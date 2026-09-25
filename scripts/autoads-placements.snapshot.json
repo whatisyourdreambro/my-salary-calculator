@@ -1,0 +1,697 @@
+{
+  "_comment": "AdSense 자동광고(AMA)가 저장해 둔 배치 선택자 — scripts/verify-autoads-paths.mjs 가 INFO 로만 대조한다(Google 이 재학습하므로 실패 사유 아님). 원본 전체 설정은 저장소 밖에 두고 선택자·순번·삽입 위치만 옮겼다.",
+  "capturedAt": "2026-09-24T20:53+09:00",
+  "source": "pagead2.googlesyndication.com/pagead/js/adsbygoogle.js 에 내장된 사이트 설정(설정 릴리스 r20260923, 스크립트 m202609220101) — 9/10 붕괴 진단 중 캡처, 복구 배포(9/24 23:25 KST) 이전 상태",
+  "fields": {
+    "selector": "querySelectorAll 에 그대로 넣는 경로(nativeQuery)",
+    "occurrenceIndex": "일치 요소 중 몇 번째에 넣는지(0부터, null = 첫 일치 — 게이트는 '하나 이상 일치'로 본다)",
+    "position": "1 = 요소 앞(beforebegin) · 2 = 요소 안 맨 앞(afterbegin) · 3 = 요소 안 맨 뒤(beforeend) · 4 = 요소 뒤(afterend)"
+  },
+  "groups": {
+    "fixed": {
+      "note": "사이트 고정 배치 — 템플릿 래퍼가 'DIV.w-full'(h-full 없음)이고 9/19 추가된 홈 월급 시계를 가리켜 붕괴 기간 DOM 에서 학습된 경로다(h-full 복원 뒤에도 CSS 상 일치)",
+      "placements": [
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN#main-content.flex-grow.w-full>DIV.w-full>DIV.w-full.bg-background.text-foreground>SECTION.border-b.border-border.bg-background>DIV.page-width",
+          "occurrenceIndex": 0,
+          "position": 4
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN#main-content.flex-grow.w-full>DIV.w-full>MAIN.w-full.min-h-screen.bg-background>HEADER.border-b.border-border.bg-card",
+          "occurrenceIndex": 0,
+          "position": 2
+        },
+        {
+          "selector": "SECTION#home-work-clock>DIV.page-width",
+          "occurrenceIndex": 0,
+          "position": 1
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN#main-content.flex-grow.w-full>DIV.w-full>MAIN.w-full.min-h-screen.bg-background>HEADER.border-b.border-border.bg-card",
+          "occurrenceIndex": 0,
+          "position": 3
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN#main-content.flex-grow.w-full>DIV.w-full>MAIN.w-full.min-h-screen.bg-background>HEADER.border-b.border-border.bg-card",
+          "occurrenceIndex": 0,
+          "position": 4
+        }
+      ]
+    },
+    "model": {
+      "note": "최적화 모델 4071423904 후보 50세트 — 붕괴 이전 구형 레이아웃·월급 시계 CSS 모듈 경로 포함",
+      "placements": [
+        {
+          "selector": "DIV.recharts-responsive-container",
+          "occurrenceIndex": null,
+          "position": 1
+        },
+        {
+          "selector": "DIV.recharts-wrapper",
+          "occurrenceIndex": null,
+          "position": 2
+        },
+        {
+          "selector": "DIV.recharts-responsive-container",
+          "occurrenceIndex": 0,
+          "position": 1
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>SECTION.max-w-7xl.mx-auto>DIV.grid>DIV",
+          "occurrenceIndex": 3,
+          "position": 3
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>SECTION.max-w-7xl.mx-auto",
+          "occurrenceIndex": 2,
+          "position": 4
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>SECTION.max-w-7xl.mx-auto>DIV.grid>DIV",
+          "occurrenceIndex": 3,
+          "position": 4
+        },
+        {
+          "selector": "HEADER",
+          "occurrenceIndex": null,
+          "position": 4
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>SECTION.text-center.max-w-7xl.mx-auto",
+          "occurrenceIndex": null,
+          "position": 2
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>SECTION.text-center.max-w-7xl.mx-auto",
+          "occurrenceIndex": 0,
+          "position": 1
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>SECTION.max-w-7xl.mx-auto.animate-fade-in-up",
+          "occurrenceIndex": null,
+          "position": 3
+        },
+        {
+          "selector": "DIV#aswift_4_host",
+          "occurrenceIndex": null,
+          "position": 2
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>SECTION.max-w-7xl.mx-auto.animate-fade-in-up",
+          "occurrenceIndex": 0,
+          "position": 4
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>DIV.max-w-7xl.mx-auto.animate-fade-in-up>DIV>DIV.flex.justify-center.border-b.overflow-x-auto.whitespace-nowrap.scrollbar-hide",
+          "occurrenceIndex": null,
+          "position": 3
+        },
+        {
+          "selector": "DIV#aswift_1_host",
+          "occurrenceIndex": null,
+          "position": 2
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>DIV.max-w-7xl.mx-auto.animate-fade-in-up>DIV>DIV.flex.justify-center.border-b.overflow-x-auto.whitespace-nowrap.scrollbar-hide",
+          "occurrenceIndex": 0,
+          "position": 4
+        },
+        {
+          "selector": "DIV.recharts-wrapper",
+          "occurrenceIndex": null,
+          "position": 3
+        },
+        {
+          "selector": "DIV.recharts-responsive-container",
+          "occurrenceIndex": null,
+          "position": 4
+        },
+        {
+          "selector": "DIV.recharts-responsive-container",
+          "occurrenceIndex": 0,
+          "position": 4
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>SECTION.max-w-7xl.mx-auto>DIV.grid>DIV",
+          "occurrenceIndex": 2,
+          "position": 3
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>SECTION.max-w-7xl.mx-auto>DIV.grid>DIV",
+          "occurrenceIndex": 3,
+          "position": 2
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>SECTION.max-w-7xl.mx-auto>DIV.grid>DIV",
+          "occurrenceIndex": 2,
+          "position": 4
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>SECTION.max-w-7xl.mx-auto>DIV.grid>DIV",
+          "occurrenceIndex": 1,
+          "position": 3
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>SECTION.max-w-7xl.mx-auto>DIV.grid>DIV",
+          "occurrenceIndex": 2,
+          "position": 2
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>SECTION.max-w-7xl.mx-auto>DIV.grid>DIV",
+          "occurrenceIndex": 1,
+          "position": 4
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>SECTION.max-w-7xl.mx-auto>DIV.grid>DIV",
+          "occurrenceIndex": 0,
+          "position": 3
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>SECTION.max-w-7xl.mx-auto>DIV.grid>DIV",
+          "occurrenceIndex": 1,
+          "position": 2
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>SECTION.max-w-7xl.mx-auto>DIV.grid>DIV",
+          "occurrenceIndex": 0,
+          "position": 4
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>DIV.max-w-7xl.mx-auto.animate-fade-in-up>DIV>DIV>DIV>DIV.grid",
+          "occurrenceIndex": null,
+          "position": 3
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>DIV.max-w-7xl.mx-auto.animate-fade-in-up>DIV>DIV>DIV>DIV.grid",
+          "occurrenceIndex": null,
+          "position": 4
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>DIV.max-w-7xl.mx-auto.animate-fade-in-up>DIV>DIV>DIV>DIV.grid",
+          "occurrenceIndex": 0,
+          "position": 4
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>SECTION.max-w-7xl.mx-auto>DIV.text-center",
+          "occurrenceIndex": null,
+          "position": 3
+        },
+        {
+          "selector": "BODY>DIV.flex.flex-col.min-h-screen>MAIN.w-full.flex-grow>MAIN.w-full>SECTION.max-w-7xl.mx-auto>DIV.text-center",
+          "occurrenceIndex": 0,
+          "position": 4
+        },
+        {
+          "selector": "DIV.work-clock_heroTop__kp_tm",
+          "occurrenceIndex": null,
+          "position": 3
+        },
+        {
+          "selector": "SECTION.work-clock_hero__YPBQc>DIV",
+          "occurrenceIndex": 1,
+          "position": 2
+        },
+        {
+          "selector": "SECTION.work-clock_hero__YPBQc>DIV",
+          "occurrenceIndex": 1,
+          "position": 1
+        },
+        {
+          "selector": "SECTION.work-clock_hero__YPBQc>DIV",
+          "occurrenceIndex": 1,
+          "position": 3
+        },
+        {
+          "selector": "P.work-clock_heroEstimate__K79Wp",
+          "occurrenceIndex": null,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_shiftLine__j1pZR",
+          "occurrenceIndex": null,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_shiftLine__j1pZR",
+          "occurrenceIndex": null,
+          "position": 2
+        },
+        {
+          "selector": "DIV.work-clock_shiftLine__j1pZR",
+          "occurrenceIndex": 0,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_shiftLine__j1pZR",
+          "occurrenceIndex": null,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_topGrid__UfSXX>SECTION.work-clock_panel__cqQEk",
+          "occurrenceIndex": null,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_shiftLine__j1pZR",
+          "occurrenceIndex": 0,
+          "position": 4
+        },
+        {
+          "selector": "DIV.work-clock_topGrid__UfSXX>SECTION.work-clock_panel__cqQEk>DIV",
+          "occurrenceIndex": 1,
+          "position": 2
+        },
+        {
+          "selector": "DIV.work-clock_topGrid__UfSXX>SECTION.work-clock_panel__cqQEk>DIV",
+          "occurrenceIndex": 1,
+          "position": 4
+        },
+        {
+          "selector": "DIV.work-clock_topGrid__UfSXX>SECTION.work-clock_panel__cqQEk>DIV.work-clock_fields__rgKDn",
+          "occurrenceIndex": null,
+          "position": 2
+        },
+        {
+          "selector": "DIV.work-clock_topGrid__UfSXX>SECTION.work-clock_panel__cqQEk>DIV.work-clock_fields__rgKDn",
+          "occurrenceIndex": 0,
+          "position": 2
+        },
+        {
+          "selector": "DIV.work-clock_topGrid__UfSXX>SECTION.work-clock_panel__cqQEk>DIV.work-clock_fields__rgKDn",
+          "occurrenceIndex": null,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_topGrid__UfSXX>SECTION.work-clock_panel__cqQEk>DIV",
+          "occurrenceIndex": 3,
+          "position": 2
+        },
+        {
+          "selector": "DIV.work-clock_topGrid__UfSXX>SECTION.work-clock_panel__cqQEk>DIV.work-clock_fields__rgKDn",
+          "occurrenceIndex": 0,
+          "position": 3
+        },
+        {
+          "selector": "DIV#work-clock-dashboard>SECTION.work-clock_panel__cqQEk>DIV>DIV.work-clock_fields__rgKDn.work-clock_controlFields__Lj_Mr",
+          "occurrenceIndex": null,
+          "position": 3
+        },
+        {
+          "selector": "DIV#work-clock-dashboard>SECTION.work-clock_panel__cqQEk>DIV>DIV.work-clock_buttonRow__n2w6P",
+          "occurrenceIndex": null,
+          "position": 2
+        },
+        {
+          "selector": "DIV#work-clock-dashboard>SECTION.work-clock_panel__cqQEk>DIV>DIV.work-clock_fields__rgKDn.work-clock_controlFields__Lj_Mr",
+          "occurrenceIndex": 0,
+          "position": 4
+        },
+        {
+          "selector": "DIV#work-clock-dashboard>SECTION.work-clock_panel__cqQEk>DIV>DIV.work-clock_buttonRow__n2w6P",
+          "occurrenceIndex": null,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_breakControls__dBVAB>DIV.work-clock_fields__rgKDn",
+          "occurrenceIndex": null,
+          "position": 2
+        },
+        {
+          "selector": "DIV#work-clock-dashboard>SECTION.work-clock_panel__cqQEk>DIV",
+          "occurrenceIndex": 0,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_breakControls__dBVAB",
+          "occurrenceIndex": null,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_breakReceipt__Q7hNG",
+          "occurrenceIndex": null,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_breakControls__dBVAB",
+          "occurrenceIndex": 0,
+          "position": 4
+        },
+        {
+          "selector": "DIV.work-clock_breakReceipt__Q7hNG",
+          "occurrenceIndex": null,
+          "position": 2
+        },
+        {
+          "selector": "DIV.work-clock_breakReceipt__Q7hNG",
+          "occurrenceIndex": 0,
+          "position": 2
+        },
+        {
+          "selector": "DIV.work-clock_breakReceipt__Q7hNG>P",
+          "occurrenceIndex": null,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_breakReceipt__Q7hNG>P",
+          "occurrenceIndex": 0,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_breakReceipt__Q7hNG",
+          "occurrenceIndex": null,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_breakReceipt__Q7hNG",
+          "occurrenceIndex": 0,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_breakReceipt__Q7hNG",
+          "occurrenceIndex": null,
+          "position": 4
+        },
+        {
+          "selector": "DIV#work-clock-dashboard>SECTION.work-clock_panel__cqQEk",
+          "occurrenceIndex": 0,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_breakReceipt__Q7hNG",
+          "occurrenceIndex": 0,
+          "position": 4
+        },
+        {
+          "selector": "DIV#work-clock-dashboard>SECTION.work-clock_panel__cqQEk",
+          "occurrenceIndex": 0,
+          "position": 4
+        },
+        {
+          "selector": "DIV.work-clock_bottomGrid__8e6oz>SECTION.work-clock_panel__cqQEk",
+          "occurrenceIndex": 0,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_goalChoices__uBEwZ",
+          "occurrenceIndex": null,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_goalChoices__uBEwZ",
+          "occurrenceIndex": null,
+          "position": 4
+        },
+        {
+          "selector": "DIV.work-clock_goalChoices__uBEwZ",
+          "occurrenceIndex": 0,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_bottomGrid__8e6oz>SECTION.work-clock_panel__cqQEk",
+          "occurrenceIndex": 0,
+          "position": 4
+        },
+        {
+          "selector": "DIV.work-clock_bottomGrid__8e6oz>SECTION.work-clock_panel__cqQEk",
+          "occurrenceIndex": 1,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_focusClock__w0J4X",
+          "occurrenceIndex": null,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_bottomGrid__8e6oz>SECTION.work-clock_panel__cqQEk>DIV.work-clock_buttonRow__n2w6P",
+          "occurrenceIndex": null,
+          "position": 2
+        },
+        {
+          "selector": "DIV.work-clock_focusClock__w0J4X",
+          "occurrenceIndex": 0,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_bottomGrid__8e6oz>SECTION.work-clock_panel__cqQEk>DIV",
+          "occurrenceIndex": 7,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_bottomGrid__8e6oz>SECTION.work-clock_panel__cqQEk>P.work-clock_muted__oW7Fc",
+          "occurrenceIndex": 1,
+          "position": 1
+        },
+        {
+          "selector": "DIV#work-clock-dashboard>SECTION.rounded-2xl.border.border-border.bg-card>DIV.grid",
+          "occurrenceIndex": null,
+          "position": 3
+        },
+        {
+          "selector": "DIV#work-clock-dashboard>SECTION.rounded-2xl.border.border-border.bg-card>P.text-xs.text-muted-foreground",
+          "occurrenceIndex": 0,
+          "position": 1
+        },
+        {
+          "selector": "DIV#work-clock-dashboard>SECTION.rounded-2xl.border.border-border.bg-card>DIV.grid",
+          "occurrenceIndex": 0,
+          "position": 3
+        },
+        {
+          "selector": "DIV#work-clock-dashboard>SECTION.rounded-2xl.border.border-border.bg-card",
+          "occurrenceIndex": null,
+          "position": 4
+        },
+        {
+          "selector": "DIV#work-clock-dashboard>SECTION.work-clock_panel__cqQEk",
+          "occurrenceIndex": 1,
+          "position": 1
+        },
+        {
+          "selector": "DIV#work-clock-dashboard>SECTION.work-clock_panel__cqQEk",
+          "occurrenceIndex": 1,
+          "position": 2
+        },
+        {
+          "selector": "H2#history-title",
+          "occurrenceIndex": null,
+          "position": 1
+        },
+        {
+          "selector": "H2#history-title",
+          "occurrenceIndex": 0,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_historyHeader__1EKVn",
+          "occurrenceIndex": null,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_historyHeader__1EKVn",
+          "occurrenceIndex": null,
+          "position": 4
+        },
+        {
+          "selector": "DIV.work-clock_historyHeader__1EKVn",
+          "occurrenceIndex": 0,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_chartLabels__jyZsm",
+          "occurrenceIndex": null,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_empty__aQAHO",
+          "occurrenceIndex": null,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_chartLabels__jyZsm",
+          "occurrenceIndex": 0,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_storage__9gGvR",
+          "occurrenceIndex": null,
+          "position": 2
+        },
+        {
+          "selector": "DIV.work-clock_storageInfo__CnZ2K",
+          "occurrenceIndex": null,
+          "position": 2
+        },
+        {
+          "selector": "DIV.work-clock_storageInfo__CnZ2K",
+          "occurrenceIndex": 0,
+          "position": 2
+        },
+        {
+          "selector": "DIV.work-clock_storageInfo__CnZ2K>P",
+          "occurrenceIndex": null,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_storageInfo__CnZ2K>P",
+          "occurrenceIndex": 0,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_storageInfo__CnZ2K",
+          "occurrenceIndex": null,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_storageInfo__CnZ2K",
+          "occurrenceIndex": null,
+          "position": 4
+        },
+        {
+          "selector": "DIV.work-clock_storageInfo__CnZ2K",
+          "occurrenceIndex": 0,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_storage__9gGvR",
+          "occurrenceIndex": null,
+          "position": 4
+        },
+        {
+          "selector": "DIV.work-clock_heroTop__kp_tm",
+          "occurrenceIndex": null,
+          "position": 2
+        },
+        {
+          "selector": "DIV.work-clock_storage__9gGvR",
+          "occurrenceIndex": 0,
+          "position": 4
+        },
+        {
+          "selector": "DIV.work-clock_settingsBody__0CkQj",
+          "occurrenceIndex": null,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_settingsBody__0CkQj>DIV",
+          "occurrenceIndex": 0,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_settingsBody__0CkQj>DIV",
+          "occurrenceIndex": 0,
+          "position": 2
+        },
+        {
+          "selector": "DIV.work-clock_settingsBody__0CkQj>DIV",
+          "occurrenceIndex": 0,
+          "position": 4
+        },
+        {
+          "selector": "DIV.work-clock_settingsBody__0CkQj>DIV.work-clock_fields__rgKDn",
+          "occurrenceIndex": null,
+          "position": 2
+        },
+        {
+          "selector": "DIV.work-clock_settingsBody__0CkQj>DIV.work-clock_fields__rgKDn",
+          "occurrenceIndex": null,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_settingsBody__0CkQj>DIV",
+          "occurrenceIndex": 2,
+          "position": 2
+        },
+        {
+          "selector": "DIV.work-clock_settingsBody__0CkQj>DIV",
+          "occurrenceIndex": 2,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_settingsBody__0CkQj>DIV",
+          "occurrenceIndex": 2,
+          "position": 3
+        },
+        {
+          "selector": "DIV.work-clock_settingsBody__0CkQj>DIV",
+          "occurrenceIndex": 2,
+          "position": 4
+        },
+        {
+          "selector": "DIV.work-clock_settingsBody__0CkQj>P.work-clock_sectionSubtitle__03JY_",
+          "occurrenceIndex": null,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_settingsBody__0CkQj>P.work-clock_sectionSubtitle__03JY_",
+          "occurrenceIndex": 0,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_calendar__xyRie",
+          "occurrenceIndex": null,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_calendar__xyRie>DIV",
+          "occurrenceIndex": null,
+          "position": 2
+        },
+        {
+          "selector": "DIV.work-clock_calendar__xyRie>DIV",
+          "occurrenceIndex": 0,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_calendar__xyRie>DIV",
+          "occurrenceIndex": null,
+          "position": 3
+        },
+        {
+          "selector": "P#work-calendar-help",
+          "occurrenceIndex": null,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_calendar__xyRie>DIV",
+          "occurrenceIndex": 0,
+          "position": 4
+        },
+        {
+          "selector": "DIV.work-clock_calendar__xyRie>TABLE",
+          "occurrenceIndex": null,
+          "position": 4
+        },
+        {
+          "selector": "SECTION.work-clock_selectedDay__Vin5t",
+          "occurrenceIndex": null,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_calendar__xyRie>TABLE",
+          "occurrenceIndex": 0,
+          "position": 4
+        },
+        {
+          "selector": "DIV.work-clock_empty__aQAHO",
+          "occurrenceIndex": 0,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_empty__aQAHO",
+          "occurrenceIndex": null,
+          "position": 4
+        },
+        {
+          "selector": "DIV#work-clock-dashboard>SECTION.work-clock_panel__cqQEk>DETAILS>P.work-clock_sectionSubtitle__03JY_",
+          "occurrenceIndex": null,
+          "position": 1
+        },
+        {
+          "selector": "DIV.work-clock_empty__aQAHO",
+          "occurrenceIndex": 0,
+          "position": 4
+        }
+      ]
+    }
+  }
+}

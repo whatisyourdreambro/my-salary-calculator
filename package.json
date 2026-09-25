@@ -18,6 +18,7 @@
     "verify:site": "tsx scripts/gen-site-metrics.ts --check && tsx scripts/gen-salary-amounts.ts --check && tsx scripts/gen-season-key.ts --check && tsx scripts/verify-company-salary-hrefs.ts",
     "verify:companies": "tsx scripts/verify-company-data.ts",
     "verify:bonus": "node scripts/verify-bonus-data.mjs",
+    "verify:autoads": "node scripts/verify-autoads-paths.mjs",
     "qa:crawl": "tsx scripts/qa-crawl.ts",
     "qa:quality": "node scripts/qa-page-quality.mjs",
     "qa:share": "node scripts/qa-share-coverage.mjs",
