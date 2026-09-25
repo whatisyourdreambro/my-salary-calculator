@@ -66,12 +66,17 @@ export const metadata: Metadata = {
   // public/ 정적 파일로 교체. 매 요청 satori 렌더가 Worker CPU 10ms 한도를 넘겨 503(1102)·
   // 빈 파비콘을 내던 최고 빈도 경로였다. 정적 파일은 _routes.json exclude 로 Worker 를 우회한다.
   // 구 URL(/icon·/apple-icon·/opengraph-image)은 next.config redirects() 가 308 로 연결.
+  // 2026-09-26 NAVER-01: 네이버 모바일·통합검색 파비콘이 파란 사각형+흰 네모(구 /icon 의 ₩ 글리프 누락)로
+  // 굳어 있었다. 네이버 파비콘 가이드(searchadvisor.naver.com/guide/markup-favicon)는 href 절대 경로 필수,
+  // 우선순위 shortcut icon > icon > /favicon.ico > apple-touch-icon — 그래서 shortcut icon 을 절대 URL 로 한 개
+  // 두고 icon·apple 도 절대 URL 로 바꾼다. 파일 URL 은 그대로(네이버: 파비콘 URL 을 자주 바꾸지 말 것).
   icons: {
+    shortcut: [{ url: "https://www.moneysalary.com/favicon.ico" }],
     icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "https://www.moneysalary.com/favicon.ico", sizes: "any" },
+      { url: "https://www.moneysalary.com/favicon.svg", type: "image/svg+xml" },
     ],
-    apple: [{ url: "/icon-192.png", sizes: "192x192", type: "image/png" }],
+    apple: [{ url: "https://www.moneysalary.com/icon-192.png", sizes: "192x192", type: "image/png" }],
   },
   // src/app/manifest.json(매 요청 Worker 경유) → public/manifest.webmanifest 정적
   // 서빙 전환(2026-08-10, 요청 한도 대응). _routes.json 에서 Worker 우회 처리.
