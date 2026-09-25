@@ -10,6 +10,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -352,7 +353,7 @@ export default function DoosanEnerbilityBonusPage() {
                 100%·영업이익 달성률 기준), 조선일보 2026-05-12 (2025년 연봉의 약 27%
                 재원 차등 지급), 헤럴드경제 단독·브릿지경제 2026-05-20 (2026 임단협
                 노조 요구안), DART 두산에너빌리티 사업보고서 2026-03-20 제출 (FY2025
-                평균 연봉 1억원). 2026년 세법(소득세율·4대보험 요율) 반영.
+                평균 연봉 1억원). {CURRENT_RATES_YEAR}년 세법(소득세율·4대보험 요율) 반영.
               </span>
             </p>
           </footer>

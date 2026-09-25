@@ -1,9 +1,10 @@
 import {
- INSURANCE_RATES_2026,
  PENSION_BASE_2026,
  earnedIncomeDeduction2026,
  calcIncomeTax2026,
 } from "@/lib/taxConstants2026";
+// 4대보험 요율은 현행 포인터 — 1/1 연도 전환 시 src/config/currentRates.ts 한 줄로 반영 (2026-09-25 N3)
+import { CURRENT_INSURANCE_RATES } from "@/config/currentRates";
 
 export type CountryCode = 'KR' | 'US' | 'JP' | 'SG' | 'UK';
 
@@ -61,7 +62,7 @@ export function calcKrProgressiveTax(taxable: number): number {
 // 국민연금 기준소득월액 상한 (2026.7~2027.6): 월 659만원 — 정본 재수출
 export const KR_PENSION_MONTHLY_CAP = PENSION_BASE_2026.MAX_MONTHLY;
 
-// 4대보험 본인부담 합계 (2026) — 요율은 taxConstants2026 정본 사용
+// 4대보험 본인부담 합계 — 요율은 현행 포인터(CURRENT_INSURANCE_RATES, 지금은 2026 정본)
 export function krSocialInsurance(grossAnnual: number): number {
  if (grossAnnual <= 0) return 0;
  // 기준소득월액 상·하한 클램프 (하한 41만 — 2026.7 갱신, taxConstants2026 정본)
@@ -69,10 +70,10 @@ export function krSocialInsurance(grossAnnual: number): number {
  Math.max(grossAnnual / 12, PENSION_BASE_2026.MIN_MONTHLY),
  KR_PENSION_MONTHLY_CAP
  );
- const pension = pensionBase * 12 * INSURANCE_RATES_2026.NATIONAL_PENSION;
- const health = grossAnnual * INSURANCE_RATES_2026.HEALTH_INSURANCE;
- const longTermCare = health * INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO;
- const employment = grossAnnual * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE;
+ const pension = pensionBase * 12 * CURRENT_INSURANCE_RATES.NATIONAL_PENSION;
+ const health = grossAnnual * CURRENT_INSURANCE_RATES.HEALTH_INSURANCE;
+ const longTermCare = health * CURRENT_INSURANCE_RATES.LONG_TERM_CARE_RATIO;
+ const employment = grossAnnual * CURRENT_INSURANCE_RATES.EMPLOYMENT_INSURANCE;
  return pension + health + longTermCare + employment;
 }
 
@@ -88,7 +89,7 @@ export class GlobalTaxEngine {
  // Income Tax: 총급여 − 근로소득공제 → 2026 누진세율 6~45% (8구간)
  tax = calcKrProgressiveTax(localGross - earnedIncomeDeduction(localGross));
 
- // Social (2026): Pension 4.75% (월 659만 상한, 2026.7~) + Health 3.595% + 장기요양 + Employment 0.9%
+ // Social: 현행 요율 포인터 — 2026 기준 Pension 4.75% (월 659만 상한, 2026.7~) + Health 3.595% + 장기요양 + Employment 0.9%
  social = krSocialInsurance(localGross);
  break;
 

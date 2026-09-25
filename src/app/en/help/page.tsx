@@ -1,4 +1,5 @@
 import Link from "@/components/AppLink";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import EnglishPageShell from "@/components/english/EnglishPageShell";
 import { buildEnglishMetadata } from "@/lib/englishSeo";
 
@@ -18,7 +19,7 @@ export default function EnglishHelpPage() {
       <div className="space-y-10">
         <section id="salary" className="scroll-mt-28 rounded-2xl border border-border p-5 sm:p-7">
           <h2 className="text-2xl font-bold">Estimate Korean monthly take-home pay</h2>
-          <p className="mt-4">The English home form uses the same 2026 simplified regular-employee calculation as the Korean home page. Gross annual salary is divided by twelve, then modeled employee insurance, national income tax from the official simplified withholding table and local income tax (10% of national tax) are subtracted. Non-taxable pay is already included in the gross amount.</p>
+          <p className="mt-4">The English home form uses the same {CURRENT_RATES_YEAR} simplified regular-employee calculation as the Korean home page. Gross annual salary is divided by twelve, then modeled employee insurance, national income tax from the official simplified withholding table and local income tax (10% of national tax) are subtracted. Non-taxable pay is already included in the gross amount.</p>
           <p className="mt-3">The model uses the current July 2026 pension income limits for each modeled month. A real full-year pension statement can use different limits in January–June. The withholding table already reflects the earned-income deduction, basic deductions, a pension deduction, part of the special deductions and the earned-income tax credit, and the table&apos;s reduction for eligible children is applied; year-end deductions and credits are omitted.</p>
           <p className="mt-3">It assumes standard insurance coverage and ordinary resident progressive taxation. Nationality, visa, age, treaties, non-resident rules and foreign-worker flat-tax eligibility are not inferred from these four inputs. The displayed national tax is the official monthly withholding-table amount for the modeled pay, not a year-end settlement result or refund.</p>
           <ul className="mt-4 list-disc space-y-2 pl-5">

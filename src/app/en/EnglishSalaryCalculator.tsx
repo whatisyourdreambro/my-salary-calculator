@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "@/components/AppLink";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 import { parseWholeKRW } from "@/lib/englishCalculators";
 import { calculateEnglishTakeHome } from "@/lib/englishTakeHome";
@@ -38,7 +39,7 @@ export default function EnglishSalaryCalculator() {
   return (
     <section id="calculator" aria-labelledby="english-salary-title" className="mx-auto mt-10 max-w-4xl scroll-mt-28 px-4 sm:px-6">
       <div className="rounded-3xl border border-border bg-background p-5 sm:p-8">
-        <h2 id="english-salary-title" className="text-2xl font-black sm:text-3xl">Korea take-home salary estimate · 2026</h2>
+        <h2 id="english-salary-title" className="text-2xl font-black sm:text-3xl">Korea take-home salary estimate · {CURRENT_RATES_YEAR}</h2>
         <p className="mt-3 text-muted-foreground">Estimate average monthly take-home pay from an annual salary, qualifying non-taxable pay and eligible dependents. The estimate assumes standard employee insurance and takes monthly income tax from Korea&apos;s official simplified withholding table (payments from March 1, 2026).</p>
         <div {...measurement.inputProps} className="mt-6 grid gap-5 sm:grid-cols-2">
           <div>

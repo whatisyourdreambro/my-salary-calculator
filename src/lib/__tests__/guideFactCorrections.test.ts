@@ -5,8 +5,14 @@ import { guides, koGuides } from "@/lib/guidesContent";
 import { guideCards } from "@/lib/guidesMeta.generated";
 import { extractGuideFaqs } from "@/lib/guideFaq";
 import { qnaData } from "@/data/qnaData";
-import { calcBonusNet, fmtManwon } from "@/lib/bonusTaxCalc";
+import { calcBonusNet, DEFAULT_BONUS_CREDIT_RATE, fmtManwon } from "@/lib/bonusTaxCalc";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
+import { INSURANCE_RATES_2026 } from "@/lib/taxConstants2026";
+
+// '-2026' 가이드 본문은 2026 요율 기준 글이다 — calcBonusNet 기본값(현행 요율 포인터, 2026-09-25 N3)이 아니라
+// 2026 요율을 명시해 대조한다. QnA(연도 표기 없음)는 현행 엔진과 대조 — 1/1 포인터 전환 뒤 실패하면 QnA 문구 갱신.
+const bonus2026 = (salary: number, bonus: number, credit = DEFAULT_BONUS_CREDIT_RATE) =>
+  calcBonusNet(salary, bonus, credit, true, INSURANCE_RATES_2026);
 
 /** 만원 단위 반올림 표기(예: 6,776,033 → "678만") — QnA 월 실수령 범위 문구 형식 */
 const manRound = (won: number) => `${Math.round(won / 10_000).toLocaleString("ko-KR")}만`;
@@ -29,7 +35,7 @@ describe("사실 정정 — 옛 오류 문구 재발 금지", () => {
     expect(t).toContain("1.33억");
   });
 
-  it("성과급 1억·5,000만: 수치는 현재 성과급 엔진(calcBonusNet) 출력과 같고, 건보 정산은 이듬해 4월", () => {
+  it("성과급 1억·5,000만: 수치는 성과급 엔진(calcBonusNet, 2026 요율) 출력과 같고, 건보 정산은 이듬해 4월", () => {
     const t = text("bonus-1eok-net-payment-2026");
     expect(t).not.toContain("4,700만원");
     expect(t).not.toContain("(7월)");
@@ -38,14 +44,14 @@ describe("사실 정정 — 옛 오류 문구 재발 금지", () => {
     expect(text("bonus-health-4-percent-2026")).not.toContain("7월에 작년 소득 기준 정산");
 
     // 연봉 7,000만 + 성과급 1억 — 세후 증가분·총 공제·추가 세액공제 30% 가정값
-    const eok = calcBonusNet(70_000_000, 100_000_000);
+    const eok = bonus2026(70_000_000, 100_000_000);
     expect(t).toContain(`세후 약 ${fmtManwon(eok.net)}`); // 6,373만원
     expect(t).toContain(`약 ${fmtManwon(eok.totalDeductions)}`); // 3,627만원
-    expect(t).toContain(`약 ${fmtManwon(Math.round(calcBonusNet(70_000_000, 100_000_000, 30).net / 1e6) * 1e6)}`); // 7,300만원
+    expect(t).toContain(`약 ${fmtManwon(Math.round(bonus2026(70_000_000, 100_000_000, 30).net / 1e6) * 1e6)}`); // 7,300만원
 
     // 연봉 6,000만 + 성과급 5,000만 — 과세표준 24% 구간, 총 부담·실수령
     const t5 = text("bonus-5000-net-payment-2026");
-    const five = calcBonusNet(60_000_000, 50_000_000);
+    const five = bonus2026(60_000_000, 50_000_000);
     expect(t5).not.toContain("9,355만원");
     expect(t5).not.toContain("3,370만");
     expect(t5).toContain(`총 부담 약 ${fmtManwon(five.totalDeductions)}`); // 1,429만원

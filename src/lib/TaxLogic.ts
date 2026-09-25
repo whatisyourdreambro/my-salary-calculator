@@ -5,14 +5,16 @@
 // 지방소득세는 소득세의 10% — 급여명세서와 같은 구조다.
 // 4대보험 요율·국민연금 상한·세율은 lib/taxConstants2026.ts 단일 진실 소스에서 import.
 // ★ 2026 블록을 제자리 수정 금지 — 연도 전환은 rates 인자/포인터 상수로 한다.
-//   calculateSalary2026(…, rates) 의 기본값이 2026 요율이라 인자를 넘기지 않는 호출부는
-//   그대로다. 2026 귀속 연말정산·/table/2026 은 2026 고정.
+//   calculateSalary2026(…, rates) 의 기본값은 현행 요율 포인터(src/config/currentRates.ts
+//   CURRENT_INSURANCE_RATES — 지금은 2026)라, 1/1 전환은 포인터 한 줄로 인자 없는 호출부
+//   (/salary·/monthly·회사 표·홈 등)에 일괄 반영된다. /table/2026(generateData·generateData2026)은
+//   INSURANCE_RATES_2026 을 명시해 2026 고정. 함수 이름의 2026 은 간이세액표·세율표 연도다.
 
 import {
- INSURANCE_RATES_2026,
  PENSION_BASE_2026,
  type InsuranceRates,
 } from "./taxConstants2026";
+import { CURRENT_INSURANCE_RATES } from "@/config/currentRates";
 import { withholdingIncomeTax2026 } from "./withholdingTaxTable2026";
 
 export type TaxResult = {
@@ -49,15 +51,16 @@ const ZERO_RESULT: TaxResult = {
 };
 
 /**
- * @param rates 4대보험·지방세 요율 — 기본값 2026. 연도 전환 시 호출부가 해당 연도 요율을 넘긴다
- *   (2026 블록 제자리 수정 금지). 국민연금 기준소득월액 상·하한은 PENSION_BASE_2026 을 쓴다.
+ * @param rates 4대보험·지방세 요율 — 기본값 현행 포인터(CURRENT_INSURANCE_RATES, 지금은 2026).
+ *   연도 고정이 필요한 호출부(/table/2026 등)는 해당 연도 요율을 명시한다(2026 블록 제자리 수정 금지).
+ *   국민연금 기준소득월액 상·하한은 PENSION_BASE_2026(2026-07~2027-06)을 쓴다.
  */
 export function calculateSalary2026(
  annualSalary: number,
  nonTaxableMonthly: number = 200_000,
  dependents: number = 1,
  children: number = 0,
- rates: InsuranceRates = INSURANCE_RATES_2026
+ rates: InsuranceRates = CURRENT_INSURANCE_RATES
 ): TaxResult {
  // 방어: 연봉 0 이하·비유한(NaN·Infinity) 입력은 전 항목 0 반환
  // (음수 공제·음수 실수령·NaN 전파 방지 — calculator.ts 와 같은 가드).

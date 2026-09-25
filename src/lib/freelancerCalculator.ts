@@ -1,9 +1,8 @@
 // src/lib/freelancerCalculator.ts
 
-import {
- INSURANCE_RATES_2026,
- PENSION_BASE_2026,
-} from "./taxConstants2026";
+import { PENSION_BASE_2026 } from "./taxConstants2026";
+// 4대보험 요율은 현행 포인터 — 1/1 연도 전환 시 src/config/currentRates.ts 한 줄로 반영 (2026-09-25 N3)
+import { CURRENT_INSURANCE_RATES } from "@/config/currentRates";
 import { withholdingIncomeTax2026 } from "./withholdingTaxTable2026";
 
 /**
@@ -46,19 +45,19 @@ export function calculatePartTimeSalary(
  employmentInsurance: 0,
  };
  } else {
- // 4대보험 적용 (월 60시간 이상 근로자 기준) — 요율은 taxConstants2026 정본 사용.
+ // 4대보험 적용 (월 60시간 이상 근로자 기준) — 요율은 현행 포인터(CURRENT_INSURANCE_RATES) 사용.
  // 2026-08 대규모 점검: 장기요양보험(건강보험료의 13.14%) 누락 보완.
  // 국민연금 — 기준소득월액 상·하한 클램프 (2026.7~: 월 41만~659만, 정본)
  const pensionBase = Math.min(
  Math.max(income, PENSION_BASE_2026.MIN_MONTHLY),
  PENSION_BASE_2026.MAX_MONTHLY
  );
- const nationalPension = pensionBase * INSURANCE_RATES_2026.NATIONAL_PENSION;
- const healthInsurance = income * INSURANCE_RATES_2026.HEALTH_INSURANCE;
+ const nationalPension = pensionBase * CURRENT_INSURANCE_RATES.NATIONAL_PENSION;
+ const healthInsurance = income * CURRENT_INSURANCE_RATES.HEALTH_INSURANCE;
  const longTermCare =
- healthInsurance * INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO;
+ healthInsurance * CURRENT_INSURANCE_RATES.LONG_TERM_CARE_RATIO;
  const employmentInsurance =
- income * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE;
+ income * CURRENT_INSURANCE_RATES.EMPLOYMENT_INSURANCE;
 
  // 근로소득세 (1인 가구 기준) — 월 60시간 이상 4대보험 가입 알바는 세법상
  // 근로소득자다. 따라서 직장인 탭(TaxLogic.calculateSalary2026)과 같은 정본

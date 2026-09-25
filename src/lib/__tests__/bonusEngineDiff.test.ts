@@ -3,6 +3,8 @@
 // 소득세 증가분 = 연간 결정세액(연봉 + 성과급) − 연간 결정세액(연봉).
 // 종전 기본값은 '산출세액 차이 × (1 − 세액공제 30%)' 였는데, 근로소득세액공제(소득세법 §59)는
 // 총급여가 오를수록 한도가 줄어드는 정액성 공제라 성과급에 비례해 늘지 않는다 — 세후 과대.
+// 2026-09-25 N3: calcBonusNet 기본 요율 = 현행 포인터(src/config/currentRates.ts), estimateAnnualIncomeTax2026
+// 기본 요율 = 2026 고정. 손 검산 리터럴은 2026 요율 명시 호출에, 구조 검사는 현행 포인터 요율에 건다.
 import { describe, expect, it } from "vitest";
 
 import {
@@ -10,7 +12,11 @@ import {
   DEFAULT_BONUS_CREDIT_RATE,
   estimateAnnualIncomeTax2026,
 } from "@/lib/bonusTaxCalc";
-import { calcIncomeTax2026, earnedIncomeTaxCredit2026, earnedIncomeDeduction2026 } from "@/lib/taxConstants2026";
+import { calcIncomeTax2026, earnedIncomeTaxCredit2026, earnedIncomeDeduction2026, INSURANCE_RATES_2026 } from "@/lib/taxConstants2026";
+import { CURRENT_INSURANCE_RATES } from "@/config/currentRates";
+
+const R26 = INSURANCE_RATES_2026;
+const RCUR = CURRENT_INSURANCE_RATES;
 
 describe("estimateAnnualIncomeTax2026 — 연말정산 구조 결정세액", () => {
   it("연봉 8,000만: 손 검산값 7,424,750원", () => {
@@ -55,24 +61,24 @@ describe("calcBonusNet — 기본값은 실제 엔진 차이", () => {
     [30_000_000, 5_000_000],
   ])("연봉 %i · 성과급 %i: 소득세 증가분 = T(연봉+성과급) − T(연봉)", (salary, bonus) => {
     const r = calcBonusNet(salary, bonus);
-    const expected = estimateAnnualIncomeTax2026(salary + bonus) - estimateAnnualIncomeTax2026(salary);
+    const expected = estimateAnnualIncomeTax2026(salary + bonus, RCUR) - estimateAnnualIncomeTax2026(salary, RCUR);
     expect(r.incomeTaxDelta).toBe(Math.round(expected));
     expect(r.localTaxDelta).toBe(Math.round(expected * 0.1));
   });
 
   it("8,000만 + 3,000만: 소득세 증가분 6,554,349원 · 세후 21,300,001원 (종전 30% 가정 22,717,460원)", () => {
-    const r = calcBonusNet(80_000_000, 30_000_000);
+    const r = calcBonusNet(80_000_000, 30_000_000, DEFAULT_BONUS_CREDIT_RATE, true, R26);
     expect(r.incomeTaxDelta).toBe(13_979_099 - 7_424_750);
     expect(r.net).toBe(21_300_001);
   });
 
   it("1억 + 5,000만: 세후 30,847,345원 (종전 30% 가정 34,670,783원, 382만원 과대)", () => {
-    expect(calcBonusNet(100_000_000, 50_000_000).net).toBe(30_847_345);
+    expect(calcBonusNet(100_000_000, 50_000_000, DEFAULT_BONUS_CREDIT_RATE, true, R26).net).toBe(30_847_345);
   });
 
   it("추가 세액공제 가정은 엔진 증가분에 비율로만 적용", () => {
-    const base = calcBonusNet(80_000_000, 30_000_000);
-    const extra = calcBonusNet(80_000_000, 30_000_000, 20);
+    const base = calcBonusNet(80_000_000, 30_000_000, DEFAULT_BONUS_CREDIT_RATE, true, R26);
+    const extra = calcBonusNet(80_000_000, 30_000_000, 20, true, R26);
     expect(extra.incomeTaxDelta).toBe(Math.round((13_979_099 - 7_424_750) * 0.8));
     expect(extra.net).toBeGreaterThan(base.net);
   });
@@ -82,7 +88,7 @@ describe("calcBonusNet — 기본값은 실제 엔진 차이", () => {
     const off = calcBonusNet(80_000_000, 30_000_000, 0, false);
     expect(off.healthDelta + off.empInsDelta + off.pensionDelta).toBe(0);
     expect(off.incomeTaxDelta).toBe(
-      estimateAnnualIncomeTax2026(110_000_000, undefined, 80_000_000) - estimateAnnualIncomeTax2026(80_000_000)
+      estimateAnnualIncomeTax2026(110_000_000, RCUR, 80_000_000) - estimateAnnualIncomeTax2026(80_000_000, RCUR)
     );
     expect(off.incomeTaxDelta).toBeGreaterThan(on.incomeTaxDelta);
   });

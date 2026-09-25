@@ -11,6 +11,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -343,7 +344,7 @@ export default function SkInnovationBonusPage() {
                 800%·SK어스온 400%·SK온 0%) — EBN(2025-02-06). FY2023 계열 차등
                 0~800%·울산CLX PS 612% — 뉴스핌(2024-02-16)·이데일리 단독(2024-02).
                 2026년 2분기 흑자전환 — CBC뉴스(2026-07). 평균연봉 — DART FY2025
-                사업보고서(2026-03-16 제출). 2026년 세법(소득세율·4대보험 요율) 반영.
+                사업보고서(2026-03-16 제출). {CURRENT_RATES_YEAR}년 세법(소득세율·4대보험 요율) 반영.
               </span>
             </p>
           </footer>

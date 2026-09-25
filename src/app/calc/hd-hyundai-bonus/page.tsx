@@ -6,6 +6,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -254,7 +255,7 @@ export default function HdHyundaiBonusPage() {
               <Info className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
               <span>
                 <strong>데이터 출처</strong>: 2025년 12월 연말 성과급 보도(아주경제·ZDNet),
-                2026년 5월 노조 요구안 (이투데이·뉴스핌·국민일보·머니데이). 2026 세법 반영.
+                2026년 5월 노조 요구안 (이투데이·뉴스핌·국민일보·머니데이). {CURRENT_RATES_YEAR} 세법 반영.
               </span>
             </p>
           </footer>

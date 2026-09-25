@@ -3,6 +3,10 @@
 // 임베드 위젯 목록 단일 소스 (2026-08-23 다중 위젯화 — 위젯 2호 연말정산 추가).
 // 스니펫의 크레딧 <a> 링크가 백링크 본체 — 크레딧 앵커를 제거하지 말 것.
 // 위젯 실물(/widget/*)은 noindex, 이 페이지(/embed)가 색인 대상.
+// 연봉·성과급 위젯의 연도 표기는 위젯 계산과 같은 현행 요율 포인터(src/config/currentRates.ts)에서 —
+// 연말정산 위젯은 2026 귀속 고정이라 리터럴 그대로 둔다 (2026-09-25 N3).
+
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 
 export interface EmbedWidgetDef {
   id: string;
@@ -27,13 +31,13 @@ export const EMBED_WIDGETS: EmbedWidgetDef[] = [
     height: 380,
     snippet: `<iframe src="https://www.moneysalary.com/widget/salary" width="100%" height="380"
   style="border:1px solid #e2e8f0;border-radius:12px;max-width:480px;"
-  title="2026 연봉 실수령액 계산기" loading="lazy"></iframe>
+  title="${CURRENT_RATES_YEAR} 연봉 실수령액 계산기" loading="lazy"></iframe>
 <p style="margin:8px 0 0;font-size:13px;">
   <a href="https://www.moneysalary.com/?utm_source=embed&utm_medium=widget"
-     target="_blank" rel="noopener noreferrer">2026 연봉 실수령액 계산기 by 머니샐러리</a>
+     target="_blank" rel="noopener noreferrer">${CURRENT_RATES_YEAR} 연봉 실수령액 계산기 by 머니샐러리</a>
 </p>`,
     basis:
-      "2026년 세법(4대보험 요율·간이세액) 기준, 부양가족 1인·비과세 식대 월 20만원 가정 추정치입니다.",
+      `${CURRENT_RATES_YEAR}년 세법(4대보험 요율·간이세액) 기준, 부양가족 1인·비과세 식대 월 20만원 가정 추정치입니다.`,
   },
   {
     id: "year-end-tax",
@@ -59,13 +63,13 @@ export const EMBED_WIDGETS: EmbedWidgetDef[] = [
     height: 430,
     snippet: `<iframe src="https://www.moneysalary.com/widget/bonus" width="100%" height="430"
   style="border:1px solid #e2e8f0;border-radius:12px;max-width:480px;"
-  title="2026 성과급 실수령액 계산기" loading="lazy"></iframe>
+  title="${CURRENT_RATES_YEAR} 성과급 실수령액 계산기" loading="lazy"></iframe>
 <p style="margin:8px 0 0;font-size:13px;">
   <a href="https://www.moneysalary.com/calc/bonus-calculators?utm_source=embed&utm_medium=widget"
-     target="_blank" rel="noopener noreferrer">2026 성과급 계산기 by 머니샐러리</a>
+     target="_blank" rel="noopener noreferrer">${CURRENT_RATES_YEAR} 성과급 계산기 by 머니샐러리</a>
 </p>`,
     basis:
-      "2026년 세법 한계세율 기준 — 성과급이 연봉에 합산되며 늘어나는 소득세·4대보험 증가분을 공제로 반영한 추정치입니다. 회사별 지급률(OPI·PS 등) 계산은 본편 회사별 계산기가 담당합니다.",
+      `${CURRENT_RATES_YEAR}년 세법 한계세율 기준 — 성과급이 연봉에 합산되며 늘어나는 소득세·4대보험 증가분을 공제로 반영한 추정치입니다. 회사별 지급률(OPI·PS 등) 계산은 본편 회사별 계산기가 담당합니다.`,
   },
   {
     id: "severance",

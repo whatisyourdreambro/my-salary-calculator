@@ -6,6 +6,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -268,7 +269,7 @@ export default function LgEnergyBonusPage() {
               <span>
                 <strong>데이터 출처</strong>: LG에너지솔루션 2025·2026 분기 실적발표
                 (배터리인사이드·디일렉), 뉴스웨이 2026-02 성과급 보도, 다올투자증권
-                리포트 2026-05. 2026 세법 반영.
+                리포트 2026-05. {CURRENT_RATES_YEAR} 세법 반영.
               </span>
             </p>
           </footer>

@@ -9,6 +9,7 @@ import Link from "@/components/AppLink";
 import { ArrowRight, Trophy } from "lucide-react";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd, itemListLd } from "@/lib/structuredData";
 import { HomeTopAd, InArticleAd, GuideMidAd, CalcResultAd } from "@/components/AdPlacement";
@@ -360,7 +361,7 @@ export default function CompanyRankingPage() {
             <span className="font-bold text-navy">
               내 연봉 실수령액 계산
               <span className="block text-xs font-medium text-faint-blue">
-                2026 세법 기준 5초 계산
+                {CURRENT_RATES_YEAR} 세법 기준 5초 계산
               </span>
             </span>
             <ArrowRight className="w-5 h-5 text-electric" />

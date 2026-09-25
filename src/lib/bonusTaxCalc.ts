@@ -14,9 +14,13 @@
 // 공제라 성과급에 비례해 늘지 않는다 — 세후가 5~19% 과대(연봉 1억 + 성과급 5천만 +538만원)였다.
 //
 // 세율·요율 상수는 lib/taxConstants2026.ts 단일 진실 소스에서 import.
-// ★ 2026 블록을 제자리 수정 금지 — 연도 전환은 calcBonusNet 의 선택 인자 rates 로 한다
-//   (기본값 2026 요율, 인자를 넘기지 않는 호출부는 그대로).
+// ★ 2026 블록을 제자리 수정 금지 — 연도 전환은 calcBonusNet 의 선택 인자 rates 로 한다.
+//   calcBonusNet 의 기본값은 현행 요율 포인터(src/config/currentRates.ts CURRENT_INSURANCE_RATES —
+//   지금은 2026)라 1/1 전환은 포인터 한 줄로 인자 없는 성과급 계산기 전부에 반영된다.
+//   estimateAnnualIncomeTax2026 의 기본값은 2026 고정이다 — 인자 없이 부르는 곳(samsung-bonus/model.ts)이
+//   다른 호출에 2026 요율을 명시하고 있어, 기본값만 포인터로 바꾸면 한 계산 안에서 연도가 섞인다.
 
+import { CURRENT_INSURANCE_RATES } from "@/config/currentRates";
 import {
   INSURANCE_RATES_2026,
   PENSION_BASE_2026,
@@ -41,7 +45,8 @@ export const DEFAULT_BONUS_CREDIT_RATE = 0;
  *
  * 총급여 → 근로소득공제(§47) → 본인 기본공제 150만(§50) → 연금보험료공제(§51의3) →
  * 건강·장기요양·고용보험료 공제(§52) → 누진세율(§55) → 근로소득세액공제(§59, 총급여 기준 한도).
- * 보험료는 2026 요율(국민연금은 기준소득월액 상·하한의 연 환산)로 추정한다.
+ * 보험료는 rates 요율(기본 2026 고정 · 국민연금은 기준소득월액 상·하한의 연 환산)로 추정한다.
+ * 현행 연도 계산은 calcBonusNet 처럼 rates 를 명시해 부른다.
  * 자녀·연금저축·의료비·신용카드 등 개인별 공제는 넣지 않는다.
  *
  * @param grossSalary 총급여 (원)
@@ -102,14 +107,14 @@ export interface BonusNetResult {
  * @param bonusWon 세전 성과급 (원)
  * @param creditRate 추가 세액공제 가정 0~50% (디폴트 0) — 엔진 증가분에서 이 비율만큼 더 뺀다
  * @param applyInsurance 4대보험 추가 부과 적용 여부 (디폴트 true)
- * @param rates 4대보험·지방세 요율 (디폴트 2026) — 연도 전환 시 해당 연도 요율을 넘긴다
+ * @param rates 4대보험·지방세 요율 (디폴트 현행 포인터 CURRENT_INSURANCE_RATES, 지금은 2026)
  */
 export function calcBonusNet(
   salary: number,
   bonusWon: number,
   creditRate = DEFAULT_BONUS_CREDIT_RATE,
   applyInsurance = true,
-  rates: InsuranceRates = INSURANCE_RATES_2026,
+  rates: InsuranceRates = CURRENT_INSURANCE_RATES,
 ): BonusNetResult {
   if (bonusWon <= 0) {
     return {
@@ -152,7 +157,7 @@ export function calcBonusNet(
     const pensionTarget = Math.min(bonusWon, remainingPensionRoom);
     pensionDelta = Math.round(pensionTarget * rates.NATIONAL_PENSION);
 
-    // 건강보험 + 장기요양 (건보의 13.14%) — 상한 없음
+    // 건강보험 + 장기요양 (건보료 × rates.LONG_TERM_CARE_RATIO) — 상한 없음
     const healthBase = bonusWon * rates.HEALTH_INSURANCE;
     const longTermCare = healthBase * rates.LONG_TERM_CARE_RATIO;
     healthDelta = Math.round(healthBase + longTermCare);

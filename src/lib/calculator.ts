@@ -5,13 +5,19 @@
 // 상수 이름만 다르고 값·로직이 100% 동일하게 중복 정의되어 있던 것을 요율
 // 파라미터화된 코어 하나로 통합. 월 소득세는 근로소득 간이세액표(withholdingTaxTable2026)
 // 금액이다 (2026-09-25 A17 — 종전 연간 추정 ÷ 12 모델 대체).
+//
+// 요율 연도 (2026-09-25 N3): calculateNetSalary 는 현행 포인터(src/config/currentRates.ts)를,
+// calculateNetSalary2026 은 2026 요율을 고정으로 쓴다 — /table/2026 주급·시급 표는 1/1 전환 뒤에도
+// 2026 값이어야 하므로 2026 고정 쪽을 부른다.
 
 // [추가] types.ts에서 AdvancedSettings 타입을 import 합니다.
 import type { AdvancedSettings } from "@/app/types";
 import {
  INSURANCE_RATES_2026,
  PENSION_BASE_2026,
+ type InsuranceRates,
 } from "./taxConstants2026";
+import { CURRENT_INSURANCE_RATES } from "@/config/currentRates";
 import { withholdingIncomeTax2026 } from "./withholdingTaxTable2026";
 
 /** 4대보험 요율 파라미터 — 연도별 계산(표의 "전년 대비" 기준선 등)에 사용 */
@@ -30,14 +36,26 @@ export interface NetSalaryRates {
  employment: number;
 }
 
-export const NET_SALARY_RATES_2026: NetSalaryRates = {
- pension: INSURANCE_RATES_2026.NATIONAL_PENSION,
+/**
+ * 연도 요율(InsuranceRates) → 코어 파라미터. 국민연금 기준소득월액 상·하한은 PENSION_BASE_2026
+ * (2026-07~2027-06 적용 — 2027-01 요율 전환과 무관하게 2027-06 까지 유지, 7월 재조정은 별도).
+ */
+export function toNetSalaryRates(rates: InsuranceRates): NetSalaryRates {
+ return {
+ pension: rates.NATIONAL_PENSION,
  pensionMonthlyCapBase: PENSION_BASE_2026.MAX_MONTHLY,
  pensionMonthlyFloorBase: PENSION_BASE_2026.MIN_MONTHLY,
- health: INSURANCE_RATES_2026.HEALTH_INSURANCE,
- ltcRatio: INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO,
- employment: INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE,
-};
+ health: rates.HEALTH_INSURANCE,
+ ltcRatio: rates.LONG_TERM_CARE_RATIO,
+ employment: rates.EMPLOYMENT_INSURANCE,
+ };
+}
+
+/** 2026 요율 고정 — /table/2026 표·전년 대비 기준선 전용 */
+export const NET_SALARY_RATES_2026: NetSalaryRates = toNetSalaryRates(INSURANCE_RATES_2026);
+
+/** 현행 요율 — src/config/currentRates.ts 포인터를 따른다 (1/1 전환 시 자동 반영) */
+export const CURRENT_NET_SALARY_RATES: NetSalaryRates = toNetSalaryRates(CURRENT_INSURANCE_RATES);
 
 const LOCAL_INCOME_TAX_RATE = INSURANCE_RATES_2026.LOCAL_INCOME_TAX_RATIO;
 
@@ -115,7 +133,29 @@ export function calculateNetSalaryWithRates(
 }
 
 // [수정] overtimePay 파라미터를 제거하고 advancedSettings를 받도록 변경
+/** 현행 요율(포인터) 월 실수령 — 홈·급여명세서 등 연도 표기 없는 계산기 */
 export function calculateNetSalary(
+ annualSalary: number,
+ nonTaxableAmount: number = 0,
+ dependents: number = 1,
+ children: number = 0,
+ advancedSettings: AdvancedSettings
+) {
+ return calculateNetSalaryWithRates(
+ annualSalary,
+ nonTaxableAmount,
+ dependents,
+ children,
+ advancedSettings,
+ CURRENT_NET_SALARY_RATES
+ );
+}
+
+/**
+ * 2026 요율 고정 월 실수령 — /table/2026 주급·시급 표(InteractiveTable)용.
+ * 2026-09-25 N3 전에는 calculateNetSalary 의 alias 였다(지금은 두 요율이 같아 값 동일).
+ */
+export function calculateNetSalary2026(
  annualSalary: number,
  nonTaxableAmount: number = 0,
  dependents: number = 1,
@@ -131,6 +171,3 @@ export function calculateNetSalary(
  NET_SALARY_RATES_2026
  );
 }
-
-// 하위 호환 alias — 기존 호출부(generateData.ts 등)가 그대로 사용
-export const calculateNetSalary2026 = calculateNetSalary;

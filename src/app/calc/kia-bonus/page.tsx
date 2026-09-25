@@ -10,6 +10,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -267,7 +268,7 @@ export default function KiaBonusPage() {
               <span>
                 <strong>데이터 출처</strong>: 2026년 8월 기아 임단협 잠정합의(8/25)·찬반투표 가결(8/28)
                 보도(헤럴드경제·ZDNet·워크투데이), 2025년 9월 합의안
-                (녹색경제·전자신문·지피코리아·삼프로TV). 2026 세법 반영.
+                (녹색경제·전자신문·지피코리아·삼프로TV). {CURRENT_RATES_YEAR} 세법 반영.
               </span>
             </p>
           </footer>

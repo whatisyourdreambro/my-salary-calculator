@@ -1,12 +1,12 @@
 {
-  "note": "요율·최저임금·실업급여 리터럴 하드코딩 허용목록 — verify-tax-constants.mjs 가 대조. 표시용 텍스트(설명·FAQ 속 '4.75%'·'10,320원' 등)와 아직 정본 미수렴 인라인 계산기를 등재한다. 2027 요율·최저임금 개정 시 이 목록의 파일 전량을 함께 갱신할 것. 인라인 계산기 4곳(calc/holiday-bonus·incentive-tax·year-end-bonus·year-end-bonus-tax)은 2026-09-25 A18 에서 bonusTaxCalc 정본으로 수렴해 목록에서 제거했다. CompanySalaryTable·tools/finance/bonus 는 2026-09-06 전수검사에서 정본(TaxLogic·earnedIncomeTaxCredit2026)으로 수렴 완료해 목록에서 제거했다. salary-raise-2026/Client.tsx 도 2026-09-25 감사(CALC-06)에서 TaxLogic.calculateSalary2026 으로 수렴해 제거했다.",
+  "note": "요율·최저임금·실업급여 리터럴 하드코딩 허용목록 — verify-tax-constants.mjs 가 대조. 표시용 텍스트(설명·FAQ 속 '4.75%'·'10,320원' 등)와 아직 정본 미수렴 인라인 계산기를 등재한다. 2027 요율·최저임금 개정 시 이 목록의 파일 전량을 함께 갱신할 것. 인라인 계산기 4곳(calc/holiday-bonus·incentive-tax·year-end-bonus·year-end-bonus-tax)은 2026-09-25 A18 에서 bonusTaxCalc 정본으로 수렴해 목록에서 제거했다. CompanySalaryTable·tools/finance/bonus 는 2026-09-06 전수검사에서 정본(TaxLogic·earnedIncomeTaxCredit2026)으로 수렴 완료해 목록에서 제거했다. salary-raise-2026/Client.tsx 도 2026-09-25 감사(CALC-06)에서 TaxLogic.calculateSalary2026 으로 수렴해 제거했다. tools/finance/bonus/page.tsx 는 2026-09-25 N3 에서 인라인 4대보험 요율·연금 연 상한 리터럴을 현행 요율 포인터(src/config/currentRates.ts CURRENT_INSURANCE_RATES)·PENSION_BASE_2026 으로 바꾸고 공제 라벨도 CURRENT_RATE_LABELS 로 파생해 목록에서 제거했다.",
+  "note_current_rates": "2026-09-25 N3: 연도 표기가 없는 상시 표면의 요율 문구(4.75% 등)와 월 실수령 엔진 기본값은 src/config/currentRates.ts 포인터에서 나온다 — 1/1 전환은 CURRENT_RATES_YEAR 한 줄. 이 목록의 파일은 연도 표기 페이지(2026 요율을 설명하는 글)이거나 최저임금·실업급여 표시 텍스트라 포인터 전환과 별개로 둔다(런북 docs/next-upgrade-plan-2026-09-11.md §5).",
   "note_format": "항목은 두 형식을 섞어 쓸 수 있으나 현재는 전부 객체 형식이다. 문자열 = 모든 패턴 허용(구 형식 — 새 항목에 쓰지 말 것). 객체 { 경로: [패턴명…] } = 나열한 패턴만 허용(2026-09-12 S2-1 SI-08 부터). 패턴명은 verify-tax-constants.mjs 의 PATTERNS name 과 일치해야 한다. 요율 8곳은 2026-09-12 리뷰에서 객체 형식으로 전환했다 — 문자열 형식은 최저임금·실업급여 패턴까지 묵시 허용해, 그 파일에 새 10,320 같은 리터럴이 들어와도 잡지 못했다.",
   "note_minimum_wage": "2026-09-12 S2-1 SI-08: 아래 객체 항목 20곳은 전부 표시용 텍스트(메타 설명·FAQ·본문·용어사전·검색 인덱스·가이드 본문)만 갖는다 — 표시 텍스트는 허용하되, 계산·기본값·프리셋은 반드시 src/config/minimumWage.ts(MINIMUM_WAGE_2026·MONTHLY_HOURS)·src/config/unemploymentBenefit.ts(UNEMPLOYMENT_BENEFIT_2026·unemploymentDailyLowerBound)를 import 할 것. 목록은 파일 단위라 같은 파일 안의 계산 리터럴 회귀는 잡지 못하므로, 이 파일들의 계산 라인은 src/lib/__tests__/wageConversion.test.ts 의 소스 스캔이 별도로 지킨다.",
   "note_guides_meta": "2026-09-25 B9: src/lib/guidesMeta.generated.ts 는 scripts/gen-guides-meta.ts 가 가이드 정본에서 뽑은 카드 메타(제목·설명) 산출물이다. 정본 가이드(hot-news-2026-deep-dive.ts)는 구직급여 상·하한을 src/config/unemploymentBenefit.ts 상수로 끼워 넣고, 산출물에는 그 표시 텍스트만 남는다 — 손으로 고치지 말고 정본 상수를 바꾼 뒤 재생성할 것.",
   "files": [
     { "src/app/health-insurance-fee-2026/HealthInsuranceFeeClient.tsx": ["건강보험 3.595%", "장기요양 13.14%"] },
     { "src/app/social-insurance-rates-2026/page.tsx": ["국민연금 4.75%", "건강보험 3.595%", "장기요양 13.14%", "연금 상한 월 659만"] },
-    { "src/app/tools/finance/bonus/page.tsx": ["국민연금 4.75%", "건강보험 3.595%", "장기요양 13.14%", "연금 상한 연 7,908만"] },
     { "src/app/calc/page.tsx": ["최저시급 10,320"] },
     { "src/app/minimum-wage-2026/page.tsx": ["최저시급 10,320", "최저임금 월 2,156,880"] },
     { "src/app/minimum-wage-2027/page.tsx": ["최저시급 10,320", "최저임금 월 2,156,880"] },
@@ -28,5 +28,41 @@
     { "src/lib/simpleCalculators/batch2.ts": ["최저시급 10,320", "실업급여 일 상한 68,100", "실업급여 일 하한 66,048"] },
     { "src/lib/simpleCalculators/enrichments.ts": ["최저시급 10,320", "최저임금 월 2,156,880", "실업급여 일 상한 68,100", "실업급여 일 하한 66,048"] },
     { "src/lib/simpleCalculators/enrichments-ext-a.ts": ["최저시급 10,320", "최저임금 월 2,156,880"] }
-  ]
+  ],
+  "switch_scan": {
+    "note": "2026-09-25 N3 리뷰 반영: 1/1 요율 전환 표기 스캔 목록 — verify-tax-constants.mjs 가 주석 아닌 줄의 '2026년 세법·모델·요율'·'국민연금 4.75%' 표기를 찾아 대조한다. 파일 경로에 2026/2027 이 든 파일은 자동으로 연도 고정. 포인터가 계산을 바꾸는 표면은 여기 올리지 말고 CURRENT_RATES_YEAR·CURRENT_RATE_LABELS 로 파생할 것. fixed = 전환 뒤에도 그대로(연도 고정·포인터 무관), manual = 전환 당일(또는 그 전) 문자열 교체 — 포인터 2027 에서 표기가 남아 있으면 verify:tax 실패. 런북 docs/next-upgrade-plan-2026-09-11.md §5-1 P-4.",
+    "fixed": {
+      "src/app/health-insurance-dependent/page.tsx": "링크 라벨 '2026 4대보험 요율표' — 연도 페이지 /social-insurance-rates-2026 로 가는 링크",
+      "src/config/seasonLinks.ts": "푸터 링크 라벨 '2026 4대보험 요율' — 연도 페이지 링크",
+      "src/lib/searchIndex.ts": "검색 항목 '2026 4대보험 요율' — 연도 페이지 링크",
+      "src/lib/simpleCalculators/enrichments.ts": "earned-income-tax-quick 산식 설명 — 2026 간이세액표 근사라 2026 요율 고정(batch1 과 같음)",
+      "src/app/calc/vacation-pay/page.tsx": "메타 설명 '2026년 세법 적용' — 이 계산기는 4대보험 약 8.5% 고정 근사라 포인터 무관(설명 연도는 세법 연도 롤오버에서)",
+      "src/app/tools/finance/dividend-tax/": "'2026 세법 기준' 배지 — 배당소득세, 4대보험 포인터 무관(세법 연도 롤오버에서 별도)",
+      "src/app/tools/finance/freelance-tax/": "'2026 세법 기준' 배지 — 종합소득세(3.3%), 4대보험 포인터 무관",
+      "src/app/tools/finance/severance/": "'2026 세법' 배지·퇴직소득세 설명 — 4대보험 포인터 무관",
+      "src/app/tools/finance/stock-tax/": "'2026 세법 기준' 배지 — 양도소득세, 4대보험 포인터 무관",
+      "src/app/tools/real-estate/acquisition-tax/": "'2026 세법 기준' 배지 — 취득세, 4대보험 포인터 무관",
+      "src/app/tools/real-estate/gift-tax/": "'2026 세법 기준' 배지 — 증여세, 4대보험 포인터 무관",
+      "src/lib/guides/supplements.ts": "간호사 가이드 보강 — 본문 2026년 요율 표(legacy-rewrite-2)를 가리키는 연도 명시 문장. 그 표를 2027 로 다시 계산하면 함께 고친다",
+      "src/lib/guidesMeta.generated.ts": "gen-guides-meta 산출물 — 손으로 고치지 않는다. 정본 가이드 파일(manual)을 고친 뒤 재생성하면 따라간다"
+    },
+    "manual": {
+      "src/app/calc/holiday-bonus/page.tsx": "메타 설명 '2026년 세법 기준' — /calc 제목·설명 동결(10/10) 뒤 CURRENT_RATES_YEAR 로 파생하거나 전환 당일 교체(본문은 파생 완료)",
+      "src/app/calc/samsung-bonus/Client.tsx": "라벨 '국민연금 (4.75% …)' — P-3 삼성 배치와 함께. 남는 '2026 4대보험 요율표' 링크 라벨은 연도 페이지 링크라 그때 fixed 로 옮긴다",
+      "src/app/embed/page.tsx": "FAQ '공통적으로 2026년 세법 기준' — 연말정산 위젯은 2026 귀속 고정이라 파생 불가, 전환 당일 문장 교체",
+      "src/app/qna/layout.tsx": "메타 설명 '2026년 세법 기준' — qnaData 의 요율·금액(P-4)과 함께 교체",
+      "src/app/region/[slug]/page.tsx": "메타 설명 '2026 세법 기준' — 제목 '평균 연봉 2026' 과 함께 연도 롤오버",
+      "src/app/tools/finance/page.tsx": "금융 계산기 허브 설명·배지·seoHeading '2026년 세법' — 13종 중 성과급만 포인터, 연도 롤오버 때 함께",
+      "src/data/glossaryData.ts": "용어집 국민연금 stat2026·example300 계산 예시·요율 문장 — P-4",
+      "src/data/qnaData.ts": "QnA 국민연금 4.75%·월 실수령 범위 — P-4 (guideFactCorrections.test.ts 단언 함께)",
+      "src/lib/simpleCalculators/enrichments-ext-b.ts": "employee-cost-quick FAQ '국민연금(4.75%)' — P-4",
+      "src/lib/guides/hot-bonus-tax-complete.ts": "상시 성과급 가이드 본문의 현행 요율 4.75% 표기 — 고친 뒤 gen-guides-meta 재실행",
+      "src/lib/guides/hot-keywords-deepdive.ts": "four-major-insurance-complete 등 상시 가이드의 4.75% 표 — 고친 뒤 gen-guides-meta 재실행",
+      "src/lib/guides/hot-keywords-deepdive-en.ts": "영문 4대보험 가이드 National Pension 4.75% — 고친 뒤 gen-guides-meta 재실행",
+      "src/lib/guides/legacy-rewrite-1.ts": "상시 가이드 '국민연금 4.75%' — 고친 뒤 gen-guides-meta 재실행",
+      "src/lib/guides/legacy-rewrite-2.ts": "연봉 인상·간호사 가이드의 2026 요율 문장·표 — 표를 2027 로 다시 계산할지 연도 명시로 둘지 결정, 고친 뒤 gen-guides-meta 재실행",
+      "src/lib/guides/lifecycle-deepdive.ts": "first-job-financial-setup·retirement-planning-30s 의 4.75% — 고친 뒤 gen-guides-meta 재실행",
+      "src/lib/guides/tax-deepdive.ts": "social-insurance-reduction '2026년 요율: 국민연금 4.75%' — 상시 글이라 전환 때 교체(real-estate-capital-gains-2026 설명의 '2026년 세법' 은 연도 글), 고친 뒤 gen-guides-meta 재실행"
+    }
+  }
 }

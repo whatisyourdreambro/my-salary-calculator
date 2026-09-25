@@ -192,7 +192,9 @@ const TAX: CalculatorDef[] = [
  const fam = Math.max(1, Math.round(dependents)); // 본인 포함 공제대상 가족 수
  const earnedDeduction = earnedIncomeDeduction2026(yearly);
  const personal = fam * 1500000; // 인적공제 1인 150만
- // 연금보험료공제 — 4.75%, 기준소득월액 상한(월 659만) 연 환산 클램프
+ // 연금보험료공제 — 4.75%, 기준소득월액 상한(월 659만) 연 환산 클램프.
+ // ★ 2026 요율 고정(현행 포인터 아님, 2026-09-25 N3): 이 계산기는 2026 간이세액표의 근사라
+ //   1/1 연금 요율 전환과 무관하다 — 간이세액표(소득세법 시행령 별표2) 개정 때 표와 함께 갱신.
  const pensionDeduction =
  Math.min(yearly, PENSION_BASE_2026.MAX_MONTHLY * 12) *
  INSURANCE_RATES_2026.NATIONAL_PENSION;

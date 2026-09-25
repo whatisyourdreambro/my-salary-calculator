@@ -2,6 +2,7 @@
 
 import type { Metadata } from "next";
 import { buildToolMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR, CURRENT_RATE_LABELS } from "@/config/currentRates";
 import {
   softwareApplicationLd,
   autoBreadcrumbLd,
@@ -112,9 +113,9 @@ export default function HolidayBonusPage() {
             <ul className="space-y-2 text-muted-blue dark:text-canvas-300">
               <li><strong>소득세</strong>: 누진세율 6~45% (연봉 합산 기준)</li>
               <li><strong>지방소득세</strong>: 소득세의 10%</li>
-              <li><strong>국민연금</strong>: 4.75% (연봉 7,908만원 상한, 2026.7~2027.6)</li>
-              <li><strong>건강보험</strong>: 3.595% + 장기요양 0.4724%</li>
-              <li><strong>고용보험</strong>: 0.9%</li>
+              <li><strong>국민연금</strong>: {CURRENT_RATE_LABELS.pension} (연봉 7,908만원 상한, 2026.7~2027.6)</li>
+              <li><strong>건강보험</strong>: {CURRENT_RATE_LABELS.health} + 장기요양 {CURRENT_RATE_LABELS.ltcOfIncome}</li>
+              <li><strong>고용보험</strong>: {CURRENT_RATE_LABELS.employment}</li>
             </ul>
 
             {/* 본문 중간 광고 */}
@@ -153,7 +154,7 @@ export default function HolidayBonusPage() {
           <div className="rounded-2xl p-5 mb-8 flex gap-3 bg-electric-5 border border-electric-20">
             <Info size={18} className="text-electric flex-shrink-0 mt-1" />
             <p className="text-xs text-muted-blue dark:text-canvas-300 leading-relaxed">
-              본 계산은 단일 직장 근로자 기준 2026년 세법으로 추정한 값입니다. 부양가족·비과세 항목 등에
+              본 계산은 단일 직장 근로자 기준 {CURRENT_RATES_YEAR}년 세법으로 추정한 값입니다. 부양가족·비과세 항목 등에
               따라 실제 금액은 다를 수 있습니다.
             </p>
           </div>

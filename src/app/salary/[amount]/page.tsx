@@ -5,6 +5,8 @@ import Link from "@/components/AppLink";
 import { notFound } from "next/navigation";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
 import { SALARY_CALCULATION_METHOD_HREF, SALARY_MODEL_2026 } from "@/lib/salaryModelContent";
+// 요율 문구·연도 표기는 현행 요율 포인터 — 1/1 전환 시 계산(calculateSalary2026 기본 요율)과 함께 바뀐다 (2026-09-25 N3)
+import { CURRENT_RATES_YEAR, CURRENT_RATE_LABELS } from "@/config/currentRates";
 import SalaryTierCard from "@/components/SalaryTierCard";
 import SalaryResultCard from "@/components/SalaryResultCard";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -131,7 +133,7 @@ function buildSalaryFaq(amount: number, monthlyNet: number, totalDeduction: numb
  return [
  {
  question: questions[0],
- answer: `연봉 ${amountLabel}의 2026년 예상 월 실수령액은 약 ${netManwon}만원입니다. 보험료와 세금을 포함한 월 공제액은 약 ${deductionManwon}만원입니다 (${SALARY_MODEL_2026.defaultConditions} 기준). ${SALARY_MODEL_2026.incomeTaxMethod} ${SALARY_MODEL_2026.limitation}`,
+ answer: `연봉 ${amountLabel}의 ${CURRENT_RATES_YEAR}년 예상 월 실수령액은 약 ${netManwon}만원입니다. 보험료와 세금을 포함한 월 공제액은 약 ${deductionManwon}만원입니다 (${SALARY_MODEL_2026.defaultConditions} 기준). ${SALARY_MODEL_2026.incomeTaxMethod} ${SALARY_MODEL_2026.limitation}`,
  },
  {
  question: questions[1],
@@ -179,7 +181,7 @@ export default function SalaryAmountPage({ params }: Props) {
 
  const howTo = howToLd({
  name: `연봉 ${formattedAmount} 실수령액 계산하는 방법`,
- description: `연봉 ${formattedAmount}의 2026년 예상 월 수령액 계산 과정. ${SALARY_MODEL_2026.defaultConditions} 기준. ${SALARY_MODEL_2026.limitation}`,
+ description: `연봉 ${formattedAmount}의 ${CURRENT_RATES_YEAR}년 예상 월 수령액 계산 과정. ${SALARY_MODEL_2026.defaultConditions} 기준. ${SALARY_MODEL_2026.limitation}`,
  totalTime: "PT2M",
  steps: [
  {
@@ -188,7 +190,7 @@ export default function SalaryAmountPage({ params }: Props) {
  },
  {
  name: "4대보험 공제",
- text: "비과세를 뺀 월 보수에 국민연금 4.75%(기준소득월액 상·하한 적용), 건강보험 3.595%, 고용보험 0.9%를 적용합니다. 장기요양보험은 건강보험료의 13.14%로 계산합니다.",
+ text: `비과세를 뺀 월 보수에 국민연금 ${CURRENT_RATE_LABELS.pension}(기준소득월액 상·하한 적용), 건강보험 ${CURRENT_RATE_LABELS.health}, 고용보험 ${CURRENT_RATE_LABELS.employment}를 적용합니다. 장기요양보험은 건강보험료의 ${CURRENT_RATE_LABELS.ltcRatio}로 계산합니다.`,
  },
  {
  name: "간이세액표 소득세 조회",
@@ -213,7 +215,7 @@ export default function SalaryAmountPage({ params }: Props) {
  breadcrumbLd(breadcrumbItems),
  softwareApplicationLd({
  name: `연봉 ${formattedAmount} 실수령액 계산기`,
- description: `연봉 ${formattedAmount}의 2026년 모델 기준 예상 월 실수령액·세금 공제 분석`,
+ description: `연봉 ${formattedAmount}의 ${CURRENT_RATES_YEAR}년 모델 기준 예상 월 실수령액·세금 공제 분석`,
  url: `/salary/${params.amount}`,
  }),
  faqLd(faqItems),
@@ -231,7 +233,7 @@ export default function SalaryAmountPage({ params }: Props) {
  <div className="flex flex-col items-center lg:items-stretch">
  <div className="flex items-center gap-2 mb-2 self-center">
  <span className="bg-canvas-dark text-electric text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">
- 2026 REPORT
+ {CURRENT_RATES_YEAR} REPORT
  </span>
  <Sparkles size={14} className="text-[#FFD700]" />
  </div>

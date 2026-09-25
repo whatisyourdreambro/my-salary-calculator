@@ -17,6 +17,7 @@ vi.mock("@/components/ResultSharePanel", () => ({ default: () => null }));
 
 import { generateMetadata } from "@/app/share/[data]/page";
 import { buildSalaryAmountMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import { decodeSharedSalary, encodeSalarySharePayload } from "@/lib/salarySharePayload";
 import { OG_URL_VERSION } from "@/lib/ogUrlVersion";
 
@@ -73,7 +74,8 @@ describe("/salary/[amount] og:image (buildSalaryAmountMetadata)", () => {
     const images = (meta.openGraph as { images: OgImage[] }).images;
     expect(images[0].url).toBe(`${SITE}/api/og?type=salary&amount=75500000&net=5070000&v=${OG_URL_VERSION}`);
     expect((meta.twitter as { images: string[] }).images).toEqual([images[0].url]);
-    expect(meta.title).toEqual({ absolute: "연봉 7,550만원 실수령액 월 507만원 (2026 세후 월급) | 머니샐러리" });
+    // 연도 표기 = 현행 요율 포인터 (2026-09-25 N3 — 지금은 '2026 세후 월급')
+    expect(meta.title).toEqual({ absolute: `연봉 7,550만원 실수령액 월 507만원 (${CURRENT_RATES_YEAR} 세후 월급) | 머니샐러리` });
   });
 
   it("net 이 없으면 종전처럼 net 생략", () => {

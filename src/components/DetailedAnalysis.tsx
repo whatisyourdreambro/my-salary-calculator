@@ -12,6 +12,7 @@ import {
  Legend,
 } from "recharts";
 import type { CalculationResult } from "@/lib/calculator";
+import { CURRENT_RATE_LABELS } from "@/config/currentRates";
 import { TrendingDown, AlertTriangle, ShieldCheck, Award } from "lucide-react";
 
 const formatNumber = (num: number) => num.toLocaleString('ko-KR');
@@ -48,10 +49,10 @@ export default function DetailedAnalysis({
  ];
 
  const deductionDetails = [
- { name: "국민연금", value: result.pension, rate: "4.75%" },
- { name: "건강보험", value: result.health, rate: "3.595%" },
- { name: "장기요양", value: result.longTermCare, rate: "건강보험의 13.14%" },
- { name: "고용보험", value: result.employment, rate: "0.9%" },
+ { name: "국민연금", value: result.pension, rate: CURRENT_RATE_LABELS.pension },
+ { name: "건강보험", value: result.health, rate: CURRENT_RATE_LABELS.health },
+ { name: "장기요양", value: result.longTermCare, rate: `건강보험의 ${CURRENT_RATE_LABELS.ltcRatio}` },
+ { name: "고용보험", value: result.employment, rate: CURRENT_RATE_LABELS.employment },
  { name: "소득세", value: result.incomeTax, rate: "소득 구간별" },
  { name: "지방소득세", value: result.localTax, rate: "소득세의 10%" },
  ].filter((item) => item.value > 0);

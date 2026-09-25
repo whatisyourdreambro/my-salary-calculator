@@ -5,6 +5,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR, CURRENT_RATE_LABELS } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -55,7 +56,7 @@ const FAQ_ITEMS = [
   {
     question: "성과급 세금은 어떻게 떼나요?",
     answer:
-      "성과급은 근로소득에 합산되어 누진세율(6~45%) + 지방세(소득세의 10%) + 4대보험(국민연금 4.75%, 건강 3.595%, 장기요양·고용) 부과. 국민연금은 보수월액 상한(2026.7~2027.6 연 7,908만원) 적용. 본 계산기는 marginal 방식(연봉만 vs 연봉+성과급 합산 세금 차이)으로 정확하게 계산.",
+      `성과급은 근로소득에 합산되어 누진세율(6~45%) + 지방세(소득세의 10%) + 4대보험(국민연금 ${CURRENT_RATE_LABELS.pension}, 건강 ${CURRENT_RATE_LABELS.health}, 장기요양·고용) 부과. 국민연금은 보수월액 상한(2026.7~2027.6 연 7,908만원) 적용. 본 계산기는 marginal 방식(연봉만 vs 연봉+성과급 합산 세금 차이)으로 정확하게 계산.`,
   },
   {
     question: "포스코홀딩스와 포스코의 차이는?",
@@ -287,7 +288,7 @@ export default function PoscoBonusPage() {
               <Info className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
               <span>
                 <strong>데이터 출처</strong>: 2025-04 포스코 직고용 발표(국민일보·부산일보),
-                잡플래닛·인크루트 연봉 데이터, 포스코 사업보고서. 2026 세법 반영.
+                잡플래닛·인크루트 연봉 데이터, 포스코 사업보고서. {CURRENT_RATES_YEAR} 세법 반영.
               </span>
             </p>
           </footer>

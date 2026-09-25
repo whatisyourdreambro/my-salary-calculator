@@ -6,6 +6,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -299,7 +300,7 @@ export default function SamsungBiologicsBonusPage() {
                 (2025-12-27)·산경투데이·컨슈머타임스(2025-12-26) / OPI 2024
                 실적분 50%·TAI 2025 상반기 100% — 한국경제·데일리안·뉴데일리경제
                 (2025-07-08) / 평균 연봉 1억 1,400만원 — MTN 머니투데이방송
-                (2026-03-19, 2025년 사업보고서 DART 인용). 2026 세법 반영.
+                (2026-03-19, 2025년 사업보고서 DART 인용). {CURRENT_RATES_YEAR} 세법 반영.
               </span>
             </p>
           </footer>

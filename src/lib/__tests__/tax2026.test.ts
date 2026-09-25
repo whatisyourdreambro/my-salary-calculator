@@ -3,6 +3,9 @@
 // 목적: 2027 요율 개정 때 taxConstants2026 정본과 각 엔진이 함께 움직이는지,
 // 경계값(세율 구간·연금 상한·공제 캡)이 회귀하지 않는지 잡는다.
 // golden 값은 현행법 기준 — 법 개정으로 의도적으로 바뀌면 함께 갱신할 것.
+// 2026-09-25 N3: 현행 요율 포인터(src/config/currentRates.ts)를 따르는 엔진(calculator·TaxLogic 기본값·
+// global·freelancer·calcBonusNet)은 기대값을 CURRENT_INSURANCE_RATES 로, /table/2026 처럼 2026 고정인
+// 표면은 INSURANCE_RATES_2026 으로 계산한다 — 1/1 포인터 전환 뒤에도 이 파일은 그대로 통과해야 한다.
 import { describe, it, expect } from "vitest";
 
 import {
@@ -19,7 +22,16 @@ import {
 import {
   calculateNetSalary,
   calculateNetSalary2026,
+  calculateNetSalaryWithRates,
+  CURRENT_NET_SALARY_RATES,
+  NET_SALARY_RATES_2026,
+  toNetSalaryRates,
 } from "@/lib/calculator";
+import {
+  CURRENT_INSURANCE_RATES,
+  CURRENT_RATES_YEAR,
+  INSURANCE_RATES_BY_YEAR,
+} from "@/config/currentRates";
 import { krSocialInsurance } from "@/lib/global/taxEngine";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
 import { generateAnnualSalaryTableData2026 } from "@/lib/generateData2026";
@@ -124,14 +136,15 @@ describe("근로소득세액공제 (소득세법 §59)", () => {
 describe("글로벌 엔진 4대보험 (global/taxEngine.ts)", () => {
   it("국민연금 하한 클램프 — 월 소득이 하한 미만이어도 하한 기준 부과", () => {
     const gross = 3_000_000; // 월 25만 < 하한 41만
+    const r = CURRENT_INSURANCE_RATES; // global 엔진은 현행 포인터
     const expected =
       PENSION_BASE_2026.MIN_MONTHLY *
         12 *
-        INSURANCE_RATES_2026.NATIONAL_PENSION +
+        r.NATIONAL_PENSION +
       gross *
-        INSURANCE_RATES_2026.HEALTH_INSURANCE *
-        (1 + INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO) +
-      gross * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE;
+        r.HEALTH_INSURANCE *
+        (1 + r.LONG_TERM_CARE_RATIO) +
+      gross * r.EMPLOYMENT_INSURANCE;
     expect(krSocialInsurance(gross)).toBeCloseTo(expected, 6);
   });
 
@@ -142,17 +155,26 @@ describe("글로벌 엔진 4대보험 (global/taxEngine.ts)", () => {
 });
 
 describe("실수령액 엔진 (calculator.ts 단일 코어)", () => {
-  it("calculateNetSalary2026 은 calculateNetSalary 의 alias 다", () => {
-    expect(calculateNetSalary2026).toBe(calculateNetSalary);
+  it("calculateNetSalary 는 현행 포인터 요율, calculateNetSalary2026 은 2026 고정 요율 (N3)", () => {
+    expect(CURRENT_NET_SALARY_RATES).toEqual(toNetSalaryRates(INSURANCE_RATES_BY_YEAR[CURRENT_RATES_YEAR]));
+    expect(NET_SALARY_RATES_2026).toEqual(toNetSalaryRates(INSURANCE_RATES_2026));
+    for (const salary of [3_000_000, 50_000_000, 200_000_000]) {
+      expect(calculateNetSalary(salary, 2_400_000, 1, 0, adv)).toEqual(
+        calculateNetSalaryWithRates(salary, 2_400_000, 1, 0, adv, CURRENT_NET_SALARY_RATES)
+      );
+      expect(calculateNetSalary2026(salary, 2_400_000, 1, 0, adv)).toEqual(
+        calculateNetSalaryWithRates(salary, 2_400_000, 1, 0, adv, NET_SALARY_RATES_2026)
+      );
+    }
   });
 
   it("국민연금 기준소득월액 상한이 적용된다", () => {
     const r = calculateNetSalary(200_000_000, 0, 1, 0, adv);
     expect(r.pension).toBe(
       Math.round(
-        PENSION_BASE_2026.MAX_MONTHLY * INSURANCE_RATES_2026.NATIONAL_PENSION
+        PENSION_BASE_2026.MAX_MONTHLY * CURRENT_INSURANCE_RATES.NATIONAL_PENSION
       )
-    ); // 6,590,000 × 4.75% = 313,025
+    ); // 2026 요율: 6,590,000 × 4.75% = 313,025
   });
 
   it("국민연금 기준소득월액 하한(월 41만)이 적용된다", () => {
@@ -160,9 +182,9 @@ describe("실수령액 엔진 (calculator.ts 단일 코어)", () => {
     const r = calculateNetSalary(3_000_000, 0, 1, 0, adv);
     expect(r.pension).toBe(
       Math.round(
-        PENSION_BASE_2026.MIN_MONTHLY * INSURANCE_RATES_2026.NATIONAL_PENSION
+        PENSION_BASE_2026.MIN_MONTHLY * CURRENT_INSURANCE_RATES.NATIONAL_PENSION
       )
-    ); // 410,000 × 4.75% = 19,475
+    ); // 2026 요율: 410,000 × 4.75% = 19,475
   });
 
   it("하한 경계(월 41만 정확히)에서는 실소득 기준과 하한 기준이 일치한다", () => {
@@ -170,7 +192,7 @@ describe("실수령액 엔진 (calculator.ts 단일 코어)", () => {
     const r = calculateNetSalary(annual, 0, 1, 0, adv);
     expect(r.pension).toBe(
       Math.round(
-        PENSION_BASE_2026.MIN_MONTHLY * INSURANCE_RATES_2026.NATIONAL_PENSION
+        PENSION_BASE_2026.MIN_MONTHLY * CURRENT_INSURANCE_RATES.NATIONAL_PENSION
       )
     );
   });
@@ -214,9 +236,11 @@ describe("/table/2026 표 데이터 (generateData2026 — 정식 엔진 통일)"
     expect(at(100_000_000).monthlyNet).toBe(6_530_913);
   });
 
-  it("표 행 = 상세 페이지(/salary/[amount]) 값과 정확히 일치 (같은 함수·같은 기준)", () => {
+  it("표 행 = 상세 페이지(/salary/[amount])와 같은 함수·같은 기준 — 요율은 2026 고정 (N3)", () => {
+    // 1/1 포인터 전환 뒤 상세 페이지는 현행 요율, 이 표는 2026 요율 — 그래서 2026 을 명시해 비교한다.
+    // 지금(포인터 = 2026)은 기본 호출과도 같다.
     const r = rows.find((x) => x.preTax === 50_000_000)!;
-    const core = calculateSalary2026(50_000_000, 200_000, 1, 0);
+    const core = calculateSalary2026(50_000_000, 200_000, 1, 0, INSURANCE_RATES_2026);
     expect(r.health).toBe(core.healthInsurance + core.longTermCare);
     expect(r.incomeTax).toBe(core.incomeTax + core.localIncomeTax);
     expect(r.monthlyNet).toBe(core.netPay);
@@ -316,8 +340,8 @@ describe("프리랜서/알바 계산기 (freelancerCalculator)", () => {
     const r = calculatePartTimeSalary(income, "part_time");
     const expectedLtc = Math.round(
       income *
-        INSURANCE_RATES_2026.HEALTH_INSURANCE *
-        INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO
+        CURRENT_INSURANCE_RATES.HEALTH_INSURANCE *
+        CURRENT_INSURANCE_RATES.LONG_TERM_CARE_RATIO
     );
     expect(r.longTermCare).toBe(expectedLtc);
     expect(r.longTermCare).toBeGreaterThan(0);
@@ -335,7 +359,7 @@ describe("성과급 세후 계산 (bonusTaxCalc)", () => {
     const room = PENSION_BASE_2026.MAX_ANNUAL - salary; // 9,080,000
     const r = calcBonusNet(salary, bonus);
     expect(r.pensionDelta).toBe(
-      Math.round(room * INSURANCE_RATES_2026.NATIONAL_PENSION)
+      Math.round(room * CURRENT_INSURANCE_RATES.NATIONAL_PENSION)
     );
   });
 });
