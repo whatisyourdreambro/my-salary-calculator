@@ -10,6 +10,9 @@ import {
   earnedIncomeTaxCredit2026,
   childTaxCredit2026,
   INSURANCE_RATES_2026,
+  PENSION_ACCOUNT_CREDIT_2026,
+  MEDICAL_CREDIT_2026,
+  EDUCATION_CREDIT_2026,
   RENT_CREDIT_2026,
 } from "@/lib/taxConstants2026";
 import { calcCardDeduction2026 } from "@/lib/cardDeduction2026";
@@ -57,6 +60,13 @@ export interface TaxResult {
  taxBase: number; // 과세표준
  grossSalary: number; // 총급여
  totalDeductions: number; // 총 공제액 (소득공제 + 세액공제)
+
+ // 상세 분석 리포트용 단계별 값 (2026-09-25). 종전 리포트는 최종 결과에서 역산해
+ // 근로소득공제·산출세액을 틀리게 보여줬고 세액공제 합계는 늘 0원이었다.
+ earnedIncomeDeduction: number; // 근로소득공제
+ incomeDeduction: number; // 과세표준에 실제 반영된 소득공제 합계 (근로소득금액 한도)
+ calculatedTax: number; // 산출세액
+ taxCredit: number; // 결정세액에 실제 반영된 세액공제 합계 (산출세액 한도)
 }
 
 // 2026년 귀속 연말정산 계산 함수
@@ -117,13 +127,18 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  // 자녀세액공제 (소득세법 §59의2, 2025 개정) — 첫째 25만·둘째 30만·셋째+ 40만
  const childTaxCredit = childTaxCredit2026(inputs.children);
 
+ // 연금계좌세액공제 — PENSION_ACCOUNT_CREDIT_2026 정본 (화면 입력이 연금저축/IRP 합산
+ // 1칸이라 연금저축 단독 600만 한도는 구분하지 않는다)
  const pensionAccountCredit =
- Math.min(inputs.pensionSavings + inputs.irp, 9000000) *
- (grossSalary <= 55000000 ? 0.15 : 0.12);
+ Math.min(inputs.pensionSavings + inputs.irp, PENSION_ACCOUNT_CREDIT_2026.TOTAL_CAP) *
+ (grossSalary <= PENSION_ACCOUNT_CREDIT_2026.SALARY_15_MAX
+ ? PENSION_ACCOUNT_CREDIT_2026.RATE_HIGH
+ : PENSION_ACCOUNT_CREDIT_2026.RATE_LOW);
  const insuranceCredit = inputs.lifeInsurance * 0.12;
  const medicalCredit =
- Math.max(0, inputs.medicalExpenses - grossSalary * 0.03) * 0.15;
- const educationCredit = inputs.educationExpenses * 0.15;
+ Math.max(0, inputs.medicalExpenses - grossSalary * MEDICAL_CREDIT_2026.THRESHOLD_RATIO) *
+ MEDICAL_CREDIT_2026.RATE;
+ const educationCredit = inputs.educationExpenses * EDUCATION_CREDIT_2026.RATE;
  // 월세 세액공제 — 총급여 8,000만 초과는 대상 아님 (RENT_CREDIT_2026 정본,
  // 2026-08-23 상한 미적용 버그 수정)
  const rentCredit =
@@ -155,12 +170,22 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  const determinedTax = Math.max(0, calculatedTax - totalTaxCredit);
  const finalRefund = inputs.prepaidTax - determinedTax;
 
+ // 리포트 산식이 원 단위로 맞아떨어지도록 반올림된 값끼리 차감한다
+ // (총급여 − 근로소득공제 − 소득공제 = 과세표준, 산출세액 − 세액공제 = 결정세액)
+ const roundedEarnedIncomeDeduction = Math.round(earnedIncomeDeduction);
+ const roundedTaxBase = Math.round(taxBase);
+ const roundedDeterminedTax = Math.round(determinedTax);
+
  return {
  finalRefund: Math.round(finalRefund),
- determinedTax: Math.round(determinedTax),
- taxBase: Math.round(taxBase),
+ determinedTax: roundedDeterminedTax,
+ taxBase: roundedTaxBase,
  grossSalary,
  totalDeductions: Math.round(grossSalary - taxBase),
+ earnedIncomeDeduction: roundedEarnedIncomeDeduction,
+ incomeDeduction: grossSalary - roundedEarnedIncomeDeduction - roundedTaxBase,
+ calculatedTax,
+ taxCredit: calculatedTax - roundedDeterminedTax,
  };
 }
 

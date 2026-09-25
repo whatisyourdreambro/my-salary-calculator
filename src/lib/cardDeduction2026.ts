@@ -15,6 +15,27 @@
 /** 문화비·한도 구분 기준 총급여 7,000만원 */
 export const CARD_SALARY_THRESHOLD = 70_000_000;
 
+/** 최저사용금액 — 총급여의 25% (조특법 §126의2①) */
+export const CARD_MIN_USAGE_RATIO = 0.25;
+
+/** 결제수단·사용처별 공제율 (조특법 §126의2②) — 문화체육은 총급여 7천만원 이하만 */
+export const CARD_RATES_2026 = {
+  CREDIT: 0.15,
+  CHECK_CASH: 0.3,
+  CULTURE: 0.3,
+  TRADITIONAL: 0.4,
+  TRANSIT: 0.4,
+} as const;
+
+/**
+ * 추가공제 한도 (조특법 §126의2⑪) — 기본 한도를 넘는 공제액 중
+ * 전통시장·대중교통(총급여 7천만원 이하는 문화체육 포함) 공제액에 한해 추가.
+ */
+export const CARD_EXTRA_LIMIT_2026 = {
+  LOW_SALARY: 3_000_000,
+  HIGH_SALARY: 2_000_000,
+} as const;
+
 export interface CardDeductionInputs {
   grossSalary: number;
   /** 자녀(손자녀 포함) 수 — 기본공제 한도 상향, 최대 2명분 반영 */
@@ -73,16 +94,17 @@ export function calcCardDeduction2026(i: CardDeductionInputs): CardDeductionResu
   // 총급여 7,000만원 초과자의 문화비는 공제 대상 아님 — 계산에서 제외
   const cultureEff = isLow ? i.culture ?? 0 : 0;
 
-  const M = i.grossSalary * 0.25; // 최저사용금액 (총급여의 25%)
+  const R = CARD_RATES_2026;
+  const M = i.grossSalary * CARD_MIN_USAGE_RATIO; // 최저사용금액 (총급여의 25%)
   const totalUse =
     i.creditCard + i.checkCash + i.traditionalMarket + i.publicTransport + cultureEff;
 
   // 결제수단별 공제액 (차감 전)
-  const A = i.creditCard * 0.15;
-  const B = i.checkCash * 0.3;
-  const C = cultureEff * 0.3;
-  const D = i.traditionalMarket * 0.4;
-  const E = i.publicTransport * 0.4;
+  const A = i.creditCard * R.CREDIT;
+  const B = i.checkCash * R.CHECK_CASH;
+  const C = cultureEff * R.CULTURE;
+  const D = i.traditionalMarket * R.TRADITIONAL;
+  const E = i.publicTransport * R.TRANSIT;
   const gross = A + B + C + D + E;
 
   // 최저사용금액 차감액 T — 공제율 낮은 결제수단(신용→30%그룹→40%그룹)부터 소진
@@ -90,13 +112,16 @@ export function calcCardDeduction2026(i: CardDeductionInputs): CardDeductionResu
   let T: number;
   let thresholdCase: 1 | 2 | 3;
   if (i.creditCard >= M) {
-    T = M * 0.15;
+    T = M * R.CREDIT;
     thresholdCase = 1;
   } else if (i.creditCard + mid >= M) {
-    T = i.creditCard * 0.15 + (M - i.creditCard) * 0.3;
+    T = i.creditCard * R.CREDIT + (M - i.creditCard) * R.CHECK_CASH;
     thresholdCase = 2;
   } else {
-    T = i.creditCard * 0.15 + mid * 0.3 + (M - i.creditCard - mid) * 0.4;
+    T =
+      i.creditCard * R.CREDIT +
+      mid * R.CHECK_CASH +
+      (M - i.creditCard - mid) * R.TRADITIONAL; // 40% 그룹(전통시장·대중교통 동률)
     thresholdCase = 3;
   }
 
@@ -104,7 +129,7 @@ export function calcCardDeduction2026(i: CardDeductionInputs): CardDeductionResu
 
   // 한도 — 기본(자녀 상향) + 추가공제(전통시장·대중교통·저소득 문화비)
   const L1 = cardBaseLimit(isLow, i.children ?? 0);
-  const L2 = isLow ? 3_000_000 : 2_000_000;
+  const L2 = isLow ? CARD_EXTRA_LIMIT_2026.LOW_SALARY : CARD_EXTRA_LIMIT_2026.HIGH_SALARY;
   const extraEligible = D + E + (isLow ? C : 0);
   const baseDeduction = Math.min(S, L1);
   const extraDeduction = Math.min(Math.max(S - L1, 0), extraEligible, L2);

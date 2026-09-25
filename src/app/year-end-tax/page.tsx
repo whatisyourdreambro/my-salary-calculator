@@ -10,6 +10,11 @@ import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
 import { buildPageMetadata } from "@/lib/seo";
 import { YEAR_END_SEASON } from "@/lib/yearEndSeason";
+import {
+ YEAR_END_LIMIT_ROWS,
+ YEAR_END_LIMIT_FAQS,
+ YEAR_END_LIMITS_SOURCE_NOTE,
+} from "@/lib/yearEndLimits2026";
 import { breadcrumbLd, softwareApplicationLd, faqLd, speakableLd } from "@/lib/structuredData";
 import { InArticleAd, HomeTopAd, GuideMidAd, CalcResultAd } from "@/components/AdPlacement";
 // 부활 팩 ④ (운영자 승인 2026-08-31) — CPA 오퍼 슬롯
@@ -44,12 +49,12 @@ const FAQ_ITEMS = [
  {
  question: "신용카드 공제 한도는 어떻게 되나요?",
  answer:
- "총급여의 25%를 초과한 금액부터 공제됩니다. 신용카드 15%, 체크카드/현금영수증 30%, 전통시장·대중교통 40% 공제율이 적용되며 최대 300만원(총급여 7천만 이하)까지입니다.",
+ "총급여 25% 초과분부터 신용카드 15%, 체크카드/현금영수증 30%, 전통시장·대중교통 40% 공제되며 기본한도는 300만원(총급여 7천만 이하, 자녀 2명 이상 400만원)입니다.",
  },
  {
  question: "연금저축·IRP 세액공제는 얼마까지 받을 수 있나요?",
  answer:
- "연금저축 600만원 + IRP 추가 300만원 = 최대 900만원까지 납입 가능합니다. 총급여 5,500만원 이하는 16.5%, 초과는 13.2%(지방소득세 포함 — 소득세 기준 15%/12%) 세액공제율이 적용됩니다 (최대 약 148만원 절세). 본 계산기 결과는 소득세 기준입니다.",
+ "연금저축 600만원 + IRP 추가 300만원 = 최대 900만원까지 공제 대상입니다. 총급여 5,500만원 이하는 16.5%, 초과는 13.2%(지방소득세 포함 — 소득세 기준 15%/12%) 세액공제율이 적용됩니다 (최대 약 148만원 절세). 본 계산기 결과는 소득세 기준입니다.",
  },
  {
  question: "2026년 귀속 연말정산에서 달라지는 점은 무엇인가요?",
@@ -73,7 +78,8 @@ export default function YearEndTaxPage() {
  "13월의 월급을 미리 계산하는 2026 귀속 연말정산 시뮬레이터.",
  url: "/year-end-tax",
  }),
- faqLd(FAQ_ITEMS),
+ // FAQPage 는 한 페이지에 하나 — 기존 FAQ + 페이지 끝 공제 한도 FAQ(둘 다 화면에 노출)
+ faqLd([...FAQ_ITEMS, ...YEAR_END_LIMIT_FAQS]),
  speakableLd({
  url: "/year-end-tax",
  cssSelectors: [".faq-answer"],
@@ -232,6 +238,77 @@ export default function YearEndTaxPage() {
  <RelatedCalculators currentPath="/year-end-tax" />
 
  <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
+
+ {/* 2026년 귀속 주요 공제 한도표 + 한도 FAQ (2026-09-25) — 마지막 광고(쿠팡 배너)보다
+ 아래, 기존 형제 요소 순서를 바꾸지 않도록 컨테이너 맨 끝에 추가 (광고 위 UI 금지 규칙).
+ 수치는 yearEndLimits2026 이 정본 상수에서 만든다. */}
+ <section className="mt-12" aria-labelledby="year-end-limits-heading">
+ <h2 id="year-end-limits-heading" className="text-xl font-black text-navy mb-2">
+ 2026년 귀속 연말정산 주요 공제 한도
+ </h2>
+ <p className="text-sm text-muted-blue leading-relaxed mb-4">
+ 위 계산기에 넣을 금액을 정하기 전에 항목별 공제율과 한도를 확인하세요.
+ 소득공제는 과세표준을, 세액공제는 세금을 직접 줄입니다.
+ </p>
+ <div className="bg-white rounded-2xl border border-canvas-200 px-4 sm:px-0">
+ <table className="w-full text-sm border-collapse block sm:table">
+ <caption className="sr-only">2026년 귀속 연말정산 항목별 공제율과 한도</caption>
+ <thead className="hidden sm:table-header-group">
+ <tr className="border-b-2 border-canvas-200 text-navy">
+ <th scope="col" className="py-3 px-4 text-left font-black">항목</th>
+ <th scope="col" className="py-3 px-4 text-left font-black">공제율</th>
+ <th scope="col" className="py-3 px-4 text-left font-black">한도·요건</th>
+ </tr>
+ </thead>
+ <tbody className="block sm:table-row-group">
+ {YEAR_END_LIMIT_ROWS.map((row) => (
+ <tr
+ key={row.item}
+ className="block sm:table-row py-4 sm:py-0 border-b border-canvas-200 last:border-b-0 align-top"
+ >
+ <th
+ scope="row"
+ className="block sm:table-cell sm:py-3 sm:px-4 text-left font-bold text-navy sm:w-44"
+ >
+ {row.item}
+ <span className="block mt-0.5 text-xs font-medium text-faint-blue">{row.basis}</span>
+ </th>
+ <td className="block sm:table-cell mt-2 sm:mt-0 sm:py-3 sm:px-4 text-muted-blue leading-relaxed">
+ <span className="sm:hidden font-bold text-navy">공제율 </span>
+ {row.rate}
+ </td>
+ <td className="block sm:table-cell mt-1 sm:mt-0 sm:py-3 sm:px-4 text-muted-blue leading-relaxed">
+ <span className="sm:hidden font-bold text-navy">한도 </span>
+ {row.limit}
+ </td>
+ </tr>
+ ))}
+ </tbody>
+ </table>
+ </div>
+ <p className="text-xs text-faint-blue leading-relaxed mt-3">
+ {YEAR_END_LIMITS_SOURCE_NOTE}
+ </p>
+
+ {/* 공제 한도 FAQ — 문구는 상단 JsonLd faqLd 와 같은 배열 (speakable .faq-answer 포함) */}
+ <h2 className="text-xl font-black text-navy mt-10 mb-6">공제 한도 자주 묻는 질문</h2>
+ <div className="space-y-3">
+ {YEAR_END_LIMIT_FAQS.map((item) => (
+ <details
+ key={item.question}
+ className="group p-5 bg-white rounded-2xl border border-canvas-200"
+ >
+ <summary className="flex items-center justify-between cursor-pointer text-sm font-bold text-navy">
+ {item.question}
+ <ArrowRight className="w-4 h-4 text-electric transition-transform group-open:rotate-90" />
+ </summary>
+ <p className="faq-answer mt-3 text-sm text-muted-blue leading-relaxed">
+ {item.answer}
+ </p>
+ </details>
+ ))}
+ </div>
+ </section>
  </div>
  </section>
  </main>
