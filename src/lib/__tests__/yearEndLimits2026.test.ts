@@ -127,15 +127,26 @@ describe("공제 한도표 — 2026년 귀속 현행법 수치", () => {
     );
   });
 
-  it("기부금 — 1,000만 이하 15%·초과 30%, 10만원 100/110, 고향사랑 10만~20만 40%(조특법 §58①2)", () => {
+  it("기부금 — 특례·일반 15%/30%, 정치자금 100/110·15%·25%, 고향사랑 100/110·40%·15%(재난지역 30%) 전 구간", () => {
     const d = row("기부금 세액공제");
+    // 소득세법 §59의4④ · 조특법 §76① · 조특법 §58①1~3호 (2026-01-01 이후 기부분, 부칙 제13조)
     expect(d.rate).toBe(
-      "특례·일반 1,000만원 이하 15% · 초과분 30% / 정치자금·고향사랑 10만원까지 100/110 (고향사랑 10만원 초과 20만원 이하 40%)"
+      "특례·일반 1,000만원 이하 15% · 초과분 30% / 정치자금 10만원까지 100/110 · 초과분 15%(3,000만원 초과분 25%) / 고향사랑 10만원까지 100/110 · 10만원 초과 20만원 이하 40%(지방소득세 포함 44%) · 20만원 초과분 15%(특별재난지역 30%)"
     );
     expect(d.limit).toBe("일반기부금 근로소득금액의 30%(종교단체 10%) · 고향사랑 연 2,000만원까지");
     // 표의 40% 구간 = 계산기 정본(donationCredit) — 20만원 기부 시 10만 × 100/110 + 10만 × 40% (지방세 포함 체감 44%)
     const zero = { grossSalary: 50_000_000, statutory: 0, general: 0, religious: 0, political: 0 };
     expect(calcDonationCredit2026({ ...zero, hometown: 200_000 }).hometownCredit).toBe(130_909);
+    // 20만원 초과분 15% · 정치자금 초과분 15%·3천만원 초과분 25% — 표 문구와 계산기 정본이 같은 산식
+    expect(calcDonationCredit2026({ ...zero, hometown: 500_000 }).hometownCredit).toBe(175_909);
+    expect(calcDonationCredit2026({ ...zero, political: 1_000_000 }).politicalCredit).toBe(225_909);
+    expect(
+      calcDonationCredit2026({ ...zero, grossSalary: 200_000_000, political: 40_000_000 }).politicalCredit
+    ).toBe(7_075_909);
+    // 특례·일반 1,000만원 초과분 30% — 1,500만원이면 150만 + 150만 = 300만원
+    expect(
+      calcDonationCredit2026({ ...zero, grossSalary: 100_000_000, statutory: 15_000_000 }).generalAxisCredit
+    ).toBe(3_000_000);
   });
 
   it("출처 문구 — 조문·기준일·2027 개편안 미반영을 밝힌다", () => {

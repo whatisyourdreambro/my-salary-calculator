@@ -9,6 +9,10 @@
 //   소득세법 §59의3(연금계좌)·§59의4(의료비·교육비·기부금) — 2026-01-01 시행 법률 제21221호
 //   조세특례제한법 §126의2(신용카드, ⑩ 자녀 한도 2025-12-23 개정·⑪ 추가공제)·§95의2(월세, ② 배우자
 //   추가 적용 2025-12-23 신설)·§58(고향사랑, 10만원 초과 20만원 이하 40% 2025-12-23 개정)·§76(정치자금)
+// 기부금 행 구간별 공제율(2026-09-25 조문 대조): 소득세법 §59의4④ 특례·일반 합산 15%·1천만원 초과분 30%
+//   (2024년 기부분 한정 3천만원 초과분 추가 10%는 ⑧ 한시 규정 — 2026년 미적용), 조특법 §76① 정치자금
+//   10만원까지 100/110·초과분 15%·3천만원 초과분 25%, §58①1~3호 고향사랑 10만원까지 100/110·10만원 초과
+//   20만원 이하 40%·20만원 초과 2천만원 이하 15%(특별재난지역 선포 지자체 기부 30%) — 부칙 제13조 2026-01-01 기부분부터.
 // ★2027년 귀속 전환(YEAR_END_SEASON 교체, 12/15) 때 이 표는 2026년 귀속 값이다 — 2027 세법 개정
 //   (2026-08-03 세제개편안: 대중교통 우대공제 폐지·추가공제 한도 하향 등) 확정 후 별도 갱신할 것.
 // FAQ 문구는 화면과 FAQPage JSON-LD 가 같은 배열을 쓴다 (page.tsx faqLd).
@@ -94,7 +98,7 @@ export const YEAR_END_LIMIT_ROWS: readonly YearEndLimitRow[] = [
   {
     item: "기부금 세액공제",
     basis: "소득세법 제59조의4 제4항 · 조세특례제한법 제58조·제76조",
-    rate: `특례·일반 ${man(D.GENERAL_HIGH_THRESHOLD)} 이하 ${pct(D.GENERAL_RATE_LOW)} · 초과분 ${pct(D.GENERAL_RATE_HIGH)} / 정치자금·고향사랑 ${man(D.FULL_CREDIT_LIMIT)}까지 100/110 (고향사랑 ${man(D.FULL_CREDIT_LIMIT)} 초과 ${man(D.HOMETOWN_MID_UPPER)} 이하 ${pct(D.HOMETOWN_RATE_MID)})`,
+    rate: `특례·일반 ${man(D.GENERAL_HIGH_THRESHOLD)} 이하 ${pct(D.GENERAL_RATE_LOW)} · 초과분 ${pct(D.GENERAL_RATE_HIGH)} / 정치자금 ${man(D.FULL_CREDIT_LIMIT)}까지 100/110 · 초과분 ${pct(D.POLITICAL_RATE)}(${man(D.POLITICAL_HIGH_THRESHOLD)} 초과분 ${pct(D.POLITICAL_RATE_HIGH)}) / 고향사랑 ${man(D.FULL_CREDIT_LIMIT)}까지 100/110 · ${man(D.FULL_CREDIT_LIMIT)} 초과 ${man(D.HOMETOWN_MID_UPPER)} 이하 ${pct(D.HOMETOWN_RATE_MID)}(지방소득세 포함 ${withLocal(D.HOMETOWN_RATE_MID)}) · ${man(D.HOMETOWN_MID_UPPER)} 초과분 ${pct(D.HOMETOWN_RATE)}(특별재난지역 ${pct(D.HOMETOWN_RATE_DISASTER)})`,
     limit: `일반기부금 근로소득금액의 ${pct(D.LIMIT_GENERAL_RATIO)}(종교단체 ${pct(D.LIMIT_RELIGIOUS_RATIO)}) · 고향사랑 연 ${man(D.HOMETOWN_CAP)}까지`,
   },
 ];
