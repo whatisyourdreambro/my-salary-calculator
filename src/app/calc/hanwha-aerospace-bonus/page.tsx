@@ -10,6 +10,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -340,7 +341,7 @@ export default function HanwhaAerospaceBonusPage() {
                 한국경제TV 단독·알파경제 (2026-02-13). FY2024 실적분 710%+500만원 —
                 뉴스1·파이낸셜뉴스 (2025-02-19). 2026 임단협 노조 요구안 — 뉴스웨이
                 (2026-04-08). 평균연봉 1억 2,400만원 — DART 사업보고서 (2026-03-16 제출,
-                소비자가만드는신문 2026-03-26 교차 확인). 2026 세법 반영.
+                소비자가만드는신문 2026-03-26 교차 확인). {CURRENT_RATES_YEAR} 세법 반영.
               </span>
             </p>
           </footer>

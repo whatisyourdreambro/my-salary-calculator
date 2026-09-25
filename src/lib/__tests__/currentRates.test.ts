@@ -3,7 +3,8 @@
 // 1) 포인터 구조: CURRENT_* 가 CURRENT_RATES_YEAR 한 줄에서만 파생되는지 (1/1 전환 = 그 한 줄).
 // 2) 2027 정본: 국민연금 5.0%(법정 스케줄 확정)·건보 동결, 미확정 항목 상태 표기, 전환 전 확인 게이트.
 // 3) 오늘(포인터 = 2026) 렌더 문구가 전환 준비 전 리터럴과 글자 하나 다르지 않은지 — 대표 3쪽
-//    (/monthly/3000000 · /salary/50000000 · 홈) + 임베드 위젯. 전환 뒤에는 이 묶음만 건너뛴다.
+//    (/monthly/3000000 · /salary/50000000 · 홈) + 임베드 위젯 + currentRatesSurfaces.ts 목록(회사 상세·상장사·
+//    /widget/bonus·성과급 계산기 출처 문장 등). 전환 뒤에는 이 묶음만 건너뛴다.
 // 4) 연도 고정 표면(/table/2026·2026 귀속·연도 표기 계산기)이 포인터와 무관하게 2026 요율인지.
 // 전환 후 모습(2027 문구·금액)은 currentRatesDryRun2027.test.ts 가 포인터를 2027 로 바꿔 확인한다.
 import { readFileSync } from "node:fs";
@@ -39,8 +40,10 @@ vi.mock("next/navigation", () => ({
 import {
   CURRENT_INSURANCE_RATES,
   CURRENT_RATE_LABELS,
+  CURRENT_RATES_AS_OF,
   CURRENT_RATES_YEAR,
   INSURANCE_RATES_BY_YEAR,
+  RATES_AS_OF_BY_YEAR,
   pctLabel,
   rateLabels,
   type RateYear,
@@ -65,6 +68,7 @@ import HomeSeoSection from "@/components/home/HomeSeoSection";
 import MonthlyPage, { generateMetadata as monthlyMetadata } from "@/app/monthly/[amount]/page";
 import SalaryPage, { generateMetadata as salaryMetadata } from "@/app/salary/[amount]/page";
 import { GET as salaryWidget } from "@/app/widget/salary/route";
+import { RATE_YEAR_SURFACES } from "./currentRatesSurfaces";
 
 const YEARS: RateYear[] = [2026, 2027];
 const adv = { isSmeYouth: false, disabledDependents: 0, seniorDependents: 0 };
@@ -78,6 +82,9 @@ describe("현행 요율 포인터 — 1/1 전환은 CURRENT_RATES_YEAR 한 줄",
     expect(INSURANCE_RATES_BY_YEAR[2027]).toBe(INSURANCE_RATES_2027);
     expect(CURRENT_RATE_LABELS).toEqual(rateLabels(CURRENT_INSURANCE_RATES));
     expect(CURRENT_NET_SALARY_RATES).toEqual(toNetSalaryRates(CURRENT_INSURANCE_RATES));
+    expect(CURRENT_RATES_AS_OF).toBe(RATES_AS_OF_BY_YEAR[CURRENT_RATES_YEAR]);
+    // 반영 시점은 그 연도 안의 YYYY-MM (회사 상세 FAQ '요율(YYYY-MM 반영)')
+    for (const y of YEARS) expect(RATES_AS_OF_BY_YEAR[y]).toMatch(new RegExp(`^${y}-(0[1-9]|1[0-2])$`));
   });
 
   it("포인터 한 줄은 런북·verify:tax 가 찾는 형식 그대로다", () => {
@@ -249,5 +256,12 @@ describe.runIf(CURRENT_RATES_YEAR === 2026)("오늘 렌더 문구 불변 — 대
     expect(html).toContain("<title>2026 연봉 실수령액 계산기 — 머니샐러리</title>");
     expect(html).toContain('<p class="title">💰 2026 연봉 <span>실수령액</span> 계산기</p>');
     expect(html).toContain("2026년 세법 · 부양가족 1인 · 비과세 식대 월 20만원 기준 추정치입니다.");
+  });
+
+  // 회사 상세·상장사·/widget/bonus·임베드 스니펫·성과급 계산기 출처 문장 등 (2026-09-25 N3 리뷰 반영) —
+  // 연도 표기를 포인터에서 파생했어도 오늘 보이는 글자는 종전 '2026' 문장과 같다
+  it.each(RATE_YEAR_SURFACES.map((s) => [s.id, s] as const))("%s — 종전 2026 문장 그대로", async (_id, s) => {
+    const html = await s.load();
+    for (const text of s.expected(2026)) expect(html).toContain(text);
   });
 });

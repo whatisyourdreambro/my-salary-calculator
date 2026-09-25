@@ -6,6 +6,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -252,7 +253,7 @@ export default function KakaoBonusPage() {
               <Info className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
               <span>
                 <strong>데이터 출처</strong>: 2026 카카오 자사주 처분 공시 (데이터투자·DealSite경제TV·인베스팅닷컴),
-                2026-05 임협 보도(뉴스웨이), 카카오 연봉체계 자료. 2026 세법 반영.
+                2026-05 임협 보도(뉴스웨이), 카카오 연봉체계 자료. {CURRENT_RATES_YEAR} 세법 반영.
               </span>
             </p>
           </footer>

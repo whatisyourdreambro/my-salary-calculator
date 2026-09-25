@@ -6,6 +6,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -283,8 +284,8 @@ export default function LgChemBonusPage() {
               <Info className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
               <span>
                 <strong>데이터 출처</strong>: 서울경제 2022 LG화학 850% 보도,
-                핀포인트뉴스 2022 720~730% 사례, LG화학 노조 자료, 사람인 연봉 데이터.
-                2026 세법 반영.
+                핀포인트뉴스 2022 720~730% 사례, LG화학 노조 자료, 사람인 연봉 데이터.{" "}
+                {CURRENT_RATES_YEAR} 세법 반영.
               </span>
             </p>
           </footer>

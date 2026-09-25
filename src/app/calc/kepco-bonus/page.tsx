@@ -9,6 +9,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -350,7 +351,7 @@ export default function KepcoBonusPage() {
                 비즈니스포스트(2024-06-17), 성과급 자율 반납 권고 —
                 뉴시스(2022-06-20), 과거 지급 관행 —
                 전기신문(2016-09-26)·서울파이낸스(2016-09-23), 평균보수 —
-                알리오 2025년 정규직 평균(매일경제 2026-05-06 인용). 2026 세법 반영.
+                알리오 2025년 정규직 평균(매일경제 2026-05-06 인용). {CURRENT_RATES_YEAR} 세법 반영.
                 2025년도 평가까지 반영, 2026년도 평가는 2027년 6월 발표 예정(미확정).
               </span>
             </p>

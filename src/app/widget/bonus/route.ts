@@ -7,7 +7,10 @@
 //
 // 회사별 지급률(OPI/PS 시나리오)은 다루지 않는다 — 제네릭 성과급 세후 계산 전용.
 // (회사별은 /calc/*-bonus 본편이 담당 — docs/serp-strategy-2026.md "Client.tsx 수정 금지")
+// 요율·연도 표기는 현행 요율 포인터(src/config/currentRates.ts)를 따른다 — calcBonusNet 기본 요율과 같은
+// 포인터라 1/1 전환 때 공제 그리드와 '2026 성과급'·'2026년 세법' 표기가 함께 바뀐다 (2026-09-25 N3).
 import { calcBonusNet } from "@/lib/bonusTaxCalc";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import { WIDGET_HEADERS, widgetShell } from "../shared";
 
 export const runtime = "edge";
@@ -34,8 +37,8 @@ function buildDeductionGrid(): number[] {
 function buildHtml(): string {
   const gridJson = JSON.stringify(buildDeductionGrid());
   return widgetShell({
-    title: "2026 성과급 실수령액 계산기 — 머니샐러리",
-    bodyHtml: `  <p class="title">🎁 2026 성과급 <span>세후 실수령</span> 계산기</p>
+    title: `${CURRENT_RATES_YEAR} 성과급 실수령액 계산기 — 머니샐러리`,
+    bodyHtml: `  <p class="title">🎁 ${CURRENT_RATES_YEAR} 성과급 <span>세후 실수령</span> 계산기</p>
   <div class="row">
     <label for="salary">연봉</label>
     <input id="salary" type="text" data-number-input="grouped" role="spinbutton" inputmode="decimal" min="500" max="20000" step="100" value="5,000">
@@ -54,7 +57,7 @@ function buildHtml(): string {
     <span class="label">공제 합계(추정)</span>
     <span class="value" id="ded">—</span>
   </div>
-  <p class="note">2026년 세법 기준 추정치입니다. 성과급을 연봉에 합산한 연간 세액(근로소득세액공제 포함)과 4대보험 증가분을 공제로 반영합니다.</p>`,
+  <p class="note">${CURRENT_RATES_YEAR}년 세법 기준 추정치입니다. 성과급을 연봉에 합산한 연간 세액(근로소득세액공제 포함)과 4대보험 증가분을 공제로 반영합니다.</p>`,
     script: `(function () {
   var G = ${gridJson};
   var MIN = ${GRID_MIN}, MAX = ${GRID_MAX}, STEP = ${GRID_STEP};

@@ -40,6 +40,19 @@ export const CURRENT_RATES_YEAR: RateYear = 2026;
 export const CURRENT_INSURANCE_RATES: InsuranceRates = INSURANCE_RATES_BY_YEAR[CURRENT_RATES_YEAR];
 
 /**
+ * 연도별 요율 '마지막 반영 시점' (YYYY-MM) — 회사 상세 FAQ '4대보험 요율(YYYY-MM 반영)' 표기용.
+ * 2026 = 7월 국민연금 기준소득월액 상·하한 갱신까지, 2027 = 1월 요율 전환.
+ * 2027-07 상·하한 재조정을 반영할 때 2027 값을 "2027-07" 로 바꾼다.
+ */
+export const RATES_AS_OF_BY_YEAR: Readonly<Record<RateYear, string>> = {
+  2026: "2026-07",
+  2027: "2027-01",
+};
+
+/** 현행 요율의 마지막 반영 시점 */
+export const CURRENT_RATES_AS_OF: string = RATES_AS_OF_BY_YEAR[CURRENT_RATES_YEAR];
+
+/**
  * 요율 → 표시 문자열. 퍼센트 소수 넷째 자리에서 반올림하고 끝의 0 은 지우되 소수 한 자리는 남긴다.
  * 예: 연금 2026 → "4.75%" · 연금 2027 → "5.0%" · 고용 → "0.9%" · 건보 → "3.595%" · 장기요양 비율 → "13.14%"
  * (요율 리터럴은 연도 정본 파일에만 둔다 — verify:tax)

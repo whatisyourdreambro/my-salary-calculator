@@ -9,6 +9,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -298,7 +299,7 @@ export default function HyundaiRotemBonusPage() {
               <span>
                 <strong>데이터 출처</strong>: 2025년 현대로템 임단협 가결 보도
                 (데일리안·아시아경제 2025-12-24), 디지털타임스(2025-12-02),
-                뉴스웨이(2026-07 성과배분 갈등 보도). 2026 세법 반영.
+                뉴스웨이(2026-07 성과배분 갈등 보도). {CURRENT_RATES_YEAR} 세법 반영.
               </span>
             </p>
           </footer>

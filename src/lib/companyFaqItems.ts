@@ -10,6 +10,7 @@ import { industryLabelKo, getIndustryBenchmark } from "@/lib/companyContentBuild
 import { buildCompanySalaryFaq, getCompanySalaryBasis } from "@/lib/companySalaryBasis";
 import { formatManwonKorean } from "@/lib/manwonFormat";
 import { josa } from "@/lib/josa";
+import { CURRENT_RATES_AS_OF, CURRENT_RATES_YEAR } from "@/config/currentRates";
 
 export function buildCompanyFaq(company: CompanyProfile | undefined) {
  if (!company) return [];
@@ -73,9 +74,11 @@ export function buildCompanyFaq(company: CompanyProfile | undefined) {
  {
  question: `${koName} 연봉 정보는 2026년 최신 기준인가요?`,
  // '최신' 단정 금지 — 계산 기준(세법)·추정치·공시 사업연도를 구분해 답한다. 페이지별 날짜는 넣지 않는다 (COMP-06, 2026-09-25)
+ // 답변의 세법 연도·반영 시점은 실수령 표(CompanySalaryTable)와 같은 현행 요율 포인터에서 (2026-09-25 N3).
+ // 질문의 '2026년' 은 검색 질의 문구라 포인터와 무관 — 연도 롤오버 때 별도로 정한다.
  answer: company.disclosed
- ? "실수령액은 2026년 세법·4대보험 요율(2026-07 반영)로 자동 계산합니다. 직급별 기본급·인센티브는 공개 자료 기반 자체 추정치이며, 공시 평균연봉은 표시된 사업연도 기준입니다."
- : "실수령액은 2026년 세법·4대보험 요율(2026-07 반영)로 자동 계산합니다. 직급별 기본급·인센티브는 공개 자료 기반 자체 추정치이며, 실제 금액은 부서·성과·연봉 협상 결과에 따라 달라질 수 있습니다.",
+ ? `실수령액은 ${CURRENT_RATES_YEAR}년 세법·4대보험 요율(${CURRENT_RATES_AS_OF} 반영)로 자동 계산합니다. 직급별 기본급·인센티브는 공개 자료 기반 자체 추정치이며, 공시 평균연봉은 표시된 사업연도 기준입니다.`
+ : `실수령액은 ${CURRENT_RATES_YEAR}년 세법·4대보험 요율(${CURRENT_RATES_AS_OF} 반영)로 자동 계산합니다. 직급별 기본급·인센티브는 공개 자료 기반 자체 추정치이며, 실제 금액은 부서·성과·연봉 협상 결과에 따라 달라질 수 있습니다.`,
  },
  ];
 }

@@ -43,6 +43,7 @@ import CompanyDetailPage from "@/app/salary-db/[id]/page";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { getOverallRank } from "@/lib/companyContentBuilder";
 import { josaParticle } from "@/lib/josa";
+import { CURRENT_RATES_AS_OF, CURRENT_RATES_YEAR } from "@/config/currentRates";
 
 const companies = companyRepository.getAll();
 const render = (id: string) =>
@@ -147,7 +148,8 @@ describe("추정치 정직성 문구 (COMP-05·06·07·09·10·12)", () => {
     for (const c of companies) {
       const text = toText(pages.get(c.id)!);
       expect(text, c.id).not.toContain("네. 본 페이지의");
-      expect(text, c.id).toContain("실수령액은 2026년 세법·4대보험 요율(2026-07 반영)로 자동 계산합니다.");
+      // 세법 연도·반영 시점은 현행 요율 포인터 (오늘 = '2026년 …(2026-07 반영)', 2026-09-25 N3)
+      expect(text, c.id).toContain(`실수령액은 ${CURRENT_RATES_YEAR}년 세법·4대보험 요율(${CURRENT_RATES_AS_OF} 반영)로 자동 계산합니다.`);
       expect(text, c.id).not.toContain("연봉 데이터 최종 업데이트");
     }
     const withDisclosed = companies.find((c) => c.disclosed)!;

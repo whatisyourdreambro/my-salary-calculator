@@ -8,6 +8,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -383,7 +384,7 @@ export default function LgDisplayBonusPage() {
                 재개·FY2025 실적 — EBN·한국경제·아주경제·서울경제TV 2026-01-29
                 보도. 과거 300% 이력 — MTN 2015-01-30, 아주경제 2009-01-12
                 보도. 평균연봉 8,000만원 — FY2023 사업보고서(DART),
-                뉴시스·파이낸셜뉴스 2024-03-14 보도. 2026년 세법(소득세율·4대보험
+                뉴시스·파이낸셜뉴스 2024-03-14 보도. {CURRENT_RATES_YEAR}년 세법(소득세율·4대보험
                 요율) 반영.
               </span>
             </p>

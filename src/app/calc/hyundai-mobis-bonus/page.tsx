@@ -7,6 +7,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -330,7 +331,7 @@ export default function HyundaiMobisBonusPage() {
                 <strong>데이터 출처</strong>: 2025년 10월 현대모비스 임단협 타결
                 (전자신문·서울경제·아주경제 2025-10-17, 뉴스웍스), 2024년 7월 잠정합의
                 (머니S 단독 2024-07-09), 현대차 2025 타결 벤치마크(머니투데이 2026-05-06 인용),
-                평균연봉 FY2025 사업보고서(포쓰저널 2026-03-09). 2026 세법 반영.
+                평균연봉 FY2025 사업보고서(포쓰저널 2026-03-09). {CURRENT_RATES_YEAR} 세법 반영.
                 2026년분 임단협은 미타결(2026-08 기준).
               </span>
             </p>

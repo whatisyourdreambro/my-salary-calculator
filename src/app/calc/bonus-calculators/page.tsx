@@ -9,6 +9,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import { BONUS_CALC_COUNT, bonusCalcCountKo, companyCountKo, companyCountPlus } from "@/config/site";
 import Link from "@/components/AppLink";
 import {
@@ -74,7 +75,7 @@ const FAQ_ITEMS = [
   {
     question: "우리 회사가 목록에 없으면 어떻게 계산하나요?",
     answer:
-      `전용 계산기가 없는 회사는 성과급 세금 계산기(/tools/finance/bonus)에 연봉과 성과급 금액만 입력하면 동일한 2026년 세법 기준으로 세후 실수령액이 나옵니다. 회사별 평균 연봉·복지가 궁금하면 ${companyCountKo}을 다루는 회사별 연봉 DB(/salary-db)를 참고하세요. 전용 계산기는 보도·공시로 지급률이 확인되는 회사부터 순차 추가하고 있습니다.`,
+      `전용 계산기가 없는 회사는 성과급 세금 계산기(/tools/finance/bonus)에 연봉과 성과급 금액만 입력하면 동일한 ${CURRENT_RATES_YEAR}년 세법 기준으로 세후 실수령액이 나옵니다. 회사별 평균 연봉·복지가 궁금하면 ${companyCountKo}을 다루는 회사별 연봉 DB(/salary-db)를 참고하세요. 전용 계산기는 보도·공시로 지급률이 확인되는 회사부터 순차 추가하고 있습니다.`,
   },
 ];
 
@@ -157,7 +158,7 @@ export default function BonusCalculatorsHubPage() {
               className="text-base sm:text-lg text-faint-blue leading-relaxed max-w-3xl"
             >
               삼성전자 OPI·TAI, SK하이닉스 PS·PI, 현대차·기아 임단협 성과급까지
-              — 회사별 최신 지급률과 2026년 세법을 반영한 전용 계산기에서 본인
+              — 회사별 최신 지급률과 {CURRENT_RATES_YEAR}년 세법을 반영한 전용 계산기에서 본인
               연봉만 입력하면 <strong>세전·세후 실수령액</strong>이 즉시
               나옵니다. 성과급의 세금 구조와 지급 시즌도 이 페이지에서 한 번에
               확인하세요.
@@ -344,7 +345,7 @@ export default function BonusCalculatorsHubPage() {
                 </p>
                 <p className="font-black text-lg">성과급 세금 계산기 →</p>
                 <p className="text-sm text-faint mt-1">
-                  연봉+성과급 금액만 입력 — 2026 세법 세후 실수령
+                  연봉+성과급 금액만 입력 — {CURRENT_RATES_YEAR} 세법 세후 실수령
                 </p>
               </Link>
               <Link

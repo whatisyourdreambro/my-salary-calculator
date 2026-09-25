@@ -13,6 +13,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -569,7 +570,7 @@ export default function SkHynixBonusPage() {
                       : ""}
                   를, PS 재원(영업이익 10%)·상한 폐지는 2025-09 노사 합의
                   보도를, 직원 수({EMPLOYEES.toLocaleString()}명)·실적은
-                  사업보고서·실적 공시를 근거로 합니다. 2026년 세법(소득세율·
+                  사업보고서·실적 공시를 근거로 합니다. {CURRENT_RATES_YEAR}년 세법(소득세율·
                   4대보험 요율)을 반영했습니다.
                 </p>
               </div>

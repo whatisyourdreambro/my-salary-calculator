@@ -7,7 +7,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
-import { CURRENT_RATE_LABELS } from "@/config/currentRates";
+import { CURRENT_RATES_YEAR, CURRENT_RATE_LABELS } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -342,8 +342,8 @@ export default function SamsungDisplayBonusPage() {
               <span>
                 <strong>데이터 출처</strong>: OPI 2025년 실적분 36%·2024년 실적분 40% —
                 연합뉴스·디지털타임스 2026-01-28 보도 / TAI 2025년 하반기 50% — 뉴시스
-                2025-12-22 보도 / TAI 2025년 상반기 전망 — SBS Biz 2025-07-01 보도.
-                2026 세법 반영.
+                2025-12-22 보도 / TAI 2025년 상반기 전망 — SBS Biz 2025-07-01 보도.{" "}
+                {CURRENT_RATES_YEAR} 세법 반영.
               </span>
             </p>
           </footer>

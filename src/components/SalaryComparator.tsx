@@ -7,6 +7,7 @@ import { trackOfferCompareComplete, trackOfferCompareExplanationView } from "@/l
 import { consumeOfferComparisonHandoff, type OfferComparisonConditions } from "@/lib/offerComparisonHandoff";
 import { prepareOfferComparisonExport } from "@/lib/offerComparisonExport";
 import Link from "@/components/AppLink";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import CurrencyInput from "./CurrencyInput";
 import { X } from "lucide-react";
 import NumberInput from "@/components/NumberInput";
@@ -95,7 +96,7 @@ export default function SalaryComparator() {
         <h2 className="font-bold">홈에서 계산한 조건을 적용할까요?</h2>
         <p className="text-sm">세전 연봉 {formatNumber(handoff.annualGross)}원 · 월 비과세 {formatNumber(handoff.nonTaxableMonthly)}원(연봉에 포함) · 기본공제 대상 {handoff.dependents}명 · 공제 대상 자녀 {handoff.children}명</p>
         <p className="text-xs text-muted-foreground">적용하면 첫 오퍼의 계약 연봉과 공통 조건을 바꾸고, 첫 오퍼의 추가 성과급·수당은 비웁니다. 두 번째 오퍼는 유지합니다. 결과는 두 오퍼를 확인하고 비교 버튼을 눌러야 계산됩니다.</p>
-        <p className="text-xs text-muted-foreground">홈의 정규직 계산과 같은 2026년 모델로 다시 계산합니다. 연간 총액·월 비과세액·가족 조건이 같으면 예상 실수령액도 같습니다.</p>
+        <p className="text-xs text-muted-foreground">홈의 정규직 계산과 같은 {CURRENT_RATES_YEAR}년 모델로 다시 계산합니다. 연간 총액·월 비과세액·가족 조건이 같으면 예상 실수령액도 같습니다.</p>
         <div className="flex flex-col sm:flex-row gap-2">
           <button type="button" className="rounded-lg bg-primary text-primary-foreground px-4 py-3 font-semibold" onClick={() => {
             pendingUserSubmit.current = false;
@@ -178,7 +179,7 @@ export default function SalaryComparator() {
             <h2 ref={headingRef} tabIndex={-1} className="text-xl sm:text-2xl font-bold focus:outline-none">같은 조건의 월 예상 실수령 비교</h2>
             <p className="text-sm text-muted-foreground">월 예상 실수령액이 큰 순서입니다. 소득세는 근로소득 간이세액표 기준 월 원천징수액이며, 성과급 지급월 입금액이나 연말정산 확정 세액은 아닙니다.</p>
             <div className="rounded-lg bg-secondary p-4 text-sm space-y-2">
-              <p>2026년 기준 모델 · 월 비과세 {formatNumber(comparison.settings.monthlyNonTaxable)}원 · 기본공제 대상 {comparison.settings.dependents}명(본인 포함) · 자녀세액공제 대상 {comparison.settings.children}명</p>
+              <p>{CURRENT_RATES_YEAR}년 기준 모델 · 월 비과세 {formatNumber(comparison.settings.monthlyNonTaxable)}원 · 기본공제 대상 {comparison.settings.dependents}명(본인 포함) · 자녀세액공제 대상 {comparison.settings.children}명</p>
               <p className="text-xs text-muted-foreground">국민연금 상·하한은 2026년 7월 이후 기준입니다. 중소기업 청년 감면, 장애인·경로우대 추가공제와 개인별 연말정산 공제는 반영하지 않습니다(보험료 공제는 반영). 같은 공통 조건이어도 소득에 따른 세금·보험료가 달라집니다.</p>
               <p className="flex flex-wrap gap-x-4 gap-y-2 text-xs"><Link href="/income-tax-2026" className="text-primary underline">세율·공제 기준 설명</Link><Link href="/social-insurance-rates-2026" className="text-primary underline">보험료 기준 설명</Link></p>
             </div>

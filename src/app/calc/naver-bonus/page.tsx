@@ -7,6 +7,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -240,7 +241,7 @@ export default function NaverBonusPage() {
               <Info className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
               <span>
                 <strong>데이터 출처</strong>: 2025 네이버 자사주 처분 공시 + 디지털투데이·뉴스1·아시아경제 보도,
-                더벨 RSU 분석. 2026 세법 반영.
+                더벨 RSU 분석. {CURRENT_RATES_YEAR} 세법 반영.
               </span>
             </p>
           </footer>

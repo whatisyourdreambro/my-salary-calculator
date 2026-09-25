@@ -4,13 +4,14 @@
 // ★키워드 축: "이직 오퍼 비교"·"오퍼 실수령 비교"·"연봉 오퍼 비교"만.
 //   "연봉 협상 계산기"=/salary-raise-2026, "중소 대기업 비교"=/company/simulator,
 //   회사 간 비교=/salary-db/compare 소유 — 본문에서 상호링크로 차별화.
-// 갱신 슬롯: 2027-01 — 4대보험 요율·간이세액표 개정 시 본문 "2026년 기준" 문구
+// 갱신 슬롯: 2027-01 — 4대보험 요율 연도 표기는 현행 요율 포인터에서 파생(2026-09-25 N3), 간이세액표 개정 시 본문 "2026년 기준" 문구
 //   기준연도와 모델 가정은 별도 확인. 홈의 TaxLogic.ts 모델(소득세 = 근로소득 간이세액표,
 //   2026-09-25 A17 전환)을 공유한다.
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { buildToolMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -48,7 +49,7 @@ const FAQ_ITEMS = [
 
 FAQ_ITEMS.push({
   question: "계산 결과가 실제 급여명세서와 같나요?",
-  answer: "이 비교기는 2026년 4대보험 요율과 근로소득 간이세액표(2026년 3월 1일 지급분부터)로 월 실수령을 계산하는 비교용 모델입니다. 원천징수 비율(80·100·120%) 선택이나 실제 성과급 지급 월과 다를 수 있습니다. 연말정산 공제·보험료 정산 등 개인별 조건을 모두 반영한 확정 세액이 아니며, 결과 설명에서 적용한 가족·비과세 조건과 제외 항목을 확인할 수 있습니다.",
+  answer: `이 비교기는 ${CURRENT_RATES_YEAR}년 4대보험 요율과 근로소득 간이세액표(2026년 3월 1일 지급분부터)로 월 실수령을 계산하는 비교용 모델입니다. 원천징수 비율(80·100·120%) 선택이나 실제 성과급 지급 월과 다를 수 있습니다. 연말정산 공제·보험료 정산 등 개인별 조건을 모두 반영한 확정 세액이 아니며, 결과 설명에서 적용한 가족·비과세 조건과 제외 항목을 확인할 수 있습니다.`,
 });
 
 FAQ_ITEMS.push({

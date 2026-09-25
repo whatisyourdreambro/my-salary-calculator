@@ -9,6 +9,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -381,7 +382,7 @@ export default function SOilBonusPage() {
                 1,470% 보도 병존), 더팩트 2025-03-07(성과급 명문화 논의·정유
                 4사 비교), SBS Biz 2026-02-22(2026년 3월 지급 목표 검토 중),
                 디지털타임스 2025-03-19(2024 사업보고서 평균연봉 1억
-                5,404만원). 2026년 세법(소득세율·4대보험 요율) 반영.
+                5,404만원). {CURRENT_RATES_YEAR}년 세법(소득세율·4대보험 요율) 반영.
               </span>
             </p>
           </footer>

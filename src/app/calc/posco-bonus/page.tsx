@@ -5,7 +5,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
-import { CURRENT_RATE_LABELS } from "@/config/currentRates";
+import { CURRENT_RATES_YEAR, CURRENT_RATE_LABELS } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -288,7 +288,7 @@ export default function PoscoBonusPage() {
               <Info className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
               <span>
                 <strong>데이터 출처</strong>: 2025-04 포스코 직고용 발표(국민일보·부산일보),
-                잡플래닛·인크루트 연봉 데이터, 포스코 사업보고서. 2026 세법 반영.
+                잡플래닛·인크루트 연봉 데이터, 포스코 사업보고서. {CURRENT_RATES_YEAR} 세법 반영.
               </span>
             </p>
           </footer>

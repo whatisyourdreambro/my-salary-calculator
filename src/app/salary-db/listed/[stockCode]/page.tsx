@@ -104,7 +104,7 @@ export default function ListedCompanyPage({ params }: Props) {
     },
     {
       question: `${c.nameKo} 평균연봉의 월 실수령액은 얼마인가요?`,
-      answer: `평균연봉 ${fmtManwon(c.avgSalaryManwon)}을 2026년 세법(4대보험·소득세, 비과세 식대 20만원·본인 1인 공제)으로 환산하면 월 실수령액은 약 ${monthlyNetManwon.toLocaleString(
+      answer: `평균연봉 ${fmtManwon(c.avgSalaryManwon)}을 ${CURRENT_RATES_YEAR}년 세법(4대보험·소득세, 비과세 식대 20만원·본인 1인 공제)으로 환산하면 월 실수령액은 약 ${monthlyNetManwon.toLocaleString(
         "ko-KR"
       )}만원입니다.`,
     },

@@ -3,6 +3,7 @@
 
 import AutoBreadcrumb from "@/components/AutoBreadcrumb";
 import { useState } from "react";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import PageFooterAds from "@/components/PageFooterAds";
 import { CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import {
@@ -65,7 +66,7 @@ const PLANNER_FAQ = [
  {
  question: "시뮬레이션의 연봉은 세전인가요, 세후인가요?",
  answer:
- "입력하는 연봉은 세전 기준이며, 저축액 계산 시 내부적으로 간이 세후 소득으로 환산해 사용합니다. 정확한 월 실수령액이 궁금하다면 머니샐러리 홈의 연봉 계산기에서 2026년 세법 기준으로 확인하세요.",
+ `입력하는 연봉은 세전 기준이며, 저축액 계산 시 내부적으로 간이 세후 소득으로 환산해 사용합니다. 정확한 월 실수령액이 궁금하다면 머니샐러리 홈의 연봉 계산기에서 ${CURRENT_RATES_YEAR}년 세법 기준으로 확인하세요.`,
  },
 ];
 

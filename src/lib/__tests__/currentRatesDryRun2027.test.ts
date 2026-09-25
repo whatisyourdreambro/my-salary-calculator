@@ -9,11 +9,13 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("@/config/currentRates", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/config/currentRates")>();
   const rates = actual.INSURANCE_RATES_BY_YEAR[2027];
+  // CURRENT_* 를 새로 export 하면 여기에도 2027 값을 넣는다 — 아래 '모킹이 적용됐다' 가 빠진 항목을 잡는다
   return {
     ...actual,
     CURRENT_RATES_YEAR: 2027,
     CURRENT_INSURANCE_RATES: rates,
     CURRENT_RATE_LABELS: actual.rateLabels(rates),
+    CURRENT_RATES_AS_OF: actual.RATES_AS_OF_BY_YEAR[2027],
   };
 });
 
@@ -42,7 +44,8 @@ vi.mock("next/navigation", () => ({
   },
 }));
 
-import { CURRENT_RATES_YEAR } from "@/config/currentRates";
+import * as currentRates from "@/config/currentRates";
+import { CURRENT_RATES_YEAR, INSURANCE_RATES_BY_YEAR, RATES_AS_OF_BY_YEAR, rateLabels } from "@/config/currentRates";
 import { INSURANCE_RATES_2027 } from "@/lib/taxConstants2027";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
 import { calcBonusNet, DEFAULT_BONUS_CREDIT_RATE } from "@/lib/bonusTaxCalc";
@@ -54,14 +57,24 @@ import { calcAnnualNet } from "@/app/salary-raise-2026/Client";
 import MonthlyPage, { generateMetadata as monthlyMetadata } from "@/app/monthly/[amount]/page";
 import SalaryPage, { generateMetadata as salaryMetadata } from "@/app/salary/[amount]/page";
 import { GET as salaryWidget } from "@/app/widget/salary/route";
+import { RATE_YEAR_SURFACES } from "./currentRatesSurfaces";
 
 const adv = { isSmeYouth: false, disabledDependents: 0, seniorDependents: 0 };
 const titleOf = (t: unknown) => (typeof t === "string" ? t : (t as { absolute: string }).absolute);
 const manwon = (won: number) => Math.round(won / 10_000);
 
 describe("1/1 전환 리허설 — 포인터 2027", () => {
-  it("모킹이 적용됐다", () => {
+  it("모킹이 적용됐다 — 포인터에서 파생되는 CURRENT_* export 전부", () => {
     expect(CURRENT_RATES_YEAR).toBe(2027);
+    const expected: Record<string, unknown> = {
+      CURRENT_RATES_YEAR: 2027,
+      CURRENT_INSURANCE_RATES: INSURANCE_RATES_BY_YEAR[2027],
+      CURRENT_RATE_LABELS: rateLabels(INSURANCE_RATES_BY_YEAR[2027]),
+      CURRENT_RATES_AS_OF: RATES_AS_OF_BY_YEAR[2027],
+    };
+    // 새 CURRENT_* export 가 모킹에서 빠지면 리허설이 조용히 2026 값을 쓴다 — 여기서 막는다
+    expect(Object.keys(currentRates).filter((k) => k.startsWith("CURRENT_")).sort()).toEqual(Object.keys(expected).sort());
+    for (const [k, v] of Object.entries(expected)) expect((currentRates as Record<string, unknown>)[k], k).toEqual(v);
   });
 
   it("엔진 기본값이 2027 요율(국민연금 5.0%)로 바뀐다", () => {
@@ -130,5 +143,13 @@ describe("1/1 전환 리허설 — 포인터 2027", () => {
     const grid = JSON.parse(/var GRID = (\[[^\]]*\]);/.exec(html)![1]) as number[];
     // 그리드 첫 칸 = 연봉 1,200만원(비과세 연 240만) 현행 요율 월 실수령
     expect(grid[0]).toBe(calculateNetSalary(12_000_000, 2_400_000, 1, 0, adv).monthlyNet);
+  });
+
+  // 회사 상세(FAQ·실수령 표)·상장사 FAQ·/widget/bonus·임베드 스니펫·성과급 계산기 출처 문장 등 —
+  // 포인터 금액 옆의 연도 표기가 2027 로 함께 바뀌고 종전 '2026' 문장은 남지 않는다 (2026-09-25 N3 리뷰 반영)
+  it.each(RATE_YEAR_SURFACES.map((s) => [s.id, s] as const))("%s — 2027 표기로 바뀐다", async (_id, s) => {
+    const html = await s.load();
+    for (const text of s.expected(2027)) expect(html).toContain(text);
+    for (const text of s.expected(2026)) expect(html).not.toContain(text);
   });
 });

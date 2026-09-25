@@ -9,7 +9,7 @@ import {
   AlertCircle, BarChart3, Sparkles, BookOpen,
 } from "lucide-react";
 import { earnedIncomeTaxCredit2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
-import { CURRENT_INSURANCE_RATES, CURRENT_RATE_LABELS } from "@/config/currentRates";
+import { CURRENT_INSURANCE_RATES, CURRENT_RATE_LABELS, CURRENT_RATES_YEAR } from "@/config/currentRates";
 import ResultSharePanel from "@/components/ResultSharePanel";
 import { CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import NumberInput from "@/components/NumberInput";
@@ -283,7 +283,7 @@ export default function BonusCalculatorPage() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-5"
             style={{ backgroundColor: "#0145F21A", color: "#0145F2", border: "1.5px solid #0145F233" }}
           >
-            <Sparkles size={12} /> 2026 기준 · 성과급 세후 비교
+            <Sparkles size={12} /> {CURRENT_RATES_YEAR} 기준 · 성과급 세후 비교
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 12 }}

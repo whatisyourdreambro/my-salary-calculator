@@ -8,6 +8,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -262,8 +263,8 @@ export default function CelltrionBonusPage() {
               <Info className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
               <span>
                 <strong>데이터 출처</strong>: 파이낸셜뉴스(2025-01-05) ·
-                알티케이뉴스(2025-01-08) · 데일리메디(2026-02-02) 보도.
-                2026 세법(소득세율·4대보험 요율) 반영.
+                알티케이뉴스(2025-01-08) · 데일리메디(2026-02-02) 보도.{" "}
+                {CURRENT_RATES_YEAR} 세법(소득세율·4대보험 요율) 반영.
               </span>
             </p>
           </footer>

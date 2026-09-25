@@ -10,6 +10,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -289,8 +290,8 @@ export default function GsCaltexBonusPage() {
                 연봉의 25%), 디지털타임스 단독 2025-01-21 (2024 실적분 기본급
                 250%+상품권 15만원), 파이낸셜뉴스 2024-02-05 (2023 실적분 연봉의
                 40%), 남도일보 2023-01·뉴스저널리즘 (2022 실적분), 디지털타임스
-                2025-03-19 (평균연봉 1억 6,575만원 — 2023 사업보고서 기준).
-                2026 세법 반영.
+                2025-03-19 (평균연봉 1억 6,575만원 — 2023 사업보고서 기준).{" "}
+                {CURRENT_RATES_YEAR} 세법 반영.
               </span>
             </p>
           </footer>

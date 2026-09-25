@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ArrowRight, Plus, X } from "lucide-react";
 import Link from "@/components/AppLink";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import NumberInput from "@/components/NumberInput";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 import { calculatePublicInstitutionSalary, parsePublicSalaryAmount } from "@/lib/publicInstitutionSalary";
@@ -118,7 +119,7 @@ export default function PublicInstitutionSalaryClient() {
         </div>
         {comparing && results[0].ok && results[1].ok && <p className="mt-4 rounded-xl border border-border bg-card p-4 text-sm leading-7">같은 공제 조건에서 기관 B의 월평균 실수령 추정은 기관 A보다 <strong>{won(Math.abs(results[1].monthlyIncludingBonus.netPay - results[0].monthlyIncludingBonus.netPay))} {results[1].monthlyIncludingBonus.netPay >= results[0].monthlyIncludingBonus.netPay ? "많습니다" : "적습니다"}</strong>. 개인 채용 조건을 비교한 값이며 기관의 보수 순위가 아닙니다.</p>}
       </div>
-      <p className="mt-5 text-sm leading-7 text-muted-foreground">2026년 일반 근로자 공제 모형과 국민연금 2026년 7월 이후 상·하한을 사용합니다. 소득세는 연간 급여를 12개월로 나눈 월급여액에 근로소득 간이세액표를 적용한 추정치이며, 성과급 지급월의 실제 원천징수·연말정산 결과와 다를 수 있습니다. 기관별 추가 공제, 보수월액 신고·정산 시점은 반영하지 않습니다.</p>
+      <p className="mt-5 text-sm leading-7 text-muted-foreground">{CURRENT_RATES_YEAR}년 일반 근로자 공제 모형과 국민연금 2026년 7월 이후 상·하한을 사용합니다. 소득세는 연간 급여를 12개월로 나눈 월급여액에 근로소득 간이세액표를 적용한 추정치이며, 성과급 지급월의 실제 원천징수·연말정산 결과와 다를 수 있습니다. 기관별 추가 공제, 보수월액 신고·정산 시점은 반영하지 않습니다.</p>
       <p className="mt-2 text-xs leading-6 text-muted-foreground">입력 금액과 기관 이름은 계산에만 사용하며 이 페이지의 URL이나 계산 분석 이벤트에 포함하지 않습니다. 새로고침하면 입력은 초기화됩니다.</p>
       {pensionSystem === "other" && <Link href="/civil-servant-pay-2026" className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-link">공무원 봉급표 안내<ArrowRight aria-hidden="true" className="h-4 w-4" /></Link>}
     </section>
