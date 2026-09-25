@@ -30,9 +30,12 @@ import {
   PAY_FULL_2026_CHECKED,
   pickPayColumns,
 } from "@/lib/payTablesFull2026";
+import { PAY_2027_CONFIRMED } from "@/lib/payTablesFull2027";
+import { PAY_TABLES_RELEASE_DATE } from "@/config/siteDates";
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
-const MODIFIED = "2026-09-25";
+// 수정일 = 봉급표 묶음 배포일(siteDates.ts PAY_TABLES_RELEASE_DATE — 배포 담당이 실제 배포일로 한 번에 갱신)
+const MODIFIED = PAY_TABLES_RELEASE_DATE;
 
 // 전체표 — 하위 5계급(순경~경감)·상위 5계급(경정~치안정감) 두 표로 나눠 모바일 가로 스크롤을 줄인다
 const POLICE_LABELS = POLICE_FIRE_RANKS_FULL.map((r) => r.police);
@@ -330,9 +333,9 @@ export default function PolicePay2026Page() {
             <Link href="/firefighter-pay-2026#fire-full-table" className="text-electric font-bold hover:underline">
               소방 봉급표 전체
             </Link>
-            , 내년 예상액은{" "}
+            , {PAY_2027_CONFIRMED ? "2027년 확정액은" : "내년 예상액은"}{" "}
             <Link href="/police-pay-2027" className="text-electric font-bold hover:underline">
-              2027 경찰 봉급표 예상
+              {PAY_2027_CONFIRMED ? "2027 경찰 봉급표" : "2027 경찰 봉급표 예상"}
             </Link>
             에서 확인하세요.
           </p>

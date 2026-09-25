@@ -8,6 +8,9 @@
 //  (5) 본문의 '2026년 호봉별 인상률'은 인사혁신처 2025 봉급표 원문 앵커로 재계산한 값과 같다
 //  (6) 제목은 검색어 형태('2027 교사 봉급표' 등)로 시작, 사이트명 제외 40자 이내 · 2026 페이지와 제목이 겹치지 않는다
 //  (7) 등록: 검색 인덱스, 2026 페이지·/civil-servant-pay-2027 에서 링크(마지막 광고 아래)
+//  (8) 12월 확정표 '빈칸'(PAY_FULL_2027 = null) 상태에서는 2027 전체표 섹션·Dataset 이 그려지지 않는다
+// 이 파일은 '확정 전' 체제를 고정한다 — 12월에 PAY_FULL_2027 에 원문 숫자를 넣어도 여기서는 null 로 강제해
+// 예상 체제 가드가 계속 돌게 한다. 확정 체제는 pay2027ConfirmedSlot.test.ts(가짜 확정 데이터)가 본다.
 import { createElement, type AnchorHTMLAttributes } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
@@ -37,6 +40,11 @@ vi.mock("@/components/RelatedCalculators", () => ({ default: () => null }));
 vi.mock("@/components/PrivateFeedback", () => ({ default: () => null }));
 vi.mock("@/components/CitationCopyButton", () => ({ default: () => null }));
 vi.mock("@/app/civil-servant-pay-2027/CivilPayForecastSelector", () => ({ default: () => null }));
+vi.mock("@/lib/payTablesFull2027", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/payTablesFull2027")>();
+  const { PAY_TABLES_RELEASE_DATE } = await import("@/config/siteDates");
+  return { ...actual, PAY_FULL_2027: null, PAY_2027_CONFIRMED: false, PAY_2027_PAGES_MODIFIED: PAY_TABLES_RELEASE_DATE };
+});
 
 import Teacher2027, { metadata as teacherMeta } from "@/app/teacher-pay-2027/page";
 import Police2027, { metadata as policeMeta } from "@/app/police-pay-2027/page";
@@ -49,6 +57,7 @@ import { RAISE_2027_BUDGET, forecast2027 } from "@/lib/civilServantPay";
 import { POLICE_FIRE_PAY_FULL_2026, TEACHER_PAY_FULL_2026 } from "@/lib/payTablesFull2026";
 import { policeFireForecastRows, teacherForecastRows } from "@/lib/payForecast2027";
 import { searchIndex } from "@/lib/searchIndex";
+import { PAY_TABLES_RELEASE_DATE } from "@/config/siteDates";
 
 const pct = `${(RAISE_2027_BUDGET * 100).toFixed(1)}%`;
 const won = (n: number) => `${n.toLocaleString("ko-KR")}원`;
@@ -87,14 +96,14 @@ describe("대표 호봉 예상치 — 2026 원문 × 1.039, 천원 반올림", (
     const rows = teacherForecastRows();
     expect(rows.map((r) => r.label)).toEqual(["9호봉", "14호봉", "18호봉", "23호봉", "28호봉", "33호봉", "40호봉"]);
     // 2,495,600 × 1.039 = 2,592,928.4 → 2,593,000 · 6,205,700 × 1.039 = 6,447,722.3 → 6,448,000
-    expect(rows[0]).toMatchObject({ base2026: 2495600, predicted2027: 2593000, monthlyIncrease: 97400, note: "신규 교사 통상 시작" });
+    expect(rows[0]).toMatchObject({ base2026: 2495600, pay2027: 2593000, monthlyIncrease: 97400, note: "신규 교사 통상 시작" });
     expect(rows[2]).toMatchObject({ base2026: 3241500, note: "약 10년 차" });
-    expect(rows[6]).toMatchObject({ base2026: 6205700, predicted2027: 6448000, note: "최고 호봉" });
+    expect(rows[6]).toMatchObject({ base2026: 6205700, pay2027: 6448000, note: "최고 호봉" });
     for (const r of rows) {
       expect(r.base2026).toBe(TEACHER_PAY_FULL_2026.find(([h]) => `${h}호봉` === r.label)?.[1]);
-      expect(r.predicted2027).toBe(forecast2027(r.base2026));
-      expect(r.predicted2027 % 1000).toBe(0);
-      expect(r.monthlyIncrease).toBe(r.predicted2027 - r.base2026);
+      expect(r.pay2027).toBe(forecast2027(r.base2026));
+      expect(r.pay2027 % 1000).toBe(0);
+      expect(r.monthlyIncrease).toBe(r.pay2027 - r.base2026);
     }
   });
 
@@ -108,12 +117,12 @@ describe("대표 호봉 예상치 — 2026 원문 × 1.039, 천원 반올림", (
       "소방사 1호봉", "소방사 5호봉", "소방교 5호봉", "소방장 10호봉", "소방위 15호봉", "소방경 20호봉", "소방령 25호봉",
     ]);
     // 2,133,000 × 1.039 = 2,216,187 → 2,216,000 · 3,276,600 × 1.039 = 3,404,387.4 → 3,404,000
-    expect(police[0]).toMatchObject({ base2026: 2133000, predicted2027: 2216000, monthlyIncrease: 83000 });
-    expect(police[3]).toMatchObject({ base2026: 3276600, predicted2027: 3404000 });
-    expect(police[6]).toMatchObject({ base2026: 5631200, predicted2027: 5851000 });
+    expect(police[0]).toMatchObject({ base2026: 2133000, pay2027: 2216000, monthlyIncrease: 83000 });
+    expect(police[3]).toMatchObject({ base2026: 3276600, pay2027: 3404000 });
+    expect(police[6]).toMatchObject({ base2026: 5631200, pay2027: 5851000 });
     police.forEach((r, i) => {
       expect(fire[i].base2026).toBe(r.base2026);
-      expect(fire[i].predicted2027).toBe(r.predicted2027);
+      expect(fire[i].pay2027).toBe(r.pay2027);
     });
   });
 });
@@ -178,6 +187,7 @@ const CASES = [
     query: "2027 교사 봉급표",
     entry: teacherForecastRows()[0],
     full2026: "/teacher-pay-2026#teacher-full-table",
+    fullId: "teacher-full-table",
   },
   {
     name: "/police-pay-2027",
@@ -189,6 +199,7 @@ const CASES = [
     query: "2027 경찰 봉급표",
     entry: policeFireForecastRows("police")[0],
     full2026: "/police-pay-2026#police-full-table",
+    fullId: "police-full-table",
   },
   {
     name: "/firefighter-pay-2027",
@@ -200,6 +211,7 @@ const CASES = [
     query: "2027 소방공무원 봉급표",
     entry: policeFireForecastRows("fire")[0],
     full2026: "/firefighter-pay-2026#fire-full-table",
+    fullId: "fire-full-table",
   },
 ];
 
@@ -220,7 +232,7 @@ describe("2027 직렬별 예상 페이지 — 메타", () => {
     expect(len(m.description), m.description).toBeLessThanOrEqual(120);
     expect(m.description).toContain(`정부 예산안 ${pct}`);
     expect(m.description).toContain("확정 전");
-    expect(m.description).toContain(`약 ${won(entry.predicted2027)}`);
+    expect(m.description).toContain(`약 ${won(entry.pay2027)}`);
     expect(m.twDescription).toBe(m.description);
   });
 
@@ -244,7 +256,7 @@ describe("2027 직렬별 예상 페이지 — 본문·구조", () => {
     const above = text(body.slice(0, body.indexOf("data-test-ad=")));
     expect(above).toContain(`정부 예산안 기준 ${pct}`);
     expect(above).toContain("확정 전");
-    expect(above).toContain(`약 ${won(entry.predicted2027)}`);
+    expect(above).toContain(`약 ${won(entry.pay2027)}`);
     expect(above).toContain("단순 예상치");
     // 출처 링크 — 2026 봉급표 원문·예산안 보도
     expect(body.slice(0, body.indexOf("data-test-ad="))).toContain("https://www.mpm.go.kr/mpm/info/resultPay/bizSalary/2026/");
@@ -260,6 +272,24 @@ describe("2027 직렬별 예상 페이지 — 본문·구조", () => {
     expect(table).toContain("2027 예상");
     expect(jsonLd.some((d) => d["@type"] === "Dataset")).toBe(false);
     expect(jsonLd.some((d) => d["@type"] === "FAQPage")).toBe(true);
+  });
+
+  it.each(CASES)("$name: 확정표 빈칸(null) — 2027 전체표 섹션이 그려지지 않는다", ({ Page, fullId }) => {
+    const { body } = render(Page);
+    expect(body).not.toContain(`id="${fullId}"`);
+    expect(body).not.toContain(`id="${fullId}-title"`);
+    // 마지막 광고(사이드바 쿠팡) 뒤에는 그리드 닫는 태그만 — 새 섹션 없음
+    const tail = body.slice(body.lastIndexOf("data-test-ad="));
+    expect(tail).not.toContain("<section");
+  });
+
+  it.each(CASES)("$name: 발행일·수정일 = 봉급표 묶음 배포일 상수(siteDates.ts)", ({ Page, meta }) => {
+    const article = render(Page).jsonLd.find((d) => d["@type"] === "Article");
+    expect(String(article?.datePublished)).toContain(PAY_TABLES_RELEASE_DATE);
+    expect(String(article?.dateModified)).toContain(PAY_TABLES_RELEASE_DATE);
+    const og = meta.openGraph as { publishedTime?: string; modifiedTime?: string };
+    expect(og.publishedTime).toBe(PAY_TABLES_RELEASE_DATE);
+    expect(og.modifiedTime).toBe(PAY_TABLES_RELEASE_DATE);
   });
 
   it.each(CASES)("$name: 3.9% 를 확정처럼 쓰지 않는다", ({ Page, meta }) => {
@@ -300,5 +330,7 @@ describe("등록 — 검색 인덱스·기존 페이지 링크", () => {
       const at = body.indexOf(`href="${href}"`);
       expect(at, href).toBeGreaterThan(lastAd);
     }
+    // 확정표 빈칸(null) — 일반직 2027 전체표·Dataset 없음
+    expect(body).not.toContain('id="general-full-table"');
   });
 });

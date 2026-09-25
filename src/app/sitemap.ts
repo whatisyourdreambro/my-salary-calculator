@@ -7,7 +7,8 @@ import { getStaticMonthlyAmounts } from '@/lib/monthlyStaticParams';
 import { industriesData } from '@/data/industriesData';
 import { regionsData } from '@/data/regionsData';
 import { reportsRegistry } from '@/data/reportsRegistry';
-import { STATIC_LAST_MODIFIED } from '@/config/siteDates';
+import { STATIC_LAST_MODIFIED, PAY_TABLES_RELEASE_DATE } from '@/config/siteDates';
+import { PAY_2027_PAGES_MODIFIED } from '@/lib/payTablesFull2027';
 import { companyPageModified } from '@/lib/pageModified';
 import { getGuideModifiedDate } from '@/lib/guideDates';
 import { EN_INDEXABLE_STATIC_PATHS } from '@/lib/englishRoutes';
@@ -89,21 +90,22 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/tax-changes-2026': { lastModified: new Date('2026-09-09') },
  '/year-end-tax-checklist': { lastModified: new Date('2026-09-09') },
  '/weekly-holiday-allowance-2026': { lastModified: new Date('2026-09-09') },
- '/civil-servant-pay-2026': { lastModified: new Date('2026-09-25') }, // 일반직 전 급수 풀표(페이지 끝)
+ '/civil-servant-pay-2026': { lastModified: new Date(PAY_TABLES_RELEASE_DATE) }, // 일반직 전 급수 풀표(페이지 끝)
  '/tools/finance/compound': { lastModified: new Date('2026-09-09') },
  '/tools/finance/bonus': { lastModified: new Date('2026-09-09') },
  '/donation-tax-credit-2026': { lastModified: new Date('2026-08-31') },
  '/health-insurance-dependent': { lastModified: new Date('2026-08-31') },
  '/social-insurance-rates-2027': { lastModified: new Date('2026-09-25') },
- // 봉급표 버티컬 4종 (2026-08-30)
+ // 봉급표 버티컬 4종 (2026-08-30) — 풀표 묶음(수익 추천 #2·#3) 7개 라우트는 siteDates.ts PAY_TABLES_RELEASE_DATE
+ // (배포 담당이 실제 배포일로 한 줄 갱신), 2027 3쪽은 12월 확정표 입력 뒤 PAY_FULL_2027.checked 로 자동 전환
  '/military-pay-2026': { lastModified: new Date('2026-08-30') },
- '/teacher-pay-2026': { lastModified: new Date('2026-09-25') }, // B20 리드·메타 정렬(네이버 저CTR)
- '/police-pay-2026': { lastModified: new Date('2026-09-25') }, // 전 계급·전 호봉 풀표(페이지 끝)
- '/firefighter-pay-2026': { lastModified: new Date('2026-09-25') }, // B20 리드·메타 정렬(네이버 저CTR)·전 호봉 풀표
- // 2027 직렬별 봉급 예상 3종 (2026-09-25 준비, 수익 추천 #3 — 배포일에 맞춰 날짜 갱신)
- '/teacher-pay-2027': { lastModified: new Date('2026-09-25') },
- '/police-pay-2027': { lastModified: new Date('2026-09-25') },
- '/firefighter-pay-2027': { lastModified: new Date('2026-09-25') },
+ '/teacher-pay-2026': { lastModified: new Date(PAY_TABLES_RELEASE_DATE) }, // B20 리드·메타 정렬(네이버 저CTR)·전 호봉 풀표
+ '/police-pay-2026': { lastModified: new Date(PAY_TABLES_RELEASE_DATE) }, // 전 계급·전 호봉 풀표(페이지 끝)
+ '/firefighter-pay-2026': { lastModified: new Date(PAY_TABLES_RELEASE_DATE) }, // B20 리드·메타 정렬(네이버 저CTR)·전 호봉 풀표
+ // 2027 직렬별 봉급 예상 3종 (2026-09-25 준비, 수익 추천 #3)
+ '/teacher-pay-2027': { lastModified: new Date(PAY_2027_PAGES_MODIFIED) },
+ '/police-pay-2027': { lastModified: new Date(PAY_2027_PAGES_MODIFIED) },
+ '/firefighter-pay-2027': { lastModified: new Date(PAY_2027_PAGES_MODIFIED) },
  // 2026-08-25 P2 백로그 (임베드 위젯 5종 확장·구조화데이터 보강·영문 메뉴)
  '/embed': { lastModified: new Date('2026-08-25') },
  '/en': { lastModified: new Date('2026-09-09') },

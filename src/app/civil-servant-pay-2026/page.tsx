@@ -42,8 +42,11 @@ import {
   PAY_FULL_2026_CHECKED,
   pickPayColumns,
 } from "@/lib/payTablesFull2026";
+import { PAY_2027_CONFIRMED } from "@/lib/payTablesFull2027";
+import { PAY_TABLES_RELEASE_DATE } from "@/config/siteDates";
 
-const MODIFIED = "2026-09-25";
+// 수정일 = 봉급표 묶음 배포일(siteDates.ts PAY_TABLES_RELEASE_DATE — 배포 담당이 실제 배포일로 한 번에 갱신)
+const MODIFIED = PAY_TABLES_RELEASE_DATE;
 
 // 전체표 — 9급~5급·4급~1급 두 표로 나눠 모바일 가로 스크롤을 줄인다
 const FULL_LOWER_GRADES = pickPayColumns(GENERAL_PAY_FULL_2026, 0, 5);
@@ -521,9 +524,9 @@ export default function CivilServantPay2026Page() {
             <Link href="/firefighter-pay-2026#fire-full-table" className="text-electric font-bold hover:underline">
               소방
             </Link>
-            {" "}봉급표에서, 내년 예상액은{" "}
+            {" "}봉급표에서, {PAY_2027_CONFIRMED ? "2027년 확정액은" : "내년 예상액은"}{" "}
             <Link href="/civil-servant-pay-2027" className="text-electric font-bold hover:underline">
-              2027 공무원 봉급표 예상
+              {PAY_2027_CONFIRMED ? "2027 공무원 봉급표" : "2027 공무원 봉급표 예상"}
             </Link>
             에서 확인하세요.
           </p>

@@ -35,6 +35,8 @@ import {
   PAY_FULL_2026_CHECKED,
   pickPayColumns,
 } from "@/lib/payTablesFull2026";
+import { PAY_2027_CONFIRMED } from "@/lib/payTablesFull2027";
+import { PAY_TABLES_RELEASE_DATE } from "@/config/siteDates";
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
 
@@ -51,7 +53,8 @@ const CAPTAIN_PAY = FIRST_STEP[5]; // 소방경 1호봉
 // 이전(2026-08-30~09-24) title: "2026 소방공무원 봉급표 — 소방사~소방경 계급·호봉별 월급"
 const PAGE_TITLE = `2026 소방공무원 봉급표 — 소방사 ${Math.floor(ENTRY_PAY / 10000)}만원부터 계급별 월급`;
 const PAGE_DESCRIPTION = `2026년 소방공무원 봉급표(경찰·소방 공통, 인사혁신처 공표). 소방사 1호봉 월 ${fmt(ENTRY_PAY)}원부터 소방경까지 계급·호봉별 월급과 위험근무수당 월 ${HAZARD_ALLOWANCE_2026 / 10000}만원 등 수당, 실수령 계산 흐름을 정리했습니다.`;
-const MODIFIED = "2026-09-25";
+// 수정일 = 봉급표 묶음 배포일(siteDates.ts PAY_TABLES_RELEASE_DATE — 배포 담당이 실제 배포일로 한 번에 갱신)
+const MODIFIED = PAY_TABLES_RELEASE_DATE;
 
 export const metadata: Metadata = buildPageMetadata({
   title: PAGE_TITLE,
@@ -347,9 +350,9 @@ export default function FirefighterPay2026Page() {
             <Link href="/police-pay-2026#police-full-table" className="text-electric font-bold hover:underline">
               경찰 봉급표 전체
             </Link>
-            , 내년 예상액은{" "}
+            , {PAY_2027_CONFIRMED ? "2027년 확정액은" : "내년 예상액은"}{" "}
             <Link href="/firefighter-pay-2027" className="text-electric font-bold hover:underline">
-              2027 소방공무원 봉급표 예상
+              {PAY_2027_CONFIRMED ? "2027 소방공무원 봉급표" : "2027 소방공무원 봉급표 예상"}
             </Link>
             에서 확인하세요.
           </p>

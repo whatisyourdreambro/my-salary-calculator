@@ -35,6 +35,8 @@ import {
 import CitationCopyButton from "@/components/CitationCopyButton";
 import PayStepTable from "@/components/PayStepTable";
 import { TEACHER_PAY_FULL_2026, PAY_FULL_2026_CHECKED } from "@/lib/payTablesFull2026";
+import { PAY_2027_CONFIRMED } from "@/lib/payTablesFull2027";
+import { PAY_TABLES_RELEASE_DATE } from "@/config/siteDates";
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
 
@@ -55,7 +57,8 @@ const LAST_ROW = TEACHER_PAY_ROWS_2026.reduce((top, row) => (row[0] > top[0] ? r
 // 이전(2026-08-30~09-24) title: "2026 교사 호봉표 — 초등·중등 교원 월급, 9호봉 249만원부터"
 const PAGE_TITLE = `2026 교사 호봉표·교원 봉급표 — ${FIRST_ROW[0]}호봉 월 ${Math.floor(FIRST_ROW[1] / 10000)}만원부터`;
 const PAGE_DESCRIPTION = `2026년 교사 호봉표(유·초·중등 교원 봉급표) 인사혁신처 공표 수치. 신규 교사 통상 ${FIRST_ROW[0]}호봉 월 ${fmt(FIRST_ROW[1])}원, ${LAST_ROW[0]}호봉 ${fmt(LAST_ROW[1])}원과 담임수당 ${TEACHER_ALLOWANCE_2026.homeroom / 10000}만원 등 수당, 실수령 계산 흐름을 정리했습니다.`;
-const MODIFIED = "2026-09-25";
+// 수정일 = 봉급표 묶음 배포일(siteDates.ts PAY_TABLES_RELEASE_DATE — 배포 담당이 실제 배포일로 한 번에 갱신)
+const MODIFIED = PAY_TABLES_RELEASE_DATE;
 
 export const metadata: Metadata = buildPageMetadata({
   title: PAGE_TITLE,
@@ -366,9 +369,9 @@ export default function TeacherPay2026Page() {
           <p className="text-xs text-faint-blue leading-6 mt-4">
             ※ 봉급표 금액은 수당을 뺀 기본급입니다. 4년제 교대·사범대를 졸업한 신규 교사는 통상{" "}
             {TEACHER_START_HOBONG}호봉에서 시작해 매년 1호봉씩 오르고, 군 경력·기간제 경력은 호봉에
-            가산됩니다. 내년 예상액은{" "}
+            가산됩니다. {PAY_2027_CONFIRMED ? "2027년 확정액은" : "내년 예상액은"}{" "}
             <Link href="/teacher-pay-2027" className="text-electric font-bold hover:underline">
-              2027 교사 봉급표 예상
+              {PAY_2027_CONFIRMED ? "2027 교사 봉급표" : "2027 교사 봉급표 예상"}
             </Link>
             , 일반직 전 급수 표는{" "}
             <Link href="/civil-servant-pay-2026#general-full-table" className="text-electric font-bold hover:underline">
