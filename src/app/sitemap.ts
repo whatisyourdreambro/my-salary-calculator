@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import type { CompanyProfile } from '@/types/company';
 import { koGuides, enGuides } from '@/lib/guidesContent';
 import { glossaryData, toGlossarySlug } from '@/data/glossaryData';
 import { qnaData, toQnaSlug } from '@/data/qnaData';
@@ -570,7 +571,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // 페이지 수정일은 회사 데이터 또는 FAQ 본문을 실제로 바꾼 날 중 최신값 —
  // rss-companies.xml pubDate 와 같은 함수(src/lib/pageModified.ts, 2026-09-25 B7 추출).
  // Dataset·데이터 배지의 lastUpdated는 원본 데이터 날짜를 그대로 유지한다.
- allCompanies.forEach((company: { id: string; lastUpdated?: string }) => {
+ // 회사 객체를 통째로 넘긴다 — L10' 대상 판정(공시 출처·연봉 범위)이 salary·disclosed 를 읽는다.
+ allCompanies.forEach((company: CompanyProfile) => {
  companyUrls.push({
  url: `${baseUrl}/salary-db/${company.id}`,
  lastModified: companyPageModified(company),

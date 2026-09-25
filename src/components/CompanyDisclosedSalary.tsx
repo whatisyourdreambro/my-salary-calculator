@@ -12,6 +12,7 @@
 import { ShieldCheck, ExternalLink, Trophy } from "lucide-react";
 import type { CompanyProfile } from "@/types/company";
 import { getCompanySalaryBasis } from "@/lib/companySalaryBasis";
+import { isOfficialDisclosureUrl } from "@/lib/companyMetaDisclosed";
 import Link from "@/components/AppLink";
 
 /** 만원 단위 → "1억 5,800만원" 한국식 표기 */
@@ -77,6 +78,27 @@ export function disclosedHistoryRows(
     return [current, ...history].slice(0, rowCount);
   }
   return history.slice(0, rowCount);
+}
+
+/**
+ * 출처 줄 머리 라벨 (A4', 2026-09-25 L10' 동봉) — 출처가 공시 원문인지 언론 보도 인용인지 밝힌다.
+ * 이 카드는 GuideMidAd 위라 출처 줄이 종전('출처: ' + 출처 문구)보다 길어지면 안 된다:
+ *  - DART 자동 주입 카드(basis 있음): '출처(공시 원문):' — 주입 출처 문구에서 뺀 꼬리(' — OpenDART 수집',
+ *    CompanyRepository)가 라벨보다 길어 줄이 늘지 않는다
+ *  - 수기 카드: 큐레이션 출처 문구는 줄일 수 없어 라벨을 '출처:'와 같은 두 글자로 —
+ *    DART·알리오 원문 링크는 '원문:', 그 밖(언론 보도 인용)은 '보도:'
+ *  - 링크 없음: 종전 '출처:' 그대로
+ * 실측(2026-09-25, 사이트 CSS·서브셋 폰트, 뷰포트 320~1280px 1px 간격): 전 카드 높이 증가 0 —
+ * 수기 카드는 전 폭 불변, 주입 카드는 430~554px 폭에서만 한 줄(16px) 줄고 나머지 폭 불변.
+ */
+export function disclosedSourceLabel(d: {
+  basis?: "reported" | "computed";
+  sourceUrl?: string;
+}): string {
+  if (!d.sourceUrl) return "출처:";
+  const official = isOfficialDisclosureUrl(d.sourceUrl);
+  if (d.basis && official) return "출처(공시 원문):";
+  return official ? "원문:" : "보도:";
 }
 
 export default function CompanyDisclosedSalary({
@@ -260,7 +282,7 @@ export default function CompanyDisclosedSalary({
         )}
 
         <p className="text-xs text-muted-blue dark:text-canvas-300">
-          출처:{" "}
+          {disclosedSourceLabel(d)}{" "}
           {d.sourceUrl ? (
             <a
               href={d.sourceUrl}
