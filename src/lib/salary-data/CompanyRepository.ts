@@ -36,9 +36,7 @@ function buildDartDisclosed(id: string): CompanyProfile["disclosed"] | undefined
  avgSalaryManwon: d.a,
  fiscalYear: d.y,
  ...(d.t != null ? { avgTenureYears: d.t } : {}),
- // 꼬리 ' — OpenDART 수집'은 뺐다 — 공시 카드 출처 줄이 '출처(공시 원문):' 라벨(A4')을 달면서
- // 줄 길이가 종전보다 길어지지 않게(광고 위 높이 불변, 2026-09-25 L10' 동봉). 링크가 곧 DART 원문이다.
- source: `금융감독원 전자공시(DART) 사업보고서(${d.y} 사업연도) '직원 등의 현황'`,
+ source: `금융감독원 전자공시(DART) 사업보고서(${d.y} 사업연도) '직원 등의 현황' — OpenDART 수집`,
  sourceUrl: `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${d.r}`,
  // 지주회사는 덧붙이지 않고 교체 — 공시 카드(GuideMidAd 위) 높이를 기존 문구와 같게 유지 (B12 COMP-12).
  // 산정 기준(B13 A19)도 기준별로 밝힌다 — 공시 1인평균 기준 문구는 괄호를 줄여 종전 길이 이하로.

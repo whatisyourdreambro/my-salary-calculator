@@ -7,6 +7,7 @@ import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { buildCompanySalaryFaq, getCompanySalaryBasis } from "@/lib/companySalaryBasis";
 import { buildCompanyFaq } from "@/lib/companyFaqItems";
 import { formatManwonKorean } from "@/lib/manwonFormat";
+import { displayedDisclosedSource } from "@/lib/companyMetaGate";
 import { faqLd } from "@/lib/structuredData";
 import CompanyFaq from "@/components/CompanyFaq";
 import type { CompanyProfile } from "@/types/company";
@@ -109,7 +110,8 @@ describe("회사 평균과 신입 연봉의 자료 기준", () => {
       const [average, entry] = buildCompanySalaryFaq(company);
       if (company.disclosed) {
         expect(average.answer, company.id).toContain(`${company.disclosed.fiscalYear} 사업연도 ${formatManwonKorean(company.disclosed.avgSalaryManwon)}`);
-        expect(average.answer, company.id).toContain(company.disclosed.source);
+        // 출처 문구는 공시 카드와 같은 표시 규칙(A4' 빌드 시점 게이트 — 켜진 뒤 DART 주입 꼬리 생략, companyMetaDescription.test.ts)
+        expect(average.answer, company.id).toContain(displayedDisclosedSource(company.disclosed.source));
       } else {
         expect(average.answer, company.id).toContain("평균연봉 공시 자료는 없습니다");
       }

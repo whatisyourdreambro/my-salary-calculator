@@ -12,7 +12,7 @@
 //    삼성전자·SK하이닉스·현대차 등 네이버 상위 회사가 피드에 없었다 → 전체 수록(약 430곳).
 //  - pubDate = companyPageModified(src/lib/pageModified.ts) — sitemap lastmod 와 같은 함수라
 //    두 신호가 다시 어긋나지 않는다. 날짜를 새로 올리지 않는다(데이터일·FAQ 검수일의 최댓값 —
-//    2026-09-28 KST 이후 빌드부터는 L10' 공시 평균 description 대상 회사만 그 적용일도 포함).
+//    2026-10-01 KST 이후 빌드부터는 L10' 공시 평균 description 대상 회사만 그 적용일도 포함).
 //  - 정렬 = 페이지 수정일 내림차순 + id 오름차순(코드 유닛 비교 — 로캘 무관, 배포마다 순서 고정.
 //    순서가 흔들리면 수집기가 '변경'으로 오인).
 //  - item title·description = 회사 페이지 <title>·meta description 문자열 그대로

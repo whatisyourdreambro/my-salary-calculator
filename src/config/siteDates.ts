@@ -35,17 +35,23 @@ export const COMPANY_FAQ_REVIEW_DATE = new Date("2026-09-10");
 
 /**
  * L10'(승인⑧) 회사 meta description 개편 적용일 — KST 날짜(YYYY-MM-DD). 같은 값이 두 가지로 쓰인다.
- *  1) 켜짐 스위치: 이 날짜 KST 자정 이후 빌드에서만 새 description(공시 평균연봉 후미·'로그인 없이'·
- *     'N월 업데이트' 삭제)이 나간다. 그 전 빌드는 종전 description 그대로다 — 9/26 시즌 푸시처럼
- *     이 브랜치가 먼저 main 에 합쳐져 배포돼도 조기 노출·미래 lastmod 가 생기지 않는다
- *     (src/lib/companyMetaDisclosed.ts isCompanyMetaDisclosedLive, propertyTaxPeriod.ts 와 같은 빌드 시점 게이트).
+ *  1) 켜짐 스위치: 이 날짜 KST 자정 이후 빌드에서만 아래가 나간다 — 새 description(공시 평균연봉 후미·
+ *     '로그인 없이'·'N월 업데이트' 삭제), A4' 공시 카드 출처 줄 라벨('출처(공시 원문):'/'원문:'/'보도:'),
+ *     DART 주입 출처 문구 꼬리(' — OpenDART 수집') 생략(카드 출처 줄·FAQ '공시 인용 출처'·FAQPage JSON-LD).
+ *     그 전 빌드는 전부 종전 출력과 바이트 동일하다 — 9/26 시즌 푸시처럼 이 브랜치가 먼저 main 에
+ *     합쳐져 배포돼도 조기 노출·미래 lastmod 가 생기지 않는다
+ *     (src/lib/companyMetaGate.ts isCompanyMetaDisclosedLive, propertyTaxPeriod.ts 와 같은 빌드 시점 게이트).
  *  2) 대상 회사(공시 평균연봉을 description 에 싣는 약 160곳)의 페이지 수정일(sitemap lastmod·
  *     rss-companies.xml pubDate) — src/lib/pageModified.ts companyPageModified 가 max() 에 넣는다.
  *     데이터 lastUpdated(배지·Dataset dateModified)는 그대로 둔다 — 바뀐 것은 데이터가 아니라 메타 문구다.
- * 배포: 이 날짜 이후 첫 빌드(아무 main 푸시 또는 CF 'Retry deployment') → 운영자 Purge.
+ * 2026-10-01 = 운영자 승인 적용일(10/1 예약 재빌드, 보유세 납부기간 재빌드와 같은 빌드). 수정일은 다른 날짜
+ * 상수처럼 UTC 자정(2026-10-01T00:00Z = 10/1 09:00 KST)으로 나가므로, 켜는 빌드는 10/1 09:00 KST 이후에
+ * 돌린다 — 그 전(00:00~09:00 KST)에 돌면 lastmod 가 최대 9시간 미래가 되고, 자정을 가로지르는 빌드는
+ * 일부 페이지만 켜질 수 있다.
+ * 배포: 10/1 09:00 KST 이후 첫 빌드(아무 main 푸시 또는 CF 'Retry deployment') → 운영자 Purge.
  * 첫 빌드가 10/5(RSS 제출) 뒤로 밀리면 이 값을 실제 배포일로 바꾼 뒤 배포한다 — 수정일은 실제 변경일에 가깝게.
  */
-export const COMPANY_META_DISCLOSED_DATE = "2026-09-28";
+export const COMPANY_META_DISCLOSED_DATE = "2026-10-01";
 
 /**
  * 회사 페이지 실수령액 표(CompanySalaryTable.estimateNetSalary)가 마지막으로 실제

@@ -13,6 +13,7 @@ import { ShieldCheck, ExternalLink, Trophy } from "lucide-react";
 import type { CompanyProfile } from "@/types/company";
 import { getCompanySalaryBasis } from "@/lib/companySalaryBasis";
 import { isOfficialDisclosureUrl } from "@/lib/companyMetaDisclosed";
+import { displayedDisclosedSource, isCompanyMetaDisclosedLive } from "@/lib/companyMetaGate";
 import Link from "@/components/AppLink";
 
 /** 만원 단위 → "1억 5,800만원" 한국식 표기 */
@@ -82,9 +83,12 @@ export function disclosedHistoryRows(
 
 /**
  * 출처 줄 머리 라벨 (A4', 2026-09-25 L10' 동봉) — 출처가 공시 원문인지 언론 보도 인용인지 밝힌다.
+ * L10' 과 같은 빌드 시점 게이트(COMPANY_META_DISCLOSED_DATE) 뒤에서만 쓴다 — 그 전 빌드는 종전 '출처:'
+ * 와 종전 출처 문구 그대로(아래 컴포넌트). 순수 함수라 라벨 규칙 테스트는 날짜와 무관하다.
  * 이 카드는 GuideMidAd 위라 출처 줄이 종전('출처: ' + 출처 문구)보다 길어지면 안 된다:
- *  - DART 자동 주입 카드(basis 있음): '출처(공시 원문):' — 주입 출처 문구에서 뺀 꼬리(' — OpenDART 수집',
- *    CompanyRepository)가 라벨보다 길어 줄이 늘지 않는다
+ *  - DART 자동 주입 카드(basis 있음): '출처(공시 원문):' — 같은 게이트에서 표시만 빼는 꼬리
+ *    (' — OpenDART 수집', companyMetaGate displayedDisclosedSource — 데이터 문구는 그대로)가 라벨보다
+ *    길어 줄이 늘지 않는다
  *  - 수기 카드: 큐레이션 출처 문구는 줄일 수 없어 라벨을 '출처:'와 같은 두 글자로 —
  *    DART·알리오 원문 링크는 '원문:', 그 밖(언론 보도 인용)은 '보도:'
  *  - 링크 없음: 종전 '출처:' 그대로
@@ -146,6 +150,11 @@ export default function CompanyDisclosedSalary({
   // 순위 'DART 공시 기준' → '산정치 기준' (광고 위 줄바꿈 증가 없음, 2026-09-25 리뷰 정정)
   const reportedBasis = d.basis === "reported";
   const historyRows = disclosedHistoryRows(d, dartStats);
+  // A4' 출처 줄 — L10' 과 같은 빌드 시점 게이트. 켜지기 전 빌드는 종전 '출처: ' + 종전 출처 문구 그대로
+  // (서버 컴포넌트 정적 프리렌더라 호출 시각 = 빌드 시각)
+  const a4Live = isCompanyMetaDisclosedLive();
+  const sourceLabel = a4Live ? disclosedSourceLabel(d) : "출처:";
+  const sourceText = displayedDisclosedSource(d.source, a4Live);
 
   return (
     <section data-msy-module="company-disclosed" className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 my-8">
@@ -282,7 +291,7 @@ export default function CompanyDisclosedSalary({
         )}
 
         <p className="text-xs text-muted-blue dark:text-canvas-300">
-          {disclosedSourceLabel(d)}{" "}
+          {sourceLabel}{" "}
           {d.sourceUrl ? (
             <a
               href={d.sourceUrl}
@@ -290,11 +299,11 @@ export default function CompanyDisclosedSalary({
               rel="nofollow noopener"
               className="underline underline-offset-2 hover:text-electric transition-colors inline-flex items-center gap-1"
             >
-              {d.source}
+              {sourceText}
               <ExternalLink className="w-3 h-3 flex-shrink-0" aria-hidden="true" />
             </a>
           ) : (
-            d.source
+            sourceText
           )}
         </p>
       </div>

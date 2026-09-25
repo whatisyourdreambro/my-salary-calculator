@@ -30,7 +30,7 @@ const COMPANY_META_DISCLOSED_MODIFIED_MS = new Date(COMPANY_META_DISCLOSED_DATE)
  * Dataset·데이터 배지의 lastUpdated 는 원본 데이터 날짜 그대로 두고, 이 값은 "페이지"
  * 수정일(sitemap lastmod·RSS pubDate)에만 쓴다. 날짜를 새로 올리지 않는다 — 입력의 최댓값뿐.
  *
- * L10'(2026-09-28 KST 이후 빌드): meta description 에 공시 평균연봉이 실린 회사
+ * L10'(COMPANY_META_DISCLOSED_DATE = 2026-10-01 KST 이후 빌드): meta description 에 공시 평균연봉이 실린 회사
  * (companyMetaDisclosedFigure — seo.ts 와 같은 판정)만 COMPANY_META_DISCLOSED_DATE 를 max() 에 넣는다.
  * 그 전 빌드·비대상 회사는 종전 값 그대로. 이 승격이 sitemap lastmod 를 바꿔 postbuild IndexNow 가
  * 대상 URL 만 제출하고, rss-companies.xml 에서 대상 회사가 맨 앞으로 온다.

@@ -361,7 +361,7 @@ export function buildCompanyMetadata(company: {
  : "직급별 추정 연봉표";
  let description: string;
  if (isCompanyMetaDisclosedLive()) {
- // L10'(승인⑧) — COMPANY_META_DISCLOSED_DATE(2026-09-28 KST) 이후 빌드부터. title·keywords 는 그대로.
+ // L10'(승인⑧) — COMPANY_META_DISCLOSED_DATE(2026-10-01 KST) 이후 빌드부터. title·keywords 는 그대로.
  //  - COMP-06: 'N월 업데이트 기준'을 뺀다. 페이지별 날짜가 직급별 자체 추정치의 최신성을 보증하는
  //    것처럼 읽혔다 — 날짜는 공시 사업연도만 남긴다.
  //  - A7': '로그인 없이' 후미 토큰(경쟁 연봉 정보 8곳의 로그인 게이트 대비, 전 회사 공통).
@@ -391,7 +391,8 @@ export function buildCompanyMetadata(company: {
  )
  : `${company.name}의 신입 초봉부터 직급별 연봉 자체 추정치와 세후 실수령액을 2026년 기준으로 안내합니다. 동종업계 비교·연봉 협상 팁을 로그인 없이 확인하세요.`;
  } else {
- // L10' 적용 전(9/28 KST 이전 빌드) — 종전 문구 그대로. 적용 배포 확인 뒤 이 분기는 지운다.
+ // L10' 적용 전(10/1 KST 이전 빌드) — 종전 문구 그대로. 적용 배포 확인 뒤 이 분기는 지운다
+ // (그때 companyMetaDescription.test.ts 의 적용 전 테스트와 fixtures/companyPreGate-bd68d860.json 도 같이 지운다).
  const updatedLabel = (() => {
  if (!company.lastUpdated) return "2026년 최신";
  const d = new Date(company.lastUpdated);

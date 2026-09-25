@@ -1,5 +1,6 @@
 import type { CompanyProfile } from "@/types/company";
 import { formatManwonKorean } from "@/lib/manwonFormat";
+import { displayedDisclosedSource } from "@/lib/companyMetaGate";
 
 type SalaryBasisCompany = Pick<CompanyProfile, "salary" | "disclosed">;
 
@@ -40,12 +41,15 @@ export function buildCompanySalaryFaq(
   // 바이트 단위로 같다 (2026-09-25 B14 META-06). 공시 원값은 소수 만원도 반올림 없이 보존한다.
   const baseLabel = formatManwonKorean(Math.round(entryBaseWon / 10000));
   const totalLabel = formatManwonKorean(Math.round(entryTotalWon / 10000));
+  // 출처 문구는 공시 카드 출처 줄과 같은 표시 규칙(A4', L10' 빌드 시점 게이트) — 켜지기 전 빌드는 종전 문구
+  // 그대로라 화면 FAQ·FAQPage JSON-LD 가 바이트 동일, 켜진 빌드는 DART 주입 꼬리(' — OpenDART 수집')만 뺀다.
+  const sourceText = disclosed ? displayedDisclosedSource(disclosed.source) : "";
 
   return [
     {
       question: `${name} 평균 연봉은 얼마인가요?`,
       answer: disclosed
-        ? `${name}의 공시 기준 직원 평균연봉은 ${disclosed.fiscalYear} 사업연도 ${formatManwonKorean(disclosed.avgSalaryManwon)}${disclosed.basis === "computed" ? "(연간 급여총액÷인원 산정)" : ""}입니다. 공시 인용 출처: ${disclosed.source}. 신입 초봉이나 개인 지급액과는 다르며, 성과급 포함 범위·집계 대상·산정 방식은 공시 카드의 출처와 주의사항을 확인하세요.`
+        ? `${name}의 공시 기준 직원 평균연봉은 ${disclosed.fiscalYear} 사업연도 ${formatManwonKorean(disclosed.avgSalaryManwon)}${disclosed.basis === "computed" ? "(연간 급여총액÷인원 산정)" : ""}입니다. 공시 인용 출처: ${sourceText}. 신입 초봉이나 개인 지급액과는 다르며, 성과급 포함 범위·집계 대상·산정 방식은 공시 카드의 출처와 주의사항을 확인하세요.`
         : `본 DB에서 확인한 ${name}의 직원 전체 평균연봉 공시 자료는 없습니다. 아래 신입·직급별 연봉은 기본급과 평균 인센티브를 바탕으로 한 자체 추정치이며, 직원 전체 평균을 대신하지 않습니다.`,
     },
     {

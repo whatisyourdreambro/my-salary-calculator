@@ -39,7 +39,7 @@ export function companyMetadataInput(company: CompanyProfile): CompanyMetadataIn
     aliases: company.aliases,
     hasCareerLevels: !!company.careerLevels?.length,
     lastUpdated: company.lastUpdated,
-    // L10' 대상 회사만 — 날짜 게이트(9/28 KST)는 buildCompanyMetadata 가 건다
+    // L10' 대상 회사만 — 날짜 게이트(10/1 KST)는 buildCompanyMetadata 가 건다
     ...(disclosedAverage ? { disclosedAverage } : {}),
   };
 }
