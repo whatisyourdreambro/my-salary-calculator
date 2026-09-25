@@ -15,6 +15,7 @@ import {
   metadataTitleText,
 } from "@/lib/companyPageMetadata";
 import { getCompanySalaryBasis } from "@/lib/companySalaryBasis";
+import { companyMetaDisclosedFigure } from "@/lib/companyMetaDisclosed";
 import { buildCompanyMetadata } from "@/lib/seo";
 import { COMPANY_FAQ_REVIEW_DATE, STATIC_LAST_MODIFIED } from "@/config/siteDates";
 
@@ -105,6 +106,8 @@ describe("companyMetadataInput — 회사 페이지 <title> 불변 이동", () =
         aliases: c.aliases,
         hasCareerLevels: !!c.careerLevels?.length,
         lastUpdated: c.lastUpdated,
+        // L10'(2026-09-25 준비) — description 후미 전용, title 산식과 무관
+        ...(companyMetaDisclosedFigure(c) ? { disclosedAverage: companyMetaDisclosedFigure(c) } : {}),
       });
     }
   });

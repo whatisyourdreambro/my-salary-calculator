@@ -8,6 +8,8 @@ import type { Metadata } from "next";
 import { getGuideModifiedDate } from "./guideDates";
 import { englishPolicyCounterpart } from "./englishSite";
 import { salaryOgImagePath } from "./ogUrlVersion";
+import { formatManwonKorean } from "./manwonFormat";
+import { isCompanyMetaDisclosedLive } from "./companyMetaDisclosed";
 // /salary 제목·설명의 연도 = 현행 요율 연도 (금액과 같은 포인터 — 2026-09-25 N3)
 import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 
@@ -280,6 +282,21 @@ export function formatSalaryKorean(amount: number): string {
  return `${manwon.toLocaleString("ko-KR")}만원`;
 }
 
+/** 회사 meta description 상한(한글 글자 수) — L10'·S2-4 규칙 */
+export const COMPANY_DESCRIPTION_MAX_CHARS = 150;
+
+/**
+ * 머리 문장 + 꼬리 후보(긴 것부터) + 후미 문구 → 상한 안에 드는 첫 조합.
+ * 어느 것도 맞지 않으면 가장 짧은 꼬리로 — 상한 초과는 회귀 테스트가 잡는다(데이터가 바뀐 경우).
+ */
+function fitCompanyDescription(head: string, tails: string[], suffix: string): string {
+ for (const tail of tails) {
+ const text = `${head} ${tail}${suffix}`;
+ if (text.length <= COMPANY_DESCRIPTION_MAX_CHARS) return text;
+ }
+ return `${head} ${tails[tails.length - 1]}${suffix}`;
+}
+
 /**
  * /salary-db/[id] 회사 페이지 전용 헬퍼.
  */
@@ -294,8 +311,13 @@ export function buildCompanyMetadata(company: {
  aliases?: string[];
  /** 직급별 상세 연봉표(careerLevels) 보유 여부 — 삼성전자·SK하이닉스 등 */
  hasCareerLevels?: boolean;
- /** 데이터 갱신일 (YYYY-MM-DD) — description 신뢰 신호 */
+ /** 데이터 갱신일 (YYYY-MM-DD) — L10' 적용 전 description 의 'N월 업데이트' 라벨에만 쓴다 */
  lastUpdated?: string;
+ /**
+ * description 후미에 붙일 공시 평균연봉 — L10' 대상 회사만(src/lib/companyMetaDisclosed.ts
+ * companyMetaDisclosedFigure). title 에는 쓰지 않는다.
+ */
+ disclosedAverage?: { avgSalaryManwon: number; fiscalYear: string };
 }): Metadata {
  // 네이버 검색 데이터 기준: "{회사} 연봉"·"{회사} 신입 연봉"·"{회사} 초봉"·
  // "{회사} 직급" 쿼리 비중이 압도적. page.tsx가 넘기는 averageSalary는 실제로
@@ -326,7 +348,7 @@ export function buildCompanyMetadata(company: {
  ]);
 
  // 회사별 고유 설명 — title 수치 반복 대신 title에 없는 주니어·리드 실수치와
- // 갱신일을 추가해 SERP에서 새 정보를 준다. 직급 라벨은 페이지 본문(신입/주니어/
+ // (L10' 적용 뒤) 공시 평균연봉을 추가해 SERP에서 새 정보를 준다. 직급 라벨은 페이지 본문(신입/주니어/
  // 시니어/리드)과 일치시켜 메타-본문 정합성 유지.
  const juniorFigure = company.juniorSalary
  ? formatSalaryKorean(company.juniorSalary)
@@ -334,6 +356,42 @@ export function buildCompanyMetadata(company: {
  const leadFigure = company.leadSalary
  ? formatSalaryKorean(company.leadSalary)
  : null;
+ const tableLabel = company.hasCareerLevels
+ ? "직급(CL)별 추정 연봉표"
+ : "직급별 추정 연봉표";
+ let description: string;
+ if (isCompanyMetaDisclosedLive()) {
+ // L10'(승인⑧) — COMPANY_META_DISCLOSED_DATE(2026-09-28 KST) 이후 빌드부터. title·keywords 는 그대로.
+ //  - COMP-06: 'N월 업데이트 기준'을 뺀다. 페이지별 날짜가 직급별 자체 추정치의 최신성을 보증하는
+ //    것처럼 읽혔다 — 날짜는 공시 사업연도만 남긴다.
+ //  - A7': '로그인 없이' 후미 토큰(경쟁 연봉 정보 8곳의 로그인 게이트 대비, 전 회사 공통).
+ //  - L10': 대상 회사(companyMetaDisclosedFigure)는 공시 평균연봉·사업연도를 맨 끝에 덧붙인다 — 첫 구절
+ //    (자체 추정치 수치)은 그대로 두는 후미 삽입. 150자 상한은 꼬리 문구를 긴 것부터 줄여 맞춘다.
+ const disclosedSuffix =
+ company.disclosedAverage && entryFigure && seniorFigureTitle
+ ? ` 공시 평균연봉 ${formatManwonKorean(company.disclosedAverage.avgSalaryManwon)}(${company.disclosedAverage.fiscalYear} 사업연도).`
+ : "";
+ const shorterTails = [
+ `${tableLabel}와 세후 실수령액을 로그인 없이 확인하세요.`,
+ `${tableLabel}·실수령액을 로그인 없이 확인하세요.`,
+ "로그인 없이 확인하세요.",
+ ];
+ description =
+ entryFigure && seniorFigureTitle && juniorFigure && leadFigure
+ ? fitCompanyDescription(
+ `${company.name} 연봉 자체 추정치: 신입 ${entryFigure}, 주니어 ${juniorFigure}, 시니어 ${seniorFigureTitle}, 리드 ${leadFigure} (성과급 포함).`,
+ [`${tableLabel}와 세후 실수령액, 성과급·복지를 로그인 없이 확인하세요.`, ...shorterTails],
+ disclosedSuffix
+ )
+ : entryFigure && seniorFigureTitle
+ ? fitCompanyDescription(
+ `${company.name} 연봉 자체 추정치: 신입 초봉 약 ${entryFigure}, 시니어 약 ${seniorFigureTitle}.`,
+ [`${tableLabel}와 세후 실수령액, 인센티브·복지를 로그인 없이 확인하세요.`, ...shorterTails],
+ disclosedSuffix
+ )
+ : `${company.name}의 신입 초봉부터 직급별 연봉 자체 추정치와 세후 실수령액을 2026년 기준으로 안내합니다. 동종업계 비교·연봉 협상 팁을 로그인 없이 확인하세요.`;
+ } else {
+ // L10' 적용 전(9/28 KST 이전 빌드) — 종전 문구 그대로. 적용 배포 확인 뒤 이 분기는 지운다.
  const updatedLabel = (() => {
  if (!company.lastUpdated) return "2026년 최신";
  const d = new Date(company.lastUpdated);
@@ -341,15 +399,13 @@ export function buildCompanyMetadata(company: {
  ? "2026년 최신"
  : `${d.getFullYear()}년 ${d.getMonth() + 1}월 업데이트`;
  })();
- const tableLabel = company.hasCareerLevels
- ? "직급(CL)별 추정 연봉표"
- : "직급별 추정 연봉표";
- const description =
+ description =
  entryFigure && seniorFigureTitle && juniorFigure && leadFigure
  ? `${company.name} 연봉 자체 추정치: 신입 ${entryFigure}, 주니어 ${juniorFigure}, 시니어 ${seniorFigureTitle}, 리드 ${leadFigure} (성과급 포함). ${tableLabel}와 세후 실수령액, 성과급·복지를 ${updatedLabel} 기준으로 확인하세요.`
  : entryFigure && seniorFigureTitle
  ? `${company.name} 연봉 자체 추정치: 신입 초봉 약 ${entryFigure}, 시니어 약 ${seniorFigureTitle}. ${tableLabel}와 세후 실수령액, 인센티브·복지를 ${updatedLabel} 기준으로 확인하세요.`
  : `${company.name}의 신입 초봉부터 직급별 연봉 자체 추정치와 세후 실수령액을 2026년 기준으로 안내합니다. 동종업계 비교·연봉 협상 팁을 확인하세요.`;
+ }
 
  return buildPageMetadata({
  title,

@@ -34,6 +34,20 @@ export const STATIC_LAST_MODIFIED_ISO = STATIC_LAST_MODIFIED.toISOString().slice
 export const COMPANY_FAQ_REVIEW_DATE = new Date("2026-09-10");
 
 /**
+ * L10'(승인⑧) 회사 meta description 개편 적용일 — KST 날짜(YYYY-MM-DD). 같은 값이 두 가지로 쓰인다.
+ *  1) 켜짐 스위치: 이 날짜 KST 자정 이후 빌드에서만 새 description(공시 평균연봉 후미·'로그인 없이'·
+ *     'N월 업데이트' 삭제)이 나간다. 그 전 빌드는 종전 description 그대로다 — 9/26 시즌 푸시처럼
+ *     이 브랜치가 먼저 main 에 합쳐져 배포돼도 조기 노출·미래 lastmod 가 생기지 않는다
+ *     (src/lib/companyMetaDisclosed.ts isCompanyMetaDisclosedLive, propertyTaxPeriod.ts 와 같은 빌드 시점 게이트).
+ *  2) 대상 회사(공시 평균연봉을 description 에 싣는 약 160곳)의 페이지 수정일(sitemap lastmod·
+ *     rss-companies.xml pubDate) — src/lib/pageModified.ts companyPageModified 가 max() 에 넣는다.
+ *     데이터 lastUpdated(배지·Dataset dateModified)는 그대로 둔다 — 바뀐 것은 데이터가 아니라 메타 문구다.
+ * 배포: 이 날짜 이후 첫 빌드(아무 main 푸시 또는 CF 'Retry deployment') → 운영자 Purge.
+ * 첫 빌드가 10/5(RSS 제출) 뒤로 밀리면 이 값을 실제 배포일로 바꾼 뒤 배포한다 — 수정일은 실제 변경일에 가깝게.
+ */
+export const COMPANY_META_DISCLOSED_DATE = "2026-09-28";
+
+/**
  * 회사 페이지 실수령액 표(CompanySalaryTable.estimateNetSalary)가 마지막으로 실제
  * 재계산된 날 — CompanyRepository.enrich 가 lastUpdated = max(데이터일, DART 주입일,
  * 이 값) 으로 파생할 때 쓰는 하한.
