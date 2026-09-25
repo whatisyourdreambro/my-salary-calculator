@@ -18,6 +18,7 @@ import KakaoScript from "@/components/KakaoScript";
 import CopyAttribution from "@/components/CopyAttribution";
 import CalcFunnelTracker from "@/components/CalcFunnelTracker";
 import NavTypeTracker from "@/components/NavTypeTracker";
+import AutoAdsSeenTracker from "@/components/AutoAdsSeenTracker";
 import SkipToContent from "@/components/SkipToContent";
 import { organizationLd, webSiteLd } from "@/lib/structuredData";
 import { RSS_FEED_ALTERNATES } from "@/lib/seo";
@@ -180,6 +181,8 @@ export default function RootLayout({
         <CalcFunnelTracker />
         {/* 뷰 도달 방식 nav_type(landing/soft) → GA4 page_view·광고 계측 이벤트. ★ga4-init Script 보다 앞에 둘 것(첫 page_view 순서) */}
         <NavTypeTracker />
+        {/* 착지 뷰 자동광고 자리·요청·채움 관측 → GA4 autoads_seen 1회(읽기 전용·무렌더, DOM 노드 0개) */}
+        <AutoAdsSeenTracker />
 
         {/* 본문 100자+ 복사 시 출처 링크 자동 첨부 (펌글 → 자연 유입) */}
         <CopyAttribution />

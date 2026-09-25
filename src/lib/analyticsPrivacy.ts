@@ -30,10 +30,12 @@ export const RESERVED_TRAFFIC_SOURCE_PARAMS = new Set([
  * turned every /monthly/N and /salary/N row into the literal "/monthly/[amount]"·"/salary/[amount]"
  * (GA4 28d: 3,811 + 1,837 ad_request_attempt that could not be joined to any real page).
  * Calculation, share and all other events keep the redaction.
+ * autoads_seen (auto-ad observation per landing view, 2026-09-26) is page-scoped the same way.
  */
 export const PAGE_SCOPED_MEASUREMENT_EVENTS = new Set([
   "ad_request_attempt", "ad_request_error", "ad_filled", "ad_unfilled", "ad_unit_click",
   "affiliate_impression", "affiliate_click", "coupang_impression", "coupang_click",
+  "autoads_seen",
 ]);
 
 const AMOUNT_PATH = /^\/(salary|monthly)\/(\d+(?:-manwon)?)(?=\/|$)/;

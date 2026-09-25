@@ -61,7 +61,7 @@ describe("public amount report pages keep their real path for ad/affiliate event
   it("covers exactly the ad and affiliate/coupang measurement events", () => {
     expect([...PAGE_SCOPED_MEASUREMENT_EVENTS].sort()).toEqual([
       "ad_filled", "ad_request_attempt", "ad_request_error", "ad_unfilled", "ad_unit_click",
-      "affiliate_click", "affiliate_impression", "coupang_click", "coupang_impression",
+      "affiliate_click", "affiliate_impression", "autoads_seen", "coupang_click", "coupang_impression",
     ]);
   });
 
