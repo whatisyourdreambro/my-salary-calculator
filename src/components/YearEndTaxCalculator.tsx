@@ -5,13 +5,13 @@ import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
 import {
  calculateYearEndTax,
- deriveAnnualHealthPremium,
+ deriveAnnualSocialInsurance2026,
+ estimatePrepaidIncomeTax2026,
  TaxInputs,
  TaxResult,
 } from "@/lib/yearEndTaxCalculator";
 import NumberStepper from "./NumberStepper";
 import { ChevronDown } from "lucide-react";
-import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
 
 const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 
@@ -139,20 +139,20 @@ const DEFAULT_SALARY = 50_000_000;
 export default function YearEndTaxCalculator() {
  const [inputs, setInputs] = useState<TaxInputs>({
  grossSalary: DEFAULT_SALARY,
- prepaidTax: 2500000,
+ // 기납부세액은 사용자가 직접 고치기 전까지 derivedInputs 가 간이세액표로 추정한다
+ // (prepaidTaxTouched). 종전 250만원 고정값은 총급여 6,000만원 이상에서 환급을 추가 납부로
+ // 뒤집어 보여줬다 (2026-09-26 W1-A). 이 시드는 수정 전까지 쓰이지 않는다.
+ prepaidTax: 0,
  // 4대보험 기본값 — taxConstants2026 요율에서 파생 (2026-08-23: 2025 요율
  // 하드코딩 잔존 버그 수정. 2027 요율 변경 시 자동 반영)
  // 아래 3개는 초기 렌더용 시드일 뿐이다 — 실제 계산은 derivedInputs 가
  // 현재 총급여에서 매번 다시 파생한다(총급여 변경 시 갱신 보장).
- nationalPension: Math.round(DEFAULT_SALARY * INSURANCE_RATES_2026.NATIONAL_PENSION),
  // 장기요양보험료 포함 (소득세법 §52①1 — 둘 다 전액 소득공제 대상)
- healthInsurance: deriveAnnualHealthPremium(DEFAULT_SALARY),
- employmentInsurance: Math.round(DEFAULT_SALARY * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE),
+ ...deriveAnnualSocialInsurance2026(DEFAULT_SALARY),
  dependents: 1,
  disabledDependents: 0,
  seniorDependents: 0,
  housingSubscription: 0,
- mortgageInterest: 0,
  creditCard: 15000000,
  debitCardAndCash: 5000000,
  // 전통시장·대중교통은 화면에 입력란이 없어 사용자가 보거나 0으로 고칠 수 없다.
@@ -172,29 +172,25 @@ export default function YearEndTaxCalculator() {
  });
 
  const [showReport, setShowReport] = useState(false);
+ // 사용자가 기납부세액을 직접 입력했는지 — 그 전까지는 총급여·부양가족·자녀 수에서 추정한다
+ const [prepaidTaxTouched, setPrepaidTaxTouched] = useState(false);
 
  // 4대보험 소득공제는 총급여에서 파생돼야 한다. 종전에는 useState 초기값
  // (DEFAULT_SALARY=5,000만 기준)으로 한 번 계산된 뒤 총급여를 바꿔도 갱신되지
  // 않았다 — 화면에 4대보험 입력란이 없으므로 사용자가 고칠 수단도 없었다.
  // 총급여 1억을 넣어도 5,000만원어치 보험료만 공제돼 결정세액이 크게 과대
  // 표시됐다(2026-09-06 전수검사). 계산 직전에 현재 총급여로 다시 파생한다.
- const derivedInputs = useMemo(() => {
- const gross = inputs.grossSalary;
- const pensionBase = Math.min(
- Math.max(gross / 12, PENSION_BASE_2026.MIN_MONTHLY),
- PENSION_BASE_2026.MAX_MONTHLY
- );
- return {
+ // 기납부세액도 같은 방식이다 — 직접 고치기 전까지 간이세액표(100%) × 12 추정 (2026-09-26 W1-A).
+ const derivedInputs = useMemo(
+ () => ({
  ...inputs,
- nationalPension: Math.round(
- pensionBase * INSURANCE_RATES_2026.NATIONAL_PENSION * 12
- ),
- healthInsurance: deriveAnnualHealthPremium(gross),
- employmentInsurance: Math.round(
- gross * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE
- ),
- };
- }, [inputs]);
+ ...deriveAnnualSocialInsurance2026(inputs.grossSalary),
+ prepaidTax: prepaidTaxTouched
+ ? inputs.prepaidTax
+ : estimatePrepaidIncomeTax2026(inputs.grossSalary, inputs.dependents, inputs.children),
+ }),
+ [inputs, prepaidTaxTouched]
+ );
 
  const result = useMemo(() => calculateYearEndTax(derivedInputs), [derivedInputs]);
 
@@ -227,10 +223,14 @@ export default function YearEndTaxCalculator() {
  onValueChange={(v) => handleInputChange("grossSalary", v)}
  quickAmounts={[10000000, 5000000, 1000000]}
  />
+ {/* 라벨은 320px 에서 한 줄 유지(종전 라벨 189.8px → 217.9px, 가용 254px) — 줄 추가 금지 구역(광고 위) */}
  <CurrencyInput
- label="기납부세액 (원천징수된 세금 총액)"
- value={inputs.prepaidTax.toLocaleString('ko-KR')}
- onValueChange={(v) => handleInputChange("prepaidTax", v)}
+ label="기납부세액 (간이세액표 추정·수정 가능)"
+ value={derivedInputs.prepaidTax.toLocaleString('ko-KR')}
+ onValueChange={(v) => {
+ setPrepaidTaxTouched(true);
+ handleInputChange("prepaidTax", v);
+ }}
  quickAmounts={[500000, 100000, 50000]}
  />
  </Accordion>
@@ -307,7 +307,8 @@ export default function YearEndTaxCalculator() {
  >
  {showReport ? "리포트 숨기기 ▲" : "상세 분석 리포트 보기 ▼"}
  </button>
- {showReport && <AnalysisReport inputs={inputs} result={result} />}
+ {/* 기납부세액 (F)는 추정값일 수 있으므로 계산에 쓴 derivedInputs 를 넘긴다 */}
+ {showReport && <AnalysisReport inputs={derivedInputs} result={result} />}
  </div>
 
  <div className="mt-6 pt-6 border-t border-border">

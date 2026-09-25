@@ -197,7 +197,10 @@ describe("연도 고정 표면 — 포인터와 무관하게 2026 요율", () =>
     ]) {
       const src = readFileSync(file, "utf8");
       expect({ file, pointer: /from "@\/config\/currentRates"/.test(src) }).toEqual({ file, pointer: false });
-      expect({ file, pinned: src.includes("INSURANCE_RATES_2026") }).toEqual({ file, pinned: true });
+      // deriveAnnualSocialInsurance2026 은 yearEndTaxCalculator.ts(아래 목록 첫 줄, INSURANCE_RATES_2026 고정)의
+      // 2026 요율 4대보험 파생 헬퍼 — YearEndTaxCalculator 는 2026-09-26 W1-A 부터 이 헬퍼로 파생한다
+      const pinned = src.includes("INSURANCE_RATES_2026") || src.includes("deriveAnnualSocialInsurance2026");
+      expect({ file, pinned }).toEqual({ file, pinned: true });
     }
     // 본문 검산 예시(연봉 3,000만 · 2026년 귀속 연금보험료공제 142만 5,000원)와 같은 요율
     expect(computeSmbTaxBreak({ annualSalary: 30_000_000, dependents: 1, breakType: "youth" }).taxBase).toBe(17_325_000);
