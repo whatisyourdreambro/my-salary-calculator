@@ -104,10 +104,15 @@ describe("헤더 시즌 ∩ 성과급·계산기 메뉴 (NAV-11 중복 제거)",
   // 상단 블록 유래 중복은 의도된 것 — 시즌 배지(SEASON/HOT)로 승격해 상단에 노출하는 항목이다.
   // 성과급 메뉴 중복: 삼성(DEC TAI·JAN OPI 발표 시즌). 계산기 메뉴 중복: 연말정산 공제 계산기 3종·환급금 계산기.
   // 새 중복이 생기면 여기 기대 집합을 갱신하며 이유를 적을 것.
+  // 2026-09-25 DEC +/tools/finance/irp — 수익 추천 #10 '12월 막차 공제'(12/31 납입분까지만 공제)로
+  // 체크리스트 자리를 IRP·연금저축 계산기로 교체해 SEASON 배지로 승격(항목 수 불변).
   const EXPECTED_TOP_OVERLAP: Record<SeasonKey, { bonus: string[]; calc: string[] }> = {
     SEP: { bonus: [], calc: [] },
     OCT: { bonus: [], calc: ["/credit-card-deduction-2026", "/rent-tax-credit-2026", "/medical-tax-credit-2026"] },
-    DEC: { bonus: ["/calc/samsung-bonus"], calc: ["/calc/samsung-bonus", "/credit-card-deduction-2026", "/medical-tax-credit-2026"] },
+    DEC: {
+      bonus: ["/calc/samsung-bonus"],
+      calc: ["/calc/samsung-bonus", "/credit-card-deduction-2026", "/medical-tax-credit-2026", "/tools/finance/irp"],
+    },
     JAN: { bonus: ["/calc/samsung-bonus"], calc: ["/calc/samsung-bonus", "/year-end-tax", "/credit-card-deduction-2026"] },
   };
 

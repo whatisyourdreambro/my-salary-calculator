@@ -112,6 +112,9 @@ export const SEASONAL_LINKS_OCT: SeasonalLinkSet = {
 // 12월 연말정산 마감 세트 — 12/1 교체용 사전 제작 (2026-09-05, L18' 시점 앞당김).
 // 라우트 6종 전부 src/app 에 실존 확인. ★TAI 하반기는 발표 전 → 라벨만, 지급률 수치 금지
 // (brief §2-5). 12/31 은 귀속연도 종료일(법정)이라 카피 허용.
+// 2026-09-25 (수익 추천 #10): 체크리스트 → IRP·연금저축 계산기 교체(6개 유지) — 근거는
+// src/config/seasonLinks.ts SEASON_TOP_DEC 주석(GA4 28일 최하위군 동률 중 허브와 역할 중복).
+// ★PageFooterAds(table layout) 위 블록 — 새 제목·설명은 교체 전 문구보다 넓지 않게(한 줄 유지).
 export const SEASONAL_LINKS_DEC: SeasonalLinkSet = {
   heading: "연말정산 12/31 마감 전 체크 — 12월 시즌 체크리스트",
   links: [
@@ -136,9 +139,9 @@ export const SEASONAL_LINKS_DEC: SeasonalLinkSet = {
       description: "실손 차감 후 공제액 — 난임 30%·무한도 대상 구분",
     },
     {
-      href: "/year-end-tax-checklist",
-      title: "연말정산 체크리스트",
-      description: "12.31 마감 전 놓치기 쉬운 공제 항목 점검",
+      href: "/tools/finance/irp",
+      title: "IRP·연금저축 계산기",
+      description: "12/31까지 납입분만 공제, 연 900만 한도",
     },
     {
       href: "/table/2027/annual",

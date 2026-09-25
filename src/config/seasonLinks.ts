@@ -109,6 +109,11 @@ export const SEASON_TOP_OCT: SeasonLink[] = [
 // 1순위 허브, 2순위 삼성 TAI(하반기 발표 전 → 라벨만·수치 금지, SEASON_REST 의 삼성 항목(footer order 3,
 // 헤더는 S3-5 로 제외)을 상단으로 승격 — footer 를 빼면 dedup 으로 푸터 링크가 사라지므로 반드시 동반), 공제 3종 SEASON,
 // 12.31 체크리스트. 공무원 2027·4대보험 2027·재산세 푸터는 OCT 세트 그대로 이월.
+// 2026-09-25 (수익 추천 #10 '12월 막차 공제'): 5번째 체크리스트 → IRP·연금저축 세액공제 계산기로 교체
+// (항목 수 불변). 교체 대상은 GA4 최근 28일(8/27~9/23) 트래픽 최하위군에서 골랐다 — 체크리스트·카드·의료비
+// 3종 모두 랜딩 top300 컷(70세션)·조회 top300 컷(98뷰) 밖이라 동률이고, 그중 체크리스트는 1순위 허브
+// ('12/31 전 마지막 점검')와 역할이 겹치며 푸터(order 21)로 계속 도달한다. 재산세 푸터는 12/1~15
+// 종부세 납부와 겹쳐 유지. 연금계좌 한도 900만(연금저축 600만 포함)은 소득세법 제59조의3·국세청 안내 확인.
 export const SEASON_TOP_DEC: SeasonLink[] = [
   {
     href: "/year-end-tax-2027",
@@ -129,8 +134,8 @@ export const SEASON_TOP_DEC: SeasonLink[] = [
     header: { name: "의료비 세액공제 계산기", description: "난임 30%·무한도 대상 구분", badge: "SEASON" },
   },
   {
-    href: "/year-end-tax-checklist",
-    header: { name: "연말정산 체크리스트", description: "12.31 마감 전 놓친 공제 점검", badge: "SEASON" },
+    href: "/tools/finance/irp",
+    header: { name: "IRP·연금저축 세액공제 계산기", description: "12/31까지 납입분만 공제 — 연 900만 한도", badge: "SEASON" },
   },
   {
     href: "/civil-servant-pay-2027",
