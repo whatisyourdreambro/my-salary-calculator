@@ -6,6 +6,7 @@
 // - 무료 GA4 한도 (월 10M 이벤트) 내 안전한 사용 가정
 
 import { PAGE_SCOPED_MEASUREMENT_EVENTS, sanitizeAnalyticsParams, sanitizeAnalyticsUrl } from "./analyticsPrivacy";
+import { getNavType } from "./navType";
 import { shareAnalyticsPath, type ShareMode } from "./sharePolicy";
 import type { ShareOutcome, ShareErrorKind } from "./shareTransport";
 
@@ -36,11 +37,17 @@ export function trackEvent(
   }
 }
 
-/** 수동 광고 요청 시도 — GA4/AdSense의 실제 ad_impression과 구분한다. */
+/**
+ * 수동 광고 요청 시도 — GA4/AdSense의 실제 ad_impression과 구분한다.
+ * 광고 계측 5종(ad_request_attempt·ad_request_error·ad_filled·ad_unfilled·ad_unit_click)은
+ * nav_type(landing = 문서 첫 로드 / soft = 클라이언트 전환 뒤)을 이벤트 인자로 싣는다(2026-09-25, 측정 전용 —
+ * 요청·렌더·dedup 로직 무변경). 값의 정의와 판정 규칙은 src/lib/navType.ts · docs/analytics-measurement.md.
+ */
 export function trackAdRequestAttempt(slotKind: string, pagePath?: string): void {
   trackEvent("ad_request_attempt", {
     slot_kind: slotKind,
     page_path: pagePath ?? (typeof location !== "undefined" ? location.pathname : ""),
+    nav_type: getNavType(),
   });
 }
 
@@ -50,6 +57,7 @@ export function trackAdRequestError(slotKind: string, pagePath?: string): void {
     slot_kind: slotKind,
     error_type: "push_failed",
     page_path: pagePath ?? (typeof location !== "undefined" ? location.pathname : ""),
+    nav_type: getNavType(),
   });
 }
 
@@ -262,6 +270,7 @@ export function trackAdUnitClick(
     position,
     page_path:
       pagePath ?? (typeof location !== "undefined" ? location.pathname : ""),
+    nav_type: getNavType(),
   });
 }
 
@@ -277,6 +286,7 @@ export function trackAdUnitClick(
  *   extra.viewport  = 뷰포트 폭 버킷 m(<768) / t(<1024) / d(그 외).
  *   슬롯·뷰포트별 예약 높이(minHeight) 자료용(S3-3, 2027-02 승인 상정). 사용자 입력·금액·URL 은 받지 않고,
  *   유효하지 않은 값은 생략한다. GA4 보고서에 보이려면 맞춤 측정기준(이벤트 범위) ad_height·viewport 를 콘솔에 등록할 것.
+ * + nav_type(2026-09-25) — trackAdRequestAttempt 주석 참조. 인자 추가뿐, 호출 시점·횟수 무변경.
  */
 export type AdFillExtra = { ad_height?: number; viewport?: "m" | "t" | "d" };
 
@@ -298,6 +308,7 @@ export function trackAdFillStatus(
       ? { ad_height: Math.round(height) }
       : {}),
     ...(viewport === "m" || viewport === "t" || viewport === "d" ? { viewport } : {}),
+    nav_type: getNavType(),
   });
 }
 

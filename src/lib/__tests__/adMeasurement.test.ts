@@ -196,11 +196,11 @@ describe("manual AdSense diagnostic events", () => {
     trackAdRequestError("fluid");
     expect(gtag.mock.calls).toEqual([
       ["event", "ad_request_attempt", {
-        slot_kind: "fluid", page_path: "/salary-db/samsung",
+        slot_kind: "fluid", page_path: "/salary-db/samsung", nav_type: "landing",
         page_location: "https://www.moneysalary.com/salary-db/samsung", page_referrer: "",
       }],
       ["event", "ad_request_error", {
-        slot_kind: "fluid", error_type: "push_failed", page_path: "/salary-db/samsung",
+        slot_kind: "fluid", error_type: "push_failed", page_path: "/salary-db/samsung", nav_type: "landing",
         page_location: "https://www.moneysalary.com/salary-db/samsung", page_referrer: "",
       }],
     ]);
