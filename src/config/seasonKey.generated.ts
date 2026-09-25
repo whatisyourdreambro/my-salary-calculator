@@ -5,4 +5,4 @@
 // 소비자: src/config/seasonLinks.ts · src/app/table/2026/SeasonalLinks.tsx · src/components/header/HeaderSearch.tsx
 import type { SeasonKey } from "@/lib/seasonKey";
 
-export const SEASON_KEY: SeasonKey = "SEP";
+export const SEASON_KEY: SeasonKey = "OCT";
