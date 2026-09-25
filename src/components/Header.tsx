@@ -98,8 +98,9 @@ export default function Header() {
  </Link>
  </div>
 
- {/* Desktop navigation and the money checklist shortcut. */}
- <div className="hidden xl:flex items-center gap-0 2xl:gap-0.5 flex-1 justify-center min-w-0">
+ {/* Desktop navigation and the money checklist shortcut.
+ 모듈 id header-nav: InternalLinkTracker 위임 클릭 계측(속성만). 안쪽 header-work-clock·header-money-check 는 closest() 로 우선한다. */}
+ <div data-msy-module="header-nav" className="hidden xl:flex items-center gap-0 2xl:gap-0.5 flex-1 justify-center min-w-0">
  {activeNavConfig.map((item) =>
  item.type === "dropdown" ? (
  <DesktopDropdown
@@ -208,9 +209,10 @@ export default function Header() {
  {isEn ? "Open my dashboard" : "내 대시보드 열기"}
  </Link>
 
- {/* Nav items */}
+ {/* Nav items — 모듈 id header-nav: 데스크톱 메뉴와 같은 위임 클릭 계측(속성만) */}
  <nav
  aria-label={isEn ? "Main menu" : "주 메뉴"}
+ data-msy-module="header-nav"
  className="overflow-hidden rounded-2xl border border-border bg-background"
  >
  {activeNavConfig.map((item) =>
