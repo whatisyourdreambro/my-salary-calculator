@@ -13,6 +13,7 @@ import {
 } from "@/lib/taxConstants2026";
 import { calcCardDeduction2026 } from "@/lib/cardDeduction2026";
 import NumberInput from "@/components/NumberInput";
+import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 
 function fmt(n: number): string {
   return Math.round(n).toLocaleString("ko-KR");
@@ -134,6 +135,13 @@ export default function CreditCardDeductionClient() {
 
   const salaryValid = salary > 0;
 
+  // GA4 calc_start·calc_success·result_view (calc_type 만 전송, 금액 미전송)
+  const measurement = useCalculatorMeasurement({
+    calcType: "credit_card_deduction_2026",
+    valid: salaryValid && [result.finalDeduction, result.saving].every(Number.isFinite),
+    resultKey: result,
+  });
+
   return (
     <section className="my-6">
       <div className="rounded-3xl border border-canvas-200 dark:border-canvas-700 bg-white dark:bg-canvas-900 p-5 sm:p-6">
@@ -142,7 +150,7 @@ export default function CreditCardDeductionClient() {
         </h2>
 
         {/* 1단계 — 총급여 */}
-        <div className="mb-5">
+        <div {...measurement.inputProps} className="mb-5">
           <MoneyField
             label="1. 연간 총급여 (세전, 원)"
             value={salary}
@@ -158,7 +166,7 @@ export default function CreditCardDeductionClient() {
         </div>
 
         {/* 2단계 — 자녀 수 (2026 귀속 한도 상향) */}
-        <div className="mb-5">
+        <div {...measurement.inputProps} className="mb-5">
           <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
             2. 자녀 수 (손자녀 포함 — 2026년 귀속부터 한도 상향)
           </label>
@@ -192,7 +200,7 @@ export default function CreditCardDeductionClient() {
         <p className="text-sm font-bold text-navy dark:text-canvas-100 mb-3">
           3. 올해 사용액 (공제 대상 금액만, 원)
         </p>
-        <div className="grid sm:grid-cols-2 gap-4 mb-2">
+        <div {...measurement.inputProps} className="grid sm:grid-cols-2 gap-4 mb-2">
           <MoneyField
             label="신용카드 (15%)"
             value={credit}
@@ -267,7 +275,7 @@ export default function CreditCardDeductionClient() {
         )}
 
         {/* 결과 카드 */}
-        <div className="mt-6 p-5 rounded-2xl bg-electric-5 border border-electric-20">
+        <div ref={measurement.resultRef} className="mt-6 p-5 rounded-2xl bg-electric-5 border border-electric-20">
           {!salaryValid ? (
             <p className="text-sm font-bold text-muted-blue dark:text-canvas-300">
               총급여를 입력하면 공제액이 계산됩니다.

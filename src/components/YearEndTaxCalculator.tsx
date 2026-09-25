@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useId } from "react";
+import { useState, useMemo, useId, type HTMLAttributes } from "react";
 import CurrencyInput from "./CurrencyInput";
 import CountUp from "react-countup";
 import {
@@ -12,6 +12,7 @@ import {
 } from "@/lib/yearEndTaxCalculator";
 import NumberStepper from "./NumberStepper";
 import { ChevronDown } from "lucide-react";
+import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 
 const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 
@@ -72,10 +73,13 @@ const Accordion = ({
  title,
  children,
  defaultOpen = false,
+ contentProps,
 }: {
  title: string;
  children: React.ReactNode;
  defaultOpen?: boolean;
+ /** 펼친 내용 영역(기존 div)에만 붙는 속성 — 계산 계측 inputProps 용. 헤더 토글 버튼은 계산 시작이 아니다 */
+ contentProps?: HTMLAttributes<HTMLDivElement>;
 }) => {
  const [isOpen, setIsOpen] = useState(defaultOpen);
  return (
@@ -91,7 +95,7 @@ const Accordion = ({
  <ChevronDown className={`transform transition-transform duration-200 ${isOpen ? "rotate-180" : "rotate-0"}`} />
  </button>
  </h3>
- {isOpen && <div className="p-4 space-y-4 bg-card border-t border-border">{children}</div>}
+ {isOpen && <div {...contentProps} className="p-4 space-y-4 bg-card border-t border-border">{children}</div>}
  </div>
  );
 };
@@ -194,6 +198,15 @@ export default function YearEndTaxCalculator() {
 
  const result = useMemo(() => calculateYearEndTax(derivedInputs), [derivedInputs]);
 
+ // GA4 calc_start·calc_success·result_view (calc_type 만 전송, 금액 미전송) — /year-end-tax 와 홈 연말정산 탭
+ const measurement = useCalculatorMeasurement({
+ calcType: "year_end_tax",
+ valid:
+ inputs.grossSalary > 0 &&
+ [result.finalRefund, result.determinedTax, derivedInputs.prepaidTax].every(Number.isFinite),
+ resultKey: result,
+ });
+
  const initialRefund = useMemo(
  () =>
  calculateYearEndTax({
@@ -216,7 +229,7 @@ export default function YearEndTaxCalculator() {
  return (
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
  <div className="lg:col-span-2 space-y-6">
- <Accordion title="1. 기본 정보" defaultOpen={true}>
+ <Accordion title="1. 기본 정보" defaultOpen={true} contentProps={measurement.inputProps}>
  <CurrencyInput
  label="총급여액 (연봉)"
  value={inputs.grossSalary.toLocaleString('ko-KR')}
@@ -235,7 +248,7 @@ export default function YearEndTaxCalculator() {
  />
  </Accordion>
 
- <Accordion title="2. 소득 공제 항목">
+ <Accordion title="2. 소득 공제 항목" contentProps={measurement.inputProps}>
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
  <NumberStepper label="부양가족(본인포함)" value={inputs.dependents} onValueChange={(v) => handleNumberChange("dependents", v)} min={1} unit="명" />
  <NumberStepper label="만 70세 이상" value={inputs.seniorDependents} onValueChange={(v) => handleNumberChange("seniorDependents", v)} unit="명" />
@@ -257,7 +270,7 @@ export default function YearEndTaxCalculator() {
  </div>
  </Accordion>
 
- <Accordion title="3. 세액 공제 항목">
+ <Accordion title="3. 세액 공제 항목" contentProps={measurement.inputProps}>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <CurrencyInput
  label="연금저축/IRP 납입액"
@@ -279,6 +292,7 @@ export default function YearEndTaxCalculator() {
  <div className="sticky top-24 bg-card p-4 sm:p-6 rounded-xl shadow-lg border border-border">
  <h2 className="text-xl sm:text-2xl font-bold text-center mb-4">💸 연말정산 예상 결과</h2>
  <div
+ ref={measurement.resultRef}
  className={`p-4 rounded-lg text-center transition-colors duration-300 ${
  result.finalRefund >= 0 ? "bg-primary/10" : "bg-destructive/10"
  }`}
@@ -313,7 +327,7 @@ export default function YearEndTaxCalculator() {
 
  <div className="mt-6 pt-6 border-t border-border">
  <h3 className="text-lg font-bold text-center mb-4">절세 최적화 시뮬레이터</h3>
- <div className="space-y-4">
+ <div {...measurement.inputProps} className="space-y-4">
  <OptimizationSlider
  label="연금저축/IRP"
  tip="연 900만원까지 세액공제 혜택을 최대로 받을 수 있어요!"

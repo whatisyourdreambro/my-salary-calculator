@@ -7,6 +7,7 @@
 import { useMemo, useState } from "react";
 import { RENT_CREDIT_2026 } from "@/lib/taxConstants2026";
 import NumberInput from "@/components/NumberInput";
+import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 
 // ── 2026년 귀속 현행법 파라미터 — 정본은 taxConstants2026 (엔진과 공유) ──
 const RENT_CREDIT_CAP = RENT_CREDIT_2026.CAP;
@@ -69,6 +70,14 @@ export default function RentTaxCreditClient() {
     };
   }, [totalSalary, monthlyRent, months, isNoHouse, isHouseOk, isMoveIn]);
 
+  // GA4 calc_start·calc_success·result_view (calc_type 만 전송, 금액 미전송).
+  // 결과는 공제 가능 카드 또는 요건 미충족 카드 중 하나만 렌더되므로 두 카드에 같은 resultRef 를 건다.
+  const measurement = useCalculatorMeasurement({
+    calcType: "rent_tax_credit_2026",
+    valid: totalSalary > 0 && [result.credit, result.annualRent].every(Number.isFinite),
+    resultKey: result,
+  });
+
   return (
     <section className="my-6">
       <div className="rounded-3xl border border-canvas-200 dark:border-canvas-700 bg-white dark:bg-canvas-900 p-5 sm:p-6">
@@ -77,7 +86,7 @@ export default function RentTaxCreditClient() {
         </h2>
 
         {/* 1단계 — 총급여 */}
-        <div className="mb-4">
+        <div {...measurement.inputProps} className="mb-4">
           <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
             ① 총급여 (연봉, 비과세 제외 · 원)
           </label>
@@ -101,7 +110,7 @@ export default function RentTaxCreditClient() {
         </div>
 
         {/* 2단계 — 월세액 */}
-        <div className="mb-4">
+        <div {...measurement.inputProps} className="mb-4">
           <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
             ② 월세액 (월 단위 · 원)
           </label>
@@ -120,7 +129,7 @@ export default function RentTaxCreditClient() {
         </div>
 
         {/* 3단계 — 지급 개월 수 */}
-        <div className="mb-5">
+        <div {...measurement.inputProps} className="mb-5">
           <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
             ③ 올해 월세 지급 개월 수: {months}개월
           </label>
@@ -140,7 +149,7 @@ export default function RentTaxCreditClient() {
         </div>
 
         {/* 4단계 — 요건 체크 */}
-        <fieldset className="mb-6 space-y-3">
+        <fieldset {...measurement.inputProps} className="mb-6 space-y-3">
           <legend className="block text-sm font-bold text-navy dark:text-canvas-100 mb-1">
             ④ 공제 요건 확인 (모두 충족해야 공제 가능)
           </legend>
@@ -190,7 +199,7 @@ export default function RentTaxCreditClient() {
 
         {/* 결과 카드 */}
         {result.eligible ? (
-          <div className="mt-6 p-5 rounded-2xl bg-electric-5 border border-electric-20">
+          <div ref={measurement.resultRef} className="mt-6 p-5 rounded-2xl bg-electric-5 border border-electric-20">
             <p className="text-xs font-bold text-electric uppercase tracking-wider mb-2">
               예상 월세 세액공제액 (2026년 귀속)
             </p>
@@ -254,7 +263,7 @@ export default function RentTaxCreditClient() {
             </details>
           </div>
         ) : (
-          <div className="mt-6 p-5 rounded-2xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30">
+          <div ref={measurement.resultRef} className="mt-6 p-5 rounded-2xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30">
             <p className="text-xs font-bold text-red-600 dark:text-red-400 uppercase tracking-wider mb-2">
               공제 요건 미충족
             </p>
