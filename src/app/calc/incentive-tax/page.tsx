@@ -144,7 +144,7 @@ export default function IncentiveTaxPage() {
                 <strong className="text-navy dark:text-canvas-50">중소기업 취업 청년 감면</strong> — 일정 요건 시 90% 감면 (연 200만원 한도)
               </li>
               <li>
-                <strong className="text-navy dark:text-canvas-50">고향사랑기부</strong> — 연 500만원, 10만원까지 100% 세액공제
+                <strong className="text-navy dark:text-canvas-50">고향사랑기부</strong> — 연 2천만원, 10만원까지 100% 세액공제
               </li>
             </ol>
           </article>
