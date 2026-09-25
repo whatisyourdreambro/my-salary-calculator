@@ -28,5 +28,41 @@
     { "src/lib/simpleCalculators/batch2.ts": ["최저시급 10,320", "실업급여 일 상한 68,100", "실업급여 일 하한 66,048"] },
     { "src/lib/simpleCalculators/enrichments.ts": ["최저시급 10,320", "최저임금 월 2,156,880", "실업급여 일 상한 68,100", "실업급여 일 하한 66,048"] },
     { "src/lib/simpleCalculators/enrichments-ext-a.ts": ["최저시급 10,320", "최저임금 월 2,156,880"] }
-  ]
+  ],
+  "switch_scan": {
+    "note": "2026-09-25 N3 리뷰 반영: 1/1 요율 전환 표기 스캔 목록 — verify-tax-constants.mjs 가 주석 아닌 줄의 '2026년 세법·모델·요율'·'국민연금 4.75%' 표기를 찾아 대조한다. 파일 경로에 2026/2027 이 든 파일은 자동으로 연도 고정. 포인터가 계산을 바꾸는 표면은 여기 올리지 말고 CURRENT_RATES_YEAR·CURRENT_RATE_LABELS 로 파생할 것. fixed = 전환 뒤에도 그대로(연도 고정·포인터 무관), manual = 전환 당일(또는 그 전) 문자열 교체 — 포인터 2027 에서 표기가 남아 있으면 verify:tax 실패. 런북 docs/next-upgrade-plan-2026-09-11.md §5-1 P-4.",
+    "fixed": {
+      "src/app/health-insurance-dependent/page.tsx": "링크 라벨 '2026 4대보험 요율표' — 연도 페이지 /social-insurance-rates-2026 로 가는 링크",
+      "src/config/seasonLinks.ts": "푸터 링크 라벨 '2026 4대보험 요율' — 연도 페이지 링크",
+      "src/lib/searchIndex.ts": "검색 항목 '2026 4대보험 요율' — 연도 페이지 링크",
+      "src/lib/simpleCalculators/enrichments.ts": "earned-income-tax-quick 산식 설명 — 2026 간이세액표 근사라 2026 요율 고정(batch1 과 같음)",
+      "src/app/calc/vacation-pay/page.tsx": "메타 설명 '2026년 세법 적용' — 이 계산기는 4대보험 약 8.5% 고정 근사라 포인터 무관(설명 연도는 세법 연도 롤오버에서)",
+      "src/app/tools/finance/dividend-tax/": "'2026 세법 기준' 배지 — 배당소득세, 4대보험 포인터 무관(세법 연도 롤오버에서 별도)",
+      "src/app/tools/finance/freelance-tax/": "'2026 세법 기준' 배지 — 종합소득세(3.3%), 4대보험 포인터 무관",
+      "src/app/tools/finance/severance/": "'2026 세법' 배지·퇴직소득세 설명 — 4대보험 포인터 무관",
+      "src/app/tools/finance/stock-tax/": "'2026 세법 기준' 배지 — 양도소득세, 4대보험 포인터 무관",
+      "src/app/tools/real-estate/acquisition-tax/": "'2026 세법 기준' 배지 — 취득세, 4대보험 포인터 무관",
+      "src/app/tools/real-estate/gift-tax/": "'2026 세법 기준' 배지 — 증여세, 4대보험 포인터 무관",
+      "src/lib/guides/supplements.ts": "간호사 가이드 보강 — 본문 2026년 요율 표(legacy-rewrite-2)를 가리키는 연도 명시 문장. 그 표를 2027 로 다시 계산하면 함께 고친다",
+      "src/lib/guidesMeta.generated.ts": "gen-guides-meta 산출물 — 손으로 고치지 않는다. 정본 가이드 파일(manual)을 고친 뒤 재생성하면 따라간다"
+    },
+    "manual": {
+      "src/app/calc/holiday-bonus/page.tsx": "메타 설명 '2026년 세법 기준' — /calc 제목·설명 동결(10/10) 뒤 CURRENT_RATES_YEAR 로 파생하거나 전환 당일 교체(본문은 파생 완료)",
+      "src/app/calc/samsung-bonus/Client.tsx": "라벨 '국민연금 (4.75% …)' — P-3 삼성 배치와 함께. 남는 '2026 4대보험 요율표' 링크 라벨은 연도 페이지 링크라 그때 fixed 로 옮긴다",
+      "src/app/embed/page.tsx": "FAQ '공통적으로 2026년 세법 기준' — 연말정산 위젯은 2026 귀속 고정이라 파생 불가, 전환 당일 문장 교체",
+      "src/app/qna/layout.tsx": "메타 설명 '2026년 세법 기준' — qnaData 의 요율·금액(P-4)과 함께 교체",
+      "src/app/region/[slug]/page.tsx": "메타 설명 '2026 세법 기준' — 제목 '평균 연봉 2026' 과 함께 연도 롤오버",
+      "src/app/tools/finance/page.tsx": "금융 계산기 허브 설명·배지·seoHeading '2026년 세법' — 13종 중 성과급만 포인터, 연도 롤오버 때 함께",
+      "src/data/glossaryData.ts": "용어집 국민연금 stat2026·example300 계산 예시·요율 문장 — P-4",
+      "src/data/qnaData.ts": "QnA 국민연금 4.75%·월 실수령 범위 — P-4 (guideFactCorrections.test.ts 단언 함께)",
+      "src/lib/simpleCalculators/enrichments-ext-b.ts": "employee-cost-quick FAQ '국민연금(4.75%)' — P-4",
+      "src/lib/guides/hot-bonus-tax-complete.ts": "상시 성과급 가이드 본문의 현행 요율 4.75% 표기 — 고친 뒤 gen-guides-meta 재실행",
+      "src/lib/guides/hot-keywords-deepdive.ts": "four-major-insurance-complete 등 상시 가이드의 4.75% 표 — 고친 뒤 gen-guides-meta 재실행",
+      "src/lib/guides/hot-keywords-deepdive-en.ts": "영문 4대보험 가이드 National Pension 4.75% — 고친 뒤 gen-guides-meta 재실행",
+      "src/lib/guides/legacy-rewrite-1.ts": "상시 가이드 '국민연금 4.75%' — 고친 뒤 gen-guides-meta 재실행",
+      "src/lib/guides/legacy-rewrite-2.ts": "연봉 인상·간호사 가이드의 2026 요율 문장·표 — 표를 2027 로 다시 계산할지 연도 명시로 둘지 결정, 고친 뒤 gen-guides-meta 재실행",
+      "src/lib/guides/lifecycle-deepdive.ts": "first-job-financial-setup·retirement-planning-30s 의 4.75% — 고친 뒤 gen-guides-meta 재실행",
+      "src/lib/guides/tax-deepdive.ts": "social-insurance-reduction '2026년 요율: 국민연금 4.75%' — 상시 글이라 전환 때 교체(real-estate-capital-gains-2026 설명의 '2026년 세법' 은 연도 글), 고친 뒤 gen-guides-meta 재실행"
+    }
+  }
 }
