@@ -217,6 +217,16 @@ describe("sourcePolicy", () => {
     expect(isOfficialSourceHost("")).toBe(false);
   });
 
+  it("2026-09-26 additions for the H1 energy/time sources match their hosts only", () => {
+    expect(isOfficialSourceHost("www.kriss.re.kr")).toBe(true); // 한국표준과학연구원(표준시)
+    expect(isOfficialSourceHost("www.mcee.go.kr")).toBe(true); // 기후에너지환경부(전기요금 정책)
+    expect(isOfficialSourceHost("www.motie.go.kr")).toBe(true); // 산업통상자원부(구) → motir.go.kr
+    expect(isOfficialSourceHost("www.motir.go.kr")).toBe(true); // 산업통상부
+    expect(isOfficialSourceUrl("https://www.mcee.go.kr/home/web/main.do")).toBe(true);
+    expect(isOfficialSourceHost("kriss.re.kr.evil.com")).toBe(false);
+    expect(isOfficialSourceHost("www.kaist.re.kr")).toBe(false); // *.re.kr is not a blanket rule
+  });
+
   it("isOfficialSourceUrl requires https and an allowlisted host", () => {
     expect(isOfficialSourceUrl("https://www.law.go.kr/법령/근로기준법")).toBe(true);
     expect(isOfficialSourceUrl("https://www.nps.or.kr/jsppage/info/easy/easy_04_01.jsp")).toBe(true);
