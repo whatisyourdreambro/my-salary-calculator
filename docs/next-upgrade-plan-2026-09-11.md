@@ -113,9 +113,46 @@
 - 연말정산 클러스터(허브 2027·미리보기·공제 계산기 4종·연말정산 계산기): 2026 귀속 한도·요율 재확인.
 - 삼성 TAI 2026 하반기(12월) → `taiData.ts`; OPI(1월 말) → `opiAnnouncement.ts` 4필드 + **`SeasonalBanner.tsx:18` OPI 게이트 한 줄** + 발표 런북(growth-playbook §3). 발표 전 추정 카피 금지.
 - 공무원 2027 확정 봉급표(12월 말) → `GENERAL_PAY_ROWS_2027` 교체, 라벨 '예상'→'확정'.
-- 2027 최저임금(1/1, 상수는 이미 config 에 있음) → **현행 포인터 2026→2027 전환** + 간이 계산기 하드코딩 제거는 S2-1 에서 선행; 4대보험 2027 요율(연금 상한 7월) `verify:tax`.
-- **국민연금 5.0%(1/1) — 운영자 결정 필요**: `taxConstants2026` 의 2026 블록은 제자리 수정 금지(2026-09-25 B10). 월 실수령 엔진은 `calculateSalary2026(…, rates)`·`calcBonusNet(…, rates)` 선택 인자(기본 2026)로 전환한다. 전환 시 2026 귀속 연말정산 3표면(`yearEndTaxCalculator.ts`·`YearEndTaxCalculator.tsx`·`widget/year-end-tax`)과 `/table/2026` 은 2026 요율을 **명시 고정**해야 한다(지금은 기본값이라 무영향). 전환하면 `/salary` 제목 금액·'(2026 세후 월급)' 라벨이 바뀌므로 승인 항목.
+- 2027 최저임금(1/1, 상수는 이미 config 에 있음 — `MINIMUM_WAGE_2027` 10,700원, 고용노동부 2026-08-05 고시) → 최저임금 소비처는 아직 `MINIMUM_WAGE_2026` 을 직접 import(포인터 미연결) — 간이 계산기 기본값·표시 문구는 `verify:tax` 허용목록의 최저임금 항목을 1/1 에 문자열로 갱신(S2-1). 4대보험 요율은 아래 §5-1 포인터.
+- **4대보험 1/1 요율 전환 — ✅ 2026-09-25 N3 로 '상수 한 줄' 준비 완료, 전환 자체는 운영자 승인 항목**: 절차는 §5-1 런북. (종전 메모: `taxConstants2026` 2026 블록 제자리 수정 금지 — 그대로 지킨다. 2026 귀속 연말정산 3표면·`/table/2026` 의 2026 명시 고정은 N3 에서 완료.)
 - S3-1 잔여분은 동결기에도 계속 가능 — batch 파일의 description/faq/sources 문자열만(필드·컴포넌트·라우트 무접촉, 검증 로그 동반).
+
+### 5-1. 2027-01-01 4대보험 요율 전환 런북 (2026-09-25 N3)
+
+**구조** — `src/config/currentRates.ts` 의 `CURRENT_RATES_YEAR` 한 줄이 '현행 요율'을 고른다. 2027 값은 `src/lib/taxConstants2027.ts`(`INSURANCE_RATES_2027` + 항목별 `INSURANCE_RATES_2027_STATUS`)가 정본, 2026 값은 `taxConstants2026.ts` 그대로.
+
+| 포인터를 따른다 (1/1 에 자동 전환) | 2026 고정 (전환해도 그대로) |
+|---|---|
+| 엔진 기본값: `TaxLogic.calculateSalary2026` · `calculator.calculateNetSalary` · `bonusTaxCalc.calcBonusNet`(삼성 외 성과급 계산기·`/widget/bonus`) · 프리랜서/알바 · 글로벌 비교 · `/tools/finance/bonus` | `/table/2026/*`·`/api/salary-table`(`generateData.ts`·`generateData2026.ts`·`calculateNetSalary2026`) |
+| 문구: `/salary/[amount]`(제목 '(YYYY 세후 월급)'·설명·FAQ·HowTo·배지) · `/monthly/[amount]`(제목·설명·요약·FAQ) · 홈(HomeSeoSection·FAQ·HowTo 본문, 예시 금액 `HOME_EXAMPLE_NET_MANWON`) · 홈 계산기 배지 · 회사 실수령 표 제목 · 상장사 산출 기준 · 급여명세서·상세 분석 라벨 · `/about` 출처 · 성과급 3쪽 FAQ(posco·samsung-display·samsung-sdi) · `/calc/holiday-bonus` 본문 · `/calc/2026-year` 요율 문장 · 공유 결과 라벨 · `/widget/salary` · OG salary 카드 '연봉 리포트' | 2026 귀속 연말정산(`yearEndTaxCalculator.ts`·`YearEndTaxCalculator.tsx`·`widget/year-end-tax`·`calc/dual-income-year-end`) · `/calc/smb-income-tax-break`(2026 귀속 검산 예시) · `/salary-raise-2026` · `/chuseok-bonus-2026` · 간이 근로소득세(`earned-income-tax-quick`, 2026 간이세액표 근사) · `estimateAnnualIncomeTax2026` 기본값 · 연도 표기 페이지(`/social-insurance-rates-2026`·`/national-pension-estimate-2026`·`-2026` 가이드) |
+
+**전환 전 준비 (동결기 전후, 전부 상수·문자열)**
+
+| # | 언제 | 무엇 | 확인 |
+|---|---|---|---|
+| P-1 | 장기요양위원회 의결 직후(10~11월 예정) | `taxConstants2027.ts` `LONG_TERM_CARE_RATIO` 확정값 + `_STATUS` → `confirmed`. 동결이면 값 그대로 두고 상태만 | `currentRates.test.ts` 홈 예시 금액 실패 시 `homeContent.ts` `HOME_EXAMPLE_NET_MANWON[2027]` 갱신 · `/table/2027`·요율표 '장기요양(2026 준용)' 문구(갱신 슬롯 ②, `healthRate2027Freeze.test.ts` 단언 함께) |
+| P-2 | 고용보험료징수법 시행령 개정 공포 시(연내 목표) 또는 12월 말 | `EMPLOYMENT_INSURANCE` 0.01(개정 공포) 또는 0.009 유지(미개정 확인) + `_STATUS` → `confirmed` | `/table/2027`·요율표 고용보험 고지 문구(갱신 슬롯 ⑤) |
+| P-3 | 12월 삼성 배치(삼성 파일 접촉 창) | `calc/samsung-bonus/model.ts` 의 `INSURANCE_RATES_2026` 3곳을 요율 인자(기본 `CURRENT_INSURANCE_RATES`)로 바꾸고, 두 번째 `estimateAnnualIncomeTax2026(salary)` 에도 같은 요율을 넘긴다. `model.test.ts` 동결값은 2026 명시 호출로 옮긴다(`taxRatesParam.test.ts` 와 같은 방식) | 이번 라운드는 삼성 파일 무접촉이라 미연결 — 안 하면 1/1 뒤 삼성 계산기만 2026 요율로 남고 `model.test.ts` '공통 엔진과 원 단위로 일치' 가 실패한다 |
+| P-4 | 12월 또는 전환 당일 | 연도 표기 없는 문자열 표면 갱신: `src/data/qnaData.ts`(국민연금 4.75%·'연봉 1억' 월 실수령 범위 — `guideFactCorrections.test.ts` QnA 단언이 전환 뒤 기대값을 알려 준다) · `src/data/glossaryData.ts`(`stat2026`·`example300` 계산 예시) · `enrichments-ext-b.ts` `employee-cost-quick` FAQ · `samsung-bonus/Client.tsx` 라벨 '국민연금 (4.75% …)'(P-3 와 함께) | `grep -rnE "4\.75\|0\.0475" src --include=*.ts --include=*.tsx` — 남아도 되는 것은 연도 표기 페이지·`-2026` 가이드·2026 정본·위 '2026 고정' 열뿐 |
+| P-5 | 전환 전 | **운영자 승인**: 전환은 `/salary` 416쪽·`/monthly` 105쪽 제목의 연도 라벨이 전부 2027 로, 금액은 /salary 361쪽·/monthly 95쪽이 1만원 단위로 바뀐다(2026-09-25 추정 — 장기요양·고용 2026 준용 기준). 회사 430쪽 실수령 열·홈 FAQ 금액도 바뀐다 | 홈 `<title>`(`HOME_META_TITLE`)·회사 `<title>`·`/calc/*` 제목은 포인터와 무관(연도 라벨은 별도 결정, 회사 title 은 불변 원칙) |
+
+**전환 당일 (2027-01-01 00:00 KST 이후 빌드)**
+
+1. 한 줄 변경 — `src/config/currentRates.ts`: `export const CURRENT_RATES_YEAR: RateYear = 2026;` → `export const CURRENT_RATES_YEAR: RateYear = 2027;`
+2. 같은 커밋의 날짜 상수(콘텐츠가 실제로 바뀌므로): `src/config/siteDates.ts` `TAX_TABLE_EFFECTIVE_DATE`·`src/app/sitemap.ts` `SALARY_METHOD_REVIEW_DATE`·`'/'`·`'/about'` override → 전환 커밋일, `src/lib/ogUrlVersion.ts` `OG_URL_VERSION` → `"20270101"`(1만원 단위가 그대로인 저연봉 카드도 새 연도 라벨로 다시 그리게).
+3. 검증(전부 exit 0 이어야 함):
+   - `npm run verify:tax` — `현행 요율 포인터 CURRENT_RATES_YEAR = 2027`, FAIL 0. (2027 인데 1/1 KST 전이면 FAIL, `_STATUS` 에 provisional 이 남으면 FAIL — P-1·P-2 미완료 신호)
+   - `npx tsc --noEmit`
+   - `npx vitest run src/lib/__tests__/currentRates.test.ts src/lib/__tests__/currentRatesDryRun2027.test.ts` — 전환 게이트·2027 문구·2026 고정 표면
+   - `npm test` — P-1~P-4 를 마쳤으면 전부 통과. 2026-09-25 리허설(포인터 2027 임시 전환)에서 실패한 것은 정확히 3건: 전환 게이트(P-1·P-2), QnA 단언(P-4), 삼성 `model.test.ts`(P-3)
+   - `node scripts/ad-audit.mjs --diff --base <직전 main>` → ERROR 0 / WARN 0 (광고 무접촉)
+   - `npm run verify:site` · `npm run verify:sitemap`
+4. main 푸시 → CF Pages 빌드 완료 → **운영자 Purge Everything** → 운영 HTML 확인: `/salary/50000000` 제목 '(2027 세후 월급)'·HowTo '국민연금 5.0%' · `/monthly/3000000` '(2027 기준)' · 홈 FAQ '2027년 기준 … 국민연금 5.0%' · `/table/2026/annual` 5,000만 행이 여전히 3,571,546원 · `/widget/salary` '2027 연봉' · `/api/og?type=salary&amount=50000000&net=…&v=20270101` 카드 '2027 연봉 리포트'.
+5. 되돌리기: 1번 한 줄을 2026 으로 되돌려 푸시 + Purge (다른 파일 무관).
+
+**포인터 밖 (이 런북으로 바뀌지 않는 것)**: 근로소득 간이세액표(2027 개정 시 `withholdingTaxTable2026` 교체는 별도 작업) · 국민연금 기준소득월액 상·하한(2027-07 재조정 — `PENSION_BASE_2026` 을 쓰는 `toNetSalaryRates`·`TaxLogic` 상한을 그때 별도로) · 최저임금 소비처(위 불릿) · 연도 라벨이 박힌 제목(홈·회사·/calc·영문 페이지) · `-2026` 가이드·용어집 계산 예시.
+
+**근거(2026-09-25 확인)**: 국민연금 2027 총 10.0%(근로자 5.0%) — 보건복지부 연금개혁 Q&A('26 9.5% → '27 10.0% → … → '33 13.0%, mohw.go.kr) · 국민연금공단 법령정보 국민연금법 개정(법률 제20903호, 2025-04-02 공포, 2026-01-01 시행, nps.or.kr) · 국민연금공단 연금개혁 FAQ(사업장가입자 절반 부담). 건강보험 2027 동결 7.19% — 2026년 제15차 건강보험정책심의위원회(2026-09-08) 의결(보도: 세계일보·메디파나·오마이뉴스 등, 기존 반영 `healthRate2027Freeze.test.ts`). 장기요양 2027 — 보건복지부 제7기 장기요양위원회 출범(2026-08-14), 수가·보험료율 10월 이후 결정(미확정). 고용보험 2027 — 고용노동부 2026-09-01 고용보험위원회 「고용보험 제도개편 방안」 실업급여 요율 각 0.9%→1.0% 안, 연내 법령 개정 목표(미확정). 최저임금 2027 10,700원 — 고용노동부 2026-08-05 확정 고시(moel.go.kr news_seq=19744).
 
 ## 6. 승인·콘솔이 필요한 것 (운영자 한 줄)
 
