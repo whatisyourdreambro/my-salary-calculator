@@ -6,6 +6,8 @@
 // 주의: /year-end-tax-2026 은 프리랜서 5월 종합소득세 가이드(의도 상이) —
 // 본 허브와 카니발 아님을 본문에서 명시. 기존 페이지 무수정 원칙.
 // 광고: GuideMid(로드맵 직후)·Multiplex(하단) — 운영자 일괄 승인 2026-08-23.
+// 2026-09-25 (수익 추천 #10): 히어로의 '12월 31일에 마감' 을 IRP·연금저축 계산기 링크로 — 같은 글자·
+// 같은 굵기의 인라인 교체라 첫 광고(GuideMid) 위 높이 불변. 12/31 까지 납입분만 연금계좌 공제 대상.
 
 import type { Metadata } from "next";
 import ShareSection from "@/components/ShareSection";
@@ -113,7 +115,7 @@ export default function YearEndTax2027HubPage() {
             </h1>
             <p className="speakable-summary text-sm sm:text-[15px] leading-7 text-muted-blue max-w-3xl">
               2026년 1~12월 소득에 대한 연말정산을 2027년 1~2월에 합니다. 공제 지출은{" "}
-              <strong className="text-navy">12월 31일에 마감</strong>되므로, 지금 예상
+              <Link href="/tools/finance/irp" title="IRP·연금저축 세액공제 계산기" className="font-bold text-electric hover:underline">12월 31일에 마감</Link>되므로, 지금 예상
               환급액을 계산하고 남은 기간의 절세 액션을 챙기는 것이 환급액을 가르는
               핵심입니다. 아래 로드맵을 시기 순서대로 따라가면 됩니다.
             </p>
