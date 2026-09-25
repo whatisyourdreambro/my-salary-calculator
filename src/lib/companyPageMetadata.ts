@@ -6,10 +6,13 @@
 // 호출해, RSS item <title>·<description> 이 페이지 <title>·description 과 문자열 그대로
 // 같게 유지된다. 이 파일은 page.tsx 에 있던 인자 조립을 그대로 옮긴 것 — 산식을 바꾸면
 // 회사 페이지 <title> 이 바뀐다(회사 <title> 은 불변 원칙). 수정 금지에 가깝게 다룰 것.
+// disclosedAverage(L10', 2026-09-25 준비)는 description 후미에만 쓰이고 title 산식과 무관하다 —
+// companyMetaDescription.test.ts 가 전 회사 <title> 을 고정 스냅샷과 대조한다.
 
 import type { Metadata } from "next";
 import type { CompanyProfile } from "@/types/company";
 import { getCompanySalaryBasis } from "@/lib/companySalaryBasis";
+import { companyMetaDisclosedFigure } from "@/lib/companyMetaDisclosed";
 import { buildCompanyMetadata } from "@/lib/seo";
 
 type CompanyMetadataInput = Parameters<typeof buildCompanyMetadata>[0];
@@ -23,6 +26,7 @@ export function companyMetadataInput(company: CompanyProfile): CompanyMetadataIn
     company.salary.junior.base + (company.salary.junior.incentive.avgAmount || 0);
   const leadTotal =
     company.salary.lead.base + (company.salary.lead.incentive.avgAmount || 0);
+  const disclosedAverage = companyMetaDisclosedFigure(company);
 
   return {
     id: company.id,
@@ -35,6 +39,8 @@ export function companyMetadataInput(company: CompanyProfile): CompanyMetadataIn
     aliases: company.aliases,
     hasCareerLevels: !!company.careerLevels?.length,
     lastUpdated: company.lastUpdated,
+    // L10' 대상 회사만 — 날짜 게이트(9/28 KST)는 buildCompanyMetadata 가 건다
+    ...(disclosedAverage ? { disclosedAverage } : {}),
   };
 }
 
