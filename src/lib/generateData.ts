@@ -10,8 +10,13 @@
 // ★ 동명 함수 주의: /table/2026/{annual,monthly} 표는 generateData2026.ts 의
 //   generateAnnualSalaryTableData2026(2,400만~2억 100만 단위 177행 + changeValue)을,
 //   이 파일의 함수들은 weekly·hourly 표와 /api/salary-table 이 사용한다.
+//
+// ★ 2026 요율 고정 (2026-09-25 N3): calculateSalary2026 의 기본 요율은 현행 포인터
+//   (src/config/currentRates.ts)라 1/1 전환 때 2027 로 바뀐다. 이 파일은 2026 표의 행이므로
+//   INSURANCE_RATES_2026 을 명시한다.
 
 import { calculateSalary2026 } from "./TaxLogic";
+import { INSURANCE_RATES_2026 } from "./taxConstants2026";
 import { MINIMUM_WAGE_2026 } from "@/config/minimumWage";
 
 export type SalaryData = {
@@ -45,7 +50,7 @@ function buildRow(annualSalary: number, preTax: number): SalaryData {
  if (annualSalary <= 0) return { preTax, ...ZERO_ROW };
  // 월급이 식대 20만원보다 작은 극저구간은 비과세를 월급까지로 클램프
  const nonTaxable = Math.min(NON_TAXABLE_MONTHLY, Math.floor(annualSalary / 12));
- const r = calculateSalary2026(annualSalary, nonTaxable, 1, 0);
+ const r = calculateSalary2026(annualSalary, nonTaxable, 1, 0, INSURANCE_RATES_2026);
  return {
  preTax,
  monthlyNet: r.netPay,

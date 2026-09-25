@@ -6,6 +6,7 @@
 import { describe, expect, it } from "vitest";
 
 import { calculateSalary2026, type TaxResult } from "@/lib/TaxLogic";
+import { INSURANCE_RATES_2026 } from "@/lib/taxConstants2026";
 import { generateAnnualSalaryTableData2026 } from "@/lib/generateData2026";
 
 const FIELDS: (keyof TaxResult)[] = [
@@ -74,7 +75,8 @@ describe("calculateSalary2026 — 극소 연봉 (월급 ≤ 비과세)", () => {
 
   it("월 과세 보수가 조금이라도 있으면 국민연금 하한(월 41만 기준)은 그대로 적용", () => {
     // 연 300만 = 월 25만, 비과세 20만 → 과세 보수 5만 → 하한 41만 × 4.75% = 19,475 → 10원 절사
-    const r = calculateSalary2026(3_000_000);
+    // (2026 요율 명시 — 기본값은 현행 요율 포인터라 1/1 전환 뒤에도 이 리터럴이 유지되도록, N3)
+    const r = calculateSalary2026(3_000_000, 200_000, 1, 0, INSURANCE_RATES_2026);
     expect(r.nationalPension).toBe(19_470);
     expect(r.netPay).toBeGreaterThan(0);
   });

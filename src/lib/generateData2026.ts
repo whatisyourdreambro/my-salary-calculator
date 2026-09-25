@@ -16,6 +16,10 @@
 //   shape(health=건보+장기요양 합산, incomeTax=소득세+지방세 합산)·export 이름은
 //   salaryStaticParams·/table 페이지가 그대로 소비하므로 바꾸지 말 것.
 //   (바꾸면 /salary/[amount] SSG 집합·sitemap 정합이 연쇄로 깨진다.)
+//
+// ★ 2026 요율 고정 (2026-09-25 N3): calculateSalary2026 의 기본 요율은 현행 포인터
+//   (src/config/currentRates.ts)라 1/1 전환 때 2027 로 바뀐다. 이 표는 '2026 표'이므로
+//   INSURANCE_RATES_2026 을 명시한다 — 전환 후에는 표(2026)와 상세 페이지(현행)가 요율만큼 다르다.
 
 import type { AdvancedSettings } from "@/app/types";
 import { calculateSalary2026 } from "./TaxLogic";
@@ -25,6 +29,7 @@ import {
  type NetSalaryRates,
 } from "./calculator";
 import {
+ INSURANCE_RATES_2026,
  INSURANCE_RATES_2025_LEGACY,
  PENSION_BASE_2025_LEGACY,
 } from "./taxConstants2026";
@@ -65,8 +70,8 @@ export function generateAnnualSalaryTableData2026(): SalaryData[] {
 
  // Range from 24,000,000 to 200,000,000 Step 1,000,000 — 격자 불변 (177행)
  for (let salary = 24000000; salary <= 200000000; salary += 1000000) {
- // 표시 수치 — 상세 페이지(/salary/[amount])와 동일 함수·동일 기준
- const r2026 = calculateSalary2026(salary, NON_TAXABLE_MONTHLY, 1, 0);
+ // 표시 수치 — 상세 페이지(/salary/[amount])와 동일 함수·동일 기준, 요율은 2026 고정
+ const r2026 = calculateSalary2026(salary, NON_TAXABLE_MONTHLY, 1, 0, INSURANCE_RATES_2026);
 
  // changeValue 전용 — 같은 비과세 기준으로 2026 vs 2025 요율 효과만 비교
  const c2026 = calculateNetSalaryWithRates(

@@ -6,11 +6,15 @@
 // 동결값 이력: 인자 추가 직전(4d80ce3e) 엔진 출력 스냅샷 → 2026-09-25 A17(CALC-01)에서 월 소득세를
 // 근로소득 간이세액표로 바꾸며 같은 커밋에서 재산출(소득세 칸은 별표2 금액과 일치). 엔진을 의도적으로
 // 바꾸는 커밋은 이 값을 같은 커밋에서 갱신하고 커밋 본문에 바뀐 제목 수를 남긴다.
+// 2026-09-25 N3: 기본값이 현행 요율 포인터(src/config/currentRates.ts)로 바뀌었다. 동결값은 '2026 요율 명시
+// 호출'에 고정하고, 기본 호출은 '현행 포인터 명시 호출'과 같음을 본다 — 지금(포인터 = 2026)은 기본 호출도
+// 동결값과 같고, 1/1 포인터 전환 뒤에도 이 파일은 수정 없이 통과한다(전환으로 바뀌는 제목 수는 런북 참조).
 import { describe, expect, it } from "vitest";
 
 import { calculateSalary2026 } from "@/lib/TaxLogic";
 import { calcBonusNet, DEFAULT_BONUS_CREDIT_RATE } from "@/lib/bonusTaxCalc";
-import { calculateNetSalary } from "@/lib/calculator";
+import { calculateNetSalary, calculateNetSalary2026, calculateNetSalaryWithRates, CURRENT_NET_SALARY_RATES } from "@/lib/calculator";
+import { CURRENT_INSURANCE_RATES } from "@/config/currentRates";
 import { generateAnnualSalaryTableData2026 } from "@/lib/generateData2026";
 import { generateAnnualSalaryTableData2027 } from "@/lib/generateData2027";
 import { INSURANCE_RATES_2026, type InsuranceRates } from "@/lib/taxConstants2026";
@@ -97,25 +101,27 @@ const TABLE_2026: ReadonlyArray<readonly [number, number, number]> = [
 ];
 
 describe("TaxLogic.calculateSalary2026 — rates 선택 인자", () => {
-  it("/salary 격자 30개: 기본 호출 = 동결값 = 2026 요율 명시 호출", () => {
+  it("/salary 격자 30개: 2026 요율 명시 호출 = 동결값 · 기본 호출 = 현행 포인터 명시 호출", () => {
     for (const [annual, netPay, incomeTax, totalDeductions] of SALARY_GRID) {
-      const byDefault = calculateSalary2026(annual, 200_000, 1, 0);
-      expect({ annual, netPay: byDefault.netPay, incomeTax: byDefault.incomeTax, totalDeductions: byDefault.totalDeductions })
+      const pinned = calculateSalary2026(annual, 200_000, 1, 0, INSURANCE_RATES_2026);
+      expect({ annual, netPay: pinned.netPay, incomeTax: pinned.incomeTax, totalDeductions: pinned.totalDeductions })
         .toEqual({ annual, netPay, incomeTax, totalDeductions });
-      expect(calculateSalary2026(annual, 200_000, 1, 0, INSURANCE_RATES_2026)).toEqual(byDefault);
+      expect(calculateSalary2026(annual, 200_000, 1, 0)).toEqual(
+        calculateSalary2026(annual, 200_000, 1, 0, CURRENT_INSURANCE_RATES)
+      );
     }
   });
 
-  it("/monthly 표본: 기본 호출 = 동결값", () => {
+  it("/monthly 표본: 2026 요율 명시 호출 = 동결값", () => {
     for (const [monthly, netPay, incomeTax, totalDeductions] of MONTHLY_SAMPLES) {
-      const r = calculateSalary2026(monthly * 12, 200_000, 1, 0);
+      const r = calculateSalary2026(monthly * 12, 200_000, 1, 0, INSURANCE_RATES_2026);
       expect({ monthly, netPay: r.netPay, incomeTax: r.incomeTax, totalDeductions: r.totalDeductions })
         .toEqual({ monthly, netPay, incomeTax, totalDeductions });
     }
   });
 
   it("다른 연도 요율을 넘기면 그 요율로 계산한다 (연금 5.0% 가상 요율)", () => {
-    const base = calculateSalary2026(50_000_000, 200_000, 1, 0);
+    const base = calculateSalary2026(50_000_000, 200_000, 1, 0, INSURANCE_RATES_2026);
     const p5 = calculateSalary2026(50_000_000, 200_000, 1, 0, RATES_PENSION_5);
     // 월 과세 보수 3,966,666.67원 × 5.0% → 10원 절사 198,330원
     expect(p5.nationalPension).toBe(198_330);
@@ -126,12 +132,14 @@ describe("TaxLogic.calculateSalary2026 — rates 선택 인자", () => {
 });
 
 describe("bonusTaxCalc.calcBonusNet — rates 선택 인자", () => {
-  it("성과급 표본: 기본 호출 = 동결값 = 2026 요율 명시 호출", () => {
+  it("성과급 표본: 2026 요율 명시 호출 = 동결값 · 기본 호출 = 현행 포인터 명시 호출", () => {
     for (const [salary, bonus, net, incomeTaxDelta, totalDeductions] of BONUS_SAMPLES) {
-      const r = calcBonusNet(salary, bonus);
+      const r = calcBonusNet(salary, bonus, DEFAULT_BONUS_CREDIT_RATE, true, INSURANCE_RATES_2026);
       expect({ salary, bonus, net: r.net, incomeTaxDelta: r.incomeTaxDelta, totalDeductions: r.totalDeductions })
         .toEqual({ salary, bonus, net, incomeTaxDelta, totalDeductions });
-      expect(calcBonusNet(salary, bonus, DEFAULT_BONUS_CREDIT_RATE, true, INSURANCE_RATES_2026)).toEqual(r);
+      expect(calcBonusNet(salary, bonus)).toEqual(
+        calcBonusNet(salary, bonus, DEFAULT_BONUS_CREDIT_RATE, true, CURRENT_INSURANCE_RATES)
+      );
     }
   });
 
@@ -139,7 +147,7 @@ describe("bonusTaxCalc.calcBonusNet — rates 선택 인자", () => {
     // 연봉 6,000만 → 연금 상한(연 7,908만)까지 남은 1,908만 중 성과급 1,000만 전액 부과
     const r = calcBonusNet(60_000_000, 10_000_000, DEFAULT_BONUS_CREDIT_RATE, true, RATES_PENSION_5);
     expect(r.pensionDelta).toBe(500_000);
-    expect(calcBonusNet(60_000_000, 10_000_000).pensionDelta).toBe(475_000);
+    expect(calcBonusNet(60_000_000, 10_000_000, DEFAULT_BONUS_CREDIT_RATE, true, INSURANCE_RATES_2026).pensionDelta).toBe(475_000);
   });
 });
 
@@ -162,7 +170,7 @@ describe("/table 표 데이터 — 요율 인자 도입 후에도 불변", () =>
     }
   });
 
-  it("calculator.ts 기본(청년 감면 OFF) 출력 동결값 — 비과세 연 240만·1인", () => {
+  it("calculator.ts 2026 고정(청년 감면 OFF) 출력 동결값 — 비과세 연 240만·1인 · 기본은 현행 포인터", () => {
     const expected: ReadonlyArray<readonly [number, number, number]> = [
       [30_000_000, 2_244_424, 29_160],
       [50_000_000, 3_571_528, 190_620],
@@ -170,8 +178,11 @@ describe("/table 표 데이터 — 요율 인자 도입 후에도 불변", () =>
       [100_000_000, 6_530_903, 986_720],
     ];
     for (const [salary, monthlyNet, incomeTax] of expected) {
-      const r = calculateNetSalary(salary, 2_400_000, 1, 0, adv);
+      const r = calculateNetSalary2026(salary, 2_400_000, 1, 0, adv);
       expect({ salary, monthlyNet: r.monthlyNet, incomeTax: r.incomeTax }).toEqual({ salary, monthlyNet, incomeTax });
+      expect(calculateNetSalary(salary, 2_400_000, 1, 0, adv)).toEqual(
+        calculateNetSalaryWithRates(salary, 2_400_000, 1, 0, adv, CURRENT_NET_SALARY_RATES)
+      );
     }
   });
 });

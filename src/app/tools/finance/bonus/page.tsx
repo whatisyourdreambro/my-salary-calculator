@@ -8,7 +8,8 @@ import {
   Zap, Shield,
   AlertCircle, BarChart3, Sparkles, BookOpen,
 } from "lucide-react";
-import { earnedIncomeTaxCredit2026 } from "@/lib/taxConstants2026";
+import { earnedIncomeTaxCredit2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
+import { CURRENT_INSURANCE_RATES, CURRENT_RATE_LABELS } from "@/config/currentRates";
 import ResultSharePanel from "@/components/ResultSharePanel";
 import { CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import NumberInput from "@/components/NumberInput";
@@ -72,27 +73,29 @@ const calcTaxCredit = (incomeTax: number, totalIncome: number): number =>
 
 
 /**
- * 성과급에 대한 4대보험 계산
+ * 성과급에 대한 4대보험 계산 — 요율은 현행 포인터(src/config/currentRates.ts, 지금은 2026)
  * - 국민연금: 4.75% (상한: 월 659만원 기준(2026.7~2027.6) → 연 7,908만원 이상이면 상한 적용)
  * - 건강보험: 3.595% + 장기요양 0.4724%
  * - 고용보험: 0.9%
- * 성과급은 비정기 상여금으로 4대보험 부과 대상
+ * 성과급은 비정기 상여금으로 4대보험 부과 대상.
+ * 2026-09-25 N3: 요율 4종·연금 연 상한 리터럴을 정본 상수(CURRENT_INSURANCE_RATES·PENSION_BASE_2026)로 교체 —
+ * 1/1 요율 전환이 포인터 한 줄로 이 계산기와 공제 내역 라벨에 반영된다(값은 동일).
  */
 function calcInsurance(bonus: number, annualSalary: number): {
   pension: number; health: number; longTerm: number; employment: number; total: number;
 } {
-  // 국민연금: 연 소득 상한(월 659만원×12월, 2026.7~2027.6)×4.75% 기준
+  // 국민연금: 연 소득 상한(월 659만원×12월, 2026.7~2027.6)×현행 요율 기준
   //   → 연봉이 이미 상한 초과 시 성과급에는 추가 부과 없음
-  const pensionCeiling = 79_080_000; // 659만×12
+  const pensionCeiling = PENSION_BASE_2026.MAX_ANNUAL; // 659만×12
   const pensionBase = Math.min(bonus, Math.max(0, pensionCeiling - annualSalary));
-  const pension = Math.round(pensionBase * 0.0475);
+  const pension = Math.round(pensionBase * CURRENT_INSURANCE_RATES.NATIONAL_PENSION);
 
   // 건강보험 + 장기요양 (상한 없음, 정산 방식)
-  const health    = Math.round(bonus * 0.03595);
-  const longTerm  = Math.round(health * 0.1314); // 건강보험료 × 13.14%
+  const health    = Math.round(bonus * CURRENT_INSURANCE_RATES.HEALTH_INSURANCE);
+  const longTerm  = Math.round(health * CURRENT_INSURANCE_RATES.LONG_TERM_CARE_RATIO); // 건강보험료 × 장기요양 비율
 
   // 고용보험
-  const employment = Math.round(bonus * 0.009);
+  const employment = Math.round(bonus * CURRENT_INSURANCE_RATES.EMPLOYMENT_INSURANCE);
 
   return {
     pension,
@@ -523,10 +526,10 @@ export default function BonusCalculatorPage() {
                 { label: "세전 성과급",            value: bonus,             sign: ""  },
                 { label: "소득세 (누진세 합산)",    value: r.bonusIncomeTax,  sign: "-" },
                 { label: "지방소득세 (소득세×10%)", value: r.localTax,        sign: "-" },
-                { label: "국민연금 (4.75%)",         value: r.insurance.pension,     sign: "-" },
-                { label: "건강보험 (3.595%)",       value: r.insurance.health,      sign: "-" },
+                { label: `국민연금 (${CURRENT_RATE_LABELS.pension})`, value: r.insurance.pension, sign: "-" },
+                { label: `건강보험 (${CURRENT_RATE_LABELS.health})`, value: r.insurance.health, sign: "-" },
                 { label: "장기요양보험",            value: r.insurance.longTerm,    sign: "-" },
-                { label: "고용보험 (0.9%)",         value: r.insurance.employment,  sign: "-" },
+                { label: `고용보험 (${CURRENT_RATE_LABELS.employment})`, value: r.insurance.employment, sign: "-" },
               ].map((row, i) => {
                 return (
                   <div

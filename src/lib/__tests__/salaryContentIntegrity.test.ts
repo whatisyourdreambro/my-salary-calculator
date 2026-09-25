@@ -31,6 +31,7 @@ import SalaryPage, { generateMetadata } from "@/app/salary/[amount]/page";
 import { HOME_FAQ_ITEMS, HOME_HOWTO_DATA, HOME_META_DESCRIPTION, HOME_META_TITLE } from "@/lib/homeContent";
 import { SALARY_CALCULATION_METHOD_HREF, SALARY_MODEL_2026 } from "@/lib/salaryModelContent";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
+import { INSURANCE_RATES_2026 } from "@/lib/taxConstants2026";
 import { faqLd } from "@/lib/structuredData";
 
 type Structured = { "@type": string; mainEntity?: { name: string; acceptedAnswer: { text: string } }[]; step?: { text: string }[] };
@@ -60,21 +61,25 @@ describe("Salary explanation and result integrity", () => {
     expect(body).toContain(`href="${SALARY_CALCULATION_METHOD_HREF}"`);
   });
 
+  // 2026-09-25 N3: /table/2026 은 2026 요율 고정, 상세(/salary)·홈 FAQ 는 현행 요율 포인터(src/config/currentRates.ts).
+  // 지금(포인터 = 2026)은 두 값이 같고, 1/1 전환 뒤에는 표는 2026 값·상세와 홈은 현행 값으로 각각 맞는지 본다.
   it.each([[30_000_000, 224], [50_000_000, 357], [100_000_000, 653]])("keeps the %i example, table row, detail result and metadata on the same default inputs", async (annual, approximateManwon) => {
-    const expected = calculateSalary2026(annual, 200_000, 1, 0).netPay;
-    expect(Math.round(expected / 10_000)).toBe(approximateManwon);
+    const expected2026 = calculateSalary2026(annual, 200_000, 1, 0, INSURANCE_RATES_2026).netPay;
+    expect(Math.round(expected2026 / 10_000)).toBe(approximateManwon);
     for (const html of [annualHtml(), monthlyHtml()]) {
-      expect(html).toContain(`<tr data-annual="${annual}"><td>${expected}</td></tr>`);
+      expect(html).toContain(`<tr data-annual="${annual}"><td>${expected2026}</td></tr>`);
       expect(html).toContain(SALARY_MODEL_2026.defaultConditions);
     }
+    expect(annualMetadata.description).toContain(`약 ${approximateManwon}만원`);
+    const expected = calculateSalary2026(annual, 200_000, 1, 0).netPay;
+    const currentManwon = Math.round(expected / 10_000);
     const params = { amount: String(annual) };
     const detail = renderToStaticMarkup(createElement(SalaryPage, { params }));
     expect(detail).toContain(`data-monthly-net="${expected}"`);
     const description = (await generateMetadata({ params })).description;
-    expect(description).toContain(`약 ${approximateManwon}만원`);
+    expect(description).toContain(`약 ${currentManwon}만원`);
     expect(description).toContain(SALARY_MODEL_2026.defaultConditions);
-    if (annual < 100_000_000) expect(JSON.stringify(HOME_FAQ_ITEMS)).toContain(`약 ${approximateManwon}만원`);
-    expect(annualMetadata.description).toContain(`약 ${approximateManwon}만원`);
+    if (annual < 100_000_000) expect(JSON.stringify(HOME_FAQ_ITEMS)).toContain(`약 ${currentManwon}만원`);
   });
 
   it.each([annualHtml, monthlyHtml])("keeps table FAQ visible and states the withholding-table income tax model", (render) => {

@@ -4,15 +4,18 @@ import { useState, useMemo } from "react";
 import { TrendingUp, ArrowRight } from "lucide-react";
 import NumberInput from "@/components/NumberInput";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
+import { INSURANCE_RATES_2026 } from "@/lib/taxConstants2026";
 
 // 연봉 → 연 실수령액 — 홈 연봉 계산기와 같은 정본 엔진(TaxLogic, 간이세액표 근사)을
 // 쓴다. 기준은 비과세 식대 월 20만원·부양가족 본인 1인·자녀 0명(홈·연봉표 기본값).
 // 종전에는 구간표·근로소득공제를 이 파일에 따로 두고 "세액공제 20% 가정"(×0.8)으로
 // 계산해, 연금보험료 공제·비과세·연금 하한이 빠진 채 연 실수령이 3,000만 −69만 ~
 // 1.5억 +516만 어긋났다(2026-09-25 감사 CALC-06).
+// 요율은 2026 고정 — '2026' 연도 표기 페이지이고 본문 수치(FAQ·구간 유지율)가 2026 엔진 값이라
+// calculateSalary2026 의 기본값(현행 요율 포인터)을 쓰지 않는다 (2026-09-25 N3).
 export function calcAnnualNet(salary: number): number {
   if (salary <= 0) return 0;
-  return calculateSalary2026(salary, 200_000, 1, 0).netPay * 12;
+  return calculateSalary2026(salary, 200_000, 1, 0, INSURANCE_RATES_2026).netPay * 12;
 }
 
 function formatInput(raw: string): string {

@@ -17,7 +17,8 @@
 //   ④ 2027년 7월 — 연금 기준소득월액 상·하한 재조정.
 //   ⑤ 고용보험 실업급여 요율 법령 개정 공포 시 — employment 교체 + 요율표·표 4종 고지 문구 동기화
 //      (healthRate2027Freeze.test.ts 의 employment 준용 단언도 함께 수정).
-//   전부 이 파일 상수만 고치면 4표에 일괄 반영된다.
+//   요율 값은 src/lib/taxConstants2027.ts(INSURANCE_RATES_2027·_STATUS)가 정본이다(2026-09-25 N3) —
+//   ②⑤ 는 그 파일만 고치면 4표·요율표·1/1 현행 포인터(src/config/currentRates.ts)에 일괄 반영된다.
 //
 // 표시 엔진: calculateNetSalaryWithRates(요율 파라미터 코어) — 2026 표(TaxLogic)와
 // 달리 2027 전용 요율을 주입해야 하므로 코어 직접 사용. 비과세 식대 월 20만원·본인
@@ -27,9 +28,10 @@ import type { AdvancedSettings } from "@/app/types";
 import {
   calculateNetSalaryWithRates,
   NET_SALARY_RATES_2026,
+  toNetSalaryRates,
   type NetSalaryRates,
 } from "./calculator";
-import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "./taxConstants2026";
+import { INSURANCE_RATES_2027 } from "./taxConstants2027";
 import type { SalaryData as SalaryDataRow } from "./generateData";
 import type { SalaryData as SalaryDataAnnual } from "./generateData2026";
 
@@ -38,18 +40,10 @@ export const MIN_WAGE_2027 = 10_700;
 /** 2027 최저임금 월 환산액 (209h) — 고시 원문 */
 export const MIN_WAGE_2027_MONTHLY = 2_236_300;
 
-export const NET_SALARY_RATES_2027: NetSalaryRates = {
-  // ★확정 — 총 10.0%의 근로자 절반 (2027-01-01~)
-  pension: 0.05,
-  // 상·하한은 2027-06-30까지 2026-07 고시값 유지 (2027-07 재조정 예정)
-  pensionMonthlyCapBase: PENSION_BASE_2026.MAX_MONTHLY,
-  pensionMonthlyFloorBase: PENSION_BASE_2026.MIN_MONTHLY,
-  // ★확정 — 2027 동결 (건정심 2026-09-08), 2026 정본값 참조가 곧 2027 확정값.
-  // 장기요양 비율(ltcRatio)·고용보험은 미확정 — 2026 준용 (고용보험은 2027 인상안 심의 중, 갱신 슬롯 ⑤)
-  health: INSURANCE_RATES_2026.HEALTH_INSURANCE,
-  ltcRatio: INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO,
-  employment: INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE,
-};
+// 연금 5.0%(★확정, 총 10.0%의 근로자 절반)·건보 2027 동결(★확정, 2026 정본값 참조)·장기요양/고용 2026 준용 —
+// 값과 확정 상태는 taxConstants2027.ts 정본. 연금 상·하한은 2027-06-30까지 2026-07 고시값 유지
+// (2027-07 재조정 예정 — toNetSalaryRates 가 PENSION_BASE_2026 을 쓴다).
+export const NET_SALARY_RATES_2027: NetSalaryRates = toNetSalaryRates(INSURANCE_RATES_2027);
 
 // 표 4종 공통 기준 — 비과세 식대 월 20만원 (2026 표·상세 페이지와 동일)
 const NON_TAXABLE_MONTHLY = 200_000;

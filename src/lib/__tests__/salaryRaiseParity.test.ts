@@ -9,14 +9,16 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { calculateSalary2026 } from "@/lib/TaxLogic";
+import { INSURANCE_RATES_2026 } from "@/lib/taxConstants2026";
 import { calcAnnualNet } from "@/app/salary-raise-2026/Client";
 
 const read = (rel: string) => readFileSync(join(process.cwd(), rel), "utf8");
-const engineAnnualNet = (salary: number) => calculateSalary2026(salary, 200_000, 1, 0).netPay * 12;
+// '2026' 연도 표기 페이지 — 요율은 2026 고정 (2026-09-25 N3: calculateSalary2026 기본값은 현행 요율 포인터)
+const engineAnnualNet = (salary: number) => calculateSalary2026(salary, 200_000, 1, 0, INSURANCE_RATES_2026).netPay * 12;
 const man = (won: number) => Math.round(won / 10_000);
 
 describe("연봉 인상 시뮬레이터 — 정본 엔진 일치", () => {
-  it("연 실수령이 홈 기본값(비과세 식대 월 20만원·본인 1인)의 calculateSalary2026 × 12 와 같다", () => {
+  it("연 실수령이 홈 기본값(비과세 식대 월 20만원·본인 1인)·2026 요율의 calculateSalary2026 × 12 와 같다", () => {
     for (const salary of [24_000_000, 30_000_000, 50_000_000, 55_000_000, 80_000_000, 100_000_000, 150_000_000, 300_000_000]) {
       expect(calcAnnualNet(salary)).toBe(engineAnnualNet(salary));
     }

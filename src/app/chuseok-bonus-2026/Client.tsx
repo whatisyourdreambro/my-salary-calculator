@@ -8,7 +8,9 @@
 import { useMemo, useState } from "react";
 import Link from "@/components/AppLink";
 import { ArrowRight, Calculator } from "lucide-react";
-import { calcBonusNet } from "@/lib/bonusTaxCalc";
+import { calcBonusNet, DEFAULT_BONUS_CREDIT_RATE } from "@/lib/bonusTaxCalc";
+// 2026년 추석(2026년 지급분) 계산기 — 요율은 2026 고정, calcBonusNet 기본값(현행 포인터) 미사용 (2026-09-25 N3)
+import { INSURANCE_RATES_2026 } from "@/lib/taxConstants2026";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 import { isValidCalculationNumber } from "@/lib/calculationMeasurement";
 import NumberInput from "@/components/NumberInput";
@@ -20,7 +22,10 @@ export default function ChuseokBonusClient() {
   const [bonus, setBonus] = useState(1_000_000); // 추석 상여 100만원 기본값
   const [validInputs, setValidInputs] = useState({ salary: true, bonus: true });
 
-  const result = useMemo(() => calcBonusNet(salary, bonus), [salary, bonus]);
+  const result = useMemo(
+    () => calcBonusNet(salary, bonus, DEFAULT_BONUS_CREDIT_RATE, true, INSURANCE_RATES_2026),
+    [salary, bonus],
+  );
   const measurement = useCalculatorMeasurement({
     calcType: "chuseok_bonus_mini",
     valid: validInputs.salary && validInputs.bonus &&

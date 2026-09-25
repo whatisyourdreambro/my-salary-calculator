@@ -18,6 +18,14 @@
 // 2027 요율·최저임금 개정 시: 이 스크립트를 돌리면 표시용 텍스트를 포함해 갱신해야 할
 // 파일 전량이 허용목록으로 정리되어 나온다 (ad-audit.mjs 와 같은 관례).
 //
+// 현행 요율 포인터 게이트 (2026-09-25 N3 — 1/1 전환 런북 docs/next-upgrade-plan-2026-09-11.md §5):
+//   - src/config/currentRates.ts 의 'export const CURRENT_RATES_YEAR: RateYear = YYYY;' 한 줄을 읽는다.
+//     형식이 바뀌어 못 찾으면 실패 (런북의 한 줄 전환이 그 형식을 전제).
+//   - 포인터가 2027 인데 오늘(KST)이 2027-01-01 전이면 실패 — 이른 전환 방지.
+//   - 포인터가 2027 인데 taxConstants2027.ts 의 INSURANCE_RATES_2027_STATUS 에 provisional 이 남아 있으면 실패.
+//   - 오늘(KST)이 2027-01-01 이후인데 포인터가 아직 2026 이면 경고 (런북 실행 필요).
+//   날짜 모의: VERIFY_TAX_NOW=2027-01-01T00:10:00+09:00 npm run verify:tax
+//
 // 사용: npm run verify:tax
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
@@ -31,6 +39,7 @@ const ALLOW_PATH = join(ROOT, "scripts", "tax-constants-allow.json");
 // 정본 파일 — 리터럴의 유일한 원천 (검사 대상에서 제외)
 const CANONICAL = new Set([
   "src/lib/taxConstants2026.ts",
+  "src/lib/taxConstants2027.ts",
   "src/config/minimumWage.ts",
   "src/config/unemploymentBenefit.ts",
 ]);
@@ -134,12 +143,59 @@ for (const [file, allowed] of allowMap) {
   }
 }
 
+// ── 현행 요율 포인터 게이트 (2026-09-25 N3)
+const POINTER_PATH = join(ROOT, "src", "config", "currentRates.ts");
+const RATES_2027_PATH = join(ROOT, "src", "lib", "taxConstants2027.ts");
+const SWITCH_AT = Date.parse("2027-01-01T00:00:00+09:00");
+const pointerSrc = readFileSync(POINTER_PATH, "utf8");
+const pointerLines = pointerSrc
+  .split(/\r?\n/)
+  .filter((l) => l.startsWith("export const CURRENT_RATES_YEAR"));
+const pointerMatch =
+  pointerLines.length === 1 ? /^export const CURRENT_RATES_YEAR: RateYear = (\d{4});$/.exec(pointerLines[0]) : null;
+const nowRaw = process.env.VERIFY_TAX_NOW;
+const now = nowRaw ? Date.parse(nowRaw) : Date.now();
+if (!Number.isFinite(now)) {
+  console.error(`[FAIL] VERIFY_TAX_NOW 를 날짜로 읽지 못함: ${nowRaw}`);
+  fail++;
+} else if (!pointerMatch) {
+  console.error(
+    "[FAIL] src/config/currentRates.ts 에서 'export const CURRENT_RATES_YEAR: RateYear = YYYY;' 한 줄을 찾지 못함 — 1/1 전환 런북이 이 형식을 전제한다"
+  );
+  fail++;
+} else {
+  const year = Number(pointerMatch[1]);
+  if (year === 2027 && now < SWITCH_AT) {
+    console.error("[FAIL] 현행 요율 포인터가 2027 인데 아직 2027-01-01 00:00 KST 전 — 1/1 00:00 이후 빌드에서만 전환");
+    fail++;
+  }
+  if (year === 2027) {
+    // 선언부('export const … = {')에 고정 — 파일 머리 주석의 같은 이름에 걸리면 요율 객체를 읽게 된다
+    const statusBlock = /export const INSURANCE_RATES_2027_STATUS\b[\s\S]*?=\s*\{([\s\S]*?)\};/.exec(
+      readFileSync(RATES_2027_PATH, "utf8")
+    );
+    const provisional = statusBlock
+      ? [...statusBlock[1].matchAll(/(\w+):\s*"provisional"/g)].map((m) => m[1])
+      : ["(INSURANCE_RATES_2027_STATUS 블록 없음)"];
+    if (provisional.length) {
+      console.error(`[FAIL] 포인터 2027 전환 전 확인 안 된 2027 요율: ${provisional.join(", ")} — taxConstants2027.ts 에서 확정값·confirmed 로 갱신`);
+      fail++;
+    }
+  }
+  if (year === 2026 && now >= SWITCH_AT) {
+    console.warn(
+      "[WARN] 2027-01-01 이 지났는데 현행 요율 포인터가 2026 — docs/next-upgrade-plan-2026-09-11.md §5 1/1 전환 런북 실행"
+    );
+  }
+  console.log(`[verify-tax-constants] 현행 요율 포인터 CURRENT_RATES_YEAR = ${year}`);
+}
+
 console.log(
   `[verify-tax-constants] 검사 완료 — 리터럴 보유 파일 ${found.size}곳 / 허용 ${allowMap.size}곳 / 위반 ${fail}곳`
 );
 if (fail) {
   console.error(
-    "→ 새 코드는 정본(src/lib/taxConstants2026.ts · src/config/minimumWage.ts · src/config/unemploymentBenefit.ts)을 import 하거나, 표시용 텍스트라면 scripts/tax-constants-allow.json 에 사유와 함께 등재하세요."
+    "→ 새 코드는 정본(src/lib/taxConstants2026.ts · src/lib/taxConstants2027.ts · src/config/currentRates.ts · src/config/minimumWage.ts · src/config/unemploymentBenefit.ts)을 import 하거나, 표시용 텍스트라면 scripts/tax-constants-allow.json 에 사유와 함께 등재하세요."
   );
   process.exit(1);
 }

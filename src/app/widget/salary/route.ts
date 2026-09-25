@@ -11,8 +11,11 @@
 //   실측(2026-08-16)이 있어 config 규칙(/widget/:path*)은 dev 패리티용이다.
 // - 색인 차단: X-Robots-Tag + robots.ts Disallow(/widget/) 이중 — 임베드 안내는
 //   /embed 페이지가 담당한다.
+// - 요율·연도 표기는 현행 포인터(src/config/currentRates.ts)를 따른다 — 1/1 전환 시 계산과
+//   '2026 연봉'·'2026년 세법' 표기가 함께 바뀐다 (2026-09-25 N3, 종전 calculateNetSalary2026).
 
-import { calculateNetSalary2026 } from "@/lib/calculator";
+import { calculateNetSalary } from "@/lib/calculator";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import { WIDGET_CSP, WIDGET_REFERRER_SCRIPT, WIDGET_NUMBER_INPUT_SCRIPT } from "../shared";
 
 export const runtime = "edge";
@@ -29,7 +32,7 @@ const DEPENDENTS = 1;
 function buildGrid(): number[] {
   const grid: number[] = [];
   for (let annual = GRID_MIN; annual <= GRID_MAX; annual += GRID_STEP) {
-    const r = calculateNetSalary2026(annual, NON_TAXABLE, DEPENDENTS, 0, {
+    const r = calculateNetSalary(annual, NON_TAXABLE, DEPENDENTS, 0, {
       isSmeYouth: false,
       disabledDependents: 0,
       seniorDependents: 0,
@@ -50,7 +53,7 @@ function buildHtml(): string {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>2026 연봉 실수령액 계산기 — 머니샐러리</title>
+<title>${CURRENT_RATES_YEAR} 연봉 실수령액 계산기 — 머니샐러리</title>
 <style>
   :root {
     --bg: #ffffff; --card: #f4f6f9; --text: #0a1829; --sub: #5b6b82;
@@ -99,7 +102,7 @@ function buildHtml(): string {
 </style>
 </head>
 <body>
-  <p class="title">💰 2026 연봉 <span>실수령액</span> 계산기</p>
+  <p class="title">💰 ${CURRENT_RATES_YEAR} 연봉 <span>실수령액</span> 계산기</p>
   <div class="row">
     <label for="salary">연봉</label>
     <input id="salary" type="text" data-number-input="grouped" role="spinbutton" inputmode="decimal" min="500" max="20000" step="100" value="5,000">
@@ -109,7 +112,7 @@ function buildHtml(): string {
     <span class="label">세후 월 실수령액</span>
     <span class="value" id="net">—</span>
   </div>
-  <p class="note">2026년 세법 · 부양가족 1인 · 비과세 식대 월 20만원 기준 추정치입니다.</p>
+  <p class="note">${CURRENT_RATES_YEAR}년 세법 · 부양가족 1인 · 비과세 식대 월 20만원 기준 추정치입니다.</p>
   <a class="cta" href="https://www.moneysalary.com/?utm_source=widget&amp;utm_medium=iframe" target="_blank" rel="noopener">정확한 공제 내역 계산하기 →</a>
   <p class="brand"><a href="https://www.moneysalary.com/?utm_source=widget&amp;utm_medium=iframe" target="_blank" rel="noopener">by 머니샐러리</a></p>
 <script>
