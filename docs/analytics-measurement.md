@@ -125,7 +125,7 @@ Verify defaults, invalid input, accepted input, a visible current result, repeat
 
 - **언제**: 착지 뷰(`nav_type=landing`)에서만 설치한다. 문서당 1회다. `visibilitychange`→hidden 이나 `pagehide` 중 먼저 온 것에서 **정확히 1번** 보낸다. 탭 전환·앱 전환·이탈·새로고침이 모두 여기에 해당한다. 전송은 `transport_type: beacon` 이다.
 - **어떻게 재나**: 5초마다 90초 동안(18회) DOM 을 읽고 보내기 직전에 1번 더 읽는다. 항목마다 그동안의 **최댓값**을 보낸다. DOM 에 쓰지 않고 DOM 관찰자(MutationObserver)도 쓰지 않는다. 모든 경로가 try/catch 로 감싸져 있다.
-- **소프트 이동**: 사이트 안 링크 이동 등으로 뷰가 `soft` 가 되면 그 시점 값에서 멈추고, `soft_nav_before_send=1` · `nav_type=soft` 로 보낸다. 다음 뷰의 DOM 은 섞이지 않는다.
+- **소프트 이동**: 사이트 안 링크 이동 등으로 뷰가 `soft` 가 되면 그 시점 값에서 멈추고, `soft_nav_before_send=1` · `nav_type=soft` 로 보낸다. 다음 뷰의 DOM 은 섞이지 않는다. 그 대신 soft 행은 **잘린 관측**이다. 이동한 뒤에 붙은 자리·요청·채움은 세지 않아 값이 작게 나온다. 그래서 soft 행은 soft 비중과 커버리지 분자에만 쓴다(판독 절차 ①).
 
 | 인자 | 형식 | 뜻 |
 |---|---|---|
@@ -148,7 +148,7 @@ Verify defaults, invalid input, accepted input, a visible current result, repeat
 
 - 앵커·전면(vignette) 광고는 `.google-auto-placed` 밖에 붙으므로 `aa_*` 에 들어가지 않는다.
 - 개인정보: 경로는 첫 마디만 싣고, 입력값·금액·쿼리는 싣지 않는다. `page_location` 은 다른 광고 이벤트처럼 공개 금액 페이지(`/monthly/N`·`/salary/N`)의 실경로를 유지한다.
-- `soft_nav_before_send=1` 행의 `page_location`(페이지 경로)은 **마지막 뷰**의 주소다. 전역 `trackEvent` 는 10/10 판정 전 무변경 규칙이라 바꾸지 않았다. 템플릿별 집계는 착지 기준인 `page_group` 으로 하거나 `nav_type=landing` 행만 쓴다.
+- `soft_nav_before_send=1` 행의 `page_location`(페이지 경로)은 **마지막 뷰**의 주소다. 전역 `trackEvent` 는 10/10 판정 전 무변경 규칙이라 바꾸지 않았다. 그래서 `autoads_seen` 을 템플릿으로 나눌 때는 페이지 경로가 아니라 착지 기준인 `page_group` 을 쓴다. 자리·요청·채움(`aa_placed`·`aa_req`·`aa_filled` 와 판독 ② 의 모든 줄)은 **`nav_type=landing` 필터를 건 집계만 인정한다.** `page_group` 으로만 묶고 soft 행을 섞은 합계는 쓰지 않는다.
 
 ### GA4 등록 (배포 당일, 모두 **이벤트 범위** — 소급되지 않는다)
 
@@ -161,7 +161,7 @@ Verify defaults, invalid input, accepted input, a visible current result, repeat
 | 맞춤 측정항목 | `aa_req` | 표준 | **필수** |
 | 맞춤 측정항목 | `aa_filled` | 표준 | **필수** |
 | 맞춤 측정항목 | `aa_ins` | 표준 | 권장 |
-| 맞춤 측정항목 | `aa_unfilled` | 표준 | 권장 |
+| 맞춤 측정항목 | `aa_unfilled` | 표준 | 권장(응답 대기 판별) |
 | 맞춤 측정항목 | `manual_ins` | 표준 | 권장 |
 | 맞춤 측정항목 | `scroll_max` | 표준 | 권장(지연 로드 판별) |
 | 맞춤 측정항목 | `doc_h` | 표준 | 권장(지연 로드 판별) |
@@ -169,7 +169,7 @@ Verify defaults, invalid input, accepted input, a visible current result, repeat
 | 맞춤 측정항목 | `ama_cfg` | 표준 | 권장 |
 
 - **새로 등록하지 않는 것**: `position`·`measurement_version`(이미 등록됨), `nav_type`(9/26~27 등록 항목), `viewport`(S1-6 때 등록 안내. 목록에 없으면 이때 함께 등록), `soft_nav_before_send`(`nav_type` 과 같은 정보), `aa_first_top`(판독표에 쓰지 않음).
-- 필수 4개(측정기준 1 + 측정항목 3)만 등록해도 판독표의 핵심 줄(뷰당 자리·요청·채움)은 나온다. 권장 7개가 없으면 지연 로드 판별 줄을 채우지 못한다.
+- 필수 4개(측정기준 1 + 측정항목 3)만 등록해도 판독표의 핵심 줄(뷰당 자리·요청·채움)은 나온다. 권장 7개가 없으면 지연 로드·응답 대기 판별 줄을 채우지 못한다.
 - 등록하지 않아도 `position` 측정기준으로 분포(`0-0-0`, `14-3-2` …)는 바로 볼 수 있다.
 
 ### 배포 당일 할 일
@@ -182,21 +182,36 @@ Verify defaults, invalid input, accepted input, a visible current result, repeat
 ### 판독 절차 — 10/2(1차 점검)·10/9(판정)
 
 - **기간**: 10/2 조회는 배포 다음 날 ~ 10/1, 10/9 조회는 배포 다음 날 ~ 10/8 이다(완료일만). 10/2 에 창이 3일 미만이면 수집 점검(아래 ①)만 하고 판독은 10/9 로 미룬다.
-- **탐색(자유 형식)**: 측정기준 `page_group`·`nav_type`(선택 `viewport`). 측정항목 `이벤트 수`와 위에서 등록한 측정항목. 필터는 `이벤트 이름 = autoads_seen` · `measurement_version = aa1` · `nav_type = landing`(보내기 전 소프트 이동 행 제외).
+- **탐색(자유 형식) — 탭 3개**
+  - **탭 A(판독용)**: 측정기준 `page_group`·`nav_type`(선택 `viewport`). 측정항목 `이벤트 수`와 위에서 등록한 측정항목. 필터는 `이벤트 이름 = autoads_seen` · `measurement_version = aa1` · `nav_type = landing`. **자리·요청·채움(아래 ②·③)은 이 필터로 낸 값만 쓴다.** 이 밖의 집계 방법은 인정하지 않는다.
+  - **탭 B(커버리지 분자·soft 비중)**: 측정기준 `page_group`·`nav_type`. 측정항목 `이벤트 수`. 필터는 `이벤트 이름 = autoads_seen` · `measurement_version = aa1` 만 건다. `nav_type` 필터는 걸지 않아 landing 행과 soft 행이 모두 나온다.
+  - **탭 C(커버리지 분모)**: 측정기준 `페이지 경로 및 화면 클래스`. 측정항목 `이벤트 수`. 필터는 `이벤트 이름 = page_view` · `nav_type = landing` 에, 템플릿마다 아래 표의 경로 정규식을 더한다. `page_view` 에는 `page_group` 이 없어서 경로로 템플릿을 가른다.
+
+| `page_group` | 분모 `page_view` 경로 정규식 | 비고 |
+|---|---|---|
+| `salary-db` | `^/salary-db(/.*)?$` | 목록 `/salary-db` 와 회사 페이지 `/salary-db/…` 를 모두 포함한다. 소프트 내비게이션 절의 `^/salary-db/`(회사 페이지만)와 범위가 다르다 |
+| `salary` | `^/salary(/.*)?$` | `^/salary` 처럼 끝을 열어 두면 `/salary-db`·`/salary-raise-2026` 까지 섞인다 |
+| `monthly` | `^/monthly(/.*)?$` | |
+| `home` | `^/$` | |
+| `guides` | `^/guides(/.*)?$` | |
+| `calc` | `^/calc(/.*)?$` | |
+
 - **순서**: 회사 DB(`salary-db`)를 먼저 보고, 이어서 `salary`·`monthly`·`home`·`guides`·`calc` 순으로 본다.
 
 ① **수집 점검(10/2)**
-   - 커버리지 = `autoads_seen`(landing) 이벤트 수 ÷ 같은 템플릿 `page_view`(landing). 이탈 순간 유실(iOS 등)이 있어 1보다 작다. **0.5 미만이면 판독 신뢰도가 낮다**고 적고 원인(캐시된 HTML·설치 실패)부터 본다.
-   - `nav_type=soft` 비중(= `soft_nav_before_send=1`)을 적는다. 이 행은 판독에서 뺀다.
+   - 커버리지 = 탭 B 에서 그 `page_group` 의 `aa1` 이벤트 **전체**(landing 행 + soft 행) ÷ 탭 C 에서 같은 템플릿 경로 정규식의 `page_view`(landing). `autoads_seen` 은 착지 뷰에서만 설치되므로 soft 행도 착지 뷰 1개에서 나온 전송이다. 분자에서 soft 행을 빼면 soft 비중만큼 커버리지가 낮게 나온다. 이탈 순간 유실(iOS 등)이 있어 1보다 작다. **0.5 미만이면 판독 신뢰도가 낮다**고 적고 원인(캐시된 HTML·설치 실패)부터 본다.
+   - soft 비중 = 탭 B 의 `nav_type=soft` 이벤트(= `soft_nav_before_send=1`) ÷ `aa1` 이벤트 전체. soft 행은 소프트 이동 순간에 멈춘 **잘린 관측**이다. 이 비중과 커버리지 분자에만 쓰고 ②·③ 의 자리·요청·채움 계산에는 넣지 않는다.
 
-② **계산(템플릿마다, N = landing 이벤트 수)**
+② **계산(템플릿마다, 탭 A 만 사용, N = landing 이벤트 수)**
 
 | 줄 | 식 |
 |---|---|
 | 뷰당 자리 **P** | Σ`aa_placed` ÷ N |
 | 뷰당 요청 **R** | Σ`aa_req` ÷ N |
 | 뷰당 채움 **F** | Σ`aa_filled` ÷ N |
+| 뷰당 응답 **U** | (Σ`aa_filled` + Σ`aa_unfilled`) ÷ N. 응답(`data-ad-status`)이 돌아온 칸. `aa_unfilled` 가 등록돼 있어야 한다 |
 | 요청 비율 | R ÷ P |
+| 응답 비율 | U ÷ R |
 | 채움 비율 | F ÷ R |
 | 설정 캐시 비율 | Σ`ama_cfg` ÷ N |
 | 평균 도달 깊이 vs 문서 높이 | Σ`scroll_max` ÷ N 과 Σ`doc_h` ÷ N |
@@ -215,17 +230,18 @@ Verify defaults, invalid input, accepted input, a visible current result, repeat
 | **P 12~17 수준인데 R 이 작음**(R ÷ P < 0.3) | 지연 로드·스크롤 문제. 자리는 있는데 요청이 나가지 않는다 | 아래 두 갈래로 나눈다 |
 | └ 평균 도달 깊이 < 평균 마지막 자리 위치 | 방문자가 아래쪽 자리까지 내려가지 않는다. 정상적인 지연 로드다 | 광고 설정 변경 대상이 아니다. 상단 콘텐츠·체류 과제로 기록한다 |
 | └ 평균 도달 깊이 ≥ 평균 마지막 자리 위치, 또는 도달 깊이 ≈ 화면 높이인데 문서 높이가 큼 | 창 스크롤이 일어나지 않거나(내부 스크롤 영역 등) 지연 로드가 걸리지 않는다 | 코드 조사 과제로 올린다. 광고 코드 변경은 운영자 승인 뒤에만 한다 |
-| R 은 충분한데 채움 비율 < 0.5 | 수요(채움) 문제 | 코드·설정 문제가 아니므로 기록만 한다 |
+| **R ≈ P 인데 U 가 R 보다 훨씬 작음**(응답 비율 U ÷ R < 0.5 정도) | 응답 대기. 요청 표시(`done`)까지는 갔지만 응답(`filled`·`unfilled`)이 오기 전에 방문이 끝났다. 요청이 지연 로드로 화면 근처까지 미뤄지는 경우이므로 역시 지연 로드·스크롤 문제다 | 위 두 갈래(도달 깊이 vs 마지막 자리 위치)로 똑같이 나눈다. `aa_unfilled` 가 등록되지 않았으면 이 줄은 판정하지 않는다 |
+| R 은 충분하고 응답도 대부분 왔는데(U ≈ R) 채움 비율 < 0.5 | 수요(채움) 문제 | 코드·설정 문제가 아니므로 기록만 한다 |
 | P ≈ 0 이고 설정 캐시 비율 < 0.8 | 자동광고 설정을 받지 못한다(스크립트 로드 실패·차단) | 스크립트 로드 경로를 조사한다 |
 | P ≈ 0 인데 설정 캐시 비율 높음 | 페이지 제외 설정이나 학습 경로 불일치(9/10 유형) | `verify:autoads` 기준선·콘솔 제외 목록을 확인한다 |
 | P 4~11 | 9/24 복구 뒤 재학습 중일 수 있다 | 10/2 대비 추세를 적고 한 주 더 본다 |
 
 ### 기록표
 
-| 조회일 | 창 | 배포·Purge·등록 시각 | 템플릿 | N | 커버리지 | P | R | F | R÷P | F÷R | ama | 도달/마지막 자리/문서 높이 | 애드센스 자동 인페이지/PV | 판정 |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 10/2 | 배포 익일~10/1 | | salary-db | | | | | | | | | | | |
-| 10/9 | 배포 익일~10/8 | | salary-db | | | | | | | | | | | |
+| 조회일 | 창 | 배포·Purge·등록 시각 | 템플릿 | N | 커버리지 | soft 비중 | P | R | F | R÷P | U÷R | F÷R | ama | 도달/마지막 자리/문서 높이 | 애드센스 자동 인페이지/PV | 판정 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 10/2 | 배포 익일~10/1 | | salary-db | | | | | | | | | | | | | |
+| 10/9 | 배포 익일~10/8 | | salary-db | | | | | | | | | | | | | |
 
 ### 한계
 
