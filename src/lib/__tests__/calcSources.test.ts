@@ -227,6 +227,15 @@ describe("sourcePolicy", () => {
     expect(isOfficialSourceHost("www.kaist.re.kr")).toBe(false); // *.re.kr is not a blanket rule
   });
 
+  it("the two .co.kr public-enterprise hosts are allowed one by one, never co.kr as a whole", () => {
+    expect(isOfficialSourceUrl("https://cyber.kepco.co.kr/ckepco/front/jsp/CY/E/E/CYEEHP00101.jsp")).toBe(true); // 한전 전기요금표
+    expect(isOfficialSourceHost("home.kepco.co.kr")).toBe(true);
+    expect(isOfficialSourceHost("www.opinet.co.kr")).toBe(true); // 오피넷(한국석유공사)
+    expect(isOfficialSourceUrl("http://cyber.kepco.co.kr/ckepco")).toBe(false); // https only
+    expect(isOfficialSourceHost("kepco.co.kr.evil.com")).toBe(false);
+    expect(isOfficialSourceHost("www.example.co.kr")).toBe(false); // *.co.kr is not a blanket rule
+  });
+
   it("isOfficialSourceUrl requires https and an allowlisted host", () => {
     expect(isOfficialSourceUrl("https://www.law.go.kr/법령/근로기준법")).toBe(true);
     expect(isOfficialSourceUrl("https://www.nps.or.kr/jsppage/info/easy/easy_04_01.jsp")).toBe(true);
