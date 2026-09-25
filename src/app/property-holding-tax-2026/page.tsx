@@ -6,6 +6,7 @@
 // 2026-09-25 B6 DATE-15: 배지·헤더·메타·FAQ 기한을 빌드 시점(KST) 날짜로 자동 선택
 // (src/lib/propertyTaxPeriod.ts — 10/1 비시즌·11/25 종부세·12/16 비시즌, 경계일 후 첫 배포+Purge)
 // (다음 갱신: 12월 종부세 시즌 — 본문 시즌 섹션은 여전히 9월분 기준, 종부세 안내 재작성은 운영자 결정)
+// 2026-09-25 후속: 본문 9월분 섹션·FAQ 카드 문장의 시점 문장도 같은 날짜로 자동 선택(10/1~ 과거형)
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -23,6 +24,7 @@ import {
   PERIOD_SEPT,
   pickPropertyTaxPeriod,
   propertyTaxMetaDescription,
+  septSectionCopy,
 } from "@/lib/propertyTaxPeriod";
 
 // ─────────────────────────────────────────────────────────────
@@ -31,10 +33,12 @@ import {
 //    (~9/30 9월분 | 10/1~11/24 비시즌 | 11/25~12/15 종부세 | 12/16~ 비시즌).
 //    정적 프리렌더라 경계일 이후 첫 배포(CF Retry deployment 또는 아무 푸시) + 운영자 Purge 로 반영.
 //    SEASON_KEY 는 쓰지 않는다(9/26 에 OCT 로 넘어가지만 9월분 납기는 9/30).
-// 2) 본문의 시즌 섹션(납부 안내·카드 무이자 일정)은 '2026년 9월분'으로 명시된 기록이라
-//    기한 뒤에도 사실관계는 유지됨 — 종부세 시즌 재작성은 수동 점검(2026-09-25 기준 9월 2기분)
+// 2) 본문의 시즌 섹션(납부 안내·카드 무이자 일정)은 '2026년 9월분'으로 명시된 기록이라 제목은 고정,
+//    시점 문장('이번 9월분…'·'9월분과 함께 정리'·'안내되어 있습니다')만 SEPT_SECTION 이 납기 전(DUE)/
+//    후(PAST, 10/1~)로 고른다 — FAQ 카드 무이자 문장도 같은 세트. 종부세 시즌 재작성은 수동 점검.
 // ─────────────────────────────────────────────────────────────
 const CURRENT_PERIOD = pickPropertyTaxPeriod(new Date());
+const SEPT_SECTION = septSectionCopy(CURRENT_PERIOD.key);
 
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 부동산 보유세 계산기 — 재산세 + 종합부동산세 동시 산출",
@@ -92,7 +96,7 @@ const FAQS = [
   },
   {
     q: "재산세를 신용카드로 내면 수수료가 있나요?",
-    a: "없습니다. 재산세 같은 지방세는 신용카드로 납부해도 수수료가 0원입니다(납부대행 수수료가 붙는 국세와 다른 점). 2026년 9월분 납부 기준으로 서울시 이택스에는 BC카드 무이자(부분무이자) 할부가 9/30까지, NH농협은 연중 적용으로 안내되어 있습니다(7월에 진행된 우리·현대·삼성·롯데·KB국민 이벤트는 종료). 캐시백·적립 등 세부 혜택 조건은 카드사·시기별로 달라지므로 결제 전 각 카드사 앱에서 확인하세요.",
+    a: `없습니다. 재산세 같은 지방세는 신용카드로 납부해도 수수료가 0원입니다(납부대행 수수료가 붙는 국세와 다른 점). 2026년 ${SEPT_SECTION.cardNotice}(7월에 진행된 우리·현대·삼성·롯데·KB국민 이벤트는 종료). 캐시백·적립 등 세부 혜택 조건은 카드사·시기별로 달라지므로 결제 전 각 카드사 앱에서 확인하세요.`,
   },
 ];
 
@@ -149,17 +153,17 @@ export default function PropertyHoldingTax2026Page() {
 
         <CalcResultAd />
 
-        {/* 2026-08-30 시즌 섹션 — 9월 2기분 납부 안내 (12월 종부세 시즌 때 재점검) */}
+        {/* 2026-08-30 시즌 섹션 — 9월 2기분 납부 안내 (12월 종부세 시즌 때 재점검)
+            2026-09-25: 시점 문장은 SEPT_SECTION(납기 전 DUE / 10/1~ PAST) — 제목은 사실 라벨이라 고정 */}
         <section className="my-10 prose prose-slate dark:prose-invert max-w-none text-[15px] leading-7 text-muted-blue dark:text-canvas-300">
           <h2 className="text-xl font-black text-navy dark:text-canvas-50">
             2026년 9월분 재산세 — {PERIOD_SEPT.range} 납부
           </h2>
           <p>
-            2026년 9월분(2기분) 재산세 납부기간은 <strong>{PERIOD_SEPT.range}</strong>입니다. 이번
-            9월분 대상은 <strong>{PERIOD_SEPT.scope}</strong>입니다. 7월에 주택분 1/2을 냈다면
-            이번에 나머지 1/2 고지서가 오고, 토지를 보유하고 있다면 토지분 재산세가 이번에 함께
-            부과됩니다. 다만 주택분 세액이 20만원 이하였다면 조례에 따라 7월에 전액 일시 부과되어
-            9월 고지서가 없을 수 있습니다.
+            2026년 9월분(2기분) 재산세 납부기간은 <strong>{PERIOD_SEPT.range}</strong>
+            {SEPT_SECTION.afterRange}
+            <strong>{PERIOD_SEPT.scope}</strong>
+            {SEPT_SECTION.afterScope}
           </p>
 
           <h3 className="text-lg font-black text-navy dark:text-canvas-50 mt-8">
@@ -168,17 +172,15 @@ export default function PropertyHoldingTax2026Page() {
           <p>
             납부기한({PERIOD_SEPT.deadline})이 지나면 <strong>즉시 3%의 납부지연가산세</strong>가
             붙습니다. 세목별 세액이 45만원 이상이면 여기에 <strong>매월 0.66%가 추가</strong>로
-            붙고(최대 60개월), 45만원 미만이면 3%만 부과됩니다. 하루 차이로 세금의 3%가 더 나가는
-            구조이므로, 기한 내 납부가 가장 확실한 절세입니다.
+            붙고(최대 60개월), 45만원 미만이면 3%만 부과됩니다. {SEPT_SECTION.lateClosing}
           </p>
 
           <h3 className="text-lg font-black text-navy dark:text-canvas-50 mt-8">
-            7월분(1기분)을 놓쳤다면 — 밀린 세금부터 확인
+            {SEPT_SECTION.missedHeading}
           </h3>
           <p>
-            지난 7월분(7/16~7/31) 재산세를 아직 내지 않았다면 이미 3% 납부지연가산세가 붙은
-            상태입니다. 위택스·이택스에서 미납 내역을 조회해 9월분과 함께 정리하는 것이 좋습니다.
-            미납 세액이 45만원 이상이면 매월 0.66%씩 가산세가 계속 쌓이므로, 늦출수록 부담만
+            {SEPT_SECTION.missedLead}
+            {" "}미납 세액이 45만원 이상이면 매월 0.66%씩 가산세가 계속 쌓이므로, 늦출수록 부담만
             커집니다. 고지서 금액이 예상과 다르다면 위 계산기에 올해 공시가격을 넣어 세액 수준을
             확인해 보세요.
           </p>
@@ -193,8 +195,7 @@ export default function PropertyHoldingTax2026Page() {
           </ul>
           <p>
             재산세는 지방세라 <strong>신용카드로 내도 납부 수수료가 0원</strong>입니다(납부대행
-            수수료가 붙는 국세와 다른 점). 9월분 납부 기준으로 서울시 이택스에는 BC카드
-            무이자(부분무이자) 할부가 9/30까지, NH농협은 연중 적용으로 안내되어 있습니다. 캐시백·
+            수수료가 붙는 국세와 다른 점). {SEPT_SECTION.cardNotice}. 캐시백·
             적립 등 세부 혜택 조건은 카드사와 시기에 따라 달라지므로 결제 전 각 카드사 앱에서
             확인하세요.
           </p>

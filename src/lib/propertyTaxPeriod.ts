@@ -143,3 +143,71 @@ export function pickPropertyTaxPeriod(now: Date): PropertyTaxPeriod {
 export function propertyTaxMetaDescription(period: PropertyTaxPeriod): string {
   return `${period.metaLead} 공시가 10억 1주택자 재산세+지방교육세 약 140만원(도시지역분 별도), 종부세까지 동시 계산.`;
 }
+
+// ── 본문 '2026년 9월분 재산세' 시즌 섹션 (CalcResultAd 아래 · GuideMidAd 위) ─────────────
+// 2026-09-25 (B6 DATE-15 후속): 섹션 제목('2026년 9월분 재산세 — 9월 16일~9월 30일 납부')은
+// 사실 라벨이라 그대로 두고, 시점에 기대는 문장만 납기 전/후로 나눈다 — '이번 9월분 대상은',
+// '이번에 나머지 1/2 고지서가 오고', '9월분과 함께 정리', 카드 무이자 '안내되어 있습니다'.
+//   DUE  (JULY·SEPT)               — 종전 문구 그대로 (9/30 까지의 빌드 출력 불변)
+//   PAST (OFFSEASON·COMPREHENSIVE) — 지난 9월분 기록으로 읽히는 과거형. 다가오는 9월 기한을 암시하지 않는다.
+// JULY 는 2026-08-01 이전 빌드에서만 나오는 키라(2027 빌드는 OFFSEASON) DUE 에 묶어 둔다.
+// ★ GuideMidAd 위라 PAST 문구는 같은 자리의 DUE 문구보다 길지 않다 — 광고 위 높이 증가 금지
+//   (propertyTaxPeriod.test.ts 가 필드별 길이와 렌더된 섹션 텍스트 길이로 강제).
+// ★ 수치는 새로 넣지 않았다 — 가산세 3%·0.66%·45만원·카드 무이자 일정은 종전 문구의 사실 그대로.
+//   PAST '자동납부' 문장 근거: 지방세 전자송달·자동납부 대상 세목에 재산세 포함(korea.kr 정책브리핑,
+//   위택스 앱·홈페이지·주민센터 신청) — 공제액 수치는 지자체별이라 쓰지 않는다.
+
+export type SeptSectionPhase = "DUE" | "PAST";
+
+export interface SeptSectionCopy {
+  phase: SeptSectionPhase;
+  /** 첫 문단: 납부기간 <strong>range</strong> 바로 뒤 ~ 대상 <strong>scope</strong> 앞 (끝 공백 포함) */
+  afterRange: string;
+  /** 첫 문단: 대상 <strong>scope</strong> 바로 뒤 ~ 문단 끝 */
+  afterScope: string;
+  /** '기한을 넘기면' 문단의 마지막 문장 */
+  lateClosing: string;
+  /** 미납 안내 소제목 (h3) */
+  missedHeading: string;
+  /** 미납 안내 문단의 앞 두 문장 (뒤 문장은 시점 무관이라 페이지에 그대로) */
+  missedLead: string;
+  /** 서울시 이택스 카드 무이자 안내 — 끝 마침표 없음(본문은 '.', FAQ 는 괄호 꼬리를 붙인다) */
+  cardNotice: string;
+}
+
+export const SEPT_SECTION_COPY: Readonly<Record<SeptSectionPhase, SeptSectionCopy>> = {
+  DUE: {
+    phase: "DUE",
+    afterRange: "입니다. 이번 9월분 대상은 ",
+    afterScope:
+      "입니다. 7월에 주택분 1/2을 냈다면 이번에 나머지 1/2 고지서가 오고, 토지를 보유하고 있다면 토지분 재산세가 이번에 함께 부과됩니다. 다만 주택분 세액이 20만원 이하였다면 조례에 따라 7월에 전액 일시 부과되어 9월 고지서가 없을 수 있습니다.",
+    lateClosing: "하루 차이로 세금의 3%가 더 나가는 구조이므로, 기한 내 납부가 가장 확실한 절세입니다.",
+    missedHeading: "7월분(1기분)을 놓쳤다면 — 밀린 세금부터 확인",
+    missedLead:
+      "지난 7월분(7/16~7/31) 재산세를 아직 내지 않았다면 이미 3% 납부지연가산세가 붙은 상태입니다. 위택스·이택스에서 미납 내역을 조회해 9월분과 함께 정리하는 것이 좋습니다.",
+    cardNotice:
+      "9월분 납부 기준으로 서울시 이택스에는 BC카드 무이자(부분무이자) 할부가 9/30까지, NH농협은 연중 적용으로 안내되어 있습니다",
+  },
+  PAST: {
+    phase: "PAST",
+    afterRange: "이었습니다. 9월분 대상은 ",
+    afterScope:
+      "으로, 7월에 주택분 1/2을 냈다면 9월에 나머지 1/2이, 토지를 보유했다면 토지분 재산세가 함께 부과됐습니다. 다만 주택분 세액이 20만원 이하였다면 조례에 따라 7월에 전액 일시 부과되어 9월 고지서가 없었을 수 있습니다.",
+    lateClosing: "하루 차이로 세금의 3%가 더 나가는 구조이므로, 다음 재산세부터는 자동납부로 챙기세요.",
+    missedHeading: "7·9월분을 놓쳤다면 — 밀린 세금부터 확인",
+    missedLead:
+      "지난 7·9월분 재산세를 아직 내지 않았다면 이미 3% 납부지연가산세가 붙은 상태입니다. 위택스·이택스에서 미납 내역을 조회해 한꺼번에 정리하는 것이 좋습니다.",
+    cardNotice:
+      "9월분 납부 때 서울시 이택스에는 BC카드 무이자(부분무이자) 할부가 9/30까지, NH농협은 연중 적용으로 안내됐습니다",
+  },
+};
+
+/** 9월분 납기(9/30) 전이면 DUE, 지났으면 PAST — 키 경계를 그대로 따른다 (10/1 KST 부터 PAST) */
+export function septSectionPhase(key: PropertyTaxPeriodKey): SeptSectionPhase {
+  return key === "JULY" || key === "SEPT" ? "DUE" : "PAST";
+}
+
+/** 본문 9월분 시즌 섹션·FAQ 카드 문장의 현재 문구 세트 */
+export function septSectionCopy(key: PropertyTaxPeriodKey): SeptSectionCopy {
+  return SEPT_SECTION_COPY[septSectionPhase(key)];
+}
