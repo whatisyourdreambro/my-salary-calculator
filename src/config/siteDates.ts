@@ -61,3 +61,14 @@ export const COMPANY_META_DISCLOSED_DATE = "2026-09-28";
  *   원천징수액으로 전환해 전 회사 실수령액 열(CompanySalaryTable·CompanyNarrative)이 다시 계산됐다.
  */
 export const TAX_TABLE_EFFECTIVE_DATE = "2026-09-25";
+
+/**
+ * 봉급표 묶음(수익 추천 #2·#3) 배포일 — 2026 풀표 4쪽(/teacher-pay-2026·/police-pay-2026·
+ * /firefighter-pay-2026·/civil-servant-pay-2026)의 수정일(메타·Article·Dataset), 2027 예상 3쪽
+ * (/teacher-pay-2027·/police-pay-2027·/firefighter-pay-2027)의 발행일·수정일, sitemap.ts 의 해당 7개
+ * lastModified 가 전부 이 값 하나를 쓴다.
+ * ★ 배포 담당: 실제 배포일(KST, YYYY-MM-DD)로 이 한 줄만 바꿔 배포 커밋에 넣는다. 지금 값 2026-09-25 는
+ *   준비일이라, 그대로 나가면 2027 페이지가 존재하기 전 날짜를 발행일로 보여 준다.
+ * 12월 말 2027 확정표 입력 뒤 2027 페이지 수정일은 PAY_FULL_2027.checked 가 대신한다(payTablesFull2027.ts).
+ */
+export const PAY_TABLES_RELEASE_DATE = "2026-09-25";

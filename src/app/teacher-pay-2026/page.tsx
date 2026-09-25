@@ -12,6 +12,9 @@
 //   한 줄 늘어 HomeTopAd 를 36~48px 밀어 기각(수정 2026-09-25).
 //   시작 호봉은 표의 첫 행이 아니라 TEACHER_START_HOBONG 값으로 찾는다(표를 1~40호봉 전체로
 //   늘려도 '신규 교사 통상 시작' 문구가 1호봉을 가리키지 않게).
+// 전 호봉 풀표 (2026-09-25 준비, 수익 추천 #2 — 배포는 10/8 자동광고 복구 판정 뒤): 1~40호봉 전체표를
+//   페이지 맨 끝(사이드바 광고까지 포함한 모든 광고·공유 버튼 아래, 그리드 밖)에 붙였다. 광고 위 발췌표
+//   (TEACHER_PAY_ROWS_2026)·메타·리드는 그대로 — 전체표 데이터는 payTablesFull2026.ts(원문 파싱).
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -30,8 +33,16 @@ import {
   TEACHER_START_HOBONG,
 } from "@/lib/civilServantPay";
 import CitationCopyButton from "@/components/CitationCopyButton";
+import PayStepTable from "@/components/PayStepTable";
+import { TEACHER_PAY_FULL_2026, PAY_FULL_2026_CHECKED } from "@/lib/payTablesFull2026";
+import { PAY_2027_CONFIRMED } from "@/lib/payTablesFull2027";
+import { PAY_TABLES_RELEASE_DATE } from "@/config/siteDates";
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
+
+// 전체표 2단(1~20 · 21~40호봉) — 데스크톱은 나란히, 모바일은 위아래
+const FULL_FIRST_HALF = TEACHER_PAY_FULL_2026.filter(([h]) => h <= 20);
+const FULL_SECOND_HALF = TEACHER_PAY_FULL_2026.filter(([h]) => h > 20);
 
 // 리드·메타 공용 — 신규 교사 통상 시작(9호봉)과 최상위(40호봉) 월 봉급.
 // 시작 행은 호봉 값으로 찾는다(표 첫 행 = 시작 호봉이라는 가정 금지), 최상위는 호봉 최댓값 행.
@@ -46,7 +57,8 @@ const LAST_ROW = TEACHER_PAY_ROWS_2026.reduce((top, row) => (row[0] > top[0] ? r
 // 이전(2026-08-30~09-24) title: "2026 교사 호봉표 — 초등·중등 교원 월급, 9호봉 249만원부터"
 const PAGE_TITLE = `2026 교사 호봉표·교원 봉급표 — ${FIRST_ROW[0]}호봉 월 ${Math.floor(FIRST_ROW[1] / 10000)}만원부터`;
 const PAGE_DESCRIPTION = `2026년 교사 호봉표(유·초·중등 교원 봉급표) 인사혁신처 공표 수치. 신규 교사 통상 ${FIRST_ROW[0]}호봉 월 ${fmt(FIRST_ROW[1])}원, ${LAST_ROW[0]}호봉 ${fmt(LAST_ROW[1])}원과 담임수당 ${TEACHER_ALLOWANCE_2026.homeroom / 10000}만원 등 수당, 실수령 계산 흐름을 정리했습니다.`;
-const MODIFIED = "2026-09-25";
+// 수정일 = 봉급표 묶음 배포일(siteDates.ts PAY_TABLES_RELEASE_DATE — 배포 담당이 실제 배포일로 한 번에 갱신)
+const MODIFIED = PAY_TABLES_RELEASE_DATE;
 
 export const metadata: Metadata = buildPageMetadata({
   title: PAGE_TITLE,
@@ -118,10 +130,10 @@ export default function TeacherPay2026Page() {
           datasetLd({
             name: "2026년 교육공무원(교원) 호봉표 데이터",
             description:
-              "공무원보수규정 별표 11 기준 2026년 유·초·중등 교원 호봉별 월 봉급액 데이터셋(주요 호봉 발췌).",
+              "공무원보수규정 별표 11 기준 2026년 유·초·중등 교원 1~40호봉 전체 월 봉급액 데이터셋(인사혁신처 2026 봉급표 원문).",
             url: "/teacher-pay-2026",
             datePublished: "2026-08-30",
-            dateModified: "2026-08-30",
+            dateModified: MODIFIED,
             keywords: ["교사 호봉표", "교원 봉급표", "초등교사 월급", "교사 월급"],
           }),
           speakableLd({ url: "/teacher-pay-2026", cssSelectors: [".faq-answer"] }),
@@ -318,6 +330,56 @@ export default function TeacherPay2026Page() {
             <CoupangBanner size="skyscraper" showDisclosure={false} />
           </aside>
         </div>
+
+        {/* 전 호봉 전체표 — 모든 광고·공유 버튼 아래 페이지 맨 끝 (수익 추천 #2, 2026-09-25 준비) */}
+        <section
+          id="teacher-full-table"
+          aria-labelledby="teacher-full-table-title"
+          className="scroll-mt-24 mt-12 p-6 sm:p-8 bg-white rounded-3xl border border-canvas-200"
+        >
+          <h2 id="teacher-full-table-title" className="text-xl font-black text-navy mb-2">
+            2026 교원 봉급표 전체 (1~40호봉)
+          </h2>
+          <p className="text-xs text-faint-blue leading-6 mb-5">
+            단위: 원(월 봉급액) · 유치원·초·중·고 교원 공통 · 출처:{" "}
+            <a
+              href="https://www.mpm.go.kr/mpm/info/resultPay/bizSalary/2026/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-electric font-bold hover:underline"
+            >
+              인사혁신처 2026년 공무원 봉급표
+            </a>
+            (공무원보수규정 별표 11) · 확인일 {PAY_FULL_2026_CHECKED}
+          </p>
+          <div className="grid gap-6 md:grid-cols-2">
+            <PayStepTable
+              caption="1~20호봉"
+              columns={["월 봉급액"]}
+              rows={FULL_FIRST_HALF}
+              regionLabel="교원 봉급표 1~20호봉"
+            />
+            <PayStepTable
+              caption="21~40호봉"
+              columns={["월 봉급액"]}
+              rows={FULL_SECOND_HALF}
+              regionLabel="교원 봉급표 21~40호봉"
+            />
+          </div>
+          <p className="text-xs text-faint-blue leading-6 mt-4">
+            ※ 봉급표 금액은 수당을 뺀 기본급입니다. 4년제 교대·사범대를 졸업한 신규 교사는 통상{" "}
+            {TEACHER_START_HOBONG}호봉에서 시작해 매년 1호봉씩 오르고, 군 경력·기간제 경력은 호봉에
+            가산됩니다. {PAY_2027_CONFIRMED ? "2027년 확정액은" : "내년 예상액은"}{" "}
+            <Link href="/teacher-pay-2027" className="text-electric font-bold hover:underline">
+              {PAY_2027_CONFIRMED ? "2027 교사 봉급표" : "2027 교사 봉급표 예상"}
+            </Link>
+            , 일반직 전 급수 표는{" "}
+            <Link href="/civil-servant-pay-2026#general-full-table" className="text-electric font-bold hover:underline">
+              2026 공무원 봉급표
+            </Link>
+            에서 확인하세요.
+          </p>
+        </section>
       </div>
     </main>
   );

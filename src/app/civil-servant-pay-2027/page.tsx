@@ -4,9 +4,11 @@
 // ★ 갱신 체크포인트 (2단계):
 //   1) 2026년 8월 말~9월 초: 정부 예산안에 반영된 2027 인상률 확정 발표 시
 //      RAISE_2027(src/lib/civilServantPay.ts)·본문·FAQ를 확정률로 갱신
-//   2) 2026년 12월 말: 국무회의 의결로 2027 봉급표 원문 공표 시
-//      이 페이지를 확정표 체제로 전면 개편(civil-servant-pay-2026 구조 복제)
-//      + datasetLd 추가 + 2026 페이지와 상호 링크 갱신
+//   2) 2026년 12월 말: 국무회의 의결로 2027 봉급표 원문 공표 시 — 11/1~1/31 동결기라 새 구조는 못 만든다.
+//      payTablesFull2027.ts 의 PAY_FULL_2027 에 원문 숫자를 넣으면 페이지 맨 끝(마지막 광고 아래)
+//      일반직 9급~1급 전 호봉 확정표(#general-full-table)와 Dataset JSON-LD 가 자동으로 나온다(2026-09-25 자리 준비).
+//      위쪽 예상 문구·FAQ·title 은 같은 자리에서 문구만 확정 표현으로 교체한다(동결기 허용 '숫자·문구 교체',
+//      광고 위는 같은 길이 이하). 2026 페이지와의 링크 문구는 PAY_2027_CONFIRMED 로 자동 전환된다.
 // 현재 상태(2026-09-03, 운영자 승인): 1단계 완료 — 2027년도 정부 예산안(9/1 국무회의 통과)에
 //   인상률 3.9% 반영(보수위 권고 상한, 2011년 이후 16년 만 최대). 7~9급 초임 추가 인상은 수치 미공표.
 //   표는 RAISE_2027_BUDGET 3.9% 단순 적용 예상치. 2단계(12월 말 확정표)는 위 체크포인트대로.
@@ -25,6 +27,8 @@
 //   (korea.kr newsId=156776382) 원문 확인. 3.9% 수치는 보도자료·브리핑문·홍보자료 본문에 없고
 //   예산안 발표 보도(연합·서울경제·이투데이, 기획예산처 인용)로만 확인 → '예산안 기준·보도' 표기 유지.
 //   네이버 28일 판정: 배포일부터 같은 길이 창으로 클릭·CTR 비교.
+// 직렬별 2027 예상 링크(교사·경찰·소방, 2026-09-25 준비 — 수익 추천 #3): 마지막 광고 MultiplexAd 아래에만
+//   붙였다. 위쪽 '직렬별 2026 봉급표 바로가기'는 Multiplex 위라 손대지 않는다(광고 위 높이 증가 금지).
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -39,7 +43,7 @@ import {
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import PublishedMeta from "@/components/PublishedMeta";
-import { breadcrumbLd, faqLd, articleLd, speakableLd } from "@/lib/structuredData";
+import { breadcrumbLd, faqLd, articleLd, datasetLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import {
   InArticleAd,
@@ -58,11 +62,19 @@ import {
   RAISE_2027_BUDGET,
   forecast2027,
 } from "@/lib/civilServantPay";
+import PayStepTable from "@/components/PayStepTable";
+import { GENERAL_GRADES_FULL, pickPayColumns } from "@/lib/payTablesFull2026";
+import { PAY_FULL_2027 } from "@/lib/payTablesFull2027";
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
 const pctMin = (RAISE_2027_RECOMMENDED.min * 100).toFixed(1);
 const pctMax = (RAISE_2027_RECOMMENDED.max * 100).toFixed(1);
 const pct = (RAISE_2027_BUDGET * 100).toFixed(1);
+
+// 12월 말 2027 확정표 입력 전까지 null — 값이 들어오면 맨 끝 일반직 전 호봉 확정표·Dataset 이 나온다
+const CONFIRMED = PAY_FULL_2027;
+const FULL_2027_LOWER = CONFIRMED ? pickPayColumns(CONFIRMED.general, 0, 5) : [];
+const FULL_2027_UPPER = CONFIRMED ? pickPayColumns(CONFIRMED.general, 5, 9) : [];
 
 // 9급 1호봉 예상치 (메타·FAQ·리드문 공용) — 예산안 3.9% 단순 적용, 저연차 추가 인상 미반영
 const g9h1 = forecast2027(GENERAL_PAY_ROWS_2026[0][1]);
@@ -145,7 +157,22 @@ export default function CivilServantPay2027Page() {
             publishedDate: "2026-08-16",
             modifiedDate: MODIFIED,
           }),
-          // datasetLd는 확정표 발표 후에만 추가 (전망 시뮬레이션은 데이터셋 부적합)
+          // datasetLd는 확정표 입력 뒤에만 (전망 시뮬레이션은 데이터셋 부적합)
+          ...(CONFIRMED
+            ? [
+                datasetLd({
+                  name: "2027년 공무원 봉급표 데이터 (일반직 9급~1급 전 호봉)",
+                  description:
+                    "공무원보수규정 별표 3 기준 2027년 일반직 공무원 9급~1급 전 호봉 월 봉급액 데이터셋(인사혁신처 2027 봉급표 원문).",
+                  url: "/civil-servant-pay-2027",
+                  datePublished: CONFIRMED.checked,
+                  dateModified: CONFIRMED.checked,
+                  keywords: ["2027 공무원 봉급표", "2027년 공무원 봉급표", "공무원 봉급표 2027", "2027 9급 월급"],
+                  citation: { name: "인사혁신처 2027년 공무원 봉급표", url: CONFIRMED.sourceUrl },
+                  temporalCoverage: "2027",
+                }),
+              ]
+            : []),
           speakableLd({
             url: "/civil-servant-pay-2027",
             cssSelectors: [".faq-answer"],
@@ -427,6 +454,76 @@ export default function CivilServantPay2027Page() {
         <div className="mt-10 max-w-3xl mx-auto">
           <MultiplexAd />
         </div>
+
+        {/* 직렬별 2027 예상 바로가기 — 마지막 광고(Multiplex) 아래에만 추가 (수익 추천 #3, 2026-09-25 준비) */}
+        <section
+          className="mt-8 max-w-3xl mx-auto"
+          aria-label={CONFIRMED ? "직렬별 2027 봉급표" : "직렬별 2027 봉급표 예상"}
+        >
+          <h2 className="text-sm font-black text-navy mb-3">
+            {CONFIRMED ? "직렬별 2027 봉급표 바로가기" : "직렬별 2027 봉급표 예상 바로가기"}
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/teacher-pay-2027" className="rounded-full border border-canvas-200 bg-white px-4 py-2 text-sm font-bold text-navy hover:border-electric hover:text-electric transition">
+              교사 봉급표 2027
+            </Link>
+            <Link href="/police-pay-2027" className="rounded-full border border-canvas-200 bg-white px-4 py-2 text-sm font-bold text-navy hover:border-electric hover:text-electric transition">
+              경찰 봉급표 2027
+            </Link>
+            <Link href="/firefighter-pay-2027" className="rounded-full border border-canvas-200 bg-white px-4 py-2 text-sm font-bold text-navy hover:border-electric hover:text-electric transition">
+              소방공무원 봉급표 2027
+            </Link>
+          </div>
+        </section>
+
+        {/* 2027 일반직 확정 전체표 — 12월 말 PAY_FULL_2027 입력 뒤에만. 마지막 광고(Multiplex)·공유 버튼 아래 페이지 맨 끝 */}
+        {CONFIRMED && (
+          <section
+            id="general-full-table"
+            aria-labelledby="general-full-table-title"
+            className="scroll-mt-24 mt-12 max-w-3xl mx-auto p-6 sm:p-8 bg-white rounded-3xl border border-canvas-200"
+          >
+            <h2 id="general-full-table-title" className="text-xl font-black text-navy mb-2">
+              2027 일반직 공무원 봉급표 전체 (9급~1급, 전 호봉)
+            </h2>
+            <p className="text-xs text-faint-blue leading-6 mb-5">
+              단위: 원(월 봉급액) · 출처:{" "}
+              <a
+                href={CONFIRMED.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-electric font-bold hover:underline"
+              >
+                인사혁신처 2027년 공무원 봉급표
+              </a>
+              (공무원보수규정 별표 3) · 확정 근거: {CONFIRMED.basis} · 확인일 {CONFIRMED.checked} ·
+              &lsquo;–&rsquo;는 해당 급수에 없는 호봉
+            </p>
+            <div className="space-y-8">
+              <PayStepTable
+                caption="9급~5급 (1~32호봉)"
+                columns={GENERAL_GRADES_FULL.slice(0, 5)}
+                rows={FULL_2027_LOWER}
+                regionLabel="2027 일반직 봉급표 9급~5급 전체 (가로 스크롤)"
+                minWidthClass="min-w-[520px]"
+              />
+              <PayStepTable
+                caption="4급~1급 (1~28호봉)"
+                columns={GENERAL_GRADES_FULL.slice(5, 9)}
+                rows={FULL_2027_UPPER}
+                regionLabel="2027 일반직 봉급표 4급~1급 전체 (가로 스크롤)"
+                minWidthClass="min-w-[440px]"
+              />
+            </div>
+            <p className="text-xs text-faint-blue leading-6 mt-4">
+              ※ 봉급표 금액은 수당을 뺀 기본급이며 일반군무원도 같은 별표 3을 적용받습니다. 2026년 금액은{" "}
+              <Link href="/civil-servant-pay-2026#general-full-table" className="text-electric font-bold hover:underline">
+                2026 일반직 공무원 봉급표 전체
+              </Link>
+              에서 비교할 수 있습니다.
+            </p>
+          </section>
+        )}
       </div>
     </main>
   );
