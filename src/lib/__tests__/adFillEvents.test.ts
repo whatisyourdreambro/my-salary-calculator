@@ -82,7 +82,7 @@ describe("trackAdFillStatus 확장 필드 (S1-6, 2026-09-11)", () => {
     trackAdFillStatus("result", "1234567890", "filled", "/calc/vat", { ad_height: 249.6, viewport: "m" });
     trackAdFillStatus("sidebar", "2", "unfilled", "/calc/vat", { ad_height: 0, viewport: "d" });
     trackAdFillStatus("result", "1234567890", "filled", "/calc/vat");
-    const base = { page_location: "https://www.moneysalary.com/calc/vat", page_referrer: "" };
+    const base = { nav_type: "landing", page_location: "https://www.moneysalary.com/calc/vat", page_referrer: "" };
     expect(gtag.mock.calls).toEqual([
       ["event", "ad_filled", { slot_kind: "result", position: "1234567890", page_path: "/calc/vat", ad_height: 250, viewport: "m", ...base }],
       ["event", "ad_unfilled", { slot_kind: "sidebar", position: "2", page_path: "/calc/vat", ad_height: 0, viewport: "d", ...base }],
