@@ -10,9 +10,14 @@
 //       min(d,1천만)×15% + 초과분×30%)과 동일 수치 — 드리프트 없음 확인 (2026-08-31)
 //   - 정치자금(본인 지출만): 10만원 이하 100/110 전액, 초과분 15%,
 //     3천만원 초과분 25%
-//   - 고향사랑기부금: 10만원 이하 100/110 전액, 초과분 15%,
+//   - 고향사랑기부금(조특법 §58①, 2025-12-23 개정 법률 제21223호, 부칙 제13조 — 2026-01-01
+//     이후 기부분부터): 10만원 이하 100/110 전액, 10만원 초과 20만원 이하 40%(종전 15%),
+//     20만원 초과 2천만원 이하 15%(특별재난지역 선포 지자체에 선포일부터 대통령령 기간 내 기부 시
+//     30% — 계산기 입력이 없어 일반 지자체 15%로 계산). 지방소득세(소득세의 10%) 포함 체감
+//     공제율은 10만원 전액·44%·16.5%(33%) — 고향사랑e음(행정안전부) 안내 표기와 같다.
 //     연간 기부 상한 2,000만원(2025-01-01 상향, 종전 500만원),
 //     답례품은 기부액의 30% 이내 포인트(세액공제와 별도 혜택)
+//     (확인 2026-09-25: law.go.kr 조특법 제58조 현행 조문·부칙 제13조, ilovegohyang.go.kr 세액공제 안내)
 //
 // 공제 한도 (근로소득금액 = 총급여 − 근로소득공제 기준):
 //   - 정치자금: 근로소득금액 100%
@@ -26,6 +31,8 @@
 //    적용 여부가 확인되지 않아 반영하지 않음.
 // 갱신 슬롯: 12월 세법개정 — 고액기부(3천만원 초과분) 40% 특례 연장 여부 확인
 // 갱신 슬롯: 2026-12 세법개정 — 공제율(15/30%)·정치자금·고향사랑 파라미터 재확인
+//   (2026-08-03 세제개편안: 비수도권 우대지역 고향사랑 10만~20만원 구간 44→55%·20만원 초과
+//    16.5→27.5% 안 — 국회 통과 시 2027-01-01 이후 기부분부터. 2026년 귀속에는 적용하지 않는다)
 
 import { earnedIncomeDeduction2026 } from "@/lib/taxConstants2026";
 
@@ -44,8 +51,13 @@ export const DONATION_CREDIT_2026 = {
   POLITICAL_RATE: 0.15,
   POLITICAL_HIGH_THRESHOLD: 30_000_000,
   POLITICAL_RATE_HIGH: 0.25,
-  /** 고향사랑 — 10만원 초과분 15%, 연간 기부 상한 2,000만원 (조특법 §58) */
+  /** 고향사랑 — 10만원 초과 20만원 이하 구간 40% (조특법 §58①2, 2026-01-01 이후 기부분) */
+  HOMETOWN_MID_UPPER: 200_000,
+  HOMETOWN_RATE_MID: 0.4,
+  /** 고향사랑 — 20만원 초과분 15% (조특법 §58①3), 연간 기부 상한 2,000만원 */
   HOMETOWN_RATE: 0.15,
+  /** 고향사랑 — 특별재난지역 선포 지자체 기부 시 20만원 초과분 30% (조특법 §58①3 괄호, 계산 미반영·표기용) */
+  HOMETOWN_RATE_DISASTER: 0.3,
   HOMETOWN_CAP: 20_000_000,
   /** 답례품 — 기부액의 30% 이내 (지자체 포인트, 세액공제와 별개) */
   HOMETOWN_GIFT_RATIO: 0.3,
@@ -148,12 +160,19 @@ export function calcDonationCredit2026(
   );
 
   // ── 2) 고향사랑기부금 — 연 2,000만원 상한, 이월 불가 ──
+  //     10만원 이하 100/110 · 10만원 초과 20만원 이하 40% · 20만원 초과 15% (조특법 §58①1~3호)
   const hometownEligible = Math.min(hometown, C.HOMETOWN_CAP);
   const hometownExcess = hometown - hometownEligible;
   const homeFull = Math.min(hometownEligible, C.FULL_CREDIT_LIMIT);
-  const homeRest = Math.max(hometownEligible - C.FULL_CREDIT_LIMIT, 0);
+  const homeMid = Math.min(
+    Math.max(hometownEligible - C.FULL_CREDIT_LIMIT, 0),
+    C.HOMETOWN_MID_UPPER - C.FULL_CREDIT_LIMIT
+  );
+  const homeRest = Math.max(hometownEligible - C.HOMETOWN_MID_UPPER, 0);
   const hometownCredit = Math.round(
-    homeFull * C.FULL_CREDIT_RATIO + homeRest * C.HOMETOWN_RATE
+    homeFull * C.FULL_CREDIT_RATIO +
+      homeMid * C.HOMETOWN_RATE_MID +
+      homeRest * C.HOMETOWN_RATE
   );
   const hometownGiftValue = Math.round(
     hometownEligible * C.HOMETOWN_GIFT_RATIO

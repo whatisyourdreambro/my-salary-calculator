@@ -2,7 +2,7 @@
 
 // src/app/donation-tax-credit-2026/Client.tsx
 // 기부금 세액공제 계산기 — 2026년 귀속(현행법).
-// 소득세법 §59의4·조특법 §76(정치자금)·§58(고향사랑) 확정값만 사용.
+// 소득세법 §59의4·조특법 §76(정치자금)·§58(고향사랑, 2026 기부분 10만~20만원 40%) 확정값만 사용.
 // 계산 로직 정본: src/lib/donationCredit.ts (vitest 검증 완료 2026-08-31)
 
 import { useMemo, useState } from "react";
@@ -142,7 +142,7 @@ export default function DonationTaxCreditClient() {
             )}
             {result.hometownCredit > 0 && (
               <div className="flex justify-between text-muted-blue dark:text-canvas-300">
-                <span>고향사랑 공제 (10만원까지 100/110)</span>
+                <span>고향사랑 공제 (100/110·40%·15%)</span>
                 <span>{fmt(result.hometownCredit)}원</span>
               </div>
             )}
@@ -199,11 +199,16 @@ export default function DonationTaxCreditClient() {
                 근로소득금액 = 총급여 {fmt(grossSalary)}원 − 근로소득공제 ={" "}
                 {fmt(result.earnedIncomeAmount)}원 (한도 판정 기준)
               </li>
-              {(amounts.political > 0 || amounts.hometown > 0) && (
+              {amounts.political > 0 && (
                 <li>
-                  정치자금·고향사랑: 각각 10만원까지 100/110 전액공제, 초과분 15%
+                  정치자금: 10만원까지 100/110 전액공제, 초과분 15%
                   {result.politicalEligible > DONATION_CREDIT_2026.POLITICAL_HIGH_THRESHOLD &&
-                    " (정치자금 3천만원 초과분은 25%)"}
+                    " (3천만원 초과분은 25%)"}
+                </li>
+              )}
+              {amounts.hometown > 0 && (
+                <li>
+                  고향사랑: 10만원까지 100/110, 20만원까지 40%, 초과분 15%
                 </li>
               )}
               <li>

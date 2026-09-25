@@ -33,9 +33,9 @@ vi.mock("@/components/ShareSection", () => ({
 
 import YearEndTaxPage from "@/app/year-end-tax/page";
 import { calcCardDeduction2026 } from "@/lib/cardDeduction2026";
+import { calcDonationCredit2026 } from "@/lib/donationCredit";
 import { calculateYearEndTax, type TaxInputs } from "@/lib/yearEndTaxCalculator";
 import {
-  HOMETOWN_SECOND_BAND_2026,
   YEAR_END_LIMIT_FAQS,
   YEAR_END_LIMIT_ROWS,
   YEAR_END_LIMITS_SOURCE_NOTE,
@@ -133,9 +133,9 @@ describe("공제 한도표 — 2026년 귀속 현행법 수치", () => {
       "특례·일반 1,000만원 이하 15% · 초과분 30% / 정치자금·고향사랑 10만원까지 100/110 (고향사랑 10만원 초과 20만원 이하 40%)"
     );
     expect(d.limit).toBe("일반기부금 근로소득금액의 30%(종교단체 10%) · 고향사랑 연 2,000만원까지");
-    // 20만원 기부 시 세액공제 = 10만 × 100/110 + 10만 × 40% (지방세 포함 체감 44%)
-    const credit20 = Math.round(100_000 * (100 / 110) + (200_000 - 100_000) * HOMETOWN_SECOND_BAND_2026.RATE);
-    expect(credit20).toBe(130_909);
+    // 표의 40% 구간 = 계산기 정본(donationCredit) — 20만원 기부 시 10만 × 100/110 + 10만 × 40% (지방세 포함 체감 44%)
+    const zero = { grossSalary: 50_000_000, statutory: 0, general: 0, religious: 0, political: 0 };
+    expect(calcDonationCredit2026({ ...zero, hometown: 200_000 }).hometownCredit).toBe(130_909);
   });
 
   it("출처 문구 — 조문·기준일·2027 개편안 미반영을 밝힌다", () => {

@@ -132,17 +132,49 @@ describe("calcDonationCredit2026 — 정치자금 (조특법 §76, 본인 지출
   });
 });
 
-describe("calcDonationCredit2026 — 고향사랑기부금 (조특법 §58)", () => {
+// 고향사랑 — 조특법 §58① (2025-12-23 개정 법률 제21223호, 부칙 제13조: 2026-01-01 이후 기부분)
+//   1호 10만원 이하: 기부금 × 100/110
+//   2호 10만원 초과 20만원 이하: 10만 × 100/110 + (기부금 − 10만) × 40%
+//   3호 20만원 초과 2천만원 이하: 10만 × 100/110 + 10만 × 40% + (기부금 − 20만) × 15%
+// 수기 대조 (2026-09-25, 소득세분 — 지방소득세 10%는 별도로 함께 줄어든다)
+describe("calcDonationCredit2026 — 고향사랑기부금 (조특법 §58, 2026 기부분)", () => {
   it("10만원 → 100/110 전액 90,909원 + 답례품 3만원", () => {
     const r = calcDonationCredit2026({ ...ZERO, hometown: 100_000 });
     expect(r.hometownCredit).toBe(90_909);
     expect(r.hometownGiftValue).toBe(30_000);
   });
 
-  it("100만원 → 90,909 + 90만×15% = 225,909원", () => {
+  it("15만원 → 90,909.09 + 5만×40%(20,000) = 110,909원", () => {
+    const r = calcDonationCredit2026({ ...ZERO, hometown: 150_000 });
+    expect(r.hometownCredit).toBe(110_909);
+    expect(r.hometownGiftValue).toBe(45_000);
+  });
+
+  it("20만원 → 90,909.09 + 10만×40%(40,000) = 130,909원 — 지방소득세 포함 14만 4천원(고향사랑e음 안내값)", () => {
+    const r = calcDonationCredit2026({ ...ZERO, hometown: 200_000 });
+    expect(r.hometownCredit).toBe(130_909);
+    expect(r.hometownGiftValue).toBe(60_000);
+    // 소득세 공제액(반올림 전) × 1.1 = 지방소득세 포함 환급 체감액
+    const raw = 100_000 * (100 / 110) + 100_000 * DONATION_CREDIT_2026.HOMETOWN_RATE_MID;
+    expect(Math.round(raw * 1.1)).toBe(144_000);
+  });
+
+  it("50만원 → 90,909.09 + 40,000 + 30만×15%(45,000) = 175,909원", () => {
+    const r = calcDonationCredit2026({ ...ZERO, hometown: 500_000 });
+    expect(r.hometownCredit).toBe(175_909);
+    expect(r.hometownGiftValue).toBe(150_000);
+  });
+
+  it("100만원 → 90,909.09 + 40,000 + 80만×15%(120,000) = 250,909원", () => {
     const r = calcDonationCredit2026({ ...ZERO, hometown: 1_000_000 });
-    expect(r.hometownCredit).toBe(225_909);
+    expect(r.hometownCredit).toBe(250_909);
     expect(r.hometownGiftValue).toBe(300_000);
+  });
+
+  it("구간 경계 — 10만 1원·20만 1원에서 다음 구간 공제율로 넘어간다", () => {
+    expect(calcDonationCredit2026({ ...ZERO, hometown: 100_001 }).hometownCredit).toBe(90_909); // +0.4원
+    expect(calcDonationCredit2026({ ...ZERO, hometown: 110_000 }).hometownCredit).toBe(94_909); // +1만×40%
+    expect(calcDonationCredit2026({ ...ZERO, hometown: 210_000 }).hometownCredit).toBe(132_409); // +1만×15%
   });
 
   it("2,500만원 → 연 상한 2,000만 적용, 초과 500만은 이월 불가", () => {
@@ -153,10 +185,17 @@ describe("calcDonationCredit2026 — 고향사랑기부금 (조특법 §58)", ()
     });
     expect(r.hometownEligible).toBe(20_000_000);
     expect(r.hometownExcess).toBe(5_000_000);
-    // 90,909.09 + 19,900,000×15%(2,985,000) = 3,075,909
-    expect(r.hometownCredit).toBe(3_075_909);
+    // 90,909.09 + 10만×40%(40,000) + 19,800,000×15%(2,970,000) = 3,100,909
+    expect(r.hometownCredit).toBe(3_100_909);
     expect(r.hometownGiftValue).toBe(6_000_000);
     expect(r.carryoverTotal).toBe(0);
+  });
+
+  it("정치자금은 구간 개정 대상이 아니다 — 같은 20만원이면 10만 초과분 15%", () => {
+    // 조특법 §76① 10만원 초과분 15%(3천만원 초과분 25%) — §58 개정과 무관
+    const r = calcDonationCredit2026({ ...ZERO, political: 200_000, hometown: 200_000 });
+    expect(r.politicalCredit).toBe(105_909);
+    expect(r.hometownCredit).toBe(130_909);
   });
 });
 
@@ -172,17 +211,17 @@ describe("calcDonationCredit2026 — 종합", () => {
     const r = calcDonationCredit2026({
       grossSalary: 60_000_000, // 근로소득금액 47,250,000
       political: 200_000, // 90,909.09 + 10만×15% = 105,909
-      hometown: 500_000, // 90,909.09 + 40만×15% = 150,909
+      hometown: 500_000, // 90,909.09 + 10만×40% + 30만×15% = 175,909
       statutory: 1_000_000,
       general: 3_000_000,
       religious: 1_000_000, // 한도 7,625,000 내 전액 인정 → 축 500만×15% = 75만
     });
     expect(r.earnedIncomeAmount).toBe(47_250_000);
     expect(r.politicalCredit).toBe(105_909);
-    expect(r.hometownCredit).toBe(150_909);
+    expect(r.hometownCredit).toBe(175_909);
     expect(r.generalLimit).toBe(7_625_000);
     expect(r.generalAxisCredit).toBe(750_000);
-    expect(r.totalCredit).toBe(1_006_818);
+    expect(r.totalCredit).toBe(1_031_818);
   });
 
   it("음수 입력은 0으로 방어", () => {
@@ -197,8 +236,13 @@ describe("calcDonationCredit2026 — 종합", () => {
     expect(r.totalCredit).toBe(0);
   });
 
-  it("상수 정합 — 이월 10년·고향사랑 상한 2,000만", () => {
+  it("상수 정합 — 이월 10년·고향사랑 상한 2,000만·구간 10만/20만·40%/15%(재난지역 30%)", () => {
     expect(DONATION_CREDIT_2026.CARRYOVER_YEARS).toBe(10);
     expect(DONATION_CREDIT_2026.HOMETOWN_CAP).toBe(20_000_000);
+    expect(DONATION_CREDIT_2026.FULL_CREDIT_LIMIT).toBe(100_000);
+    expect(DONATION_CREDIT_2026.HOMETOWN_MID_UPPER).toBe(200_000);
+    expect(DONATION_CREDIT_2026.HOMETOWN_RATE_MID).toBe(0.4);
+    expect(DONATION_CREDIT_2026.HOMETOWN_RATE).toBe(0.15);
+    expect(DONATION_CREDIT_2026.HOMETOWN_RATE_DISASTER).toBe(0.3);
   });
 });

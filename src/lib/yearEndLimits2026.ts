@@ -36,13 +36,6 @@ const pct = (rate: number) => `${Number((rate * 100).toFixed(1))}%`;
 /** 소득세 공제율 → 지방소득세(소득세의 10%) 포함 체감 공제율 */
 const withLocal = (rate: number) => pct(rate * (1 + INSURANCE_RATES_2026.LOCAL_INCOME_TAX_RATIO));
 
-/**
- * 고향사랑기부금 10만원 초과 20만원 이하 구간 (조특법 §58①2, 2025-12-23 개정 — 2026년 기부분).
- * donationCredit.ts 의 HOMETOWN_RATE(15%)는 20만원 초과 구간 값이며 이 구간이 아직 반영돼 있지 않다
- * (2026-09-25 보고 — /donation-tax-credit-2026 계산기 후속 수정 대상).
- */
-export const HOMETOWN_SECOND_BAND_2026 = { UPPER: 200_000, RATE: 0.4 } as const;
-
 const R = CARD_RATES_2026;
 const CARD_7K = man(CARD_SALARY_THRESHOLD); // "7,000만원"
 const P = PENSION_ACCOUNT_CREDIT_2026;
@@ -101,7 +94,7 @@ export const YEAR_END_LIMIT_ROWS: readonly YearEndLimitRow[] = [
   {
     item: "기부금 세액공제",
     basis: "소득세법 제59조의4 제4항 · 조세특례제한법 제58조·제76조",
-    rate: `특례·일반 ${man(D.GENERAL_HIGH_THRESHOLD)} 이하 ${pct(D.GENERAL_RATE_LOW)} · 초과분 ${pct(D.GENERAL_RATE_HIGH)} / 정치자금·고향사랑 ${man(D.FULL_CREDIT_LIMIT)}까지 100/110 (고향사랑 ${man(D.FULL_CREDIT_LIMIT)} 초과 ${man(HOMETOWN_SECOND_BAND_2026.UPPER)} 이하 ${pct(HOMETOWN_SECOND_BAND_2026.RATE)})`,
+    rate: `특례·일반 ${man(D.GENERAL_HIGH_THRESHOLD)} 이하 ${pct(D.GENERAL_RATE_LOW)} · 초과분 ${pct(D.GENERAL_RATE_HIGH)} / 정치자금·고향사랑 ${man(D.FULL_CREDIT_LIMIT)}까지 100/110 (고향사랑 ${man(D.FULL_CREDIT_LIMIT)} 초과 ${man(D.HOMETOWN_MID_UPPER)} 이하 ${pct(D.HOMETOWN_RATE_MID)})`,
     limit: `일반기부금 근로소득금액의 ${pct(D.LIMIT_GENERAL_RATIO)}(종교단체 ${pct(D.LIMIT_RELIGIOUS_RATIO)}) · 고향사랑 연 ${man(D.HOMETOWN_CAP)}까지`,
   },
 ];
