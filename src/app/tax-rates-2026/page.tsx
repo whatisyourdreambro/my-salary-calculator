@@ -16,11 +16,11 @@ import CoupangBanner from "@/components/CoupangBanner";
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 세율표 한눈에 — 소득세·증여세·상속세·양도세·법인세",
  description:
- "2026년 한국 모든 세금 누진세율표. 근로소득세 6~45%, 증여세 10~50%, 상속세 10~50%, 양도세 6~45%, 법인세 9~24%까지 한 페이지에서.",
+ "2026년 한국 모든 세금 누진세율표. 근로소득세 6~45%, 증여세 10~50%, 상속세 10~50%, 양도세 6~45%, 법인세 10~25%까지 한 페이지에서.",
  path: "/tax-rates-2026",
  ogType: "article",
  publishedTime: "2026-01-01",
- modifiedTime: "2026-05-12",
+ modifiedTime: "2026-09-26",
  keywords: [
  "2026 세율",
  "소득세 세율",
@@ -69,11 +69,13 @@ const INHERITANCE_GIFT_BRACKETS = [
  { range: "30억 초과", rate: "50%", deduction: "4억 6,000만" },
 ];
 
+// 법인세법 제55조① 1호(법률 제21217호, 2025.12.23.) — 부칙 제5조: 2026.1.1 이후 개시하는 사업연도부터 적용.
+// 그 전에 개시한 사업연도는 종전 9·19·21·24%. 국세청 '법인세 세율(2026년 이후)' cntntsId=7746 과 일치(2026-09-26 확인).
 const CORPORATE_TAX_BRACKETS = [
- { range: "2억 이하", rate: "9%" },
- { range: "200억 이하", rate: "19%" },
- { range: "3,000억 이하", rate: "21%" },
- { range: "3,000억 초과", rate: "24%" },
+ { range: "2억 이하", rate: "10%" },
+ { range: "200억 이하", rate: "20%" },
+ { range: "3,000억 이하", rate: "22%" },
+ { range: "3,000억 초과", rate: "25%" },
 ];
 
 function formatKrw(num: number): string {
@@ -108,7 +110,7 @@ export default function TaxRates2026Page() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  2026 세율표 <span className="text-electric">한눈에</span>
  </h1>
- <PublishedMeta publishedDate="2026-01-01" updatedDate="2026-05-12" className="mb-2" />
+ <PublishedMeta publishedDate="2026-01-01" updatedDate="2026-09-26" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  한국 모든 세금의 2026년 누진세율을 한 페이지로.
  소득세·증여세·상속세·양도세·법인세까지.
@@ -231,7 +233,7 @@ export default function TaxRates2026Page() {
  <section className="mb-12 p-6 sm:p-8 bg-white rounded-3xl border border-canvas-200">
  <h2 className="text-xl sm:text-2xl font-black text-navy mb-2">법인세율</h2>
  <p className="text-sm text-faint-blue mb-6">
- 법인 과세표준 기준 4단계. 지방소득세 10% 별도.
+ 2026년 이후 개시 사업연도분(종전 9~24%).
  </p>
  <div className="overflow-x-auto">
  <table className="w-full text-sm">
