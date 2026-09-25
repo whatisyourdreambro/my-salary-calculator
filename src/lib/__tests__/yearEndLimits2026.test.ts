@@ -135,7 +135,7 @@ describe("공제 한도표 — 2026년 귀속 현행법 수치", () => {
     );
     expect(d.limit).toBe("일반기부금 근로소득금액의 30%(종교단체 10%) · 고향사랑 연 2,000만원까지");
     // 표의 40% 구간 = 계산기 정본(donationCredit) — 20만원 기부 시 10만 × 100/110 + 10만 × 40% (지방세 포함 체감 44%)
-    const zero = { grossSalary: 50_000_000, statutory: 0, general: 0, religious: 0, political: 0 };
+    const zero = { grossSalary: 50_000_000, statutory: 0, general: 0, religious: 0, political: 0, hometown: 0 };
     expect(calcDonationCredit2026({ ...zero, hometown: 200_000 }).hometownCredit).toBe(130_909);
     // 20만원 초과분 15% · 정치자금 초과분 15%·3천만원 초과분 25% — 표 문구와 계산기 정본이 같은 산식
     expect(calcDonationCredit2026({ ...zero, hometown: 500_000 }).hometownCredit).toBe(175_909);
