@@ -15,6 +15,8 @@ import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 import type { ReactElement } from "react";
 import { OG_CLIENT_CACHE_CONTROL, OgFontCache, serveCachedOgImage } from "@/lib/ogImageCache";
+// type=salary 카드의 연도 표기 = 현행 요율 연도 (카드의 월 실수령액과 같은 포인터 — 2026-09-25 N3)
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 
 export const runtime = "edge";
 
@@ -132,11 +134,13 @@ function renderSalaryOg(amount: string, netPay?: string): OgRender {
   const netManwon = netPay
     ? Math.round(Number(netPay) / 10000).toLocaleString("ko-KR")
     : null;
+  // 문자열 하나로 넘긴다 (satori 복수 자식 거부 — 아래 주석 참고)
+  const reportLabel = `${CURRENT_RATES_YEAR} 연봉 리포트`;
   const node = (
     <div style={containerStyle}>
       <div style={cardStyle}>
         <div style={{ color: CANVAS, fontSize: 28, fontWeight: 900, marginBottom: 16, letterSpacing: "0.04em" }}>
-          2026 연봉 리포트
+          {reportLabel}
         </div>
         {/* 자식을 문자열 하나로 합친다 — JSX 가 ["연봉 ", manwon, "만원"] 배열을 만들면 satori 가
             display:flex 없는 <div> 의 복수 자식을 거부해(Expected <div> to have explicit "display: flex")
@@ -169,7 +173,7 @@ function renderSalaryOg(amount: string, netPay?: string): OgRender {
     </div>
   );
   const text = [
-    "2026 연봉 리포트",
+    reportLabel,
     `연봉 ${manwon}만원`,
     "세후 월 실수령액",
     netManwon ? `월 ${netManwon}만원` : "",

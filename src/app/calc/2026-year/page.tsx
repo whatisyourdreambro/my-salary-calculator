@@ -8,6 +8,8 @@ import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, softwareApplicationLd } from "@/lib/structuredData";
 import { GuideMidAd } from "@/components/AdPlacement";
 import RelatedCalculators from "@/components/RelatedCalculators";
+// 요율 안내 문장은 이 페이지 계산기(SalaryCalculator — 현행 요율 포인터)와 같은 포인터에서 (2026-09-25 N3)
+import { CURRENT_RATES_YEAR, CURRENT_RATE_LABELS } from "@/config/currentRates";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 연봉 계산기 PRO - 최신 세법·티어 카드·자산 시뮬",
@@ -68,7 +70,7 @@ export default function Calc2026Page() {
  </div>
  <h3 className="font-bold text-navy">최신 보험 요율</h3>
  <p className="text-xs text-faint-blue leading-relaxed">
- 2026년 확정 요율(국민연금 4.75%, 건강보험 3.595%)을 반영하여 가장 정확한 실수령액을 산출합니다.
+ {CURRENT_RATES_YEAR}년 확정 요율(국민연금 {CURRENT_RATE_LABELS.pension}, 건강보험 {CURRENT_RATE_LABELS.health})을 반영하여 가장 정확한 실수령액을 산출합니다.
  </p>
  </div>
  

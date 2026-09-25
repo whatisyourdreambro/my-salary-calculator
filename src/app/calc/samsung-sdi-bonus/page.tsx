@@ -6,6 +6,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATE_LABELS } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -61,7 +62,7 @@ const FAQ_ITEMS = [
   {
     question: "세금은 어떻게 떼나요?",
     answer:
-      "성과급은 근로소득 합산 누진세율(6~45%) + 지방세 + 4대보험(국민연금 4.75%, 건강 3.595%, 장기요양 등). 국민연금은 보수월액 상한(2026.7~2027.6 연 7,908만원) 적용. 본 계산기는 marginal 방식으로 정확하게 산출합니다.",
+      `성과급은 근로소득 합산 누진세율(6~45%) + 지방세 + 4대보험(국민연금 ${CURRENT_RATE_LABELS.pension}, 건강 ${CURRENT_RATE_LABELS.health}, 장기요양 등). 국민연금은 보수월액 상한(2026.7~2027.6 연 7,908만원) 적용. 본 계산기는 marginal 방식으로 정확하게 산출합니다.`,
   },
   {
     question: "LG에너지솔루션과 어떻게 다른가요?",

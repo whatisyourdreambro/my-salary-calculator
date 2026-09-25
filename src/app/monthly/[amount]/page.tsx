@@ -35,7 +35,9 @@ import { formatManwonKorean } from "@/lib/manwonFormat";
 import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import { salaryReportHrefOrNearest } from "@/lib/salaryRedirect";
 import { getStaticMonthlyAmounts, MIN_MONTHLY, MAX_MONTHLY } from "@/lib/monthlyStaticParams";
-import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
+import { PENSION_BASE_2026 } from "@/lib/taxConstants2026";
+// 요율 문구·연도 표기(제목·설명·요약·FAQ)는 현행 포인터 — 1/1 전환 시 계산(calculateSalary2026 기본 요율)과 함께 바뀐다 (2026-09-25 N3)
+import { CURRENT_RATES_YEAR, CURRENT_RATE_LABELS } from "@/config/currentRates";
 
 /** 이 페이지 전 계산의 비과세 식대 기준 (calculateSalary2026 호출과 공유) */
 const NON_TAXABLE_MONTHLY = 200_000;
@@ -90,8 +92,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const m = fmtManwon(monthly);
   const net = fmtManwon(tax.netPay);
   return buildPageMetadata({
-    title: `월급 ${m}만원 실수령액 — 세후 월 ${net}만원 (2026 기준)`,
-    description: `세전 월급 ${m}만원의 2026년 실수령액은 약 ${net}만원. 4대보험·소득세 공제 내역, 상여금 포함 연봉 환산표, 시급·주급 환산까지 월급 기준으로 정리했습니다.`,
+    title: `월급 ${m}만원 실수령액 — 세후 월 ${net}만원 (${CURRENT_RATES_YEAR} 기준)`,
+    description: `세전 월급 ${m}만원의 ${CURRENT_RATES_YEAR}년 실수령액은 약 ${net}만원. 4대보험·소득세 공제 내역, 상여금 포함 연봉 환산표, 시급·주급 환산까지 월급 기준으로 정리했습니다.`,
     path: `/monthly/${monthly}`,
     keywords: [
       `월급 ${m}만원 실수령액`,
@@ -139,7 +141,7 @@ export default function MonthlyPage({ params }: Props) {
   const faqItems = [
     {
       question: `월급 ${m}만원의 실수령액은 얼마인가요?`,
-      answer: `세전 월급 ${m}만원 기준 2026년 실수령액은 약 ${netManwon}만원입니다. 국민연금 ${(INSURANCE_RATES_2026.NATIONAL_PENSION * 100).toFixed(2)}%, 건강보험 ${(INSURANCE_RATES_2026.HEALTH_INSURANCE * 100).toFixed(3)}%(+장기요양), 고용보험 ${(INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE * 100).toFixed(1)}%와 근로소득세·지방소득세를 공제한 값입니다 (비과세 식대 20만원, 본인 1인 공제 기준).`,
+      answer: `세전 월급 ${m}만원 기준 ${CURRENT_RATES_YEAR}년 실수령액은 약 ${netManwon}만원입니다. 국민연금 ${CURRENT_RATE_LABELS.pension}, 건강보험 ${CURRENT_RATE_LABELS.health}(+장기요양), 고용보험 ${CURRENT_RATE_LABELS.employment}와 근로소득세·지방소득세를 공제한 값입니다 (비과세 식대 20만원, 본인 1인 공제 기준).`,
     },
     {
       question: "월급 실수령액과 '연봉 ÷ 12'가 왜 다른가요?",
@@ -193,7 +195,7 @@ export default function MonthlyPage({ params }: Props) {
         </div>
 
         <p className="speakable-summary max-w-xl mx-auto text-center text-sm text-muted-blue mb-8">
-          세전 월급 {m}만원의 2026년 실수령액은 약 {netManwon}만원, 4대보험·세금
+          세전 월급 {m}만원의 {CURRENT_RATES_YEAR}년 실수령액은 약 {netManwon}만원, 4대보험·세금
           공제는 월 약 {deductManwon}만원입니다.
         </p>
 

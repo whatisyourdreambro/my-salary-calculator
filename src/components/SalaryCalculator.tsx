@@ -8,6 +8,8 @@ import Link from "@/components/AppLink";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
+// 배지·공유 설명의 연도는 현행 요율 포인터 (2026-09-25 N3). 공유 payload 의 taxYear: 2026 은 형식 태그라 그대로.
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import { calculatePartTimeSalary } from "@/lib/freelancerCalculator";
 import MoneyInput from "./ui/MoneyInput"; // New UI Component
 import SalaryResultCard from "./SalaryResultCard"; // New UI Component
@@ -351,7 +353,7 @@ export default function SalaryCalculator() {
  const origin = typeof window !== "undefined" ? window.location.origin : "";
  return {
  title: `${incomeType === "regular" ? "연봉" : "월 소득의 연 환산"} ${annualManwon}만원 · 월 수령 추정 ${netManwon}만원`,
- description: incomeType === "freelancer" ? "월 사업소득 3.3% 원천징수 추정입니다. 최종 종합소득세와 다릅니다." : "2026년 계산 모델의 추정액입니다. 실제 급여명세서·최종 세액과 다를 수 있습니다.",
+ description: incomeType === "freelancer" ? "월 사업소득 3.3% 원천징수 추정입니다. 최종 종합소득세와 다릅니다." : `${CURRENT_RATES_YEAR}년 계산 모델의 추정액입니다. 실제 급여명세서·최종 세액과 다를 수 있습니다.`,
  // 1만원 단위 + &v= 버전 — 카드 표시값은 같고 OG 캐시 키만 모인다 (OG-09·OG-03)
  imageUrl: `${origin}${salaryOgImagePath(annualSalary, result.monthlyNet)}`,
  };
@@ -370,7 +372,7 @@ export default function SalaryCalculator() {
  <div {...measurement.inputProps} className="bg-white rounded-3xl border border-canvas shadow-sm p-6 space-y-5">
  <div>
  <div className="flex items-center gap-2 mb-2">
- <span className="bg-canvas text-primary text-xs font-bold px-3 py-1 rounded-full">2026 세법 적용</span>
+ <span className="bg-canvas text-primary text-xs font-bold px-3 py-1 rounded-full">{CURRENT_RATES_YEAR} 세법 적용</span>
  <Sparkles size={14} className="text-primary" />
  </div>
  <h2 className="text-xl font-black text-navy tracking-tight">얼마나 받으시나요?</h2>

@@ -4,6 +4,7 @@ import { useState, useRef, useMemo } from "react";
 import CurrencyInput from "./CurrencyInput";
 import { calculateNetSalary } from "@/lib/calculator";
 import type { CalculationResult } from "@/lib/calculator";
+import { CURRENT_RATE_LABELS } from "@/config/currentRates";
 import { Download, HelpCircle, Info } from "lucide-react";
 
 const formatNumber = (num: number) => num.toLocaleString('ko-KR');
@@ -212,10 +213,10 @@ export default function PayStubGenerator() {
  공제 내역 <span className="text-xs font-normal text-faint-blue">(Deduction)</span>
  </h3>
  <div className="space-y-1 text-sm">
- <DeductionItem label="국민연금" amount={result.pension} tooltip="월 소득의 4.75% (상한액 적용)" />
- <DeductionItem label="건강보험" amount={result.health} tooltip="월 소득의 3.595%" />
- <DeductionItem label="장기요양" amount={result.longTermCare} tooltip="건강보험료의 13.14%" />
- <DeductionItem label="고용보험" amount={result.employment} tooltip="월 소득의 0.9%" />
+ <DeductionItem label="국민연금" amount={result.pension} tooltip={`월 소득의 ${CURRENT_RATE_LABELS.pension} (상한액 적용)`} />
+ <DeductionItem label="건강보험" amount={result.health} tooltip={`월 소득의 ${CURRENT_RATE_LABELS.health}`} />
+ <DeductionItem label="장기요양" amount={result.longTermCare} tooltip={`건강보험료의 ${CURRENT_RATE_LABELS.ltcRatio}`} />
+ <DeductionItem label="고용보험" amount={result.employment} tooltip={`월 소득의 ${CURRENT_RATE_LABELS.employment}`} />
  <DeductionItem label="소득세" amount={result.incomeTax} tooltip="간이세액표 기준" />
  <DeductionItem label="지방소득세" amount={result.localTax} tooltip="소득세의 10%" />
  </div>

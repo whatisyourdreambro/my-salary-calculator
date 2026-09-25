@@ -7,6 +7,7 @@
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import { CURRENT_RATE_LABELS } from "@/config/currentRates";
 import Link from "@/components/AppLink";
 import {
   softwareApplicationLd,
@@ -67,7 +68,7 @@ const FAQ_ITEMS = [
   {
     question: "성과급 세금은 어떻게 계산되나요?",
     answer:
-      "OPI·TAI 모두 근로소득에 합산되어 누진세율(6~45%) + 지방소득세(소득세의 10%) + 4대보험(국민연금 4.75%, 건강보험 3.595% 등)이 부과됩니다. 국민연금은 보수월액 상한(2026.7~2027.6 연 7,908만원) 적용. 본 계산기는 연봉 기준 세금과 연봉+성과급 합산 세금의 차이를 성과급에 귀속시키는 marginal 방식으로 정확하게 산출합니다.",
+      `OPI·TAI 모두 근로소득에 합산되어 누진세율(6~45%) + 지방소득세(소득세의 10%) + 4대보험(국민연금 ${CURRENT_RATE_LABELS.pension}, 건강보험 ${CURRENT_RATE_LABELS.health} 등)이 부과됩니다. 국민연금은 보수월액 상한(2026.7~2027.6 연 7,908만원) 적용. 본 계산기는 연봉 기준 세금과 연봉+성과급 합산 세금의 차이를 성과급에 귀속시키는 marginal 방식으로 정확하게 산출합니다.`,
   },
   {
     question: "이 계산기 결과를 어디까지 신뢰할 수 있나요?",

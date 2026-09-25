@@ -13,6 +13,8 @@
 import type { CompanyProfile, JobLevel } from "@/types/company";
 import Link from "@/components/AppLink";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
+// 표 제목의 세법 연도 = 현행 요율 포인터 (실수령 열이 같은 포인터로 계산됨 — 2026-09-25 N3)
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import { salaryReportHref } from "@/lib/salaryRedirect";
 
 /** 사이트 공통 기준 — /salary/[amount]·/table 과 같은 비과세 식대 월 20만원 */
@@ -96,7 +98,7 @@ export default function CompanySalaryTable({ company }: { company: CompanyProfil
     <section data-msy-module="company-salary-net" className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="mb-6">
         <h2 className="text-2xl sm:text-3xl font-black text-navy dark:text-canvas-50 mb-2">
-          {company.name.ko} 직급별 연봉 · 실수령액 (2026 세법 기준)
+          {company.name.ko} 직급별 연봉 · 실수령액 ({CURRENT_RATES_YEAR} 세법 기준)
         </h2>
         <p className="text-sm text-muted-blue dark:text-canvas-300">
           신입부터 임원까지 직급별 평균 연봉, 세금 공제 후 실수령액, 월 실수령까지 한눈에 비교하세요.

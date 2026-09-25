@@ -1,6 +1,9 @@
 import { calculateNetSalary } from "./calculator";
 import { calculateSalary2026 } from "./TaxLogic";
 import { calculatePartTimeSalary } from "./freelancerCalculator";
+// taxYear: 2026 은 v1 링크 형식 태그다(요율 연도 아님 — 1/1 전환 뒤에도 바꾸지 않는다, 바꾸면 기존 링크가 무효).
+// 공유 결과는 언제나 현행 요율 포인터로 다시 계산하므로 표시 라벨의 연도도 포인터를 따른다 (2026-09-25 N3).
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 
 const MAX_TOKEN_LENGTH = 2048;
 const MAX_ANNUAL = 1_000_000_000_000;
@@ -65,7 +68,7 @@ export function calculateSharedSalary(payload: SalarySharePayload) {
       ? calculateSalary2026(annualSalary, payload.nonTaxableAmount, payload.dependents, payload.children).netPay
       : calculateNetSalary(annualSalary, payload.nonTaxableAmount * 12, payload.dependents, payload.children,
         { isSmeYouth: false, disabledDependents: 0, seniorDependents: 0 }).monthlyNet;
-    modelLabel = "v" in payload ? "2026년 홈 계산 모델 · 소득세는 근로소득 간이세액표 기준" : "기존 공유 링크 · 간이세액표 기준으로 다시 계산 · 현재 홈과 원 단위 처리 차이가 날 수 있음";
+    modelLabel = "v" in payload ? `${CURRENT_RATES_YEAR}년 홈 계산 모델 · 소득세는 근로소득 간이세액표 기준` : "기존 공유 링크 · 간이세액표 기준으로 다시 계산 · 현재 홈과 원 단위 처리 차이가 날 수 있음";
   }
   if (!Number.isFinite(monthlyNet) || monthlyNet <= 0) return null;
   return { annualSalary, monthlyNet, modelLabel, regular };

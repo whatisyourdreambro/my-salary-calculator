@@ -6,6 +6,8 @@ import { ArrowRight } from "lucide-react";
 import { HOME_FAQ_ITEMS, POPULAR_SALARY_LINKS } from "@/lib/homeContent";
 import { SALARY_CALCULATION_METHOD_HREF, SALARY_MODEL_2026 } from "@/lib/salaryModelContent";
 import { JOB_COUNT, companyCountKo } from "@/config/site";
+// 본문의 연도·요율은 현행 요율 포인터 — 1/1 전환 시 계산과 함께 바뀐다 (2026-09-25 N3)
+import { CURRENT_RATES_YEAR, CURRENT_RATE_LABELS } from "@/config/currentRates";
 
 export default function HomeSeoSection() {
   return (
@@ -17,7 +19,7 @@ export default function HomeSeoSection() {
             연봉 구간별 실수령액 보기
           </h2>
           <p className="text-muted-foreground text-[15px] font-medium mb-6">
-            연봉 구간별 2026년 예상 월 실수령액과 계산 조건을 확인하세요.
+            연봉 구간별 {CURRENT_RATES_YEAR}년 예상 월 실수령액과 계산 조건을 확인하세요.
           </p>
           <div className="flex flex-wrap gap-2.5">
             {POPULAR_SALARY_LINKS.map(({ label, amount }) => (
@@ -36,21 +38,21 @@ export default function HomeSeoSection() {
         {/* 실수령액 계산 방법 설명 — 본문 텍스트 (E-E-A-T·키워드) */}
         <article className="mb-16">
           <h2 className="text-2xl font-semibold text-foreground tracking-tight sm:text-3xl mb-4">
-            2026년 연봉 실수령액, 이렇게 계산됩니다
+            {CURRENT_RATES_YEAR}년 연봉 실수령액, 이렇게 계산됩니다
           </h2>
           <p className="text-[15.5px] leading-[1.8] text-muted-foreground font-medium mb-4">
             회사와 계약한 <strong className="text-foreground">세전 연봉</strong>은 통장에
             그대로 들어오지 않습니다. 매달 급여에서 4대보험료와 소득세·지방소득세가
             원천징수된 뒤 남는 금액이 바로 <strong className="text-foreground">실수령액</strong>
-            입니다. 머니샐러리 연봉 계산기는 2026년 계산 기준과 입력 조건으로
+            입니다. 머니샐러리 연봉 계산기는 {CURRENT_RATES_YEAR}년 계산 기준과 입력 조건으로
             보험료와 세금의 예상 공제액을 계산합니다.
           </p>
           <p className="text-[15.5px] leading-[1.8] text-muted-foreground font-medium mb-4">
             이 모델의 근로자 부담 보험료는{" "}
-            <strong className="text-foreground">국민연금 4.75%</strong>,{" "}
-            <strong className="text-foreground">건강보험 3.595%</strong>(여기에 건강보험료의
-            13.14%가 장기요양보험으로 추가),{" "}
-            <strong className="text-foreground">고용보험 0.9%</strong>입니다.
+            <strong className="text-foreground">국민연금 {CURRENT_RATE_LABELS.pension}</strong>,{" "}
+            <strong className="text-foreground">건강보험 {CURRENT_RATE_LABELS.health}</strong>(여기에 건강보험료의
+            {" "}{CURRENT_RATE_LABELS.ltcRatio}가 장기요양보험으로 추가),{" "}
+            <strong className="text-foreground">고용보험 {CURRENT_RATE_LABELS.employment}</strong>입니다.
             보험료는 비과세를 뺀 보수와 항목별 조건으로 계산하며, 국민연금에는 기준소득월액 상·하한이 적용됩니다.
             여기에 부양가족 수와 비과세액에 따라 달라지는{" "}
             <strong className="text-foreground">근로소득세</strong>와 그 10%인{" "}

@@ -8,6 +8,8 @@ import type { Metadata } from "next";
 import { getGuideModifiedDate } from "./guideDates";
 import { englishPolicyCounterpart } from "./englishSite";
 import { salaryOgImagePath } from "./ogUrlVersion";
+// /salary 제목·설명의 연도 = 현행 요율 연도 (금액과 같은 포인터 — 2026-09-25 N3)
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 
 const SITE_URL = "https://www.moneysalary.com";
 const SITE_NAME = "머니샐러리";
@@ -176,12 +178,12 @@ export function buildSalaryAmountMetadata(
  // 검색 의도 = "연봉 X 실수령액이 얼마?" → 답(월 실수령액 숫자)을 제목 맨 앞에 박아
  // SERP에서 질문에 즉답 → CTR 상승 (GSC: 이 페이지군이 11~13위인데 클릭0인 문제 해결).
  const title = netManwon
- ? `연봉 ${label} 실수령액 월 ${netManwon}만원 (2026 세후 월급)`
- : `연봉 ${label} 실수령액 — 2026 세후 월급 계산`;
+ ? `연봉 ${label} 실수령액 월 ${netManwon}만원 (${CURRENT_RATES_YEAR} 세후 월급)`
+ : `연봉 ${label} 실수령액 — ${CURRENT_RATES_YEAR} 세후 월급 계산`;
 
  const description = netManwon
- ? `연봉 ${label}의 월 실수령액은 약 ${netManwon}만원입니다(2026년 최신 세법 기준). 국민연금·건강보험·고용보험·소득세 공제 내역과 세후 월급, 실수령액 표, 같은 연봉대 회사까지 한눈에 확인하세요.`
- : `연봉 ${label}의 세후 월급과 국민연금·건강보험·고용보험·소득세 공제액을 2026년 최신 세법 기준으로 즉시 계산합니다. 실수령액 분석·자산 시뮬레이션·동급 회사 비교까지 무료 제공.`;
+ ? `연봉 ${label}의 월 실수령액은 약 ${netManwon}만원입니다(${CURRENT_RATES_YEAR}년 최신 세법 기준). 국민연금·건강보험·고용보험·소득세 공제 내역과 세후 월급, 실수령액 표, 같은 연봉대 회사까지 한눈에 확인하세요.`
+ : `연봉 ${label}의 세후 월급과 국민연금·건강보험·고용보험·소득세 공제액을 ${CURRENT_RATES_YEAR}년 최신 세법 기준으로 즉시 계산합니다. 실수령액 분석·자산 시뮬레이션·동급 회사 비교까지 무료 제공.`;
 
  return buildPageMetadata({
  title,

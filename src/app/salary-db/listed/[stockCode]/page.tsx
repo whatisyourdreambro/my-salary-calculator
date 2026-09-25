@@ -16,6 +16,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbLd, faqLd, datasetLd } from "@/lib/structuredData";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
+import { CURRENT_RATES_YEAR, CURRENT_RATE_LABELS } from "@/config/currentRates";
 import { isStaticSalaryAmount } from "@/lib/salaryStaticParams";
 import {
   listedCohort,
@@ -233,7 +234,7 @@ export default function ListedCompanyPage({ params }: Props) {
             ))}
           </div>
           <p className="text-xs leading-6 text-muted-blue">
-            2026년 세법 기준(국민연금 4.75%·건강보험 3.595% 등), 비과세 식대 월 20만원·본인 1인
+            {CURRENT_RATES_YEAR}년 세법 기준(국민연금 {CURRENT_RATE_LABELS.pension}·건강보험 {CURRENT_RATE_LABELS.health} 등), 비과세 식대 월 20만원·본인 1인
             공제 가정. 부양가족·비과세 항목에 따라 실제 수령액은 달라집니다.
           </p>
           {gridAmount != null && (

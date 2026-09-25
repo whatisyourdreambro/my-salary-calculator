@@ -6,6 +6,7 @@ import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
 import { breadcrumbLd, organizationLd } from "@/lib/structuredData";
 import { SALARY_MODEL_2026 } from "@/lib/salaryModelContent";
+import { CURRENT_RATE_LABELS } from "@/config/currentRates";
 // 부활 팩 P2-A (운영자 승인 2026-08-31) — 무광고 색인 페이지 0→2유닛
 import { GuideMidAd, HomeTopAd } from "@/components/AdPlacement";
 
@@ -26,17 +27,17 @@ const DATA_SOURCES = [
  {
  name: "국민연금공단",
  url: "https://www.nps.or.kr/jsppage/info/easy/easy_04_01.jsp",
- description: "국민연금 보험료율 (4.75%)",
+ description: `국민연금 보험료율 (${CURRENT_RATE_LABELS.pension})`,
  },
  {
  name: "국민건강보험공단",
  url: "https://www.nhis.or.kr/nhis/together/wbhaea01400m01.do",
- description: "건강보험 요율 (3.595%) + 장기요양보험",
+ description: `건강보험 요율 (${CURRENT_RATE_LABELS.health}) + 장기요양보험`,
  },
  {
  name: "근로복지공단",
  url: "https://www.comwel.or.kr/comwel/info/info/insrcmprt.jsp",
- description: "고용보험 요율 (0.9%)",
+ description: `고용보험 요율 (${CURRENT_RATE_LABELS.employment})`,
  },
 ];
 
