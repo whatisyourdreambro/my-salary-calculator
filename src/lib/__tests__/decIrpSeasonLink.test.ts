@@ -4,7 +4,9 @@
 // 국세청 근로소득 연금계좌 세액공제 안내 — 연 900만원, 연금저축은 600만원까지) 사람들이 실제로 움직이는 달이
 // 12월뿐인데, 12월 시즌 링크 묶음에 이 계산기로 가는 링크가 없었다.
 //   1) DEC 세트(헤더 시즌 메뉴 SEASON_TOP_DEC · 표 페이지 SEASONAL_LINKS_DEC)에서 체크리스트 자리를
-//      /tools/finance/irp 로 교체 — 항목 수 불변, 체크리스트는 푸터(order 21)로 계속 도달.
+//      /tools/finance/irp 로 교체 — 헤더·표 블록 항목 수 불변. 체크리스트는 헤더에서 빠지고 푸터로 옮겨 간다:
+//      58b8876d 의 DEC 에서는 헤더 전용 상단 항목이 dedup 으로 SEASON_REST 푸터(order 21)를 가려 DEC 푸터에
+//      없었고(27개), 교체 후 order 21 이 살아나 DEC 푸터 28개가 된다 ('푸터로 계속 도달'은 틀린 서술 — 정정).
 //   2) SeasonalLinks 는 표 layout 의 PageFooterAds 위 블록 — 새 제목·설명은 교체 전 문구보다 길지 않다.
 //   3) 검색 칩 DEC 세트에는 이미 'IRP' 칩이 있다(변경 없음, 7개 유지).
 //   4) 연말정산 허브 히어로의 '12월 31일에 마감' 을 같은 글자 인라인 링크로 — 첫 광고(GuideMid) 위 높이 불변.
@@ -46,7 +48,7 @@ describe("DEC 헤더 시즌 메뉴 (SEASON_TOP_DEC)", () => {
     expect(SEASON_TOP_DEC.map((l) => l.href)).not.toContain(CHECKLIST);
   });
 
-  it("헤더 항목 12개(≤ HEADER_SEASON_MAX)·푸터 항목 수 불변, 체크리스트는 푸터로 계속 도달", () => {
+  it("헤더 항목 12개(≤ HEADER_SEASON_MAX) 그대로, 체크리스트는 헤더에서 빠지고 푸터 order 21 로 새로 노출", () => {
     const links = buildSeasonLinks("DEC");
     const header = links.filter((l) => l.header).map((l) => l.href);
     expect(header).toHaveLength(12);
@@ -55,6 +57,8 @@ describe("DEC 헤더 시즌 메뉴 (SEASON_TOP_DEC)", () => {
     expect(header).not.toContain(CHECKLIST);
     const footer = links.filter((l) => l.footer).map((l) => l.href);
     expect(footer).toContain(CHECKLIST);
+    // 살아난 것은 SEASON_REST 의 푸터 항목(order 21) — 상단 블록에는 체크리스트가 없다
+    expect(links.find((l) => l.href === CHECKLIST)?.footer?.order).toBe(21);
     // 종부세 납부(12/1~15)와 겹치는 재산세 푸터는 유지
     expect(footer).toContain("/property-holding-tax-2026");
   });

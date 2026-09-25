@@ -114,6 +114,9 @@ export const SEASONAL_LINKS_OCT: SeasonalLinkSet = {
 // (brief §2-5). 12/31 은 귀속연도 종료일(법정)이라 카피 허용.
 // 2026-09-25 (수익 추천 #10): 체크리스트 → IRP·연금저축 계산기 교체(6개 유지) — 근거는
 // src/config/seasonLinks.ts SEASON_TOP_DEC 주석(GA4 28일 최하위군 동률 중 허브와 역할 중복).
+// 교체 후 12월 표 페이지에서 체크리스트로 가는 전역 경로는 사이트 푸터다: 58b8876d 까지 DEC 에서는 헤더
+// 시즌 메뉴에만 있었고(푸터 order 21 은 dedup 으로 가려져 DEC 푸터 27개) 교체 후 헤더에서 빠지며 푸터
+// order 21 로 새로 노출된다(DEC 푸터 28개). 이 파일의 동작은 그대로 — 주석 정정만 (2026-09-25).
 // ★PageFooterAds(table layout) 위 블록 — 새 제목·설명은 교체 전 문구보다 넓지 않게(한 줄 유지).
 export const SEASONAL_LINKS_DEC: SeasonalLinkSet = {
   heading: "연말정산 12/31 마감 전 체크 — 12월 시즌 체크리스트",
