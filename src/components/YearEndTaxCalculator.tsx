@@ -16,13 +16,14 @@ import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026"
 const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 
 const AnalysisReport = ({ inputs, result }: { inputs: TaxInputs; result: TaxResult; }) => {
- const earnedIncomeDeduction = inputs.grossSalary - result.taxBase - result.determinedTax > 0
- ? inputs.grossSalary - result.taxBase - result.determinedTax
- : 0;
+ // 단계별 값은 엔진이 계산한 값을 그대로 쓴다. 종전에는 최종 결과에서 역산해
+ // 근로소득공제 = 총급여 − 과세표준 − 결정세액, 산출세액 = 결정세액, 세액공제 = 0원으로
+ // 표시됐다 (2026-09-25 수정).
+ const earnedIncomeDeduction = result.earnedIncomeDeduction;
  const earnedIncomeAmount = inputs.grossSalary - earnedIncomeDeduction;
- const incomeDeductionTotal = earnedIncomeAmount - result.taxBase;
- const calculatedTax = result.determinedTax + (inputs.prepaidTax - result.finalRefund - result.determinedTax);
- const taxCreditTotal = calculatedTax - result.determinedTax;
+ const incomeDeductionTotal = result.incomeDeduction;
+ const calculatedTax = result.calculatedTax;
+ const taxCreditTotal = result.taxCredit;
 
  const calculationSteps = [
  { label: "총급여액 (A)", value: inputs.grossSalary, isBold: true },

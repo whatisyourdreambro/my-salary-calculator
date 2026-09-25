@@ -57,6 +57,13 @@ export interface TaxResult {
  taxBase: number; // 과세표준
  grossSalary: number; // 총급여
  totalDeductions: number; // 총 공제액 (소득공제 + 세액공제)
+
+ // 상세 분석 리포트용 단계별 값 (2026-09-25). 종전 리포트는 최종 결과에서 역산해
+ // 근로소득공제·산출세액을 틀리게 보여줬고 세액공제 합계는 늘 0원이었다.
+ earnedIncomeDeduction: number; // 근로소득공제
+ incomeDeduction: number; // 과세표준에 실제 반영된 소득공제 합계 (근로소득금액 한도)
+ calculatedTax: number; // 산출세액
+ taxCredit: number; // 결정세액에 실제 반영된 세액공제 합계 (산출세액 한도)
 }
 
 // 2026년 귀속 연말정산 계산 함수
@@ -155,12 +162,22 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  const determinedTax = Math.max(0, calculatedTax - totalTaxCredit);
  const finalRefund = inputs.prepaidTax - determinedTax;
 
+ // 리포트 산식이 원 단위로 맞아떨어지도록 반올림된 값끼리 차감한다
+ // (총급여 − 근로소득공제 − 소득공제 = 과세표준, 산출세액 − 세액공제 = 결정세액)
+ const roundedEarnedIncomeDeduction = Math.round(earnedIncomeDeduction);
+ const roundedTaxBase = Math.round(taxBase);
+ const roundedDeterminedTax = Math.round(determinedTax);
+
  return {
  finalRefund: Math.round(finalRefund),
- determinedTax: Math.round(determinedTax),
- taxBase: Math.round(taxBase),
+ determinedTax: roundedDeterminedTax,
+ taxBase: roundedTaxBase,
  grossSalary,
  totalDeductions: Math.round(grossSalary - taxBase),
+ earnedIncomeDeduction: roundedEarnedIncomeDeduction,
+ incomeDeduction: grossSalary - roundedEarnedIncomeDeduction - roundedTaxBase,
+ calculatedTax,
+ taxCredit: calculatedTax - roundedDeterminedTax,
  };
 }
 
