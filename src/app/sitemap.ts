@@ -72,6 +72,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/kia-bonus': { lastModified: new Date('2026-09-25'), priority: 0.85 },
  '/minimum-wage-2027': { lastModified: new Date('2026-08-26') },
  '/minimum-wage-2026': { lastModified: new Date('2026-08-26') },
+ '/year-end-tax': { lastModified: new Date('2026-09-25') }, // 2026 귀속 공제 한도표·한도 FAQ 5문항 추가
  // 2026-08-23 시즌 패키지 (연말정산 허브·미리보기·시즌 사이드바)
  '/year-end-tax-2027': { lastModified: new Date('2026-08-23') },
  '/year-end-tax-preview': { lastModified: new Date('2026-08-23') },

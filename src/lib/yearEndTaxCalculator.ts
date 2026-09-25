@@ -10,6 +10,9 @@ import {
   earnedIncomeTaxCredit2026,
   childTaxCredit2026,
   INSURANCE_RATES_2026,
+  PENSION_ACCOUNT_CREDIT_2026,
+  MEDICAL_CREDIT_2026,
+  EDUCATION_CREDIT_2026,
   RENT_CREDIT_2026,
 } from "@/lib/taxConstants2026";
 import { calcCardDeduction2026 } from "@/lib/cardDeduction2026";
@@ -124,13 +127,18 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  // 자녀세액공제 (소득세법 §59의2, 2025 개정) — 첫째 25만·둘째 30만·셋째+ 40만
  const childTaxCredit = childTaxCredit2026(inputs.children);
 
+ // 연금계좌세액공제 — PENSION_ACCOUNT_CREDIT_2026 정본 (화면 입력이 연금저축/IRP 합산
+ // 1칸이라 연금저축 단독 600만 한도는 구분하지 않는다)
  const pensionAccountCredit =
- Math.min(inputs.pensionSavings + inputs.irp, 9000000) *
- (grossSalary <= 55000000 ? 0.15 : 0.12);
+ Math.min(inputs.pensionSavings + inputs.irp, PENSION_ACCOUNT_CREDIT_2026.TOTAL_CAP) *
+ (grossSalary <= PENSION_ACCOUNT_CREDIT_2026.SALARY_15_MAX
+ ? PENSION_ACCOUNT_CREDIT_2026.RATE_HIGH
+ : PENSION_ACCOUNT_CREDIT_2026.RATE_LOW);
  const insuranceCredit = inputs.lifeInsurance * 0.12;
  const medicalCredit =
- Math.max(0, inputs.medicalExpenses - grossSalary * 0.03) * 0.15;
- const educationCredit = inputs.educationExpenses * 0.15;
+ Math.max(0, inputs.medicalExpenses - grossSalary * MEDICAL_CREDIT_2026.THRESHOLD_RATIO) *
+ MEDICAL_CREDIT_2026.RATE;
+ const educationCredit = inputs.educationExpenses * EDUCATION_CREDIT_2026.RATE;
  // 월세 세액공제 — 총급여 8,000만 초과는 대상 아님 (RENT_CREDIT_2026 정본,
  // 2026-08-23 상한 미적용 버그 수정)
  const rentCredit =
