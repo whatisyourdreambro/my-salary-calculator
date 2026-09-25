@@ -12,7 +12,7 @@ import { describe, expect, it } from "vitest";
 
 const read = (p: string) => readFileSync(resolve(process.cwd(), p), "utf8");
 
-/** 모듈 파일 → 기대 data-msy-module id (≤30종 — GA4 position 측정기준 카디널리티, 아래 MAX_MODULE_IDS 주석) */
+/** 모듈 파일 → 기대 data-msy-module id (≤40종 — GA4 position 측정기준 카디널리티, 아래 MAX_MODULE_IDS 주석) */
 const MODULES: Record<string, string[]> = {
   "src/components/CompanyIndustryRank.tsx": ["industry-rank"],
   "src/components/RelatedCompanies.tsx": ["related-companies"],
@@ -48,6 +48,16 @@ const MODULES: Record<string, string[]> = {
   "src/components/CompanyInsights.tsx": ["company-insights"],
   "src/components/CompanyFaq.tsx": ["company-faq"],
   "src/app/salary-db/[id]/CompanyDetailClient.tsx": ["company-savings-goal"],
+  // 2026-09-26 RPM-02 — 모듈 id 가 없던 내비 표면(헤더·이동 경로·푸터·허브 목록). 속성만 추가, 마크업·class·높이 무변경.
+  // Header.tsx 는 이미 있던 리터럴 header-work-clock 도 함께 스캔된다(header-money-check 는 식 표기라 스캔 밖).
+  // 안쪽 header-work-clock·header-money-check 링크는 closest() 로 header-nav 보다 먼저 잡힌다.
+  "src/components/Header.tsx": ["header-nav", "header-work-clock"],
+  "src/components/Breadcrumbs.tsx": ["breadcrumbs"],
+  "src/components/Footer.tsx": ["footer"],
+  "src/app/salary-db/SalaryDbClient.tsx": ["salary-db-hub"],
+  "src/app/salary-db/ranking/page.tsx": ["ranking-list"],
+  "src/app/job/page.tsx": ["job-hub"],
+  "src/app/industry/[slug]/page.tsx": ["industry-list"],
 };
 
 /**
@@ -93,8 +103,51 @@ const SELF_TRACKED = [
 
 // 2026-09-25: 15 → 30. GA4 이벤트 범위 맞춤 측정기준의 절삭 기준은 일 고유값 500개라
 // position(모듈 id + 광고 슬롯 id + CTA 위치 + 제휴 배치 2종)이 수십 종이어도 (other) 로 묶이지 않는다.
-const MAX_MODULE_IDS = 30;
+// 2026-09-26 RPM-02: 30 → 40. 26 + 7(header-nav·breadcrumbs·footer·salary-db-hub·ranking-list·job-hub·industry-list) = 33,
+// 여기에 Header.tsx 등재로 함께 스캔되는 기존 header-work-clock 1종을 더해 34. 근거는 15 → 30 때와 같다 —
+// GA4 이벤트 범위 맞춤 측정기준의 절삭은 일 고유값 500개에서 일어나므로 수십 종은 (other) 로 묶이지 않는다.
+// 목적지는 href 대신 17값 dest_tpl(analytics.ts destTemplate)로 본다.
+const MAX_MODULE_IDS = 40;
 const ATTR_RE = /data-msy-module="([a-z0-9-]+)"/g;
+
+/** 광고·쿠팡 컴포넌트 — 모듈 속성을 단 요소 안에 있으면 안 된다(광고 클릭은 ad_unit_click 몫, 속성은 링크 목록만 감싼다) */
+const AD_COMPONENT_RE = /<(?:[A-Z][A-Za-z0-9]*Ad|AdPlacement|CoupangBanner)\b/;
+
+/**
+ * 소스에서 data-msy-module 리터럴을 단 JSX 요소의 원문(여는 태그 ~ 짝 닫는 태그)을 뽑는다.
+ * 주석은 먼저 지운다. 같은 이름 태그의 중첩만 세는 가벼운 파서라 자기 닫힘 요소는 여는 태그만 돌려준다.
+ */
+function taggedElementSources(source: string): string[] {
+  const src = source
+    .replace(/\{\/\*[\s\S]*?\*\/\}/g, "")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "");
+  const out: string[] = [];
+  for (const m of src.matchAll(ATTR_RE)) {
+    const open = src.lastIndexOf("<", m.index);
+    const tag = /^<([A-Za-z][A-Za-z0-9.]*)/.exec(src.slice(open))?.[1];
+    expect(tag, `data-msy-module="${m[1]}" 의 여는 태그를 찾지 못함`).toBeTruthy();
+    const openEnd = src.indexOf(">", m.index);
+    if (src[openEnd - 1] === "/") {
+      out.push(src.slice(open, openEnd + 1));
+      continue;
+    }
+    const re = new RegExp(`<${tag}[\\s>]|</${tag}>`, "g");
+    re.lastIndex = open;
+    let depth = 0;
+    let end = -1;
+    for (let t = re.exec(src); t; t = re.exec(src)) {
+      depth += t[0].startsWith("</") ? -1 : 1;
+      if (depth === 0) {
+        end = t.index + t[0].length;
+        break;
+      }
+    }
+    expect(end, `data-msy-module="${m[1]}" <${tag}> 의 닫는 태그를 찾지 못함`).toBeGreaterThan(open);
+    out.push(src.slice(open, end));
+  }
+  return out;
+}
 
 describe("내부 링크 모듈 계측", () => {
   it("각 링크 모듈 파일이 기대한 data-msy-module id 를 가진다", () => {
@@ -108,7 +161,7 @@ describe("내부 링크 모듈 계측", () => {
     }
   });
 
-  it("모듈 id 총 종류가 30개 이하이고 파일 간에 겹치지 않는다", () => {
+  it("모듈 id 총 종류가 40개 이하이고 파일 간에 겹치지 않는다", () => {
     const fileOf = new Map<string, string>();
     for (const file of Object.keys(MODULES)) {
       for (const m of read(file).matchAll(ATTR_RE)) {
@@ -136,6 +189,26 @@ describe("내부 링크 모듈 계측", () => {
         expect(delegated !== direct, `${route}: ${file} delegated=${delegated} direct=${direct}`).toBe(true);
       }
     }
+  });
+
+  it("data-msy-module 을 단 요소 안에는 광고·쿠팡 컴포넌트가 없다 (속성은 링크 목록만 감싼다)", () => {
+    let scanned = 0;
+    for (const file of Object.keys(MODULES)) {
+      for (const element of taggedElementSources(read(file))) {
+        scanned += 1;
+        expect(element, `${file}: 모듈 속성을 단 요소 안에 광고 컴포넌트가 있음`).not.toMatch(AD_COMPONENT_RE);
+      }
+    }
+    expect(scanned).toBeGreaterThanOrEqual(Object.values(MODULES).flat().length);
+  });
+
+  it("RPM-02 허브 파일은 광고를 품은 목록 컨테이너 대신 광고 밖 요소에 속성을 단다", () => {
+    // /salary-db 회사 카드 그리드는 안에 CalcResultAd·Display2Ad 가 있어 카드 링크마다 속성을 단다
+    const hub = read("src/app/salary-db/SalaryDbClient.tsx");
+    expect(hub).toContain('<Link href={`/salary-db/${company.id}`} data-msy-module="salary-db-hub"');
+    expect(hub).not.toMatch(/data-msy-module="[^"]+"\s+className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"/);
+    // 헤더 데스크톱 메뉴와 모바일 메뉴 두 곳
+    expect(read("src/components/Header.tsx").match(/data-msy-module="header-nav"/g)).toHaveLength(2);
   });
 
   it("이미 onClick 계측 중인 모듈에는 data-msy-module 이 없다 (2중 집계 방지)", () => {

@@ -31,7 +31,7 @@ These partner events describe site observations. Partner-recognized clicks, purc
 
 ## Analysis and rollout
 
-Register event-scoped definitions for `calc_type`, `measurement_version`, `result_origin`, `slot_kind`, `position`, `offer_id`, `vertical`, `banner_size`, and `nav_type` as needed in the reporting property. `calc_success` may be a key event with no default monetary value. Do not assign fictional revenue to calculation or partner clicks.
+Register event-scoped definitions for `calc_type`, `measurement_version`, `result_origin`, `slot_kind`, `position`, `offer_id`, `vertical`, `banner_size`, `nav_type`, and `dest_tpl` as needed in the reporting property. `calc_success` may be a key event with no default monetary value. Do not assign fictional revenue to calculation or partner clicks.
 
 Record the deployment boundary before comparing measurements. Revenue remains the source platform's reported amount; GA views and AdSense pageviews have different definitions. URL-prefix channels overlap and must not be added together as independent revenue.
 
@@ -111,3 +111,11 @@ Verify defaults, invalid input, accepted input, a visible current result, repeat
 ### 하지 않은 것
 
 - **`autoads_seen` 이벤트 — 보류.** 자동광고 자리는 애드센스가 나중에 DOM 에 끼워 넣어서 언제 붙었는지 코드가 알 수 없다. 알려면 DOM 관찰자(MutationObserver)나 주기 조회가 필요하고, 이전 뷰에서 들어간 자리가 레이아웃에 남아 새 자리와 구분도 되지 않는다. 대신 위 '애드센스 착지 대조'와 수동 점검으로 확인한다. 수동 점검은 운영 사이트 회사 페이지에서 본문 링크로 이동한 뒤 10초 기다려, 개발자 도구 콘솔의 `document.querySelectorAll('.google-auto-placed').length` 가 이동 전보다 늘었는지, 늘어난 자리가 새 본문 안에 있는지 보는 방식이다. 광고는 클릭하지 않는다.
+
+## 내비 표면 모듈 id + 목적지 템플릿 `dest_tpl` (2026-09-26 RPM-02, 측정 전용)
+
+- **무엇이 바뀌나**: 모듈 id 가 없던 내비 표면 7곳에 `data-msy-module` 속성만 달았다(마크업·class·높이 무변경, 광고를 품은 요소에는 달지 않음). 루트 `InternalLinkTracker` 가 기존 `guide_cta_click`(position=모듈 id)으로 보낸다. 새 이벤트명은 없다.
+  - `header-nav`(데스크톱 메뉴·모바일 메뉴 — 안쪽 `header-work-clock`·`header-money-check` 링크는 가까운 id 가 우선), `breadcrumbs`(보이는 이동 경로), `footer`(하단 메뉴), `salary-db-hub`(/salary-db 형제 허브·회사 카드·검색 0건 바로가기), `ranking-list`(/salary-db/ranking 순위표), `job-hub`(/job 직업 목록), `industry-list`(/industry/[slug] 회사·직업·다른 업계 목록).
+- **`dest_tpl`**: 위임 계측(`trackInternalLinkClick`) 클릭에만 싣는 목적지 템플릿. href 는 하루 고유값 500개를 넘어 측정기준으로 못 쓰므로 17개 고정값으로 묶는다 — `company` · `compare` · `salary-db-hub` · `ranking` · `job` · `job-hub` · `bonus-calc` · `samsung-bonus` · `calc` · `salary-amount` · `monthly` · `pay-table` · `table` · `guide` · `industry` · `home` · `other`. 규칙은 `src/lib/analytics.ts` `destTemplate` 과 `src/lib/__tests__/destTemplate.test.ts` 표가 정본이다. 상장사 공시 트리는 허브(`/salary-db/listed`)=`salary-db-hub`, 순위형(`top-*`·`industry`)=`ranking`, 종목 페이지=`company`. 직접 onClick 호출부(related-calc·next-action·related-guide 등)는 종전 그대로 `dest_tpl` 이 없다.
+- ☐ **운영자 — 배포 당일 GA4 맞춤 측정기준 `dest_tpl` 등록**: 관리 → 데이터 표시 → 맞춤 정의 → 맞춤 측정기준 만들기 → 이름 `dest_tpl` · 범위 **이벤트** · 이벤트 매개변수 `dest_tpl` → 저장. 소급되지 않으므로 늦으면 그만큼 10/19 판정 창이 짧아진다. 이벤트 범위 한도(50개) 여유를 먼저 본다.
+- **보는 법**: 탐색 분석 자유 형식, 필터 `이벤트 이름 = guide_cta_click`, 행 `position`, 열 `dest_tpl`, 값 `이벤트 수`. 헤더 대 본문 클릭 비중은 `header-nav`·`breadcrumbs`·`footer` 합 ÷ 전체 위임 클릭. `dest_tpl` 의 `(not set)` 은 직접 호출부 클릭이거나 배포 전 JS 로 열려 있던 탭의 클릭이다.

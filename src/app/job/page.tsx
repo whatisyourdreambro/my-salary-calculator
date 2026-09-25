@@ -110,7 +110,8 @@ export default function JobIndexPage() {
                   ({jobsByCategory[category].length}개 직업)
                 </span>
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {/* 모듈 id job-hub: InternalLinkTracker 위임 클릭 계측(속성만). 카테고리 사이 광고는 이 목록 밖(Fragment 형제) */}
+              <div data-msy-module="job-hub" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {jobsByCategory[category].map((job) => (
                   <Link
                     key={job.id}
