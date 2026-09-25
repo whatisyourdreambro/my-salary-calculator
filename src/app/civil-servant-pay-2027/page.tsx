@@ -25,6 +25,8 @@
 //   (korea.kr newsId=156776382) 원문 확인. 3.9% 수치는 보도자료·브리핑문·홍보자료 본문에 없고
 //   예산안 발표 보도(연합·서울경제·이투데이, 기획예산처 인용)로만 확인 → '예산안 기준·보도' 표기 유지.
 //   네이버 28일 판정: 배포일부터 같은 길이 창으로 클릭·CTR 비교.
+// 직렬별 2027 예상 링크(교사·경찰·소방, 2026-09-25 준비 — 수익 추천 #3): 마지막 광고 MultiplexAd 아래에만
+//   붙였다. 위쪽 '직렬별 2026 봉급표 바로가기'는 Multiplex 위라 손대지 않는다(광고 위 높이 증가 금지).
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -427,6 +429,22 @@ export default function CivilServantPay2027Page() {
         <div className="mt-10 max-w-3xl mx-auto">
           <MultiplexAd />
         </div>
+
+        {/* 직렬별 2027 예상 바로가기 — 마지막 광고(Multiplex) 아래에만 추가 (수익 추천 #3, 2026-09-25 준비) */}
+        <section className="mt-8 max-w-3xl mx-auto" aria-label="직렬별 2027 봉급표 예상">
+          <h2 className="text-sm font-black text-navy mb-3">직렬별 2027 봉급표 예상 바로가기</h2>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/teacher-pay-2027" className="rounded-full border border-canvas-200 bg-white px-4 py-2 text-sm font-bold text-navy hover:border-electric hover:text-electric transition">
+              교사 봉급표 2027
+            </Link>
+            <Link href="/police-pay-2027" className="rounded-full border border-canvas-200 bg-white px-4 py-2 text-sm font-bold text-navy hover:border-electric hover:text-electric transition">
+              경찰 봉급표 2027
+            </Link>
+            <Link href="/firefighter-pay-2027" className="rounded-full border border-canvas-200 bg-white px-4 py-2 text-sm font-bold text-navy hover:border-electric hover:text-electric transition">
+              소방공무원 봉급표 2027
+            </Link>
+          </div>
+        </section>
       </div>
     </main>
   );

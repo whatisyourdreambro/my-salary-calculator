@@ -85,6 +85,10 @@ const seasonPages: SearchEntry[] = [
  { title: "2026 소방관 봉급표", href: "/firefighter-pay-2026", category: "시즌", description: "소방사 1호봉 213만원부터 계급별 호봉표", priority: 2 },
  { title: "2026 공무원 봉급표", href: "/civil-servant-pay-2026", category: "시즌", description: "9급 1호봉 213만원·직급별 봉급표", priority: 1 },
  { title: "2027 공무원 봉급표 — 인상 전망과 확정 일정", href: "/civil-servant-pay-2027", category: "시즌", description: "예산안과 확정 봉급표의 차이·9급~5급 예상 월급", priority: 1 },
+ // 2026-09-25 — 2027 직렬별 봉급 예상 3종 (수익 추천 #3, 예산안 3.9% 단순 적용·확정 전)
+ { title: "2027 교사 봉급표 예상", href: "/teacher-pay-2027", category: "시즌", description: "예산안 3.9% 적용 교원 주요 호봉 예상 월급·확정 일정", priority: 2 },
+ { title: "2027 경찰 봉급표 예상", href: "/police-pay-2027", category: "시즌", description: "예산안 3.9% 적용 순경~경정 예상 월급·수당 변화", priority: 2 },
+ { title: "2027 소방공무원 봉급표 예상", href: "/firefighter-pay-2027", category: "시즌", description: "예산안 3.9% 적용 소방사~소방령 예상 월급·확정 일정", priority: 2 },
  // 2026-08-31 — R2 신규 8건 (연말정산 시즌 패키지·뉴스 트리거·이직)
  { title: "맞벌이 연말정산 몰아주기 계산기", href: "/calc/dual-income-year-end", category: "계산기", description: "자녀공제·의료비 귀속 시나리오별 부부 합산 세액 비교", priority: 1 },
  { title: "기부금 세액공제 계산기", href: "/donation-tax-credit-2026", category: "계산기", description: "정치자금·고향사랑 전액공제·종교 10% 한도·10년 이월", priority: 1 },

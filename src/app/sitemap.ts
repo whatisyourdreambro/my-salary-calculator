@@ -100,6 +100,10 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/teacher-pay-2026': { lastModified: new Date('2026-09-25') }, // B20 리드·메타 정렬(네이버 저CTR)
  '/police-pay-2026': { lastModified: new Date('2026-09-25') }, // 전 계급·전 호봉 풀표(페이지 끝)
  '/firefighter-pay-2026': { lastModified: new Date('2026-09-25') }, // B20 리드·메타 정렬(네이버 저CTR)·전 호봉 풀표
+ // 2027 직렬별 봉급 예상 3종 (2026-09-25 준비, 수익 추천 #3 — 배포일에 맞춰 날짜 갱신)
+ '/teacher-pay-2027': { lastModified: new Date('2026-09-25') },
+ '/police-pay-2027': { lastModified: new Date('2026-09-25') },
+ '/firefighter-pay-2027': { lastModified: new Date('2026-09-25') },
  // 2026-08-25 P2 백로그 (임베드 위젯 5종 확장·구조화데이터 보강·영문 메뉴)
  '/embed': { lastModified: new Date('2026-08-25') },
  '/en': { lastModified: new Date('2026-09-09') },
@@ -350,6 +354,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/teacher-pay-2026',
  '/police-pay-2026',
  '/firefighter-pay-2026',
+ // 2027 직렬별 봉급 예상 3종 (2026-09-25 준비, 수익 추천 #3) — 교사·경찰·소방, 12월 말 확정표 전환 예정
+ '/teacher-pay-2027',
+ '/police-pay-2027',
+ '/firefighter-pay-2027',
  ];
 
  // lastModified 기준일 STATIC_LAST_MODIFIED — src/config/siteDates.ts 단일 소스
