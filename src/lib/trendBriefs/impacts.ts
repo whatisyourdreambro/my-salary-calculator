@@ -162,9 +162,10 @@ export const IMPACT_KINDS: Readonly<Record<string, ImpactKind>> = {
       base: {
         type: "enum",
         required: false,
-        label: "변경 후 요율의 바탕 — 2027: taxConstants2027 요율(미확정 항목은 provisional) · 2026: 현행 요율에 override 만 반영",
-        values: ["2027", "2026"],
-        default: "2027",
+        label:
+          "변경 후 요율의 바탕 — 2026(기본): 현행 요율에 override 만 반영 · 2027: taxConstants2027 요율(결정 전 항목은 provisional — 렌더가 표 설명에 '아직 결정 전' 고지를 자동으로 붙인다). 2027 은 명시적으로 고를 때만",
+        values: ["2026", "2027"],
+        default: "2026",
       },
       override: {
         type: "rates",
@@ -176,7 +177,8 @@ export const IMPACT_KINDS: Readonly<Record<string, ImpactKind>> = {
     },
     build(p) {
       const override = (p.override && typeof p.override === "object" ? p.override : {}) as Partial<Record<RateKey, number>>;
-      const base2026 = str(p, "base", "2027") === "2026";
+      // 기본은 2026(현행) — 결정 전 값이 섞이는 2027 은 writer 가 명시적으로 고를 때만 (critic fix 2026-09-26)
+      const base2026 = str(p, "base", "2026") === "2026";
       const after: InsuranceRates = { ...(base2026 ? INSURANCE_RATES_2026 : INSURANCE_RATES_2027), ...override };
       const provisional = base2026
         ? []
@@ -429,6 +431,41 @@ export function impactCell(kindId: string, params: Record<string, unknown>, r: n
   const cell = impactTable(kindId, params).rows[r]?.[c];
   if (cell === undefined) throw new Error(`[trendBriefs] 영향 표 셀 없음 (${kindId} r${r} c${c})`);
   return escapeHtml(cell);
+}
+
+// ─────────────────────────────────────────────────────────────
+// 결정 전(provisional) 값 고지 — writer 가 아니라 렌더가 표 설명 끝에 고정 문장으로 붙인다 (critic fix 2026-09-26).
+// 운영자 승인은 '내용 검수 아님' 이므로, 결정 전 값을 '변경 후' 값처럼 보여 주지 않도록 코드가 직접 밝힌다.
+// 문장에 '확정' 이라는 낱말을 쓰지 않는다(규칙 unannounced-facts 의 부정 문맥 목록 밖 표현이 되지 않게).
+// ─────────────────────────────────────────────────────────────
+/** 2027 요율 키 → 쉬운 이름 (INSURANCE_RATES_2027_STATUS 가 provisional = 2026 값 준용) */
+export const PROVISIONAL_RATE_LABELS: Readonly<Record<string, string>> = {
+  "INSURANCE_RATES_2027.NATIONAL_PENSION": "국민연금 요율",
+  "INSURANCE_RATES_2027.HEALTH_INSURANCE": "건강보험 요율",
+  "INSURANCE_RATES_2027.LONG_TERM_CARE_RATIO": "장기요양보험 비율",
+  "INSURANCE_RATES_2027.EMPLOYMENT_INSURANCE": "고용보험 요율",
+};
+/** 그 밖의 provisional 표식 → 고지 문장 */
+export const PROVISIONAL_SENTENCES: Readonly<Record<string, string>> = {
+  RAISE_2027_BUDGET: "표의 정부안 단순 적용 예상은 정부 예산안의 보수 인상률을 현행 봉급에 일률 적용한 값이라, 직급·호봉별 최종 봉급표와 다를 수 있습니다.",
+  UNEMPLOYMENT_BENEFIT_2027: "표의 2027년 값은 현행 산정 방식에 2027년 최저임금을 넣어 계산한 값이라, 제도 개편 등으로 산정 방식이 바뀌면 달라질 수 있습니다.",
+};
+const PROVISIONAL_FALLBACK = "표의 일부 값은 아직 결정 전인 값으로 계산했습니다.";
+
+/** provisional 목록 → 표 설명 끝에 붙일 고정 문장(없으면 빈 문자열). 평문 — HTML 에 넣을 때 escapeHtml. */
+export function provisionalDisclosure(provisional: readonly string[]): string {
+  if (!provisional.length) return "";
+  const parts: string[] = [];
+  const rates = provisional.filter((k) => k in PROVISIONAL_RATE_LABELS).map((k) => PROVISIONAL_RATE_LABELS[k]);
+  if (rates.length) parts.push(`표의 ${rates.join("·")} 2027년 값은 아직 결정 전이라 2026년 값을 그대로 넣었습니다.`);
+  for (const k of provisional) if (PROVISIONAL_SENTENCES[k]) parts.push(PROVISIONAL_SENTENCES[k]);
+  if (provisional.some((k) => !(k in PROVISIONAL_RATE_LABELS) && !(k in PROVISIONAL_SENTENCES))) parts.push(PROVISIONAL_FALLBACK);
+  return parts.join(" ");
+}
+
+/** 영향 표의 결정 전 값 고지 문장 (파라미터 오류면 예외 — impactTable 과 같다) */
+export function impactDisclosure(kindId: string, params: Record<string, unknown>): string {
+  return provisionalDisclosure(impactTable(kindId, params).provisional);
 }
 
 // ─────────────────────────────────────────────────────────────

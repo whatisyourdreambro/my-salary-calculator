@@ -3,8 +3,10 @@
 // 사용:
 //   npx tsx scripts/trend-publish/gate.ts --draft <초안.json> --sources <스냅숏 디렉터리> [--headlines <dir>] [--sentinel <file>]
 //        [--mode dryrun|publish] [--today YYYY-MM-DD] [--phase pre|post] [--check-diff <ref>] [--next <dir>] [--repo <dir>]
-//        [--trend-home <dir>] [--update] [--candidate-route new-brief|update-existing] [--out <gate.json>]
+//        [--trend-home <dir>] [--update] [--candidate <후보.json>] [--candidate-route new-brief|update-existing] [--out <gate.json>]
 //   npx tsx scripts/trend-publish/gate.ts --self-test      (합성 픽스처: good 통과·규칙별 실패, 30초·500MB 안)
+// --candidate: daily prepare 가 남긴 레이더 후보(state/<날짜>-candidate.json · PROPOSE 보관본의 candidate). 새 브리프는 필수 —
+//   1차 출처 URL·게시일·발표 종류를 writer 선언이 아니라 이 기록과 대조한다. --candidate-route 가 없으면 후보의 route 를 쓴다.
 // pre  = 규칙 전부 + secret-scan + 경로 허용목록(--check-diff 가 있을 때)
 // post = pre 규칙 + 프리렌더 허브·정적 페이지 유사도 + rss.xml 크기 투영(.next 필요)
 // 출력: 한국어 표 + gate-<slug>.json (TREND_HOME/gates 또는 --out). 종료 코드 0 통과 · 1 규칙 실패 · 2 인프라 오류.
@@ -23,6 +25,7 @@ import {
   kstToday,
   parseVerifyTaxPatterns,
   runRules,
+  type BriefCandidate,
   type BriefFixture,
   type CalendarConfig,
   type HeadlineRecord,
@@ -246,6 +249,10 @@ export async function main(): Promise<number> {
     }
     if (!staticPages.length) throw new InfraError(`프리렌더 페이지를 찾지 못함: ${nextDir}`);
   }
+  const candidatePath = arg("--candidate");
+  if (candidatePath && !existsSync(candidatePath)) throw new InfraError(`후보 파일 없음: ${candidatePath}`);
+  const candidate = candidatePath ? (JSON.parse(readFileSync(candidatePath, "utf8")) as BriefCandidate) : undefined;
+  if (candidate && (typeof candidate.url !== "string" || typeof candidate.publishedDate !== "string")) throw new InfraError(`후보 파일 형식 오류(url·publishedDate): ${candidatePath}`);
   const ctx: RuleContext = {
     mode,
     phase,
@@ -266,7 +273,10 @@ export async function main(): Promise<number> {
     headlines: loadHeadlines(arg("--headlines") || undefined, today),
     taxPatterns: parseVerifyTaxPatterns(readFileSync(join(repo, "scripts/verify-tax-constants.mjs"), "utf8")),
     tripWires: (config.tripWires as string[]) ?? [],
-    candidateRoute: (arg("--candidate-route") || undefined) as RuleContext["candidateRoute"],
+    candidateRoute: (arg("--candidate-route") || candidate?.route || undefined) as RuleContext["candidateRoute"],
+    candidate,
+    // render --write 가 등록부에 넣은 같은 slug 본문(생성 모듈 평가값) — 렌더 규칙이 실제 모듈에 반영됐는지 본다
+    renderedHtml: trendBriefGuides.find((g) => g.slug === draft.slug)?.content,
     updateOf,
   };
   const results = runRules(draft, ctx);

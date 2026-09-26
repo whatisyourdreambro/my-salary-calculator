@@ -3,7 +3,9 @@
 // ★이 파일만 git push 를 한다. 운영자가 채팅에서 브리프별로 승인('발행 <slug>' · '철회 <slug>')한 세션만 실행한다.
 //   권한 허용목록에 올리지 않는다 — 실행 때마다 권한 확인 창이 두 번째 확인이 된다. PUBLISH_ENABLED 는 준비·긴급 정지 플래그일 뿐 승인이 아니다.
 // 사용:
-//   node scripts/trend-publish/publish-approved.mjs --slug <slug> --draft-sha256 <hex> [--manual-purge-ack] [--today YYYY-MM-DD] [--check-only]
+//   node scripts/trend-publish/publish-approved.mjs --slug <slug> --draft-sha256 <hex> [--manual-purge-ack] [--check-only [--today YYYY-MM-DD]]
+//   (--today 는 --check-only 와 함께일 때만 — 실제 반영 경로의 날짜는 언제나 실제 KST 오늘이다. critic fix 2026-09-26:
+//    날짜 인자 하나로 첫 발행일·동결·판정일·배포 차단·한도·카드 만료를 건너뛰고 거짓 발행일을 찍지 못하게)
 //   node scripts/trend-publish/publish-approved.mjs --slug <slug> --draft-sha256 <hex> --update --draft <고친 초안.json> [--manual-purge-ack]
 //   node scripts/trend-publish/publish-approved.mjs --slug <slug> --retire --to <허브 경로> [--manual-purge-ack]
 // 사전 조건(하나라도 어기면 아무것도 하지 않고 종료):
@@ -32,8 +34,10 @@ import {
   readTypesConstants,
   resolvePaths,
   reviewedUntilState,
+  safeResetWorktree,
   sha256Text,
   updateCalendarBlocks,
+  worktreeGuard,
 } from "./daily.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -65,6 +69,8 @@ export function checkPreconditions(p) {
     else {
       const expiry = cardExpiry(p.archive.primaryPublishedDate ?? p.archive.cardDate, p.archive.cardDate);
       if (p.today > expiry) add(`승인 카드 만료(${expiry}) — 다음 daily 에서 다시 제안`);
+      const c = p.archive.candidate;
+      if (!c || typeof c.url !== "string" || typeof c.publishedDate !== "string") add("보관본에 레이더 후보 기록(candidate) 없음 — 1차 출처를 대조할 수 없다. 다음 daily PROPOSE 를 다시 거칠 것");
     }
   }
   if (p.kind !== "retire") {
@@ -85,10 +91,23 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
   const kind = argv.includes("--retire") ? "retire" : argv.includes("--update") ? "update" : "publish";
   const config = loadConfig(REPO_OF_SCRIPT);
   const { home, wt } = resolvePaths({ trendHome: arg(argv, "--trend-home"), worktree: arg(argv, "--worktree") }, config);
-  const today = arg(argv, "--today") ?? kstToday(deps.now());
   const say = (s) => deps.log(s);
+  const checkOnly = argv.includes("--check-only");
+  const realToday = kstToday(deps.now());
+  const todayArg = arg(argv, "--today");
+  if ((argv.includes("--today") || todayArg) && !checkOnly && todayArg !== realToday) {
+    say(`[publish] --today 는 --check-only 와 함께일 때만 쓸 수 있다(실제 오늘 KST ${realToday}) — 아무것도 하지 않았다`);
+    return 2;
+  }
+  const today = checkOnly && todayArg ? todayArg : realToday;
   if (!slug || !/^[a-z0-9-]+$/.test(slug)) {
     say("[publish] --slug <slug> 가 필요하다");
+    return 2;
+  }
+  // 트렌드 워크트리 확인 — 설정 워크트리·연결 워크트리·메인 저장소 아님 (daily.mjs 와 같은 관문)
+  const refused = await worktreeGuard(deps, { wt, allowAnyWorktree: deps.allowAnyWorktree === true });
+  if (refused) {
+    say(`[publish] ${refused}`);
     return 2;
   }
   const run = (cmd, args, cwd = wt) => deps.run(cmd, args, { cwd });
@@ -150,7 +169,7 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
     say(["[publish] 사전 조건 미충족 — 아무것도 바꾸지 않았다:", ...failures.map((f) => `- ${f}`)].join("\n"));
     return 1;
   }
-  if (argv.includes("--check-only")) {
+  if (checkOnly) {
     say("[publish] 사전 조건 통과 (--check-only — 여기서 멈춤)");
     return 0;
   }
@@ -166,12 +185,20 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
       say(`[publish] 기준 빌드 실패 (exit ${base.code}) — 중지`);
       return base.code === 75 ? 75 : 1;
     }
+    // 기준 빌드의 prebuild 가 생성 파일을 바꿨을 수 있다 — 렌더 전에 깨끗한 origin/main 으로(운영자 파일 경로가 보이면 원복 거부 + HALT)
+    if (!(await safeResetWorktree(deps, home, wt, originSha))) {
+      say("[publish] 기준 빌드 뒤 원복 거부(운영자 파일 경로) — HALT 기록, 중지");
+      return 1;
+    }
   }
 
   // 4) 렌더 · 생성 파일 · 게이트
   mkdirSync(join(home, "tmp"), { recursive: true });
   const draftFile = join(home, "tmp", `publish-${slug}.json`);
   if (draft) writeFileSync(draftFile, `${JSON.stringify(draft, null, 2)}\n`, "utf8");
+  // 레이더 후보(PROPOSE 보관본) — gate 가 1차 출처 URL·게시일·발표 종류를 writer 선언이 아니라 이 기록과 대조한다
+  const candidateFile = kind === "publish" && archive?.candidate ? join(home, "tmp", `publish-${slug}-candidate.json`) : null;
+  if (candidateFile) writeFileSync(candidateFile, `${JSON.stringify(archive.candidate, null, 2)}\n`, "utf8");
   const renderArgs =
     kind === "retire"
       ? [tsx, join(wt, "scripts/trend-publish/render.ts"), "--retire", slug, "--to", arg(argv, "--to") ?? "", "--write", "--today", today, "--repo", wt]
@@ -179,18 +206,17 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
   const r = await run(process.execPath, renderArgs);
   if (r.code !== 0) {
     say(`[publish] render 실패 — 중지:\n${(r.stderr || r.stdout).trim()}`);
-    await git(["reset", "--hard", originSha]);
+    await safeResetWorktree(deps, home, wt, originSha);
     return 1;
   }
   const fail = async (msg) => {
     say(`[publish] ${msg} — 중지(원격 반영 안 함)`);
-    await git(["reset", "--hard", originSha]);
-    await git(["clean", "-fd"]);
+    await safeResetWorktree(deps, home, wt, originSha);
     return 1;
   };
   const snapDir = archive?.snapDir ?? join(home, "snapshots", today);
   if (kind !== "retire") {
-    const gate = await run(process.execPath, [tsx, join(wt, "scripts/trend-publish/gate.ts"), "--draft", draftFile, "--sources", snapDir, "--headlines", join(home, "radar"), "--sentinel", join(home, "sentinel"), "--mode", "publish", "--today", today, "--phase", "pre", "--check-diff", originSha, "--repo", wt, "--trend-home", home, ...(kind === "update" ? ["--update"] : []), "--out", join(home, "gates", `gate-${slug}-publish-pre.json`)]);
+    const gate = await run(process.execPath, [tsx, join(wt, "scripts/trend-publish/gate.ts"), "--draft", draftFile, "--sources", snapDir, "--headlines", join(home, "radar"), "--sentinel", join(home, "sentinel"), "--mode", "publish", "--today", today, "--phase", "pre", "--check-diff", originSha, "--repo", wt, "--trend-home", home, ...(kind === "update" ? ["--update"] : []), ...(candidateFile ? ["--candidate", candidateFile] : []), "--out", join(home, "gates", `gate-${slug}-publish-pre.json`)]);
     if (gate.code !== 0) return fail(`gate pre 실패 (exit ${gate.code})\n${gate.stdout.trim().slice(-2000)}`);
   } else {
     const scan = await run(process.execPath, [join(wt, "scripts/trend-publish/secret-scan.mjs"), "--repo", wt, "--base", originSha, "--trend-home", home]);
@@ -210,9 +236,9 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
   const tree = (await git(["write-tree"])).stdout.trim();
   const reuse = kind === "publish" && archive && archive.heavyInputsHash === sha256Text(`${originSha}\n${tree}`);
   if (!reuse) {
-    const steps = heavySteps({ slug, originSha, home, wt, config: wtConfig, sibling: wtConfig.adSequence?.siblingGuide });
+    const steps = heavySteps({ slug, originSha, home, wt, config: wtConfig, sibling: wtConfig.adSequence?.siblingGuide, candidate: candidateFile, update: kind === "update" });
     for (const s of steps) {
-      if (kind === "retire" && ["ad-sequence", "chunk-diff", "gate-post"].includes(s.name)) continue;
+      if (kind === "retire" && ["prebuild-status", "ad-sequence", "chunk-diff", "gate-post"].includes(s.name)) continue;
       const cmd = s.cmd.replace("{DRAFT}", draftFile).replace("{SOURCES}", snapDir).replace("{MODE}", "publish").replace("{TODAY}", today);
       const h = await heavy(s.name, cmd);
       if (h.code === 75) return fail(`${s.name}: 메모리·잠금 부족 — 나중에 다시`);

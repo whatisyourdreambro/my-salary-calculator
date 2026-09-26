@@ -92,7 +92,11 @@
     "1\\.2억 초과.{0,6}200만"
   ],
   "linkFreshness": { "staticStale": ["/savings-interest-2026"] },
-  "chunkDiff": { "runtimeExempt": ["^webpack-[0-9a-f]+\\.js$"] },
+  "chunkDiff": {
+    "runtimeExempt": ["^webpack-[0-9a-f]+\\.js$"],
+    "compare": "strict",
+    "_compare": "strict = 정규화(v2) 비교에서 slug·런타임·사이트 수치(GUIDE_COUNT 등)만 바뀐 청크 밖의 변경이면 SKIP. 오탐이 나오면 report(보고만)로 바꾸고 런북 §14 에 기록. prebuild-status(생성 파일 허용목록)는 이 값과 무관하게 필수."
+  },
   "adSequence": {
     "gatePages": ["/", "/guides/nurse-salary", "/calc/samsung-bonus"],
     "siblingGuide": "salary-guide-2026"

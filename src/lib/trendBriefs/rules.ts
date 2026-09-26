@@ -6,13 +6,12 @@
 // 임계값: types.ts (정책 근거 guardrails — 런북 docs/trend-publishing-runbook.md).
 import { extractGuideFaqs } from "@/lib/guideFaq";
 import { isOfficialSourceHost } from "@/lib/simpleCalculators/sourcePolicy";
-import { CANONICAL_CONSTS, IMPACT_KINDS, impactTable, pct, validateImpactParams } from "./impacts";
+import { CANONICAL_CONSTS, IMPACT_KINDS, escapeHtml, impactDisclosure, impactTable, pct, provisionalDisclosure, validateImpactParams } from "./impacts";
 import { inlinePlain, parseInline, prepare, proseFields, segmentsToHtml, draftToEntrySource, type Inline } from "./render";
 import {
   containment,
   guideSegments,
   longestCommonSubstring,
-  ngram8Containment,
   normalizeForShingles,
   shingles,
   titleJaccard,
@@ -88,6 +87,8 @@ export interface LocalCalendar {
 }
 
 export interface SourceSnapshot {
+  /** source-snapshot.ts --id — daily 는 레이더 후보를 'primary', 보조 출처를 'secondary-N' 으로 받는다 */
+  id?: string;
   url: string;
   finalUrl?: string;
   fetchedAt: string;
@@ -117,6 +118,21 @@ export interface TaxPattern {
   re: RegExp;
 }
 
+/**
+ * daily prepare 가 고른 레이더 후보(TREND_HOME/state/<날짜>-candidate.json · PROPOSE 보관본의 candidate).
+ * writer 가 적은 1차 출처·게시일·발표 종류를 이 기록과 대조한다 — writer 의 선언만 믿지 않는다(critic fix 2026-09-26).
+ */
+export interface BriefCandidate {
+  url: string;
+  publishedDate: string;
+  /** 레이더 원 필드(sourceKind) 또는 daily 정규화 필드(eventKind) — 고시·공포·보도자료·설명자료·입법예고·행정예고·통계·공고 */
+  sourceKind?: string;
+  eventKind?: string;
+  route?: "new-brief" | "update-existing" | string;
+  title?: string;
+  cluster?: string;
+}
+
 export interface RuleContext {
   mode: "dryrun" | "publish";
   phase: "pre" | "post";
@@ -137,11 +153,18 @@ export interface RuleContext {
   headlines: readonly HeadlineRecord[];
   taxPatterns: readonly TaxPattern[];
   tripWires: readonly string[];
-  /** 레이더가 이 후보를 기존 글 갱신(update-existing)으로 분류했으면 새 브리프 불가 */
+  /** 레이더가 이 후보를 기존 글 갱신(update-existing)으로 분류했으면 새 브리프 불가 (없으면 candidate.route) */
   candidateRoute?: "new-brief" | "update-existing";
+  /** 레이더 후보 기록 — 새 브리프(--update 아님)는 필수. 1차 출처 URL·게시일·발표 종류를 대조한다 */
+  candidate?: BriefCandidate;
+  /** 등록부(trendBriefGuides)에 실제로 들어간 같은 slug 본문 — 생성 모듈이 렌더 규칙(결정 전 값 고지 등)을 담았는지 본다 */
+  renderedHtml?: string;
   /** --update(같은 slug 수정 발행) 이면 slug·중복 검사에서 자기 자신을 뺀다 */
   updateOf?: string;
 }
+
+/** 1차 출처 제목·후보 제목에 이 표현이 있으면 확정 발표가 아니라 예고·정부안으로 본다 */
+export const PROPOSAL_TITLE_RE = /입법예고|행정예고|정부안|예산안/;
 
 // ─────────────────────────────────────────────────────────────
 // guideSpec.test.ts FORBIDDEN 복제 — 브리프는 허용목록(가이드 워크플로 소유)에 오를 수 없으므로 적중 0 이어야 한다.
@@ -587,7 +610,20 @@ export function runRules(input: TrendBriefDraft, ctx: RuleContext): RuleResult[]
     }
     const ids = new Set(d.sources.map((s) => s.id));
     if (ids.size !== d.sources.length) errs.push("출처 id 중복");
-    out.push(r("citations", !errs.length, errs.join(" · ") || `공식 출처 ${distinct.size}건`, distinct.size, 2));
+    // 레이더 후보 대조 (critic fix 2026-09-26) — 7일 신선도·1차 출처 판정을 writer 가 적은 role·publishedDate 에만 맡기지 않는다.
+    // 역할을 바꿔 오래된 보조 출처를 1차로 올리거나 게시일을 새로 적으면 여기서 막힌다.
+    const cand = ctx.candidate;
+    if (!cand) {
+      if (!ctx.updateOf) errs.push("레이더 후보 기록 없음(--candidate) — 1차 출처·게시일을 후보와 대조할 수 없음");
+    } else if (p) {
+      const cited = snapshotFor(ctx, p.url);
+      if (![p.url, cited?.url, cited?.finalUrl].includes(cand.url)) errs.push(`1차 출처 ${p.id} 가 레이더 후보 문서가 아님`);
+      const primarySnap = ctx.snapshots.find((s) => s.id === "primary");
+      if (primarySnap && cited !== primarySnap) errs.push(`1차 출처 ${p.id} 가 daily 가 1차로 받은 스냅숏(primary)이 아님`);
+      if (p.publishedDate !== cand.publishedDate) errs.push(`1차 출처 게시일 ${p.publishedDate} ≠ 레이더 후보 게시일 ${cand.publishedDate}`);
+      if (d.event.announcedDate > cand.publishedDate) errs.push(`발표일 ${d.event.announcedDate} 이 레이더 후보 게시일 ${cand.publishedDate} 보다 늦음`);
+    }
+    out.push(r("citations", !errs.length, errs.join(" · ") || `공식 출처 ${distinct.size}건 · 1차 = 레이더 후보`, distinct.size, 2));
   }
 
   // robots-kogl
@@ -605,7 +641,8 @@ export function runRules(input: TrendBriefDraft, ctx: RuleContext): RuleResult[]
   // canonical-release
   {
     const text2 = `${d.event.name} ${d.title}`;
-    const isCanonical = ctx.candidateRoute === "update-existing" || (d.event.kind === "고시" && CANONICAL_RELEASE_RE.test(text2)) || CANONICAL_RELEASE_RE.test(d.event.name);
+    const route = ctx.candidateRoute ?? ctx.candidate?.route;
+    const isCanonical = route === "update-existing" || (d.event.kind === "고시" && CANONICAL_RELEASE_RE.test(text2)) || CANONICAL_RELEASE_RE.test(d.event.name);
     out.push(
       r("canonical-release", !isCanonical, isCanonical ? "정본 데이터 발표(고시·요율·봉급표·기준금리)는 기존 허브 갱신(update-existing) 대상 — 새 브리프 불가" : "새 브리프 대상 발표")
     );
@@ -802,7 +839,21 @@ export function runRules(input: TrendBriefDraft, ctx: RuleContext): RuleResult[]
   // unannounced-facts
   {
     const errs: string[] = [];
-    const proposed = d.event.status === "proposed" || PROPOSED_EVENT_KINDS.includes(d.event.kind);
+    // 예고·정부안 신호는 writer 의 event 선언만이 아니라 레이더 후보 종류·1차 출처 스냅숏 제목에서도 읽는다 (critic fix 2026-09-26)
+    const cand = ctx.candidate;
+    const candKind = cand?.sourceKind ?? cand?.eventKind;
+    const primarySrc = d.sources.find((s) => s.role === "primary");
+    const primarySnap = primarySrc ? snapshotFor(ctx, primarySrc.url) : undefined;
+    const signals: string[] = [];
+    if (candKind && (PROPOSED_EVENT_KINDS as readonly string[]).includes(candKind)) signals.push(`레이더 후보 종류 ${candKind}`);
+    const titleHit = primarySnap?.title ? PROPOSAL_TITLE_RE.exec(primarySnap.title) : null;
+    if (titleHit) signals.push(`1차 출처 제목의 '${titleHit[0]}'`);
+    const candTitleHit = cand?.title ? PROPOSAL_TITLE_RE.exec(cand.title) : null;
+    if (candTitleHit) signals.push(`후보 제목의 '${candTitleHit[0]}'`);
+    if (signals.length && (!PROPOSED_EVENT_KINDS.includes(d.event.kind) || d.event.status !== "proposed")) {
+      errs.push(`예고·정부안 문서(${signals.join(", ")})인데 event.kind=${d.event.kind}·status=${d.event.status} — kind 는 ${PROPOSED_EVENT_KINDS.join("/")} 중 하나, status 는 proposed`);
+    }
+    const proposed = d.event.status === "proposed" || PROPOSED_EVENT_KINDS.includes(d.event.kind) || signals.length > 0;
     const nonNegated = (s: string) => s.replace(CONFIRM_NEGATION_RE, "").includes("확정");
     if (proposed) {
       const lead = inlinePlain(parseInline(d.lead, d.impact.table.kind), d);
@@ -830,7 +881,22 @@ export function runRules(input: TrendBriefDraft, ctx: RuleContext): RuleResult[]
         errs.push(`${f.path}: 확정되지 않은 값(${[...provisional, ...unconfirmedConsts.filter((n) => f.text.includes(n))].join(", ")})을 '확정'으로 표현`);
       }
     }
-    out.push(r("unannounced-facts", !errs.length, errs.join(" · ") || (proposed ? "정부안·예고 표기 충족" : "확정 발표")));
+    // 표에 결정 전 값이 있으면 렌더가 붙이는 고정 고지 문장이 평가 HTML 과 등록된 본문(생성 모듈) 모두에 있어야 한다 (critic fix 2026-09-26)
+    const disclosure = provisionalDisclosure(provisional);
+    if (disclosure) {
+      const needle = escapeHtml(disclosure);
+      if (!html.includes(needle)) errs.push(`결정 전 값(${provisional.join(", ")}) 고지 문장이 렌더 HTML 에 없음`);
+      if (ctx.renderedHtml !== undefined && !ctx.renderedHtml.includes(needle)) {
+        errs.push(`등록된 본문(생성 모듈)에 결정 전 값(${provisional.join(", ")}) 고지 문장이 없음 — render.ts 로 다시 렌더`);
+      }
+    }
+    out.push(
+      r(
+        "unannounced-facts",
+        !errs.length,
+        errs.join(" · ") || `${proposed ? "정부안·예고 표기 충족" : "확정 발표"}${disclosure ? ` · 결정 전 값 고지 있음(${provisional.join(", ")})` : ""}`
+      )
+    );
   }
 
   // topic-denylist
@@ -926,15 +992,44 @@ export function runRules(input: TrendBriefDraft, ctx: RuleContext): RuleResult[]
     out.push(r("similarity-title", !errs.length, errs.join(" · ") || `최대 ${worst.v.toFixed(2)} (${worst.key || "-"})`, Number(worst.v.toFixed(2)), SIMILARITY.titleJaccardMax));
   }
 
-  // similarity-source (1차 출처 8-gram, 인용·표 제외)
+  // similarity-source (critic fix 2026-09-26) — 1차만이 아니라 writer 가 본 모든 출처 원문(인용한 출처 + 그날 스냅숏 전부)과
+  // 그 합집합에 대해 8-gram 포함률(인용·표 제외). 보조 보도자료·법령 문장을 적용 시점·주의·FAQ 로 옮겨 적는 짜깁기를 막는다.
   {
-    const p = d.sources.find((s) => s.role === "primary");
-    const snap = p ? snapshotFor(ctx, p.url) : undefined;
-    if (!snap) out.push(r("similarity-source", false, "1차 출처 스냅숏 없음"));
-    else {
-      const v = ngram8Containment(visibleText(stripQuotesTables(bodyBeforeSources(html))), snap.text);
-      out.push(r("similarity-source", v <= SIMILARITY.sourceNgram8Max, `1차 출처 8-gram 포함률 ${v.toFixed(3)}`, Number(v.toFixed(3)), SIMILARITY.sourceNgram8Max));
+    const errs: string[] = [];
+    const max = SIMILARITY.sourceNgram8Max;
+    const mine8 = shingles(visibleText(stripQuotesTables(bodyBeforeSources(html))), 8);
+    const seen = new Set<SourceSnapshot>();
+    const per: { id: string; v: number; set: Set<number> }[] = [];
+    const measure = (id: string, snap: SourceSnapshot) => {
+      if (seen.has(snap)) return;
+      seen.add(snap);
+      const set = shingles(snap.text, 8);
+      per.push({ id, v: containment(mine8, set), set });
+    };
+    for (const s of d.sources) {
+      const snap = snapshotFor(ctx, s.url);
+      if (!snap) errs.push(`출처 스냅숏 없음: ${s.id}`);
+      else measure(s.id, snap);
     }
+    for (const snap of ctx.snapshots) measure(snap.id ?? snap.url, snap);
+    const worst = per.reduce<{ id: string; v: number }>((a, b) => (b.v > a.v ? b : a), { id: "-", v: 0 });
+    let hit = 0;
+    mine8.forEach((x) => {
+      if (per.some((p) => p.set.has(x))) hit++;
+    });
+    const union = mine8.size ? hit / mine8.size : 0;
+    if (worst.v > max) errs.push(`출처 ${worst.id} 8-gram 포함률 ${worst.v.toFixed(3)} > ${max}`);
+    if (union > max) errs.push(`출처 ${per.length}건 합산 8-gram 포함률 ${union.toFixed(3)} > ${max}`);
+    const v = Math.max(worst.v, union);
+    out.push(
+      r(
+        "similarity-source",
+        !errs.length,
+        errs.join(" · ") || `출처 ${per.length}건 8-gram 최대 ${worst.v.toFixed(3)} (${worst.id}) · 합산 ${union.toFixed(3)}`,
+        Number(v.toFixed(3)),
+        max
+      )
+    );
   }
 
   // similarity-headline (21일 안에 본 헤드라인)
@@ -1001,6 +1096,8 @@ export function fixtureCase(
   const cp = (c?.contextPatch ?? {}) as Record<string, unknown>;
   const snapPatch = (cp.snapshotPatch ?? {}) as Record<string, Partial<SourceSnapshot>>;
   const snapshots: SourceSnapshot[] = fx.good.sources.map((s) => ({
+    // daily 와 같은 이름 — 레이더 후보(1차) 스냅숏은 id 'primary'
+    id: s.role === "primary" ? "primary" : s.id,
     url: s.url,
     fetchedAt: s.fetchedAt,
     sha256: sha(sections[s.id] ?? ""),
@@ -1024,13 +1121,24 @@ export function fixtureCase(
     tripWires: (fc.tripWires as string[]) ?? [],
     staticPages: [],
     snapshots,
+    candidate: (fc.candidate as BriefCandidate | undefined) ?? undefined,
     ...base,
   };
-  for (const key of ["mode", "phase", "today", "ledger", "staleRoutes", "candidateRoute", "headlines"] as const) {
-    if (key in cp) (ctx as unknown as Record<string, unknown>)[key] = cp[key];
+  for (const key of ["mode", "phase", "today", "ledger", "staleRoutes", "candidateRoute", "headlines", "candidate"] as const) {
+    if (key in cp) (ctx as unknown as Record<string, unknown>)[key] = cp[key] ?? undefined;
   }
   const ev = evaluateDraft(draft);
   const briefText = ev ? visibleText(bodyBeforeSources(ev.html)) : "";
+  if (cp.secondaryContainsBrief) {
+    // 1차가 아닌 출처(보조·법령) 원문에 브리프 본문이 들어 있는 경우 — 짜깁기
+    const other = fx.good.sources.find((s) => s.role !== "primary");
+    ctx.snapshots = ctx.snapshots.map((s) => (other && s.url === other.url ? { ...s, text: `${s.text}\n${briefText}` } : s));
+  }
+  if (cp.renderedWithoutDisclosure && ev) {
+    // 등록된 생성 모듈이 결정 전 값 고지 문장 없이 만들어진 경우(옛 렌더·손 편집)
+    const needle = ` ${escapeHtml(impactDisclosure(draft.impact.table.kind, draft.impact.table.params))}`;
+    ctx.renderedHtml = ev.html.split(needle).join("");
+  }
   if (cp.cloneBriefAsGuide) ctx.existingGuides = [...ctx.existingGuides, { key: "clone-guide", title: "복제 가이드", text: briefText }];
   if (cp.cloneBriefAsStatic) {
     ctx.phase = "post";

@@ -9,7 +9,7 @@
 // 이스케이프: 문장은 HTML 이스케이프 → 템플릿 이스케이프(\ · ` · ${). img·iframe·script·style·새 class 없음.
 // 미니 마크업: **굵게** · [라벨](링크) · {{engine:kind:행:열}} · {{const:NAME}}.
 import type { Guide } from "@/lib/guidesData";
-import { CANONICAL_CONSTS, IMPACT_KINDS, constText, escapeHtml, impactCell, impactRows } from "./impacts";
+import { CANONICAL_CONSTS, IMPACT_KINDS, constText, escapeHtml, impactCell, impactDisclosure, impactRows } from "./impacts";
 import {
   FAQ_HEADING,
   HOW_MADE_HEADING,
@@ -225,7 +225,9 @@ export function buildSegments(input: TrendBriefDraft): Segment[] {
   add(lit('<table class="w-full text-sm">\n<thead><tr>'));
   for (const col of kind ? kind.columns : []) add(lit(`<th>${escapeHtml(col)}</th>`));
   add(lit("</tr></thead>\n<tbody>\n"), { call: "impactRows", kind: d.impact.table.kind, params: d.impact.table.params }, lit("\n</tbody>\n</table>\n"));
-  p(d.impact.table.caption);
+  // 표 설명 + (결정 전 값이 있으면) 렌더가 붙이는 고정 고지 문장 — writer 문장이 아니다(critic fix 2026-09-26)
+  const disclosure = kind ? impactDisclosure(d.impact.table.kind, d.impact.table.params) : "";
+  add(lit("<p>"), ...inlineSegments(d.impact.table.caption, d), ...(disclosure ? [lit(` ${escapeHtml(disclosure)}`)] : []), lit("</p>\n"));
   if (d.impact.notes.length) {
     add(lit("<ul>\n"));
     d.impact.notes.forEach((n) => li(inlineSegments(n, d)));

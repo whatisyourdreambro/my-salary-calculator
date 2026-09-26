@@ -152,7 +152,7 @@ export const SIMILARITY = {
   containmentMax: 0.25,
   titleJaccardMax: 0.6,
   hubTitleJaccardMax: 0.35,
-  /** 1차 출처 스냅숏 대비 8-gram 포함률 상한 (인용·표 제외) */
+  /** 출처 스냅숏(1차·보조·법령, 그날 writer 가 본 것 전부) 각각과 합집합 대비 8-gram 포함률 상한 (인용·표 제외) */
   sourceNgram8Max: 0.2,
   /** 21일 안에 본 헤드라인과의 최장 공통 부분 문자열 상한 */
   headlineLcsMax: 14,
