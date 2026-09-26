@@ -135,7 +135,7 @@ describe("META-07 검색 전용 설명 규칙", () => {
   const withMeta = guides.filter((g) => g.metaDescription);
 
   it("설명이 가장 짧던 39편에 80~120자, 이모지 없이 붙는다", () => {
-    expect(withMeta.length).toBe(39);
+    expect(withMeta.length).toBeGreaterThanOrEqual(39); // META-07 39편 + W3-A 키퍼·기둥 글(guideSpec KEEPERS 가 80~120자 재검사)
     for (const g of withMeta) {
       const len = [...(g.metaDescription as string)].length;
       expect(len, g.slug).toBeGreaterThanOrEqual(80);

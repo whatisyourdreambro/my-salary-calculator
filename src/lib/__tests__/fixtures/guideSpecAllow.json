@@ -45,27 +45,6 @@
       "note": "30~70만은 출산·입양 세액공제(1회) — 연간 자녀세액공제로 적음. 1명 25만·2명 55만·셋째부터 40만씩으로 (hot-news-2026-deep-dive.ts)"
     },
     {
-      "slug": "credit-card-deduction-30-40-strategy-2026",
-      "patternId": "card-extra-each-100",
-      "snippet": "통시장·대중교통·도서공연은 별도 한도 100만원씩 추가 ⚠️ 부부 결제 분리 신용",
-      "tag": "GUIDES-08",
-      "note": "추가공제 항목별 100만씩 → 합산 300만/200만 (W3-A 1차 키퍼 재작성 대상)"
-    },
-    {
-      "slug": "credit-card-deduction-30-40-strategy-2026",
-      "patternId": "card-over-1.2eok-200",
-      "snippet": "2억: 한도 250만원 · 1.2억 초과: 한도 200만원 · 전통시장·대중교통·도",
-      "tag": "GUIDES-08",
-      "note": "폐지된 1.2억 초과 200만 구간 (W3-A 1차 키퍼 재작성 대상)"
-    },
-    {
-      "slug": "credit-card-deduction-30-40-strategy-2026",
-      "patternId": "card-tier-1.2eok",
-      "snippet": "이하: 한도 300만원 · 7,000만원 초과 ~ 1.2억: 한도 250만원 · 1.",
-      "tag": "GUIDES-08",
-      "note": "폐지된 7천~1.2억 구간 (W3-A 1차 키퍼 재작성 대상)"
-    },
-    {
       "slug": "crypto-tax-deferred-2027-2026",
       "patternId": "crypto-loss-carry-5y",
       "snippet": "+ 연 250만원 공제 + 5년 이월결손금.",
