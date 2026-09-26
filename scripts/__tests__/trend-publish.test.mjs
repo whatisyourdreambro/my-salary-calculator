@@ -46,6 +46,9 @@ test("secret-scan: 40·32자리 hex · OC= · serviceKey · 환경변수 값을 
   const hits = scan.scanText(`literal ${secret} and ${encodeURIComponent(secret)} and ${b64}`, { file: "log.txt", envSecrets: env });
   assert.ok(hits.filter((h) => h.rule === "env:ECOS_API_KEY").length >= 2);
   assert.ok(hits.some((h) => h.preview.startsWith(b64.slice(0, 4))));
+  // 압축 번들의 속성 대입은 키가 아니다(.next/server/edge-chunks 실측 오탐) — URL 파라미터·줄 머리만
+  assert.deepEqual(scan.scanText("w.path=w.pathname+w.search,w.auth=[u.username,u.password].map(de)", { file: ".next/server/edge-chunks/706.js", keyedOnly: true }), []);
+  assert.equal(scan.scanText(`x?${CK.replace("crtfc_key", "auth")}${"k".repeat(12)}`, { file: "log.txt" })[0]?.rule, "keyed-param");
   // .next 는 키 붙은 URL 만 — 빌드 해시(hex)는 정상
   assert.deepEqual(scan.scanText(`previewModeId":"${h32}"`, { file: ".next/prerender-manifest.json", keyedOnly: true }), []);
 });

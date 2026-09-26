@@ -17,9 +17,10 @@ import { pathToFileURL } from "node:url";
 export const PATTERNS = [
   { id: "hex40", re: /\b[0-9a-f]{40}\b/g, keyed: false },
   { id: "hex32", re: /\b[0-9a-f]{32}\b/g, keyed: false },
-  { id: "keyed-param", re: /(?:crtfc_key|auth)=[^&\s"'<>]{8,}/gi, keyed: true },
+  // 앞 글자가 영숫자·'.'·'$' 이면 제외 — 압축된 번들의 속성 대입(w.auth=[u.username…])은 키가 아니다(.next 실측 오탐)
+  { id: "keyed-param", re: /(?<![\w.$])(?:crtfc_key|auth)=[^&\s"'<>]{8,}/gi, keyed: true },
   { id: "law-oc", re: /[?&]OC=[^&\s"'<>#]{2,}/g, keyed: true },
-  { id: "service-key", re: /serviceKey=[^&\s"'<>]{8,}/gi, keyed: true },
+  { id: "service-key", re: /(?<![\w.$])serviceKey=[^&\s"'<>]{8,}/gi, keyed: true },
   { id: "naver-header", re: /X-Naver-Client-(?:Id|Secret)\s*[:=]\s*['"][^'"]+/gi, keyed: true },
 ];
 /** IndexNow 키 파일 — 공개 키라 32자리 hex 예외 */
