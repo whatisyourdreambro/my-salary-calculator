@@ -1,7 +1,8 @@
 // rss.xml 본문 전문(content:encoded) 회귀 테스트 (2026-09-26 NAVER-03b)
 //
 // 배경: 네이버 서치어드바이저 요청 피드는 item 에 요약이 아닌 전문을 요구한다. 9/26 운영 rss.xml 은
-// 240,707바이트·337 item·content:encoded 0개였다(네임스페이스만 선언). 최신 가이드 50편에 본문 HTML 을 싣는다.
+// 240,707바이트·337 item·content:encoded 0개였다(네임스페이스만 선언). 최신 가이드 FULL_TEXT_GUIDE_COUNT 편에
+// 본문 HTML 을 싣는다(50편 767KB → 크기 거부 위험으로 30편).
 // rssCompanies.test.ts 처럼 실제 GET 핸들러 출력(XML 문자열)을 정규식으로 분해한다 — XML 파서 의존성 추가 금지.
 
 import { describe, expect, it } from "vitest";
@@ -9,7 +10,7 @@ import { GET } from "@/app/rss.xml/route";
 import { koGuides } from "@/lib/guidesContent";
 import { reportsRegistry } from "@/data/reportsRegistry";
 import { getGuideModifiedDate } from "@/lib/guideDates";
-import { absolutizeUrl, cdata, contentEncoded, feedHtml } from "@/lib/rssFullText";
+import { absolutizeUrl, cdata, contentEncoded, feedHtml, FULL_TEXT_GUIDE_COUNT } from "@/lib/rssFullText";
 
 const BASE = "https://www.moneysalary.com";
 const CDATA_OPEN = "<![CDATA[";
@@ -50,23 +51,29 @@ const guideSlug = (guid: string) =>
   guid.startsWith(`${BASE}/guides/`) ? guid.slice(`${BASE}/guides/`.length) : null;
 const bySlug = new Map(koGuides.map((g) => [g.slug, g]));
 
-describe("rss.xml — 최신 가이드 50편 본문 전문", () => {
-  it("content:encoded 는 정확히 50개, 피드 첫 50개 가이드 item 에만 있다", async () => {
+const N = FULL_TEXT_GUIDE_COUNT;
+
+describe("rss.xml — 최신 가이드 N편 본문 전문", () => {
+  it("N 은 30 — 피드 크기 상한과 함께 고정", () => {
+    expect(N).toBe(30);
+  });
+
+  it("content:encoded 는 정확히 N개, 피드 첫 N개 가이드 item 에만 있다", async () => {
     const xml = await loadFeed();
-    expect((xml.match(/<content:encoded>/g) ?? []).length).toBe(50);
-    expect((xml.match(/<\/content:encoded>/g) ?? []).length).toBe(50);
+    expect((xml.match(/<content:encoded>/g) ?? []).length).toBe(N);
+    expect((xml.match(/<\/content:encoded>/g) ?? []).length).toBe(N);
 
     const items = parseItems(xml);
     const guides = items.filter((i) => guideSlug(i.guid));
     guides.forEach((item, idx) => {
-      expect(item.encoded.length, item.guid).toBe(idx < 50 ? 1 : 0);
+      expect(item.encoded.length, item.guid).toBe(idx < N ? 1 : 0);
     });
     // 리포트 item 은 종전 그대로
     for (const item of items.filter((i) => !guideSlug(i.guid))) expect(item.encoded).toEqual([]);
     expect(items.length).toBe(koGuides.length + reportsRegistry.length);
   });
 
-  it("전문 대상 = (modifiedDate ?? publishedDate) 내림차순 최신 50편", async () => {
+  it("전문 대상 = (modifiedDate ?? publishedDate) 내림차순 최신 N편", async () => {
     const items = parseItems(await loadFeed());
     const withText = items.filter((i) => i.encoded.length).map((i) => bySlug.get(guideSlug(i.guid)!)!);
     const withoutText = koGuides.filter((g) => !withText.includes(g));
@@ -75,7 +82,7 @@ describe("rss.xml — 최신 가이드 50편 본문 전문", () => {
     expect(oldestWithText).toBeGreaterThanOrEqual(newestWithout);
     // 가장 최근 수정 가이드는 반드시 포함
     const newest = Math.max(...koGuides.map((g) => Date.parse(getGuideModifiedDate(g))));
-    for (const g of koGuides.filter((x) => Date.parse(getGuideModifiedDate(x)) === newest).slice(0, 50)) {
+    for (const g of koGuides.filter((x) => Date.parse(getGuideModifiedDate(x)) === newest).slice(0, N)) {
       expect(withText, g.slug).toContain(g);
     }
   });
@@ -88,13 +95,15 @@ describe("rss.xml — 최신 가이드 50편 본문 전문", () => {
       const html = decodeCdata(item.encoded[0]);
       expect(html).toBe(feedHtml(guide.content, item.guid));
       expect(html, item.guid).not.toMatch(/\s(?:href|src)\s*=\s*["'](?![a-z][a-z0-9+.-]*:)/i);
-      expect(html).not.toMatch(/<(?:script|iframe)\b/i);
+      expect(html).not.toMatch(/<(?:script|iframe|style|object|embed|form)\b/i);
+      expect(html).not.toMatch(/<[^>]*\son[a-z]+\s*=/i);
+      expect(html).not.toMatch(/\s(?:href|src)\s*=\s*["']?\s*(?:javascript|vbscript|data):/i);
       rewritten += (guide.content.match(/\shref="\//g) ?? []).length;
     }
     expect(rewritten).toBeGreaterThan(0); // 실제로 상대 링크가 있던 본문을 검사했는지
   });
 
-  it("피드 정합 — CDATA 균형 · 이스케이프 · 여닫는 item 수 · 3MB 미만", async () => {
+  it("피드 정합 — CDATA 균형 · 이스케이프 · 여닫는 item 수 · 0.65MB 미만", async () => {
     const xml = await loadFeed();
     expect(xml.startsWith('<?xml version="1.0" encoding="UTF-8" ?>')).toBe(true);
     expect(xml).toContain('xmlns:content="http://purl.org/rss/1.0/modules/content/"');
@@ -112,8 +121,9 @@ describe("rss.xml — 최신 가이드 50편 본문 전문", () => {
     // eslint-disable-next-line no-control-regex
     expect(xml).not.toMatch(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/);
     const size = Buffer.byteLength(xml, "utf8");
-    expect(size).toBeLessThan(3_000_000);
-    expect(size).toBeGreaterThan(500_000); // 전문이 실제로 실렸는지 (종전 약 0.24MB)
+    // 상한: 네이버 크기 거부 회피(50편 767KB 실측 → 30편). 가이드가 길어져 넘으면 N 을 줄인다.
+    expect(size).toBeLessThan(650_000);
+    expect(size).toBeGreaterThan(350_000); // 전문이 실제로 실렸는지 (종전 약 0.24MB)
   });
 });
 
@@ -152,6 +162,34 @@ describe("rssFullText — 가공 규칙", () => {
       '<h2>제목</h2><script>alert(1)</script><p>본문</p>' +
       '<iframe src="https://www.law.go.kr/x"></iframe><iframe src="/y" /><SCRIPT src="/z.js"></SCRIPT><p>끝</p>';
     expect(feedHtml(html, page)).toBe("<h2>제목</h2><p>본문</p><p>끝</p>");
+  });
+
+  it("style·object·embed 는 내용째, form 은 태그만 제거", () => {
+    const html =
+      '<style>p{color:red}</style><p>a</p><object data="/x.swf"><param name="m"></object>' +
+      '<embed src="/y.swf"><form action="/go"><p>b</p></form><STYLE>x</STYLE>';
+    expect(feedHtml(html, page)).toBe("<p>a</p><p>b</p>");
+  });
+
+  it("on* 이벤트 속성 제거(따옴표·무따옴표), 태그 밖 본문 글자는 보존", () => {
+    const html =
+      '<img src="/a.png" onerror="alert(1)" alt="x"><a href="/b" ONCLICK=\'x()\' onmouseover=y()>b</a>' +
+      '<p title="1>0" onload="z">phone onclick = 3 once=1</p>';
+    expect(feedHtml(html, page)).toBe(
+      `<img src="${BASE}/a.png" alt="x"><a href="${BASE}/b">b</a>` +
+        '<p title="1>0">phone onclick = 3 once=1</p>'
+    );
+  });
+
+  it("javascript:·vbscript:·data: URL 은 '#' 로 (따옴표·무따옴표·앞 공백 우회 포함)", () => {
+    const html =
+      '<a href="javascript:alert(1)">1</a><a href=\' JavaScript:x\'>2</a><a href=javascript:y>3</a>' +
+      '<img src="data:image/svg+xml;base64,AAAA"><a href="vbscript:z">4</a><a href="/ok">5</a>';
+    expect(feedHtml(html, page)).toBe(
+      // 따옴표 없는 값은 "#" 로 바뀐 뒤 상대 URL 규칙을 거쳐 현재 가이드 주소# 가 된다(안전)
+      `<a href="#">1</a><a href='#'>2</a><a href="${page}#">3</a>` +
+        `<img src="#"><a href="#">4</a><a href="${BASE}/ok">5</a>`
+    );
   });
 
   it("XML 금지 제어 문자 제거, content:encoded 로 감싼다", () => {

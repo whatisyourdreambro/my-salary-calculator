@@ -8,13 +8,12 @@ import { koGuides } from "@/lib/guidesContent";
 // pubDate=updatedDate(갱신 시 피드 상단 재노출). 10/5 서치어드바이저 rss.xml 제출 전 선행.
 import { reportsRegistry } from "@/data/reportsRegistry";
 import { getGuideModifiedDate } from "@/lib/guideDates";
-import { contentEncoded } from "@/lib/rssFullText";
+import { contentEncoded, FULL_TEXT_GUIDE_COUNT } from "@/lib/rssFullText";
 
 const REPORT_CATEGORY = "데이터 리포트";
 // 본문 전문(content:encoded)을 싣는 최신 가이드 수 (2026-09-26 NAVER-03b) — 네이버 요청 피드는 item 에
-// 요약이 아닌 전문을 요구한다. 전 편(334편·본문 약 1.5MB)이 아니라 최신 50편(약 0.5MB)만 실어
-// 피드를 가볍게 유지한다. 나머지 가이드·리포트 item 은 종전 그대로(요약 description 만).
-const FULL_TEXT_GUIDE_COUNT = 50;
+// 요약이 아닌 전문을 요구한다. 전 편(334편·본문 약 1.5MB)이 아니라 최신 FULL_TEXT_GUIDE_COUNT(30)편만
+// 실어 피드를 가볍게 유지한다(50편은 약 0.77MB — 크기 거부 위험). 나머지 가이드·리포트 item 은 종전 그대로.
 
 /** 가이드·리포트 공통 피드 항목 */
 interface FeedItem {
