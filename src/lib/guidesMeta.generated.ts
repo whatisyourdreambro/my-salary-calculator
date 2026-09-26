@@ -176,7 +176,7 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "year-end-tax-2026",
-  "title": "13월의 월급 만들기: 2025 연말정산 필승 공략집 🧾",
+  "title": "2026년 귀속 연말정산(2027년 1월) 공제 총정리 — 한도표·달라진 점",
   "description": "바뀐 세법 완벽 반영! 남들은 모르는 소득공제, 세액공제 꿀팁으로 환급액 200만원 더 받는 법.",
   "category": "세금",
   "tags": [
@@ -940,7 +940,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "year-end-tax-13-tips-2026",
   "title": "2026 연말정산 공제 조건 13가지 — 대상·한도·증빙 확인",
-  "description": "의료비 3% 문턱, 자녀 만 8세, 연금저축 IRP 한도와 혼인공제 귀속연도 등 13개 공제 조건을 확인합니다. 중복·누락을 피하는 사례와 공식 근거.",
+  "description": "의료비 3% 문턱, 자녀 9세, 연금저축 IRP 한도와 혼인공제 귀속연도 등 13개 공제 조건을 확인합니다. 중복·누락을 피하는 사례와 공식 근거.",
   "category": "세금",
   "tags": [
    "연말정산",
@@ -954,7 +954,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 4735
+  "contentChars": 4945
  },
  {
   "slug": "salary-negotiation-script-2026",
@@ -1388,7 +1388,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "marriage-tax-benefits-2026",
   "title": "결혼·출산 세제 혜택 2026 — 혼인신고 연도·자녀 공제 요건",
-  "description": "혼인세액공제의 2024~2026년 적용과 생애 1회 요건, 자녀 만 8세 기준, 출산입양 공제를 확인합니다. 공제액과 실제 환급액을 구분하는 사례·준비표.",
+  "description": "혼인세액공제의 2024~2026년 적용과 생애 1회 요건, 자녀 9세 기준, 출산입양 공제를 확인합니다. 공제액과 실제 환급액을 구분하는 사례·준비표.",
   "category": "세금",
   "tags": [
    "결혼세액공제",
@@ -1401,7 +1401,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3573
+  "contentChars": 3678
  },
  {
   "slug": "stock-investment-beginner-2026",
@@ -1503,7 +1503,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-03-25",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2234
+  "contentChars": 2908
  },
  {
   "slug": "health-insurance-vs-life-insurance",
@@ -2119,7 +2119,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-09-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1929
+  "contentChars": 2174
  },
  {
   "slug": "irp-pension-isa-comparison-2026",
@@ -2289,7 +2289,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-16",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2727
+  "contentChars": 3003
  },
  {
   "slug": "etf-beginner",
@@ -2347,7 +2347,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-16",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2298
+  "contentChars": 2482
  },
  {
   "slug": "health-insurance-2026-guide",
@@ -2479,60 +2479,23 @@ export const guideCards: GuideCardMeta[] = [
   "contentChars": 3561
  },
  {
-  "slug": "samsung-wage-negotiation-status-2026",
-  "title": "삼성전자 2026 임금협상 본격 시작 — 5월 12일, 5대 쟁점 총정리",
-  "description": "5월 12일 본교섭 시작. 기본급 인상률 6%, OPI 산정 변경, TAI 통합, 복지포인트 150만원까지 5대 쟁점. HBM3E 양산 안정화가 PS 1,000% 가능 변수.",
-  "category": "연봉",
-  "tags": [
-   "삼성전자",
-   "임금협상",
-   "OPI",
-   "PS",
-   "성과급",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 2156
- },
- {
-  "slug": "sk-hynix-ps-bonus-2026",
-  "title": "SK하이닉스 2026 PS 성과급 — 기본급 2,000% 가능할까",
-  "description": "[9월 업데이트] 2025년분 PS 2,964% 확정(영업이익 47.2조)·상한 폐지. 현금 40%+자사주 60% 잠정합의안은 8/25 부결 → 수정안(현금 50%+자사주 50%) 9/16 가결 — 5월 작성 전망 글에 최신 확정치를 병기.",
-  "category": "연봉",
-  "tags": [
-   "SK하이닉스",
-   "PS",
-   "성과급",
-   "HBM",
-   "메모리",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 2618
- },
- {
   "slug": "lgensol-wage-negotiation-2026",
-  "title": "LG에너지솔루션 2026 임금협상 — 배터리 캐즘 종료, 인상률 5%+",
-  "description": "전기차 캐즘 종료 + ESS 본격화로 LG엔솔 2026 임금협상 인상률 5%+ 전망. 신입 영끌 5,500~6,500만원, 시니어 9,500만~1.2억원. 미국 파견 인센티브 확대.",
+  "title": "LG에너지솔루션 2026 임금협상·성과급 정리",
+  "description": "2025년 실적 성과급 기본급 최대 75%(2026-02-06 지급), 2025년 평균 급여 약 1억 1,200만원. 연도별 추이·세후·2026 임금협상 확인 현황.",
   "category": "연봉",
   "tags": [
    "LG에너지솔루션",
-   "배터리",
+   "LG엔솔 성과급",
    "임금협상",
-   "전기차",
+   "배터리",
    "2026"
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1463
+  "contentChars": 5128
  },
  {
   "slug": "kakao-rsu-tax-saving-2026",
@@ -2575,8 +2538,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "naver-rsu-tax-strategy-2026",
-  "title": "네이버 RSU 행사 양도세 절세 — 1억 매도 시 실수령 5,875만원 확보",
-  "description": "네이버 RSU 베스팅 즉시 매도/단기/장기 보유 3가지 전략 비교. 1억 차익 시 베스팅 근로소득세 3,850만원 + 양도세 275만원 → 절세 4가지로 추가 절감.",
+  "title": "네이버 RSU 세금 정리 — 베스팅 근로소득세와 매도 차익 과세 여부",
+  "description": "네이버 RSU는 베스팅 때 시가가 근로소득으로 과세되고, 대주주가 아니면 장내 매도 차익에 양도세가 없습니다. 매도 시점 3가지·절세 포인트 비교.",
   "category": "주식",
   "tags": [
    "네이버",
@@ -2590,7 +2553,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1474
+  "contentChars": 1720
  },
  {
   "slug": "youth-leap-account-2026",
@@ -2652,8 +2615,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "didimdol-newborn-special-loan-2026",
-  "title": "디딤돌 신생아 특례대출 1.6% — 5억 30년 시 2억 8천만원 절감",
-  "description": "2023년 이후 출생 자녀 + 부부 소득 1.3억 이하 + 주택 9억 이하. 최저 1.6% 금리로 5억 30년 대출 시 시중 4.5% 대비 약 2억 8천만원 이자 절감. 자녀 추가 출산 시 우대.",
+  "title": "디딤돌 신생아 특례대출 최저 1.8% — 한도 4억·맞벌이 소득 2억",
+  "description": "2023년 이후 출생 자녀 + 부부 1.3억(맞벌이 2억) 이하 + 주택 9억 이하. 최저 1.8%, 한도 4억. 4억 30년이면 시중 4.5% 대비 특례 5년간 이자 약 3,140만원 절감.",
   "category": "부동산",
   "tags": [
    "디딤돌대출",
@@ -2666,12 +2629,12 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1684
+  "contentChars": 2074
  },
  {
   "slug": "housing-subscription-25man-deduction-2026",
-  "title": "청약통장 매월 25만원 소득공제 300만원 — 매년 46만원 환급 + 청약 가점",
-  "description": "무주택 세대주 + 총급여 7천만원 이하. 청약통장 월 25만원 × 40% = 120만원 공제 → 한계세율 35% 시 46.2만원 환급. 5년 1,500만원이면 청약 가점 만점.",
+  "title": "청약통장 소득공제 2026 — 연 300만원 한도와 요건",
+  "description": "총급여 7천만원 이하 무주택 세대의 세대주·배우자가 연 300만원까지 넣으면 40%, 최대 120만원을 소득공제합니다.",
   "category": "부동산",
   "tags": [
    "청약통장",
@@ -2682,9 +2645,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1431
+  "contentChars": 7133
  },
  {
   "slug": "internet-bank-savings-5percent-2026",
@@ -2725,28 +2689,9 @@ export const guideCards: GuideCardMeta[] = [
   "contentChars": 1533
  },
  {
-  "slug": "side-hustle-n-jab-tax-2026",
-  "title": "부업·N잡 종합소득세 신고 절세 — 5월 미신고 시 가산세 최대 40%",
-  "description": "사업소득 3.3% 원천징수·기타소득 8.8%·사업자등록 부가세 분리. 필요경비(노트북·통신비·차량·교육비) 활용 + 단순경비율/기준경비율/실비 신고 선택으로 절세.",
-  "category": "세금",
-  "tags": [
-   "종합소득세",
-   "부업",
-   "N잡",
-   "프리랜서",
-   "필요경비",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 1733
- },
- {
   "slug": "crypto-tax-deferred-2027-2026",
   "title": "가상자산 양도세 2027년 유예 — 2026년 코인 투자자 점검 3가지",
-  "description": "2025→2027년 1월 추가 유예. 2026년 동안 취득가 기록 정리·손실 종목 매도·양도세 시뮬 필수. 시행 시 22% + 연 250만원 공제 + 5년 이월결손금.",
+  "description": "2025→2027년 1월 추가 유예. 2026년 동안 취득가 기록 정리·보유분 시가 확인·세액 시뮬 필수. 시행 시 22%·연 250만원 공제, 결손 이월 없음.",
   "category": "투자",
   "tags": [
    "가상자산",
@@ -2760,7 +2705,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1667
+  "contentChars": 1808
  },
  {
   "slug": "credit-score-850-strategy-2026",
@@ -2782,8 +2727,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "parent-support-deduction-integration-2026",
-  "title": "부모 부양 인적공제 + 의료비 통합 절세 — 매년 100만원 환급",
-  "description": "60세+ 부모 인적공제 150만원 + 경로우대 100만원 + 부모 의료비 100% 공제. 형제 중 한계세율 높은 자녀가 등록 시 환급 효과 최대. 피부양자 자격은 별도 점검.",
+  "title": "부모님 부양가족 공제 2026 — 나이·소득 요건과 절세액",
+  "description": "60세 이상(1966년 이전 출생)·소득금액 100만원 이하면 1명당 150만원, 70세 이상은 100만원 추가. 의료비는 나이·소득 무관.",
   "category": "세금",
   "tags": [
    "인적공제",
@@ -2795,9 +2740,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1826
+  "contentChars": 6028
  },
  {
   "slug": "irp-pension-payout-tax-2026",
@@ -2820,8 +2766,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "rental-income-2000man-tax-2026",
-  "title": "임대소득 2,000만원 분리과세 vs 종합과세 — 200~400만원 절세",
-  "description": "임대 1,500만원 분리과세 14% = 210만원 vs 2,500만원 종합과세 35% = 875만원. 임대료 200만원 차이로 600만원 세금 차이. 등록임대주택은 필요경비율 60% + 공제 400만원 우대.",
+  "title": "임대소득 2,000만원 분리과세 vs 종합과세 — 세액 계산법",
+  "description": "주택 임대수입 2,000만원 이하는 분리과세 14%(필요경비 50% 차감) 선택 가능. 연봉 7천 직장인이 1,500만원이면 약 105만원, 초과 시 종합과세. 등록임대는 필요경비율 60%·400만원 차감.",
   "category": "부동산",
   "tags": [
    "임대소득",
@@ -2834,12 +2780,12 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1918
+  "contentChars": 2200
  },
  {
   "slug": "newborn-special-loan-application-2026",
-  "title": "신생아 특례대출 1.6% 5억 — 자격·신청 절차·금리 우대 총정리",
-  "description": "2023년 이후 출생 자녀 + 부부 1.3억 이하 + 주택 9억 이하. 5억 30년 시 시중은행 4.5% 대비 약 2억 8천만원 이자 절감. 자녀 추가 출산 시 0.2%p 우대.",
+  "title": "신생아 특례대출 최저 1.8%·한도 4억 — 자격·신청·금리 우대",
+  "description": "2023년 이후 출생 자녀 + 부부 1.3억(맞벌이 2억) 이하 + 주택 9억 이하. 금리 1.8~4.5%, 한도 4억. 추가 출산 시 0.2%p 우대·특례기간 5년 연장.",
   "category": "부동산",
   "tags": [
    "신생아특례대출",
@@ -2853,12 +2799,12 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1711
+  "contentChars": 2033
  },
  {
   "slug": "postpartum-medical-deduction-200man-2026",
-  "title": "2026 산후조리원 의료비 공제 200만원 — 최대 환급 30만원",
-  "description": "산후조리원 출산 1회당 200만원 한도 의료비 공제(소득 무관) + 출산 의료비 합산. 최대 30만원(지방세 포함 33만원) 환급. 영수증 5년 보관 + 부부 중 총급여 낮은 쪽 공제 유리.",
+  "title": "2026 산후조리원 공제 — 200만원 한도·최대 30만원",
+  "description": "산후조리원 비용은 출산 1회당 200만원까지 의료비 15% 세액공제(최대 30만원). 2024년부터 소득 요건 없음, 총급여 3% 문턱은 적용.",
   "category": "세금",
   "tags": [
    "산후조리원",
@@ -2869,14 +2815,15 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1432
+  "contentChars": 4768
  },
  {
   "slug": "implant-dental-medical-deduction-2026",
-  "title": "임플란트·치과 의료비 공제 — 4개 600만원 시 70만원 환급",
-  "description": "임플란트·교정·보철·스케일링 모두 의료비 공제. 600만원 시 총급여 3% 초과분 420만원 × 15% = 63만원 환급. 미용 목적 제외. 영수증 + 카드 결제 + 부부 한쪽 몰아주기 전략.",
+  "title": "의료비 세액공제 항목 2026 — 임플란트·안경·한약",
+  "description": "임플란트·보철·스케일링은 공제, 치아교정은 저작기능장애 진단서가 있을 때만. 안경 1명당 50만원, 미숙아 20%·난임 30%. 간병비·해외 병원은 제외.",
   "category": "세금",
   "tags": [
    "임플란트",
@@ -2888,9 +2835,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1668
+  "contentChars": 5361
  },
  {
   "slug": "youth-housing-dream-1eok-2026",
@@ -2968,28 +2916,9 @@ export const guideCards: GuideCardMeta[] = [
   "contentChars": 1789
  },
  {
-  "slug": "monthly-rent-tax-credit-17-2026",
-  "title": "월세 세액공제 17% — 무주택자 1,000만원 한도, 매년 100만원 환급",
-  "description": "무주택 세대주 + 총급여 8천만원 이하(5,500만 이하 17%·초과 15%). 월세 50만원(연 600만원) × 17% = 102만원 환급. 5년 미신청자 경정청구로 누적 400~500만원 환급 가능.",
-  "category": "세금",
-  "tags": [
-   "월세",
-   "세액공제",
-   "무주택",
-   "전세대출",
-   "연말정산",
-   "2026"
-  ],
-  "level": "초급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 1873
- },
- {
   "slug": "credit-card-deduction-30-40-strategy-2026",
-  "title": "신용카드 공제 25% 초과분 — 체크/전통시장/대중교통 전환 시 환급 60만원 추가",
-  "description": "총급여 5천만원 25% = 1,250만원 초과분만 공제. 신용카드 15% vs 체크 30%, 전통시장 40%, 대중교통 40%. 초과분을 고공제 카테고리로 전환 시 매년 60만원+ 추가 환급.",
+  "title": "2026 신용카드 소득공제 — 공제율·한도·25% 문턱",
+  "description": "총급여 25% 초과분부터 신용 15%·체크 30%·전통시장·대중교통 40%. 기본 한도 300만원(7천 초과 250만), 자녀 수 따라 상향, 추가 한도는 합산 300만/200만.",
   "category": "세금",
   "tags": [
    "신용카드",
@@ -3001,9 +2930,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2023
+  "contentChars": 6493
  },
  {
   "slug": "rental-business-prop-tax-exclusion-2026",
@@ -3083,8 +3013,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "newlywed-didimdol-bomgijari-2026",
-  "title": "신혼부부 디딤돌 vs 보금자리론 — 5억 30년 시 1.8억 절감",
-  "description": "디딤돌 1.6%·한도 5억 vs 보금자리론 3.5%·한도 10억. 부부 소득·집값별 유리한 상품 선택.",
+  "title": "신혼부부 디딤돌 vs 보금자리론 — 소득·집값·한도 비교",
+  "description": "디딤돌 신혼 한도 3.2억 vs 보금자리론 3.6억, 둘 다 주택 6억 이하. 소득 요건별 선택.",
   "category": "부동산",
   "tags": [
    "신혼부부",
@@ -3097,7 +3027,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1474
+  "contentChars": 1742
  },
  {
   "slug": "youth-subscription-60points-2026",
@@ -3119,8 +3049,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "youth-housing-dream-account-detail-2026",
-  "title": "청년우대형 vs 청년주택드림 청약통장 — 4.5% 금리 + 3억 대출",
-  "description": "청년주택드림 신규 가입 (만 19~34세) 최대 4.5% + 연 120만원 소득공제 + 최대 3억 대출 자격. 5년 누적 약 494만원 혜택.",
+  "title": "청년우대형 vs 청년주택드림 청약통장 — 최고 4.5%·전용 대출",
+  "description": "청년주택드림(만 19~34세, 연소득 5천 이하) 최고 4.5% 금리 + 연 120만원 소득공제 + 당첨 시 분양가 80% 대출 연계.",
   "category": "부동산",
   "tags": [
    "청년주택드림",
@@ -3133,30 +3063,31 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1005
+  "contentChars": 1262
  },
  {
   "slug": "newlywed-deduction-first-year-2026",
-  "title": "신혼부부 첫 연말정산 5가지 — 양가 부모 부양·취득세 200만원",
-  "description": "무소득 배우자 인적공제 + 양가 부모 부양 + 신혼 첫 주택 취득세 감면 + 결혼 카드 사용 + 출산·산후조리원 의료비 200만원.",
+  "title": "신혼부부 첫 연말정산 2026 — 혼인 세액공제 50만원",
+  "description": "2026년 혼인신고 시 부부 각자 혼인 세액공제 50만원, 배우자·양가 부모 기본공제는 12월 31일 기준으로 판정합니다.",
   "category": "세금",
   "tags": [
    "신혼부부",
    "연말정산",
    "인적공제",
-   "취득세",
+   "혼인세액공제",
    "2026"
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 823
+  "contentChars": 6397
  },
  {
   "slug": "newlywed-child-birth-benefit-2026",
-  "title": "자녀 1명 출산 시 정부 지원 3,200만원 — 6+6 + 자녀세액공제 + 산후조리원",
-  "description": "출산휴가 90일 + 6+6 부모 육아휴직 3,200만원 + 자녀세액공제 30~70만원 + 산후조리원 200만원 + 자녀장려금 80만원.",
+  "title": "자녀 1명 출산 시 정부 지원 총정리 — 6+6 + 자녀세액공제 + 산후조리원",
+  "description": "출산휴가 90일 + 6+6 부모육아휴직 + 출산·입양 세액공제 30~70만원 + 산후조리원 200만원 + 자녀장려금 100만원.",
   "category": "세금",
   "tags": [
    "출산",
@@ -3169,7 +3100,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 960
+  "contentChars": 1150
  },
  {
   "slug": "youth-3account-combination-2026",
@@ -3427,8 +3358,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "earned-income-deduction-2026",
-  "title": "근로소득공제 + 근로소득세액공제 — 직장인 자동 200~400만원 절감",
-  "description": "근로소득공제(자동 적용 5~70%) + 근로소득세액공제(산출세액 55%·30%, 한도 74만원) = 직장인 자동 절세 200~400만원.",
+  "title": "근로소득공제·근로소득세액공제 2026 구간표와 한도",
+  "description": "근로소득공제는 총급여 구간별 70~2%(한도 2,000만원), 세액공제는 산출세액의 55%·30%에 한도 74만~20만원.",
   "category": "세금",
   "tags": [
    "근로소득공제",
@@ -3439,14 +3370,15 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1010
+  "contentChars": 6125
  },
  {
   "slug": "standard-vs-special-deduction-2026",
-  "title": "표준세액공제 13만원 vs 특별공제 — 의료비 80만원이면 표준 유리",
-  "description": "특별세액공제(의료비·교육비·기부금) 합계가 13만원 초과 시 특별, 미만이면 표준 자동 적용. 부부 한쪽 몰아주기로 한도 빠르게.",
+  "title": "표준세액공제 13만원 vs 특별공제 — 건보료까지 비교",
+  "description": "표준세액공제 13만원은 건강보험료 공제와 의료비·교육비 등 특별공제를 하나도 신청하지 않을 때만 받습니다.",
   "category": "세금",
   "tags": [
    "표준세액공제",
@@ -3457,14 +3389,15 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 833
+  "contentChars": 5572
  },
  {
   "slug": "medical-edu-donation-limits-2026",
-  "title": "의료비·교육비·기부금 한도 — 평균 직장인 135만원 환급",
-  "description": "의료비 15% 한도 700, 교육비 본인 무제한·자녀 300/900, 기부금 종교 10%·일반 30%. 5천만원 직장인 평균 135만원 환급.",
+  "title": "의료비·교육비·기부금 세액공제 한도 2026",
+  "description": "의료비 15%(총급여 3% 초과, 일반 700만), 교육비 초중고 300만·대학 900만, 기부금 1천만 초과분 30%.",
   "category": "세금",
   "tags": [
    "의료비공제",
@@ -3475,14 +3408,15 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 963
+  "contentChars": 6281
  },
  {
   "slug": "child-education-deduction-limit-2026",
-  "title": "자녀 교육비 공제 한도 — 미취학 300만원·대학 900만원",
-  "description": "미취학 300, 초중고 300, 대학·대학원 900만원 한도 15% 공제. 학원비는 미취학·취학 전만 인정. 자녀 1명 800만원 시 125만원 환급.",
+  "title": "자녀 교육비 세액공제 2026 — 300만·900만원 한도",
+  "description": "취학 전·초중고 1명당 300만원, 대학생 900만원 한도로 15% 공제. 2026년부터 초1·2 예체능 학원비 포함, 자녀 소득 요건 폐지.",
   "category": "세금",
   "tags": [
    "자녀교육비",
@@ -3493,14 +3427,15 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1120
+  "contentChars": 5983
  },
  {
   "slug": "insurance-100man-limit-2026",
-  "title": "보장성 보험료 100만원 한도 — 종신·암·실손·자동차 합산 12만원 환급",
-  "description": "한도 100만원 × 12% = 12만원 환급. 종신·암·정기·실손·자동차·운전자·어린이 보험 포함. 저축성·연금보험 제외.",
+  "title": "보장성 보험료 세액공제 2026 — 100만원 한도·12%",
+  "description": "보장성 보험료 연 100만원 한도 12%, 장애인전용은 별도 100만원 15%. 피보험자는 기본공제대상자여야 합니다.",
   "category": "세금",
   "tags": [
    "보험료공제",
@@ -3511,63 +3446,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 860
- },
- {
-  "slug": "credit-card-deduction-limit-detail-2026",
-  "title": "신용카드 한도 상세 — 7천 이하 300만원·초과 250만원",
-  "description": "기본 한도 7천 이하 300만·초과 250만원(자녀 상향) + 전통시장·대중교통 추가 300만(7천 초과 200만). 25% 초과 후 체크·전통시장으로.",
-  "category": "세금",
-  "tags": [
-   "신용카드",
-   "체크카드",
-   "한도",
-   "공제율",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 886
- },
- {
-  "slug": "book-concert-museum-deduction-2026",
-  "title": "도서·공연·박물관·영화 30% 공제 — 100만원 한도 추가 환급",
-  "description": "총급여 7천 이하. 도서·공연·박물관·미술관·영화 티켓 30% 공제. 100만원 사용 시 한계세율 24% 약 7만원 추가 환급.",
-  "category": "세금",
-  "tags": [
-   "도서공연비",
-   "박물관",
-   "영화",
-   "공제",
-   "2026"
-  ],
-  "level": "초급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 793
- },
- {
-  "slug": "eyewear-herb-implant-medical-2026",
-  "title": "안경·한약·임플란트 의료비 — 종합 영수증으로 환급 극대화",
-  "description": "안경 50만 한도, 한약·한방, 임플란트·치과, 출산·산후조리원 200만 포함. 미용 목적·건강기능식품·마사지 제외.",
-  "category": "세금",
-  "tags": [
-   "의료비공제",
-   "안경",
-   "한약",
-   "임플란트",
-   "2026"
-  ],
-  "level": "초급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 840
+  "contentChars": 5410
  },
  {
   "slug": "foreign-flat-tax-19-2026",
@@ -3586,24 +3468,6 @@ export const guideCards: GuideCardMeta[] = [
   "views": 0,
   "lang": "ko",
   "contentChars": 975
- },
- {
-  "slug": "religious-donation-100-percent-2026",
-  "title": "기부금 한도 — 종교 10%·정치 10만원 100% 환급",
-  "description": "정치자금 10만원까지 100% 세액공제 + 초과분 15%. 법정 100%, 지정 30%, 종교 10% 한도. 5천만원 + 종교 600만원 시 약 57만원 환급.",
-  "category": "세금",
-  "tags": [
-   "기부금공제",
-   "종교단체",
-   "정치자금",
-   "법정기부금",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 1036
  },
  {
   "slug": "domestic-vs-overseas-etf-tax-2026",
@@ -3897,21 +3761,22 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "executive-severance-limit-2026",
-  "title": "임원 퇴직금 한도 초과분 — 5억 퇴직 시 1.08억 세금",
-  "description": "임원 퇴직금 한도는 일반 직원 × 3~5배. 한도 내 퇴직소득세 + 한도 초과분 근로소득세 누진세율. 5억 퇴직 시 약 1.08억 세금.",
+  "title": "임원 퇴직금 한도 계산 2026 — 초과분은 근로소득",
+  "description": "임원 퇴직금은 소득세법 한도(2012~2019분 3배·2020년 이후 2배)까지만 퇴직소득이고, 넘는 금액은 근로소득으로 과세합니다.",
   "category": "커리어",
   "tags": [
    "임원",
    "퇴직금",
-   "한도초과",
-   "근로소득세",
+   "퇴직소득 한도",
+   "근로소득",
    "2026"
   ],
   "level": "고급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 820
+  "contentChars": 5321
  },
  {
   "slug": "stock-option-exercise-timing-2026",
@@ -4096,7 +3961,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "carryover-loss-15year-2026",
   "title": "이월결손금 15년 — 손실난 해 신고로 미래 3,000만원 절세",
-  "description": "사업 손실 15년 이월(양도차손 제외). 2025년 손실 1억 → 2026 이익 1.5억 시 절세 3,000만원. 가상자산은 5년만.",
+  "description": "사업 손실 15년 이월(양도차손·가상자산 제외). 2025년 손실 1억 → 2026 이익 1.5억 시 절세 약 3,000만원.",
   "category": "세금",
   "tags": [
    "이월결손금",
@@ -4109,7 +3974,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 938
+  "contentChars": 999
  },
  {
   "slug": "tax-reduction-disabled-2026",
@@ -4166,41 +4031,6 @@ export const guideCards: GuideCardMeta[] = [
   "contentChars": 1578
  },
  {
-  "slug": "orthodontics-tax-deduction-2026",
-  "title": "치아 교정 의료비 공제 — 500만원 시 52만원 환급",
-  "description": "부정교합 교정 100% 공제, 미관 단독은 부분 공제. 500만원 시 총급여 3% 초과분 350만원 × 15% = 52만원 환급.",
-  "category": "세금",
-  "tags": [
-   "치아교정",
-   "의료비공제",
-   "부정교합",
-   "2026"
-  ],
-  "level": "초급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 890
- },
- {
-  "slug": "psychiatry-medical-deduction-2026",
-  "title": "정신과 의료비 공제 — 우울증·ADHD 상담 모두 포함",
-  "description": "진료비·처방약·검사비 모두 의료비 공제. 국세청 자료는 의료기관명·금액만 표시, 진료 내용은 비공개.",
-  "category": "세금",
-  "tags": [
-   "정신과",
-   "우울증",
-   "의료비공제",
-   "처방약",
-   "2026"
-  ],
-  "level": "초급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 819
- },
- {
   "slug": "industrial-accident-benefit-2026",
   "title": "산업재해보상 — 의료비 100% + 휴업급여 70% + 장해연금",
   "description": "업무 중 부상 시 의료비 무제한 + 휴업급여 평균임금 70% + 후유장해 연금. 임시·알바 모두 의무 가입.",
@@ -4255,42 +4085,6 @@ export const guideCards: GuideCardMeta[] = [
   "contentChars": 876
  },
  {
-  "slug": "physical-therapy-tax-2026",
-  "title": "물리치료·도수치료 의료비 공제 — 60만원 도수치료 48만원 보상",
-  "description": "척추·관절 통증, 수술 후 재활, 한방 추나치료 의료비 공제. 도수치료 6회 60만원 + 실비 80% = 48만원 보상.",
-  "category": "세금",
-  "tags": [
-   "물리치료",
-   "도수치료",
-   "한방치료",
-   "의료비공제",
-   "2026"
-  ],
-  "level": "초급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 796
- },
- {
-  "slug": "infertility-medical-20-percent-2026",
-  "title": "난임 시술비 의료비 공제 30% — 800만원 시 240만원 환급",
-  "description": "난임 시술비 공제율 30%(일반 15%) + 한도 무제한. 시술 800만 + 일반 200 시 합산 243만원 환급.",
-  "category": "세금",
-  "tags": [
-   "난임시술",
-   "의료비공제",
-   "시험관",
-   "출산",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 894
- },
- {
   "slug": "dementia-insurance-2026",
   "title": "치매보험 — 50~60대 가입 권장 + 부모 명의 12만원 환급",
   "description": "경증 진단 500~1,000만원 + 중증 연금 200~300만원/월. 부모 명의 보험 본인 납입 시 12만원 환급.",
@@ -4307,23 +4101,6 @@ export const guideCards: GuideCardMeta[] = [
   "views": 0,
   "lang": "ko",
   "contentChars": 834
- },
- {
-  "slug": "disability-insurance-2026",
-  "title": "장애인 보험료 한도 — 일반 100 + 장애인 100 합 24만원 환급",
-  "description": "일반 보장성 100만원 + 장애인 보장성 100만원 = 합산 200만원 한도. 12% 공제 = 최대 24만원 환급.",
-  "category": "세금",
-  "tags": [
-   "장애인보험",
-   "보험료공제",
-   "보장성보험",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 596
  },
  {
   "slug": "inheritance-tax-2026",
@@ -4652,24 +4429,6 @@ export const guideCards: GuideCardMeta[] = [
   "contentChars": 908
  },
  {
-  "slug": "employment-insurance-detail-2026",
-  "title": "실업급여 — 평균임금 60%·최대 9개월 + 하한 66,048원",
-  "description": "고용보험 18개월 중 180일 이상 가입 + 비자발적 이직. 평균임금 200만원이면 하한 적용 7개월 약 1,387만원 수령.",
-  "category": "커리어",
-  "tags": [
-   "실업급여",
-   "고용보험",
-   "구직급여",
-   "권고사직",
-   "2026"
-  ],
-  "level": "초급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 854
- },
- {
   "slug": "voluntary-vs-recommended-resignation-2026",
   "title": "권고사직 안전 절차 5단계 — \"일신상 사유\" 절대 금지",
   "description": "권고사직 → 실업급여 가능. 단 \"일신상 사유\" 표현 거부 + \"경영상 이유\" 명시. 잘못 처리 시 약 1,000만원 손해.",
@@ -4742,24 +4501,6 @@ export const guideCards: GuideCardMeta[] = [
   "contentChars": 766
  },
  {
-  "slug": "seeking-job-benefit-2026",
-  "title": "2026 구직급여 — 일 상한 68,100원·하한 66,048원",
-  "description": "평균임금 60%·상한 일 68,100원·하한 66,048원(2026). 지급기간 120~270일(나이·가입기간별). 자영업도 가입 시 가능.",
-  "category": "커리어",
-  "tags": [
-   "구직급여",
-   "실업급여",
-   "청년",
-   "정년",
-   "2026"
-  ],
-  "level": "초급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 881
- },
- {
   "slug": "digital-nomad-visa-korea-2026",
   "title": "한국 디지털 노마드 비자 — 연소득 8만 달러+ 외국인 IT 인재 유치",
   "description": "외국 회사 원격 근무 + 연소득 8만 달러+ + 건강보험. 1+1년 체류. 한국 비거주자 분류로 한국 소득세 없음.",
@@ -4779,8 +4520,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "childcare-support-comprehensive-2026",
-  "title": "자녀 1명 0~18세 정부 지원 총 6,000~7,000만원 — 단계별 정리",
-  "description": "0~1세 부모급여 + 아동수당, 2~7세 보육료 무료, 초등 돌봄, 중·고 학자금, 대학 청년주택드림. 누적 6~7천만원.",
+  "title": "자녀 1명 0~18세 정부 지원 — 아동수당·부모급여 나이별 정리",
+  "description": "0~1세 부모급여부터 2026년 만 9세 미만 아동수당 월 10만원, 어린이집 보육료, 초등 돌봄, 자녀세액공제까지.",
   "category": "기초",
   "tags": [
    "육아지원",
@@ -4793,7 +4534,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 852
+  "contentChars": 1050
  },
  {
   "slug": "elder-care-insurance-2026",
@@ -4869,97 +4610,103 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "bonus-vs-incentive-vs-allowance-2026",
-  "title": "성과급 vs 인센티브 vs 격려금 — 통상임금 포함 평생 1억 차이",
-  "description": "정기상여·경영성과급·격려금·RSU 4종 법적 성격 + 세금 + 통상임금 포함 여부. 통상임금 포함되면 연차수당·퇴직금 25% 증가, 평생 임금 1억+ 차이.",
+  "title": "성과급·인센티브·격려금 차이 — 통상임금·퇴직금",
+  "description": "세금은 모두 근로소득으로 같고, 통상임금·퇴직금 반영 여부는 지급 방식이 가릅니다. 2024년 전원합의체·2026년 대법원 판결 기준.",
   "category": "연봉",
   "tags": [
    "성과급",
    "인센티브",
+   "격려금",
    "통상임금",
    "퇴직금",
    "2026"
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1659
+  "contentChars": 5440
  },
  {
   "slug": "samsung-opi-tai-complete-2026",
-  "title": "삼성전자 OPI + TAI 완벽 가이드 — 메모리 호황기 영끌 1억 3,750만",
-  "description": "OPI(1월·사업부 영업이익 연동 최대 50%) + TAI(6월·12월·목표달성 최대 100%). 메모리 사업부 호황기 합산 250%, 기본급 5,500만 직원 영끌 1.37억.",
+  "title": "삼성전자 OPI·TAI 2026 — 사업부별 지급률·세후",
+  "description": "OPI는 연봉의 최대 50%, TAI는 월 기본급 대비 반기 지급. 2025년 실적분 OPI·2026년 상반기 TAI 사업부별 지급률과 연봉별 세후.",
   "category": "연봉",
   "tags": [
    "삼성전자",
    "OPI",
    "TAI",
    "성과급",
-   "메모리",
+   "임금협상",
    "2026"
   ],
-  "level": "고급",
+  "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1303
+  "contentChars": 7200
  },
  {
   "slug": "sk-hynix-ps-history-2026-prospect",
-  "title": "SK하이닉스 PS 연도별 추이 — 2026 PS 2,000% 가능?",
-  "description": "2021 1,000% → 2023 적자 0% → 2024 1,500% → 2025 1,500%+ → 2026 2,000% 가능. 기본급 6,000만 직원 PS 1,500% 시 실수령 9,200만원.",
+  "title": "SK하이닉스 PS 연도별 지급률과 2026 지급 방식",
+  "description": "PS 2021년 1,000% → 2023년 0% → 2025년 2,964%(2026년 지급). 2026년 실적분부터 현금 50%·자사주 30%·이연 20%, 연봉별 세후.",
   "category": "연봉",
   "tags": [
    "SK하이닉스",
    "PS",
+   "PI",
    "성과급",
-   "HBM",
-   "메모리",
+   "임단협",
    "2026"
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2232
+  "contentChars": 6527
  },
  {
   "slug": "lg-hyundai-posco-bonus-2026",
-  "title": "LG·현대차·기아·포스코 성과급 구조 비교 — 사업부 차등 최대 50%",
-  "description": "LG전자 사업부별 ±50% 격차, 현대차·기아 통합 균등, 포스코 연 1회 균등. 직장인 6,000만 + 800% 성과급 시 실수령 7,300만원.",
+  "title": "LG·현대차·기아·포스코 성과급 비교 2026",
+  "description": "현대차·기아 400%+1,270만원, LG엔솔 최대 75%·LG디스플레이 150%(2025년 실적분), 포스코 구분법과 세후 환산.",
   "category": "연봉",
   "tags": [
-   "LG전자",
    "현대차",
+   "기아",
+   "LG에너지솔루션",
    "포스코",
    "성과급",
-   "사업부",
    "2026"
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1563
+  "contentChars": 5751
  },
  {
   "slug": "it-rsu-vs-cash-bonus-2026",
-  "title": "네이버·카카오·쿠팡 RSU vs 현금 보너스 — 5,000만 RSU 175만 유리",
-  "description": "네이버 4년 베스팅 즉시 매도 비과세, 카카오 5년 25%, 쿠팡 미국 22% 양도세, 토스 비상장 IPO lockup. RSU 5,000만 vs 현금 175만 유리 (주가 변동 리스크 별개).",
+  "title": "RSU·현금 성과급 세금 2026 — 네이버·카카오·쿠팡",
+  "description": "RSU도 받는 날 시가로 근로소득 과세돼 세금은 현금 성과급과 같습니다. 차이는 이후 주가와, 국내·해외 상장에 따라 갈리는 매도 세금입니다.",
   "category": "주식",
   "tags": [
+   "RSU",
    "네이버",
    "카카오",
    "쿠팡",
-   "RSU",
-   "현금보너스",
+   "성과급",
    "2026"
   ],
   "level": "고급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1151
+  "contentChars": 6308
  },
  {
   "slug": "foreign-bonus-structure-2026",
@@ -4979,24 +4726,6 @@ export const guideCards: GuideCardMeta[] = [
   "views": 0,
   "lang": "ko",
   "contentChars": 937
- },
- {
-  "slug": "year-end-encouragement-vs-bonus-2026",
-  "title": "연말 격려금 vs 정기상여 — 통상임금 포함 여부 절세 효과",
-  "description": "격려금은 통상임금 미포함 → 퇴직금 영향 0. 정기상여는 통상임금 포함 → 퇴직금 증가. 12월 격려금 1,000만 + IRP 900만 만기 시 142만원 환급.",
-  "category": "연봉",
-  "tags": [
-   "격려금",
-   "정기상여",
-   "통상임금",
-   "퇴직금",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 914
  },
  {
   "slug": "sign-on-bonus-tax-2026",
@@ -5053,45 +4782,28 @@ export const guideCards: GuideCardMeta[] = [
   "contentChars": 900
  },
  {
-  "slug": "bonus-bracket-jump-2026",
-  "title": "성과급 한계세율 점프 — 1.2억+1억 시 추가 3,800만원 세금",
-  "description": "8단계 누진세율 6~45%. 성과급 받으면 한 단계 점프 흔함. 연봉 1.2억+성과급 1억 시 35%→38% 점프 → 추가 3,800만원 세금.",
-  "category": "세금",
-  "tags": [
-   "성과급",
-   "한계세율",
-   "누진세율",
-   "8단계",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 1595
- },
- {
   "slug": "bonus-1eok-net-payment-2026",
-  "title": "성과급 1억 실수령 — 연봉 7천 시 세후 약 6,370만원",
-  "description": "연봉 7,000만 + 성과급 1억 = 영끌 1.7억. 세금·4대보험·4월 건보 정산 약 4,895만. 연간 실수령 약 1.21억, 성과급분 약 6,373만.",
+  "title": "성과급 1억 실수령액 — 연봉 7천이면 약 6,373만원",
+  "description": "연봉 7,000만원에 성과급 1억이면 세금·4대보험 약 3,627만원을 빼고 약 6,373만원이 남습니다.",
   "category": "세금",
   "tags": [
    "성과급",
    "실수령액",
    "1억",
-   "한계세율",
+   "성과급세금",
    "2026"
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1622
+  "contentChars": 6244
  },
  {
   "slug": "bonus-5000-net-payment-2026",
-  "title": "성과급 5,000만 실수령 — 약 3,570만, IRP 더하면 3,690만",
-  "description": "연봉 6,000만 + 성과급 5,000만 = 영끌 1.1억. 세금+4대보험 약 1,429만. 실수령 약 3,571만 (71.4%). IRP 900만 만기 시 약 119만 환급 추가.",
+  "title": "성과급 5천만원 실수령 — 연봉 6천이면 약 3,571만원",
+  "description": "연봉 6,000만원에 성과급 5,000만원이면 약 1,429만원이 빠져 약 3,571만원이 남습니다. 과세표준은 24% 구간입니다.",
   "category": "세금",
   "tags": [
    "성과급",
@@ -5102,45 +4814,29 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 969
+  "contentChars": 5813
  },
  {
   "slug": "income-tax-8-step-bracket-2026",
-  "title": "2026 종합소득세 8단계 누진세율 완벽 — 초과분만 높은 세율",
-  "description": "6~45% 8단계 누진세율 + 누진공제 + 지방세 10%. 초과분만 높은 세율 적용. 8,800만→8,801만 되어도 추가 1만에만 35% 적용.",
+  "title": "2026 소득세 세율표 8단계 — 과세표준·누진공제 계산법",
+  "description": "과세표준 1,400만원 이하 6%부터 10억원 초과 45%까지 8단계이며, 넘은 금액에만 높은 세율이 붙습니다.",
   "category": "세금",
   "tags": [
+   "소득세율",
    "누진세율",
    "8단계",
-   "종합소득세",
-   "지방소득세",
+   "과세표준",
    "2026"
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1897
- },
- {
-  "slug": "salary-bonus-calc-8step-2026",
-  "title": "성과급 + 연봉 합산 세금 계산 8단계 — 직접 계산 vs 계산기",
-  "description": "총소득 → 근로소득공제 → 인적공제 → 과세표준 → 산출세액 → 세액공제 → 결정세액 → 납부세액. 8단계 계산 → 머니샐러리 계산기 활용.",
-  "category": "세금",
-  "tags": [
-   "성과급계산법",
-   "8단계",
-   "연말정산",
-   "산출세액",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 1025
+  "contentChars": 6146
  },
  {
   "slug": "bonus-split-payout-1000-saving-2026",
@@ -5161,185 +4857,42 @@ export const guideCards: GuideCardMeta[] = [
   "contentChars": 951
  },
  {
-  "slug": "irp-before-bonus-payout-2026",
-  "title": "성과급 받기 전 IRP 900만 만기 — 환급 119~149만원",
-  "description": "성과급 받기 1~2개월 전 IRP·연금저축 900만 만기 납입 → 한계세율 35%+ 구간 환급 119~149만원. 12월 31일까지 납입 필수.",
-  "category": "세금",
-  "tags": [
-   "IRP",
-   "연금저축",
-   "성과급",
-   "절세",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 1110
- },
- {
-  "slug": "card-25-before-bonus-2026",
-  "title": "성과급 받기 전 신용카드 25% 기준선 — 체크·전통시장 전환",
-  "description": "성과급으로 25% 기준선이 올라가기 전 체크카드·전통시장·대중교통 사용 한도 채우기. 100만 추가 사용 시 약 12만 환급(체크 30% × 한계세율 35%).",
-  "category": "세금",
-  "tags": [
-   "신용카드",
-   "체크카드",
-   "25%",
-   "전통시장",
-   "2026"
-  ],
-  "level": "초급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 925
- },
- {
-  "slug": "medical-edu-donation-bonus-year-2026",
-  "title": "성과급 받는 해 의료비·교육비·기부금 — 환급 효과 12%p 큼",
-  "description": "한계세율 35%+ 구간에서 공제 효과 12%p 큼. 임플란트·치아교정·자녀 대학원 등 큰 비용 한 해에 몰아 결제 → 약 200~250만 추가 환급.",
-  "category": "세금",
-  "tags": [
-   "의료비",
-   "교육비",
-   "기부금",
-   "성과급",
-   "한계세율",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 1049
- },
- {
-  "slug": "dependent-deduction-bonus-year-2026",
-  "title": "성과급 받는 해 인적공제 — 1인 150만 × 35% = 52만 환급",
-  "description": "한계세율 35% 시 인적공제 효과 큼. 부모 2명 + 자녀 2명 + 경로우대 + 의료비 통합 시 약 174만 추가 환급.",
-  "category": "세금",
-  "tags": [
-   "인적공제",
-   "부양가족",
-   "성과급",
-   "한계세율",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 1036
- },
- {
-  "slug": "bonus-pension-45-ceiling-590-2026",
-  "title": "성과급 국민연금 4.75% — 보수월액 상한 659만원 적용",
-  "description": "국민연금은 659만 상한(2026년 7월~). 월급 700만+ 직원은 성과급 받아도 국민연금 추가 부담 0원. 월급 400만 직원이 성과급 200만 받으면 월 약 7,900원 추가.",
-  "category": "기초",
-  "tags": [
-   "국민연금",
-   "성과급",
-   "상한",
-   "659만",
-   "2026"
-  ],
-  "level": "초급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 1131
- },
- {
   "slug": "bonus-health-4-percent-2026",
-  "title": "성과급 건강보험 4.07% — 1억 시 본인 약 407만원",
-  "description": "건강보험 3.595% + 장기요양 0.472% = 본인 약 4.07%. 사실상 전액 부과. 성과급 1억 시 본인 약 407만 + 회사 약 407만 = 약 814만 부과. 다음해 4월 정산 추가.",
+  "title": "성과급 건강보험료 4.07% — 1억이면 본인 약 407만",
+  "description": "성과급에는 건강보험 3.595%와 장기요양(건보료의 13.14%)이 붙어 본인 약 4.07%입니다. 성과급분은 보통 이듬해 4월 정산에 반영됩니다.",
   "category": "기초",
   "tags": [
    "건강보험",
    "성과급",
    "장기요양",
-   "정산",
+   "4월정산",
    "2026"
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1239
- },
- {
-  "slug": "bonus-employment-09-2026",
-  "title": "성과급 고용보험 0.9% — 1억 시 90만, 3억 시 270만",
-  "description": "고용보험 본인 0.9% + 회사 0.9% + α. 상한 없음. 1억 성과급 시 본인 90만, 3억 시 270만. 실업급여 산정 시 평균임금 베이스 증가 효과.",
-  "category": "기초",
-  "tags": [
-   "고용보험",
-   "성과급",
-   "실업급여",
-   "0.9%",
-   "2026"
-  ],
-  "level": "초급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 852
+  "contentChars": 4760
  },
  {
   "slug": "four-insurance-ceiling-summary-2026",
-  "title": "4대보험 상한·하한 한 번에 — 성과급 1억 시 본인 부담 약 497만",
-  "description": "국민연금 4.75% 상한 659만 + 건강보험 3.595% + 장기요양 0.472% + 고용보험 0.9%. 성과급 1억 시 합산 본인 부담 약 497만원.",
+  "title": "2026 4대보험 상한·하한 — 국민연금 월 659만원",
+  "description": "국민연금은 월 659만원 상한, 건강보험은 월 보험료 상한 9,183,480원, 고용보험은 상한이 없습니다.",
   "category": "기초",
   "tags": [
    "4대보험",
    "상한",
-   "성과급",
+   "국민연금",
    "건강보험",
    "2026"
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1550
- },
- {
-  "slug": "july-health-adjust-bonus-1eok-2026",
-  "title": "성과급 1억 + 4월 건보료 정산 — 추가 400만 부과",
-  "description": "성과급 부분은 매월 부과 안 되고 다음해 4월 연말정산에서 부과. 1억 성과급 시 약 400만 추가, 정산액이 당월 보험료 이상이면 12회 이내 분할 납부 가능.",
-  "category": "기초",
-  "tags": [
-   "건보료정산",
-   "건강보험",
-   "성과급",
-   "분할납부",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 1381
- },
- {
-  "slug": "july-health-adjust-bonus-detail-2026",
-  "title": "4월 건보료 정산 흐름 — 성과급별 정산금 80~800만원",
-  "description": "1~3월 보수총액 확정 → 4월분 보험료에 정산 반영 → 12회 이내 분할 신청. 성과급 2,000만 약 80만, 5,000만 200만, 1억 400만, 2억 800만 정산금.",
-  "category": "기초",
-  "tags": [
-   "건보료정산",
-   "건강보험",
-   "분할",
-   "정산금",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 1330
+  "contentChars": 5369
  },
  {
   "slug": "dependent-check-before-bonus-2026",
@@ -5378,27 +4931,9 @@ export const guideCards: GuideCardMeta[] = [
   "contentChars": 917
  },
  {
-  "slug": "retire-with-bonus-4insurance-2026",
-  "title": "퇴직금 + 성과급 같은 해 — IRP 이전 시 절세 1,500만",
-  "description": "퇴직금 4대보험 면제 + 환산급여 우대. 성과급은 정상 부과. 5억 퇴직금 IRP 이전 시 즉시 세금 0원 → 연금 분할로 1,500만 절감.",
-  "category": "기초",
-  "tags": [
-   "퇴직금",
-   "성과급",
-   "IRP",
-   "4대보험",
-   "2026"
-  ],
-  "level": "고급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 1136
- },
- {
   "slug": "optional-continue-after-bonus-2026",
-  "title": "성과급 큰 임원 퇴직 후 임의계속가입 — 3년 5,000만 절감",
-  "description": "성과급 5,000만 받은 임원 퇴직 후 지역가입자 월 200~300만 vs 임의계속가입 약 월 60만. 36개월 절감 약 5,000만.",
+  "title": "성과급 큰 임원 퇴직 후 임의계속가입 — 신청 기한·36개월",
+  "description": "성과급 큰 임원이 퇴직하면 지역보험료가 커질 수 있다. 임의계속가입은 퇴직 전 12개월 평균 보수월액 기준으로 최대 36개월.",
   "category": "기초",
   "tags": [
    "임의계속가입",
@@ -5411,43 +4946,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 909
- },
- {
-  "slug": "irp-max-bonus-year-2026",
-  "title": "성과급 + IRP 900만 환급 119만, ISA 전환 합산 1,200만 175만",
-  "description": "IRP + 연금저축 합산 900만 (전 연령 공통, ISA 만기 전환분 합산 시 최대 1,200만). 세액공제율 5,500만 이하 16.5%, 초과 13.2%. 성과급 받는 해 한계세율 높아 환급 효과 최대.",
-  "category": "세금",
-  "tags": [
-   "IRP",
-   "연금저축",
-   "성과급",
-   "세액공제",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 1312
- },
- {
-  "slug": "isa-for-bonus-2026",
-  "title": "성과급 일부 ISA 적립 — 5년 운용 시 63만 절감",
-  "description": "성과급 2,000만 ISA 적립 → 5년 7% 운용 약 2,800만. 차익 800만 중 200만 비과세 + 600만 9.9% = 60만 세금. 일반 계좌 대비 63만 절감.",
-  "category": "투자",
-  "tags": [
-   "ISA",
-   "성과급",
-   "비과세",
-   "절세",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 904
+  "contentChars": 1140
  },
  {
   "slug": "gift-children-with-bonus-2026",
@@ -5469,8 +4968,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "couple-split-bonus-year-2026",
-  "title": "성과급 받는 해 부부 분산 — 의료비 600만 시 45만 절감",
-  "description": "본인 한계 35% + 배우자 15% 시 의료비·교육비는 총급여 낮은 쪽이 공제 효과 큼. 600만 의료비 부부 분산으로 45만 추가 환급.",
+  "title": "맞벌이 연말정산 몰아주기 — 성과급 받은 해 기준",
+  "description": "인적공제는 세율 높은 쪽, 의료비는 3% 문턱 낮은 쪽, 카드는 25% 문턱을 넘는 쪽. 세액공제는 세율과 무관합니다.",
   "category": "세금",
   "tags": [
    "부부분산",
@@ -5481,135 +4980,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1069
- },
- {
-  "slug": "parent-support-bonus-year-2026",
-  "title": "성과급 받는 해 부모 부양 — 2명 등록 시 174만 환급",
-  "description": "한계세율 35%, 부모 2명 + 만 75세 경로우대 + 의료비 200만 시 인적공제·경로우대·의료비 합산 약 174만 환급.",
-  "category": "세금",
-  "tags": [
-   "부모부양",
-   "인적공제",
-   "경로우대",
-   "성과급",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 1086
- },
- {
-  "slug": "medical-edu-donation-concentration-2026",
-  "title": "성과급 받는 해 의료비·교육비 집중 — 60~80만 추가 환급",
-  "description": "한계세율 35% 시 임플란트·자녀 대학원·기부금 등 큰 비용 한 해에 몰기. 합산 200~250만 환급(한계 24% 대비 +60~80만).",
-  "category": "세금",
-  "tags": [
-   "의료비집중",
-   "교육비",
-   "기부금",
-   "절세",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 916
- },
- {
-  "slug": "card-30-40-percent-bonus-2026",
-  "title": "성과급 받는 해 체크·전통시장 전환 — 70만 추가 환급",
-  "description": "성과급으로 25% 기준선↑. 25% 초과분을 체크 30% + 전통시장 40% + 대중교통 40%로 전환. 1,000만 전환 시 약 70만 추가 환급.",
-  "category": "세금",
-  "tags": [
-   "체크카드",
-   "전통시장",
-   "대중교통",
-   "공제",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 1066
- },
- {
-  "slug": "monthly-rent-17-bonus-2026",
-  "title": "성과급 받는 해 월세 15~17% — 월 60만 시 최대 134만 환급",
-  "description": "무주택 세대주 + 총급여 8,000만 이하(성과급으로 초과 시 그해 공제 제외). 월세 60만(연 720만) × 17% = 122만 + 지방세 = 약 134만 환급. 5년 미신청자 경정청구 가능.",
-  "category": "세금",
-  "tags": [
-   "월세",
-   "세액공제",
-   "무주택",
-   "성과급",
-   "2026"
-  ],
-  "level": "초급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 1208
- },
- {
-  "slug": "housing-25-bonus-2026",
-  "title": "성과급 받는 해 청약통장 25만 — 5년 200~230만 환급",
-  "description": "매월 25만 납입 시 연 300만 한도 40% = 120만 공제. 한계세율 35% 시 약 42만 환급/년. 5년 누적 200~230만 + 청약 가점 만점.",
-  "category": "세금",
-  "tags": [
-   "청약통장",
-   "소득공제",
-   "25만",
-   "성과급",
-   "2026"
-  ],
-  "level": "초급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 819
- },
- {
-  "slug": "insurance-100-bonus-2026",
-  "title": "성과급 받는 해 보장성 보험 100만 — 12만 환급 챙기기",
-  "description": "종신·암·정기·실손·자동차·운전자 합산 100만 한도 12% 공제 = 최대 12만 환급. 본인·부양가족 명의 모두 가능. 저축성·연금보험 제외.",
-  "category": "세금",
-  "tags": [
-   "보장성보험",
-   "공제",
-   "12%",
-   "성과급",
-   "2026"
-  ],
-  "level": "초급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 728
- },
- {
-  "slug": "opi-vs-tai-timing-tax-2026",
-  "title": "1월 OPI vs 6월 TAI — 분할 지급 150만 절감",
-  "description": "삼성 OPI 1월 일시 vs TAI 6·12월 분할. 분할 효과로 한계세율 분산. 영끌 1.08억 시 약 150만 절감. 인사 협상 시도.",
-  "category": "세금",
-  "tags": [
-   "OPI",
-   "TAI",
-   "분할지급",
-   "한계세율",
-   "2026"
-  ],
-  "level": "고급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 1151
+  "contentChars": 5992
  },
  {
   "slug": "december-vs-january-bonus-2026",
@@ -5649,79 +5023,27 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "bonus-retire-impact-severance-2026",
-  "title": "성과급 받고 퇴직 — 정기상여 vs 일회성 보너스 퇴직금 2,500만 차이",
-  "description": "정기상여(통상임금 포함)는 평균임금 베이스 증가 → 퇴직금 증가. 월급 500만 10년 + 연 3,000만 시 정기상여 7,500만 vs 일회성 5,000만.",
+  "title": "성과급 퇴직금 포함 기준 2026 — 평균임금·대법원 판례",
+  "description": "퇴직금은 평균임금으로 계산합니다. 정기상여·목표 인센티브는 들어가고, 해마다 노사합의로 정한 경영성과급은 빠질 수 있습니다.",
   "category": "커리어",
   "tags": [
    "퇴직금",
-   "정기상여",
-   "통상임금",
+   "평균임금",
    "성과급",
+   "퇴직소득세",
    "2026"
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-09-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 857
- },
- {
-  "slug": "before-vs-after-leave-bonus-2026",
-  "title": "성과급 받기 전 휴직 vs 받고 휴직 — 권리 보장 + 휴직 전 지급",
-  "description": "성과급은 재직 중 발생 성과 보상 → 휴직 전 발생분은 받을 권리. 인사팀과 지급 시점 확정 + 휴직 중 4대보험 변경 확인.",
-  "category": "커리어",
-  "tags": [
-   "휴직",
-   "성과급",
-   "지급권리",
-   "육아휴직",
-   "2026"
-  ],
-  "level": "중급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 816
- },
- {
-  "slug": "irp-eligibility-before-bonus-2026",
-  "title": "성과급 받기 전 IRP·연금저축 가입 — 누구나 가능",
-  "description": "IRP: 근로소득자·자영업자·공무원. 연금저축: 만 19세+ 누구나. 12월 31일까지 납입 시 당해 공제. 만 55세까지 유지 의무.",
-  "category": "세금",
-  "tags": [
-   "IRP",
-   "연금저축",
-   "가입자격",
-   "2026"
-  ],
-  "level": "초급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 972
- },
- {
-  "slug": "executive-severance-limit-bonus-deep-2026",
-  "title": "임원 퇴직금 한도 초과 + 성과급 — 5억 시 1.08억 세금",
-  "description": "한도 3억 + 초과 2억 시 초과분 근로소득세 7,800만 (한계 38%). 한도 내 5억이면 5,000만. 정관 한도 미리 점검.",
-  "category": "커리어",
-  "tags": [
-   "임원",
-   "퇴직금한도",
-   "근로소득세",
-   "성과급",
-   "2026"
-  ],
-  "level": "고급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 1028
+  "contentChars": 7422
  },
  {
   "slug": "stock-option-with-bonus-2026",
-  "title": "성과급 + 스톡옵션 일반 vs 적격 — 1억 차익 1,860만 차이",
-  "description": "일반: 행사 근로소득 3,800만 + 매도 양도 220만 = 4,020만. 적격(벤처·중소): 양도세 2,160만만. 차이 1,860만.",
+  "title": "성과급 + 스톡옵션 일반 vs 적격 — 과세 시점·세금 차이",
+  "description": "일반: 행사이익은 근로소득으로 성과급과 합산 과세. 적격(벤처)은 요건 충족 시 행사 때 과세를 미루고 매도 때 양도세.",
   "category": "주식",
   "tags": [
    "스톡옵션",
@@ -5734,25 +5056,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1366
- },
- {
-  "slug": "bonus-rsu-same-year-2026",
-  "title": "성과급 + RSU 베스팅 같은 해 — 영끌 2.7억 시 총 7,900만 부담",
-  "description": "연봉 1.2억 + 성과급 5,000만 + RSU 1억 베스팅 = 영끌 2.7억. 근로 5,200만 + 양도 1,700만 + 정산 1,000만 = 7,900만. 분할 매도로 600만 절감.",
-  "category": "주식",
-  "tags": [
-   "RSU",
-   "성과급",
-   "베스팅",
-   "양도세",
-   "2026"
-  ],
-  "level": "고급",
-  "publishedDate": "2026-05-23",
-  "views": 0,
-  "lang": "ko",
-  "contentChars": 810
+  "contentChars": 1684
  },
  {
   "slug": "bonus-property-sell-same-year-2026",
@@ -5829,7 +5133,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5725
+  "contentChars": 5930
  },
  {
   "slug": "samsung-opi-forecast-2027",
