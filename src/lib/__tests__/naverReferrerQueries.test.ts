@@ -14,6 +14,7 @@ import {
   parseGa4NaverExport,
   renderMarkdown,
   runNaverReferrerCli,
+  sanitizeForTerminal,
   type CliIo,
   type NaverRow,
 } from "../naverReferrerQueries";
@@ -273,6 +274,67 @@ describe("runNaverReferrerCli", () => {
     expect(unreadable.code).toBe(1);
     expect(runNaverReferrerCli([], io()).code).toBe(1);
     expect(runNaverReferrerCli(["--help"], io()).code).toBe(0);
+  });
+});
+
+describe("terminal escape injection (forged GA4 referrer / landing)", () => {
+  // C0·DEL·C1 제어 문자와 양방향 재정렬 서식 문자 — 출력에 '\n' 외에는 하나도 없어야 한다.
+  const UNSAFE = /[\u0000-\u0009\u000b-\u001f\u007f-\u009f\u202A-\u202E\u2066-\u2069\u200B-\u200F\u2028\u2029\uFEFF]/;
+  const OSC52 = "%1B]52;c;ZWNobyBwd24%3D%07abc"; // ESC ] 52 ; c ; <base64> BEL — 클립보드 쓰기
+  const RLO = "%E2%80%AE"; // U+202E RIGHT-TO-LEFT OVERRIDE
+  const csv = ga4Csv([
+    `${PC}${OSC52}${RLO}x,/x%1B%5B31m${RLO}y%1B]52;c;eA%3D%3D%07,5,6`,
+    `${PC}a%E2%81%A6b%E2%80%8Bc%C2%9B31m%7F,/salary-db/1,3,3`,
+    `${PC}ok,(not set)\u001b[31m\u202E,2,2`,
+    `${PC}ok2,/raw\u001b[2J\u0085\u009b31m\u2066z,1,1`,
+  ]);
+  const io: CliIo = { repoRoot: "/work/repo", cwd: "/work/repo", realpath: (p) => p, readText: () => csv, pathImpl: path.posix };
+
+  it("replaces control, format and bidi characters in queries and landings with U+FFFD", () => {
+    expect(extractNaverQuery(`${PC}${OSC52}`).query).toBe("\uFFFD]52;c;ZWNobyBwd24=\uFFFDabc");
+    expect(extractNaverQuery(`${PC}a${RLO}b`).query).toBe("a\uFFFDb");
+    expect(normalizeLanding(`/x%1B%5B31m${RLO}y`)).toBe("/x\uFFFD[31m\uFFFDy");
+    expect(normalizeLanding("(not set)\u001b[31m")).toBe("(not set)\uFFFD[31m");
+    expect(normalizeLanding("https://www.moneysalary.com/a%07b/")).toBe("/a\uFFFDb");
+    expect(sanitizeForTerminal("가\u0000\u001b\u007f\u0085\u009b\u200B\u200D\u202A\u202E\u2066\u2069\u2028\u2029\uFEFF\ud800나")).toBe(
+      `가${"\uFFFD".repeat(15)}나`,
+    );
+    // 정상 한글·기호는 그대로
+    expect(sanitizeForTerminal("삼성전자 연봉 · 성과급 — 2026 ★")).toBe("삼성전자 연봉 · 성과급 — 2026 ★");
+  });
+
+  it("prints no escape or bidi character to stdout or stderr in either --by mode", () => {
+    for (const by of ["query", "landing"]) {
+      const res = runNaverReferrerCli(["/tmp/ga4.csv", "--by", by], io);
+      expect(res.code).toBe(0);
+      expect(res.stdout).toContain("\uFFFD\\]52;c;ZWNobyBwd24=\uFFFDabc"); // ']' 는 cell() 이 이스케이프
+      expect(res.stdout.replace(/\n/g, "")).not.toMatch(UNSAFE);
+      expect(res.stderr).not.toMatch(UNSAFE);
+    }
+  });
+
+  it("sanitizes the header-failure diagnostic that echoes the first record", () => {
+    const res = runNaverReferrerCli(["/tmp/x.csv"], { ...io, readText: () => "a\u001b[31m,b\u202Ec\u0007,d\u009b\n" });
+    expect(res.code).toBe(1);
+    expect(res.stderr).toContain("a\uFFFD[31m | b\uFFFDc\uFFFD | d\uFFFD");
+    expect(res.stderr.replace(/\n/g, "")).not.toMatch(UNSAFE);
+  });
+
+  it("sanitizes argv-derived error text as well", () => {
+    const res = runNaverReferrerCli(["/tmp/x.csv", "--by", "q\u001b]52;c;eA==\u0007"], io);
+    expect(res.code).toBe(1);
+    expect(res.stderr.replace(/\n/g, "")).not.toMatch(UNSAFE);
+  });
+
+  it("escapes square brackets and backslashes so a forged query cannot render as a markdown link or image", () => {
+    const rows: NaverRow[] = [
+      { query: "![x](https://evil.example/p.png)", landing: "/a", sessions: 2, views: 0 },
+      { query: "\\[y\\](https://evil.example/)", landing: "/a", sessions: 1, views: 0 },
+    ];
+    const md = renderMarkdown(aggregateNaverRows(rows), { top: 5, by: "query", hasViews: true, droppedRows: 0 });
+    expect(md).toContain("| 1 | !\\[x\\](https://evil.example/p.png) | /a | 2 | 0 |");
+    expect(md).toContain("| 2 | \\\\\\[y\\\\\\](https://evil.example/) | /a | 1 | 0 |");
+    expect(md).not.toMatch(/(^|[^\\])\[x\]/);
   });
 });
 

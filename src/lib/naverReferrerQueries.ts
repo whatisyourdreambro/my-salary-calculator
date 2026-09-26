@@ -8,6 +8,8 @@
 //   CLI: scripts/naver-referrer-queries.ts (npx tsx). 파일 쓰기·데이터 내장 없음, 결과는 stdout 뿐.
 // ★개인정보: 집계값만 출력하고 리퍼러 원문(URL)은 어떤 경로로도 출력하지 않는다.
 //   사이트 계측(analytics.ts·analyticsPrivacy.ts)은 건드리지 않는다 — 사이트 코드에 검색어 수집 없음.
+// ★터미널 안전: 리퍼러·방문 페이지는 위조 가능한 입력이다 — 디코딩한 제어·서식 문자는 U+FFFD 로 바꾸고,
+//   CLI 출력 전체도 한 번 더 거른다(sanitizeForTerminal·sanitizeOutput).
 
 import nodePath from "node:path";
 
@@ -132,12 +134,35 @@ export function findHeader(rows: string[][]): { index: number; columns: ColumnMa
 }
 
 // ─────────────────────────────────────────────────────────────
+// 터미널 안전 — 제어·서식 문자 치환
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * 제어(Cc: C0·DEL·C1 — ESC·BEL·CSI 포함)·서식(Cf: 양방향 재정렬 U+202A–202E·U+2066–2069, 폭 없는 문자, BOM)·
+ * 짝 없는 서로게이트(Cs)·줄/문단 구분자(Zl·Zp).
+ * GA4 page_referrer·page_location 은 공개 측정 ID 만 알면 누구나 위조할 수 있다 — 퍼센트 디코딩된
+ * ESC ] 52 … BEL(OSC 52 클립보드 쓰기) 같은 시퀀스가 운영자 터미널에 그대로 찍히면 안 된다.
+ */
+const UNSAFE_CHARS = /[\p{Cc}\p{Cf}\p{Cs}\p{Zl}\p{Zp}]/gu;
+const REPLACEMENT_CHAR = "\uFFFD";
+
+/** 출력 가능한 문자열로: 위 문자를 모두 U+FFFD 로 바꾼다(흔적이 보이도록 삭제 대신 치환). */
+export function sanitizeForTerminal(s: string): string {
+  return s.replace(UNSAFE_CHARS, REPLACEMENT_CHAR);
+}
+
+/** stdout·stderr 최종 관문 — 렌더러가 넣는 '\n' 줄바꿈만 남기고 같은 규칙을 적용한다. */
+function sanitizeOutput(s: string): string {
+  return s.replace(UNSAFE_CHARS, (ch) => (ch === "\n" ? ch : REPLACEMENT_CHAR));
+}
+
+// ─────────────────────────────────────────────────────────────
 // 리퍼러·방문 페이지 정규화
 // ─────────────────────────────────────────────────────────────
 
-/** 검색어 정리: NFC(자모 분해 방지) → 공백 연속을 한 칸으로 → 앞뒤 공백 제거. */
+/** 검색어 정리: NFC(자모 분해 방지) → 공백 연속을 한 칸으로 → 제어·서식 문자 치환 → 앞뒤 공백 제거. */
 function cleanQuery(value: string | null): string {
-  return (value ?? "").normalize("NFC").replace(/\s+/g, " ").trim();
+  return sanitizeForTerminal((value ?? "").normalize("NFC").replace(/\s+/g, " ")).trim();
 }
 
 /**
@@ -166,8 +191,13 @@ export function extractNaverQuery(referrer: string): { naver: boolean; query: st
  * 방문 페이지를 쿼리 문자열·해시 없는 경로로 정규화한다.
  * 절대 URL 이면 경로만, 퍼센트 인코딩 경로는 디코딩(실패 시 원문), NFC, 끝 슬래시 제거(루트 제외).
  * GA4 자리표시자('(not set)'·'(other)')와 빈 값은 '(not set)' 계열로 유지한다.
+ * 디코딩으로 생긴(또는 원문에 있던) 제어·서식 문자는 U+FFFD 로 치환한다.
  */
 export function normalizeLanding(landing: string): string {
+  return sanitizeForTerminal(normalizeLandingRaw(landing));
+}
+
+function normalizeLandingRaw(landing: string): string {
   let s = (landing ?? "").trim();
   if (!s) return "(not set)";
   if (s.startsWith("(")) return s;
@@ -349,8 +379,18 @@ export function aggregateNaverRows(rows: NaverRow[]): NaverReport {
 
 const fmt = (n: number) => n.toLocaleString("en-US", { maximumFractionDigits: 2 });
 const pct = (r: number | null) => (r === null ? "-" : `${(r * 100).toFixed(1)}%`);
-/** 표 셀 이스케이프 — 파이프는 열을 깨고 '<' 는 뷰어에서 태그로 해석될 수 있다. */
-const cell = (s: string) => s.replace(/\r?\n|\r/g, " ").replace(/\|/g, "\\|").replace(/</g, "&lt;");
+/**
+ * 표 셀 이스케이프 — 줄바꿈은 공백, 제어·서식 문자는 U+FFFD(상류에서 이미 치환했어도 한 번 더),
+ * 파이프는 열을 깨고 '<' 는 뷰어에서 태그로, '[' ']' 는 위조 검색어가 링크·이미지(![](url))로 렌더될 수 있다.
+ * 역슬래시를 먼저 이스케이프해야 입력의 '\' 가 뒤의 '\[' '\]' 이스케이프를 무력화하지 못한다.
+ */
+const cell = (s: string) =>
+  sanitizeForTerminal(s.replace(/\r?\n|\r/g, " "))
+    .replace(/\\/g, "\\\\")
+    .replace(/\|/g, "\\|")
+    .replace(/\[/g, "\\[")
+    .replace(/\]/g, "\\]")
+    .replace(/</g, "&lt;");
 
 function moreLine(total: number, shown: number): string {
   return total > shown ? `\n_...외 ${fmt(total - shown)}건_\n` : "";
@@ -482,16 +522,25 @@ export interface CliResult {
   stderr: string;
 }
 
-/** 헤더 인식 실패 진단용 — URL 처럼 보이는 셀(데이터 행일 수 있음)은 원문을 싣지 않는다. */
+/**
+ * 헤더 인식 실패 진단용 — URL 처럼 보이는 셀(데이터 행일 수 있음)은 원문을 싣지 않는다.
+ * 나머지 셀도 40자로 자른 뒤(자르다 생긴 짝 없는 서로게이트 포함) 제어·서식 문자를 치환한다.
+ */
 function describeRecord(record: string[]): string {
   if (!record.length) return "(빈 파일)";
   return record
     .slice(0, 12)
-    .map((c) => (/:\/\/|[?&=]/.test(c) ? "(URL 생략)" : c.trim().slice(0, 40)))
+    .map((c) => (/:\/\/|[?&=]/.test(c) ? "(URL 생략)" : sanitizeForTerminal(c.trim().slice(0, 40))))
     .join(" | ");
 }
 
+/** CLI 진입점 — 모든 반환 경로의 stdout·stderr 를 최종 관문(sanitizeOutput)에 통과시킨다. */
 export function runNaverReferrerCli(argv: string[], io: CliIo): CliResult {
+  const result = runNaverReferrerCliInner(argv, io);
+  return { code: result.code, stdout: sanitizeOutput(result.stdout), stderr: sanitizeOutput(result.stderr) };
+}
+
+function runNaverReferrerCliInner(argv: string[], io: CliIo): CliResult {
   const p = io.pathImpl ?? nodePath;
   const parsed = parseCliArgs(argv);
   if (!parsed.ok) {
