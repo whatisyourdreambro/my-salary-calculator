@@ -45,6 +45,13 @@ const KEEPERS: readonly string[] = [
   "implant-dental-medical-deduction-2026",
   "postpartum-medical-deduction-200man-2026",
   "insurance-100man-limit-2026",
+  // 1차 연말정산 묶음 — G1B (2026-09-26 재작성, 배포 예정 2026-09-30)
+  "housing-subscription-25man-deduction-2026",
+  "earned-income-deduction-2026",
+  "standard-vs-special-deduction-2026",
+  "child-education-deduction-limit-2026",
+  "couple-split-bonus-year-2026",
+  "newlywed-deduction-first-year-2026",
 ];
 
 const BASE = "3b564c80";
@@ -765,5 +772,24 @@ describe.skipIf(REGEN.size > 0)("(5) 키퍼 표 — 2026 요율·상한은 정�
       return tableLiterals(src.body, patterns()).map((x) => `${slug} (${src.rel}) ${x}`);
     });
     expect(report, "표의 요율·상한은 taxConstants2026·config 정본을 import 해 ${…} 로 넣는다").toEqual([]);
+  });
+});
+
+// ═════════════════════════════════════════════════════════════
+// (6) 검색 전용 설명(metaDescription)의 출처 — guidesContent 의 META-07 맵(39편 + W3-A 기둥 글 year-end-tax-2026
+//     메타 개명 1편 = 40편)과 KEEPERS 뿐이다. guideFactCorrections 의 META-07 은 키퍼가 늘 때마다 개수가 바뀌어
+//     '39편 이상'만 본다. 키퍼가 아닌 글에 metaDescription 이 새로 붙는 실수는 KEEPERS 를 가진 이 파일에서 정확히 막는다.
+describe.skipIf(REGEN.size > 0)("(6) metaDescription 은 META-07 맵(40편)과 KEEPERS 에만", () => {
+  it("META-07 맵은 40편(39 + year-end-tax-2026) 그대로이고, 맵 밖에서 metaDescription 을 가진 글은 모두 키퍼다", () => {
+    const src = read("src/lib/guidesContent.ts");
+    const start = src.indexOf("const guideMetaDescriptions");
+    expect(start, "guidesContent.ts 의 META-07 맵을 찾지 못함").toBeGreaterThan(-1);
+    const block = src.slice(start, src.indexOf("\n};", start));
+    const meta07 = new Set([...block.matchAll(/^\s*"([a-z0-9-]+)"\s*:/gm)].map((m) => m[1]));
+    expect(meta07.size).toBe(40);
+    expect(meta07.has("year-end-tax-2026"), "W3-A 연말정산 기둥 글 메타 개명").toBe(true);
+    expect([...meta07].filter((s) => !bySlug.get(s)?.metaDescription)).toEqual([]);
+    const stray = koGuides.filter((g) => g.metaDescription && !meta07.has(g.slug) && !keeperSet.has(g.slug)).map((g) => g.slug);
+    expect(stray, "키퍼로 등록하지 않은 글에는 metaDescription 을 붙이지 않는다").toEqual([]);
   });
 });
