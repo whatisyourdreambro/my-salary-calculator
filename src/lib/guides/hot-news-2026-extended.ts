@@ -94,17 +94,17 @@ const newlywedDeduction = `
 `;
 
 const newlywedChildBirthBenefit = `
-<p class="lead">자녀 출산 시 받는 세제·정부 지원: 출산휴가 + 6+6 육아휴직 정부지원금 합산 약 3,200만원, 자녀세액공제 연 25~40만원 + 출산·입양 세액공제(일회성) 30~70만원, 산후조리원 의료비 공제 200만원, 자녀장려금 최대 80만원.</p>
+<p class="lead">자녀 출산 시 받는 세제·정부 지원: 출산휴가 급여와 6+6 부모육아휴직(첫 6개월 통상임금 100%, 월 상한 단계 상향), 자녀세액공제 연 25~40만원 + 출산·입양 세액공제(일회성) 30~70만원, 산후조리원 의료비 공제 200만원 한도, 자녀장려금 자녀 1인당 최대 100만원.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">👶 자녀 1명 출산 시 합산 혜택</h2>
 <ul class="space-y-2 mt-4">
-<li>· <strong>출산휴가 90일</strong> (산모): 통상임금 100%</li>
-<li>· <strong>6+6 육아휴직</strong>: 부부 합산 최대 24개월, 약 3,200만원 정부지원</li>
-<li>· <strong>자녀세액공제 (매년)</strong>: 첫째 25만원·둘째 30만원·셋째+ 40만원/년 (8세 이상 자녀)</li>
+<li>· <strong>출산휴가 90일</strong> (산모): 통상임금 100% (고용보험 지급분은 월 상한 적용)</li>
+<li>· <strong>6+6 육아휴직</strong>: 부모가 함께 쓰면 첫 6개월 통상임금 100%, 월 상한은 달마다 올라 6개월째 450만원. 부모가 각각 3개월 이상 쓰면 1인 휴직 기간 최대 1년 6개월</li>
+<li>· <strong>자녀세액공제 (매년)</strong>: 첫째 25만원·둘째 30만원·셋째+ 40만원/년 (2026년 귀속 9세 이상 자녀, 2017년생 제외)</li>
 <li>· <strong>출산·입양 세액공제 (일회성)</strong>: 첫째 30만원·둘째 50만원·셋째+ 70만원 (출산·입양한 해 1회)</li>
 <li>· <strong>산후조리원 의료비 공제</strong>: 200만원 한도</li>
-<li>· <strong>자녀장려금</strong>: 가구당 최대 80만원 (소득·자녀수 조건)</li>
-<li>· <strong>출산축하금</strong>: 지자체별 50~500만원</li>
+<li>· <strong>자녀장려금</strong>: 자녀 1인당 최대 100만원 (부부 합산 총소득 7,000만원 미만 등 소득·재산 조건)</li>
+<li>· <strong>출산축하금</strong>: 지자체별로 금액·조건이 달라 주소지 지자체 공고로 확인</li>
 </ul>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/parental-leave" class="text-primary underline">육아휴직 급여 계산기</a></li></ul></div>
@@ -1065,7 +1065,7 @@ export const hotNewsExtended: Guide[] = [
   { slug: "youth-subscription-60points-2026", title: "청약 가점 60점+ 5년 안에 만드는 5가지 전략", description: "청약통장 만 17점·무주택 10점·부양가족 25점 = 60점. 청년주택드림 + 특별공급 활용.", category: "부동산", tags: ["청약", "가점", "청년", "특별공급", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: youthSubscriptionGapyo5y, lang: "ko" },
   { slug: "youth-housing-dream-account-detail-2026", title: "청년우대형 vs 청년주택드림 청약통장 — 4.5% 금리 + 3억 대출", description: "청년주택드림 신규 가입 (만 19~34세) 최대 4.5% + 연 120만원 소득공제 + 최대 3억 대출 자격. 5년 누적 약 494만원 혜택.", category: "부동산", tags: ["청년주택드림", "청약", "청년", "내집마련", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: youthSubscriptionAccount, lang: "ko" },
   { slug: "newlywed-deduction-first-year-2026", title: "신혼부부 첫 연말정산 5가지 — 양가 부모 부양·취득세 200만원", description: "무소득 배우자 인적공제 + 양가 부모 부양 + 신혼 첫 주택 취득세 감면 + 결혼 카드 사용 + 출산·산후조리원 의료비 200만원.", category: "세금", tags: ["신혼부부", "연말정산", "인적공제", "취득세", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: newlywedDeduction, lang: "ko" },
-  { slug: "newlywed-child-birth-benefit-2026", title: "자녀 1명 출산 시 정부 지원 3,200만원 — 6+6 + 자녀세액공제 + 산후조리원", description: "출산휴가 90일 + 6+6 부모 육아휴직 3,200만원 + 자녀세액공제 30~70만원 + 산후조리원 200만원 + 자녀장려금 80만원.", category: "세금", tags: ["출산", "자녀", "정부지원", "육아휴직", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: newlywedChildBirthBenefit, lang: "ko" },
+  { slug: "newlywed-child-birth-benefit-2026", title: "자녀 1명 출산 시 정부 지원 총정리 — 6+6 + 자녀세액공제 + 산후조리원", description: "출산휴가 90일 + 6+6 부모육아휴직 + 출산·입양 세액공제 30~70만원 + 산후조리원 200만원 + 자녀장려금 100만원.", category: "세금", tags: ["출산", "자녀", "정부지원", "육아휴직", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: newlywedChildBirthBenefit, lang: "ko" },
   { slug: "youth-3account-combination-2026", title: "청년 3종 조합 — 도약계좌·장기투자 2025년 말 신규 종료", description: "청년도약·청년형 장기투자는 2025-12-31 신규 가입 종료(청년미래적금 참고). 기존 가입자 기준 도약 243만 + 주택드림 약 394만원.", category: "투자", tags: ["청년", "도약계좌", "주택드림", "장기투자", "절세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: youthAccountCombination, lang: "ko" },
   { slug: "youth-k-pass-mass-transit-2026", title: "K-패스 대중교통 환급 — 청년 30% 연 28만원, 저소득층 53%", description: "월 15회+ 대중교통 이용 시 일반 20%·청년 30%·저소득 53% 환급. 청년 월 8만원 사용 시 연 28만원 환급.", category: "기초", tags: ["K-패스", "대중교통", "청년", "환급", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: youthKpass, lang: "ko" },
   { slug: "newlywed-loan-limit-2x-2026", title: "신혼부부 대출 한도 부부 합산 — 단독 대비 2배 가능", description: "부부 합산 DSR 40% + LTV 70%. 부부 연 1.2억 시 8.5억 대출 + 12억 주택 매수 가능. 공동 채무자 리스크 점검 필수.", category: "부동산", tags: ["신혼부부", "대출 한도", "DSR", "LTV", "공동명의", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: newlywedLoanLimit, lang: "ko" },

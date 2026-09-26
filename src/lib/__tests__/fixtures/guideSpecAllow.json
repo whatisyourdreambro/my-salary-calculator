@@ -31,13 +31,6 @@
       "note": "추가공제 항목별 한도 100만 → 합산 300만/200만"
     },
     {
-      "slug": "childcare-support-comprehensive-2026",
-      "patternId": "child-credit-30-70",
-      "snippet": "00~7,000만원. 부모 자녀세액공제 추가 환급 30~70만원/년. 📌 관련 · 육아휴",
-      "tag": "GUIDES-08",
-      "note": "30~70만은 출산·입양 세액공제(1회) — 연간 자녀세액공제로 적음. 1명 25만·2명 55만·셋째부터 40만씩으로 (hot-news-2026-deep-dive.ts)"
-    },
-    {
       "slug": "credit-card-deduction-30-40-strategy-2026",
       "patternId": "card-extra-each-100",
       "snippet": "통시장·대중교통·도서공연은 별도 한도 100만원씩 추가 ⚠️ 부부 결제 분리 신용",
@@ -64,13 +57,6 @@
       "snippet": "이 7월 16일 기준금리를 연 2.75%로 인상(2023년 1월 이",
       "tag": "dated-historical",
       "note": "2026-07-16 2.75% 인상(2023-01 이후 첫 인상) 이력 — bok.or.kr 와 일치"
-    },
-    {
-      "slug": "newlywed-child-birth-benefit-2026",
-      "patternId": "child-credit-30-70",
-      "snippet": "육아휴직 3,200만원 + 자녀세액공제 30~70만원 + 산후조리원 200만원",
-      "tag": "GUIDES-08",
-      "note": "description(TL;DR) 문구 — 출산·입양 세액공제 30~70만(1회)을 자녀세액공제로 적음. 고칠 때 기준선 길이 이하 유지 (hot-news-2026-extended.ts)"
     },
     {
       "slug": "officetel-investment",

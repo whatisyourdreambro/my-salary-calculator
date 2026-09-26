@@ -827,7 +827,7 @@ const childcareSupport = `
 <li>· <strong>대학</strong>: 청년주택드림 + 학자금 대출</li>
 </ul>
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 누적</h2>
-<p>자녀 1명 0~18세 정부 지원 누적 약 6,000~7,000만원. 부모 자녀세액공제 추가 환급 30~70만원/년.</p>
+<p>자녀 1명 0~18세 정부 지원 누적 약 6,000~7,000만원. 부모 자녀세액공제는 자녀 1명 연 25만원(2026년 귀속 9세 이상, 2017년생 제외)이고, 출산·입양한 해에는 출산·입양 세액공제(첫째 30만·둘째 50만·셋째 이상 70만원)가 한 번 따로 붙습니다.</p>
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/parental-leave" class="text-primary underline">육아휴직 급여 계산기</a></li></ul></div>
 `;
 
