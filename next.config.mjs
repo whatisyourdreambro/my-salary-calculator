@@ -1158,6 +1158,55 @@ const nextConfig = {
         destination: "/guides/one-home-prop-tax-12eok-2026",
         permanent: true,
       },
+      // ─────────────────────────────────────────────────────────────────
+      // 삭제된 가이드 슬러그 8건 308 (2026-09-26, GSC 노출 URL 스윕):
+      // 로컬 next start 는 guides/[slug] 페이지 폴백(permanentRedirect → /guides)
+      // 으로 308 을 주지만, CF Pages 는 force-static 라우트에서 그 폴백을
+      // 건너뛰어 프로덕션은 404 다. 주제가 이어지는 페이지로 정확 경로 1홉.
+      // 후속 주제가 없는 pm-career-path·parking-account-comparison·
+      // majority-union-benefits·startup-vs-large-corp 는 의도적으로 404 유지
+      // (허브로 보내면 soft 404). 목적지 실존은 guideRedirectTargets.test.ts.
+      // ─────────────────────────────────────────────────────────────────
+      {
+        source: "/guides/hyundai-production-salary",
+        destination: "/salary-db/hyundai",
+        permanent: true,
+      },
+      {
+        source: "/guides/salary-guide-2025",
+        destination: "/guides/salary-guide-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/public-servant-salary",
+        destination: "/job/civil-servant-9",
+        permanent: true,
+      },
+      {
+        source: "/guides/salary-negotiation-strategy",
+        destination: "/guides/salary-negotiation-secret",
+        permanent: true,
+      },
+      {
+        source: "/guides/developer-roadmap-2026",
+        destination: "/job/software-engineer",
+        permanent: true,
+      },
+      {
+        source: "/guides/compound-interest-magic",
+        destination: "/calc/compound-interest-quick",
+        permanent: true,
+      },
+      {
+        source: "/guides/linkedin-power-up",
+        destination: "/guides/linkedin-networking",
+        permanent: true,
+      },
+      {
+        source: "/guides/sp500-vs-nasdaq",
+        destination: "/guides/etf-beginner",
+        permanent: true,
+      },
     ];
   },
   async headers() {

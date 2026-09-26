@@ -3,12 +3,14 @@ import { buildPageMetadata } from "@/lib/seo";
 import AutoShareSection from "@/components/AutoShareSection";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "FIRE 조기은퇴 계산기 - 경제적 자유 시뮬레이션 (2026)",
+ title: "파이어족 FIRE 조기은퇴 계산기 - 경제적 자유 시뮬레이션 (2026)",
  description:
- "현재 자산, 월 저축액, 목표 생활비를 입력하면 조기은퇴(FIRE) 가능 시점을 시뮬레이션합니다. 4% 룰 기반 은퇴 자산 목표, 연 수익률별 경로 비교 무료 제공.",
+ "현재 자산·월 저축액·목표 생활비를 넣으면 파이어족 조기은퇴(FIRE) 가능 시점을 계산합니다. 4% 룰 기반 은퇴 자산 목표, 연 수익률별 경로 비교 무료 제공.",
  path: "/fire-calculator",
  keywords: [
  "FIRE 계산기",
+ "파이어족 계산기",
+ "파이어 계산기",
  "조기은퇴 계산기",
  "경제적 자유",
  "은퇴 자산 시뮬레이션",
