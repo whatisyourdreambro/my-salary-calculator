@@ -14,11 +14,12 @@ import { formatManwonKorean } from "@/lib/manwonFormat";
 import { BONUS_PROFILES, type BonusPayout } from "@/data/bonusData";
 import { OPI_ACTUAL_2025, type OpiActualRate } from "@/app/calc/samsung-bonus/opiData";
 import { TAI_RATES_2026_H1 } from "@/app/calc/samsung-bonus/taiData";
-import { PS_HISTORY, type PsHistoryRow } from "@/app/calc/sk-hynix-bonus/psData";
+import { PI_TIERS, PS_HISTORY, type PsHistoryRow } from "@/app/calc/sk-hynix-bonus/psData";
 
 export { OPI1_MAX_RATE, OPI_ACTUAL_2025 } from "@/app/calc/samsung-bonus/opiData";
 export { TAI_ANNOUNCED_DATE, TAI_PAY_DATE, TAI_RATES_2026_H1 } from "@/app/calc/samsung-bonus/taiData";
-export { AGREEMENT_2026, BASIC_RATIO, PI_2026, PI_TIERS, PS_HISTORY } from "@/app/calc/sk-hynix-bonus/psData";
+// PI_2026 은 다시 내보내지 않는다 — h1.paidDate(2026-07-28)는 2025년 상반기 보도 날짜로 보여 2026년 근거가 없다(원장 X-06).
+export { AGREEMENT_2026, BASIC_RATIO, PI_TIERS, PS_HISTORY } from "@/app/calc/sk-hynix-bonus/psData";
 
 const must = <T>(value: T | undefined, what: string): T => {
   if (value === undefined) throw new Error(`[bonusKeeperFigures] ${what} 없음 — 데이터 모듈이 바뀌었으면 회사 성과급 키퍼 본문을 함께 고칠 것`);
@@ -31,8 +32,40 @@ export const opi2025 = (id: string): OpiActualRate => must(OPI_ACTUAL_2025.rates
 export const OPI_2025_DESC: readonly OpiActualRate[] = [...OPI_ACTUAL_2025.rates].sort((a, b) => b.rate - a.rate);
 /** 2026년 상반기 TAI — 지급률 높은 순(같은 비율은 데이터 순서) */
 export const TAI_2026_H1_DESC = [...TAI_RATES_2026_H1].sort((a, b) => b.rate - a.rate);
-/** SK하이닉스 PS 이력 한 해 */
-export const psYear = (year: number): PsHistoryRow => must(PS_HISTORY.find((r) => r.year === year), `PS ${year}`);
+
+/**
+ * psData PS_HISTORY 가운데 회사 실적 발표·회사 인용 보도와 어긋나는 값 — 가이드 본문에서만 바로잡는다.
+ * psData·bonusData 는 계산기(/calc/sk-hynix-bonus)·리포트가 함께 쓰는 파일이라 이 배치에서 고치지 않고 통합 담당에게 넘긴다
+ * (원장 docs/guides-facts-2026-10-G2B.md X-05). psData 가 같은 값으로 고쳐지면 테스트가 이 보정표를 지우라고 알린다.
+ *  - 2022년: PS 820% — 이투데이 2023-02-01 회사 인용("2022년 PS를 820%로 최종 결정"), 영업이익 7조 66억원 — SK하이닉스 뉴스룸 2023-02-01.
+ *  - 2024년: 영업이익 23조 4,673억원(23.5조) — 회사 2025-01-23 발표. 1,500% 는 PS 1,000% + 특별성과급 500%(2025-01 복수 보도).
+ */
+export const PS_HISTORY_CORRECTIONS: Readonly<Record<number, Partial<PsHistoryRow>>> = {
+  2022: { psRatePct: 820, opTril: 7.0 },
+  2024: { opTril: 23.5, note: "PS 1,000% + 특별성과급 500%, HBM 호황" },
+};
+/** 가이드 본문용 PS 이력 — psData 에 위 보정표를 덮어쓴 값 */
+export const PS_HISTORY_GUIDE: readonly PsHistoryRow[] = PS_HISTORY.map((r) => ({ ...r, ...PS_HISTORY_CORRECTIONS[r.year] }));
+/** SK하이닉스 PS 이력 한 해(보정 반영) */
+export const psYear = (year: number): PsHistoryRow => must(PS_HISTORY_GUIDE.find((r) => r.year === year), `PS ${year}`);
+/** 영업이익(조원) 표기 — 소수 첫째 자리까지(7.0조원) */
+export const opTrilKo = (tril: number): string => `${tril.toFixed(1)}조원`;
+
+/**
+ * SK하이닉스 2026년 분기 실적(억원) — 회사 뉴스룸 1분기(https://news.skhynix.co.kr/q1-2026-business-results/)·
+ * 2분기(https://news.skhynix.co.kr/q2-2026-business-results/, 2026-07-29) 발표값. 상반기 PI 지급률은 공식 발표가 없어
+ * 이 실적의 영업이익률을 보도된 PI 구간표(psData PI_TIERS)에 넣어 본문에서 '구간 기준상' 값으로만 쓴다.
+ */
+export const SK_2026_Q = {
+  q1: { revenueEok: 525_763, opEok: 376_103, marginPct: 72 },
+  q2: { revenueEok: 793_187, opEok: 605_426, marginPct: 76 },
+} as const;
+/** 2026년 상반기 영업이익률(%) — 두 분기 합산, 반올림 */
+export const SK_2026_H1_MARGIN_PCT = Math.round(
+  ((SK_2026_Q.q1.opEok + SK_2026_Q.q2.opEok) / (SK_2026_Q.q1.revenueEok + SK_2026_Q.q2.revenueEok)) * 100,
+);
+/** 반기 영업이익률 → 보도된 PI 구간표의 지급률 */
+export const piRateForMargin = (marginPct: number): number => must(PI_TIERS.find((t) => marginPct >= t.minMarginPct), `PI 구간 ${marginPct}`).rate;
 
 /** 성과급 세후 — 연봉에 성과급을 더한 연간 결정세액 차이 + 4대보험 (2026 요율 고정, 추가 세액공제 가정 0) */
 export const bonusNet2026 = (salaryWon: number, bonusWon: number): BonusNetResult =>
