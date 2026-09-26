@@ -42,6 +42,9 @@ const KEEPERS: readonly string[] = [
   "housing-subscription-25man-deduction-2026",
   "earned-income-deduction-2026",
   "standard-vs-special-deduction-2026",
+  "child-education-deduction-limit-2026",
+  "couple-split-bonus-year-2026",
+  "newlywed-deduction-first-year-2026",
 ];
 
 const BASE = "3b564c80";
