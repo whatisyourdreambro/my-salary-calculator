@@ -349,7 +349,7 @@ const didimdolNewborn = `
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 금리·한도</h2>
 <ul class="space-y-2 mt-4">
 <li>· <strong>금리</strong>: 연 1.80~4.50% (우대 전, 소득 구간·만기별, 1.3억 초과 구간은 맞벌이만). 지방 주택은 0.2%p 인하, 우대 후 최종금리 하한 1.2%</li>
-<li>· <strong>한도</strong>: 최대 4억원 (2025년 6월 27일 이전 계약분 5억원), LTV 70%·DTI 60%</li>
+<li>· <strong>한도</strong>: 최대 4억원 (2025년 6월 27일 이전 계약분 5억원), LTV 70%(생애최초 80%, 수도권·규제지역 주택은 70%)·DTI 60%</li>
 <li>· <strong>기간</strong>: 10·15·20·30년</li>
 <li>· <strong>특례금리 5년</strong> 적용 (추가 출산 1명당 5년 연장, 최장 15년), 이후 소득 구간별 금리</li>
 </ul>
@@ -1669,7 +1669,7 @@ export const hotNewsMay2026: Guide[] = [
   },
   {
     slug: "newborn-special-loan-application-2026",
-    title: "신생아 특례대출 최저 1.8%·한도 4억 — 자격·신청 절차·금리 우대 총정리",
+    title: "신생아 특례대출 최저 1.8%·한도 4억 — 자격·신청·금리 우대",
     description:
       "2023년 이후 출생 자녀 + 부부 1.3억(맞벌이 2억) 이하 + 주택 9억 이하. 금리 1.8~4.5%, 한도 4억. 추가 출산 시 0.2%p 우대·특례기간 5년 연장.",
     category: "부동산",

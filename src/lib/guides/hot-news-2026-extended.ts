@@ -71,7 +71,7 @@ const youthSubscriptionAccount = `
 <ul class="space-y-2 mt-4">
 <li>· 월 50만원 × 60개월 = 3,000만원</li>
 <li>· 이자: 가입 기간·우대 조건에 따라 적용 금리가 달라 은행 안내로 확인 (출시 발표 최고 연 4.5%)</li>
-<li>· 소득공제: 총급여 7,000만원 이하 무주택 세대주면 연 300만원 × 40% = 연 최대 120만원 — 환급액은 본인 한계세율에 따라 달라지고, 연소득 5,000만원 이하라면 대체로 15% 이하 구간</li>
+<li>· 소득공제: 총급여 7,000만원 이하 무주택 세대주(또는 세대주의 배우자)면 연 300만원 × 40% = 연 최대 120만원 — 환급액은 본인 한계세율에 따라 달라지고, 연소득 5,000만원 이하라면 대체로 15% 이하 구간</li>
 <li>· 청년주택드림대출: 청약 당첨 시 분양대금 최대 80%·2%대 금리 (2024년 2월 발표 기준, 세부 한도·요건은 주택도시기금 안내 확인)</li>
 </ul>
 
@@ -99,7 +99,7 @@ const newlywedChildBirthBenefit = `
 <h2 class="mt-12 text-2xl font-bold text-primary">👶 자녀 1명 출산 시 합산 혜택</h2>
 <ul class="space-y-2 mt-4">
 <li>· <strong>출산휴가 90일</strong> (산모): 통상임금 100% (고용보험 지급분은 월 상한 적용)</li>
-<li>· <strong>6+6 육아휴직</strong>: 부모가 함께 쓰면 첫 6개월 통상임금 100%, 월 상한은 달마다 올라 6개월째 450만원. 부모가 각각 3개월 이상 쓰면 1인 휴직 기간 최대 1년 6개월</li>
+<li>· <strong>6+6 육아휴직</strong>: 부모가 함께 쓰면 첫 6개월 통상임금 100%, 월 상한은 1·2개월째 250만원에서 3개월째부터 50만원씩 올라 6개월째 450만원. 부모가 각각 3개월 이상 쓰면 1인 휴직 기간 최대 1년 6개월</li>
 <li>· <strong>자녀세액공제 (매년)</strong>: 첫째 25만원·둘째 30만원·셋째+ 40만원/년 (2026년 귀속 9세 이상 자녀, 2017년생 제외)</li>
 <li>· <strong>출산·입양 세액공제 (일회성)</strong>: 첫째 30만원·둘째 50만원·셋째+ 70만원 (출산·입양한 해 1회)</li>
 <li>· <strong>산후조리원 의료비 공제</strong>: 200만원 한도</li>
@@ -1063,7 +1063,7 @@ export const hotNewsExtended: Guide[] = [
   { slug: "newlywed-asset-tax-saving-2026", title: "신혼부부 자산·공제 확인표 — 공동명의와 맞벌이 비교", description: "부부 공제가 자동으로 두 배가 되지 않는 이유. 종부세 인별 9억원·1주택 12억원, 자산 명의와 지출자, 중복 공제 조건을 구분합니다.", category: "세금", tags: ["신혼부부", "절세", "공동명의", "증여세", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-09", views: 0, content: newlywedAssetTax, lang: "ko" },
   { slug: "newlywed-didimdol-bomgijari-2026", title: "신혼부부 디딤돌 vs 보금자리론 — 소득·집값·한도 비교", description: "디딤돌 신혼 한도 3.2억 vs 보금자리론 3.6억, 둘 다 주택 6억 이하. 소득 요건별 선택.", category: "부동산", tags: ["신혼부부", "디딤돌", "보금자리론", "주택대출", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: newlywedDidimdolVsBomgijari, lang: "ko" },
   { slug: "youth-subscription-60points-2026", title: "청약 가점 60점+ 5년 안에 만드는 5가지 전략", description: "청약통장 만 17점·무주택 10점·부양가족 25점 = 60점. 청년주택드림 + 특별공급 활용.", category: "부동산", tags: ["청약", "가점", "청년", "특별공급", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: youthSubscriptionGapyo5y, lang: "ko" },
-  { slug: "youth-housing-dream-account-detail-2026", title: "청년우대형 vs 청년주택드림 청약통장 — 최고 4.5% 금리·전용 대출", description: "청년주택드림(만 19~34세, 연소득 5천 이하) 최고 4.5% 금리 + 연 120만원 소득공제 + 당첨 시 분양가 80% 대출 연계.", category: "부동산", tags: ["청년주택드림", "청약", "청년", "내집마련", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: youthSubscriptionAccount, lang: "ko" },
+  { slug: "youth-housing-dream-account-detail-2026", title: "청년우대형 vs 청년주택드림 청약통장 — 최고 4.5%·전용 대출", description: "청년주택드림(만 19~34세, 연소득 5천 이하) 최고 4.5% 금리 + 연 120만원 소득공제 + 당첨 시 분양가 80% 대출 연계.", category: "부동산", tags: ["청년주택드림", "청약", "청년", "내집마련", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: youthSubscriptionAccount, lang: "ko" },
   { slug: "newlywed-deduction-first-year-2026", title: "신혼부부 첫 연말정산 5가지 — 양가 부모 부양·취득세 200만원", description: "무소득 배우자 인적공제 + 양가 부모 부양 + 신혼 첫 주택 취득세 감면 + 결혼 카드 사용 + 출산·산후조리원 의료비 200만원.", category: "세금", tags: ["신혼부부", "연말정산", "인적공제", "취득세", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: newlywedDeduction, lang: "ko" },
   { slug: "newlywed-child-birth-benefit-2026", title: "자녀 1명 출산 시 정부 지원 총정리 — 6+6 + 자녀세액공제 + 산후조리원", description: "출산휴가 90일 + 6+6 부모육아휴직 + 출산·입양 세액공제 30~70만원 + 산후조리원 200만원 + 자녀장려금 100만원.", category: "세금", tags: ["출산", "자녀", "정부지원", "육아휴직", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: newlywedChildBirthBenefit, lang: "ko" },
   { slug: "youth-3account-combination-2026", title: "청년 3종 조합 — 도약계좌·장기투자 2025년 말 신규 종료", description: "청년도약·청년형 장기투자는 2025-12-31 신규 가입 종료(청년미래적금 참고). 기존 가입자 기준 도약 243만 + 주택드림 약 394만원.", category: "투자", tags: ["청년", "도약계좌", "주택드림", "장기투자", "절세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: youthAccountCombination, lang: "ko" },
