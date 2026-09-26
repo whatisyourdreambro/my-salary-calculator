@@ -833,71 +833,6 @@ const insurance100Limit = `
 <p>함께 보기: <a href="/guides/year-end-tax-2026">2026년 귀속 연말정산 공제 총정리</a> · <a href="/guides/medical-edu-donation-limits-2026">의료비·교육비·기부금 한도</a> · <a href="/guides/implant-dental-medical-deduction-2026">의료비 세액공제 항목 정리</a></p>
 `;
 
-const cardLimitDetail = `
-<p class="lead">신용카드 등 사용액 소득공제는 결제 수단별 공제율과 한도가 모두 다름. 신용카드 15%, 체크/현금 30%, 도서공연 등 문화비 30%(총급여 7천 이하), 전통시장·대중교통 40%. 기본 한도는 7천 이하 300만원·초과 250만원(자녀 수에 따라 상향).</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 한도 — 총급여별</h2>
-<ul class="space-y-2 mt-4">
-<li>· 7천 이하: 300만원 (자녀 1명 350만·2명 이상 400만)</li>
-<li>· 7천 초과: 250만원 (자녀 1명 275만·2명 이상 300만)</li>
-<li>· 1.2억 초과 별도 구간(200만원)은 2023년 귀속부터 폐지 — 7천 초과와 같은 한도</li>
-<li>· 추가 한도: 전통시장·대중교통(7천 이하는 문화비 포함) 합산 300만원 / 7천 초과 200만원</li>
-</ul>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">🎯 최적 사용 비율</h2>
-<p>25% 기준선 도달 전까지는 신용카드(포인트), 초과분은 체크카드·전통시장·대중교통. 본인 의지에 따라 50~100만원 추가 환급 가능.</p>
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/year-end-tax" class="text-primary underline">연말정산 계산기</a></li></ul></div>
-`;
-
-const bookConcertDeduction = `
-<p class="lead">도서·공연·박물관·미술관 사용액 30% 공제(별도 한도 100만원). 영화 티켓도 포함. 총급여 7천만원 이하 직장인에게 추가 절세 항목.</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 공제 대상</h2>
-<ul class="space-y-2 mt-4">
-<li>· 도서 구매(서점·인터넷서점)</li>
-<li>· 공연 티켓(콘서트·연극·뮤지컬·국악)</li>
-<li>· 박물관·미술관 입장료</li>
-<li>· 영화 티켓(2023년부터)</li>
-<li>· 신문 구독료(일부)</li>
-</ul>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬</h2>
-<p>연 도서 50만원 + 공연 40만원 + 영화 30만원 = 120만원 사용:</p>
-<ul class="space-y-2 mt-4">
-<li>· 한도 100만원 적용</li>
-<li>· 30% 공제 = 30만원</li>
-<li>· 한계세율 24% 시 7.2만원 환급</li>
-</ul>
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/year-end-tax" class="text-primary underline">연말정산 계산기</a></li></ul></div>
-`;
-
-const eyewearHerbMedical = `
-<p class="lead">의료비 공제는 일반 의료비뿐만 아니라 안경·렌즈·콘택트렌즈, 한약·한방치료, 임플란트·치과치료, 출산·산후조리원까지 포함. 영수증 보관이 절세 핵심.</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 의료비로 인정되는 항목</h2>
-<ul class="space-y-2 mt-4">
-<li>· 안경·콘택트렌즈 (시력 교정 목적) — 연 50만원 한도</li>
-<li>· 한약 (보약 아닌 처방한약)</li>
-<li>· 한방치료·침</li>
-<li>· 임플란트·치과·교정</li>
-<li>· 출산·분만 의료비</li>
-<li>· 산후조리원 (200만원 한도)</li>
-<li>· 난임시술 (한도 없음, 30% 공제)</li>
-</ul>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 제외 항목</h2>
-<ul class="space-y-2 mt-4">
-<li>· 미용 목적 시술(라미네이트·미백·필러)</li>
-<li>· 건강기능식품·비타민</li>
-<li>· 마사지·찜질방</li>
-<li>· 보약(보양 목적 한약)</li>
-</ul>
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/year-end-tax" class="text-primary underline">연말정산 계산기</a></li></ul></div>
-`;
-
 const foreignFlatTax19 = `
 <p class="lead">한국에 거주하는 외국인 근로자는 단일세율 19%를 선택 가능. 일반 누진세율(6~45%)과 비교해 유리한 쪽 선택. 연봉 8천만원+ 외국인 직장인에게 큰 절세.</p>
 
@@ -920,30 +855,6 @@ const foreignFlatTax19 = `
 <p>연봉 약 2억+ 외국인은 단일세율 유리. 그 이하는 일반 누진세율(특히 공제·세액공제 받을 게 많으면) 유리.</p>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/en/flat-tax" class="text-primary underline">Foreign Worker 19% Flat Tax (EN)</a></li></ul></div>
-`;
-
-const religiousDonation100 = `
-<p class="lead">종교단체 기부금은 소득금액의 10% 한도, 그 외 지정기부금은 30% 한도. 정치자금 기부는 100% 세액공제(10만원 한도) + 초과분 15%. 절세 효과 큰 기부 전략.</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 기부금 한도</h2>
-<ul class="space-y-2 mt-4">
-<li>· <strong>정치자금</strong>: 10만원까지 100% (그 외 15%)</li>
-<li>· <strong>법정기부금</strong>: 종합소득의 100% (국가·지자체·재해구호)</li>
-<li>· <strong>지정기부금</strong>: 종합소득의 30% (사회복지·교육·문화)</li>
-<li>· <strong>종교단체</strong>: 종합소득의 10%</li>
-</ul>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬</h2>
-<p>연소득 6,000만원 + 종교단체 기부 600만원:</p>
-<ul class="space-y-2 mt-4">
-<li>· 한도 = 근로소득금액(약 4,725만원) × 10% ≈ 472만원 (나머지 128만원은 한도 초과)</li>
-<li>· 472만원 × 15% 세액공제 ≈ 71만원 환급</li>
-</ul>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 영수증 필수</h2>
-<p>기부금 영수증 없으면 공제 불가. 종교단체·시민단체에 연말 영수증 요청 + 5년 보관.</p>
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/year-end-tax" class="text-primary underline">연말정산 계산기</a></li></ul></div>
 `;
 
 // ═══════════════════════════════════════════════════════════════
@@ -1480,11 +1391,7 @@ export const hotNewsExtended: Guide[] = [
   { slug: "child-education-deduction-limit-2026", title: "자녀 교육비 세액공제 2026 — 300만·900만원 한도", description: "취학 전·초중고 1명당 300만원, 대학생 900만원 한도로 15% 공제. 2026년부터 초1·2 예체능 학원비 포함, 자녀 소득 요건 폐지.", metaDescription: "자녀 교육비 세액공제는 취학 전·초중고 1명당 연 300만원, 대학생 900만원 한도로 15%입니다. 2026년 추가된 초1·2 예체능 학원비와 자녀 소득 요건 폐지, 계산 예시를 정리했습니다.", category: "세금", tags: ["자녀교육비", "공제", "대학등록금", "학원비", "2026"], level: "초급", publishedDate: "2026-05-23", modifiedDate: "2026-09-30", views: 0, content: childEducationLimit, lang: "ko" },
   // W3-A 1차 키퍼 재작성 — 소득세법 §59의4①, 시행령 §118의4, 국세상담센터 보험료 사례 (사실 원장 docs/guides-facts-2026-10-G1A.md)
   { slug: "insurance-100man-limit-2026", title: "보장성 보험료 세액공제 2026 — 100만원 한도·12%", description: "보장성 보험료 연 100만원 한도 12%, 장애인전용은 별도 100만원 15%. 피보험자는 기본공제대상자여야 합니다.", metaDescription: "2026년 귀속 보장성 보험료 세액공제는 연 100만원 한도로 12%, 장애인전용 보장성보험은 별도 100만원 한도로 15%입니다. 계약자·피보험자 조합별 공제 여부와 제외 보험을 정리했습니다.", category: "세금", tags: ["보험료공제", "종신보험", "실손보험", "자동차보험", "2026"], level: "초급", publishedDate: "2026-05-23", modifiedDate: "2026-09-30", views: 0, content: insurance100Limit, lang: "ko" },
-  { slug: "credit-card-deduction-limit-detail-2026", title: "신용카드 한도 상세 — 7천 이하 300만원·초과 250만원", description: "기본 한도 7천 이하 300만·초과 250만원(자녀 상향) + 전통시장·대중교통 추가 300만(7천 초과 200만). 25% 초과 후 체크·전통시장으로.", category: "세금", tags: ["신용카드", "체크카드", "한도", "공제율", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: cardLimitDetail, lang: "ko" },
-  { slug: "book-concert-museum-deduction-2026", title: "도서·공연·박물관·영화 30% 공제 — 100만원 한도 추가 환급", description: "총급여 7천 이하. 도서·공연·박물관·미술관·영화 티켓 30% 공제. 100만원 사용 시 한계세율 24% 약 7만원 추가 환급.", category: "세금", tags: ["도서공연비", "박물관", "영화", "공제", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bookConcertDeduction, lang: "ko" },
-  { slug: "eyewear-herb-implant-medical-2026", title: "안경·한약·임플란트 의료비 — 종합 영수증으로 환급 극대화", description: "안경 50만 한도, 한약·한방, 임플란트·치과, 출산·산후조리원 200만 포함. 미용 목적·건강기능식품·마사지 제외.", category: "세금", tags: ["의료비공제", "안경", "한약", "임플란트", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: eyewearHerbMedical, lang: "ko" },
   { slug: "foreign-flat-tax-19-2026", title: "외국인 근로자 단일세율 19% — 연봉 2억+ 외국인에게 유리", description: "국내 최초 근로 제공일부터 20년간 외국인 근로자 단일세율 19% + 지방세 = 20.9%. 연봉 2억+ 외국인에게 일반 누진세율 대비 유리.", category: "세금", tags: ["외국인", "단일세율", "Flat Tax", "근로자", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: foreignFlatTax19, lang: "ko" },
-  { slug: "religious-donation-100-percent-2026", title: "기부금 한도 — 종교 10%·정치 10만원 100% 환급", description: "정치자금 10만원까지 100% 세액공제 + 초과분 15%. 법정 100%, 지정 30%, 종교 10% 한도. 5천만원 + 종교 600만원 시 약 57만원 환급.", category: "세금", tags: ["기부금공제", "종교단체", "정치자금", "법정기부금", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: religiousDonation100, lang: "ko" },
   // 투자·재테크 10편
   { slug: "domestic-vs-overseas-etf-tax-2026", title: "국내상장 vs 해외 ETF 세금 — 5천 → 7천 매도 시 77만원 차이", description: "같은 S&P500이라도 TIGER(국내상장) 배당소득 15.4% vs SPY(미국) 22% 양도세. 2,000만원 차익 시 308만 vs 385만원, 약 77만원 차이.", category: "투자", tags: ["ETF", "양도세", "S&P500", "TIGER", "SPY", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: domesticVsOverseasEtf, lang: "ko" },
   { slug: "bond-investment-tax-2026", title: "채권 투자 세금 — 이자 15.4% 분리, 매매차익 비과세", description: "1억 국채 10년 5% 보유 시 연 이자 500만원 × 15.4% = 77만원 세금, 10년 누적 770만원. 매매차익은 일반인 비과세.", category: "투자", tags: ["채권", "국채", "이자소득세", "분리과세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bondTax, lang: "ko" },

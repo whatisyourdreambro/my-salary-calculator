@@ -127,12 +127,12 @@ export const CALC_TO_GUIDES: Record<string, string[]> = {
   "currency-converter": ["currency-exchange-2026", "dollar-investment"],
   // ───── R2 신규 8종 (2026-08-31) — 시즌 패키지·뉴스 트리거·이직
   // 정적 라우트 키는 STATIC_CALC_CARDS에 카드(+href)가 있어야 역링크가 렌더된다.
-  "dual-income-year-end": ["year-end-tax-deductions-guide", "medical-edu-donation-concentration-2026", "marriage-tax-benefits-2026"],
+  "dual-income-year-end": ["year-end-tax-deductions-guide", "medical-edu-donation-limits-2026", "marriage-tax-benefits-2026"],
   "voluntary-retirement": ["voluntary-vs-recommended-resignation-2026", "severance-pay-guide", "unemployment-benefits-complete"],
   "dependent-check": ["year-end-tax-deductions-guide", "year-end-tax-13-tips-2026", "tax-refund-mistakes-2026"],
   "smb-income-tax-break": ["big-corp-vs-mid-2026", "income-tax-8-step-bracket-2026", "tax-refund-mistakes-2026"],
   "offer-compare": ["job-change-salary-jump-2026", "salary-negotiation-script-2026"],
-  "donation-tax-credit-2026": ["donation-tax-credit", "religious-donation-100-percent-2026"],
+  "donation-tax-credit-2026": ["donation-tax-credit", "medical-edu-donation-limits-2026"],
   "health-insurance-dependent": ["health-insurance-2026-guide", "four-major-insurance-complete", "national-pension-strategy-2026"],
   "social-insurance-rates-2027": ["four-major-insurance-complete", "social-insurance-reduction"],
 };

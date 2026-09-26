@@ -10,27 +10,6 @@
   "base": "3b564c80",
   "forbiddenHits": [
     {
-      "slug": "card-30-40-percent-bonus-2026",
-      "patternId": "card-extra-each-100",
-      "snippet": "공연·박물관·영화: 30% (한도 100만 추가) 💰 시뮬 — 한계세율 35",
-      "tag": "GUIDES-08",
-      "note": "추가공제 항목별 한도 100만 → 합산 300만/200만"
-    },
-    {
-      "slug": "card-30-40-percent-bonus-2026",
-      "patternId": "card-extra-each-100",
-      "snippet": "근·여행: 대중교통 40% (한도 100만 추가) · 도서·공연·박물관·영화",
-      "tag": "GUIDES-08",
-      "note": "추가공제 항목별 한도 100만 → 합산 300만/200만"
-    },
-    {
-      "slug": "card-30-40-percent-bonus-2026",
-      "patternId": "card-extra-each-100",
-      "snippet": "기·식비: 전통시장 40% (한도 100만 추가) · 출퇴근·여행: 대중교통",
-      "tag": "GUIDES-08",
-      "note": "추가공제 항목별 한도 100만 → 합산 300만/200만"
-    },
-    {
       "slug": "minus-loan-vs-credit-loan-2026",
       "patternId": "base-rate-2.75",
       "snippet": "이 7월 16일 기준금리를 연 2.75%로 인상(2023년 1월 이",
@@ -50,13 +29,6 @@
       "snippet": "거나 부부 공동명의 공제가 각 6억원인 것은 아닙니다. 먼저",
       "tag": "dated-historical",
       "note": "부정문 — '각 6억원인 것은 아닙니다'(옛 값을 바로잡는 문장)"
-    },
-    {
-      "slug": "salary-bonus-calc-8step-2026",
-      "patternId": "child-credit-30-70",
-      "snippet": "- 누진공제 ⑥ 세액공제: 자녀(30~70만) + 연금저축(13.2%)",
-      "tag": "GUIDES-08",
-      "note": "자녀(30~70만) — 출산·입양 공제 금액. 연간 자녀세액공제는 1명 25만·2명 55만 (hot-bonus-tax-complete.ts)"
     }
   ],
   "descriptionBaseline": {
