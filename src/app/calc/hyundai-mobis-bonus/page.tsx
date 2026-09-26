@@ -183,15 +183,15 @@ export default function HyundaiMobisBonusPage() {
                 </p>
               </article>
               <article className="rounded-xl border border-canvas-deep p-5 bg-canvas/30">
-                <h3 className="font-bold mb-2 text-lg">📢 2026년 임단협 (잠정합의)</h3>
+                <h3 className="font-bold mb-2 text-lg">📢 2026 임단협 (잠정합의)</h3>
                 <ul className="space-y-1 text-sm leading-relaxed">
-                  <li>• 현대차 <strong>8/31 가결</strong>(성과금 400%+1,270만·주식 15주)</li>
+                  <li>• 현대차 8/31 <strong>가결</strong>(성과금 400%·1,270만, 주식 15주)</li>
                   <li>• 모비스는 현대차 타결 수준을 따라가는 패턴</li>
                   <li>• 모비스 <strong>8/25 잠정합의</strong> 보도</li>
-                  <li>• 조건은 계산기 반영 전 — &lsquo;직접 입력&rsquo;으로 계산 가능</li>
+                  <li>• 타결 시 본 계산기 &lsquo;직접 입력&rsquo;으로 즉시 계산 가능</li>
                 </ul>
                 <p className="text-xs text-faint mt-2">
-                  2026년분은 <strong>미확정</strong>(2026-09-26 기준). 확정되면 본 페이지를 갱신합니다.
+                  2026년분 지급률은 <strong>미확정</strong>. 확정 보도가 나오면 본 페이지를 갱신합니다.
                 </p>
               </article>
             </div>
@@ -289,8 +289,8 @@ export default function HyundaiMobisBonusPage() {
                 <strong className="block mb-1 text-amber-900">⚠️ 추정 시뮬레이터입니다</strong>
                 <span className="text-amber-800">
                   2025년 10월 임단협 타결 + 2024년 7월 잠정합의 공개 보도 기반 추정.
-                  실제 지급은 직군·근속·평가에 따라 차이 가능하며, 2026년분은
-                  잠정합의(8/25 보도) 후 확정 전 상태입니다.
+                  실제 지급은 직군·근속·평가에 따라 차이 가능하며, 2026년분은 현대차
+                  가결 이후에도 잠정안(미확정) 상태입니다.
                 </span>
               </span>
             </p>
@@ -335,7 +335,7 @@ export default function HyundaiMobisBonusPage() {
                 (전자신문·서울경제·아주경제 2025-10-17, 뉴스웍스), 2024년 7월 잠정합의
                 (머니S 단독 2024-07-09), 현대차 2025 타결 벤치마크(머니투데이 2026-05-06 인용),
                 평균연봉 FY2025 사업보고서(포쓰저널 2026-03-09). {CURRENT_RATES_YEAR} 세법 반영.
-                2026년분은 잠정합의 보도 후 확정 전(9/26 기준).
+                2026년분 임단협은 잠정안(2026-08 보도).
               </span>
             </p>
           </footer>

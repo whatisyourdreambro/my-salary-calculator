@@ -8,7 +8,8 @@
 //   사측은 하한 100% 폐지 맞대응 — 헤럴드경제 단독·브릿지경제 2026-05-20.
 //   교섭 진행 중 → 타결 시 시나리오·본문 갱신 필요.
 //   KBS 2026-06-27: 교섭 결렬, 노조 7/3 중노위 조정 신청·파업 찬반투표 예고. 2026-09-26 기준
-//   타결·잠정합의 보도 미확인 → 본문 상태 표기는 기준일(9/26)을 붙인다(bonusDealStatusR4.test.ts).
+//   타결·잠정합의 보도 미확인 → 광고 위 상자 제목에 기준일(9/26)을 붙이고, 광고 위 문구는 main 과 같은
+//   글자 폭으로 맞춘다(줄 수 불변 — bonusDealStatusR4.test.ts 5번).
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
@@ -211,7 +212,7 @@ export default function DoosanEnerbilityBonusPage() {
                 </p>
               </article>
               <article className="rounded-xl border border-canvas-deep p-5 bg-canvas/30">
-                <h3 className="font-bold mb-2 text-lg">📢 2026 임단협 (9/26 교섭 중)</h3>
+                <h3 className="font-bold mb-2 text-lg">📢 2026 임단협, 9/26 교섭 중</h3>
                 <ul className="space-y-1 text-sm leading-relaxed">
                   <li>
                     • 노조: 성과급 <strong>상한(530%) 폐지</strong> 요구
@@ -301,7 +302,7 @@ export default function DoosanEnerbilityBonusPage() {
                   2026-05-12 연봉 27% 재원, 헤럴드경제·브릿지경제 2026-05-20 임단협
                   요구안)와 DART 사업보고서 기반 추정 모델이며 회사 공식 자료가
                   아닙니다. 실제 지급은 개인·조직 평가와 직군·근속에 따라 차이가
-                  크고, 2026년분은 미타결(9/26 기준)입니다.
+                  크고, 2026년분은 임단협 타결까지 미확정입니다.
                 </span>
               </span>
             </p>
@@ -354,7 +355,7 @@ export default function DoosanEnerbilityBonusPage() {
                 <strong>데이터 출처</strong>: 서울경제 2026-05-21 (상한 530%·하한
                 100%·영업이익 달성률 기준), 조선일보 2026-05-12 (2025년 연봉의 약 27%
                 재원 차등 지급), 헤럴드경제 단독·브릿지경제 2026-05-20 (2026 임단협
-                노조 요구안)·KBS 2026-06-27(결렬), DART 두산에너빌리티 사업보고서 2026-03-20 제출 (FY2025
+                노조 요구안), DART 두산에너빌리티 사업보고서 2026-03-20 제출 (FY2025
                 평균 연봉 1억원). {CURRENT_RATES_YEAR}년 세법(소득세율·4대보험 요율) 반영.
               </span>
             </p>

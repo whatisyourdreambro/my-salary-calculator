@@ -214,10 +214,10 @@ export default function HyundaiRotemBonusPage() {
                   <li>• 2024년 임단협: <strong>500% + 1,800만원</strong> (평균 3,508만원)</li>
                   <li>• 2025년 영업이익 <strong>1조56억원</strong> — 2023년의 약 5배</li>
                   <li>• 그룹 관행상 <strong>현대차 성과급(450%)을 넘기지 않는 경향</strong> 보도 (디지털타임스 2025-12-02)</li>
-                  <li>• 실적 대비 축소로 내부 불만 → 2026년 9/3 잠정합의 보도 (이데일리)</li>
+                  <li>• 실적 대비 축소로 내부 불만 → 2026년 잠정합의 보도 확정 전 (이데일리)</li>
                 </ul>
                 <p className="text-xs text-faint mt-2">
-                  2026 잠정합의 조건은 미반영. 확정 시 본 페이지에 반영 예정.
+                  이번 잠정합의는 미반영. 확정 시 본 페이지에 반영 예정.
                 </p>
               </article>
             </div>
@@ -302,7 +302,7 @@ export default function HyundaiRotemBonusPage() {
               <span>
                 <strong>데이터 출처</strong>: 2025년 현대로템 임단협 가결 보도
                 (데일리안·아시아경제 2025-12-24), 디지털타임스(2025-12-02),
-                이데일리(2026-09-03 잠정합의)·뉴스웨이(2026-07 갈등 보도). {CURRENT_RATES_YEAR} 세법 반영.
+                뉴스웨이(2026-07 성과배분 갈등 보도). {CURRENT_RATES_YEAR} 세법 반영.
               </span>
             </p>
           </footer>
