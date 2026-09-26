@@ -79,14 +79,28 @@ export function salaryReportHrefOrNearest(amountWon: number, amounts: readonly n
 }
 
 /**
+ * 2025 구형 만원 단위 URL — 1~5자리 숫자 조각(/salary/3850 = 연봉 3,850만원).
+ * 2025-09-16 ~ 2025-11-22 사이 /salary/[amount] 페이지는 parseInt(amount) * 10000 으로 읽었다
+ * (git 8395a74e·e4733f1e, 정적 생성 2000~10000 만원). 원 단위로 읽으면 전부 최소 금액(500만원)으로
+ * 클램프돼 엉뚱한 페이지로 308 했다 — 2026-09-26 GSC 스윕: 이런 URL 107건, 361일 노출 742회·평균 순위 9.0,
+ * 107건 전부 /salary/5000000 착지. 1~5자리면 n ≤ 99,999 라 만원 해석(최대 9억 9,999만원)만 말이 된다.
+ * 6~7자리(100,000~4,999,999)는 원·만원 어느 쪽인지 모호해 종전대로 원 단위(최소 금액 클램프),
+ * 8자리 이상과 -manwon·-eok·-5-eok 형태도 종전 그대로. parseSalaryPathAmount 의 계약(숫자 = 원)은 바꾸지 않는다.
+ */
+const LEGACY_MANWON_SEGMENT = /^\d{1,5}$/;
+
+/**
  * pathname 이 /salary/* 이고 정적 페이지가 아니면 308 목적지 경로, 아니면 null.
  * 정적 집합 안의 숫자 경로(정상 페이지)는 null — 미들웨어가 그대로 통과시킨다.
+ * Edge 미들웨어 경로 — 정수 곱셈 한 번과 정규식 한 번만 더한다(Worker CPU 평탄 유지).
  */
 export function resolveSalaryRedirect(pathname: string, amounts: readonly number[] = SALARY_STATIC_AMOUNTS): string | null {
   const m = pathname.match(SALARY_PATH);
   if (!m) return null;
-  const amount = parseSalaryPathAmount(m[1]);
+  const segment = m[1];
+  let amount = parseSalaryPathAmount(segment);
   if (amount === null || !Number.isFinite(amount) || amount <= 0) return null; // 형식 불명 → 기존 404 흐름
+  if (LEGACY_MANWON_SEGMENT.test(segment)) amount *= 10_000; // 0 < n < 100,000 만원 → 원
   const target = nearestStaticSalaryAmount(amount, amounts);
   const targetPath = `/salary/${target}`;
   return targetPath === pathname ? null : targetPath;
