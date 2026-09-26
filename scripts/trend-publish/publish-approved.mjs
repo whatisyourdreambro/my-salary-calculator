@@ -9,7 +9,8 @@
 // 사전 조건(하나라도 어기면 아무것도 하지 않고 종료):
 //   HALT 없음 · PUBLISH_ENABLED · REVIEWED_UNTIL 유효 · 달력 통과 · 한도 여유 · 결정 대기 없음 · CF_PURGE_OK 또는 --manual-purge-ack ·
 //   DEPLOY_HOLD 없음 · origin/main 최신 커밋이 2시간 이상 지남 · 카드 미만료 · 초안 해시 = 보관본 해시 = 인자
-//   (--retire 는 되돌리기라 HALT·달력·한도·결정 대기·REVIEWED_UNTIL·PUBLISH_ENABLED 를 보지 않는다 — DEPLOY_HOLD·2시간·Purge 확인만)
+//   (--retire 는 되돌리기라 HALT·달력·한도·결정 대기·REVIEWED_UNTIL·PUBLISH_ENABLED 를 보지 않는다 — DEPLOY_HOLD·2시간·Purge 확인만.
+//    --update 는 새 URL 이 아니라 한도·결정 대기·동결·첫 발행일을 보지 않는다 — 판정일·배포 배치·로컬 차단은 본다)
 // 흐름: 워크트리를 origin/main 으로 → render(오늘 날짜·operator-approved) → 생성 파일 재생성 → 게이트 전부 →
 //   커밋 → git push origin HEAD:main (force 없음, 거부되면 멈춤) → verify-prod → 한국어 요약.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -32,6 +33,7 @@ import {
   resolvePaths,
   reviewedUntilState,
   sha256Text,
+  updateCalendarBlocks,
 } from "./daily.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -53,7 +55,7 @@ export function checkPreconditions(p) {
     if (!rv.valid) add(rv.reason);
     for (const b of p.calendarBlocks ?? []) add(`달력: ${b}`);
     if (p.kind === "publish") for (const c of p.capReasons ?? []) add(`한도: ${c}`);
-    if ((p.pending ?? []).length) add(`결정 대기 ${p.pending.length}건: ${p.pending.map((x) => `${x.slug}@${x.at}`).join(", ")}`);
+    if (p.kind === "publish" && (p.pending ?? []).length) add(`결정 대기 ${p.pending.length}건: ${p.pending.map((x) => `${x.slug}@${x.at}`).join(", ")}`);
   }
   if (!p.flags.cfPurgeOk && !p.manualPurgeAck) add("CF_PURGE_OK 없음 — 자동 Purge(A35)를 확인했거나 --manual-purge-ack(배포 뒤 수동 Purge 약속)가 필요");
   if (p.flags.deployHold) add(`DEPLOY_HOLD: ${p.flags.deployHold}`);
@@ -134,7 +136,7 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
     kind,
     today,
     flags,
-    calendarBlocks: calendarBlocks(today, readJson(join(wt, "scripts/trend-publish/calendar.json"), {}), readJson(join(home, "calendar.local.json"), {}), decisions.some((d) => d.decision === "pilot-verdict" && d.value === "continue"), consts.firstPublishNotBefore),
+    calendarBlocks: ((b) => (kind === "update" ? updateCalendarBlocks(b) : b))(calendarBlocks(today, readJson(join(wt, "scripts/trend-publish/calendar.json"), {}), readJson(join(home, "calendar.local.json"), {}), decisions.some((d) => d.decision === "pilot-verdict" && d.value === "continue"), consts.firstPublishNotBefore)),
     capReasons: draft ? capViolations(today, ledger, wtConfig.caps, { cluster: draft.cluster, primaryUrl: primary.url, primarySha: primary.sha256, slug }, consts.hardCaps) : [],
     pending: pendingDecisions(today, ledger, decisions),
     manualPurgeAck: argv.includes("--manual-purge-ack"),
@@ -188,7 +190,7 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
   };
   const snapDir = archive?.snapDir ?? join(home, "snapshots", today);
   if (kind !== "retire") {
-    const gate = await run(process.execPath, [tsx, join(wt, "scripts/trend-publish/gate.ts"), "--draft", draftFile, "--sources", snapDir, "--headlines", join(home, "headlines"), "--sentinel", join(home, "sentinel", "latest.json"), "--mode", "publish", "--today", today, "--phase", "pre", "--check-diff", originSha, "--repo", wt, "--trend-home", home, ...(kind === "update" ? ["--update"] : []), "--out", join(home, "gates", `gate-${slug}-publish-pre.json`)]);
+    const gate = await run(process.execPath, [tsx, join(wt, "scripts/trend-publish/gate.ts"), "--draft", draftFile, "--sources", snapDir, "--headlines", join(home, "radar"), "--sentinel", join(home, "sentinel"), "--mode", "publish", "--today", today, "--phase", "pre", "--check-diff", originSha, "--repo", wt, "--trend-home", home, ...(kind === "update" ? ["--update"] : []), "--out", join(home, "gates", `gate-${slug}-publish-pre.json`)]);
     if (gate.code !== 0) return fail(`gate pre 실패 (exit ${gate.code})\n${gate.stdout.trim().slice(-2000)}`);
   } else {
     const scan = await run(process.execPath, [join(wt, "scripts/trend-publish/secret-scan.mjs"), "--repo", wt, "--base", originSha, "--trend-home", home]);

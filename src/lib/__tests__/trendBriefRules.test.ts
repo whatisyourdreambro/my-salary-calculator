@@ -22,6 +22,7 @@ import {
   numericTokens,
   parseVerifyTaxPatterns,
   runRules,
+  updateCalendarBlocks,
   type BriefFixture,
   type CalendarConfig,
   type LedgerEntry,
@@ -222,6 +223,73 @@ describe("드리프트 가드", () => {
       );
     }
     expect(daily.draftSha256(FX.good)).toBe(draftSha256(FX.good as TrendBriefDraft));
+  });
+});
+
+describe("렌더 뒤 게이트 문맥 (원장·등록부에 자기 자신이 있음)", () => {
+  it("render --write 가 원장에 올린 자기 자신은 한도에서 빠진다", () => {
+    const self: LedgerEntry = {
+      slug: FX.good.slug,
+      publishedDate: "2026-10-13",
+      cluster: FX.good.cluster,
+      eventName: FX.good.event.name,
+      eventKind: FX.good.event.kind,
+      eventStatus: FX.good.event.status,
+      primary: { url: FX.good.sources[0].url, sha256: FX.good.sources[0].sha256, fetchedAt: "", publishedDate: "2026-10-08" },
+      sources: [],
+      reviewBy: "2026-12-12",
+      status: "live",
+    };
+    const { draft, ctx } = fixtureCase(FX, SNAP, sha, BASE, { rule: "caps", contextPatch: { ledger: [self] } });
+    expect(runRules(draft, ctx).find((r) => r.id === "caps")!.ok).toBe(true);
+  });
+
+  it("--update 는 동결·첫 발행일과 무관하고 판정일·배포 배치·로컬 차단만 본다 (daily.mjs 와 같은 규칙)", async () => {
+    const daily = await import("../../../scripts/trend-publish/daily.mjs");
+    const reasons = ["동결 2026-11-01~2027-01-31", "첫 발행일 2026-10-10 이전", "판정일 2026-10-09", "배포 배치 2026-10-10 + 2일", "calendar.local.json 차단 2026-10-20"];
+    expect(updateCalendarBlocks(reasons)).toEqual(daily.updateCalendarBlocks(reasons));
+    const { draft, ctx } = fixtureCase(FX, SNAP, sha, BASE, { rule: "calendar", contextPatch: { today: "2026-11-20" } });
+    const upd = { ...draft, publishedDate: "2026-10-13", modifiedDate: "2026-11-20" };
+    const res = runRules(upd, { ...ctx, updateOf: draft.slug });
+    expect(res.find((r) => r.id === "calendar")!.ok).toBe(true);
+    expect(runRules(upd, ctx).find((r) => r.id === "calendar")!.ok).toBe(false);
+  });
+
+  it("gate 로더 — 레이더 headlines-<날짜>.json·감시기 sentinel-<날짜>.json 계약", async () => {
+    const gate = await import("../../../scripts/trend-publish/gate");
+    const dir = mkdtempSync(join(tmpdir(), "trend-gate-"));
+    try {
+      writeFileSync(join(dir, "headlines-2026-10-12.json"), JSON.stringify({ date: "2026-10-12", titles: ["최근 헤드라인"] }));
+      writeFileSync(join(dir, "headlines-2026-09-01.json"), JSON.stringify({ date: "2026-09-01", titles: ["오래된 헤드라인"] }));
+      writeFileSync(join(dir, "radar-2026-10-12.json"), JSON.stringify({ candidates: [{ title: "후보는 헤드라인이 아니다" }] }));
+      expect(gate.loadHeadlines(dir, "2026-10-13").map((h: { title?: string }) => h.title)).toEqual(["최근 헤드라인"]);
+      writeFileSync(join(dir, "sentinel-2026-10-11.json"), JSON.stringify({ staleRoutes: ["/old"] }));
+      writeFileSync(join(dir, "sentinel-2026-10-12.json"), JSON.stringify({ staleRoutes: ["/savings-interest-2026", "/guides/x"] }));
+      expect(gate.loadStaleRoutes(dir, { linkFreshness: { staticStale: ["/static"] } }).sort()).toEqual(["/guides/x", "/savings-interest-2026", "/static"]);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("render: 원장에 있는 slug 를 새 브리프로 덮어쓰지 않는다(같은 날 재렌더는 멱등)", async () => {
+    const mod = await import("../../../scripts/trend-publish/render");
+    const repo = mkdtempSync(join(tmpdir(), "trend-render-"));
+    try {
+      for (const f of ["src/lib/guides/trend-briefs.ts", "scripts/trend-publish/ledger.json", "src/lib/__tests__/fixtures/trendBriefNumbers.json", "scripts/verify-tax-constants.mjs"]) {
+        mkdirSync(join(repo, f, ".."), { recursive: true });
+        writeFileSync(join(repo, f), read(f));
+      }
+      const plan = mod.planRender(repo, FX.good as TrendBriefDraft, { today: "2026-10-13" });
+      expect(plan.taxHits).toEqual([]);
+      for (const c of plan.changes) writeFileSync(join(repo, c.path), c.after);
+      expect(mod.planRender(repo, FX.good as TrendBriefDraft, { today: "2026-10-13" }).changes.every((c: { before: string | null; after: string }) => c.before === c.after)).toBe(true);
+      expect(() => mod.planRender(repo, FX.good as TrendBriefDraft, { today: "2026-10-20" })).toThrow(/이미 원장/);
+      const upd = mod.planRender(repo, FX.good as TrendBriefDraft, { today: "2026-10-20", update: true });
+      expect(upd.draft.publishedDate).toBe("2026-10-13");
+      expect(upd.draft.modifiedDate).toBe("2026-10-20");
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
   });
 });
 

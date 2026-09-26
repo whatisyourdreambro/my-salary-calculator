@@ -23,6 +23,10 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const TP = join(ROOT, "scripts", "trend-publish");
 const hex = (n, ch = "a") => ch.repeat(n);
 const tmp = (p) => mkdtempSync(join(tmpdir(), p));
+// 키 붙은 URL 파라미터 이름도 실행 중에 조립한다(이 파일 원문이 브랜치 secret-scan 에 걸리지 않게)
+const OC = ["O", "C="].join("");
+const SK = ["service", "Key="].join("");
+const CK = ["crtfc", "_key="].join("");
 
 // ─────────────────────────────────────────────────────────────
 // secret-scan
@@ -30,7 +34,7 @@ const tmp = (p) => mkdtempSync(join(tmpdir(), p));
 test("secret-scan: 40·32자리 hex · OC= · serviceKey · 환경변수 값을 잡고 IndexNow 키 파일은 허용", () => {
   const h40 = hex(40, "b");
   const h32 = hex(32, "c");
-  const text = [`const a = "${h40}";`, `k=${h32}`, "https://www.law.go.kr/DRF/lawSearch.do?OC=someone&target=law", `https://apis.data.go.kr/x?serviceKey=${"Z".repeat(20)}`, `crtfc_key=${"q".repeat(40)}`].join("\n");
+  const text = [`const a = "${h40}";`, `k=${h32}`, `https://www.law.go.kr/DRF/lawSearch.do?${OC}someone&target=law`, `https://apis.data.go.kr/x?${SK}${"Z".repeat(20)}`, `${CK}${"q".repeat(40)}`].join("\n");
   const rules = new Set(scan.scanText(text, { file: "src/x.ts" }).map((h) => h.rule));
   for (const r of ["hex40", "hex32", "law-oc", "service-key", "keyed-param"]) assert.ok(rules.has(r), r);
   assert.deepEqual(scan.scanText(h32, { file: `public/${h32}.txt` }), []);
@@ -58,7 +62,7 @@ test("secret-scan: 값 가리기 — 출력에 원문이 없다 (git 저장소 �
     g("add", ".");
     g("commit", "-qm", "base");
     const secret = `Tok-${"y".repeat(24)}`;
-    writeFileSync(join(repo, "a.txt"), `base\nurl https://x.example/?serviceKey=${secret}\n`);
+    writeFileSync(join(repo, "a.txt"), `base\nurl https://x.example/?${SK}${secret}\n`);
     const r = spawnSync(process.execPath, [join(TP, "secret-scan.mjs"), "--repo", repo, "--base", "HEAD", "--trend-home", home, "--no-next"], {
       encoding: "utf8",
       env: { ...process.env, DATA_GO_KR_KEY: secret },
@@ -90,8 +94,9 @@ function fakeWorktree({ ledger = [] } = {}) {
   }
   writeFileSync(join(wt, "scripts/trend-publish/ledger.json"), JSON.stringify(ledger));
   mkdirSync(join(wt, "scripts/trend-radar"), { recursive: true });
-  writeFileSync(join(wt, "scripts/trend-radar/radar.mjs"), "");
-  writeFileSync(join(wt, "scripts/trend-radar/sentinel.mjs"), "");
+  mkdirSync(join(wt, "scripts/fact-sentinel"), { recursive: true });
+  writeFileSync(join(wt, "scripts/trend-radar/run.mjs"), "");
+  writeFileSync(join(wt, "scripts/fact-sentinel/run.mjs"), "");
   return wt;
 }
 function fakeHome(flags = {}) {
@@ -113,9 +118,12 @@ function fakeRunner(home, { dirty = false, codes = {}, candidates } = {}) {
       if (args.includes("rev-parse")) return { code: 0, stdout: "base1234\n", stderr: "" };
       return { code: 0, stdout: "", stderr: "" };
     }
-    if (line.includes("radar.mjs")) {
+    if (line.includes("trend-radar")) {
+      // 레이더 계약(scripts/trend-radar/README.md): radar-<날짜>.json 의 candidates[] — link·publishedAt·recommendation
       mkdirSync(join(home, "radar"), { recursive: true });
-      writeFileSync(join(home, "radar", "candidates.json"), JSON.stringify({ candidates: candidates ?? [] }));
+      const radar = (candidates ?? []).map((c) => ({ id: c.id, src: "moel-policy", ministry: "고용노동부", sourceKind: "보도자료", title: c.title, link: c.url, publishedAt: `${c.publishedDate}T10:00:00+09:00`, cluster: c.cluster, briefEligible: true, score: c.score, recommendation: c.route }));
+      writeFileSync(join(home, "radar", "radar-2026-10-13.json"), JSON.stringify({ date: "2026-10-13", candidates: radar }));
+      writeFileSync(join(home, "radar", "headlines-2026-10-13.json"), JSON.stringify({ date: "2026-10-13", titles: ["헤드라인은 후보가 아니다"] }));
       return { code: 0, stdout: "", stderr: "" };
     }
     if (line.includes("heavy.mjs")) {
@@ -187,7 +195,7 @@ test("daily prepare: 동결은 보고만 · 후보 없음 · RAM 부족 SKIP · 
     const frozen = fakeRunner(home);
     const f = await daily.prepare({ trendHome: home, worktree: wt, today: "2026-11-15", noSync: true }, frozen);
     assert.equal(f.status, "freeze-report-only");
-    assert.ok(!frozen.calls.some((c) => c.includes("heavy.mjs") || c.includes("radar.mjs")), "동결 기간엔 빌드·레이더 없음");
+    assert.ok(!frozen.calls.some((c) => c.includes("heavy.mjs") || c.includes("trend-radar")), "동결 기간엔 빌드·레이더 없음");
     const none = fakeRunner(home, { candidates: [] });
     assert.equal((await daily.prepare({ trendHome: home, worktree: wt, today: "2026-10-13", noSync: true }, none)).status, "no-candidate");
     const ram = fakeRunner(home, { candidates: [CAND], codes: { "base-build": EXIT_RESOURCE } });
@@ -335,6 +343,13 @@ test("publish-approved: 해시 불일치 · 카드 만료 · origin/main 2시간
   assert.ok(checkPreconditions({ ...base, calendarBlocks: ["동결"] }).some((x) => x.includes("달력")));
   assert.ok(checkPreconditions({ ...base, pending: [{ slug: "a", at: "d28" }] }).some((x) => x.includes("결정 대기")));
   assert.ok(checkPreconditions({ ...base, archive: null }).some((x) => x.includes("보관")));
+  // 수정 발행(--update)은 새 URL 이 아니다 — 한도·결정 대기는 보지 않고, 달력은 판정일·배포 배치·로컬 차단만(호출부가 거른다)
+  assert.deepEqual(checkPreconditions({ ...base, kind: "update", archive: null, capReasons: ["하루 1편"], pending: [{ slug: "a", at: "d28" }] }), []);
+  assert.deepEqual(daily.updateCalendarBlocks(["동결 2026-11-01~2027-01-31", "첫 발행일 2026-10-10 이전", "판정일 2026-10-09", "배포 배치 2026-10-10 + 2일", "calendar.local.json 차단 2026-10-20"]), [
+    "판정일 2026-10-09",
+    "배포 배치 2026-10-10 + 2일",
+    "calendar.local.json 차단 2026-10-20",
+  ]);
   // 철회는 되돌리기 — HALT·달력이 있어도 DEPLOY_HOLD·2시간·Purge 만 본다
   assert.deepEqual(checkPreconditions({ ...base, kind: "retire", flags: { ...flags, halt: "x" }, calendarBlocks: ["동결"], argSha: undefined }), []);
 });

@@ -307,6 +307,11 @@ export function calendarBlocks(today: string, cal: CalendarConfig, local?: Local
   return out;
 }
 
+/** 기존 글 수정(--update)에 적용하는 달력 차단 — 판정일·배포 배치·로컬 차단만 (daily.mjs 와 같은 규칙) */
+export function updateCalendarBlocks(reasons: readonly string[]): string[] {
+  return reasons.filter((r) => /^(?:판정일|배포 배치|calendar\.local)/.test(r));
+}
+
 // ─────────────────────────────────────────────────────────────
 // 본문 분석 도구
 // ─────────────────────────────────────────────────────────────
@@ -528,7 +533,8 @@ export function runRules(input: TrendBriefDraft, ctx: RuleContext): RuleResult[]
       cluster: d.cluster,
       primaryUrl: primary?.url,
       primarySha: primary?.sha256,
-      slug: ctx.updateOf,
+      // render --write 가 원장에 이 브리프를 먼저 올려 두므로 자기 자신은 센다(같은 slug 재사용은 render·slug 규칙이 막는다)
+      slug: d.slug,
     });
     if (ctx.updateOf) out.push(r("caps", true, "--update: 기존 글 수정(신규 URL 아님)"));
     else if (ctx.mode === "dryrun") out.push(r("caps", true, v.length ? `[dry-run 참고] 발행 시 차단: ${v.join(" · ")}` : "한도 여유"));
@@ -537,7 +543,9 @@ export function runRules(input: TrendBriefDraft, ctx: RuleContext): RuleResult[]
 
   // calendar
   {
-    const v = calendarBlocks(ctx.today, ctx.calendar, ctx.localCalendar, ctx.pilotVerdict);
+    const all = calendarBlocks(ctx.today, ctx.calendar, ctx.localCalendar, ctx.pilotVerdict);
+    // --update(수치 정정 등 기존 글 수정)은 새 URL 이 아니라 동결·첫 발행일·파일럿 판정과 무관 — 판정일·배포 배치·로컬 차단만 본다
+    const v = ctx.updateOf ? updateCalendarBlocks(all) : all;
     if (ctx.mode === "dryrun") out.push(r("calendar", true, v.length ? `[dry-run 참고] 발행 시 차단: ${v.join(" · ")}` : "발행 가능일"));
     else out.push(r("calendar", !v.length, v.join(" · ") || "발행 가능일"));
   }

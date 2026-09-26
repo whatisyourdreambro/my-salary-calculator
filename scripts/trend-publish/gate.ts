@@ -10,10 +10,11 @@
 // 출력: 한국어 표 + gate-<slug>.json (TREND_HOME/gates 또는 --out). 종료 코드 0 통과 · 1 규칙 실패 · 2 인프라 오류.
 import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { koGuides } from "../../src/lib/guidesContent";
+import { trendBriefGuides } from "../../src/lib/guides/trend-briefs";
 import {
   RULE_IDS,
   daysBetween,
@@ -76,25 +77,47 @@ export function loadSnapshots(dir: string): SourceSnapshot[] {
     .filter((s) => typeof s.url === "string" && typeof s.text === "string");
 }
 
-/** 21일 안의 헤드라인 기록 (*.json: 배열 또는 {headlines: []}; 항목 {title?, shingles15?, ts}) */
+/**
+ * 21일 안의 헤드라인 기록. 레이더(scripts/trend-radar/run.mjs)의 headlines-<날짜>.json {date, titles[]} 를 읽고,
+ * 그 밖에 배열 또는 {headlines: [{title?, shingles15?, ts}]} 모양도 받는다. 후보 파일(radar-*.json)은 헤드라인이 아니라 건너뛴다.
+ */
 export function loadHeadlines(dir: string | undefined, today: string): HeadlineRecord[] {
   if (!dir || !existsSync(dir)) return [];
   const out: HeadlineRecord[] = [];
-  for (const f of readdirSync(dir).filter((n) => n.endsWith(".json"))) {
+  const recent = (d: string) => daysBetween(d, today) <= SIMILARITY.headlineWindowDays && daysBetween(d, today) >= -1;
+  for (const f of readdirSync(dir).filter((n) => n.endsWith(".json") && !n.startsWith("radar-"))) {
     const raw = JSON.parse(readFileSync(join(dir, f), "utf8")) as unknown;
+    if (raw && typeof raw === "object" && !Array.isArray(raw) && Array.isArray((raw as { titles?: unknown[] }).titles)) {
+      const r = raw as { date?: string; titles: unknown[] };
+      const date = String(r.date ?? /headlines-(\d{4}-\d{2}-\d{2})/.exec(f)?.[1] ?? today).slice(0, 10);
+      if (!recent(date)) continue;
+      for (const t of r.titles) if (typeof t === "string" && t.trim()) out.splice(out.length, 0, { title: t });
+      continue;
+    }
     const list = (Array.isArray(raw) ? raw : ((raw as { headlines?: unknown[] }).headlines ?? [])) as { title?: string; shingles15?: number[]; ts?: string }[];
     for (const h of list) {
       const ts = h.ts ? String(h.ts).slice(0, 10) : today;
-      if (daysBetween(ts, today) > SIMILARITY.headlineWindowDays) continue;
+      if (!recent(ts)) continue;
       out.splice(out.length, 0, { title: h.title, shingles15: h.shingles15 });
     }
   }
   return out;
 }
 
-/** sentinel 보고서의 낡은 경로 (+ config.linkFreshness.staticStale) */
-export function loadStaleRoutes(file: string | undefined, config: { linkFreshness?: { staticStale?: string[] } }): string[] {
+/**
+ * 감시기(scripts/fact-sentinel/run.mjs)의 낡은 경로 + config.linkFreshness.staticStale.
+ * 인자가 폴더면 그 안의 가장 최근 sentinel-<날짜>.json, 파일이면 그 파일. 형식 {staleRoutes: string[] | {route}[]}.
+ */
+export function loadStaleRoutes(fileOrDir: string | undefined, config: { linkFreshness?: { staticStale?: string[] } }): string[] {
   const out = [...(config.linkFreshness?.staticStale ?? [])];
+  let file = fileOrDir;
+  if (file && existsSync(file) && statSync(file).isDirectory()) {
+    const latest = readdirSync(file)
+      .filter((n) => /^sentinel-\d{4}-\d{2}-\d{2}\.json$/.test(n) || n === "latest.json")
+      .sort()
+      .reverse()[0];
+    file = latest ? join(file, latest) : undefined;
+  }
   if (file && existsSync(file)) {
     const raw = JSON.parse(readFileSync(file, "utf8")) as { staleRoutes?: (string | { route: string })[] } | (string | { route: string })[];
     const list = Array.isArray(raw) ? raw : (raw.staleRoutes ?? []);
@@ -206,7 +229,12 @@ export async function main(): Promise<number> {
   }
   const draft = v.draft;
   const updateOf = process.argv.includes("--update") ? draft.slug : undefined;
+  // slug 중복 — render 뒤에는 이 브리프도 koGuides 에 있다. 등록부(trendBriefGuides)에 렌더된 자기 자신 1건을 빼고도
+  // 같은 slug 가 남으면(기존 가이드와 충돌) 중복이다. --update 는 자기 자신을 고치는 것이라 예외(rules.ts slug 규칙).
   const slugs = koGuides.map((g) => g.slug);
+  const renderedSelf = trendBriefGuides.some((g) => g.slug === draft.slug) ? 1 : 0;
+  const othersWithSlug = slugs.filter((s) => s === draft.slug).length - renderedSelf;
+  const existingSlugs = [...slugs.filter((s) => s !== draft.slug), ...(othersWithSlug > 0 ? [draft.slug] : [])];
   const nextDir = resolve(repo, arg("--next") || ".next");
   const staticPages: RuleContext["staticPages"] = [];
   const cannibalHubs = (config.cannibalHubs as RuleContext["cannibalHubs"]) ?? [];
@@ -230,7 +258,7 @@ export async function main(): Promise<number> {
     existingGuides: koGuides.filter((g) => g.slug !== draft.slug).map((g) => ({ key: g.slug, title: g.title, text: visibleText(g.content) })),
     staticPages,
     cannibalHubs,
-    existingSlugs: slugs,
+    existingSlugs,
     redirectSlugs: redirectSlugs(repo),
     routeExists: routeChecker(repo, slugs),
     staleRoutes: loadStaleRoutes(arg("--sentinel") || undefined, config as { linkFreshness?: { staticStale?: string[] } }),

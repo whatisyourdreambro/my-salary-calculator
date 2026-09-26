@@ -71,6 +71,10 @@ export function planRender(
   const ledger = JSON.parse(readText(ledgerPath) ?? "[]") as LedgerEntry[];
   const prev = ledger.find((e) => e.slug === input.slug);
   let draft: TrendBriefDraft = { ...input };
+  // 같은 slug 재사용 금지 — 원장에 다른 날 발행분이나 철회분이 있으면 새 브리프로 덮어쓰지 않는다(같은 날 재렌더는 멱등 허용)
+  if (!opts.update && prev && (prev.status !== "live" || prev.publishedDate !== (opts.today ?? input.publishedDate))) {
+    throw new Error(`slug ${input.slug} 는 이미 원장에 있다(${prev.publishedDate} ${prev.status}) — 새 브리프는 새 slug, 기존 글 수정은 --update`);
+  }
   if (opts.update) {
     if (!prev || prev.status !== "live") throw new Error(`--update: 원장에 게시 중인 ${input.slug} 가 없음`);
     draft = { ...draft, publishedDate: prev.publishedDate, modifiedDate: opts.today ?? draft.modifiedDate };

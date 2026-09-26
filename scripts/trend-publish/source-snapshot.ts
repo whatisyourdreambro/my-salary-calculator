@@ -62,6 +62,19 @@ export async function loadNet(): Promise<Net> {
   if (!existsSync(robotsPath) || !existsSync(httpPath)) throw new Error("scripts/trend-radar/lib/{robots,http}.mjs 없음 — 레이더 컴포넌트가 먼저 병합돼야 한다");
   const robots = (await import(pathToFileURL(robotsPath).href)) as Record<string, unknown>;
   const http = (await import(pathToFileURL(httpPath).href)) as Record<string, unknown>;
+  // 레이더 공용 계약(scripts/trend-radar/README.md): createHttp(opts).get(url) → {status, text, finalUrl} · isAllowed(url, {http}) → {allowed}
+  if (typeof http.createHttp === "function" && typeof robots.isAllowed === "function") {
+    type Client = { get(url: string): Promise<{ status: number; text?: string; finalUrl?: string }> };
+    const client = (http.createHttp as (o: Record<string, unknown>) => Client)({ maxRequests: 12, log: (line: string) => console.error(line) });
+    const isAllowed = robots.isAllowed as (url: string, ctx: { http: Client }) => Promise<{ allowed: boolean }>;
+    return {
+      robotsAllowed: async (url) => (await isAllowed(url, { http: client })).allowed === true,
+      fetchText: async (url) => {
+        const r = await client.get(url);
+        return { status: r.status, finalUrl: r.finalUrl ?? url, body: r.text ?? "" };
+      },
+    };
+  }
   const pick = (mod: Record<string, unknown>, names: string[]) => {
     for (const n of names) if (typeof mod[n] === "function") return mod[n] as (...a: unknown[]) => Promise<unknown>;
     const d = mod.default as Record<string, unknown> | undefined;

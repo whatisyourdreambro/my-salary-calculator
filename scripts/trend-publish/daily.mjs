@@ -128,6 +128,9 @@ export function calendarBlocks(today, cal, local, pilotVerdict, firstPublishNotB
   return reasons;
 }
 
+/** 기존 글 수정(--update)에 적용하는 달력 차단 — 판정일·배포 배치·로컬 차단만 (rules.ts 와 같은 규칙) */
+export const updateCalendarBlocks = (reasons) => reasons.filter((r) => /^(?:판정일|배포 배치|calendar\.local)/.test(r));
+
 export const isFrozen = (today, cal) => (cal.freezes ?? []).some((f) => today >= f.from && today <= f.to);
 
 /** 결정 대기 — 게시 중 글의 D+28 판정·reviewBy 판정이 없으면 */
@@ -197,7 +200,7 @@ export const OPERATOR_REPO_FILES = [
   /^\.wrangler\//,
   /^\.claude\/settings\.local\.json$/,
 ];
-export const HOME_DIRS = ["radar", "sentinel", "snapshots", "builds", "writer", "drafts", "drafts/pending", "cards", "reports", "gates", "logs", "state", "locks", "headlines", "tmp"];
+export const HOME_DIRS = ["radar", "sentinel", "snapshots", "builds", "writer", "drafts", "drafts/pending", "cards", "reports", "gates", "logs", "state", "locks", "tmp"];
 
 export function readFlags(home) {
   const read = (n) => (existsSync(join(home, n)) ? readFileSync(join(home, n), "utf8").trim() : null);
@@ -290,27 +293,33 @@ export function readEligibleClusters(root) {
   return [...block.matchAll(/"([a-z-]+)"/g)].map((m) => m[1]);
 }
 
-/** 가장 최근 레이더 출력(radar/*.json) → 정규화된 후보 목록 */
+/**
+ * 가장 최근 레이더 출력 → 정규화된 후보 목록.
+ * scripts/trend-radar/run.mjs 의 radar-<날짜>.json(candidates[]: link·publishedAt(ISO +09:00)·recommendation·
+ * sourceKind·briefEligible·score) 을 우선 읽고, 없으면 radar/*.json 중 candidates 배열이 있는 최신 파일.
+ * headlines-<날짜>.json 은 후보가 아니다(게이트의 헤드라인 겹침 검사 전용).
+ */
 export function readRadarCandidates(home) {
   const dir = join(home, "radar");
   if (!existsSync(dir)) return [];
   const files = readdirSync(dir)
-    .filter((f) => f.endsWith(".json"))
-    .map((f) => ({ f, t: statSync(join(dir, f)).mtimeMs }))
-    .sort((a, b) => b.t - a.t);
+    .filter((f) => f.endsWith(".json") && !f.startsWith("headlines"))
+    .map((f) => ({ f, radar: /^radar-\d{4}-\d{2}-\d{2}\.json$/.test(f), t: statSync(join(dir, f)).mtimeMs }))
+    .sort((a, b) => Number(b.radar) - Number(a.radar) || b.t - a.t || (a.f < b.f ? 1 : -1));
   if (!files.length) return [];
   const raw = readJson(join(dir, files[0].f), []);
   const list = Array.isArray(raw) ? raw : (raw.candidates ?? raw.items ?? []);
   return list
+    .filter((c) => c && c.briefEligible !== false)
     .map((c) => ({
-      id: String(c.id ?? c.url ?? c.primaryUrl ?? ""),
+      id: String(c.id ?? c.link ?? c.url ?? ""),
       cluster: CLUSTER_ALIASES[c.cluster] ?? c.cluster,
-      route: c.route ?? c.kind ?? c.action ?? "new-brief",
+      route: c.recommendation ?? c.route ?? "new-brief",
       title: String(c.title ?? ""),
-      url: String(c.url ?? c.primaryUrl ?? ""),
-      publishedDate: String(c.publishedDate ?? c.date ?? "").slice(0, 10),
+      url: String(c.link ?? c.url ?? c.primaryUrl ?? ""),
+      publishedDate: String(c.publishedAt ?? c.publishedDate ?? c.date ?? "").slice(0, 10),
       ministry: c.ministry ? String(c.ministry) : undefined,
-      eventKind: c.eventKind ? String(c.eventKind) : undefined,
+      eventKind: c.sourceKind ? String(c.sourceKind) : c.eventKind ? String(c.eventKind) : undefined,
       score: Number(c.score ?? 0),
       fromRss: c.fromRss ?? c.rssUrl,
     }))
@@ -628,7 +637,7 @@ export async function finish(opts, deps = defaultDeps()) {
     }
     const gatePre = await deps.run(
       process.execPath,
-      [tsx, join(wt, "scripts/trend-publish/gate.ts"), "--draft", opts.draft, "--sources", state.snapDir, "--headlines", join(home, "headlines"), "--sentinel", join(home, "sentinel", "latest.json"),
+      [tsx, join(wt, "scripts/trend-publish/gate.ts"), "--draft", opts.draft, "--sources", state.snapDir, "--headlines", join(home, "radar"), "--sentinel", join(home, "sentinel"),
         "--mode", gateMode, "--today", today, "--phase", "pre", "--check-diff", state.originSha || "origin/main", "--repo", wt, "--trend-home", home, "--out", join(home, "gates", `gate-${slug}-pre.json`)],
       { cwd: wt }
     );
