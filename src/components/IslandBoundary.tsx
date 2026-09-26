@@ -10,7 +10,8 @@
 //  - 자동 새로고침은 하지 않는다 — 정상 동작 중인 페이지를 다시 불러오면 광고를 재요청한다.
 //    (React.lazy 는 거부된 import 를 캐시하므로 재렌더로는 회복되지 않는다 → 단독 경로 링크를
 //    일반 <a> 로 둬 새 HTML·새 청크를 받는 전체 로드로 이동시킨다.)
-//  - ★ 광고 컴포넌트(CalcResultAd·InArticleAd 등)나 광고를 품은 트리(CalculatorTabs)는 감싸지 않는다.
+//  - ★ 광고 컴포넌트(CalcResultAd·InArticleAd 등)는 감싸지 않는다. 광고를 품은 트리는 승인 건만:
+//    홈 CalculatorTabs(ResultAd 포함)는 운영자 승인 #10 A14(2026-09-25)로 감싼다 — 정상 렌더 DOM·광고 위치 불변.
 "use client";
 
 import { Component, type CSSProperties, type ReactNode } from "react";
@@ -41,11 +42,20 @@ export default class IslandBoundary extends Component<Props, State> {
   }
 }
 
-/** 섬 자리의 짧은 안내 + (선택) 단독 경로 링크. className·minHeight 로 원래 자리 크기를 유지한다. */
-export function IslandFallback({ message, href, linkLabel, className = "", style }: {
+/** 사용자가 누른 새로고침 — 새 HTML·새 청크 해시로 전체 로드한다(자동 새로고침은 하지 않는다). */
+export function reloadPage() {
+  window.location.reload();
+}
+
+/**
+ * 섬 자리의 짧은 안내 + (선택) 단독 경로 링크·새로고침 버튼. className·minHeight 로 원래 자리 크기를 유지한다.
+ * reloadLabel(2026-09-26 A14): 단독 경로가 없는 섬(홈 계산기 탭 — ?tab= 상태 유지)은 같은 주소 새로고침 버튼.
+ */
+export function IslandFallback({ message, href, linkLabel, reloadLabel, className = "", style }: {
   message: string;
   href?: string;
   linkLabel?: string;
+  reloadLabel?: string;
   className?: string;
   style?: CSSProperties;
 }) {
@@ -58,6 +68,12 @@ export function IslandFallback({ message, href, linkLabel, className = "", style
             {" "}
             {/* 전체 로드로 이동해야 새 청크를 받는다 — 클라이언트 전환(AppLink) 대신 일반 링크. */}
             <a href={href} className="font-semibold text-link underline underline-offset-4">{linkLabel}</a>
+          </>
+        )}
+        {reloadLabel && (
+          <>
+            {" "}
+            <button type="button" onClick={reloadPage} className="font-semibold text-link underline underline-offset-4">{reloadLabel}</button>
           </>
         )}
       </p>
