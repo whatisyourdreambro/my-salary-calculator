@@ -34,7 +34,8 @@ export const INDEXNOW_KEY_FILE = /^public\/[0-9a-f]{32}\.txt$/;
 export const TEST_FIXTURE_PATH = /^(?:scripts\/__tests__\/|src\/lib\/__tests__\/|scripts\/[\w-]+\/fixtures\/)/;
 export const PLACEHOLDER_VALUE = /^(?:test|dummy|example|planted[_a-z0-9]*|raw_secret|[A-Z]{1,3}_SECRET)$/;
 const keyedValue = (match) => match.replace(/^[?&]?[\w-]+\s*=\s*/, "");
-export const SECRET_ENV_NAME = /(?:^|_)(?:KEY|SECRET|TOKEN|PASSWORD|OC)$/i;
+// CLIENT_ID(2026-09-27): 데이터랩 키 파일의 클라이언트 ID 도 비밀값처럼 찾는다(짝인 …SECRET 은 원래 규칙에 걸린다)
+export const SECRET_ENV_NAME = /(?:^|_)(?:KEY|SECRET|TOKEN|PASSWORD|OC|CLIENT_ID)$/i;
 const TEXT_EXT = /\.(?:html?|js|mjs|cjs|json|rsc|body|meta|txt|xml|css|map|md|log|jsonl|ts|tsx)$/i;
 
 /** 값 가리기 — 앞 4자 + 길이 */

@@ -350,9 +350,101 @@ test("git push 는 publish-approved.mjs 에만 있다", () => {
   const pa = readFileSync(join(TP, "publish-approved.mjs"), "utf8");
   assert.ok(/\["push", "origin", "HEAD:main"\]/.test(pa));
   assert.ok(!/--force|-f\b.*push|push.*--force/.test(pa), "강제 반영 없음");
-  // 검색·데이터랩 API 흔적 없음 (정책: 코드·환경변수 이름 금지)
-  const all = readdirSync(TP).map((f) => readFileSync(join(TP, f), "utf8")).join("\n");
-  assert.ok(!all.includes(["NAVER", "_"].join("")) && !new RegExp(["fin", "life"].join(""), "i").test(all));
+  // 네이버 검색·뉴스 API 흔적 없음. 발행기는 네이버 API 를 부르지 않는다 — 데이터랩 키 이름은 config.json 의 선택 키 파일
+  // 허용 이름(레이더 부스터용, 2026-09-27 운영자 결정)으로만 둔다. 금융상품 비교 API 도 금지.
+  const files = readdirSync(TP).filter((f) => /\.(?:mjs|ts|md|json)$/.test(f));
+  for (const f of files) {
+    const text = readFileSync(join(TP, f), "utf8");
+    const lower = text.toLowerCase();
+    for (const bad of ["openapi.naver.com", "search.naver.com", "news.naver", "/v1/search/", "datalab.naver"]) assert.ok(!lower.includes(bad), `${f} 에 ${bad}`);
+    assert.ok(!new RegExp(["fin", "life"].join(""), "i").test(text), `${f} 에 금융상품 비교 API`);
+    const naverNames = [...text.matchAll(new RegExp(`${["NAVER", "_"].join("")}\\w*`, "g"))].map((m) => m[0]);
+    if (f === "config.json") assert.deepEqual([...new Set(naverNames)].sort(), [["NAVER", "_CLIENT_ID"].join(""), ["NAVER", "_CLIENT_SECRET"].join("")]);
+    else assert.deepEqual(naverNames, [], `${f} 에 네이버 키 이름`);
+  }
+});
+
+// ─────────────────────────────────────────────────────────────
+// 선택 키 파일 (secret-env.mjs — 2026-09-27 운영자 결정)
+// ─────────────────────────────────────────────────────────────
+test("secret-env: 허용 이름만 읽고 기존 값을 덮지 않으며 값은 요약·보고에 남지 않는다", async () => {
+  const se = await import("../trend-publish/secret-env.mjs");
+  const dir = tmp("trend-secret-env-");
+  const idName = ["NAVER", "_CLIENT_ID"].join("");
+  const secretName = ["NAVER", "_CLIENT_SECRET"].join("");
+  const idVal = `cid-${"m".repeat(12)}`;
+  const secretVal = `csv-${"n".repeat(12)}`;
+  const ocVal = `oc-${"p".repeat(9)}`;
+  try {
+    // 형식: BOM·CRLF·주석·export·따옴표·허용 밖 이름·빈 값
+    const parsed = se.parseEnvText(`\uFEFF# 주석\r\nexport LAW_OC=${ocVal}\r\nECOS_API_KEY=""\r\nOTHER_KEY=zzz\r\n${idName}='${idVal}'\r\n`, ["LAW_OC", "ECOS_API_KEY", idName]);
+    assert.deepEqual(parsed, { LAW_OC: ocVal, [idName]: idVal });
+    const trendEnv = join(dir, "trend.env");
+    const datalabEnv = join(dir, "naver", "datalab.env.txt");
+    mkdirSync(dirname(datalabEnv), { recursive: true });
+    writeFileSync(trendEnv, `LAW_OC=${ocVal}\n`);
+    writeFileSync(datalabEnv, `${idName}=${idVal}\n${secretName}=${secretVal}\n`);
+    const env = { [secretName]: "already-set-by-operator" };
+    const specs = [
+      { path: trendEnv, names: ["LAW_OC", "ECOS_API_KEY"] },
+      { path: datalabEnv, names: [idName, secretName] },
+      { path: join(dir, "missing.env"), names: ["LAW_OC"] },
+      { path: join(dir, "bad-name.env"), names: ["lower_case", "X"] },
+    ];
+    const summary = se.loadSecretEnvFiles(specs, env);
+    assert.equal(env.LAW_OC, ocVal);
+    assert.equal(env[idName], idVal);
+    assert.equal(env[secretName], "already-set-by-operator", "운영자가 넘긴 값이 이긴다");
+    assert.equal(env.ECOS_API_KEY, undefined);
+    assert.deepEqual(summary, [
+      { file: "trend.env", present: true, loaded: ["LAW_OC"], kept: [] },
+      { file: "datalab.env.txt", present: true, loaded: [idName], kept: [secretName] },
+      { file: "missing.env", present: false, loaded: [], kept: [] },
+    ]);
+    const line = se.describeSecretEnv(summary);
+    for (const v of [ocVal, idVal, secretVal]) {
+      assert.ok(!JSON.stringify(summary).includes(v) && !line.includes(v), "값은 요약·보고에 없다");
+    }
+    assert.match(line, /trend\.env 있음\(LAW_OC\)/);
+    assert.match(line, /missing\.env 없음/);
+    // 크기 상한 — 키 파일이 아닌 큰 파일은 읽지 않는다
+    const big = join(dir, "big.env");
+    writeFileSync(big, `LAW_OC=${"q".repeat(se.MAX_SECRET_ENV_BYTES)}\n`);
+    const env2 = {};
+    assert.match(se.loadSecretEnvFiles([{ path: big, names: ["LAW_OC"] }], env2)[0].error, /초과/);
+    assert.equal(env2.LAW_OC, undefined);
+    // secret-scan 이 두 데이터랩 키 이름을 비밀값으로 잡는다
+    assert.deepEqual(scan.collectEnvSecrets({ [idName]: idVal, [secretName]: secretVal, PATH: "/usr/bin" }).map((e) => e.name).sort(), [idName, secretName].sort());
+  } finally {
+    cleanup(dir);
+  }
+});
+
+test("secret-env: 설정 경로·이름은 운영자 결정 그대로, 실제 실행(defaultDeps)만 키 파일을 읽는다", async () => {
+  const config = JSON.parse(readFileSync(join(TP, "config.json"), "utf8"));
+  assert.deepEqual(config.secretEnvFiles, [
+    { path: "C:/Users/ruby1/.moneysalary-secrets/trend.env", names: ["LAW_OC", "ECOS_API_KEY"] },
+    { path: "C:/Users/ruby1/.moneysalary-secrets/naver/datalab.env.txt", names: [["NAVER", "_CLIENT_ID"].join(""), ["NAVER", "_CLIENT_SECRET"].join("")] },
+  ]);
+  assert.equal(typeof daily.defaultDeps().secretEnv, "function");
+  // prepare 는 deps.secretEnv 가 있을 때만 부르고, 보고서에는 파일·이름만 적는다(가짜 함수 — 실제 파일은 열지 않는다)
+  const wt = fakeWorktree();
+  const home = fakeHome({ PUBLISH_ENABLED: "", REVIEWED_UNTIL: "2026-10-20" });
+  try {
+    let seen = null;
+    const d = { ...fakeRunner(home, { candidates: [] }), secretEnv: (specs) => ((seen = specs), [{ file: "trend.env", present: true, loaded: ["LAW_OC"], kept: [] }, { file: "datalab.env.txt", present: false, loaded: [], kept: [] }]) };
+    const r = await daily.prepare({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13", noSync: true }, d);
+    assert.equal(r.status, "no-candidate");
+    assert.deepEqual(seen, config.secretEnvFiles);
+    assert.match(readFileSync(r.report, "utf8"), /선택 키 파일: trend\.env 있음\(LAW_OC\) · datalab\.env\.txt 없음\(키 없이 동작\)/);
+    // HALT 면 키 파일을 건드리지도 않는다
+    writeFileSync(join(home, "HALT"), "테스트 중지");
+    seen = null;
+    await daily.prepare({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13", noSync: true }, d);
+    assert.equal(seen, null);
+  } finally {
+    cleanup(wt, home);
+  }
 });
 
 // ─────────────────────────────────────────────────────────────

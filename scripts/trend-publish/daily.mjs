@@ -37,6 +37,7 @@ import {
 } from "node:fs";
 import { dirname, join, resolve, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { describeSecretEnv, loadSecretEnvFiles } from "./secret-env.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 export const REPO_OF_SCRIPT = resolve(HERE, "..", "..");
@@ -433,7 +434,14 @@ export function realRun(cmd, args, { cwd, env } = {}) {
     child.on("error", (e) => resolveRun({ code: 127, stdout, stderr: String(e) }));
   });
 }
-export const defaultDeps = () => ({ run: realRun, now: () => new Date(), log: (s) => process.stdout.write(`${s}\n`) });
+// secretEnv: config.json secretEnvFiles(저장소 밖 선택 키 파일)를 process.env 로 — 실제 실행(defaultDeps)에만 있다.
+// 테스트의 가짜 deps 에는 없으므로 테스트는 실제 키 파일을 열지 않는다(scripts/trend-publish/secret-env.mjs).
+export const defaultDeps = () => ({
+  run: realRun,
+  now: () => new Date(),
+  log: (s) => process.stdout.write(`${s}\n`),
+  secretEnv: (specs) => loadSecretEnvFiles(specs, process.env),
+});
 
 const lastJson = (text) => {
   const line = String(text ?? "").trim().split(/\r?\n/).filter(Boolean).at(-1) ?? "";
@@ -536,6 +544,8 @@ export async function prepare(opts, deps = defaultDeps()) {
     if (flags.halt) return out({ status: "halt", reason: `HALT: ${flags.halt}`, report: report(home, today, [`## prepare — 중지(HALT)`, `- ${flags.halt}`]) });
     const refused = await worktreeGuard(deps, { wt, allowAnyWorktree: opts.allowAnyWorktree === true });
     if (refused) return out({ status: "error", reason: refused });
+    // 선택 키(trend.env 의 법령 OC·ECOS, 데이터랩 키 파일) — 있으면 환경변수로. 재실행 자식·레이더·감시기가 상속한다.
+    const keyNote = deps.secretEnv ? describeSecretEnv(deps.secretEnv(config.secretEnvFiles)) : null;
 
     if (!opts.noSync) {
       const f = await git(deps, wt, ["fetch", "origin", "--prune"]);
@@ -566,6 +576,7 @@ export async function prepare(opts, deps = defaultDeps()) {
     const wtConfig = loadConfig(wt);
     const m = demoteForDateOverride(computeMode({ today, flags, calendar, localCalendar, pilotVerdict, ledger, decisions, consts, config: wtConfig }), today, realToday);
     const lines = [`## prepare ${today} — 모드 ${m.mode}`, ...m.reasons.map((r) => `- ${r}`), `- 기준 커밋 ${originSha.slice(0, 8)}`];
+    if (keyNote) lines.splice(lines.length, 0, `- 선택 키 파일: ${keyNote}`);
 
     if (m.mode === "FREEZE") {
       const pend = pendingDecisions(today, ledger, decisions);
@@ -684,6 +695,8 @@ export async function finish(opts, deps = defaultDeps()) {
     if (flags.halt) return res({ status: "halt", reason: `HALT: ${flags.halt}` });
     const refused = await worktreeGuard(deps, { wt, allowAnyWorktree: opts.allowAnyWorktree === true });
     if (refused) return res({ status: "error", reason: refused });
+    // 선택 키 적용 — gate pre·post 의 secret-scan 이 값을 알아야 diff·.next·로그에 새어 나간 흔적을 잡는다
+    if (deps.secretEnv) deps.secretEnv(config.secretEnvFiles);
     const state = readJson(join(home, "state", `${today}.json`), null);
     if (!state) return res({ status: "error", reason: `prepare 상태 없음: state/${today}.json` });
     if (!opts.draft || !existsSync(opts.draft)) return res({ status: "error", reason: `초안 파일 없음: ${opts.draft}` });

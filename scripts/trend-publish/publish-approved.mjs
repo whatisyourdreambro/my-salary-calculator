@@ -110,6 +110,8 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
     say(`[publish] ${refused}`);
     return 2;
   }
+  // 선택 키 파일(config.json secretEnvFiles) — 게이트·secret-scan 이 값을 알아야 새어 나간 흔적을 잡는다. 값은 기록하지 않는다.
+  if (deps.secretEnv) deps.secretEnv(config.secretEnvFiles);
   const run = (cmd, args, cwd = wt) => deps.run(cmd, args, { cwd });
   const git = (args) => run("git", ["-C", wt, ...args]);
   const tsx = join(wt, "node_modules/tsx/dist/cli.mjs");

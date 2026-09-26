@@ -5,12 +5,17 @@
     "caps perKstDay 1 · perIsoWeek 5 = 운영자 결정(2026-09-27): 하루 1편·주 5편 이하, 발행은 브리프마다 운영자 승인('발행 <slug>') 뒤에만.",
     "minFreeMB 6144 는 2026-09-26 첫 dry-run 실측으로 유지 확인(빌드 1회가 여유 메모리를 약 4.0~4.8GB 소모, 1GB 이상 남김) — 런북 §16.",
     "clusters[].standingSources 는 2026-09-26 구현 시 브라우저 UA 로 HTTP 200 과 robots 허용을 확인한 공식 URL(법령 원문 링크 — 숫자 대조는 1차 출처로).",
-    "tripWires 는 정규식 문자열(guideSpec FORBIDDEN 과 옛 값) — 본문·제목·설명에 걸리면 SKIP."
+    "tripWires 는 정규식 문자열(guideSpec FORBIDDEN 과 옛 값) — 본문·제목·설명에 걸리면 SKIP.",
+    "secretEnvFiles(운영자 결정 2026-09-27): 저장소 밖 선택 키 파일 — 있으면 names 의 이름만 환경변수로 읽는다(secret-env.mjs, 값은 기록 안 함). 없으면 키 없이 동작. trend.env = 법령 OC·ECOS 인증키, datalab.env.txt = 네이버 데이터랩 검색어 트렌드 전용 키(레이더 부스터, 하루 50회 상한). 네이버 검색·뉴스 API 는 쓰지 않는다."
   ],
   "mainRepo": "C:/dev/moneysalary/my-salary-calculator",
   "worktree": "C:/dev/moneysalary/trend-wt",
   "trendHome": "C:/Users/ruby1/.moneysalary-trend",
   "caps": { "perKstDay": 1, "perIsoWeek": 5 },
+  "secretEnvFiles": [
+    { "path": "C:/Users/ruby1/.moneysalary-secrets/trend.env", "names": ["LAW_OC", "ECOS_API_KEY"] },
+    { "path": "C:/Users/ruby1/.moneysalary-secrets/naver/datalab.env.txt", "names": ["NAVER_CLIENT_ID", "NAVER_CLIENT_SECRET"] }
+  ],
   "minFreeMB": 6144,
   "heavyWaitMin": 30,
   "baseBuild": "always",
