@@ -503,7 +503,7 @@ export const hotKeywordsGuides = [
   publishedDate: "2026-05-16",
   views: 0,
   content: `
-<p class="lead">연말정산은 '13월의 월급'이라고 하지만, 아는 만큼 돌려받습니다. 2026년 귀속 연말정산에서 반드시 챙겨야 할 핵심 공제 항목 20가지를 세액공제 효과가 큰 순서로 정리합니다.</p>
+<p class="lead">이 글은 2026년 귀속 연말정산의 <strong>공제 항목</strong> 20가지를 소득공제·세액공제로 나눠 한 번에 훑어보는 목록입니다. 항목마다 정확한 한도와 계산은 <a href="/guides/year-end-tax-2026">2026년 귀속 연말정산 공제 총정리</a>에서, 항목별로 받을 수 있는 조건은 <a href="/guides/year-end-tax-13-tips-2026">연말정산 공제 조건 13가지</a>에서 확인하세요.</p>
 
 <h2>💡 소득공제 vs 세액공제 — 뭐가 더 유리한가요?</h2>
 <div class="bg-secondary/30 p-4 rounded-xl mt-4">
