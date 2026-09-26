@@ -151,14 +151,14 @@ const carryoverLoss = `
 <ul class="space-y-3 mt-4">
 <li><strong>① 사업소득 결손</strong>: 다른 종합소득(근로·이자·배당)과 통산 후 잔여분 이월</li>
 <li><strong>② 양도소득 결손</strong>: 같은 양도소득 내 통산 (주식·부동산은 분리)</li>
-<li><strong>③ 가상자산 결손</strong>: 5년 이월 (15년 아닌 짧음 주의)</li>
+<li><strong>③ 가상자산 결손</strong>: 이월공제 규정 없음 — 2027년 과세 시행 뒤에도 그해 가상자산 손익끼리만 통산</li>
 <li><strong>④ 신고 의무</strong>: 손실난 해도 종소세 신고해야 이월 인정</li>
 </ul>
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬</h2>
 <p>2025년 사업 손실 1억 → 2026년 사업 이익 1.5억:</p>
 <ul class="space-y-2 mt-4">
 <li>· 2026년 과세표준: 1.5억 - 1억 (이월) = 5천만</li>
-<li>· 절세 약 3,000만원 (한계세율 24%~35% 차이)</li>
+<li>· 절세 약 3,000만원 (산출세액이 과세표준 1.5억일 때 3,706만원, 5천만일 때 624만원 — 지방소득세 별도)</li>
 </ul>
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/income-tax-2026" class="text-primary underline">종합소득세 계산</a></li></ul></div>
 `;
@@ -900,7 +900,7 @@ export const hotNewsDeepDive: Guide[] = [
   { slug: "personal-vs-corporation-tax-2026", title: "개인사업자 vs 법인 — 순이익 1.5억 이상 법인 유리", description: "개인 6~45% vs 법인 9~24% + 배당 15.4%. 매출 5억 + 순이익 1.5억 이상부터 법인 전환 검토.", category: "세금", tags: ["개인사업자", "법인", "법인세", "전환", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: personalVsCorporation, lang: "ko" },
   { slug: "vat-refund-2026", title: "부가가치세 환급 — 초기 투자 큰 사업자 자금 흐름", description: "매입세액 > 매출세액 시 환급. 스타트업 1분기 매출 1억 vs 매입 1.5억 = 500만원 환급. 분기 신고 또는 월별 조기 환급.", category: "세금", tags: ["부가가치세", "VAT", "환급", "스타트업", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: vatRefund, lang: "ko" },
   { slug: "consumption-tax-simple-vs-general-2026", title: "간이과세자 vs 일반과세자 — 매출 1.04억 분기점 100만원 절세", description: "간이 부가세 1.5~4% vs 일반 10%. 매출 8천 음식점 시 간이가 약 100만원 유리. 단 매입세액 공제 제한.", category: "세금", tags: ["간이과세", "일반과세", "부가세", "자영업", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: consumptionTaxReturn, lang: "ko" },
-  { slug: "carryover-loss-15year-2026", title: "이월결손금 15년 — 손실난 해 신고로 미래 3,000만원 절세", description: "사업 손실 15년 이월(양도차손 제외). 2025년 손실 1억 → 2026 이익 1.5억 시 절세 3,000만원. 가상자산은 5년만.", category: "세금", tags: ["이월결손금", "사업손실", "양도손실", "절세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: carryoverLoss, lang: "ko" },
+  { slug: "carryover-loss-15year-2026", title: "이월결손금 15년 — 손실난 해 신고로 미래 3,000만원 절세", description: "사업 손실 15년 이월(양도차손·가상자산 제외). 2025년 손실 1억 → 2026 이익 1.5억 시 절세 약 3,000만원.", category: "세금", tags: ["이월결손금", "사업손실", "양도손실", "절세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: carryoverLoss, lang: "ko" },
   { slug: "tax-reduction-disabled-2026", title: "장애인 인적공제 200만원 + 의료비 무한도 — 매년 100~300만원 환급", description: "본인·부양가족 장애 등록 시 인적공제 200 + 의료비 한도 없음 + 보험료 100 + 교육비 무한도. 매년 100~300만원 추가 환급.", category: "세금", tags: ["장애인", "인적공제", "의료비", "보험료", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: taxReductionDisabled, lang: "ko" },
   { slug: "tax-amnesty-self-report-2026", title: "자진 수정신고 — 1개월 이내 가산세 90% 감면", description: "1개월 90% / 3개월 75% / 6개월 50% / 1년 30% / 2년 20% 감면. 무신고 시 20%, 부정 40%, 역외 60% 가산세.", category: "세금", tags: ["수정신고", "가산세", "감면", "세무조사", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: taxAmnestyReform, lang: "ko" },
   // 건강·의료 10편

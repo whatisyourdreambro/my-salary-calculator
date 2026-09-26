@@ -31,13 +31,6 @@
       "note": "추가공제 항목별 한도 100만 → 합산 300만/200만"
     },
     {
-      "slug": "carryover-loss-15year-2026",
-      "patternId": "crypto-5y-carry",
-      "snippet": "(주식·부동산은 분리) ③ 가상자산 결손: 5년 이월 (15년 아닌 짧음 주의)",
-      "tag": "GUIDES-08",
-      "note": "가상자산 결손 5년 이월 — 이월공제 규정 없음 (hot-news-2026-deep-dive.ts, W3-A 정정 목록)"
-    },
-    {
       "slug": "childcare-support-comprehensive-2026",
       "patternId": "child-credit-30-70",
       "snippet": "00~7,000만원. 부모 자녀세액공제 추가 환급 30~70만원/년. 📌 관련 · 육아휴",
@@ -66,39 +59,11 @@
       "note": "폐지된 7천~1.2억 구간 (W3-A 1차 키퍼 재작성 대상)"
     },
     {
-      "slug": "crypto-tax-deferred-2027-2026",
-      "patternId": "crypto-loss-carry-5y",
-      "snippet": "+ 연 250만원 공제 + 5년 이월결손금.",
-      "tag": "GUIDES-08",
-      "note": "가상자산 5년 이월결손금 — 이월공제 규정 없음 (EDIT-05 잔여, W3-A 정정 목록)"
-    },
-    {
-      "slug": "crypto-tax-deferred-2027-2026",
-      "patternId": "crypto-loss-carry-5y",
-      "snippet": "다른 코인 손실과 통산 · 이월결손금: 5년 이월 가능 (주식의 10년",
-      "tag": "GUIDES-08",
-      "note": "가상자산 5년 이월결손금 — 이월공제 규정 없음 (EDIT-05 잔여, W3-A 정정 목록)"
-    },
-    {
-      "slug": "crypto-tax-deferred-2027-2026",
-      "patternId": "stock-10y-carry",
-      "snippet": "결손금: 5년 이월 가능 (주식의 10년보다 짧음) · 해외 거래소",
-      "tag": "GUIDES-08",
-      "note": "주식 10년 이월 — 양도차손 이월 규정 없음 (hot-news-2026-may.ts, W3-A 정정 목록)"
-    },
-    {
       "slug": "minus-loan-vs-credit-loan-2026",
       "patternId": "base-rate-2.75",
       "snippet": "이 7월 16일 기준금리를 연 2.75%로 인상(2023년 1월 이",
       "tag": "dated-historical",
       "note": "2026-07-16 2.75% 인상(2023-01 이후 첫 인상) 이력 — bok.or.kr 와 일치"
-    },
-    {
-      "slug": "naver-rsu-tax-strategy-2026",
-      "patternId": "stock-loss-carry",
-      "snippet": "50만원 공제 후 22%. 손실 시 이월 가능. ③ 장기 보유(1년+):",
-      "tag": "GUIDES-08",
-      "note": "해외주식 RSU 양도차손은 같은 해 통산만, 이월 불가 (소득세법 §102, hot-news-2026-may.ts)"
     },
     {
       "slug": "newlywed-child-birth-benefit-2026",
