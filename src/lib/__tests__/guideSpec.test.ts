@@ -42,6 +42,8 @@ const KEEPERS: readonly string[] = [
   "credit-card-deduction-30-40-strategy-2026",
   "parent-support-deduction-integration-2026",
   "medical-edu-donation-limits-2026",
+  "implant-dental-medical-deduction-2026",
+  "postpartum-medical-deduction-200man-2026",
   "insurance-100man-limit-2026",
 ];
 
