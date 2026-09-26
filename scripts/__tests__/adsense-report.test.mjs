@@ -145,3 +145,11 @@ test("units, window and join remain usable without exp1 provenance", (t) => {
   assert.match(f.run("join", site, subset, ...beforeDates), /20\.00%/);
   assert.equal(readFileSync(site, "utf8"), original);
 });
+
+test("name-only company-top rows are not merged into HOME_TOP (both names contain 상단)", (t) => {
+  const f = fixture(t);
+  const units = f.write("units-names.csv", `${unitHeader}\n머니샐러리_회사상단,1.5,300,3\n머니샐러리_상단,2.5,500,5`);
+  const output = f.run("units", units);
+  assert.match(output, /\| 회사상단\/COMPANY_TOP \(5077529791\) \| 300 \|/);
+  assert.match(output, /\| 상단\/HOME_TOP \(9958502911\) \| 500 \|/);
+});
