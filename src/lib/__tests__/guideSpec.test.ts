@@ -37,7 +37,12 @@ import { hotNewsDeepDive } from "@/lib/guides/hot-news-2026-deep-dive";
 import { hotBonusTaxComplete } from "@/lib/guides/hot-bonus-tax-complete";
 
 /** 재작성 완료 키퍼 — W3-A 가 재작성 커밋마다 슬러그를 추가한다 (2026-10-13 1차부터). */
-const KEEPERS: readonly string[] = [];
+const KEEPERS: readonly string[] = [
+  // 2차 G2B (회사 성과급 묶음, 2026-09-26)
+  "samsung-opi-tai-complete-2026",
+  "sk-hynix-ps-history-2026-prospect",
+  "lg-hyundai-posco-bonus-2026",
+];
 
 const BASE = "3b564c80";
 const read = (rel: string) => readFileSync(join(process.cwd(), rel), "utf8");
