@@ -42,6 +42,7 @@ import { legacyRewrite7 } from "@/lib/guides/legacy-rewrite-7";
 import { legacyRewrite8 } from "@/lib/guides/legacy-rewrite-8";
 import { legacyRewrite9 } from "@/lib/guides/legacy-rewrite-9";
 import { legacyRewrite10 } from "@/lib/guides/legacy-rewrite-10";
+import { trendBriefGuides } from "@/lib/guides/trend-briefs";
 
 // 레거시 rawGuides 50편의 고유 본문 (2026-08-15 재작성 — 전편 출처 검증).
 // (구 generateExpertContent 템플릿 본문을 대체 — 템플릿은 2026-08 점검에서 제거됨)
@@ -360,6 +361,7 @@ const allRawGuides = [
  // 삼성전자 8/21 이사회 임직원 보상용 자사주 15조 매입 의결이 축.
  // 확정/보도/전망을 본문에서 구분 표기 — 전망은 "확정 아님" 명시.
  ...semiconductorBonusNews202609Guides,
+ ...trendBriefGuides,
 ];
 
 // 검색 결과(meta description) 전용 설명 — META-07 (2026-09-25 감사).
