@@ -2,6 +2,7 @@
 
 import { useId, useState } from "react";
 import { Calendar, Clock, Briefcase } from "lucide-react";
+import { countWorkdays, workdayResultLabel, type WorkdayCount } from "@/lib/koreanHolidays";
 
 // "YYYY-MM-DD"(date input 값)를 로컬 자정으로 파싱.
 // new Date("YYYY-MM-DD")는 UTC 자정으로 해석되어 UTC- 시간대에서 하루 밀리는
@@ -137,7 +138,7 @@ export function WorkDayCalculator() {
  const inputId = useId();
  const [startDate, setStartDate] = useState("");
  const [endDate, setEndDate] = useState("");
- const [result, setResult] = useState<number | null>(null);
+ const [result, setResult] = useState<WorkdayCount | null>(null);
 
  const calculate = () => {
  if (!startDate || !endDate) return;
@@ -153,16 +154,10 @@ export function WorkDayCalculator() {
  return;
  }
 
- let count = 0;
- const cur = new Date(start);
- while (cur <= end) {
- const dayOfWeek = cur.getDay();
- if (dayOfWeek !== 0 && dayOfWeek !== 6) { // 0=Sun, 6=Sat
- count++;
- }
- cur.setDate(cur.getDate() + 1);
- }
- setResult(count);
+ // 월~금 중 2026~2027년 관공서 공휴일(대체공휴일 포함)을 뺀다 — src/lib/koreanHolidays.ts.
+ // 범위 밖 연도가 섞이면 covered=false 로 그 연도 공휴일은 빠지지 않았음을 표시한다.
+ // 결과 문구는 기존 두 줄(라벨·숫자) 안에서만 바꾼다 — 결과 직하 CalcResultAd 위치 불변.
+ setResult(countWorkdays(start, end));
  };
 
  return (
@@ -201,8 +196,8 @@ export function WorkDayCalculator() {
  </button>
  {result !== null && (
  <div className="mt-6 p-6 bg-electric rounded-xl border border-canvas text-center">
- <p className="text-muted-blue mb-2">주말 제외 영업일수</p>
- <p className="text-5xl font-black text-primary">{result}일</p>
+ <p className="text-muted-blue mb-2">{workdayResultLabel(result)}</p>
+ <p className="text-5xl font-black text-primary">{result.workdays}일</p>
  </div>
  )}
  </div>
