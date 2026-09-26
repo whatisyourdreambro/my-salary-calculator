@@ -4,7 +4,7 @@
 기존 사이트 페이지에 연결하고, 점수를 매겨 **JSON + 한국어 보고서**를 만든다.
 
 - 글을 쓰지 않는다. 상세 페이지·본문·첨부를 가져오지 않는다. 제목·링크·날짜만 읽는다.
-- 키가 없어도 기본 경로가 전부 돈다(키는 선택 소스 1개뿐, 환경변수로만).
+- 키가 없어도 기본 경로가 전부 돈다(키는 선택 소스 2개 — 법령 감시 OC·네이버 데이터랩 부스터 — 뿐, 환경변수로만).
 - 발행·git 조작·예약 작업 생성은 하지 않는다. 예약 실행(Claude 예약 작업)과 설정 변경은 운영자 승인 항목이다.
 - 새 글 추천(`new-brief`)은 **후보**일 뿐이다. 실제 발행 여부는 발행기(trend-publish)의 게이트와 운영자 승인이 정한다.
 
@@ -24,6 +24,7 @@ node scripts/trend-radar/run.mjs --check-robots
 #   --out <dir>          산출물 폴더(기본 scripts/trend-radar/.cache — git 무시)
 #   --max-requests N     요청 상한(기본 20)
 #   --today YYYY-MM-DD   기준일(없으면 오늘 KST). 지정하면 기준 시각은 그날 09:00 KST
+#   --datalab-usage <f>  데이터랩 하루 호출 수 기록 파일(기본 TREND_HOME/state/datalab-usage.json — 없으면 ~/.moneysalary-trend/state)
 ```
 
 종료 코드: `0` 정상(일부 소스 실패는 보고서에 기록만) · `1` 모든 소스 실패 또는 설정 오류 · `2` 사용법 오류.
@@ -34,8 +35,8 @@ node scripts/trend-radar/run.mjs --check-robots
 
 | 파일 | 내용 |
 |---|---|
-| `radar-<date>.json` | `generatedAt, mode, date, sources[], candidates[], calendarUpcoming[], nextEvent, trends{items, financeMatches, clusters}, statutes[], lawdrf, cost{ms, rssMB, heapMB, requests, bytes}` — 정확한 형태는 `lib/report.mjs` 의 JSDoc typedef(`RadarOutput`)와 `validateRadar()` |
-| `radar-<date>.md` | 한국어 보고서: 소스 상태 표, 새 글 후보 top 5, 기존 페이지 갱신 권장, 관찰, 다가오는 공식 일정(14일), 법령 공포 감시, 구글 트렌드 금융 매칭 수 |
+| `radar-<date>.json` | `generatedAt, mode, date, sources[], candidates[], calendarUpcoming[], nextEvent, trends{items, financeMatches, clusters}, statutes[], lawdrf, datalab{status, note, calls, clusters[], changes[{cluster, change, surge}]}, cost{ms, rssMB, heapMB, requests, bytes}` — 정확한 형태는 `lib/report.mjs` 의 JSDoc typedef(`RadarOutput`)와 `validateRadar()` |
+| `radar-<date>.md` | 한국어 보고서: 소스 상태 표, 새 글 후보 top 5, 기존 페이지 갱신 권장, 관찰, 다가오는 공식 일정(14일), 법령 공포 감시, 구글 트렌드 금융 매칭 수, 네이버 데이터랩(선택 — 군집별 배수만) |
 | `headlines-<date>.json` | `{date, titles[]}` — 구글 트렌드 제목 + 트렌드 뉴스 헤드라인. **발행기의 헤드라인 겹침 게이트 전용**(보고서·작성기에 넘기지 않음). 21일 지난 파일은 실행 때마다 삭제 |
 
 후보(candidate) 한 건: `id(sha1(정규화 링크)), src, ministry, sourceKind, title, link, publishedAt(ISO +09:00), cluster, briefEligible, score, scoreParts, matches{guides[3], pages[3]}, hubRoutes[], recommendation, reason(한국어), linkRobots`.
@@ -57,6 +58,7 @@ node scripts/trend-radar/run.mjs --check-robots
 | moel-press | 고용노동부 보도자료 | 목록 HTML 1쪽 | 600KB | `/news/` 허용. 보도자료 RSS 없음 |
 | gtrends-kr | 구글 트렌드 KR 일간 RSS | RSS(PDT) | 2MB | 탐색(explore) 화면만 robots 차단, RSS 허용. **신호 전용**: +10 부스트·헤드라인 게이트에만 쓰고 제목을 보고서에 싣지 않음 |
 | lawdrf (선택) | 국가법령정보 공동활용 DRF | XML | 1MB | Allow /. env `LAW_OC` 가 있을 때만 1회. 없으면 `키 없음 — 건너뜀` |
+| datalab (선택) | 네이버 데이터랩 검색어 트렌드 API(POST, `datalab.json`) | JSON | 256KB | 2026-09-27 운영자 결정. env `NAVER_CLIENT_ID`·`NAVER_CLIENT_SECRET` 둘 다 있고 `--live` 일 때만, 실행당 2회·**하루 50회 하드 상한**. 없으면 `키 없음 — 건너뜀`. **부스터 전용**: 급상승 군집 후보에 +10(구글 트렌드와 합쳐 최대 10), 결과(배수)는 작성기에 넘기지 않음 |
 
 공공기관 누리집 자료는 각 기관 저작권 정책(공공누리 등)을 따른다. 이 도구는 **제목·링크·날짜(사실 정보)만** 기록하고 본문·첨부를 복제하지 않는다.
 
@@ -64,15 +66,18 @@ node scripts/trend-radar/run.mjs --check-robots
 
 | 이름 | 용도 | 없을 때 |
 |---|---|---|
+| `NAVER_CLIENT_ID` · `NAVER_CLIENT_SECRET` | 네이버 데이터랩 검색어 트렌드 전용(선택 부스터, 2026-09-27 운영자 결정). 트렌드 파이프라인(daily.mjs)은 저장소 밖 `C:/Users/ruby1/.moneysalary-secrets/naver/datalab.env.txt` 가 있으면 여기서 읽어 넘긴다. 따로 돌릴 때는 `node --env-file=<그 파일> scripts/trend-radar/run.mjs --live` | 건너뜀(보고서에 `키 없음 — 건너뜀`) — 점수 영향 없음 |
 | `LAW_OC` | 국가법령정보 공동활용(open.law.go.kr) 무료 등록 ID. 최근 7일 공포된 대상 법령(소득세법·조세특례제한법·고용보험법·근로기준법·최저임금법·국민연금법·국민건강보험법·공무원보수규정·남녀고용평등법·근로자퇴직급여 보장법과 각 시행령·시행규칙) 감시 | 건너뜀(보고서에 `키 없음 — 건너뜀`) |
 
+- 데이터랩 키는 요청 헤더로만 보내고, 로그는 `[radar] POST host/path status bytes ms` 한 줄(헤더·본문 없음). 하루 호출 수는 호출 **전에** 사용량 파일에 적는다(도중에 죽어도 덜 세지 않음).
 - 키는 **환경변수로만** 읽는다. 저장소·로그·보고서에 절대 쓰지 않는다(`lib/http.mjs` 의 `redactUrl` 이 OC·key·auth·authKey·serviceKey·crtfc_key 값과 ECOS 경로 키를 `***` 로 가림).
 - 키가 든 URL 은 https 가 아니면 요청 자체를 거부한다.
 
 ## 점수와 추천
 
 점수(0~100) = 자료 종류(고시·공포 40 / 보도자료 32 / 설명자료 24 / 입법·행정예고 20 / 통계·공고 16)
-\+ 최신성(24시간 20 / 72시간 12 / 7일 6) + 20 × 클러스터 수요 등급 + 공식 일정 창 ±7일 10 + 구글 트렌드 부스트 10.
+\+ 최신성(24시간 20 / 72시간 12 / 7일 6) + 20 × 클러스터 수요 등급 + 공식 일정 창 ±7일 10 + 구글 트렌드 부스트 10
+\+ 네이버 데이터랩 부스트 10(선택 — 그 군집 최근 7일 검색 비율이 앞 21일의 1.5배 이상, 구글 트렌드 부스트와 합쳐 최대 10).
 
 추천은 위에서부터 먼저 걸리는 것:
 
@@ -106,8 +111,8 @@ node scripts/trend-radar/run.mjs --check-robots
 
 | 소스 | 이유 |
 |---|---|
-| 네이버 데이터랩(Data Lab) 검색어 트렌드 API | 2026-07-30 신규 신청 마감. **네이버 API HUB 가입 절대 금지.** 코드·환경변수 이름도 두지 않는다 |
-| 네이버 검색 API(뉴스·블로그) | 약관상 AI 입력·캐시·수익 화면 표시 제한 → 제외 |
+| 네이버 데이터랩(Data Lab) 검색어 트렌드 API — **2026-09-27 운영자 결정으로 선택 부스터만 허용** | 운영자가 이미 가진 키 파일(`datalab.env.txt`)이 있을 때만 쓴다. 새 신청·**네이버 API HUB 가입은 여전히 절대 금지**. 부스터(+10) 전용, 하루 50회 상한, 결과는 작성기·사이트에 넣지 않음 |
+| 네이버 검색 API(뉴스·블로그·웹문서 등) | 약관상 AI 입력·캐시·수익 화면 표시 제한 → 제외. 테스트가 이 폴더에서 데이터랩 밖 네이버 API 경로를 grep 으로 막는다 |
 | 네이버·구글 검색 결과 페이지 수집 | 약관·robots 위반 — 금지 |
 | 구글 트렌드 탐색(explore) 화면·비공식 엔드포인트 | robots 차단 — 공개 RSS 만 사용 |
 | 정책브리핑(korea.kr) RSS·목록 자동 조회 | RSS 는 2026-07-01 저작권 보호를 이유로 폐지. 목록 자동 조회로 대체하지 않는다(개별 기사 링크를 인용 출처로 쓰는 것은 발행기 몫) |

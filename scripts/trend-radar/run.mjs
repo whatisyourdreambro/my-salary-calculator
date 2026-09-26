@@ -12,6 +12,9 @@
 //   옵션: --out <dir>(기본 scripts/trend-radar/.cache) · --max-requests N(기본 20) · --today YYYY-MM-DD
 // 종료 코드: 0 정상(일부 소스 실패는 기록만) · 1 모든 소스 실패 또는 설정 오류 · 2 사용법 오류
 // 선택 env: LAW_OC(국가법령정보 공동활용 등록 ID) — 있으면 법령 공포 감시 1회 추가. 값은 절대 출력하지 않는다.
+// 선택 env: NAVER_CLIENT_ID·NAVER_CLIENT_SECRET(네이버 데이터랩 검색어 트렌드 전용, 2026-09-27 운영자 결정) — 둘 다 있고
+//   --live 면 급상승 군집 부스터(하루 50회 상한, lib/datalab.mjs). 네이버 검색·뉴스 API 는 쓰지 않는다.
+//   옵션 --datalab-usage <file>(하루 호출 수 기록, 기본 TREND_HOME/state/datalab-usage.json).
 
 import { readFileSync, existsSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
@@ -34,6 +37,7 @@ import {
   recommend,
 } from "./lib/score.mjs";
 import { runLawDrf, LAW_DRF_ENDPOINT } from "./lib/lawdrf.mjs";
+import { runDatalab, validateDatalabConfig } from "./lib/datalab.mjs";
 import { validateRadar, writeOutputs } from "./lib/report.mjs";
 
 // 배열 뒤에 붙이기(발행기 외 트렌드 스크립트에는 배열 메서드 이름까지 포함해 '푸시' 문자열을 두지 않는다 — trend-publish 게이트).
@@ -49,17 +53,18 @@ export const FIXTURES_DIR = join(HERE, "fixtures");
 const SOURCE_KINDS = ["rss", "html-nts", "html-moel", "gtrends", "lawdrf"];
 const REC_ORDER = { "new-brief": 0, "update-existing": 1, watch: 2, ignore: 3 };
 
-export const USAGE = `사용법: node scripts/trend-radar/run.mjs (--fixtures | --live) [--today YYYY-MM-DD] [--out <dir>] [--max-requests N] [--check-robots]
+export const USAGE = `사용법: node scripts/trend-radar/run.mjs (--fixtures | --live) [--today YYYY-MM-DD] [--out <dir>] [--max-requests N] [--check-robots] [--datalab-usage <file>]
   --fixtures       오프라인 고정 표본(scripts/trend-radar/fixtures) — --today 와 함께 쓰면 결정적
   --live           공식 목록 실시간 수집(요청 상한 기본 20)
   --check-robots   소스 경로별 robots 허용/차단만 출력(기본 --live)
   --out <dir>      산출물 폴더(기본 scripts/trend-radar/.cache, git 무시)
+  --datalab-usage <file>  데이터랩 하루 호출 수 기록 파일(기본 TREND_HOME/state/datalab-usage.json)
 종료 코드: 0 정상 · 1 모든 소스 실패/설정 오류 · 2 사용법 오류`;
 
 export class UsageError extends Error {}
 
 export function parseArgs(argv) {
-  const o = { mode: null, today: null, out: DEFAULT_OUT, maxRequests: 20, checkRobots: false, help: false };
+  const o = { mode: null, today: null, out: DEFAULT_OUT, maxRequests: 20, checkRobots: false, help: false, datalabUsage: null };
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
     const val = () => {
@@ -82,6 +87,7 @@ export function parseArgs(argv) {
       if (!Number.isInteger(v) || v < 1 || v > 100) throw new UsageError("--max-requests 는 1~100 정수");
       o.maxRequests = v;
     } else if (a === "--check-robots") o.checkRobots = true;
+    else if (a === "--datalab-usage") o.datalabUsage = resolve(val());
     else if (a === "--help" || a === "-h") o.help = true;
     else throw new UsageError(`알 수 없는 옵션: ${a}`);
   }
@@ -94,7 +100,7 @@ export function parseArgs(argv) {
 
 export function loadConfig(dir = HERE) {
   const read = (f) => JSON.parse(readFileSync(join(dir, f), "utf8"));
-  return { sources: read("sources.json").sources, clusters: read("clusters.json"), calendar: read("calendar-events.json") };
+  return { sources: read("sources.json").sources, clusters: read("clusters.json"), calendar: read("calendar-events.json"), datalab: read("datalab.json") };
 }
 
 /** 설정 검증 — 오류 문자열 배열 */
@@ -130,6 +136,7 @@ export function validateConfig(cfg, repoRoot = REPO_ROOT) {
     if (ev.recurrence === "dates" && !(Array.isArray(ev.dates) && ev.dates.every((d) => /^\d{4}-\d{2}-\d{2}$/.test(d)))) put(e, `calendar.${ev.id} dates 형식`);
     if (!["yearly", "once", "dates"].includes(ev.recurrence)) put(e, `calendar.${ev.id}.recurrence`);
   }
+  if (cfg.datalab) put(e, ...validateDatalabConfig(cfg.datalab, cfg.clusters.clusters || []));
   return e;
 }
 
@@ -206,10 +213,11 @@ async function fetchSource(src, http) {
  * @param {number} ctx.nowMs
  * @param {string} ctx.date
  * @param {Set<string>} ctx.trendClusters
+ * @param {Set<string>} [ctx.datalabClusters] 데이터랩 급상승 군집(선택 부스터)
  * @param {ReturnType<typeof loadSiteIndex>} ctx.siteIndex
  * @param {{get: Function}} [ctx.http] robots 캐시 조회용(없으면 linkRobots=unknown)
  */
-export async function buildCandidate(it, { compiled, events, nowMs, date, trendClusters, siteIndex, http }) {
+export async function buildCandidate(it, { compiled, events, nowMs, date, trendClusters, datalabClusters, siteIndex, http }) {
   const cls = classifyTitle(it.title, compiled, { ministry: it.src.ministry });
   if (!cls.allowed) return null;
   const cluster = cls.cluster ? clusterById(compiled, cls.cluster) : null;
@@ -217,8 +225,9 @@ export async function buildCandidate(it, { compiled, events, nowMs, date, trendC
   const ageH = ageHours(it.publishedAt, nowMs);
   const calendarHit = cluster ? Boolean(calendarMatch(cluster.id, it.publishedAt ? kstDate(it.publishedAt) : date, events)) : false;
   const trendsHit = cluster ? trendClusters.has(cluster.id) : false;
+  const datalabHit = cluster && datalabClusters ? datalabClusters.has(cluster.id) : false;
   const { score, parts } = scoreCandidate(
-    { kind, ageH, demandWeight: cluster ? cluster.demandWeight : 0, calendarHit, trendsHit },
+    { kind, ageH, demandWeight: cluster ? cluster.demandWeight : 0, calendarHit, trendsHit, datalabHit },
     compiled.kindPoints,
   );
   const matches = topMatches(it.title, siteIndex, 3);
@@ -277,6 +286,8 @@ export async function buildCandidate(it, { compiled, events, nowMs, date, trendC
  * @param {(line: string) => void} [o.log]
  * @param {string} [o.repoRoot]
  * @param {boolean} [o.write]
+ * @param {string|null} [o.datalabUsage] 데이터랩 하루 호출 수 기록 파일(기본 TREND_HOME/state/datalab-usage.json)
+ * @param {typeof fetch} [o.datalabFetch] 데이터랩 요청용 fetch(테스트 주입)
  */
 export async function runRadar({
   mode,
@@ -288,6 +299,8 @@ export async function runRadar({
   log = (l) => console.log(l),
   repoRoot = REPO_ROOT,
   write = true,
+  datalabUsage = null,
+  datalabFetch,
 } = {}) {
   const t0 = performance.now();
   const cfg = loadConfig();
@@ -341,8 +354,20 @@ export async function runRadar({
   put(sourceStatus, lawStatus);
   const tf = trendsFinance(trendTitles, compiled);
 
+  // 네이버 데이터랩 검색어 트렌드(선택 부스터) — 키가 둘 다 있고 live 일 때만, 하루 50회 상한. 결과는 점수·보고서에만.
+  const dl = await runDatalab({
+    mode,
+    env,
+    today: date,
+    usageFile: datalabUsage || undefined,
+    fetchImpl: datalabFetch || globalThis.fetch,
+    log,
+    config: cfg.datalab,
+  });
+  log(`[radar] datalab: ${dl.note}`);
+
   const byId = new Map();
-  const ctx = { compiled, events, nowMs, date, trendClusters: tf.clusters, siteIndex, http };
+  const ctx = { compiled, events, nowMs, date, trendClusters: tf.clusters, datalabClusters: new Set(dl.clusters), siteIndex, http };
   for (const it of raw) {
     const c = await buildCandidate(it, ctx);
     if (c && !byId.has(c.id)) byId.set(c.id, c);
@@ -367,6 +392,7 @@ export async function runRadar({
     trends: { items: trendTitles.length, financeMatches: tf.count, clusters: [...tf.clusters].sort() },
     statutes: law.items,
     lawdrf: { status: law.status, note: law.note },
+    datalab: { status: dl.status, note: dl.note, calls: dl.calls, clusters: dl.clusters, changes: dl.rows.map((x) => ({ cluster: x.cluster, change: x.change, surge: x.surge })) },
     cost: {
       ms: Math.round(performance.now() - t0),
       rssMB: Math.round((mem.rss / 1048576) * 10) / 10,
@@ -445,7 +471,7 @@ async function main() {
     const { exitCode } = await checkRobots({ mode: opts.mode });
     process.exit(exitCode);
   }
-  const { exitCode } = await runRadar({ mode: opts.mode, today: opts.today, outDir: opts.out, maxRequests: opts.maxRequests });
+  const { exitCode } = await runRadar({ mode: opts.mode, today: opts.today, outDir: opts.out, maxRequests: opts.maxRequests, datalabUsage: opts.datalabUsage });
   process.exit(exitCode);
 }
 

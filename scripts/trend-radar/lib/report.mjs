@@ -39,7 +39,7 @@ const put = (arr, ...vals) => {
  * @property {string|null} cluster
  * @property {boolean} briefEligible
  * @property {number} score            0..100
- * @property {{officialKind: number, recency: number, demand: number, calendar: number, trends: number}} scoreParts
+ * @property {{officialKind: number, recency: number, demand: number, calendar: number, trends: number, datalab: number}} scoreParts
  * @property {RadarMatch} matches
  * @property {string[]} hubRoutes
  * @property {'ignore'|'watch'|'update-existing'|'new-brief'} recommendation
@@ -75,6 +75,7 @@ const put = (arr, ...vals) => {
  * @property {{items: number, financeMatches: number, clusters: string[]}} trends  제목은 싣지 않는다
  * @property {RadarStatute[]} statutes
  * @property {{status: string, note: string}} lawdrf
+ * @property {{status: string, note: string, calls: number, clusters: string[], changes: {cluster: string, change: number|null, surge: boolean}[]}} [datalab]  선택 부스터 — 배수만(검색어·원 비율 없음)
  * @property {{ms: number, rssMB: number, heapMB: number, requests: number, bytes: number}} cost
  */
 
@@ -119,6 +120,12 @@ export function validateRadar(r) {
   req(r.trends && Object.keys(r.trends).every((k) => ["items", "financeMatches", "clusters"].includes(k)), "trends 에 제목 등 추가 필드 금지");
   req(Array.isArray(r.statutes), "statutes 배열");
   req(r.lawdrf && typeof r.lawdrf.status === "string" && typeof r.lawdrf.note === "string", "lawdrf");
+  if (r.datalab !== undefined) {
+    const d = r.datalab || {};
+    req(typeof d.status === "string" && typeof d.note === "string" && Number.isInteger(d.calls) && d.calls >= 0 && d.calls <= 50 && Array.isArray(d.clusters) && Array.isArray(d.changes), "datalab");
+    req(Object.keys(d).every((k) => ["status", "note", "calls", "clusters", "changes"].includes(k)), "datalab 에 추가 필드 금지");
+    for (const x of d.changes || []) req(x && Object.keys(x).every((k) => ["cluster", "change", "surge"].includes(k)) && typeof x.surge === "boolean", "datalab.changes 형식");
+  }
   const cost = r.cost || {};
   req(["ms", "rssMB", "heapMB", "requests", "bytes"].every((k) => typeof cost[k] === "number"), "cost");
   return e;
@@ -198,6 +205,15 @@ export function renderMarkdown(r) {
   put(L, `- 트렌드 ${r.trends.items}건 중 금융 클러스터 매칭 ${r.trends.financeMatches}건${r.trends.clusters.length ? ` (부스트 클러스터: ${r.trends.clusters.join(", ")})` : ""}`);
   put(L, "- 트렌드 제목은 부스트(+10)·헤드라인 겹침 게이트에만 쓰고 보고서·작성기에 넘기지 않습니다.");
   put(L, "");
+  if (r.datalab) {
+    put(L, "## 네이버 데이터랩 검색어 트렌드 (선택 부스터)");
+    put(L, "");
+    put(L, `- 상태: ${r.datalab.status === "ok" ? r.datalab.note : `${r.datalab.status} — ${r.datalab.note}`}`);
+    const moved = (r.datalab.changes || []).filter((x) => x.change !== null).map((x) => `${x.cluster} ×${x.change}${x.surge ? "(급상승)" : ""}`);
+    if (moved.length) put(L, `- 최근 7일 ÷ 앞 21일: ${moved.join(" · ")}`);
+    put(L, "- 급상승 군집 후보에만 +10(구글 트렌드와 합쳐 최대 10). 검색어·비율은 작성기(writer)에 넘기지 않습니다. 하루 호출 50회 상한.");
+    put(L, "");
+  }
   return L.join("\n");
 }
 

@@ -5,6 +5,7 @@
 //      + 20 × demandWeight(클러스터 수요 등급)
 //      + 공식 일정 창(±7일) 일치 10
 //      + 구글 트렌드 부스트 10(트렌드 제목이 같은 클러스터 정규식에 맞을 때)
+//      + 네이버 데이터랩 부스트 10(선택 — 그 군집 검색량 급상승, 구글 트렌드 부스트와 합쳐 최대 10)
 // 추천 우선순위(위에서 먼저 걸리는 것):
 //   1 ignore          클러스터 없음 또는 denylist
 //   2 watch           발표 후 31일 초과(목록에 남은 오래된 글)
@@ -114,7 +115,7 @@ export function nextEvent(todayYmd, events) {
 }
 
 /**
- * @param {{kind: string, ageH: number|null, demandWeight: number, calendarHit: boolean, trendsHit: boolean}} x
+ * @param {{kind: string, ageH: number|null, demandWeight: number, calendarHit: boolean, trendsHit: boolean, datalabHit?: boolean}} x
  * @param {Record<string, number>} kindPoints
  */
 export function scoreCandidate(x, kindPoints) {
@@ -124,8 +125,10 @@ export function scoreCandidate(x, kindPoints) {
     demand: Math.round(20 * (x.demandWeight || 0) * 10) / 10,
     calendar: x.calendarHit ? 10 : 0,
     trends: x.trendsHit ? 10 : 0,
+    // 데이터랩 부스트는 구글 트렌드 부스트와 겹치지 않는다(검색 수요 신호는 합쳐 최대 10)
+    datalab: x.datalabHit && !x.trendsHit ? 10 : 0,
   };
-  const score = Math.min(100, Math.round((parts.officialKind + parts.recency + parts.demand + parts.calendar + parts.trends) * 10) / 10);
+  const score = Math.min(100, Math.round((parts.officialKind + parts.recency + parts.demand + parts.calendar + parts.trends + parts.datalab) * 10) / 10);
   return { score, parts };
 }
 

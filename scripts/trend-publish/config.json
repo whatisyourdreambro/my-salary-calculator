@@ -19,7 +19,7 @@
   "minFreeMB": 6144,
   "heavyWaitMin": 30,
   "baseBuild": "always",
-  "radar": { "cmd": ["node", "scripts/trend-radar/run.mjs", "--live", "--out", "{TREND_HOME}/radar"] },
+  "radar": { "cmd": ["node", "scripts/trend-radar/run.mjs", "--live", "--out", "{TREND_HOME}/radar", "--datalab-usage", "{TREND_HOME}/state/datalab-usage.json"] },
   "sentinel": { "cmd": ["node", "scripts/fact-sentinel/run.mjs", "--live", "--out", "{TREND_HOME}/sentinel"] },
   "cannibalHubs": [
     { "route": "/civil-servant-pay-2027", "headTerms": ["공무원 봉급표", "공무원 보수", "공무원 월급"] },

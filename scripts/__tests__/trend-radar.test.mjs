@@ -206,8 +206,15 @@ test("추천 행렬: 우선순위대로 한 가지씩", () => {
 
 test("점수: 구성요소 합, 일정 창 ±7일, 연도 추출", () => {
   const { score, parts } = scoreCandidate({ kind: "고시", ageH: 10, demandWeight: 0.5, calendarHit: true, trendsHit: true }, compiled.kindPoints);
-  assert.deepEqual(parts, { officialKind: 40, recency: 20, demand: 10, calendar: 10, trends: 10 });
+  assert.deepEqual(parts, { officialKind: 40, recency: 20, demand: 10, calendar: 10, trends: 10, datalab: 0 });
   assert.equal(score, 90);
+  // 데이터랩 부스트(선택): 구글 트렌드가 없을 때만 +10 — 검색 수요 신호는 합쳐 최대 10
+  const dl = scoreCandidate({ kind: "보도자료", ageH: 10, demandWeight: 0.5, calendarHit: false, trendsHit: false, datalabHit: true }, compiled.kindPoints);
+  assert.equal(dl.parts.datalab, 10);
+  assert.equal(dl.score, 32 + 20 + 10 + 10);
+  const both = scoreCandidate({ kind: "보도자료", ageH: 10, demandWeight: 0.5, calendarHit: false, trendsHit: true, datalabHit: true }, compiled.kindPoints);
+  assert.equal(both.score, dl.score);
+  assert.deepEqual([both.parts.trends, both.parts.datalab], [10, 0]);
   assert.equal(scoreCandidate({ kind: "통계", ageH: 100, demandWeight: 0.3, calendarHit: false, trendsHit: false }, compiled.kindPoints).score, 16 + 6 + 6);
   assert.equal(scoreCandidate({ kind: "보도자료", ageH: 50, demandWeight: 1, calendarHit: false, trendsHit: false }, compiled.kindPoints).score, 32 + 12 + 20);
   const ev = cfg.calendar.events;
@@ -533,18 +540,166 @@ function walk(dir) {
 }
 
 test("금지 엔드포인트 grep: scripts/trend-radar 전체", () => {
-  const forbidden = ["korea.kr/rss", "openapi.naver.com", "datalab", "yna.co.kr", "finlife", "search.naver.com", "google.com/search", "trends/explore", "mpb.go.kr"];
+  // 2026-09-27 운영자 결정: 네이버는 데이터랩 검색어 트렌드 엔드포인트 하나만(lib/datalab.mjs). 검색·뉴스 API 는 금지.
+  const DATALAB = "https://openapi.naver.com/v1/datalab/search";
+  const forbidden = ["korea.kr/rss", "yna.co.kr", "finlife", "search.naver.com", "news.naver", "/v1/search/", "datalab.naver", "google.com/search", "trends/explore", "mpb.go.kr"];
   const files = walk(RADAR_DIR);
   assert.ok(files.length >= 20);
+  const endpointFiles = [];
   for (const f of files) {
     const rel = relative(RADAR_DIR, f).split(sep).join("/");
     const text = readFileSync(f, "utf8");
     const lower = text.toLowerCase();
     for (const bad of forbidden) assert.ok(!lower.includes(bad), `${rel} 에 금지 문자열 ${bad}`);
+    // openapi.naver.com 은 데이터랩 엔드포인트 전체 문자열로만, lib/datalab.mjs 안에서만
+    if (lower.includes(DATALAB)) add(endpointFiles, rel);
+    assert.ok(!lower.split(DATALAB).join("").includes("openapi.naver.com"), `${rel} 에 데이터랩 밖 네이버 API`);
     if (!rel.startsWith("fixtures/")) assert.ok(!text.includes("OC=test"), `${rel} 에 OC=test`);
     // 발행기(trend-publish) 게이트: 발행 스크립트 외 트렌드 스크립트에는 이 단어 자체가 없어야 한다
     assert.ok(!lower.includes("pu" + "sh"), `${rel} 에 금지 단어`);
   }
+  assert.deepEqual(endpointFiles, ["lib/datalab.mjs"]);
+});
+
+// ─── 네이버 데이터랩 부스터(선택, 2026-09-27 운영자 결정) ─────────────
+const DL_ID = ["NAVER", "_CLIENT_ID"].join("");
+const DL_SECRET = ["NAVER", "_CLIENT_SECRET"].join("");
+const dlEnv = () => ({ [DL_ID]: `cid-${"r".repeat(10)}`, [DL_SECRET]: `csv-${"s".repeat(10)}` });
+/** 가짜 데이터랩: 그룹마다 앞 21일 비율 10, 최근 7일은 recentFor(그룹) */
+function fakeDatalab(recentFor, calls, { status = 200 } = {}) {
+  return async (url, init) => {
+    add(calls, { url, init });
+    if (status !== 200) return new Response(JSON.stringify({ errorMessage: "echo-should-not-appear", errorCode: "024" }), { status });
+    const body = JSON.parse(init.body);
+    const results = body.keywordGroups.map((g) => {
+      const data = [];
+      for (let i = 0; i < 28; i += 1) {
+        const d = new Date(Date.parse(`${body.startDate}T00:00:00Z`) + i * 86400000).toISOString().slice(0, 10);
+        add(data, { period: d, ratio: i >= 21 ? recentFor(g.groupName) : 10 });
+      }
+      return { title: g.groupName, keywords: g.keywords, data };
+    });
+    return okResponse(JSON.stringify({ startDate: body.startDate, endDate: body.endDate, timeUnit: "date", results }), { headers: { "content-type": "application/json" } });
+  };
+}
+
+test("데이터랩: 설정 검증 · 요약 판정 · 하루 상한 50(하드)", async () => {
+  const dlm = await import("../trend-radar/lib/datalab.mjs");
+  assert.deepEqual(dlm.validateDatalabConfig(cfg.datalab, cfg.clusters.clusters), []);
+  assert.deepEqual(validateConfig(cfg), []);
+  const eligible = cfg.clusters.clusters.filter((c) => c.briefEligible).map((c) => c.id).sort();
+  assert.deepEqual(cfg.datalab.groups.map((g) => g.cluster).sort(), eligible, "새 글 대상 군집 전부, 그 밖은 없음");
+  const bad = { ...cfg.datalab, boost: 20, groups: [...cfg.datalab.groups, { cluster: "parental-leave", keywords: ["육아휴직"] }, { cluster: "nope", keywords: [] }] };
+  const errs = dlm.validateDatalabConfig(bad, cfg.clusters.clusters).join(" / ");
+  for (const s of ["boost", "parental-leave", "nope"]) assert.ok(errs.includes(s), `${s}: ${errs}`);
+  assert.equal(dlm.effectiveDailyCap({ dailyCap: 999 }), 50);
+  assert.equal(dlm.effectiveDailyCap({ dailyCap: 7 }), 7);
+  assert.equal(dlm.DATALAB_HARD_DAILY_CAP, 50);
+  // 요약: 빠진 날은 0, 7일 ÷ 21일 배수, 최소 비율
+  const rows = dlm.summarizeResults(
+    { results: [
+      { title: "a", data: [{ period: "2026-10-12", ratio: 30 }, { period: "2026-09-20", ratio: 21 }] },
+      { title: "b", data: [{ period: "2026-10-12", ratio: 0.5 }] },
+      { title: "c", data: [{ period: "2026-09-20", ratio: 50 }] },
+    ] },
+    { endDate: "2026-10-12", windowDays: 28, recentDays: 7, surgeRatio: 1.5, minRecentRatio: 1 },
+  );
+  assert.deepEqual(rows.map((r) => [r.cluster, r.surge]), [["a", true], ["b", false], ["c", false]]);
+  assert.equal(rows[0].change, Math.round(((30 / 7) / (21 / 21)) * 100) / 100);
+  // 사용량 파일: 날짜가 바뀌면 0, 상한에서 멈춤
+  const dir = tmp();
+  try {
+    const f = join(dir, "state", "datalab-usage.json");
+    assert.equal(dlm.readUsage(f, "2026-10-13"), 0);
+    assert.ok(dlm.reserveCall(f, "2026-10-13", 2));
+    assert.ok(dlm.reserveCall(f, "2026-10-13", 2));
+    assert.equal(dlm.reserveCall(f, "2026-10-13", 2), false);
+    assert.equal(dlm.readUsage(f, "2026-10-14"), 0);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("데이터랩: 키 없음·고정 표본은 요청 0 · 키 있으면 실행당 2회·헤더로만 키 · 급상승 군집만 · 로그·결과에 키 없음", async () => {
+  const { runDatalab, NO_KEY_NOTE: DL_NO_KEY, FIXTURE_NOTE, DATALAB_ENDPOINT } = await import("../trend-radar/lib/datalab.mjs");
+  const dir = tmp();
+  const usageFile = join(dir, "usage.json");
+  try {
+    const calls = [];
+    const fx = fakeDatalab(() => 10, calls);
+    assert.equal((await runDatalab({ mode: "live", env: {}, today: "2026-10-13", usageFile, fetchImpl: fx, log: () => {} })).note, DL_NO_KEY);
+    assert.equal((await runDatalab({ mode: "live", env: { [DL_ID]: "only-id-value" }, today: "2026-10-13", usageFile, fetchImpl: fx, log: () => {} })).status, "skipped");
+    assert.equal((await runDatalab({ mode: "fixtures", env: dlEnv(), today: "2026-10-13", usageFile, fetchImpl: fx, log: () => {} })).note, FIXTURE_NOTE);
+    assert.equal(calls.length, 0);
+    assert.ok(!existsSync(usageFile), "건너뛸 때는 사용량 파일도 안 만든다");
+
+    const env = dlEnv();
+    const lines = [];
+    const r = await runDatalab({ mode: "live", env, today: "2026-10-13", usageFile, fetchImpl: fakeDatalab((g) => (g === "minimum-wage" ? 25 : 10), calls), log: (l) => add(lines, l) });
+    assert.equal(r.status, "ok", r.note);
+    assert.equal(r.calls, 2);
+    assert.equal(calls.length, 2);
+    assert.deepEqual(r.clusters, ["minimum-wage"]);
+    for (const c of calls) {
+      assert.equal(c.url, DATALAB_ENDPOINT);
+      assert.equal(c.init.method, "POST");
+      assert.equal(c.init.headers["x-naver-client-id"], env[DL_ID]);
+      assert.equal(c.init.headers["x-naver-client-secret"], env[DL_SECRET]);
+      const body = JSON.parse(c.init.body);
+      assert.ok(body.keywordGroups.length <= 5);
+      assert.equal(body.endDate, "2026-10-12", "어제까지");
+      assert.equal(body.startDate, "2026-09-15");
+      assert.ok(!c.init.body.includes(env[DL_ID]) && !c.url.includes(env[DL_ID]), "키는 헤더로만");
+    }
+    const out = JSON.stringify(r) + lines.join("\n") + readFileSync(usageFile, "utf8");
+    for (const v of Object.values(env)) assert.ok(!out.includes(v), "키 값이 결과·로그·사용량 파일에 없다");
+    assert.ok(lines.every((l) => /^\[radar\] POST openapi\.naver\.com\/v1\/datalab\/search 200 \d+ \d+$/.test(l)), lines.join("\n"));
+
+    // HTTP 오류: 본문을 옮기지 않는다
+    const e401 = await runDatalab({ mode: "live", env, today: "2026-10-13", usageFile, fetchImpl: fakeDatalab(() => 10, [], { status: 401 }), log: () => {} });
+    assert.equal(e401.status, "error");
+    assert.ok(!JSON.stringify(e401).includes("echo-should-not-appear"));
+    assert.match(e401.note, /인증 실패/);
+
+    // 하루 상한: 이미 49회면 1회만 하고 멈춘다, 50회면 0회
+    writeFileSync(usageFile, JSON.stringify({ date: "2026-10-14", calls: 49 }));
+    const capCalls = [];
+    const capped = await runDatalab({ mode: "live", env, today: "2026-10-14", usageFile, fetchImpl: fakeDatalab(() => 10, capCalls), log: () => {} });
+    assert.equal(capped.status, "cap");
+    assert.equal(capCalls.length, 1);
+    assert.equal(JSON.parse(readFileSync(usageFile, "utf8")).calls, 50);
+    const none = await runDatalab({ mode: "live", env, today: "2026-10-14", usageFile, fetchImpl: fakeDatalab(() => 10, capCalls), log: () => {} });
+    assert.equal(none.calls, 0);
+    assert.equal(capCalls.length, 1);
+    // 설정이 상한을 올려도 50 을 넘지 않는다
+    const loose = await runDatalab({ mode: "live", env, today: "2026-10-14", usageFile, fetchImpl: fakeDatalab(() => 10, capCalls), log: () => {}, config: { ...cfg.datalab, dailyCap: 500 } });
+    assert.equal(loose.calls, 0);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("데이터랩: 급상승 군집 후보만 +10, 출력 스키마·보고서 절, 작성기 입력에는 없음", async () => {
+  const it = item("인사혁신처, 2027년 공무원 보수 1.8% 인상안 발표", "mpm-press");
+  const plain = await buildCandidate(it, ctx);
+  const boosted = await buildCandidate(it, { ...ctx, datalabClusters: new Set(["civil-servant-pay"]) });
+  const other = await buildCandidate(it, { ...ctx, datalabClusters: new Set(["minimum-wage"]) });
+  assert.equal(boosted.score, Math.min(100, plain.score + 10));
+  assert.equal(boosted.scoreParts.datalab, 10);
+  assert.equal(other.score, plain.score);
+  const { radar } = await runRadar({ mode: "fixtures", today: "2026-09-26", write: false, log: () => {} });
+  assert.equal(radar.datalab.status, "skipped");
+  assert.equal(radar.datalab.calls, 0);
+  assert.deepEqual(validateRadar(radar), []);
+  const withDl = structuredClone(radar);
+  withDl.datalab = { status: "ok", note: "호출 2회", calls: 2, clusters: ["minimum-wage"], changes: [{ cluster: "minimum-wage", change: 2.5, surge: true }] };
+  assert.deepEqual(validateRadar(withDl), []);
+  assert.match(renderMarkdown(withDl), /네이버 데이터랩[\s\S]*minimum-wage ×2\.5\(급상승\)/);
+  withDl.datalab.keywords = ["최저임금"];
+  assert.ok(validateRadar(withDl).some((e) => e.includes("datalab")));
+  // 작성기 입력은 후보의 군집·공식 제목·URL·날짜·부처·종류만 — 점수·데이터랩 값은 가지 않는다
+  const wi = readFileSync(join(REPO_ROOT, "scripts/trend-publish/writer-input.ts"), "utf8");
+  assert.ok(!/datalab|scoreParts/i.test(wi));
 });
 
 test("비밀 스캔: 40자리 hex·키 값 패턴 없음(설정·코드·표본)", () => {
