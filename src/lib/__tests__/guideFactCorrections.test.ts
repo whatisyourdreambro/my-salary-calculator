@@ -135,7 +135,8 @@ describe("META-07 검색 전용 설명 규칙", () => {
   const withMeta = guides.filter((g) => g.metaDescription);
 
   it("설명이 가장 짧던 39편에 80~120자, 이모지 없이 붙는다", () => {
-    // 39편(META-07) + W3-A 재작성 키퍼(guideSpec KEEPERS — 키퍼 사양이 metaDescription 80~120자를 요구)
+    // 39편(META-07) + W3-A 재작성 키퍼(guideSpec KEEPERS — 키퍼 사양이 metaDescription 80~120자를 요구).
+    // 정확한 출처 가드(맵 39편 고정·키퍼 밖 추가 금지)는 guideSpec.test.ts (6) 이 KEEPERS 와 함께 건다.
     expect(withMeta.length).toBeGreaterThanOrEqual(39);
     for (const g of withMeta) {
       const len = [...(g.metaDescription as string)].length;

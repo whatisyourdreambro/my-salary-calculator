@@ -124,7 +124,7 @@ const newlywedDeduction = `
 <h2>신혼집 공제 — 월세·청약·전세대출</h2>
 <ul>
 <li><strong>월세 세액공제</strong>: 무주택 세대주가 총급여 8,000만원 이하(종합소득금액 7,000만원 초과자 제외)이면 월세의 15%, 총급여 5,500만원 이하(종합소득금액 4,500만원 초과자 제외)이면 17%를 연 1,000만원 한도로 공제합니다. 2026년부터는 주소를 달리하는 등 요건을 갖춘 배우자도 추가로 공제받을 수 있고, 이때 부부 월세 합계 한도는 1,000만원입니다. 계산은 <a href="/rent-tax-credit-2026">월세 세액공제 계산기</a>에서 할 수 있습니다.</li>
-<li><strong>청약통장 소득공제</strong>: 세대주의 배우자도 2025년 납입분부터 본인 명의 통장으로 공제받습니다. 부부가 각자 연 300만원까지 넣으면 각자 공제 대상입니다. 요건과 실제 절감액은 <a href="/guides/housing-subscription-25man-deduction-2026">청약통장 소득공제 가이드</a>에 정리했습니다.</li>
+<li><strong>청약통장 소득공제</strong>: 세대주의 배우자도 2025년 납입분부터 본인 명의 통장으로 공제받습니다. 조세특례제한법 제87조에는 월세 공제(부부 합계 1,000만원)와 달리 부부 합산 한도가 없어, 두 사람이 각각 총급여 7,000만원 이하 등 요건을 채우면 각자 본인 통장 납입액을 연 300만원 한도로 공제받는 구조입니다. 요건과 실제 절감액은 <a href="/guides/housing-subscription-25man-deduction-2026">청약통장 소득공제 가이드</a>에 정리했습니다.</li>
 <li><strong>전세자금대출 원리금</strong>: 무주택 세대주가 요건을 갖춘 주택임차자금 대출의 원리금을 갚으면 상환액의 40%를 소득공제하며, 청약통장 공제와 합쳐 연 400만원이 한도입니다.</li>
 </ul>
 <p>한 세대 안에서 세대주가 청약·주택자금·월세 공제 중 하나라도 받으면 세대원은 월세 세액공제를 받을 수 없으므로, 신혼집 계약 명의와 세대주를 누구로 할지 정할 때 공제 순서도 함께 따져 보세요.</p>
@@ -134,19 +134,19 @@ const newlywedDeduction = `
 <li><strong>출산·입양 세액공제</strong>: 그해 출산하거나 입양 신고한 자녀가 첫째면 30만원, 둘째 50만원, 셋째 이상 70만원을 공제합니다. 매년 받는 자녀세액공제와는 별개입니다.</li>
 <li><strong>산후조리원</strong>: 출산 1회당 200만원까지 의료비에 넣어 15%를 공제하므로 최대 30만원입니다. 총급여 요건은 없고, 다른 의료비와 합쳐 총급여 3% 문턱을 넘는 부분부터 공제됩니다.</li>
 <li><strong>주택 취득세 감면은 별개</strong>: 생애최초 주택 취득세 감면 같은 제도는 지방세라 연말정산 항목이 아닙니다. 연말정산 환급액에 섞어 계산하지 마세요.</li>
-<li><strong>결혼식 비용</strong>: 예식장·신혼여행 결제는 따로 공제되는 항목이 아니라 신용카드 등 사용액에 포함될 뿐이며, 총급여 25%를 넘는 부분부터 공제됩니다.</li>
+<li><strong>결혼식·신혼여행 비용</strong>: 예식장처럼 국내에서 결제한 금액은 따로 공제되는 항목이 아니라 신용카드 등 사용액에 포함될 뿐이며, 총급여 25%를 넘는 부분부터 공제됩니다. 신혼여행지에서 카드로 결제한 해외 사용액은 국외 사용분이라 신용카드 등 사용액에서 아예 빠집니다.</li>
 </ul>
 <p>연말정산 전체 일정은 <a href="/year-end-tax-2027">연말정산 2027 총정리</a>, 부모님 공제 요건은 <a href="/calc/dependent-check">부양가족 공제 판정기</a>에서 확인할 수 있습니다.</p>
 
 <h2>자주 묻는 질문</h2>
 <ul>
-<li><strong>Q. 2025년에 혼인신고를 했는데 2026년 연말정산에서 받을 수 있나요?</strong> — 혼인 세액공제는 혼인신고를 한 날이 속하는 해에만 적용됩니다. 2025년 혼인신고라면 2025년 귀속 연말정산에서 받아야 했고, 놓쳤다면 경정청구로 바로잡을 수 있습니다.</li>
+<li><strong>Q. 2025년에 혼인신고를 했는데 2026년 귀속 연말정산(2027년 1월)에서 받을 수 있나요?</strong> — 받을 수 없습니다. 혼인 세액공제는 혼인신고를 한 날이 속하는 과세기간에만 적용되므로, 2025년 혼인신고라면 2025년 귀속 연말정산(2026년 1~2월)에서 받는 것입니다. 그때 놓쳤다면 경정청구로 바로잡을 수 있습니다.</li>
 <li><strong>Q. 재혼이어도 혼인 세액공제를 받나요?</strong> — 조문은 초혼과 재혼을 나누지 않고 1인당 1회로 제한합니다. 2024년 이후 이미 한 번 받았다면 다시 받을 수 없습니다.</li>
 <li><strong>Q. 12월에 혼인신고를 해도 배우자 기본공제가 되나요?</strong> — 됩니다. 배우자 해당 여부는 12월 31일 현재 상황으로 판정하므로, 배우자 소득 요건만 채우면 그해 150만원 기본공제를 받습니다.</li>
 <li><strong>Q. 결혼 전에 배우자가 쓴 카드 금액도 합칠 수 있나요?</strong> — 합칠 수 없습니다. 국세청 안내에 따르면 혼인일 이후 사용한 금액만 대상이고, 그마저도 배우자 소득 요건을 채운 경우에 한합니다.</li>
 </ul>
 
-<p>근거: <a href="https://www.law.go.kr/법령/조세특례제한법/제92조" target="_blank" rel="noopener noreferrer">조세특례제한법 제92조(혼인 세액공제)</a> · <a href="https://www.law.go.kr/법령/소득세법/제50조" target="_blank" rel="noopener noreferrer">소득세법 제50조(기본공제)</a> · <a href="https://www.law.go.kr/법령/소득세법/제53조" target="_blank" rel="noopener noreferrer">소득세법 제53조(판정 시기)</a> · <a href="https://www.law.go.kr/법령/조세특례제한법/제95조의2" target="_blank" rel="noopener noreferrer">조세특례제한법 제95조의2(월세 세액공제)</a> · <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=6596&amp;cntntsId=7875" target="_blank" rel="noopener noreferrer">국세청 근로소득 세액공제 안내(혼인세액공제)</a> · <a href="https://call.nts.go.kr/call/qna/selectQnaInfo.do?mi=1318&amp;ctgId=CTG11898" target="_blank" rel="noopener noreferrer">국세상담센터 신용카드 Q&amp;A</a>. 기준일 2026-09-26 — 법령은 소득세법 2026년 1월 1일 시행본, 조세특례제한법 2026년 9월 18일 시행본 기준이며, 계산 예시는 이 사이트 연말정산 엔진 값입니다.</p>
+<p>근거: <a href="https://www.law.go.kr/법령/조세특례제한법/제92조" target="_blank" rel="noopener noreferrer">조세특례제한법 제92조(혼인 세액공제)</a> · <a href="https://www.law.go.kr/법령/소득세법/제50조" target="_blank" rel="noopener noreferrer">소득세법 제50조(기본공제)</a> · <a href="https://www.law.go.kr/법령/소득세법/제53조" target="_blank" rel="noopener noreferrer">소득세법 제53조(판정 시기)</a> · <a href="https://www.law.go.kr/법령/조세특례제한법/제95조의2" target="_blank" rel="noopener noreferrer">조세특례제한법 제95조의2(월세 세액공제)</a> · <a href="https://www.law.go.kr/법령/조세특례제한법/제87조" target="_blank" rel="noopener noreferrer">조세특례제한법 제87조(청약저축 소득공제)</a> · <a href="https://www.law.go.kr/법령/조세특례제한법/제126조의2" target="_blank" rel="noopener noreferrer">조세특례제한법 제126조의2(신용카드 등 소득공제, 국외 사용분 제외)</a> · <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=6596&amp;cntntsId=7875" target="_blank" rel="noopener noreferrer">국세청 근로소득 세액공제 안내(혼인세액공제)</a> · <a href="https://call.nts.go.kr/call/qna/selectQnaInfo.do?mi=1318&amp;ctgId=CTG11898" target="_blank" rel="noopener noreferrer">국세상담센터 신용카드 Q&amp;A</a>. 기준일 2026-09-26 — 법령은 소득세법 2026년 1월 1일 시행본, 조세특례제한법 2026년 9월 18일 시행본 기준이며, 계산 예시는 이 사이트 연말정산 엔진 값입니다.</p>
 `;
 
 const newlywedChildBirthBenefit = `
@@ -650,7 +650,7 @@ const childEducationLimit = `
 <tr><td>장애인 특수교육비</td><td>한도 없음</td><td>—</td><td>기본공제대상 장애인의 재활교육비(직계존속 포함)</td></tr>
 </tbody>
 </table>
-<p>수능 응시료와 대학 입학전형료도 교육비로 인정됩니다. 반면 초등 3학년 이상 학생의 학원비와 방문 학습지는 공제 대상이 아닙니다. 부모 등 직계존속을 위해 낸 일반 교육비도 대상이 아니며, 장애인 특수교육비만 예외입니다.</p>
+<p>수능 응시료와 대학 입학전형료도 교육비로 인정됩니다. 반면 방문 학습지는 공제 대상이 아니고, 12월 31일 현재 9세 이상인 초등 3학년 이상 학생의 학원비도 대상이 아닙니다. 부모 등 직계존속을 위해 낸 일반 교육비도 대상이 아니며, 장애인 특수교육비만 예외입니다.</p>
 
 <h2>2026년에 달라진 두 가지</h2>
 <p>2025년 12월 23일 개정된 소득세법(법률 제21221호)이 2026년 1월 1일 이후 지급하는 교육비부터 적용됩니다.</p>
@@ -680,17 +680,17 @@ const childEducationLimit = `
 <h2>공제가 빠지거나 줄어드는 경우</h2>
 <ul>
 <li><strong>장학금</strong>: 학교·직장·사내근로복지기금 등에서 받은 장학금으로 낸 부분은 공제 대상 교육비에서 뺍니다.</li>
-<li><strong>자녀 명의 학자금 대출</strong>: 자녀가 학자금 대출을 받아 낸 등록금은 부모가 공제받을 수 없습니다. 이 경우 자녀 본인이 나중에 대출 원리금을 갚을 때 본인 교육비로 공제받습니다.</li>
+<li><strong>자녀 명의 학자금 대출</strong>: 자녀가 학자금 대출을 받아 낸 등록금은 부모가 공제받을 수 없습니다. 이 경우 자녀가 나중에 대출 원리금을 갚을 때 근로소득이 있으면 본인 교육비로 공제받을 수 있습니다.</li>
 <li><strong>자녀 대학원</strong>: 대학원 학비는 본인이 다닐 때만 공제됩니다.</li>
 <li><strong>맞벌이 부부</strong>: 자녀 기본공제를 받는 사람만 그 자녀의 교육비를 공제받습니다. 남편이 기본공제를, 아내가 교육비를 나눠 받을 수는 없습니다.</li>
-<li><strong>연도 중 취업·혼인한 자녀</strong>: 기본공제 대상에서 벗어난 사유가 생긴 날까지 이미 낸 교육비는 공제할 수 있습니다.</li>
+<li><strong>연도 중 혼인 등으로 부양가족에서 빠진 자녀</strong>: 혼인 등의 사유로 자녀가 과세기간 중에 기본공제대상자에서 벗어나면, 그 사유가 생긴 날까지 낸 교육비만 공제합니다(소득세법 제59조의4 제5항). 반면 2026년 지출분부터는 교육비 공제에서 자녀의 소득을 따지지 않으므로, 자녀가 연도 중 취업해 소득이 생겼다는 이유만으로 그 뒤에 낸 교육비가 빠지지는 않습니다.</li>
 <li><strong>국외 교육기관</strong>: 국내 학교에 해당하는 국외 교육기관 교육비도 인정되지만, 부모가 국내에서 근무하면 취학 전 아동과 초·중학생은 자비유학 자격 등 요건을 갖춘 경우만 해당합니다.</li>
 </ul>
 <p>부양가족 요건은 <a href="/calc/dependent-check">부양가족 공제 판정기</a>, 맞벌이 부부의 자녀 귀속 비교는 <a href="/calc/dual-income-year-end">맞벌이 연말정산 몰아주기 계산기</a>와 <a href="/guides/couple-split-bonus-year-2026">맞벌이 몰아주기 가이드</a>에서 이어서 확인할 수 있습니다. 연말정산 전체 일정은 <a href="/year-end-tax-2027">연말정산 2027 총정리</a>에 있습니다.</p>
 
 <h2>자주 묻는 질문</h2>
 <ul>
-<li><strong>Q. 초등학교 3학년 자녀의 태권도 학원비도 공제되나요?</strong> — 되지 않습니다. 2026년에 새로 들어온 예체능 학원비는 12월 31일 현재 9세 미만이거나 2학년 이하인 초등학생만 대상입니다.</li>
+<li><strong>Q. 초등학교 3학년 자녀의 태권도 학원비도 공제되나요?</strong> — 12월 31일 현재 9세 이상인 3학년이라면 되지 않습니다. 2026년에 새로 들어온 예체능 학원비는 12월 31일 현재 9세 미만이거나 2학년 이하인 초등학생만 대상이므로, 3학년이라도 12월 31일에 9세가 되지 않았다면 공제됩니다.</li>
 <li><strong>Q. 아르바이트 소득이 있는 대학생 자녀 등록금도 공제되나요?</strong> — 2026년에 낸 등록금부터는 자녀의 소득과 관계없이 1명당 연 900만원 한도에서 15%를 공제받습니다. 다만 자녀 본인의 기본공제 150만원은 소득 요건을 따로 봅니다.</li>
 <li><strong>Q. 대학원에 다니는 자녀 학비는 공제되나요?</strong> — 되지 않습니다. 대학원 교육비는 근로자 본인 것만 한도 없이 공제됩니다.</li>
 <li><strong>Q. 유치원생 영어학원비는 공제되나요?</strong> — 취학 전 아동이 학원에서 월 단위로 주 1회 이상 교습을 받고 낸 수강료는 1명당 연 300만원 한도에서 공제됩니다. 방문 학습지는 대상이 아닙니다.</li>
@@ -1272,7 +1272,7 @@ export const hotNewsExtended: Guide[] = [
   { slug: "newlywed-didimdol-bomgijari-2026", title: "신혼부부 디딤돌 vs 보금자리론 — 5억 30년 시 1.8억 절감", description: "디딤돌 1.6%·한도 5억 vs 보금자리론 3.5%·한도 10억. 부부 소득·집값별 유리한 상품 선택.", category: "부동산", tags: ["신혼부부", "디딤돌", "보금자리론", "주택대출", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: newlywedDidimdolVsBomgijari, lang: "ko" },
   { slug: "youth-subscription-60points-2026", title: "청약 가점 60점+ 5년 안에 만드는 5가지 전략", description: "청약통장 만 17점·무주택 10점·부양가족 25점 = 60점. 청년주택드림 + 특별공급 활용.", category: "부동산", tags: ["청약", "가점", "청년", "특별공급", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: youthSubscriptionGapyo5y, lang: "ko" },
   { slug: "youth-housing-dream-account-detail-2026", title: "청년우대형 vs 청년주택드림 청약통장 — 4.5% 금리 + 3억 대출", description: "청년주택드림 신규 가입 (만 19~34세) 최대 4.5% + 연 120만원 소득공제 + 최대 3억 대출 자격. 5년 누적 약 494만원 혜택.", category: "부동산", tags: ["청년주택드림", "청약", "청년", "내집마련", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: youthSubscriptionAccount, lang: "ko" },
-  { slug: "newlywed-deduction-first-year-2026", title: "신혼부부 첫 연말정산 2026 — 혼인 세액공제 50만원", description: "2026년 혼인신고 시 부부 각자 혼인 세액공제 50만원, 배우자·양가 부모 기본공제는 12월 31일 기준으로 판정합니다.", metaDescription: "2026년에 혼인신고를 했다면 부부 각자 혼인 세액공제 50만원을 받습니다. 배우자·양가 부모 기본공제, 월세·청약 공제, 출산·산후조리원까지 신혼 첫 연말정산 항목을 계산 예시와 정리했습니다.", category: "세금", tags: ["신혼부부", "연말정산", "인적공제", "취득세", "2026"], level: "초급", publishedDate: "2026-05-23", modifiedDate: "2026-09-30", views: 0, content: newlywedDeduction, lang: "ko" },
+  { slug: "newlywed-deduction-first-year-2026", title: "신혼부부 첫 연말정산 2026 — 혼인 세액공제 50만원", description: "2026년 혼인신고 시 부부 각자 혼인 세액공제 50만원, 배우자·양가 부모 기본공제는 12월 31일 기준으로 판정합니다.", metaDescription: "2026년에 혼인신고를 했다면 부부 각자 혼인 세액공제 50만원을 받습니다. 배우자·양가 부모 기본공제, 월세·청약 공제, 출산·산후조리원까지 신혼 첫 연말정산 항목을 계산 예시와 정리했습니다.", category: "세금", tags: ["신혼부부", "연말정산", "인적공제", "혼인세액공제", "2026"], level: "초급", publishedDate: "2026-05-23", modifiedDate: "2026-09-30", views: 0, content: newlywedDeduction, lang: "ko" },
   { slug: "newlywed-child-birth-benefit-2026", title: "자녀 1명 출산 시 정부 지원 3,200만원 — 6+6 + 자녀세액공제 + 산후조리원", description: "출산휴가 90일 + 6+6 부모 육아휴직 3,200만원 + 자녀세액공제 30~70만원 + 산후조리원 200만원 + 자녀장려금 80만원.", category: "세금", tags: ["출산", "자녀", "정부지원", "육아휴직", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: newlywedChildBirthBenefit, lang: "ko" },
   { slug: "youth-3account-combination-2026", title: "청년 3종 조합 — 도약계좌·장기투자 2025년 말 신규 종료", description: "청년도약·청년형 장기투자는 2025-12-31 신규 가입 종료(청년미래적금 참고). 기존 가입자 기준 도약 243만 + 주택드림 약 394만원.", category: "투자", tags: ["청년", "도약계좌", "주택드림", "장기투자", "절세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: youthAccountCombination, lang: "ko" },
   { slug: "youth-k-pass-mass-transit-2026", title: "K-패스 대중교통 환급 — 청년 30% 연 28만원, 저소득층 53%", description: "월 15회+ 대중교통 이용 시 일반 20%·청년 30%·저소득 53% 환급. 청년 월 8만원 사용 시 연 28만원 환급.", category: "기초", tags: ["K-패스", "대중교통", "청년", "환급", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: youthKpass, lang: "ko" },
