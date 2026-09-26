@@ -52,6 +52,13 @@ const KEEPERS: readonly string[] = [
   "child-education-deduction-limit-2026",
   "couple-split-bonus-year-2026",
   "newlywed-deduction-first-year-2026",
+  // G2A — 성과급 세금 (2026-09-30)
+  "bonus-1eok-net-payment-2026",
+  "bonus-5000-net-payment-2026",
+  "income-tax-8-step-bracket-2026",
+  // G2A — 4대보험 (2026-09-30)
+  "bonus-health-4-percent-2026",
+  "four-insurance-ceiling-summary-2026",
 ];
 
 const BASE = "3b564c80";
