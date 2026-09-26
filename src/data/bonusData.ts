@@ -220,7 +220,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         year: 2025,
         scheme: "PS",
         percentOfBase: 1500,
-        note: "2024년 실적분 — HBM 호황 (영업이익 23.4조)",
+        note: "2024년 실적분 — HBM 호황 (영업이익 23.5조)",
         source: "공개 보도 수치 (psData.ts PS_HISTORY)",
       },
       {

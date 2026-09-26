@@ -61,6 +61,7 @@ import {
   opi2025,
   pct,
   piRateForMargin,
+  psRateCell,
   psYear,
 } from "@/lib/guides/bonusKeeperFigures";
 import { calculateSeverancePay } from "@/lib/severanceCalculator";
@@ -227,11 +228,12 @@ ${[60_000_000, 80_000_000, 100_000_000].map(ssOpiNetRow).join("\n")}
 <p class="text-sm">기준일: 2026-09-26. OPI·TAI 지급률과 임금협상 내용은 노조 공지를 인용한 복수 보도로, <a href="/calc/samsung-bonus">삼성전자 성과급 계산기</a>와 같은 데이터입니다. 특별경영성과급의 지급 조건은 보도(지디넷코리아·아시아경제 2026-05-21) 기준입니다. 자사주 지급은 회사 공시, 판결은 <a href="https://www.law.go.kr/판례/(2021다248299)">대법원 2021다248299 판결(국가법령정보센터)</a>, 과세 구조는 <a href="https://www.law.go.kr/법령/소득세법/제20조">소득세법 제20조</a>와 <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=2227&cntntsId=7667">국세청 종합소득세 세율</a>, 건강보험료 정산은 <a href="https://www.law.go.kr/법령/국민건강보험법시행령/제39조">국민건강보험법 시행령 제39조</a>, 상여금의 평균임금 산입은 <a href="https://www.moel.go.kr/retirementpayCal.do">고용노동부 퇴직금 계산</a>을 따랐습니다. 다른 회사 성과급은 <a href="/calc/bonus-calculators">회사별 성과급 계산기 모음</a>에서 볼 수 있습니다.</p>
 `;
 
-// 2차 키퍼(2026-09-26 G2B) — PS·PI 이력은 계산기 데이터(psData)에 회사 실적 발표·회사 인용 보도로 바로잡은 값(PS_HISTORY_GUIDE),
+// 2차 키퍼(2026-09-26 G2B) — PS·PI 이력은 계산기 데이터(psData) 값 그대로(영업이익은 DART 사업보고서와 대조, 2022년 PS 지급률은 미게재 — PS_HISTORY_GUIDE),
 // 가결 조건은 psData, 세후는 성과급 엔진(2026 요율). sk-hynix-ps-bonus-2026(5월 전망 글)의 검색 의도를 흡수한다.
 // 2026년 실적분 지급률은 확정 전이라 추정하지 않는다. 2025년 실적분 이연 20%는 9/16 가결안에서 2026년 선지급(복수 보도).
 const SK_2025 = psYear(2025);
 const SK_PS_2025 = SK_2025.psRatePct as number;
+const SK_2021 = psYear(2021);
 const SK_2022 = psYear(2022);
 const SK_NEW = AGREEMENT_2026.newSplit;
 const SK_OLD = AGREEMENT_2026.oldSplit;
@@ -251,14 +253,14 @@ const skHynixPs = `
 <p class="lead">SK하이닉스 PS(초과이익분배금)는 연간 영업이익의 ${SK_POOL_PCT}%를 재원으로 이듬해 초에 기준급 대비 %로 지급하는 성과급입니다. 2025년 실적분 PS는 <strong>${pct(SK_PS_2025)}%</strong>로, 기준급 1,000% 상한이 없어진 뒤 처음 적용된 해였습니다. 이 가운데 ${SK_OLD.cashNowPct}%는 2026년 2월 5일 지급됐고, 2027·2028년에 받기로 했던 나머지 ${SK_OLD_DEFERRED}%도 9월 16일 총투표에서 가결된 합의에 따라 2026년 안에 앞당겨 지급됩니다. 2026년 실적분부터는 이듬해 초 현금 ${SK_NEW.cashNowPct}%·자사주 ${SK_NEW.stockNowPct}%, 1년 뒤와 2년 뒤 자사주 ${SK_NEW.stockYear1Pct}%씩으로 나눠 받습니다. 회사 실적 발표·복수 보도와 사업보고서 기준이며, 기준일은 2026년 9월 26일입니다.</p>
 
 <h2>연도별 PS·PI 지급률</h2>
-<p>PS는 연 1회, PI(생산성 격려금)는 반기마다 받습니다. 아래 표는 실적 연도 기준이고 PS는 이듬해 초에 지급됩니다. 지급률은 기준급 대비 %이며, 사이트 계산기는 기준급을 연봉의 ${BASIC_RATIO}분의 1로 봅니다. 영업이익은 회사 연간 실적 발표 기준입니다.</p>
+<p>PS는 연 1회, PI(생산성 격려금)는 반기마다 받습니다. 아래 표는 실적 연도 기준이고 PS는 이듬해 초에 지급됩니다. 지급률은 기준급 대비 %이며, 사이트 계산기는 기준급을 연봉의 ${BASIC_RATIO}분의 1로 봅니다. 영업이익은 DART 사업보고서의 연결 영업이익(감사 후 확정치)입니다.</p>
 <div class="overflow-x-auto"><table class="w-full text-sm">
 <thead><tr><th>실적 연도</th><th>PS</th><th>PI(연간)</th><th>영업이익</th><th>메모</th></tr></thead>
 <tbody>
-${PS_HISTORY_GUIDE.map((r) => `<tr><td>${r.year}</td><td>${r.psRatePct == null ? "—" : `${pct(r.psRatePct)}%`}</td><td>${r.piTotalPct == null ? "공개 자료 미확인" : `${pct(r.piTotalPct)}%`}</td><td>${opTrilKo(r.opTril)}</td><td>${r.note ?? ""}</td></tr>`).join("\n")}
+${PS_HISTORY_GUIDE.map((r) => `<tr><td>${r.year}</td><td>${psRateCell(r)}</td><td>${r.piTotalPct == null ? "공개 자료 미확인" : `${pct(r.piTotalPct)}%`}</td><td>${opTrilKo(r.opTril)}</td><td>${r.note ?? ""}</td></tr>`).join("\n")}
 </tbody>
 </table></div>
-<p>PS ${pct(SK_PS_2025)}%를 연봉 기준으로 바꾸면 기준급(연봉 ÷ ${BASIC_RATIO}) × ${SK_PS_2025 / 100} = 연봉의 ${SK_PS_2025 / BASIC_RATIO}%입니다. 연봉 1억원이면 PS 총액이 세전 ${manKo(skPsWon(100_000_000))}이라는 뜻입니다. 영업이익이 전년보다 크게 줄어든 2022년에는 PS가 ${pct(SK_2022.psRatePct as number)}%(연봉의 약 ${(SK_2022.psRatePct as number) / BASIC_RATIO}%)로 내려갔고, 적자였던 2023년에는 PS가 없었습니다. 영업이익에 그대로 연동되는 만큼 해마다 편차가 큽니다. 직원 평균 급여는 2025년 사업보고서 기준 1억 8,500만원(직원 3만4,549명)이며, 직급별 연봉과 함께 <a href="/salary-db/sk-hynix">SK하이닉스 연봉 정보</a>에 정리돼 있습니다.</p>
+<p>PS ${pct(SK_PS_2025)}%를 연봉 기준으로 바꾸면 기준급(연봉 ÷ ${BASIC_RATIO}) × ${SK_PS_2025 / 100} = 연봉의 ${SK_PS_2025 / BASIC_RATIO}%입니다. 연봉 1억원이면 PS 총액이 세전 ${manKo(skPsWon(100_000_000))}이라는 뜻입니다. 영업이익이 ${opTrilKo(SK_2021.opTril)}에서 ${opTrilKo(SK_2022.opTril)}으로 줄어든 2022년에는 PS도 전년(${pct(SK_2021.psRatePct as number)}%)보다 낮아졌고(그해 지급률은 공개 자료로 확인되지 않아 표에 싣지 않았습니다), 적자였던 2023년에는 PS가 없었습니다. 영업이익에 그대로 연동되는 만큼 해마다 편차가 큽니다. 직원 평균 급여는 2025년 사업보고서 기준 1억 8,500만원(직원 3만4,549명)이며, 직급별 연봉과 함께 <a href="/salary-db/sk-hynix">SK하이닉스 연봉 정보</a>에 정리돼 있습니다.</p>
 
 <h2>2026년 실적분부터 바뀌는 지급 방식</h2>
 <p>2026년 임단협은 8월 20일 첫 잠정합의안(현금 40%·자사주 60%)이 8월 25일 총투표에서 부결된 뒤, 9월 9일 마련한 수정안이 9월 16일 총투표에서 찬성 57.08%로 가결됐습니다. 새 방식은 2026년 실적분(2027년 초 지급)부터 적용됩니다.</p>
@@ -302,7 +304,7 @@ ${[60_000_000, 80_000_000, 100_000_000, 120_000_000].map(skNetRow).join("\n")}
 <li><strong>Q. PS는 퇴직금에 반영되나요?</strong> — 2026년 2월 대법원 판결(2021다219994)은 해마다 노사합의로 정하던 2015년 무렵의 SK하이닉스 경영성과급이 평균임금에 들어가지 않는다고 봤습니다. 2025년 이후의 지금 PS 제도를 직접 판단한 판결은 아니므로, 퇴직 전에 회사 산정 기준을 확인하세요.</li>
 </ul>
 
-<p class="text-sm">기준일: 2026-09-26. 영업이익은 SK하이닉스 연간·분기 실적 발표, PS·PI 지급률과 가결 조건은 회사 인용 보도·복수 보도(2022년 PS: 이투데이 2023-02-01, 2025년 실적분 이연분 선지급: 서울신문·이투데이·머니투데이 2026-09-16, 상반기 PI 지급 예정일: 파이낸셜뉴스 2026-07-26) 기준입니다. 본인 몫 계산은 <a href="/calc/sk-hynix-bonus">SK하이닉스 성과급 계산기</a>를 쓰면 됩니다. 판결은 <a href="https://scourt.go.kr/portal/news/NewsViewAction.work?gubun=6&searchOption=&searchWord=&seqnum=2931">대법원 2021다219994 보도자료</a>, 평균임금 정의는 <a href="https://www.law.go.kr/법령/근로기준법/제2조">근로기준법 제2조</a>, 과세 구조는 <a href="https://www.law.go.kr/법령/소득세법/제20조">소득세법 제20조</a>와 <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=2227&cntntsId=7667">국세청 종합소득세 세율</a>을 따랐습니다. 다른 회사는 <a href="/calc/bonus-calculators">회사별 성과급 계산기 모음</a>에서 볼 수 있습니다.</p>
+<p class="text-sm">기준일: 2026-09-26. 연간 영업이익은 <a href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260317000635">DART SK하이닉스 사업보고서</a>(연결, 감사 후 확정치), 2026년 분기 실적은 회사 실적 발표, PS·PI 지급률과 가결 조건은 회사 인용 보도·복수 보도(2025년 실적분 이연분 선지급: 서울신문·이투데이·머니투데이 2026-09-16, 상반기 PI 지급 예정일: 파이낸셜뉴스 2026-07-26) 기준입니다. PS 지급률은 공시 항목이 아니어서 공개 자료로 확인되지 않는 2022년분은 싣지 않았습니다. 본인 몫 계산은 <a href="/calc/sk-hynix-bonus">SK하이닉스 성과급 계산기</a>를 쓰면 됩니다. 판결은 <a href="https://scourt.go.kr/portal/news/NewsViewAction.work?gubun=6&searchOption=&searchWord=&seqnum=2931">대법원 2021다219994 보도자료</a>, 평균임금 정의는 <a href="https://www.law.go.kr/법령/근로기준법/제2조">근로기준법 제2조</a>, 과세 구조는 <a href="https://www.law.go.kr/법령/소득세법/제20조">소득세법 제20조</a>와 <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=2227&cntntsId=7667">국세청 종합소득세 세율</a>을 따랐습니다. 다른 회사는 <a href="/calc/bonus-calculators">회사별 성과급 계산기 모음</a>에서 볼 수 있습니다.</p>
 `;
 
 // 2차 키퍼(2026-09-26 G2B) — 회사별 성과급은 계산기와 같은 bonusData, 세후는 성과급 엔진(2026 요율).

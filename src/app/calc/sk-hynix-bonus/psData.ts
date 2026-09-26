@@ -46,7 +46,10 @@ export const AGREEMENT_2026 = {
   appliesFrom: "2026년 성과급(2027년 초 지급분)부터",
 } as const;
 
-/** 연도별 PS·PI 실지급 이력 (실적 귀속 연도 기준, 공개 보도 수치) */
+/** 연도별 PS·PI 실지급 이력 (실적 귀속 연도 기준, 공개 보도 수치)
+ *  opTril = DART 사업보고서 요약연결재무정보 영업이익(감사 후, 소수 첫째 자리 반올림) — 2026-09-26 대조:
+ *  2021 12조4,103억 · 2022 6조8,094억(잠정 공시 7조66억과 다름) · 2023 −7조7,303억 · 2024 23조4,673억 · 2025 47조2,063억.
+ *  psRatePct 는 공시 항목이 아니다. 2022년 600% 는 출처 미확인(회사 인용 보도는 820%) — 확인 전까지 값 유지. */
 export type PsHistoryRow = {
   year: number;
   /** 기본급 대비 PS % (null = 미지급) */
@@ -62,7 +65,7 @@ export const PS_HISTORY: PsHistoryRow[] = [
   { year: 2021, psRatePct: 1000, piTotalPct: null, opTril: 12.4, note: "상한(1,000%) 도달" },
   { year: 2022, psRatePct: 600, piTotalPct: null, opTril: 6.8, note: "다운사이클" },
   { year: 2023, psRatePct: 0, piTotalPct: null, opTril: -7.7, note: "적자 — PS 미지급" },
-  { year: 2024, psRatePct: 1500, piTotalPct: 300, opTril: 23.4, note: "HBM 호황" },
+  { year: 2024, psRatePct: 1500, piTotalPct: 300, opTril: 23.5, note: "HBM 호황" },
   {
     year: 2025,
     psRatePct: 2964,
@@ -141,4 +144,4 @@ export const SOURCES = [
   },
 ] as const;
 
-export const LAST_UPDATED = "2026-09-20";
+export const LAST_UPDATED = "2026-09-26";

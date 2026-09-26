@@ -34,18 +34,24 @@ export const OPI_2025_DESC: readonly OpiActualRate[] = [...OPI_ACTUAL_2025.rates
 export const TAI_2026_H1_DESC = [...TAI_RATES_2026_H1].sort((a, b) => b.rate - a.rate);
 
 /**
- * psData PS_HISTORY 가운데 회사 실적 발표·회사 인용 보도와 어긋나는 값 — 가이드 본문에서만 바로잡는다.
- * psData·bonusData 는 계산기(/calc/sk-hynix-bonus)·리포트가 함께 쓰는 파일이라 이 배치에서 고치지 않고 통합 담당에게 넘긴다
- * (원장 docs/guides-facts-2026-10-G2B.md X-05). psData 가 같은 값으로 고쳐지면 테스트가 이 보정표를 지우라고 알린다.
- *  - 2022년: PS 820% — 이투데이 2023-02-01 회사 인용("2022년 PS를 820%로 최종 결정"), 영업이익 7조 66억원 — SK하이닉스 뉴스룸 2023-02-01.
- *  - 2024년: 영업이익 23조 4,673억원(23.5조) — 회사 2025-01-23 발표. 1,500% 는 PS 1,000% + 특별성과급 500%(2025-01 복수 보도).
+ * 가이드 PS 이력 표는 계산기와 같은 psData PS_HISTORY 값을 그대로 쓴다(2026-09-26 통합 — 원장 G2B X-05 처리).
+ * 연간 영업이익은 DART 사업보고서 요약연결재무정보(감사 후 확정치, 백만원)와 대조했다:
+ *   2021 12,410,340(rcpNo 20220322000590) · 2022 6,809,417(20230321001209) · 2023 (7,730,313) · 2024 23,467,319(20250319000665)
+ *   · 2025 47,206,319(20260317000635) → 12.4·6.8·−7.7·23.5·47.2조. psData 2024 23.4조를 23.5조로 고쳐 보정표를 없앴다.
+ *   2022년 '7조 66억원(7.0조)'은 2023-02-01 잠정실적 공정공시(20230201800006) 값이고 감사 후 확정치는 6.8조라 psData 가 맞다.
+ * PS 지급률은 DART 에 공시되지 않는다. 2022년 실적분은 psData 600%(출처 미상)와 회사 인용 보도 820%(이투데이 2023-02-01)가
+ * 어긋나 공식 자료로 확인할 수 없으므로, 계산기 값은 그대로 두고 가이드는 그해 지급률 숫자를 싣지 않는다(계산기와 모순 방지).
  */
-export const PS_HISTORY_CORRECTIONS: Readonly<Record<number, Partial<PsHistoryRow>>> = {
-  2022: { psRatePct: 820, opTril: 7.0 },
-  2024: { opTril: 23.5, note: "PS 1,000% + 특별성과급 500%, HBM 호황" },
+export const PS_RATE_UNDISCLOSED_YEARS: ReadonlySet<number> = new Set([2022]);
+/** 가이드 표 메모만 덧붙이는 해 — 값(지급률·영업이익)은 psData 그대로. 2024 구성은 2025-01 복수 보도(헤럴드경제 등) */
+export const PS_HISTORY_GUIDE_NOTES: Readonly<Record<number, string>> = {
+  2024: "PS 1,000% + 특별성과급 500%, HBM 호황",
 };
-/** 가이드 본문용 PS 이력 — psData 에 위 보정표를 덮어쓴 값 */
-export const PS_HISTORY_GUIDE: readonly PsHistoryRow[] = PS_HISTORY.map((r) => ({ ...r, ...PS_HISTORY_CORRECTIONS[r.year] }));
+/** 가이드 본문용 PS 이력 — psData 값에 가이드 메모만 덧붙인 것 */
+export const PS_HISTORY_GUIDE: readonly PsHistoryRow[] = PS_HISTORY.map((r) => ({ ...r, note: PS_HISTORY_GUIDE_NOTES[r.year] ?? r.note }));
+/** 가이드 표의 PS 칸 — 공시로 확인할 수 없는 해는 숫자 대신 안내 문구 */
+export const psRateCell = (r: PsHistoryRow): string =>
+  PS_RATE_UNDISCLOSED_YEARS.has(r.year) ? "공개 자료 미확인" : r.psRatePct == null ? "—" : `${pct(r.psRatePct)}%`;
 /** SK하이닉스 PS 이력 한 해(보정 반영) */
 export const psYear = (year: number): PsHistoryRow => must(PS_HISTORY_GUIDE.find((r) => r.year === year), `PS ${year}`);
 /** 영업이익(조원) 표기 — 소수 첫째 자리까지(7.0조원) */

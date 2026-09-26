@@ -4666,7 +4666,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
-  "contentChars": 6527
+  "contentChars": 6727
  },
  {
   "slug": "lg-hyundai-posco-bonus-2026",
