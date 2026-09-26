@@ -11,6 +11,11 @@
 //    - 육아휴직 미허용은 500만원 이하 벌금(과태료 아님): 같은 법 제37조 제4항 제4호.
 //    - 우선지원 대상기업이 아닌 기업은 출산전후휴가 최초 60일을 사업주가 유급 처리:
 //      근로기준법 제74조 제4항, 고용보험법 제76조 제1항 제1호.
+//    - 육아휴직 신청 조건은 휴직과 급여를 나눈다. 휴직: 같은 회사(해당 사업) 계속근로 6개월
+//      미만이면 사업주가 허용하지 않을 수 있다 — 남녀고용평등법 제19조 제1항 단서·같은 법
+//      시행령 제10조(law.go.kr, 2026-09-18 시행본). 급여: 피보험 단위기간 합산 180일 이상 —
+//      고용보험법 제70조 제1항. 고용보험 180일을 휴직 신청 요건으로 쓰면 180일은 채웠지만
+//      지금 회사 근무가 6개월 미만인 사람에게 틀린 안내가 된다(parental-leave/faq.ts 4번과 일치).
 // 2) /earned-income-credit 반기 신청 지급 시기·금액
 //    - 상반기분(9월) 반기 신청은 연간 예상산정액의 35%를 12월에 지급, 나머지는 다음 해
 //      6월 정산: 국세상담센터 call.nts.go.kr 반기신청 Q&A(mi=13042), korea.kr newsId=148971348.
@@ -86,6 +91,27 @@ const QNA_PAIRS: Pair[] = [
     after: "30인 미만 소기업 근로자도 육아휴직이 보장됩니다. 회사가 거부할 경우 500만원 이하의 벌금에 처해집니다.",
     afterLen: 60,
   },
+  {
+    name: "육아휴직 신청 조건 결론",
+    before: "만 8세 이하(또는 초등학교 2학년 이하) 자녀가 있는 근로자라면 고용보험 가입 180일 이상이면 신청할 수 있습니다. 계약직도 가능합니다.",
+    beforeLen: 78,
+    after: "만 8세 이하(또는 초등학교 2학년 이하) 자녀가 있고 같은 회사 6개월 이상 근무했다면 회사가 거부할 수 없습니다. 계약직도 가능합니다.",
+    afterLen: 77,
+  },
+  {
+    name: "육아휴직 기본 요건 2",
+    before: "<strong>기본 요건:</strong> ①만 8세 이하 또는 초등학교 2학년 이하 자녀 ②육아휴직 시작일 전 고용보험 피보험기간 180일 이상.",
+    beforeLen: 82,
+    after: "<strong>기본 요건:</strong> ①만 8세 이하 또는 초등학교 2학년 이하 자녀 ②회사 계속근로 6개월(급여는 피보험 단위기간 180일)",
+    afterLen: 82,
+  },
+  {
+    name: "계약직·기간제 요건",
+    before: "<strong>계약직·기간제 근로자:</strong> 고용보험 가입 기간을 충족하면 동일하게 적용됩니다. 단, 육아휴직 중 계약 만료 시 연장은 법적 의무가 아닙니다.",
+    beforeLen: 93,
+    after: "<strong>계약직·기간제 근로자:</strong> 같은 회사 6개월 이상이면 똑같이 쓸 수 있습니다. 단, 육아휴직 중 계약 만료 시 연장은 법적 의무가 아닙니다.",
+    afterLen: 93,
+  },
 ];
 
 const EIC_PAIRS: Pair[] = [
@@ -127,6 +153,32 @@ describe("R4 YMYL — /qna 출산휴가·육아휴직 답변", () => {
     expect(cond!.answer.tip).not.toContain("과태료");
 
     for (const p of QNA_PAIRS) expect(qnaSrc, p.name).toContain(p.after);
+  });
+
+  it("육아휴직 신청 조건 답변이 고용보험 180일을 휴직 신청 요건으로 안내하지 않는다", () => {
+    const cond = findQna("육아휴직 신청 조건이 뭔가요");
+    expect(cond).toBeDefined();
+    const { conclusion, details, tip } = cond!.answer;
+    const texts = [conclusion, ...details, tip ?? ""].map((t) => t.replace(/<[^>]+>/g, ""));
+    // 옛 오안내: 180일이면 신청 가능, 가입 기간만 채우면 계약직도 동일
+    for (const t of texts) {
+      expect(t).not.toMatch(/180일 이상이면 신청/);
+      expect(t).not.toContain("고용보험 가입 기간을 충족하면");
+      expect(t).not.toContain("육아휴직 시작일 전 고용보험 피보험기간 180일");
+    }
+    // 180일은 급여 요건으로만 나온다: 같은 문구 안에서 180일 앞 20자 안에 급여가 있어야 한다
+    for (const t of texts) {
+      for (const m of t.matchAll(/180일/g)) {
+        expect(t.slice(Math.max(0, m.index! - 20), m.index!), t).toContain("급여");
+      }
+    }
+    // 휴직 요건은 같은 회사 계속근로 6개월
+    expect(conclusion).not.toContain("180일");
+    expect(conclusion).toContain("같은 회사 6개월 이상 근무했다면 회사가 거부할 수 없습니다");
+    const req = details.find((d) => d.includes("기본 요건"));
+    expect(req).toContain("②회사 계속근로 6개월(급여는 피보험 단위기간 180일)");
+    const contract = details.find((d) => d.includes("계약직·기간제"));
+    expect(contract).toContain("같은 회사 6개월 이상이면");
   });
 
   it("정정 문구는 바꾼 문구보다 길지 않다 (광고 위 높이 불변)", () => {
