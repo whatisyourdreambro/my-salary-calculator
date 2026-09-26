@@ -37,7 +37,12 @@ import { hotNewsDeepDive } from "@/lib/guides/hot-news-2026-deep-dive";
 import { hotBonusTaxComplete } from "@/lib/guides/hot-bonus-tax-complete";
 
 /** 재작성 완료 키퍼 — W3-A 가 재작성 커밋마다 슬러그를 추가한다 (2026-10-13 1차부터). */
-const KEEPERS: readonly string[] = [];
+const KEEPERS: readonly string[] = [
+  // 2차(성과급 세금·4대보험·회사 성과급) — G2C
+  "bonus-retire-impact-severance-2026",
+  "executive-severance-limit-2026",
+  "it-rsu-vs-cash-bonus-2026",
+];
 
 const BASE = "3b564c80";
 const read = (rel: string) => readFileSync(join(process.cwd(), rel), "utf8");

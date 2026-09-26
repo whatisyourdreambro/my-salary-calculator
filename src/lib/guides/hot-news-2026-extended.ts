@@ -5,6 +5,10 @@
 // 운영자 명시 요청: 더 많은 검색 트래픽 확보.
 
 import type { Guide } from "@/lib/guidesData";
+import { calculateSeveranceTax } from "@/lib/severanceCalculator";
+import { estimateAnnualIncomeTax2026 } from "@/lib/bonusTaxCalc";
+import { INSURANCE_RATES_2026 } from "@/lib/taxConstants2026";
+import { formatManwonKorean } from "@/lib/manwonFormat";
 
 // ═══════════════════════════════════════════════════════════════
 // 카테고리 A — 청년·신혼부부 (10편)
@@ -954,25 +958,97 @@ const bonusTiming = `
 </ul>
 `;
 
+// ── executive-severance-limit-2026 (2026-09-30 키퍼 재작성, GUIDES-05) ──
+// 한도 산식은 소득세법 제22조 제3항, 세액은 사이트 엔진(퇴직소득세 calculateSeveranceTax ·
+// 근로소득 결정세액 estimateAnnualIncomeTax2026, 2026 요율 명시)으로 계산해 끼운다.
+// 사실 근거: docs/guides-facts-2026-10-G2C.md H-01~H-07. 회귀: __tests__/guideG2cKeepers.test.ts
+const execMan = (n: number) => formatManwonKorean(Math.round(n / 10_000));
+/** 2016-07-01 임원 선임 ~ 2026-06-30 퇴직(근속 10년, 재직 3,652일). 퇴직한 해 상반기 급여 1.5억, 퇴직금은 같은 해 지급 */
+export const EXEC_EXAMPLE = {
+  monthsTo2019: 42,
+  monthsFrom2020: 78,
+  avgPay2017to2019: 200_000_000,
+  avgPayLast3Years: 300_000_000,
+  years: 10,
+  days: 3652,
+  severance: 800_000_000,
+  salaryInExitYear: 150_000_000,
+} as const;
+export const EXEC_LIMIT =
+  (EXEC_EXAMPLE.avgPay2017to2019 / 10) * (EXEC_EXAMPLE.monthsTo2019 / 12) * 3 +
+  (EXEC_EXAMPLE.avgPayLast3Years / 10) * (EXEC_EXAMPLE.monthsFrom2020 / 12) * 2;
+export const EXEC_EXCESS = EXEC_EXAMPLE.severance - EXEC_LIMIT;
+const execWithin = calculateSeveranceTax(EXEC_LIMIT, EXEC_EXAMPLE.days, EXEC_EXAMPLE.years);
+const execAllRetire = calculateSeveranceTax(EXEC_EXAMPLE.severance, EXEC_EXAMPLE.days, EXEC_EXAMPLE.years);
+const execLaborDelta =
+  estimateAnnualIncomeTax2026(EXEC_EXAMPLE.salaryInExitYear + EXEC_EXCESS, INSURANCE_RATES_2026, EXEC_EXAMPLE.salaryInExitYear) -
+  estimateAnnualIncomeTax2026(EXEC_EXAMPLE.salaryInExitYear, INSURANCE_RATES_2026, EXEC_EXAMPLE.salaryInExitYear);
+/** 한도 초과분이 근로소득에 더해져 늘어나는 소득세 + 지방소득세 */
+export const EXEC_LABOR_TAX = Math.round(execLaborDelta) + Math.round(execLaborDelta * 0.1);
+export const EXEC_WITHIN_TAX = execWithin.incomeTax + execWithin.localTax;
+export const EXEC_ALL_RETIRE_TAX = execAllRetire.incomeTax + execAllRetire.localTax;
+export const EXEC_TOTAL_TAX = EXEC_WITHIN_TAX + EXEC_LABOR_TAX;
+
 const executiveSeveranceLimit = `
-<p class="lead">임원 퇴직금은 일반 직원과 달리 한도가 있음. 임원 직급별·연차별 한도 초과분은 근로소득으로 과세되어 누진세율 적용. 임원 퇴직 직전 IRP·연금저축 활용으로 절세.</p>
+<p class="lead">임원 퇴직금은 소득세법 제22조 제3항의 한도까지만 퇴직소득으로 과세되고, 넘는 금액은 근로소득으로 봅니다. 한도는 2012~2019년 근무분은 2019년 말 직전 3년 연평균 총급여의 10% × 근무연수 × 3배, 2020년 이후 근무분은 퇴직 전 3년 연평균 총급여의 10% × 근무연수 × 2배를 더한 금액입니다. 한도가 ${execMan(EXEC_LIMIT)}인 임원이 퇴직금 ${execMan(EXEC_EXAMPLE.severance)}을 받으면 초과 ${execMan(EXEC_EXCESS)}이 그해 근로소득에 더해져, 전액이 퇴직소득일 때보다 세금이 약 ${execMan(EXEC_TOTAL_TAX - EXEC_ALL_RETIRE_TAX)} 늘어납니다(기준일 2026년 9월 30일).</p>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 임원 퇴직금 한도</h2>
-<ul class="space-y-2 mt-4">
-<li>· 통상 일반 직원 퇴직금 × 3~5배</li>
-<li>· 직급별·연차별 회사 정관 명시</li>
-<li>· 한도 초과분: 근로소득으로 과세</li>
-<li>· 부여 RSU·스톡옵션은 별도 처리</li>
+<h2>임원 퇴직금 한도는 어떻게 계산하나요</h2>
+<p>한도는 근무기간을 2011년 이전, 2012~2019년, 2020년 이후로 나눠 계산합니다. 근무기간은 개월 수로 세고 1개월 미만은 1개월로 보며, 총급여는 봉급·상여 등 근로소득에서 비과세소득을 뺀 금액입니다(소득세법 제22조 제4항). 공적연금에서 받는 일시금은 이 한도 계산에서 빠집니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>근무 구간</th><th>한도 계산</th><th>비고</th></tr></thead>
+<tbody>
+<tr><td>2011년 이전</td><td>한도 계산에서 뺀다 — 2011년 12월 31일에 퇴직했다고 가정한 퇴직소득금액</td><td>퇴직소득금액 × 2011년 이전 근무월수 ÷ 전체 근무월수. 그날 정관·임원 퇴직급여지급규정이 있던 회사는 그 규정 금액을 고를 수 있음</td></tr>
+<tr><td>2012~2019년</td><td>2019년 말부터 거꾸로 3년 연평균 총급여 × 1/10 × 근무월수/12 × 3</td><td>이 구간 근무가 3년 미만이면 그 기간 평균</td></tr>
+<tr><td>2020년 이후</td><td>퇴직일부터 거꾸로 3년 연평균 총급여 × 1/10 × 근무월수/12 × 2</td><td>같음</td></tr>
+<tr><td>한도 초과액</td><td>퇴직소득금액 − (2011년 이전분) − 한도</td><td>근로소득으로 과세</td></tr>
+</tbody></table></div>
+<p>이 한도가 적용되는 임원은 법인의 회장·사장·부사장·대표이사·전무·상무 등 이사회 구성원 전원과 청산인, 감사, 그 밖에 이에 준하는 직무를 맡은 사람입니다(소득세법 시행령 제42조의2, 법인세법 시행령 제40조). 직원은 이 한도가 없고 퇴직금 전액이 퇴직소득입니다. 일반 직원의 퇴직금 계산은 <a href="/tools/finance/severance">퇴직금 계산기</a>로 바로 해 볼 수 있습니다.</p>
+
+<h2>국세청 계산 사례는 어떻게 되나요</h2>
+<p>국세청은 임원 퇴직소득금액 안내에서 아래 사례를 들었습니다. 2011년 이전 근무분을 먼저 빼고, 2012~2019년과 2020년 이후 구간에 각각 3배·2배를 적용합니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>항목</th><th>값</th></tr></thead>
+<tbody>
+<tr><td>퇴직일·근무월수</td><td>2022년 12월 31일 퇴직, 2012~2019년 96개월, 2020년~퇴직일 36개월</td></tr>
+<tr><td>퇴직소득금액</td><td>35억원</td></tr>
+<tr><td>2011년 말 퇴직 가정 금액(임원 퇴직급여지급규정)</td><td>15억원 — 한도 적용 대상은 20억원</td></tr>
+<tr><td>연평균 총급여</td><td>2017~2019년 3억원, 2020년~퇴직일 4억원</td></tr>
+<tr><td>한도</td><td>3억원 ÷ 10 × 96/12 × 3 + 4억원 ÷ 10 × 36/12 × 2 = 9.6억원</td></tr>
+<tr><td>한도 초과액(근로소득)</td><td>20억원 − 9.6억원 = 10.4억원</td></tr>
+</tbody></table></div>
+<p>이 사례에서 퇴직소득으로 과세되는 금액은 2011년 이전분 15억원과 한도 9.6억원을 합한 24.6억원이고, 10.4억원은 근로소득입니다. 한도 초과액은 지급받거나 지급받기로 한 날이 속한 해의 근로소득이 됩니다(소득세법 시행령 제49조).</p>
+
+<h2>한도를 넘으면 세금이 얼마나 늘어나나요</h2>
+<p>2016년 7월 1일 임원이 되어 2026년 6월 30일 퇴직(근속 10년, 2012~2019년 ${EXEC_EXAMPLE.monthsTo2019}개월·2020년 이후 ${EXEC_EXAMPLE.monthsFrom2020}개월)하고, 2017~2019년 연평균 총급여 ${execMan(EXEC_EXAMPLE.avgPay2017to2019)}, 퇴직 전 3년 연평균 ${execMan(EXEC_EXAMPLE.avgPayLast3Years)}, 퇴직한 해 급여 ${execMan(EXEC_EXAMPLE.salaryInExitYear)}인 임원이 같은 해 퇴직금 ${execMan(EXEC_EXAMPLE.severance)}을 받는 경우입니다. 한도는 ${execMan(EXEC_EXAMPLE.avgPay2017to2019)} ÷ 10 × ${EXEC_EXAMPLE.monthsTo2019}/12 × 3 + ${execMan(EXEC_EXAMPLE.avgPayLast3Years)} ÷ 10 × ${EXEC_EXAMPLE.monthsFrom2020}/12 × 2 = ${execMan(EXEC_LIMIT)}입니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>구분</th><th>한도 적용(실제 과세)</th><th>전액 퇴직소득이라면(비교용)</th></tr></thead>
+<tbody>
+<tr><td>퇴직소득으로 과세되는 금액</td><td>${execMan(EXEC_LIMIT)}</td><td>${execMan(EXEC_EXAMPLE.severance)}</td></tr>
+<tr><td>퇴직소득세·지방소득세</td><td>${execMan(EXEC_WITHIN_TAX)}</td><td>${execMan(EXEC_ALL_RETIRE_TAX)}</td></tr>
+<tr><td>근로소득으로 더해지는 금액</td><td>${execMan(EXEC_EXCESS)}</td><td>0원</td></tr>
+<tr><td>그로 인해 늘어나는 소득세·지방소득세</td><td>${execMan(EXEC_LABOR_TAX)}</td><td>0원</td></tr>
+<tr><td>세금 합계</td><td>${execMan(EXEC_TOTAL_TAX)}</td><td>${execMan(EXEC_ALL_RETIRE_TAX)}</td></tr>
+</tbody></table></div>
+<p>퇴직소득세는 근속연수로 나눠 세율을 매긴 뒤 다시 곱하는 방식이라 같은 금액이라도 근로소득보다 부담이 작습니다. 한도를 넘는 ${execMan(EXEC_EXCESS)}은 이 혜택 없이 그해 급여에 얹혀 높은 누진세율 구간에서 과세되므로 차이가 생깁니다. 근로소득 세액은 본인 기본공제만 반영한 사이트 성과급 엔진의 추정이며, 실제 세액은 다른 공제와 지급 시기에 따라 달라집니다.</p>
+
+<h2>정관 규정과 법인세 한도는 무엇이 다른가요</h2>
+<p>임원 퇴직금에는 한도가 두 겹입니다. 회사 쪽 법인세 한도는 정관(정관에서 위임한 퇴직급여지급규정 포함)에 정한 금액이고, 규정이 없으면 퇴직 전 1년 총급여 × 1/10 × 근속연수입니다(법인세법 시행령 제44조). 이를 넘는 금액은 회사 비용으로 인정되지 않고, 국세청 안내는 이 부분을 임원의 근로소득(인정상여)으로 봅니다. 그 안에서 받은 퇴직금에 다시 소득세법 한도가 적용되고, 넘는 부분이 근로소득이 됩니다.</p>
+<ul>
+<li><strong>정관 규정이 있어도</strong> 소득세법 한도는 따로 적용됩니다. 정관 금액이 크다고 전액이 퇴직소득이 되지는 않습니다.</li>
+<li><strong>직원에서 임원이 될 때</strong> 퇴직금을 정산하지 않았다면 법인세 한도의 근속연수에 직원 기간을 합칠 수 있습니다(법인세법 시행령 제44조 제4항).</li>
+<li><strong>IRP로 옮겨 세금을 미룰 수 있는 것</strong>은 퇴직소득으로 과세되는 부분입니다(소득세법 제146조). 근로소득으로 보는 초과분은 그해 근로소득 세금으로 정산합니다. 연금 수령과 일시금 비교는 <a href="/calc/severance-vs-pension">퇴직금 일시금·연금 비교 계산기</a>에서 볼 수 있습니다.</li>
 </ul>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 임원 퇴직 5억</h2>
-<ul class="space-y-2 mt-4">
-<li>· 한도 내 3억: 퇴직소득세 약 3,000만원</li>
-<li>· 한도 초과 2억: 근로소득 → 약 7,800만원 (한계세율 38%+)</li>
-<li>· <strong>총 세금 약 1.08억</strong></li>
+<h2>자주 묻는 질문</h2>
+<ul>
+<li><strong>Q. 등기하지 않은 임원도 한도가 적용되나요?</strong> — 한도 대상은 법인세법 시행령 제40조의 직무에 종사하는 사람으로, 이사회 구성원과 감사 외에 이에 준하는 직무를 맡은 사람도 들어갈 수 있습니다. 직함보다 실제 직무로 판단하므로 회사 세무 담당자에게 분류를 확인하세요.</li>
+<li><strong>Q. 2011년 이전부터 임원이었다면 어떻게 되나요?</strong> — 2011년 12월 31일에 퇴직했다고 가정한 금액은 한도 계산에서 빠져 그대로 퇴직소득입니다. 근무월수 비율로 계산하거나, 그날 규정이 있었다면 규정 금액을 고를 수 있습니다.</li>
+<li><strong>Q. 한도 초과분 근로소득은 언제 세금을 내나요?</strong> — 지급받거나 지급받기로 한 날이 속한 해의 근로소득이 되어, 회사 원천징수와 그해 연말정산(또는 이듬해 5월 종합소득세 신고)으로 정산합니다.</li>
+<li><strong>Q. 한도를 넘지 않으려면 무엇을 봐야 하나요?</strong> — 구간별 근무월수, 2017~2019년과 최근 3년의 총급여(상여 포함), 회사 퇴직급여지급규정을 먼저 모읍니다. 이 세 가지로 위 산식에 넣으면 한도를 미리 계산할 수 있습니다.</li>
 </ul>
 
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/tools/finance/severance" class="text-primary underline">퇴직금 계산기</a></li></ul></div>
+<p>근거: <a href="https://www.law.go.kr/법령/소득세법/제22조">소득세법 제22조</a> · <a href="https://www.law.go.kr/법령/소득세법시행령/제42조의2">소득세법 시행령 제42조의2</a> · <a href="https://www.law.go.kr/법령/소득세법시행령/제49조">소득세법 시행령 제49조</a> · <a href="https://www.law.go.kr/법령/법인세법시행령/제44조">법인세법 시행령 제44조</a> · <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=6448&amp;cntntsId=7884">국세청 임원 퇴직소득금액 안내</a>. 기준일: 2026년 9월 30일. 세액은 사이트 퇴직금·성과급 엔진 기준 추정입니다.</p>
+<p>함께 보기: <a href="/guides/bonus-retire-impact-severance-2026">성과급과 퇴직금 — 평균임금 기준</a> · <a href="/guides/severance-lump-vs-irp-2026">퇴직금 일시금 vs IRP</a> · <a href="/retirement-pension-2026">퇴직연금 2026</a> · <a href="/income-tax-2026">종합소득세 계산기</a></p>
 `;
 
 const stockOptionExercise = `
@@ -1110,7 +1186,7 @@ export const hotNewsExtended: Guide[] = [
   { slug: "business-trip-expense-tax-2026", title: "출장비 비과세 — 국내 1일 2만원·해외 1일 5만원", description: "실비 영수증 출장비 비과세. 일비 정액은 국내 2만원·해외 5만원까지. 초과분은 근로소득으로 과세.", category: "연봉", tags: ["출장비", "일비", "비과세", "해외출장", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: travelExpenseTax, lang: "ko" },
   { slug: "child-tuition-tax-free-2026", title: "자녀 학자금 비과세 — 사내복지기금 vs 회사 직접 지급", description: "사내복지기금 학자금 지원 비과세 + 본인 대학원 업무 관련 비과세 + 해외 주재원 자녀 학비 비과세. 연 500만원 = 175만원 절감.", category: "연봉", tags: ["자녀학자금", "사내복지기금", "비과세", "주재원", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: childTuitionTaxFree, lang: "ko" },
   { slug: "bonus-payout-timing-2026", title: "성과급 12월·1월 지급 차이 — 귀속연도와 원천징수 확인", description: "성과급 지급일과 소득 귀속연도는 다를 수 있습니다. 국세청 2026년 답변으로 분할 지급, 최종 세금과 원천징수, IRP 세액공제를 구분합니다.", category: "세금", tags: ["성과급", "귀속연도", "원천징수", "IRP", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-09", views: 0, content: bonusTiming, lang: "ko" },
-  { slug: "executive-severance-limit-2026", title: "임원 퇴직금 한도 초과분 — 5억 퇴직 시 1.08억 세금", description: "임원 퇴직금 한도는 일반 직원 × 3~5배. 한도 내 퇴직소득세 + 한도 초과분 근로소득세 누진세율. 5억 퇴직 시 약 1.08억 세금.", category: "커리어", tags: ["임원", "퇴직금", "한도초과", "근로소득세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: executiveSeveranceLimit, lang: "ko" },
+  { slug: "executive-severance-limit-2026", title: "임원 퇴직금 한도 계산 2026 — 초과분은 근로소득", description: "임원 퇴직금은 소득세법 한도(2012~2019분 3배·2020년 이후 2배)까지만 퇴직소득이고, 넘는 금액은 근로소득으로 과세합니다.", metaDescription: "임원 퇴직금 한도는 2012~2019년 근무분 3배, 2020년 이후 2배로 계산하고 넘는 금액은 근로소득으로 과세합니다. 국세청 계산 사례와 퇴직금 8억원 예시로 세금 차이를 정리했습니다.", category: "커리어", tags: ["임원", "퇴직금", "퇴직소득 한도", "근로소득", "2026"], level: "고급", publishedDate: "2026-05-23", modifiedDate: "2026-09-30", views: 0, content: executiveSeveranceLimit, lang: "ko" },
   { slug: "stock-option-exercise-timing-2026", title: "스톡옵션 행사 시점 — 일반 vs 적격 시 1,860만원 차이", description: "일반 스톡옵션: 행사 시 근로소득세 + 매도 양도세 22%. 적격 스톡옵션: 매도 시 양도세만. 1억 차익 시 1,860만원 절감.", category: "주식", tags: ["스톡옵션", "행사", "적격스톡옵션", "양도세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: stockOptionExercise, lang: "ko" },
   { slug: "incentive-split-payout-2026", title: "인센티브 분할 지급 — 귀속연도·미수령 잔액·퇴사 조건 확인", description: "80%·10%·10% 분할 지급에 관한 국세청 2026년 답변을 확인합니다. 세금이 자동으로 줄지 않는 이유와 지급 일정·재직 조건 확인표를 제공합니다.", category: "연봉", tags: ["인센티브", "분할지급", "귀속연도", "지급조건", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-09", views: 0, content: incentiveSplitPayout, lang: "ko" },
   { slug: "overtime-night-holiday-pay-2026", title: "야근·휴일·시간외 수당 — 50% 가산 + 생산직 연 240만원 비과세", description: "8시간 초과·22~6시 야간·휴일 근로 50% 가산. 야간+시간외 중복 시 100%. 생산직 연 240만원 야근수당 비과세. 포괄임금제 함정 점검.", category: "연봉", tags: ["야근수당", "휴일근로", "시간외수당", "포괄임금제", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: overtimeNightHolidayTax, lang: "ko" },

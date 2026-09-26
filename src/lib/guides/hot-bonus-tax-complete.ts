@@ -6,9 +6,19 @@
 
 import type { Guide } from "@/lib/guidesData";
 import { UNEMPLOYMENT_BENEFIT_2026 } from "@/config/unemploymentBenefit";
+import { calculateSeverancePay } from "@/lib/severanceCalculator";
+import { calcBonusNet } from "@/lib/bonusTaxCalc";
+import { INSURANCE_RATES_2026 } from "@/lib/taxConstants2026";
+import { formatManwonKorean } from "@/lib/manwonFormat";
+import { seedCompanies } from "@/data/seedCompanies";
+import { BONUS_PROFILES } from "@/data/bonusData";
 
 // 구직급여 1일 상한 표시값 — 정본(src/config/unemploymentBenefit.ts)에서 끼워 넣는다 (verify-tax-constants 게이트)
 const UB_UPPER = UNEMPLOYMENT_BENEFIT_2026.DAILY_UPPER.toLocaleString("en-US");
+
+// 2차 키퍼(G2C) 예시 금액 표기 — 원 단위 / 만원·억 단위(1억 이상은 "1억 2,000만원" 형식)
+const g2cWon = (n: number) => `${Math.round(n).toLocaleString("ko-KR")}원`;
+const g2cMan = (n: number) => formatManwonKorean(Math.round(n / 10_000));
 
 // ═══════════════════════════════════════════════════════════════
 // 영역 A — 성과급 종류·구조 (10편)
@@ -102,26 +112,95 @@ const lgPoscoBonus = `
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/tools/finance/bonus" class="text-primary underline">성과급 세금 계산</a></li></ul></div>
 `;
 
+// ── it-rsu-vs-cash-bonus-2026 (2026-09-30 키퍼 재작성, GUIDES-05·GUIDES-10 엔티티 형식) ──
+// 회사 값은 회사 페이지·성과급 계산기 정본(seedCompanies disclosed · bonusData RSU)에서, 세금·보험료는
+// 성과급 엔진(calcBonusNet, 2026 요율 명시)에서 끼운다. 사실 근거: docs/guides-facts-2026-10-G2C.md R-01~R-12.
+const rsuDisclosed = (id: string) => seedCompanies.find((c) => c.id === id)?.disclosed;
+const rsuPayout = (companyId: string) =>
+  BONUS_PROFILES.find((p) => p.companyId === companyId)?.payouts.find((p) => p.scheme === "RSU");
+export const RSU_ENTITIES = {
+  naver: { disclosed: rsuDisclosed("naver"), rsu: rsuPayout("naver") },
+  kakao: { disclosed: rsuDisclosed("kakao"), rsu: rsuPayout("kakao") },
+} as const;
+const rsuAvg = (d: { avgSalaryManwon: number } | undefined) => (d ? formatManwonKorean(d.avgSalaryManwon) : "공시 확인 중");
+const rsuAmount = (p: { fixedAmountManwon?: number } | undefined) =>
+  p?.fixedAmountManwon ? formatManwonKorean(p.fixedAmountManwon) : "공시 확인 중";
+/** 연봉 8,000만원인 사람이 3,000만원어치를 현금 성과급 또는 RSU로 받는 예시 */
+export const RSU_EXAMPLE = { salary: 80_000_000, grant: 30_000_000 } as const;
+/** 현금 성과급 — RSU를 회사가 급여(보수)로 신고하면 베스팅 때 부담도 같다 */
+export const RSU_CASH_NET = calcBonusNet(RSU_EXAMPLE.salary, RSU_EXAMPLE.grant, 0, true, INSURANCE_RATES_2026);
+/** 건강·고용보험을 매기지 않는 경우(보수에 넣지 않음) — 소득세·지방소득세만 */
+export const RSU_NO_INSURANCE = calcBonusNet(RSU_EXAMPLE.salary, RSU_EXAMPLE.grant, 0, false, INSURANCE_RATES_2026);
+const rsuScenarioRows = [-30, 0, 30]
+  .map((pct) => {
+    const value = (RSU_EXAMPLE.grant * (100 + pct)) / 100;
+    const label = pct === 0 ? "그대로" : pct > 0 ? `${pct}% 상승` : `${-pct}% 하락`;
+    return `<tr><td>${label}</td><td>${g2cMan(value)}</td><td>${g2cMan(RSU_CASH_NET.totalDeductions)}</td><td>${g2cMan(value - RSU_CASH_NET.totalDeductions)}</td><td>${g2cMan(RSU_CASH_NET.net)}</td></tr>`;
+  })
+  .join("\n");
+
 const itRsuVsCash = `
-<p class="lead">네이버·카카오·쿠팡·토스·당근 등 IT 기업은 현금 보너스보다 RSU(Restricted Stock Unit) 비중이 큼. RSU는 베스팅 시 근로소득세 + 매도 시 양도세 22%(해외 상장) 또는 비과세(국내 상장). 보유 전략에 따라 절세 가능.</p>
+<p class="lead">RSU(양도제한조건부주식)는 주식을 받는 날의 시가가 그대로 근로소득이 되므로, 같은 금액이면 현금 성과급과 소득세가 같습니다(국세청 서면-2023-원천-0341). 연봉 8,000만원인 사람이 3,000만원어치를 더 받으면 추가 세금·보험료는 약 ${g2cMan(RSU_CASH_NET.totalDeductions)}이고, 차이는 받은 뒤의 주가와 매도 세금에서 생깁니다. 네이버·카카오처럼 국내 상장주식은 소액주주가 증권시장에서 팔면 양도소득세가 없고, 쿠팡처럼 미국 상장주식은 차익에 지방소득세를 포함해 22%가 붙습니다(기준일 2026년 9월 30일).</p>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">📊 IT 기업 RSU 정책 비교</h2>
-<ul class="space-y-3 mt-4">
-<li><strong>네이버</strong>: 매년 RSU 부여, 4년 베스팅, 매도 즉시 비과세(국내 상장)</li>
-<li><strong>카카오</strong>: RSU 5년 베스팅, 매년 25% 베스팅</li>
-<li><strong>쿠팡</strong>: 미국 상장 RSU, 4년 베스팅, 양도세 22%(미국)</li>
-<li><strong>토스</strong>: 비상장 RSU, IPO 시 6개월 lockup</li>
-<li><strong>당근</strong>: 비상장 스톡옵션, 행사가 우대</li>
+<h2>네이버·카카오·쿠팡 RSU는 무엇이 다른가요</h2>
+<p>세 회사 모두 주식 보상을 주지만, 주식이 어디에 상장돼 있느냐에 따라 팔 때의 세금이 갈립니다. 아래 값은 회사 연봉 페이지와 성과급 계산기가 쓰는 공시·보도 자료 그대로이며, 개인별 부여 금액은 직급·평가에 따라 크게 다릅니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>회사</th><th>주식이 상장된 곳</th><th>팔 때 양도소득세(소액주주)</th><th>공시·보도로 확인된 값</th></tr></thead>
+<tbody>
+<tr><td><a href="/salary-db/naver">네이버</a></td><td>국내 증권시장</td><td>장내 매도는 과세 대상 아님</td><td>${RSU_ENTITIES.naver.rsu?.year ?? ""}년 자사주 465억원(약 22만주)을 1,683명에게 RSU로 지급, 단순 평균 ${rsuAmount(RSU_ENTITIES.naver.rsu)}(임원·핵심 인재 집중). ${RSU_ENTITIES.naver.disclosed?.fiscalYear ?? ""} 사업연도 직원 평균 급여 ${rsuAvg(RSU_ENTITIES.naver.disclosed)}</td></tr>
+<tr><td><a href="/salary-db/kakao">카카오</a></td><td>국내 증권시장</td><td>장내 매도는 과세 대상 아님</td><td>${RSU_ENTITIES.kakao.rsu?.year ?? ""}년 1인 평균 RSU 가치 약 ${rsuAmount(RSU_ENTITIES.kakao.rsu)}(자사주 처분 공시 기반 평균). ${RSU_ENTITIES.kakao.disclosed?.fiscalYear ?? ""} 사업연도 직원 평균 급여 ${rsuAvg(RSU_ENTITIES.kakao.disclosed)}</td></tr>
+<tr><td><a href="/salary-db/coupang">쿠팡</a></td><td>미국 뉴욕증권거래소(쿠팡 Inc., CPNG)</td><td>국외 주식 — 차익의 20%, 지방소득세 포함 22%</td><td>RSU는 보통 2~4년에 걸쳐 나눠 확정되며 각 확정일에 재직해야 함(쿠팡 Inc. 2025 사업연도 Form 10-K)</td></tr>
+</tbody></table></div>
+<p>네이버의 공시 평균 급여는 스톡옵션 행사차익을 포함한 값이고, 빼면 1억 4,300만원입니다. 주식 보상이 근로소득으로 잡혀 평균 급여를 끌어올린다는 뜻입니다. 회사별 성과급 구조는 <a href="/calc/naver-bonus">네이버 성과급 계산기</a>와 <a href="/calc/kakao-bonus">카카오 성과급 계산기</a>에서 볼 수 있습니다.</p>
+
+<h2>RSU를 받을 때 세금은 어떻게 매기나요</h2>
+<p>국세청은 외국 모회사에서 급여 일부를 RSU로 받은 것을 근로소득으로 보고, 수입 시기는 주식을 받은 날, 금액은 그날의 시가로 계산한다고 회신했습니다(서면-2023-원천-0341). 국내 회사가 임직원에게 주는 RSU도 회사 쪽에서는 인건비(상여금)로 봅니다(서면-2025-법규법인-1886). 따라서 베스팅돼 주식이 계좌에 들어오는 날, 그 가치가 그해 연봉·성과급과 합쳐져 누진세율로 과세됩니다.</p>
+<ul>
+<li><strong>국내 회사 RSU</strong> — 회사가 급여와 합쳐 원천징수하고 연말정산에서 정산합니다. 주식으로 받았어도 세금은 현금으로 내야 하므로, 회사마다 급여에서 떼거나 일부 주식을 팔게 하는 등 방식이 다릅니다.</li>
+<li><strong>외국 모회사 RSU</strong> — 국내 회사가 원천징수하지 않았다면 이듬해 5월 종합소득세 확정신고에 넣어야 하고, 빠뜨리면 가산세가 붙을 수 있습니다. 외국에서 이미 떼인 세금이 있으면 외국납부세액공제를 받을 수 있습니다(서면-2021-국제세원-0806).</li>
+<li><strong>근무 기간을 못 채워 부여가 취소되면</strong> — 이미 원천징수한 금액은 회사가 신고를 고쳐 바로잡을 수 있습니다(서면-2025-원천-3476).</li>
+</ul>
+<p>세금은 받는 날 가치로 정해지고, 그 뒤 주가가 떨어져도 이미 확정된 근로소득세는 줄지 않습니다. RSU를 성과급과 같은 해에 받으면 두 금액이 합쳐져 높은 세율 구간으로 올라갈 수 있으니 <a href="/tools/finance/bonus">성과급 세금 계산기</a>에 합계 금액을 넣어 보세요.</p>
+
+<h2>같은 3,000만원이면 현금과 RSU 중 무엇이 남나요</h2>
+<p>연봉 8,000만원인 사람이 3,000만원을 받는 경우를 사이트 성과급 엔진(2026년 요율)으로 계산하면, 현금 성과급의 추가 부담은 소득세 ${g2cMan(RSU_CASH_NET.incomeTaxDelta)}, 지방소득세 ${g2cMan(RSU_CASH_NET.localTaxDelta)}, 건강·장기요양보험 ${g2cMan(RSU_CASH_NET.healthDelta)}, 고용보험 ${g2cMan(RSU_CASH_NET.empInsDelta)}이고 세후 ${g2cMan(RSU_CASH_NET.net)}이 남습니다. 이 연봉은 이미 국민연금 기준소득월액 상한을 넘는 수준이라 연금보험료는 더 붙지 않습니다. RSU를 회사가 급여로 신고하면 받는 날의 부담은 이와 같습니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>1년 뒤 주가</th><th>보유 주식 가치</th><th>받을 때 낸 세금·보험료</th><th>실제로 남는 가치</th><th>같은 금액 현금 성과급 세후</th></tr></thead>
+<tbody>
+${rsuScenarioRows}
+</tbody></table></div>
+<p>세금을 급여에서 따로 냈고 주식은 그대로 들고 있다고 가정했습니다. 주가가 30% 떨어지면 현금으로 받은 경우보다 ${g2cMan((RSU_EXAMPLE.grant * 30) / 100)} 적게 남고, 30% 오르면 그만큼 많이 남습니다. 국내 상장주식은 오른 부분에 양도소득세가 없지만, 해외 상장주식은 오른 부분에 양도소득세가 따로 붙습니다. 회사가 RSU를 건강보험 보수로 신고하지 않으면 받을 때 부담은 소득세·지방소득세 약 ${g2cMan(RSU_NO_INSURANCE.totalDeductions)}으로 줄지만, 급여 외 소득이 연 2,000만원을 넘으면 보수 외 소득월액보험료가 따로 매겨질 수 있습니다(국민건강보험법 제71조).</p>
+
+<h2>팔 때 세금은 국내 상장과 해외 상장이 어떻게 다른가요</h2>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>구분</th><th>국내 상장주식(대주주 아님·장내 매도)</th><th>해외 상장주식</th></tr></thead>
+<tbody>
+<tr><td>양도소득세</td><td>과세 대상 아님(소득세법 제94조) — 증권거래세는 붙음</td><td>양도차익의 20%, 지방소득세 2% 더해 22%(소득세법 제104조·지방세법 제103조의3)</td></tr>
+<tr><td>기본공제</td><td>해당 없음</td><td>국내외 과세 대상 주식 양도소득을 합쳐 연 250만원(소득세법 제103조)</td></tr>
+<tr><td>손실이 났을 때</td><td>과세 대상이 아니라 공제도 없음</td><td>같은 해 다른 과세 대상 주식의 양도차익과만 합산하고, 남은 손실을 다음 해로 넘기지 못함(소득세법 제102조)</td></tr>
+<tr><td>신고</td><td>없음</td><td>판 해의 다음 해 5월 양도소득세 확정신고</td></tr>
+</tbody></table></div>
+<p>해외 주식의 양도차익은 파는 가격에서 취득가액과 필요경비를 빼서 구합니다. RSU로 받은 주식은 취득가액을 어떻게 잡느냐에 따라 차익이 달라지므로, 확정일·주식 수·그날 시가·환율·원천징수 내역이 적힌 증권사 자료와 원천징수영수증을 보관해 신고 근거로 씁니다. 판단이 어려우면 신고 전에 국세청 상담이나 세무 전문가에게 확인하세요. 매도 금액을 넣어 보려면 <a href="/tools/finance/stock-tax">주식 양도세 계산기</a>를 쓰세요.</p>
+
+<h2>RSU를 받기 전에 무엇을 확인해야 하나요</h2>
+<ul>
+<li><strong>확정 일정과 재직 조건</strong> — 몇 년에 걸쳐 몇 번 확정되는지, 퇴사하면 남은 주식이 어떻게 되는지 부여 계약서를 확인합니다.</li>
+<li><strong>세금 내는 방식</strong> — 급여 원천징수인지, 주식 일부 매도인지, 본인이 5월에 신고해야 하는지 확인합니다. 외국 모회사 RSU라면 원천징수영수증에 포함됐는지부터 봅니다.</li>
+<li><strong>같은 해 다른 소득</strong> — 현금 성과급·스톡옵션 행사이익과 확정일이 겹치면 한 해 근로소득이 크게 늘어납니다. <a href="/income-tax-2026">종합소득세 계산기</a>로 세율 구간을 먼저 봅니다.</li>
+<li><strong>건강보험</strong> — 회사가 RSU를 보수로 신고하는지, 보수 외 소득으로 잡히는지에 따라 건강보험료가 달라집니다.</li>
+<li><strong>팔 계획</strong> — 해외 상장주식은 같은 해 이익과 손실만 합쳐지므로, 이익이 난 해에 손실 종목을 정리하면 세금이 줄 수 있습니다.</li>
 </ul>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 네이버 RSU 5,000만원 vs 현금 5,000만원</h2>
-<ul class="space-y-2 mt-4">
-<li>· <strong>RSU</strong>: 베스팅 시 근로소득세 약 1,925만원 + 매도 즉시 비과세 → 실수령 약 3,075만원</li>
-<li>· <strong>현금</strong>: 근로소득세 약 1,925만원 + 4대보험 일부 → 실수령 약 2,900만원</li>
-<li>· <strong>RSU가 약 175만원 유리</strong> (단 주가 변동 리스크)</li>
+<h2>자주 묻는 질문</h2>
+<ul>
+<li><strong>Q. RSU는 받을 때 세금이 없고 팔 때만 내나요?</strong> — 아닙니다. 주식을 받는 날의 시가가 근로소득으로 과세됩니다. 팔 때의 양도소득세는 그 뒤 오른 부분에 대한 별도의 세금입니다.</li>
+<li><strong>Q. 주가가 떨어지면 이미 낸 근로소득세를 돌려받을 수 있나요?</strong> — 받는 날 시가로 정해진 근로소득세는 그대로입니다. 해외 상장주식이라면 판 손실을 같은 해 다른 과세 대상 주식의 이익과 합산할 수 있을 뿐입니다.</li>
+<li><strong>Q. 네이버·카카오 RSU를 팔면 양도소득세를 내나요?</strong> — 대주주가 아니고 증권시장에서 판다면 양도소득세 과세 대상이 아닙니다. 매도 대금에 증권거래세만 붙습니다.</li>
+<li><strong>Q. 쿠팡 RSU 세금은 누가 신고하나요?</strong> — 받을 때의 근로소득은 회사 원천징수 여부를 먼저 확인하고, 빠졌다면 이듬해 5월 종합소득세 신고에 넣습니다. 판 뒤의 양도소득세는 본인이 다음 해 5월에 확정신고합니다.</li>
 </ul>
 
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/tools/finance/stock-tax" class="text-primary underline">주식 양도세 계산</a></li></ul></div>
+<p>근거: <a href="https://taxlaw.nts.go.kr/qt/USEQTA002P.do?ntstDcmId=200000000000010691">국세청 서면-2023-원천-0341</a> · <a href="https://taxlaw.nts.go.kr/qt/USEQTA002P.do?ntstDcmId=200000000000022618">서면-2025-법규법인-1886</a> · <a href="https://www.law.go.kr/법령/소득세법/제94조">소득세법 제94조</a> · <a href="https://www.law.go.kr/법령/소득세법/제104조">소득세법 제104조</a> · <a href="https://www.law.go.kr/법령/소득세법/제103조">소득세법 제103조</a> · <a href="https://www.sec.gov/Archives/edgar/data/1834584/000183458426000024/cpng-20251231.htm">쿠팡 Inc. Form 10-K</a>. 기준일: 2026년 9월 30일. 회사 값은 공시·보도 기준이며 세금 계산은 사이트 성과급 엔진의 가정(본인 공제만 반영)을 따릅니다.</p>
+<p>함께 보기: <a href="/guides/naver-rsu-tax-strategy-2026">네이버 RSU 세금</a> · <a href="/guides/kakao-rsu-tax-saving-2026">카카오 RSU 세금</a> · <a href="/guides/foreign-bonus-structure-2026">외국계 보너스 구조</a> · <a href="/calc/bonus-calculators">회사별 성과급 계산기 모음</a></p>
 `;
 
 const foreignBonus = `
@@ -983,21 +1062,105 @@ const moveCompanyBonus = `
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/income-tax-2026" class="text-primary underline">종합소득세 계산</a></li></ul></div>
 `;
 
+// ── bonus-retire-impact-severance-2026 (2026-09-30 키퍼 재작성, GUIDES-05) ──
+// 예시 금액은 /tools/finance/severance 계산기와 같은 엔진(calculateSeverancePay)으로 계산해 끼운다.
+// 사실 근거: docs/guides-facts-2026-10-G2C.md G-01~G-14. 회귀: __tests__/guideG2cKeepers.test.ts
+/** 월 임금 500만원, 입사 2016-10-01 · 마지막 근무일 2026-09-30 (재직 3,652일, 산정 기간 7/1~9/30 92일) */
+export const SEVERANCE_BONUS_EXAMPLE = { start: "2016-10-01", last: "2026-09-30", monthly: 5_000_000 } as const;
+export const SEVERANCE_BONUS_ROWS = [0, 6_000_000, 12_000_000, 24_000_000].map((bonus) => ({
+  bonus,
+  r: calculateSeverancePay(
+    SEVERANCE_BONUS_EXAMPLE.start,
+    SEVERANCE_BONUS_EXAMPLE.last,
+    [SEVERANCE_BONUS_EXAMPLE.monthly, SEVERANCE_BONUS_EXAMPLE.monthly, SEVERANCE_BONUS_EXAMPLE.monthly],
+    bonus,
+    0
+  ),
+}));
+const sevBase = SEVERANCE_BONUS_ROWS[0].r;
+const sev1200 = SEVERANCE_BONUS_ROWS[2].r;
+/** 평균임금에 들어가는 연 상여 1,200만원이 늘리는 세전 퇴직금 */
+export const SEVERANCE_GAIN_1200 = sev1200.estimatedSeverancePay - sevBase.estimatedSeverancePay;
+/** 평균임금에 들어가는 연 상여 100만원당 근속 1년에 늘어나는 퇴직금 (100원 단위) */
+export const SEVERANCE_PER_100_PER_YEAR =
+  Math.round(SEVERANCE_GAIN_1200 / 12 / (sevBase.totalDaysOfEmployment / 365) / 100) * 100;
+const sevTableRows = SEVERANCE_BONUS_ROWS.map(
+  ({ bonus, r }) =>
+    `<tr><td>${bonus === 0 ? "0원 (평균임금에서 빠짐)" : g2cMan(bonus)}</td><td>${g2cWon(r.averageDailyWage)}</td><td>${g2cMan(r.estimatedSeverancePay)}</td><td>${g2cWon(r.incomeTax + r.localTax)}</td><td>${g2cMan(r.netSeverancePay)}</td></tr>`
+).join("\n");
+
 const bonusRetireImpact = `
-<p class="lead">성과급 받고 퇴직 시 퇴직금에 영향 — 정기상여(통상임금 포함)는 퇴직금 베이스 증가, 격려금·일회성 보너스는 미포함. 통상임금 산정 방식에 따라 퇴직금 1억+ 차이 가능.</p>
+<p class="lead">성과급이 퇴직금에 들어가는지는 그 성과급이 <strong>평균임금에 포함되는 임금인지</strong>로 정해집니다. 2026년 대법원은 삼성전자의 목표 인센티브는 포함하고, 사업부 이익에 연동한 성과 인센티브와 해마다 노사합의로 정한 경영성과급은 뺐습니다. 포함되는 상여는 연간 총액의 3/12를 퇴직 전 3개월 임금에 더하므로, 월 임금 500만원·근속 10년이면 연 1,200만원이 들어갈 때 퇴직금이 약 ${g2cMan(SEVERANCE_GAIN_1200)} 늘어납니다(근로자퇴직급여 보장법 제8조·고용노동부 산정 방식, 기준일 2026년 9월 30일).</p>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 퇴직금 산정</h2>
-<p>퇴직금 = 평균임금 × 근속연수. 평균임금은 퇴직 직전 3개월 임금 합계 / 90일. 정기상여는 1년 누적 / 12로 환산해 평균임금 포함.</p>
+<h2>퇴직금은 어떤 공식으로 계산하나요</h2>
+<p>퇴직금은 계속근로 1년마다 30일분 이상의 평균임금입니다(근로자퇴직급여 보장법 제8조). 평균임금은 퇴직일 이전 3개월 동안 받은 임금 총액을 그 기간의 총일수로 나눈 금액이고, 이렇게 구한 값이 통상임금보다 적으면 통상임금을 평균임금으로 씁니다(근로기준법 제2조). 3개월 밖에서 나오는 상여금은 1년 치 총액을 12개월로 나눠 3개월분만 더합니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>단계</th><th>계산</th><th>근거</th></tr></thead>
+<tbody>
+<tr><td>① 3개월 임금</td><td>퇴직일 이전 3개월의 기본급·수당 합계</td><td>근로기준법 제2조 제1항 제6호</td></tr>
+<tr><td>② 상여 가산</td><td>퇴직 전 1년간 받은 상여 총액 × 3/12</td><td>고용노동부 퇴직금 계산 방식</td></tr>
+<tr><td>③ 연차수당 가산</td><td>미사용 연차수당 × 3/12</td><td>고용노동부 퇴직금 계산 방식</td></tr>
+<tr><td>④ 1일 평균임금</td><td>(① + ② + ③) ÷ 3개월의 총일수(89~92일)</td><td>근로기준법 제2조</td></tr>
+<tr><td>⑤ 퇴직금</td><td>1일 평균임금 × 30일 × 재직일수 ÷ 365</td><td>근로자퇴직급여 보장법 제8조</td></tr>
+</tbody></table></div>
+<p>산정 기간에 육아휴직, 출산전후휴가, 업무상 부상·질병 요양, 사용자 귀책 휴업 같은 기간이 끼어 있으면 그 기간과 그 기간에 받은 임금을 빼고 계산합니다(근로기준법 시행령 제2조). 퇴직금은 지급 사유가 생긴 날부터 14일 안에 지급해야 하고(당사자 합의로 연장 가능), 원칙적으로 근로자가 지정한 개인형퇴직연금(IRP) 계좌로 옮기는 방식으로 줍니다. 55세 이후 퇴직 등은 예외입니다(같은 법 제9조). 입사일·퇴사일·3개월 임금·연간 상여를 <a href="/tools/finance/severance">퇴직금 계산기</a>에 넣으면 이 표와 같은 순서로 계산합니다.</p>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 정기상여 600% vs 일회성 보너스</h2>
-<p>월급 500만, 10년 근속, 연 성과 동일 3,000만:</p>
-<ul class="space-y-2 mt-4">
-<li>· <strong>정기상여(연 3,000만 = 월 250만 가산)</strong>: 평균임금 750만 → 퇴직금 7,500만</li>
-<li>· <strong>일회성 보너스</strong>: 평균임금 500만 → 퇴직금 5,000만</li>
-<li>· <strong>차이 2,500만원</strong></li>
+<h2>어떤 성과급이 평균임금에 들어가나요</h2>
+<p>판례의 기준은 이름이 아니라 지급 구조입니다. 사용자에게 지급의무가 있고(단체협약·취업규칙·급여규정·근로계약·노동관행), 계속적·정기적으로 지급되며, 지급의무의 발생이 근로 제공과 직접 또는 밀접하게 관련돼야 평균임금에 들어갑니다. 계속적·정기적으로 받았더라도 근로의 대가로 볼 수 없으면 빠집니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>성과급 유형</th><th>평균임금</th><th>판단 근거</th></tr></thead>
+<tbody>
+<tr><td>취업규칙·단체협약에 지급률이 정해져 정기적으로 나오는 상여</td><td>포함</td><td>지급의무와 정기성 — 판례의 기본 기준</td></tr>
+<tr><td>반기마다 사업부 평가 등급(A~D)에 따라 상여기초금액의 0~100%를 주는 삼성전자 목표 인센티브(보도상 TAI)</td><td>포함</td><td>대법원 2026. 1. 29. 선고 2021다248299</td></tr>
+<tr><td>사업부 경제적 부가가치(EVA)의 20%를 재원으로 한 삼성전자 성과 인센티브(보도상 OPI)</td><td>제외</td><td>같은 판결 — 근로 제공과 밀접한 관련이 없다고 봄</td></tr>
+<tr><td>해마다 노사합의로 지급 여부·기준을 정해 생산량·영업이익에 따라 준 경영성과급</td><td>제외</td><td>대법원 2026. 2. 12. 선고 2021다219994(보도상 SK하이닉스 사건)</td></tr>
+<tr><td>지급 대상·조건이 정해져 해마다 나오는 공공기관 경영평가성과급</td><td>포함</td><td>대법원 2018. 10. 12. 선고 2015두36157</td></tr>
+<tr><td>지급의무 없이 회사 재량으로 한 번 주는 격려금·포상금</td><td>포함되기 어려움</td><td>지급의무가 없으면 임금으로 보기 어렵다는 같은 기준</td></tr>
+</tbody></table></div>
+<p>삼성전자 사건은 원심을 깨고 수원고등법원으로 돌려보냈으므로, 원고별 퇴직금 차액은 파기환송심에서 정해집니다. 판결은 해당 회사의 지급 규정과 이력을 보고 내린 판단이라 다른 회사 성과급에 그대로 옮겨 적용할 수는 없습니다. 우리 회사 성과급이 어느 쪽에 가까운지는 지급 규정, 재원 산식, 지급 이력을 함께 봐야 합니다. 회사별 지급률은 <a href="/calc/samsung-bonus">삼성전자 성과급 계산기</a>와 <a href="/calc/sk-hynix-bonus">SK하이닉스 성과급 계산기</a>에서 확인할 수 있습니다.</p>
+<p>통상임금은 2024년 12월 대법원 전원합의체가 고정성 요건을 빼면서 재직 조건이 붙은 정기상여도 통상임금이 될 수 있게 바뀌었습니다(2020다247190). 다만 퇴직금의 기준은 평균임금이고, 통상임금은 평균임금이 더 적을 때만 대신 쓰입니다. 시간외수당 기준이 궁금하면 <a href="/calc/ordinary-wage">통상임금 계산기</a>를 보세요.</p>
+
+<h2>성과급이 들어가면 퇴직금이 얼마나 늘어나나요</h2>
+<p>월 임금 500만원, 입사 2016년 10월 1일, 마지막 근무일 2026년 9월 30일(재직 ${sevBase.totalDaysOfEmployment.toLocaleString("ko-KR")}일, 산정 기간 7월 1일~9월 30일 92일), 연차수당은 없다고 두고 평균임금에 들어가는 연간 상여만 바꿨습니다. 퇴직소득세는 지방소득세를 더한 금액입니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>평균임금에 들어가는 연 상여</th><th>1일 평균임금</th><th>퇴직금(세전)</th><th>퇴직소득세·지방소득세</th><th>세후 수령</th></tr></thead>
+<tbody>
+${sevTableRows}
+</tbody></table></div>
+<p>평균임금에 들어가는 연 상여가 100만원 늘 때마다 근속 1년에 약 ${g2cWon(SEVERANCE_PER_100_PER_YEAR)}(100만원 × 3/12 ÷ 92일 × 30일)이 더해집니다. 같은 금액을 월급으로 받는 것보다 효과는 작지만 근속이 길수록 차이가 커집니다. 같은 사람이라도 연 1,200만원짜리 성과급이 평균임금에서 빠지면 퇴직금은 ${g2cMan(sevBase.estimatedSeverancePay)}, 들어가면 ${g2cMan(sev1200.estimatedSeverancePay)}입니다.</p>
+
+<h2>퇴직금에는 세금이 얼마나 붙나요</h2>
+<p>퇴직금은 근로소득과 합치지 않고 퇴직소득으로 따로 과세합니다. 먼저 근속연수공제를 빼고, 남은 금액을 근속연수로 나눠 12를 곱한 환산급여에서 환산급여공제를 뺀 뒤 기본세율을 적용하고, 그 세액을 12로 나눠 근속연수를 곱합니다(소득세법 제48조·제55조 제2항). 1년 미만 근속은 1년으로 봅니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>근속연수</th><th>근속연수공제</th></tr></thead>
+<tbody>
+<tr><td>5년 이하</td><td>100만원 × 근속연수</td></tr>
+<tr><td>5년 초과 10년 이하</td><td>500만원 + 200만원 × (근속연수 − 5년)</td></tr>
+<tr><td>10년 초과 20년 이하</td><td>1,500만원 + 250만원 × (근속연수 − 10년)</td></tr>
+<tr><td>20년 초과</td><td>4,000만원 + 300만원 × (근속연수 − 20년)</td></tr>
+</tbody></table></div>
+<p>위 예시에서 연 상여 1,200만원이 들어간 경우를 따라가면, 퇴직금 ${g2cWon(sev1200.estimatedSeverancePay)}에서 근속 10년 공제 ${g2cWon(sev1200.details.serviceYearDeduction)}을 빼고 환산급여 ${g2cWon(sev1200.details.convertedSalary)}, 환산급여공제 ${g2cWon(sev1200.details.convertedSalaryDeduction)}, 과세표준 ${g2cWon(sev1200.details.taxBase)}을 거쳐 퇴직소득세 ${g2cWon(sev1200.incomeTax)}과 지방소득세 ${g2cWon(sev1200.localTax)}이 나옵니다.</p>
+<p>퇴직금은 건강보험료를 매기는 보수에서 빠집니다(국민건강보험법 시행령 제33조). 퇴직금을 IRP 같은 연금계좌로 받거나 받은 날부터 60일 안에 넣으면 연금 외로 꺼낼 때까지 퇴직소득세를 떼지 않고, 이미 뗐다면 환급을 신청할 수 있습니다(소득세법 제146조). 나중에 연금으로 받으면 실제 수령 10년 차까지는 원래 퇴직소득세율의 70%, 11~20년 차는 60%, 그 뒤는 50%로 원천징수합니다(같은 법 제129조). 일시금과 연금의 차이는 <a href="/calc/severance-vs-pension">퇴직금 일시금·연금 비교 계산기</a>와 <a href="/guides/severance-lump-vs-irp-2026">퇴직금 일시금 vs IRP 가이드</a>에서 이어서 볼 수 있습니다.</p>
+
+<h2>퇴직 전후에 받는 성과급은 무엇을 확인해야 하나요</h2>
+<ul>
+<li><strong>평균임금에 들어가는 상여인지</strong> — 들어가는 상여라면 퇴직 전 1년 안에 받은 금액의 3/12가 반영됩니다. 들어가지 않는 경영성과급은 퇴직 직전에 받아도 퇴직금을 바꾸지 않습니다.</li>
+<li><strong>지급일 재직 조건</strong> — 지급 규정에 '지급일 현재 재직자'만 준다는 조건이 있으면 퇴직일을 정하기 전에 지급일을 확인해야 합니다.</li>
+<li><strong>휴직과 퇴직이 겹칠 때</strong> — 육아휴직처럼 산정에서 빼는 기간이 있으면 그 기간을 제외하고 평균임금을 구합니다.</li>
+<li><strong>퇴직 뒤 받는 성과급의 세금</strong> — 퇴직금이 아니라 근로소득입니다. 퇴사할 때 한 정산에 들어가지 않았다면 회사의 재정산이나 이듬해 5월 종합소득세 확정신고로 그해 다른 근로소득과 합칩니다. <a href="/year-end-tax-mid-resign">중도퇴사자 연말정산</a>과 <a href="/guides/bonus-payout-timing-2026">성과급 지급 시점과 세금</a>을 함께 보세요.</li>
+<li><strong>건강보험료</strong> — 재직 중 받은 성과급은 건강보험 보수에 들어갑니다. 퇴직하면 회사가 그동안 낸 보험료를 다시 계산해 근로자와 정산하고(국민건강보험법 시행령 제39조), 퇴직금은 보수에서 빠집니다.</li>
 </ul>
 
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/tools/finance/severance" class="text-primary underline">퇴직금 계산</a></li></ul></div>
+<h2>자주 묻는 질문</h2>
+<ul>
+<li><strong>Q. 경영성과급이 평균임금에서 빠진다는 판결이 나왔으면 소송은 의미가 없나요?</strong> — 같은 해 1월 판결은 삼성전자 목표 인센티브를 평균임금에 넣었습니다. 결론은 회사마다 지급의무가 정해져 있는지, 재원이 근로 제공과 얼마나 밀접한지에 따라 갈리므로 지급 규정과 이력을 먼저 확인해야 합니다.</li>
+<li><strong>Q. 성과급을 퇴직 전 3개월 안에 받으면 퇴직금이 크게 늘어나나요?</strong> — 고용노동부 산정 방식은 상여를 3개월 임금에 통째로 넣지 않고 1년 치 총액의 3/12만 더합니다. 받은 시점보다 평균임금에 들어가는 상여인지가 중요합니다.</li>
+<li><strong>Q. 퇴직금에도 건강보험료가 붙나요?</strong> — 붙지 않습니다. 건강보험 보수에서 퇴직금은 빠집니다(국민건강보험법 시행령 제33조). 퇴직소득세와 지방소득세만 원천징수됩니다.</li>
+<li><strong>Q. 퇴직금을 IRP로 받으면 세금이 없어지나요?</strong> — 없어지지 않고 미뤄집니다. 연금으로 나눠 받으면 원래 퇴직소득세율의 70%(11~20년 차 60%, 그 뒤 50%)를 내고, 일시금으로 꺼내면 원래 퇴직소득세를 냅니다.</li>
+</ul>
+
+<p>근거: <a href="https://www.law.go.kr/법령/근로자퇴직급여보장법/제8조">근로자퇴직급여 보장법 제8조</a> · <a href="https://www.law.go.kr/법령/근로기준법/제2조">근로기준법 제2조</a> · <a href="https://www.moel.go.kr/retirementpayCal.do">고용노동부 퇴직금 계산 방식</a> · <a href="https://www.law.go.kr/판례/(2021다248299)">대법원 2021다248299</a> · <a href="https://scourt.go.kr/portal/news/NewsViewAction.work?gubun=4&amp;seqnum=10916">대법원 판례속보 2021다219994</a> · <a href="https://www.law.go.kr/법령/소득세법/제48조">소득세법 제48조</a> · <a href="https://www.law.go.kr/법령/소득세법/제146조">소득세법 제146조</a>. 기준일: 2026년 9월 30일. 계산은 사이트 퇴직금 엔진 기준이며 회사 규정·실제 임금에 따라 달라집니다.</p>
+<p>함께 보기: <a href="/guides/severance-pay-guide">퇴직금 기본 가이드</a> · <a href="/retirement-pension-2026">퇴직연금 2026</a> · <a href="/salary-db/samsung-electronics">삼성전자 연봉</a> · <a href="/calc/bonus-calculators">회사별 성과급 계산기 모음</a></p>
 `;
 
 const beforeLeave = `
@@ -1147,7 +1310,7 @@ export const hotBonusTaxComplete: Guide[] = [
   { slug: "samsung-opi-tai-complete-2026", title: "삼성전자 OPI + TAI 완벽 가이드 — 메모리 호황기 영끌 1억 3,750만", description: "OPI(1월·사업부 영업이익 연동 최대 50%) + TAI(6월·12월·목표달성 최대 100%). 메모리 사업부 호황기 합산 250%, 기본급 5,500만 직원 영끌 1.37억.", category: "연봉", tags: ["삼성전자", "OPI", "TAI", "성과급", "메모리", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: samsungOpiTai, lang: "ko" },
   { slug: "sk-hynix-ps-history-2026-prospect", title: "SK하이닉스 PS 연도별 추이 — 2026 PS 2,000% 가능?", description: "2021 1,000% → 2023 적자 0% → 2024 1,500% → 2025 1,500%+ → 2026 2,000% 가능. 기본급 6,000만 직원 PS 1,500% 시 실수령 9,200만원.", category: "연봉", tags: ["SK하이닉스", "PS", "성과급", "HBM", "메모리", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: skHynixPs, lang: "ko" },
   { slug: "lg-hyundai-posco-bonus-2026", title: "LG·현대차·기아·포스코 성과급 구조 비교 — 사업부 차등 최대 50%", description: "LG전자 사업부별 ±50% 격차, 현대차·기아 통합 균등, 포스코 연 1회 균등. 직장인 6,000만 + 800% 성과급 시 실수령 7,300만원.", category: "연봉", tags: ["LG전자", "현대차", "포스코", "성과급", "사업부", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: lgPoscoBonus, lang: "ko" },
-  { slug: "it-rsu-vs-cash-bonus-2026", title: "네이버·카카오·쿠팡 RSU vs 현금 보너스 — 5,000만 RSU 175만 유리", description: "네이버 4년 베스팅 즉시 매도 비과세, 카카오 5년 25%, 쿠팡 미국 22% 양도세, 토스 비상장 IPO lockup. RSU 5,000만 vs 현금 175만 유리 (주가 변동 리스크 별개).", category: "주식", tags: ["네이버", "카카오", "쿠팡", "RSU", "현금보너스", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: itRsuVsCash, lang: "ko" },
+  { slug: "it-rsu-vs-cash-bonus-2026", title: "RSU·현금 성과급 세금 2026 — 네이버·카카오·쿠팡", description: "RSU도 받는 날 시가로 근로소득 과세돼 세금은 현금 성과급과 같습니다. 차이는 이후 주가와, 국내·해외 상장에 따라 갈리는 매도 세금입니다.", metaDescription: "RSU는 주식을 받는 날의 시가로 근로소득세가 정해져 같은 금액 현금 성과급과 세금이 같습니다. 네이버·카카오(국내 상장)와 쿠팡(미국 상장) RSU의 매도 세금과 주가 하락 때 손익을 비교했습니다.", category: "주식", tags: ["RSU", "네이버", "카카오", "쿠팡", "성과급", "2026"], level: "고급", publishedDate: "2026-05-23", modifiedDate: "2026-09-30", views: 0, content: itRsuVsCash, lang: "ko" },
   { slug: "foreign-bonus-structure-2026", title: "외국계 보너스 — 구글·아마존·메타·MS 한국지사 RSU 구조", description: "구글 Alphabet RSU + 사인온, 아마존 분할 사인온 + 4년 비균등 RSU, 메타·MS 분기 성과 + RSU. 외국 모회사 직접 지급 시 본인 종소세 신고 의무.", category: "주식", tags: ["외국계", "구글", "아마존", "메타", "RSU", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: foreignBonus, lang: "ko" },
   { slug: "year-end-encouragement-vs-bonus-2026", title: "연말 격려금 vs 정기상여 — 통상임금 포함 여부 절세 효과", description: "격려금은 통상임금 미포함 → 퇴직금 영향 0. 정기상여는 통상임금 포함 → 퇴직금 증가. 12월 격려금 1,000만 + IRP 900만 만기 시 142만원 환급.", category: "연봉", tags: ["격려금", "정기상여", "통상임금", "퇴직금", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: yearEndEncouragement, lang: "ko" },
   { slug: "sign-on-bonus-tax-2026", title: "사인온 보너스 5,000만 — 실수령 2,875만, 분할로 600만 절감", description: "입사 시 일회성 보너스. 한계세율 35%+ + 4대보험 + 지방세 = 약 43% 부담. 5,000만 일시 vs 2년 분할 시 600만 절감.", category: "연봉", tags: ["사인온", "Signing Bonus", "입사", "절세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: signOnBonus, lang: "ko" },
@@ -1190,7 +1353,7 @@ export const hotBonusTaxComplete: Guide[] = [
   { slug: "opi-vs-tai-timing-tax-2026", title: "1월 OPI vs 6월 TAI — 분할 지급 150만 절감", description: "삼성 OPI 1월 일시 vs TAI 6·12월 분할. 분할 효과로 한계세율 분산. 영끌 1.08억 시 약 150만 절감. 인사 협상 시도.", category: "세금", tags: ["OPI", "TAI", "분할지급", "한계세율", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: opiTaiTimingCompare, lang: "ko" },
   { slug: "december-vs-january-bonus-2026", title: "12월 인센티브 vs 1월 인센티브 — 정산 시점·IRP 한도", description: "같은 금액 세금 차이 거의 없음. 단 12월 지급은 당해 정산, IRP 한도 즉시 도달. 1월 지급은 다음해 정산. 정산·납입 일정 차이.", category: "세금", tags: ["12월", "1월", "인센티브", "정산", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: december1January, lang: "ko" },
   { slug: "moving-company-bonus-2026", title: "이직 중 성과급 — 전·신 회사 합산 1,000만+ 추가 세금", description: "전 회사 + 신 회사 성과급 모두 근로소득 합산. 5월 종소세 신고 시 합산 신고 의무. 한계세율 점프 시 추가 1,000만+ 세금.", category: "커리어", tags: ["이직", "성과급", "전회사", "종합소득세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: moveCompanyBonus, lang: "ko" },
-  { slug: "bonus-retire-impact-severance-2026", title: "성과급 받고 퇴직 — 정기상여 vs 일회성 보너스 퇴직금 2,500만 차이", description: "정기상여(통상임금 포함)는 평균임금 베이스 증가 → 퇴직금 증가. 월급 500만 10년 + 연 3,000만 시 정기상여 7,500만 vs 일회성 5,000만.", category: "커리어", tags: ["퇴직금", "정기상여", "통상임금", "성과급", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonusRetireImpact, lang: "ko" },
+  { slug: "bonus-retire-impact-severance-2026", title: "성과급 퇴직금 포함 기준 2026 — 평균임금·대법원 판례", description: "퇴직금은 평균임금으로 계산합니다. 정기상여·목표 인센티브는 들어가고, 해마다 노사합의로 정한 경영성과급은 빠질 수 있습니다.", metaDescription: "성과급이 퇴직금에 들어가는지는 평균임금 포함 여부로 갈립니다. 2026년 대법원 판결(삼성전자 목표 인센티브 포함·경영성과급 제외)과 월 500만원·10년 근속 예시로 퇴직금 차이와 퇴직소득세를 계산했습니다.", category: "커리어", tags: ["퇴직금", "평균임금", "성과급", "퇴직소득세", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-30", views: 0, content: bonusRetireImpact, lang: "ko" },
   { slug: "before-vs-after-leave-bonus-2026", title: "성과급 받기 전 휴직 vs 받고 휴직 — 권리 보장 + 휴직 전 지급", description: "성과급은 재직 중 발생 성과 보상 → 휴직 전 발생분은 받을 권리. 인사팀과 지급 시점 확정 + 휴직 중 4대보험 변경 확인.", category: "커리어", tags: ["휴직", "성과급", "지급권리", "육아휴직", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: beforeLeave, lang: "ko" },
   { slug: "irp-eligibility-before-bonus-2026", title: "성과급 받기 전 IRP·연금저축 가입 — 누구나 가능", description: "IRP: 근로소득자·자영업자·공무원. 연금저축: 만 19세+ 누구나. 12월 31일까지 납입 시 당해 공제. 만 55세까지 유지 의무.", category: "세금", tags: ["IRP", "연금저축", "가입자격", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: irpEligibility, lang: "ko" },
   { slug: "executive-severance-limit-bonus-deep-2026", title: "임원 퇴직금 한도 초과 + 성과급 — 5억 시 1.08억 세금", description: "한도 3억 + 초과 2억 시 초과분 근로소득세 7,800만 (한계 38%). 한도 내 5억이면 5,000만. 정관 한도 미리 점검.", category: "커리어", tags: ["임원", "퇴직금한도", "근로소득세", "성과급", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: executiveSeveranceLimitDeep, lang: "ko" },
