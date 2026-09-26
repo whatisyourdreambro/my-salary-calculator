@@ -6,6 +6,7 @@
 // 각 가이드는 자동으로 사이트맵 + /guides 인덱스에 노출됨.
 
 import type { Guide } from "@/lib/guidesData";
+import { basePct, bonusNet2026, manKo } from "@/lib/guides/bonusKeeperFigures";
 
 // ═══════════════════════════════════════════════════════════════
 // 1. 삼성전자 임금협상 현황
@@ -104,38 +105,78 @@ const skHynixPS2026 = `
 // ═══════════════════════════════════════════════════════════════
 // 3. LG에너지솔루션 2026 임금협상
 // ═══════════════════════════════════════════════════════════════
+// 2차 키퍼(2026-09-26 G2B) — 엔티티 형식(GUIDES-10). 첫 표의 평균 급여는 DART 사업보고서 급여총액÷인원
+// (src/data/dart/dartDisclosed.ts, /salary-db/lgensol 연도별 표와 같은 기준), 성과급은 계산기와 같은 bonusData.
+// 2025·2026년 임금 인상률은 공식 발표·복수 보도로 확인되지 않아 숫자를 싣지 않는다(추정 금지).
+const LGES_Y25 = basePct("lgensol", 2025); // 2025년 실적분 — 2026-02-06 지급 (뉴스웨이 2026-02-04)
+const LGES_Y24 = basePct("lgensol", 2024);
+const LGES_SALARY_X = 13; // lg-energy-bonus 계산기의 연봉 가정(월 기본급 × 13)
+const lgesRows = [3_000_000, 4_000_000, 5_000_000].map((monthly) => {
+  const bonus = (monthly * LGES_Y25) / 100;
+  return { monthly, bonus, salary: monthly * LGES_SALARY_X, r: bonusNet2026(monthly * LGES_SALARY_X, bonus) };
+});
+const LGES_EFF_MIN = Math.min(...lgesRows.map((x) => x.r.effectiveRate));
+const LGES_EFF_MAX = Math.max(...lgesRows.map((x) => x.r.effectiveRate));
+
 const lgensolWage2026 = `
-<p class="lead">
-2026년 배터리 시장은 전기차 캐즘(일시적 정체)을 지나 다시 회복 국면. LG에너지솔루션은 GM·현대차·도요타와의 합작 확대와 ESS(에너지저장장치) 시장 진입으로 매출 성장 재시작. 이에 따라 2026년 임금협상도 인상률 5%+ 가능성이 거론됩니다.
-</p>
+<p class="lead">LG에너지솔루션은 2025년 실적 성과급으로 <strong>기본급의 최대 ${LGES_Y25}%</strong>를 2026년 2월 6일 지급했습니다. 2024년 실적분 ${LGES_Y24}%보다 늘었지만, 세 자릿수였던 2022~2023년 실적분에는 크게 못 미칩니다. 2025년 사업보고서 기준 직원 평균 급여는 약 1억 1,200만원(직원 1만2,922명)으로 2023년부터 2년 연속 줄었습니다. 2026년 임금 인상률은 회사나 노조의 공식 발표, 복수 보도로 확인되지 않았습니다. 기준일은 2026년 9월 26일입니다.</p>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">📊 LG엔솔 직급별 영끌 연봉(2026 추정)</h2>
-<ul class="space-y-2 mt-4">
-<li><strong>신입</strong>: 영끌 약 5,500~6,500만원 (기본급 4,800만원 + 성과급)</li>
-<li><strong>대리(주니어)</strong>: 약 7,000~8,500만원</li>
-<li><strong>과장(시니어)</strong>: 약 9,500~12,000만원</li>
-<li><strong>부장·팀장</strong>: 약 13,000~18,000만원</li>
+<h2>연도별 평균 급여와 성과급</h2>
+<p>평균 급여는 금융감독원 전자공시 사업보고서의 연간 급여총액을 직원 수로 나눈 값으로, 사이트 <a href="/salary-db/lgensol">LG에너지솔루션 연봉 정보</a>의 연도별 표와 같은 기준입니다. 성과급은 그해 실적에 대해 이듬해 초 기본급 대비 %로 지급된 값입니다(보도 기준).</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>사업연도</th><th>평균 급여(급여총액÷인원)</th><th>직원 수</th><th>그해 실적 성과급</th></tr></thead>
+<tbody>
+<tr><td>2025</td><td>1억 1,168만원</td><td>12,922명</td><td>최대 ${LGES_Y25}% (2026년 2월 6일 지급)</td></tr>
+<tr><td>2024</td><td>1억 1,839만원</td><td>12,635명</td><td>${LGES_Y24}%</td></tr>
+<tr><td>2023</td><td>1억 2,306만원</td><td>12,166명</td><td>340~380%</td></tr>
+</tbody>
+</table></div>
+<p>사업보고서의 연간 급여총액에는 그해 실제로 지급된 성과급이 들어갑니다. 그래서 2022년 실적분 성과급(870~900%, 보도)이 지급된 2023년 평균이 가장 높고, 성과급이 줄어든 2024·2025년 평균은 내려간 것으로 볼 수 있습니다. 회사 페이지 헤드라인의 1억 1,200만원은 2025년 값을 100만원 단위로 반올림한 것입니다.</p>
+
+<h2>2026년 임금협상, 확인된 것과 안 된 것</h2>
+<ul>
+<li><strong>가장 최근에 확인된 인상률</strong> — 2024년도 임금은 평균 6% 인상으로 정해졌고(2024년 3월 회사 발표), 이를 담은 임단협 잠정합의안이 2025년 1월 조합원 투표에서 64% 찬성으로 가결됐습니다(보도).</li>
+<li><strong>2025·2026년 인상률</strong> — 2026년 9월 26일 현재 회사·노조의 공식 발표나 복수 보도로 확인된 숫자가 없습니다. 이 글은 확인되지 않은 인상률 전망을 싣지 않습니다.</li>
+<li><strong>성과급의 바탕이 된 실적</strong> — 회사가 발표한 2025년 연간 실적은 매출 23조 6,718억원, 영업이익 1조 3,461억원입니다. 2026년 2월에 지급된 최대 ${LGES_Y25}%는 이 실적에 대한 성과급입니다.</li>
+</ul>
+<p>2026년 실적 성과급은 2027년 초 회사 발표로 정해집니다. 그 전에 나오는 지급률 숫자는 전망이므로, 가늠이 필요하면 아래 계산기에서 지급률을 바꿔 보는 편이 안전합니다.</p>
+
+<h2>성과급 최대 ${LGES_Y25}%, 세후로는 얼마인가요</h2>
+<p>LG에너지솔루션 성과급은 월 기본급 대비 %입니다. 2025년 실적분은 보도상 최대 ${LGES_Y25}%이므로 아래 표는 최대치를 받는 경우이며, 사이트 <a href="/calc/lg-energy-bonus">LG에너지솔루션 성과급 계산기</a>와 같은 가정(연봉 = 월 기본급 × ${LGES_SALARY_X})으로 성과급 엔진(2026년 요율, 국민연금 기준소득월액 상한 반영)이 계산한 세후 금액입니다. 본인 기본공제 외의 공제는 넣지 않았습니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>월 기본급</th><th>성과급 ${LGES_Y25}%</th><th>연봉 가정</th><th>세후</th><th>부담률</th></tr></thead>
+<tbody>
+${lgesRows.map((x) => `<tr><td>${manKo(x.monthly)}</td><td>${manKo(x.bonus)}</td><td>${manKo(x.salary)}</td><td>${manKo(x.r.net)}</td><td>${x.r.effectiveRate}%</td></tr>`).join("\n")}
+</tbody>
+</table></div>
+<p>성과급 규모가 크지 않아 세금·보험료 부담률은 ${LGES_EFF_MIN}~${LGES_EFF_MAX}% 수준입니다. 호황기처럼 수백 %가 나오면 과세표준이 높은 구간으로 올라가 부담률도 커집니다. 성과급은 연봉과 합쳐 근로소득으로 연말정산되므로, 받는 달 원천징수가 많아 보여도 연간 세액으로 다시 맞춰집니다.</p>
+
+<h2>배터리·LG 계열사 평균 급여 비교</h2>
+<p>같은 2025년 사업보고서 기준으로 비교하면 다음과 같습니다. 금액은 사이트 회사 페이지에 표시된 헤드라인 값입니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>회사</th><th>2025년 평균 급여</th><th>직원 수</th><th>더 보기</th></tr></thead>
+<tbody>
+<tr><td>LG에너지솔루션</td><td>1억 1,200만원</td><td>12,922명</td><td><a href="/salary-db/lgensol">연봉 정보</a></td></tr>
+<tr><td>LG화학</td><td>1억 700만원</td><td>12,869명</td><td><a href="/salary-db/lg-chem">연봉 정보</a></td></tr>
+<tr><td>삼성SDI</td><td>9,500만원</td><td>12,826명</td><td><a href="/salary-db/samsung-sdi">연봉 정보</a></td></tr>
+<tr><td>LG전자</td><td>1억 1,700만원</td><td>34,144명</td><td><a href="/salary-db/lgelectronics">연봉 정보</a></td></tr>
+</tbody>
+</table></div>
+<p>평균 급여는 직원 구성(생산직 비중·근속연수)과 그해 지급된 성과급에 따라 달라지므로, 같은 직급의 연봉 차이로 바로 읽으면 안 됩니다. 성과급까지 함께 비교하려면 <a href="/guides/lg-hyundai-posco-bonus-2026">LG·현대차·기아·포스코 성과급 비교</a>를 참고하세요.</p>
+
+<h2>성과급은 통상임금·퇴직금에 들어가나요</h2>
+<p>회사 실적에 따라 해마다 지급 여부와 지급률이 정해지는 성과급은 통상임금으로 보기 어렵습니다. 대법원 전원합의체(2024년 12월 19일, 2020다247190)는 업무성과나 평가 결과가 기준에 이르러야 지급되는 순수 성과급을 통상임금에서 제외했습니다.</p>
+<p>퇴직금 기준인 평균임금에 들어가는지는 지급 의무가 취업규칙·단체협약 등으로 정해져 있는지, 근로 제공과 밀접한지로 판단합니다(대법원 2021다248299). 2026년 대법원은 영업이익 등 경영성과를 나누는 성과급을 평균임금에서 제외한 판결(삼성전자 OPI, SK하이닉스 경영성과급)을 잇달아 냈습니다. LG에너지솔루션 성과급을 직접 다룬 판결은 확인되지 않았으므로, 퇴직을 앞두고 있다면 회사의 퇴직금 산정 기준을 확인하세요. 판단 기준은 <a href="/guides/bonus-vs-incentive-vs-allowance-2026">성과급·인센티브·격려금 차이</a>에 정리했습니다.</p>
+
+<h2>자주 묻는 질문</h2>
+<ul>
+<li><strong>Q. LG에너지솔루션 성과급은 언제 나오나요?</strong> — 전년 실적 성과급이 이듬해 2월 초에 지급됩니다. 2026년에는 2월 4일 임직원 설명회에서 최대 ${LGES_Y25}%가 안내됐고 2월 6일 지급됐습니다(보도).</li>
+<li><strong>Q. 2026년 실적 성과급은 얼마로 예상되나요?</strong> — 아직 정해지지 않았습니다. 2027년 초 회사 발표 전의 숫자는 전망일 뿐이며, 계산기에서 지급률을 바꿔 가며 가늠할 수 있습니다.</li>
+<li><strong>Q. 평균 급여가 왜 2년 연속 줄었나요?</strong> — 사업보고서 급여총액에는 그해 지급된 전년 실적 성과급이 포함됩니다. 2022년 실적분 870~900%가 지급된 2023년 평균이 가장 높았고, 성과급이 ${LGES_Y24}%·최대 ${LGES_Y25}%로 줄면서 평균도 내려간 것으로 볼 수 있습니다.</li>
+<li><strong>Q. 2026년 임금 인상률은 몇 %인가요?</strong> — 2026년 9월 26일 현재 확인된 공식 수치가 없습니다. 가장 최근에 확인된 값은 2024년도 평균 6% 인상입니다.</li>
 </ul>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">🎯 2026 임금협상 3대 쟁점</h2>
-<ol class="space-y-3 mt-4">
-<li><strong>① 기본급 인상률 5%+</strong>: 캐즘 종료 + ESS 매출 본격화로 인상 명분 확보. 단 미국 현지 공장 확대 비용 부담 변수.</li>
-<li><strong>② 변동 성과급 비중 확대</strong>: 사업부별 성과 격차 반영 — 미국·유럽 사업부 vs 한국 본사 격차 확대 우려.</li>
-<li><strong>③ 미국 현지 파견 인센티브</strong>: 미시간 합작공장 파견자 대상 주거비·자녀학자금 등 인센티브 확대.</li>
-</ol>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">💡 2차전지 직무 가치 — 5년 후 전망</h2>
-<p>
-2030년까지 글로벌 EV 시장 연 18% 성장 전망(IEA). LG엔솔·삼성SDI·SK온 3사 합산 인력 수요는 5년간 약 5만명 추가 채용 예상. 배터리 셀 설계·BMS·소재 분야는 신입 영끌 7,000만원 + 시니어 1.5억까지 가능.
-</p>
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20">
-<p class="font-bold text-primary mb-2">📌 관련 도구</p>
-<ul class="space-y-1 text-sm">
-<li>· <a href="/salary-db/lgensol" class="text-primary underline">LG에너지솔루션 연봉 상세</a></li>
-<li>· <a href="/industry/chemical-energy" class="text-primary underline">화학·에너지·배터리 업계 연봉 순위</a></li>
-</ul>
-</div>
+<p class="text-sm">기준일: 2026-09-26. 평균 급여·직원 수는 금융감독원 전자공시 LG에너지솔루션 사업보고서(2025년, 접수번호 20260312000217 및 과년도)의 연간 급여총액÷인원, 성과급은 보도(뉴스웨이 2026-02-04)로 <a href="/calc/lg-energy-bonus">성과급 계산기</a>와 같은 데이터, 2025년 실적은 회사 연간 실적 발표, 2024년도 임금 인상은 보도(헤럴드경제 2024-03, 뉴스저널리즘 2025-01-08) 기준입니다. 판결은 <a href="https://www.law.go.kr/판례/(2020다247190)">대법원 2020다247190</a>과 <a href="https://www.law.go.kr/판례/(2021다248299)">대법원 2021다248299</a>, 과세 구조는 <a href="https://www.law.go.kr/법령/소득세법/제20조">소득세법 제20조</a>와 <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=2227&cntntsId=7667">국세청 종합소득세 세율</a>을 따랐습니다.</p>
 `;
 
 // ═══════════════════════════════════════════════════════════════
@@ -1601,13 +1642,16 @@ export const hotNewsMay2026: Guide[] = [
   },
   {
     slug: "lgensol-wage-negotiation-2026",
-    title: "LG에너지솔루션 2026 임금협상 — 배터리 캐즘 종료, 인상률 5%+",
+    title: "LG에너지솔루션 2026 임금협상·성과급 정리",
     description:
-      "전기차 캐즘 종료 + ESS 본격화로 LG엔솔 2026 임금협상 인상률 5%+ 전망. 신입 영끌 5,500~6,500만원, 시니어 9,500만~1.2억원. 미국 파견 인센티브 확대.",
+      "2025년 실적 성과급 기본급 최대 75%(2026-02-06 지급), 2025년 평균 급여 약 1억 1,200만원. 연도별 추이·세후·2026 임금협상 확인 현황.",
+    metaDescription:
+      "LG에너지솔루션 2025년 실적 성과급 기본급 최대 75%(2026년 2월 6일 지급), 사업보고서 평균 급여 추이(2023~2025년), 성과급 세후, 2026년 임금협상에서 확인된 것과 안 된 것을 정리했습니다.",
     category: "연봉",
-    tags: ["LG에너지솔루션", "배터리", "임금협상", "전기차", "2026"],
+    tags: ["LG에너지솔루션", "LG엔솔 성과급", "임금협상", "배터리", "2026"],
     level: "중급",
     publishedDate: "2026-05-23",
+    modifiedDate: "2026-09-30",
     views: 0,
     content: lgensolWage2026,
     lang: "ko",

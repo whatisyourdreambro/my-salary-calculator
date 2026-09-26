@@ -31,7 +31,8 @@ import {
   IRP_FULL_CREDIT_HIGH,
   manOnly,
   manwon,
-  pct,
+  // 요율 → "4.75%" 표기. bonusKeeperFigures 의 pct(숫자 천 단위 구분, % 없음)와 이름이 겹쳐 별칭으로 가져온다 (G2A×G2B 병합)
+  pct as ratePct,
   PENSION_BY_PAY,
   PENSION_LABEL,
   RATE_LABEL,
@@ -39,6 +40,29 @@ import {
   TAX_EXAMPLES,
   won,
 } from "@/lib/guides/bonusNetFigures2026";
+import {
+  AGREEMENT_2026,
+  BASIC_RATIO,
+  OPI1_MAX_RATE,
+  OPI_2025_DESC,
+  OPI_ACTUAL_2025,
+  PI_TIERS,
+  PS_HISTORY_GUIDE,
+  SK_2026_H1_MARGIN_PCT,
+  SK_2026_Q,
+  TAI_2026_H1_DESC,
+  TAI_ANNOUNCED_DATE,
+  TAI_PAY_DATE,
+  basePct,
+  bonusNet2026,
+  fixedManwon,
+  manKo,
+  opTrilKo,
+  opi2025,
+  pct,
+  piRateForMargin,
+  psYear,
+} from "@/lib/guides/bonusKeeperFigures";
 
 // 구직급여 1일 상한 표시값 — 정본(src/config/unemploymentBenefit.ts)에서 끼워 넣는다 (verify-tax-constants 게이트)
 const UB_UPPER = UNEMPLOYMENT_BENEFIT_2026.DAILY_UPPER.toLocaleString("en-US");
@@ -47,92 +71,311 @@ const UB_UPPER = UNEMPLOYMENT_BENEFIT_2026.DAILY_UPPER.toLocaleString("en-US");
 // 영역 A — 성과급 종류·구조 (10편)
 // ═══════════════════════════════════════════════════════════════
 
+// 2차 키퍼(2026-09-26 G2B) — 통상임금·평균임금은 대법원 판결문과 법령, 세후 예시는 성과급 엔진(2026 요율).
+// year-end-encouragement-vs-bonus-2026(격려금 vs 정기상여)의 검색 의도를 흡수하고 그 글의 "35% 점프" 계산을 바로잡는다.
+const ENC = bonusNet2026(60_000_000, 10_000_000);
+
 const bonusVsIncentive = `
-<p class="lead">성과급·인센티브·보너스는 비슷해 보이지만 법적 성격·세금·근로기준법 적용이 다릅니다. 회사 정관·근로계약서에 따라 통상임금 포함 여부 결정 → 퇴직금·연차수당·시간외수당 계산 베이스 변경 → 직장인 평생 임금 수억원 차이 가능.</p>
+<p class="lead">성과급·인센티브·격려금은 세금에서는 차이가 없습니다. 이름과 관계없이 모두 근로소득(소득세법 제20조)이라 그해 연봉과 합쳐 연말정산되고 6~45% 누진세율이 적용됩니다. 차이는 노동법에서 납니다. 연장·야간수당의 기준인 <strong>통상임금</strong>에는 재직 조건이 붙은 정기상여금도 들어가지만 근무실적에 따른 순수 성과급은 들어가지 않고(대법원 2024년 12월 19일 전원합의체), 퇴직금의 기준인 <strong>평균임금</strong>에는 지급 의무가 정해져 있고 근로 제공과 밀접한 성과급만 들어갑니다(대법원 2026년 1월 29일). 기준일은 2026년 9월 26일입니다.</p>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">📊 4가지 구분</h2>
-<div class="overflow-x-auto my-6"><table class="w-full text-sm border border-border"><thead class="bg-secondary"><tr><th class="p-3">종류</th><th class="p-3">법적 성격</th><th class="p-3">통상임금</th><th class="p-3">세금</th></tr></thead><tbody>
-<tr class="border-t"><td class="p-3"><strong>정기상여</strong></td><td class="p-3">근로기준법상 임금</td><td class="p-3 text-emerald-600">포함</td><td class="p-3">근로소득</td></tr>
-<tr class="border-t"><td class="p-3"><strong>경영성과급</strong></td><td class="p-3">임금이지만 변동성</td><td class="p-3">조건부 포함</td><td class="p-3">근로소득</td></tr>
-<tr class="border-t"><td class="p-3"><strong>격려금·포상금</strong></td><td class="p-3">은혜적 금품</td><td class="p-3 text-rose-600">미포함</td><td class="p-3">근로소득(과세)</td></tr>
-<tr class="border-t"><td class="p-3"><strong>주식 보상(RSU·옵션)</strong></td><td class="p-3">근로소득 + 양도소득</td><td class="p-3 text-rose-600">미포함</td><td class="p-3">근로 + 양도</td></tr>
-</tbody></table></div>
+<h2>네 가지 보상, 한 표로 비교</h2>
+<p>회사마다 부르는 이름이 달라서 이름보다 지급 방식으로 구분하는 것이 정확합니다. 아래 표는 판례가 제시한 기준을 전형적인 경우에 적용한 것이며, 실제 판단은 취업규칙·단체협약에 적힌 지급 조건에 따라 달라질 수 있습니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>구분</th><th>전형적인 예</th><th>통상임금</th><th>평균임금(퇴직금)</th><th>세금</th></tr></thead>
+<tbody>
+<tr><td>정기상여금</td><td>짝수 달 100%, 설·추석 상여</td><td>들어감(재직 조건, 소정근로일수 이내의 근무일수 조건이 붙어도)</td><td>들어감(12개월분의 3/12)</td><td>근로소득</td></tr>
+<tr><td>목표·평가형 성과급</td><td>미리 정한 기준으로 평가 등급별 지급률 적용</td><td>순수 성과급은 안 들어감, 최소 보장분은 들어감</td><td>지급 의무가 정해져 있으면 들어감(삼성전자 TAI)</td><td>근로소득</td></tr>
+<tr><td>경영성과 배분형 성과급</td><td>영업이익·경제적 부가가치의 일정 비율 배분</td><td>안 들어감</td><td>안 들어간다는 판결(삼성전자 OPI·SK하이닉스 경영성과급)</td><td>근로소득</td></tr>
+<tr><td>일회성 격려금·포상금</td><td>창립기념 격려금, 특별 포상</td><td>안 들어감</td><td>계속·정기 지급과 지급 의무가 없으면 안 들어감</td><td>근로소득</td></tr>
+</tbody>
+</table></div>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 통상임금 포함 효과 — 연 200만원+</h2>
-<p>월 300만원 직원이 정기상여 300%(연 900만원) 받는 경우. 통상임금이 월 375만원으로 인상되어 연차수당·퇴직금·야근수당 모두 25% 증가. 평생 임금 약 1억 차이.</p>
+<h2>통상임금 — 2024년 12월 전원합의체 이후 기준</h2>
+<p>통상임금은 연장·야간·휴일근로 가산수당과 연차수당 등을 계산하는 기준 임금입니다. 근로기준법 시행령 제6조는 근로자에게 정기적이고 일률적으로 소정근로 또는 총 근로에 대해 지급하기로 정한 금액으로 정의합니다.</p>
+<p>대법원은 2024년 12월 19일 전원합의체 판결(2020다247190)에서 종전의 '고정성' 요건을 버렸습니다. 그래서 특정 시점에 재직 중인 사람에게만 주거나 소정근로일수 이내에서 정한 근무일수를 채워야 주는 조건이 붙었다는 이유만으로 정기상여금이 통상임금에서 빠지지 않습니다. 다만 소정근로일수를 넘는 근무일수를 채워야 주는 임금은 소정근로를 넘는 추가 근로의 대가라서 통상임금이 아니라고 했습니다. 반면 업무성과를 달성하거나 평가 결과가 기준에 이르러야 지급되는 '순수한 의미의 성과급'은 여전히 통상임금이 아니라고 했고, 근무실적과 무관하게 지급하기로 정한 최소 보장액은 통상임금이라고 봤습니다. 새 법리는 판결 선고일 이후의 통상임금 산정부터 적용됩니다.</p>
+<p>본인 수당 구성으로 시간급 통상임금과 연장·야간수당 파급액을 보려면 <a href="/calc/ordinary-wage">통상임금 계산기</a>를 쓰면 됩니다.</p>
 
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/tools/finance/bonus" class="text-primary underline">성과급 세금 계산기</a></li><li>· <a href="/calc/samsung-bonus" class="text-primary underline">삼성 성과급 시뮬레이터</a></li></ul></div>
+<h2>평균임금·퇴직금 — 성과급이 들어가는 조건</h2>
+<p>퇴직금은 계속근로기간 1년에 30일분 이상의 평균임금입니다(근로자퇴직급여 보장법 제8조). 평균임금은 퇴직 전 3개월 동안 받은 임금 총액을 그 기간의 총일수로 나눈 금액이고(근로기준법 제2조), 1년 단위로 받는 상여금은 퇴직 전 12개월 동안 받은 금액의 3/12만 더합니다(고용노동부 퇴직금 계산 예시).</p>
+<p>성과급이 여기서 말하는 '임금'인지는 두 가지로 판단합니다(대법원 2021다248299). 첫째, 계속적·정기적으로 지급되고 단체협약·취업규칙·근로계약·노동관행 등으로 회사에 지급 의무가 있어야 합니다. 둘째, 지급 의무의 발생이 근로 제공과 직접 또는 밀접하게 관련돼야 합니다.</p>
+<ul>
+<li><strong>삼성전자(2026년 1월 29일)</strong> — 평가 등급에 따라 상여기초금액에 연동해 주는 목표 인센티브(TAI)는 임금이고, 사업부 경제적 부가가치(EVA)의 20%를 재원으로 나누는 성과 인센티브(OPI)는 임금이 아니라고 봤습니다.</li>
+<li><strong>SK하이닉스(2026년 2월 12일, 2021다219994)</strong> — 연도별 노사합의로 지급 여부와 기준을 정해 온 경영성과급은 지급 의무가 인정되지 않고 영업이익은 근로 외 요인의 영향이 크다며 평균임금이 아니라고 봤습니다.</li>
+</ul>
+<p>예를 들어 1년에 정기상여금 400만원을 받는 사람이라면 평균임금을 계산할 때 100만원(400만원 × 3/12)이 3개월 임금 총액에 더해집니다. 퇴직금과 퇴직소득세는 <a href="/tools/finance/severance">퇴직금 세금 계산기</a>에서 계산할 수 있습니다.</p>
+
+<h2>세금은 이름과 관계없이 근로소득입니다</h2>
+<p>소득세법 제20조는 근로를 제공하고 받는 봉급·급료·임금·상여·수당과 이와 비슷한 급여를 모두 근로소득으로 봅니다. 성과급·인센티브·격려금은 이름과 관계없이 그해 총급여에 합산되고, 근로소득공제와 인적공제 등을 뺀 과세표준에 6~45% 누진세율이 적용됩니다(소득세법 제55조). 여기에 지방소득세(소득세의 10%), 건강보험·고용보험, 기준소득월액 상한 안의 국민연금이 붙습니다.</p>
+<p>"격려금을 받으면 세율이 35%로 뛴다"는 말은 대부분 사실과 다릅니다. 연봉 6,000만원인 직원이 연말 격려금 1,000만원을 받으면 총급여는 7,000만원이지만, 공제를 빼면 과세표준이 5,000만원을 넘지 않아 한계세율은 15%입니다. 사이트 성과급 엔진(2026년 요율)으로 계산하면 격려금 1,000만원에 붙는 세금·보험료는 약 ${manKo(ENC.totalDeductions)}, 세후는 약 ${manKo(ENC.net)}(부담률 ${ENC.effectiveRate}%)입니다. 받는 달에 원천징수가 많이 잡혀도 연말정산에서 연간 세액으로 다시 맞춰집니다.</p>
+<p>본인 연봉과 성과급 금액으로는 <a href="/tools/finance/bonus">성과급·인센티브 세금 계산기</a>에서 바로 확인할 수 있습니다.</p>
+
+<h2>격려금·일회성 보너스는 어떻게 보나요</h2>
+<p>격려금은 이름만으로 판단하지 않습니다. 앞의 기준대로 계속적·정기적으로 지급되는지, 회사에 지급 의무가 있는지, 근로 제공과 관련이 있는지를 봅니다. 창립기념일이나 특별한 사정으로 한 번 주는 격려금·포상금은 이 기준으로는 통상임금이나 평균임금에 들어간다고 보기 어렵습니다. 반대로 매년 같은 시기에 같은 기준으로 지급하도록 규정돼 있다면 정기상여금과 같은 판단을 받을 수 있습니다.</p>
+<p>퇴사를 앞두고 있다면 받을 성과급이 평균임금에 들어가는 종류인지 먼저 확인하세요. 들어가는 종류라면 퇴직 전 12개월 안에 받은 금액만 3/12로 반영되므로, 지급일이 그 12개월 안에 드는지에 따라 퇴직금이 달라집니다. 회사별 성과급 제도는 <a href="/calc/bonus-calculators">회사별 성과급 계산기 모음</a>, 삼성전자 OPI·TAI는 <a href="/guides/samsung-opi-tai-complete-2026">삼성전자 OPI·TAI 정리</a>에서 볼 수 있습니다.</p>
+
+<h2>자주 묻는 질문</h2>
+<ul>
+<li><strong>Q. 성과급과 인센티브는 세금이 다른가요?</strong> — 다르지 않습니다. 이름과 관계없이 근로소득으로 그해 연봉과 합산되고, 연말정산에서 6~45% 누진세율로 한 번에 계산됩니다.</li>
+<li><strong>Q. 정기상여금에 재직 조건이 붙어 있으면 통상임금에서 빠지나요?</strong> — 2024년 12월 19일 전원합의체 판결 이후 산정분부터는 재직 조건이나 소정근로일수 이내의 근무일수 조건만으로 빠지지 않습니다. 소정근로일수를 넘는 근무일수를 요구하는 조건이라면 통상임금이 아닙니다.</li>
+<li><strong>Q. 성과급은 퇴직금에 들어가나요?</strong> — 종류에 따라 다릅니다. 지급 의무가 미리 정해진 목표·평가형 성과급은 들어간다는 판결(삼성전자 TAI)이, 영업이익 등 경영성과를 나누는 성과급은 들어가지 않는다는 판결(삼성전자 OPI, SK하이닉스 경영성과급)이 있습니다.</li>
+<li><strong>Q. 연말 격려금 1,000만원을 받으면 세율이 35%가 되나요?</strong> — 연봉 6,000만원이라면 아닙니다. 합산 뒤 과세표준이 5,000만원 이하라 한계세율은 15%이고, 세금·보험료는 약 ${manKo(ENC.totalDeductions)}입니다.</li>
+<li><strong>Q. 퇴직 직전에 성과급을 받으면 퇴직금이 늘어나나요?</strong> — 평균임금에 들어가는 성과급이라면 퇴직 전 12개월 안에 받은 금액의 3/12이 평균임금 계산에 더해집니다.</li>
+</ul>
+
+<p class="text-sm">기준일: 2026-09-26. 근거: <a href="https://www.law.go.kr/판례/(2020다247190)">대법원 2020다247190 전원합의체 판결</a>, <a href="https://www.law.go.kr/판례/(2021다248299)">대법원 2021다248299 판결</a>, <a href="https://scourt.go.kr/portal/news/NewsViewAction.work?gubun=6&searchOption=&searchWord=&seqnum=2931">대법원 2021다219994 보도자료</a>, <a href="https://www.law.go.kr/법령/근로기준법시행령/제6조">근로기준법 시행령 제6조</a>, <a href="https://www.law.go.kr/법령/근로기준법/제2조">근로기준법 제2조</a>, <a href="https://www.law.go.kr/법령/근로자퇴직급여보장법/제8조">근로자퇴직급여 보장법 제8조</a>, <a href="https://www.moel.go.kr/retirementpayCal.do">고용노동부 퇴직금 계산</a>, <a href="https://www.law.go.kr/법령/소득세법/제20조">소득세법 제20조</a>, <a href="https://www.law.go.kr/법령/소득세법/제55조">소득세법 제55조</a>. 개별 사안의 통상임금·평균임금 해당 여부는 취업규칙·단체협약에 따라 달라지므로 회사 인사팀이나 노무 전문가에게 확인하세요.</p>
 `;
+
+// 2차 키퍼(2026-09-26 G2B) — OPI·TAI 지급률은 계산기 데이터(opiData·taiData), 세후는 성과급 엔진(2026 요율)에서 끼워 넣는다.
+// opi-vs-tai-timing-tax-2026(지급 시점 분산)·samsung-wage-negotiation-status-2026(2026 임협)의 검색 의도를 흡수한다.
+const SS_MX = opi2025("mx");
+const SS_DS = opi2025("ds-common");
+const SS_VD = opi2025("vd-da-nw-med");
+const SS_LOW = OPI_2025_DESC[OPI_2025_DESC.length - 1];
+const SS_TAI_TOP = TAI_2026_H1_DESC[0];
+const SS_TAI_LOW = TAI_2026_H1_DESC[TAI_2026_H1_DESC.length - 1];
+const ssOpiWon = (salary: number, rate: number) => (salary * rate) / 100;
+const SS_1EOK_DS = bonusNet2026(100_000_000, ssOpiWon(100_000_000, SS_DS.rate));
+const SS_TAI_EXAMPLE = bonusNet2026(80_000_000, 4_000_000);
+const ssOpiNetRow = (salary: number) => {
+  const ds = ssOpiWon(salary, SS_DS.rate);
+  const vd = ssOpiWon(salary, SS_VD.rate);
+  return `<tr><td>${manKo(salary)}</td><td>${manKo(ds)} → ${manKo(bonusNet2026(salary, ds).net)}</td><td>${manKo(vd)} → ${manKo(bonusNet2026(salary, vd).net)}</td></tr>`;
+};
 
 const samsungOpiTai = `
-<p class="lead">삼성전자 성과급은 OPI(Overall Performance Incentive)와 TAI(Target Achievement Incentive) 듀얼 구조. OPI는 사업부 영업이익 연동(연 1회 1월 지급, 최대 기본급 50%), TAI는 목표달성도(연 2회 6월·12월, 최대 100%). 메모리·DS 부문은 OPI 비중 50%까지 가능해 변동성 가장 큼.</p>
+<p class="lead">삼성전자 성과급은 연 1회 받는 <strong>OPI(초과이익성과급)</strong>와 상·하반기에 한 번씩 받는 <strong>TAI(목표달성장려금)</strong> 두 가지입니다. OPI는 연봉 대비 %(상한 ${OPI1_MAX_RATE}%), TAI는 월 기본급 대비 %로 계산합니다. 2025년 실적분 OPI는 ${OPI_ACTUAL_2025.payDateLabel}에 MX ${SS_MX.rate}%·DS부문 공통 ${SS_DS.rate}%·VD·생활가전 등 ${SS_VD.rate}%로 지급됐고, 2026년 상반기 TAI는 ${TAI_PAY_DATE}에 ${SS_TAI_TOP.division} ${SS_TAI_TOP.rate}%부터 ${SS_TAI_LOW.division} ${SS_TAI_LOW.rate}%까지 지급됐습니다. 노조 공지를 인용한 복수 보도 기준이며, 기준일은 2026년 9월 26일입니다.</p>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">📊 OPI vs TAI 비교</h2>
-<ul class="space-y-3 mt-4">
-<li><strong>OPI (1월)</strong>: 사업부 영업이익 × 일정 비율. 메모리 호황기 50%(=6개월치), 불황기 0% 가능. 변동성 큼.</li>
-<li><strong>TAI (6월·12월)</strong>: 목표달성도 평가. 최대 기본급 100% (월 100%). 비교적 안정적.</li>
-<li><strong>합산</strong>: 호황기 연 OPI 50% + TAI 100% × 2회 = 기본급 250% 가능 (= 약 30개월치)</li>
+<h2>OPI와 TAI는 무엇이 다른가요</h2>
+<p>둘 다 성과급이지만 계산 기준과 결정 방식이 다릅니다. 지급 시기와 최근 지급률은 사이트 계산기와 같은 데이터(노조 공지 기반 보도)이고, 결정 방식과 퇴직금 반영 여부는 2026년 1월 29일 대법원 판결문(2021다248299)에 적힌 내용입니다. 판결문의 결정 방식은 원고들이 퇴직한 2016~2018년 무렵의 제도를 설명한 것이라, 이후 세부 기준이 바뀌었을 수 있습니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>구분</th><th>OPI (초과이익성과급)</th><th>TAI (목표달성장려금)</th></tr></thead>
+<tbody>
+<tr><td>지급 횟수·시기</td><td>연 1회, 통상 1월 말~2월 초</td><td>연 2회, 통상 7월 초·12월 말</td></tr>
+<tr><td>계산 기준</td><td>연봉 대비 %, 상한 ${OPI1_MAX_RATE}%</td><td>월 기본급(상여기초금액) 대비 %</td></tr>
+<tr><td>결정 방식(판결문)</td><td>사업부 경제적 부가가치(EVA)의 20%를 재원으로 배분</td><td>반기마다 사업부문·사업부 성과를 A~D 네 등급으로 평가해 0~100%</td></tr>
+<tr><td>최근 지급률</td><td>2025년 실적분 ${SS_LOW.rate}~${SS_MX.rate}%</td><td>2026년 상반기 ${SS_TAI_LOW.rate}~${SS_TAI_TOP.rate}%</td></tr>
+<tr><td>퇴직금(평균임금)</td><td>들어가지 않음</td><td>들어감</td></tr>
+</tbody>
+</table></div>
+<p>한 해 성과급을 합칠 때는 기준이 다르다는 점을 먼저 맞춰야 합니다. 예를 들어 OPI 47%는 연봉의 47%이고, TAI 100%는 한 달 기본급 100%입니다. 두 숫자를 그대로 더하면 안 됩니다.</p>
+
+<h2>2025년 실적분 OPI 사업부별 지급률</h2>
+<p>${OPI_ACTUAL_2025.payDateLabel}에 지급된 2025년 실적분 OPI입니다. 연봉 대비 %이므로 오른쪽 열처럼 연봉 8,000만원이면 세전 금액이 바로 나옵니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>사업부</th><th>연봉 대비</th><th>연봉 8,000만원일 때 세전</th></tr></thead>
+<tbody>
+${OPI_2025_DESC.map((r) => `<tr><td>${r.division}</td><td>${r.rate}%</td><td>${manKo(ssOpiWon(80_000_000, r.rate))}</td></tr>`).join("\n")}
+</tbody>
+</table></div>
+<p>같은 회사 안에서도 최고(MX ${SS_MX.rate}%)와 최저(${SS_LOW.division} ${SS_LOW.rate}%)의 차이가 연봉의 ${SS_MX.rate - SS_LOW.rate}%p입니다. 2026년 실적분 OPI는 2027년 1월 말 전후에 발표되며, 이 글은 발표 전 수치를 추정하지 않습니다. 삼성전자 직원 평균 급여(2025년 사업보고서 1억 5,800만원)와 직급별 연봉은 <a href="/salary-db/samsung-electronics">삼성전자 연봉 정보</a>에서 볼 수 있습니다.</p>
+
+<h2>2026년 상반기 TAI 사업부별 지급률</h2>
+<p>${TAI_ANNOUNCED_DATE} 사내 공지, ${TAI_PAY_DATE} 지급분입니다. TAI는 월 기본급 대비라서 월 기본급 400만원이면 100%는 400만원, 50%는 200만원입니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>사업부</th><th>부문</th><th>월 기본급 대비</th></tr></thead>
+<tbody>
+${TAI_2026_H1_DESC.map((r) => `<tr><td>${r.division}</td><td>${r.group}</td><td>${r.rate}%</td></tr>`).join("\n")}
+</tbody>
+</table></div>
+<p>하반기 TAI는 통상 12월 말에 발표·지급됩니다. 2026년 9월 26일 현재 하반기 지급률은 발표되지 않았습니다.</p>
+
+<h2>연봉별 OPI 세후 금액</h2>
+<p>성과급은 따로 과세되지 않고 그해 연봉과 합쳐 근로소득으로 연말정산됩니다(소득세법 제20조). 아래 표는 사이트 성과급 엔진으로 "연봉만 받을 때"와 "연봉과 OPI를 함께 받을 때"의 연간 결정세액 차이를 구하고, 지방소득세와 4대보험(2026년 요율, 국민연금 기준소득월액 상한 반영)을 더해 뺀 세후 금액입니다. 본인 기본공제 외의 부양가족·카드·연금저축 공제는 넣지 않았습니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>연봉</th><th>DS부문 공통 ${SS_DS.rate}% 세전 → 세후</th><th>VD·생활가전 등 ${SS_VD.rate}% 세전 → 세후</th></tr></thead>
+<tbody>
+${[60_000_000, 80_000_000, 100_000_000].map(ssOpiNetRow).join("\n")}
+</tbody>
+</table></div>
+<p>연봉 1억원이면 OPI ${SS_DS.rate}%(${manKo(SS_1EOK_DS.gross)})에서 세금과 보험료 약 ${manKo(SS_1EOK_DS.totalDeductions)}이 빠져 세후는 약 ${manKo(SS_1EOK_DS.net)}(부담률 ${SS_1EOK_DS.effectiveRate}%)입니다. 같은 비율이라도 연봉이 높을수록 부담률이 올라가는 것은 누진세율 때문입니다. TAI도 같은 방식으로 계산합니다. 월 기본급 400만원·연봉 8,000만원인 직원이 TAI 100%(400만원)를 받으면 세후는 약 ${manKo(SS_TAI_EXAMPLE.net)}입니다. 본인 사업부·연봉으로는 <a href="/calc/samsung-bonus">삼성전자 성과급 계산기</a>에서 바로 계산할 수 있습니다.</p>
+
+<h2>지급 시점을 나누면 세금이 줄어드나요</h2>
+<p>같은 해 안에서는 줄지 않습니다. 소득세는 1~12월 총급여 전체로 연말정산하므로, OPI처럼 1월에 한 번에 받든 TAI처럼 7월과 12월로 나눠 받든 그해 총급여가 같으면 연간 결정세액도 같습니다. 달라지는 것은 다음 세 가지입니다.</p>
+<ul>
+<li><strong>지급 달 원천징수</strong> — 성과급을 받은 달에는 원천징수가 크게 잡힐 수 있지만, 연말정산에서 연간 세액으로 다시 맞춰져 환급이나 추가 납부로 정리됩니다.</li>
+<li><strong>건강보험료 정산</strong> — 회사가 성과급을 포함한 전년도 보수총액을 3월 10일까지 신고하면 공단이 보험료를 다시 계산해 4월분에서 차액을 걷거나 돌려줍니다. 추가로 낼 금액이 그달 보험료 이상이면 회사 신청으로 12회 이내 나눠 낼 수 있습니다.</li>
+<li><strong>해가 바뀌는 경우</strong> — 12월과 이듬해 1월처럼 연도가 달라지면 어느 해 소득으로 잡히느냐에 따라 연간 세액이 달라질 수 있습니다. 같은 해 안의 분할과는 다른 문제입니다.</li>
 </ul>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 메모리 사업부 과장</h2>
-<p>기본급 5,500만원 가정, 메모리 호황기 (2024~2026):</p>
-<ul class="space-y-2 mt-4">
-<li>· OPI 50%: 약 2,750만원 (1월 지급)</li>
-<li>· TAI 100% × 2회: 약 5,500만원 (6월·12월)</li>
-<li>· 영끌 연봉: 5,500 + 8,250 = <strong>약 1억 3,750만원</strong></li>
-<li>· 한계세율 35~38% → 약 4,800~5,200만원 세금</li>
-<li>· 실수령 약 8,500~8,950만원</li>
+<h2>2026 임금협상과 퇴직금 판결로 달라진 점</h2>
+<p>2026년 임금협상은 5월 27일 조합원 투표(찬성 73.7%)로 타결됐습니다(보도 기준). 성과급과 관련된 내용은 다음과 같습니다.</p>
+<ul>
+<li><strong>임금</strong> — 기본인상률 4.1%에 성과인상률 평균 2.1%.</li>
+<li><strong>DS부문 특별경영성과급 신설</strong> — 노사가 합의해 정한 DS부문 사업성과의 10.5%를 재원으로 부문 공통 40%·사업부 60%로 나누고, 세후 금액 전액을 자사주로 지급합니다(3분의 1은 바로 팔 수 있고, 나머지는 1년·2년 매각 제한). 조건이 붙은 10년 제도로, 해당 연도 DS부문 영업이익이 2026~2028년에는 200조원, 2029~2035년에는 100조원 이상이어야 지급됩니다. 2026년 실적이 첫 대상이라 조건을 채우면 2027년 초에 처음 지급되며, 기존 OPI는 그대로 유지됩니다.</li>
+<li><strong>DX부문·CSS사업팀 자사주</strong> — 회사는 임금협상 합의에 따라 2026년 7월 8일 대상 직원 4만9,345명에게 보통주 108만3,434주(처분 예정금액 약 3,445억원)를 지급한다고 공시했습니다.</li>
+</ul>
+<p>퇴직금 기준도 정리됐습니다. 대법원은 2026년 1월 29일 목표 인센티브(TAI)가 근로의 대가인 임금이라 평균임금에 넣어야 한다고 보고 원심을 깨 수원고등법원으로 돌려보냈고, 성과 인센티브(OPI)는 경영성과의 사후 분배에 가까워 평균임금이 아니라고 판단했습니다. 개별 퇴직금 차액은 환송심과 회사 산정을 거쳐 정해집니다. 앞으로 받을 특별경영성과급(자사주)은 <a href="/guides/samsung-vs-sk-hynix-stock-bonus-2026">삼성전자·SK하이닉스 주식 성과급 비교</a>에서 따로 다룹니다.</p>
+
+<h2>자주 묻는 질문</h2>
+<ul>
+<li><strong>Q. OPI는 연봉의 몇 %까지 받을 수 있나요?</strong> — 제도상 상한은 연봉의 ${OPI1_MAX_RATE}%입니다. 2025년 실적분은 MX가 상한인 ${SS_MX.rate}%, DS부문 공통이 ${SS_DS.rate}%였고 가장 낮은 ${SS_LOW.division}은 ${SS_LOW.rate}%였습니다(노조 공지 기반 보도).</li>
+<li><strong>Q. 2026년 하반기 TAI는 언제 발표되나요?</strong> — 통상 12월 말에 발표·지급됩니다. 2026년 9월 26일 현재 하반기 지급률은 나오지 않았으므로, 발표 전 숫자는 전망으로만 보세요.</li>
+<li><strong>Q. OPI와 TAI를 같은 해에 나눠 받으면 세금이 줄어드나요?</strong> — 아닙니다. 그해 총급여가 같으면 연간 결정세액도 같습니다. 달라지는 것은 지급 달 원천징수액과 연말정산 환급·추가 납부의 크기입니다.</li>
+<li><strong>Q. 성과급도 퇴직금 계산에 들어가나요?</strong> — 2026년 1월 대법원 판결 기준으로 TAI는 평균임금에 들어가고 OPI는 들어가지 않습니다. 평균임금에 넣는 상여금은 퇴직 전 12개월 동안 받은 금액의 3/12입니다(고용노동부 퇴직금 계산 예시).</li>
+<li><strong>Q. DS부문 특별경영성과급은 언제 처음 받나요?</strong> — 2026년 실적이 첫 대상입니다. 2026년 DS부문 영업이익이 200조원 이상이어야 지급되고, 조건을 채우면 2027년 초에 처음 받습니다(보도 기준). 조건에 못 미친 해에는 지급되지 않으며, 세후 금액을 전부 자사주로 받는 구조라 현금으로 받는 OPI와 받는 방식도 다릅니다.</li>
 </ul>
 
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/calc/samsung-bonus" class="text-primary underline">삼성 OPI·TAI 시뮬레이터</a></li><li>· <a href="/income-tax-2026" class="text-primary underline">종합소득세 계산기</a></li></ul></div>
+<p class="text-sm">기준일: 2026-09-26. OPI·TAI 지급률과 임금협상 내용은 노조 공지를 인용한 복수 보도로, <a href="/calc/samsung-bonus">삼성전자 성과급 계산기</a>와 같은 데이터입니다. 특별경영성과급의 지급 조건은 보도(지디넷코리아·아시아경제 2026-05-21) 기준입니다. 자사주 지급은 회사 공시, 판결은 <a href="https://www.law.go.kr/판례/(2021다248299)">대법원 2021다248299 판결(국가법령정보센터)</a>, 과세 구조는 <a href="https://www.law.go.kr/법령/소득세법/제20조">소득세법 제20조</a>와 <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=2227&cntntsId=7667">국세청 종합소득세 세율</a>, 건강보험료 정산은 <a href="https://www.law.go.kr/법령/국민건강보험법시행령/제39조">국민건강보험법 시행령 제39조</a>, 상여금의 평균임금 산입은 <a href="https://www.moel.go.kr/retirementpayCal.do">고용노동부 퇴직금 계산</a>을 따랐습니다. 다른 회사 성과급은 <a href="/calc/bonus-calculators">회사별 성과급 계산기 모음</a>에서 볼 수 있습니다.</p>
 `;
+
+// 2차 키퍼(2026-09-26 G2B) — PS·PI 이력은 계산기 데이터(psData)에 회사 실적 발표·회사 인용 보도로 바로잡은 값(PS_HISTORY_GUIDE),
+// 가결 조건은 psData, 세후는 성과급 엔진(2026 요율). sk-hynix-ps-bonus-2026(5월 전망 글)의 검색 의도를 흡수한다.
+// 2026년 실적분 지급률은 확정 전이라 추정하지 않는다. 2025년 실적분 이연 20%는 9/16 가결안에서 2026년 선지급(복수 보도).
+const SK_2025 = psYear(2025);
+const SK_PS_2025 = SK_2025.psRatePct as number;
+const SK_2022 = psYear(2022);
+const SK_NEW = AGREEMENT_2026.newSplit;
+const SK_OLD = AGREEMENT_2026.oldSplit;
+const SK_OLD_DEFERRED = SK_OLD.cashYear1Pct + SK_OLD.cashYear2Pct;
+const SK_POOL_PCT = AGREEMENT_2026.poolRate * 100;
+const SK_PI_MAX = Math.max(...PI_TIERS.map((t) => t.rate));
+const SK_PI_H1 = piRateForMargin(SK_2026_H1_MARGIN_PCT);
+const skPsWon = (salary: number) => (salary / BASIC_RATIO) * (SK_PS_2025 / 100);
+// 2025년 실적분은 2월 지급 80% + 2026년 안 선지급 20% = 전액이 2026년 총급여 — 세후는 PS 전액(원금) 기준
+const skNetRow = (salary: number) => {
+  const total = skPsWon(salary);
+  const r = bonusNet2026(salary, total);
+  return `<tr><td>${manKo(salary)}</td><td>${manKo(total)}</td><td>${manKo(r.totalDeductions)}</td><td>${manKo(r.net)}</td><td>${r.effectiveRate}%</td></tr>`;
+};
 
 const skHynixPs = `
-<p class="lead">SK하이닉스 PS(Profit Sharing, 초과이익분배금)는 연간 영업이익의 10%를 재원으로 임직원에게 분배하는 성과급. 2025년 9월 합의로 기본급 1,000% 상한이 폐지됐고, 2025년분은 <strong>2,964%</strong>(영업이익 47.2조)가 확정 지급됐다. 2026년분 지급 방식은 2026-08-20 잠정합의안(현금 40% + 자사주 60%)이 8/25 총투표에서 부결된 뒤, 수정안(<strong>당해 현금 50% + 자사주 30%, 1·2년 후 자사주 10%씩 이연</strong>)이 2026-09-16 총투표에서 가결(찬성 57.08%)되어 확정됐다.</p>
+<p class="lead">SK하이닉스 PS(초과이익분배금)는 연간 영업이익의 ${SK_POOL_PCT}%를 재원으로 이듬해 초에 기준급 대비 %로 지급하는 성과급입니다. 2025년 실적분 PS는 <strong>${pct(SK_PS_2025)}%</strong>로, 기준급 1,000% 상한이 없어진 뒤 처음 적용된 해였습니다. 이 가운데 ${SK_OLD.cashNowPct}%는 2026년 2월 5일 지급됐고, 2027·2028년에 받기로 했던 나머지 ${SK_OLD_DEFERRED}%도 9월 16일 총투표에서 가결된 합의에 따라 2026년 안에 앞당겨 지급됩니다. 2026년 실적분부터는 이듬해 초 현금 ${SK_NEW.cashNowPct}%·자사주 ${SK_NEW.stockNowPct}%, 1년 뒤와 2년 뒤 자사주 ${SK_NEW.stockYear1Pct}%씩으로 나눠 받습니다. 회사 실적 발표·복수 보도와 사업보고서 기준이며, 기준일은 2026년 9월 26일입니다.</p>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">📊 SK하이닉스 연도별 PS 추이</h2>
-<div class="overflow-x-auto my-6"><table class="w-full text-sm border border-border"><thead class="bg-secondary"><tr><th class="p-3">연도</th><th class="p-3">PS %</th><th class="p-3">영업이익</th></tr></thead><tbody>
-<tr class="border-t"><td class="p-3">2021</td><td class="p-3">1,000% (상한)</td><td class="p-3">약 12.4조</td></tr>
-<tr class="border-t"><td class="p-3">2022</td><td class="p-3">600%</td><td class="p-3">약 6.8조</td></tr>
-<tr class="border-t"><td class="p-3">2023</td><td class="p-3">0% (적자)</td><td class="p-3">-7.7조</td></tr>
-<tr class="border-t"><td class="p-3">2024</td><td class="p-3">1,500%</td><td class="p-3">약 23.4조</td></tr>
-<tr class="border-t"><td class="p-3">2025</td><td class="p-3"><strong>2,964% 확정</strong> (상한 폐지 첫 적용)</td><td class="p-3">47.2조</td></tr>
-<tr class="border-t"><td class="p-3"><strong>2026 (전망)</strong></td><td class="p-3"><strong>상한 없음 — 현금 50%+자사주 50% 신 체계 (9/16 가결)</strong></td><td class="p-3"><strong>컨센서스 약 250조</strong></td></tr>
-</tbody></table></div>
-<p class="text-sm">2026년 상반기 실적만 98.2조원 — 컨센서스(250조) 실현 시 1인 평균 세전 약 7억원 추정 보도가 있다. 최신 수치·신구 체계 비교는 <a href="/calc/sk-hynix-bonus" class="text-primary underline">SK하이닉스 성과급 계산기</a>에서.</p>
+<h2>연도별 PS·PI 지급률</h2>
+<p>PS는 연 1회, PI(생산성 격려금)는 반기마다 받습니다. 아래 표는 실적 연도 기준이고 PS는 이듬해 초에 지급됩니다. 지급률은 기준급 대비 %이며, 사이트 계산기는 기준급을 연봉의 ${BASIC_RATIO}분의 1로 봅니다. 영업이익은 회사 연간 실적 발표 기준입니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>실적 연도</th><th>PS</th><th>PI(연간)</th><th>영업이익</th><th>메모</th></tr></thead>
+<tbody>
+${PS_HISTORY_GUIDE.map((r) => `<tr><td>${r.year}</td><td>${r.psRatePct == null ? "—" : `${pct(r.psRatePct)}%`}</td><td>${r.piTotalPct == null ? "공개 자료 미확인" : `${pct(r.piTotalPct)}%`}</td><td>${opTrilKo(r.opTril)}</td><td>${r.note ?? ""}</td></tr>`).join("\n")}
+</tbody>
+</table></div>
+<p>PS ${pct(SK_PS_2025)}%를 연봉 기준으로 바꾸면 기준급(연봉 ÷ ${BASIC_RATIO}) × ${SK_PS_2025 / 100} = 연봉의 ${SK_PS_2025 / BASIC_RATIO}%입니다. 연봉 1억원이면 PS 총액이 세전 ${manKo(skPsWon(100_000_000))}이라는 뜻입니다. 영업이익이 전년보다 크게 줄어든 2022년에는 PS가 ${pct(SK_2022.psRatePct as number)}%(연봉의 약 ${(SK_2022.psRatePct as number) / BASIC_RATIO}%)로 내려갔고, 적자였던 2023년에는 PS가 없었습니다. 영업이익에 그대로 연동되는 만큼 해마다 편차가 큽니다. 직원 평균 급여는 2025년 사업보고서 기준 1억 8,500만원(직원 3만4,549명)이며, 직급별 연봉과 함께 <a href="/salary-db/sk-hynix">SK하이닉스 연봉 정보</a>에 정리돼 있습니다.</p>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 PS 1,500% 실수령액</h2>
-<p>기본급 6,000만원 직원 PS 1,500% = 9,000만원 추가:</p>
-<ul class="space-y-2 mt-4">
-<li>· 영끌 1억 5,000만원</li>
-<li>· 한계세율 38% 적용 (1억 5천 초과)</li>
-<li>· 종합소득세 + 지방세 + 4대보험 ≈ 5,800만원</li>
-<li>· 실수령 약 9,200만원</li>
+<h2>2026년 실적분부터 바뀌는 지급 방식</h2>
+<p>2026년 임단협은 8월 20일 첫 잠정합의안(현금 40%·자사주 60%)이 8월 25일 총투표에서 부결된 뒤, 9월 9일 마련한 수정안이 9월 16일 총투표에서 찬성 57.08%로 가결됐습니다. 새 방식은 2026년 실적분(2027년 초 지급)부터 적용됩니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>지급 시점</th><th>2025년 실적분까지</th><th>2026년 실적분부터</th></tr></thead>
+<tbody>
+<tr><td>이듬해 초</td><td>현금 ${SK_OLD.cashNowPct}%</td><td>현금 ${SK_NEW.cashNowPct}% + 자사주 ${SK_NEW.stockNowPct}%</td></tr>
+<tr><td>1년 뒤</td><td>현금 ${SK_OLD.cashYear1Pct}%</td><td>자사주 ${SK_NEW.stockYear1Pct}%</td></tr>
+<tr><td>2년 뒤</td><td>현금 ${SK_OLD.cashYear2Pct}%</td><td>자사주 ${SK_NEW.stockYear2Pct}%</td></tr>
+<tr><td>주식 선택</td><td>없음</td><td>현금 몫을 10% 단위로 주식 전환 가능(전액 주식 가능)</td></tr>
+</tbody>
+</table></div>
+<p>2025년 실적분의 이연분은 예외입니다. 1년 뒤와 2년 뒤(2027·2028년)에 ${SK_OLD.cashYear1Pct}%씩 받기로 했던 ${SK_OLD_DEFERRED}%를 이번 합의로 2026년 안에 한꺼번에 앞당겨 지급하기로 했습니다(서울신문·이투데이·머니투데이 2026-09-16 보도). 제도가 바뀌는 과정의 혼선을 줄이기 위한 조치로 보도됐습니다.</p>
+<p>임금은 ${AGREEMENT_2026.wageIncreasePct}% 인상이 유지됐고, 회사가 적자를 내면 임금 일부(보도상 최대 ${AGREEMENT_2026.deficitWageDeferralMaxPct}%)를 뒤로 미뤄 지급할 수 있다는 조항이 들어갔습니다. PS 재원(영업이익의 ${SK_POOL_PCT}%)과 상한 폐지는 그대로입니다. 현금·주식 비중에 따라 결과가 어떻게 갈리는지는 <a href="/guides/sk-hynix-ps-cash-vs-stock-scenarios-2026">SK하이닉스 PS 현금·주식 시나리오</a>에서 따로 비교합니다.</p>
+
+<h2>PS ${pct(SK_PS_2025)}%는 세후 얼마인가요</h2>
+<p>2025년 실적분은 옛 방식이라 PS의 ${SK_OLD.cashNowPct}%가 2026년 2월에 현금으로 들어왔고, 2027·2028년에 받기로 했던 나머지 ${SK_OLD_DEFERRED}%도 2026년 안에 앞당겨 받습니다. PS 전액을 2026년에 받으므로 모두 2026년 총급여에 더해 연말정산됩니다. 아래 표는 PS 전액을 연봉에 더해 사이트 성과급 엔진(2026년 요율, 국민연금 기준소득월액 상한 반영)으로 계산한 세후입니다. 조기 지급분에 이자를 더하는지 같은 세부 조건은 보도마다 달라 원금만 넣었고, PI 등 다른 성과급과 본인 기본공제 외의 공제도 넣지 않았습니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>연봉</th><th>PS 총액(2026년 지급)</th><th>세금·보험료</th><th>세후</th><th>부담률</th></tr></thead>
+<tbody>
+${[60_000_000, 80_000_000, 100_000_000, 120_000_000].map(skNetRow).join("\n")}
+</tbody>
+</table></div>
+<p>연봉이 높을수록 부담률이 올라가는 것은 성과급이 더해지면서 과세표준의 윗부분이 35~38% 구간에 걸리기 때문입니다. 2월과 선지급 때 떼는 원천징수는 지급할 때마다 따로 계산되지만, 연말정산에서 1년치 총급여 기준 세액으로 다시 맞춰집니다. 본인 연봉과 영업이익 시나리오로는 <a href="/calc/sk-hynix-bonus">SK하이닉스 성과급 계산기</a>에서 바로 확인할 수 있습니다.</p>
+
+<h2>2026년 실적분 PS는 언제, 어떻게 정해지나요</h2>
+<p>재원은 2026년 연간 영업이익의 ${SK_POOL_PCT}%이고, 연간 실적이 확정되는 2027년 초에 지급률이 정해집니다. 2026년 9월 26일 현재 연간 실적이 나오지 않았으므로 이 글은 2026년 실적분 지급률을 추정하지 않습니다. 영업이익을 바꿔 가며 본인 몫을 가늠하려면 계산기의 시나리오를 쓰면 됩니다.</p>
+<p>PI는 반기 영업이익률 구간으로 정해집니다. 보도된 기준은 ${PI_TIERS.filter((t) => t.rate > 0).map((t) => `영업이익률 ${t.minMarginPct}% 이상 ${t.rate}%`).join(", ")}, 그 아래는 0%입니다. 회사가 발표한 2026년 영업이익률은 1분기 ${SK_2026_Q.q1.marginPct}%, 2분기 ${SK_2026_Q.q2.marginPct}%(상반기 합산 약 ${SK_2026_H1_MARGIN_PCT}%)로 30%를 크게 넘으므로, 이 구간 기준을 적용하면 상반기 PI는 최대치인 ${SK_PI_H1}%입니다. 상반기 PI는 7월 30일 지급 예정으로 보도됐습니다(파이낸셜뉴스 2026-07-26). 하반기 PI는 2027년 1월께 정해집니다.</p>
+
+<h2>PS는 퇴직금에 들어가나요</h2>
+<p>들어가지 않는다는 판결이 나왔습니다. 대법원은 2026년 2월 12일 SK하이닉스 퇴직자 사건(2021다219994)에서, 생산량·영업이익 등 경영성과에 따라 연도별 노사합의로 지급해 온 성과급은 평균임금 산정의 기초가 되는 임금이 아니라고 본 원심을 확정했습니다. 취업규칙에 지급 규정이 없고 2001년과 2009년에는 노사합의가 없어 지급되지 않았다는 점, 영업이익은 근로 외 요인의 영향이 크다는 점이 근거였습니다.</p>
+<p>다만 이 사건은 2016년 2월에 퇴직한 직원들이 2015년에 받은 성과급, 즉 해마다 노사합의로 지급 여부와 기준을 정하던 시기의 경영성과급(당시에도 PI·PS라는 이름으로 지급)을 다룬 것입니다. 영업이익의 ${SK_POOL_PCT}%를 재원으로 하고 2025년 노사 합의로 상한을 없앤 지금의 PS 제도를 직접 판단한 것은 아니므로, 퇴직을 앞두고 있다면 회사의 퇴직금 산정 기준을 확인하는 것이 좋습니다.</p>
+<p>같은 쟁점에서 삼성전자 목표 인센티브(TAI)는 평균임금에 넣어야 한다는 판결(2026년 1월 29일)이 나왔는데, 지급 의무가 취업규칙 등으로 미리 정해져 있었는지와 근로 제공과 얼마나 직접 관련되는지가 결론을 갈랐습니다. 퇴직금은 평균임금 × 30일 × 근속연수로 계산하며, 상세 구조는 <a href="/tools/finance/severance">퇴직금 세금 계산기</a>에서 볼 수 있습니다.</p>
+
+<h2>자주 묻는 질문</h2>
+<ul>
+<li><strong>Q. PS ${pct(SK_PS_2025)}%는 연봉의 몇 %인가요?</strong> — 기준급을 연봉의 ${BASIC_RATIO}분의 1로 보는 계산기 가정이면 연봉의 ${SK_PS_2025 / BASIC_RATIO}%입니다. 연봉 1억원이면 세전 ${manKo(skPsWon(100_000_000))}입니다. 그중 ${SK_OLD.cashNowPct}%는 2026년 2월에 지급됐고, 나머지 ${SK_OLD_DEFERRED}%도 9월 16일 가결된 합의로 2026년 안에 앞당겨 지급됩니다(보도 기준).</li>
+<li><strong>Q. 2026년 실적분 PS는 몇 %인가요?</strong> — 아직 정해지지 않았습니다. 2026년 연간 영업이익의 ${SK_POOL_PCT}%가 재원이고 상한이 없으며, 연간 실적이 나오는 2027년 초에 확정됩니다.</li>
+<li><strong>Q. 현금 대신 주식을 더 받을 수 있나요?</strong> — 2026년 실적분부터는 현금 몫 ${SK_NEW.cashNowPct}%를 10% 단위로 주식으로 바꿀 수 있고, 전액을 주식으로 받는 것도 가능합니다.</li>
+<li><strong>Q. PI는 PS와 무엇이 다른가요?</strong> — PI는 반기마다 반기 영업이익률 구간에 따라 기준급의 0~${SK_PI_MAX}%를 받는 성과급이고, PS는 연간 영업이익의 ${SK_POOL_PCT}%를 재원으로 연 1회 받는 성과급입니다. 2026년 상반기는 영업이익률이 30%를 넘어 보도된 구간 기준상 ${SK_PI_H1}%입니다.</li>
+<li><strong>Q. PS는 퇴직금에 반영되나요?</strong> — 2026년 2월 대법원 판결(2021다219994)은 해마다 노사합의로 정하던 2015년 무렵의 SK하이닉스 경영성과급이 평균임금에 들어가지 않는다고 봤습니다. 2025년 이후의 지금 PS 제도를 직접 판단한 판결은 아니므로, 퇴직 전에 회사 산정 기준을 확인하세요.</li>
 </ul>
 
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/salary-db/sk-hynix" class="text-primary underline">SK하이닉스 연봉 상세</a></li><li>· <a href="/tools/finance/bonus" class="text-primary underline">성과급 세금 계산기</a></li></ul></div>
+<p class="text-sm">기준일: 2026-09-26. 영업이익은 SK하이닉스 연간·분기 실적 발표, PS·PI 지급률과 가결 조건은 회사 인용 보도·복수 보도(2022년 PS: 이투데이 2023-02-01, 2025년 실적분 이연분 선지급: 서울신문·이투데이·머니투데이 2026-09-16, 상반기 PI 지급 예정일: 파이낸셜뉴스 2026-07-26) 기준입니다. 본인 몫 계산은 <a href="/calc/sk-hynix-bonus">SK하이닉스 성과급 계산기</a>를 쓰면 됩니다. 판결은 <a href="https://scourt.go.kr/portal/news/NewsViewAction.work?gubun=6&searchOption=&searchWord=&seqnum=2931">대법원 2021다219994 보도자료</a>, 평균임금 정의는 <a href="https://www.law.go.kr/법령/근로기준법/제2조">근로기준법 제2조</a>, 과세 구조는 <a href="https://www.law.go.kr/법령/소득세법/제20조">소득세법 제20조</a>와 <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=2227&cntntsId=7667">국세청 종합소득세 세율</a>을 따랐습니다. 다른 회사는 <a href="/calc/bonus-calculators">회사별 성과급 계산기 모음</a>에서 볼 수 있습니다.</p>
 `;
 
+// 2차 키퍼(2026-09-26 G2B) — 회사별 성과급은 계산기와 같은 bonusData, 세후는 성과급 엔진(2026 요율).
+// 평균 급여는 각 /salary-db 회사 페이지 헤드라인(2025년 사업보고서, 수기 공시 우선·없으면 DART 주입값)과 같다.
+const HY26_PCT = basePct("hyundai", 2026);
+const HY26_FIX = fixedManwon("hyundai", 2026);
+const KIA26_PCT = basePct("kia", 2026);
+const KIA26_FIX = fixedManwon("kia", 2026);
+const LGES_25 = basePct("lgensol", 2025);
+const LGD_25 = basePct("lg-display", 2026); // bonusData 는 지급 연도(2026) — 2025년 실적분
+const POSCO_S_MIN = basePct("posco", 2025); // 직고용(S직군) 흑자 시 최소 경영성과급 — 2026-04 보도
+const HY_CASH = 5_000_000 * (HY26_PCT / 100) + HY26_FIX * 10_000;
+const HY_NET = bonusNet2026(5_000_000 * 18, HY_CASH);
+const GEN_5000 = bonusNet2026(80_000_000, 50_000_000);
+const genNetRow = (bonus: number) => {
+  const r = bonusNet2026(80_000_000, bonus);
+  return `<tr><td>${manKo(bonus)}</td><td>${manKo(r.totalDeductions)}</td><td>${manKo(r.net)}</td><td>${r.effectiveRate}%</td></tr>`;
+};
+
 const lgPoscoBonus = `
-<p class="lead">LG전자·LG에너지솔루션·현대차·기아·포스코의 성과급 구조 비교. LG·현대차는 분기·반기 단위, 포스코는 연 1회. 사업부별 차등이 가장 큰 곳은 LG전자(VS·HE·MC 사업부별 ±50% 격차), 가장 균등한 곳은 포스코.</p>
+<p class="lead">2026년 9월 현재 확정된 성과급을 보면 현대차(8월 31일 가결)와 기아(8월 28일 가결)는 모두 <strong>월 기본급 ${HY26_PCT}% + 정액 ${pct(HY26_FIX)}만원 + 주식</strong>이고, LG에너지솔루션은 2025년 실적분으로 기본급의 최대 ${LGES_25}%, LG디스플레이는 ${LGD_25}%를 지급했습니다. LG전자는 사업본부별로 따로 정해 전사 공통 지급률이 알려져 있지 않고, 포스코는 사업회사 포스코와 지주사 POSCO홀딩스를 나눠 봐야 합니다. 보도·공시 기준이며 기준일은 2026년 9월 26일입니다.</p>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">📊 4사 성과급 구조</h2>
-<div class="overflow-x-auto my-6"><table class="w-full text-sm border border-border"><thead class="bg-secondary"><tr><th class="p-3">회사</th><th class="p-3">주기</th><th class="p-3">한도</th><th class="p-3">사업부 차등</th></tr></thead><tbody>
-<tr class="border-t"><td class="p-3">LG전자</td><td class="p-3">분기 + 연말</td><td class="p-3">기본급 600~1,200%</td><td class="p-3">크다(VS·HE)</td></tr>
-<tr class="border-t"><td class="p-3">LG엔솔</td><td class="p-3">분기 + 연말</td><td class="p-3">기본급 400~1,000%</td><td class="p-3">중간</td></tr>
-<tr class="border-t"><td class="p-3">현대차·기아</td><td class="p-3">분기 + 연말</td><td class="p-3">기본급 500~1,000%</td><td class="p-3">작다(통합)</td></tr>
-<tr class="border-t"><td class="p-3">포스코</td><td class="p-3">연 1회</td><td class="p-3">기본급 200~700%</td><td class="p-3">작다(균등)</td></tr>
-</tbody></table></div>
+<h2>회사별 최근 확정 성과급 한눈에</h2>
+<p>성과급 정률(%)은 회사마다 기준이 다를 수 있지만, 아래 표의 정률은 모두 월 기본급 대비입니다. 그래서 같은 ${HY26_PCT}%라도 기본급이 높은 사람이 더 받습니다. 평균 급여는 각 회사 2025년 사업보고서 기준으로 사이트 회사 페이지에 표시된 값입니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>회사</th><th>최근 확정 성과급</th><th>2025년 평균 급여</th><th>더 보기</th></tr></thead>
+<tbody>
+<tr><td>현대자동차</td><td>2026 임금협상: ${HY26_PCT}% + ${pct(HY26_FIX)}만원 + 주식 15주</td><td>1억 3,100만원</td><td><a href="/calc/hyundai-bonus">계산기</a> · <a href="/salary-db/hyundai">연봉</a></td></tr>
+<tr><td>기아</td><td>2026 임단협: ${KIA26_PCT}% + ${pct(KIA26_FIX)}만원 + 자사주 47주</td><td>1억 3,400만원</td><td><a href="/calc/kia-bonus">계산기</a> · <a href="/salary-db/kia">연봉</a></td></tr>
+<tr><td>LG에너지솔루션</td><td>2025년 실적분 최대 ${LGES_25}% (2026년 2월 6일 지급)</td><td>1억 1,200만원</td><td><a href="/calc/lg-energy-bonus">계산기</a> · <a href="/salary-db/lgensol">연봉</a></td></tr>
+<tr><td>LG디스플레이</td><td>2025년 실적분 ${LGD_25}% (2026년 2월 지급)</td><td>8,600만원</td><td><a href="/calc/lg-display-bonus">계산기</a></td></tr>
+<tr><td>LG전자</td><td>사업본부·고과별 상이 (전사 공통값 미공개)</td><td>1억 1,700만원</td><td><a href="/salary-db/lgelectronics">연봉</a></td></tr>
+<tr><td>포스코</td><td>직고용(S직군) 기준: 흑자 시 경영성과급 최소 ${POSCO_S_MIN}% (2026년 4월 보도)</td><td>POSCO홀딩스 1억 4,700만원</td><td><a href="/calc/posco-bonus">계산기</a> · <a href="/salary-db/posco">연봉</a></td></tr>
+</tbody>
+</table></div>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 사례 — 직장인 6,000만원 + 성과급 800%</h2>
-<ul class="space-y-2 mt-4">
-<li>· 성과급: 6,000만 × 800% = 4억 8천만 (8개월 분) — 단, 800%는 월급 기준이라 약 4,000만원</li>
-<li>· 영끌: 약 1억</li>
-<li>· 한계세율 35% → 약 2,700만원 세금</li>
-<li>· 실수령 약 7,300만원</li>
+<h2>현대차·기아 2026 임단협 — 같은 ${HY26_PCT}%, 다른 구성</h2>
+<p>두 회사 모두 조합원 찬반투표를 거쳐 8월 말에 타결됐습니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>항목</th><th>현대자동차</th><th>기아</th></tr></thead>
+<tbody>
+<tr><td>가결</td><td>8월 31일, 찬성 61.55%(투표율 78.63%)</td><td>8월 28일, 찬성 64.1%</td></tr>
+<tr><td>기본급</td><td>월 10만원 인상(호봉승급분 포함)</td><td>월 10만원 인상</td></tr>
+<tr><td>정률</td><td>성과금 ${HY26_PCT}%</td><td>경영성과금 300% + 품질향상 격려금 100%</td></tr>
+<tr><td>정액</td><td>${pct(HY26_FIX)}만원</td><td>${pct(KIA26_FIX)}만원 (경영성과금 400만·품질향상 격려금 470만·오토카 어워즈 기념 400만)</td></tr>
+<tr><td>주식</td><td>15주</td><td>자사주 47주</td></tr>
+<tr><td>전년(2025) 합의</td><td>${basePct("hyundai", 2025)}% + ${pct(fixedManwon("hyundai", 2025))}만원 + 30주</td><td>${basePct("kia", 2025)}% + ${pct(fixedManwon("kia", 2025))}만원 + 53주</td></tr>
+</tbody>
+</table></div>
+<p>숫자는 같아도 기아는 ${KIA26_PCT}%를 경영성과금과 품질향상 격려금으로 나눴고 주식 수가 다릅니다. 정률 부분은 월 기본급에 비례하고 정액은 모두에게 같으므로, 기본급이 낮을수록 정액이 차지하는 비중이 커집니다. 주식은 지급일 주가에 따라 가치가 달라집니다. 현대차는 이 밖에 복지포인트 50만원도 받습니다.</p>
+
+<h2>LG 계열은 회사마다 따로 정합니다</h2>
+<p>LG 계열사는 회사별 실적에 따라 성과급을 따로 정합니다. 2026년 초에 지급된 2025년 실적분을 보면 차이가 큽니다.</p>
+<ul>
+<li><strong>LG에너지솔루션</strong> — 기본급의 최대 ${LGES_25}%를 2026년 2월 6일 지급했습니다. 2024년 실적분 ${basePct("lgensol", 2024)}%보다는 늘었지만, 2022년 실적분 870~900%, 2023년 실적분 340~380%(보도)와 비교하면 크게 줄었습니다. 연도별 추이는 <a href="/guides/lgensol-wage-negotiation-2026">LG에너지솔루션 임금협상·성과급 정리</a>에 있습니다.</li>
+<li><strong>LG디스플레이</strong> — 4년 만에 흑자로 돌아서면서 전 사업부에 기본급의 ${LGD_25}%를 지급했습니다(2026년 2월).</li>
+<li><strong>LG전자</strong> — 성과급이 사업본부와 개인 고과에 따라 달라, 전사 공통 지급률로 보도된 값이 없습니다. 평균 급여(2025년 1억 1,700만원)와 직급별 초임은 <a href="/salary-db/lgelectronics">LG전자 연봉 정보</a>에서 볼 수 있습니다.</li>
 </ul>
 
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/tools/finance/bonus" class="text-primary underline">성과급 세금 계산</a></li></ul></div>
+<h2>포스코는 사업회사와 지주사를 나눠 봐야 합니다</h2>
+<p>사이트의 포스코 연봉 페이지는 상장사인 POSCO홀딩스(지주사, 직원 524명)의 공시를 씁니다. 2025년 사업보고서 평균 급여는 1억 4,700만원입니다. 포항·광양제철소를 운영하는 철강 사업회사 포스코는 별도 법인이므로, 두 회사의 급여와 성과급을 같은 것으로 보면 안 됩니다.</p>
+<p>포스코 성과급으로 가장 최근에 구체적인 숫자가 나온 것은 2026년 4월 협력사 직원 직고용 로드맵입니다. 보도(국민일보·부산일보 2026-04-21)에 따르면 직고용 대상(S직군)에게 업적급(상여금) 400%를 매달 나눠 지급하고, 포스코가 영업이익 흑자를 내면 경영성과급을 최소 ${POSCO_S_MIN}% 지급하는 기준이 제시됐습니다. 기존 정규직의 연간 지급률로 공식 발표된 값은 아닙니다. 업황별로 가늠하려면 <a href="/calc/posco-bonus">포스코 성과급 계산기</a>를 쓰면 됩니다.</p>
+
+<h2>성과급 세후 환산 — 연봉 8,000만원 기준</h2>
+<p>회사가 달라도 세금 계산은 같습니다. 성과급은 연봉과 합쳐 근로소득으로 과세되고(소득세법 제20조), 지방소득세와 4대보험이 붙습니다. 아래는 연봉 8,000만원인 직원이 성과급을 받을 때 사이트 성과급 엔진(2026년 요율, 국민연금 기준소득월액 상한 반영)으로 계산한 값입니다. 본인 기본공제 외의 공제는 넣지 않았습니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>성과급 세전</th><th>세금·보험료</th><th>세후</th><th>부담률</th></tr></thead>
+<tbody>
+${[10_000_000, 20_000_000, 30_000_000, 50_000_000].map(genNetRow).join("\n")}
+</tbody>
+</table></div>
+<p>현대차 2026년 조건을 예로 들면, 월 기본급 500만원인 직원의 현금 성과급은 ${HY26_PCT}%인 ${manKo(5_000_000 * (HY26_PCT / 100))}에 정액 ${pct(HY26_FIX)}만원을 더한 ${manKo(HY_CASH)}입니다. 현대차 계산기처럼 연봉을 월 기본급의 18배(${manKo(5_000_000 * 18)})로 두면 세후는 약 ${manKo(HY_NET.net)}입니다(주식·복지포인트 제외). 표의 5,000만원 줄에서 부담률이 뛰는 것은 과세표준 일부가 35% 구간에 들어가기 때문이며, 35%는 그 구간에 들어간 금액에만 적용됩니다.</p>
+
+<h2>자주 묻는 질문</h2>
+<ul>
+<li><strong>Q. 현대차와 기아의 2026 성과급은 같은가요?</strong> — 정률 ${HY26_PCT}%와 정액 ${pct(HY26_FIX)}만원은 같습니다. 기아는 ${KIA26_PCT}%를 경영성과금 300%와 품질향상 격려금 100%로 나눴고, 주식은 현대차 15주, 기아 자사주 47주입니다.</li>
+<li><strong>Q. 포스코 성과급 ${POSCO_S_MIN}%는 모든 직원 기준인가요?</strong> — 아닙니다. 2026년 4월 보도된 협력사 직고용(S직군) 처우 기준으로, 포스코가 영업이익 흑자를 낼 때 최소 ${POSCO_S_MIN}%를 지급한다는 조건입니다.</li>
+<li><strong>Q. LG전자 성과급은 얼마인가요?</strong> — 사업본부와 개인 고과에 따라 달라 전사 공통 지급률로 확인된 값이 없습니다. 회사 발표나 사내 공지로 본인 사업본부 지급률을 확인해야 합니다.</li>
+<li><strong>Q. 성과급이 많으면 세율이 35%로 뛰나요?</strong> — 누진세율은 과세표준 가운데 해당 구간에 들어간 부분에만 적용됩니다. 연봉 8,000만원에 성과급 5,000만원이면 과세표준 일부가 35% 구간에 걸리지만, 성과급 전체에 대한 세금·보험료 부담률은 약 ${GEN_5000.effectiveRate}%입니다.</li>
+</ul>
+
+<p class="text-sm">기준일: 2026-09-26. 회사별 성과급은 보도(현대차: 머니투데이·한국경제 2026-09-01, 기아: 헤럴드경제 2026-08-25·ZDNet 2026-08-28, LG에너지솔루션: 뉴스웨이 2026-02-04, LG디스플레이: 한국경제 2026-01-29, 포스코: 국민일보·부산일보 2026-04-21)로, 각 회사 계산기와 같은 데이터입니다. 평균 급여는 금융감독원 전자공시 사업보고서 기준입니다. 과세 구조는 <a href="https://www.law.go.kr/법령/소득세법/제20조">소득세법 제20조</a>, 세율은 <a href="https://www.law.go.kr/법령/소득세법/제55조">소득세법 제55조</a>와 <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=2227&cntntsId=7667">국세청 종합소득세 세율</a>을 따랐습니다. 다른 회사는 <a href="/calc/bonus-calculators">회사별 성과급 계산기 모음</a>과 <a href="/insights/bonus-payout-history-2026">대기업 성과급 실지급률 리포트</a>에서 볼 수 있습니다.</p>
 `;
 
 const itRsuVsCash = `
@@ -425,7 +668,7 @@ const bracket8Step = `
 <div class="overflow-x-auto"><table class="w-full text-sm">
 <thead><tr><th>과세표준</th><th>세율</th><th>누진공제</th><th>구간 상단까지 세액</th><th>지방소득세 포함</th></tr></thead>
 <tbody>
-${BRACKET_ROWS.map((b, i) => `<tr><td>${i === 0 ? `${manwon(b.limit)} 이하` : b.taxAtLimit === null ? `${manwon(b.lower)} 초과` : `${manwon(b.lower)} 초과 ${manwon(b.limit)} 이하`}</td><td><strong>${pct(b.rate)}</strong></td><td>${b.deduction ? manwon(b.deduction) : "—"}</td><td>${b.taxAtLimit === null ? "—" : manwon(b.taxAtLimit)}</td><td>${pct(b.rate * (1 + INSURANCE_RATES_2026.LOCAL_INCOME_TAX_RATIO))}</td></tr>`).join("\n")}
+${BRACKET_ROWS.map((b, i) => `<tr><td>${i === 0 ? `${manwon(b.limit)} 이하` : b.taxAtLimit === null ? `${manwon(b.lower)} 초과` : `${manwon(b.lower)} 초과 ${manwon(b.limit)} 이하`}</td><td><strong>${ratePct(b.rate)}</strong></td><td>${b.deduction ? manwon(b.deduction) : "—"}</td><td>${b.taxAtLimit === null ? "—" : manwon(b.taxAtLimit)}</td><td>${ratePct(b.rate * (1 + INSURANCE_RATES_2026.LOCAL_INCOME_TAX_RATIO))}</td></tr>`).join("\n")}
 </tbody>
 </table></div>
 <p>누진공제는 과세표준 전체에 그 구간 세율을 곱했을 때 아래 구간에서 더 매겨진 세금을 한 번에 빼 주는 숫자입니다. 과세표준 1억원이면 1억원 × 35% − 1,544만원 = ${manwon(TAX_EXAMPLES[4].tax)}이고, 이는 8,800만원까지의 세액 ${manwon(TAX_EXAMPLES[2].tax)}에 초과분 1,200만원의 35%인 420만원을 더한 값과 같습니다. 법조문도 '구간 상단까지 세액 + 초과 금액 × 세율' 방식으로 적혀 있습니다.</p>
@@ -1395,10 +1638,10 @@ const bonusPropertySell = `
 
 export const hotBonusTaxComplete: Guide[] = [
   // 영역 A — 성과급 종류·구조 10편
-  { slug: "bonus-vs-incentive-vs-allowance-2026", title: "성과급 vs 인센티브 vs 격려금 — 통상임금 포함 평생 1억 차이", description: "정기상여·경영성과급·격려금·RSU 4종 법적 성격 + 세금 + 통상임금 포함 여부. 통상임금 포함되면 연차수당·퇴직금 25% 증가, 평생 임금 1억+ 차이.", category: "연봉", tags: ["성과급", "인센티브", "통상임금", "퇴직금", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonusVsIncentive, lang: "ko" },
-  { slug: "samsung-opi-tai-complete-2026", title: "삼성전자 OPI + TAI 완벽 가이드 — 메모리 호황기 영끌 1억 3,750만", description: "OPI(1월·사업부 영업이익 연동 최대 50%) + TAI(6월·12월·목표달성 최대 100%). 메모리 사업부 호황기 합산 250%, 기본급 5,500만 직원 영끌 1.37억.", category: "연봉", tags: ["삼성전자", "OPI", "TAI", "성과급", "메모리", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: samsungOpiTai, lang: "ko" },
-  { slug: "sk-hynix-ps-history-2026-prospect", title: "SK하이닉스 PS 연도별 추이 — 2026 PS 2,000% 가능?", description: "2021 1,000% → 2023 적자 0% → 2024 1,500% → 2025 1,500%+ → 2026 2,000% 가능. 기본급 6,000만 직원 PS 1,500% 시 실수령 9,200만원.", category: "연봉", tags: ["SK하이닉스", "PS", "성과급", "HBM", "메모리", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: skHynixPs, lang: "ko" },
-  { slug: "lg-hyundai-posco-bonus-2026", title: "LG·현대차·기아·포스코 성과급 구조 비교 — 사업부 차등 최대 50%", description: "LG전자 사업부별 ±50% 격차, 현대차·기아 통합 균등, 포스코 연 1회 균등. 직장인 6,000만 + 800% 성과급 시 실수령 7,300만원.", category: "연봉", tags: ["LG전자", "현대차", "포스코", "성과급", "사업부", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: lgPoscoBonus, lang: "ko" },
+  { slug: "bonus-vs-incentive-vs-allowance-2026", title: "성과급·인센티브·격려금 차이 — 통상임금·퇴직금", description: "세금은 모두 근로소득으로 같고, 통상임금·퇴직금 반영 여부는 지급 방식이 가릅니다. 2024년 전원합의체·2026년 대법원 판결 기준.", metaDescription: "성과급·인센티브·격려금은 모두 근로소득으로 과세됩니다. 통상임금과 퇴직금(평균임금)에 들어가는지는 지급 방식에 따라 갈리며, 2024년 전원합의체와 2026년 삼성전자·SK하이닉스 판결 기준으로 정리했습니다.", category: "연봉", tags: ["성과급", "인센티브", "격려금", "통상임금", "퇴직금", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-30", views: 0, content: bonusVsIncentive, lang: "ko" },
+  { slug: "samsung-opi-tai-complete-2026", title: "삼성전자 OPI·TAI 2026 — 사업부별 지급률·세후", description: "OPI는 연봉의 최대 50%, TAI는 월 기본급 대비 반기 지급. 2025년 실적분 OPI·2026년 상반기 TAI 사업부별 지급률과 연봉별 세후.", metaDescription: "삼성전자 OPI(연봉의 최대 50%, 연 1회)와 TAI(월 기본급 대비, 연 2회)의 차이, 2025년 실적분 OPI·2026년 상반기 TAI 사업부별 지급률, 연봉별 세후와 임금협상 변경점을 정리했습니다.", category: "연봉", tags: ["삼성전자", "OPI", "TAI", "성과급", "임금협상", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-30", views: 0, content: samsungOpiTai, lang: "ko" },
+  { slug: "sk-hynix-ps-history-2026-prospect", title: "SK하이닉스 PS 연도별 지급률과 2026 지급 방식", description: "PS 2021년 1,000% → 2023년 0% → 2025년 2,964%(2026년 지급). 2026년 실적분부터 현금 50%·자사주 30%·이연 20%, 연봉별 세후.", metaDescription: "SK하이닉스 PS 연도별 지급률과 2025년 실적분 2,964%의 연봉별 세후, 9월 16일 가결된 2026년 실적분 지급 방식(현금 50%·자사주 30%·이연 20%), 퇴직금 반영 여부를 정리했습니다.", category: "연봉", tags: ["SK하이닉스", "PS", "PI", "성과급", "임단협", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-30", views: 0, content: skHynixPs, lang: "ko" },
+  { slug: "lg-hyundai-posco-bonus-2026", title: "LG·현대차·기아·포스코 성과급 비교 2026", description: "현대차·기아 400%+1,270만원, LG엔솔 최대 75%·LG디스플레이 150%(2025년 실적분), 포스코 구분법과 세후 환산.", metaDescription: "현대차·기아 2026 임단협 성과급(400%+정액 1,270만원+주식), LG에너지솔루션 최대 75%·LG디스플레이 150%, LG전자와 포스코의 지급 구조를 비교하고 연봉 8,000만원 기준 세후를 계산했습니다.", category: "연봉", tags: ["현대차", "기아", "LG에너지솔루션", "포스코", "성과급", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-30", views: 0, content: lgPoscoBonus, lang: "ko" },
   { slug: "it-rsu-vs-cash-bonus-2026", title: "네이버·카카오·쿠팡 RSU vs 현금 보너스 — 5,000만 RSU 175만 유리", description: "네이버 4년 베스팅 즉시 매도 비과세, 카카오 5년 25%, 쿠팡 미국 22% 양도세, 토스 비상장 IPO lockup. RSU 5,000만 vs 현금 175만 유리 (주가 변동 리스크 별개).", category: "주식", tags: ["네이버", "카카오", "쿠팡", "RSU", "현금보너스", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: itRsuVsCash, lang: "ko" },
   { slug: "foreign-bonus-structure-2026", title: "외국계 보너스 — 구글·아마존·메타·MS 한국지사 RSU 구조", description: "구글 Alphabet RSU + 사인온, 아마존 분할 사인온 + 4년 비균등 RSU, 메타·MS 분기 성과 + RSU. 외국 모회사 직접 지급 시 본인 종소세 신고 의무.", category: "주식", tags: ["외국계", "구글", "아마존", "메타", "RSU", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: foreignBonus, lang: "ko" },
   { slug: "year-end-encouragement-vs-bonus-2026", title: "연말 격려금 vs 정기상여 — 통상임금 포함 여부 절세 효과", description: "격려금은 통상임금 미포함 → 퇴직금 영향 0. 정기상여는 통상임금 포함 → 퇴직금 증가. 12월 격려금 1,000만 + IRP 900만 만기 시 142만원 환급.", category: "연봉", tags: ["격려금", "정기상여", "통상임금", "퇴직금", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: yearEndEncouragement, lang: "ko" },
