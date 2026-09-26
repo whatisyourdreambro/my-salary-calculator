@@ -25,22 +25,22 @@ const newlywedAssetTax = `
 `;
 
 const newlywedDidimdolVsBomgijari = `
-<p class="lead">신혼부부 내집마련의 두 축은 디딤돌 대출과 보금자리론. 디딤돌은 1.6~3.3% 초저금리, 보금자리론은 한도 5~10억으로 더 크지만 금리 3.5~4%. 부부 소득·집값별로 어느 게 유리한지 비교합니다.</p>
+<p class="lead">신혼부부 내집마련의 두 축은 디딤돌 대출과 보금자리론. 디딤돌은 연 2.85~4.15%(우대 전)에 신혼가구 한도 3.2억, 보금자리론은 한도 3.6억(생애최초 4.2억)의 고정금리 상품이고 둘 다 주택 6억 이하가 대상. 부부 소득·집값별로 어느 게 유리한지 비교합니다.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 디딤돌 vs 보금자리론 비교</h2>
 <div class="overflow-x-auto my-6"><table class="w-full text-sm border border-border"><thead class="bg-secondary"><tr><th class="p-3">항목</th><th class="p-3">디딤돌</th><th class="p-3">보금자리론</th></tr></thead><tbody>
-<tr class="border-t"><td class="p-3">금리</td><td class="p-3">1.6~3.3%</td><td class="p-3">3.5~4.0%</td></tr>
-<tr class="border-t"><td class="p-3">한도</td><td class="p-3">최대 5억</td><td class="p-3">최대 10억</td></tr>
-<tr class="border-t"><td class="p-3">소득 요건</td><td class="p-3">부부 1.3억 이하</td><td class="p-3">부부 1.3억 이하</td></tr>
-<tr class="border-t"><td class="p-3">집값</td><td class="p-3">9억 이하</td><td class="p-3">12억 이하</td></tr>
-<tr class="border-t"><td class="p-3">자녀 우대</td><td class="p-3">0.2%p × 자녀수</td><td class="p-3">최대 -0.4%p</td></tr>
+<tr class="border-t"><td class="p-3">금리</td><td class="p-3">연 2.85~4.15% (소득·만기별)</td><td class="p-3">고정금리, 주택금융공사 매월 공시</td></tr>
+<tr class="border-t"><td class="p-3">한도</td><td class="p-3">신혼·2자녀 3.2억 (일반 2억)</td><td class="p-3">3.6억 (생애최초 4.2억)</td></tr>
+<tr class="border-t"><td class="p-3">소득 요건</td><td class="p-3">부부 6천 이하 (신혼 8.5천)</td><td class="p-3">부부 7천 이하 (신혼 8.5천)</td></tr>
+<tr class="border-t"><td class="p-3">집값</td><td class="p-3">신혼·2자녀 6억 이하 (일반 5억)</td><td class="p-3">6억 이하</td></tr>
+<tr class="border-t"><td class="p-3">자녀 우대</td><td class="p-3">1명 0.3%p·2명 0.5%p·3명+ 0.7%p</td><td class="p-3">2자녀 0.5%p·3자녀+ 0.7%p</td></tr>
 </tbody></table></div>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 5억 30년 부담 비교</h2>
 <ul class="space-y-2 mt-4">
-<li>· 디딤돌 1.6%: 월 175만원, 총이자 1.3억</li>
-<li>· 보금자리론 3.5%: 월 224만원, 총이자 3.1억</li>
-<li>· <strong>차이: 약 1.8억</strong> — 자격되면 디딤돌 압도적 유리</li>
+<li>· 5억은 두 상품 모두 현행 한도(디딤돌 신혼 3.2억, 보금자리론 3.6억·생애최초 4.2억)를 넘어 그대로 빌릴 수 없음</li>
+<li>· 3억·30년 원리금균등 기준: 연 3.0% 월 약 126만원(총이자 약 1.55억), 연 4.0% 월 약 143만원(총이자 약 2.16억)</li>
+<li>· <strong>금리 1%p 차이 = 30년 총이자 약 6천만원</strong> — 두 상품의 실제 적용 금리(우대 포함)를 같은 금액·만기로 비교</li>
 </ul>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/home-loan" class="text-primary underline">주택담보대출 계산기</a></li></ul></div>
@@ -62,21 +62,21 @@ const youthSubscriptionGapyo5y = `
 `;
 
 const youthSubscriptionAccount = `
-<p class="lead">청년우대형 주택청약종합저축은 만 19~34세 청년이 가입하는 일반 청약통장. 2024년 청년주택드림 청약통장 신설로 청년우대형은 신규 가입 불가. 기존 가입자는 자동 유지 + 만 34세까지 우대.</p>
+<p class="lead">청년우대형 주택청약종합저축은 만 19~34세 청년이 가입하던 청약통장. 2024년 2월 청년주택드림 청약통장 출시로 청년우대형은 신규 가입 불가. 기존 가입자는 별도 신청 없이 청년주택드림으로 자동 전환.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 청년우대형 vs 청년주택드림 비교</h2>
 <ul class="space-y-2 mt-4">
-<li>· 청년우대형: 최대 금리 3.3% + 소득공제 40% × 300만원</li>
-<li>· 청년주택드림(신규): 최대 금리 4.5% + 소득공제 40% × 연 300만원(최대 120만원, 이자 비과세는 연 600만원 납입분) + 최대 3억원(신혼 4억원) 대출 자격</li>
+<li>· 청년우대형: 신규 가입이 끝난 옛 상품 — 기존 가입자는 청년주택드림으로 자동 전환</li>
+<li>· 청년주택드림: 만 19~34세·연소득 5,000만원 이하 무주택자, 출시 발표 최고 연 4.5% + 소득공제 40% × 연 300만원(최대 120만원) + 이자소득 500만원까지 비과세(소득 요건) + 청약 당첨 시 분양대금 최대 80%·2%대 금리 전용 대출 연계</li>
 </ul>
-<p>청년우대형 기존 가입자는 청년주택드림으로 전환 신청 가능. 더 큰 혜택을 위해 전환 권장.</p>
+<p>청년우대형 기존 가입자는 출시일(2024년 2월 21일)에 별도 신청 없이 청년주택드림으로 전환됐습니다. 우대금리·비과세 요건 충족 여부는 가입 은행에서 확인하세요.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 청년주택드림 5년 누적 효과</h2>
 <ul class="space-y-2 mt-4">
 <li>· 월 50만원 × 60개월 = 3,000만원</li>
-<li>· 4.5% 이자: 약 350만원</li>
-<li>· 소득공제 환급: 약 144만원 (연 120만원 공제 × 한계세율 24%, 5년 누적)</li>
-<li>· 청년주택드림 대출 자격: 최대 3억원·신혼 4억원 (1년 + 1,000만원 납입 시)</li>
+<li>· 이자: 가입 기간·우대 조건에 따라 적용 금리가 달라 은행 안내로 확인 (출시 발표 최고 연 4.5%)</li>
+<li>· 소득공제: 총급여 7,000만원 이하 무주택 세대주(또는 세대주의 배우자)면 연 300만원 × 40% = 연 최대 120만원 — 환급액은 본인 한계세율에 따라 달라지고, 연소득 5,000만원 이하라면 대체로 15% 이하 구간</li>
+<li>· 청년주택드림대출: 청약 당첨 시 분양대금 최대 80%·2%대 금리 (2024년 2월 발표 기준, 세부 한도·요건은 주택도시기금 안내 확인)</li>
 </ul>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/calc/housing-subscription" class="text-primary underline">청약 시뮬레이터</a></li></ul></div>
@@ -154,17 +154,17 @@ const newlywedDeduction = `
 `;
 
 const newlywedChildBirthBenefit = `
-<p class="lead">자녀 출산 시 받는 세제·정부 지원: 출산휴가 + 6+6 육아휴직 정부지원금 합산 약 3,200만원, 자녀세액공제 연 25~40만원 + 출산·입양 세액공제(일회성) 30~70만원, 산후조리원 의료비 공제 200만원, 자녀장려금 최대 80만원.</p>
+<p class="lead">자녀 출산 시 받는 세제·정부 지원: 출산휴가 급여와 6+6 부모육아휴직(첫 6개월 통상임금 100%, 월 상한 단계 상향), 자녀세액공제 연 25~40만원 + 출산·입양 세액공제(일회성) 30~70만원, 산후조리원 의료비 공제 200만원 한도, 자녀장려금 자녀 1인당 최대 100만원.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">👶 자녀 1명 출산 시 합산 혜택</h2>
 <ul class="space-y-2 mt-4">
-<li>· <strong>출산휴가 90일</strong> (산모): 통상임금 100%</li>
-<li>· <strong>6+6 육아휴직</strong>: 부부 합산 최대 24개월, 약 3,200만원 정부지원</li>
-<li>· <strong>자녀세액공제 (매년)</strong>: 첫째 25만원·둘째 30만원·셋째+ 40만원/년 (8세 이상 자녀)</li>
+<li>· <strong>출산휴가 90일</strong> (산모): 통상임금 100% (고용보험 지급분은 월 상한 적용)</li>
+<li>· <strong>6+6 육아휴직</strong>: 부모가 함께 쓰면 첫 6개월 통상임금 100%, 월 상한은 1·2개월째 250만원에서 3개월째부터 50만원씩 올라 6개월째 450만원. 부모가 각각 3개월 이상 쓰면 1인 휴직 기간 최대 1년 6개월</li>
+<li>· <strong>자녀세액공제 (매년)</strong>: 첫째 25만원·둘째 30만원·셋째+ 40만원/년 (2026년 귀속 9세 이상 자녀, 2017년생 제외)</li>
 <li>· <strong>출산·입양 세액공제 (일회성)</strong>: 첫째 30만원·둘째 50만원·셋째+ 70만원 (출산·입양한 해 1회)</li>
 <li>· <strong>산후조리원 의료비 공제</strong>: 200만원 한도</li>
-<li>· <strong>자녀장려금</strong>: 가구당 최대 80만원 (소득·자녀수 조건)</li>
-<li>· <strong>출산축하금</strong>: 지자체별 50~500만원</li>
+<li>· <strong>자녀장려금</strong>: 자녀 1인당 최대 100만원 (부부 합산 총소득 7,000만원 미만 등 소득·재산 조건)</li>
+<li>· <strong>출산축하금</strong>: 지자체별로 금액·조건이 달라 주소지 지자체 공고로 확인</li>
 </ul>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/parental-leave" class="text-primary underline">육아휴직 급여 계산기</a></li></ul></div>
@@ -1452,11 +1452,11 @@ const overtimeNightHolidayTax = `
 export const hotNewsExtended: Guide[] = [
   // 청년·신혼부부 10편
   { slug: "newlywed-asset-tax-saving-2026", title: "신혼부부 자산·공제 확인표 — 공동명의와 맞벌이 비교", description: "부부 공제가 자동으로 두 배가 되지 않는 이유. 종부세 인별 9억원·1주택 12억원, 자산 명의와 지출자, 중복 공제 조건을 구분합니다.", category: "세금", tags: ["신혼부부", "절세", "공동명의", "증여세", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-09", views: 0, content: newlywedAssetTax, lang: "ko" },
-  { slug: "newlywed-didimdol-bomgijari-2026", title: "신혼부부 디딤돌 vs 보금자리론 — 5억 30년 시 1.8억 절감", description: "디딤돌 1.6%·한도 5억 vs 보금자리론 3.5%·한도 10억. 부부 소득·집값별 유리한 상품 선택.", category: "부동산", tags: ["신혼부부", "디딤돌", "보금자리론", "주택대출", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: newlywedDidimdolVsBomgijari, lang: "ko" },
+  { slug: "newlywed-didimdol-bomgijari-2026", title: "신혼부부 디딤돌 vs 보금자리론 — 소득·집값·한도 비교", description: "디딤돌 신혼 한도 3.2억 vs 보금자리론 3.6억, 둘 다 주택 6억 이하. 소득 요건별 선택.", category: "부동산", tags: ["신혼부부", "디딤돌", "보금자리론", "주택대출", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: newlywedDidimdolVsBomgijari, lang: "ko" },
   { slug: "youth-subscription-60points-2026", title: "청약 가점 60점+ 5년 안에 만드는 5가지 전략", description: "청약통장 만 17점·무주택 10점·부양가족 25점 = 60점. 청년주택드림 + 특별공급 활용.", category: "부동산", tags: ["청약", "가점", "청년", "특별공급", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: youthSubscriptionGapyo5y, lang: "ko" },
-  { slug: "youth-housing-dream-account-detail-2026", title: "청년우대형 vs 청년주택드림 청약통장 — 4.5% 금리 + 3억 대출", description: "청년주택드림 신규 가입 (만 19~34세) 최대 4.5% + 연 120만원 소득공제 + 최대 3억 대출 자격. 5년 누적 약 494만원 혜택.", category: "부동산", tags: ["청년주택드림", "청약", "청년", "내집마련", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: youthSubscriptionAccount, lang: "ko" },
+  { slug: "youth-housing-dream-account-detail-2026", title: "청년우대형 vs 청년주택드림 청약통장 — 최고 4.5%·전용 대출", description: "청년주택드림(만 19~34세, 연소득 5천 이하) 최고 4.5% 금리 + 연 120만원 소득공제 + 당첨 시 분양가 80% 대출 연계.", category: "부동산", tags: ["청년주택드림", "청약", "청년", "내집마련", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: youthSubscriptionAccount, lang: "ko" },
   { slug: "newlywed-deduction-first-year-2026", title: "신혼부부 첫 연말정산 2026 — 혼인 세액공제 50만원", description: "2026년 혼인신고 시 부부 각자 혼인 세액공제 50만원, 배우자·양가 부모 기본공제는 12월 31일 기준으로 판정합니다.", metaDescription: "2026년에 혼인신고를 했다면 부부 각자 혼인 세액공제 50만원을 받습니다. 배우자·양가 부모 기본공제, 월세·청약 공제, 출산·산후조리원까지 신혼 첫 연말정산 항목을 계산 예시와 정리했습니다.", category: "세금", tags: ["신혼부부", "연말정산", "인적공제", "혼인세액공제", "2026"], level: "초급", publishedDate: "2026-05-23", modifiedDate: "2026-09-30", views: 0, content: newlywedDeduction, lang: "ko" },
-  { slug: "newlywed-child-birth-benefit-2026", title: "자녀 1명 출산 시 정부 지원 3,200만원 — 6+6 + 자녀세액공제 + 산후조리원", description: "출산휴가 90일 + 6+6 부모 육아휴직 3,200만원 + 자녀세액공제 30~70만원 + 산후조리원 200만원 + 자녀장려금 80만원.", category: "세금", tags: ["출산", "자녀", "정부지원", "육아휴직", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: newlywedChildBirthBenefit, lang: "ko" },
+  { slug: "newlywed-child-birth-benefit-2026", title: "자녀 1명 출산 시 정부 지원 총정리 — 6+6 + 자녀세액공제 + 산후조리원", description: "출산휴가 90일 + 6+6 부모육아휴직 + 출산·입양 세액공제 30~70만원 + 산후조리원 200만원 + 자녀장려금 100만원.", category: "세금", tags: ["출산", "자녀", "정부지원", "육아휴직", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: newlywedChildBirthBenefit, lang: "ko" },
   { slug: "youth-3account-combination-2026", title: "청년 3종 조합 — 도약계좌·장기투자 2025년 말 신규 종료", description: "청년도약·청년형 장기투자는 2025-12-31 신규 가입 종료(청년미래적금 참고). 기존 가입자 기준 도약 243만 + 주택드림 약 394만원.", category: "투자", tags: ["청년", "도약계좌", "주택드림", "장기투자", "절세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: youthAccountCombination, lang: "ko" },
   { slug: "youth-k-pass-mass-transit-2026", title: "K-패스 대중교통 환급 — 청년 30% 연 28만원, 저소득층 53%", description: "월 15회+ 대중교통 이용 시 일반 20%·청년 30%·저소득 53% 환급. 청년 월 8만원 사용 시 연 28만원 환급.", category: "기초", tags: ["K-패스", "대중교통", "청년", "환급", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: youthKpass, lang: "ko" },
   { slug: "newlywed-loan-limit-2x-2026", title: "신혼부부 대출 한도 부부 합산 — 단독 대비 2배 가능", description: "부부 합산 DSR 40% + LTV 70%. 부부 연 1.2억 시 8.5억 대출 + 12억 주택 매수 가능. 공동 채무자 리스크 점검 필수.", category: "부동산", tags: ["신혼부부", "대출 한도", "DSR", "LTV", "공동명의", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: newlywedLoanLimit, lang: "ko" },

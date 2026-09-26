@@ -1207,22 +1207,22 @@ const retireBonusFourInsurance = `
 `;
 
 const optionalContinueAfterBonus = `
-<p class="lead">성과급 큰 직원이 퇴직 시 임의계속가입 신청은 거의 무조건 유리. 작년 성과급 큰 보수월액 기준으로 4월 정산금이 부과되지만, 임의계속가입은 직장가입자 시절 보수월액 기준 보험료 유지.</p>
+<p class="lead">성과급 큰 직원이 퇴직하면 임의계속가입이 유리한 경우가 많습니다. 지역가입자 보험료는 소득과 재산으로 다시 매겨지지만, 임의계속가입은 퇴직 전 최근 12개월 평균 보수월액 기준 보험료를 최대 36개월 유지합니다.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 임의계속가입 신청</h2>
 <ul class="space-y-2 mt-4">
-<li>· 퇴직 후 2개월 이내 신청</li>
-<li>· 최대 36개월 유지 가능</li>
-<li>· 본인 + 회사 분담분 모두 본인 부담</li>
-<li>· 재산·소득 점수가 아닌 보수월액 기준</li>
+<li>· 지역가입자가 된 뒤 처음 받은 지역보험료 고지서의 납부기한부터 2개월 안에 신청</li>
+<li>· 퇴직 다음 날부터 최대 36개월 유지 가능 (퇴직 전 직장가입자 자격 기간 통산 1년 이상 필요)</li>
+<li>· 보수월액보험료는 본인이 전액 부담하되, 보건복지부 고시로 일부 경감</li>
+<li>· 지역보험료 방식(소득월액 × 보험료율 + 재산 점수)이 아니라 퇴직 전 12개월 평균 보수월액 기준</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 성과급 큰 임원 퇴직</h2>
 <p>연봉 1.5억 + 성과급 5,000만 임원 퇴직 후:</p>
 <ul class="space-y-2 mt-4">
-<li>· <strong>지역가입자</strong>: 재산·소득 점수 → 월 200~300만원</li>
-<li>· <strong>임의계속가입</strong>: 약 월 60만원 × 36개월 = 2,160만원</li>
-<li>· <strong>3년 절감: 약 5,000만원</strong></li>
+<li>· <strong>지역가입자</strong>: 전년도 소득과 주택 등 재산으로 보험료 산정 — 소득·재산이 크면 직장 시절 본인 부담보다 커질 수 있음 (월 상한 4,591,740원)</li>
+<li>· <strong>임의계속가입</strong>: 퇴직 전 12개월 평균 보수월액 기준 보험료를 최대 36개월</li>
+<li>· <strong>절감액은 사람마다 다름</strong> — 건강보험공단에서 지역보험료 예상액을 확인해 두 금액을 비교</li>
 </ul>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/health-insurance-fee-2026" class="text-primary underline">건강보험료 계산</a></li></ul></div>
@@ -1729,26 +1729,26 @@ const executiveSeveranceLimitDeep = `
 `;
 
 const stockOptionTimingBonus = `
-<p class="lead">성과급 + 스톡옵션 행사 동시 받으면 한계세율 45% 가능. 일반 스톡옵션은 행사 시 근로소득세 + 매도 시 양도세 22% 중복. 적격 스톡옵션 시 양도세만. 1억 차익 시 1,860만원 차이.</p>
+<p class="lead">성과급과 스톡옵션 행사이익을 같은 해에 받으면 근로소득이 합산돼 한계세율이 크게 오를 수 있습니다. 일반 스톡옵션은 행사이익에 근로소득세, 매도 차익에는 주식 종류에 따라 양도세가 붙습니다. 벤처기업 적격 스톡옵션은 요건을 채우면 행사 때 과세하지 않고 매도할 때 양도소득세로 과세합니다.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 일반 vs 적격 스톡옵션</h2>
 <div class="overflow-x-auto my-6"><table class="w-full text-sm border border-border"><thead class="bg-secondary"><tr><th class="p-3">구분</th><th class="p-3">행사 시</th><th class="p-3">매도 시</th></tr></thead><tbody>
-<tr class="border-t"><td class="p-3">일반</td><td class="p-3">근로소득세 (한계 35~45%)</td><td class="p-3">양도세 22%</td></tr>
-<tr class="border-t"><td class="p-3">적격 (벤처·중소)</td><td class="p-3 text-emerald-600">과세 없음</td><td class="p-3">양도세 22%만</td></tr>
+<tr class="border-t"><td class="p-3">일반</td><td class="p-3">근로소득세 (성과급과 합산한 한계세율)</td><td class="p-3">양도세 (상장주식 소액주주 장내 매도는 과세 대상 아님)</td></tr>
+<tr class="border-t"><td class="p-3">적격 (벤처기업)</td><td class="p-3 text-emerald-600">과세 없음 (특례 신청 시)</td><td class="p-3">양도소득세 (행사이익 포함, 세율은 주식 종류·보유자별)</td></tr>
 </tbody></table></div>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 1억 차익</h2>
 <ul class="space-y-2 mt-4">
-<li>· <strong>일반</strong>: 근로 3,800만 + 양도 220만 = 4,020만</li>
-<li>· <strong>적격</strong>: 양도세 2,160만만</li>
-<li>· <strong>차이 1,860만</strong></li>
+<li>· <strong>일반</strong>: 행사이익 1억이 근로소득에 더해져 성과급 포함 과세표준의 한계세율로 과세 + 매도 차익은 별도 양도세</li>
+<li>· <strong>적격</strong>: 행사 때 과세 없음, 매도 때 행사이익과 매도 차익을 양도소득으로 과세</li>
+<li>· <strong>차이</strong>: 행사 당시 한계세율과 양도세율의 차이만큼 — 금액은 과세표준과 주식 종류에 따라 따로 계산</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 적격 스톡옵션 요건</h2>
 <ul class="space-y-2 mt-4">
-<li>· 벤처·중소기업 부여</li>
-<li>· 부여 후 2년 + 행사 후 1년 보유</li>
-<li>· 부여 한도 등 조건 충족</li>
+<li>· 벤처기업(인수기업 포함)이 2027년 12월 31일 이전에 부여 — 일반 중소기업은 대상 아님</li>
+<li>· 부여 후 2년 + 행사일부터 1년 보유 (1년 안에 팔거나 증여하면 행사이익을 근로소득 등으로 과세)</li>
+<li>· 행사일부터 거꾸로 2년 동안의 전체 행사가액 5억원 이하 등 조건 충족</li>
 </ul>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/tools/finance/stock-tax" class="text-primary underline">주식 양도세 계산</a></li></ul></div>
@@ -1899,7 +1899,7 @@ export const hotBonusTaxComplete: Guide[] = [
   { slug: "dependent-check-before-bonus-2026", title: "성과급 받기 전 가족 피부양자 점검 — 임대 2,000만 + 박탈", description: "본인 성과급으로 피부양자 자격 직접 영향 없음. 단 가족 임대·연금·이자 합산 2,000만+ 시 박탈 → 지역가입자 월 50~150만 부담.", category: "기초", tags: ["피부양자", "건강보험", "성과급", "지역가입자", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: dependentBeforeBonus, lang: "ko" },
   { slug: "total-income-adjustment-bonus-2026", title: "성과급 + 임대 + 금융 + 사업 종합 정산 — 영끌 2억 시 추가 5,750만", description: "성과급 5,000만 + 임대 3,000만 + 배당 2,000만 + 사업 3,000만 = 영끌 2억. 종소세 4,500만 + 지방세 + 정산 800만 = 약 5,750만 추가.", category: "기초", tags: ["종합과세", "성과급", "임대소득", "정산", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: incomeAdjustmentTotal, lang: "ko" },
   { slug: "retire-with-bonus-4insurance-2026", title: "퇴직금 + 성과급 같은 해 — IRP 이전 시 절세 1,500만", description: "퇴직금 4대보험 면제 + 환산급여 우대. 성과급은 정상 부과. 5억 퇴직금 IRP 이전 시 즉시 세금 0원 → 연금 분할로 1,500만 절감.", category: "기초", tags: ["퇴직금", "성과급", "IRP", "4대보험", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: retireBonusFourInsurance, lang: "ko" },
-  { slug: "optional-continue-after-bonus-2026", title: "성과급 큰 임원 퇴직 후 임의계속가입 — 3년 5,000만 절감", description: "성과급 5,000만 받은 임원 퇴직 후 지역가입자 월 200~300만 vs 임의계속가입 약 월 60만. 36개월 절감 약 5,000만.", category: "기초", tags: ["임의계속가입", "퇴직", "건강보험", "임원", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: optionalContinueAfterBonus, lang: "ko" },
+  { slug: "optional-continue-after-bonus-2026", title: "성과급 큰 임원 퇴직 후 임의계속가입 — 신청 기한·36개월", description: "성과급 큰 임원이 퇴직하면 지역보험료가 커질 수 있다. 임의계속가입은 퇴직 전 12개월 평균 보수월액 기준으로 최대 36개월.", category: "기초", tags: ["임의계속가입", "퇴직", "건강보험", "임원", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: optionalContinueAfterBonus, lang: "ko" },
   // 영역 D — 성과급 절세 심화 10편
   { slug: "irp-max-bonus-year-2026", title: "성과급 + IRP 900만 환급 119만, ISA 전환 합산 1,200만 175만", description: "IRP + 연금저축 합산 900만 (전 연령 공통, ISA 만기 전환분 합산 시 최대 1,200만). 세액공제율 5,500만 이하 16.5%, 초과 13.2%. 성과급 받는 해 한계세율 높아 환급 효과 최대.", category: "세금", tags: ["IRP", "연금저축", "성과급", "세액공제", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: irpMaxBonus, lang: "ko" },
   { slug: "isa-for-bonus-2026", title: "성과급 일부 ISA 적립 — 5년 운용 시 63만 절감", description: "성과급 2,000만 ISA 적립 → 5년 7% 운용 약 2,800만. 차익 800만 중 200만 비과세 + 600만 9.9% = 60만 세금. 일반 계좌 대비 63만 절감.", category: "투자", tags: ["ISA", "성과급", "비과세", "절세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: isaForBonus, lang: "ko" },
@@ -1919,7 +1919,7 @@ export const hotBonusTaxComplete: Guide[] = [
   { slug: "before-vs-after-leave-bonus-2026", title: "성과급 받기 전 휴직 vs 받고 휴직 — 권리 보장 + 휴직 전 지급", description: "성과급은 재직 중 발생 성과 보상 → 휴직 전 발생분은 받을 권리. 인사팀과 지급 시점 확정 + 휴직 중 4대보험 변경 확인.", category: "커리어", tags: ["휴직", "성과급", "지급권리", "육아휴직", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: beforeLeave, lang: "ko" },
   { slug: "irp-eligibility-before-bonus-2026", title: "성과급 받기 전 IRP·연금저축 가입 — 누구나 가능", description: "IRP: 근로소득자·자영업자·공무원. 연금저축: 만 19세+ 누구나. 12월 31일까지 납입 시 당해 공제. 만 55세까지 유지 의무.", category: "세금", tags: ["IRP", "연금저축", "가입자격", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: irpEligibility, lang: "ko" },
   { slug: "executive-severance-limit-bonus-deep-2026", title: "임원 퇴직금 한도 초과 + 성과급 — 5억 시 1.08억 세금", description: "한도 3억 + 초과 2억 시 초과분 근로소득세 7,800만 (한계 38%). 한도 내 5억이면 5,000만. 정관 한도 미리 점검.", category: "커리어", tags: ["임원", "퇴직금한도", "근로소득세", "성과급", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: executiveSeveranceLimitDeep, lang: "ko" },
-  { slug: "stock-option-with-bonus-2026", title: "성과급 + 스톡옵션 일반 vs 적격 — 1억 차익 1,860만 차이", description: "일반: 행사 근로소득 3,800만 + 매도 양도 220만 = 4,020만. 적격(벤처·중소): 양도세 2,160만만. 차이 1,860만.", category: "주식", tags: ["스톡옵션", "적격", "벤처", "양도세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: stockOptionTimingBonus, lang: "ko" },
+  { slug: "stock-option-with-bonus-2026", title: "성과급 + 스톡옵션 일반 vs 적격 — 과세 시점·세금 차이", description: "일반: 행사이익은 근로소득으로 성과급과 합산 과세. 적격(벤처)은 요건 충족 시 행사 때 과세를 미루고 매도 때 양도세.", category: "주식", tags: ["스톡옵션", "적격", "벤처", "양도세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: stockOptionTimingBonus, lang: "ko" },
   { slug: "bonus-rsu-same-year-2026", title: "성과급 + RSU 베스팅 같은 해 — 영끌 2.7억 시 총 7,900만 부담", description: "연봉 1.2억 + 성과급 5,000만 + RSU 1억 베스팅 = 영끌 2.7억. 근로 5,200만 + 양도 1,700만 + 정산 1,000만 = 7,900만. 분할 매도로 600만 절감.", category: "주식", tags: ["RSU", "성과급", "베스팅", "양도세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: rsuVestingSameBonus, lang: "ko" },
   { slug: "bonus-property-sell-same-year-2026", title: "성과급 + 부동산 양도 동시 — 종합 세금 점검 필수", description: "근로소득(성과급) 종합과세 + 부동산 분류과세 별도. 건보료 정산에도 반영. 1주택 비과세 + 80% 공제 시 5억 양도차익 약 200만, 성과급 5,000만 + 합산 약 2,700만.", category: "부동산", tags: ["성과급", "부동산양도", "종합세금", "정산", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: bonusPropertySell, lang: "ko" },
 ];

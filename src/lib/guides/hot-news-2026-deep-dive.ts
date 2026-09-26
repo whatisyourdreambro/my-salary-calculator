@@ -151,14 +151,14 @@ const carryoverLoss = `
 <ul class="space-y-3 mt-4">
 <li><strong>① 사업소득 결손</strong>: 다른 종합소득(근로·이자·배당)과 통산 후 잔여분 이월</li>
 <li><strong>② 양도소득 결손</strong>: 같은 양도소득 내 통산 (주식·부동산은 분리)</li>
-<li><strong>③ 가상자산 결손</strong>: 5년 이월 (15년 아닌 짧음 주의)</li>
+<li><strong>③ 가상자산 결손</strong>: 이월공제 규정 없음 — 2027년 과세 시행 뒤에도 그해 가상자산 손익끼리만 통산</li>
 <li><strong>④ 신고 의무</strong>: 손실난 해도 종소세 신고해야 이월 인정</li>
 </ul>
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬</h2>
 <p>2025년 사업 손실 1억 → 2026년 사업 이익 1.5억:</p>
 <ul class="space-y-2 mt-4">
 <li>· 2026년 과세표준: 1.5억 - 1억 (이월) = 5천만</li>
-<li>· 절세 약 3,000만원 (한계세율 24%~35% 차이)</li>
+<li>· 절세 약 3,000만원 (산출세액이 과세표준 1.5억일 때 3,706만원, 5천만일 때 624만원 — 지방소득세 별도)</li>
 </ul>
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/income-tax-2026" class="text-primary underline">종합소득세 계산</a></li></ul></div>
 `;
@@ -817,17 +817,17 @@ const digitalNomadVisa = `
 `;
 
 const childcareSupport = `
-<p class="lead">육아 정부 지원 종합 — 아동수당 + 부모급여 + 어린이집 보육료 + 초등 돌봄 + 청년주택드림. 자녀 1명 출생부터 초등까지 정부 지원 약 7,000만원+.</p>
+<p class="lead">육아 정부 지원 종합 — 아동수당 + 부모급여 + 어린이집 보육료 + 초등 돌봄 + 청년주택드림. 받는 금액은 자녀 나이, 사는 지역, 어린이집 이용 여부에 따라 달라지므로 나이대별로 받을 수 있는 항목을 정리했습니다.</p>
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 단계별 지원</h2>
 <ul class="space-y-2 mt-4">
 <li>· <strong>0~1세</strong>: 부모급여 월 100만원/50만원 + 아동수당 10만원</li>
-<li>· <strong>2~7세</strong>: 아동수당 10만원 + 어린이집 보육료 무료</li>
+<li>· <strong>2~8세</strong>: 아동수당 월 10만원(2026년 만 9세 미만, 비수도권·인구감소지역은 추가 지급) + 어린이집을 다니면 0~5세반 보육료 지원(소득 무관)</li>
 <li>· <strong>초등</strong>: 초등 돌봄교실 + 방학 돌봄</li>
 <li>· <strong>중·고등</strong>: 자녀세액공제 + 학자금</li>
 <li>· <strong>대학</strong>: 청년주택드림 + 학자금 대출</li>
 </ul>
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 누적</h2>
-<p>자녀 1명 0~18세 정부 지원 누적 약 6,000~7,000만원. 부모 자녀세액공제 추가 환급 30~70만원/년.</p>
+<p>누적액은 사는 지역, 어린이집 이용 여부, 가구 소득에 따라 크게 달라 한 숫자로 정리하기 어렵습니다. 부모 자녀세액공제는 자녀 1명 연 25만원(2026년 귀속 9세 이상, 2017년생 제외)이고, 출산·입양한 해에는 출산·입양 세액공제(첫째 30만·둘째 50만·셋째 이상 70만원)가 한 번 따로 붙습니다.</p>
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/parental-leave" class="text-primary underline">육아휴직 급여 계산기</a></li></ul></div>
 `;
 
@@ -900,7 +900,7 @@ export const hotNewsDeepDive: Guide[] = [
   { slug: "personal-vs-corporation-tax-2026", title: "개인사업자 vs 법인 — 순이익 1.5억 이상 법인 유리", description: "개인 6~45% vs 법인 9~24% + 배당 15.4%. 매출 5억 + 순이익 1.5억 이상부터 법인 전환 검토.", category: "세금", tags: ["개인사업자", "법인", "법인세", "전환", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: personalVsCorporation, lang: "ko" },
   { slug: "vat-refund-2026", title: "부가가치세 환급 — 초기 투자 큰 사업자 자금 흐름", description: "매입세액 > 매출세액 시 환급. 스타트업 1분기 매출 1억 vs 매입 1.5억 = 500만원 환급. 분기 신고 또는 월별 조기 환급.", category: "세금", tags: ["부가가치세", "VAT", "환급", "스타트업", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: vatRefund, lang: "ko" },
   { slug: "consumption-tax-simple-vs-general-2026", title: "간이과세자 vs 일반과세자 — 매출 1.04억 분기점 100만원 절세", description: "간이 부가세 1.5~4% vs 일반 10%. 매출 8천 음식점 시 간이가 약 100만원 유리. 단 매입세액 공제 제한.", category: "세금", tags: ["간이과세", "일반과세", "부가세", "자영업", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: consumptionTaxReturn, lang: "ko" },
-  { slug: "carryover-loss-15year-2026", title: "이월결손금 15년 — 손실난 해 신고로 미래 3,000만원 절세", description: "사업 손실 15년 이월(양도차손 제외). 2025년 손실 1억 → 2026 이익 1.5억 시 절세 3,000만원. 가상자산은 5년만.", category: "세금", tags: ["이월결손금", "사업손실", "양도손실", "절세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: carryoverLoss, lang: "ko" },
+  { slug: "carryover-loss-15year-2026", title: "이월결손금 15년 — 손실난 해 신고로 미래 3,000만원 절세", description: "사업 손실 15년 이월(양도차손·가상자산 제외). 2025년 손실 1억 → 2026 이익 1.5억 시 절세 약 3,000만원.", category: "세금", tags: ["이월결손금", "사업손실", "양도손실", "절세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: carryoverLoss, lang: "ko" },
   { slug: "tax-reduction-disabled-2026", title: "장애인 인적공제 200만원 + 의료비 무한도 — 매년 100~300만원 환급", description: "본인·부양가족 장애 등록 시 인적공제 200 + 의료비 한도 없음 + 보험료 100 + 교육비 무한도. 매년 100~300만원 추가 환급.", category: "세금", tags: ["장애인", "인적공제", "의료비", "보험료", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: taxReductionDisabled, lang: "ko" },
   { slug: "tax-amnesty-self-report-2026", title: "자진 수정신고 — 1개월 이내 가산세 90% 감면", description: "1개월 90% / 3개월 75% / 6개월 50% / 1년 30% / 2년 20% 감면. 무신고 시 20%, 부정 40%, 역외 60% 가산세.", category: "세금", tags: ["수정신고", "가산세", "감면", "세무조사", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: taxAmnestyReform, lang: "ko" },
   // 건강·의료 10편
@@ -942,7 +942,7 @@ export const hotNewsDeepDive: Guide[] = [
   { slug: "basic-pension-65-2026", title: "기초연금 2026 — 단독 349,700원·부부 559,520원", description: "소득 하위 70%. 단독 최대 349,700원, 부부 동시 수령 시 각 20% 감액(합산 559,520원). 국민연금 수령자도 일부 가능.", category: "기초", tags: ["기초연금", "노후", "65세", "정부지원", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: basicPension2026, lang: "ko" },
   { slug: "seeking-job-benefit-2026", title: `2026 구직급여 — 일 상한 ${UB_UPPER}원·하한 ${UB_LOWER}원`, description: `평균임금 60%·상한 일 ${UB_UPPER}원·하한 ${UB_LOWER}원(2026). 지급기간 120~270일(나이·가입기간별). 자영업도 가입 시 가능.`, category: "커리어", tags: ["구직급여", "실업급여", "청년", "정년", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: seekingJobBenefit, lang: "ko" },
   { slug: "digital-nomad-visa-korea-2026", title: "한국 디지털 노마드 비자 — 연소득 8만 달러+ 외국인 IT 인재 유치", description: "외국 회사 원격 근무 + 연소득 8만 달러+ + 건강보험. 1+1년 체류. 한국 비거주자 분류로 한국 소득세 없음.", category: "커리어", tags: ["디지털노마드", "비자", "외국인", "원격근무", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: digitalNomadVisa, lang: "ko" },
-  { slug: "childcare-support-comprehensive-2026", title: "자녀 1명 0~18세 정부 지원 총 6,000~7,000만원 — 단계별 정리", description: "0~1세 부모급여 + 아동수당, 2~7세 보육료 무료, 초등 돌봄, 중·고 학자금, 대학 청년주택드림. 누적 6~7천만원.", category: "기초", tags: ["육아지원", "아동수당", "보육료", "학자금", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: childcareSupport, lang: "ko" },
+  { slug: "childcare-support-comprehensive-2026", title: "자녀 1명 0~18세 정부 지원 — 아동수당·부모급여 나이별 정리", description: "0~1세 부모급여부터 2026년 만 9세 미만 아동수당 월 10만원, 어린이집 보육료, 초등 돌봄, 자녀세액공제까지.", category: "기초", tags: ["육아지원", "아동수당", "보육료", "학자금", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: childcareSupport, lang: "ko" },
   { slug: "elder-care-insurance-2026", title: "장기요양보험 — 부모 등급 받으면 월 50~200만원 서비스", description: "만 65+ 또는 노인성 질환. 등급별 시설·재가 서비스 본인부담 15~20%. 의료비 공제까지.", category: "기초", tags: ["장기요양보험", "요양시설", "재가서비스", "노인", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: elderCare, lang: "ko" },
   { slug: "veteran-benefit-2026", title: "국가유공자·보훈대상자 — 양도세 100% 감면 + 자녀 대학 무료", description: "양도세 100% 감면(5억 한도) + 취득세 50% + 의료비 본인부담 0 + 자녀 대학 등록금 + 보훈수당.", category: "기초", tags: ["국가유공자", "보훈", "양도세감면", "대학학자금", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: veteranBenefit, lang: "ko" },
   { slug: "low-income-support-4benefits-2026", title: "기초생활보장 4종 — 4인 가구 생계 195만원/월 + 의료 무료", description: "생계·의료·주거·교육 4종 급여. 4인 가구 생계 195만원, 의료 본인부담 0~5%. 주민센터 또는 복지로 신청.", category: "기초", tags: ["기초생활보장", "저소득층", "생계급여", "의료급여", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: lowIncomeSupport, lang: "ko" },
