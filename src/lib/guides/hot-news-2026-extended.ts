@@ -1019,7 +1019,7 @@ const executiveSeveranceLimit = `
 <p>이 사례에서 퇴직소득으로 과세되는 금액은 2011년 이전분 15억원과 한도 9.6억원을 합한 24.6억원이고, 10.4억원은 근로소득입니다. 한도 초과액은 지급받거나 지급받기로 한 날이 속한 해의 근로소득이 됩니다(소득세법 시행령 제49조).</p>
 
 <h2>한도를 넘으면 세금이 얼마나 늘어나나요</h2>
-<p>2016년 7월 1일 임원이 되어 2026년 6월 30일 퇴직(근속 10년, 2012~2019년 ${EXEC_EXAMPLE.monthsTo2019}개월·2020년 이후 ${EXEC_EXAMPLE.monthsFrom2020}개월)하고, 2017~2019년 연평균 총급여 ${execMan(EXEC_EXAMPLE.avgPay2017to2019)}, 퇴직 전 3년 연평균 ${execMan(EXEC_EXAMPLE.avgPayLast3Years)}, 퇴직한 해 급여 ${execMan(EXEC_EXAMPLE.salaryInExitYear)}인 임원이 같은 해 퇴직금 ${execMan(EXEC_EXAMPLE.severance)}을 받는 경우입니다. 한도는 ${execMan(EXEC_EXAMPLE.avgPay2017to2019)} ÷ 10 × ${EXEC_EXAMPLE.monthsTo2019}/12 × 3 + ${execMan(EXEC_EXAMPLE.avgPayLast3Years)} ÷ 10 × ${EXEC_EXAMPLE.monthsFrom2020}/12 × 2 = ${execMan(EXEC_LIMIT)}입니다.</p>
+<p>2016년 7월 1일 임원이 되어 2026년 6월 30일 퇴직(근속 10년, 2012~2019년 ${EXEC_EXAMPLE.monthsTo2019}개월·2020년 이후 ${EXEC_EXAMPLE.monthsFrom2020}개월)하고, 2017~2019년 연평균 총급여 ${execMan(EXEC_EXAMPLE.avgPay2017to2019)}, 퇴직 전 3년 연평균 ${execMan(EXEC_EXAMPLE.avgPayLast3Years)}, 퇴직한 해 급여 ${execMan(EXEC_EXAMPLE.salaryInExitYear)}인 임원이 같은 해 퇴직금 ${execMan(EXEC_EXAMPLE.severance)}을 받는 경우입니다. 한도는 ${execMan(EXEC_EXAMPLE.avgPay2017to2019)} ÷ 10 × ${EXEC_EXAMPLE.monthsTo2019}/12 × 3 + ${execMan(EXEC_EXAMPLE.avgPayLast3Years)} ÷ 10 × ${EXEC_EXAMPLE.monthsFrom2020}/12 × 2 = ${execMan(EXEC_LIMIT)}입니다. 퇴직금 ${execMan(EXEC_EXAMPLE.severance)}은 정관(정관에서 위임한 퇴직급여지급규정 포함)에 정한 금액대로 지급해 법인세법상 손금 한도 안에 있다고 가정했습니다. 그런 규정이 없으면 법인세 한도가 퇴직 전 1년 총급여 × 1/10 × 근속연수로 정해지고, 이를 넘는 금액은 퇴직금이 아니라 근로소득(인정상여)으로 처리돼 아래 결과가 달라집니다(법인세법 시행령 제44조 제4항).</p>
 <div class="overflow-x-auto"><table class="w-full text-sm">
 <thead><tr><th>구분</th><th>한도 적용(실제 과세)</th><th>전액 퇴직소득이라면(비교용)</th></tr></thead>
 <tbody>

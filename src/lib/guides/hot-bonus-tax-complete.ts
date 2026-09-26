@@ -125,6 +125,9 @@ export const RSU_ENTITIES = {
 const rsuAvg = (d: { avgSalaryManwon: number } | undefined) => (d ? formatManwonKorean(d.avgSalaryManwon) : "공시 확인 중");
 const rsuAmount = (p: { fixedAmountManwon?: number } | undefined) =>
   p?.fixedAmountManwon ? formatManwonKorean(p.fixedAmountManwon) : "공시 확인 중";
+/** 네이버 평균은 10만원 단위로 내려 보인다 — 보도 반올림값 465억원 ÷ 1,683명(약 2,763만원)과 어긋나 보이지 않게 */
+const rsuAmountApprox = (p: { fixedAmountManwon?: number } | undefined) =>
+  p?.fixedAmountManwon ? `약 ${formatManwonKorean(Math.floor(p.fixedAmountManwon / 10) * 10)}` : "공시 확인 중";
 /** 연봉 8,000만원인 사람이 3,000만원어치를 현금 성과급 또는 RSU로 받는 예시 */
 export const RSU_EXAMPLE = { salary: 80_000_000, grant: 30_000_000 } as const;
 /** 현금 성과급 — RSU를 회사가 급여(보수)로 신고하면 베스팅 때 부담도 같다 */
@@ -147,7 +150,7 @@ const itRsuVsCash = `
 <div class="overflow-x-auto"><table class="w-full text-sm">
 <thead><tr><th>회사</th><th>주식이 상장된 곳</th><th>팔 때 양도소득세(소액주주)</th><th>공시·보도로 확인된 값</th></tr></thead>
 <tbody>
-<tr><td><a href="/salary-db/naver">네이버</a></td><td>국내 증권시장</td><td>장내 매도는 과세 대상 아님</td><td>${RSU_ENTITIES.naver.rsu?.year ?? ""}년 자사주 465억원(약 22만주)을 1,683명에게 RSU로 지급, 단순 평균 ${rsuAmount(RSU_ENTITIES.naver.rsu)}(임원·핵심 인재 집중). ${RSU_ENTITIES.naver.disclosed?.fiscalYear ?? ""} 사업연도 직원 평균 급여 ${rsuAvg(RSU_ENTITIES.naver.disclosed)}</td></tr>
+<tr><td><a href="/salary-db/naver">네이버</a></td><td>국내 증권시장</td><td>장내 매도는 과세 대상 아님</td><td>${RSU_ENTITIES.naver.rsu?.year ?? ""}년 자사주 465억원(약 22만주)을 1,683명에게 RSU로 지급, 단순 평균 ${rsuAmountApprox(RSU_ENTITIES.naver.rsu)}(임원·핵심 인재 집중). ${RSU_ENTITIES.naver.disclosed?.fiscalYear ?? ""} 사업연도 직원 평균 급여 ${rsuAvg(RSU_ENTITIES.naver.disclosed)}</td></tr>
 <tr><td><a href="/salary-db/kakao">카카오</a></td><td>국내 증권시장</td><td>장내 매도는 과세 대상 아님</td><td>${RSU_ENTITIES.kakao.rsu?.year ?? ""}년 1인 평균 RSU 가치 약 ${rsuAmount(RSU_ENTITIES.kakao.rsu)}(자사주 처분 공시 기반 평균). ${RSU_ENTITIES.kakao.disclosed?.fiscalYear ?? ""} 사업연도 직원 평균 급여 ${rsuAvg(RSU_ENTITIES.kakao.disclosed)}</td></tr>
 <tr><td><a href="/salary-db/coupang">쿠팡</a></td><td>미국 뉴욕증권거래소(쿠팡 Inc., CPNG)</td><td>국외 주식 — 차익의 20%, 지방소득세 포함 22%</td><td>RSU는 보통 2~4년에 걸쳐 나눠 확정되며 각 확정일에 재직해야 함(쿠팡 Inc. 2025 사업연도 Form 10-K)</td></tr>
 </tbody></table></div>
@@ -195,7 +198,7 @@ ${rsuScenarioRows}
 <ul>
 <li><strong>Q. RSU는 받을 때 세금이 없고 팔 때만 내나요?</strong> — 아닙니다. 주식을 받는 날의 시가가 근로소득으로 과세됩니다. 팔 때의 양도소득세는 그 뒤 오른 부분에 대한 별도의 세금입니다.</li>
 <li><strong>Q. 주가가 떨어지면 이미 낸 근로소득세를 돌려받을 수 있나요?</strong> — 받는 날 시가로 정해진 근로소득세는 그대로입니다. 해외 상장주식이라면 판 손실을 같은 해 다른 과세 대상 주식의 이익과 합산할 수 있을 뿐입니다.</li>
-<li><strong>Q. 네이버·카카오 RSU를 팔면 양도소득세를 내나요?</strong> — 대주주가 아니고 증권시장에서 판다면 양도소득세 과세 대상이 아닙니다. 매도 대금에 증권거래세만 붙습니다.</li>
+<li><strong>Q. 네이버·카카오 RSU를 팔면 양도소득세를 내나요?</strong> — 대주주가 아니고 증권시장에서 판다면 양도소득세 과세 대상이 아닙니다. 매도 대금에는 증권거래세가 붙고, 두 회사처럼 유가증권시장 상장주식이면 양도가액의 0.15%인 농어촌특별세도 함께 붙습니다(농어촌특별세법 제5조).</li>
 <li><strong>Q. 쿠팡 RSU 세금은 누가 신고하나요?</strong> — 받을 때의 근로소득은 회사 원천징수 여부를 먼저 확인하고, 빠졌다면 이듬해 5월 종합소득세 신고에 넣습니다. 판 뒤의 양도소득세는 본인이 다음 해 5월에 확정신고합니다.</li>
 </ul>
 
@@ -1093,7 +1096,7 @@ const bonusRetireImpact = `
 <p class="lead">성과급이 퇴직금에 들어가는지는 그 성과급이 <strong>평균임금에 포함되는 임금인지</strong>로 정해집니다. 2026년 대법원은 삼성전자의 목표 인센티브는 포함하고, 사업부 이익에 연동한 성과 인센티브와 해마다 노사합의로 정한 경영성과급은 뺐습니다. 포함되는 상여는 연간 총액의 3/12를 퇴직 전 3개월 임금에 더하므로, 월 임금 500만원·근속 10년이면 연 1,200만원이 들어갈 때 퇴직금이 약 ${g2cMan(SEVERANCE_GAIN_1200)} 늘어납니다(근로자퇴직급여 보장법 제8조·고용노동부 산정 방식, 기준일 2026년 9월 30일).</p>
 
 <h2>퇴직금은 어떤 공식으로 계산하나요</h2>
-<p>퇴직금은 계속근로 1년마다 30일분 이상의 평균임금입니다(근로자퇴직급여 보장법 제8조). 평균임금은 퇴직일 이전 3개월 동안 받은 임금 총액을 그 기간의 총일수로 나눈 금액이고, 이렇게 구한 값이 통상임금보다 적으면 통상임금을 평균임금으로 씁니다(근로기준법 제2조). 3개월 밖에서 나오는 상여금은 1년 치 총액을 12개월로 나눠 3개월분만 더합니다.</p>
+<p>퇴직금은 계속근로 1년마다 30일분 이상의 평균임금입니다(근로자퇴직급여 보장법 제8조). 평균임금은 퇴직일 이전 3개월 동안 받은 임금 총액을 그 기간의 총일수로 나눈 금액이고, 이렇게 구한 값이 통상임금보다 적으면 통상임금을 평균임금으로 씁니다(근로기준법 제2조). 상여금은 퇴직 전 3개월 안에 받았는지와 관계없이 퇴직 전 1년 동안 받은 총액의 3/12만 더합니다.</p>
 <div class="overflow-x-auto"><table class="w-full text-sm">
 <thead><tr><th>단계</th><th>계산</th><th>근거</th></tr></thead>
 <tbody>
@@ -1127,7 +1130,7 @@ const bonusRetireImpact = `
 <tbody>
 ${sevTableRows}
 </tbody></table></div>
-<p>평균임금에 들어가는 연 상여가 100만원 늘 때마다 근속 1년에 약 ${g2cWon(SEVERANCE_PER_100_PER_YEAR)}(100만원 × 3/12 ÷ 92일 × 30일)이 더해집니다. 같은 금액을 월급으로 받는 것보다 효과는 작지만 근속이 길수록 차이가 커집니다. 같은 사람이라도 연 1,200만원짜리 성과급이 평균임금에서 빠지면 퇴직금은 ${g2cMan(sevBase.estimatedSeverancePay)}, 들어가면 ${g2cMan(sev1200.estimatedSeverancePay)}입니다.</p>
+<p>평균임금에 들어가는 연 상여가 100만원 늘 때마다 근속 1년에 약 ${g2cWon(SEVERANCE_PER_100_PER_YEAR)}(100만원 × 3/12 ÷ 92일 × 30일)이 더해집니다. 같은 연간 금액을 월급에 나눠 받아도 퇴직 전 3개월분, 곧 연간 금액의 3/12만 평균임금에 들어가므로 퇴직금에 미치는 효과는 같고, 늘어나는 금액은 근속연수에 비례해 커집니다. 같은 사람이라도 연 1,200만원짜리 성과급이 평균임금에서 빠지면 퇴직금은 ${g2cMan(sevBase.estimatedSeverancePay)}, 들어가면 ${g2cMan(sev1200.estimatedSeverancePay)}입니다.</p>
 
 <h2>퇴직금에는 세금이 얼마나 붙나요</h2>
 <p>퇴직금은 근로소득과 합치지 않고 퇴직소득으로 따로 과세합니다. 먼저 근속연수공제를 빼고, 남은 금액을 근속연수로 나눠 12를 곱한 환산급여에서 환산급여공제를 뺀 뒤 기본세율을 적용하고, 그 세액을 12로 나눠 근속연수를 곱합니다(소득세법 제48조·제55조 제2항). 1년 미만 근속은 1년으로 봅니다.</p>

@@ -74,6 +74,10 @@ describe("bonus-retire-impact-severance-2026 — 평균임금·퇴직금", () =>
     // 흡수한 retire-with-bonus-4insurance 의 오류(퇴직소득 연금수령 세율을 연금계좌 세율로 적음)
     expect(t).not.toMatch(/5\.5\s?~\s?3\.3\s?%/);
     expect(t).toContain("퇴직소득세율의 70%");
+    // 리뷰 정정: 같은 연간 금액을 월급으로 나눠 받아도 3/12 만 들어가 효과가 같다 / 상여 3/12 는 지급 시점과 무관
+    for (const s of ["월급으로 받는 것보다 효과는 작지만", "3개월 밖에서 나오는 상여금"]) expect(t).not.toContain(s);
+    expect(t).toContain("퇴직금에 미치는 효과는 같고");
+    expect(t).toContain("퇴직 전 3개월 안에 받았는지와 관계없이");
   });
 });
 
@@ -89,6 +93,8 @@ describe("executive-severance-limit-2026 — 임원 퇴직소득 한도", () => 
     expect(html).toContain("= 9.6억원");
     expect(html).toContain("20억원 − 9.6억원 = 10.4억원");
     expect(html).toContain(`= ${man(EXEC_LIMIT)}입니다`);
+    // 예시는 법인세법 시행령 제44조 제4항 손금 한도 안(정관 규정 금액)이라는 가정을 밝힌다 (리뷰 정정)
+    expect(html).toContain("손금 한도 안에 있다고 가정했습니다");
   });
 
   it("세액 표는 퇴직소득세 엔진·근로소득 엔진(2026 요율)과 같다", () => {
@@ -142,7 +148,10 @@ describe("it-rsu-vs-cash-bonus-2026 — RSU와 현금 성과급 (엔티티 형�
     expect(html).toContain("빼면 1억 4,300만원");
     const rsu = (id: string) => BONUS_PROFILES.find((p) => p.companyId === id)?.payouts.find((p) => p.scheme === "RSU");
     expect(rsu("naver")?.note).toContain("465억원(약 22만주)을 1,683명");
-    expect(html).toContain(`465억원(약 22만주)을 1,683명에게 RSU로 지급, 단순 평균 ${formatManwonKorean(rsu("naver")!.fixedAmountManwon!)}`);
+    // 네이버 평균은 10만원 단위로 내려 '약'으로 보인다 — 본문의 465억원 ÷ 1,683명과 10만원 넘게 어긋나지 않을 것
+    const naverShown = Math.floor(rsu("naver")!.fixedAmountManwon! / 10) * 10;
+    expect(html).toContain(`465억원(약 22만주)을 1,683명에게 RSU로 지급, 단순 평균 약 ${formatManwonKorean(naverShown)}`);
+    expect(Math.abs(46_500_000_000 / 1_683 / 10_000 - naverShown)).toBeLessThan(10);
     expect(html).toContain(`1인 평균 RSU 가치 약 ${formatManwonKorean(rsu("kakao")!.fixedAmountManwon!)}`);
     expect(html).not.toContain("공시 확인 중");
   });
@@ -150,6 +159,9 @@ describe("it-rsu-vs-cash-bonus-2026 — RSU와 현금 성과급 (엔티티 형�
   it("옛 오류 문구(RSU 175만 유리·5년 베스팅 25%·해외주식 손실 넘김)가 없다", () => {
     const t = all(slug);
     for (const s of ["175만", "5년 베스팅", "4년 베스팅", "lockup", "이월"]) expect(t).not.toContain(s);
+    // 유가증권시장 매도는 증권거래세만이 아니라 농어촌특별세(양도가액 1만분의 15)도 붙는다 (리뷰 정정)
+    expect(t).not.toContain("증권거래세만 붙습니다");
+    expect(t).toContain("농어촌특별세법 제5조");
     for (const s of ["서면-2023-원천-0341", "소득세법 제94조", "소득세법 제104조", "소득세법 제103조", "기준일"]) expect(t).toContain(s);
   });
 });
