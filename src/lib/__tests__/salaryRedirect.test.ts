@@ -118,6 +118,60 @@ describe("resolveSalaryRedirect", () => {
   });
 });
 
+// 2025-09-16 ~ 2025-11-22 의 /salary/[amount] 는 parseInt(amount) * 10000 (만원 단위) 이었다.
+// GSC 에 남은 1~5자리 URL 107건(361일 노출 742·평균 순위 9.0)이 전부 500만원 페이지로 가던 사고 (2026-09-26).
+describe("resolveSalaryRedirect — 2025 구형 만원 단위 1~5자리 URL", () => {
+  const min = SALARY_STATIC_AMOUNTS[0];
+  const nearestPath = (won: number) => `/salary/${nearestStaticSalaryAmount(won)}`;
+
+  it("reads 1~5 digit segments as 만원 and snaps to the nearest static page", async () => {
+    const t3850 = resolveSalaryRedirect("/salary/3850");
+    expect(t3850).toBe(nearestPath(38_500_000));
+    const won3850 = Number(t3850!.replace("/salary/", ""));
+    expect(Math.abs(won3850 - 38_500_000) / 38_500_000).toBeLessThanOrEqual(0.02);
+    expect(resolveSalaryRedirect("/salary/25000")).toBe(nearestPath(250_000_000));
+    expect(resolveSalaryRedirect("/salary/4150")).toBe(nearestPath(41_500_000));
+    expect(resolveSalaryRedirect("/salary/10300")).toBe(nearestPath(103_000_000));
+    expect(resolveSalaryRedirect("/salary/2300")).toBe(nearestPath(23_000_000));
+    expect(SALARY_STATIC_AMOUNTS).toContain(50_000_000);
+    expect(resolveSalaryRedirect("/salary/5000")).toBe("/salary/50000000");
+    expect(resolveSalaryRedirect("/salary/1")).toBe(`/salary/${min}`); // 1만원 → 최소 금액 (종전과 같음)
+  });
+
+  it("leaves ambiguous, full-won, legacy-suffix and invalid forms as before", async () => {
+    expect(nearestStaticSalaryAmount(1)).toBe(min);
+    expect(parseSalaryPathAmount("3850")).toBe(3850); // 파서 계약(숫자 = 원)은 그대로
+    expect(resolveSalaryRedirect("/salary/300000")).toBe(`/salary/${min}`); // 6~7자리는 모호 → 종전 클램프
+    expect(resolveSalaryRedirect("/salary/4999999")).toBe(`/salary/${min}`);
+    expect(resolveSalaryRedirect("/salary/50000000")).toBeNull();
+    expect(resolveSalaryRedirect("/salary/9-manwon")).toBe(`/salary/${min}`); // -manwon 은 이미 만원 → 재곱셈 금지
+    expect(resolveSalaryRedirect("/salary/5000-manwon")).toBe("/salary/50000000");
+    expect(resolveSalaryRedirect("/salary/1-5-eok")).toBe("/salary/150000000");
+    expect(resolveSalaryRedirect("/salary/abc")).toBeNull();
+    expect(resolveSalaryRedirect("/salary/0")).toBeNull();
+    expect(resolveSalaryRedirect("/salary/00000")).toBeNull();
+  });
+
+  it("sweep n = 1..99999: every target is a static page and never the request itself", async () => {
+    const statics = new Set(SALARY_STATIC_AMOUNTS);
+    for (let n = 1; n <= 99_999; n++) {
+      const req = `/salary/${n}`;
+      const t = resolveSalaryRedirect(req);
+      if (t === null || t === req || !statics.has(Number(t.slice(8)))) {
+        expect.fail(`${req} -> ${t}`);
+      }
+    }
+  });
+
+  it("middleware 308s /salary/3850 to the 3,850만원 page and keeps the query", async () => {
+    const r = await middleware(request("/salary/3850?utm_source=google"));
+    expect(r.status).toBe(308);
+    const loc = new URL(r.headers.get("location")!);
+    expect(loc.pathname).toBe(nearestPath(38_500_000));
+    expect(loc.searchParams.get("utm_source")).toBe("google");
+  });
+});
+
 describe("middleware /salary normalization", () => {
   it("308s off-grid and legacy salary URLs to the nearest static page, keeps static pages", async () => {
     const r1 = await middleware(request("/salary/6980-manwon"));
