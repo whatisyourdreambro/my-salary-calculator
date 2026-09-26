@@ -11,6 +11,7 @@
 
 import { useMemo, useState } from "react";
 import NumberInput from "@/components/NumberInput";
+import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 
 const GENERAL_LIMIT = 7_000_000; // ④ 그 밖의 부양가족 의료비 연 한도
 
@@ -95,6 +96,13 @@ export default function MedicalTaxCreditClient() {
     };
   }, [salary, generalMed, specialMed, prematureMed, fertilityMed, insurance]);
 
+  // GA4 calc_start·calc_success·result_view (calc_type 만 전송, 금액 미전송)
+  const measurement = useCalculatorMeasurement({
+    calcType: "medical_tax_credit_2026",
+    valid: salary > 0 && [result.credit, result.threshold].every(Number.isFinite),
+    resultKey: result,
+  });
+
   const inputCls =
     "w-full px-4 py-3 rounded-xl border border-canvas-200 dark:border-canvas-700 bg-white dark:bg-canvas-800 text-navy dark:text-canvas-50 font-bold text-lg focus:outline-none focus:border-electric";
   const labelCls =
@@ -109,7 +117,7 @@ export default function MedicalTaxCreditClient() {
         </h2>
 
         {/* 1단계 — 총급여 */}
-        <div className="mb-5">
+        <div {...measurement.inputProps} className="mb-5">
           <p className="text-xs font-bold text-electric uppercase tracking-wider mb-2">
             1단계 — 총급여
           </p>
@@ -133,7 +141,7 @@ export default function MedicalTaxCreditClient() {
         </div>
 
         {/* 2단계 — 의료비 */}
-        <div className="mb-5 pt-4 border-t border-canvas-200 dark:border-canvas-700">
+        <div {...measurement.inputProps} className="mb-5 pt-4 border-t border-canvas-200 dark:border-canvas-700">
           <p className="text-xs font-bold text-electric uppercase tracking-wider mb-2">
             2단계 — 올해 지출한 의료비 (지급일 기준)
           </p>
@@ -213,7 +221,7 @@ export default function MedicalTaxCreditClient() {
         </div>
 
         {/* 3단계 — 실손보험금 */}
-        <div className="mb-5 pt-4 border-t border-canvas-200 dark:border-canvas-700">
+        <div {...measurement.inputProps} className="mb-5 pt-4 border-t border-canvas-200 dark:border-canvas-700">
           <p className="text-xs font-bold text-electric uppercase tracking-wider mb-2">
             3단계 — 실손의료보험금
           </p>
@@ -238,7 +246,7 @@ export default function MedicalTaxCreditClient() {
         </div>
 
         {/* 결과 카드 */}
-        <div className="mt-6 p-5 rounded-2xl bg-electric-5 border border-electric-20">
+        <div ref={measurement.resultRef} className="mt-6 p-5 rounded-2xl bg-electric-5 border border-electric-20">
           <p className="text-xs font-bold text-electric uppercase tracking-wider mb-2">
             의료비 세액공제액 (2026년 귀속)
           </p>

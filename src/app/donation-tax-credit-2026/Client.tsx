@@ -11,6 +11,7 @@ import {
   DONATION_CREDIT_2026,
 } from "@/lib/donationCredit";
 import NumberInput from "@/components/NumberInput";
+import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 
 function fmt(n: number): string {
   return Math.round(n).toLocaleString("ko-KR");
@@ -69,6 +70,13 @@ export default function DonationTaxCreditClient() {
   const setAmount = (key: keyof typeof amounts, value: number) =>
     setAmounts((prev) => ({ ...prev, [key]: Math.max(0, value || 0) }));
 
+  // GA4 calc_start·calc_success·result_view (calc_type 만 전송, 금액 미전송)
+  const measurement = useCalculatorMeasurement({
+    calcType: "donation_tax_credit_2026",
+    valid: grossSalary > 0 && [result.totalCredit, result.earnedIncomeAmount].every(Number.isFinite),
+    resultKey: result,
+  });
+
   return (
     <section className="my-6">
       <div className="rounded-3xl border border-canvas-200 dark:border-canvas-700 bg-white dark:bg-canvas-900 p-5 sm:p-6">
@@ -77,7 +85,7 @@ export default function DonationTaxCreditClient() {
         </h2>
 
         {/* 1단계 — 총급여 */}
-        <div className="mb-5">
+        <div {...measurement.inputProps} className="mb-5">
           <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
             ① 총급여 (연봉, 비과세 제외 · 원)
           </label>
@@ -97,7 +105,7 @@ export default function DonationTaxCreditClient() {
         </div>
 
         {/* 2단계 — 기부 유형별 금액 */}
-        <fieldset className="mb-6 space-y-4">
+        <fieldset {...measurement.inputProps} className="mb-6 space-y-4">
           <legend className="block text-sm font-bold text-navy dark:text-canvas-100 mb-1">
             올해 기부한 금액을 유형별로 입력하세요 (원)
           </legend>
@@ -121,7 +129,7 @@ export default function DonationTaxCreditClient() {
         </fieldset>
 
         {/* 결과 카드 */}
-        <div className="mt-6 p-5 rounded-2xl bg-electric-5 border border-electric-20">
+        <div ref={measurement.resultRef} className="mt-6 p-5 rounded-2xl bg-electric-5 border border-electric-20">
           <p className="text-xs font-bold text-electric uppercase tracking-wider mb-2">
             예상 기부금 세액공제액 (2026년 귀속)
           </p>
