@@ -927,6 +927,237 @@ const nextConfig = {
         destination: "/guides/hometax-year-end-preview-2026",
         permanent: true,
       },
+      // ─────────────────────────────────────────────────────────────────
+      // GUIDES-07 가이드 308 통합 40건 (2026-09-26 운영자 승인 14, W3-A ②):
+      // 5/23 대량 배치 중 유입이 없고(GA4 90일 랜딩 5 미만·네이버 유입 5 미만·
+      // GSC 클릭 0) 틀린 수치나 중복 주제를 담은 가이드를 주제가 같은 대표
+      // 가이드로 정확 경로 1홉 통합. 원본 객체는 src/lib/guides/* 에서 뺐다.
+      // 영문 짝(enGuides)이 없어 /en/guides/* 규칙은 두지 않는다.
+      // 슬러그·목적지·1홉·원본 삭제는 configRedirects.test.ts 가 확인한다.
+      // ─────────────────────────────────────────────────────────────────
+      // 성과급 건강보험 — 슬러그의 '7월 건보 정산'은 틀린 사실(정산은 4월)
+      {
+        source: "/guides/july-health-adjust-bonus-1eok-2026",
+        destination: "/guides/bonus-health-4-percent-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/july-health-adjust-bonus-detail-2026",
+        destination: "/guides/bonus-health-4-percent-2026",
+        permanent: true,
+      },
+      // 4대보험 상한 — 슬러그의 4.5%·590만은 옛 값(현행 4.75%·659만)
+      {
+        source: "/guides/bonus-pension-45-ceiling-590-2026",
+        destination: "/guides/four-insurance-ceiling-summary-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/bonus-employment-09-2026",
+        destination: "/guides/four-insurance-ceiling-summary-2026",
+        permanent: true,
+      },
+      // 의료비 항목 — 난임 20%(법정 30%) 슬러그와 얇은 항목별 중복 글
+      {
+        source: "/guides/infertility-medical-20-percent-2026",
+        destination: "/guides/implant-dental-medical-deduction-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/eyewear-herb-implant-medical-2026",
+        destination: "/guides/implant-dental-medical-deduction-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/orthodontics-tax-deduction-2026",
+        destination: "/guides/implant-dental-medical-deduction-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/physical-therapy-tax-2026",
+        destination: "/guides/implant-dental-medical-deduction-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/psychiatry-medical-deduction-2026",
+        destination: "/guides/implant-dental-medical-deduction-2026",
+        permanent: true,
+      },
+      // 의료비·교육비·기부금 한도 — 세액공제에 한계세율을 곱한 오류
+      {
+        source: "/guides/medical-edu-donation-bonus-year-2026",
+        destination: "/guides/medical-edu-donation-limits-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/medical-edu-donation-concentration-2026",
+        destination: "/guides/medical-edu-donation-limits-2026",
+        permanent: true,
+      },
+      // 신용카드 공제 — 옛 공제율·항목별 100만 추가 한도(폐지 구조) 표기
+      {
+        source: "/guides/card-25-before-bonus-2026",
+        destination: "/guides/credit-card-deduction-30-40-strategy-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/card-30-40-percent-bonus-2026",
+        destination: "/guides/credit-card-deduction-30-40-strategy-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/credit-card-deduction-limit-detail-2026",
+        destination: "/guides/credit-card-deduction-30-40-strategy-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/book-concert-museum-deduction-2026",
+        destination: "/guides/credit-card-deduction-30-40-strategy-2026",
+        permanent: true,
+      },
+      // 인적공제·부모 부양
+      {
+        source: "/guides/dependent-deduction-bonus-year-2026",
+        destination: "/guides/parent-support-deduction-integration-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/parent-support-bonus-year-2026",
+        destination: "/guides/parent-support-deduction-integration-2026",
+        permanent: true,
+      },
+      // 월세 세액공제 — 옛 기준시가 3억(현행 4억) 등
+      {
+        source: "/guides/monthly-rent-17-bonus-2026",
+        destination: "/guides/monthly-rent-tax-credit",
+        permanent: true,
+      },
+      {
+        source: "/guides/monthly-rent-tax-credit-17-2026",
+        destination: "/guides/monthly-rent-tax-credit",
+        permanent: true,
+      },
+      // 청약통장 소득공제
+      {
+        source: "/guides/housing-25-bonus-2026",
+        destination: "/guides/housing-subscription-25man-deduction-2026",
+        permanent: true,
+      },
+      // 보장성 보험료 — 장애인전용 공제율 12%(법정 15%) 오기 포함
+      {
+        source: "/guides/insurance-100-bonus-2026",
+        destination: "/guides/insurance-100man-limit-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/disability-insurance-2026",
+        destination: "/guides/insurance-100man-limit-2026",
+        permanent: true,
+      },
+      // IRP·연금저축·ISA
+      {
+        source: "/guides/irp-before-bonus-payout-2026",
+        destination: "/guides/irp-pension-year-end-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/irp-max-bonus-year-2026",
+        destination: "/guides/irp-pension-year-end-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/irp-eligibility-before-bonus-2026",
+        destination: "/guides/irp-pension-year-end-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/isa-for-bonus-2026",
+        destination: "/guides/isa-account-guide",
+        permanent: true,
+      },
+      // 누진세율 — 총급여에 세율을 바로 적용한 오류 등
+      {
+        source: "/guides/salary-bonus-calc-8step-2026",
+        destination: "/guides/income-tax-8-step-bracket-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/bonus-bracket-jump-2026",
+        destination: "/guides/income-tax-8-step-bracket-2026",
+        permanent: true,
+      },
+      // 실업급여(구직급여)
+      {
+        source: "/guides/seeking-job-benefit-2026",
+        destination: "/guides/unemployment-benefits-complete",
+        permanent: true,
+      },
+      {
+        source: "/guides/employment-insurance-detail-2026",
+        destination: "/guides/unemployment-benefits-complete",
+        permanent: true,
+      },
+      // 부업 세금 — 옛 납부지연 가산세율·신고 기준 오기
+      {
+        source: "/guides/side-hustle-n-jab-tax-2026",
+        destination: "/guides/side-hustle-tax-2026",
+        permanent: true,
+      },
+      // 성과급·퇴직·주식 보상
+      {
+        source: "/guides/executive-severance-limit-bonus-deep-2026",
+        destination: "/guides/executive-severance-limit-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/bonus-rsu-same-year-2026",
+        destination: "/guides/it-rsu-vs-cash-bonus-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/before-vs-after-leave-bonus-2026",
+        destination: "/guides/bonus-retire-impact-severance-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/retire-with-bonus-4insurance-2026",
+        destination: "/guides/bonus-retire-impact-severance-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/year-end-encouragement-vs-bonus-2026",
+        destination: "/guides/bonus-vs-incentive-vs-allowance-2026",
+        permanent: true,
+      },
+      // 삼성전자·SK하이닉스 성과급 — 5월 타결 전 기사·같은 해 분할 절세 오류
+      {
+        source: "/guides/opi-vs-tai-timing-tax-2026",
+        destination: "/guides/samsung-opi-tai-complete-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/samsung-wage-negotiation-status-2026",
+        destination: "/guides/samsung-opi-tai-complete-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/sk-hynix-ps-bonus-2026",
+        destination: "/guides/sk-hynix-ps-history-2026-prospect",
+        permanent: true,
+      },
+      // 기부금 — 옛 법정·지정 용어와 설명·본문 수치 불일치
+      {
+        source: "/guides/religious-donation-100-percent-2026",
+        destination: "/guides/donation-tax-credit",
+        permanent: true,
+      },
+      {
+        // GSC 404 (2026-06-22 발견): 슬러그에 한글 '억'이 섞인 오기 주소. 비ASCII source 는
+        // 퍼센트 인코딩 필수(요청 경로를 인코딩 상태로 매칭 — 12억 → 12%EC%96%B5).
+        source: "/guides/one-home-prop-tax-12%EC%96%B5-2026",
+        destination: "/guides/one-home-prop-tax-12eok-2026",
+        permanent: true,
+      },
     ];
   },
   async headers() {

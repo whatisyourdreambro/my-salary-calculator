@@ -43,11 +43,12 @@ describe("사실 정정 — 옛 오류 문구 재발 금지", () => {
     expect(t).toContain("이듬해 4월");
     expect(text("bonus-health-4-percent-2026")).not.toContain("7월에 작년 소득 기준 정산");
 
-    // 연봉 7,000만 + 성과급 1억 — 세후 증가분·총 공제·추가 세액공제 30% 가정값
+    // 연봉 7,000만 + 성과급 1억 — 세후 증가분·총 공제 (2026-09-30 키퍼 재작성: '추가 세액공제 30% 가정' 문구 삭제,
+    // 표 값 전체 고정은 guideBonusNetTables.test.ts)
     const eok = bonus2026(70_000_000, 100_000_000);
     expect(t).toContain(`세후 약 ${fmtManwon(eok.net)}`); // 6,373만원
     expect(t).toContain(`약 ${fmtManwon(eok.totalDeductions)}`); // 3,627만원
-    expect(t).toContain(`약 ${fmtManwon(Math.round(bonus2026(70_000_000, 100_000_000, 30).net / 1e6) * 1e6)}`); // 7,300만원
+    expect(t).not.toContain("30% 가정");
 
     // 연봉 6,000만 + 성과급 5,000만 — 과세표준 24% 구간, 총 부담·실수령
     const t5 = text("bonus-5000-net-payment-2026");
@@ -56,7 +57,7 @@ describe("사실 정정 — 옛 오류 문구 재발 금지", () => {
     expect(t5).not.toContain("3,370만");
     expect(t5).toContain(`총 부담 약 ${fmtManwon(five.totalDeductions)}`); // 1,429만원
     expect(t5).toContain(`실수령 약 ${fmtManwon(five.net)}`); // 3,571만원
-    expect(t5).toContain(`소득세: 약 ${fmtManwon(five.incomeTaxDelta)}`); // 991만원
+    expect(t5).toContain(`${five.incomeTaxDelta.toLocaleString("ko-KR")}원`); // 9,911,163원 (공제 내역 표)
   });
 
   it("국내상장 해외지수 ETF 매매차익은 배당소득 15.4%", () => {
@@ -78,9 +79,13 @@ describe("사실 정정 — 옛 오류 문구 재발 금지", () => {
   });
 
   it("난임시술비 공제율 30%, 구직급여 2026 상·하한", () => {
-    expect(text("infertility-medical-20-percent-2026")).toContain("243만원");
-    expect(text("infertility-medical-20-percent-2026")).not.toContain("× 20%");
-    const job = text("seeking-job-benefit-2026");
+    // 2026-09-26 GUIDES-07: 난임 20% 슬러그와 구직급여 May 두 편은 308 통합으로 빠졌다(configRedirects.test).
+    // 난임 20% 문구 재발은 guideSpec 금지 사실 스캔(infertility-20)이 전편에서 막고, 구직급여 수치는 통합 목적지에서 확인한다.
+    const live = new Set(koGuides.map((g) => g.slug));
+    for (const retired of ["infertility-medical-20-percent-2026", "seeking-job-benefit-2026", "employment-insurance-detail-2026"]) {
+      expect(live.has(retired), retired).toBe(false);
+    }
+    const job = text("unemployment-benefits-complete");
     expect(job).not.toContain("7.4만");
     expect(job).not.toContain("6개월 보장");
     expect(job).toContain("68,100원");
@@ -88,7 +93,8 @@ describe("사실 정정 — 옛 오류 문구 재발 금지", () => {
   });
 
   it("카드 한도 1.2억 구간·종부세 공동명의 각 6억 표기 제거", () => {
-    expect(text("credit-card-deduction-limit-detail-2026")).not.toContain("7천~1.2억: 250만원");
+    // credit-card-deduction-limit-detail-2026 은 308 통합(GUIDES-07) — '7천~1.2억' 구간은 guideSpec card-tier-1.2eok 이 전편에서 막는다
+    expect(koGuides.some((g) => g.slug === "credit-card-deduction-limit-detail-2026")).toBe(false);
     const joint = text("newlywed-joint-ownership-2026");
     expect(joint).not.toContain("각 6억");
     expect(joint).toContain("약 192만원");
@@ -135,7 +141,9 @@ describe("META-07 검색 전용 설명 규칙", () => {
   const withMeta = guides.filter((g) => g.metaDescription);
 
   it("설명이 가장 짧던 39편에 80~120자, 이모지 없이 붙는다", () => {
-    expect(withMeta.length).toBe(39);
+    // 39편(META-07) + W3-A 재작성 키퍼·기둥 글(guideSpec KEEPERS — 키퍼 사양이 metaDescription 80~120자를 요구).
+    // 정확한 출처 가드(맵 39편 고정·키퍼 밖 추가 금지)는 guideSpec.test.ts (6) 이 KEEPERS 와 함께 건다.
+    expect(withMeta.length).toBeGreaterThanOrEqual(39);
     for (const g of withMeta) {
       const len = [...(g.metaDescription as string)].length;
       expect(len, g.slug).toBeGreaterThanOrEqual(80);
