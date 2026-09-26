@@ -450,7 +450,8 @@ export async function prepare(opts, deps = defaultDeps()) {
       await git(deps, wt, ["checkout", "--detach", "origin/main"]);
       await git(deps, wt, ["reset", "--hard", "origin/main"]);
       if (!opts.reexeced) {
-        const args = [join(wt, "scripts/trend-publish/daily.mjs"), "prepare", "--reexeced", "--trend-home", home, "--worktree", wt, ...(opts.today ? ["--today", opts.today] : [])];
+        // 방금 맞춘 워크트리의 새 코드로 다시 실행 — 자식은 동기화를 반복하지 않는다(--no-sync)
+        const args = [join(wt, "scripts/trend-publish/daily.mjs"), "prepare", "--reexeced", "--no-sync", "--trend-home", home, "--worktree", wt, ...(opts.today ? ["--today", opts.today] : [])];
         rmSync(lock, { recursive: true, force: true });
         const r = await deps.run(process.execPath, args, { cwd: wt });
         return lastJson(r.stdout) ?? out({ status: "error", reason: `재실행 결과를 읽지 못함 (exit ${r.code})` });
@@ -499,7 +500,9 @@ export async function prepare(opts, deps = defaultDeps()) {
     const b = join(home, "builds", originSha);
     const sibling = wtConfig.adSequence?.siblingGuide;
     const gatePages = [...(wtConfig.adSequence?.gatePages ?? []), ...(sibling ? [`/guides/${sibling}`] : [])].join(",");
-    for (const [name, cmd] of [
+    // baseBuild: "always"(기본 — 날짜 의존 블록이 있어 매일 다시 빌드) · "reuse"(같은 커밋 목록이 있으면 재사용)
+    const reuseBase = wtConfig.baseBuild === "reuse" && existsSync(join(b, "chunks.json")) && existsSync(join(b, "adseq.json"));
+    for (const [name, cmd] of reuseBase ? [] : [
       ["base-build", "npm run build"],
       ["base-manifests", `node scripts/trend-publish/chunk-diff.mjs manifest --next .next --out "${join(b, "chunks.json")}" && node scripts/trend-publish/ad-sequence.mjs extract --next .next --pages "${gatePages}" --out "${join(b, "adseq.json")}"`],
       ["base-autoads", "npm run verify:autoads"],
