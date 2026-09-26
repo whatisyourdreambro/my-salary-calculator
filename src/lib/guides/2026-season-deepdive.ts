@@ -24,7 +24,7 @@ export const season2026Guides = [
 <h2>4. 의료비는 총급여 3% 문턱부터</h2>
 <p>총급여 5,500만원의 3%는 165만원입니다. 그해 공제 대상 의료비가 본인 지출 80만원뿐이면 문턱보다 작으므로 해당 의료비 세액공제액은 0원입니다. 여기에 근거 없이 5만원 환급을 더할 수 없습니다. 실손보험 등으로 보전받은 금액은 제외하고 대상별 한도와 공제율을 구분합니다.</p>
 <h2>5. 나머지 공제는 조건별로 확인합니다</h2>
-<ul><li><a href="/credit-card-deduction-2026">카드 소득공제:</a> 총급여·사용액·결제수단·공제 한도를 함께 확인합니다.</li><li><a href="/rent-tax-credit-2026">월세 세액공제:</a> 소득·주택·주소·지출자·납부 증빙을 확인합니다.</li><li><a href="/calc/child-deduction">자녀공제:</a> 기본공제 대상과 만 8세 이상 세액공제 대상을 나눕니다.</li><li><a href="/donation-tax-credit-2026">기부금:</a> 단체 유형·한도·본인 지출·이월 여부를 확인합니다.</li></ul>
+<ul><li><a href="/credit-card-deduction-2026">카드 소득공제:</a> 총급여·사용액·결제수단·공제 한도를 함께 확인합니다.</li><li><a href="/rent-tax-credit-2026">월세 세액공제:</a> 소득·주택·주소·지출자·납부 증빙을 확인합니다.</li><li><a href="/calc/child-deduction">자녀공제:</a> 기본공제 대상과 세액공제 대상(2026년 귀속 9세 이상, 2017년생 제외)을 나눕니다.</li><li><a href="/donation-tax-credit-2026">기부금:</a> 단체 유형·한도·본인 지출·이월 여부를 확인합니다.</li></ul>
 <h2>6. 계산 전에 준비할 자료</h2>
 <p>총급여와 비과세 내역, 소득세·지방소득세 기납부액, 부양가족 소득과 중복 공제 여부, 본인 명의 납입·지출 증빙을 준비하세요. 연말정산 미리보기의 예상액도 실제 연말 자료로 다시 확인해야 합니다. 절세를 위해 필요 없는 소비나 감당하기 어려운 장기 납입을 늘리지 마세요.</p>
 <p>근거: <a href="https://b.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7875&amp;mi=6596">국세청 세액공제 안내</a> · <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7874&amp;mi=6595">국세청 특별세액공제 안내</a>.</p>

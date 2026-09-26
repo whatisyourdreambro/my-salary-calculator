@@ -80,20 +80,6 @@
       "note": "자녀(30~70만) — 출산·입양 공제 금액. 연간 자녀세액공제는 1명 25만·2명 55만 (hot-bonus-tax-complete.ts)"
     },
     {
-      "slug": "tax-refund-mistakes-2026",
-      "patternId": "rent-cap-750",
-      "snippet": "더 환급됩니다. 🏠 1. 월세 세액공제 — 무주택자 한정 총급여 7천만 이하 무주택 세대주. 한도 750만의 17% = 최대 약 12",
-      "tag": "GUIDES-08",
-      "note": "월세 한도 750만 → 현행 연 1,000만 (최대 환급액 문구도 함께)"
-    },
-    {
-      "slug": "tax-refund-mistakes-2026",
-      "patternId": "rent-salary-7000",
-      "snippet": "더 환급됩니다. 🏠 1. 월세 세액공제 — 무주택자 한정 총급여 7천만 이하 무주택 세대주. 한도",
-      "tag": "GUIDES-08",
-      "note": "월세 세액공제 총급여 7천만 → 현행 8,000만 이하(2024년 귀속~)"
-    },
-    {
       "slug": "year-end-tax-deductions-guide",
       "patternId": "card-extra-each-100",
       "snippet": "교통·전통시장·도서공연비 (각 100만원 추가 한도) 중소기업 청년 소득",
