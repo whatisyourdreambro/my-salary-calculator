@@ -124,18 +124,32 @@ describe("result label (one line at 320px, measured 2026-09-26)", () => {
   });
 });
 
-describe("toolContent /tools/date/work-days (above tools/layout ads: length caps)", () => {
+describe("toolContent /tools/date/work-days (above tools/layout ads: width-pinned copy)", () => {
   const c = getToolContent("/tools/date/work-days")!;
-  const len = (s: string) => [...s].length;
 
-  it("never grows the edited strings beyond their pre-2026-09-26 lengths", () => {
-    expect(len(c.sections[1].paragraphs![0])).toBeLessThanOrEqual(102);
-    expect(len(c.sections[1].paragraphs![1])).toBeLessThanOrEqual(92);
-    expect(len(c.sections[2].paragraphs![0])).toBeLessThanOrEqual(103);
-    expect(len(c.sections[2].list!.items[1])).toBeLessThanOrEqual(34);
-    expect(len(c.sections[2].list!.items[2])).toBeLessThanOrEqual(35);
-    expect(len(c.faqs[0].answer)).toBeLessThanOrEqual(99);
-    expect(len(c.disclaimer!)).toBeLessThanOrEqual(85);
+  // 본문 섹션·목록·유의사항은 GuideMidAd 와 tools/layout 의 InArticleAd·HomeTopAd 위에 있다.
+  // 글자 수 상한만으로는 줄 수가 지켜지지 않았다(R4 리뷰: 390~430px 에서 광고 28px 이동).
+  // 그래서 바뀐 문구는 단어마다 옛 문구와 같은 폭(한글 음절 수·문장부호, 14px 의 (26–27)=한글 4자 폭)
+  // 으로 맞췄고, 섹션 제목은 모든 폭에서 한 줄이다. 320~1440px 1px 간격과 1536·1920px 에서 광고 위치가
+  // 같음을 확인했다(scratch sweepfit). 바꾸려면 같은 확인을 다시 하고 이 값을 갱신한다.
+  // 접힌 FAQ 답(details)은 높이에 영향이 없어 고정하지 않는다.
+  it("keeps the width-fitted copy above the ads", () => {
+    expect(c.sections[1].paragraphs).toEqual([
+      "시작일과 종료일을 입력하면 그 사이의 주말과 공휴일 빼고 남은 영업일이 계산됩니다. 시작일과 종료일을 포함할지 여부에 따라 결과가 하루 정도 달라질 수 있으니 표시 기준을 확인하세요.",
+      "휴일 없이 월요일부터 같은 주 금요일까지는 5일, 그다음 주 금요일까지는 10일이 됩니다. 기간이 길어질수록 손으로 세기 번거로운 작업을 빠르게 처리할 수 있습니다.",
+    ]);
+    expect(c.sections[2].heading).toBe("2026~27년 공휴일 처리");
+    expect(c.sections[2].paragraphs).toEqual([
+      "이 계산기는 토·일요일을 제외하며, 설날·추석·제헌절 같은 법정 공휴일도 계산에서 알아서 빠집니다. 회사휴일 낀 기간을 계산할 때는 그 일수만큼 결과에서 직접 빼서 보정해야 정확합니다.",
+    ]);
+    expect(c.sections[2].list!.items).toEqual([
+      "급여·수당 계산 시 회사 규정상 휴일 기준을 먼저 확인합니다.",
+      "타연도의 휴일 등 반영이 안된 날짜는 수동 보정이 필요합니다.",
+      "임시공휴일이 지정되는 해에는 해당 연도 달력을 함께 참고하세요.",
+    ]);
+    expect(c.disclaimer).toBe(
+      "본 계산기는 주말을 제외한 참고용 영업일 수를 제공하며 (26–27) 공휴일도 뺐습니다. 그밖의 공휴일은 회사 규정과 해당 연도 달력으로 확인하시기 바랍니다.",
+    );
   });
 
   it("keeps the FAQ question text unchanged", () => {
