@@ -1,0 +1,145 @@
+{
+  "_note": "트렌드 레이더 금융 클러스터 12종(2026-09-26 R5). include/canonicalReleases 는 JS 정규식 원문(플래그 없음). demandWeight 는 운영자 네이버 서치어드바이저 30일 상위 30(검색어·웹문서) 카테고리 비중을 거친 등급(0.3/0.5/0.7/1.0)으로만 옮긴 값 — 원수치는 저장소에 두지 않는다. hubRoutes 는 src/app/<route>/page.tsx 가 실제로 있어야 한다(실행 시·테스트에서 검증).",
+  "baseAllow": "(연봉|월급|급여|임금|최저임금|통상임금|퇴직|연금|국민연금|건강보험|건보|보험료|4대보험|고용보험|산재|세법|소득세|연말정산|근로장려|자녀장려|세액|공제|비과세|원천징수|종합소득|부가세|양도세|종부세|재산세|취득세|상속|증여|금리|기준금리|대출|주담대|전세|DSR|예금|적금|ISA|청약|국채|보수|봉급|수당|성과급|육아휴직|출산|배우자|실업급여|구직급여|장려금|지원금|바우처|환급|물가|소비자물가|유족연금|난임)",
+  "denylist": "(주식|증시|코스피|코스닥|공매도|상장|ETF|ETN|레버리지|가상자산|디지털자산|코인|비트코인|스테이블|펀드|전망|예측|집값|부동산\\s?가격|선거|대선|총선|후보자|국회의원|배우(?!자)|가수|아이돌|연예|방송인|야구|축구|농구|배구|골프|올림픽|아시안게임|월드컵|K리그|사고|화재|붕괴|추락|사망|별세|부고|모친상|자살|범죄|혐의|구속|기소|검거|횡령|재난|지진|태풍|홍수|산불|폭염|응급|감염병|백신|질병|치매|진료|의료기관|정신건강|로또|복권|도박|신용점수|신용평점|신용등급|금리\\s?비교|금리\\s?순위|특판|최고금리)",
+  "kindRules": [
+    { "kind": "입법예고", "re": "입법예고" },
+    { "kind": "행정예고", "re": "행정예고" },
+    { "kind": "설명자료", "re": "^\\s*[\\(\\[]\\s*(보도)?설명|설명자료|해명자료|반박자료|(기사|보도)(\\s?등)?에\\s?대한\\s?설명" },
+    { "kind": "공포", "re": "(법률|시행령|시행규칙|개정령|개정법률).{0,12}공포|공포\\s?(및|·)?\\s?시행" },
+    { "kind": "고시", "re": "고시(?!원|생|촌|텔|공부)" },
+    { "kind": "통계", "re": "통계|동향|현황|지표|실적" }
+  ],
+  "kindPoints": {
+    "고시": 40,
+    "공포": 40,
+    "보도자료": 32,
+    "설명자료": 24,
+    "입법예고": 20,
+    "행정예고": 20,
+    "통계": 16,
+    "공고": 16
+  },
+  "clusters": [
+    {
+      "id": "minimum-wage",
+      "label": "최저임금",
+      "include": "최저임금|최저시급",
+      "ministry": "고용노동부",
+      "briefEligible": true,
+      "canonicalReleases": "최저임금.{0,25}(고시|결정|의결|확정)|(고시|결정|확정).{0,10}최저임금",
+      "hubRoutes": ["/minimum-wage-2027"],
+      "demandWeight": 0.5
+    },
+    {
+      "id": "social-insurance-rates",
+      "label": "4대보험 요율",
+      "include": "보험료율|건강보험료|장기요양보험료|고용보험료|보험료징수법|4대\\s?보험|사회보험료|요율",
+      "ministry": "보건복지부",
+      "briefEligible": true,
+      "canonicalReleases": "(보험료율|요율).{0,25}(결정|고시|의결|확정|동결|인상)|(결정|확정|동결).{0,10}(보험료율|요율)",
+      "hubRoutes": ["/social-insurance-rates-2027"],
+      "demandWeight": 0.7
+    },
+    {
+      "id": "civil-servant-pay",
+      "label": "공무원 보수",
+      "include": "공무원\\s?(보수|봉급|임금|처우|월급|급여)|봉급표|보수\\s?인상|보수규정|수당규정",
+      "ministry": "인사혁신처",
+      "briefEligible": true,
+      "canonicalReleases": "봉급표.{0,15}(확정|고시|공포)|보수규정.{0,20}(개정|의결|공포)|공무원\\s?(보수|봉급).{0,25}(확정|의결)",
+      "hubRoutes": ["/civil-servant-pay-2027"],
+      "demandWeight": 1
+    },
+    {
+      "id": "tax-law-amendment",
+      "label": "세법 개정",
+      "include": "세법\\s?개정|세제\\s?개편|가업상속공제|세법개정안|세제개편안|조세특례제한법|조특법|과세\\s?체계|비과세|감면\\s?(확대|축소|연장|종료)|공제\\s?(확대|신설|개편|축소|폐지)",
+      "ministry": "재정경제부",
+      "briefEligible": false,
+      "canonicalReleases": "세법\\s?개정안.{0,15}(국회\\s?)?(통과|의결)|(개정\\s?)?세법.{0,10}공포|세법\\s?시행령\\s?개정",
+      "hubRoutes": ["/tax-reform-2026"],
+      "demandWeight": 0.3
+    },
+    {
+      "id": "year-end-tax",
+      "label": "연말정산",
+      "include": "연말정산|간소화\\s?서비스|간이세액표|원천징수|소득공제|세액공제|근로소득\\s?(세액|공제)",
+      "ministry": "국세청",
+      "briefEligible": true,
+      "canonicalReleases": "간이세액표.{0,10}(개정|고시)|간소화\\s?서비스.{0,10}(개통|개시|오픈|제공)",
+      "hubRoutes": ["/year-end-tax-2027"],
+      "demandWeight": 0.5
+    },
+    {
+      "id": "earned-income-credit",
+      "label": "근로·자녀장려금",
+      "include": "근로장려금|자녀장려금|근로\\s?장려\\s?세제|장려금\\s?신청",
+      "ministry": "국세청",
+      "briefEligible": false,
+      "canonicalReleases": "(근로|자녀)장려금.{0,30}(지급|결정)",
+      "hubRoutes": ["/earned-income-credit"],
+      "demandWeight": 0.3
+    },
+    {
+      "id": "bok-base-rate",
+      "label": "한국은행 기준금리",
+      "include": "기준금리|통화정책방향|금융통화위원회|금통위",
+      "ministry": "한국은행",
+      "briefEligible": true,
+      "canonicalReleases": "기준금리.{0,15}(인상|인하|동결|결정)|통화정책방향\\s?결정",
+      "hubRoutes": ["/home-loan", "/savings-interest-2026"],
+      "demandWeight": 0.5
+    },
+    {
+      "id": "national-pension",
+      "label": "국민연금",
+      "include": "국민연금|기준소득월액|연금개혁|노령연금|연금액|기초연금|연금\\s?(인상|수급|보험료)",
+      "ministry": "보건복지부",
+      "briefEligible": true,
+      "canonicalReleases": "기준소득월액.{0,20}(상·?하한|상한|하한|조정)|(국민연금|기초연금|연금액).{0,20}(인상률|인상액).{0,10}(확정|고시|적용)",
+      "hubRoutes": ["/national-pension-estimate-2026", "/calc/pension-hike-2027"],
+      "demandWeight": 0.5
+    },
+    {
+      "id": "parental-leave",
+      "label": "육아휴직·출산휴가",
+      "include": "육아휴직|출산휴가|출산전후휴가|배우자\\s?(출산|지원)|육아기\\s?근로시간|부모급여|난임치료휴가|육아\\s?지원",
+      "ministry": "고용노동부",
+      "briefEligible": false,
+      "canonicalReleases": "육아휴직\\s?급여.{0,20}(인상|확정|시행)",
+      "hubRoutes": ["/parental-leave"],
+      "demandWeight": 0.5
+    },
+    {
+      "id": "unemployment-benefit",
+      "label": "실업급여(구직급여)",
+      "include": "구직급여|실업급여|조기재취업수당|고용보험법",
+      "ministry": "고용노동부",
+      "briefEligible": true,
+      "canonicalReleases": "(구직급여|실업급여).{0,20}(상한|하한).{0,15}(인상|조정|확정)",
+      "hubRoutes": ["/unemployment-benefit"],
+      "demandWeight": 0.3
+    },
+    {
+      "id": "retirement-pension",
+      "label": "퇴직연금·퇴직금",
+      "include": "퇴직연금|퇴직금|퇴직급여|디폴트옵션|사전지정운용|IRP|개인형\\s?퇴직연금",
+      "ministry": "고용노동부",
+      "briefEligible": true,
+      "canonicalReleases": "퇴직연금.{0,20}의무화.{0,15}(확정|공포|시행)",
+      "hubRoutes": ["/retirement-pension-2026"],
+      "demandWeight": 0.3
+    },
+    {
+      "id": "household-loan-policy",
+      "label": "가계대출 정책",
+      "include": "가계대출|가계부채|주택담보대출|주담대|DSR|LTV|전세대출|전세자금대출|대출\\s?규제|정책대출|디딤돌|버팀목|보금자리론|정책모기지",
+      "ministry": "금융위원회",
+      "briefEligible": true,
+      "canonicalReleases": "(스트레스\\s?)?DSR.{0,20}(시행|적용|확정)|가계부채\\s?관리\\s?방안",
+      "hubRoutes": ["/home-loan"],
+      "demandWeight": 0.5
+    }
+  ]
+}

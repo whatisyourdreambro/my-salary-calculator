@@ -1,0 +1,26 @@
+User-agent: *
+
+Allow: /rss/board.es?mid=a10501010000&bid=0003&cg_code=C01
+Allow: /rss/board.es?mid=a10501040000&bid=0003&cg_code=C03
+Allow: /rss/board.es?mid=a10502000000&bid=0025
+Allow: /rss/board.es?mid=a10503000000&bid=0027
+Allow: /rss/board.es?mid=a10409020000&bid=0026
+Allow: /rss
+
+Allow: /board.es?mid=a10501010100&bid=0003
+Allow: /board.es?mid=a10501010500&bid=0003&cg_code=C03
+Allow: /board.es?mid=a10501010300&bid=0003&cg_code=C01&tag=CORONA
+Allow: /board.es?mid=a10501010400&bid=0003&cg_code=C02
+Allow: /board.es?mid=a10501010500&bid=0003&cg_code=C03
+Allow: /board.es?mid=a10503010100&bid=0027
+Allow: /board.es?mid=a10503010200&bid=0027&cg_code=C01
+Allow: /board.es?mid=a10503010300&bid=0027&cg_code=C02
+
+Disallow: /search/
+Disallow: /react/
+Disallow: /react/search
+Disallow: /react/search/search.jsp
+Disallow: /board.es
+Disallow: /board
+
+Sitemap: https://www.mohw.go.kr/sitemap.xml

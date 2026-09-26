@@ -1,0 +1,124 @@
+{
+  "_note": "공식 근거를 2026-09-26 에 직접 확인한 일정만 둔다. 후보 발표일이 같은 클러스터 일정 창(start~end) ±7일 안이면 +10점, 오늘부터 14일 안에 걸치면 보고서 '다가오는 공식 일정'에 표시. recurrence: yearly(MM-DD) · once(YYYY-MM-DD) · dates(날짜 목록). 확인 못 한 일정은 dropped 에 사유와 함께 두고 점수에 쓰지 않는다.",
+  "events": [
+    {
+      "id": "minimum-wage-decision",
+      "cluster": "minimum-wage",
+      "name": "최저임금 결정·고시(8월 5일까지 결정, 지체 없이 고시)",
+      "recurrence": "yearly",
+      "start": "07-01",
+      "end": "08-05",
+      "basis": "최저임금법 제8조제1항(매년 8월 5일까지 결정)·제10조제1항(지체 없이 고시). 창 시작일 7/1 은 최저임금위원회 의결이 통상 7월이라는 관행",
+      "sourceUrl": "https://www.law.go.kr/법령/최저임금법/제8조",
+      "verifiedAt": "2026-09-26"
+    },
+    {
+      "id": "eitc-half-first",
+      "cluster": "earned-income-credit",
+      "name": "근로장려금 반기 신청(상반기 소득분) 9월 1일~9월 15일",
+      "recurrence": "yearly",
+      "start": "09-01",
+      "end": "09-15",
+      "basis": "조세특례제한법 제100조의6제7항. 국세청 2026-09-01 보도자료(9월 15일까지 신청)와 일치",
+      "sourceUrl": "https://www.law.go.kr/법령/조세특례제한법/제100조의6",
+      "verifiedAt": "2026-09-26"
+    },
+    {
+      "id": "eitc-half-second",
+      "cluster": "earned-income-credit",
+      "name": "근로장려금 반기 신청(하반기 소득분) 3월 1일~3월 15일",
+      "recurrence": "yearly",
+      "start": "03-01",
+      "end": "03-15",
+      "basis": "조세특례제한법 제100조의6제7항",
+      "sourceUrl": "https://www.law.go.kr/법령/조세특례제한법/제100조의6",
+      "verifiedAt": "2026-09-26"
+    },
+    {
+      "id": "eitc-regular",
+      "cluster": "earned-income-credit",
+      "name": "근로·자녀장려금 정기 신청 5월 1일~5월 31일(종합소득세 확정신고 기간)",
+      "recurrence": "yearly",
+      "start": "05-01",
+      "end": "05-31",
+      "basis": "조세특례제한법 제100조의6제1항(종합소득과세표준 확정신고 기간) + 소득세법 제70조제1항(다음 연도 5월 1일~5월 31일)",
+      "sourceUrl": "https://www.law.go.kr/법령/조세특례제한법/제100조의6",
+      "verifiedAt": "2026-09-26"
+    },
+    {
+      "id": "nps-income-cap-notice",
+      "cluster": "national-pension",
+      "name": "국민연금 기준소득월액 상·하한액 고시(3월 31일까지)",
+      "recurrence": "yearly",
+      "start": "03-01",
+      "end": "03-31",
+      "basis": "국민연금법 시행령 제5조제3항(매년 3월 31일까지 고시). 창 시작일 3/1 은 표시용",
+      "sourceUrl": "https://www.law.go.kr/법령/국민연금법시행령/제5조",
+      "verifiedAt": "2026-09-26"
+    },
+    {
+      "id": "nps-income-cap-apply",
+      "cluster": "national-pension",
+      "name": "국민연금 기준소득월액 상·하한액 적용 시작(7월 1일)",
+      "recurrence": "yearly",
+      "start": "07-01",
+      "end": "07-01",
+      "basis": "국민연금법 시행령 제5조제4항(해당 연도 7월부터 다음 연도 6월까지 적용)",
+      "sourceUrl": "https://www.law.go.kr/법령/국민연금법시행령/제5조",
+      "verifiedAt": "2026-09-26"
+    },
+    {
+      "id": "health-insurance-rate-decision",
+      "cluster": "social-insurance-rates",
+      "name": "건강보험료율 결정(건강보험정책심의위원회 의결 — 관행상 8월 하순~9월 초)",
+      "recurrence": "yearly",
+      "start": "08-20",
+      "end": "09-10",
+      "basis": "국민건강보험법 제73조제1항(심의위원회 의결 → 대통령령). 법정 기한 없음 — 시기는 관행(2026년은 9월 8일 제15차 건정심, 사이트 정본 src/lib/taxConstants2027.ts 기록)",
+      "sourceUrl": "https://www.law.go.kr/법령/국민건강보험법/제73조",
+      "verifiedAt": "2026-09-26"
+    },
+    {
+      "id": "budget-bill-submission",
+      "cluster": "civil-servant-pay",
+      "name": "정부 예산안 국회 제출 기한(회계연도 개시 120일 전 = 9월 3일) — 공무원 보수 인상률 정부안 포함",
+      "recurrence": "yearly",
+      "start": "08-20",
+      "end": "09-03",
+      "basis": "국가재정법 제33조(회계연도 개시 120일 전까지 제출). 창 시작일 8/20 은 국무회의 의결이 통상 8월 하순이라는 관행",
+      "sourceUrl": "https://www.law.go.kr/법령/국가재정법/제33조",
+      "verifiedAt": "2026-09-26"
+    },
+    {
+      "id": "budget-bill-vote-deadline",
+      "cluster": "civil-servant-pay",
+      "name": "국회 예산안 의결 기한(회계연도 개시 30일 전 = 12월 2일)",
+      "recurrence": "yearly",
+      "start": "12-02",
+      "end": "12-02",
+      "basis": "대한민국헌법 제54조제2항(회계연도 개시 30일 전까지 의결)",
+      "sourceUrl": "https://www.law.go.kr/법령/대한민국헌법/제54조",
+      "verifiedAt": "2026-09-26"
+    },
+    {
+      "id": "bok-policy-rate-2026",
+      "cluster": "bok-base-rate",
+      "name": "한국은행 통화정책방향 결정회의(2026년)",
+      "recurrence": "dates",
+      "dates": ["2026-01-15", "2026-02-26", "2026-04-10", "2026-05-28", "2026-07-16", "2026-08-27", "2026-10-22", "2026-11-26"],
+      "basis": "한국은행 '통화정책방향 결정회의 일정 및 자료'(2026년 목록) — /portal/ 경로는 robots 허용",
+      "sourceUrl": "https://www.bok.or.kr/portal/singl/crncyPolicyDrcMtg/listYear.do?mtgSe=A&menuNo=200755",
+      "verifiedAt": "2026-09-26"
+    }
+  ],
+  "dropped": [
+    {
+      "name": "연말정산 간소화 서비스 개통(1월 15일)",
+      "reason": "법령에 날짜 규정이 없고, 국세청 보도자료 목록은 검색·페이지 이동이 POST 양식이라(자동 양식 제출 금지) 2026-09-26 검증에서 공식 페이지를 확인하지 못함. 운영자가 매년 1월 국세청 보도자료 링크로 확인한 뒤 events 에 추가할 것."
+    },
+    {
+      "name": "한국은행 2027년 통화정책방향 결정회의 일정",
+      "reason": "2026-09-26 기준 2026년 목록만 확인. 2027년 일정이 공개되면 같은 페이지(연도 선택)에서 확인 후 dates 에 추가할 것."
+    }
+  ]
+}
