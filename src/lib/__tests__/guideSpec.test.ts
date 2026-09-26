@@ -65,6 +65,10 @@ const KEEPERS: readonly string[] = [
   "lgensol-wage-negotiation-2026",
   "lg-hyundai-posco-bonus-2026",
   "bonus-vs-incentive-vs-allowance-2026",
+  // 2차(성과급 세금·4대보험·회사 성과급) — G2C
+  "bonus-retire-impact-severance-2026",
+  "executive-severance-limit-2026",
+  "it-rsu-vs-cash-bonus-2026",
 ];
 
 const BASE = "3b564c80";
