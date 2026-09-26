@@ -1,0 +1,150 @@
+{
+  "_note": "트렌드 레이더 신호 소스(2026-09-26 전부 실측 확인). 키 없는 공식 목록 12종 + 선택(키) 1종. 제목·링크·날짜만 읽는다 — 본문(description)·상세 페이지·첨부는 절대 가져오지 않는다. 여기 없는 소스를 추가할 때는 README 의 '제외 소스'와 이용약관·robots 를 먼저 확인할 것.",
+  "sources": [
+    {
+      "id": "mofe-press",
+      "kind": "rss",
+      "url": "https://mofe.go.kr/com/detailRssTagService.do?bbsId=MOSFBBS_000000000028",
+      "host": "mofe.go.kr",
+      "ministry": "재정경제부",
+      "defaultKind": "보도자료",
+      "dateFormat": "mofe",
+      "maxBytes": 2097152,
+      "robotsNote": "robots Disallow 는 /sch/schMain.do·/id/qustnr.do 뿐 — RSS·상세 경로 허용(2026-09-26). 옛 moef.go.kr 는 mofe.go.kr 로 301."
+    },
+    {
+      "id": "mofe-explain",
+      "kind": "rss",
+      "url": "https://mofe.go.kr/com/detailRssTagService.do?bbsId=MOSFBBS_000000000029",
+      "host": "mofe.go.kr",
+      "ministry": "재정경제부",
+      "defaultKind": "설명자료",
+      "dateFormat": "mofe",
+      "maxBytes": 2097152,
+      "robotsNote": "mofe-press 와 같음(2026-09-26)."
+    },
+    {
+      "id": "fsc-press",
+      "kind": "rss",
+      "url": "https://www.fsc.go.kr/about/fsc_bbs_rss/?fid=0111",
+      "host": "www.fsc.go.kr",
+      "ministry": "금융위원회",
+      "defaultKind": "보도자료",
+      "dateFormat": "dc-kst",
+      "maxBytes": 614400,
+      "robotsNote": "robots Allow / (2026-09-26). description 에 본문 전문이 실림 — 파싱 전에 잘라 냄."
+    },
+    {
+      "id": "fsc-explain",
+      "kind": "rss",
+      "url": "https://www.fsc.go.kr/about/fsc_bbs_rss/?fid=0112",
+      "host": "www.fsc.go.kr",
+      "ministry": "금융위원회",
+      "defaultKind": "설명자료",
+      "dateFormat": "dc-kst",
+      "maxBytes": 614400,
+      "robotsNote": "robots Allow / (2026-09-26)."
+    },
+    {
+      "id": "mohw-press",
+      "kind": "rss",
+      "url": "https://www.mohw.go.kr/rss/board.es?mid=a10503000000&bid=0027",
+      "host": "www.mohw.go.kr",
+      "ministry": "보건복지부",
+      "defaultKind": "보도자료",
+      "dateFormat": "rfc822",
+      "maxBytes": 2097152,
+      "robotsNote": "robots 가 이 RSS 경로를 명시 Allow, 상세 /board.es 는 Disallow — 링크 기록만, 원문 스냅샷 불가(2026-09-26)."
+    },
+    {
+      "id": "mpm-press",
+      "kind": "rss",
+      "url": "https://www.mpm.go.kr/board/rss.do?boardId=bbs_0000000000000029&mode=fed&proc=rss",
+      "host": "www.mpm.go.kr",
+      "ministry": "인사혁신처",
+      "defaultKind": "보도자료",
+      "dateFormat": "iso-offset",
+      "maxBytes": 614400,
+      "robotsNote": "robots 는 /board/board.do(상세) Disallow, /board/rss.do 는 허용(2026-09-26). 본문 전문 100건(약 330KB)."
+    },
+    {
+      "id": "moel-policy",
+      "kind": "rss",
+      "url": "https://www.moel.go.kr/rss/policy.do",
+      "host": "www.moel.go.kr",
+      "ministry": "고용노동부",
+      "defaultKind": "보도자료",
+      "dateFormat": "dc-kst",
+      "maxBytes": 2097152,
+      "robotsNote": "robots Disallow 는 /portal/·/v2024/·/info/defaulter/ 등 — /rss/ 허용(2026-09-26)."
+    },
+    {
+      "id": "moel-lawinfo",
+      "kind": "rss",
+      "url": "https://www.moel.go.kr/rss/lawinfo.do",
+      "host": "www.moel.go.kr",
+      "ministry": "고용노동부",
+      "defaultKind": "입법예고",
+      "dateFormat": "dc-kst",
+      "maxBytes": 2097152,
+      "robotsNote": "moel-policy 와 같음(2026-09-26). 입법·행정예고 목록."
+    },
+    {
+      "id": "moel-notice",
+      "kind": "rss",
+      "url": "https://www.moel.go.kr/rss/notice.do",
+      "host": "www.moel.go.kr",
+      "ministry": "고용노동부",
+      "defaultKind": "공고",
+      "dateFormat": "dc-kst",
+      "maxBytes": 2097152,
+      "robotsNote": "moel-policy 와 같음(2026-09-26). 채용·공모 공고가 대부분 — 금융 필터에서 대부분 빠짐."
+    },
+    {
+      "id": "nts-press",
+      "kind": "html-nts",
+      "url": "https://www.nts.go.kr/nts/na/ntt/selectNttList.do?mi=2201&bbsId=1028",
+      "host": "www.nts.go.kr",
+      "ministry": "국세청",
+      "defaultKind": "보도자료",
+      "dateFormat": "nts-dotted",
+      "maxBytes": 2097152,
+      "robotsNote": "robots Allow / (2026-09-26). 국세청은 RSS 가 없어 목록 HTML 1쪽(10행)만 하루 1회. 상세 링크는 번호로 조립."
+    },
+    {
+      "id": "moel-press",
+      "kind": "html-moel",
+      "url": "https://www.moel.go.kr/news/enews/report/enewsList.do",
+      "host": "www.moel.go.kr",
+      "ministry": "고용노동부",
+      "defaultKind": "보도자료",
+      "dateFormat": "nts-dotted",
+      "maxBytes": 614400,
+      "robotsNote": "robots 가 /news/ 를 막지 않음(2026-09-26). 보도자료 RSS 가 없어 목록 HTML 1쪽만(약 250KB)."
+    },
+    {
+      "id": "gtrends-kr",
+      "kind": "gtrends",
+      "url": "https://trends.google.com/trending/rss?geo=KR",
+      "host": "trends.google.com",
+      "ministry": "구글 트렌드(신호 전용)",
+      "defaultKind": "신호",
+      "dateFormat": "rfc822",
+      "maxBytes": 2097152,
+      "robotsNote": "robots 가 막는 것은 탐색(explore) 화면 경로 2개뿐 — /trending/rss 허용(2026-09-26). 실행당 1회, +10 부스트·헤드라인 게이트 전용."
+    },
+    {
+      "id": "lawdrf",
+      "kind": "lawdrf",
+      "url": "https://www.law.go.kr/DRF/lawSearch.do",
+      "host": "www.law.go.kr",
+      "ministry": "법제처(국가법령정보)",
+      "defaultKind": "공포",
+      "dateFormat": "yyyymmdd",
+      "maxBytes": 1048576,
+      "robotsNote": "robots Allow / (2026-09-26). 공동활용 Open API — env LAW_OC(무료 등록 ID)가 있을 때만 1회. 없으면 건너뜀.",
+      "optional": true,
+      "env": "LAW_OC"
+    }
+  ]
+}
