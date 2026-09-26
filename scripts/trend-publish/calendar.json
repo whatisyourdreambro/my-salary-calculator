@@ -1,0 +1,15 @@
+{
+  "_README": [
+    "발행 달력 (2026-09-26 R5 publisher) — 이 파일과 TREND_HOME/calendar.local.json(차단 추가만 가능)을 함께 본다.",
+    "firstPublishNotBefore 는 types.ts FIRST_PUBLISH_NOT_BEFORE 보다 앞당길 수 없다(늦은 쪽이 이긴다).",
+    "freezes: growth-masterplan §5-2 창 B(11/1~1/31 신규 라우트 금지). 연말정산 동결 예외는 운영자 결정 — 기본 아니오.",
+    "verdictWindows: 광고 판정일 당일 차단. deployBatches: 운영자 배포 배치일과 그 뒤 deployBlackoutDaysAfter 일 차단.",
+    "resumeRequiresPilotVerdictAfter: 이 날짜 이후 재개는 decide.mjs --pilot-verdict continue 기록이 있어야 한다."
+  ],
+  "firstPublishNotBefore": "2026-10-10",
+  "freezes": [{ "from": "2026-11-01", "to": "2027-01-31", "reason": "growth-masterplan §5-2 창 B — 신규 라우트 금지" }],
+  "verdictWindows": [{ "date": "2026-10-09", "reason": "자동광고 판정(10/9)" }],
+  "deployBatches": [{ "date": "2026-10-10", "reason": "R3 배치 배포" }],
+  "deployBlackoutDaysAfter": 2,
+  "resumeRequiresPilotVerdictAfter": "2027-01-31"
+}

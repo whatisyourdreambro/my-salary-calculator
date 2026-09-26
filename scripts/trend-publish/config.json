@@ -1,0 +1,121 @@
+{
+  "_README": [
+    "트렌드 브리프 파이프라인 설정 (2026-09-26 R5 publisher) — 런북 docs/trend-publishing-runbook.md.",
+    "caps 는 src/lib/trendBriefs/types.ts HARD_CAPS 보다 조이기만 한다(큰 값은 무시). 빈 객체 = 하드 상한 그대로.",
+    "minFreeMB 는 자리표시값 — 첫 dry-run 이 실측(빌드 중 최저 여유 메모리)으로 다시 고정한다.",
+    "clusters[].standingSources 는 2026-09-26 구현 시 브라우저 UA 로 HTTP 200 과 robots 허용을 확인한 공식 URL(법령 원문 링크 — 숫자 대조는 1차 출처로).",
+    "tripWires 는 정규식 문자열(guideSpec FORBIDDEN 과 옛 값) — 본문·제목·설명에 걸리면 SKIP."
+  ],
+  "mainRepo": "C:/dev/moneysalary/my-salary-calculator",
+  "worktree": "C:/dev/moneysalary/trend-wt",
+  "trendHome": "C:/Users/ruby1/.moneysalary-trend",
+  "caps": {},
+  "minFreeMB": 6144,
+  "heavyWaitMin": 30,
+  "baseBuild": "always",
+  "radar": { "cmd": ["node", "scripts/trend-radar/radar.mjs", "--live", "--out", "{TREND_HOME}/radar"] },
+  "sentinel": { "cmd": ["node", "scripts/trend-radar/sentinel.mjs", "--live", "--out", "{TREND_HOME}/sentinel"] },
+  "cannibalHubs": [
+    { "route": "/civil-servant-pay-2027", "headTerms": ["공무원 봉급표", "공무원 보수", "공무원 월급"] },
+    { "route": "/social-insurance-rates-2027", "headTerms": ["4대보험 요율", "사회보험 요율", "4대보험료율"] },
+    { "route": "/minimum-wage-2027", "headTerms": ["최저임금", "최저시급"] },
+    { "route": "/home-loan", "headTerms": ["주택담보대출", "주담대 금리", "대출 금리"] },
+    { "route": "/calc/samsung-bonus", "headTerms": ["삼성전자 성과급", "삼성 성과급"] },
+    { "route": "/year-end-tax-2027", "headTerms": ["연말정산"] }
+  ],
+  "clusters": {
+    "minimum-wage": {
+      "impactKinds": ["minimum-wage", "net-pay", "unemployment-benefit"],
+      "keywords": ["최저임금", "최저시급", "주휴수당"],
+      "standingSources": ["https://www.law.go.kr/법령/최저임금법"]
+    },
+    "social-insurance-rates": {
+      "impactKinds": ["insurance-rate-change", "net-pay"],
+      "keywords": ["4대보험", "고용보험", "건강보험료", "국민연금 보험료"],
+      "standingSources": [
+        "https://www.law.go.kr/법령/고용보험및산업재해보상보험의보험료징수등에관한법률시행령",
+        "https://www.law.go.kr/법령/국민건강보험법시행령"
+      ]
+    },
+    "civil-servant-pay": {
+      "impactKinds": ["civil-servant-pay"],
+      "keywords": ["공무원", "봉급", "호봉"],
+      "standingSources": ["https://www.law.go.kr/법령/공무원보수규정"]
+    },
+    "tax-law-amendment": {
+      "impactKinds": ["net-pay", "year-end-tax", "bonus-net"],
+      "keywords": ["세법개정", "소득세", "세액공제"],
+      "standingSources": ["https://www.law.go.kr/법령/소득세법", "https://www.law.go.kr/법령/조세특례제한법"]
+    },
+    "year-end-tax": {
+      "impactKinds": ["year-end-tax"],
+      "keywords": ["연말정산", "환급", "소득공제"],
+      "standingSources": ["https://www.law.go.kr/법령/소득세법", "https://www.law.go.kr/법령/조세특례제한법"]
+    },
+    "earned-income-credit": { "impactKinds": [], "keywords": ["근로장려금"], "standingSources": [] },
+    "bok-base-rate": {
+      "impactKinds": ["loan-repayment"],
+      "keywords": ["기준금리", "대출 이자", "변동금리"],
+      "standingSources": ["https://www.bok.or.kr/portal/singl/baseRate/list.do?dataSeCd=01&menuNo=200643"]
+    },
+    "national-pension": {
+      "impactKinds": ["insurance-rate-change"],
+      "keywords": ["국민연금", "연금개혁", "보험료율"],
+      "standingSources": ["https://www.law.go.kr/법령/국민연금법"]
+    },
+    "parental-leave": { "impactKinds": [], "keywords": ["육아휴직"], "standingSources": [] },
+    "unemployment-benefit": {
+      "impactKinds": ["unemployment-benefit"],
+      "keywords": ["실업급여", "구직급여"],
+      "standingSources": ["https://www.law.go.kr/법령/고용보험법"]
+    },
+    "retirement-pension": {
+      "impactKinds": ["severance"],
+      "keywords": ["퇴직금", "퇴직연금", "퇴직소득세"],
+      "standingSources": ["https://www.law.go.kr/법령/근로자퇴직급여보장법", "https://www.law.go.kr/법령/소득세법"]
+    },
+    "household-loan-policy": {
+      "impactKinds": ["loan-repayment"],
+      "keywords": ["가계대출", "DSR", "주택담보대출"],
+      "standingSources": ["https://www.law.go.kr/행정규칙/은행업감독규정"]
+    }
+  },
+  "tripWires": [
+    "연 2\\.75%",
+    "국민연금\\s?4\\.5\\s?%",
+    "(?:^|[^\\d,.])590만",
+    "7월.{0,8}(?:건보|건강보험).{0,6}정산",
+    "필요경비\\s?80\\s?%",
+    "도약계좌.{0,40}(?:가입하세요|지금 가입|바로 가입|신청하세요)",
+    "대중교통.{0,20}80\\s?%",
+    "월세.{0,40}750만",
+    "1\\.2억 초과.{0,6}200만"
+  ],
+  "linkFreshness": { "staticStale": ["/savings-interest-2026"] },
+  "chunkDiff": { "runtimeExempt": ["^webpack-[0-9a-f]+\\.js$"] },
+  "adSequence": {
+    "gatePages": ["/", "/guides/nurse-salary", "/calc/samsung-bonus"],
+    "siblingGuide": "salary-guide-2026"
+  },
+  "pathAllowlist": {
+    "publish": [
+      "^src/lib/guides/trend-briefs\\.ts$",
+      "^src/lib/guides/trend-briefs-\\d{4}-\\d{2}\\.ts$",
+      "^src/lib/__tests__/fixtures/trendBriefNumbers\\.json$",
+      "^scripts/trend-publish/ledger\\.json$",
+      "^src/lib/guidesMeta\\.generated\\.ts$",
+      "^src/config/site-metrics\\.generated\\.ts$",
+      "^scripts/url-ledger\\.snapshot\\.json$"
+    ],
+    "retire": ["^next\\.config\\.mjs$"]
+  },
+  "publish": {
+    "minOriginAgeHours": 2,
+    "verifyTimeoutMin": 45,
+    "verifyIntervalSec": 60,
+    "staleChunkPages": ["/", "/calc/samsung-bonus", "/guides/nurse-salary"],
+    "maxAssetGets": 40,
+    "purgeRecheckMin": 15,
+    "origin": "https://www.moneysalary.com"
+  }
+}
