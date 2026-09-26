@@ -41,6 +41,8 @@ const KEEPERS: readonly string[] = [
   // 1차(연말정산) — G1A
   "credit-card-deduction-30-40-strategy-2026",
   "parent-support-deduction-integration-2026",
+  "medical-edu-donation-limits-2026",
+  "insurance-100man-limit-2026",
 ];
 
 const BASE = "3b564c80";
