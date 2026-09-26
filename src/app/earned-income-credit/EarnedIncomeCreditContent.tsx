@@ -102,7 +102,7 @@ const APPLY_STEPS = [
  {
   step: "04",
   title: "신청 완료 → 지급",
-  desc: "정기 신청 시 9월 말 지급. 반기는 신청 다음 달 말 지급",
+  desc: "정기 신청은 9월 말 지급. 반기는 12월 35%·6월 정산",
  },
 ];
 
@@ -290,9 +290,9 @@ export default function EarnedIncomeCreditContent() {
        )}
        <div className="grid grid-cols-2 gap-2 pt-1">
         <div className="bg-white rounded-lg p-3 text-center">
-         <div className="text-xs text-muted-blue">이번 달 신청 시</div>
-         <div className="text-base font-bold text-navy">{formatWon(finalBenefit / 2)}만원</div>
-         <div className="text-xs text-muted-blue">반기 지급</div>
+         <div className="text-xs text-muted-blue">반기신청 35%</div>
+         <div className="text-base font-bold text-navy">{formatWon(finalBenefit * 0.35)}만원</div>
+         <div className="text-xs text-muted-blue">12월 지급</div>
         </div>
         <div className="bg-white rounded-lg p-3 text-center">
          <div className="text-xs text-muted-blue">5월 정기 신청 시</div>
