@@ -176,7 +176,24 @@ ECOS_API_KEY=<ECOS 인증키>
 | gate `canonical-release` 실패 | 최저임금 고시·요율 결정·봉급표·기준금리 결정은 새 글이 아니라 기존 허브 갱신 대상 — 별도 작업으로. |
 | `radar 없음`·`sentinel 없음` | scripts/trend-radar·scripts/fact-sentinel 병합 전. prepare 는 SKIP 으로 끝난다. |
 
-## 16. 1회 설정 순서 (운영자 승인 후)
+## 16. 첫 dry-run 결과 (2026-09-26, 통합 브랜치 claude/r5-integrated-20260926)
+
+§14 값 재측정:
+- `HTML_BUDGET_BYTES`: 빌드 피드 rss.xml 559,211B · 전문 제외 240,707B → 11,361 → **11,300 그대로**.
+- `minFreeMB`: 빌드 한 번이 여유 메모리를 약 4.0~4.8GB 끌어내림(6.4GB → 1.6GB, 5.0GB → 1.1GB). 1GB 이상 남기려면 6,144 가 맞다 → **6,144 유지**.
+- `adSequence.siblingGuide = salary-guide-2026`: 브리프 페이지 광고 순서가 형제와 4폭 모두 같음 → **유지**. `chunkDiff.runtimeExempt` 는 webpack 런타임에 맞음(아래 청크 차분 문제는 별개).
+
+결과: 레이더 새 글 후보 0건 → prepare `no-candidate`. 7일 안 대상 군집 발표는 고용노동부 9/22 입법예고 3건뿐이고 공고 본문이 첨부 파일에만 있어 writer skip → finish `skip`.
+견본(1차 출처 9/1 보도자료, 발행 불가)을 임시 등록해 빌드: 규칙 27개 중 citations(1차 출처 25일 경과)만 실패, 정적 생성·ad-sequence·autoads 0%·ad-audit 0/0·rss 투영 535,879B 통과. 견본은 docs/drafts-trend/.
+
+발행 전에 고쳐야 할 것 (결정 필요):
+1. **청크 차분(chunk-diff compare)이 매번 실패한다.** 같은 소스를 두 번 빌드해도 클라이언트 청크 66개 이름·해시가 바뀐다(webpack 청크 머리의 청크 id 배열 순서가 빌드마다 다름). 브리프가 들어가면 GUIDE_COUNT(레이아웃·공용 청크에 인라인)와 바뀐 공용 청크 id 참조 때문에 slug 없는 청크가 더 바뀐다. 이대로면 finish 가 매일 `chunk-diff 실패 → SKIP`.
+2. **가시 텍스트 상한 여유**: 승인 표기(`운영자가 발행을 승인했습니다(내용 검수 아님)`)가 dry-run 표기보다 4자 길어, dry-run 에서 3,297~3,300자인 초안은 발행 재렌더에서 structure 가 실패한다. writer 목표를 3,290자 이하로 하거나 규칙이 긴 표기로 재야 한다.
+3. **예약 작업 지시문 경로**: daily.mjs 는 writer 입력을 `TREND_HOME/writer/<날짜>/writer-input.json` 에, 초안 경로를 `TREND_HOME/drafts/pending/<날짜>.json`(prepare 결과의 draftPath)로 준다. 지시문의 읽기·쓰기 허용 경로를 이 둘에 맞춰야 한다.
+4. **첫 secret-scan 이 느릴 수 있다**: .next(약 1.5GB, cache 제외) 전체를 읽는다. 다른 빌드와 겹친 찬 캐시에서는 55분, 캐시가 따뜻하면 14초였다.
+5. 고용노동부 입법·행정예고 게시판은 본문이 첨부 파일뿐이라 1차 출처로 쓰면 거의 항상 writer skip 이 된다.
+
+## 17. 1회 설정 순서 (운영자 승인 후)
 
 1. `node scripts/trend-publish/daily.mjs init` → 계획 확인 → `--yes` 로 워크트리·정션·TREND_HOME 생성.
 2. 10/10 전까지 dry-run 을 몇 번 돌려 §14 값을 고정.
