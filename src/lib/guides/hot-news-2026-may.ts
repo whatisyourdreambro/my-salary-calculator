@@ -10,97 +10,9 @@ import type { Guide } from "@/lib/guidesData";
 // ═══════════════════════════════════════════════════════════════
 // 1. 삼성전자 임금협상 현황
 // ═══════════════════════════════════════════════════════════════
-const samsungWageStatus = `
-<p class="lead">
-2026년 삼성전자 임금협상이 5월 12일 본격적으로 시작됐습니다. 사측과 노조(전국삼성전자노동조합)는 기본급 인상률, OPI 산정 기준 변경, TAI 통합, 복지포인트·학자금 확대 4대 쟁점을 두고 본교섭에 들어갔습니다. 메모리 업황 회복으로 PS(Performance Sharing)가 다시 사업부별로 차이가 벌어지고 있어, 인상률 협상에 큰 변수가 됩니다.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">🔥 5월 12일 본교섭 5대 쟁점</h2>
-<ul class="space-y-3 mt-4">
-<li><strong>1. 기본급 인상률</strong>: 노조 측은 작년 5.1% 인상 대비 6% 이상을 요구. 사측은 4.5~5% 선에서 협의 가능성. 격차 1.5%p가 핵심.</li>
-<li><strong>2. OPI 산정 기준 변경</strong>: 메모리 사업부 OPI는 영업이익 연동. HBM3E 본격 출하로 2026년 OPI 한도 50% 가능성. 단 사업부별 격차 확대 우려.</li>
-<li><strong>3. TAI 통합 논의</strong>: TAI(목표달성장려금)와 OPI를 단일 성과급 체계로 통합하는 방안. 평가 단순화는 좋지만 사업부 간 형평성 이슈.</li>
-<li><strong>4. 복지포인트 확대</strong>: 현재 연 100만원 → 150만원 인상 요구. 카페테리아식 자유 사용 확대.</li>
-<li><strong>5. 자녀 학자금 한도</strong>: 자녀 대학 등록금 전액 → 대학원·해외 유학까지 확대 검토.</li>
-</ul>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">📅 협상 일정 & 변수</h2>
-<p>
-5월 12일 본교섭을 시작으로 매주 1회 협상 진행. 통상 7~8월에 잠정합의안 도출 후 조합원 투표를 거쳐 9월 타결되는 것이 일반적입니다. 다만 2024~2025년 임금협상 결렬·파업 사례가 있어, 2026년에도 변수 발생 가능성 상존.
-</p>
-<p>
-가장 큰 외부 변수는 <strong>HBM3E 12-Hi 양산 안정화 시점</strong>입니다. NVIDIA 공급 본격화 시 메모리 사업부 영업이익이 분기 5조원+ 가능. 이 경우 PS 1,000% 이상도 가능해 협상의 핵심 카드가 됩니다.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 직원 입장에서 챙길 3가지</h2>
-<ol class="space-y-3 mt-4">
-<li><strong>① OPI 시점 절세</strong>: 1월·7월 OPI 지급 직전 IRP·연금저축에 추가 납입하면 한계세율 35~38% 구간에서 효과 큼. 최대 900만원 → 환급 약 119~149만원.</li>
-<li><strong>② RSU·ESPP 행사 시점</strong>: ESPP 할인분 + 자사주 양도세 22%(해외주식)는 1년 250만원 공제 활용. 분할 매도 권장.</li>
-<li><strong>③ 협상 결과 즉시 반영</strong>: 합의안 조합원 투표 통과 후 소급분이 한 번에 지급되므로, 그달 종합소득세 한계세율 점프 주의.</li>
-</ol>
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20">
-<p class="font-bold text-primary mb-2">📌 관련 도구</p>
-<ul class="space-y-1 text-sm">
-<li>· <a href="/calc/samsung-bonus" class="text-primary underline">삼성전자 성과급 계산기 (OPI·TAI 듀얼)</a></li>
-<li>· <a href="/samsung-negotiation-2026" class="text-primary underline">삼성 임금협상 가이드 페이지</a></li>
-<li>· <a href="/income-tax-2026" class="text-primary underline">2026 종합소득세 계산기</a></li>
-<li>· <a href="/tools/finance/irp" class="text-primary underline">IRP·연금저축 세액공제 계산기</a></li>
-</ul>
-</div>
-`;
-
 // ═══════════════════════════════════════════════════════════════
 // 2. SK하이닉스 2026 PS 성과급 전망
 // ═══════════════════════════════════════════════════════════════
-const skHynixPS2026 = `
-<div class="mt-2 mb-8 p-5 bg-primary/5 rounded-2xl border border-primary/20">
-<p class="font-bold text-primary mb-2">🔄 2026-08-25 업데이트 — 이후 확정된 사실</p>
-<ul class="space-y-1 text-sm">
-<li>· 2025년분 PS는 <strong>기본급의 2,964%</strong>로 확정 지급됐습니다(2026-02-05, 영업이익 47.2조·상한 1,000% 폐지 첫 적용). 아래 본문의 '한도 1,000%'·'25조' 서술은 작성 시점(2026-05) 전망입니다.</li>
-<li>· 2026-08-20 임단협 잠정합의안(PS 현금 40% + 자사주 60%)은 2026-08-25 총투표에서 부결됐고, 수정안(<strong>당해 현금 50% + 자사주 30%, 1·2년 후 자사주 10%씩</strong>)이 <strong>2026-09-16 총투표에서 가결</strong>되어 2026년분부터 적용됩니다.</li>
-<li>· 최신 수치·신구 체계 비교는 <a href="/calc/sk-hynix-bonus" class="text-primary underline">SK하이닉스 성과급 계산기</a>를 참고하세요.</li>
-</ul>
-</div>
-<p class="lead">
-2025년 4분기 SK하이닉스가 분기 영업이익 약 12조원을 기록하며 HBM 시장을 사실상 독점한 결과, 2026년 PS(생산성격려금) 최고치 갱신 기대가 커지고 있습니다. 통상 PS는 기본급 대비 1,000%(=10개월치)가 한도지만, 2025년 메모리 사업부 PS 1,500% 사례 이후 2026년에는 더 큰 폭이 가능하다는 전망입니다.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">📊 2025 vs 2026 PS 비교</h2>
-<div class="overflow-x-auto my-6">
-<table class="w-full text-sm border border-border">
-<thead class="bg-secondary"><tr><th class="p-3 text-left">항목</th><th class="p-3 text-left">2025년</th><th class="p-3 text-left">2026년 전망</th></tr></thead>
-<tbody>
-<tr class="border-t"><td class="p-3">연간 영업이익</td><td class="p-3">약 25조원</td><td class="p-3">약 40조원+</td></tr>
-<tr class="border-t"><td class="p-3">PS 한도</td><td class="p-3">기본급 1,500%</td><td class="p-3">기본급 2,000% 가능성</td></tr>
-<tr class="border-t"><td class="p-3">HBM 점유율</td><td class="p-3">약 50%</td><td class="p-3">약 50% 유지(삼성 추격)</td></tr>
-</tbody>
-</table>
-</div>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">💸 PS 1,500% 시 실수령액</h2>
-<p>
-기본급 5,000만원 직원이 PS 1,500% 받으면 7,500만원 추가 지급. 단 성과급은 종합소득세 누진세율 적용으로 한계세율 35~38% 구간 → 실수령 약 4,650~4,875만원. 추가로 4대보험 상한선 적용 후 실제 통장 입금액은 더 낮을 수 있습니다.
-</p>
-<p>
-<strong>절세 전략</strong>: 지급 직전 월 IRP·연금저축 900만원 만기 납입 → 약 119~149만원 환급. 또한 비과세 식대 20만원 100% 활용 + 부양가족 인적공제 1인 150만원도 동시 적용.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 변수 — 메모리 사이클 후반</h2>
-<p>
-2025~2026년 메모리 슈퍼사이클의 끝이 언제냐가 관건. AI 수요가 지속되면 2027년까지 PS 고점 유지 가능. 반면 NAND 가격 급락이나 HBM 경쟁 심화 시 2026 4분기부터 둔화 가능성. 사이클 후반에는 PS가 절반 이하로 줄 수 있어 자산 배분 전략이 중요합니다.
-</p>
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20">
-<p class="font-bold text-primary mb-2">📌 관련 도구</p>
-<ul class="space-y-1 text-sm">
-<li>· <a href="/salary-db/sk-hynix" class="text-primary underline">SK하이닉스 연봉 상세 페이지</a></li>
-<li>· <a href="/tools/finance/bonus" class="text-primary underline">성과급 세금 계산기</a></li>
-<li>· <a href="/income-tax-2026" class="text-primary underline">2026 종합소득세 계산기</a></li>
-</ul>
-</div>
-`;
-
 // ═══════════════════════════════════════════════════════════════
 // 3. LG에너지솔루션 2026 임금협상
 // ═══════════════════════════════════════════════════════════════
@@ -511,57 +423,6 @@ const usStockTaxSaving = `
 // ═══════════════════════════════════════════════════════════════
 // 14. 부업·N잡 종합소득세 신고
 // ═══════════════════════════════════════════════════════════════
-const sideHustleTax = `
-<p class="lead">
-직장인 부업·N잡 수익은 연 500만원을 넘으면 종합소득세 신고 의무. 5월 1~31일 신고 시기를 놓치면 가산세 최대 20%. 부업 유형별 신고 방식과 절세 전략을 정리합니다.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 부업 유형별 신고</h2>
-<ul class="space-y-3 mt-4">
-<li><strong>① 사업소득(3.3% 원천징수)</strong>: 강사·디자이너·개발자 외주 등. 종합소득세 신고 의무.</li>
-<li><strong>② 기타소득(8.8% 원천징수)</strong>: 강연료·원고료·인세. 연 300만원 초과 시 종합과세 vs 분리과세 선택.</li>
-<li><strong>③ 사업자등록 후 소득</strong>: 부가세 신고(1·7월) + 종합소득세 신고(5월) 별도.</li>
-</ul>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 필요경비 활용 절세</h2>
-<p>
-사업소득은 매출에서 필요경비를 차감해 과세표준 계산. 필요경비로 인정되는 항목:
-</p>
-<ul class="space-y-2 mt-4">
-<li>· 노트북·모니터·소프트웨어 (감가상각 또는 즉시상각)</li>
-<li>· 사무실 임대료·관리비 (재택 사무실 일부)</li>
-<li>· 통신비 (업무용 비율 70~100%)</li>
-<li>· 차량 유지비 (업무용 비율)</li>
-<li>· 교육비·도서비 (직무 관련)</li>
-<li>· 외부 미팅 식대 (영수증 보관)</li>
-</ul>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">🎯 단순경비율 vs 기준경비율</h2>
-<p>
-업종별 정해진 비율로 필요경비를 산정하는 간이 방식:
-</p>
-<ul class="space-y-2 mt-4">
-<li>· <strong>단순경비율</strong> (소득 7,500만원 이하): 업종 평균 경비율 적용. 영수증 없어도 OK.</li>
-<li>· <strong>기준경비율</strong> (소득 7,500만원 초과): 일부 항목만 적용. 영수증 필요.</li>
-<li>· <strong>실비 신고</strong>: 모든 경비 실비 적용. 영수증 보관 필수.</li>
-</ul>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 미신고 시 불이익</h2>
-<ul class="space-y-2 mt-4">
-<li>· 무신고 가산세: 20% (단순 누락은 10%)</li>
-<li>· 납부불성실 가산세: 연 9.125%</li>
-<li>· 매년 가산세 누적 → 3년 후 원래 세액의 1.5~2배</li>
-</ul>
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20">
-<p class="font-bold text-primary mb-2">📌 관련 도구</p>
-<ul class="space-y-1 text-sm">
-<li>· <a href="/tools/finance/freelance-tax" class="text-primary underline">프리랜서 종합소득세 계산기</a></li>
-<li>· <a href="/income-tax-2026" class="text-primary underline">2026 종합소득세 계산기</a></li>
-</ul>
-</div>
-`;
-
 // ═══════════════════════════════════════════════════════════════
 // 15. 가상자산 양도세 유예
 // ═══════════════════════════════════════════════════════════════
@@ -1151,58 +1012,6 @@ const youthInvestmentSavings = `
 // ═══════════════════════════════════════════════════════════════
 // 27. 월세 세액공제 15~17% 1,000만원
 // ═══════════════════════════════════════════════════════════════
-const monthlyRentTaxCredit = `
-<p class="lead">
-무주택 세대주가 월세를 내고 있다면 연 1,000만원 한도로 15%(총급여 5,500만원 초과)~17%(5,500만원 이하) 세액공제. 매월 50~60만원 월세 거주자는 매년 약 90~122만원 환급 가능. 신청 안 하면 그대로 손해.
-</p>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 공제 요건</h2>
-<ul class="space-y-2 mt-4">
-<li>· <strong>무주택 세대주</strong>: 본인 무주택 + 배우자 무주택 (세대원 가능)</li>
-<li>· <strong>총급여 8,000만원 이하</strong> (종합소득 7,000만원 이하)</li>
-<li>· <strong>국민주택규모 이하 주택</strong>: 전용 85㎡ 이하 또는 기준시가 3억 이하</li>
-<li>· <strong>계약자 = 본인</strong>: 임대차계약서상 본인 명의 (배우자 명의는 본인 공제 안 됨)</li>
-</ul>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 환급액 시뮬</h2>
-<p>
-월세 50만원(연 600만원) 거주, 총급여 4,000만원:
-</p>
-<ul class="space-y-2 mt-4">
-<li>· 공제 한도 내: 600만원 (≤1,000만원)</li>
-<li>· 총급여 5,500만원 이하 → 17% 세액공제 = 102만원 환급</li>
-<li>· 지방소득세 포함 시 약 112만원 환급 (총급여 5,500만 초과~8,000만 이하는 15% = 90만원)</li>
-</ul>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 신청 방법</h2>
-<ol class="space-y-2 mt-4">
-<li>1. 월세 계약서 확보 (본인 명의)</li>
-<li>2. 월세 이체 확인 (은행 이체 내역 또는 현금영수증)</li>
-<li>3. 연말정산 시 회사 제출 또는 5월 종소세 신고에 포함</li>
-<li>4. 추후 누락 시 5년 이내 경정청구로 환급 가능</li>
-</ol>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">🎯 함께 신청하면 좋은 공제</h2>
-<ul class="space-y-2 mt-4">
-<li>· <strong>전세자금 대출 이자 소득공제</strong>: 전세대출 원리금 상환액의 40% (한도 400만원)</li>
-<li>· <strong>주택청약저축 소득공제</strong>: 월 25만원 × 40% = 120만원</li>
-<li>· <strong>장기주택저당차입금 이자 공제</strong>: 1주택자만</li>
-</ul>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 5년 경정청구</h2>
-<p>
-월세 공제를 그동안 안 받았다면 5년 이내 경정청구로 환급 가능. 2021~2025년 월세분 모두 신청 시 환급 누적 약 400~500만원 가능.
-</p>
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20">
-<p class="font-bold text-primary mb-2">📌 관련 도구</p>
-<ul class="space-y-1 text-sm">
-<li>· <a href="/calc/monthly-rent-tax-credit-quick" class="text-primary underline">월세 세액공제 환급액 계산</a></li>
-<li>· <a href="/year-end-tax" class="text-primary underline">연말정산 계산기</a></li>
-</ul>
-</div>
-`;
-
 // ═══════════════════════════════════════════════════════════════
 // 28. 신용카드 공제 30·40% 전략
 // ═══════════════════════════════════════════════════════════════
@@ -1421,32 +1230,6 @@ const coupangFulfillmentPay = `
 // ═══════════════════════════════════════════════════════════════
 export const hotNewsMay2026: Guide[] = [
   {
-    slug: "samsung-wage-negotiation-status-2026",
-    title: "삼성전자 2026 임금협상 본격 시작 — 5월 12일, 5대 쟁점 총정리",
-    description:
-      "5월 12일 본교섭 시작. 기본급 인상률 6%, OPI 산정 변경, TAI 통합, 복지포인트 150만원까지 5대 쟁점. HBM3E 양산 안정화가 PS 1,000% 가능 변수.",
-    category: "연봉",
-    tags: ["삼성전자", "임금협상", "OPI", "PS", "성과급", "2026"],
-    level: "중급",
-    publishedDate: "2026-05-23",
-    views: 0,
-    content: samsungWageStatus,
-    lang: "ko",
-  },
-  {
-    slug: "sk-hynix-ps-bonus-2026",
-    title: "SK하이닉스 2026 PS 성과급 — 기본급 2,000% 가능할까",
-    description:
-      "[9월 업데이트] 2025년분 PS 2,964% 확정(영업이익 47.2조)·상한 폐지. 현금 40%+자사주 60% 잠정합의안은 8/25 부결 → 수정안(현금 50%+자사주 50%) 9/16 가결 — 5월 작성 전망 글에 최신 확정치를 병기.",
-    category: "연봉",
-    tags: ["SK하이닉스", "PS", "성과급", "HBM", "메모리", "2026"],
-    level: "중급",
-    publishedDate: "2026-05-23",
-    views: 0,
-    content: skHynixPS2026,
-    lang: "ko",
-  },
-  {
     slug: "lgensol-wage-negotiation-2026",
     title: "LG에너지솔루션 2026 임금협상 — 배터리 캐즘 종료, 인상률 5%+",
     description:
@@ -1587,19 +1370,6 @@ export const hotNewsMay2026: Guide[] = [
     publishedDate: "2026-05-23",
     views: 0,
     content: usStockTaxSaving,
-    lang: "ko",
-  },
-  {
-    slug: "side-hustle-n-jab-tax-2026",
-    title: "부업·N잡 종합소득세 신고 절세 — 5월 미신고 시 가산세 최대 40%",
-    description:
-      "사업소득 3.3% 원천징수·기타소득 8.8%·사업자등록 부가세 분리. 필요경비(노트북·통신비·차량·교육비) 활용 + 단순경비율/기준경비율/실비 신고 선택으로 절세.",
-    category: "세금",
-    tags: ["종합소득세", "부업", "N잡", "프리랜서", "필요경비", "2026"],
-    level: "중급",
-    publishedDate: "2026-05-23",
-    views: 0,
-    content: sideHustleTax,
     lang: "ko",
   },
   {
@@ -1756,19 +1526,6 @@ export const hotNewsMay2026: Guide[] = [
     publishedDate: "2026-05-23",
     views: 0,
     content: youthInvestmentSavings,
-    lang: "ko",
-  },
-  {
-    slug: "monthly-rent-tax-credit-17-2026",
-    title: "월세 세액공제 17% — 무주택자 1,000만원 한도, 매년 100만원 환급",
-    description:
-      "무주택 세대주 + 총급여 8천만원 이하(5,500만 이하 17%·초과 15%). 월세 50만원(연 600만원) × 17% = 102만원 환급. 5년 미신청자 경정청구로 누적 400~500만원 환급 가능.",
-    category: "세금",
-    tags: ["월세", "세액공제", "무주택", "전세대출", "연말정산", "2026"],
-    level: "초급",
-    publishedDate: "2026-05-23",
-    views: 0,
-    content: monthlyRentTaxCredit,
     lang: "ko",
   },
   {

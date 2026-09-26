@@ -8,26 +8,6 @@
   ],
   "base": "3b564c80",
   "guides": {
-    "samsung-wage-negotiation-status-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🔥 5월 12일 본교섭 5대 쟁점</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📅 협상 일정 & 변수</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 직원 입장에서 챙길 3가지</h2>"
-      ],
-      "split": [
-        2
-      ]
-    },
-    "sk-hynix-ps-bonus-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📊 2025 vs 2026 PS 비교</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💸 PS 1,500% 시 실수령액</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">⚠️ 변수 — 메모리 사이클 후반</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
     "lgensol-wage-negotiation-2026": {
       "h2": [
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📊 LG엔솔 직급별 영끌 연봉(2026 추정)</h2>",
@@ -133,17 +113,6 @@
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 절세 5가지 핵심</h2>",
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 신고 시기</h2>",
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 절세 시뮬</h2>"
-      ],
-      "split": [
-        2
-      ]
-    },
-    "side-hustle-n-jab-tax-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 부업 유형별 신고</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 필요경비 활용 절세</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 단순경비율 vs 기준경비율</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">⚠️ 미신고 시 불이익</h2>"
       ],
       "split": [
         2
@@ -275,18 +244,6 @@
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 혜택</h2>",
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📊 5년 시뮬레이션</h2>",
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">⚠️ 주의</h2>"
-      ],
-      "split": [
-        2
-      ]
-    },
-    "monthly-rent-tax-credit-17-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 공제 요건</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 환급액 시뮬</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 신청 방법</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 함께 신청하면 좋은 공제</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">⚠️ 5년 경정청구</h2>"
       ],
       "split": [
         2
@@ -563,33 +520,6 @@
         2
       ]
     },
-    "credit-card-deduction-limit-detail-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 한도 — 총급여별</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 최적 사용 비율</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "book-concert-museum-deduction-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 공제 대상</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 시뮬</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "eyewear-herb-implant-medical-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 의료비로 인정되는 항목</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">⚠️ 제외 항목</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
     "foreign-flat-tax-19-2026": {
       "h2": [
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 적용 요건</h2>",
@@ -598,16 +528,6 @@
       ],
       "split": [
         2
-      ]
-    },
-    "religious-donation-100-percent-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 기부금 한도</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 시뮬</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">⚠️ 영수증 필수</h2>"
-      ],
-      "split": [
-        1
       ]
     },
     "domestic-vs-overseas-etf-tax-2026": {
@@ -892,25 +812,6 @@
         1
       ]
     },
-    "orthodontics-tax-deduction-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 교정 종류별 공제</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 시뮬</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "psychiatry-medical-deduction-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 정신과 의료비 공제</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 비공제 — 단순 상담</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">⚠️ 개인정보 보호</h2>"
-      ],
-      "split": [
-        2
-      ]
-    },
     "industrial-accident-benefit-2026": {
       "h2": [
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 산재 보상 범위</h2>",
@@ -938,24 +839,6 @@
         1
       ]
     },
-    "physical-therapy-tax-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 인정·제외 기준</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 시뮬 — 도수치료 6회 60만원</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "infertility-medical-20-percent-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 난임 시술 우대</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 시뮬</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
     "dementia-insurance-2026": {
       "h2": [
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 치매보험 주요 보장</h2>",
@@ -964,12 +847,6 @@
       "split": [
         1
       ]
-    },
-    "disability-insurance-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 장애인 보험 특례</h2>"
-      ],
-      "split": []
     },
     "inheritance-tax-2026": {
       "h2": [
@@ -1135,15 +1012,6 @@
         1
       ]
     },
-    "employment-insurance-detail-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 실업급여 자격</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 지급 — 평균임금 60%</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
     "voluntary-vs-recommended-resignation-2026": {
       "h2": [
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 권고사직 5단계 안전 절차</h2>",
@@ -1175,15 +1043,6 @@
       "h2": [
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 자격·금액</h2>",
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 신청</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "seeking-job-benefit-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 2026 구직급여 변경</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 시뮬</h2>"
       ],
       "split": [
         1
@@ -1294,15 +1153,6 @@
         1
       ]
     },
-    "year-end-encouragement-vs-bonus-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 격려금 vs 정기상여</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 절세 — 12월 격려금 1,000만원</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
     "sign-on-bonus-tax-2026": {
       "h2": [
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 사인온 일반 구조</h2>",
@@ -1326,15 +1176,6 @@
       "h2": [
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 비상장 임원 성과급 한도</h2>",
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 시뮬 — 한도 5억 / 실 지급 8억</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "bonus-bracket-jump-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📊 2026 8단계 한계세율</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 한계세율 점프 시뮬</h2>"
       ],
       "split": [
         1
@@ -1364,12 +1205,6 @@
         1
       ]
     },
-    "salary-bonus-calc-8step-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 8단계 계산 절차</h2>"
-      ],
-      "split": []
-    },
     "bonus-split-payout-1000-saving-2026": {
       "h2": [
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📊 분할 vs 일시 비교</h2>",
@@ -1377,54 +1212,6 @@
       ],
       "split": [
         1
-      ]
-    },
-    "irp-before-bonus-payout-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 IRP·연금저축 세액공제율</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📊 환급 시뮬</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 타이밍 — 12월 31일 전 납입</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "card-25-before-bonus-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📊 25% 기준선</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 카드별 공제율</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 성과급 받기 직전 전략</h2>"
-      ],
-      "split": [
-        2
-      ]
-    },
-    "medical-edu-donation-bonus-year-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 한도 도달 전략</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 시뮬 — 성과급 받는 해 의료비 600만 사용</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "dependent-deduction-bonus-year-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 인적공제 대상</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 성과급 받는 해 추가 절세</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "bonus-pension-45-ceiling-590-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 국민연금 상한 (2026.7~2027.6)</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 성과급 영향 — 거의 없음</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">⚠️ 단 — 월급이 낮은 직원은 영향</h2>"
-      ],
-      "split": [
-        2
       ]
     },
     "bonus-health-4-percent-2026": {
@@ -1437,39 +1224,10 @@
         2
       ]
     },
-    "bonus-employment-09-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 고용보험 본인 0.9%</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 시뮬</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 활용 — 실업급여 산정 베이스</h2>"
-      ],
-      "split": [
-        2
-      ]
-    },
     "four-insurance-ceiling-summary-2026": {
       "h2": [
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📊 4대보험 본인 부담 정리</h2>",
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 성과급 1억 시 4대보험 부담</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "july-health-adjust-bonus-1eok-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 4월 건보료 연말정산 구조</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 정산금 시뮬</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 미리 대비</h2>"
-      ],
-      "split": [
-        2
-      ]
-    },
-    "july-health-adjust-bonus-detail-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 4월 정산 흐름</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 성과급별 정산금 추정</h2>"
       ],
       "split": [
         1
@@ -1494,39 +1252,10 @@
         1
       ]
     },
-    "retire-with-bonus-4insurance-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 퇴직금 vs 성과급 4대보험</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 시뮬 — 12월 퇴직 + 1월 성과급</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 절세 — 퇴직금 IRP 이전</h2>"
-      ],
-      "split": [
-        2
-      ]
-    },
     "optional-continue-after-bonus-2026": {
       "h2": [
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 임의계속가입 신청</h2>",
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 시뮬 — 성과급 큰 임원 퇴직</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "irp-max-bonus-year-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 2026 IRP·연금저축 한도</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 성과급 받는 해 환급</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 추가 — ISA 만기 자금 전환</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "isa-for-bonus-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 ISA 활용 시나리오</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📊 ISA 한도</h2>"
       ],
       "split": [
         1
@@ -1545,70 +1274,6 @@
       "h2": [
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 결정 기준</h2>",
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 시뮬 — 부부 의료비 600만</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "parent-support-bonus-year-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 부모 부양 종합 절세</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 시뮬 — 성과급 받는 해 부모 2명 등록</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "medical-edu-donation-concentration-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 집중 결제 전략</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 추가 환급</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "card-30-40-percent-bonus-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📊 카드 사용 전략</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 시뮬 — 한계세율 35% 직장인</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "monthly-rent-17-bonus-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 월세 세액공제 자격</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 시뮬 — 월세 60만 (연 720만)</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">⚠️ 5년 경정청구</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "housing-25-bonus-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 청약통장 소득공제</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 5년 누적 효과</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "insurance-100-bonus-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 보장성 보험 공제</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">⚠️ 제외</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "opi-vs-tai-timing-tax-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📊 OPI vs TAI 세금 비교</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 인사팀 협상</h2>"
       ],
       "split": [
         1
@@ -1638,48 +1303,11 @@
         1
       ]
     },
-    "before-vs-after-leave-bonus-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 성과급 권리</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 휴직 전 점검</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "irp-eligibility-before-bonus-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 IRP·연금저축 가입 조건</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 가입 절차</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "executive-severance-limit-bonus-deep-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 임원 퇴직금 한도</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 시뮬 — 임원 퇴직 5억</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 정관 한도 미리 점검</h2>"
-      ],
-      "split": [
-        2
-      ]
-    },
     "stock-option-with-bonus-2026": {
       "h2": [
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📊 일반 vs 적격 스톡옵션</h2>",
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 시뮬 — 1억 차익</h2>",
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 적격 스톡옵션 요건</h2>"
-      ],
-      "split": [
-        1
-      ]
-    },
-    "bonus-rsu-same-year-2026": {
-      "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📊 성과급 + RSU 시뮬</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 절세 — 분할 매도</h2>"
       ],
       "split": [
         1

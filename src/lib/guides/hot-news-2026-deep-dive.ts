@@ -4,18 +4,9 @@
 // 세금 심화·건강 의료·자산 노후·법률 실용·2026 정책 5개 카테고리 × 10편.
 
 import type { Guide } from "@/lib/guidesData";
-import { UNEMPLOYMENT_BENEFIT_2026, unemploymentDailyLowerBound } from "@/config/unemploymentBenefit";
 
-// 구직급여 1일 상·하한 표시값 — 정본(src/config/unemploymentBenefit.ts)에서 끼워 넣는다
-// (verify-tax-constants 게이트: 상·하한 금액 리터럴 하드코딩 금지). en-US 그룹핑은 ko-KR 과 같다.
-const won = (n: number): string => n.toLocaleString("en-US");
-const UB_LOWER_WON = Math.round(unemploymentDailyLowerBound());
-const UB_UPPER = won(UNEMPLOYMENT_BENEFIT_2026.DAILY_UPPER);
-const UB_LOWER = won(UB_LOWER_WON);
-/** 하한 × 30일 (만원) */
-const UB_LOWER_MONTH_MAN = Math.round((UB_LOWER_WON * 30) / 10_000);
-/** 하한 × 210일(7개월) (만원) */
-const UB_LOWER_7M_MAN = won(Math.round((UB_LOWER_WON * 210) / 10_000));
+// 구직급여 두 편(employment-insurance-detail·seeking-job-benefit)은 2026-09-26 GUIDES-07 로
+// /guides/unemployment-benefits-complete 에 308 통합 — 상·하한 표시값 상수도 함께 뺐다.
 
 // ═══════════════════════════════════════════════════════════════
 // 카테고리 F — 세금 절세 심화 (10편)
@@ -223,41 +214,6 @@ const outOfPocketLimit = `
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/health-insurance-fee-2026" class="text-primary underline">건강보험료 계산기</a></li></ul></div>
 `;
 
-const orthodonticsTax = `
-<p class="lead">치아 교정은 미용 목적이라도 의료비 공제 일부 인정. 부정교합 교정은 100% 의료비 공제, 단순 미관 목적도 일부 인정. 5~10개월 분할 결제로 한도 도달 유리.</p>
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 교정 종류별 공제</h2>
-<ul class="space-y-2 mt-4">
-<li>· <strong>부정교합 교정</strong>: 100% 의료비 공제</li>
-<li>· <strong>구순구개열·턱교정</strong>: 100% 공제</li>
-<li>· <strong>미관 목적 단독 교정</strong>: 부분 공제 또는 불인정 (병원 기준 다름)</li>
-<li>· <strong>투명교정(인비절라인)</strong>: 의료 목적이면 인정</li>
-</ul>
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬</h2>
-<p>치아 교정 500만원 (의료 목적), 총급여 5,000만원:</p>
-<ul class="space-y-2 mt-4">
-<li>· 총급여 3% = 150만원 초과분만 공제</li>
-<li>· 500만원 - 150만원 = 350만원 × 15% = 52.5만원 환급</li>
-</ul>
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/year-end-tax" class="text-primary underline">연말정산 계산기</a></li></ul></div>
-`;
-
-const psychiatryDeduction = `
-<p class="lead">정신과 진료비도 의료비 공제 대상. 우울증·불안장애·ADHD 등 치료비, 처방약, 상담 모두 영수증 보관 시 공제. 정신 건강 치료 부담 완화 정책.</p>
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 정신과 의료비 공제</h2>
-<ul class="space-y-2 mt-4">
-<li>· 진료비·상담료 (의사 처방 기준)</li>
-<li>· 처방약 (정신과 약)</li>
-<li>· 검사비 (심리검사 포함)</li>
-<li>· 입원치료비</li>
-<li>· 정신과 의료기관 영수증 필수</li>
-</ul>
-<h2 class="mt-12 text-2xl font-bold text-primary">🎯 비공제 — 단순 상담</h2>
-<p>의료기관 아닌 심리상담센터·코치는 의료비 공제 안 됨. 단 의사 처방 기반 심리치료는 인정.</p>
-<h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 개인정보 보호</h2>
-<p>국세청 의료비 자료는 의료기관명·금액만 표시. 진료 내용은 비공개. 안심하고 신고.</p>
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/year-end-tax" class="text-primary underline">연말정산 계산기</a></li></ul></div>
-`;
-
 const industrialAccidentBenefit = `
 <p class="lead">산업재해보상보험은 업무 중 부상·질병 시 의료비 100% + 휴업급여 70% + 장해연금까지. 임시·일용직·알바도 모두 의무 가입. 미신고 시 사업주 처벌.</p>
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 산재 보상 범위</h2>
@@ -307,39 +263,6 @@ const realLifeInsurance = `
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/year-end-tax" class="text-primary underline">연말정산 계산기</a></li></ul></div>
 `;
 
-const physicalTherapy = `
-<p class="lead">물리치료·도수치료·재활치료는 의료비 공제 + 실비 보험 청구 가능. 단 미용 목적·체형교정 목적은 제외. 한방 추나치료도 의료 목적이면 공제.</p>
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 인정·제외 기준</h2>
-<ul class="space-y-2 mt-4">
-<li>· <strong>인정</strong>: 척추·관절 통증 치료, 수술 후 재활, 한방 추나치료</li>
-<li>· <strong>인정</strong>: 도수치료(의료기관 발급 영수증)</li>
-<li>· <strong>제외</strong>: 마사지·체형교정 단독 목적, 일반 마사지샵</li>
-<li>· <strong>제외</strong>: 찜질방·사우나</li>
-</ul>
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 도수치료 6회 60만원</h2>
-<p>의료기관 영수증 + 실비 청구 80% = 48만원 보상. 나머지 12만원은 의료비 공제(총급여 3% 초과 시).</p>
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/year-end-tax" class="text-primary underline">연말정산 계산기</a></li></ul></div>
-`;
-
-const infertilityTax = `
-<p class="lead">난임 시술비는 의료비 공제 30%(일반 15%보다 우대) + 한도 제한 없음. 시험관 시술 1회 300~500만원에 대해 큰 환급 효과. 만 44세+ 여성도 시술비 정부 일부 지원.</p>
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 난임 시술 우대</h2>
-<ul class="space-y-2 mt-4">
-<li>· 공제율 30% (일반 의료비 15%, 미숙아·선천성이상아 의료비는 20%)</li>
-<li>· 한도 무제한 (일반 700만원 한도 적용 안 됨)</li>
-<li>· 시술비·약값·검사비 모두 포함</li>
-<li>· 정부 지원금(난임 시술 보조금)도 별도 받을 수 있음</li>
-</ul>
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬</h2>
-<p>난임 시술 800만원 + 일반 의료비 200만원, 총급여 6,000만원:</p>
-<ul class="space-y-2 mt-4">
-<li>· 일반 의료비 200 - 3%(180) = 20만원 × 15% = 3만원</li>
-<li>· 난임 800 × 30% = 240만원 환급</li>
-<li>· <strong>합산 243만원 환급</strong></li>
-</ul>
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/year-end-tax" class="text-primary underline">연말정산 계산기</a></li></ul></div>
-`;
-
 const dementiaInsurance = `
 <p class="lead">치매보험은 진단 시 일시금 + 매월 연금형 보장. 단 65세 이전 가입 권장 (그 이후는 보험료 폭증). 부모 부양 가구는 부모 명의 치매보험 + 본인 부담으로 보험료 12% 공제.</p>
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 치매보험 주요 보장</h2>
@@ -351,18 +274,6 @@ const dementiaInsurance = `
 </ul>
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 절세 — 본인 결제 부모 보험</h2>
 <p>부모 명의 치매보험에 본인이 보험료 납입 시 보장성 보험료 100만원 한도 공제. 한계세율 24% 시 12만원 환급.</p>
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/year-end-tax" class="text-primary underline">연말정산 계산기</a></li></ul></div>
-`;
-
-const handicapInsurance = `
-<p class="lead">장애인 보험료는 본인·부양가족 장애인 등록 시 한도 100만원 외 추가 100만원 = 합산 200만원. 보장성 보험료 공제율 12%로 24만원 환급 가능.</p>
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 장애인 보험 특례</h2>
-<ul class="space-y-2 mt-4">
-<li>· 일반 보장성 100만원 한도 + 장애인 보장성 100만원 한도 = 합산 200만원</li>
-<li>· 공제율 12%로 최대 24만원 환급</li>
-<li>· 장애인 본인·부양가족 모두 적용</li>
-<li>· 보험증권에 "장애인" 명시 필요</li>
-</ul>
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/year-end-tax" class="text-primary underline">연말정산 계산기</a></li></ul></div>
 `;
 
@@ -703,25 +614,6 @@ const blacklistEmployer = `
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/salary-db" class="text-primary underline">회사별 연봉 DB</a></li></ul></div>
 `;
 
-const employmentInsurance = `
-<p class="lead">고용보험 실업급여는 퇴직 직전 평균임금의 60%·최대 9개월 지급. 자발적 퇴직은 원칙적 불가, 권고사직·계약만료·중대 사유는 가능. 자격·금액·신청 절차 완벽 정리.</p>
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 실업급여 자격</h2>
-<ul class="space-y-2 mt-4">
-<li>· 고용보험 가입 18개월 중 180일 이상</li>
-<li>· 비자발적 이직 (권고사직·계약만료·중대사유)</li>
-<li>· 적극적 구직활동 의지</li>
-<li>· 만 65세 미만</li>
-</ul>
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 지급 — 평균임금 60%</h2>
-<p>평균임금 200만원 직원 7개월 수급:</p>
-<ul class="space-y-2 mt-4">
-<li>· 평균임금 60%가 하한보다 낮아 하한 ${UB_LOWER}원 적용 → × 30 ≈ ${UB_LOWER_MONTH_MAN}만원/월 (2026)</li>
-<li>· 7개월(210일) × ${UB_LOWER}원 ≈ ${UB_LOWER_7M_MAN}만원</li>
-<li>· 지급기간 120~270일(나이·가입기간별)</li>
-</ul>
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/unemployment-benefit" class="text-primary underline">실업급여 계산기</a></li></ul></div>
-`;
-
 const employmentEstoppel = `
 <p class="lead">권고사직 → 실업급여 가능하지만 "자진퇴사"로 처리되면 불가. 사직서에 "권고사직" 명시 + 회사 동의 + 노동부 확인. 잘못 처리하면 약 1,000만원 손해.</p>
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 권고사직 5단계 안전 절차</h2>
@@ -781,24 +673,6 @@ const basicPension2026 = `
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 신청</h2>
 <p>만 65세 생일 한 달 전부터 주민센터 또는 국민연금공단(1355) 신청. 매년 소득 재확인.</p>
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/national-pension-estimate-2026" class="text-primary underline">국민연금 예상수령액</a></li></ul></div>
-`;
-
-const seekingJobBenefit = `
-<p class="lead">구직급여(실업급여) — 평균임금 60% × 지급기간 120~270일. 2026년 상한 일 ${UB_UPPER}원·하한 ${UB_LOWER}원(최저임금 80%). 청년·정년 퇴직자 추가 기간 규정은 없음.</p>
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 2026 구직급여 변경</h2>
-<ul class="space-y-2 mt-4">
-<li>· 평균임금 60% (상한 일 ${UB_UPPER}원·하한 일 ${UB_LOWER}원, 2026)</li>
-<li>· 지급기간 120~270일(나이·가입기간별)</li>
-<li>· 50세 이상·장애인은 같은 가입기간이라도 더 긴 구간 적용(최대 270일)</li>
-<li>· 자영업·1인 사업자도 가입 시 수급 가능</li>
-</ul>
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬</h2>
-<p>평균임금 250만원 직원 7개월 수급:</p>
-<ul class="space-y-2 mt-4">
-<li>· 평균임금 60%(약 5만원)가 하한보다 낮아 하한 ${UB_LOWER}원 × 30 ≈ ${UB_LOWER_MONTH_MAN}만원/월</li>
-<li>· 7개월(210일) × ${UB_LOWER}원 ≈ ${UB_LOWER_7M_MAN}만원</li>
-</ul>
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/unemployment-benefit" class="text-primary underline">실업급여 계산기</a></li></ul></div>
 `;
 
 const digitalNomadVisa = `
@@ -905,15 +779,10 @@ export const hotNewsDeepDive: Guide[] = [
   { slug: "tax-amnesty-self-report-2026", title: "자진 수정신고 — 1개월 이내 가산세 90% 감면", description: "1개월 90% / 3개월 75% / 6개월 50% / 1년 30% / 2년 20% 감면. 무신고 시 20%, 부정 40%, 역외 60% 가산세.", category: "세금", tags: ["수정신고", "가산세", "감면", "세무조사", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: taxAmnestyReform, lang: "ko" },
   // 건강·의료 10편
   { slug: "out-of-pocket-limit-2026", title: "본인부담상한제 — 5분위 시 327만원 환급", description: "1년 의료비 90~843만원 초과분은 다음해 8월 말 안내 후 신청 시 환급. 5분위 직장인 500만원 부담 시 327만원 환급.", category: "기초", tags: ["본인부담상한제", "의료비", "환급", "건강보험", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: outOfPocketLimit, lang: "ko" },
-  { slug: "orthodontics-tax-deduction-2026", title: "치아 교정 의료비 공제 — 500만원 시 52만원 환급", description: "부정교합 교정 100% 공제, 미관 단독은 부분 공제. 500만원 시 총급여 3% 초과분 350만원 × 15% = 52만원 환급.", category: "세금", tags: ["치아교정", "의료비공제", "부정교합", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: orthodonticsTax, lang: "ko" },
-  { slug: "psychiatry-medical-deduction-2026", title: "정신과 의료비 공제 — 우울증·ADHD 상담 모두 포함", description: "진료비·처방약·검사비 모두 의료비 공제. 국세청 자료는 의료기관명·금액만 표시, 진료 내용은 비공개.", category: "세금", tags: ["정신과", "우울증", "의료비공제", "처방약", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: psychiatryDeduction, lang: "ko" },
   { slug: "industrial-accident-benefit-2026", title: "산업재해보상 — 의료비 100% + 휴업급여 70% + 장해연금", description: "업무 중 부상 시 의료비 무제한 + 휴업급여 평균임금 70% + 후유장해 연금. 임시·알바 모두 의무 가입.", category: "기초", tags: ["산재", "산업재해", "휴업급여", "장해연금", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: industrialAccidentBenefit, lang: "ko" },
   { slug: "cancer-checkup-5-2026", title: "5대 암검진 — 본인부담 10% + 무료 검진", description: "위암(40+ 2년), 대장(50+ 1년), 간(40+ 6개월), 유방(40+ 2년), 자궁경부(20+ 2년). 본인부담 5천원~7천원.", category: "기초", tags: ["암검진", "건강검진", "위암", "대장암", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: cancerCheckup5, lang: "ko" },
   { slug: "real-life-insurance-combo-2026", title: "실비보험 + 의료비 공제 + 본인부담상한 — 5중 보상 전략", description: "실비 80~90% + 의료비 공제 15% + 본인부담상한제 환급 + 사내복지기금 + 실비 미보상분만 공제. 영수증 보관 필수.", category: "기초", tags: ["실비보험", "의료비공제", "본인부담상한", "이중보상", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: realLifeInsurance, lang: "ko" },
-  { slug: "physical-therapy-tax-2026", title: "물리치료·도수치료 의료비 공제 — 60만원 도수치료 48만원 보상", description: "척추·관절 통증, 수술 후 재활, 한방 추나치료 의료비 공제. 도수치료 6회 60만원 + 실비 80% = 48만원 보상.", category: "세금", tags: ["물리치료", "도수치료", "한방치료", "의료비공제", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: physicalTherapy, lang: "ko" },
-  { slug: "infertility-medical-20-percent-2026", title: "난임 시술비 의료비 공제 30% — 800만원 시 240만원 환급", description: "난임 시술비 공제율 30%(일반 15%) + 한도 무제한. 시술 800만 + 일반 200 시 합산 243만원 환급.", category: "세금", tags: ["난임시술", "의료비공제", "시험관", "출산", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: infertilityTax, lang: "ko" },
   { slug: "dementia-insurance-2026", title: "치매보험 — 50~60대 가입 권장 + 부모 명의 12만원 환급", description: "경증 진단 500~1,000만원 + 중증 연금 200~300만원/월. 부모 명의 보험 본인 납입 시 12만원 환급.", category: "기초", tags: ["치매보험", "노후", "부모부양", "보험료공제", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: dementiaInsurance, lang: "ko" },
-  { slug: "disability-insurance-2026", title: "장애인 보험료 한도 — 일반 100 + 장애인 100 합 24만원 환급", description: "일반 보장성 100만원 + 장애인 보장성 100만원 = 합산 200만원 한도. 12% 공제 = 최대 24만원 환급.", category: "세금", tags: ["장애인보험", "보험료공제", "보장성보험", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: handicapInsurance, lang: "ko" },
   // 자산관리·노후 10편
   { slug: "inheritance-tax-2026", title: "상속세 배우자 공제 — 법정상속분 한도와 20억 상속 예시", description: "1억 10%~30억 50% 누진. 일괄공제 5억 + 배우자 공제(법정상속분 한도). 20억·배우자+자녀 2명이면 산출세액 약 1.33억.", category: "부동산", tags: ["상속세", "배우자공제", "일괄공제", "절세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: inheritanceTax, lang: "ko" },
   { slug: "gift-vs-transfer-asset-2026", title: "증여 vs 양도 — 자산별 최적 이전 방법", description: "10억 주택 단순 증여 2.4억 vs 부담부증여 1.1억. 현금은 증여, 부동산은 부담부증여, 주식은 저평가 시기 증여.", category: "부동산", tags: ["증여", "양도", "부담부증여", "자녀이전", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: giftVsTransfer, lang: "ko" },
@@ -934,13 +803,11 @@ export const hotNewsDeepDive: Guide[] = [
   { slug: "overtime-proof-claim-2026", title: "야근수당 미지급 — 근로시간 증거와 청구액 확인 방법", description: "출퇴근·업무 지시·급여명세서를 연결하는 방법. 연장근로수당 검산, 3년 시효와 조건부 손해배상을 자동 가산금과 구분합니다.", category: "커리어", tags: ["야근수당", "시간외수당", "노동부진정", "3년시효", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-09", views: 0, content: overtimeProof, lang: "ko" },
   { slug: "annual-leave-refund-2026", title: "연차수당과 사용 촉진 — 미사용 일수·서면 통보·기한 확인", description: "연차수당 계산 전 확인할 발생·소멸 시점과 사용 촉진 절차. 7월·10월 고정 일정 대신 사용기간과 1년 미만 근로자의 별도 요건을 구분합니다.", category: "커리어", tags: ["연차수당", "통상임금", "휴가사용촉진", "2026"], level: "초급", publishedDate: "2026-05-23", modifiedDate: "2026-09-09", views: 0, content: annualLeaveRefund, lang: "ko" },
   { slug: "employer-blacklist-check-2026", title: "취업 전 회사 평판 조회 5채널 — 임금체불 명단까지", description: "잡플래닛·블라인드·크레딧잡·국세청 폐업·노동부 체불 명단. 별점 2.5 이하 회피, 체불 명단 절대 입사 X.", category: "커리어", tags: ["회사평판", "잡플래닛", "블라인드", "체불사업주", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: blacklistEmployer, lang: "ko" },
-  { slug: "employment-insurance-detail-2026", title: `실업급여 — 평균임금 60%·최대 9개월 + 하한 ${UB_LOWER}원`, description: `고용보험 18개월 중 180일 이상 가입 + 비자발적 이직. 평균임금 200만원이면 하한 적용 7개월 약 ${UB_LOWER_7M_MAN}만원 수령.`, category: "커리어", tags: ["실업급여", "고용보험", "구직급여", "권고사직", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: employmentInsurance, lang: "ko" },
   { slug: "voluntary-vs-recommended-resignation-2026", title: "권고사직 안전 절차 5단계 — \"일신상 사유\" 절대 금지", description: "권고사직 → 실업급여 가능. 단 \"일신상 사유\" 표현 거부 + \"경영상 이유\" 명시. 잘못 처리 시 약 1,000만원 손해.", category: "커리어", tags: ["권고사직", "자진퇴사", "실업급여", "사직서", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: employmentEstoppel, lang: "ko" },
   // 2026 정책 신설 10편
   { slug: "youth-monthly-rent-support-2026", title: "2026 청년 월세 한시 특별지원 — 월 20만원 × 12개월 = 240만원", description: "만 19~34세 무주택 + 본인 소득 중위 60% 이하 + 보증금 5천·월세 70만 이하. 복지로·주민센터 신청.", category: "부동산", tags: ["청년월세", "정부지원", "무주택", "특별지원", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: youthMonthlyRentSupport, lang: "ko" },
   { slug: "child-support-100-2026", title: "아동수당 — 만 0~7세 매월 10만원 + 부모급여 100만원 중복", description: "소득 무관 보편 지급. 만 0세 부모급여 100만/월 + 아동수당 10만 중복. 7년 누적 840만원.", category: "기초", tags: ["아동수당", "부모급여", "출산", "보편지급", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: childSupport100, lang: "ko" },
   { slug: "basic-pension-65-2026", title: "기초연금 2026 — 단독 349,700원·부부 559,520원", description: "소득 하위 70%. 단독 최대 349,700원, 부부 동시 수령 시 각 20% 감액(합산 559,520원). 국민연금 수령자도 일부 가능.", category: "기초", tags: ["기초연금", "노후", "65세", "정부지원", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: basicPension2026, lang: "ko" },
-  { slug: "seeking-job-benefit-2026", title: `2026 구직급여 — 일 상한 ${UB_UPPER}원·하한 ${UB_LOWER}원`, description: `평균임금 60%·상한 일 ${UB_UPPER}원·하한 ${UB_LOWER}원(2026). 지급기간 120~270일(나이·가입기간별). 자영업도 가입 시 가능.`, category: "커리어", tags: ["구직급여", "실업급여", "청년", "정년", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: seekingJobBenefit, lang: "ko" },
   { slug: "digital-nomad-visa-korea-2026", title: "한국 디지털 노마드 비자 — 연소득 8만 달러+ 외국인 IT 인재 유치", description: "외국 회사 원격 근무 + 연소득 8만 달러+ + 건강보험. 1+1년 체류. 한국 비거주자 분류로 한국 소득세 없음.", category: "커리어", tags: ["디지털노마드", "비자", "외국인", "원격근무", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: digitalNomadVisa, lang: "ko" },
   { slug: "childcare-support-comprehensive-2026", title: "자녀 1명 0~18세 정부 지원 총 6,000~7,000만원 — 단계별 정리", description: "0~1세 부모급여 + 아동수당, 2~7세 보육료 무료, 초등 돌봄, 중·고 학자금, 대학 청년주택드림. 누적 6~7천만원.", category: "기초", tags: ["육아지원", "아동수당", "보육료", "학자금", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: childcareSupport, lang: "ko" },
   { slug: "elder-care-insurance-2026", title: "장기요양보험 — 부모 등급 받으면 월 50~200만원 서비스", description: "만 65+ 또는 노인성 질환. 등급별 시설·재가 서비스 본인부담 15~20%. 의료비 공제까지.", category: "기초", tags: ["장기요양보험", "요양시설", "재가서비스", "노인", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: elderCare, lang: "ko" },

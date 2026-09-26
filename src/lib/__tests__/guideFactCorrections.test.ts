@@ -78,9 +78,13 @@ describe("사실 정정 — 옛 오류 문구 재발 금지", () => {
   });
 
   it("난임시술비 공제율 30%, 구직급여 2026 상·하한", () => {
-    expect(text("infertility-medical-20-percent-2026")).toContain("243만원");
-    expect(text("infertility-medical-20-percent-2026")).not.toContain("× 20%");
-    const job = text("seeking-job-benefit-2026");
+    // 2026-09-26 GUIDES-07: 난임 20% 슬러그와 구직급여 May 두 편은 308 통합으로 빠졌다(configRedirects.test).
+    // 난임 20% 문구 재발은 guideSpec 금지 사실 스캔(infertility-20)이 전편에서 막고, 구직급여 수치는 통합 목적지에서 확인한다.
+    const live = new Set(koGuides.map((g) => g.slug));
+    for (const retired of ["infertility-medical-20-percent-2026", "seeking-job-benefit-2026", "employment-insurance-detail-2026"]) {
+      expect(live.has(retired), retired).toBe(false);
+    }
+    const job = text("unemployment-benefits-complete");
     expect(job).not.toContain("7.4만");
     expect(job).not.toContain("6개월 보장");
     expect(job).toContain("68,100원");
@@ -88,7 +92,8 @@ describe("사실 정정 — 옛 오류 문구 재발 금지", () => {
   });
 
   it("카드 한도 1.2억 구간·종부세 공동명의 각 6억 표기 제거", () => {
-    expect(text("credit-card-deduction-limit-detail-2026")).not.toContain("7천~1.2억: 250만원");
+    // credit-card-deduction-limit-detail-2026 은 308 통합(GUIDES-07) — '7천~1.2억' 구간은 guideSpec card-tier-1.2eok 이 전편에서 막는다
+    expect(koGuides.some((g) => g.slug === "credit-card-deduction-limit-detail-2026")).toBe(false);
     const joint = text("newlywed-joint-ownership-2026");
     expect(joint).not.toContain("각 6억");
     expect(joint).toContain("약 192만원");
