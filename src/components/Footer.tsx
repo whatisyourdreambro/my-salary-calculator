@@ -171,7 +171,8 @@ export default function Footer() {
             {trustBadges.map(({ Icon, label }) => <span key={label} className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground"><Icon size={15} className="text-link" aria-hidden="true" />{label}</span>)}
           </div>
         </div>
-        <nav aria-label={isEnglish ? "Footer" : "하단 메뉴"} className="grid grid-cols-1 gap-2 pt-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-5">
+        {/* 모듈 id footer: 루트 InternalLinkTracker 위임 클릭 계측(속성만). RSS 두 줄은 <a> 라도 href 가 / 로 시작해 함께 잡힌다(dest_tpl=other). */}
+        <nav aria-label={isEnglish ? "Footer" : "하단 메뉴"} data-msy-module="footer" className="grid grid-cols-1 gap-2 pt-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-5">
           {sections.map((section, idx) => <div key={section.title} className="min-w-0">
             {/* Native closed details cannot reliably be expanded with a descendant display rule. */}
             <details className="group footer-accordion sm:hidden" open={idx < 2}>

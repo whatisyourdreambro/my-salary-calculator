@@ -12,6 +12,11 @@
 //   - lastmod 가 실제 수정일일 때만 의미가 있다(src/config/siteDates.ts 원칙) — lastmod 를
 //     빌드 날짜로 찍으면 매 배포 전량 제출로 되돌아간다.
 //
+// 2026-09-26 NAVER-03a — 같은 payload 를 네이버 IndexNow(searchadvisor.naver.com/indexnow)에도 직접 POST:
+//   공유 엔드포인트 경유로는 네이버 수신 여부가 로그에 안 남는다. 전송·로그·비치명 처리는
+//   scripts/indexnow-submit.mjs(submitIndexNow) 한 곳 — 로그 "[indexnow] naver <HTTP 상태>".
+//   네이버 쪽 예외·비 2xx 도 빌드에 영향 없음(아래 안전 원칙 그대로).
+//
 // 안전 원칙: 어떤 실패도 빌드를 깨지 않는다 — postbuild 모든 경로에서 exit 0.
 // (package.json postbuild 에서 `|| echo` 이중 안전망과 함께 사용)
 // 예외: `--selftest` 는 개발 게이트라 불일치 시 exit 1.
@@ -30,8 +35,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import assert from "node:assert/strict";
 import { HOST, readSitemap, planSubmission, formatCounts } from "./indexnow-diff.mjs";
+import { submitIndexNow } from "./indexnow-submit.mjs";
 
-const ENDPOINT = "https://api.indexnow.org/indexnow";
 const URL_CAP = 10000; // IndexNow 1회 POST 상한
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
@@ -111,19 +116,17 @@ async function main() {
     return;
   }
 
-  const res = await fetch(ENDPOINT, {
-    method: "POST",
-    headers: { "content-type": "application/json; charset=utf-8", "user-agent": UA },
-    body: JSON.stringify({
+  // api.indexnow.org → 네이버 순서로 같은 payload. 로그: "[indexnow] submitted N changed urls → HTTP s",
+  // "[indexnow] naver s". 어느 쪽 실패도 throw 하지 않는다(200/202 = 접수, 4xx여도 빌드는 계속).
+  await submitIndexNow(
+    {
       host: HOST,
       key,
       keyLocation: `https://${HOST}/${key}.txt`,
       urlList: plan.urls,
-    }),
-    signal: AbortSignal.timeout(20000),
-  });
-  // 200/202 = 접수. 4xx여도 빌드는 계속 — 로그로만 남김
-  console.log(`[indexnow] submitted ${plan.urls.length} changed urls → HTTP ${res.status}`);
+    },
+    { userAgent: UA },
+  );
 }
 
 // --selftest: 픽스처 XML 2개(운영=직전, 빌드=이번)로 diff·판독 규칙을 검증한다. 네트워크 없음.

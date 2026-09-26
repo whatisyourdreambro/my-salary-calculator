@@ -9,6 +9,11 @@
 //  - 제외: fine.fss.or.kr(fss.or.kr 하위라 중복) · minwon.go.kr(구 민원24, 응답 없음 — gov.kr 로 대체)
 //  - 2025~26 정부조직 개편으로 kostat.go.kr → mods.go.kr, moef.go.kr → mofe.go.kr 리다이렉트 — 양쪽 다 허용.
 //  - 추가는 별도 커밋으로(콘텐츠 커밋에 섞지 말 것). 후보를 발견하면 보고서에 올린다.
+//  - 2026-09-26 추가(H1 유가·전기요금·표준시 계산기용, 브라우저 UA HTTP 실측): kriss.re.kr(200) · motie.go.kr(301 →
+//    motir.go.kr 200, 양쪽 허용) · mcee.go.kr(200). 2025.10.1 조직 개편으로 전기요금 약관 인가는 기후에너지환경부
+//    (전기사업법 제16조), 석유제품 판매가격 공개는 산업통상부(석유사업법 제38조의2) 소관이다.
+//  - 2026-09-26 별도 커밋(운영자 승인 사항): 공기업 원문 kepco.co.kr(cyber 전기요금표 200) · opinet.co.kr(200).
+//    co.kr 은 공용 2단계 도메인이라 전체가 아니라 이 두 호스트만 넣는다.
 
 export const OFFICIAL_SOURCE_HOSTS = [
   // 세금·법령
@@ -47,6 +52,14 @@ export const OFFICIAL_SOURCE_HOSTS = [
   "nabo.go.kr", // 국회예산정책처
   "gov.kr", // 정부24
   "korea.kr", // 대한민국 정책브리핑
+  // 에너지·표준
+  "mcee.go.kr", // 기후에너지환경부 — 전력·전기요금 정책(2025.10.1 산업통상자원부에서 이관)
+  "motie.go.kr", // 산업통상자원부(구) — motir.go.kr 로 리다이렉트
+  "motir.go.kr", // 산업통상부 — 석유산업(석유제품 판매가격 공개)
+  "kriss.re.kr", // 한국표준과학연구원 — 국가 표준시
+  // 공기업 원문(.co.kr) — co.kr 전체가 아니라 두 호스트만. 운영자 승인 사항(2026-09-26 별도 커밋)
+  "kepco.co.kr", // 한국전력공사 — 전기요금표(cyber·home 하위 포함)
+  "opinet.co.kr", // 오피넷(한국석유공사 운영) — 석유제품 판매가격 공개
 ] as const;
 
 export type OfficialSourceHost = (typeof OFFICIAL_SOURCE_HOSTS)[number];

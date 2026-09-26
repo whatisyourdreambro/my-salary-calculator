@@ -34,8 +34,9 @@ export default function Breadcrumbs({
     items ?? (path ? buildBreadcrumbTrail(path, { leafName, overrides }) : []);
   if (trail.length < 2) return null;
 
+  // 모듈 id breadcrumbs: 루트 InternalLinkTracker 위임 클릭 계측(속성만, 마크업·높이 무변경)
   return (
-    <nav aria-label="이동 경로" className={className}>
+    <nav aria-label="이동 경로" data-msy-module="breadcrumbs" className={className}>
       <ol
         className={`flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm text-muted-foreground ${
           align === "center" ? "justify-center" : ""

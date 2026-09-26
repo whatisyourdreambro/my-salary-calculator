@@ -196,7 +196,9 @@ export default function IndustryPage({ params }: Props) {
                 {formatSalaryKorean(aggregate.avgSenior)} 수준입니다. 평균 주당 근무시간은 약{" "}
                 {aggregate.avgWeeklyHours}시간입니다.
               </p>
-              <div className="overflow-hidden rounded-xl border border-gray-100 dark:border-gray-700">
+              {/* 모듈 id industry-list: InternalLinkTracker 위임 클릭 계측(속성만). 이 파일의 목록 3곳(회사·직업·다른 업계)이
+                  같은 id 이고 목적지는 dest_tpl(company·job·industry)로 갈린다. 광고는 세 목록 모두의 밖이다. */}
+              <div data-msy-module="industry-list" className="overflow-hidden rounded-xl border border-gray-100 dark:border-gray-700">
                 {aggregate.rows.map((row) => (
                   <Link
                     key={row.company.id}
@@ -236,7 +238,7 @@ export default function IndustryPage({ params }: Props) {
               <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
                 이 업계 주요 직업 연봉
               </h2>
-              <div className="space-y-2">
+              <div data-msy-module="industry-list" className="space-y-2">
                 {relatedJobs.map((job) => (
                   <Link
                     key={job.id}
@@ -285,7 +287,7 @@ export default function IndustryPage({ params }: Props) {
           <GuideMidAd />
 
           {/* 다른 업계 */}
-          <section className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">
+          <section data-msy-module="industry-list" className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">
             <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">다른 업계 연봉 비교</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {relatedIndustries.map((ind) => (

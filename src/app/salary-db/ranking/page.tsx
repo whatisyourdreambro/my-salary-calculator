@@ -133,8 +133,8 @@ export default function CompanyRankingPage() {
           </p>
         </article>
 
-        {/* 순위표 */}
-        <div className="overflow-hidden rounded-3xl border border-canvas-200 bg-white shadow-sm">
+        {/* 순위표 — 모듈 id ranking-list: InternalLinkTracker 위임 클릭 계측(속성만, 높이·마크업 무변경) */}
+        <div data-msy-module="ranking-list" className="overflow-hidden rounded-3xl border border-canvas-200 bg-white shadow-sm">
           <table className="w-full text-left">
             <thead>
               <tr className="border-b border-canvas-200 bg-canvas/60 text-xs font-bold text-faint-blue uppercase tracking-wide">

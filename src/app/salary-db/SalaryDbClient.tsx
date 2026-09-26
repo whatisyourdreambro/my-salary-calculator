@@ -148,9 +148,12 @@ export default function SalaryDbClient({ companies }: { companies: CompanyIndexI
  </section>
 
  <div className="page-width pt-6">
- {/* 형제 허브 진입 — 회사 검색이 의도가 아니면 다른 차원으로 분기 */}
+ {/* 형제 허브 진입 — 회사 검색이 의도가 아니면 다른 차원으로 분기.
+ 모듈 id salary-db-hub: InternalLinkTracker 위임 클릭 계측(속성만). 이 파일의 목록 3곳이 같은 id —
+ 회사 카드 그리드는 안에 광고가 있어 컨테이너 대신 카드 링크마다 붙인다. 목적지는 dest_tpl 로 갈린다. */}
  <nav
  aria-label="다른 연봉 데이터 보기"
+ data-msy-module="salary-db-hub"
  className="max-w-5xl mx-auto mb-8 grid grid-cols-2 md:grid-cols-3 gap-3"
  >
  {SIBLING_HUBS.map((h) => {
@@ -254,7 +257,7 @@ export default function SalaryDbClient({ companies }: { companies: CompanyIndexI
  animationDelay: `${Math.min(idx, 8) * 0.05}s`,
  }}
  >
- <Link href={`/salary-db/${company.id}`} className="block h-full">
+ <Link href={`/salary-db/${company.id}`} data-msy-module="salary-db-hub" className="block h-full">
  <div className="group h-full duotone-card p-6 hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] transition-all duration-200 relative overflow-hidden">
  <div className="flex justify-between items-start mb-4">
  <div className="w-12 h-12 text-4xl flex items-center justify-center bg-secondary rounded-xl group-hover:scale-110 transition-transform">
@@ -334,7 +337,7 @@ export default function SalaryDbClient({ companies }: { companies: CompanyIndexI
  (현재 {companies.length.toLocaleString("ko-KR")}개 기업 데이터 제공 중)
  </p>
  {/* dead-end 방지 — 인기 회사 바로가기 + 계산기 CTA */}
- <div className="flex flex-wrap justify-center gap-2 mb-4">
+ <div data-msy-module="salary-db-hub" className="flex flex-wrap justify-center gap-2 mb-4">
  {POPULAR_COMPANIES.map((c) => (
  <Link
  key={c.id}
