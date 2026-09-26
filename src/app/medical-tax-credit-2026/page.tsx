@@ -6,6 +6,7 @@
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { buildPageMetadata } from "@/lib/seo";
+import { yearEndToolTitle } from "@/lib/yearEndSeason";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";
 import { HomeTopAd, InArticleAd, CalcResultAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
@@ -17,7 +18,8 @@ import ShareButtons from "@/components/ShareButtons";
 import MedicalTaxCreditClient from "./Client";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "의료비 세액공제 계산기 2026 — 실손 차감·3% 문턱·난임 30% 자동 계산",
+  // SEASON-06 (2026-09-26): 종전 '의료비 세액공제 계산기 2026 — 실손 차감·3% 문턱·난임 30% 자동 계산'
+  title: yearEndToolTitle("의료비 세액공제 계산기"),
   description:
     "총급여의 3% 초과 의료비부터 15~30% 세액공제. 실손보험금 차감, 본인·65세 이상·장애인·6세 이하 무한도, 난임시술 30%까지 반영해 2026년 귀속 연말정산 의료비 세액공제액을 즉시 계산합니다.",
   path: "/medical-tax-credit-2026",

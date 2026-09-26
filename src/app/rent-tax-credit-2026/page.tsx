@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { AlertTriangle } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
+import { yearEndToolTitle } from "@/lib/yearEndSeason";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";
 import { HomeTopAd, InArticleAd, CalcResultAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
@@ -19,7 +20,8 @@ import ShareButtons from "@/components/ShareButtons";
 import RentTaxCreditClient from "./Client";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "월세 세액공제 계산기 2026 — 최대 170만원, 15%·17% 자동 판정",
+  // SEASON-06 (2026-09-26): 종전 '월세 세액공제 계산기 2026 — 최대 170만원, 15%·17% 자동 판정'
+  title: yearEndToolTitle("월세 세액공제 계산기"),
   description:
     "2026년 귀속 월세 세액공제 즉시 계산. 총급여 5,500만원 이하 17%·8,000만원 이하 15%, 연 1,000만원 한도로 최대 170만원 세액공제. 무주택 세대주·전입신고·오피스텔 포함 요건까지 1분 확인.",
   path: "/rent-tax-credit-2026",

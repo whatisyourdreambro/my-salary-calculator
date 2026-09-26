@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { CheckCircle2, AlertCircle, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
-import { YEAR_END_SEASON } from "@/lib/yearEndSeason";
+import { YEAR_END_SEASON, yearEndLeadTitle } from "@/lib/yearEndSeason";
 import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
 import PublishedMeta from "@/components/PublishedMeta";
@@ -17,7 +17,8 @@ import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
  // 의도: 12월 31일 마감 전 항목별 점검표 (체크 형태). 계산기·전략은 별도 페이지.
- title: `${YEAR_END_SEASON.attributionYear} 연말정산 체크리스트 — 12월 31일 마감 전 40+ 항목 점검표`,
+ // SEASON-06 (2026-09-26): 종전 '2026 연말정산 체크리스트 — 12월 31일 마감 전 40+ 항목 점검표'
+ title: yearEndLeadTitle("체크리스트", "12월 마감 전 점검표"),
  description:
  "12월 31일 마감 전 빠짐없이 점검해야 할 연말정산 40+ 항목 체크리스트. 신용카드·연금저축·기부금·월세·인적공제 카테고리별 점검표 형식으로 빠르게 확인.",
  path: "/year-end-tax-checklist",
@@ -173,7 +174,7 @@ export default function YearEndTaxChecklistPage() {
  12월 마감 전 점검
  </p>
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
- 2026 연말정산 <span className="text-electric">체크리스트</span>
+ {YEAR_END_SEASON.filingYear} 연말정산 <span className="text-electric">체크리스트</span>
  </h1>
  <PublishedMeta publishedDate="2026-01-10" updatedDate="2026-09-30" className="mb-2" />
  <YearEndTaxCluster />

@@ -221,6 +221,12 @@ export interface ToolMeta {
  path: string;
  /** 추가 키워드 */
  keywords?: string[];
+ /**
+ * 제목 통째 지정 — 주면 `${name} 2026 — ${tagline}` 대신 이 문자열을 쓴다(OG 카드는 name 그대로).
+ * 헬퍼 문자열은 21쪽 공용이라 통째로 바꾸지 않고 쪽별로 넘긴다(next-upgrade P-6 메모).
+ * 연말정산 시즌 /calc 4쪽은 yearEndToolTitle(name) (SEASON-06, 2026-09-26).
+ */
+ title?: string;
 }
 
 /**
@@ -229,7 +235,7 @@ export interface ToolMeta {
  */
 export function buildToolMetadata(tool: ToolMeta): Metadata {
  return buildPageMetadata({
- title: `${tool.name} 2026 — ${tool.tagline}`,
+ title: tool.title ?? `${tool.name} 2026 — ${tool.tagline}`,
  description: tool.description,
  path: tool.path,
  keywords: tool.keywords,

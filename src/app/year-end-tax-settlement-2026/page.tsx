@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { Calendar, Gift, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
-import { YEAR_END_SEASON } from "@/lib/yearEndSeason";
+import { YEAR_END_ATTRIBUTION_LABEL, yearEndLeadTitle } from "@/lib/yearEndSeason";
 import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
 import PublishedMeta from "@/components/PublishedMeta";
@@ -16,11 +16,15 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
+/** "2027 연말정산 성과급 절세 가이드(2026년 귀속) — 12월 전략" (SEASON-06) — <title>·Article headline 공용 */
+const SETTLEMENT_TITLE = yearEndLeadTitle("성과급 절세 가이드", "12월 전략");
+
 export const metadata: Metadata = buildPageMetadata({
  // 의도: 근로자 12월 시즌 가이드 (전략·읽는 콘텐츠). 체크리스트는 별도 페이지(/year-end-tax-checklist), 계산기는 /year-end-tax.
- title: `${YEAR_END_SEASON.attributionYear} 근로자 연말정산 + 성과급 절세 가이드 — 12월 IRP 만기 납입까지`,
+ // SEASON-06 (2026-09-26): 종전 '2026 근로자 연말정산 + 성과급 절세 가이드 — 12월 IRP 만기 납입까지'
+ title: SETTLEMENT_TITLE,
  description:
- `성과급 1천만원 받으면 한계세율 35%→38%로 점프할 수 있음. 12월까지 IRP·연금저축 합산 900만원 세액공제 대상 한도와 공제율 확인. ${YEAR_END_SEASON.attributionYear} 근로자 연말정산 + 성과급 절세 6가지 핵심 전략.`,
+ `성과급 1천만원 받으면 한계세율 35%→38%로 점프할 수 있음. 12월까지 IRP·연금저축 합산 900만원 세액공제 대상 한도와 공제율 확인. ${YEAR_END_ATTRIBUTION_LABEL} 근로자 연말정산 + 성과급 절세 6가지 핵심 전략.`,
  path: "/year-end-tax-settlement-2026",
  ogType: "article",
  publishedTime: "2026-01-15",
@@ -83,7 +87,7 @@ export default function YearEndTaxSettlement2026Page() {
  ]),
  faqLd(FAQ_ITEMS),
  articleLd({
- title: "2026 연말정산 + 성과급 절세 가이드",
+ title: SETTLEMENT_TITLE,
  description: "12월 연말정산 공제 항목 + 성과급 세금 전략",
  slug: "year-end-tax-settlement-2026",
  url: "/year-end-tax-settlement-2026",

@@ -7,6 +7,7 @@
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { buildToolMetadata } from "@/lib/seo";
+import { yearEndToolTitle } from "@/lib/yearEndSeason";
 import {
   softwareApplicationLd,
   autoBreadcrumbLd,
@@ -49,6 +50,8 @@ const FAQ_ITEMS = [
 
 export const metadata: Metadata = buildToolMetadata({
   name: "13월의 월급 시뮬레이터",
+  // SEASON-06 (2026-09-26): 제목만 '… — 2026년 귀속·2027 연말정산' — 설명·OG(name)·주소 불변
+  title: yearEndToolTitle("13월의 월급 시뮬레이터"),
   tagline: "연말정산 환급액 미리보기 — 카드·의료비·IRP까지",
   description:
     "13월의 월급, 즉 연말정산 환급액을 미리 계산해보세요. 신용카드 사용액, IRP 납입, 의료비 공제 등 주요 공제 항목을 입력하면 환급/추징 예상액을 즉시 확인할 수 있습니다.",

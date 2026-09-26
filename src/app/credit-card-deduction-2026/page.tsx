@@ -8,6 +8,7 @@
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { buildPageMetadata } from "@/lib/seo";
+import { yearEndToolTitle } from "@/lib/yearEndSeason";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";
 import { HomeTopAd, InArticleAd, CalcResultAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
@@ -21,7 +22,8 @@ import ShareButtons from "@/components/ShareButtons";
 import CreditCardDeductionClient from "./Client";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "신용카드 소득공제 계산기 2026 — 공제한도·예상 절세액 즉시 계산",
+  // SEASON-06 (2026-09-26): 종전 '신용카드 소득공제 계산기 2026 — 공제한도·예상 절세액 즉시 계산'
+  title: yearEndToolTitle("신용카드 소득공제 계산기"),
   description:
     "총급여의 25% 초과 사용분부터 신용카드 15%·체크/현금영수증 30%·전통시장/대중교통 40% 공제. 2026년 귀속 자녀 수별 한도 상향(최대 400만원)까지 반영해 최종 소득공제액과 예상 절세액을 즉시 계산합니다.",
   path: "/credit-card-deduction-2026",

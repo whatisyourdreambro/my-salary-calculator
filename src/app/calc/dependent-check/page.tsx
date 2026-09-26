@@ -7,6 +7,7 @@
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { buildToolMetadata } from "@/lib/seo";
+import { yearEndToolTitle } from "@/lib/yearEndSeason";
 import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -50,6 +51,8 @@ const FAQ_ITEMS = [
 
 export const metadata: Metadata = buildToolMetadata({
   name: "부양가족 인적공제 판정기",
+  // SEASON-06 (2026-09-26): 제목만 '… — 2026년 귀속·2027 연말정산' — 설명·OG(name)·주소 불변
+  title: yearEndToolTitle("부양가족 인적공제 판정기"),
   tagline: "관계·나이·소득으로 기본공제 150만원 즉시 판정",
   description:
     "부모님·배우자·자녀·형제자매가 연말정산 기본공제(150만원) 대상인지 관계·출생연도·소득·동거 여부로 즉시 판정합니다. 경로우대·장애인 추가공제와 미충족 사유까지 소득세법 50~53조 기준으로 안내.",
