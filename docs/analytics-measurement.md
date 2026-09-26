@@ -24,6 +24,7 @@ Calculation events contain calculator type, sanitized page path, measurement ver
 - `ad_request_error`: that push threw an exception. No error text or input data is included.
 - `ad_filled` / `ad_unfilled`: the existing slot status observer; these are not revenue or viewability measurements.
 - Since 2026-09-25 the four manual-ad events above and `ad_unit_click` carry `nav_type` (`landing` = first document load, `soft` = after a client-side route change). Automatic `page_view` carries the same value through `gtag('set')`. See "소프트 내비게이션 계측" below.
+- `autoads_seen` (prepared 2026-09-26, ships only after operator approval): one read-only observation of AdSense auto in-page placements per landing view, sent once when the page is hidden or unloaded. It counts placements, requests and fills; it does not change ads. See "자동광고 관측 `autoads_seen`" below.
 - `coupang_impression`: an actual rendered banner reaches 50% viewport intersection with positive dimensions. Empty fallback wrappers are excluded. `banner_size` and `category` come from the rendered banner, matching click dimensions. The legacy `size_key` alias now reflects actual size.
 - `affiliate_impression`: an offer card reaches 50% viewport intersection. Observers restart when pathname or offer changes; callbacks from disposed observers are ignored.
 
@@ -110,7 +111,7 @@ Verify defaults, invalid input, accepted input, a visible current result, repeat
 
 ### 하지 않은 것
 
-- **`autoads_seen` 이벤트 — 보류.** 자동광고 자리는 애드센스가 나중에 DOM 에 끼워 넣어서 언제 붙었는지 코드가 알 수 없다. 알려면 DOM 관찰자(MutationObserver)나 주기 조회가 필요하고, 이전 뷰에서 들어간 자리가 레이아웃에 남아 새 자리와 구분도 되지 않는다. 대신 위 '애드센스 착지 대조'와 수동 점검으로 확인한다. 수동 점검은 운영 사이트 회사 페이지에서 본문 링크로 이동한 뒤 10초 기다려, 개발자 도구 콘솔의 `document.querySelectorAll('.google-auto-placed').length` 가 이동 전보다 늘었는지, 늘어난 자리가 새 본문 안에 있는지 보는 방식이다. 광고는 클릭하지 않는다.
+- **`autoads_seen` 이벤트 — 9/25 에는 보류했고, 9/26 에 아래 '자동광고 관측' 절로 준비했다(운영자 승인 뒤 배포).** 보류 사유였던 두 문제는 이렇게 풀었다. 착지 뷰에서만 재고 소프트 이동이 일어나면 그 시점 값에서 멈추므로 이전 뷰의 자리와 섞이지 않는다. 또 DOM 관찰자 대신 5초 간격 조회(90초)와 보낼 때 1회 조회만 쓴다. 9/25 당시 기록은 다음과 같다. 자동광고 자리는 애드센스가 나중에 DOM 에 끼워 넣어서 언제 붙었는지 코드가 알 수 없다. 알려면 DOM 관찰자(MutationObserver)나 주기 조회가 필요하고, 이전 뷰에서 들어간 자리가 레이아웃에 남아 새 자리와 구분도 되지 않는다. 대신 위 '애드센스 착지 대조'와 수동 점검으로 확인한다. 수동 점검은 운영 사이트 회사 페이지에서 본문 링크로 이동한 뒤 10초 기다려, 개발자 도구 콘솔의 `document.querySelectorAll('.google-auto-placed').length` 가 이동 전보다 늘었는지, 늘어난 자리가 새 본문 안에 있는지 보는 방식이다. 광고는 클릭하지 않는다.
 
 ## 내비 표면 모듈 id + 목적지 템플릿 `dest_tpl` (2026-09-26 RPM-02, 측정 전용)
 
@@ -119,3 +120,139 @@ Verify defaults, invalid input, accepted input, a visible current result, repeat
 - **`dest_tpl`**: 위임 계측(`trackInternalLinkClick`) 클릭에만 싣는 목적지 템플릿. href 는 하루 고유값 500개를 넘어 측정기준으로 못 쓰므로 17개 고정값으로 묶는다 — `company` · `compare` · `salary-db-hub` · `ranking` · `job` · `job-hub` · `bonus-calc` · `samsung-bonus` · `calc` · `salary-amount` · `monthly` · `pay-table` · `table` · `guide` · `industry` · `home` · `other`. 규칙은 `src/lib/analytics.ts` `destTemplate` 과 `src/lib/__tests__/destTemplate.test.ts` 표가 정본이다. 상장사 공시 트리는 허브(`/salary-db/listed`)=`salary-db-hub`, 순위형(`top-*`·`industry`)=`ranking`, 종목 페이지=`company`. 직접 onClick 호출부(related-calc·next-action·related-guide 등)는 종전 그대로 `dest_tpl` 이 없다.
 - ☐ **운영자 — 배포 당일 GA4 맞춤 측정기준 `dest_tpl` 등록**: 관리 → 데이터 표시 → 맞춤 정의 → 맞춤 측정기준 만들기 → 이름 `dest_tpl` · 범위 **이벤트** · 이벤트 매개변수 `dest_tpl` → 저장. 소급되지 않으므로 늦으면 그만큼 10/19 판정 창이 짧아진다. 이벤트 범위 한도(50개) 여유를 먼저 본다.
 - **보는 법**: 탐색 분석 자유 형식, 필터 `이벤트 이름 = guide_cta_click`, 행 `position`, 열 `dest_tpl`, 값 `이벤트 수`. 헤더 대 본문 클릭 비중은 `header-nav`·`breadcrumbs`·`footer` 합 ÷ 전체 위임 클릭. `dest_tpl` 의 `(not set)` 은 직접 호출부 클릭이거나 배포 전 JS 로 열려 있던 탭의 클릭이다.
+
+## 자동광고 관측 `autoads_seen` (측정 버전 `aa1`, 2026-09-26 준비 — 운영자 승인 뒤 배포, 측정 전용)
+
+**왜**: 9/26 진단에서 애드센스 콘솔의 자동광고 미리보기는 페이지마다 인페이지 자리 12~17개를 계획했다. 그런데 실제 방문의 자동 인페이지 노출은 PV 당 0.6~0.8 이었고, 9/10 사건 때 가장 많이 잃은 곳은 회사 페이지였다. 실방문에서 구글이 자리를 몇 개 끼워 넣는지(placed), 그중 몇 개를 요청하는지(req), 몇 개가 채워지는지(filled)를 재서 10/9 에스컬레이션 방향을 정한다.
+
+**배포 조건**: 운영자 승인 뒤에만 배포한다. 광고 요청·렌더·위치·광고량은 바꾸지 않는다. 계측은 광고 이벤트 계측 예외(승인②)를 넓히는 것이라 승인이 필요하다. 루트 layout 에 무렌더 컴포넌트 1개를 더할 뿐 DOM 노드를 만들지 않는다. 그래서 자동광고 동결(10/9까지) 규칙과 `verify:autoads` 0% 소실 게이트에 걸리지 않는다. 배포 전 게이트로 `npm run verify:autoads` 가 0% 소실인지 확인한다.
+
+**코드**: `src/lib/autoAdsSeen.ts`(스냅숏·설치) · `src/components/AutoAdsSeenTracker.tsx`(루트 layout, NavTypeTracker 다음 무렌더) · `src/lib/analyticsPrivacy.ts`(`PAGE_SCOPED_MEASUREMENT_EVENTS` 에 추가해 공개 금액 페이지 실경로 유지) · 테스트 `src/lib/__tests__/autoAdsSeen.test.ts`.
+
+### 이벤트 규격
+
+- **언제**: 착지 뷰(`nav_type=landing`)에서만 설치한다. 문서당 1회다. `visibilitychange`→hidden 이나 `pagehide` 중 먼저 온 것에서 **정확히 1번** 보낸다. 탭 전환·앱 전환·이탈·새로고침이 모두 여기에 해당한다. 전송은 `transport_type: beacon` 이다.
+- **어떻게 재나**: 5초마다 90초 동안(18회) DOM 을 읽고 보내기 직전에 1번 더 읽는다. 항목마다 그동안의 **최댓값**을 보낸다. DOM 에 쓰지 않고 DOM 관찰자(MutationObserver)도 쓰지 않는다. 모든 경로가 try/catch 로 감싸져 있다.
+- **소프트 이동**: 사이트 안 링크 이동 등으로 뷰가 `soft` 가 되면 그 시점 값에서 멈추고, `soft_nav_before_send=1` · `nav_type=soft` 로 보낸다. 다음 뷰의 DOM 은 섞이지 않는다. 그 대신 soft 행은 **잘린 관측**이다. 이동한 뒤에 붙은 자리·요청·채움은 세지 않아 값이 작게 나온다. 그래서 soft 행은 soft 비중과 커버리지 분자에만 쓴다(판독 절차 ①).
+
+| 인자 | 형식 | 뜻 |
+|---|---|---|
+| `aa_placed` | 숫자 | `.google-auto-placed`(자동 인페이지 자리 컨테이너) 수 |
+| `aa_ins` | 숫자 | 그 안의 `ins.adsbygoogle` 수 |
+| `aa_req` | 숫자 | 그중 `data-adsbygoogle-status="done"`(요청까지 간 것) |
+| `aa_filled` | 숫자 | 그중 `data-ad-status="filled"` |
+| `aa_unfilled` | 숫자 | 그중 `data-ad-status="unfilled"` |
+| `aa_first_top` · `aa_last_top` | 숫자(100 단위) | 자리의 문서 기준 위치(`rect.top + scrollY`) 최소·최대. 자리 수가 가장 많았던 최근 스냅숏의 값이다. 0×0(숨김) 자리는 빼며, 잴 자리가 없으면 **싣지 않는다** |
+| `manual_ins` | 숫자 | `.google-auto-placed` 밖의 `ins.adsbygoogle[data-ad-slot]` = 사이트가 직접 넣은 광고 칸 |
+| `doc_h` | 숫자(100 단위) | `documentElement.scrollHeight` |
+| `scroll_max` | 숫자(100 단위) | `max(scrollY + innerHeight)`. 1초 스로틀 passive 스크롤 리스너로 잰다 |
+| `ama_cfg` | 0/1 | localStorage 에 `google_ama_config`(자동광고 설정 캐시)가 있으면 1. 읽기만 하며, 읽을 수 없으면 0 |
+| `page_group` | 문자 | **착지** 경로의 첫 마디(`salary-db`·`salary`·`monthly`·`calc`·`guides` …). 루트는 `home`, 한글·인코딩 경로는 `other` |
+| `viewport` | 문자 | `m`(<768) · `t`(<1024) · `d` |
+| `nav_type` | 문자 | 보낼 때의 값. `soft` 이면 `soft_nav_before_send=1` 과 같은 뜻이다 |
+| `soft_nav_before_send` | 0/1 | 보내기 전에 소프트 이동이 있었는지 |
+| `measurement_version` | 문자 | `aa1` |
+| `position` | 문자 | `'<aa_ins>-<aa_req>-<aa_filled>'` (예 `14-3-2`). 이미 등록된 맞춤 측정기준 `position` 을 재사용한다 |
+
+- 앵커·전면(vignette) 광고는 `.google-auto-placed` 밖에 붙으므로 `aa_*` 에 들어가지 않는다.
+- 개인정보: 경로는 첫 마디만 싣고, 입력값·금액·쿼리는 싣지 않는다. `page_location` 은 다른 광고 이벤트처럼 공개 금액 페이지(`/monthly/N`·`/salary/N`)의 실경로를 유지한다.
+- `soft_nav_before_send=1` 행의 `page_location`(페이지 경로)은 **마지막 뷰**의 주소다. 전역 `trackEvent` 는 10/10 판정 전 무변경 규칙이라 바꾸지 않았다. 그래서 `autoads_seen` 을 템플릿으로 나눌 때는 페이지 경로가 아니라 착지 기준인 `page_group` 을 쓴다. 자리·요청·채움(`aa_placed`·`aa_req`·`aa_filled` 와 판독 ② 의 모든 줄)은 **`nav_type=landing` 필터를 건 집계만 인정한다.** `page_group` 으로만 묶고 soft 행을 섞은 합계는 쓰지 않는다.
+
+### GA4 등록 (배포 당일, 모두 **이벤트 범위** — 소급되지 않는다)
+
+관리 → 데이터 표시 → **맞춤 정의**. 표준 속성의 이벤트 범위 한도는 맞춤 측정기준 50개, 맞춤 측정항목 50개라 목록 수를 먼저 확인한다.
+
+| 종류 | 이름 = 이벤트 매개변수 | 단위 | 비고 |
+|---|---|---|---|
+| 맞춤 측정기준 | `page_group` | — | **새로 등록(필수)** |
+| 맞춤 측정항목 | `aa_placed` | 표준 | **필수** |
+| 맞춤 측정항목 | `aa_req` | 표준 | **필수** |
+| 맞춤 측정항목 | `aa_filled` | 표준 | **필수** |
+| 맞춤 측정항목 | `aa_ins` | 표준 | 권장 |
+| 맞춤 측정항목 | `aa_unfilled` | 표준 | 권장(응답 대기 판별) |
+| 맞춤 측정항목 | `manual_ins` | 표준 | 권장 |
+| 맞춤 측정항목 | `scroll_max` | 표준 | 권장(지연 로드 판별) |
+| 맞춤 측정항목 | `doc_h` | 표준 | 권장(지연 로드 판별) |
+| 맞춤 측정항목 | `aa_last_top` | 표준 | 권장(지연 로드 판별) |
+| 맞춤 측정항목 | `ama_cfg` | 표준 | 권장 |
+
+- **새로 등록하지 않는 것**: `position`·`measurement_version`(이미 등록됨), `nav_type`(9/26~27 등록 항목), `viewport`(S1-6 때 등록 안내. 목록에 없으면 이때 함께 등록), `soft_nav_before_send`(`nav_type` 과 같은 정보), `aa_first_top`(판독표에 쓰지 않음).
+- 필수 4개(측정기준 1 + 측정항목 3)만 등록해도 판독표의 핵심 줄(뷰당 자리·요청·채움)은 나온다. 권장 7개가 없으면 지연 로드·응답 대기 판별 줄을 채우지 못한다.
+- 등록하지 않아도 `position` 측정기준으로 분포(`0-0-0`, `14-3-2` …)는 바로 볼 수 있다.
+
+### 배포 당일 할 일
+
+1. ☐ 위 표대로 등록한다(배포와 같은 날. 늦은 만큼 판독 창이 짧아진다).
+2. ☐ **실제 전송 확인(5분, 광고는 클릭하지 않는다)**: 운영 사이트(엣지 캐시 Purge 뒤) 회사 페이지를 새로 연다. 개발자 도구 → 네트워크 → 필터 `collect`. 20초쯤 기다린 뒤 다른 탭으로 전환한다. `en=autoads_seen` 요청(유형 `ping`/beacon)이 1번 나가고, 페이로드에 `epn.aa_placed`·`epn.aa_req`·`epn.aa_filled`(숫자는 `epn.`), `ep.position`·`ep.page_group=salary-db`·`ep.measurement_version=aa1`(문자는 `ep.`)이 있어야 한다. 탭으로 돌아왔다가 다시 전환해도 두 번째 요청은 없어야 한다.
+3. ☐ 같은 페이지 콘솔에서 `document.querySelectorAll('.google-auto-placed').length` 가 `epn.aa_placed` 와 대략 같은지 본다(보낸 뒤에 자리가 더 붙었으면 콘솔 쪽이 클 수 있다).
+4. ☐ 배포 시각·Purge 시각·등록 시각을 아래 기록표에 적는다.
+
+### 판독 절차 — 10/2(1차 점검)·10/9(판정)
+
+- **기간**: 10/2 조회는 배포 다음 날 ~ 10/1, 10/9 조회는 배포 다음 날 ~ 10/8 이다(완료일만). 10/2 에 창이 3일 미만이면 수집 점검(아래 ①)만 하고 판독은 10/9 로 미룬다.
+- **탐색(자유 형식) — 탭 3개**
+  - **탭 A(판독용)**: 측정기준 `page_group`·`nav_type`(선택 `viewport`). 측정항목 `이벤트 수`와 위에서 등록한 측정항목. 필터는 `이벤트 이름 = autoads_seen` · `measurement_version = aa1` · `nav_type = landing`. **자리·요청·채움(아래 ②·③)은 이 필터로 낸 값만 쓴다.** 이 밖의 집계 방법은 인정하지 않는다.
+  - **탭 B(커버리지 분자·soft 비중)**: 측정기준 `page_group`·`nav_type`. 측정항목 `이벤트 수`. 필터는 `이벤트 이름 = autoads_seen` · `measurement_version = aa1` 만 건다. `nav_type` 필터는 걸지 않아 landing 행과 soft 행이 모두 나온다.
+  - **탭 C(커버리지 분모)**: 측정기준 `페이지 경로 및 화면 클래스`. 측정항목 `이벤트 수`. 필터는 `이벤트 이름 = page_view` · `nav_type = landing` 에, 템플릿마다 아래 표의 경로 정규식을 더한다. `page_view` 에는 `page_group` 이 없어서 경로로 템플릿을 가른다.
+
+| `page_group` | 분모 `page_view` 경로 정규식 | 비고 |
+|---|---|---|
+| `salary-db` | `^/salary-db(/.*)?$` | 목록 `/salary-db` 와 회사 페이지 `/salary-db/…` 를 모두 포함한다. 소프트 내비게이션 절의 `^/salary-db/`(회사 페이지만)와 범위가 다르다 |
+| `salary` | `^/salary(/.*)?$` | `^/salary` 처럼 끝을 열어 두면 `/salary-db`·`/salary-raise-2026` 까지 섞인다 |
+| `monthly` | `^/monthly(/.*)?$` | |
+| `home` | `^/$` | |
+| `guides` | `^/guides(/.*)?$` | |
+| `calc` | `^/calc(/.*)?$` | |
+
+- **순서**: 회사 DB(`salary-db`)를 먼저 보고, 이어서 `salary`·`monthly`·`home`·`guides`·`calc` 순으로 본다.
+
+① **수집 점검(10/2)**
+   - 커버리지 = 탭 B 에서 그 `page_group` 의 `aa1` 이벤트 **전체**(landing 행 + soft 행) ÷ 탭 C 에서 같은 템플릿 경로 정규식의 `page_view`(landing). `autoads_seen` 은 착지 뷰에서만 설치되므로 soft 행도 착지 뷰 1개에서 나온 전송이다. 분자에서 soft 행을 빼면 soft 비중만큼 커버리지가 낮게 나온다. 이탈 순간 유실(iOS 등)이 있어 1보다 작다. **0.5 미만이면 판독 신뢰도가 낮다**고 적고 원인(캐시된 HTML·설치 실패)부터 본다.
+   - soft 비중 = 탭 B 의 `nav_type=soft` 이벤트(= `soft_nav_before_send=1`) ÷ `aa1` 이벤트 전체. soft 행은 소프트 이동 순간에 멈춘 **잘린 관측**이다. 이 비중과 커버리지 분자에만 쓰고 ②·③ 의 자리·요청·채움 계산에는 넣지 않는다.
+
+② **계산(템플릿마다, 탭 A 만 사용, N = landing 이벤트 수)**
+
+| 줄 | 식 |
+|---|---|
+| 뷰당 자리 **P** | Σ`aa_placed` ÷ N |
+| 뷰당 요청 **R** | Σ`aa_req` ÷ N |
+| 뷰당 채움 **F** | Σ`aa_filled` ÷ N |
+| 뷰당 응답 **U** | (Σ`aa_filled` + Σ`aa_unfilled`) ÷ N. 응답(`data-ad-status`)이 돌아온 칸. `aa_unfilled` 가 등록돼 있어야 한다 |
+| 요청 비율 | R ÷ P |
+| 응답 비율 | U ÷ R |
+| 채움 비율 | F ÷ R |
+| 설정 캐시 비율 | Σ`ama_cfg` ÷ N |
+| 평균 도달 깊이 vs 문서 높이 | Σ`scroll_max` ÷ N 과 Σ`doc_h` ÷ N |
+| 평균 마지막 자리 위치(근사) | 필터에 `position` 정규식 `^[1-9]`(자동 ins 1개 이상)를 더한 행에서 Σ`aa_last_top` ÷ 이벤트 수. 탐색의 측정항목 필터는 이벤트 단위가 아니라 행 합계에 걸리므로 이벤트 단위 측정기준인 `position` 으로 거른다 |
+| 뷰당 수동 칸 | Σ`manual_ins` ÷ N |
+
+   - **대조**: F 를 애드센스 '자동 인페이지 노출 ÷ PV'(9/26 진단 0.6~0.8)와 같은 기간으로 나란히 적는다. 크게 어긋나면(2배 이상) 수치 해석 전에 필터·기간부터 다시 본다.
+   - **분포**: 행 `position`, 열 `page_group`, 값 `이벤트 수`. 평균이 두 무리(예 `0-0-0` 과 `14-3-2`)의 섞임인지 확인한다.
+   - **보류**: 한 템플릿의 N 이 300 미만이면 그 템플릿은 판정하지 않는다.
+
+③ **해석과 10/9 조치**
+
+| 관측 | 해석 | 10/9 조치 |
+|---|---|---|
+| **P ≈ 3 안팎**(미리보기 12~17 보다 크게 적음), 설정 캐시 비율 높음 | 구글 쪽 배치 한도. 설정·학습 때문에 실방문에 자리를 적게 끼운다 | **애드센스 지원 문의**. 템플릿별 P·R·F, 미리보기 12~17 화면, 9/10 사건과 9/24 복구 경위를 첨부한다. 사이트 코드는 바꾸지 않는다 |
+| **P 12~17 수준인데 R 이 작음**(R ÷ P < 0.3) | 지연 로드·스크롤 문제. 자리는 있는데 요청이 나가지 않는다 | 아래 두 갈래로 나눈다 |
+| └ 평균 도달 깊이 < 평균 마지막 자리 위치 | 방문자가 아래쪽 자리까지 내려가지 않는다. 정상적인 지연 로드다 | 광고 설정 변경 대상이 아니다. 상단 콘텐츠·체류 과제로 기록한다 |
+| └ 평균 도달 깊이 ≥ 평균 마지막 자리 위치, 또는 도달 깊이 ≈ 화면 높이인데 문서 높이가 큼 | 창 스크롤이 일어나지 않거나(내부 스크롤 영역 등) 지연 로드가 걸리지 않는다 | 코드 조사 과제로 올린다. 광고 코드 변경은 운영자 승인 뒤에만 한다 |
+| **R ≈ P 인데 U 가 R 보다 훨씬 작음**(응답 비율 U ÷ R < 0.5 정도) | 응답 대기. 요청 표시(`done`)까지는 갔지만 응답(`filled`·`unfilled`)이 오기 전에 방문이 끝났다. 요청이 지연 로드로 화면 근처까지 미뤄지는 경우이므로 역시 지연 로드·스크롤 문제다 | 위 두 갈래(도달 깊이 vs 마지막 자리 위치)로 똑같이 나눈다. `aa_unfilled` 가 등록되지 않았으면 이 줄은 판정하지 않는다 |
+| R 은 충분하고 응답도 대부분 왔는데(U ≈ R) 채움 비율 < 0.5 | 수요(채움) 문제 | 코드·설정 문제가 아니므로 기록만 한다 |
+| P ≈ 0 이고 설정 캐시 비율 < 0.8 | 자동광고 설정을 받지 못한다(스크립트 로드 실패·차단) | 스크립트 로드 경로를 조사한다 |
+| P ≈ 0 인데 설정 캐시 비율 높음 | 페이지 제외 설정이나 학습 경로 불일치(9/10 유형) | `verify:autoads` 기준선·콘솔 제외 목록을 확인한다 |
+| P 4~11 | 9/24 복구 뒤 재학습 중일 수 있다 | 10/2 대비 추세를 적고 한 주 더 본다 |
+
+### 기록표
+
+| 조회일 | 창 | 배포·Purge·등록 시각 | 템플릿 | N | 커버리지 | soft 비중 | P | R | F | R÷P | U÷R | F÷R | ama | 도달/마지막 자리/문서 높이 | 애드센스 자동 인페이지/PV | 판정 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 10/2 | 배포 익일~10/1 | | salary-db | | | | | | | | | | | | | |
+| 10/9 | 배포 익일~10/8 | | salary-db | | | | | | | | | | | | | |
+
+### 한계
+
+- 보낸 뒤(첫 hidden 이후)에 붙은 자리는 세지 않는다. 탭을 잠깐 바꿨다 돌아와 오래 읽은 방문은 적게 잡힌다.
+- 광고 차단기를 쓰는 방문은 gtag 도 막혀 이벤트가 없다. 애드센스 PV 도 없으므로 비교는 유효하다.
+- 조회 1회는 자리마다 `getBoundingClientRect` 를 읽는 것이다. 5초 간격, 90초까지, 보낼 때 1회라 성능 영향은 무시할 만하다.
