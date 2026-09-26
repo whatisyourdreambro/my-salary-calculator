@@ -663,7 +663,10 @@ export function runRules(input: TrendBriefDraft, ctx: RuleContext): RuleResult[]
     if (html.length < HTML_MIN_JS_CHARS) errs.push(`HTML ${html.length}자 < ${HTML_MIN_JS_CHARS}`);
     const bytes = utf8Bytes(html);
     if (bytes > HTML_BUDGET_BYTES) errs.push(`HTML ${bytes}B > 예산 ${HTML_BUDGET_BYTES}B`);
-    if (text.length < VISIBLE_TEXT.min || text.length > VISIBLE_TEXT.max) errs.push(`가시 텍스트 ${text.length}자 (${VISIBLE_TEXT.min}~${VISIBLE_TEXT.max})`);
+    // 분량 한도는 writer 가 쓴 글만 잰다 — 렌더가 붙이는 결정 전 값 고지 문장(고정)은 뺀다. 바이트 예산(HTML_BUDGET_BYTES)은 전부 센다.
+    const disclosureText = impactDisclosure(d.impact.table.kind, d.impact.table.params);
+    const writerLen = disclosureText ? text.replace(` ${disclosureText}`, "").length : text.length;
+    if (writerLen < VISIBLE_TEXT.min || writerLen > VISIBLE_TEXT.max) errs.push(`가시 텍스트 ${writerLen}자 (${VISIBLE_TEXT.min}~${VISIBLE_TEXT.max}${disclosureText ? ", 고지 문장 제외" : ""})`);
     if (guideSegments(html).length !== 3) errs.push("본문 3분할 아님(GuideMidAd 1/3 · InArticleAd 2/3)");
     if (/<(?:img|iframe|script|style|object|embed|form)\b/i.test(html)) errs.push("img·iframe·script·style 금지");
     const classes = [...html.matchAll(/\sclass="([^"]*)"/g)].map((m) => m[1]).filter((c) => c !== "lead" && c !== "w-full text-sm");
@@ -672,7 +675,15 @@ export function runRules(input: TrendBriefDraft, ctx: RuleContext): RuleResult[]
     if (!html.includes(`<h3>${HOW_MADE_HEADING}</h3>`)) errs.push("작성 방식 상자 없음");
     if (!html.includes("세무·금융 자문이 아닙니다")) errs.push("자문 아님 고지 없음");
     if (html.includes("검수 완료")) errs.push("'검수 완료' 금지");
-    out.push(r("structure", !errs.length, errs.join(" · ") || `H2 6 · FAQ ${faqs.length} · ${html.length}자 · ${bytes}B · 가시 ${text.length}자`, text.length, `${VISIBLE_TEXT.min}~${VISIBLE_TEXT.max}`));
+    out.push(
+      r(
+        "structure",
+        !errs.length,
+        errs.join(" · ") || `H2 6 · FAQ ${faqs.length} · ${html.length}자 · ${bytes}B · 가시 ${writerLen}자${disclosureText ? `(+고지 ${disclosureText.length + 1}자)` : ""}`,
+        writerLen,
+        `${VISIBLE_TEXT.min}~${VISIBLE_TEXT.max}`
+      )
+    );
   }
 
   // shares (요약 비중·인용)

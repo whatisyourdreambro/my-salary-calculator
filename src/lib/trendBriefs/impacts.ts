@@ -463,6 +463,14 @@ export function provisionalDisclosure(provisional: readonly string[]): string {
   return parts.join(" ");
 }
 
+const RATE_DISCLOSURE_RE = /표의 [^.]{1,80}? 2027년 값은 아직 결정 전이라 2026년 값을 그대로 넣었습니다\./g;
+/** 가시 텍스트에서 렌더가 붙인 결정 전 값 고지 문장을 뺀다 — 분량 한도(VISIBLE_TEXT)는 writer 가 쓴 글만 잰다(등록된 본문 검사용) */
+export function stripProvisionalDisclosures(text: string): string {
+  let s = text.replace(RATE_DISCLOSURE_RE, "");
+  for (const sentence of [...Object.values(PROVISIONAL_SENTENCES), PROVISIONAL_FALLBACK]) s = s.split(sentence).join("");
+  return s.replace(/\s+/g, " ").trim();
+}
+
 /** 영향 표의 결정 전 값 고지 문장 (파라미터 오류면 예외 — impactTable 과 같다) */
 export function impactDisclosure(kindId: string, params: Record<string, unknown>): string {
   return provisionalDisclosure(impactTable(kindId, params).provisional);

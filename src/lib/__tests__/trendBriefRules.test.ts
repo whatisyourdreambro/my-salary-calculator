@@ -28,7 +28,7 @@ import {
   type LedgerEntry,
 } from "@/lib/trendBriefs/rules";
 import { autoConstText, draftToHtml } from "@/lib/trendBriefs/render";
-import { impactTable, provisionalDisclosure } from "@/lib/trendBriefs/impacts";
+import { impactTable, provisionalDisclosure, stripProvisionalDisclosures } from "@/lib/trendBriefs/impacts";
 import { visibleText } from "@/lib/trendBriefs/text";
 import {
   FIRST_PUBLISH_NOT_BEFORE,
@@ -149,6 +149,16 @@ describe("critic fix 2026-09-26 — 출처 전체 유사도 · 레이더 후보 
     const r = rule(y27, { ...ctx, renderedHtml: html }, "unannounced-facts");
     expect(r.ok, r.detail).toBe(true);
     expect(r.detail).toContain("결정 전 값 고지 있음");
+    // 분량 한도는 writer 글만 — 고지 문장은 빼고 잰다(등록 본문 검사와 같은 기준)
+    const s = rule(y27, ctx, "structure");
+    expect(s.ok, s.detail).toBe(true);
+    expect(s.detail).toMatch(/\(\+고지 \d+자\)/);
+    const full = visibleText(html);
+    expect(stripProvisionalDisclosures(full)).not.toContain("아직 결정 전");
+    expect(stripProvisionalDisclosures(full).length).toBe(s.value);
+    for (const k of ["RAISE_2027_BUDGET", "UNEMPLOYMENT_BENEFIT_2027", "UNKNOWN_FLAG"]) {
+      expect(stripProvisionalDisclosures(`앞 문장. ${provisionalDisclosure([k])} 뒤 문장.`)).toBe("앞 문장. 뒤 문장.");
+    }
   });
 });
 

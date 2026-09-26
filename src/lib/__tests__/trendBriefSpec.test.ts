@@ -16,7 +16,7 @@ import { koGuides } from "@/lib/guidesContent";
 import { trendBriefGuides } from "@/lib/guides/trend-briefs";
 import { extractGuideFaqs } from "@/lib/guideFaq";
 import { GET } from "@/app/rss.xml/route";
-import { constText, impactCell, impactRows } from "@/lib/trendBriefs/impacts";
+import { constText, impactCell, impactRows, stripProvisionalDisclosures } from "@/lib/trendBriefs/impacts";
 import {
   buildMonthlyFile,
   draftToEntrySource,
@@ -50,7 +50,8 @@ const koTitles = koGuides.map((g) => g.title);
 function briefViolations(g: Guide): string[] {
   const v: string[] = [];
   const html = g.content;
-  const text = visibleText(html);
+  // 분량 한도는 writer 글만 — 렌더가 붙인 결정 전 값 고지 문장은 뺀다(rules.ts structure 와 같은 기준)
+  const text = stripProvisionalDisclosures(visibleText(html));
   if (!html.startsWith('<p class="lead">')) v.push("lead 로 시작하지 않음");
   const h2 = [...html.matchAll(/<h2([^>]*)>/g)];
   if (h2.length !== 6 || h2.some((m) => m[1] !== "")) v.push(`맨 <h2> 6개 아님 (${h2.length})`);
