@@ -460,7 +460,8 @@ test("법령 DRF: 키 없으면 건너뜀(요청 0), 키 있으면 대상 법령
 // ─── 사이트 색인 ─────────────────────────────────────────────
 test("사이트 색인: 한국어 가이드 카드·정적 라우트(동적·en·api 제외)·바이그램 유사도", () => {
   const cards = loadGuideCards(REPO_ROOT);
-  assert.ok(cards.length >= 300);
+  // main 가이드 상태 기준: adb120cc 한국어 카드 294편(R4 보류 40편 제외, 8e37ceb8 은 334편) — 하한은 여유를 둔 280
+  assert.ok(cards.length >= 280, `한국어 가이드 카드 ${cards.length}편`);
   assert.ok(cards.every((g) => g.url === `/guides/${g.slug}`));
   assert.ok(siteIndex.routes.includes("/earned-income-credit"));
   assert.ok(siteIndex.routes.every((r) => !/\[|\(|^\/en(\/|$)|^\/api(\/|$)/.test(r)));
