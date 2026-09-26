@@ -228,8 +228,9 @@ describe("한도·달력", () => {
 
   const cal: CalendarConfig = FX.context.calendar as CalendarConfig;
   it("첫 발행일·동결·판정일·배포 배치 +2일·로컬 차단·파일럿 판정", () => {
-    expect(FIRST_PUBLISH_NOT_BEFORE).toBe("2026-10-10");
+    expect(FIRST_PUBLISH_NOT_BEFORE).toBe("2026-10-13");
     expect(calendarBlocks("2026-10-09", cal).join()).toContain("첫 발행일");
+    expect(calendarBlocks("2026-10-12", cal).join()).toContain("첫 발행일 2026-10-13");
     expect(calendarBlocks("2026-10-10", cal).join()).toContain("배포 배치");
     expect(calendarBlocks("2026-10-12", cal).join()).toContain("배포 배치");
     expect(calendarBlocks("2026-10-13", cal)).toEqual([]);
@@ -242,6 +243,33 @@ describe("한도·달력", () => {
     expect(calendarBlocks("2027-02-02", withResume, undefined, true)).toEqual([]);
     // calendar.json 이 첫 발행일을 앞당겨도 하드 상수가 이긴다
     expect(calendarBlocks("2026-10-05", { ...cal, firstPublishNotBefore: "2026-10-01" }).join()).toContain("첫 발행일");
+  });
+
+  it("파일럿 10/13~10/31 (운영자 결정 2026-09-27): 시작 전 차단 · 기간 중 통과 · 끝나면 판정 전까지 차단 · 수정(--update)은 무관", () => {
+    const withPilot: CalendarConfig = { ...cal, pilot: { from: "2026-10-13", to: "2026-10-31" } };
+    expect(calendarBlocks("2026-10-13", withPilot)).toEqual([]);
+    expect(calendarBlocks("2026-10-31", withPilot)).toEqual([]);
+    // pilot.from 이 더 늦으면 그것이 첫 발행일
+    expect(calendarBlocks("2026-10-14", { ...withPilot, pilot: { from: "2026-10-15", to: "2026-10-31" } }).join()).toContain("첫 발행일 2026-10-15");
+    // 동결이 없어도(가정) 파일럿이 끝나면 판정 전까지 막힌다
+    const noFreeze: CalendarConfig = { ...withPilot, freezes: [] };
+    expect(calendarBlocks("2026-11-01", noFreeze).join()).toContain("파일럿 2026-10-13~2026-10-31 종료");
+    expect(calendarBlocks("2026-11-01", noFreeze, undefined, true)).toEqual([]);
+    expect(calendarBlocks("2027-02-01", withPilot).join()).toContain("파일럿");
+    expect(calendarBlocks("2027-02-01", withPilot, undefined, true)).toEqual([]);
+    expect(updateCalendarBlocks(calendarBlocks("2027-02-01", withPilot))).toEqual([]);
+    // 저장소 calendar.json 이 운영자 결정과 같다
+    const repoCal = JSON.parse(read("scripts/trend-publish/calendar.json")) as CalendarConfig;
+    expect(repoCal.pilot).toMatchObject({ from: "2026-10-13", to: "2026-10-31" });
+    expect(repoCal.firstPublishNotBefore).toBe("2026-10-13");
+    expect(repoCal.freezes).toEqual([expect.objectContaining({ from: "2026-11-01", to: "2027-01-31" })]);
+    expect(calendarBlocks("2026-10-12", repoCal).length).toBeGreaterThan(0);
+    expect(calendarBlocks("2026-10-13", repoCal)).toEqual([]);
+    expect(calendarBlocks("2026-11-01", repoCal).join()).toContain("동결");
+    expect(calendarBlocks("2027-01-31", repoCal).join()).toContain("동결");
+    expect(calendarBlocks("2027-02-01", repoCal).join()).toContain("파일럿");
+    const cfg = JSON.parse(read("scripts/trend-publish/config.json")) as { caps: Record<string, number> };
+    expect(cfg.caps).toMatchObject({ perKstDay: 1, perIsoWeek: 5 });
   });
 });
 
@@ -295,6 +323,12 @@ describe("드리프트 가드", () => {
       expect(daily.calendarBlocks(day, cal, { blackouts: ["2026-10-20"] }, false, consts.firstPublishNotBefore), day).toEqual(
         calendarBlocks(day, cal, { blackouts: ["2026-10-20"] }, false)
       );
+      const piloted = { ...cal, freezes: [], pilot: { from: "2026-10-14", to: "2026-10-31" } };
+      for (const verdict of [false, true]) {
+        expect(daily.calendarBlocks(day, piloted, {}, verdict, consts.firstPublishNotBefore), `${day} pilot ${verdict}`).toEqual(
+          calendarBlocks(day, piloted, {}, verdict)
+        );
+      }
       expect(daily.capViolations(day, ledger, { perIsoWeek: 3 }, { cluster: "year-end-tax" }, consts.hardCaps), day).toEqual(
         capViolations(day, ledger, { perIsoWeek: 3 }, { cluster: "year-end-tax" })
       );

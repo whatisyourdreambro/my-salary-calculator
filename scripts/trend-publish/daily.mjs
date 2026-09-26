@@ -115,7 +115,7 @@ export function capViolations(today, ledger, capsConfig, candidate, hardCaps) {
 export function calendarBlocks(today, cal, local, pilotVerdict, firstPublishNotBefore) {
   const reasons = [];
   const add = (r) => reasons.splice(reasons.length, 0, r);
-  const first = [cal.firstPublishNotBefore, firstPublishNotBefore].filter(Boolean).sort().reverse()[0];
+  const first = [cal.firstPublishNotBefore, firstPublishNotBefore, cal.pilot?.from].filter(Boolean).sort().reverse()[0];
   if (today < first) add(`첫 발행일 ${first} 이전`);
   for (const f of cal.freezes ?? []) if (today >= f.from && today <= f.to) add(`동결 ${f.from}~${f.to}${f.reason ? ` (${f.reason})` : ""}`);
   for (const w of cal.verdictWindows ?? []) if (today === w.date) add(`판정일 ${w.date}${w.reason ? ` (${w.reason})` : ""}`);
@@ -130,6 +130,10 @@ export function calendarBlocks(today, cal, local, pilotVerdict, firstPublishNotB
   }
   if (cal.resumeRequiresPilotVerdictAfter && today > cal.resumeRequiresPilotVerdictAfter && !pilotVerdict) {
     add(`${cal.resumeRequiresPilotVerdictAfter} 이후 재개는 D+28 파일럿 판정 필요`);
+  }
+  // 파일럿(운영자 결정 2026-09-27: 10/13~10/31) — 끝나면 파일럿 판정 전까지 발행 없음 (rules.ts 와 같은 규칙)
+  if (cal.pilot?.to && today > cal.pilot.to && !pilotVerdict) {
+    add(`파일럿 ${cal.pilot.from}~${cal.pilot.to} 종료 — 재개는 D+28 파일럿 판정 필요`);
   }
   return reasons;
 }

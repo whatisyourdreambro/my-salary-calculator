@@ -99,8 +99,11 @@ export const HARD_CAPS = {
 } as const;
 export type Caps = { -readonly [K in keyof typeof HARD_CAPS]: number };
 
-/** 첫 발행 가능일 — 10/9 자동광고 판정 이후, 그 전에는 dry-run 만 */
-export const FIRST_PUBLISH_NOT_BEFORE = "2026-10-10";
+/**
+ * 첫 발행 가능일 — 운영자 결정(2026-09-27): 파일럿 10/13~10/31(10/9 자동광고 판정·10/10 배포 배치 +2일 뒤).
+ * 그 전에는 dry-run 만. 파일럿 끝은 calendar.json pilot.to — 그 뒤 재개는 파일럿 판정(decide.mjs --pilot-verdict continue) 필요.
+ */
+export const FIRST_PUBLISH_NOT_BEFORE = "2026-10-13";
 
 /** 본문 HTML 최소 길이(JS 문자 수) — GuidePageClient 3분할(1/3 GuideMidAd · 2/3 InArticleAd) 조건 */
 export const HTML_MIN_JS_CHARS = 4000;

@@ -173,6 +173,20 @@ test("daily: 모드 결정 — 10/10 전 DRYRUN · 동결 · 배포 배치+2일 
   assert.ok(early.reasons.some((r) => r.includes("첫 발행일")));
   assert.equal(daily.computeMode({ ...base, today: "2026-11-15" }).mode, "FREEZE");
   assert.ok(daily.computeMode({ ...base, today: "2026-10-11" }).reasons.some((r) => r.includes("배포 배치")));
+  // 운영자 결정(2026-09-27): 파일럿 10/13~10/31 · 11/1~1/31 동결 · 그 뒤는 파일럿 판정 전까지 DRYRUN · 하루 1편·주 5편
+  assert.ok(daily.computeMode({ ...base, today: "2026-10-12" }).reasons.some((r) => r.includes("첫 발행일 2026-10-13")));
+  assert.equal(daily.computeMode({ ...base, today: "2026-10-31", flags: { ...flags, reviewedUntil: "2026-11-05" } }).mode, "PROPOSE");
+  assert.equal(daily.computeMode({ ...base, today: "2026-11-01" }).mode, "FREEZE");
+  assert.equal(daily.computeMode({ ...base, today: "2027-01-31" }).mode, "FREEZE");
+  const after = daily.computeMode({ ...base, today: "2027-02-01", flags: { ...flags, reviewedUntil: "2027-02-10" } });
+  assert.equal(after.mode, "DRYRUN");
+  assert.ok(after.reasons.some((r) => r.includes("파일럿")));
+  assert.equal(daily.computeMode({ ...base, today: "2027-02-01", flags: { ...flags, reviewedUntil: "2027-02-10" }, pilotVerdict: true }).mode, "PROPOSE");
+  const repoCaps = JSON.parse(readFileSync(join(TP, "config.json"), "utf8")).caps;
+  assert.deepEqual(daily.effectiveCaps(consts.hardCaps, repoCaps), { ...consts.hardCaps, perKstDay: 1, perIsoWeek: 5 });
+  const week4 = ["2026-10-19", "2026-10-20", "2026-10-21", "2026-10-22", "2026-10-23"].map((d, i) => ({ slug: `w${i}`, publishedDate: d, cluster: `c${i}`, primary: { url: `u${i}`, sha256: `s${i}` }, reviewBy: "2026-12-20", status: "live" }));
+  const weekCapped = daily.computeMode({ ...base, today: "2026-10-24", ledger: week4, decisions: week4.map((e) => ({ slug: e.slug, at: "d28" })), config: { caps: repoCaps } });
+  assert.ok(weekCapped.reasons.some((r) => r.includes("주 5편")), weekCapped.reasons.join(" / "));
   assert.ok(daily.computeMode({ ...base, today: "2026-10-13", flags: { ...flags, reviewedUntil: "2026-10-12" } }).reasons.some((r) => r.includes("만료")));
   assert.ok(daily.computeMode({ ...base, today: "2026-10-13", flags: { ...flags, reviewedUntil: "2026-10-30" } }).reasons.some((r) => r.includes("14일")));
   assert.ok(daily.computeMode({ ...base, today: "2026-10-13", flags: { ...flags, publishEnabled: false } }).reasons.some((r) => r.includes("PUBLISH_ENABLED")));

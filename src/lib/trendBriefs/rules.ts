@@ -81,6 +81,11 @@ export interface CalendarConfig {
   deployBlackoutDaysAfter: number;
   /** 이 날짜 이후 재개는 D+28 파일럿 판정(decide.mjs --pilot-verdict continue) 이 있어야 한다 */
   resumeRequiresPilotVerdictAfter?: string;
+  /**
+   * 파일럿 기간(운영자 결정 2026-09-27: 10/13~10/31). from 은 첫 발행일로도 쓰이고(늦은 쪽이 이긴다),
+   * to 가 지나면 파일럿 판정(decide.mjs --pilot-verdict continue) 전까지 발행을 막는다.
+   */
+  pilot?: { from: string; to: string; reason?: string };
 }
 export interface LocalCalendar {
   blackouts?: (string | { from: string; to?: string; reason?: string })[];
@@ -311,7 +316,7 @@ export function capViolations(
 /** 달력 차단 사유 목록 (빈 배열이면 발행 가능 날짜) */
 export function calendarBlocks(today: string, cal: CalendarConfig, local?: LocalCalendar, pilotVerdict?: boolean): string[] {
   const out: string[] = [];
-  const first = [cal.firstPublishNotBefore, FIRST_PUBLISH_NOT_BEFORE].sort().reverse()[0];
+  const first = [cal.firstPublishNotBefore, FIRST_PUBLISH_NOT_BEFORE, cal.pilot?.from].filter((d): d is string => Boolean(d)).sort().reverse()[0];
   if (today < first) out.push(`첫 발행일 ${first} 이전`);
   for (const f of cal.freezes ?? []) if (today >= f.from && today <= f.to) out.push(`동결 ${f.from}~${f.to}${f.reason ? ` (${f.reason})` : ""}`);
   for (const w of cal.verdictWindows ?? []) if (today === w.date) out.push(`판정일 ${w.date}${w.reason ? ` (${w.reason})` : ""}`);
@@ -326,6 +331,9 @@ export function calendarBlocks(today: string, cal: CalendarConfig, local?: Local
   }
   if (cal.resumeRequiresPilotVerdictAfter && today > cal.resumeRequiresPilotVerdictAfter && !pilotVerdict) {
     out.push(`${cal.resumeRequiresPilotVerdictAfter} 이후 재개는 D+28 파일럿 판정 필요`);
+  }
+  if (cal.pilot?.to && today > cal.pilot.to && !pilotVerdict) {
+    out.push(`파일럿 ${cal.pilot.from}~${cal.pilot.to} 종료 — 재개는 D+28 파일럿 판정 필요`);
   }
   return out;
 }

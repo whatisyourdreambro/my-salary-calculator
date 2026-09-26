@@ -2,6 +2,7 @@
   "_README": [
     "트렌드 브리프 파이프라인 설정 (2026-09-26 R5 publisher) — 런북 docs/trend-publishing-runbook.md.",
     "caps 는 src/lib/trendBriefs/types.ts HARD_CAPS 보다 조이기만 한다(큰 값은 무시). 빈 객체 = 하드 상한 그대로.",
+    "caps perKstDay 1 · perIsoWeek 5 = 운영자 결정(2026-09-27): 하루 1편·주 5편 이하, 발행은 브리프마다 운영자 승인('발행 <slug>') 뒤에만.",
     "minFreeMB 6144 는 2026-09-26 첫 dry-run 실측으로 유지 확인(빌드 1회가 여유 메모리를 약 4.0~4.8GB 소모, 1GB 이상 남김) — 런북 §16.",
     "clusters[].standingSources 는 2026-09-26 구현 시 브라우저 UA 로 HTTP 200 과 robots 허용을 확인한 공식 URL(법령 원문 링크 — 숫자 대조는 1차 출처로).",
     "tripWires 는 정규식 문자열(guideSpec FORBIDDEN 과 옛 값) — 본문·제목·설명에 걸리면 SKIP."
@@ -9,7 +10,7 @@
   "mainRepo": "C:/dev/moneysalary/my-salary-calculator",
   "worktree": "C:/dev/moneysalary/trend-wt",
   "trendHome": "C:/Users/ruby1/.moneysalary-trend",
-  "caps": {},
+  "caps": { "perKstDay": 1, "perIsoWeek": 5 },
   "minFreeMB": 6144,
   "heavyWaitMin": 30,
   "baseBuild": "always",
