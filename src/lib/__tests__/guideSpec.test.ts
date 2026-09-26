@@ -41,7 +41,9 @@ const KEEPERS: readonly string[] = [
   // 2차 G2B (회사 성과급 묶음, 2026-09-26)
   "samsung-opi-tai-complete-2026",
   "sk-hynix-ps-history-2026-prospect",
+  "lgensol-wage-negotiation-2026",
   "lg-hyundai-posco-bonus-2026",
+  "bonus-vs-incentive-vs-allowance-2026",
 ];
 
 const BASE = "3b564c80";

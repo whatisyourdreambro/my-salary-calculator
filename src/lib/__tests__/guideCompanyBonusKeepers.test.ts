@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 import { koGuides } from "@/lib/guidesContent";
 import { formatManwonKorean } from "@/lib/manwonFormat";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
+import { dartDisclosed } from "@/data/dart/dartDisclosed";
 import {
   AGREEMENT_2026,
   BASIC_RATIO,
@@ -95,6 +96,44 @@ describe("SK하이닉스 PS 키퍼", () => {
   });
 });
 
+describe("LG에너지솔루션 키퍼 (엔티티 형식)", () => {
+  const slug = "lgensol-wage-negotiation-2026";
+
+  it("첫 표는 DART 급여총액÷인원 이력과 같다", () => {
+    const c = content(slug);
+    const entry = dartDisclosed.find((e) => e.corpCode === "01515323")!;
+    const rows = [
+      { fiscalYear: entry.fiscalYear, avgSalaryManwonRaw: entry.avgSalaryManwonRaw, employeeCount: entry.employeeCount },
+      ...(entry.history ?? []),
+    ];
+    expect(rows.length).toBeGreaterThanOrEqual(3);
+    for (const h of rows.slice(0, 3)) {
+      expect(c, h.fiscalYear).toContain(`<tr><td>${h.fiscalYear}</td><td>${formatManwonKorean(h.avgSalaryManwonRaw)}</td><td>${h.employeeCount.toLocaleString("en-US")}명</td>`);
+    }
+    // 첫 표의 첫 행(가장 최근 사업연도)이 본문 첫 표 안에 있다
+    const firstTable = c.slice(c.indexOf("<table"), c.indexOf("</table>"));
+    expect(firstTable).toContain(`<td>${entry.fiscalYear}</td>`);
+  });
+
+  it("성과급·평균 급여는 계산기 데이터·회사 페이지 헤드라인과 같다", () => {
+    const t = text(slug);
+    expect(t).toContain(`기본급의 ${basePct("lgensol", 2025)}%`);
+    expect(t).toContain(`${basePct("lgensol", 2024)}%`);
+    const h = headline("lgensol");
+    expect(h.fiscalYear).toBe("2025");
+    expect(t).toContain(`약 ${h.text}`);
+    for (const id of ["lgensol", "lg-chem", "samsung-sdi", "lgelectronics"]) {
+      expect(headline(id).fiscalYear, id).toBe("2025");
+      expect(t, id).toContain(`<td>${headline(id).text}</td>`);
+    }
+  });
+
+  it("추정 연봉 구간·전망 인상률이 없다", () => {
+    const t = text(slug);
+    for (const bad of ["영끌", "5%+", "9,500만~1.2억", "캐즘 종료", "5만명"]) expect(t, bad).not.toContain(bad);
+  });
+});
+
 describe("LG·현대차·기아·포스코 키퍼", () => {
   const slug = "lg-hyundai-posco-bonus-2026";
 
@@ -124,5 +163,22 @@ describe("LG·현대차·기아·포스코 키퍼", () => {
     const t = text(slug);
     for (const bad of ["±50%", "600~1,200%", "분기 + 연말", "7,300만원"]) expect(t, bad).not.toContain(bad);
     expect(t).toContain("2026년 4월");
+  });
+});
+
+describe("성과급·인센티브·격려금 키퍼", () => {
+  const slug = "bonus-vs-incentive-vs-allowance-2026";
+
+  it("격려금 예시는 엔진 값이고 '35% 점프' 오류를 바로잡는다", () => {
+    const c = content(slug);
+    const enc = bonusNet2026(60_000_000, 10_000_000);
+    expect(c).toContain(`약 ${manKo(enc.totalDeductions)}, 세후는 약 ${manKo(enc.net)}`);
+    expect(c).toContain("한계세율은 15%");
+  });
+
+  it("판례·법령 근거가 붙고 근거 없는 '평생 1억' 문구가 없다", () => {
+    const c = text(slug);
+    for (const need of ["2020다247190", "2021다248299", "2021다219994", "3/12"]) expect(c, need).toContain(need);
+    for (const bad of ["평생 1억", "평생 임금", "25% 증가"]) expect(c, bad).not.toContain(bad);
   });
 });

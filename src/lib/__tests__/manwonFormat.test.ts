@@ -160,12 +160,13 @@ describe("/job·/industry·/region 제목·설명", () => {
 });
 
 describe("가이드 카드 설명 (meta description·핵심 요약 원천)", () => {
-  it("다섯 자리 만원이 없다 — lgensol 은 원문보다 짧은 '9,500만~1.2억원' (핵심 요약 박스는 광고 위)", () => {
+  it("다섯 자리 만원이 없다 — lgensol 은 억 표기 '1억 1,200만원' (핵심 요약 박스는 광고 위)", () => {
     for (const card of guideCards) {
       expect(card.description, card.slug).not.toMatch(FIVE_DIGIT_MANWON);
     }
     const lgensol = guideCards.find((c) => c.slug === "lgensol-wage-negotiation-2026")!;
-    expect(lgensol.description).toContain("시니어 9,500만~1.2억원.");
+    // 2026-09-26 키퍼 재작성(G2B): 추정 연봉 구간을 빼고 사업보고서 평균 급여를 억 표기로
+    expect(lgensol.description).toContain("약 1억 1,200만원");
     // 종전 설명("시니어 9,500~12,000만원.")보다 길어지면 핵심 요약이 한 줄 늘어 아래 광고를 민다
     expect(lgensol.description.length).toBeLessThanOrEqual(
       "전기차 캐즘 종료 + ESS 본격화로 LG엔솔 2026 임금협상 인상률 5%+ 전망. 신입 영끌 5,500~6,500만원, 시니어 9,500~12,000만원. 미국 파견 인센티브 확대.".length,
