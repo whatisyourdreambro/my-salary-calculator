@@ -2838,7 +2838,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5361
+  "contentChars": 5464
  },
  {
   "slug": "youth-housing-dream-1eok-2026",
@@ -3411,7 +3411,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
-  "contentChars": 6281
+  "contentChars": 6305
  },
  {
   "slug": "child-education-deduction-limit-2026",
