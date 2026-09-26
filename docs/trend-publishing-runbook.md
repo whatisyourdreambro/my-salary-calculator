@@ -199,7 +199,12 @@ ECOS_API_KEY=<ECOS 인증키>
 견본(1차 출처 9/1 보도자료, 발행 불가)을 임시 등록해 빌드: 규칙 27개 중 citations(1차 출처 25일 경과)만 실패, 정적 생성·ad-sequence·autoads 0%·ad-audit 0/0·rss 투영 535,879B 통과. 견본은 docs/drafts-trend/.
 
 발행 전에 고쳐야 할 것 (결정 필요):
-1. **청크 차분(chunk-diff compare)이 매번 실패한다.** 같은 소스를 두 번 빌드해도 클라이언트 청크 66개 이름·해시가 바뀐다(webpack 청크 머리의 청크 id 배열 순서가 빌드마다 다름). 브리프가 들어가면 GUIDE_COUNT(레이아웃·공용 청크에 인라인)와 바뀐 공용 청크 id 참조 때문에 slug 없는 청크가 더 바뀐다. 이대로면 finish 가 매일 `chunk-diff 실패 → SKIP`.
+1. ~~청크 차분(chunk-diff compare)이 매번 실패한다.~~ 같은 소스를 두 번 빌드해도 클라이언트 청크 66개 이름·해시가 바뀐다(webpack 청크 머리의 청크 id 배열 순서가 빌드마다 다름). 브리프가 들어가면 GUIDE_COUNT(레이아웃·공용 청크에 인라인)와 바뀐 공용 청크 id 참조 때문에 slug 없는 청크가 더 바뀐다. 이대로면 finish 가 매일 `chunk-diff 실패 → SKIP`.
+   → **해결(2026-09-26 최종 검토 수정, chunk-diff v2 — §14)**: 정규화 내용 비교 + 사이트 수치만 바뀐 청크 인정 + 생성 파일 검사(`prebuild-status`) 독립 단계. 통합 브랜치(5db72360) 실측:
+   - 같은 소스 두 번 빌드: 바뀐 파일 49개 전부 '이름·순서만' → **통과**(옛 v1 원본 해시 비교였다면 49건 실패). prebuild-status 두 빌드 모두 허용목록 안.
+   - 견본 브리프 임시 등록 빌드(기준 = 위 첫 빌드): 바뀐 파일 67개 — 이름·순서만 63 · slug 포함 1 · webpack 런타임 1 · GUIDE_COUNT 334→335 만 2(레이아웃·공용 청크) · 그 밖 0 → **통과**. prebuild-status 허용목록 안(생성 파일 guidesMeta·site-metrics 포함).
+   - 같은 견본으로 gate pre·post(레이더 후보 대조 포함): citations(1차 출처 25일 경과)만 실패 — 1차 출처·게시일은 후보와 일치, similarity-source 출처 3건 최대 0.034·합산 0.039, 결정 전 값 고지 79자(분량 한도 제외, 생성 모듈에도 있음), rss 최악 투영 541,189B. 견본 등록은 되돌림.
+   - 오탐이 새로 확인되면 `config.chunkDiff.compare` 를 `report` 로 바꾸고(보고만) 여기에 기록한다.
 2. **가시 텍스트 상한 여유**: 승인 표기(`운영자가 발행을 승인했습니다(내용 검수 아님)`)가 dry-run 표기보다 4자 길어, dry-run 에서 3,297~3,300자인 초안은 발행 재렌더에서 structure 가 실패한다. writer 목표를 3,290자 이하로 하거나 규칙이 긴 표기로 재야 한다.
 3. **예약 작업 지시문 경로**: daily.mjs 는 writer 입력을 `TREND_HOME/writer/<날짜>/writer-input.json` 에, 초안 경로를 `TREND_HOME/drafts/pending/<날짜>.json`(prepare 결과의 draftPath)로 준다. 지시문의 읽기·쓰기 허용 경로를 이 둘에 맞춰야 한다.
 4. **첫 secret-scan 이 느릴 수 있다**: .next(약 1.5GB, cache 제외) 전체를 읽는다. 다른 빌드와 겹친 찬 캐시에서는 55분, 캐시가 따뜻하면 14초였다.
