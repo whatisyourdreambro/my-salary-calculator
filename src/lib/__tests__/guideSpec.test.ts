@@ -45,18 +45,18 @@ const KEEPERS: readonly string[] = [
   "implant-dental-medical-deduction-2026",
   "postpartum-medical-deduction-200man-2026",
   "insurance-100man-limit-2026",
-  // 1차 연말정산 묶음 — G1B (2026-09-26 재작성, 배포 예정 2026-09-30)
+  // 1차 연말정산 묶음 — G1B (2026-09-26 재작성·배포)
   "housing-subscription-25man-deduction-2026",
   "earned-income-deduction-2026",
   "standard-vs-special-deduction-2026",
   "child-education-deduction-limit-2026",
   "couple-split-bonus-year-2026",
   "newlywed-deduction-first-year-2026",
-  // G2A — 성과급 세금 (2026-09-30)
+  // G2A — 성과급 세금 (2026-09-26)
   "bonus-1eok-net-payment-2026",
   "bonus-5000-net-payment-2026",
   "income-tax-8-step-bracket-2026",
-  // G2A — 4대보험 (2026-09-30)
+  // G2A — 4대보험 (2026-09-26)
   "bonus-health-4-percent-2026",
   "four-insurance-ceiling-summary-2026",
   // 2차 G2B (회사 성과급 묶음, 2026-09-26)
@@ -315,6 +315,14 @@ const MAY_FAMILY: readonly Guide[] = [...hotNewsMay2026, ...hotNewsExtended, ...
 const OFFICIAL_LINK_RE =
   /href="(https?:\/\/(?:[\w-]+\.)*(?:law\.go\.kr|nts\.go\.kr|nhis\.or\.kr|nps\.or\.kr|moel\.go\.kr|molit\.go\.kr|fsc\.go\.kr)(?:[/?#][^"]*)?)"/g;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+/** 오늘(KST) — 키퍼의 modifiedDate·기준일은 실제 배포·확인일이어야 하므로 미래일 수 없다 (2026-09-26 통합 리뷰) */
+const TODAY_KST = new Date(Date.now() + 9 * 3_600_000).toISOString().slice(0, 10);
+/** 본문의 '기준일 2026-09-26' · '기준일: 2026년 9월 26일' 표기를 YYYY-MM-DD 로 */
+function baseDates(html: string): string[] {
+  return [...html.matchAll(/기준일[^0-9<]{0,6}(\d{4})(?:-|년 ?)(\d{1,2})(?:-|월 ?)(\d{1,2})/g)].map(
+    (m) => `${m[1]}-${m[2].padStart(2, "0")}-${m[3].padStart(2, "0")}`
+  );
+}
 
 interface DescriptionBaseline {
   chars: number;
@@ -366,6 +374,9 @@ function keeperViolations(g: Guide, ctx: KeeperContext): string[] {
 
   if (!g.modifiedDate || !DATE_RE.test(g.modifiedDate)) v.push("modifiedDate 없음 (배포일 YYYY-MM-DD)");
   else if (g.modifiedDate < g.publishedDate) v.push(`modifiedDate ${g.modifiedDate} < publishedDate ${g.publishedDate}`);
+  else if (g.modifiedDate > TODAY_KST) v.push(`modifiedDate ${g.modifiedDate} > 오늘 ${TODAY_KST} (미래 날짜 금지)`);
+  const futureBase = baseDates(html).filter((d) => d > TODAY_KST);
+  if (futureBase.length) v.push(`기준일 ${futureBase.join(",")} > 오늘 ${TODAY_KST} (미래 날짜 금지)`);
   return v;
 }
 
@@ -626,7 +637,7 @@ describe.skipIf(REGEN.size > 0)("(2) 키퍼 사양 + TL;DR 길이", () => {
     const para = "<p>2026년 귀속 연말정산에서 공제 한도는 총급여와 부양가족 조건에 따라 달라지므로 먼저 요건을 확인합니다.</p>\n".repeat(14);
     const section = (h: string) => `<h2>${h}</h2>\n${para}`;
     const content = [
-      '<p class="lead">2026년 귀속 신용카드 공제 한도는 총급여 7,000만원 이하 300만원입니다. 기준일 2026-10-13, 근거는 조세특례제한법입니다.</p>',
+      '<p class="lead">2026년 귀속 신용카드 공제 한도는 총급여 7,000만원 이하 300만원입니다. 기준일 2026-09-26, 근거는 조세특례제한법입니다.</p>',
       section("신용카드 공제 한도는 얼마인가요"),
       section("공제율은 결제수단마다 다른가요"),
       '<table class="w-full text-sm"><tr><th>구분</th><th>한도</th></tr><tr><td>7천 이하</td><td>300만원</td></tr></table>',
@@ -636,7 +647,7 @@ describe.skipIf(REGEN.size > 0)("(2) 키퍼 사양 + TL;DR 길이", () => {
         "<li><strong>Q. 체크카드도 공제되나요?</strong> — 체크카드와 현금영수증은 30% 공제율이 적용됩니다.</li>\n" +
         "<li><strong>Q. 부모님 카드도 합산되나요?</strong> — 소득 요건을 충족한 기본공제 대상자의 사용액만 합산됩니다.</li>\n" +
         "<li><strong>Q. 해외 결제도 포함되나요?</strong> — 해외 사용분은 공제 대상 사용금액에서 빠집니다.</li>\n</ul>",
-      '<p>출처: <a href="https://www.law.go.kr/법령/조세특례제한법/제126조의2">조특법 §126의2</a> · <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7794">국세청</a> · 기준일 2026-10-13</p>',
+      '<p>출처: <a href="https://www.law.go.kr/법령/조세특례제한법/제126조의2">조특법 §126의2</a> · <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7794">국세청</a> · 기준일 2026-09-26</p>',
     ].join("\n");
     const good: Guide = {
       slug: "synthetic-keeper",
@@ -648,7 +659,7 @@ describe.skipIf(REGEN.size > 0)("(2) 키퍼 사양 + TL;DR 길이", () => {
       tags: [],
       level: "중급",
       publishedDate: "2026-05-23",
-      modifiedDate: "2026-10-13",
+      modifiedDate: "2026-09-26",
       views: 0,
       content,
       lang: "ko",
@@ -676,6 +687,8 @@ describe.skipIf(REGEN.size > 0)("(2) 키퍼 사양 + TL;DR 길이", () => {
     expect(bad({ content: `${content}<p>검수 완료</p>` })).toContain("검수 완료");
     expect(bad({ content: content.slice(0, 1500) })).toContain("가시 텍스트");
     expect(bad({ modifiedDate: undefined })).toContain("modifiedDate");
+    expect(bad({ modifiedDate: "2999-01-01" })).toContain("미래 날짜");
+    expect(bad({ content: content.replace("기준일 2026-09-26</p>", "기준일: 2999년 1월 1일</p>") })).toContain("기준일 2999-01-01");
   });
 });
 

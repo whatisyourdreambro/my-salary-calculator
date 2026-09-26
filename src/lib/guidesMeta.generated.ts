@@ -2492,7 +2492,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 5128
@@ -2645,7 +2645,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 7133
@@ -2740,7 +2740,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 6028
@@ -2815,7 +2815,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 4768
@@ -2835,7 +2835,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 5361
@@ -2930,7 +2930,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 6493
@@ -3079,7 +3079,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 6397
@@ -3370,7 +3370,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 6125
@@ -3389,7 +3389,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 5572
@@ -3408,7 +3408,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 6281
@@ -3427,7 +3427,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 5983
@@ -3446,7 +3446,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 5410
@@ -3773,7 +3773,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "고급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 5321
@@ -4623,7 +4623,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 5440
@@ -4643,7 +4643,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 7200
@@ -4663,7 +4663,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 6527
@@ -4683,7 +4683,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 5751
@@ -4703,7 +4703,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "고급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 6308
@@ -4795,7 +4795,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 6244
@@ -4814,7 +4814,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 5813
@@ -4833,7 +4833,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 6146
@@ -4870,7 +4870,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 4760
@@ -4889,7 +4889,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 5369
@@ -4980,7 +4980,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 5992
@@ -5035,7 +5035,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-30",
+  "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
   "contentChars": 7422

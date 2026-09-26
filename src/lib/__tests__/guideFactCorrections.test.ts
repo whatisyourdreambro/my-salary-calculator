@@ -43,7 +43,7 @@ describe("사실 정정 — 옛 오류 문구 재발 금지", () => {
     expect(t).toContain("이듬해 4월");
     expect(text("bonus-health-4-percent-2026")).not.toContain("7월에 작년 소득 기준 정산");
 
-    // 연봉 7,000만 + 성과급 1억 — 세후 증가분·총 공제 (2026-09-30 키퍼 재작성: '추가 세액공제 30% 가정' 문구 삭제,
+    // 연봉 7,000만 + 성과급 1억 — 세후 증가분·총 공제 (2026-09-26 키퍼 재작성: '추가 세액공제 30% 가정' 문구 삭제,
     // 표 값 전체 고정은 guideBonusNetTables.test.ts)
     const eok = bonus2026(70_000_000, 100_000_000);
     expect(t).toContain(`세후 약 ${fmtManwon(eok.net)}`); // 6,373만원

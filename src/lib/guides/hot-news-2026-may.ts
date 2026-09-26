@@ -1434,7 +1434,7 @@ export const hotNewsMay2026: Guide[] = [
     tags: ["LG에너지솔루션", "LG엔솔 성과급", "임금협상", "배터리", "2026"],
     level: "중급",
     publishedDate: "2026-05-23",
-    modifiedDate: "2026-09-30",
+    modifiedDate: "2026-09-26",
     views: 0,
     content: lgensolWage2026,
     lang: "ko",
@@ -1540,7 +1540,7 @@ export const hotNewsMay2026: Guide[] = [
     tags: ["청약통장", "소득공제", "주택청약", "절세", "2026"],
     level: "초급",
     publishedDate: "2026-05-23",
-    modifiedDate: "2026-09-30",
+    modifiedDate: "2026-09-26",
     views: 0,
     content: housing25Man,
     lang: "ko",
@@ -1609,7 +1609,7 @@ export const hotNewsMay2026: Guide[] = [
     level: "중급",
     publishedDate: "2026-05-23",
     // W3-A 1차 키퍼 재작성 — 소득세법 §50·§51·§53, 국세상담센터 사례 (사실 원장 docs/guides-facts-2026-10-G1A.md)
-    modifiedDate: "2026-09-30",
+    modifiedDate: "2026-09-26",
     views: 0,
     content: parentSupportDeduction,
     lang: "ko",
@@ -1665,7 +1665,7 @@ export const hotNewsMay2026: Guide[] = [
     level: "초급",
     publishedDate: "2026-05-23",
     // W3-A 1차 키퍼 재작성 — 소득세법 시행령 §118의5①7, 국세상담센터 사례 (사실 원장 docs/guides-facts-2026-10-G1A.md)
-    modifiedDate: "2026-09-30",
+    modifiedDate: "2026-09-26",
     views: 0,
     content: postpartumMedical,
     lang: "ko",
@@ -1682,7 +1682,7 @@ export const hotNewsMay2026: Guide[] = [
     level: "초급",
     publishedDate: "2026-05-23",
     // W3-A 1차 키퍼 재작성(의료비 항목 키퍼로 확장) — 소득세법 §59의4②, 시행령 §118의5, 국세상담센터 사례
-    modifiedDate: "2026-09-30",
+    modifiedDate: "2026-09-26",
     views: 0,
     content: implantMedical,
     lang: "ko",
@@ -1751,7 +1751,7 @@ export const hotNewsMay2026: Guide[] = [
     level: "중급",
     publishedDate: "2026-05-23",
     // W3-A 1차 키퍼 재작성 — 조특법 §126의2·시행령 §121의2, 예시는 cardDeduction2026 계산식 (사실 원장 docs/guides-facts-2026-10-G1A.md)
-    modifiedDate: "2026-09-30",
+    modifiedDate: "2026-09-26",
     views: 0,
     content: cardDeductionStrategy,
     lang: "ko",

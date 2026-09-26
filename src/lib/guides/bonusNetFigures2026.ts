@@ -1,6 +1,6 @@
 // src/lib/guides/bonusNetFigures2026.ts
 //
-// 성과급 세금·4대보험 키퍼 가이드 5편(2026-09-30 재작성, W3-A 2차 G2A)의 숫자 정본.
+// 성과급 세금·4대보험 키퍼 가이드 5편(2026-09-26 재작성, W3-A 2차 G2A)의 숫자 정본.
 //   bonus-1eok-net-payment-2026 · bonus-5000-net-payment-2026 · bonus-health-4-percent-2026 ·
 //   four-insurance-ceiling-summary-2026 · income-tax-8-step-bracket-2026
 //
