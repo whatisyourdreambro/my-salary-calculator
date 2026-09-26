@@ -37,7 +37,12 @@ import { hotNewsDeepDive } from "@/lib/guides/hot-news-2026-deep-dive";
 import { hotBonusTaxComplete } from "@/lib/guides/hot-bonus-tax-complete";
 
 /** 재작성 완료 키퍼 — W3-A 가 재작성 커밋마다 슬러그를 추가한다 (2026-10-13 1차부터). */
-const KEEPERS: readonly string[] = [];
+const KEEPERS: readonly string[] = [
+  // 1차 연말정산 묶음 — G1B (2026-09-26 재작성, 배포 예정 2026-09-30)
+  "housing-subscription-25man-deduction-2026",
+  "earned-income-deduction-2026",
+  "standard-vs-special-deduction-2026",
+];
 
 const BASE = "3b564c80";
 const read = (rel: string) => readFileSync(join(process.cwd(), rel), "utf8");
