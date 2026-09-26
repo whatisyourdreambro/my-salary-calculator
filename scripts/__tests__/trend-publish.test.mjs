@@ -53,6 +53,20 @@ test("secret-scan: 40·32자리 hex · OC= · serviceKey · 환경변수 값을 
   assert.deepEqual(scan.scanText(`previewModeId":"${h32}"`, { file: ".next/prerender-manifest.json", keyedOnly: true }), []);
 });
 
+test("secret-scan: 테스트·픽스처 경로의 뻔한 자리표시 값만 키 URL 규칙에서 빠진다", () => {
+  const lines = [`https://www.law.go.kr/DRF/lawSearch.do?${OC}planted_oc_1&target=law`, `x?${CK}CK_SECRET`, `y?${SK}SK_SECRET`, `<link>https://www.law.go.kr/x?${OC}test</link>`].join("\n");
+  assert.deepEqual(scan.scanText(lines, { file: "scripts/__tests__/trend-radar.test.mjs" }), []);
+  assert.deepEqual(scan.scanText(lines, { file: "scripts/trend-radar/fixtures/lawdrf.xml" }), []);
+  // 같은 값이라도 테스트 경로가 아니면 잡는다
+  assert.equal(scan.scanText(lines, { file: "src/lib/x.ts" }).length, 4);
+  // 테스트 경로라도 자리표시 모양이 아닌 값은 잡는다 · hex 규칙은 그대로
+  assert.equal(scan.scanText(`z?${OC}realowner77`, { file: "scripts/__tests__/a.test.mjs" })[0]?.rule, "law-oc");
+  assert.equal(scan.scanText(hex(40, "f"), { file: "scripts/__tests__/a.test.mjs" })[0]?.rule, "hex40");
+  // 환경변수 실값은 경로와 무관하게 잡는다
+  const env = scan.collectEnvSecrets({ LAW_OC: "planted_oc_value" });
+  assert.equal(scan.scanText(`q?${OC}planted_oc_value`, { file: "scripts/__tests__/a.test.mjs", envSecrets: env }).filter((h) => h.rule === "env:LAW_OC").length, 1);
+});
+
 test("secret-scan: 값 가리기 — 출력에 원문이 없다 (git 저장소 종단 검사 + HALT)", () => {
   const repo = tmp("scan-repo-");
   const home = tmp("scan-home-");

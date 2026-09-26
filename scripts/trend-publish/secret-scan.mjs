@@ -25,6 +25,14 @@ export const PATTERNS = [
 ];
 /** IndexNow 키 파일 — 공개 키라 32자리 hex 예외 */
 export const INDEXNOW_KEY_FILE = /^public\/[0-9a-f]{32}\.txt$/;
+/**
+ * 테스트·픽스처 경로의 뻔한 자리표시 값 — 레이더 URL 가림(redact) 테스트·법령 API 합성 픽스처가 일부러 심은 값(OC=test ·
+ * OC=planted_oc_1 · auth=A_SECRET 따위). 두 조건을 모두 만족할 때만 키 붙은 URL 규칙에서 뺀다 — hex 규칙과 환경변수 실값 검사는 그대로.
+ * (2026-09-26 통합 브랜치 전체 검사에서 레이더 테스트 자리표시 값 14건이 걸림 — 실제 키 모양이 아니다)
+ */
+export const TEST_FIXTURE_PATH = /^(?:scripts\/__tests__\/|src\/lib\/__tests__\/|scripts\/[\w-]+\/fixtures\/)/;
+export const PLACEHOLDER_VALUE = /^(?:test|dummy|example|planted[_a-z0-9]*|raw_secret|[A-Z]{1,3}_SECRET)$/;
+const keyedValue = (match) => match.replace(/^[?&]?[\w-]+\s*=\s*/, "");
 export const SECRET_ENV_NAME = /(?:^|_)(?:KEY|SECRET|TOKEN|PASSWORD|OC)$/i;
 const TEXT_EXT = /\.(?:html?|js|mjs|cjs|json|rsc|body|meta|txt|xml|css|map|md|log|jsonl|ts|tsx)$/i;
 
@@ -56,7 +64,10 @@ export function scanText(text, { file = "", keyedOnly = false, envSecrets = [] }
     if (keyedOnly && !p.keyed) continue;
     if (p.id === "hex32" && INDEXNOW_KEY_FILE.test(file)) continue;
     p.re.lastIndex = 0;
-    for (const m of text.matchAll(p.re)) hits.splice(hits.length, 0, { file, line: lineOf(m.index ?? 0), rule: p.id, preview: redact(m[0]) });
+    for (const m of text.matchAll(p.re)) {
+      if (p.keyed && p.id !== "naver-header" && TEST_FIXTURE_PATH.test(file) && PLACEHOLDER_VALUE.test(keyedValue(m[0]))) continue;
+      hits.splice(hits.length, 0, { file, line: lineOf(m.index ?? 0), rule: p.id, preview: redact(m[0]) });
+    }
   }
   for (const s of envSecrets) {
     for (const form of s.forms) {
