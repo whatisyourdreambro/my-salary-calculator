@@ -1,0 +1,13 @@
+// 픽스처 — 페이지(경로 매핑·주석 제외 확인)
+import Client from "./Client";
+
+export default function Page() {
+  return (
+    <main>
+      {/* 주석 속 수치는 화면에 안 보이므로 제외: 현재 상한 637만원 */}
+      <p>2026년 7월부터 기준소득월액 상한이 월 637만원에서 659만원으로 올랐습니다.</p>
+
+      <Client />
+    </main>
+  );
+}

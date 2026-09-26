@@ -1,0 +1,7 @@
+// 픽스처 — 계산기 데이터('/calc/<slug>' 매핑, '대출 기준금리' 제외 확인)
+export const fixtureCalcs = {
+  "deposit-fixture": {
+    details: "한국은행 기준금리(2026년 8월 27일 결정 연 3.00%) 기준입니다.",
+    caveats: ["변동금리는 COFIX 등 대출 기준금리 2.75%에 연동된다고 가정한 예시입니다."],
+  },
+};

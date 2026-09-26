@@ -9,6 +9,7 @@ import { ArrowRight, BookOpen, TrendingUp } from "lucide-react";
 // 가이드 본문 전체가 실린다 (2026-08-26 Phase 4 물리 분리)
 import { koGuideCards } from "@/lib/guidesData";
 import { compareGuideDates } from "@/lib/guideDiscovery";
+import { TREND_BRIEF_TAG } from "@/lib/trendBriefs/types";
 
 // 시즌 우선 노출 슬러그 — 월별 분기 (빌드 시점 기준. CF Pages는 배포마다 재빌드)
 const PRIORITY_SLUGS_BY_SEASON: Record<string, string[]> = {
@@ -34,6 +35,7 @@ export default function FeaturedGuides() {
  // 2) 시즌 후보 다음에는 본문을 갖춘 가이드를 실제 수정일(없으면 발행일) 순서로 선택.
  const recent = [...koGuideCards]
  .filter((g) => !prioritySlugs.includes(g.slug))
+ .filter((g) => !g.tags?.includes(TREND_BRIEF_TAG))
  .sort(compareGuideDates)
  .filter((g) => g.contentChars > 1500)
  .slice(0, 8 - prioritized.length);
@@ -44,6 +46,7 @@ export default function FeaturedGuides() {
  if (items.length < 8) {
  const fallback = [...koGuideCards]
  .filter((g) => !items.find((it) => it.slug === g.slug))
+ .filter((g) => !g.tags?.includes(TREND_BRIEF_TAG))
  .sort(compareGuideDates)
  .slice(0, 8 - items.length);
  items.push(...fallback);

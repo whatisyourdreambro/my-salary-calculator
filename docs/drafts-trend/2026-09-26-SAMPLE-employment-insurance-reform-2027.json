@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "slug": "employment-insurance-reform-2027",
+  "title": "고용보험 제도개편 방안 정부안, 구직급여 하한 비교",
+  "description": "고용노동부가 9월 1일 내놓은 고용보험 제도개편 방안의 구직급여 변경 내용을 정리하고, 하루 근로시간별 구직급여 하한을 2026년과 2027년 최저임금으로 계산했습니다.",
+  "category": "기초",
+  "tags": ["고용보험", "구직급여", "실업급여", "제도개편"],
+  "level": "중급",
+  "publishedDate": "2026-09-26",
+  "modifiedDate": "2026-09-26",
+  "cluster": "unemployment-benefit",
+  "event": {
+    "name": "고용보험 제도개편 방안",
+    "kind": "보도자료",
+    "ministry": "고용노동부",
+    "announcedDate": "2026-09-01",
+    "status": "proposed"
+  },
+  "sources": [
+    {
+      "id": "moel-pr-0901",
+      "url": "https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=19866",
+      "title": "고용보험 제도개선 TF 논의결과 도출·고용보험 제도개편 방안 마련 (고용노동부 보도자료)",
+      "publishedDate": "2026-09-01",
+      "fetchedAt": "2026-09-26T08:31:11.813Z",
+      "sha256": "beed7ce044c151d499ff883292cf30cf7cd0fd944f57603b7293317606d12433",
+      "role": "primary"
+    },
+    {
+      "id": "moel-ei-decree-notice",
+      "url": "https://www.moel.go.kr/info/lawinfo/lawmaking/view.do?bbs_seq=20260900700",
+      "title": "「고용보험법 시행령」 일부개정령안 입법예고 (고용노동부 공고)",
+      "publishedDate": "2026-09-22",
+      "fetchedAt": "2026-09-26T08:33:34.665Z",
+      "sha256": "712a440c85cbf824716bcd6056bd2f79c07b320542d1b215fd9fa3cef14b3caf",
+      "role": "secondary"
+    }
+  ],
+  "lead": "고용노동부가 9월 1일 고용보험위원회 심의를 거쳐 내놓은 **고용보험 제도개편 방안**은 구직급여 지급 기준과 상한액 결정 방식을 바꾸고 실업급여 계정 보험료율을 올리는 정부안입니다. 정부는 올해 안에 법률과 하위법령 개정을 추진하고 있어 아직 적용되지 않습니다. 이 글은 구직급여 부분을 정리하고, 머니샐러리 계산 엔진으로 하루 소정근로시간별 구직급여 하한을 2027년 최저임금으로 계산했습니다.",
+  "officialSummary": {
+    "heading": "공식 발표 요약: 방안에 담긴 네 갈래",
+    "paragraphs": [
+      "방안은 네 갈래입니다. 실업급여 계정에서 나가던 육아휴직급여 같은 모성보호 지출을 떼어 낼 새 계정(가칭 일·가정 양립 계정)을 2028년에 만들고, 구직급여 지급 기준과 상한액 결정 방식을 고치며, 조기재취업수당 범위를 좁히고, 노무제공자 적용을 넓힙니다.",
+      "보험료 쪽에서는 2027년 실업급여 계정 요율을 노동자와 사용자가 각각 0.1%p씩 더 내는 안이 제시됐습니다. 두 몫을 합한 요율로 보면 1.8%에서 2.0%로 바뀝니다. 정부는 일반회계 전입금을 늘려 노사 부담 인상 폭을 줄였다고 설명했습니다."
+    ],
+    "quotes": [
+      { "text": "구직급여 지급방식을 현행 주 7일에서 주 6일 지급으로 변경한다.", "sourceId": "moel-pr-0901" },
+      { "text": "다만 총 지급액과 총 지급일수(120~270일)는 기존과 동일하게 유지된다.", "sourceId": "moel-pr-0901" }
+    ]
+  },
+  "impact": {
+    "heading": "하루 근로시간별 구직급여 하한 계산",
+    "intro": "구직급여 하한은 이직할 때의 최저임금과 하루 소정근로시간으로 정해집니다. 아래 표는 하루 소정근로시간을 4시간, 6시간, 8시간으로 가정하고 2026년 최저임금 {{const:MINIMUM_WAGE_2026_HOURLY}}과 2027년 최저임금 {{const:MINIMUM_WAGE_2027_HOURLY}}을 넣어 머니샐러리 계산 엔진으로 구한 하루 하한액입니다.",
+    "table": {
+      "kind": "unemployment-benefit",
+      "params": { "hours": [4, 6, 8] },
+      "caption": "소정근로시간은 가정값입니다. 오른쪽 열은 2027년 최저임금을 넣어 본 추정치이며, 2027년 이직자에게 적용될 구직급여 기준이 정해지기 전의 값입니다."
+    },
+    "notes": [
+      "하루 8시간 근무를 예시로 들면 하한은 {{engine:unemployment-benefit:2:1}}에서 {{engine:unemployment-benefit:2:2}}으로 올라갑니다.",
+      "상한액이 2026년 수준({{const:UNEMPLOYMENT_UPPER_2026}})에 머물면 이 예시의 2027년 하한이 상한액보다 높아집니다. 방안이 막겠다고 한 상·하한액 역전입니다.",
+      "방안은 상한액을 하한액의 103%로 묶겠다고 했고, 이 비율은 2026년 상·하한액 차이(3.1%)를 고려한 값입니다. 실제 2027년 상한액은 하위법령 개정을 거쳐 정해질 예정입니다."
+    ]
+  },
+  "effective": {
+    "heading": "무엇이 언제 바뀌나",
+    "paragraphs": [
+      "방안 요약표에서 무급휴일을 빼고 지급하는 변경은 법률 개정 항목, 보험료율 인상·상한액 연동·조기재취업수당 기준 조정은 하위법령 개정 항목입니다. 보험료율 인상은 2027년분, 새 계정은 2028년 신설로 제시됐지만 구직급여 변경의 시행일은 보도자료에 없습니다.",
+      "고용노동부는 9월 22일 [「고용보험법 시행령」 일부개정령안](https://www.moel.go.kr/info/lawinfo/lawmaking/view.do?bbs_seq=20260900700)을 입법예고했습니다. 개정 이유와 조문은 첨부 파일로만 공개돼 이 글은 개정안이 방안의 어느 항목을 담았는지 판단하지 않았습니다. 노무제공자는 보험설계사 등 4개 직종부터 적용을 넓힐 계획입니다."
+    ],
+    "beforeAfter": [
+      { "label": "구직급여 지급 기준", "before": "주 7일", "after": "무급휴일을 뺀 주 6일(정부안)" },
+      { "label": "구직급여 상한액", "before": "정액(2026년 {{const:UNEMPLOYMENT_UPPER_2026}})", "after": "하한액의 103%에 연동(정부안)" },
+      { "label": "실업급여 계정 보험료율(노사 합계)", "before": "1.8%", "after": "2.0%(정부안)" },
+      { "label": "조기재취업수당 지급 제외 기준", "before": "월 소득 574만원 이상", "after": "월 300만원 이상(정부안)" }
+    ],
+    "caveats": [
+      "표의 하한은 가정한 근로시간 기준이며, 실제 구직급여일액은 이직 전 평균임금으로 계산한 금액에 상한·하한을 적용해 정해집니다.",
+      "보험료율, 상한액 연동 비율, 조기재취업수당 기준은 하위법령 개정 과정에서 달라질 수 있습니다.",
+      "표의 2027년 열은 2027년 이직을 전제로 한 추정이며, 2026년에 이직하면 2026년 기준 하한이 쓰입니다."
+    ]
+  },
+  "calculators": {
+    "heading": "내 조건으로 다시 계산하기",
+    "links": [
+      { "href": "/unemployment-benefit", "label": "실업급여 계산기", "why": "이직 전 급여와 가입 기간으로 구직급여 일액과 지급 일수를 계산합니다" },
+      { "href": "/minimum-wage-2027", "label": "2027 최저임금 환산표", "why": "2027년 최저시급을 월급으로 바꿔 봅니다" },
+      { "href": "/social-insurance-rates-2027", "label": "2027 4대보험 요율표", "why": "고용보험을 포함한 다음 해 요율을 봅니다" },
+      { "href": "/guides/seeking-job-benefit-2026", "label": "2026 구직급여 상한·하한 정리", "why": "올해 이직자의 상한과 하한을 봅니다" }
+    ]
+  },
+  "faq": [
+    {
+      "q": "2027년 구직급여 하한은 얼마가 되나요?",
+      "a": "하루 8시간 근무를 가정하면 2027년 최저임금 기준 하한은 {{engine:unemployment-benefit:2:2}}으로 계산됩니다. 2027년 이직자에게 적용될 기준이 아직 정해지지 않아 추정값입니다."
+    },
+    {
+      "q": "주 6일 지급으로 바뀌면 받는 돈이 줄어드나요?",
+      "a": "정부 설명으로는 총 지급액과 총 지급일수는 그대로이고 무급휴일을 빼고 주는 방식만 바뀝니다. 법률 개정이 필요합니다."
+    },
+    {
+      "q": "고용보험료는 얼마나 오르나요?",
+      "a": "방안은 2027년 실업급여 계정 보험료율을 노동자와 사용자 각각 0.1%p 올리는 내용입니다. 현재 노동자 몫은 {{const:EMPLOYMENT_RATE_2026}}이며 하위법령 개정 뒤에 적용됩니다."
+    },
+    {
+      "q": "조기재취업수당은 어떻게 바뀌나요?",
+      "a": "지금은 월 소득 574만원 이상인 경우만 지급 대상에서 빠지는데, 방안은 이 제외 기준을 월 300만원 이상으로 낮추는 내용입니다."
+    }
+  ],
+  "numbers": [
+    { "token": "0.1%p", "sourceId": "moel-pr-0901", "locator": "모성보호급여 문단: 노동자 사용자 보험료율이 각각 0.1%p 인상" },
+    { "token": "1.8%", "sourceId": "moel-pr-0901", "locator": "주요 내용 표: 실업급여 계정 보험료율 인상(1.8%→2.0%)" },
+    { "token": "2.0%", "sourceId": "moel-pr-0901", "locator": "주요 내용 표: 실업급여 계정 보험료율 인상(1.8%→2.0%)" },
+    { "token": "103%", "sourceId": "moel-pr-0901", "locator": "실업급여 제도 개편: 연동비율 103%" },
+    { "token": "3.1%", "sourceId": "moel-pr-0901", "locator": "실업급여 제도 개편: 26년 상·하한액 격차(3.1%)" },
+    { "token": "574만원", "sourceId": "moel-pr-0901", "locator": "조기재취업수당: 월 소득 574만원 이상" },
+    { "token": "300만원", "sourceId": "moel-pr-0901", "locator": "조기재취업수당: 월 300만원 이상으로 하향" },
+    { "token": "7일", "sourceId": "moel-pr-0901", "locator": "구직급여 지급방식: 현행 주 7일" },
+    { "token": "6일", "sourceId": "moel-pr-0901", "locator": "구직급여 지급방식: 주 6일 지급" },
+    { "token": "4개", "sourceId": "moel-pr-0901", "locator": "고용보험 적용 확대: 보험설계사, 방과후학교 강사 등 4개 직종" },
+    { "token": "4시간", "sourceId": "assumption", "locator": "영향 표 params.hours" },
+    { "token": "6시간", "sourceId": "assumption", "locator": "영향 표 params.hours" },
+    { "token": "8시간", "sourceId": "assumption", "locator": "영향 표 params.hours" },
+    { "token": "10,320원", "sourceId": "const:MINIMUM_WAGE_2026_HOURLY", "locator": "config/minimumWage.ts" },
+    { "token": "10,700원", "sourceId": "const:MINIMUM_WAGE_2027_HOURLY", "locator": "config/minimumWage.ts" },
+    { "token": "68,100원", "sourceId": "const:UNEMPLOYMENT_UPPER_2026", "locator": "config/unemploymentBenefit.ts" },
+    { "token": "0.9%", "sourceId": "const:EMPLOYMENT_RATE_2026", "locator": "lib/taxConstants2026.ts" }
+  ],
+  "humanReview": "none"
+}

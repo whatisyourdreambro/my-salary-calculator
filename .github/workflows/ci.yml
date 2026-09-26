@@ -52,6 +52,9 @@ jobs:
       - run: node --test scripts/__tests__/edge-bundle-scripts.test.mjs
       - run: node --test scripts/__tests__/cf-purge-after-deploy.test.mjs
       - run: node --test scripts/__tests__/verify-autoads-paths.test.mjs
+      - run: node --test scripts/__tests__/trend-radar.test.mjs
+      - run: node --test scripts/__tests__/fact-sentinel.test.mjs
+      - run: node --test scripts/__tests__/trend-publish.test.mjs
       - run: npm run qa:share
       - run: python3 scripts/verify-contact-storage.py
       - run: python3 scripts/verify-fixed-feedback-storage.py

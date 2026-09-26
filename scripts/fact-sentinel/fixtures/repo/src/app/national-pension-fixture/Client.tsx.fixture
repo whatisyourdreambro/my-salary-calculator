@@ -1,0 +1,5 @@
+"use client";
+// 픽스처 — 같은 폴더의 Client 는 페이지 경로로 매핑된다.
+export default function Client() {
+  return <p>현행 국민연금 기준소득월액 상한은 월 637만원입니다.</p>;
+}
