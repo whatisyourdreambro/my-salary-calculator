@@ -21,12 +21,19 @@ import {
   FIVE_WITH_BONUS,
   FLOW_7000,
   GROSS_AT_BRACKET,
+  HEALTH_BY_BONUS,
+  HEALTH_CAP_LABEL,
+  HEALTH_PREMIUM_LIMITS_2026,
+  INSURANCE_BY_SALARY,
   IRP_FULL_CREDIT_HIGH,
+  PENSION_BY_PAY,
+  PENSION_LABEL,
   RATE_LABEL,
   TAX_EXAMPLES,
   annualTax2026,
   bonusNet2026,
   engineDecidedTax2026,
+  manOnly,
   manwon,
   won,
 } from "@/lib/guides/bonusNetFigures2026";
@@ -72,6 +79,7 @@ describe("공통 — 2026 요율 고정·표기 도우미", () => {
     expect(manwon(113_945_961)).toBe("1억1,395만원");
     expect(manwon(100_000_000)).toBe("1억원");
     expect(manwon(384_060_000)).toBe("3억8,406만원");
+    expect(manOnly(4_067_383)).toBe("407만");
     expect(won(48_447_831.9)).toBe("48,447,832");
   });
 
@@ -165,5 +173,43 @@ describe("income-tax-8-step-bracket-2026 — 기본세율표·총급여 경계",
     for (const v of ["3억8,406만원", "1,544만원", "49.5%", "15,710,000원", "약 1억1,395만원", "48,447,832원", "5,347,175원"]) {
       expect(t).toContain(v);
     }
+  });
+});
+
+describe("bonus-health-4-percent-2026 — 성과급 건강보험료", () => {
+  it("금액별 근로자 몫 = calcBonusNet 의 healthDelta, 상한 표기", () => {
+    expect(HEALTH_BY_BONUS.map((h) => h.total)).toEqual([406_738, 1_220_215, 2_033_692, 4_067_383, 8_134_766]);
+    for (const h of HEALTH_BY_BONUS) expect(h.total, String(h.bonus)).toBe(bonusNet2026(60_000_000, h.bonus).healthDelta);
+    expect(HEALTH_PREMIUM_LIMITS_2026).toEqual({ MONTHLY_CAP_TOTAL: 9_183_480, MONTHLY_FLOOR_TOTAL: 20_160 });
+    expect(HEALTH_CAP_LABEL).toMatchObject({ employee: "4,591,740", payAtCap: "1억2,773만원", annualPayAtCap: "15억3,271만원" });
+  });
+
+  it("제목·본문 — 4월 정산, 7월 건보 정산 표현 없음", () => {
+    const g = guide("bonus-health-4-percent-2026");
+    expect(g.title).toBe("성과급 건강보험료 4.07% — 1억이면 본인 약 407만");
+    const t = all("bonus-health-4-percent-2026");
+    for (const v of ["4,067,383원", "8,134,766원", "9,183,480원", "4,591,740원", "12회 이내", "3월 10일", "이듬해 4월"]) {
+      expect(t).toContain(v);
+    }
+    expect(t).not.toMatch(/7월.{0,8}(?:건보|건강보험).{0,6}정산/);
+  });
+});
+
+describe("four-insurance-ceiling-summary-2026 — 4대보험 상한·하한", () => {
+  it("국민연금 상·하한과 월 보험료, 성과급 1억의 4대보험 추가분", () => {
+    expect(PENSION_LABEL).toMatchObject({ max: "659만원", min: "41만원", minShort: "41만", maxAnnual: "7,908만원", maxPremium: "313,025", minPremium: "19,475" });
+    expect(PENSION_BY_PAY.map((p) => Math.round(p.premium))).toEqual([19_475, 142_500, 237_500, 313_025, 313_025]);
+    expect(INSURANCE_BY_SALARY.map((x) => x.sum)).toEqual([6_348_683, 5_398_683, 4_967_383, 4_967_383]);
+    expect(INSURANCE_BY_SALARY.map((x) => x.pension)).toEqual([1_381_300, 431_300, 0, 0]);
+  });
+
+  it("제목·본문 값", () => {
+    const g = guide("four-insurance-ceiling-summary-2026");
+    expect(g.title).toBe("2026 4대보험 상한·하한 — 국민연금 월 659만원");
+    const t = all("four-insurance-ceiling-summary-2026");
+    for (const v of ["41만~659만원", "313,025원", "19,475원", "9,183,480원", "20,160원", "약 497만원", "6,348,683원", "637만원"]) {
+      expect(t).toContain(v);
+    }
+    expect(t).not.toMatch(/(?:^|[^\d,.])590만/);
   });
 });

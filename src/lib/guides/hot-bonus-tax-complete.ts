@@ -25,9 +25,14 @@ import {
   FIVE_WITH_BONUS,
   FLOW_7000,
   GROSS_AT_BRACKET,
+  HEALTH_BY_BONUS,
+  HEALTH_CAP_LABEL,
+  INSURANCE_BY_SALARY,
   IRP_FULL_CREDIT_HIGH,
+  manOnly,
   manwon,
   pct,
+  PENSION_BY_PAY,
   PENSION_LABEL,
   RATE_LABEL,
   ratio,
@@ -638,28 +643,50 @@ const bonusPension45 = `
 `;
 
 const bonusHealth3545 = `
-<p class="lead">성과급에 건강보험료 3.595% + 장기요양 0.472% = 본인 약 4.07% 부과. 국민연금과 달리 건강보험은 보수월액 상한이 매우 높아 사실상 전액 부과. 성과급 1억 받으면 이듬해 4월 정산 시 본인 건보료 약 360만원 추가 부과.</p>
+<p class="lead">성과급에도 건강보험료가 붙습니다. 2026년 직장가입자 건강보험료율은 보수의 ${RATE_LABEL.healthTotal}로 근로자와 회사가 ${RATE_LABEL.health}씩 내고, 장기요양보험료는 건강보험료의 ${RATE_LABEL.ltcRatio}입니다. 근로자 몫을 합치면 성과급의 <strong>약 ${RATE_LABEL.healthPlusLtc}</strong>로, 성과급 1억원이면 <strong>본인 약 ${manwon(HEALTH_BY_BONUS[3].total)}</strong>이고 회사도 같은 금액을 냅니다. 성과급분 보험료는 보통 이듬해 4월 건강보험료 정산에서 한꺼번에 고지되고, 그달 보험료 이상이면 12회 이내로 나눠 낼 수 있습니다. 기준일 2026-09-26.</p>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 건강보험료 상한 없음</h2>
-<ul class="space-y-2 mt-4">
-<li>· 건강보험 본인 3.595%</li>
-<li>· 장기요양 건강보험의 13.14% = 약 0.472%</li>
-<li>· 합산 본인 약 4.07%</li>
-<li>· <strong>보수월액 상한이 매우 높아 → 성과급에 사실상 전액 부과</strong></li>
+<h2>성과급 금액별 건강보험료(근로자 몫)</h2>
+<p>아래 금액은 성과급 전액이 보수에 더해진다고 보고 2026년 요율로 계산한 근로자 부담분입니다. 회사도 같은 금액을 따로 냅니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>성과급</th><th>건강보험</th><th>장기요양</th><th>본인 합계</th><th>12회로 나누면 월</th></tr></thead>
+<tbody>
+${HEALTH_BY_BONUS.map((h) => `<tr><td>${manwon(h.bonus)}</td><td>${won(h.health)}원</td><td>${won(h.care)}원</td><td><strong>${won(h.total)}원</strong></td><td>약 ${won(h.total / 12)}원</td></tr>`).join("\n")}
+</tbody>
+</table></div>
+<p>건강보험료는 성과급 × ${RATE_LABEL.health}, 장기요양보험료는 그 건강보험료 × ${RATE_LABEL.ltcRatio}입니다. 두 개를 합친 근로자 부담률이 약 ${RATE_LABEL.healthPlusLtc2}라서 흔히 "성과급 건보료 4%"라고 부릅니다. 실제 고지액은 공단의 산정 방식에 따라 원 단위가 조금 다를 수 있습니다.</p>
+
+<h2>요율은 어떻게 정해지나요</h2>
+<ul>
+<li><strong>건강보험 ${RATE_LABEL.healthTotal}</strong>: 직장가입자 보험료율은 1만분의 719입니다(국민건강보험법 시행령 제44조, 2026년 적용).</li>
+<li><strong>근로자·회사 절반씩</strong>: 직장가입자의 보수월액보험료는 근로자와 사업주가 100분의 50씩 부담합니다(국민건강보험법 제76조). 그래서 근로자 몫이 ${RATE_LABEL.health}입니다.</li>
+<li><strong>장기요양 ${RATE_LABEL.ltcOfIncome}</strong>: 장기요양보험료율은 100만분의 9,448로(노인장기요양보험법 시행령 제4조, 2026-05-12 시행본), 건강보험료 대비로 바꾸면 약 ${RATE_LABEL.ltcRatio}입니다. 장기요양보험료는 건강보험료액에 이 비율을 곱해 산정하므로(노인장기요양보험법 제9조) 근로자 몫도 근로자 건강보험료에 비례합니다.</li>
+<li><strong>성과급이 보수에 들어가는 근거</strong>: 보수에는 봉급·급료·임금·상여·수당 등 근로의 대가가 모두 들어가고, 퇴직금과 소득세법상 비과세 근로소득 등은 빠집니다(국민건강보험법 시행령 제33조). 성과급·인센티브는 상여라 보험료 대상이고, 퇴직금에는 건강보험료가 붙지 않습니다.</li>
 </ul>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 성과급 1억 시 건보료 부담</h2>
-<ul class="space-y-2 mt-4">
-<li>· 본인 부담: 1억 × 4.07% = <strong>약 407만원</strong></li>
-<li>· 회사 부담: 동일 약 407만원</li>
-<li>· 합계 814만원이 건강보험공단에 납부</li>
-<li>· 매월 정기 부과 + 다음해 4월 연말정산으로 사후 부과</li>
+<h2>상한은 있지만 성과급에는 거의 닿지 않는다</h2>
+<p>직장가입자 보수월액보험료에도 상한이 있습니다. 2026년 월 상한은 근로자·회사 합계 ${HEALTH_CAP_LABEL.total}원(근로자 몫 ${HEALTH_CAP_LABEL.employee}원), 하한은 ${HEALTH_CAP_LABEL.floorTotal}원입니다(보건복지부고시 제2025-222호, 2026-01-01 시행). 근로자 몫이 상한에 닿으려면 보수월액이 약 ${HEALTH_CAP_LABEL.payAtCap}, 1년 보수로는 약 ${HEALTH_CAP_LABEL.annualPayAtCap}이어야 합니다.</p>
+<p>국민연금이 월 ${PENSION_LABEL.max}에서 멈추는 것과 달리, 건강보험은 대부분의 직장인에게 성과급 전액에 붙는다는 뜻입니다. 연봉이 높은 사람이 성과급을 받으면 국민연금은 더 늘지 않는데 건강보험료는 그대로 늘어나는 이유입니다. 두 보험의 상한 차이는 <a href="/guides/four-insurance-ceiling-summary-2026">4대보험 상한·하한 정리</a>에 표로 모았습니다.</p>
+
+<h2>성과급분은 언제 내나요 — 이듬해 4월 정산</h2>
+<p>매달 떼는 건강보험료는 전년도 보수총액으로 정한 보수월액을 기준으로 하고, 이 보수월액은 4월부터 이듬해 3월까지 적용됩니다. 그해 실제 보수총액이 다음 해에 확정되면 보수월액을 다시 계산해 차액을 정산합니다(국민건강보험법 시행령 제34조). 그래서 성과급을 받은 달에는 건강보험료가 늘지 않는 경우가 많습니다.</p>
+<ol>
+<li><strong>3월 10일까지</strong>: 회사가 전년도 보수총액을 공단에 통보합니다. 전년도 보수에 대한 간이지급명세서를 세무서에 냈다면 통보한 것으로 봅니다(시행령 제35조).</li>
+<li><strong>4월</strong>: 공단이 보험료를 다시 계산해 덜 걷은 금액은 추가로 징수하고, 더 걷은 금액은 돌려줍니다(시행령 제39조 제1항). 전년도 보수 변동분이 4월분 보험료와 함께 고지되는 것이 일반적입니다.</li>
+<li><strong>분할 납부</strong>: 추가로 걷을 금액 중 근로자 몫이 그달 보험료 이상이면 회사 신청으로 12회 이내로 나눠 낼 수 있습니다(같은 조 제4항). 성과급 1억원이면 근로자 몫 약 ${manwon(HEALTH_BY_BONUS[3].total)}을 12회로 나눠 월 약 ${manwon(HEALTH_BY_BONUS[3].total / 12)}씩 내는 식입니다.</li>
+<li><strong>퇴사하면</strong>: 회사가 퇴직 때 그동안 낸 보험료를 다시 계산해 근로자와 정산합니다(같은 조 제2항).</li>
+</ol>
+<p>이렇게 정산으로 낸 보험료는 낸 해의 연말정산에서 보험료 공제를 받습니다. 근로자가 부담한 건강·장기요양·고용보험료는 그 과세기간에 낸 금액만큼 근로소득금액에서 빼 주기 때문입니다(소득세법 제52조 제1항). 2026년 성과급분을 2027년 4월에 정산했다면 2027년 귀속 연말정산에 들어갑니다.</p>
+
+<h2>자주 묻는 질문</h2>
+<ul>
+<li><strong>Q. 성과급에도 건강보험료가 붙나요?</strong> — 붙습니다. 상여는 건강보험의 보수에 포함되므로(국민건강보험법 시행령 제33조) 근로자 몫 약 ${RATE_LABEL.healthPlusLtc2}(장기요양 포함)가 더해집니다. 퇴직금과 비과세 근로소득에는 붙지 않습니다.</li>
+<li><strong>Q. 건강보험 연말정산은 몇 월에 반영되나요?</strong> — 회사가 3월 10일까지 전년도 보수총액을 통보하면 4월분 보험료에 정산액이 반영되는 것이 일반적입니다. 7월은 국민연금 기준소득월액이 바뀌는 달로, 건강보험료 정산과는 별개입니다.</li>
+<li><strong>Q. 정산 금액이 너무 크면 어떻게 하나요?</strong> — 추가 징수액 중 근로자 몫이 그달 보험료 이상이면 회사가 공단에 신청해 12회 이내로 나눠 낼 수 있습니다. 회사 급여 담당에게 분할 신청 여부를 확인하세요.</li>
+<li><strong>Q. 회사도 성과급분 건강보험료를 내나요?</strong> — 냅니다. 직장가입자의 보수월액보험료는 근로자와 사업주가 절반씩 부담하므로 성과급 1억원이면 회사도 약 ${manwon(HEALTH_BY_BONUS[3].total)}을 냅니다(국민건강보험법 제76조).</li>
 </ul>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 4월 건보료 정산 폭탄 주의</h2>
-<p>매월 정기 부과는 월급 기준이라 성과급분은 이듬해 4월분 보험료에 작년 소득 기준 정산액으로 일시 반영(정산액이 당월 보험료 이상이면 12회 이내 분할 신청 가능). 성과급 큰 해는 4월 고지액이 크게 늘 수 있으니 미리 대비.</p>
-
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/health-insurance-fee-2026" class="text-primary underline">건강보험료 계산기</a></li><li>· <a href="/health-insurance-2026" class="text-primary underline">건보료 연말정산 가이드</a></li></ul></div>
+<p>월급 기준 보험료는 <a href="/health-insurance-fee-2026">건강보험료 계산기</a>, 4월 정산 절차와 분할 납부는 <a href="/health-insurance-2026">건강보험료 연말정산 가이드</a>, 올해 요율 전체는 <a href="/social-insurance-rates-2026">2026 4대보험 요율표</a>에서 확인할 수 있습니다. 성과급 세후 금액은 <a href="/guides/bonus-1eok-net-payment-2026">성과급 1억 실수령</a>과 <a href="/tools/finance/bonus">성과급 세금 계산기</a>를 참고하세요.</p>
+<p>근거: <a href="https://www.law.go.kr/법령/국민건강보험법시행령/제44조">국민건강보험법 시행령 제44조(보험료율)</a> · <a href="https://www.law.go.kr/법령/노인장기요양보험법시행령/제4조">노인장기요양보험법 시행령 제4조(장기요양보험료율)</a> · <a href="https://www.law.go.kr/법령/국민건강보험법시행령/제34조">시행령 제34조(보수월액보험료 부과와 정산)</a> · <a href="https://www.law.go.kr/법령/국민건강보험법시행령/제39조">시행령 제39조(정산·분할납부)</a> · <a href="https://www.nhis.or.kr/lm/lmxsrv/law/lawFullContent.do?SEQ=39&amp;SEQ_HISTORY=595294">보건복지부고시 제2025-222호(보험료 상·하한)</a>. 기준일 2026-09-26(법령·고시 확인), 2026년 보험료율 기준입니다.</p>
 `;
 
 const bonusEmployment09 = `
@@ -682,27 +709,54 @@ const bonusEmployment09 = `
 `;
 
 const bonusInsuranceCeiling = `
-<p class="lead">4대보험 상한·하한 정리. 국민연금 보수월액 상한 659만(2026년 7월~), 건강보험은 상한이 매우 높아 사실상 전액 부과, 고용보험 상한 없음, 산재 회사만 부담. 성과급 큰 직원에게 가장 큰 부담은 건강보험(약 4.07%), 그 다음 고용보험(0.9%).</p>
+<p class="lead">2026년 근로자가 내는 4대보험료율은 국민연금 ${RATE_LABEL.pension}, 건강보험 ${RATE_LABEL.health}(장기요양은 건강보험료의 ${RATE_LABEL.ltcRatio}), 고용보험 ${RATE_LABEL.employment}이고 산재보험은 회사가 전액 냅니다. 상한은 국민연금(기준소득월액 월 ${PENSION_LABEL.minShort}~${PENSION_LABEL.max}, 2026년 7월~2027년 6월)과 건강보험(월 보험료 합계 ${HEALTH_CAP_LABEL.total}원)에만 있고, 고용보험료에는 상한이 없습니다. 그래서 연봉이 ${PENSION_LABEL.maxAnnual} 이상인 사람이 성과급 1억원을 받으면 4대보험 근로자 추가분은 <strong>약 ${manwon(INSURANCE_BY_SALARY[2].sum)}</strong>입니다. 기준일 2026-09-26.</p>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">📊 4대보험 본인 부담 정리</h2>
-<div class="overflow-x-auto my-6"><table class="w-full text-sm border border-border"><thead class="bg-secondary"><tr><th class="p-3">보험</th><th class="p-3">본인 부담률</th><th class="p-3">상한·하한</th></tr></thead><tbody>
-<tr class="border-t"><td class="p-3">국민연금</td><td class="p-3">4.75%</td><td class="p-3"><strong>상한 659만원</strong></td></tr>
-<tr class="border-t"><td class="p-3">건강보험</td><td class="p-3">3.595%</td><td class="p-3">보수월액 상한 매우 높음(사실상 전액)</td></tr>
-<tr class="border-t"><td class="p-3">장기요양</td><td class="p-3">0.472%</td><td class="p-3">건강보험료에 연동(사실상 전액)</td></tr>
-<tr class="border-t"><td class="p-3">고용보험</td><td class="p-3">0.9%</td><td class="p-3">상한 없음</td></tr>
-<tr class="border-t"><td class="p-3">산재보험</td><td class="p-3">0% (회사 부담)</td><td class="p-3">-</td></tr>
-</tbody></table></div>
+<h2>2026년 4대보험 요율과 상한·하한 한눈에</h2>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>보험</th><th>근로자</th><th>회사</th><th>상한·하한</th></tr></thead>
+<tbody>
+<tr><td>국민연금</td><td>${RATE_LABEL.pension}</td><td>${RATE_LABEL.pension}</td><td>기준소득월액 월 ${PENSION_LABEL.minShort}~${PENSION_LABEL.max}(2026.7~2027.6)</td></tr>
+<tr><td>건강보험</td><td>${RATE_LABEL.health}</td><td>${RATE_LABEL.health}</td><td>월 보험료 합계 상한 ${HEALTH_CAP_LABEL.total}원, 하한 ${HEALTH_CAP_LABEL.floorTotal}원</td></tr>
+<tr><td>장기요양</td><td>건강보험료의 ${RATE_LABEL.ltcRatio}</td><td>건강보험료의 ${RATE_LABEL.ltcRatio}</td><td>건강보험료를 따라감</td></tr>
+<tr><td>고용보험</td><td>${RATE_LABEL.employment}</td><td>${RATE_LABEL.employment} + 0.25~0.85%(규모별)</td><td>상한 없음</td></tr>
+<tr><td>산재보험</td><td>없음</td><td>업종별 요율 전액</td><td>—</td></tr>
+</tbody>
+</table></div>
+<p>국민연금 합계 요율은 ${RATE_LABEL.pensionTotal}이고 2033년 13%까지 해마다 0.5%p씩 오릅니다(국민연금공단). 건강보험은 보수의 ${RATE_LABEL.healthTotal}를 절반씩 내고(국민건강보험법 시행령 제44조·법 제76조), 고용보험 실업급여 보험료율 1.8%도 절반씩 냅니다. 회사는 여기에 고용안정·직업능력개발 보험료를 상시근로자 150명 미만 0.25%, 1천명 이상 0.85% 등 규모별로 더 냅니다(고용산재보험료징수법 시행령 제12조).</p>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 성과급 1억 시 4대보험 부담</h2>
-<ul class="space-y-2 mt-4">
-<li>· 국민연금: 0원 (상한 적용)</li>
-<li>· 건강보험: 359.5만원</li>
-<li>· 장기요양: 47.2만원</li>
-<li>· 고용보험: 90만원</li>
-<li>· <strong>합계 약 497만원</strong></li>
+<h2>국민연금 — 월 ${PENSION_LABEL.max}에서 보험료가 멈춘다</h2>
+<p>국민연금 보험료는 실제 월급이 아니라 '기준소득월액'에 요율을 곱합니다. 기준소득월액은 신고한 소득월액을 쓰되 하한보다 적으면 하한, 상한보다 많으면 상한으로 정합니다(국민연금법 시행령 제5조). 상·하한은 보건복지부 장관이 매년 3월 31일까지 고시하고 그해 7월부터 이듬해 6월까지 적용합니다. 2026년 7월~2027년 6월은 하한 ${PENSION_LABEL.min}, 상한 ${PENSION_LABEL.max}으로, 직전 1년(2025년 7월~2026년 6월, 하한 40만원·상한 637만원)보다 올랐습니다.</p>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>월 소득</th><th>적용 기준소득월액</th><th>근로자 월 보험료</th></tr></thead>
+<tbody>
+${PENSION_BY_PAY.map((p) => `<tr><td>${manwon(p.pay)}</td><td>${manwon(p.base)}</td><td>${won(p.premium)}원</td></tr>`).join("\n")}
+</tbody>
+</table></div>
+<p>월 소득이 ${PENSION_LABEL.max}을 넘으면 근로자 보험료는 월 ${PENSION_LABEL.maxPremium}원에서 더 오르지 않습니다. 회사에 다니는 사업장가입자는 전년도 소득총액을 근무일수로 나눈 금액의 30배로 기준소득월액을 다시 정해 7월부터 1년간 적용합니다(국민연금공단 안내). 성과급을 받으면 그해가 아니라 이듬해 7월부터 보험료에 반영되는 이유입니다.</p>
+
+<h2>건강보험·고용보험 — 성과급 거의 전액에 붙는다</h2>
+<p>건강보험도 상한이 있지만 문턱이 매우 높습니다. 2026년 직장가입자 보수월액보험료 상한은 근로자·회사 합계 월 ${HEALTH_CAP_LABEL.total}원, 근로자 몫 ${HEALTH_CAP_LABEL.employee}원입니다(보건복지부고시 제2025-222호). 근로자 몫이 이 상한에 닿으려면 보수월액이 약 ${HEALTH_CAP_LABEL.payAtCap}(연 약 ${HEALTH_CAP_LABEL.annualPayAtCap})이어야 하므로 대부분의 직장인에게는 성과급 전액에 건강보험료가 붙습니다. 성과급분은 보통 이듬해 4월 보수총액 정산에서 고지됩니다. 자세한 정산 절차는 <a href="/guides/bonus-health-4-percent-2026">성과급 건강보험료 4.07%</a>에 정리했습니다.</p>
+<p>고용보험료에는 상한이 아예 없습니다. 근로자가 내는 고용보험료는 자기 보수총액에 실업급여 보험료율의 절반을 곱한 금액이라(고용산재보험료징수법 제13조 제2항) 보수가 늘면 그대로 늘어납니다. 반면 받는 쪽인 구직급여에는 1일 상한 ${UB_UPPER}원(2026년 이직자)이 있어, 성과급이 많아도 실업급여가 그만큼 늘지는 않습니다(고용노동부). 산재보험료는 사업주가 전부 부담합니다(같은 조 제5항).</p>
+
+<h2>성과급 1억원을 받으면 4대보험은 얼마나 늘까</h2>
+<div class="overflow-x-auto"><table class="w-full text-sm">
+<thead><tr><th>연봉</th><th>국민연금</th><th>건강·장기요양</th><th>고용보험</th><th>합계</th></tr></thead>
+<tbody>
+${INSURANCE_BY_SALARY.map((x) => `<tr><td>${manwon(x.salary)}</td><td>${won(x.pension)}원</td><td>${won(x.health)}원</td><td>${won(x.employment)}원</td><td><strong>${won(x.sum)}원</strong></td></tr>`).join("\n")}
+</tbody>
+</table></div>
+<p>국민연금은 연봉이 연 상한 ${PENSION_LABEL.maxAnnual}(월 ${PENSION_LABEL.max} × 12)에 못 미치는 만큼만 성과급에 붙습니다. 연봉 5,000만원이면 남은 ${manwon(PENSION_BASE_2026.MAX_ANNUAL - 50_000_000)}에 ${RATE_LABEL.pension}를 곱한 ${won(INSURANCE_BY_SALARY[0].pension)}원이 늘고, 연봉이 ${PENSION_LABEL.maxAnnual} 이상이면 0원입니다. 건강·장기요양과 고용보험은 연봉과 관계없이 성과급에 비례합니다. 세금까지 포함한 세후 금액은 <a href="/guides/bonus-1eok-net-payment-2026">성과급 1억 실수령</a>과 <a href="/guides/bonus-5000-net-payment-2026">성과급 5,000만원 실수령</a>을 보세요.</p>
+
+<h2>자주 묻는 질문</h2>
+<ul>
+<li><strong>Q. 국민연금 상한 ${PENSION_LABEL.max}은 언제 바뀌나요?</strong> — 보건복지부 장관이 매년 3월 31일까지 고시하고 그해 7월부터 이듬해 6월까지 적용합니다(국민연금법 시행령 제5조). 지금 값은 2027년 6월까지 쓰입니다.</li>
+<li><strong>Q. 고용보험료에는 정말 상한이 없나요?</strong> — 없습니다. 근로자 몫은 보수총액 × ${RATE_LABEL.employment}입니다. 대신 구직급여에는 1일 ${UB_UPPER}원 상한이 있어 보험료를 많이 냈다고 실업급여가 비례해 늘지는 않습니다.</li>
+<li><strong>Q. 월급이 적으면 하한이 적용되나요?</strong> — 국민연금은 신고 소득이 월 ${PENSION_LABEL.min}보다 적으면 ${PENSION_LABEL.min}으로 계산해 근로자 보험료가 월 ${PENSION_LABEL.minPremium}원입니다. 건강보험은 월 보험료 합계 ${HEALTH_CAP_LABEL.floorTotal}원이 하한입니다.</li>
+<li><strong>Q. 성과급을 받은 달에 4대보험이 한꺼번에 빠지나요?</strong> — 보통은 아닙니다. 건강보험은 이듬해 4월 보수총액 정산, 국민연금은 이듬해 7월 기준소득월액 재결정 때 반영되는 경우가 일반적입니다. 회사 급여 처리 방식에 따라 다를 수 있으니 급여명세서를 확인하세요.</li>
 </ul>
 
-<div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/health-insurance-fee-2026" class="text-primary underline">건강보험료 계산</a></li></ul></div>
+<p>월급 기준 4대보험 전체는 <a href="/social-insurance-rates-2026">2026 4대보험 요율표</a>, 건강보험료는 <a href="/health-insurance-fee-2026">건강보험료 계산기</a>, 국민연금 수령액은 <a href="/national-pension-estimate-2026">국민연금 예상수령액 계산기</a>, 실업급여는 <a href="/unemployment-benefit">실업급여 계산기</a>에서 확인할 수 있습니다.</p>
+<p>근거: <a href="https://www.nps.or.kr/pnsinfo/ntpsklg/getOHAF0038M0.do">국민연금공단 기준소득월액 상·하한</a> · <a href="https://www.nps.or.kr/pnsinfo/ntpsklg/getOHAF0095M0.do">국민연금공단 연금보험료율</a> · <a href="https://www.law.go.kr/법령/국민연금법시행령/제5조">국민연금법 시행령 제5조</a> · <a href="https://www.law.go.kr/법령/국민건강보험법시행령/제44조">국민건강보험법 시행령 제44조</a> · <a href="https://www.nhis.or.kr/lm/lmxsrv/law/lawFullContent.do?SEQ=39&amp;SEQ_HISTORY=595294">보건복지부고시 제2025-222호</a> · <a href="https://www.law.go.kr/법령/고용보험및산업재해보상보험의보험료징수등에관한법률/제13조">고용산재보험료징수법 제13조</a> · <a href="https://www.law.go.kr/법령/고용보험및산업재해보상보험의보험료징수등에관한법률시행령/제12조">같은 법 시행령 제12조</a> · <a href="https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=18736">고용노동부 구직급여 상한 보도자료</a>. 기준일 2026-09-26(법령·고시 확인), 2026년 보험료율 기준입니다.</p>
 `;
 
 const bonusHealthAdjust = `
@@ -1357,9 +1411,35 @@ export const hotBonusTaxComplete: Guide[] = [
   { slug: "dependent-deduction-bonus-year-2026", title: "성과급 받는 해 인적공제 — 1인 150만 × 35% = 52만 환급", description: "한계세율 35% 시 인적공제 효과 큼. 부모 2명 + 자녀 2명 + 경로우대 + 의료비 통합 시 약 174만 추가 환급.", category: "세금", tags: ["인적공제", "부양가족", "성과급", "한계세율", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: dependentBonus, lang: "ko" },
   // 영역 C — 성과급 4대보험·건강보험 10편
   { slug: "bonus-pension-45-ceiling-590-2026", title: "성과급 국민연금 4.75% — 보수월액 상한 659만원 적용", description: "국민연금은 659만 상한(2026년 7월~). 월급 700만+ 직원은 성과급 받아도 국민연금 추가 부담 0원. 월급 400만 직원이 성과급 200만 받으면 월 약 7,900원 추가.", category: "기초", tags: ["국민연금", "성과급", "상한", "659만", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bonusPension45, lang: "ko" },
-  { slug: "bonus-health-4-percent-2026", title: "성과급 건강보험 4.07% — 1억 시 본인 약 407만원", description: "건강보험 3.595% + 장기요양 0.472% = 본인 약 4.07%. 사실상 전액 부과. 성과급 1억 시 본인 약 407만 + 회사 약 407만 = 약 814만 부과. 다음해 4월 정산 추가.", category: "기초", tags: ["건강보험", "성과급", "장기요양", "정산", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bonusHealth3545, lang: "ko" },
+  {
+    slug: "bonus-health-4-percent-2026",
+    title: `성과급 건강보험료 ${RATE_LABEL.healthPlusLtc2} — 1억이면 본인 약 ${manOnly(HEALTH_BY_BONUS[3].total)}`,
+    description: `성과급에는 건강보험 ${RATE_LABEL.health}와 장기요양(건보료의 ${RATE_LABEL.ltcRatio})이 붙어 본인 약 ${RATE_LABEL.healthPlusLtc2}입니다. 성과급분은 보통 이듬해 4월 정산에 반영됩니다.`,
+    metaDescription: `2026년 성과급 건강보험료는 건강보험 ${RATE_LABEL.health}와 장기요양을 합쳐 본인 약 ${RATE_LABEL.healthPlusLtc}로, 1억이면 약 ${manwon(HEALTH_BY_BONUS[3].total)}입니다. 금액별 표와 월 보험료 상한, 이듬해 4월 정산·12회 분할 납부를 정리했습니다.`,
+    category: "기초",
+    tags: ["건강보험", "성과급", "장기요양", "4월정산", "2026"],
+    level: "초급",
+    publishedDate: "2026-05-23",
+    modifiedDate: "2026-09-30",
+    views: 0,
+    content: bonusHealth3545,
+    lang: "ko",
+  },
   { slug: "bonus-employment-09-2026", title: "성과급 고용보험 0.9% — 1억 시 90만, 3억 시 270만", description: "고용보험 본인 0.9% + 회사 0.9% + α. 상한 없음. 1억 성과급 시 본인 90만, 3억 시 270만. 실업급여 산정 시 평균임금 베이스 증가 효과.", category: "기초", tags: ["고용보험", "성과급", "실업급여", "0.9%", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: bonusEmployment09, lang: "ko" },
-  { slug: "four-insurance-ceiling-summary-2026", title: "4대보험 상한·하한 한 번에 — 성과급 1억 시 본인 부담 약 497만", description: "국민연금 4.75% 상한 659만 + 건강보험 3.595% + 장기요양 0.472% + 고용보험 0.9%. 성과급 1억 시 합산 본인 부담 약 497만원.", category: "기초", tags: ["4대보험", "상한", "성과급", "건강보험", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonusInsuranceCeiling, lang: "ko" },
+  {
+    slug: "four-insurance-ceiling-summary-2026",
+    title: `2026 4대보험 상한·하한 — 국민연금 월 ${PENSION_LABEL.max}`,
+    description: `국민연금은 월 ${PENSION_LABEL.max} 상한, 건강보험은 월 보험료 상한 ${HEALTH_CAP_LABEL.total}원, 고용보험은 상한이 없습니다.`,
+    metaDescription: `2026년 4대보험 상한·하한을 정리했습니다. 국민연금 기준소득월액은 ${PENSION_LABEL.minShort}~${PENSION_LABEL.max}(2026.7~2027.6), 건강보험 월 보험료 상한은 ${HEALTH_CAP_LABEL.total}원이고 고용보험은 상한이 없습니다.`,
+    category: "기초",
+    tags: ["4대보험", "상한", "국민연금", "건강보험", "2026"],
+    level: "중급",
+    publishedDate: "2026-05-23",
+    modifiedDate: "2026-09-30",
+    views: 0,
+    content: bonusInsuranceCeiling,
+    lang: "ko",
+  },
   { slug: "july-health-adjust-bonus-1eok-2026", title: "성과급 1억 + 4월 건보료 정산 — 추가 400만 부과", description: "성과급 부분은 매월 부과 안 되고 다음해 4월 연말정산에서 부과. 1억 성과급 시 약 400만 추가, 정산액이 당월 보험료 이상이면 12회 이내 분할 납부 가능.", category: "기초", tags: ["건보료정산", "건강보험", "성과급", "분할납부", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: bonusHealthAdjust, lang: "ko" },
   { slug: "july-health-adjust-bonus-detail-2026", title: "4월 건보료 정산 흐름 — 성과급별 정산금 80~800만원", description: "1~3월 보수총액 확정 → 4월분 보험료에 정산 반영 → 12회 이내 분할 신청. 성과급 2,000만 약 80만, 5,000만 200만, 1억 400만, 2억 800만 정산금.", category: "기초", tags: ["건보료정산", "건강보험", "분할", "정산금", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: julyAdjust, lang: "ko" },
   { slug: "dependent-check-before-bonus-2026", title: "성과급 받기 전 가족 피부양자 점검 — 임대 2,000만 + 박탈", description: "본인 성과급으로 피부양자 자격 직접 영향 없음. 단 가족 임대·연금·이자 합산 2,000만+ 시 박탈 → 지역가입자 월 50~150만 부담.", category: "기초", tags: ["피부양자", "건강보험", "성과급", "지역가입자", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: dependentBeforeBonus, lang: "ko" },

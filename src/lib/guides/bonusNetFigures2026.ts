@@ -48,6 +48,8 @@ export function manwon(n: number): string {
   if (eok === 0) return `${rest.toLocaleString("ko-KR")}만원`;
   return `${eok}억${rest ? `${rest.toLocaleString("ko-KR")}만` : ""}원`;
 }
+/** 만원 표기에서 '원'을 뗀 짧은 형태 — 제목·범위 표기용 (4,067,383 → "407만", 410,000 → "41만") */
+export const manOnly = (n: number) => manwon(n).replace(/원$/, "");
 /** 요율 → 백분율 표기 — 0.009 → "0.9%", 0.132 → "13.2%" (끝자리 0 제거) */
 export const pct = (rate: number, digits = 4) => `${Number((rate * 100).toFixed(digits))}%`;
 /** 실수령률·실효세율 — 소수 첫째 자리 */
@@ -72,6 +74,8 @@ export const RATE_LABEL = {
 export const PENSION_LABEL = {
   max: manwon(PENSION_BASE_2026.MAX_MONTHLY),
   min: manwon(PENSION_BASE_2026.MIN_MONTHLY),
+  /** 범위 표기 앞쪽 — "41만~659만원" */
+  minShort: manOnly(PENSION_BASE_2026.MIN_MONTHLY),
   maxAnnual: manwon(PENSION_BASE_2026.MAX_ANNUAL),
   /** 상한 도달 시 근로자 월 연금보험료 (원) */
   maxPremium: won(PENSION_BASE_2026.MAX_MONTHLY * R.NATIONAL_PENSION),
