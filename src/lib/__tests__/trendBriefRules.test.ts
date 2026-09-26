@@ -27,7 +27,8 @@ import {
   type CalendarConfig,
   type LedgerEntry,
 } from "@/lib/trendBriefs/rules";
-import { autoConstText } from "@/lib/trendBriefs/render";
+import { autoConstText, draftToHtml } from "@/lib/trendBriefs/render";
+import { impactTable, provisionalDisclosure } from "@/lib/trendBriefs/impacts";
 import { visibleText } from "@/lib/trendBriefs/text";
 import {
   FIRST_PUBLISH_NOT_BEFORE,
@@ -63,12 +64,12 @@ describe("합성 픽스처 — good 통과 · 규칙별 실패", () => {
     expect(failed.map((r) => `${r.id}: ${r.detail}`)).toEqual([]);
   });
 
-  it("규칙 목록 전부에 실패 픽스처가 하나씩 있다", () => {
-    expect(FX.cases.map((c) => c.rule).sort()).toEqual([...RULE_IDS].sort());
+  it("규칙 목록 전부에 실패 픽스처가 하나 이상 있다 (목록 밖 규칙 이름 없음)", () => {
+    expect([...new Set(FX.cases.map((c) => c.rule))].sort()).toEqual([...RULE_IDS].sort());
   });
 
-  for (const c of FX.cases) {
-    it(`${c.rule} — 심어 둔 위반을 잡는다`, () => {
+  for (const [i, c] of FX.cases.entries()) {
+    it(`${c.rule} #${i} — 심어 둔 위반을 잡는다`, () => {
       const { draft, ctx } = fixtureCase(FX, SNAP, sha, BASE, c);
       const hit = runRules(draft, ctx).find((r) => r.id === c.rule);
       expect(hit, c.rule).toBeDefined();
@@ -82,6 +83,72 @@ describe("합성 픽스처 — good 통과 · 규칙별 실패", () => {
     const cal = res.find((r) => r.id === "calendar")!;
     expect(cal.ok).toBe(true);
     expect(cal.detail).toContain("[dry-run 참고]");
+  });
+});
+
+describe("critic fix 2026-09-26 — 출처 전체 유사도 · 레이더 후보 대조 · 결정 전 값 고지", () => {
+  const rule = (draft: TrendBriefDraft, ctx: ReturnType<typeof fixtureCase>["ctx"], id: string) => runRules(draft, ctx).find((r) => r.id === id)!;
+
+  it("similarity-source 는 인용한 출처 전부와 합집합을 잰다 (good 은 통과)", () => {
+    const { draft, ctx } = fixtureCase(FX, SNAP, sha, BASE);
+    const r = rule(draft, ctx, "similarity-source");
+    expect(r.ok, r.detail).toBe(true);
+    expect(r.detail).toContain("출처 2건");
+    expect(r.detail).toContain("합산");
+  });
+
+  it("인용하지 않았어도 그날 writer 가 본 스냅숏에서 옮겨 적으면 막는다", () => {
+    const { draft, ctx } = fixtureCase(FX, SNAP, sha, BASE);
+    const briefText = visibleText(draftToHtml(draft));
+    const extra = { id: "secondary-1", url: "https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=77777", fetchedAt: "", sha256: "x", text: briefText, robotsAllowed: true };
+    const r = rule(draft, { ...ctx, snapshots: [...ctx.snapshots, extra] }, "similarity-source");
+    expect(r.ok).toBe(false);
+    expect(r.detail).toContain("secondary-1");
+  });
+
+  it("레이더 후보 대조 — --update 는 후보 없이도 되고, dryrun 이어도 후보 없는 새 브리프는 실패", () => {
+    const { draft, ctx } = fixtureCase(FX, SNAP, sha, BASE);
+    expect(rule(draft, { ...ctx, candidate: undefined, updateOf: draft.slug }, "citations").detail).not.toContain("레이더 후보 기록 없음");
+    expect(rule(draft, { ...ctx, candidate: undefined, mode: "dryrun" }, "citations").ok).toBe(false);
+    // finalUrl(리디렉트 도착지)로 적어도 같은 문서면 통과
+    const moved = { ...ctx, snapshots: ctx.snapshots.map((s) => (s.id === "primary" ? { ...s, url: "https://www.moel.go.kr/old?news_seq=99999", finalUrl: s.url } : s)) };
+    expect(rule(draft, moved, "citations").detail).not.toContain("레이더 후보 문서가 아님");
+    // 후보 route 가 update-existing 이면 canonical-release 가 막는다(--candidate-route 없이도)
+    expect(rule(draft, { ...ctx, candidate: { ...ctx.candidate!, route: "update-existing" } }, "canonical-release").ok).toBe(false);
+  });
+
+  it("예고·정부안 후보면 event.kind 가 예고 종류이고 status 가 proposed 여야 한다", () => {
+    const { draft, ctx } = fixtureCase(FX, SNAP, sha, BASE);
+    const cand = { ...ctx.candidate!, sourceKind: "행정예고" };
+    expect(rule(draft, { ...ctx, candidate: cand }, "unannounced-facts").ok).toBe(false);
+    const honest = { ...draft, event: { ...draft.event, kind: "행정예고" as const, status: "proposed" as const } };
+    const r = rule(honest, { ...ctx, candidate: cand }, "unannounced-facts");
+    expect(r.ok, r.detail).toBe(true);
+  });
+
+  it("영향 표 base 기본값은 2026 — 2027 은 명시할 때만, 그때 결정 전 값 고지가 표 설명에 자동으로 붙는다", () => {
+    const params = FX.good.impact.table.params as Record<string, unknown>;
+    const noBase = { ...params };
+    delete noBase.base;
+    expect(impactTable("insurance-rate-change", noBase).provisional).toEqual([]);
+    const y27 = { ...FX.good, impact: { ...FX.good.impact, table: { ...FX.good.impact.table, params: { ...params, base: "2027" } } } } as TrendBriefDraft;
+    expect(impactTable("insurance-rate-change", y27.impact.table.params).provisional).toEqual(["INSURANCE_RATES_2027.LONG_TERM_CARE_RATIO"]);
+    const html = draftToHtml(y27);
+    expect(html).toContain("표의 장기요양보험 비율 2027년 값은 아직 결정 전이라 2026년 값을 그대로 넣었습니다.");
+    expect(draftToHtml(FX.good as TrendBriefDraft)).not.toContain("아직 결정 전이라");
+    const noOverride = { monthlyPays: [2000000, 3000000, 4000000], base: "2027" };
+    expect(provisionalDisclosure(impactTable("insurance-rate-change", noOverride).provisional)).toBe(
+      "표의 장기요양보험 비율·고용보험 요율 2027년 값은 아직 결정 전이라 2026년 값을 그대로 넣었습니다."
+    );
+    // 고지 문장은 '확정' 이라는 낱말을 쓰지 않는다(정부안 글의 확정 표현 검사와 부딪히지 않게)
+    for (const k of ["RAISE_2027_BUDGET", "UNEMPLOYMENT_BENEFIT_2027", "INSURANCE_RATES_2027.EMPLOYMENT_INSURANCE", "UNKNOWN_FLAG"]) {
+      expect(provisionalDisclosure([k])).not.toContain("확정");
+      expect(provisionalDisclosure([k]).length).toBeGreaterThan(10);
+    }
+    const { ctx } = fixtureCase(FX, SNAP, sha, BASE);
+    const r = rule(y27, { ...ctx, renderedHtml: html }, "unannounced-facts");
+    expect(r.ok, r.detail).toBe(true);
+    expect(r.detail).toContain("결정 전 값 고지 있음");
   });
 });
 

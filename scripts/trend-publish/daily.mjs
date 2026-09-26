@@ -8,13 +8,19 @@
 //   prepare             잠금 → HALT 확인 → 워크트리 동기화(깨끗해야 함, 아니면 HALT) → 새 코드로 재실행 → 레이더·센티널 →
 //                       모드 결정(DRYRUN / PROPOSE / 동결 보고) → 후보 선택 → 기준 빌드·목록(청크·광고 순서·자동광고) →
 //                       1차+보조 출처 스냅숏 → writer-input.json. 마지막 줄 JSON {status, mode, reason, report, writerInput?, draftPath?}
-//   finish --draft <p>  skip 초안이면 종료. 아니면 render --write → gate pre(비밀값·경로 허용목록 포함) → 무거운 16단계(heavy.mjs,
-//                       첫 실패에서 멈춤) → DRYRUN: 보고 후 워크트리 원복 / PROPOSE: 로컬 브랜치 trend/<날짜>-<slug> 커밋 +
-//                       초안 보관(draftSha256) + 승인 카드. 마지막 줄 JSON {status, reason, card?, gateSummary}
+//   finish --draft <p>  skip 초안이면 종료. 아니면 워크트리가 깨끗한지 확인(아니면 HALT) → render --write → gate pre(비밀값·경로
+//                       허용목록·레이더 후보 대조 포함) → 무거운 17단계(heavy.mjs, 첫 실패에서 멈춤) → DRYRUN: 보고 후 워크트리 원복 /
+//                       PROPOSE: 로컬 브랜치 trend/<날짜>-<slug> 커밋 + 초안·후보 보관(draftSha256) + 승인 카드.
+//                       마지막 줄 JSON {status, reason, card?, gateSummary}
 //   status              플래그·모드·결정 대기 요약
 // 이 파일은 운영자 파일(docs/drafts·docs/revenue-audit-*·docs/naver-blog-100-*·docs/search-console*·docs/*.zip·hf70.html·
 // .wrangler·.claude/settings.local.json)과 운영자 플래그(PUBLISH_ENABLED·REVIEWED_UNTIL·CF_PURGE_OK·DEPLOY_HOLD·
-// calendar.local.json)를 쓰지 않는다 — 모든 쓰기는 safeWrite 한 곳을 거친다(테스트가 확인).
+// calendar.local.json)를 쓰지 않는다 — 모든 파일 쓰기는 safeWrite 한 곳을 거친다(테스트가 확인).
+// git 원복(reset --hard · clean -fd)은 safeResetWorktree 한 곳 — 운영자 파일 경로가 보이면 원복하지 않고 HALT.
+// prepare·finish·init 은 worktreeGuard 를 먼저 통과해야 한다(critic fix 2026-09-26): --worktree 는 설정 워크트리(config.worktree)와
+// 같아야 하고, git 연결 워크트리(--git-dir ≠ --git-common-dir)여야 하며, 메인 저장소가 아니어야 한다 — 허용목록의
+// `daily.mjs:*` 가 아무 인자나 받아도 메인 작업 트리를 원복하지 못한다.
+// --today 가 실제 KST 오늘과 다르면 PROPOSE 하지 않는다(DRYRUN) — 날짜를 바꾼 실행이 막힌 날짜의 카드를 만들지 못하게.
 // 공용 정책 함수(한도·달력·결정 대기·해시)는 여기서 export — publish-approved·review-ack·decide 가 함께 쓴다.
 // rules.ts 의 같은 이름 함수와 결과가 같아야 한다(src/lib/__tests__/trendBriefRules.test.ts 대조).
 import { createHash } from "node:crypto";
@@ -259,6 +265,74 @@ export function resolvePaths(opts, config) {
 }
 
 // ─────────────────────────────────────────────────────────────
+// 워크트리 안전장치 (critic fix 2026-09-26)
+// ─────────────────────────────────────────────────────────────
+/** 같은 경로인가 — Windows 는 대소문자·구분자 무시 */
+export function samePath(a, b) {
+  if (!a || !b) return false;
+  const x = resolve(a);
+  const y = resolve(b);
+  return process.platform === "win32" ? x.toLowerCase() === y.toLowerCase() : x === y;
+}
+
+/** git status --porcelain 출력 → 경로 목록 (이름 바꾸기 'a -> b' 는 둘 다) */
+export function porcelainPaths(out) {
+  return String(out ?? "")
+    .split(/\r?\n/)
+    .filter(Boolean)
+    .flatMap((l) => l.slice(3).split(" -> "))
+    .map((p) => p.trim().replace(/^"|"$/g, ""))
+    .filter(Boolean);
+}
+
+/**
+ * 트렌드 워크트리 확인 — 빈 문자열이면 통과, 아니면 거부 사유.
+ * ① wt = 이 스크립트 저장소 config.worktree (테스트만 allowAnyWorktree — CLI 로는 켤 수 없다)
+ * ② wt ≠ 메인 저장소  ③ wt 는 git 연결 워크트리(rev-parse --git-dir ≠ --git-common-dir)
+ */
+export async function worktreeGuard(deps, { wt, allowAnyWorktree = false, mustExist = true }) {
+  const own = loadConfig(REPO_OF_SCRIPT);
+  const expected = own.worktree ? resolve(own.worktree) : "";
+  const mainRepo = resolve(own.mainRepo ?? REPO_OF_SCRIPT);
+  if (!allowAnyWorktree && !samePath(wt, expected)) return `--worktree ${wt} 는 설정 워크트리(${expected || "config.worktree 없음"})가 아님 — 거부`;
+  if (samePath(wt, mainRepo)) return `메인 저장소(${mainRepo})에서는 실행하지 않음 — 거부`;
+  if (!existsSync(wt)) return mustExist ? `워크트리 없음: ${wt} (daily.mjs init)` : "";
+  const gd = await git(deps, wt, ["rev-parse", "--git-dir"]);
+  const cd = await git(deps, wt, ["rev-parse", "--git-common-dir"]);
+  if (gd.code !== 0 || cd.code !== 0 || !gd.stdout.trim() || !cd.stdout.trim()) return `git 저장소가 아님: ${wt}`;
+  if (samePath(resolve(wt, gd.stdout.trim()), resolve(wt, cd.stdout.trim()))) {
+    return `${wt} 는 git 연결 워크트리(worktree add)가 아님(메인 작업 트리) — 원복(reset·clean)을 할 수 있는 곳이 아니라 거부`;
+  }
+  return "";
+}
+
+/**
+ * 워크트리 원복의 단일 관문 — reset --hard <sha> + clean -fd.
+ * 변경·미추적 경로에 운영자 파일(OPERATOR_REPO_FILES)이 하나라도 있으면 아무것도 지우지 않고 HALT 를 쓴 뒤 false.
+ */
+export async function safeResetWorktree(deps, home, wt, sha) {
+  const st = await git(deps, wt, ["status", "--porcelain", "--untracked-files=all"]);
+  if (st.code !== 0) {
+    writeHalt(home, `원복 전 git status 실패 — 원복하지 않음: ${wt}`);
+    return false;
+  }
+  const hits = porcelainPaths(st.stdout).filter((p) => OPERATOR_REPO_FILES.some((re) => re.test(p)));
+  if (hits.length) {
+    writeHalt(home, `워크트리에 운영자 파일 경로가 있어 원복(reset·clean) 거부 — 사람이 확인: ${hits.slice(0, 5).join(", ")} (${wt})`);
+    return false;
+  }
+  await git(deps, wt, ["reset", "--hard", sha]);
+  await git(deps, wt, ["clean", "-fd"]);
+  return true;
+}
+
+/** --today 가 실제 KST 오늘과 다르면 PROPOSE 를 DRYRUN 으로 낮춘다 */
+export function demoteForDateOverride(m, today, realToday) {
+  if (today === realToday || m.mode !== "PROPOSE") return m;
+  return { mode: "DRYRUN", reasons: [...m.reasons, `--today ${today} ≠ 실제 오늘(KST) ${realToday} — 날짜를 바꾼 실행은 제안하지 않음`] };
+}
+
+// ─────────────────────────────────────────────────────────────
 // 모드 결정
 // ─────────────────────────────────────────────────────────────
 /** PROPOSE 는 아래가 모두 참일 때만 — 그 밖은 DRYRUN, 동결 기간은 FREEZE(보고만) */
@@ -385,12 +459,19 @@ function acquireLock(home, name, maxAgeMs) {
   }
 }
 
-/** 무거운 16단계 — 워크트리에서 heavy.mjs 로 하나씩, 첫 실패에서 멈춘다 */
-export function heavySteps({ slug, originSha, home, wt, config, sibling }) {
+/**
+ * 무거운 17단계 — 워크트리에서 heavy.mjs 로 하나씩, 첫 실패에서 멈춘다.
+ * prebuild-status(빌드 뒤 생성 파일 허용목록)는 청크 비교와 따로 떨어진 필수 단계다(critic fix 2026-09-26).
+ * chunk-diff 는 정규화 목록(v2)으로 비교한다 — config.chunkDiff.compare 가 "report" 면 보고만.
+ * candidate: 레이더 후보 파일(gate-post 대조용) · update: --update 수정 발행이면 gate-post 에도 --update.
+ */
+export function heavySteps({ slug, originSha, home, wt, config, sibling, candidate, update = false }) {
   const b = join(home, "builds", originSha);
   const pages = [...(config.adSequence?.gatePages ?? ["/", "/guides/nurse-salary", "/calc/samsung-bonus"]), `/guides/${slug}`, ...(sibling ? [`/guides/${sibling}`] : [])].join(",");
   const allow = (config.pathAllowlist?.publish ?? []).map((re) => `--allow "${re}"`).join(" ");
   const exempt = (config.chunkDiff?.runtimeExempt ?? []).map((re) => `--runtime-exempt "${re}"`).join(" ");
+  const reportOnly = config.chunkDiff?.compare === "report" ? " --report-only" : "";
+  const gateExtra = `${candidate ? ` --candidate "${candidate}"` : ""}${update ? " --update" : ""}`;
   return [
     ["prebuild-gens", "npx tsx scripts/gen-guides-meta.ts && npx tsx scripts/gen-site-metrics.ts && npx tsx scripts/gen-salary-amounts.ts && npx tsx scripts/gen-season-key.ts"],
     ["ledger-update", "npm run ledger:update"],
@@ -401,6 +482,7 @@ export function heavySteps({ slug, originSha, home, wt, config, sibling }) {
     ["verify-sitemap", "npm run verify:sitemap"],
     ["eslint", "npx eslint src/lib/guides/trend-briefs.ts src/lib/guides/trend-briefs-*.ts"],
     ["build", "npm run build"],
+    ["prebuild-status", `node scripts/trend-publish/chunk-diff.mjs status --repo . ${allow}`],
     ["edge-bundle", "node scripts/verify-edge-bundle.mjs"],
     ["autoads", "npm run verify:autoads"],
     ["qa-quality", "npm run qa:quality"],
@@ -411,9 +493,9 @@ export function heavySteps({ slug, originSha, home, wt, config, sibling }) {
     ],
     [
       "chunk-diff",
-      `node scripts/trend-publish/chunk-diff.mjs manifest --next .next --out "${join(b, `brief-${slug}-chunks.json`)}" && node scripts/trend-publish/chunk-diff.mjs compare --base "${join(b, "chunks.json")}" --brief "${join(b, `brief-${slug}-chunks.json`)}" --slug ${slug} --next .next ${exempt} && node scripts/trend-publish/chunk-diff.mjs status --repo . ${allow}`,
+      `node scripts/trend-publish/chunk-diff.mjs manifest --next .next --out "${join(b, `brief-${slug}-chunks.json`)}" && node scripts/trend-publish/chunk-diff.mjs compare --base "${join(b, "chunks.json")}" --brief "${join(b, `brief-${slug}-chunks.json`)}" --slug ${slug} --next .next ${exempt} --metrics src/config/site-metrics.generated.ts --metrics-base ${originSha} --repo . --report "${join(b, `brief-${slug}-chunk-report.json`)}"${reportOnly}`,
     ],
-    ["gate-post", `npx tsx scripts/trend-publish/gate.ts --draft "{DRAFT}" --sources "{SOURCES}" --mode {MODE} --today {TODAY} --phase post --repo . --trend-home "${home}" --out "${join(home, "gates", `gate-${slug}-post.json`)}"`],
+    ["gate-post", `npx tsx scripts/trend-publish/gate.ts --draft "{DRAFT}" --sources "{SOURCES}" --mode {MODE} --today {TODAY} --phase post --repo . --trend-home "${home}"${gateExtra} --out "${join(home, "gates", `gate-${slug}-post.json`)}"`],
   ].map(([name, cmd]) => ({ name, cmd, wt }));
 }
 
@@ -440,13 +522,16 @@ export async function prepare(opts, deps = defaultDeps()) {
   const config = loadConfig(opts.worktree ?? REPO_OF_SCRIPT);
   const { home, wt } = resolvePaths(opts, config);
   for (const d of HOME_DIRS) mkdirSync(join(home, d), { recursive: true });
-  const today = opts.today ?? kstToday(deps.now());
+  const realToday = kstToday(deps.now());
+  const today = opts.today ?? realToday;
   const lock = acquireLock(home, "daily.lock", 6 * 3_600_000);
   const out = (o) => ({ mode: null, reason: "", report: null, ...o });
   if (!lock) return out({ status: "skip", reason: "다른 daily 실행 중(daily.lock)" });
   try {
     const flags = readFlags(home);
     if (flags.halt) return out({ status: "halt", reason: `HALT: ${flags.halt}`, report: report(home, today, [`## prepare — 중지(HALT)`, `- ${flags.halt}`]) });
+    const refused = await worktreeGuard(deps, { wt, allowAnyWorktree: opts.allowAnyWorktree === true });
+    if (refused) return out({ status: "error", reason: refused });
 
     if (!opts.noSync) {
       const f = await git(deps, wt, ["fetch", "origin", "--prune"]);
@@ -475,7 +560,7 @@ export async function prepare(opts, deps = defaultDeps()) {
     const decisions = readJsonl(join(home, "decisions.jsonl"));
     const pilotVerdict = decisions.some((d) => d.decision === "pilot-verdict" && d.value === "continue");
     const wtConfig = loadConfig(wt);
-    const m = computeMode({ today, flags, calendar, localCalendar, pilotVerdict, ledger, decisions, consts, config: wtConfig });
+    const m = demoteForDateOverride(computeMode({ today, flags, calendar, localCalendar, pilotVerdict, ledger, decisions, consts, config: wtConfig }), today, realToday);
     const lines = [`## prepare ${today} — 모드 ${m.mode}`, ...m.reasons.map((r) => `- ${r}`), `- 기준 커밋 ${originSha.slice(0, 8)}`];
 
     if (m.mode === "FREEZE") {
@@ -526,6 +611,11 @@ export async function prepare(opts, deps = defaultDeps()) {
         return out({ status: "skip", mode: m.mode, reason: `${name} 실패`, report: report(home, today, lines) });
       }
       if (name === "base-autoads") safeWrite(home, join(b, "autoads.txt"), r.stdout.slice(-4000));
+    }
+    // 기준 빌드의 prebuild 가 생성 파일(예: 날짜 의존 seasonKey)을 바꿨을 수 있다 — finish 는 깨끗한 워크트리에서 시작해야 하므로 원복
+    if (!(await safeResetWorktree(deps, home, wt, originSha))) {
+      lines.splice(lines.length, 0, "- 기준 빌드 뒤 원복 거부(운영자 파일 경로) → HALT");
+      return out({ status: "halt", mode: m.mode, reason: "원복 거부", report: report(home, today, lines) });
     }
 
     // 1차 + 보조 출처 스냅숏
@@ -579,13 +669,17 @@ export async function prepare(opts, deps = defaultDeps()) {
 export async function finish(opts, deps = defaultDeps()) {
   const config = loadConfig(opts.worktree ?? REPO_OF_SCRIPT);
   const { home, wt } = resolvePaths(opts, config);
-  const today = opts.today ?? kstToday(deps.now());
+  const realToday = kstToday(deps.now());
+  const today = opts.today ?? realToday;
   const res = (o) => ({ reason: "", gateSummary: null, ...o });
+  mkdirSync(home, { recursive: true });
   const lock = acquireLock(home, "daily.lock", 6 * 3_600_000);
   if (!lock) return res({ status: "skip", reason: "다른 daily 실행 중(daily.lock)" });
   try {
     const flags = readFlags(home);
     if (flags.halt) return res({ status: "halt", reason: `HALT: ${flags.halt}` });
+    const refused = await worktreeGuard(deps, { wt, allowAnyWorktree: opts.allowAnyWorktree === true });
+    if (refused) return res({ status: "error", reason: refused });
     const state = readJson(join(home, "state", `${today}.json`), null);
     if (!state) return res({ status: "error", reason: `prepare 상태 없음: state/${today}.json` });
     if (!opts.draft || !existsSync(opts.draft)) return res({ status: "error", reason: `초안 파일 없음: ${opts.draft}` });
@@ -604,12 +698,22 @@ export async function finish(opts, deps = defaultDeps()) {
     const slug = String(draft.slug ?? "");
     const head = (await git(deps, wt, ["rev-parse", "HEAD"])).stdout.trim();
     if (state.originSha && head && head !== state.originSha) return res({ status: "error", reason: `워크트리 HEAD 가 prepare 이후 바뀜 (${head.slice(0, 8)} ≠ ${state.originSha.slice(0, 8)}) — prepare 부터 다시` });
+    // render 전에 워크트리가 깨끗해야 한다 — 아니면 누가 손댄 것이므로 원복하지 않고 HALT (critic fix 2026-09-26)
+    const pre = await git(deps, wt, ["status", "--porcelain", "--untracked-files=all"]);
+    if (pre.code !== 0 || pre.stdout.trim()) {
+      writeHalt(home, `finish 시작 때 트렌드 워크트리가 깨끗하지 않음 — 사람이 확인: ${wt}`);
+      report(home, today, [...lines, "- render 전 워크트리 변경 발견 → HALT(원복하지 않음)", "```", pre.stdout.trim().slice(0, 2000), "```"]);
+      return res({ status: "halt", reason: "render 전 워크트리 변경 → HALT" });
+    }
+    const candPath = join(home, "state", `${today}-candidate.json`);
+    if (!existsSync(candPath)) return res({ status: "error", reason: `레이더 후보 기록 없음: state/${today}-candidate.json — prepare 부터 다시` });
+    const candidate = readJson(candPath, null);
 
     // 모드 재계산(플래그가 바뀌었을 수 있다) — PROPOSE 는 둘 다 PROPOSE 일 때만
     const consts = readTypesConstants(wt);
     const ledger = readJson(join(wt, "scripts/trend-publish/ledger.json"), []);
     const decisions = readJsonl(join(home, "decisions.jsonl"));
-    const m = computeMode({
+    const m0 = computeMode({
       today,
       flags,
       calendar: readJson(join(wt, "scripts/trend-publish/calendar.json"), {}),
@@ -620,13 +724,11 @@ export async function finish(opts, deps = defaultDeps()) {
       consts,
       config: loadConfig(wt),
     });
+    const m = demoteForDateOverride(m0, today, realToday);
     const mode = state.mode === "PROPOSE" && m.mode === "PROPOSE" ? "PROPOSE" : "DRYRUN";
     const gateMode = mode === "PROPOSE" ? "publish" : "dryrun";
     const tsx = join(wt, "node_modules/tsx/dist/cli.mjs");
-    const resetWt = async () => {
-      await git(deps, wt, ["reset", "--hard", state.originSha || "origin/main"]);
-      await git(deps, wt, ["clean", "-fd"]);
-    };
+    const resetWt = () => safeResetWorktree(deps, home, wt, state.originSha || "origin/main");
 
     const render = await deps.run(process.execPath, [tsx, join(wt, "scripts/trend-publish/render.ts"), "--draft", opts.draft, "--write", "--today", today, "--repo", wt], { cwd: wt });
     if (render.code !== 0) {
@@ -638,7 +740,8 @@ export async function finish(opts, deps = defaultDeps()) {
     const gatePre = await deps.run(
       process.execPath,
       [tsx, join(wt, "scripts/trend-publish/gate.ts"), "--draft", opts.draft, "--sources", state.snapDir, "--headlines", join(home, "radar"), "--sentinel", join(home, "sentinel"),
-        "--mode", gateMode, "--today", today, "--phase", "pre", "--check-diff", state.originSha || "origin/main", "--repo", wt, "--trend-home", home, "--out", join(home, "gates", `gate-${slug}-pre.json`)],
+        "--mode", gateMode, "--today", today, "--phase", "pre", "--check-diff", state.originSha || "origin/main", "--repo", wt, "--trend-home", home,
+        "--candidate", candPath, "--candidate-route", String(candidate?.route ?? "new-brief"), "--out", join(home, "gates", `gate-${slug}-pre.json`)],
       { cwd: wt }
     );
     if (gatePre.code !== 0) {
@@ -648,7 +751,7 @@ export async function finish(opts, deps = defaultDeps()) {
       return res({ status: gatePre.code === 1 ? "skip" : "error", reason: "gate pre", gateSummary: join(home, "gates", `gate-${slug}-pre.json`) });
     }
 
-    const steps = heavySteps({ slug, originSha: state.originSha, home, wt, config: loadConfig(wt), sibling: loadConfig(wt).adSequence?.siblingGuide });
+    const steps = heavySteps({ slug, originSha: state.originSha, home, wt, config: loadConfig(wt), sibling: loadConfig(wt).adSequence?.siblingGuide, candidate: candPath });
     for (const s of steps) {
       const cmd = s.cmd.replace("{DRAFT}", opts.draft).replace("{SOURCES}", state.snapDir).replace("{MODE}", gateMode).replace("{TODAY}", today);
       const r = await runHeavy(deps, { home, wt, date: today, name: s.name, cmd });
@@ -711,7 +814,7 @@ export async function finish(opts, deps = defaultDeps()) {
     safeWrite(
       home,
       join(home, "drafts", `${slug}.json`),
-      `${JSON.stringify({ draft, draftSha256: sha, originSha: state.originSha, treeHash: tree, heavyInputsHash: sha256Text(`${state.originSha}\n${tree}`), cardDate: today, primaryPublishedDate: primary.publishedDate, expiry, branch, snapDir: state.snapDir, gateSummary }, null, 2)}\n`
+      `${JSON.stringify({ draft, candidate, draftSha256: sha, originSha: state.originSha, treeHash: tree, heavyInputsHash: sha256Text(`${state.originSha}\n${tree}`), cardDate: today, primaryPublishedDate: primary.publishedDate, expiry, branch, snapDir: state.snapDir, gateSummary }, null, 2)}\n`
     );
     const card = join(home, "cards", `${today}-${slug}.md`);
     safeWrite(
@@ -755,6 +858,9 @@ export async function init(opts, deps = defaultDeps()) {
   const config = loadConfig(REPO_OF_SCRIPT);
   const { home, wt, mainRepo } = resolvePaths(opts, config);
   const plan = [`TREND_HOME: ${home}`, `워크트리: ${wt} (origin/main 분리 HEAD)`, `node_modules 정션: ${join(wt, "node_modules")} → ${join(mainRepo, "node_modules")}`];
+  // 설정 워크트리·메인 저장소 아님 — 이미 있으면 연결 워크트리인지까지 (없으면 만든 뒤 다시 확인)
+  const refused = await worktreeGuard(deps, { wt, allowAnyWorktree: opts.allowAnyWorktree === true, mustExist: false });
+  if (refused) return { status: "error", reason: refused, plan };
   if (!opts.yes) return { status: "plan", reason: "확인 후 --yes 로 다시 실행", plan };
   for (const d of HOME_DIRS) mkdirSync(join(home, d), { recursive: true });
   if (!existsSync(wt)) {
@@ -762,6 +868,8 @@ export async function init(opts, deps = defaultDeps()) {
     if (f.code !== 0) return { status: "error", reason: "git fetch 실패", plan };
     const a = await deps.run("git", ["-C", mainRepo, "worktree", "add", "--detach", wt, "origin/main"], { cwd: mainRepo });
     if (a.code !== 0) return { status: "error", reason: `worktree add 실패: ${a.stderr.trim()}`, plan };
+    const again = await worktreeGuard(deps, { wt, allowAnyWorktree: opts.allowAnyWorktree === true });
+    if (again) return { status: "error", reason: again, plan };
   }
   if (!existsSync(join(wt, "node_modules"))) symlinkSync(join(mainRepo, "node_modules"), join(wt, "node_modules"), "junction");
   return { status: "ok", reason: "초기화 완료", plan };

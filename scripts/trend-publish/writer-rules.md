@@ -29,10 +29,16 @@ This file is embedded verbatim in writer-input.json. The scheduled Claude task f
 
 ## 2. 확정 여부 — Status honesty
 
+- 1차 출처(`role: "primary"`)는 입력의 `candidate.url` 문서(스냅숏 id `primary`)이고, 그 `publishedDate` 는 `candidate.publishedDate` 를 **그대로** 쓴다.
+  `event.announcedDate` 는 그 날짜보다 늦을 수 없다. 보조 출처를 1차로 바꾸거나 날짜를 새로 적으면 게이트가 SKIP 한다.
+  The primary source must be `candidate.url` with `publishedDate` exactly `candidate.publishedDate`; the gate checks this against the radar record.
 - 정부안·입법예고·행정예고·예산안·추진 단계면 `event.status: "proposed"`, 제목이나 리드에 `정부안`·`예고`·`예산안`·`잠정`·`추진` 중 하나.
   이때 본문에 **확정** 이라고 쓰지 않는다(허용: 확정되지·확정 전·미확정·확정될·확정되면 같은 부정·미래 표현).
+- `candidate.eventKind` 가 입법예고·행정예고이거나 1차 출처 제목에 입법예고·행정예고·정부안·예산안이 있으면
+  `event.kind` 는 입법예고·행정예고·정부안·예산안 중 하나, `event.status` 는 `proposed` 여야 한다(보도자료·확정으로 적으면 SKIP).
 - 미래 시행일을 말하는 문장에는 `예정` 을 쓴다.
-- 표가 미확정 값을 쓰면(`provisional`) 그 값을 확정이라 부르지 않는다.
+- 표가 미확정 값을 쓰면(`provisional`) 그 값을 확정이라 부르지 않는다. `insurance-rate-change` 의 `base` 기본값은 `2026`(현행)이다 —
+  `2027` 은 꼭 필요할 때만 고르고, 그러면 렌더가 표 설명 끝에 '아직 결정 전' 고지 문장을 자동으로 붙인다(직접 쓰지 않는다).
 
 ## 3. 구성과 분량 — Structure and size
 
@@ -47,7 +53,11 @@ This file is embedded verbatim in writer-input.json. The scheduled Claude task f
 
 ## 4. 문장 — Writing
 
-- 뉴스 헤드라인·기사 문장을 가져오지 않는다(21일 헤드라인과 15자 이상 겹치면 SKIP). 1차 출처 문장도 베끼지 않는다(8-gram 포함률 20% 이하).
+- 뉴스 헤드라인·기사 문장을 가져오지 않는다(21일 헤드라인과 15자 이상 겹치면 SKIP).
+- **모든 출처** 원문 문장을 베끼지 않는다 — 1차 출처만이 아니라 보조 보도자료·법령 등 `snapshots[]` 의 `untrustedText` 전부.
+  게이트가 출처마다 그리고 출처 전체를 합쳐 8-gram 포함률을 재고, 어느 하나라도 20%를 넘으면 SKIP(인용·표는 제외).
+  공식 요약·적용 시점·주의할 점·FAQ 어디에서든 출처 문장을 옮겨 적지 말고 자기 말로 풀고 엔진 계산으로 가치를 더한다.
+  Never copy sentences from any source (primary, secondary press release, statute) into any section; per-source and combined 8-gram containment must stay at or below 20%.
 - 기존 가이드·허브와 겹치는 설명을 반복하지 않는다(5-gram 포함률 25% 이하). 허브 핵심어+연도 제목(예: "2027 4대보험 요율") 금지.
 - 금지 표현(제목·설명·태그): 속보 · 단독 · 충격 · 경악 · 역대급 · 무조건 · 대박 · 긴급 · 난리 · !!
 - 금지 주제: 주식·코인·펀드·가격 전망·정치·연예·스포츠·사고·사망·범죄·재난·건강·복권·신용점수·은행 상품 금리 순위·미확인 성과급·노조 소문.
@@ -69,5 +79,5 @@ guideSpec FORBIDDEN 과 옛 값. The gate SKIPs on any of these:
 
 ## 6. 출력 전 스스로 확인 — Self-check before output
 
-1. 공식 출처 2건 이상(1차 1건, 7일 이내)인가? 2. 모든 숫자가 1절의 넷 중 하나인가? 3. 정부안이면 확정 표현이 없는가?
+1. 공식 출처 2건 이상(1차 1건 = candidate.url, 게시일 = candidate.publishedDate, 7일 이내)인가? 2. 모든 숫자가 1절의 넷 중 하나인가? 3. 정부안이면 확정 표현이 없는가?
 4. 표 kind·params 가 allowedKinds 안인가? 5. 링크가 allowedInternalLinks·인용 출처 안인가? 6. JSON 하나만 출력했는가?
