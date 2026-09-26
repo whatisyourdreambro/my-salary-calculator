@@ -78,20 +78,6 @@
       "snippet": "- 누진공제 ⑥ 세액공제: 자녀(30~70만) + 연금저축(13.2%)",
       "tag": "GUIDES-08",
       "note": "자녀(30~70만) — 출산·입양 공제 금액. 연간 자녀세액공제는 1명 25만·2명 55만 (hot-bonus-tax-complete.ts)"
-    },
-    {
-      "slug": "year-end-tax-deductions-guide",
-      "patternId": "card-extra-each-100",
-      "snippet": "교통·전통시장·도서공연비 (각 100만원 추가 한도) 중소기업 청년 소득",
-      "tag": "GUIDES-08",
-      "note": "추가공제 항목별 각 100만 → 합산 300만(7천 이하)/200만(초과)"
-    },
-    {
-      "slug": "youth-benefits-2026",
-      "patternId": "youth-leap-invite",
-      "snippet": "만원 대체 제도: 위의 청년도약계좌, 아래의 중소기업 취업 청년 소득세 감면 등을 활용하세요 💸 중소기업 취업 청년 소",
-      "tag": "GUIDES-08",
-      "note": "신규 가입이 끝난 청년도약계좌를 대체 제도로 권유 — 청년미래적금 안내로"
     }
   ],
   "descriptionBaseline": {
