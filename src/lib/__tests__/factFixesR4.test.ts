@@ -21,9 +21,11 @@
 //      6월 정산: 국세상담센터 call.nts.go.kr 반기신청 Q&A(mi=13042), korea.kr newsId=148971348.
 //
 // 광고 위치 보호: 모든 문구는 바꾼 문자열보다 길지 않게(글자 수) 정정했고, 320/375/414/1280px 에서
-// 줄 수가 base 와 같도록 어휘를 골랐다(실측: 같은 CSS·폰트에서 블록 높이 동일). 단 하나의 예외는
-// 타일 캡션 반기 지급 → 12월 지급(5 → 6자)으로, 한글 한 자(반)가 반각 숫자 두 자(12)로 바뀐
-// 것이라 반각 가중 폭은 같다(4.5 = 4.5). 320px 타일 높이·라벨/캡션 한 줄 유지는 DOM 실측으로 확인했다.
+// 줄 수가 base 와 같도록 어휘를 골랐다(실측: 같은 CSS·폰트에서 블록 높이 동일). 예외는 두 개다.
+// 타일 캡션 반기 지급 → 12월 지급(5 → 6자)은 한글 한 자(반)가 반각 숫자 두 자(12)로 바뀐 것이라
+// 반각 가중 폭이 같다(4.5 = 4.5). 신청 절차 04 는 R4 최종 점검(320~1440px 1px 간격 전수)에서
+// 35%·6월 이 377~379px 폭에서 줄을 바꿔 광고를 밀었기에 35%, 6월(33 → 34자)로 바꿔 렌더 폭을
+// 옛 문구와 같게 맞췄다(245.66px vs 245.67px, 1,123폭 광고 위치 차이 0).
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -119,8 +121,8 @@ const EIC_PAIRS: Pair[] = [
     name: "신청 절차 04",
     before: "정기 신청 시 9월 말 지급. 반기는 신청 다음 달 말 지급",
     beforeLen: 33,
-    after: "정기 신청은 9월 말 지급. 반기는 12월 35%·6월 정산",
-    afterLen: 33,
+    after: "정기 신청은 9월 말 지급. 반기는 12월 35%, 6월 정산",
+    afterLen: 34,
   },
   // 반기 신청 35%(띄어쓰기)는 320px 에서 두 줄로 접혀 국세청 용어 반기신청으로 붙여 쓴다.
   { name: "타일 라벨", before: "이번 달 신청 시", beforeLen: 9, after: "반기신청 35%", afterLen: 8 },
@@ -205,12 +207,12 @@ describe("R4 YMYL — /earned-income-credit 반기 신청", () => {
     expect(eicSrc).toContain('<div className="text-xs text-muted-blue">12월 지급</div>');
   });
 
-  it("정정 문구 길이 — 캡션만 반각 숫자 때문에 1자 예외, 반각 가중 폭은 모두 같거나 짧다", () => {
+  it("정정 문구 길이 — 캡션·신청 절차 04 만 1자 예외, 반각 가중 폭은 모두 같거나 짧다", () => {
     for (const p of EIC_PAIRS) {
       expect(len(p.before), p.name).toBe(p.beforeLen);
       expect(len(p.after), p.name).toBe(p.afterLen);
       expect(halfWidth(p.after), p.name).toBeLessThanOrEqual(halfWidth(p.before));
-      if (p.name === "타일 캡션") expect(p.afterLen - p.beforeLen).toBe(1);
+      if (p.name === "타일 캡션" || p.name === "신청 절차 04") expect(p.afterLen - p.beforeLen).toBe(1);
       else expect(p.afterLen, p.name).toBeLessThanOrEqual(p.beforeLen);
     }
   });
