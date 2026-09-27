@@ -66,6 +66,7 @@ const SLOT_OF = {
   InArticleAd: ["IN_ARTICLE"],
   MultiplexAd: ["MULTIPLEX"],
   Display2Ad: ["DISPLAY_2"],
+  CompanyTopAd: ["COMPANY_TOP"], // 머니샐러리_회사상단(2026-09-27) — 회사 상세 K1 전용
   PageFooterAds: ["IN_ARTICLE", "HOME_TOP", "COUPANG"], // 합성 래퍼
   CoupangBanner: ["COUPANG"], // 심 경유 — 실제 렌더는 AffiliateSlot(오퍼 무매칭 시 쿠팡 폴백)
   AffiliateSlot: ["COUPANG"], // 직접 사용처 대비 — 폴백이 쿠팡이므로 동일 슬롯 취급

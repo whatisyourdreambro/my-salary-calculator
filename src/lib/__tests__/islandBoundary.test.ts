@@ -47,7 +47,7 @@ describe("IslandBoundary", () => {
 });
 
 /** 광고 컴포넌트 또는 광고를 품은 트리 */
-const AD_COMPONENT = /<(CalcResultAd|InArticleAd|HomeTopAd|GuideMidAd|Display2Ad|MultiplexAd|PageFooterAds|CoupangBanner|AdPlacement|ResultAd|CalculatorTabs)\b/;
+const AD_COMPONENT = /<(CalcResultAd|InArticleAd|HomeTopAd|GuideMidAd|Display2Ad|CompanyTopAd|MultiplexAd|PageFooterAds|CoupangBanner|AdPlacement|ResultAd|CalculatorTabs)\b/;
 
 /** 각 <IslandBoundary ...>...</IslandBoundary> 블록의 본문을 뽑는다. */
 const boundaryBlocks = (src: string) => {

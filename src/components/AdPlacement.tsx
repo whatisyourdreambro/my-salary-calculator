@@ -34,7 +34,8 @@ type AdSlotKind =
   | "fluid"
   | "guide-mid"
   | "multiplex"
-  | "display-2";
+  | "display-2"
+  | "company-top";
 
 type AdSlotProps = {
   slot: string | undefined;
@@ -355,6 +356,21 @@ export function Display2Ad() {
       format="auto"
       slotKind="display-2"
       minHeight={250}
+    />
+  );
+}
+
+// 회사 상세 전용 상단 디스플레이 유닛 — 머니샐러리_회사상단(2026-09-27 운영자 승인·발급, 반응형).
+// /salary-db/[id] 의 요약 영역 끝 ~ 직급별 연봉표 사이(K1) 한 곳에만 둔다(다른 페이지 사용 금지 —
+// src/lib/__tests__/companyTopAd.test.ts). env NEXT_PUBLIC_ADSENSE_SLOT_COMPANY_TOP 미설정 시 렌더 안 함.
+// minHeight 280 = 큰 채움(336x280) 기준. 폭별 전체 예약(lg 미만 소재 324px·lg 이상 304px 까지)은 사용처 aside 의 min-height 가 맡는다.
+export function CompanyTopAd() {
+  return (
+    <AdSlot
+      slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_COMPANY_TOP}
+      format="auto"
+      slotKind="company-top"
+      minHeight={280}
     />
   );
 }

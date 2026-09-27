@@ -18,6 +18,7 @@ vi.mock("@/components/AdPlacement", () => ({
   InArticleAd: stub,
   MultiplexAd: stub,
   Display2Ad: stub,
+  CompanyTopAd: stub,
   ResultAd: stub,
 }));
 vi.mock("@/components/CoupangBanner", () => ({ default: stub }));

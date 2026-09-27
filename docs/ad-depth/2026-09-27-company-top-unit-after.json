@@ -1,0 +1,3583 @@
+{
+ "label": "head-final",
+ "baseUrl": "http://localhost:3403",
+ "at": "2026-09-27T00:53:07.666Z",
+ "routes": {
+  "/salary-db/samsung-electronics": {
+   "320": {
+    "docInitial": 27628,
+    "initial": [
+     {
+      "top": 2317,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 5684,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 8461,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 14193,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 18144,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 24711,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 27628,
+    "scrolled": [
+     {
+      "top": 2317,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 5684,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 8461,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 14193,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 18144,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 24711,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "375": {
+    "docInitial": 26077,
+    "initial": [
+     {
+      "top": 2172,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 5295,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 7902,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 13304,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 16824,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 23184,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 26077,
+    "scrolled": [
+     {
+      "top": 2172,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 5295,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 7902,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 13304,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 16824,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 23184,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "414": {
+    "docInitial": 25129,
+    "initial": [
+     {
+      "top": 2072,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 5083,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 7541,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 12785,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 16084,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 22265,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 25129,
+    "scrolled": [
+     {
+      "top": 2072,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 5083,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 7541,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 12785,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 16084,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 22265,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "1280": {
+    "docInitial": 19399,
+    "initial": [
+     {
+      "top": 1224,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3323,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5196,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8913,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11564,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 16320,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 16174,
+      "height": 620,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 19399,
+    "scrolled": [
+     {
+      "top": 1224,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3323,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5196,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8913,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11564,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 16320,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 16174,
+      "height": 620,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   }
+  },
+  "/salary-db/sk-hynix": {
+   "320": {
+    "docInitial": 23591,
+    "initial": [
+     {
+      "top": 1379,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3469,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6174,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 10461,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 13939,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 20674,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 23591,
+    "scrolled": [
+     {
+      "top": 1379,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3469,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6174,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 10461,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 13939,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 20674,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "375": {
+    "docInitial": 22362,
+    "initial": [
+     {
+      "top": 1287,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3281,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5792,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 9905,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 12938,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 19469,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 22362,
+    "scrolled": [
+     {
+      "top": 1287,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3281,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5792,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 9905,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 12938,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 19469,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "414": {
+    "docInitial": 21717,
+    "initial": [
+     {
+      "top": 1245,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3223,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5662,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 9632,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 12526,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 18853,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 21717,
+    "scrolled": [
+     {
+      "top": 1245,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3223,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5662,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 9632,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 12526,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 18853,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "1280": {
+    "docInitial": 16622,
+    "initial": [
+     {
+      "top": 711,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 1997,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 3696,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 6483,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 8689,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 13543,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 13397,
+      "height": 620,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 16622,
+    "scrolled": [
+     {
+      "top": 711,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 1997,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 3696,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 6483,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 8689,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 13543,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 13397,
+      "height": 620,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   }
+  },
+  "/salary-db/kt": {
+   "320": {
+    "docInitial": 20025,
+    "initial": [
+     {
+      "top": 1269,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3268,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6365,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8164,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11313,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 17109,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 20025,
+    "scrolled": [
+     {
+      "top": 1269,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3268,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6365,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8164,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11313,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 17109,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "375": {
+    "docInitial": 18970,
+    "initial": [
+     {
+      "top": 1245,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3148,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5974,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 7661,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 10474,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 16078,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 18970,
+    "scrolled": [
+     {
+      "top": 1245,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3148,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5974,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 7661,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 10474,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 16078,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "414": {
+    "docInitial": 18551,
+    "initial": [
+     {
+      "top": 1245,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3148,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5870,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 7514,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 10188,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 15687,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 18551,
+    "scrolled": [
+     {
+      "top": 1245,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3148,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5870,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 7514,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 10188,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 15687,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "1280": {
+    "docInitial": 14292,
+    "initial": [
+     {
+      "top": 711,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 1997,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 3925,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 4947,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 7065,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 11213,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 11066,
+      "height": 620,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 14292,
+    "scrolled": [
+     {
+      "top": 711,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 1997,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 3925,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 4947,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 7065,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 11213,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 11066,
+      "height": 620,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   }
+  },
+  "/salary-db/hyundai": {
+   "320": {
+    "docInitial": 22498,
+    "initial": [
+     {
+      "top": 1339,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3322,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6507,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 9912,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 13342,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 19528,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 22498,
+    "scrolled": [
+     {
+      "top": 1339,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3322,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6507,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 9912,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 13342,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 19528,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "375": {
+    "docInitial": 21394,
+    "initial": [
+     {
+      "top": 1315,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3218,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6154,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 9389,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 12422,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 18448,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 21394,
+    "scrolled": [
+     {
+      "top": 1315,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3218,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6154,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 9389,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 12422,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 18448,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "414": {
+    "docInitial": 20730,
+    "initial": [
+     {
+      "top": 1273,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3176,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5966,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 9123,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11960,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 17812,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 20730,
+    "scrolled": [
+     {
+      "top": 1273,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3176,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5966,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 9123,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11960,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 17812,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "1280": {
+    "docInitial": 15990,
+    "initial": [
+     {
+      "top": 711,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 1997,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 3962,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 6276,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 8454,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 12857,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 12711,
+      "height": 620,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 15990,
+    "scrolled": [
+     {
+      "top": 711,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 1997,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 3962,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 6276,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 8454,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 12857,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 12711,
+      "height": 620,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   }
+  },
+  "/salary-db/lgelectronics": {
+   "320": {
+    "docInitial": 21249,
+    "initial": [
+     {
+      "top": 1311,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3278,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5895,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8993,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 12354,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 18332,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 21249,
+    "scrolled": [
+     {
+      "top": 1311,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3278,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5895,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8993,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 12354,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 18332,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "375": {
+    "docInitial": 20121,
+    "initial": [
+     {
+      "top": 1245,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3148,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5588,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8483,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11488,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 17228,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 20121,
+    "scrolled": [
+     {
+      "top": 1245,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3148,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5588,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8483,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11488,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 17228,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "414": {
+    "docInitial": 19656,
+    "initial": [
+     {
+      "top": 1245,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3148,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5494,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8346,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11156,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 16792,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 19656,
+    "scrolled": [
+     {
+      "top": 1245,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3148,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5494,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8346,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11156,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 16792,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "1280": {
+    "docInitial": 14976,
+    "initial": [
+     {
+      "top": 711,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 1997,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 3629,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 5479,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 7684,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 11897,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 11750,
+      "height": 620,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 14976,
+    "scrolled": [
+     {
+      "top": 711,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 1997,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 3629,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 5479,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 7684,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 11897,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 11750,
+      "height": 620,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   }
+  },
+  "/salary-db/naver": {
+   "320": {
+    "docInitial": 21927,
+    "initial": [
+     {
+      "top": 1311,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3376,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6121,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 9106,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 12367,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 18902,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 21927,
+    "scrolled": [
+     {
+      "top": 1311,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3376,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6121,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 9106,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 12367,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 18902,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "375": {
+    "docInitial": 20821,
+    "initial": [
+     {
+      "top": 1245,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3230,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5822,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8626,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11523,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 17820,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 20821,
+    "scrolled": [
+     {
+      "top": 1245,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3230,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5822,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8626,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11523,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 17820,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "414": {
+    "docInitial": 20254,
+    "initial": [
+     {
+      "top": 1245,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3214,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5648,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8362,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11091,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 17282,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 20254,
+    "scrolled": [
+     {
+      "top": 1245,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3214,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5648,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8362,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11091,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 17282,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "1280": {
+    "docInitial": 15923,
+    "initial": [
+     {
+      "top": 711,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 1997,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 3894,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 5881,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 7998,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 12790,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 12644,
+      "height": 620,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 15923,
+    "scrolled": [
+     {
+      "top": 711,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 1997,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 3894,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 5881,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 7998,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 12790,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 12644,
+      "height": 620,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   }
+  },
+  "/salary-db/kakao": {
+   "320": {
+    "docInitial": 21753,
+    "initial": [
+     {
+      "top": 1339,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3388,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6021,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8960,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 12194,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 18729,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 21753,
+    "scrolled": [
+     {
+      "top": 1339,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3388,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6021,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8960,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 12194,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 18729,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "375": {
+    "docInitial": 20671,
+    "initial": [
+     {
+      "top": 1273,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3242,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5738,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8476,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11374,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 17671,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 20671,
+    "scrolled": [
+     {
+      "top": 1273,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3242,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5738,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8476,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11374,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 17671,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "414": {
+    "docInitial": 20142,
+    "initial": [
+     {
+      "top": 1273,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3242,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5604,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8272,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11002,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 17170,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 20142,
+    "scrolled": [
+     {
+      "top": 1273,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3242,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5604,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8272,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11002,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 17170,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "1280": {
+    "docInitial": 15861,
+    "initial": [
+     {
+      "top": 711,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 1997,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 3853,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 5818,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 7936,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 12728,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 12581,
+      "height": 620,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 15861,
+    "scrolled": [
+     {
+      "top": 711,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 1997,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 3853,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 5818,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 7936,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 12728,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 12581,
+      "height": 620,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   }
+  },
+  "/salary-db/lgensol": {
+   "320": {
+    "docInitial": 21328,
+    "initial": [
+     {
+      "top": 1491,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3833,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6516,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8403,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11936,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 18465,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 21328,
+    "scrolled": [
+     {
+      "top": 1491,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3833,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6516,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8403,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11936,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 18465,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "375": {
+    "docInitial": 20171,
+    "initial": [
+     {
+      "top": 1439,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3701,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6140,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 7845,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 10994,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 17333,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 20171,
+    "scrolled": [
+     {
+      "top": 1439,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3701,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6140,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 7845,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 10994,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 17333,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "414": {
+    "docInitial": 19538,
+    "initial": [
+     {
+      "top": 1399,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3645,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6028,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 7710,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 10632,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 16728,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 19538,
+    "scrolled": [
+     {
+      "top": 1399,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3645,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6028,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 7710,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 10632,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 16728,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "1280": {
+    "docInitial": 14727,
+    "initial": [
+     {
+      "top": 773,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 2107,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 3762,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 4871,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 7049,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 11648,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 11501,
+      "height": 620,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 14727,
+    "scrolled": [
+     {
+      "top": 773,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 2107,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 3762,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 4871,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 7049,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 11648,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 11501,
+      "height": 620,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   }
+  },
+  "/salary-db/samsung-biologics": {
+   "320": {
+    "docInitial": 21540,
+    "initial": [
+     {
+      "top": 1379,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3346,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6450,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8314,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11827,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 18550,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 21540,
+    "scrolled": [
+     {
+      "top": 1379,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3346,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6450,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 8314,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11827,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 18550,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "375": {
+    "docInitial": 20403,
+    "initial": [
+     {
+      "top": 1327,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3230,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6134,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 7838,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 10988,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 17457,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 20403,
+    "scrolled": [
+     {
+      "top": 1327,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3230,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 6134,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 7838,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 10988,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 17457,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "414": {
+    "docInitial": 19729,
+    "initial": [
+     {
+      "top": 1287,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3190,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5908,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 7590,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 10483,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 16810,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 19729,
+    "scrolled": [
+     {
+      "top": 1287,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3190,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 5908,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 7590,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 10483,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 16810,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "1280": {
+    "docInitial": 15120,
+    "initial": [
+     {
+      "top": 711,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 1997,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 3944,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 5053,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 7231,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 11987,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 11840,
+      "height": 620,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 15120,
+    "scrolled": [
+     {
+      "top": 711,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 1997,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 3944,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 5053,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 7231,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 11987,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 11840,
+      "height": 620,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   }
+  },
+  "/salary-db/coupang": {
+   "320": {
+    "docInitial": 19642,
+    "initial": [
+     {
+      "top": 1297,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3280,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 4972,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 6771,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 10160,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 16725,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 19642,
+    "scrolled": [
+     {
+      "top": 1297,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3280,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 4972,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 6771,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 10160,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 16725,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "375": {
+    "docInitial": 18756,
+    "initial": [
+     {
+      "top": 1273,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3176,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 4823,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 6510,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 9543,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 15864,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 18756,
+    "scrolled": [
+     {
+      "top": 1273,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3176,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 4823,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 6510,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 9543,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 15864,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "414": {
+    "docInitial": 18358,
+    "initial": [
+     {
+      "top": 1245,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3148,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 4795,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 6462,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 9327,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 15493,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 18358,
+    "scrolled": [
+     {
+      "top": 1245,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 3148,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 4795,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 6462,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 9327,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 15493,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 0,
+      "height": 0,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   },
+   "1280": {
+    "docInitial": 14227,
+    "initial": [
+     {
+      "top": 711,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 1997,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 3126,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 4151,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 6356,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 11148,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 11002,
+      "height": 620,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ],
+    "docScrolled": 14227,
+    "scrolled": [
+     {
+      "top": 711,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 1997,
+      "height": 300,
+      "cls": "ad-container ad-slot-company-top"
+     },
+     {
+      "top": 3126,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 4151,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 6356,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 11148,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 11002,
+      "height": 620,
+      "cls": "ad-container ad-slot-sidebar"
+     }
+    ]
+   }
+  },
+  "/": {
+   "320": {
+    "docInitial": 19414,
+    "initial": [
+     {
+      "top": 1505,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 3464,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11769,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 12151,
+      "height": 300,
+      "cls": "ad-container ad-slot-multiplex"
+     }
+    ],
+    "docScrolled": 21145,
+    "scrolled": [
+     {
+      "top": 1505,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 3464,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 13501,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 13883,
+      "height": 300,
+      "cls": "ad-container ad-slot-multiplex"
+     }
+    ]
+   },
+   "375": {
+    "docInitial": 18294,
+    "initial": [
+     {
+      "top": 1481,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 3404,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11387,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 11769,
+      "height": 300,
+      "cls": "ad-container ad-slot-multiplex"
+     }
+    ],
+    "docScrolled": 19899,
+    "scrolled": [
+     {
+      "top": 1481,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 3404,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 12992,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 13374,
+      "height": 300,
+      "cls": "ad-container ad-slot-multiplex"
+     }
+    ]
+   },
+   "414": {
+    "docInitial": 17593,
+    "initial": [
+     {
+      "top": 1429,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 3352,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 10963,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 11345,
+      "height": 300,
+      "cls": "ad-container ad-slot-multiplex"
+     }
+    ],
+    "docScrolled": 19174,
+    "scrolled": [
+     {
+      "top": 1429,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 3352,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 12544,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 12926,
+      "height": 300,
+      "cls": "ad-container ad-slot-multiplex"
+     }
+    ]
+   },
+   "1280": {
+    "docInitial": 12095,
+    "initial": [
+     {
+      "top": 1053,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 2500,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 6828,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 7274,
+      "height": 300,
+      "cls": "ad-container ad-slot-multiplex"
+     }
+    ],
+    "docScrolled": 12817,
+    "scrolled": [
+     {
+      "top": 1053,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 2500,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 7550,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     },
+     {
+      "top": 7996,
+      "height": 300,
+      "cls": "ad-container ad-slot-multiplex"
+     }
+    ]
+   }
+  },
+  "/calc/samsung-bonus": {
+   "320": {
+    "docInitial": 25912,
+    "initial": [
+     {
+      "top": 3669,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 5106,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 8378,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 13797,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 16566,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     }
+    ],
+    "docScrolled": 31706,
+    "scrolled": [
+     {
+      "top": 3669,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 5106,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 14173,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 19591,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 22361,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     }
+    ]
+   },
+   "375": {
+    "docInitial": 23762,
+    "initial": [
+     {
+      "top": 3457,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 4758,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 7812,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 12664,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 15114,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     }
+    ],
+    "docScrolled": 29101,
+    "scrolled": [
+     {
+      "top": 3457,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 4758,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 13151,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 18004,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 20454,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     }
+    ]
+   },
+   "414": {
+    "docInitial": 23023,
+    "initial": [
+     {
+      "top": 3416,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 4610,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 7611,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 12270,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 14560,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     }
+    ],
+    "docScrolled": 28183,
+    "scrolled": [
+     {
+      "top": 3416,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 4610,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 12771,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 17430,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 19720,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     }
+    ]
+   },
+   "1280": {
+    "docInitial": 17954,
+    "initial": [
+     {
+      "top": 2190,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 3302,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 6090,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 9615,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 11326,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     }
+    ],
+    "docScrolled": 21631,
+    "scrolled": [
+     {
+      "top": 2190,
+      "height": 140,
+      "cls": "ad-container ad-slot-home-top"
+     },
+     {
+      "top": 3302,
+      "height": 270,
+      "cls": "ad-container ad-slot-result"
+     },
+     {
+      "top": 9767,
+      "height": 220,
+      "cls": "ad-container ad-in-article ad-slot-fluid"
+     },
+     {
+      "top": 13291,
+      "height": 270,
+      "cls": "ad-container ad-slot-display-2"
+     },
+     {
+      "top": 15003,
+      "height": 270,
+      "cls": "ad-container ad-slot-guide-mid"
+     }
+    ]
+   }
+  }
+ },
+ "blockedRequests": 208,
+ "blockedHosts": {
+  "pagead2.googlesyndication.com": 48,
+  "www.googletagmanager.com": 48,
+  "t1.kakaocdn.net": 48,
+  "ads-partners.coupang.com": 64
+ },
+ "leakedExternalRequests": 0
+}

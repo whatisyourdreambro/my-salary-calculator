@@ -28,7 +28,7 @@ import RelatedCompanies from "@/components/RelatedCompanies";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import CompanyConnections from "@/components/CompanyConnections";
 import JsonLd from "@/components/JsonLd";
-import { Display2Ad, GuideMidAd, InArticleAd, HomeTopAd, SidebarAd } from "@/components/AdPlacement";
+import { CompanyTopAd, Display2Ad, GuideMidAd, InArticleAd, HomeTopAd, SidebarAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import UpdatedBadge from "@/components/UpdatedBadge";
@@ -148,6 +148,23 @@ export default function CompanyDetailPage({
  company={company}
  summary={company.id === "samsung-electronics" ? <SamsungCompanySummary company={company} dartSalaryManwon={dartSalaryManwon} /> : undefined}
  />
+
+ {/* 회사 상단 광고 K1 — 신규 유닛 머니샐러리_회사상단(2026-09-27 운영자 승인·발급, docs/ad-experiments.md 실험 #3).
+     순증 1: 기존 유닛(결과창·가이드중간·디스플레이2·인아티클·페이지 끝 HomeTop·사이드바)은 제자리.
+     자리: 회사 요약 영역(main) 끝 ~ 직급별 연봉표 사이 — H1·히어로 위 아님. env 가 없으면 자리째 렌더하지 않는다.
+     aside 태그: 아래 형제 광고 래퍼 DIV.max-w-5xl.mx-auto 의 CSS 경로 순번을 밀지 않게(자동광고 학습 경로 보존).
+     my-12: 위 버튼·아래 연봉표와 간격. min-h: 광고 칸(라벨 20 + 소재) 전체 예약 — lg 미만 344 = 소재 324px 까지(모바일 채움 약 300 + 여유 24),
+     lg 이상 324 = 소재 304px 까지(데스크톱 최대 336x280 + 여유 24). 광고 칸 자체 아래 여백은 aside 여백과 겹쳐 예약을 먹지 않는다(실측).
+     채워지든 미채움으로 접히든 아래 연봉표가 움직이지 않게(삼성전자 '5단계 연봉·실수령 표' 점프 링크 CLS 대책). */}
+ {process.env.NEXT_PUBLIC_ADSENSE_SLOT_COMPANY_TOP && (
+ <aside
+ aria-label="광고"
+ data-msy-ad="company-upper"
+ className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 my-12 min-h-[344px] lg:min-h-[324px]"
+ >
+ <CompanyTopAd />
+ </aside>
+ )}
 
  <SamsungSectionAnchor companyId={company.id} id="samsung-salary-table">
  <CompanySalaryTable company={company} />
