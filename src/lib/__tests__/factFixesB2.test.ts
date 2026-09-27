@@ -13,13 +13,15 @@
 //    /insights 표 출처 문구는 옛 문구와 같은 음절 수("공개 보도 수치"→"회사 인용 보도").
 // 3) /savings-interest-2026 접힌 FAQ: 예금자보호 한도 1억원(2025-09-01~, 예금보험공사)·원천징수 지방소득세 1.4%.
 // 4) 반도체 심층 가이드 sk-hynix-wage-2026: 2025년 행 psData 값, 2026년 전망 행 취소선 철회, 합의선 추정→당시의 추정(아래 describe).
+// 5) 같은 가이드의 확정 사실(9/16 가결 등)은 레이아웃 푸터 광고 아래 보강 섹션(supplements.ts)에만 — psData 값에서 끼워 넣는다.
 // 이 문자열들을 다시 바꿀 때는 같은 방식으로 폭을 맞추고 전 폭 광고 위치를 다시 잴 것.
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { BONUS_PROFILES } from "@/data/bonusData";
-import { PS_HISTORY } from "@/app/calc/sk-hynix-bonus/psData";
+import { AGREEMENT_2026, H1_2026_PROFIT_TRIL, PS_HISTORY } from "@/app/calc/sk-hynix-bonus/psData";
 import { koGuides } from "@/lib/guidesContent";
+import { guideSupplements } from "@/lib/guides/supplements";
 
 const readSrc = (rel: string) => readFileSync(resolve(process.cwd(), rel), "utf8");
 const flat = (s: string) => s.replace(/\s+/g, " ");
@@ -116,5 +118,20 @@ describe("sk-hynix-wage-2026 PS 추이 표 2025·2026년 행과 '당시의 추�
     expect(c).toContain("<strong>당시의 추정: 5.5~7.0%</strong>");
     expect(c).not.toContain("합의선 추정");
     expect(syllables("당시의 추정:")).toEqual(syllables("합의선 추정:"));
+  });
+
+  // 5) 확정 사실(9/16 가결·6.3%·PS 새 방식·2025 PS·상반기 98.2조)은 레이아웃 푸터 광고 아래 보강 섹션(supplements.ts)에만 둔다.
+  it("보강 섹션이 psData 값과 가결 날짜를 담고, 본문에는 새 문장이 들어가지 않았다", () => {
+    const s = flat(guideSupplements["sk-hynix-wage-2026"] ?? "");
+    expect(AGREEMENT_2026.status).toBe("ratified");
+    expect(s).toContain("2026년 9월 16일 조합원 총투표에서 수정 잠정합의안이 가결됐습니다");
+    expect(s).toContain(`기본급 인상률은 ${AGREEMENT_2026.wageIncreasePct}%`);
+    const sp = AGREEMENT_2026.newSplit;
+    expect(s).toContain(`당해 ${sp.cashNowPct + sp.stockNowPct}%(현금 ${sp.cashNowPct}% + 자사주 ${sp.stockNowPct}%)`);
+    expect(s).toContain("기본급 대비 2,964%(2026년 2월 5일 지급, 보도 기준)");
+    expect(s).toContain("47.2조원(DART 사업보고서)");
+    expect(s).toContain(`상반기 영업이익 약 ${H1_2026_PROFIT_TRIL}조원(회사 실적 발표)`);
+    expect(s).toContain("시나리오이며 전망이 아닙니다");
+    expect(c).not.toContain("9월 16일");
   });
 });
