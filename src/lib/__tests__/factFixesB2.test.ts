@@ -11,6 +11,7 @@
 //    (https://www.etoday.co.kr/news/view/2217429 — 월 기본급의 820%·연봉의 41%, 2023-02-03 지급). 보도 기준.
 //    영업이익 6.8조원은 DART 사업보고서(감사 후 연결, rcpNo 20230321001209) — 잠정 공시 7조66억원과 다르다.
 //    /insights 표 출처 문구는 옛 문구와 같은 음절 수("공개 보도 수치"→"회사 인용 보도").
+// 3) /savings-interest-2026 접힌 FAQ: 예금자보호 한도 1억원(2025-09-01~, 예금보험공사)·원천징수 지방소득세 1.4%.
 // 이 문자열들을 다시 바꿀 때는 같은 방식으로 폭을 맞추고 전 폭 광고 위치를 다시 잴 것.
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -45,6 +46,18 @@ describe("/savings-interest-2026 기준금리 3.00%(2026-08-27)", () => {
     expect(savingsSrc).toContain("2026년 7월 16일(2.50%→2.75%)과 8월 27일(2.75%→3.00%) 두 차례 연속 인상돼 현재 연 3.00%");
     expect(savingsSrc).toContain('"기준금리 3.00%"');
     expect(savingsSrc).not.toContain('"기준금리 2.75%"');
+  });
+
+  // 3) 같은 페이지 접힌 FAQ(InArticleAd 아래 닫힌 details — 높이 0, FAQPage JSON-LD 로도 나간다) 2026-09-27 정정:
+  //    예금자보호 한도는 2025-09-01부터 금융회사(저축은행 포함)별 1인당 원리금 합산 1억원(예금보험공사),
+  //    이자소득 원천징수 15.4% = 소득세 14% + 지방소득세 1.4%.
+  it("접힌 FAQ: 예금자보호 1억원(2025-09-01~)·지방소득세 1.4%", () => {
+    expect(savingsSrc).toContain(
+      "단 예금자보호 한도는 2025년 9월 1일부터 금융회사(저축은행 포함)별 1인당 원리금 합산 1억원(예금보험공사).",
+    );
+    expect(savingsSrc).not.toContain("5천만원까지 예금자보호");
+    expect(savingsSrc).toContain("14% 이자소득세 + 1.4% 지방소득세 = 총 15.4%");
+    expect(savingsSrc).not.toContain("1.4% 농어촌특별세");
   });
 });
 
