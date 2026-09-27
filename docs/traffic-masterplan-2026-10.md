@@ -79,6 +79,7 @@
 함께 적어 둘 것
 - R6-09 개명 별칭은 9/27 에 앞당겨 만들었다: `claude/r8-aliases-20260927`(`claude/r3-w2b-20260926` = `c7566555` 기반, W3-F 포함). **10/13 비광고 묶음에서 W2-B 대신 이 헤드를 병합**한다(부록 C R6-09 의 `claude/r6-aliases-20261006` 자리).
 - 광고 쪽 공변량(실험 #3 D0 = 9/27 15:28:51 푸시 `77ee189e`, 배포 B 15:56:36 `41fb5ff4`, R6-1 18:46:46 `4ef59a4b`)은 [ad-experiments.md](ad-experiments.md) 3(c) 표에 적었다.
+- **R4-B3 통합 때 승인 1 가이드 싣는 법**: `claude/r4-guides-pay-season-20260926` 대신 `claude/r8-guide-refocus-20260927` 를 병합한다(pay-season + holdback + origin/main `4ef59a4b` 병합 — `src/lib/guidesContent.ts` 충돌은 이미 풀림: pay-season spread 다음에 trend-briefs spread 가 마지막). 그 뒤 등록 단계는 R4 preview `4bdc317c` 와 같게 하되 **생성 파일은 가져오지 말고 다시 만든다** — guideSpec `KEEPERS` 에 R4 7편 추가 · `GUIDE_SPEC_REGEN=baseline` · `tsx scripts/gen-guides-meta.ts`·`gen-site-metrics.ts` 재실행(명세서 글의 제목·설명이 바뀌어 `4bdc317c` 의 `guidesMeta.generated.ts` 는 옛 문구다) · `trendBriefSpec` 의 '빈 브리프 동안 한국어 가이드 수' 294 → 301. 배포일에 publishedDate·modifiedDate 와 기준선 publishedDate 를 실제 날짜로 맞추는 규칙은 그대로. 명세서 글 설명은 73자라 `4bdc317c` 기준선 79자 안이다.
 
 **승인 7 콘솔 절차 — HTML 엣지 캐시 1시간 → 1일 (운영자 본인 브라우저, 약 3분)**
 0. 먼저 확인: GitHub 저장소 → Actions → `cf-purge` 가 최근 배포 **2번 연속 성공**(초록)인지. 아니면 오늘은 하지 않는다 — 퍼지 없이 TTL 만 늘리면 배포 뒤 최대 24시간 옛 HTML 이 나간다. C01 규칙 B 가 아직 없으면 C01 을 먼저 한다(규칙 B 를 처음 만들 때 1일로 넣어도 된다).
