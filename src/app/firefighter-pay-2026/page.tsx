@@ -277,6 +277,14 @@ export default function FirefighterPay2026Page() {
                 description="소방사 1호봉 213만원부터, 위험근무수당·출동가산금 구조 총정리"
               />
             </div>
+            {/* 세후 월급 계산기 역링크 — 광고 아래 마지막 줄 (2026-09-27) */}
+            <p className="mt-8 text-sm text-muted-blue dark:text-canvas-300">
+              위험근무수당·공무원연금 기여금을 반영한 소방관 세후 월급은{" "}
+              <Link href="/calc/civil-servant-net-pay#fire" className="font-bold text-electric hover:underline">
+                소방관 실수령액 계산기
+              </Link>
+              에서 호봉별로 바로 계산할 수 있습니다.
+            </p>
           </div>
 
           <aside

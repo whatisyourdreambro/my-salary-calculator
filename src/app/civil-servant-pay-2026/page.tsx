@@ -440,6 +440,14 @@ export default function CivilServantPay2026Page() {
         <div className="mt-10">
           <MultiplexAd />
         </div>
+        {/* 세후 월급 계산기 역링크 — 광고 아래 마지막 줄 (2026-09-27) */}
+        <p className="mt-8 text-sm text-muted-blue dark:text-canvas-300">
+          수당·공무원연금 기여금·세금을 반영한 세후 월급은{" "}
+          <Link href="/calc/civil-servant-net-pay#general" className="font-bold text-electric hover:underline">
+            공무원 월급 실수령액 계산기
+          </Link>
+          에서 호봉별로 바로 계산할 수 있습니다.
+        </p>
           </div>
 
           {/* Desktop sticky sidebar — 광고 + 쿠팡 (salary/[amount] 동일 조합) */}

@@ -1,0 +1,623 @@
+{
+  "base": "adb120cc",
+  "dedicatedCalculatorHrefs": [
+    "/",
+    "/calc/samsung-bonus",
+    "/calc/sk-hynix-bonus",
+    "/calc/hyundai-bonus",
+    "/calc/kia-bonus",
+    "/calc/lg-energy-bonus",
+    "/calc/hd-hyundai-bonus",
+    "/calc/naver-bonus",
+    "/calc/kakao-bonus",
+    "/calc/posco-bonus",
+    "/calc/samsung-sdi-bonus",
+    "/calc/lg-chem-bonus",
+    "/calc/celltrion-bonus",
+    "/calc/hyundai-rotem-bonus",
+    "/salary-raise-2026",
+    "/auto-tax-2026",
+    "/weekly-holiday-allowance-2026",
+    "/income-tax-2026",
+    "/property-holding-tax-2026",
+    "/health-insurance-fee-2026",
+    "/national-pension-estimate-2026",
+    "/savings-interest-2026",
+    "/credit-card-deduction-2026",
+    "/rent-tax-credit-2026",
+    "/medical-tax-credit-2026",
+    "/calc/ordinary-wage",
+    "/calc/annual-leave-days",
+    "/calc/pension-hike-2027",
+    "/calc/dual-income-year-end",
+    "/donation-tax-credit-2026",
+    "/calc/dependent-check",
+    "/health-insurance-dependent",
+    "/calc/voluntary-retirement",
+    "/calc/smb-income-tax-break",
+    "/calc/offer-compare",
+    "/calc/holiday-bonus",
+    "/basic-pension-2026",
+    "/unemployment-benefit",
+    "/earned-income-credit",
+    "/parental-leave",
+    "/calc/2026-year",
+    "/calc/year-end-bonus",
+    "/calc/year-end-bonus-tax",
+    "/calc/january-bonus",
+    "/calc/incentive-tax",
+    "/calc/child-deduction",
+    "/calc/housing-subscription",
+    "/calc/jeonse-loan",
+    "/calc/severance-vs-pension",
+    "/calc/vacation-pay",
+    "/calc/samsung-display-bonus",
+    "/calc/lg-display-bonus",
+    "/calc/sk-innovation-bonus",
+    "/calc/s-oil-bonus",
+    "/calc/gs-caltex-bonus",
+    "/calc/hyundai-mobis-bonus",
+    "/calc/doosan-enerbility-bonus",
+    "/calc/hanwha-aerospace-bonus",
+    "/calc/samsung-biologics-bonus",
+    "/calc/kepco-bonus",
+    "/home-loan",
+    "/car-loan",
+    "/fire-calculator",
+    "/year-end-tax",
+    "/global",
+    "/pro/career-planner",
+    "/public-institutions",
+    "/tools/finance/dividend-tax",
+    "/tools/finance/bonus",
+    "/tools/finance/irp",
+    "/tools/real-estate/dsr",
+    "/tools/real-estate/ltv",
+    "/tools/real-estate/acquisition-tax",
+    "/tools/real-estate/gift-tax",
+    "/tools/loan",
+    "/tools/deposit",
+    "/tools/finance/compound",
+    "/tools/finance/stock-tax",
+    "/tools/finance/freelance-tax",
+    "/tools/finance/severance",
+    "/tools/finance/installment",
+    "/tools/finance/vat",
+    "/tools/finance/cagr",
+    "/tools/math",
+    "/tools/life/dutch-pay",
+    "/tools/life/fuel-cost",
+    "/tools/life/subscription",
+    "/tools/life/unit-converter",
+    "/tools/health/bmi",
+    "/tools/math/percent",
+    "/tools/math/number-gen",
+    "/tools/date/age",
+    "/tools/date/d-day",
+    "/tools/date/work-days"
+  ],
+  "relatedByPath": {
+    "/": [
+      "/calc/samsung-bonus",
+      "/weekly-holiday-allowance-2026",
+      "/calc/ordinary-wage",
+      "/year-end-tax"
+    ],
+    "/home-loan": [
+      "/tools/real-estate/dsr",
+      "/tools/real-estate/ltv",
+      "/savings-interest-2026",
+      "/tools/finance/installment"
+    ],
+    "/car-loan": [
+      "/tools/real-estate/dsr",
+      "/tools/real-estate/ltv",
+      "/savings-interest-2026",
+      "/tools/finance/installment"
+    ],
+    "/year-end-tax": [
+      "/credit-card-deduction-2026",
+      "/rent-tax-credit-2026",
+      "/medical-tax-credit-2026",
+      "/donation-tax-credit-2026"
+    ],
+    "/year-end-tax-2027": [
+      "/year-end-tax",
+      "/credit-card-deduction-2026",
+      "/rent-tax-credit-2026",
+      "/medical-tax-credit-2026"
+    ],
+    "/fire-calculator": [
+      "/savings-interest-2026",
+      "/national-pension-estimate-2026",
+      "/tools/finance/compound",
+      "/tools/finance/cagr"
+    ],
+    "/calc/2026-year": [
+      "/",
+      "/calc/samsung-bonus",
+      "/weekly-holiday-allowance-2026",
+      "/calc/ordinary-wage"
+    ],
+    "/calc/samsung-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/salary-db",
+      "/tools/finance/irp"
+    ],
+    "/calc/sk-hynix-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/hyundai-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/kia-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/lg-energy-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/hd-hyundai-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/naver-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/kakao-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/posco-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/samsung-sdi-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/lg-chem-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/celltrion-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/hyundai-rotem-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/samsung-display-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/samsung-biologics-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/lg-display-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/sk-innovation-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/s-oil-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/gs-caltex-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/doosan-enerbility-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/hyundai-mobis-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/hanwha-aerospace-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/kepco-bonus": [
+      "/calc/bonus-calculators",
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db"
+    ],
+    "/calc/bonus-calculators": [
+      "/",
+      "/calc/samsung-bonus",
+      "/salary-db",
+      "/tools/finance/irp"
+    ],
+    "/salary-raise-2026": [
+      "/",
+      "/calc/samsung-bonus",
+      "/weekly-holiday-allowance-2026",
+      "/calc/ordinary-wage"
+    ],
+    "/tools": [
+      "/",
+      "/calc/samsung-bonus",
+      "/weekly-holiday-allowance-2026",
+      "/calc/ordinary-wage"
+    ],
+    "/tools/loan": [
+      "/tools/real-estate/dsr",
+      "/tools/real-estate/ltv",
+      "/savings-interest-2026",
+      "/tools/finance/installment"
+    ],
+    "/tools/deposit": [
+      "/savings-interest-2026",
+      "/national-pension-estimate-2026",
+      "/tools/finance/compound",
+      "/tools/finance/cagr"
+    ],
+    "/tools/finance/bonus": [
+      "/income-tax-2026",
+      "/health-insurance-fee-2026",
+      "/year-end-tax",
+      "/tools/finance/freelance-tax"
+    ],
+    "/tools/finance/severance": [
+      "/",
+      "/calc/samsung-bonus",
+      "/weekly-holiday-allowance-2026",
+      "/calc/ordinary-wage"
+    ],
+    "/tools/finance/freelance-tax": [
+      "/income-tax-2026",
+      "/health-insurance-fee-2026",
+      "/year-end-tax",
+      "/tools/finance/bonus"
+    ],
+    "/tools/finance/stock-tax": [
+      "/income-tax-2026",
+      "/health-insurance-fee-2026",
+      "/year-end-tax",
+      "/tools/finance/bonus"
+    ],
+    "/tools/finance/cagr": [
+      "/savings-interest-2026",
+      "/national-pension-estimate-2026",
+      "/tools/finance/compound",
+      "/fire-calculator"
+    ],
+    "/tools/finance/compound": [
+      "/savings-interest-2026",
+      "/national-pension-estimate-2026",
+      "/tools/finance/cagr",
+      "/fire-calculator"
+    ],
+    "/tools/finance/installment": [
+      "/tools/real-estate/dsr",
+      "/tools/real-estate/ltv",
+      "/savings-interest-2026",
+      "/"
+    ],
+    "/tools/finance/irp": [
+      "/income-tax-2026",
+      "/health-insurance-fee-2026",
+      "/year-end-tax",
+      "/tools/finance/bonus"
+    ],
+    "/tools/finance/vat": [
+      "/income-tax-2026",
+      "/health-insurance-fee-2026",
+      "/year-end-tax",
+      "/tools/finance/bonus"
+    ],
+    "/tools/real-estate/acquisition-tax": [
+      "/property-holding-tax-2026",
+      "/auto-tax-2026",
+      "/tools/real-estate/gift-tax",
+      "/home-loan"
+    ],
+    "/tools/real-estate/gift-tax": [
+      "/property-holding-tax-2026",
+      "/tools/real-estate/acquisition-tax",
+      "/auto-tax-2026",
+      "/home-loan"
+    ],
+    "/tools/real-estate/dsr": [
+      "/property-holding-tax-2026",
+      "/tools/real-estate/acquisition-tax",
+      "/auto-tax-2026",
+      "/tools/real-estate/gift-tax"
+    ],
+    "/tools/real-estate/ltv": [
+      "/property-holding-tax-2026",
+      "/tools/real-estate/acquisition-tax",
+      "/auto-tax-2026",
+      "/tools/real-estate/gift-tax"
+    ],
+    "/tools/life/dutch-pay": [
+      "/hub/daily-life",
+      "/tools/life/fuel-cost",
+      "/tools/life/subscription",
+      "/tools/life/unit-converter"
+    ],
+    "/tools/life/fuel-cost": [
+      "/hub/daily-life",
+      "/tools/life/dutch-pay",
+      "/tools/life/subscription",
+      "/tools/life/unit-converter"
+    ],
+    "/tools/life/subscription": [
+      "/hub/daily-life",
+      "/tools/life/dutch-pay",
+      "/tools/life/fuel-cost",
+      "/tools/life/unit-converter"
+    ],
+    "/tools/life/unit-converter": [
+      "/hub/daily-life",
+      "/tools/life/dutch-pay",
+      "/tools/life/fuel-cost",
+      "/tools/life/subscription"
+    ],
+    "/dashboard": [
+      "/",
+      "/calc/samsung-bonus",
+      "/weekly-holiday-allowance-2026",
+      "/calc/ordinary-wage"
+    ],
+    "/salary-db": [
+      "/",
+      "/year-end-tax",
+      "/tools/finance/severance",
+      "/calc/offer-compare"
+    ],
+    "/salary-db/compare": [
+      "/",
+      "/year-end-tax",
+      "/tools/finance/severance",
+      "/calc/offer-compare"
+    ],
+    "/job": [
+      "/",
+      "/year-end-tax",
+      "/tools/finance/severance",
+      "/calc/offer-compare"
+    ],
+    "/industry": [
+      "/",
+      "/year-end-tax",
+      "/tools/finance/severance",
+      "/calc/offer-compare"
+    ],
+    "/region": [
+      "/",
+      "/year-end-tax",
+      "/tools/finance/severance",
+      "/calc/offer-compare"
+    ],
+    "/unemployment-benefit": [
+      "/",
+      "/calc/samsung-bonus",
+      "/weekly-holiday-allowance-2026",
+      "/calc/ordinary-wage"
+    ],
+    "/parental-leave": [
+      "/hub/daily-life",
+      "/calc/baby-yearly-cost",
+      "/calc/education-cost-cumulative",
+      "/"
+    ],
+    "/auto-tax-2026": [
+      "/property-holding-tax-2026",
+      "/tools/real-estate/acquisition-tax",
+      "/tools/real-estate/gift-tax",
+      "/home-loan"
+    ],
+    "/weekly-holiday-allowance-2026": [
+      "/",
+      "/calc/samsung-bonus",
+      "/calc/ordinary-wage",
+      "/year-end-tax"
+    ],
+    "/income-tax-2026": [
+      "/health-insurance-fee-2026",
+      "/year-end-tax",
+      "/tools/finance/bonus",
+      "/tools/finance/freelance-tax"
+    ],
+    "/property-holding-tax-2026": [
+      "/tools/real-estate/acquisition-tax",
+      "/auto-tax-2026",
+      "/tools/real-estate/gift-tax",
+      "/home-loan"
+    ],
+    "/health-insurance-fee-2026": [
+      "/income-tax-2026",
+      "/year-end-tax",
+      "/tools/finance/bonus",
+      "/tools/finance/freelance-tax"
+    ],
+    "/health-insurance-2026": [
+      "/income-tax-2026",
+      "/health-insurance-fee-2026",
+      "/year-end-tax",
+      "/tools/finance/bonus"
+    ],
+    "/national-pension-estimate-2026": [
+      "/savings-interest-2026",
+      "/tools/finance/compound",
+      "/tools/finance/cagr",
+      "/fire-calculator"
+    ],
+    "/savings-interest-2026": [
+      "/national-pension-estimate-2026",
+      "/tools/finance/compound",
+      "/tools/finance/cagr",
+      "/fire-calculator"
+    ],
+    "/minimum-wage-2026": [
+      "/",
+      "/calc/samsung-bonus",
+      "/weekly-holiday-allowance-2026",
+      "/calc/ordinary-wage"
+    ],
+    "/minimum-wage-2027": [
+      "/",
+      "/calc/samsung-bonus",
+      "/weekly-holiday-allowance-2026",
+      "/calc/ordinary-wage"
+    ],
+    "/tax-reform-2026": [
+      "/income-tax-2026",
+      "/health-insurance-fee-2026",
+      "/year-end-tax",
+      "/tools/finance/bonus"
+    ],
+    "/credit-card-deduction-2026": [
+      "/year-end-tax",
+      "/rent-tax-credit-2026",
+      "/medical-tax-credit-2026",
+      "/donation-tax-credit-2026"
+    ],
+    "/rent-tax-credit-2026": [
+      "/year-end-tax",
+      "/credit-card-deduction-2026",
+      "/medical-tax-credit-2026",
+      "/donation-tax-credit-2026"
+    ],
+    "/medical-tax-credit-2026": [
+      "/year-end-tax",
+      "/credit-card-deduction-2026",
+      "/rent-tax-credit-2026",
+      "/donation-tax-credit-2026"
+    ],
+    "/calc/vacation-pay": [
+      "/",
+      "/calc/samsung-bonus",
+      "/weekly-holiday-allowance-2026",
+      "/calc/ordinary-wage"
+    ],
+    "/calc/ordinary-wage": [
+      "/",
+      "/calc/samsung-bonus",
+      "/weekly-holiday-allowance-2026",
+      "/year-end-tax"
+    ],
+    "/calc/annual-leave-days": [
+      "/",
+      "/calc/samsung-bonus",
+      "/weekly-holiday-allowance-2026",
+      "/calc/ordinary-wage"
+    ],
+    "/calc/pension-hike-2027": [
+      "/income-tax-2026",
+      "/health-insurance-fee-2026",
+      "/year-end-tax",
+      "/tools/finance/bonus"
+    ],
+    "/calc/dual-income-year-end": [
+      "/year-end-tax",
+      "/credit-card-deduction-2026",
+      "/rent-tax-credit-2026",
+      "/medical-tax-credit-2026"
+    ],
+    "/calc/voluntary-retirement": [
+      "/",
+      "/calc/samsung-bonus",
+      "/weekly-holiday-allowance-2026",
+      "/calc/ordinary-wage"
+    ],
+    "/calc/dependent-check": [
+      "/year-end-tax",
+      "/credit-card-deduction-2026",
+      "/rent-tax-credit-2026",
+      "/medical-tax-credit-2026"
+    ],
+    "/calc/child-deduction": [
+      "/year-end-tax",
+      "/credit-card-deduction-2026",
+      "/rent-tax-credit-2026",
+      "/medical-tax-credit-2026"
+    ],
+    "/calc/smb-income-tax-break": [
+      "/income-tax-2026",
+      "/health-insurance-fee-2026",
+      "/year-end-tax",
+      "/tools/finance/bonus"
+    ],
+    "/calc/offer-compare": [
+      "/",
+      "/calc/samsung-bonus",
+      "/weekly-holiday-allowance-2026",
+      "/calc/ordinary-wage"
+    ],
+    "/donation-tax-credit-2026": [
+      "/year-end-tax",
+      "/credit-card-deduction-2026",
+      "/rent-tax-credit-2026",
+      "/medical-tax-credit-2026"
+    ],
+    "/health-insurance-dependent": [
+      "/income-tax-2026",
+      "/health-insurance-fee-2026",
+      "/year-end-tax",
+      "/tools/finance/bonus"
+    ],
+    "/social-insurance-rates-2027": [
+      "/income-tax-2026",
+      "/health-insurance-fee-2026",
+      "/year-end-tax",
+      "/tools/finance/bonus"
+    ]
+  }
+}

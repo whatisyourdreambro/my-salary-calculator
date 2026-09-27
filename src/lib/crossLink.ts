@@ -225,6 +225,13 @@ export const STATIC_CALC_CARDS: Record<
     description: "국민연금 10% 확정 — 내 월급 공제 변화 미리 확인",
     href: "/social-insurance-rates-2027",
   },
+  // 공무원 월급 실수령액 계산기 (2026-09-27) — 가이드가 CALC_TO_GUIDES 로 매핑될 때만 렌더(현재 매핑 없음)
+  "civil-servant-net-pay": {
+    slug: "civil-servant-net-pay",
+    title: "공무원 월급 실수령액 계산기",
+    description: "9급·교사·경찰·소방 호봉별 세후 월급 — 기여금 9%·수당 자동 반영",
+    href: "/calc/civil-servant-net-pay",
+  },
   // 반도체 성과급 전용 계산기 2종 (2026-09-03 뉴스 게시글 5편 역링크용)
   "samsung-bonus": {
     slug: "samsung-bonus",

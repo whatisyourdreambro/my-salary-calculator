@@ -258,6 +258,8 @@ const PATH_RECOMMENDATIONS: Record<string, string[]> = {
  "/donation-tax-credit-2026": ["yearEnd", "tax"],
  "/health-insurance-dependent": ["tax", "salary"],
  "/social-insurance-rates-2027": ["tax", "salary"],
+ // 2026-09-27 — 공무원 월급 실수령액 계산기 (카테고리 배열은 그대로, 경로 매핑만 추가)
+ "/calc/civil-servant-net-pay": ["salary", "tax"],
 };
 
 /**
