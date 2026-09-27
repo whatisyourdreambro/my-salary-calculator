@@ -12,6 +12,7 @@ import ShareSection from "@/components/ShareSection";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { formatSalaryKorean } from "@/lib/companyContentBuilder";
 import { formatManwonKorean } from "@/lib/manwonFormat";
+import { resolveJobMeta } from "@/lib/jobSeoOverrides";
 
 export const dynamic = "force-static";
 
@@ -43,9 +44,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   // 금액 표기: 1억 이상은 "1억 8,000만원"(formatManwonKorean) — "18,000만원"은 SERP 가독성이
   // 나빠 CTR 을 깎는다. 1억 미만 문자열은 종전과 바이트 단위로 같다 (2026-09-25 B14 META-06).
-  return buildPageMetadata({
+  // R6-06 (2026-09-27): 직업별 교체 맵(jobSeoOverrides) 경유 — 맵이 비어 있으면 템플릿 그대로.
+  const { title, description } = resolveJobMeta(job.id, {
     title: `${job.name} 연봉 2026 — 평균 ${formatManwonKorean(job.salary.overall)}·경력별 급여 비교`,
     description: `${job.name} 연봉 참고 자료: 평균 ${formatManwonKorean(job.salary.overall)}, 신입 ${formatManwonKorean(job.salary.entry.avg)}, 3~5년 ${formatManwonKorean(job.salary.junior.avg)}, 10년 이상 ${formatManwonKorean(job.salary.senior.avg)}. 자료 기준과 경력별 차이를 확인하고 개인 조건으로 실수령액을 계산하세요.`,
+  });
+  return buildPageMetadata({
+    title,
+    description,
     path: `/job/${params.slug}`,
     keywords: [
       ...job.keywords,
