@@ -60,6 +60,36 @@
 | 나머지 5건(r6-crawl·panel·paykit·announce·jobmeta) + 이 문서 | 10/4 R6-1 | **9/27로 앞당겨 배포(R6-1 완료)**. 통합 브랜치 `claude/r6-deploy-20260927`(`edd7368c`, `adb120cc` 기준)을 운영 중인 origin/main `41fb5ff4` 위로 다시 병합(배포 브랜치 `claude/r6-deploy-main-20260927`, 충돌 0)하고, 같은 브랜치에서 `docs/season-urls-2026-27.json`의 두 계산기 행(/calc/civil-servant-net-pay, /calc/bonus-home-plan) status를 `pending-civilpay` → `live`로 바꿈(`season-announce check` 경고 2 → 0). 도구·문서·잠든 스위치만이라 보이는 페이지 변화 0, 광고 수·위치 0. 아래 10/4 줄에는 승인 4(HD현대인프라코어 `a96205fc`)만 남음 |
 | 빈 배포 줄 | — | 9/29·10/2·10/20·10/27. 10/20은 #6 광고 주라 비워 두고, 10/27은 R5 발행 가능일로만 씀 |
 
+#### 9/27 저녁 운영자 답 — '권장대로' (승인 1~9)
+
+9/27 저녁 제시안 9개에 운영자가 **'권장대로'** 로 답했다. 아래 번호는 그 제시안 번호다(§6 번호와 다르다 — 괄호가 §6 대응). 같은 답에 **'추가 대규모 업데이트 같이 진행'** 이 붙어, 오래된 내용이 남은 페이지를 사이트 전체에서 찾아 고치는 스윕이 별도 작업으로 대기열에 올랐다(광고 위 높이 0·공식 출처 규칙 그대로).
+
+| 승인 | 내용 | 실행 | 배포 |
+|---|---|---|---|
+| 1 | 가이드 /guides/civil-servant-net-pay-2026 을 **'공무원 급여명세서 항목 읽는 법'** 으로 바꾸고 /calc/civil-servant-net-pay 와 서로 링크 — 링크는 진짜 마지막 광고 아래에만 (§6-7 기본안) | 브랜치 `claude/r8-guide-refocus-20260927`(`claude/r4-guides-pay-season-20260926` 기반) | R4 가이드 묶음과 같은 푸시(R4-B3, 10/19~10/20) — 그날 pay-season 브랜치 대신 이 브랜치를 병합 |
+| 2 | R5 첫 발행은 10/19(R4-B3 보류 목록이 main 에 들어간 뒤) 이후, **푸시가 없는 날에만** | §4-1 R5 발행 가능일(10/24·10/26·10/27·10/29) 그대로 | — |
+| 3 | 동결기(11/1~1/31) 공식 발표 **당일** 문자열·데이터 갱신. 푸시는 매번 운영자 '메인 푸시' 한마디 뒤 (§6-11) | 발표마다 로컬 브랜치 → 게이트 → '메인 푸시' | 발표 당일 |
+| 4 | HD현대인프라코어 합병 사실 — `a96205fc`(히어로 소개문 폭 맞춤 제자리 교체, 1,123폭 광고 위치 동일 검증) **지금 배포** (§6-4) | 10/4 R6-1 줄에서 빠진다. 푸시·CF 성공·퍼지 시각은 [ad-experiments.md](ad-experiments.md) 3(c) | 운영자 '메인 푸시' 즉시 |
+| 5 | /job 교수·의사 제목·설명 1회 교정은 **10/30 판독에서 CTR 6% 미만일 때만** (§6-10) | R6-06 그대로 | 11/2(조건부) |
+| 6 | 1~2월 성과급 발표: samsung-bonus·sk-hynix-bonus·hyundai-bonus 설명문 끝에 '지급률 확정(날짜, 회사 공지)' 구절을 **회사별 1회** — 날짜 조건이 걸린 잠든 키트를 지금 준비 | `claude/r8-bonus-announce-kit-20260927`(`src/data/bonusAnnouncements.ts`, 휴면 = 출력 바이트 동일) · 런북 `docs/bonus-announcement-kit.md` | 키트는 지금(휴면), 켜기는 회사 공지일 |
+| 7 | HTML 엣지 캐시 1시간 → 24시간 — **운영자 콘솔 작업**, 자동 퍼지(A35) 입증이 전제 (§6-6) | 아래 '승인 7 콘솔 절차' · §5-1 | 운영자 콘솔 |
+| 8 | DART 공시 블록은 10월이 아니라 **4월 FY2026 블록**으로 (§0, 부록 C R6-11) | 변경 없음(이미 반영) | 2027-04-01~04-07 |
+| 9 | 동결기 11/1~1/31 **새 URL 0개** (§4-0) | 변경 없음 | — |
+
+함께 적어 둘 것
+- R6-09 개명 별칭은 9/27 에 앞당겨 만들었다: `claude/r8-aliases-20260927`(`claude/r3-w2b-20260926` = `c7566555` 기반, W3-F 포함). **10/13 비광고 묶음에서 W2-B 대신 이 헤드를 병합**한다(부록 C R6-09 의 `claude/r6-aliases-20261006` 자리).
+- 광고 쪽 공변량(실험 #3 D0 = 9/27 15:28:51 푸시 `77ee189e`, 배포 B 15:56:36 `41fb5ff4`, R6-1 18:46:46 `4ef59a4b`)은 [ad-experiments.md](ad-experiments.md) 3(c) 표에 적었다.
+
+**승인 7 콘솔 절차 — HTML 엣지 캐시 1시간 → 1일 (운영자 본인 브라우저, 약 3분)**
+0. 먼저 확인: GitHub 저장소 → Actions → `cf-purge` 가 최근 배포 **2번 연속 성공**(초록)인지. 아니면 오늘은 하지 않는다 — 퍼지 없이 TTL 만 늘리면 배포 뒤 최대 24시간 옛 HTML 이 나간다. C01 규칙 B 가 아직 없으면 C01 을 먼저 한다(규칙 B 를 처음 만들 때 1일로 넣어도 된다).
+1. Cloudflare → **moneysalary.com** → Caching → **Cache Rules** → 규칙 **B(HTML)** → Edit.
+2. **Edge TTL**('Ignore cache-control header and use this TTL'): **1 hour → 1 day**. 같은 칸의 **Status code TTL `200`** 도 1 hour → 1 day. `301-599 → No cache` 는 그대로.
+3. **Browser TTL 은 Bypass cache 그대로**(바꾸지 않는다). 규칙 순서, 규칙 C, 기존 `/salary/*`·`/robots.txt` 규칙도 그대로 둔다 — 마지막에 맞는 규칙이 이기므로 /salary 쪽 개별 설정(브라우저 캐시 우회 포함)이 유지된다.
+4. Save(Deploy). 퍼지는 필요 없다(이미 캐시된 HTML 은 원래 1시간 뒤 만료).
+5. 확인(선택): 브라우저로 `/calc/samsung-bonus` 를 두 번 열어 개발자 도구에서 두 번째 응답 `cf-cache-status: HIT`. "했어요" 한마디 주시면 Claude 가 캐시 샘플러로 확인한다.
+6. **이후 규칙**: 예약 재빌드(11/25·12/1·12/16)는 CF 'Retry deployment' 대신 **빈 커밋 main 푸시**로 해야 `cf-purge` 가 돈다. Retry 로 재빌드했다면 바로 Caching → Configuration → **Purge Everything**.
+- **되돌리기**: 같은 화면에서 Edge TTL 과 Status code TTL `200` 을 **1 day → 1 hour** 로 되돌리고 Save → Caching → Configuration → **Purge Everything** 1회(1일짜리로 이미 들어간 HTML 을 비운다). 되돌릴 때: 배포 뒤 옛 HTML 이 계속 보이거나(퍼지 실패), `cf-purge` 가 실패로 바뀌었을 때.
+
 ---
 
 ## 1. 목표 (수치·기간)
@@ -329,6 +359,7 @@ ID 순서가 곧 우선순위입니다. '담당'의 **둘 다**는 Claude가 만
 |---|---|---|---|
 | 9/27 | 수집 요청 8개: /calc/hyundai-mobis-bonus, /calc/hyundai-rotem-bonus, /calc/doosan-enerbility-bonus, /calc/hanwha-aerospace-bonus, /earned-income-credit, /qna, /tools/date/work-days, /fire-calculator | 8분 | 네이버 서치어드바이저 → 요청 → 웹 페이지 수집 |
 | 9/27~9/28 | 새 계산기 수집 요청 2개: /calc/civil-servant-net-pay, /calc/bonus-home-plan(9/27 배포) | 2분 | 서치어드바이저 |
+| 9/28 C01 뒤 (A35 퍼지 2회 성공 확인 후) | **승인 7**: HTML 엣지 캐시 1시간 → 1일 — 규칙 B 의 Edge TTL·Status 200 TTL 만 바꾸고 Browser TTL(Bypass)·/salary 규칙은 그대로. 절차·되돌리기는 §0-1 '승인 7 콘솔 절차' | 3분 | Cloudflare → Caching → Cache Rules |
 | **9/28** | ① **A35** 자동 퍼지 시크릿 3개(콘솔팩 '배포 후 캐시 자동 Purge 설정' 1~5) | 5분 | GitHub 저장소 설정 + Cloudflare |
 | **9/28** | ② **C01** 캐시 규칙 B·C + Smart Tiered Cache(콘솔팩 세션 3 '★정정 2026-09-23' 1~7). **저장 전 확인**: 규칙 B가 /robots.txt, /sitemap.xml, /rss.xml, /rss-companies.xml, /rss-tables.xml을 포함하는지. 아니면 Claude가 한 줄 추가식을 드립니다 | 15분 | Cloudflare → Caching → Cache Rules |
 | **9/28** | ③ **C09** GA4 이벤트 데이터 보관 14개월 | 1분 | GA4 → 관리 → 데이터 보관 |
@@ -384,6 +415,8 @@ ID 순서가 곧 우선순위입니다. '담당'의 **둘 다**는 Claude가 만
 | **15** | (예고) 2/20 결정 묶음: 회사별 제목 연도 2026→2027(실제 갱신된 회사만, 회사 제목 불변 규칙의 1회 예외), 합병 회사 페이지 통합 여부, lite 2단계, R5 재개, ALIO(data.go.kr 가입이 필요하면 별도 승인), DART 공시 블록 설계 | 지금 답할 필요 없음 | — | 2/20 |
 
 **권장 답 한 줄**(그대로 보내셔도 됩니다. 1·5·9번은 9/27에 해당 없음이 됨): `2 예 · 3 예 · 4 예 · 6 조건부 예 · 7 기본안 · 8 조건부 예 · 10 예 · 11 예 · 12 고시 확인 시 예 · 13 보류 · 14 아니오`
+
+**9/27 저녁 답**: 운영자 '권장대로' — 내용과 실행은 §0-1 '9/27 저녁 운영자 답' 표(제시안 번호 1~9, §6 대응 번호 병기).
 
 **이미 결정됨 — 다시 묻지 않음**
 - 실험 #3 회사 상단 새 유닛(5077529791): 즉시 배포, D0 분할 판독(9/27). 9/27 15:28 배포 완료.
