@@ -42,3 +42,12 @@
 - 설명 변경은 주 3개 이하, 사건 하나에 회사 하나. 날짜 기반 일괄 교체 금지. 23개 계산기 Client.tsx 무접촉.
 - 참고: 구절은 설명문 **끝**에 붙으므로 검색 결과 스니펫 길이(한글 약 80~90자)를 넘는 부분은 잘려 보일 수 있다
   (종전 길이 samsung 96 · sk-hynix 126 · hyundai 111자 + 구절 약 30자). 앞쪽 배치는 승인 범위 밖이라 하지 않는다.
+
+## 5. 휴면 검증 기록 (2026-09-27, 커밋 `fbbe0f3b`)
+
+- 같은 디렉터리에서 `4ef59a4b` 와 `fbbe0f3b` 를 차례로 `npm run build`(둘 다 exit 0, prebuild ad-audit ERROR 0 / WARN 0, 정적 2,503쪽)해 `.next/server/app` 프리렌더 7,493개 파일을 대조했다.
+  - `/calc/samsung-bonus` · `/calc/sk-hynix-bonus` · `/calc/hyundai-bonus` 의 `.html`·`.rsc`·`.meta` 9개: **BUILD_ID 치환만으로 바이트 동일**.
+  - 사이트 전체: 청크 파일명 해시·청크 목록 순서·RSS lastBuildDate 를 정규화하면 7,480개 동일. 남은 13개 HTML 은 script 블록을 뺀 DOM 과
+    인라인 RSC 텍스트(청크 목록 정규화)가 모두 같다 — 같은 소스를 두 번 빌드해도 생기는 청크 순서 차이와 렌더 때 Math.random 장식(/lotto·/mbti-salary)뿐.
+- `npm run verify:autoads` 통과(11쪽 기준 경로 소실 0.0%) · `node scripts/ad-audit.mjs --diff --base 4ef59a4b` ERROR 0 / WARN 0.
+- 화면 문장 변경이 없어 adpos 폭 스윕은 해당 없음(설명문은 head 메타와 JSON-LD·공유 설명에만 들어간다).
