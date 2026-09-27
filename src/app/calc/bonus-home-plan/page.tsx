@@ -102,7 +102,7 @@ export default function BonusHomePlanPage() {
             <h1 className="text-4xl sm:text-5xl font-black tracking-tight mb-3 text-navy dark:text-canvas-50" style={{ letterSpacing: "-0.04em" }}>
               {NAME}
             </h1>
-            <p className="text-lg font-medium text-muted-blue dark:text-canvas-300">
+            <p className="text-lg font-medium text-muted-blue dark:text-canvas-300 break-keep">
               성과급 5년 누적 + DSR·LTV 한도 — <strong className="text-electric">몇 년 뒤 살 수 있나</strong>
             </p>
           </header>

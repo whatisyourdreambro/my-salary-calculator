@@ -44,7 +44,10 @@ const SCENARIO_ORDER: ScenarioId[] = ["conservative", "base", "optimistic", "cus
 // 광고 위 고정 높이 클래스 — 바꾸면 bonusHomePlanPage.test.ts 와 전 폭 측정으로 다시 확인할 것
 const LABEL = "block h-4 truncate text-[11px] font-bold leading-4 text-faint-blue";
 const CONTROL =
-  "mt-1 block h-11 w-full min-w-0 rounded-xl border border-canvas-200 bg-white px-3 text-base font-bold text-navy focus:border-electric focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-canvas-700 dark:bg-canvas-800 dark:text-canvas-50";
+  "mt-1 block h-11 w-full min-w-0 rounded-xl border border-canvas-200 bg-white px-2 font-bold text-navy focus:border-electric focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-canvas-700 dark:bg-canvas-800 dark:text-canvas-50";
+// 320px 두 칸에서 '화성시 동탄구'·'80,000,000' 이 잘리지 않게 sm 미만은 좌우 여백을 줄이고 선택 칸은 14px
+const SELECT = `${CONTROL} text-sm sm:px-3 sm:text-base`;
+const INPUT = `${CONTROL} pr-6 text-base sm:px-3 sm:pr-8`;
 
 /** 문자열 입력 → 숫자(빈 칸·비유한 = fallback) */
 const num = (raw: string, fallback = 0): number => {
@@ -197,7 +200,7 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
             <label htmlFor="bhp-company" className={LABEL}>회사</label>
             <select
               id="bhp-company"
-              className={CONTROL}
+              className={SELECT}
               value={raw.company}
               onChange={(e) => setRaw((prev) => ({ ...prev, company: e.target.value as CompanyId, wageGrowth: "", pi: "", taiBase: "" }))}
             >
@@ -210,7 +213,7 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
             {raw.company === "samsung" ? (
               <>
                 <label htmlFor="bhp-division" className={LABEL}>사업부</label>
-                <select id="bhp-division" className={CONTROL} value={raw.division} onChange={(e) => set("division", e.target.value as DivisionId)}>
+                <select id="bhp-division" className={SELECT} value={raw.division} onChange={(e) => set("division", e.target.value as DivisionId)}>
                   {DIVISIONS.map((d) => (
                     <option key={d.id} value={d.id}>{d.label}</option>
                   ))}
@@ -219,7 +222,7 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
             ) : raw.company === "sk" ? (
               <>
                 <label htmlFor="bhp-division" className={LABEL}>사업부</label>
-                <select id="bhp-division" className={CONTROL} value="none" disabled onChange={() => undefined}>
+                <select id="bhp-division" className={SELECT} value="none" disabled onChange={() => undefined}>
                   <option value="none">해당 없음</option>
                 </select>
               </>
@@ -227,8 +230,8 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
               <>
                 <label htmlFor="bhp-custom-bonus" className={LABEL}>연 성과급 (연봉 대비 %)</label>
                 <div className="relative">
-                  <NumberInput id="bhp-custom-bonus" inputMode="decimal" maxLength={6} value={raw.customBonusPct} onValueChange={(v) => set("customBonusPct", v)} className={`${CONTROL} pr-8`} />
-                  <span className="pointer-events-none absolute right-3 top-1/2 translate-y-[-40%] text-xs font-bold text-electric">%</span>
+                  <NumberInput id="bhp-custom-bonus" inputMode="decimal" maxLength={6} value={raw.customBonusPct} onValueChange={(v) => set("customBonusPct", v)} className={INPUT} />
+                  <span className="pointer-events-none absolute right-2 top-1/2 translate-y-[-40%] sm:right-3 text-xs font-bold text-electric">%</span>
                 </div>
               </>
             )}
@@ -236,13 +239,13 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
           <div className="min-w-0">
             <label htmlFor="bhp-salary" className={LABEL}>연봉 (세전, 2026년)</label>
             <div className="relative">
-              <NumberInput id="bhp-salary" inputMode="numeric" maxLength={11} value={raw.salary} onValueChange={(v) => set("salary", v)} className={`${CONTROL} pr-8`} />
-              <span className="pointer-events-none absolute right-3 top-1/2 translate-y-[-40%] text-xs font-bold text-electric">원</span>
+              <NumberInput id="bhp-salary" inputMode="numeric" maxLength={11} value={raw.salary} onValueChange={(v) => set("salary", v)} className={INPUT} />
+              <span className="pointer-events-none absolute right-2 top-1/2 translate-y-[-40%] sm:right-3 text-xs font-bold text-electric">원</span>
             </div>
           </div>
           <div className="min-w-0">
             <label htmlFor="bhp-region" className={LABEL}>목표 지역</label>
-            <select id="bhp-region" className={CONTROL} value={raw.regionId} onChange={(e) => set("regionId", e.target.value)}>
+            <select id="bhp-region" className={SELECT} value={raw.regionId} onChange={(e) => set("regionId", e.target.value)}>
               {HOME_REGIONS.map((r) => (
                 <option key={r.id} value={r.id}>{r.label}</option>
               ))}
@@ -251,15 +254,15 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
           <div className="min-w-0">
             <label htmlFor="bhp-assets" className={LABEL}>현재 모은 돈</label>
             <div className="relative">
-              <NumberInput id="bhp-assets" inputMode="numeric" maxLength={12} value={raw.startAssets} onValueChange={(v) => set("startAssets", v)} className={`${CONTROL} pr-8`} />
-              <span className="pointer-events-none absolute right-3 top-1/2 translate-y-[-40%] text-xs font-bold text-electric">원</span>
+              <NumberInput id="bhp-assets" inputMode="numeric" maxLength={12} value={raw.startAssets} onValueChange={(v) => set("startAssets", v)} className={INPUT} />
+              <span className="pointer-events-none absolute right-2 top-1/2 translate-y-[-40%] sm:right-3 text-xs font-bold text-electric">원</span>
             </div>
           </div>
           <div className="min-w-0">
             <label htmlFor="bhp-savings" className={LABEL}>월 저축률 (실수령 대비)</label>
             <div className="relative">
-              <NumberInput id="bhp-savings" inputMode="decimal" maxLength={5} value={raw.savingsRate} onValueChange={(v) => set("savingsRate", v)} className={`${CONTROL} pr-8`} />
-              <span className="pointer-events-none absolute right-3 top-1/2 translate-y-[-40%] text-xs font-bold text-electric">%</span>
+              <NumberInput id="bhp-savings" inputMode="decimal" maxLength={5} value={raw.savingsRate} onValueChange={(v) => set("savingsRate", v)} className={INPUT} />
+              <span className="pointer-events-none absolute right-2 top-1/2 translate-y-[-40%] sm:right-3 text-xs font-bold text-electric">%</span>
             </div>
           </div>
         </div>
@@ -290,7 +293,7 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
       {/* 2) 결과 카드 — 고정 줄 */}
       <section ref={measurement.resultRef} aria-live="polite" aria-label="구매 가능 연도" className="overflow-hidden rounded-2xl" style={{ boxShadow: "0 8px 40px #0145F225" }}>
         <div className="px-4 pb-4 pt-5 sm:px-6" style={{ background: "linear-gradient(135deg, #0145F2 0%, #0D5BFF 100%)" }}>
-          <p className="h-10 text-sm font-bold leading-5 text-white/80 line-clamp-2">{priceLine}</p>
+          <p className="h-10 break-keep text-sm font-bold leading-5 text-white/80 line-clamp-2 sm:h-5 sm:line-clamp-1">{priceLine}</p>
           <p className="mt-3 h-5 truncate text-xs font-bold leading-5 text-white/70">{scenarioText(raw.company, plan.scenario)} 기준 구매 가능 시점</p>
           <p className="h-8 truncate text-xl font-black leading-8 tracking-tight text-white sm:text-3xl sm:leading-8">{buyText(afford.buyYear)}</p>
           <p className="h-5 truncate text-xs font-bold leading-5 text-white/80">{headlineBuy}</p>
@@ -374,7 +377,7 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
       <section aria-labelledby="bhp-year-title" className="rounded-2xl border border-canvas-200 bg-white p-5 dark:border-canvas-800 dark:bg-canvas-900 sm:p-6">
         <h2 id="bhp-year-title" className="text-lg font-black text-navy dark:text-canvas-50">연도별 계산 (2027~2031년) — {scenarioText(raw.company, plan.scenario)}</h2>
         <div className="mt-3 overflow-x-auto">
-          <table className="w-full min-w-[860px] text-right text-xs tabular-nums sm:text-sm">
+          <table className="w-full min-w-[860px] whitespace-nowrap text-right text-xs tabular-nums sm:text-sm">
             <thead>
               <tr className="border-b border-canvas-200 text-faint-blue dark:border-canvas-700">
                 <th className="py-2 text-left">연도</th>
@@ -427,7 +430,7 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
         <h2 id="bhp-scn-title" className="text-lg font-black text-navy dark:text-canvas-50">시나리오(가정) 3종 비교 — {plan.region.label}</h2>
         {plan.scenarioRows.length > 0 ? (
           <div className="mt-3 overflow-x-auto">
-            <table className="w-full min-w-[640px] text-right text-sm tabular-nums">
+            <table className="w-full min-w-[640px] whitespace-nowrap text-right text-sm tabular-nums">
               <thead>
                 <tr className="border-b border-canvas-200 text-xs text-faint-blue dark:border-canvas-700">
                   <th className="py-2 text-left">시나리오(가정)</th>
@@ -460,7 +463,7 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
         <h2 id="bhp-region-title" className="text-lg font-black text-navy dark:text-canvas-50">지역 비교 — 아파트 중위가격 {MARKET_SNAPSHOT.rone.monthLabel} (한국부동산원)</h2>
         <p className="mt-1 text-xs text-faint-blue">{scenarioText(raw.company, plan.scenario)} · 지역별 기본 LTV·스트레스 금리·주담대 한도 적용 · 집값 변동 가정 {state.priceGrowthPct}%</p>
         <div className="mt-3 overflow-x-auto">
-          <table className="w-full min-w-[760px] text-right text-sm tabular-nums">
+          <table className="w-full min-w-[760px] whitespace-nowrap text-right text-sm tabular-nums">
             <thead>
               <tr className="border-b border-canvas-200 text-xs text-faint-blue dark:border-canvas-700">
                 <th className="py-2 text-left">지역</th>
@@ -478,7 +481,7 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
                   <tr key={row.region.id} className={`border-b border-canvas-100 dark:border-canvas-800 ${row.region.id === raw.regionId ? "bg-electric-5" : ""}`}>
                     <td className="py-2 text-left">
                       <span className="font-bold">{row.region.label}</span>
-                      <span className="block text-[11px] text-faint-blue">{row.region.workplace} · {row.region.regulated ? "규제지역" : row.region.capitalArea ? "수도권 비규제" : "지방"}</span>
+                      <span className="block whitespace-normal text-[11px] text-faint-blue">{row.region.workplace} · {row.region.regulated ? "규제지역" : row.region.capitalArea ? "수도권 비규제" : "지방"}</span>
                     </td>
                     <td className="py-2">{fmtEokShort(row.price)}</td>
                     <td className="py-2">{fmtEokShort(d.need)}</td>
@@ -568,7 +571,7 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
 function Kpi({ label, value, sub }: { label: string; value: string; sub: string }) {
   return (
     <div className="min-w-0 rounded-xl bg-canvas-50 p-2 dark:bg-canvas-800">
-      <div className="h-8 text-[11px] leading-4 text-faint-blue line-clamp-2">{label}</div>
+      <div className="h-8 break-keep text-[11px] leading-4 text-faint-blue line-clamp-2 sm:h-4 sm:line-clamp-1">{label}</div>
       <div className="h-6 truncate text-sm font-black leading-6 tabular-nums text-navy dark:text-canvas-50 sm:text-lg sm:leading-6">{value}</div>
       <div className="h-4 truncate text-[10px] leading-4 text-faint-blue">{sub}</div>
     </div>

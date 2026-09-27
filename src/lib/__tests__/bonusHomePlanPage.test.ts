@@ -41,7 +41,10 @@ function geometry(html: string): string[] {
     const cls = /class="([^"]*)"/.exec(attrs)?.[1] ?? "";
     if (/\babsolute\b/.test(cls)) continue; // 절대 위치 요소는 흐름 높이에 영향 없음
     const kind = tag === "select" || tag === "input" ? "control" : tag;
-    out.push(`${kind}:${cls.split(/\s+/).filter((c) => GEOMETRY.test(c)).sort().join(" ")}`);
+    // 입력·선택 칸은 h-11 고정이라 글자 크기가 높이를 바꾸지 않는다 — 선택(14px)·숫자 입력(16px) 차이는 비교에서 뺀다
+    const tokens = cls.split(/\s+/).filter((c) => GEOMETRY.test(c) && !(kind === "control" && /^(?:sm:)?text-/.test(c)));
+    expect(kind !== "control" || tokens.includes("h-11"), `${tag} ${cls}`).toBe(true);
+    out.push(`${kind}:${tokens.sort().join(" ")}`);
   }
   // select 는 wrapper 없이, input 은 relative wrapper 안 — wrapper(div.relative, 기하 클래스 없음)는 높이를 더하지 않는다
   return out.filter((e) => e !== "div:");
