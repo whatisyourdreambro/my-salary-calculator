@@ -182,6 +182,12 @@ const toolPages: SearchEntry[] = [
  { title: "2026 직장인 꿀팁 15선", href: "/tips", category: "도구", description: "연봉 협상·절세·재테크·내집마련" },
 ];
 
+// 헤더 검색에만 등재하는 신설 계산기 — getDedicatedCalculatorEntries(/calc 디렉터리 목록)에는 넣지 않는다.
+// /calc 디렉터리 카드 추가는 운영자 결정 사항이라(디렉터리 페이지 광고 위 높이) 여기서 분리한다 (2026-09-27).
+const searchOnlyCalcPages: SearchEntry[] = [
+ { title: "성과급 내 집 마련 계산기", href: "/calc/bonus-home-plan", category: "계산기", description: "삼성·SK 성과급 5년 누적 + 동탄·평택·이천 집값·DSR", priority: 1 },
+];
+
 // 회사별 성과급 계산기 — 위 seasonPages 에 수기 등재된 slug 는 제외하고 나머지를 허브 레지스트리(BONUS_CALCS)에서 파생.
 // 두산에너빌리티·한화에어로·삼성바이오·한전 등 10종이 검색 0건이던 갭 해소 (전면 최적화, 운영자 지시 2026-09-02)
 const explicitBonusHrefs = new Set(seasonPages.map((e) => e.href));
@@ -244,6 +250,7 @@ const companyEntries: SearchEntry[] = companyRepository.getAll().map((c) => ({
 export const searchIndex: SearchEntry[] = [
  ...toolPages,
  ...seasonPages,
+ ...searchOnlyCalcPages,
  ...calculatorEntries,
  ...guideEntries,
  ...glossaryEntries,
