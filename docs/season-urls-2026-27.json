@@ -54,7 +54,7 @@
     { "url": "/teacher-pay-2026", "cluster": "pay", "events": ["E7"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/teacher-pay-2026" }, "feeds": ["rss-tables"], "status": "live" },
     { "url": "/police-pay-2026", "cluster": "pay", "events": ["E7"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/police-pay-2026" }, "feeds": ["rss-tables"], "status": "live" },
     { "url": "/firefighter-pay-2026", "cluster": "pay", "events": ["E7"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/firefighter-pay-2026" }, "feeds": ["rss-tables"], "status": "live" },
-    { "url": "/calc/civil-servant-net-pay", "cluster": "pay", "events": ["E7"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/calc/civil-servant-net-pay" }, "feeds": [], "status": "pending-civilpay" },
+    { "url": "/calc/civil-servant-net-pay", "cluster": "pay", "events": ["E7"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/calc/civil-servant-net-pay" }, "feeds": [], "status": "live" },
     { "url": "/job/soldier", "cluster": "pay", "events": ["E7"], "peak": "2027-01", "lastmodHandle": { "kind": "add-on-event", "ref": "sitemap.ts jobUrls — 직업별 날짜 손잡이 없음" }, "feeds": [], "status": "live" },
 
     { "url": "/calc/samsung-bonus", "cluster": "bonus", "events": ["E4", "E10"], "peak": "2027-01", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": ["rss-tables"], "status": "live" },
@@ -64,7 +64,7 @@
     { "url": "/calc/year-end-bonus", "cluster": "bonus", "events": ["E4", "E10", "E11"], "peak": "2026-12~2027-02", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": ["rss-tables"], "status": "live" },
     { "url": "/calc/year-end-bonus-tax", "cluster": "bonus", "events": ["E4", "E10", "E11"], "peak": "2026-12~2027-02", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": [], "status": "live" },
     { "url": "/calc/incentive-tax", "cluster": "bonus", "events": ["E4", "E10", "E11"], "peak": "2026-12~2027-02", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": [], "status": "live" },
-    { "url": "/calc/bonus-home-plan", "cluster": "bonus", "events": ["E4", "E10", "E11"], "peak": "2027-01~2027-02", "lastmodHandle": { "kind": "route-override", "ref": "/calc/bonus-home-plan" }, "feeds": [], "status": "pending-civilpay" },
+    { "url": "/calc/bonus-home-plan", "cluster": "bonus", "events": ["E4", "E10", "E11"], "peak": "2027-01~2027-02", "lastmodHandle": { "kind": "route-override", "ref": "/calc/bonus-home-plan" }, "feeds": [], "status": "live" },
     { "url": "/calc/samsung-display-bonus", "cluster": "bonus", "events": ["E10"], "peak": "2027-01", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": [], "status": "live" },
     { "url": "/calc/samsung-sdi-bonus", "cluster": "bonus", "events": ["E10"], "peak": "2027-01", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": [], "status": "live" },
     { "url": "/calc/samsung-biologics-bonus", "cluster": "bonus", "events": ["E10"], "peak": "2027-01", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": [], "status": "live" },

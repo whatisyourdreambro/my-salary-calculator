@@ -57,7 +57,7 @@
 | R4-B2 군 2027(`fd335234`) | 10/16 | 운영 중인 계산기 링크 커밋 `69ddc736`과 `src/app/military-pay-2026/page.tsx`에서 **충돌**(둘 다 마지막 광고 아래 덧붙임). 승인 2가 예이면 10/16 전에 덧붙이기만으로 리베이스하고 게이트를 다시 돌림 |
 | R6-08 합병 회사(r6-corpstatus) | HD현대미포(필수) + HD현대인프라코어(확인 시) | DART로 둘 다 합병 확인. **HD현대인프라코어만** 폭 맞춤 성공(`a96205fc`, 승인 4 대기). HD현대미포는 폭 맞춤 정지 조건 → 2월 통합 결정(R6-13) |
 | R6-10 연봉 순위(r6-rank) | 10/4(승인 5) | **정지 조건 발동, 커밋 없음** → 2027-02. 가입 없는 공식 표 3종 모두 연령 7구간 또는 상위 구간 절단값 조건을 못 채움. 승인 5는 해당 없음 |
-| 나머지 5건(r6-crawl·panel·paykit·announce·jobmeta) + 이 문서 | 10/4 R6-1 | 통합 브랜치 `claude/r6-deploy-20260927`(`adb120cc` 기준, 푸시 없음). 10/4에 그때의 origin/main 위로 다시 병합하고 게이트를 돌린 뒤 배포. 병합 뒤 `docs/season-urls-2026-27.json`의 두 계산기 행(/calc/civil-servant-net-pay, /calc/bonus-home-plan) status를 `pending-civilpay` → `live`로 바꾸는 데이터 커밋을 더함(`season-announce check` 경고 2 → 0. `adb120cc` 기준 브랜치에서는 두 URL이 사이트맵에 없어 지금 바꾸면 오류) |
+| 나머지 5건(r6-crawl·panel·paykit·announce·jobmeta) + 이 문서 | 10/4 R6-1 | **9/27로 앞당겨 배포(R6-1 완료)**. 통합 브랜치 `claude/r6-deploy-20260927`(`edd7368c`, `adb120cc` 기준)을 운영 중인 origin/main `41fb5ff4` 위로 다시 병합(배포 브랜치 `claude/r6-deploy-main-20260927`, 충돌 0)하고, 같은 브랜치에서 `docs/season-urls-2026-27.json`의 두 계산기 행(/calc/civil-servant-net-pay, /calc/bonus-home-plan) status를 `pending-civilpay` → `live`로 바꿈(`season-announce check` 경고 2 → 0). 도구·문서·잠든 스위치만이라 보이는 페이지 변화 0, 광고 수·위치 0. 아래 10/4 줄에는 승인 4(HD현대인프라코어 `a96205fc`)만 남음 |
 | 빈 배포 줄 | — | 9/29·10/2·10/20·10/27. 10/20은 #6 광고 주라 비워 두고, 10/27은 R5 발행 가능일로만 씀 |
 
 ---
