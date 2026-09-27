@@ -12,6 +12,7 @@
 //    영업이익 6.8조원은 DART 사업보고서(감사 후 연결, rcpNo 20230321001209) — 잠정 공시 7조66억원과 다르다.
 //    /insights 표 출처 문구는 옛 문구와 같은 음절 수("공개 보도 수치"→"회사 인용 보도").
 // 3) /savings-interest-2026 접힌 FAQ: 예금자보호 한도 1억원(2025-09-01~, 예금보험공사)·원천징수 지방소득세 1.4%.
+// 4) 반도체 심층 가이드 sk-hynix-wage-2026: 2025년 행 psData 값, 2026년 전망 행 취소선 철회, 합의선 추정→당시의 추정(아래 describe).
 // 이 문자열들을 다시 바꿀 때는 같은 방식으로 폭을 맞추고 전 폭 광고 위치를 다시 잴 것.
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -77,5 +78,43 @@ describe("SK하이닉스 2022년 실적분 PS 820%(회사 인용 보도 기준)"
     const c = flat(g.content);
     expect(c).toContain('<td class="p-3">2022</td> <td class="p-3">6.8조원</td> <td class="p-3">820%</td>');
     expect(c).not.toContain('<td class="p-3">7조원</td>');
+  });
+});
+
+// 4) 반도체 심층 가이드 sk-hynix-wage-2026 PS 5년 추이 표·본문(GuideMidAd 와 InArticleAd 사이) 2026-09-27 폭 맞춤 정정.
+//    - 2025년 행: psData PS_HISTORY(47.2조 DART·PS 2,964% 보도) — PS 칸 ' 지급'은 옛 ' 안팎'과 같은 한글 2음절(표 숫자는 tabular-nums).
+//    - 2026년 행: 5월 전망(30~35조·1,000~1,500%)은 상반기 98.2조와 맞지 않아 철회. 두 숫자가 영업이익·PS 열의 최소 폭을 정해서
+//      지우면 320~544px 에서 표 높이가 바뀐다 — 글자는 두고 <s> 취소선, '(예상)'→'(정정)', '삼성 경쟁 격화'→'기존 전망 철회'.
+//    - '합의선 추정' → '당시의 추정'(같은 3·2음절).
+//    측정: 320~1440px 1px 간격 + 1536·1920px 광고 top 차이 0. 다시 고칠 때도 같은 음절 구조를 지키고 전 폭을 다시 잴 것.
+describe("sk-hynix-wage-2026 PS 추이 표 2025·2026년 행과 '당시의 추정'(2026-09-27)", () => {
+  const g = koGuides.find((x) => x.slug === "sk-hynix-wage-2026")!;
+  const c = flat(g.content);
+
+  it("2025년 행은 psData PS_HISTORY 값(영업이익·PS %)이고 옛 30조원+·1,500% 안팎이 없다", () => {
+    const r = PS_HISTORY.find((x) => x.year === 2025)!;
+    expect(r).toMatchObject({ psRatePct: 2964, opTril: 47.2 });
+    expect(c).toContain(
+      `<td class="p-3 font-bold">2025</td> <td class="p-3 font-bold">${r.opTril}조원</td> <td class="p-3 font-bold text-primary">${r.psRatePct!.toLocaleString("en-US")}% 지급</td>`,
+    );
+    expect(c).not.toContain("30조원+");
+    expect(c).not.toContain("1,500% 안팎");
+    expect(syllables("2,964% 지급")).toEqual(syllables("1,500% 안팎"));
+  });
+
+  it("2026년 전망 행은 취소선으로 철회 표시되고 음절 구조가 옛 행과 같다", () => {
+    expect(c).toContain(
+      '<td class="p-3 font-bold">2026 (정정)</td> <td class="p-3"><s>30~35조원</s></td> <td class="p-3"><s>1,000~1,500%</s></td> <td class="p-3">HBM4 진입, 기존 전망 철회</td>',
+    );
+    expect(c).not.toContain("2026 (예상)");
+    expect(c).not.toContain("삼성 경쟁 격화");
+    expect(syllables("(정정)")).toEqual(syllables("(예상)"));
+    expect(syllables("HBM4 진입, 기존 전망 철회")).toEqual(syllables("HBM4 진입, 삼성 경쟁 격화"));
+  });
+
+  it("'합의선 추정'은 '당시의 추정'으로 바뀌었다(같은 음절 구조)", () => {
+    expect(c).toContain("<strong>당시의 추정: 5.5~7.0%</strong>");
+    expect(c).not.toContain("합의선 추정");
+    expect(syllables("당시의 추정:")).toEqual(syllables("합의선 추정:"));
   });
 });

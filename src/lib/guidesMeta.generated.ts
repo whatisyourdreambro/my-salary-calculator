@@ -2002,7 +2002,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-13",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5055
+  "contentChars": 5070
  },
  {
   "slug": "samsung-hynix-2026-deepdive",
