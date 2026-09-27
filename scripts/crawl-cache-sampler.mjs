@@ -5,13 +5,25 @@
 //
 // 사용법:
 //   node scripts/crawl-cache-sampler.mjs [--passes 3] [--interval 600] [--seed YYYY-MM-DD]
-//        [--sitemap-file <path>] [--limit N] [--out <저장소 밖 json>] [--label D0] [--dry-run]
+//        [--sitemap-file <path>] [--limit N] [--out <저장소 밖 json>] [--prev <앞선 실행 --out json>]
+//        [--label D0] [--dry-run]
 //
 // 대표 지표 = 계열별 pass-1 HIT 비율. pass 1 은 이 도구가 아직 건드리지 않은 URL 이라 실제 방문·크롤러가
 //   데워 둔 정도(엣지 캐시 온기)를 보여 준다. pass 2 이후 HIT 는 이 도구가 pass 1 에서 스스로 데운 값이라
 //   참고용일 뿐 KPI 로 쓰지 않는다(docs 트래픽 마스터플랜 1-4).
-//   ★같은 시드(기본 = 오늘 KST 날짜)로 1~4시간 안에 다시 돌리면 앞선 실행이 데운 캐시 때문에 pass 1 이 오염된다
-//   (HTML 엣지 캐시 1h, /salary/* 4h). 하루 두 번 재려면 두 번째는 --seed 를 바꿀 것.
+//
+// ★앞선 실행과 4시간 안에 다시 돌릴 때(예: 9/28 C01 전·후) — 시드만 바꾸는 것으로는 부족하다.
+//   앞선 실행이 모든 pass 에서 데운 캐시(HTML 엣지 캐시 1h, /salary/* 4h)가 남아 있으면 pass 1 이 오염된다.
+//   시드를 바꾸면 company·lite·calc·guides·salary 는 모집단이 몫보다 훨씬 커서 거의 안 겹치지만(운영 사이트맵
+//   실측 0~4/20·0~2/10·0/5), pay-table 은 모집단 6·몫 5 라 어떤 두 시드도 5개 중 4~5개를 공유하고, 피드 5개는
+//   매 실행 같은 URL 이다 — 이 둘은 재시드로 피할 수 없다.
+//   그래서 두 번째 실행은 --seed 를 바꾸고 --prev 로 첫 실행의 --out JSON 을 넘긴다. 도구는 그 파일에서
+//   4시간(OVERLAP_WINDOW_MS) 안에 요청한 URL 을 '앞선 실행과 겹침'으로 보고 pass-1 분자·분모에서 빼며
+//   (집계 줄에 'carried k'), 계열 표본의 과반이 겹치면 그 계열 pass-1 HIT 를 'n/a (overlaps earlier run)' 로 찍는다.
+//   --prev 없이 --seed 가 실행일과 다르면 같은 날 기본 시드(= 실행일) 실행이 앞서 있었다고 보고 그 표본·피드와
+//   겹치는 URL 을 같은 방식으로 뺀다(이때 pay-table 은 항상 n/a). --prev 가 있으면 시드 추정 대신 실제 요청
+//   시각으로만 판정한다(예: D+1 에 어제 시드를 다시 쓸 때 어제 --out 을 주면 4시간이 지나 아무것도 빼지 않는다).
+//   같은 시드(기본)로 --prev 없이 4시간 안에 다시 돌리면 도구가 겹침을 알 수 없다 — 그 경우 pass 1 은 믿지 말 것.
 //
 // 표본(시드 + URL 의 sha256 오름차순 — 같은 시드면 항상 같은 60개):
 //   company 20  /salary-db/{id}           (compare·ranking·listed·submit 제외)
@@ -30,9 +42,11 @@
 //   운영 사이트맵을 직접 받은 경우 그 응답이 곧 /sitemap.xml 의 pass-1 기록이다(두 번 받아 스스로 데우지 않게).
 //
 // 출력: stdout 에 마크다운 표 + 마지막 줄에 집계 한 줄(URL 없음 — metrics-ingest log --note 에 그대로 붙인다).
-//   --out 은 요청별 원자료 JSON(URL 포함)을 저장소 밖 경로에만 쓴다. 저장소 안 경로(정션·링크를 푼 실제 경로
-//   포함)는 읽거나 요청하기 전에 거부하고 exit 2(scripts/naver-referrer-queries.ts 와 같은 판정).
-// 종료 코드: 0 정상 · 1 5xx 또는 망 오류가 한 건이라도 있음(피드 포함)·사이트맵 읽기 실패·인자 오류 · 2 저장소 안 --out 거부.
+//   --out 은 요청별 원자료 JSON(URL·요청 시각 포함)을 저장소 밖 경로에만 쓴다. 저장소 안 경로(정션·링크를 푼 실제
+//   경로 포함)는 읽거나 요청하기 전에 거부하고 exit 2(scripts/naver-referrer-queries.ts 와 같은 판정).
+//   --prev 도 원자료 JSON 이라 같은 규칙(저장소 안이면 exit 2). --dry-run 결과 파일은 요청 기록이 없어 받지 않는다.
+// 종료 코드: 0 정상 · 1 5xx 또는 망 오류가 한 건이라도 있음(피드 포함)·사이트맵 읽기 실패·인자 오류·--prev 읽기 실패
+//   · 2 저장소 안 --out/--prev 거부.
 //   403·기타 non-200 은 exit 코드를 바꾸지 않고 표와 집계 줄에만 드러낸다.
 
 import { createHash } from "node:crypto";
@@ -54,21 +68,32 @@ export const FEED_PATHS = ["/robots.txt", "/sitemap.xml", "/rss.xml", "/rss-comp
 export const RSS_TABLES_LIVE_FROM = "2026-10-16";
 export const MIN_GAP_MS = 300;
 export const FETCH_TIMEOUT_MS = 20000;
+/** 앞선 실행과의 겹침 창 — 엣지 캐시 TTL 중 가장 긴 /salary/* 4h 를 모든 계열에 보수적으로 쓴다. */
+export const OVERLAP_WINDOW_MS = 4 * 3600 * 1000;
+export const NA_MARK = "n/a (overlaps earlier run)";
 
 const COMPANY_RESERVED = new Set(["compare", "ranking", "listed", "submit"]);
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 export const USAGE = [
   "사용법: node scripts/crawl-cache-sampler.mjs [--passes 3] [--interval 600] [--seed YYYY-MM-DD]",
-  "        [--sitemap-file <path>] [--limit N] [--out <저장소 밖 json>] [--label D0] [--dry-run]",
+  "        [--sitemap-file <path>] [--limit N] [--out <저장소 밖 json>] [--prev <앞선 --out json>]",
+  "        [--label D0] [--dry-run]",
   "  --passes N       같은 표본을 N 번 잰다(1~10, 기본 3). 대표 지표는 pass-1 HIT",
   "  --interval S     pass 사이 대기 초(0~86400, 기본 600)",
   "  --seed D         표본 시드(기본 오늘 KST 날짜). 같은 시드 = 같은 표본",
   "  --sitemap-file P 운영 사이트맵 대신 로컬 파일로 표본을 뽑는다",
   "  --limit N        표본을 계열을 돌아가며 N 개로 줄인다(스모크용, 피드는 그대로)",
   "  --out P          요청별 원자료 JSON — 저장소 밖 경로만(저장소 안이면 exit 2)",
+  "  --prev P         앞선 실행의 --out JSON. 4시간 안에 요청한 URL 을 pass-1 에서 빼고(carried k),",
+  "                   계열 표본의 과반이 겹치면 그 계열을 'n/a (overlaps earlier run)' 로 찍는다",
   "  --label L        집계 줄 날짜 뒤에 붙일 표지(예: D0, D+1, pre-C01)",
   "  --dry-run        요청 없이 표본 URL 만 출력(사이트맵 파일이 없으면 사이트맵 1회만 받는다)",
+  "",
+  "  같은 날(4시간 안) 두 번째 실행: --seed <다른 날짜> --prev <첫 실행 --out>",
+  "    재시드는 company·lite·calc·guides·salary 만 겹침을 줄인다. pay-table(모집단 6·몫 5)은 어떤 시드로도",
+  "    5개 중 4~5개가 겹치고 피드 5개는 늘 같아서 재시드로 못 피한다 — 도구가 n/a 로 표시한다.",
+  "    --prev 없이 시드만 바꾸면 같은 날 기본 시드 실행과 겹친 것으로 추정해 뺀다(pay-table 은 항상 n/a).",
 ].join("\n");
 
 // ── 계열 분류 ──────────────────────────────────────────────────────────────
@@ -175,6 +200,45 @@ export function applyLimit(sample, limit) {
   return sample.filter((s) => kept.has(s));
 }
 
+// ── 앞선 실행과의 겹침 ─────────────────────────────────────────────────────
+
+/**
+ * 앞선 실행 --out JSON → 경로별 마지막 요청 시각(epoch ms). 기록마다 at 이 있으면 그 값,
+ * 없으면(이 필드를 넣기 전 파일) finishedAt → runAt 순으로 대신 쓴다.
+ * 반환: { lastAt: Map, runAt } 또는 { error }
+ */
+export function prevFetchTimes(payload) {
+  if (!payload || typeof payload !== "object" || payload.tool !== "crawl-cache-sampler")
+    return { error: "crawl-cache-sampler 의 --out JSON 이 아닙니다" };
+  if (payload.dryRun) return { error: "--dry-run 결과 파일은 요청 기록이 없습니다 — 실제 실행의 --out JSON 을 주세요" };
+  if (!Array.isArray(payload.records)) return { error: "records 배열이 없습니다" };
+  const fallback = [payload.finishedAt, payload.runAt].map((s) => (typeof s === "string" ? Date.parse(s) : NaN)).find(Number.isFinite);
+  const lastAt = new Map();
+  for (const r of payload.records) {
+    if (!r || typeof r.path !== "string") continue;
+    const at = Number.isFinite(r.at) ? r.at : fallback;
+    if (!Number.isFinite(at)) return { error: "요청 시각(at·finishedAt·runAt)이 없습니다" };
+    if (!(lastAt.get(r.path) >= at)) lastAt.set(r.path, at);
+  }
+  return { lastAt, runAt: typeof payload.runAt === "string" ? payload.runAt : null };
+}
+
+/** --prev: 이번 실행 시작 시각 기준 windowMs 안에 앞선 실행이 요청한 대상 경로(미래 시각도 겹침으로 본다). */
+export function carriedFromPrev(lastAt, startedAt, targets, windowMs = OVERLAP_WINDOW_MS) {
+  const out = new Set();
+  for (const t of targets) {
+    const at = lastAt.get(t.path);
+    if (at != null && startedAt - at < windowMs) out.add(t.path);
+  }
+  return out;
+}
+
+/** --prev 없이 시드 ≠ 실행일: 같은 날 기본 시드(= 실행일) 실행의 전체 표본 60 + 피드와 겹치는 대상 경로. */
+export function carriedFromReseed(paths, runDate, targets) {
+  const assumed = new Set([...sampleUrls(paths, runDate).sample.map((s) => s.path), ...FEED_PATHS]);
+  return new Set(targets.filter((t) => assumed.has(t.path)).map((t) => t.path));
+}
+
 // ── 요청 ───────────────────────────────────────────────────────────────────
 
 /**
@@ -190,13 +254,14 @@ export function hasBodyMarker(p, contentType, text) {
   return text.length > 0;
 }
 
-/** 한 번 가져오기. 예외는 던지지 않고 기록의 error 로 남긴다. { rec, text } */
+/** 한 번 가져오기. 예외는 던지지 않고 기록의 error 로 남긴다. { rec, text } — at 은 요청 시작 시각(epoch ms, --prev 판정용). */
 export async function fetchOnce(target, pass, io) {
   const rec = {
     pass,
     family: target.family,
     path: target.path,
     url: target.url,
+    at: io.clock(),
     status: null,
     cache: null,
     age: null,
@@ -273,11 +338,18 @@ export function median(values) {
 const isHit = (r) => r.error == null && r.cache === "HIT";
 const responded = (r) => r.error == null && r.status != null;
 
-/** 계열별 집계 — pass 1 과 pass 2 이후를 따로 센다. */
-export function aggregate(records, families = [...FAMILIES, "feeds"]) {
+/**
+ * 계열별 집계 — pass 1 과 pass 2 이후를 따로 센다.
+ * carried: 앞선 실행과 겹친 경로. pass-1 지표(HIT·cf-cache-status·Age·ms)는 이 경로를 분자·분모에서 뺀 값이고,
+ *   p1Carried 에 뺀 수, 계열 pass-1 표본의 과반이 겹치면 p1Na = true(HIT 를 n/a 로 찍는다).
+ *   5xx·403·망 오류·본문 표지·pass2+ 는 겹침과 무관하게 전부 센다.
+ */
+export function aggregate(records, { families = [...FAMILIES, "feeds"], carried = new Set() } = {}) {
   return families.map((family) => {
     const rs = records.filter((r) => r.family === family);
-    const p1 = rs.filter((r) => r.pass === 1);
+    const p1All = rs.filter((r) => r.pass === 1);
+    const p1 = p1All.filter((r) => !carried.has(r.path));
+    const p1Carried = p1All.length - p1.length;
     const pn = rs.filter((r) => r.pass > 1);
     const p1Cache = {};
     for (const r of p1) {
@@ -294,6 +366,8 @@ export function aggregate(records, families = [...FAMILIES, "feeds"]) {
       net: rs.filter((r) => r.error != null).length,
       other: rs.filter((r) => responded(r) && r.status !== 200 && r.status !== 403 && r.status < 500).length,
       p1: { n: p1.length, hit: p1.filter(isHit).length },
+      p1Carried,
+      p1Na: p1Carried > 0 && p1Carried * 2 > p1All.length,
       pn: { n: pn.length, hit: pn.filter(isHit).length },
       p1Cache,
       ageMedP1: median(p1.filter(responded).map((r) => r.age ?? NaN)),
@@ -327,13 +401,20 @@ export function feedVerdicts(records, runDate) {
 
 const pct = (hit, n) => (n ? `${Math.round((hit / n) * 100)}%` : "-");
 
-/** 집계 한 줄 — URL·경로를 싣지 않는다(계열 이름·피드 이름·숫자만). metrics-ingest --note 용. */
-export function aggregateLine(rows, feeds, { runDate, label }) {
+/** 계열 pass-1 HIT 한 칸 — 과반 겹침이면 n/a, 일부 겹침이면 뺀 뒤 비율 + carried k. */
+const p1HitText = (r) =>
+  r.p1Na ? NA_MARK : `${pct(r.p1.hit, r.p1.n)}${r.p1Carried ? ` (carried ${r.p1Carried})` : ""}`;
+
+/**
+ * 집계 한 줄 — URL·경로를 싣지 않는다(계열 이름·피드 이름·숫자만). metrics-ingest --note 용.
+ * overlap: { source: "prev" | "reseed", carried } — 겹침 점검을 했으면 끝에 'overlap-check …' 를 붙인다.
+ */
+export function aggregateLine(rows, feeds, { runDate, label, overlap = null }) {
   const md = `${Number(runDate.slice(5, 7))}/${Number(runDate.slice(8, 10))}`;
   const head = `crawl-sampler ${md}${label ? ` ${label}` : ""}:`;
   const sampled = rows.filter((r) => r.family !== "feeds");
   const sum = (k) => sampled.reduce((a, r) => a + r[k], 0);
-  const hits = sampled.map((r) => `${r.family} ${pct(r.p1.hit, r.p1.n)}`);
+  const hits = sampled.map((r) => `${r.family} ${p1HitText(r)}`);
   const pnN = sampled.reduce((a, r) => a + r.pn.n, 0);
   const pnHit = sampled.reduce((a, r) => a + r.pn.hit, 0);
   const segs = [`pass1 HIT ${hits.join(" · ")}`];
@@ -348,11 +429,31 @@ export function aggregateLine(rows, feeds, { runDate, label }) {
     if (fail.length) s += ` FAIL ${fail.join(", ")}`;
     segs.push(s);
   }
+  if (overlap?.source) segs.push(`overlap-check ${overlap.source} (carried ${overlap.carried})`);
   return `${head} ${segs.join(" · ")}`;
 }
 
+/** 겹침 점검 설명 줄(보고서·dry-run 공용). overlap 이 없으면 빈 배열. */
+export function overlapNote(overlap, { seed, runDate }) {
+  if (!overlap?.source) return [];
+  const byFamily = Object.entries(overlap.byFamily ?? {})
+    .filter(([, k]) => k > 0)
+    .map(([f, k]) => `${f} ${k}`)
+    .join(" · ");
+  const counts = `겹친 URL ${overlap.carried}개${byFamily ? `(${byFamily})` : ""}`;
+  const head =
+    overlap.source === "prev"
+      ? `⚠ 겹침 점검(--prev${overlap.prevRunAt ? `, 앞선 실행 ${overlap.prevRunAt}` : ""}): 4시간 안에 앞선 실행이 요청한 ${counts}를 pass-1 지표에서 뺀다.`
+      : `⚠ 겹침 점검(시드 ${seed} ≠ 실행일 ${runDate}, --prev 없음): 같은 날 기본 시드(${runDate}) 실행이 앞서 있었다고 보고 ` +
+        `그 표본·피드와 ${counts}를 pass-1 지표에서 뺀다. 앞선 --out JSON 을 --prev 로 주면 실제 요청 시각으로 판정한다.`;
+  return [
+    head,
+    "  계열 표본의 과반이 겹치면 pass1 HIT 를 'n/a (overlaps earlier run)' 로 둔다 — pay-table(모집단 6·몫 5)과 피드는 시드를 바꿔도 거의 전부 겹친다.",
+  ];
+}
+
 /** 마크다운 보고서(표 + 이상 상세). 마지막 줄 집계 줄은 main 이 따로 붙인다. */
-export function formatReport({ rows, feeds, records, runDate, seed, passes, intervalSec, sampleSize, limit, pools, shortfall }) {
+export function formatReport({ rows, feeds, records, runDate, seed, passes, intervalSec, sampleSize, limit, pools, shortfall, overlap = null }) {
   const lines = [];
   lines.push(`## crawl-cache-sampler — ${runDate} KST`);
   lines.push("");
@@ -362,6 +463,10 @@ export function formatReport({ rows, feeds, records, runDate, seed, passes, inte
   lines.push(`모집단: ${FAMILIES.map((f) => `${f} ${pools[f]}`).join(" · ")}`);
   for (const [f, s] of Object.entries(shortfall)) lines.push(`⚠ ${f}: 모집단 부족 — ${s.got}/${s.want}`);
   lines.push("대표 지표 = pass1 HIT(실제 방문·크롤러가 데운 정도). pass2+ HIT 는 이 도구가 데운 값이라 참고용.");
+  lines.push(...overlapNote(overlap, { seed, runDate }));
+  const sampledRows = rows.filter((r) => r.family !== "feeds" && r.p1Carried + r.p1.n > 0);
+  if (sampledRows.length && sampledRows.every((r) => r.p1Na))
+    lines.push("⚠ 모든 계열이 앞선 실행과 겹쳤다(같은 시드로 다시 잰 것) — 두 번째 실행은 --seed 를 다른 날짜로 바꿀 것.");
   lines.push("");
   lines.push(
     "| 계열 | URL | 요청 | pass1 HIT | pass2+ HIT | pass1 cf-cache-status | Age 중앙(p1, 초) | ms 중앙(p1) | ms 중앙(p2+) | 5xx | 403 | 망 오류 | 기타 non-200 | 본문 표지 |"
@@ -374,8 +479,11 @@ export function formatReport({ rows, feeds, records, runDate, seed, passes, inte
         .sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1))
         .map(([k, v]) => `${k} ${v}`)
         .join(" · ") || "-";
+    const p1Cell = r.p1Na
+      ? `${NA_MARK} · 겹침 ${r.p1Carried}/${r.p1Carried + r.p1.n}`
+      : `${pct(r.p1.hit, r.p1.n)} (${r.p1.hit}/${r.p1.n})${r.p1Carried ? ` · 겹침 ${r.p1Carried} 제외` : ""}`;
     lines.push(
-      `| ${r.family} | ${r.urls} | ${r.n} | ${pct(r.p1.hit, r.p1.n)} (${r.p1.hit}/${r.p1.n}) | ` +
+      `| ${r.family} | ${r.urls} | ${r.n} | ${p1Cell} | ` +
         `${r.pn.n ? `${pct(r.pn.hit, r.pn.n)} (${r.pn.hit}/${r.pn.n})` : "-"} | ${cache} | ` +
         `${dash(r.ageMedP1)} | ${dash(r.msMedP1)} | ${dash(r.msMedPn)} | ${r.s5xx} | ${r.s403} | ${r.net} | ${r.other} | ` +
         `${r.body.ok}/${r.body.of} |`
@@ -415,7 +523,7 @@ function isValidDate(s) {
 }
 
 export function parseArgs(argv) {
-  const o = { passes: 3, interval: 600, seed: null, sitemapFile: null, limit: null, out: null, label: null, dryRun: false, help: false };
+  const o = { passes: 3, interval: 600, seed: null, sitemapFile: null, limit: null, out: null, prev: null, label: null, dryRun: false, help: false };
   const int = (name, v, lo, hi) => {
     if (!/^\d+$/.test(v) || Number(v) < lo || Number(v) > hi) throw new Error(`--${name} 는 ${lo}~${hi} 정수여야 합니다: ${v}`);
     return Number(v);
@@ -455,6 +563,9 @@ export function parseArgs(argv) {
           break;
         case "out":
           o.out = value;
+          break;
+        case "prev":
+          o.prev = value;
           break;
         case "label":
           // 집계 줄에 들어가므로 URL·경로가 될 수 있는 글자('/' ':')는 받지 않는다
@@ -529,23 +640,47 @@ export async function main(argv, ioOverrides = {}) {
     io.stdout(`${USAGE}\n`);
     return 0;
   }
-  const runDate = kstDate(io.clock());
+  const startedAt = io.clock();
+  const runDate = kstDate(startedAt);
   const seed = o.seed ?? runDate;
 
-  // 1) 저장소 안 --out 거부 — 원자료(URL 목록)가 작업 트리에 들어가 커밋·배포되지 않게. 요청 전에 판정한다.
+  // 1) 저장소 안 --out·--prev 거부 — 원자료(URL 목록)가 작업 트리에 들어가 커밋·배포되지 않게. 요청 전에 판정한다.
+  const outsideRepo = (p) => {
+    const lexical = path.resolve(io.cwd, p);
+    const real = io.realpath(lexical);
+    const inside = isPathInside(lexical, io.repoRoot) || isPathInside(real, io.realpath(io.repoRoot));
+    return inside ? null : real;
+  };
   let outPath = null;
   if (o.out) {
-    const lexical = path.resolve(io.cwd, o.out);
-    const real = io.realpath(lexical);
-    const realRoot = io.realpath(io.repoRoot);
-    if (isPathInside(lexical, io.repoRoot) || isPathInside(real, realRoot)) {
+    outPath = outsideRepo(o.out);
+    if (!outPath) {
       io.stderr(
         "거부: --out 경로가 저장소 작업 트리 안에 있습니다 — 원자료 JSON 은 저장소 밖 폴더에만 씁니다.\n" +
           "예: --out C:/Users/<나>/Documents/crawl-sampler/2026-09-28.json\n"
       );
       return 2;
     }
-    outPath = real;
+  }
+  let prev = null;
+  if (o.prev) {
+    const prevPath = outsideRepo(o.prev);
+    if (!prevPath) {
+      io.stderr("거부: --prev 경로가 저장소 작업 트리 안에 있습니다 — 원자료 JSON 은 저장소 밖 폴더에만 둡니다.\n");
+      return 2;
+    }
+    let payload;
+    try {
+      payload = JSON.parse(io.readText(prevPath));
+    } catch (e) {
+      io.stderr(`--prev 파일을 읽을 수 없습니다: ${e?.message ?? e}\n`);
+      return 1;
+    }
+    prev = prevFetchTimes(payload);
+    if (prev.error) {
+      io.stderr(`--prev 를 쓸 수 없습니다: ${prev.error}\n`);
+      return 1;
+    }
   }
 
   // 2) 사이트맵 → 표본
@@ -578,12 +713,32 @@ export async function main(argv, ioOverrides = {}) {
     io.stderr(`표본이 0개입니다 — 사이트맵에서 이 사이트 URL 을 찾지 못했습니다(읽은 경로 ${paths.length}개).\n`);
     return 1;
   }
+  const targets = [...picked, ...FEED_PATHS.map((p) => ({ family: "feeds", path: p, url: BASE + p }))];
+
+  // 앞선 실행과의 겹침 — --prev 가 있으면 실제 요청 시각(4시간 창), 없고 시드 ≠ 실행일이면 같은 날 기본 시드 실행을 추정
+  let carried = new Set();
+  let overlap = null;
+  if (prev) {
+    carried = carriedFromPrev(prev.lastAt, startedAt, targets);
+    overlap = { source: "prev", prevRunAt: prev.runAt };
+  } else if (seed !== runDate) {
+    carried = carriedFromReseed(paths, runDate, targets);
+    overlap = { source: "reseed" };
+  }
+  if (overlap) {
+    overlap.carried = carried.size;
+    overlap.windowHours = OVERLAP_WINDOW_MS / 3600000;
+    overlap.byFamily = Object.fromEntries(
+      [...FAMILIES, "feeds"].map((f) => [f, targets.filter((t) => t.family === f && carried.has(t.path)).length])
+    );
+  }
 
   if (o.dryRun) {
     const lines = [
       `## crawl-cache-sampler --dry-run — 시드 ${seed} · 표본 ${picked.length}개 · ${new Set(picked.map((s) => s.family)).size}개 계열`,
       `모집단: ${FAMILIES.map((f) => `${f} ${pools[f]}`).join(" · ")}`,
       ...Object.entries(shortfall).map(([f, s]) => `⚠ ${f}: 모집단 부족 — ${s.got}/${s.want}`),
+      ...overlapNote(overlap, { seed, runDate }),
       "",
       ...picked.map((s) => `${s.family}\t${s.url}`),
       "",
@@ -591,19 +746,21 @@ export async function main(argv, ioOverrides = {}) {
     ];
     io.stdout(`${lines.join("\n")}\n`);
     if (outPath) {
-      io.writeText(outPath, `${JSON.stringify({ tool: "crawl-cache-sampler", dryRun: true, runDate, seed, sitemapSource, pools, shortfall, sample: picked }, null, 2)}\n`);
+      io.writeText(
+        outPath,
+        `${JSON.stringify({ tool: "crawl-cache-sampler", dryRun: true, runDate, seed, sitemapSource, pools, shortfall, overlap, carried: [...carried], sample: picked }, null, 2)}\n`
+      );
     }
     return 0;
   }
 
   // 3) 요청
-  const targets = [...picked, ...FEED_PATHS.map((p) => ({ family: "feeds", path: p, url: BASE + p }))];
   const records = await runPasses(targets, { passes: o.passes, intervalSec: o.interval }, io, prefetched);
 
   // 4) 집계
-  const rows = aggregate(records);
+  const rows = aggregate(records, { carried });
   const feeds = feedVerdicts(records, runDate);
-  const line = aggregateLine(rows, feeds, { runDate, label: o.label });
+  const line = aggregateLine(rows, feeds, { runDate, label: o.label, overlap });
   const report = formatReport({
     rows,
     feeds,
@@ -616,13 +773,15 @@ export async function main(argv, ioOverrides = {}) {
     limit: o.limit,
     pools,
     shortfall,
+    overlap,
   });
   io.stdout(`${report}\n\n${line}\n`);
 
   if (outPath) {
     const payload = {
       tool: "crawl-cache-sampler",
-      runAt: new Date(io.clock()).toISOString(),
+      runAt: new Date(startedAt).toISOString(),
+      finishedAt: new Date(io.clock()).toISOString(),
       runDate,
       seed,
       passes: o.passes,
@@ -632,6 +791,8 @@ export async function main(argv, ioOverrides = {}) {
       sitemapSource,
       pools,
       shortfall,
+      overlap,
+      carried: [...carried],
       sample: picked,
       records,
       rows,
