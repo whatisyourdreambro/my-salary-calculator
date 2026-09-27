@@ -26,14 +26,18 @@ import { Car, AlertTriangle, Info } from "lucide-react";
 import HyundaiBonusClient from "./Client";
 import ShareButtons from "@/components/ShareButtons";
 import FavoritesButton from "@/components/FavoritesButton";
+import { withBonusAnnouncement } from "@/data/bonusAnnouncements";
 
 const SITE_URL = "https://www.moneysalary.com";
 const SITE_NAME = "머니샐러리";
 const PAGE_PATH = "/calc/hyundai-bonus";
 const PAGE_TITLE = "현대차 성과급 계산기 2026 — 현금·주식·세금 비교";
 const PAGE_TITLE_FULL = `${PAGE_TITLE} | ${SITE_NAME}`;
-const PAGE_DESC =
-  "현대차 성과급 계산기. 월 기준금액과 주가를 입력해 2026·2025 보도 시나리오의 현금 성과금, 주식·포인트 평가액, 예상 공제액을 비교합니다. 개인별 지급 확정액이 아닌 가정에 따른 계산입니다.";
+// 1~2월 지급률 확정 공지 꼬리 구절(승인 6) — src/data/bonusAnnouncements.ts 가 휴면이면 종전 문자열 그대로
+const PAGE_DESC = withBonusAnnouncement(
+  "hyundai-bonus",
+  "현대차 성과급 계산기. 월 기준금액과 주가를 입력해 2026·2025 보도 시나리오의 현금 성과금, 주식·포인트 평가액, 예상 공제액을 비교합니다. 개인별 지급 확정액이 아닌 가정에 따른 계산입니다."
+);
 
 const FAQ_ITEMS = [
   {

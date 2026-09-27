@@ -32,6 +32,7 @@ import SkHynixBonusClient from "./Client";
 import StockScenarioSection from "./StockScenarioSection";
 import ShareButtons from "@/components/ShareButtons";
 import FavoritesButton from "@/components/FavoritesButton";
+import { withBonusAnnouncement } from "@/data/bonusAnnouncements";
 import {
   AGREEMENT_2026,
   EMPLOYEES,
@@ -48,12 +49,15 @@ const PAGE_TITLE_FULL = `${PAGE_TITLE} | ${SITE_NAME}`;
 
 // 잠정합의 상태별 문구 (psData.AGREEMENT_2026.status 로 일괄 분기)
 const STATUS = AGREEMENT_2026.status;
-const PAGE_DESC =
+// 1~2월 지급률 확정 공지 꼬리 구절(승인 6) — src/data/bonusAnnouncements.ts 가 휴면이면 종전 문자열 그대로
+const PAGE_DESC = withBonusAnnouncement(
+  "sk-hynix-bonus",
   STATUS === "ratified"
     ? "SK하이닉스 PS·PI 성과급 계산기. 2026 임단협 9/16 가결(현금 50%+자사주 50%) 반영 — 영업이익·연봉만 입력하면 주식 지급분·하방 보전·세후 실수령까지 무료 시뮬레이션. 2026 상반기 PI 150% 확정."
     : STATUS === "rejected"
       ? "SK하이닉스 PS·PI 성과급 계산기. 잠정합의안(현금 40%+자사주 60%) 8/25 총투표 부결·재협상 중 — 신·구 체계 모두 영업이익·연봉만 입력하면 주식 지급분·세후 실수령까지 무료 시뮬레이션. 2026 상반기 PI 150% 확정."
-      : "SK하이닉스 PS·PI 성과급 계산기. 2026 임단협 잠정합의(현금 40%+자사주 60%) 반영 — 영업이익·연봉만 입력하면 주식 지급분·하방 보전·세후 실수령까지 무료 시뮬레이션. 2026 상반기 PI 150% 확정.";
+      : "SK하이닉스 PS·PI 성과급 계산기. 2026 임단협 잠정합의(현금 40%+자사주 60%) 반영 — 영업이익·연봉만 입력하면 주식 지급분·하방 보전·세후 실수령까지 무료 시뮬레이션. 2026 상반기 PI 150% 확정."
+);
 const STATUS_BADGE =
   STATUS === "ratified"
     ? "🔔 2026 임단협 최종 타결(9/16 가결) · 현금 50% + 자사주 50%"

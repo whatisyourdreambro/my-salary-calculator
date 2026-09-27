@@ -35,13 +35,18 @@ import { OPI1_MAX_RATE, OPI_LATEST, OPI_LATEST_BOTTOM, opiRateSummary } from "./
 import { ANNUAL_OP_2026_PRELIM } from "./annualOp";
 import ShareButtons from "@/components/ShareButtons";
 import FavoritesButton from "@/components/FavoritesButton";
+import { withBonusAnnouncement } from "@/data/bonusAnnouncements";
 
 const SITE_URL = "https://www.moneysalary.com";
 const PAGE_PATH = "/calc/samsung-bonus";
 const PAGE_TITLE = "삼성전자 성과급 계산기 2026 — OPI·TAI";
 // SERP 표시 한도(한글 80~90자) 안에 핵심 키워드 전진 배치
 // 반기 라벨·최고 지급률은 taiData TAI_LATEST 파생 — 오늘 출력은 종전 문자열과 동일
-const PAGE_DESC = `삼성전자 OPI(초과이익성과금)·TAI(목표달성장려금) 계산기. ${TAI_LATEST.shortLabel} TAI ${TAI_LATEST_TOP.division} ${TAI_LATEST_TOP.rate}% 반영, 사업부별 1인당·세후 실수령·RSU 매도까지 무료 시뮬레이션.`;
+// 1~2월 지급률 확정 공지 꼬리 구절(승인 6) — src/data/bonusAnnouncements.ts 가 휴면이면 종전 문자열 그대로
+const PAGE_DESC = withBonusAnnouncement(
+  "samsung-bonus",
+  `삼성전자 OPI(초과이익성과금)·TAI(목표달성장려금) 계산기. ${TAI_LATEST.shortLabel} TAI ${TAI_LATEST_TOP.division} ${TAI_LATEST_TOP.rate}% 반영, 사업부별 1인당·세후 실수령·RSU 매도까지 무료 시뮬레이션.`
+);
 
 // ─────────────────────────────────────────────────────────────
 // FAQ
