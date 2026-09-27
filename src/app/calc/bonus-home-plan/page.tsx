@@ -124,7 +124,7 @@ export default function BonusHomePlanPage() {
                 삼성전자 메모리·연봉 8천만원·기본 시나리오(가정): 2027년 성과급 세전 {fmtEokShort(ex2027.gross)}(특별경영성과급 {fmtEokShort(ex2027.components[1].gross)} 포함),
                 세후 {fmtEokShort(ex2027.net)}(공제율 약 {Math.round(ex2027.effRate)}%)
               </li>
-              <li>같은 조건 5년 누적 세후 성과급 {fmtEokShort(example.comp.fiveYearNet)}, {exampleRegion.label} 중위가격 기준 구매 가능 {example.afford.buyYear ? `${example.afford.buyYear}년 말` : "2031년까지 불가"}(모은 돈 0원·월 저축 30%)</li>
+              <li>같은 조건·기본 시나리오(가정)의 5년 누적 세후 성과급 {fmtEokShort(example.comp.fiveYearNet)}, {exampleRegion.label} 중위가격 기준 구매 가능 {example.afford.buyYear ? `${example.afford.buyYear}년 말` : "2031년까지 불가"}(모은 돈 0원·월 저축 30%)</li>
               <li>SK하이닉스 연봉 1억·기본 시나리오(가정): 2026년 실적분 PS 세전 {fmtEokShort(skPsBase1eok)}</li>
             </ul>
 
