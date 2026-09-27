@@ -6,6 +6,7 @@
 
 import { DEFAULT_REGION_ID, HOME_REGIONS, type HomeRegion } from "@/data/homePriceRegions";
 import snapshotJson from "@/data/marketSnapshot.json";
+import { formatManwonKorean } from "@/lib/manwonFormat";
 import { solveAffordability, type AffordResult } from "./affordability";
 import {
   computeComp,
@@ -200,12 +201,14 @@ export function fmtEokShort(won: number): string {
   const sign = won < 0 ? "−" : "";
   const a = Math.abs(won);
   if (a >= 100_000_000) return `${sign}${(a / 100_000_000).toFixed(2)}억`;
-  return `${sign}${Math.round(a / 10_000).toLocaleString("ko-KR")}만`;
+  const man = Math.round(a / 10_000);
+  if (man === 0) return "0원";
+  return `${sign}${man.toLocaleString("ko-KR")}만`;
 }
-/** 만원 단위 — '3,410만원' */
+/** 만원 단위 한글 — '3,410만원' · '1억 8,973만원' (사이트 공용 formatManwonKorean) */
 export function fmtManwon(won: number): string {
   if (!Number.isFinite(won)) return "—";
-  return `${Math.round(won / 10_000).toLocaleString("ko-KR")}만원`;
+  return formatManwonKorean(Math.round(won / 10_000));
 }
 /** 원 단위 — '1,723,747원' */
 export function fmtWon(won: number): string {

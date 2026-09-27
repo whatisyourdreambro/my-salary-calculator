@@ -158,6 +158,21 @@ describe("문구 가드", () => {
   });
 });
 
+describe("표기", () => {
+  it("0·비유한·억 경계", async () => {
+    const { fmtEokShort, fmtManwon, fmtTril } = await import("@/lib/bonusHome/plan");
+    expect(fmtEokShort(0)).toBe("0원");
+    expect(fmtEokShort(4_000)).toBe("0원");
+    expect(fmtEokShort(34_100_000)).toBe("3,410만");
+    expect(fmtEokShort(576_000_000)).toBe("5.76억");
+    expect(fmtEokShort(Number.NaN)).toBe("—");
+    expect(fmtManwon(189_730_000)).toBe("1억 8,973만원");
+    expect(fmtManwon(22_590_000)).toBe("2,259만원");
+    expect(fmtTril(293.4)).toBe("293.4조");
+    expect(fmtTril(-7.7)).toBe("-7.7조");
+  });
+});
+
 describe("런타임 외부 요청·저장소 없음", () => {
   const files = [
     CLIENT,
