@@ -14,7 +14,8 @@ import {
   PS_HISTORY,
   PS_HISTORY_GUIDE,
   PS_HISTORY_GUIDE_NOTES,
-  PS_RATE_UNDISCLOSED_YEARS,
+  PS_RATE_REPORT_ONLY_YEARS,
+  PS_REPORT_ONLY_CELL,
   SK_2026_H1_MARGIN_PCT,
   TAI_RATES_2026_H1,
   basePct,
@@ -80,13 +81,13 @@ describe("삼성전자 OPI·TAI 키퍼", () => {
 describe("SK하이닉스 PS 키퍼", () => {
   const slug = "sk-hynix-ps-history-2026-prospect";
 
-  it("PS 이력 표는 계산기 psData 값 그대로다 — 영업이익은 DART 사업보고서 확정치, 2022년 PS 지급률은 싣지 않는다", () => {
+  it("PS 이력 표는 계산기 psData 값 그대로다 — 영업이익은 DART 사업보고서 확정치, 2022년 PS 820%는 회사 인용 보도치로 메모 칸", () => {
     const c = content(slug);
     expect(PS_HISTORY_GUIDE.map((r) => r.year)).toEqual(PS_HISTORY.map((r) => r.year));
     for (const r of PS_HISTORY_GUIDE) {
       const src = PS_HISTORY.find((x) => x.year === r.year)!;
       expect({ ...r, note: src.note }, `${r.year} 값은 psData 와 같다`).toEqual(src);
-      const ps = PS_RATE_UNDISCLOSED_YEARS.has(r.year) ? "공개 자료 미확인" : r.psRatePct == null ? "—" : `${pct(r.psRatePct)}%`;
+      const ps = PS_RATE_REPORT_ONLY_YEARS.has(r.year) ? PS_REPORT_ONLY_CELL : r.psRatePct == null ? "—" : `${pct(r.psRatePct)}%`;
       expect(c, String(r.year)).toContain(`<tr><td>${r.year}</td><td>${ps}</td>`);
       expect(c, `${r.year} 영업이익`).toContain(`<td>${opTrilKo(r.opTril)}</td>`);
     }
@@ -95,9 +96,14 @@ describe("SK하이닉스 PS 키퍼", () => {
     for (const r of PS_HISTORY) expect(r.opTril, `${r.year} 영업이익(DART)`).toBe(dartOpTril[r.year]);
     expect(c).toContain("<td>6.8조원</td>");
     expect(c).toContain("<td>23.5조원</td>");
-    // 2022년 PS 지급률은 공시로 확인되지 않아 가이드가 숫자를 싣지 않는다 — 계산기(600%)와 보도(820%) 어느 쪽과도 모순되지 않게
-    expect(c).toContain("<tr><td>2022</td><td>공개 자료 미확인</td>");
-    for (const bad of ["820%", "<td>600%</td>", "<td>7.0조원</td>", "<td>23.4조원</td>", "7조 66억"]) expect(c, bad).not.toContain(bad);
+    // 2022년 PS 는 회사 사내 공지 인용 보도(이투데이 2023-02-01) 820% — 계산기 psData 와 같은 값. 표 PS 칸은 광고 위 폭 불변을 위해
+    // 옛 '공개 자료 미확인'과 같은 2-2-3 음절 문구, 지급률은 메모 칸에 싣는다(2026-09-27).
+    expect(PS_HISTORY.find((r) => r.year === 2022)?.psRatePct).toBe(820);
+    expect(c).toContain("<tr><td>2022</td><td>회사 인용 보도치</td><td>공개 자료 미확인</td><td>6.8조원</td><td>PS 820%</td></tr>");
+    expect(PS_REPORT_ONLY_CELL.split(" ").map((w) => w.length)).toEqual([2, 2, 3]);
+    expect(c).toContain("(그해 지급률은 회사 공지를 인용했던 보도 값을 표에 실었습니다)");
+    expect(c).toContain("PS 지급률은 공시 항목이 아니어서 보도 수치를 따랐으며 그중 2022년분은 공지 인용입니다.");
+    for (const bad of ["<td>600%</td>", "<td>7.0조원</td>", "<td>23.4조원</td>", "7조 66억", "2022년분은 싣지", "표에 싣지 않았습니다"]) expect(c, bad).not.toContain(bad);
     expect(c).toContain("dart.fss.or.kr/dsaf001/main.do?rcpNo=20260317000635");
     const n = AGREEMENT_2026.newSplit;
     expect(c).toContain(`현금 ${n.cashNowPct}% + 자사주 ${n.stockNowPct}%`);
@@ -105,9 +111,13 @@ describe("SK하이닉스 PS 키퍼", () => {
     expect(c).toContain(`2025년 사업보고서 기준 ${headline("sk-hynix").text}`);
   });
 
-  it("가이드 전용 메모는 psData 에 있는 해에만, 미게재 연도는 psData 에 값이 있는 해만 둔다", () => {
+  it("가이드 전용 메모는 psData 에 있는 해에만, 보도치만 싣는 해는 psData 에 값이 있는 해만 둔다", () => {
     for (const year of Object.keys(PS_HISTORY_GUIDE_NOTES)) expect(PS_HISTORY.some((r) => r.year === Number(year)), year).toBe(true);
-    for (const year of PS_RATE_UNDISCLOSED_YEARS) expect(PS_HISTORY.find((r) => r.year === year)?.psRatePct, String(year)).not.toBeNull();
+    for (const year of PS_RATE_REPORT_ONLY_YEARS) {
+      const ps = PS_HISTORY.find((r) => r.year === year)?.psRatePct;
+      expect(ps, String(year)).not.toBeNull();
+      expect(PS_HISTORY_GUIDE.find((r) => r.year === year)?.note, String(year)).toBe(`PS ${pct(ps as number)}%`);
+    }
     expect(PS_HISTORY_GUIDE.find((r) => r.year === 2024)?.note).toBe(PS_HISTORY_GUIDE_NOTES[2024]);
   });
 

@@ -39,19 +39,30 @@ export const TAI_2026_H1_DESC = [...TAI_RATES_2026_H1].sort((a, b) => b.rate - a
  *   2021 12,410,340(rcpNo 20220322000590) · 2022 6,809,417(20230321001209) · 2023 (7,730,313) · 2024 23,467,319(20250319000665)
  *   · 2025 47,206,319(20260317000635) → 12.4·6.8·−7.7·23.5·47.2조. psData 2024 23.4조를 23.5조로 고쳐 보정표를 없앴다.
  *   2022년 '7조 66억원(7.0조)'은 2023-02-01 잠정실적 공정공시(20230201800006) 값이고 감사 후 확정치는 6.8조라 psData 가 맞다.
- * PS 지급률은 DART 에 공시되지 않는다. 2022년 실적분은 psData 600%(출처 미상)와 회사 인용 보도 820%(이투데이 2023-02-01)가
- * 어긋나 공식 자료로 확인할 수 없으므로, 계산기 값은 그대로 두고 가이드는 그해 지급률 숫자를 싣지 않는다(계산기와 모순 방지).
+ * PS 지급률은 DART 에 공시되지 않는다(보도 기준). 2022년 실적분은 2026-09-27 계산기·가이드 모두 820%로 통일했다 —
+ * 회사 사내 공지를 인용한 이투데이 2023-02-01 보도(https://www.etoday.co.kr/news/view/2217429, 월 기본급의 820%·연봉의 41%).
+ * 가이드 표에서는 그해 PS 칸에 숫자 대신 '회사 인용 보도치'를 쓰고 지급률은 메모 칸('PS 820%')에 싣는다:
+ * 표가 가이드 본문 광고 위라, 옛 PS 칸 문구('공개 자료 미확인', 한글 7음절 2-2-3)와 같은 음절 구조여야 열 너비·줄바꿈이
+ * 그대로다('820%'를 PS 칸에 넣으면 PS 열 최대 폭이 줄어 표 높이가 바뀌고 광고가 움직인다 — 2026-09-27 320~1440px 전 폭 측정).
  */
-export const PS_RATE_UNDISCLOSED_YEARS: ReadonlySet<number> = new Set([2022]);
+export const PS_RATE_REPORT_ONLY_YEARS: ReadonlySet<number> = new Set([2022]);
+/** PS_RATE_REPORT_ONLY_YEARS 해의 가이드 표 PS 칸 문구 — 옛 '공개 자료 미확인'과 같은 2-2-3 음절 구조(바꿀 때도 유지) */
+export const PS_REPORT_ONLY_CELL = "회사 인용 보도치";
 /** 가이드 표 메모만 덧붙이는 해 — 값(지급률·영업이익)은 psData 그대로. 2024 구성은 2025-01 복수 보도(헤럴드경제 등) */
 export const PS_HISTORY_GUIDE_NOTES: Readonly<Record<number, string>> = {
   2024: "PS 1,000% + 특별성과급 500%, HBM 호황",
 };
-/** 가이드 본문용 PS 이력 — psData 값에 가이드 메모만 덧붙인 것 */
-export const PS_HISTORY_GUIDE: readonly PsHistoryRow[] = PS_HISTORY.map((r) => ({ ...r, note: PS_HISTORY_GUIDE_NOTES[r.year] ?? r.note }));
-/** 가이드 표의 PS 칸 — 공시로 확인할 수 없는 해는 숫자 대신 안내 문구 */
+/** 가이드 본문용 PS 이력 — psData 값에 가이드 메모만 덧붙인 것(보도치만 싣는 해는 메모 칸에 'PS 지급률') */
+export const PS_HISTORY_GUIDE: readonly PsHistoryRow[] = PS_HISTORY.map((r) => ({
+  ...r,
+  note:
+    PS_RATE_REPORT_ONLY_YEARS.has(r.year) && r.psRatePct != null
+      ? `PS ${r.psRatePct.toLocaleString("en-US")}%`
+      : PS_HISTORY_GUIDE_NOTES[r.year] ?? r.note,
+}));
+/** 가이드 표의 PS 칸 — 보도치만 싣는 해는 숫자 대신 PS_REPORT_ONLY_CELL(지급률은 메모 칸) */
 export const psRateCell = (r: PsHistoryRow): string =>
-  PS_RATE_UNDISCLOSED_YEARS.has(r.year) ? "공개 자료 미확인" : r.psRatePct == null ? "—" : `${pct(r.psRatePct)}%`;
+  PS_RATE_REPORT_ONLY_YEARS.has(r.year) ? PS_REPORT_ONLY_CELL : r.psRatePct == null ? "—" : `${pct(r.psRatePct)}%`;
 /** SK하이닉스 PS 이력 한 해(보정 반영) */
 export const psYear = (year: number): PsHistoryRow => must(PS_HISTORY_GUIDE.find((r) => r.year === year), `PS ${year}`);
 /** 영업이익(조원) 표기 — 소수 첫째 자리까지(7.0조원) */
