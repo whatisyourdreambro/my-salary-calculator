@@ -8,7 +8,7 @@
     "pending-1014": "10/14 09:10 봉급표 예약 배포(2027 교사·경찰·소방) 뒤 live",
     "pending-1016": "10/16 R4-RSS·R4-B1 배포 뒤 live",
     "pending-R4B3": "R4-B3 새 가이드 7편 배포(10/19~10/21) 뒤 live",
-    "pending-civilpay": "batch2 공무원 실수령 계산기 배포 뒤 live"
+    "pending-civilpay": "batch2 배포(공무원 실수령 계산기·성과급 내 집 마련 계산기) 뒤 live"
   },
   "clusters": {
     "pay": { "priority": 1, "name": "봉급표" },
@@ -61,6 +61,10 @@
     { "url": "/calc/sk-hynix-bonus", "cluster": "bonus", "events": ["E11"], "peak": "2027-01~2027-02", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": ["rss-tables"], "status": "live" },
     { "url": "/calc/bonus-calculators", "cluster": "bonus", "events": ["E4", "E10", "E11"], "peak": "2027-01~2027-02", "lastmodHandle": { "kind": "route-override", "ref": "/calc/bonus-calculators" }, "feeds": ["rss-tables"], "status": "live" },
     { "url": "/insights/bonus-payout-history-2026", "cluster": "bonus", "events": ["E4", "E10", "E11"], "peak": "2027-01~2027-02", "lastmodHandle": { "kind": "data-checked", "ref": "reportsRegistry bonus-payout-history-2026 updatedDate" }, "feeds": ["rss"], "status": "live" },
+    { "url": "/calc/year-end-bonus", "cluster": "bonus", "events": ["E4", "E10", "E11"], "peak": "2026-12~2027-02", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": ["rss-tables"], "status": "live" },
+    { "url": "/calc/year-end-bonus-tax", "cluster": "bonus", "events": ["E4", "E10", "E11"], "peak": "2026-12~2027-02", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": [], "status": "live" },
+    { "url": "/calc/incentive-tax", "cluster": "bonus", "events": ["E4", "E10", "E11"], "peak": "2026-12~2027-02", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": [], "status": "live" },
+    { "url": "/calc/bonus-home-plan", "cluster": "bonus", "events": ["E4", "E10", "E11"], "peak": "2027-01~2027-02", "lastmodHandle": { "kind": "route-override", "ref": "/calc/bonus-home-plan" }, "feeds": [], "status": "pending-civilpay" },
     { "url": "/calc/samsung-display-bonus", "cluster": "bonus", "events": ["E10"], "peak": "2027-01", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": [], "status": "live" },
     { "url": "/calc/samsung-sdi-bonus", "cluster": "bonus", "events": ["E10"], "peak": "2027-01", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": [], "status": "live" },
     { "url": "/calc/samsung-biologics-bonus", "cluster": "bonus", "events": ["E10"], "peak": "2027-01", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": [], "status": "live" },
@@ -83,6 +87,7 @@
     { "url": "/calc/hanwha-aerospace-bonus", "cluster": "bonus", "events": ["E11"], "peak": "2027-01~2027-02", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": [], "status": "live" },
     { "url": "/calc/kepco-bonus", "cluster": "bonus", "events": [], "peak": "2027-06", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": [], "status": "live" },
 
+    { "url": "/tax-reform-2026", "cluster": "year-end", "events": ["E3"], "peak": "2026-12", "lastmodHandle": { "kind": "route-override", "ref": "/tax-reform-2026" }, "feeds": [], "status": "live" },
     { "url": "/year-end-tax", "cluster": "year-end", "events": ["E0", "E3", "E9", "E12"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/year-end-tax" }, "feeds": ["rss-tables"], "status": "live" },
     { "url": "/year-end-tax-preview", "cluster": "year-end", "events": ["E0", "E9"], "peak": "2026-11~2026-12", "lastmodHandle": { "kind": "route-override", "ref": "/year-end-tax-preview" }, "feeds": ["rss-tables"], "status": "live" },
     { "url": "/year-end-tax-2027", "cluster": "year-end", "events": ["E3", "E6"], "peak": "2026-12~2027-02", "lastmodHandle": { "kind": "route-override", "ref": "/year-end-tax-2027" }, "feeds": ["rss-tables"], "status": "live" },
@@ -111,6 +116,8 @@
     { "url": "/calc/unemployment-benefit", "cluster": "rollover", "events": ["E8"], "peak": "2027-01", "lastmodHandle": { "kind": "calc-publishedAt", "ref": "unemployment-benefit" }, "feeds": [], "status": "live" },
     { "url": "/weekly-holiday-allowance-2026", "cluster": "rollover", "events": ["E8"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/weekly-holiday-allowance-2026" }, "feeds": [], "status": "live" },
     { "url": "/basic-pension-2026", "cluster": "rollover", "events": ["E8"], "peak": "2027-01", "lastmodHandle": { "kind": "add-on-event", "ref": "/basic-pension-2026" }, "feeds": [], "status": "live" },
+    { "url": "/tax-changes-2026", "cluster": "rollover", "events": ["E6", "E8"], "peak": "2026-12~2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/tax-changes-2026" }, "feeds": [], "status": "live" },
+    { "url": "/tax-rates-2026", "cluster": "rollover", "events": ["E3", "E8"], "peak": "2026-12~2027-01", "lastmodHandle": { "kind": "add-on-event", "ref": "/tax-rates-2026" }, "feeds": [], "status": "live" },
     { "url": "/earned-income-credit", "cluster": "rollover", "events": ["E3", "E12"], "peak": "2027-02~2027-03", "lastmodHandle": { "kind": "add-on-event", "ref": "/earned-income-credit" }, "feeds": ["rss-tables"], "status": "live" },
     { "url": "/auto-tax-2026", "cluster": "rollover", "events": ["E9"], "peak": "2027-01", "lastmodHandle": { "kind": "add-on-event", "ref": "/auto-tax-2026" }, "feeds": [], "status": "live" },
     { "url": "/minimum-wage-2026", "cluster": "rollover", "events": ["E8"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/minimum-wage-2026" }, "feeds": ["rss-tables"], "status": "live" },

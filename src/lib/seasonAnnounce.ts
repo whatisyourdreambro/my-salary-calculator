@@ -10,7 +10,7 @@
 //    R3 W4-A 동결 런북 슬롯 이름만 가리킨다 — 바꿀 상수·문구·절차 본문은 그 원문에 있고 여기서 복사하지 않는다.
 //    진행형 상태 문구 점검은 staleStatusScan(scripts/stale-status-scan.ts)의 몫이라 여기에는 상태 단어가 없다.
 //  - announceList: 이벤트 하나의 알림 후보 — 네이버 수집 요청 10개 이하(클러스터 우선순위 순),
-//    구글 URL 검사 3개 이하, rss-tables 피드 메타 동기화 대상, lastmod 손잡이 할 일.
+//    구글 URL 검사 3개 이하, rss-tables 피드 메타 동기화 대상, lastmod 손잡이 할 일, diff 밖 수동 요청 후보.
 //  - diffSitemaps: 배포 전·후 사이트맵의 (loc, lastmod) 쌍 차이. scripts/indexnow-diff.mjs 와 같은 규칙
 //    (같은 호스트만, XML 엔티티 복원, lastmod 는 날짜 값으로 비교, 오류 페이지·잘린 XML 은 판독 실패)이라
 //    결과가 CF 빌드 로그 [indexnow] 제출 목록과 같다 — 운영자 수집 요청 목록 = [indexnow] 목록.
@@ -24,8 +24,14 @@
 //  - calc-publishedAt  : 간이 계산기 CalculatorDef.publishedAt(사이트맵이 읽는 유일한 날짜). ref = 슬러그.
 //  - bonus-engine      : sitemap.ts 성과급 엔진 루프의 공유 날짜 — 루프가 ROUTE_OVERRIDES 의 날짜를 덮어쓰므로
 //                        한 URL 만 올릴 수 없다(올리면 루프의 모든 라우트가 [indexnow] 대상).
+//                        (11/1 전 결정 대기: 루프를 max(ROUTE_OVERRIDES 날짜, BONUS_ENGINE_REVIEW_DATE) 로 바꾸면
+//                         발표 당사 계산기 한 곳만 올릴 수 있다 — sitemap.ts 코드 변경이라 R6 담당·운영자 결정.)
 //  - data-checked      : 데이터 상수의 확인일에서 파생(예: 2027 봉급표 checked, 리포트 updatedDate). ref = 심볼.
 //  - company-lastUpdated: 회사 상세 — companyPageModified(회사 데이터·FAQ 수정일).
+//
+// 날짜 손잡이가 없는 행(isHandleless: bonus-engine, ref 가 경로가 아닌 add-on-event)은 내용이 바뀌어도
+// 사이트맵 diff·[indexnow] 에 나오지 않는다. 발표일에는 'diff 밖 수동 요청' 목록(manualOnly·manualRequest)으로
+// 따로 내보내고, '손잡이 누락' 경고(eventUnchanged)에는 넣지 않는다.
 
 export const EVENT_IDS = [
   "E0", "E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9", "E10", "E11", "E12",
@@ -253,6 +259,8 @@ export interface ValidateOptions {
  * - sitemapLastmods·overrideDays 를 주면: route-override 행의 사이트맵 lastmod 가 ROUTE_OVERRIDES 날짜와 같아야 한다
  *   (다르면 다른 코드가 그 날짜를 덮어쓰는 것 — 예: 성과급 엔진 루프. 그 손잡이는 올려도 [indexnow] 에 안 나간다).
  * - 피드 표시가 경로 종류와 맞아야 하고, rss-tables 멤버는 RSS_TABLES_MAX_ITEMS 이하.
+ * - rssTables 를 주면 양방향 대조: 'rss-tables' 표시 ↔ FEED_PATHS·PENDING_AFTER_OCT_MERGE,
+ *   그리고 피드 멤버인데 등록부 행 자체가 없는 경로도 오류.
  * - 이벤트 표: 모든 C-xx·W4-A 슬롯은 어느 이벤트에 걸리거나 NotMapped 에 사유가 있어야 한다(둘 다는 안 됨).
  */
 export function validateRegistry(
@@ -322,6 +330,7 @@ export function validateRegistry(
   if (options.rssTables) {
     const members = new Set([...options.rssTables.feed, ...(options.rssTables.pending ?? [])]);
     const feedNow = new Set(options.rssTables.feed);
+    const rowUrls = new Set(registry.rows.map((r) => r.url));
     for (const r of tablesRows) {
       if (!members.has(r.url)) errors.push(`${r.url}: 'rss-tables' 표시인데 rssTablesFeed.ts 멤버가 아님`);
     }
@@ -329,6 +338,13 @@ export function validateRegistry(
       if (feedNow.has(r.url) && !r.feeds.includes("rss-tables")) {
         errors.push(`${r.url}: rssTablesFeed.ts FEED_PATHS 멤버인데 등록부에 'rss-tables' 표시 없음`);
       }
+    }
+    // 반대 방향 — 피드 멤버인데 등록부 행 자체가 없으면 위 루프(등록부 행 기준)로는 안 잡힌다
+    for (const path of options.rssTables.feed) {
+      if (!rowUrls.has(path)) errors.push(`${path}: rssTablesFeed.ts FEED_PATHS 멤버인데 등록부에 행 없음`);
+    }
+    for (const path of options.rssTables.pending ?? []) {
+      if (!rowUrls.has(path)) errors.push(`${path}: rssTablesFeed.ts PENDING_AFTER_OCT_MERGE 멤버인데 등록부에 행 없음`);
     }
   }
 
@@ -415,9 +431,21 @@ export interface AnnounceList {
   feedMetaSync: string[];
   /** 가이드·리포트(rss) 멤버 — 날짜를 올리면 /rss.xml 순서가 바뀐다 */
   rssMembers: string[];
+  /** 날짜 손잡이가 없는 후보(isHandleless) — 사이트맵 diff 에 나오지 않으니 내용이 바뀌면 수동 수집 요청 */
+  manualOnly: string[];
   lastmodTodo: LastmodTodo[];
   /** 이벤트에 걸렸지만 아직 live 가 아닌 행 */
   skippedPending: Array<{ url: string; status: RowStatus }>;
+}
+
+/**
+ * 날짜 손잡이가 없는 행인가 — 내용이 바뀌어도 사이트맵 lastmod 가 그대로라 diff·[indexnow] 에 나오지 않는다.
+ *  - bonus-engine: 공유 날짜 하나라 한 URL 만 올릴 수 없다.
+ *  - add-on-event 중 ref 가 경로가 아닌 것(예: /job/soldier — jobUrls 에 직업별 날짜 손잡이 없음).
+ * ref 가 경로인 add-on-event 는 ROUTE_OVERRIDES 한 줄로 손잡이를 만들 수 있으니 여기 들지 않는다.
+ */
+export function isHandleless(handle: LastmodHandle): boolean {
+  return handle.kind === "bonus-engine" || (handle.kind === "add-on-event" && !handle.ref.startsWith("/"));
 }
 
 /** 손잡이 종류별 할 일 한 줄 (한국어) */
@@ -429,13 +457,13 @@ export function lastmodAction(handle: LastmodHandle): string {
     case "add-on-event":
       return ref.startsWith("/")
         ? `손잡이 없음 — src/app/sitemap.ts ROUTE_OVERRIDES 에 '${ref}': { lastModified: 반영 배포일 } 한 줄 추가`
-        : `손잡이 없음 — ${ref}. 날짜만으로 올릴 수 없으니 수집 요청만 하고 [indexnow] 대상 아님을 기록`;
+        : `손잡이 없음 — ${ref}. 날짜만으로 올릴 수 없어 diff·[indexnow] 에 안 나옴 — 내용이 바뀌었으면 'diff 밖 수동 요청'으로 수집 요청`;
     case "guide-modified":
       return `가이드 '${ref}' modifiedDate → 반영 배포일, 그다음 npx tsx scripts/gen-guides-meta.ts`;
     case "calc-publishedAt":
       return `간이 계산기 '${ref}' publishedAt(없으면 추가) → 반영 배포일`;
     case "bonus-engine":
-      return `공유 날짜 ${ref} — 한 URL 만 올릴 수 없음(올리면 성과급 엔진 루프 전체가 [indexnow] 대상). 날짜는 그대로 두고 수집 요청만`;
+      return `공유 날짜 ${ref} — 한 URL 만 올릴 수 없음(올리면 성과급 엔진 루프 전체가 [indexnow] 대상). 날짜는 그대로 두고, 내용이 바뀌었으면 'diff 밖 수동 요청'으로 수집 요청`;
     case "data-checked":
       return `${ref} 에서 파생 — 그 확인일이 바뀌는 반영일 때만 자동으로 올라감(아니면 diff 의 'lastmod 그대로' 목록에 남는다)`;
     case "company-lastUpdated":
@@ -468,6 +496,7 @@ export function announceList(registry: SeasonRegistry, eventId: EventId): Announ
     gscInspect: candidates.slice(0, GSC_INSPECT_CAP),
     feedMetaSync: live.filter((r) => r.feeds.includes("rss-tables")).map((r) => r.url),
     rssMembers: live.filter((r) => r.feeds.includes("rss")).map((r) => r.url),
+    manualOnly: live.filter((r) => isHandleless(r.lastmodHandle)).map((r) => r.url),
     lastmodTodo: live.map((r) => ({
       url: r.url,
       kind: r.lastmodHandle.kind,
@@ -575,13 +604,22 @@ export interface RequestPlan {
   removed: string[];
   /** 등록부에 없는 바뀐 URL — 의도한 변경인지 확인 */
   outsideRegistry: string[];
-  /** eventId 를 준 경우: 이벤트 후보인데 lastmod 가 안 바뀐 URL — 손잡이를 빠뜨렸는지 확인 */
+  /**
+   * eventId 를 준 경우: 이벤트 후보 중 날짜 손잡이가 없는 URL(isHandleless) 로 diff 에 안 나온 것.
+   * diff 에 나올 수 없으니 누락 경고가 아니다 — 내용이 바뀐 것만 골라 diff 목록과 함께 수동으로 수집 요청.
+   * 등록부 클러스터 우선순위 순.
+   */
+  manualRequest: string[];
+  /** eventId 를 준 경우: 날짜 손잡이가 있는 이벤트 후보인데 lastmod 가 안 바뀐 URL — 손잡이를 빠뜨렸는지 확인 */
   eventUnchanged: string[];
   /** eventId 를 준 경우: 바뀌었지만 그 이벤트 후보가 아닌 등록부 URL */
   notInEvent: string[];
 }
 
-/** diffSitemaps 결과(ok) → 운영자 요청 목록. 목록 전체 = [indexnow] 제출 목록(삭제분은 요청 대상에서만 뺀다). */
+/**
+ * diffSitemaps 결과(ok) → 운영자 요청 목록. ordered·removed 전체 = [indexnow] 제출 목록(삭제분은 요청 대상에서만 뺀다).
+ * manualRequest 는 [indexnow] 밖 — 날짜 손잡이가 없어 diff 에 나올 수 없는 이벤트 후보(수동 요청, 내용이 바뀐 것만).
+ */
 export function requestPlan(
   diff: Extract<SitemapDiff, { ok: true }>,
   registry: SeasonRegistry,
@@ -599,12 +637,15 @@ export function requestPlan(
   const naverDays: string[][] = [];
   for (let i = 0; i < ordered.length; i += NAVER_REQUEST_CAP) naverDays.push(ordered.slice(i, i + NAVER_REQUEST_CAP));
 
+  let manualRequest: string[] = [];
   let eventUnchanged: string[] = [];
   let notInEvent: string[] = [];
   if (eventId) {
     const touchedPaths = new Set(touched.map(toPath));
-    const candidates = announceList(registry, eventId).candidates;
-    eventUnchanged = candidates.filter((p) => !touchedPaths.has(p)).map((p) => `${SITE_ORIGIN}${p}`);
+    const untouched = announceList(registry, eventId).candidates.filter((p) => !touchedPaths.has(p));
+    const handleless = (p: string) => isHandleless((byPath.get(p) as SeasonRow).lastmodHandle);
+    manualRequest = untouched.filter(handleless).map((p) => `${SITE_ORIGIN}${p}`);
+    eventUnchanged = untouched.filter((p) => !handleless(p)).map((p) => `${SITE_ORIGIN}${p}`);
     notInEvent = inReg.filter((u) => !(byPath.get(toPath(u)) as SeasonRow).events.includes(eventId));
   }
   return {
@@ -613,6 +654,7 @@ export function requestPlan(
     gscInspect: ordered.slice(0, GSC_INSPECT_CAP),
     removed: [...diff.removed],
     outsideRegistry: outside,
+    manualRequest,
     eventUnchanged,
     notInEvent,
   };

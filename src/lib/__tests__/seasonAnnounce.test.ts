@@ -6,10 +6,15 @@
 //  (3) announceList 상한(네이버 10개·구글 3개)과 클러스터 우선순위 순서, 대기 행 제외
 //  (4) feedMetaSync 는 rss-tables 멤버만
 //  (5) diffSitemaps 가 바뀐 loc 만 정확히 돌려주고, scripts/indexnow-diff.mjs 와 같은 결과(= [indexnow] 목록)
-//  (6) validateRegistry 가 사이트맵에 없는 live URL 과 없는 ROUTE_OVERRIDES 키를 잡음
+//  (6) validateRegistry 가 사이트맵에 없는 live URL 과 없는 ROUTE_OVERRIDES 키를 잡음,
+//      rss-tables 피드 멤버 ↔ 등록부 행을 양방향으로 대조
 //  (7) 어떤 페이지·컴포넌트도 이 모듈을 import 하지 않음(빌드 산출물 무변화)
+//
+// 실제 등록부(REG)에는 오래가는 성질만 단언한다. 행 status 는 배포마다 live 로 바뀌는 값(동결기에도 허용되는
+// 데이터 수정)이라, status 에 기대는 단언은 모두 합성 등록부(synthetic·clone 뒤 수정)에서 한다 — 발표일 Day-0 에
+// status 를 고쳐도 npm test 가 깨지지 않게.
 
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -26,6 +31,7 @@ import {
   W4A_SLOTS,
   announceList,
   diffSitemaps,
+  isHandleless,
   lastmodAction,
   parseRegistry,
   readSitemapXml,
@@ -33,6 +39,7 @@ import {
   requestPlan,
   schemaErrors,
   toEventId,
+  toPath,
   validateRegistry,
   type SeasonRegistry,
   type SeasonRow,
@@ -59,6 +66,43 @@ const liveUrls = (r: SeasonRegistry) => r.rows.filter((x) => x.status === "live"
 const overrideRefs = (r: SeasonRegistry) =>
   r.rows.filter((x) => x.lastmodHandle.kind === "route-override").map((x) => x.lastmodHandle.ref);
 
+/** 소스 파일의 `const NAME = [ ... ]` 배열 리터럴에서 따옴표 문자열만 (주석 줄 제외) */
+function arrayLiteral(text: string, name: string): string[] {
+  const m = text.match(new RegExp(`const ${name}\\s*=\\s*\\[([\\s\\S]*?)\\]`));
+  if (!m) throw new Error(`${name} 배열을 찾지 못함`);
+  const body = m[1].replace(/^\s*\/\/.*$/gm, "");
+  return [...body.matchAll(/["']([^"']+)["']/g)].map((x) => x[1]);
+}
+
+/**
+ * rss-tables 브랜치(8f420a23)의 src/lib/rssTablesFeed.ts FEED_PATHS·PENDING_AFTER_OCT_MERGE.
+ * 그 파일이 이 트리에 없을 때(R4-RSS 배포 전)만 쓰는 사본 — 파일이 생기면 파일을 읽는다.
+ */
+const RSS_TABLES_8F420A23 = {
+  feed: [
+    "/civil-servant-pay-2026", "/civil-servant-pay-2027", "/teacher-pay-2026", "/police-pay-2026",
+    "/firefighter-pay-2026", "/military-pay-2026",
+    "/table/2026/annual", "/table/2026/monthly", "/table/2026/weekly", "/table/2026/hourly",
+    "/table/2027/annual", "/table/2027/monthly", "/table/2027/weekly", "/table/2027/hourly",
+    "/minimum-wage-2026", "/minimum-wage-2027", "/social-insurance-rates-2026", "/social-insurance-rates-2027",
+    "/calc/pension-hike-2027", "/year-end-tax", "/year-end-tax-2027", "/year-end-tax-preview",
+    "/calc/bonus-calculators", "/calc/samsung-bonus", "/calc/sk-hynix-bonus", "/calc/hyundai-bonus", "/calc/kia-bonus",
+    "/calc/hyundai-rotem-bonus", "/calc/hyundai-mobis-bonus", "/calc/year-end-bonus", "/calc/holiday-bonus",
+    "/chuseok-bonus-2026", "/home-loan", "/unemployment-benefit", "/earned-income-credit",
+  ],
+  pending: ["/teacher-pay-2027", "/police-pay-2027", "/firefighter-pay-2027"],
+};
+function rssTablesMembers(): { feed: string[]; pending: string[]; source: string } {
+  const p = resolve(ROOT, "src/lib/rssTablesFeed.ts");
+  if (!existsSync(p)) return { ...RSS_TABLES_8F420A23, source: "8f420a23 사본" };
+  const text = readFileSync(p, "utf8");
+  return {
+    feed: arrayLiteral(text, "FEED_PATHS"),
+    pending: /const PENDING_AFTER_OCT_MERGE\b/.test(text) ? arrayLiteral(text, "PENDING_AFTER_OCT_MERGE") : [],
+    source: "src/lib/rssTablesFeed.ts",
+  };
+}
+
 // ── (1) 구조 ─────────────────────────────────────────────────────────────────────
 
 describe("등록부 구조", () => {
@@ -66,11 +110,13 @@ describe("등록부 구조", () => {
     expect(schemaErrors(RAW)).toEqual([]);
   });
 
-  it("약 70행 — 시드 묶음이 모두 들어 있다", () => {
+  it("약 90행 — 시드 묶음이 모두 들어 있다", () => {
     expect(REG.rows.length).toBeGreaterThanOrEqual(60);
-    expect(REG.rows.length).toBeLessThanOrEqual(90);
+    expect(REG.rows.length).toBeLessThanOrEqual(120);
     const urls = new Set(REG.rows.map((r) => r.url));
     const seeds = [
+      // 세법 이벤트(국회 의결·연도 전환)
+      "/tax-reform-2026", "/tax-changes-2026", "/tax-rates-2026",
       // 연말정산
       "/year-end-tax", "/year-end-tax-preview", "/year-end-tax-checklist", "/year-end-tax-mid-resign", "/year-end-tax-2027",
       "/credit-card-deduction-2026", "/medical-tax-credit-2026", "/rent-tax-credit-2026", "/donation-tax-credit-2026",
@@ -93,14 +139,36 @@ describe("등록부 구조", () => {
     expect(seeds.filter((u) => !urls.has(u))).toEqual([]);
   });
 
-  it("성과급 계산기 23종 + 허브 + 리포트", () => {
+  it("회사별 성과급 계산기 23종 + 공통 성과급 계산기 + 허브 + 리포트", () => {
+    // -bonus 로 끝나지만 회사별이 아닌 공통 계산기(연말 성과급)
+    const GENERIC = new Set(["/calc/year-end-bonus"]);
     const companyBonus = REG.rows.filter(
-      (r) => r.cluster === "bonus" && /^\/calc\/.+-bonus$/.test(r.url),
+      (r) => r.cluster === "bonus" && /^\/calc\/.+-bonus$/.test(r.url) && !GENERIC.has(r.url),
     );
     expect(companyBonus).toHaveLength(23);
+    const urls = new Set(REG.rows.map((r) => r.url));
+    const generic = ["/calc/year-end-bonus", "/calc/year-end-bonus-tax", "/calc/incentive-tax", "/calc/holiday-bonus"];
+    expect(generic.filter((u) => !urls.has(u))).toEqual([]);
+    expect(urls.has("/calc/bonus-calculators") && urls.has("/insights/bonus-payout-history-2026")).toBe(true);
   });
 
-  it("R4 가이드 7편은 pending-R4B3 · guide-modified · rss", () => {
+  it("sitemap.ts 성과급 엔진 루프(BONUS_ENGINE_ROUTES) = 등록부 bonus-engine 행 (빠짐도 남음도 없음)", () => {
+    const routes = arrayLiteral(read("src/app/sitemap.ts"), "BONUS_ENGINE_ROUTES").sort();
+    expect(routes.length).toBeGreaterThan(20);
+    const engineRows = REG.rows.filter((r) => r.lastmodHandle.kind === "bonus-engine").map((r) => r.url).sort();
+    expect(engineRows).toEqual(routes);
+  });
+
+  it("세법 이벤트 페이지 — /tax-reform-2026 은 E3(국회 의결) 행, 손잡이는 ROUTE_OVERRIDES", () => {
+    const byUrl = new Map(REG.rows.map((r) => [r.url, r]));
+    const reform = byUrl.get("/tax-reform-2026");
+    expect(reform?.events).toContain("E3");
+    expect(reform?.lastmodHandle).toEqual({ kind: "route-override", ref: "/tax-reform-2026" });
+    expect(byUrl.get("/tax-changes-2026")?.events).toEqual(expect.arrayContaining(["E6", "E8"]));
+    expect(byUrl.get("/tax-rates-2026")?.events).toEqual(expect.arrayContaining(["E3", "E8"]));
+  });
+
+  it("R4 가이드 7편 — guide-modified(ref = 슬러그) · rss (status 는 배포 따라 바뀌므로 값을 고정하지 않음)", () => {
     const guides = REG.rows.filter((r) => r.url.startsWith("/guides/"));
     expect(guides.map((g) => g.url.slice("/guides/".length)).sort()).toEqual(
       [
@@ -114,7 +182,7 @@ describe("등록부 구조", () => {
       ].sort(),
     );
     for (const g of guides) {
-      expect(g.status).toBe("pending-R4B3");
+      expect(STATUSES).toContain(g.status);
       expect(g.lastmodHandle).toEqual({ kind: "guide-modified", ref: g.url.slice("/guides/".length) });
       expect(g.feeds).toEqual(["rss"]);
     }
@@ -283,13 +351,52 @@ describe("announceList", () => {
     }
   });
 
-  it("실제 등록부 E3: 봉급표가 먼저, 대기 중인 2027 교원·경찰·소방은 건너뜀", () => {
+  it("합성: 대기 행을 live 로 바꾸면 그 자리(클러스터·등록부 순서)에 후보로 들어온다", () => {
+    const r = synthetic();
+    const before = announceList(r, "E5");
+    (r.rows.find((x) => x.url === "/pending-0") as SeasonRow).status = "live";
+    const after = announceList(r, "E5");
+    expect(after.skippedPending).toEqual([]);
+    expect(after.candidates).toHaveLength(before.candidates.length + 1);
+    // pay 클러스터 6행 뒤(등록부 순서), bonus 앞
+    expect(after.candidates.indexOf("/pending-0")).toBe(6);
+    expect(after.feedMetaSync).toContain("/pending-0");
+  });
+
+  it("실제 등록부 E3: 봉급표가 먼저, 세법개정안 페이지는 1일차 안, 대기 행은 후보 밖", () => {
     const a = announceList(REG, "E3");
     expect(a.candidates.length).toBeGreaterThan(NAVER_REQUEST_CAP);
     expect(a.naverRequest[0]).toBe("/civil-servant-pay-2027");
-    expect(a.skippedPending.map((p) => p.url)).toEqual(
-      expect.arrayContaining(["/teacher-pay-2027", "/police-pay-2027", "/firefighter-pay-2027"]),
-    );
+    expect(a.naverRequest).toContain("/tax-reform-2026");
+    const pending = REG.rows.filter((r) => r.events.includes("E3") && r.status !== "live").map((r) => r.url);
+    expect(a.skippedPending.map((p) => p.url)).toEqual(pending);
+    for (const p of pending) expect(a.candidates).not.toContain(p);
+  });
+
+  it("실제 등록부: 어느 이벤트에서도 live 가 아닌 행은 후보가 아니고 skippedPending 에만 있다", () => {
+    for (const id of EVENT_IDS) {
+      const a = announceList(REG, id);
+      const notLive = REG.rows.filter((r) => r.events.includes(id) && r.status !== "live").map((r) => r.url);
+      expect(a.candidates.filter((u) => notLive.includes(u)), id).toEqual([]);
+      expect(a.skippedPending.map((p) => p.url), id).toEqual(notLive);
+    }
+  });
+
+  it("diff 밖 수동 요청 후보 = 날짜 손잡이 없는 live 후보 (성과급 엔진·직업 상세)", () => {
+    expect(isHandleless({ kind: "bonus-engine", ref: "BONUS_ENGINE_REVIEW_DATE" })).toBe(true);
+    expect(isHandleless({ kind: "add-on-event", ref: "sitemap.ts jobUrls — 직업별 날짜 손잡이 없음" })).toBe(true);
+    expect(isHandleless({ kind: "add-on-event", ref: "/auto-tax-2026" })).toBe(false);
+    expect(isHandleless({ kind: "route-override", ref: "/home-loan" })).toBe(false);
+    expect(isHandleless({ kind: "data-checked", ref: "PAY_2027_PAGES_MODIFIED" })).toBe(false);
+    const e10 = announceList(REG, "E10");
+    expect(e10.manualOnly).toEqual(expect.arrayContaining(["/calc/samsung-bonus", "/calc/year-end-bonus"]));
+    expect(e10.manualOnly).not.toContain("/calc/bonus-calculators");
+    expect(announceList(REG, "E7").manualOnly).toContain("/job/soldier");
+    for (const id of EVENT_IDS) {
+      const a = announceList(REG, id);
+      const byUrl = new Map(REG.rows.map((r) => [r.url, r]));
+      expect(a.manualOnly).toEqual(a.candidates.filter((u) => isHandleless((byUrl.get(u) as SeasonRow).lastmodHandle)));
+    }
   });
 
   it("lastmod 할 일 문구 — 성과급 엔진 공유 날짜는 올리지 말라고 알린다", () => {
@@ -297,6 +404,8 @@ describe("announceList", () => {
     expect(lastmodAction({ kind: "add-on-event", ref: "/auto-tax-2026" })).toContain("한 줄 추가");
     expect(lastmodAction({ kind: "guide-modified", ref: "lotto-prize-tax" })).toContain("gen-guides-meta");
     expect(lastmodAction({ kind: "bonus-engine", ref: "BONUS_ENGINE_REVIEW_DATE" })).toContain("한 URL 만 올릴 수 없음");
+    expect(lastmodAction({ kind: "bonus-engine", ref: "BONUS_ENGINE_REVIEW_DATE" })).toContain("diff 밖 수동 요청");
+    expect(lastmodAction({ kind: "add-on-event", ref: "sitemap.ts jobUrls" })).toContain("diff 밖 수동 요청");
     const a = announceList(REG, "E10");
     expect(a.lastmodTodo.find((t) => t.url === "/calc/samsung-bonus")?.kind).toBe("bonus-engine");
   });
@@ -389,12 +498,47 @@ describe("diffSitemaps — (loc, lastmod) 쌍", () => {
     expect(p.eventUnchanged).toContain(`${O}/year-end-tax`);
     expect(p.eventUnchanged).not.toContain(`${O}/civil-servant-pay-2027`);
     expect(p.notInEvent).toEqual([]);
+    // 이벤트를 안 주면 이벤트 목록은 비어 있다
+    const noEvent = requestPlan(d, REG);
+    expect([noEvent.manualRequest, noEvent.eventUnchanged, noEvent.notInEvent]).toEqual([[], [], []]);
 
     const many = sitemapXml(...Array.from({ length: 23 }, (_, i) => urlXml(`${O}/p${i}`, "2026-12-02")));
     const base = sitemapXml(...Array.from({ length: 23 }, (_, i) => urlXml(`${O}/p${i}`, "2026-12-01")));
     const d2 = diffSitemaps(base, many);
     if (!d2.ok) throw new Error(d2.reason);
     expect(requestPlan(d2, REG).naverDays.map((x) => x.length)).toEqual([10, 10, 3]);
+  });
+
+  it("requestPlan: 손잡이 없는 후보(성과급 엔진·직업 상세)는 '손잡이 누락'이 아니라 수동 요청 목록으로", () => {
+    // 삼성 OPI 날(E10): 허브만 lastmod 를 올렸고 성과급 엔진 계산기는 공유 날짜라 그대로
+    const rest = [
+      urlXml(`${O}/calc/samsung-bonus`, "2026-09-25"),
+      urlXml(`${O}/calc/year-end-bonus`, "2026-09-25"),
+      urlXml(`${O}/insights/bonus-payout-history-2026`, "2026-09-26"),
+    ];
+    const prev = sitemapXml(urlXml(`${O}/calc/bonus-calculators`, "2026-09-20"), ...rest);
+    const next = sitemapXml(urlXml(`${O}/calc/bonus-calculators`, "2027-01-29"), ...rest);
+    const d = diffSitemaps(prev, next);
+    if (!d.ok) throw new Error(d.reason);
+    expect(d.changed).toEqual([`${O}/calc/bonus-calculators`]);
+    const p = requestPlan(d, REG, "E10");
+    expect(p.ordered).toEqual([`${O}/calc/bonus-calculators`]);
+    // 수동 요청: 등록부 순서(클러스터 우선순위), 발표 당사 계산기가 맨 앞
+    expect(p.manualRequest[0]).toBe(`${O}/calc/samsung-bonus`);
+    expect(p.manualRequest).toEqual(expect.arrayContaining([`${O}/calc/year-end-bonus`, `${O}/calc/samsung-display-bonus`]));
+    // 손잡이 누락 경고에는 날짜 손잡이가 있는 행만 (리포트 updatedDate 는 올릴 수 있는 손잡이)
+    expect(p.eventUnchanged).toContain(`${O}/insights/bonus-payout-history-2026`);
+    const byUrl = new Map(REG.rows.map((r) => [`${O}${r.url}`, r]));
+    for (const u of p.eventUnchanged) expect(isHandleless((byUrl.get(u) as SeasonRow).lastmodHandle), u).toBe(false);
+    for (const u of p.manualRequest) expect(isHandleless((byUrl.get(u) as SeasonRow).lastmodHandle), u).toBe(true);
+    // 두 목록 + diff = 이벤트 후보 전체 (빠짐·겹침 없음)
+    const all = [...p.ordered, ...p.manualRequest, ...p.eventUnchanged].map(toPath).sort();
+    expect(all).toEqual([...announceList(REG, "E10").candidates].sort());
+
+    // E7: /job/soldier 는 직업 상세라 날짜 손잡이가 없다 → 수동 요청
+    const e7 = requestPlan(d, REG, "E7");
+    expect(e7.manualRequest).toContain(`${O}/job/soldier`);
+    expect(e7.eventUnchanged).not.toContain(`${O}/job/soldier`);
   });
 });
 
@@ -406,9 +550,16 @@ describe("validateRegistry", () => {
 
   it("live URL 이 모두 사이트맵에 있고 route-override 키가 모두 있으면 0건 (대기 행은 없어도 됨)", () => {
     expect(validateRegistry(REG, sitemapOk(), overridesOk())).toEqual([]);
-    const pending = REG.rows.filter((r) => r.status !== "live");
-    expect(pending.length).toBeGreaterThan(0);
-    for (const p of pending) expect(sitemapOk()).not.toContain(p.url);
+    // 대기 행이 사이트맵·ROUTE_OVERRIDES 에 없어도 통과 — 합성 행으로 (실제 대기 행 수는 배포마다 줄어든다)
+    const r = clone();
+    r.rows.push({ url: "/pending-x", cluster: "pay", events: ["E7"], peak: "2027-01", lastmodHandle: { kind: "route-override", ref: "/pending-x" }, feeds: [], status: "pending-1014" });
+    expect(validateRegistry(r, sitemapOk(), overridesOk())).toEqual([]);
+    // 같은 행이 live 가 되면 사이트맵·ROUTE_OVERRIDES 에 있어야 한다
+    (r.rows[r.rows.length - 1] as SeasonRow).status = "live";
+    expect(validateRegistry(r, sitemapOk(), overridesOk())).toEqual([
+      "/pending-x: live 인데 사이트맵에 없음",
+      "/pending-x: ROUTE_OVERRIDES 에 '/pending-x' 키 없음 — 손잡이가 없으면 add-on-event 로 적을 것",
+    ]);
   });
 
   it("사이트맵에 없는 live URL 을 잡는다", () => {
@@ -417,13 +568,13 @@ describe("validateRegistry", () => {
   });
 
   it("ROUTE_OVERRIDES 에 없는 route-override 키를 잡는다 — add-on-event 는 키가 없어도 통과", () => {
-    const keys = overridesOk().filter((k) => k !== "/year-end-tax");
-    const errs = validateRegistry(REG, sitemapOk(), keys);
+    const r = clone();
+    r.rows.push({ url: "/addon-x", cluster: "rollover", events: ["E8"], peak: "2027-01", lastmodHandle: { kind: "add-on-event", ref: "/addon-x" }, feeds: [], status: "live" });
+    const keys = overrideRefs(r).filter((k) => k !== "/year-end-tax");
+    expect(keys).not.toContain("/addon-x");
+    const errs = validateRegistry(r, liveUrls(r), keys);
     expect(errs).toHaveLength(1);
     expect(errs[0]).toMatch(/^\/year-end-tax: ROUTE_OVERRIDES 에 '\/year-end-tax' 키 없음/);
-    const addOn = REG.rows.filter((r) => r.lastmodHandle.kind === "add-on-event");
-    expect(addOn.length).toBeGreaterThan(0);
-    for (const r of addOn) expect(keys).not.toContain(r.lastmodHandle.ref);
   });
 
   it("알 수 없는 route-override 키(오타)를 잡는다", () => {
@@ -471,6 +622,30 @@ describe("validateRegistry", () => {
     ]);
   });
 
+  it("반대 방향: rssTablesFeed.ts 멤버인데 등록부 행 자체가 없으면 잡는다", () => {
+    const tables = REG.rows.filter((r) => r.feeds.includes("rss-tables") && r.status === "live").map((r) => r.url);
+    const pending = REG.rows.filter((r) => r.feeds.includes("rss-tables") && r.status !== "live").map((r) => r.url);
+    const errs = validateRegistry(REG, sitemapOk(), overridesOk(), {
+      rssTables: { feed: [...tables, "/calc/not-registered"], pending: [...pending, "/pending-not-registered"] },
+    });
+    expect(errs).toEqual([
+      "/calc/not-registered: rssTablesFeed.ts FEED_PATHS 멤버인데 등록부에 행 없음",
+      "/pending-not-registered: rssTablesFeed.ts PENDING_AFTER_OCT_MERGE 멤버인데 등록부에 행 없음",
+    ]);
+    // 회귀: 8f420a23 의 FEED_PATHS 에 있던 /calc/year-end-bonus 행이 빠지면 정확히 그 한 건 (예전에는 0건이라 못 잡았다)
+    const r = clone();
+    r.rows = r.rows.filter((x) => x.url !== "/calc/year-end-bonus");
+    expect(validateRegistry(r, liveUrls(r), overrideRefs(r), { rssTables: { feed: tables, pending } })).toEqual([
+      "/calc/year-end-bonus: rssTablesFeed.ts FEED_PATHS 멤버인데 등록부에 행 없음",
+    ]);
+  });
+
+  it("실제 rss-tables 피드 멤버(파일이 있으면 파일, 없으면 8f420a23 사본)는 모두 등록부 행이 있고 표시가 맞다", () => {
+    const m = rssTablesMembers();
+    expect(m.feed.length).toBeGreaterThan(0);
+    expect(validateRegistry(REG, sitemapOk(), overridesOk(), { rssTables: m }), m.source).toEqual([]);
+  });
+
   it("죽은 손잡이: 사이트맵 lastmod 가 ROUTE_OVERRIDES 날짜와 다르면 잡는다 (성과급 루프가 덮어쓰는 유형)", () => {
     const r = clone();
     const row = r.rows.find((x) => x.url === "/calc/samsung-bonus") as SeasonRow;
@@ -502,14 +677,17 @@ describe("validateRegistry", () => {
     ]);
   });
 
-  it("경고: 대기 행이 사이트맵에 나타나면 live 로, add-on-event 키가 생기면 route-override 로", () => {
-    const warns = registryWarnings(REG, [...sitemapOk(), "/teacher-pay-2027"], [...overridesOk(), "/auto-tax-2026"]);
-    expect(warns).toEqual(
-      expect.arrayContaining([
-        "/teacher-pay-2027: pending-1014 인데 이미 사이트맵에 있음 — status 를 live 로",
-        "/auto-tax-2026: ROUTE_OVERRIDES 에 '/auto-tax-2026' 키가 생김 — kind 를 route-override 로",
-      ]),
+  it("경고: 대기 행이 사이트맵에 나타나면 live 로, add-on-event 키가 생기면 route-override 로 (합성 행)", () => {
+    const r = clone();
+    r.rows.push(
+      { url: "/pending-x", cluster: "pay", events: ["E7"], peak: "2027-01", lastmodHandle: { kind: "data-checked", ref: "X" }, feeds: [], status: "pending-1014" },
+      { url: "/addon-x", cluster: "rollover", events: ["E8"], peak: "2027-01", lastmodHandle: { kind: "add-on-event", ref: "/addon-x" }, feeds: [], status: "live" },
     );
+    const warns = registryWarnings(r, [...liveUrls(r), "/pending-x"], [...overrideRefs(r), "/addon-x"]);
+    expect(warns).toEqual([
+      "/pending-x: pending-1014 인데 이미 사이트맵에 있음 — status 를 live 로",
+      "/addon-x: ROUTE_OVERRIDES 에 '/addon-x' 키가 생김 — kind 를 route-override 로",
+    ]);
     expect(registryWarnings(REG, sitemapOk(), overridesOk())).toEqual([]);
   });
 });

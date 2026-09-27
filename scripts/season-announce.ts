@@ -9,9 +9,11 @@
 //       rssTablesFeed.ts 가 트리에 있으면 rss-tables 멤버도 대조. 오류가 있으면 exit 1.
 //   npx tsx scripts/season-announce.ts event E3
 //       그 이벤트의 한국어 Day-0 체크리스트, 수집 요청 후보(10개 이하)·구글 검사 후보(3개 이하),
-//       lastmod 손잡이 할 일, 피드 메타 동기화 알림.
+//       diff 밖 수동 요청 후보(날짜 손잡이 없는 URL), lastmod 손잡이 할 일, 피드 메타 동기화 알림.
 //   npx tsx scripts/season-announce.ts diff <prev.xml> <next.xml> [--event E3]
 //       배포 전·후 사이트맵의 (loc, lastmod) 차이 = CF 빌드 로그 [indexnow] 제출 목록.
+//       --event 를 주면 그 이벤트 후보 중 diff 에 없는 URL 을 둘로 나눈다:
+//       날짜 손잡이가 없는 URL = 'diff 밖 수동 요청', 손잡이가 있는 URL = '손잡이 누락' 확인 목록.
 //       파일 자리에 build 를 쓰면 이 트리의 빌드 산출물(.next/server/app/sitemap.xml.body)을 읽는다.
 //   공통: --registry <경로> 로 다른 등록부 파일.
 // 종료 코드: 0 정상 · 1 check 오류 또는 diff 판독 실패 · 2 인자 오류.
@@ -154,8 +156,12 @@ async function cmdEvent(registry: SeasonRegistry, raw: string | undefined, root:
   lines.push(`   curl -s -A "Mozilla/5.0" ${SITE_ORIGIN}/sitemap.xml -o prev.xml (기본 UA 는 403)`);
   lines.push(`6. npx tsx scripts/season-announce.ts diff prev.xml next.xml --event ${id}`);
   lines.push("   → 목록 수가 CF 빌드 로그 '[indexnow] diff: 신규 · 변경 · 삭제' 와 같은지 확인.");
-  lines.push(`7. 네이버 서치어드바이저 → 요청 → 웹 페이지 수집 요청: diff 목록만, 하루 ${NAVER_REQUEST_CAP}개 이하.`);
-  lines.push(`   구글 서치콘솔 URL 검사 → 색인 생성 요청: ${GSC_INSPECT_CAP}개 이하.`);
+  lines.push(
+    `7. 네이버 서치어드바이저 → 요청 → 웹 페이지 수집 요청: diff 목록 + 아래 'diff 밖 수동 요청' 목록(내용이 바뀐 것만), 하루 ${NAVER_REQUEST_CAP}개 이하.`,
+  );
+  lines.push("   수동 요청 목록은 날짜 손잡이가 없어 diff·[indexnow] 에 나올 수 없는 URL 입니다(성과급 계산기 등).");
+  lines.push("   발표 당사 계산기처럼 이번 발표로 바뀐 URL 을 1일차 앞쪽에 두고, 넘치는 diff 목록 뒤쪽은 다음 날로 넘깁니다.");
+  lines.push(`   구글 서치콘솔 URL 검사 → 색인 생성 요청: ${GSC_INSPECT_CAP}개 이하 (같은 순서).`);
   lines.push("8. docs/ad-experiments.md 3(c) 공변량 행 + docs/metrics-log.md 한 줄.");
   lines.push("");
 
@@ -171,6 +177,13 @@ async function cmdEvent(registry: SeasonRegistry, raw: string | undefined, root:
     }
     lines.push(`## 구글 URL 검사 후보 (${a.gscInspect.length})`);
     lines.push(...numbered(a.gscInspect.map(full)));
+    if (a.manualOnly.length) {
+      lines.push("");
+      lines.push(
+        `## diff 밖 수동 요청 후보 ${a.manualOnly.length}개 — 날짜 손잡이가 없어 6번 diff 에 나오지 않음, 내용이 바뀐 것만 7번에서 요청`,
+      );
+      lines.push(...numbered(a.manualOnly.map(full)));
+    }
     lines.push("");
     lines.push("## lastmod 손잡이 (바뀐 URL 만)");
     for (const t of a.lastmodTodo) {
@@ -224,7 +237,11 @@ function cmdDiff(registry: SeasonRegistry, args: string[], root: string): number
   const out: string[] = [];
   out.push(`${TAG} diff: 신규 ${d.added.length} · 변경 ${d.changed.length} · 삭제 ${d.removed.length} (= [indexnow] 목록 ${d.urls.length}개)`);
   if (d.urls.length === 0) {
-    out.push("바뀐 lastmod 없음 — 수집 요청 없음. 내용을 바꿨다면 lastmod 손잡이를 빠뜨린 것입니다.");
+    out.push(
+      `바뀐 lastmod 없음 — diff 수집 요청 없음. 날짜 손잡이가 있는 URL 의 내용을 바꿨다면 lastmod 손잡이를 빠뜨린 것입니다${
+        eventId ? "(손잡이 없는 URL 은 아래 수동 요청 목록)" : "(손잡이 없는 URL 은 --event 를 주면 수동 요청 목록으로 나옴)"
+      }.`,
+    );
   }
   if (d.added.length || d.removed.length) {
     out.push("[WARN] 동결기(11/1~1/31)에는 새 URL·삭제 URL 이 0개여야 합니다 — 의도한 변경인지 확인.");
@@ -245,8 +262,19 @@ function cmdDiff(registry: SeasonRegistry, args: string[], root: string): number
     out.push(`[WARN] 등록부 밖에서 바뀐 URL ${plan.outsideRegistry.length}개 — 위 목록 끝에 포함. 의도한 변경인지 확인.`);
   }
   if (eventId) {
+    if (plan.manualRequest.length) {
+      const lastDay = plan.naverDays[plan.naverDays.length - 1] ?? [];
+      const free = plan.naverDays.length ? NAVER_REQUEST_CAP - lastDay.length : NAVER_REQUEST_CAP;
+      out.push(
+        `## diff 밖 수동 요청 — ${eventId} 후보 중 날짜 손잡이가 없는 URL ${plan.manualRequest.length}개 (내용이 바뀐 것만 골라 요청)`,
+      );
+      out.push(
+        `   diff 목록과 합쳐 하루 ${NAVER_REQUEST_CAP}개 이하 — 발표 당사 계산기를 1일차 앞쪽에, 넘치는 diff 뒤쪽은 다음 날로 (지금 마지막 날 남은 자리 ${free}개).`,
+      );
+      out.push(...numbered(plan.manualRequest));
+    }
     if (plan.eventUnchanged.length) {
-      out.push(`## ${eventId} 후보인데 lastmod 가 그대로인 URL ${plan.eventUnchanged.length}개 (내용을 바꿨다면 손잡이 누락)`);
+      out.push(`## ${eventId} 후보인데 lastmod 가 그대로인 URL ${plan.eventUnchanged.length}개 (날짜 손잡이가 있음 — 내용을 바꿨다면 손잡이 누락)`);
       out.push(...numbered(plan.eventUnchanged));
     }
     if (plan.notInEvent.length) {
