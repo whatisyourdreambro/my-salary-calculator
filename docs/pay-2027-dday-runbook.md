@@ -15,11 +15,11 @@
 
 | 무엇 | 언제 main 에 | 이 런북에서 쓰는 곳 |
 |---|---|---|
-| r2-l2: `src/lib/payTablesFull2026.ts`, `src/lib/payTablesFull2027.ts`(`PAY_FULL_2027 = null`, `validatePayFull2027`), 2027 교사·경찰·소방 3쪽, 테스트 `payTablesFull2027`·`pay2027ConfirmedSlot` | 10/14 09:10 예약 배포 | 4·5단계 |
+| r2-l2: `src/lib/payTablesFull2026.ts`, `src/lib/payTablesFull2027.ts`(`PAY_FULL_2027 = null`, `validatePayFull2027`), 2027 교사·경찰·소방 3쪽, 테스트 `payTablesFull2027`·`pay2027ConfirmedSlot` | 10/14 09:10 예약 배포 | 3(a)·5·7단계 |
 | R4-RSS: `src/lib/rssTablesFeed.ts`(`TABLES_FEED_META`, 2027 봉급 3쪽을 `FEED_PATHS` 로 옮김), `rssTablesFeed.test.ts` | 10/16 | 6단계 |
 | b2-civilpay(공무원 실수령 계산기) | 10/20 | 게이트 |
 | **R6-3**: `/civil-servant-pay-2027` 광고 위 확정 문구 변형(`PAY_2027_CONFIRMED` 로 선택, 꺼진 동안 바이트 동일, 폭 맞춤) + 교원·경찰·소방 확정 문구 1,123폭 증명 | 10/28 | 5단계 |
-| 이 키트(파서·픽스처·이 문서) | R6-1 푸시(10/4) | 2~4단계 |
+| 이 키트(파서·픽스처·이 문서) | R6-1 푸시(10/4) | 3·4-B단계 |
 | r6-announce 등록부 `docs/season-urls-2026-27.json` + `scripts/season-announce.ts` | R6-1 푸시(10/4) | 9단계 |
 | A35 자동 퍼지(cf-purge.yml 시크릿 3개) | 9/28 운영자 콘솔 | 8단계 |
 
@@ -166,7 +166,7 @@ npm run verify:autoads                                # 0.0% 손실
 ## 9. 알리기·기록 (15분)
 
 1. 바뀐 URL 목록 = `npx tsx scripts/season-announce.ts diff` 의 lastmod 변경 집합(= CF 빌드 로그 `[indexnow]` 목록). 변화 없는 URL 은 올리지 않습니다.
-2. 운영자: 네이버 서치어드바이저 → 요청 → 웹 페이지 수집, **바뀐 URL만 10개 이하** (보통 2027 봉급 4쪽 + 링크 문구가 바뀐 2026 봉급 4쪽).
+2. 운영자: 네이버 서치어드바이저 → 요청 → 웹 페이지 수집, **바뀐 URL만 10개 이하** (보통 2027 봉급 4쪽. 2026 봉급 4쪽은 링크 문구만 바뀌므로 1번 목록에 있을 때만).
 3. 운영자: Google Search Console URL 검사 → 색인 요청 **3개 이하**: `/civil-servant-pay-2027`, `/teacher-pay-2027`, `/police-pay-2027`.
 4. 등록부 행: `docs/season-urls-2026-27.json` 의 E7(봉급표 D-Day) 행 상태를 완료로, 날짜를 배포일로. `npx tsx scripts/season-announce.ts check` 0.
 5. `docs/metrics-log.md` 에 한 줄(T0, 배포 시각, 24시간 안 여부).
