@@ -137,6 +137,9 @@ ${DISCLAIMER_HTML}
 </div>
 `;
 
+// PS 5년 추이 표 2022년 행(2026-09-27 대조): PS 820%는 회사 사내 공지 인용 보도 기준(이투데이 2023-02-01,
+// https://www.etoday.co.kr/news/view/2217429 — 월 기본급의 820%·연봉의 41%), 영업이익은 DART 사업보고서 감사 후
+// 연결 영업이익 6조8,094억원(rcpNo 20230321001209 — 잠정 공시 7조66억원과 다름). 계산기 psData.ts 와 같은 값.
 const skHynixWage2026 = `
 <p class="lead">
  SK하이닉스는 2024~2025년 HBM3E 슈퍼사이클로 분기 영업이익 7조원대를 기록하며 사상 최대 PS(이익분배금)를 직원에게 지급했습니다.
@@ -181,7 +184,7 @@ const skHynixWage2026 = `
    </tr>
    <tr class="border-t border-border">
     <td class="p-3">2022</td>
-    <td class="p-3">7조원</td>
+    <td class="p-3">6.8조원</td>
     <td class="p-3">820%</td>
     <td class="p-3">하반기 둔화</td>
    </tr>

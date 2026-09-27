@@ -49,7 +49,10 @@ export const AGREEMENT_2026 = {
 /** 연도별 PS·PI 실지급 이력 (실적 귀속 연도 기준, 공개 보도 수치)
  *  opTril = DART 사업보고서 요약연결재무정보 영업이익(감사 후, 소수 첫째 자리 반올림) — 2026-09-26 대조:
  *  2021 12조4,103억 · 2022 6조8,094억(잠정 공시 7조66억과 다름) · 2023 −7조7,303억 · 2024 23조4,673억 · 2025 47조2,063억.
- *  psRatePct 는 공시 항목이 아니다. 2022년 600% 는 출처 미확인(회사 인용 보도는 820%) — 확인 전까지 값 유지. */
+ *  psRatePct 는 공시 항목이 아니다(보도 기준 — 표 캡션 "(보도 기준)").
+ *  2022년 820%: 회사가 사내 공지로 "2022년 PS를 820%로 최종 결정"했다고 인용한 이투데이 2023-02-01 보도
+ *  (https://www.etoday.co.kr/news/view/2217429 — 월 기본급의 820%·연봉의 41%, 2023-02-03 지급). 2026-09-27 정정:
+ *  종전 600% 는 출처가 확인되지 않은 값이었다. 표 셀은 tabular-nums 라 600%→820% 폭 동일(광고 위치 불변). */
 export type PsHistoryRow = {
   year: number;
   /** 기본급 대비 PS % (null = 미지급) */
@@ -63,7 +66,7 @@ export type PsHistoryRow = {
 
 export const PS_HISTORY: PsHistoryRow[] = [
   { year: 2021, psRatePct: 1000, piTotalPct: null, opTril: 12.4, note: "상한(1,000%) 도달" },
-  { year: 2022, psRatePct: 600, piTotalPct: null, opTril: 6.8, note: "다운사이클" },
+  { year: 2022, psRatePct: 820, piTotalPct: null, opTril: 6.8, note: "다운사이클" },
   { year: 2023, psRatePct: 0, piTotalPct: null, opTril: -7.7, note: "적자 — PS 미지급" },
   { year: 2024, psRatePct: 1500, piTotalPct: 300, opTril: 23.5, note: "HBM 호황" },
   {

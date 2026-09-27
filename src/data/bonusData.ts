@@ -202,12 +202,15 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         note: "2021년 실적분 — 상한(1,000%) 도달. 연간 PS는 통상 이듬해 2월 지급",
         source: "공개 보도 수치 (psData.ts PS_HISTORY)",
       },
+      // 2022년 실적분 820% — 회사 사내 공지 인용 보도(이투데이 2023-02-01,
+      // https://www.etoday.co.kr/news/view/2217429: 월 기본급의 820%·연봉의 41%, 2023-02-03 지급). 2026-09-27 600%→820% 정정.
+      // source 문구는 /insights 표(광고 위) 줄 수 불변을 위해 옛 문구와 같은 음절 수로 맞췄다("공개 보도 수치"→"회사 인용 보도").
       {
         year: 2023,
         scheme: "PS",
-        percentOfBase: 600,
+        percentOfBase: 820,
         note: "2022년 실적분 — 다운사이클",
-        source: "공개 보도 수치 (psData.ts PS_HISTORY)",
+        source: "회사 인용 보도 (psData.ts PS_HISTORY)",
       },
       {
         year: 2024,

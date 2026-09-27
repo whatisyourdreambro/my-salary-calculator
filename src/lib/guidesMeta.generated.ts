@@ -2002,7 +2002,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-13",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5053
+  "contentChars": 5055
  },
  {
   "slug": "samsung-hynix-2026-deepdive",
@@ -4666,7 +4666,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
-  "contentChars": 6727
+  "contentChars": 6729
  },
  {
   "slug": "lg-hyundai-posco-bonus-2026",
