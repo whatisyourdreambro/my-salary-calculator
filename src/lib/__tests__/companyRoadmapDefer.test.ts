@@ -8,7 +8,7 @@ import path from "node:path";
 
 const src = readFileSync(path.resolve(process.cwd(), "src/app/salary-db/[id]/CompanyDetailClient.tsx"), "utf8");
 
-const AD_COMPONENT = /<(CalcResultAd|InArticleAd|HomeTopAd|GuideMidAd|Display2Ad|MultiplexAd|PageFooterAds|CoupangBanner|AdPlacement|ResultAd)\b/;
+const AD_COMPONENT = /<(CalcResultAd|InArticleAd|HomeTopAd|GuideMidAd|Display2Ad|CompanyTopAd|MultiplexAd|PageFooterAds|CoupangBanner|AdPlacement|ResultAd)\b/;
 
 describe("CompanyDetailClient roadmap chart", () => {
   it("keeps the fixed 300px box, the pulse placeholder and the dynamic import", () => {
