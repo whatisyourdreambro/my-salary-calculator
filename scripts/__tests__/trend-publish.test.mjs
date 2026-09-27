@@ -1,0 +1,819 @@
+// node --test scripts/__tests__/trend-publish.test.mjs — 트렌드 브리프 파이프라인 스크립트 (2026-09-26 R5 publisher)
+// 오프라인: 네트워크·실제 빌드 없이 가짜 명령 실행기·가짜 fetch·임시 TREND_HOME 으로 상태 기계와 게이트를 검사한다.
+// 비밀값·40자리 hex 는 이 파일에 글자로 두지 않고 실행 중에 만든다(브랜치 diff 의 secret-scan 이 이 파일도 훑는다).
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { execFileSync, spawnSync } from "node:child_process";
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+import * as scan from "../trend-publish/secret-scan.mjs";
+import * as daily from "../trend-publish/daily.mjs";
+import { checkPreconditions, main as publishMain } from "../trend-publish/publish-approved.mjs";
+import { extractAssets, pollPage, run as verifyRun, staleChunkCheck } from "../trend-publish/verify-prod.mjs";
+import { compareManifests, fileEntry, metricChanges, normalizeChunk, statusViolations } from "../trend-publish/chunk-diff.mjs";
+import { compareSequences, extractAdMarkers } from "../trend-publish/ad-sequence.mjs";
+import { checkResources, EXIT_RESOURCE } from "../trend-publish/heavy.mjs";
+import { validateAck } from "../trend-publish/review-ack.mjs";
+import { numberErrors30d, zombieCohortRatio } from "../trend-publish/decide.mjs";
+
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
+const TP = join(ROOT, "scripts", "trend-publish");
+const hex = (n, ch = "a") => ch.repeat(n);
+const tmp = (p) => mkdtempSync(join(tmpdir(), p));
+// 키 붙은 URL 파라미터 이름도 실행 중에 조립한다(이 파일 원문이 브랜치 secret-scan 에 걸리지 않게)
+const OC = ["O", "C="].join("");
+const SK = ["service", "Key="].join("");
+const CK = ["crtfc", "_key="].join("");
+
+// ─────────────────────────────────────────────────────────────
+// secret-scan
+// ─────────────────────────────────────────────────────────────
+test("secret-scan: 40·32자리 hex · OC= · serviceKey · 환경변수 값을 잡고 IndexNow 키 파일은 허용", () => {
+  const h40 = hex(40, "b");
+  const h32 = hex(32, "c");
+  const text = [`const a = "${h40}";`, `k=${h32}`, `https://www.law.go.kr/DRF/lawSearch.do?${OC}someone&target=law`, `https://apis.data.go.kr/x?${SK}${"Z".repeat(20)}`, `${CK}${"q".repeat(40)}`].join("\n");
+  const rules = new Set(scan.scanText(text, { file: "src/x.ts" }).map((h) => h.rule));
+  for (const r of ["hex40", "hex32", "law-oc", "service-key", "keyed-param"]) assert.ok(rules.has(r), r);
+  assert.deepEqual(scan.scanText(h32, { file: `public/${h32}.txt` }), []);
+  assert.ok(scan.scanText(h32, { file: "public/other.txt" }).length > 0);
+  const secret = `S3cr3t-${"x".repeat(12)}`;
+  const env = scan.collectEnvSecrets({ ECOS_API_KEY: secret, LAW_OC: "operator-oc-value", PATH: "/usr/bin", SHORT_KEY: "abc" });
+  assert.deepEqual(env.map((e) => e.name).sort(), ["ECOS_API_KEY", "LAW_OC"]);
+  const b64 = Buffer.from(secret).toString("base64");
+  const hits = scan.scanText(`literal ${secret} and ${encodeURIComponent(secret)} and ${b64}`, { file: "log.txt", envSecrets: env });
+  assert.ok(hits.filter((h) => h.rule === "env:ECOS_API_KEY").length >= 2);
+  assert.ok(hits.some((h) => h.preview.startsWith(b64.slice(0, 4))));
+  // 압축 번들의 속성 대입은 키가 아니다(.next/server/edge-chunks 실측 오탐) — URL 파라미터·줄 머리만
+  assert.deepEqual(scan.scanText("w.path=w.pathname+w.search,w.auth=[u.username,u.password].map(de)", { file: ".next/server/edge-chunks/706.js", keyedOnly: true }), []);
+  assert.equal(scan.scanText(`x?${CK.replace("crtfc_key", "auth")}${"k".repeat(12)}`, { file: "log.txt" })[0]?.rule, "keyed-param");
+  // .next 는 키 붙은 URL 만 — 빌드 해시(hex)는 정상
+  assert.deepEqual(scan.scanText(`previewModeId":"${h32}"`, { file: ".next/prerender-manifest.json", keyedOnly: true }), []);
+});
+
+test("secret-scan: 테스트·픽스처 경로의 뻔한 자리표시 값만 키 URL 규칙에서 빠진다", () => {
+  const lines = [`https://www.law.go.kr/DRF/lawSearch.do?${OC}planted_oc_1&target=law`, `x?${CK}CK_SECRET`, `y?${SK}SK_SECRET`, `<link>https://www.law.go.kr/x?${OC}test</link>`].join("\n");
+  assert.deepEqual(scan.scanText(lines, { file: "scripts/__tests__/trend-radar.test.mjs" }), []);
+  assert.deepEqual(scan.scanText(lines, { file: "scripts/trend-radar/fixtures/lawdrf.xml" }), []);
+  // 같은 값이라도 테스트 경로가 아니면 잡는다
+  assert.equal(scan.scanText(lines, { file: "src/lib/x.ts" }).length, 4);
+  // 테스트 경로라도 자리표시 모양이 아닌 값은 잡는다 · hex 규칙은 그대로
+  assert.equal(scan.scanText(`z?${OC}realowner77`, { file: "scripts/__tests__/a.test.mjs" })[0]?.rule, "law-oc");
+  assert.equal(scan.scanText(hex(40, "f"), { file: "scripts/__tests__/a.test.mjs" })[0]?.rule, "hex40");
+  // 환경변수 실값은 경로와 무관하게 잡는다
+  const env = scan.collectEnvSecrets({ LAW_OC: "planted_oc_value" });
+  assert.equal(scan.scanText(`q?${OC}planted_oc_value`, { file: "scripts/__tests__/a.test.mjs", envSecrets: env }).filter((h) => h.rule === "env:LAW_OC").length, 1);
+});
+
+test("secret-scan: 값 가리기 — 출력에 원문이 없다 (git 저장소 종단 검사 + HALT)", () => {
+  const repo = tmp("scan-repo-");
+  const home = tmp("scan-home-");
+  try {
+    const g = (...a) => execFileSync("git", ["-C", repo, ...a], { stdio: "ignore" });
+    g("init", "-q");
+    g("config", "user.email", "t@example.com");
+    g("config", "user.name", "t");
+    writeFileSync(join(repo, "a.txt"), "base\n");
+    g("add", ".");
+    g("commit", "-qm", "base");
+    const secret = `Tok-${"y".repeat(24)}`;
+    writeFileSync(join(repo, "a.txt"), `base\nurl https://x.example/?${SK}${secret}\n`);
+    const r = spawnSync(process.execPath, [join(TP, "secret-scan.mjs"), "--repo", repo, "--base", "HEAD", "--trend-home", home, "--no-next"], {
+      encoding: "utf8",
+      env: { ...process.env, DATA_GO_KR_KEY: secret },
+    });
+    assert.equal(r.status, 1);
+    assert.ok(!r.stdout.includes(secret) && !r.stderr.includes(secret), "출력에 비밀값 원문이 없어야 한다");
+    assert.ok(existsSync(join(home, "HALT")));
+    assert.ok(!readFileSync(join(home, "HALT"), "utf8").includes(secret));
+    assert.equal(scan.redact(secret), `${secret.slice(0, 4)}…(${secret.length}자)`);
+    // 깨끗한 변경은 통과
+    writeFileSync(join(repo, "a.txt"), "base\nclean line\n");
+    rmSync(join(home, "HALT"));
+    const ok = spawnSync(process.execPath, [join(TP, "secret-scan.mjs"), "--repo", repo, "--base", "HEAD", "--trend-home", home, "--no-next"], { encoding: "utf8" });
+    assert.equal(ok.status, 0, ok.stderr);
+  } finally {
+    rmSync(repo, { recursive: true, force: true });
+    rmSync(home, { recursive: true, force: true });
+  }
+});
+
+// ─────────────────────────────────────────────────────────────
+// daily.mjs 상태 기계 — 가짜 TREND_HOME · 가짜 명령 실행기
+// ─────────────────────────────────────────────────────────────
+function fakeWorktree({ ledger = [] } = {}) {
+  const wt = tmp("trend-wt-");
+  for (const f of ["scripts/trend-publish/calendar.json", "scripts/trend-publish/config.json", "src/lib/trendBriefs/types.ts"]) {
+    mkdirSync(dirname(join(wt, f)), { recursive: true });
+    copyFileSync(join(ROOT, f), join(wt, f));
+  }
+  writeFileSync(join(wt, "scripts/trend-publish/ledger.json"), JSON.stringify(ledger));
+  mkdirSync(join(wt, "scripts/trend-radar"), { recursive: true });
+  mkdirSync(join(wt, "scripts/fact-sentinel"), { recursive: true });
+  writeFileSync(join(wt, "scripts/trend-radar/run.mjs"), "");
+  writeFileSync(join(wt, "scripts/fact-sentinel/run.mjs"), "");
+  return wt;
+}
+function fakeHome(flags = {}) {
+  const home = tmp("trend-home-");
+  for (const [k, v] of Object.entries(flags)) writeFileSync(join(home, k), v);
+  return home;
+}
+const snapshotOperator = (home) => Object.fromEntries(daily.OPERATOR_FLAGS.map((f) => [f, existsSync(join(home, f)) ? readFileSync(join(home, f), "utf8") : null]));
+
+/**
+ * 가짜 실행기 — 명령을 기록하고 규칙대로 답한다.
+ * git status: dirty 면 늘 변경 있음, 아니면 render.ts 가 불리기 전에는 깨끗하고 그 뒤에는 codes.gitStatus.
+ * rev-parse --git-dir / --git-common-dir: 연결 워크트리처럼 서로 다른 값(linked=false 면 같은 값 — 메인 작업 트리).
+ */
+function fakeRunner(home, { dirty = false, codes = {}, candidates, linked = true } = {}) {
+  const calls = [];
+  let rendered = false;
+  const run = async (cmd, args) => {
+    const line = [cmd, ...args].join(" ");
+    calls.splice(calls.length, 0, line);
+    if (line.includes("render.ts")) rendered = true;
+    if (cmd === "git") {
+      if (args.includes("status")) return { code: 0, stdout: dirty ? " M src/x.ts\n" : rendered ? codes.gitStatus ?? "" : "", stderr: "" };
+      if (args.includes("--git-dir")) return { code: 0, stdout: linked ? "C:/repo/.git/worktrees/trend-wt\n" : ".git\n", stderr: "" };
+      if (args.includes("--git-common-dir")) return { code: 0, stdout: linked ? "C:/repo/.git\n" : ".git\n", stderr: "" };
+      if (args.includes("rev-parse") && args.includes("HEAD^{tree}")) return { code: 0, stdout: "tree1234\n", stderr: "" };
+      if (args.includes("rev-parse")) return { code: 0, stdout: "base1234\n", stderr: "" };
+      return { code: 0, stdout: "", stderr: "" };
+    }
+    if (line.includes("trend-radar")) {
+      // 레이더 계약(scripts/trend-radar/README.md): radar-<날짜>.json 의 candidates[] — link·publishedAt·recommendation
+      mkdirSync(join(home, "radar"), { recursive: true });
+      const radar = (candidates ?? []).map((c) => ({ id: c.id, src: "moel-policy", ministry: "고용노동부", sourceKind: "보도자료", title: c.title, link: c.url, publishedAt: `${c.publishedDate}T10:00:00+09:00`, cluster: c.cluster, briefEligible: true, score: c.score, recommendation: c.route }));
+      writeFileSync(join(home, "radar", "radar-2026-10-13.json"), JSON.stringify({ date: "2026-10-13", candidates: radar }));
+      writeFileSync(join(home, "radar", "headlines-2026-10-13.json"), JSON.stringify({ date: "2026-10-13", titles: ["헤드라인은 후보가 아니다"] }));
+      return { code: 0, stdout: "", stderr: "" };
+    }
+    if (line.includes("heavy.mjs")) {
+      const name = /logs[\\/]\d{4}-\d{2}-\d{2}-([a-z0-9-]+)\.log/.exec(line)?.[1];
+      return { code: codes[name] ?? 0, stdout: `[heavy] ${name}`, stderr: "" };
+    }
+    return { code: codes.other ?? 0, stdout: "", stderr: "" };
+  };
+  return { run, calls, now: () => new Date("2026-10-13T01:00:00Z"), log: () => {} };
+}
+const CAND = { id: "c1", cluster: "social-insurance-rates", route: "new-brief", title: "고용보험 제도개편 방안", url: "https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=1", publishedDate: "2026-10-08", score: 50 };
+const cleanup = (...dirs) => dirs.forEach((d) => rmSync(d, { recursive: true, force: true }));
+
+test("daily: 모드 결정 — 10/10 전 DRYRUN · 동결 · 배포 배치+2일 · REVIEWED_UNTIL 만료/14일 초과 · D+28 대기 · 한도 · 모두 충족 시 PROPOSE", () => {
+  const consts = daily.readTypesConstants(ROOT);
+  const calendar = JSON.parse(readFileSync(join(TP, "calendar.json"), "utf8"));
+  const flags = { halt: null, publishEnabled: true, reviewedUntil: "2026-10-20", cfPurgeOk: true, deployHold: null };
+  const base = { flags, calendar, localCalendar: {}, pilotVerdict: false, ledger: [], decisions: [], consts, config: {} };
+  assert.equal(daily.computeMode({ ...base, today: "2026-10-13" }).mode, "PROPOSE");
+  const early = daily.computeMode({ ...base, today: "2026-10-05", flags: { ...flags, reviewedUntil: "2026-10-12" } });
+  assert.equal(early.mode, "DRYRUN");
+  assert.ok(early.reasons.some((r) => r.includes("첫 발행일")));
+  assert.equal(daily.computeMode({ ...base, today: "2026-11-15" }).mode, "FREEZE");
+  assert.ok(daily.computeMode({ ...base, today: "2026-10-11" }).reasons.some((r) => r.includes("배포 배치")));
+  // 운영자 결정(2026-09-27): 파일럿 10/13~10/31 · 11/1~1/31 동결 · 그 뒤는 파일럿 판정 전까지 DRYRUN · 하루 1편·주 5편
+  assert.ok(daily.computeMode({ ...base, today: "2026-10-12" }).reasons.some((r) => r.includes("첫 발행일 2026-10-13")));
+  assert.equal(daily.computeMode({ ...base, today: "2026-10-31", flags: { ...flags, reviewedUntil: "2026-11-05" } }).mode, "PROPOSE");
+  assert.equal(daily.computeMode({ ...base, today: "2026-11-01" }).mode, "FREEZE");
+  assert.equal(daily.computeMode({ ...base, today: "2027-01-31" }).mode, "FREEZE");
+  const after = daily.computeMode({ ...base, today: "2027-02-01", flags: { ...flags, reviewedUntil: "2027-02-10" } });
+  assert.equal(after.mode, "DRYRUN");
+  assert.ok(after.reasons.some((r) => r.includes("파일럿")));
+  assert.equal(daily.computeMode({ ...base, today: "2027-02-01", flags: { ...flags, reviewedUntil: "2027-02-10" }, pilotVerdict: true }).mode, "PROPOSE");
+  const repoCaps = JSON.parse(readFileSync(join(TP, "config.json"), "utf8")).caps;
+  assert.deepEqual(daily.effectiveCaps(consts.hardCaps, repoCaps), { ...consts.hardCaps, perKstDay: 1, perIsoWeek: 5 });
+  const week4 = ["2026-10-19", "2026-10-20", "2026-10-21", "2026-10-22", "2026-10-23"].map((d, i) => ({ slug: `w${i}`, publishedDate: d, cluster: `c${i}`, primary: { url: `u${i}`, sha256: `s${i}` }, reviewBy: "2026-12-20", status: "live" }));
+  const weekCapped = daily.computeMode({ ...base, today: "2026-10-24", ledger: week4, decisions: week4.map((e) => ({ slug: e.slug, at: "d28" })), config: { caps: repoCaps } });
+  assert.ok(weekCapped.reasons.some((r) => r.includes("주 5편")), weekCapped.reasons.join(" / "));
+  assert.ok(daily.computeMode({ ...base, today: "2026-10-13", flags: { ...flags, reviewedUntil: "2026-10-12" } }).reasons.some((r) => r.includes("만료")));
+  assert.ok(daily.computeMode({ ...base, today: "2026-10-13", flags: { ...flags, reviewedUntil: "2026-10-30" } }).reasons.some((r) => r.includes("14일")));
+  assert.ok(daily.computeMode({ ...base, today: "2026-10-13", flags: { ...flags, publishEnabled: false } }).reasons.some((r) => r.includes("PUBLISH_ENABLED")));
+  const live = { slug: "b1", publishedDate: "2026-09-01", cluster: "year-end-tax", primary: { url: "u", sha256: "s" }, reviewBy: "2026-10-31", status: "live" };
+  const pend = daily.computeMode({ ...base, today: "2026-10-13", ledger: [live] });
+  assert.equal(pend.mode, "DRYRUN");
+  assert.ok(pend.reasons.some((r) => r.includes("결정 대기")));
+  assert.equal(daily.computeMode({ ...base, today: "2026-10-13", ledger: [live], decisions: [{ slug: "b1", at: "d28" }] }).mode, "PROPOSE");
+  const capped = daily.computeMode({ ...base, today: "2026-10-13", ledger: [{ ...live, slug: "b2", publishedDate: "2026-10-13", reviewBy: "2026-12-12" }] });
+  assert.ok(capped.reasons.some((r) => r.includes("하루")));
+  assert.equal(daily.cardExpiry("2026-10-08", "2026-10-13"), "2026-10-15");
+  assert.equal(daily.cardExpiry("2026-10-12", "2026-10-13"), "2026-10-15");
+  assert.equal(daily.cardExpiry("2026-10-06", "2026-10-13"), "2026-10-13");
+});
+
+test("daily prepare: HALT · 워크트리 변경 → HALT · 새 코드로 재실행", async () => {
+  const wt = fakeWorktree();
+  const home = fakeHome({ HALT: "테스트 중지" });
+  try {
+    const d = fakeRunner(home);
+    const r = await daily.prepare({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13" }, d);
+    assert.equal(r.status, "halt");
+    assert.equal(d.calls.length, 0, "HALT 면 아무 명령도 실행하지 않는다");
+    rmSync(join(home, "HALT"));
+    const dirty = fakeRunner(home, { dirty: true });
+    const r2 = await daily.prepare({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13" }, dirty);
+    assert.equal(r2.status, "halt");
+    assert.ok(existsSync(join(home, "HALT")));
+    rmSync(join(home, "HALT"));
+    const clean = fakeRunner(home);
+    await daily.prepare({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13" }, clean);
+    assert.ok(clean.calls.some((c) => c.includes("checkout --detach origin/main")));
+    assert.ok(clean.calls.some((c) => c.includes("reset --hard origin/main")));
+    assert.ok(clean.calls.some((c) => c.includes("daily.mjs prepare --reexeced")), "새 코드로 재실행");
+  } finally {
+    cleanup(wt, home);
+  }
+});
+
+test("daily prepare: 동결은 보고만 · 후보 없음 · RAM 부족 SKIP · 정상이면 write", async () => {
+  const wt = fakeWorktree();
+  const home = fakeHome({ PUBLISH_ENABLED: "", REVIEWED_UNTIL: "2026-10-20" });
+  const before = snapshotOperator(home);
+  try {
+    const frozen = fakeRunner(home);
+    const f = await daily.prepare({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-11-15", noSync: true }, frozen);
+    assert.equal(f.status, "freeze-report-only");
+    assert.ok(!frozen.calls.some((c) => c.includes("heavy.mjs") || c.includes("trend-radar")), "동결 기간엔 빌드·레이더 없음");
+    const none = fakeRunner(home, { candidates: [] });
+    assert.equal((await daily.prepare({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13", noSync: true }, none)).status, "no-candidate");
+    const ram = fakeRunner(home, { candidates: [CAND], codes: { "base-build": EXIT_RESOURCE } });
+    const r = await daily.prepare({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13", noSync: true }, ram);
+    assert.equal(r.status, "skip");
+    assert.match(r.reason, /RAM/);
+    const ok = fakeRunner(home, { candidates: [CAND] });
+    const w = await daily.prepare({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13", noSync: true }, ok);
+    assert.equal(w.status, "write", w.reason);
+    assert.equal(w.mode, "PROPOSE");
+    assert.ok(ok.calls.some((c) => c.includes("source-snapshot.ts") && c.includes("--id primary")));
+    assert.ok(ok.calls.some((c) => c.includes("secondary-1")));
+    assert.ok(existsSync(join(home, "state", "2026-10-13.json")));
+    const old = fakeRunner(home, { candidates: [{ ...CAND, publishedDate: "2026-10-01" }] });
+    assert.equal((await daily.prepare({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13", noSync: true }, old)).status, "no-candidate", "1차 출처 7일 초과");
+    assert.deepEqual(snapshotOperator(home), before, "운영자 파일 불변");
+  } finally {
+    cleanup(wt, home);
+  }
+});
+
+function writeState(home, wt, mode) {
+  mkdirSync(join(home, "state"), { recursive: true });
+  const snapDir = join(home, "snapshots", "2026-10-13");
+  mkdirSync(snapDir, { recursive: true });
+  writeFileSync(join(home, "state", "2026-10-13.json"), JSON.stringify({ date: "2026-10-13", mode, originSha: "base1234", candidate: CAND, snapDir }));
+  writeFileSync(join(home, "state", "2026-10-13-candidate.json"), JSON.stringify(CAND));
+  const draft = JSON.parse(readFileSync(join(ROOT, "src/lib/__tests__/fixtures/trendBriefDrafts.json"), "utf8")).good;
+  const p = join(home, "draft.json");
+  writeFileSync(p, JSON.stringify(draft));
+  return { draftPath: p, draft };
+}
+
+test("daily finish: skip 초안 · 단계 실패에서 멈춤 · RAM SKIP · DRYRUN 원복 · PROPOSE 커밋·보관·카드", async () => {
+  const wt = fakeWorktree();
+  const home = fakeHome({ PUBLISH_ENABLED: "", REVIEWED_UNTIL: "2026-10-20" });
+  const before = snapshotOperator(home);
+  try {
+    const { draftPath, draft } = writeState(home, wt, "PROPOSE");
+    const skipPath = join(home, "skip.json");
+    writeFileSync(skipPath, JSON.stringify({ skip: true, reason: "공식 출처 1건" }));
+    assert.equal((await daily.finish({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13", draft: skipPath }, fakeRunner(home))).status, "skip");
+
+    const failing = fakeRunner(home, { codes: { vitest: 1 } });
+    const f = await daily.finish({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13", draft: draftPath }, failing);
+    assert.equal(f.status, "skip");
+    assert.match(f.reason, /vitest/);
+    assert.ok(!failing.calls.some((c) => c.includes("-build.log")), "실패 뒤 단계는 실행하지 않는다");
+    assert.ok(failing.calls.some((c) => c.includes("reset --hard")), "워크트리 원복");
+
+    const ram = fakeRunner(home, { codes: { build: EXIT_RESOURCE } });
+    const r = await daily.finish({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13", draft: draftPath }, ram);
+    assert.equal(r.status, "skip");
+    assert.match(r.reason, /RAM/);
+
+    writeState(home, wt, "DRYRUN");
+    const dry = fakeRunner(home);
+    const d = await daily.finish({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13", draft: draftPath }, dry);
+    assert.equal(d.status, "dryrun-pass");
+    assert.equal(dry.calls.filter((c) => c.includes("heavy.mjs")).length, 17, "무거운 단계 17개(prebuild-status 분리)");
+    assert.ok(!dry.calls.some((c) => c.includes(" commit ")), "DRYRUN 은 커밋하지 않는다");
+    // gate pre·post 모두 레이더 후보 기록을 받는다
+    const cand = join(home, "state", "2026-10-13-candidate.json");
+    assert.ok(dry.calls.some((c) => c.includes("gate.ts") && c.includes("--phase pre") && c.includes(`--candidate ${cand}`) && c.includes("--candidate-route new-brief")));
+    assert.ok(dry.calls.some((c) => c.includes("-gate-post.log") && c.includes(`--candidate "${cand}"`)));
+
+    writeState(home, wt, "PROPOSE");
+    const prop = fakeRunner(home, { codes: { gitStatus: " M src/lib/guides/trend-briefs.ts\n?? src/lib/guides/trend-briefs-2026-10.ts\n M scripts/trend-publish/ledger.json\n" } });
+    const p = await daily.finish({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13", draft: draftPath }, prop);
+    assert.equal(p.status, "proposed", p.reason);
+    assert.ok(prop.calls.some((c) => c.includes(`checkout -b trend/2026-10-13-${draft.slug}`)));
+    assert.ok(prop.calls.some((c) => c.includes("commit -F")));
+    const archive = JSON.parse(readFileSync(join(home, "drafts", `${draft.slug}.json`), "utf8"));
+    assert.equal(archive.draftSha256, daily.draftSha256(draft));
+    assert.equal(archive.expiry, "2026-10-15");
+    assert.deepEqual(archive.candidate, CAND, "보관본에 레이더 후보가 함께 남는다(publish-approved 가 gate 에 넘긴다)");
+    const card = readFileSync(p.card, "utf8");
+    assert.ok(card.includes(`발행 ${draft.slug}`) && card.includes(archive.draftSha256));
+    const msg = readFileSync(join(home, "tmp", `commit-${draft.slug}.txt`), "utf8");
+    assert.ok(!msg.includes('"'), "커밋 메시지에 큰따옴표 없음");
+    assert.ok(msg.trimEnd().endsWith("Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"));
+
+    writeState(home, wt, "PROPOSE");
+    const outside = fakeRunner(home, { codes: { gitStatus: " M src/app/page.tsx\n" } });
+    const o = await daily.finish({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13", draft: draftPath }, outside);
+    assert.equal(o.status, "halt", "허용 밖 변경이면 HALT");
+    assert.deepEqual(snapshotOperator(home), before, "운영자 파일 불변");
+  } finally {
+    cleanup(wt, home);
+  }
+});
+
+test("daily: 운영자 파일·TREND_HOME 밖 쓰기 거부, 원격 반영 코드 없음", () => {
+  const home = tmp("trend-home-");
+  try {
+    for (const f of daily.OPERATOR_FLAGS) assert.throws(() => daily.safeWrite(home, join(home, f), "x"), /운영자/);
+    assert.throws(() => daily.safeWrite(home, join(tmpdir(), "elsewhere.txt"), "x"), /밖/);
+    daily.safeWrite(home, join(home, "reports", "ok.md"), "ok");
+    const src = readFileSync(join(TP, "daily.mjs"), "utf8");
+    assert.equal((src.match(/writeFileSync\(/g) ?? []).length, 1, "쓰기는 safeWrite 한 곳");
+    assert.ok(!/push/i.test(src), "daily.mjs 에 push 문자열 없음");
+  } finally {
+    cleanup(home);
+  }
+});
+
+test("git push 는 publish-approved.mjs 에만 있다", () => {
+  // 정책: 이 폴더에서 'push' 라는 글자 자체를 publish-approved.mjs 에만 둔다 — 배열 추가도 splice 로 쓴다.
+  const offenders = readdirSync(TP)
+    .filter((f) => /\.(?:mjs|ts|md|json)$/.test(f) && f !== "publish-approved.mjs")
+    .filter((f) => /push/i.test(readFileSync(join(TP, f), "utf8")));
+  assert.deepEqual(offenders, []);
+  const pa = readFileSync(join(TP, "publish-approved.mjs"), "utf8");
+  assert.ok(/\["push", "origin", "HEAD:main"\]/.test(pa));
+  assert.ok(!/--force|-f\b.*push|push.*--force/.test(pa), "강제 반영 없음");
+  // 네이버 검색·뉴스 API 흔적 없음. 발행기는 네이버 API 를 부르지 않는다 — 데이터랩 키 이름은 config.json 의 선택 키 파일
+  // 허용 이름(레이더 부스터용, 2026-09-27 운영자 결정)으로만 둔다. 금융상품 비교 API 도 금지.
+  const files = readdirSync(TP).filter((f) => /\.(?:mjs|ts|md|json)$/.test(f));
+  for (const f of files) {
+    const text = readFileSync(join(TP, f), "utf8");
+    const lower = text.toLowerCase();
+    for (const bad of ["openapi.naver.com", "search.naver.com", "news.naver", "/v1/search/", "datalab.naver"]) assert.ok(!lower.includes(bad), `${f} 에 ${bad}`);
+    assert.ok(!new RegExp(["fin", "life"].join(""), "i").test(text), `${f} 에 금융상품 비교 API`);
+    const naverNames = [...text.matchAll(new RegExp(`${["NAVER", "_"].join("")}\\w*`, "g"))].map((m) => m[0]);
+    if (f === "config.json") assert.deepEqual([...new Set(naverNames)].sort(), [["NAVER", "_CLIENT_ID"].join(""), ["NAVER", "_CLIENT_SECRET"].join("")]);
+    else assert.deepEqual(naverNames, [], `${f} 에 네이버 키 이름`);
+  }
+});
+
+// ─────────────────────────────────────────────────────────────
+// 선택 키 파일 (secret-env.mjs — 2026-09-27 운영자 결정)
+// ─────────────────────────────────────────────────────────────
+test("secret-env: 허용 이름만 읽고 기존 값을 덮지 않으며 값은 요약·보고에 남지 않는다", async () => {
+  const se = await import("../trend-publish/secret-env.mjs");
+  const dir = tmp("trend-secret-env-");
+  const idName = ["NAVER", "_CLIENT_ID"].join("");
+  const secretName = ["NAVER", "_CLIENT_SECRET"].join("");
+  const idVal = `cid-${"m".repeat(12)}`;
+  const secretVal = `csv-${"n".repeat(12)}`;
+  const ocVal = `oc-${"p".repeat(9)}`;
+  try {
+    // 형식: BOM·CRLF·주석·export·따옴표·허용 밖 이름·빈 값
+    const parsed = se.parseEnvText(`\uFEFF# 주석\r\nexport LAW_OC=${ocVal}\r\nECOS_API_KEY=""\r\nOTHER_KEY=zzz\r\n${idName}='${idVal}'\r\n`, ["LAW_OC", "ECOS_API_KEY", idName]);
+    assert.deepEqual(parsed, { LAW_OC: ocVal, [idName]: idVal });
+    const trendEnv = join(dir, "trend.env");
+    const datalabEnv = join(dir, "naver", "datalab.env.txt");
+    mkdirSync(dirname(datalabEnv), { recursive: true });
+    writeFileSync(trendEnv, `LAW_OC=${ocVal}\n`);
+    writeFileSync(datalabEnv, `${idName}=${idVal}\n${secretName}=${secretVal}\n`);
+    const env = { [secretName]: "already-set-by-operator" };
+    const specs = [
+      { path: trendEnv, names: ["LAW_OC", "ECOS_API_KEY"] },
+      { path: datalabEnv, names: [idName, secretName] },
+      { path: join(dir, "missing.env"), names: ["LAW_OC"] },
+      { path: join(dir, "bad-name.env"), names: ["lower_case", "X"] },
+    ];
+    const summary = se.loadSecretEnvFiles(specs, env);
+    assert.equal(env.LAW_OC, ocVal);
+    assert.equal(env[idName], idVal);
+    assert.equal(env[secretName], "already-set-by-operator", "운영자가 넘긴 값이 이긴다");
+    assert.equal(env.ECOS_API_KEY, undefined);
+    assert.deepEqual(summary, [
+      { file: "trend.env", present: true, loaded: ["LAW_OC"], kept: [] },
+      { file: "datalab.env.txt", present: true, loaded: [idName], kept: [secretName] },
+      { file: "missing.env", present: false, loaded: [], kept: [] },
+    ]);
+    const line = se.describeSecretEnv(summary);
+    for (const v of [ocVal, idVal, secretVal]) {
+      assert.ok(!JSON.stringify(summary).includes(v) && !line.includes(v), "값은 요약·보고에 없다");
+    }
+    assert.match(line, /trend\.env 있음\(LAW_OC\)/);
+    assert.match(line, /missing\.env 없음/);
+    // 크기 상한 — 키 파일이 아닌 큰 파일은 읽지 않는다
+    const big = join(dir, "big.env");
+    writeFileSync(big, `LAW_OC=${"q".repeat(se.MAX_SECRET_ENV_BYTES)}\n`);
+    const env2 = {};
+    assert.match(se.loadSecretEnvFiles([{ path: big, names: ["LAW_OC"] }], env2)[0].error, /초과/);
+    assert.equal(env2.LAW_OC, undefined);
+    // secret-scan 이 두 데이터랩 키 이름을 비밀값으로 잡는다
+    assert.deepEqual(scan.collectEnvSecrets({ [idName]: idVal, [secretName]: secretVal, PATH: "/usr/bin" }).map((e) => e.name).sort(), [idName, secretName].sort());
+  } finally {
+    cleanup(dir);
+  }
+});
+
+test("secret-env: 설정 경로·이름은 운영자 결정 그대로, 실제 실행(defaultDeps)만 키 파일을 읽는다", async () => {
+  const config = JSON.parse(readFileSync(join(TP, "config.json"), "utf8"));
+  assert.deepEqual(config.secretEnvFiles, [
+    { path: "C:/Users/ruby1/.moneysalary-secrets/trend.env", names: ["LAW_OC", "ECOS_API_KEY"] },
+    { path: "C:/Users/ruby1/.moneysalary-secrets/naver/datalab.env.txt", names: [["NAVER", "_CLIENT_ID"].join(""), ["NAVER", "_CLIENT_SECRET"].join("")] },
+  ]);
+  assert.equal(typeof daily.defaultDeps().secretEnv, "function");
+  // prepare 는 deps.secretEnv 가 있을 때만 부르고, 보고서에는 파일·이름만 적는다(가짜 함수 — 실제 파일은 열지 않는다)
+  const wt = fakeWorktree();
+  const home = fakeHome({ PUBLISH_ENABLED: "", REVIEWED_UNTIL: "2026-10-20" });
+  try {
+    let seen = null;
+    const d = { ...fakeRunner(home, { candidates: [] }), secretEnv: (specs) => ((seen = specs), [{ file: "trend.env", present: true, loaded: ["LAW_OC"], kept: [] }, { file: "datalab.env.txt", present: false, loaded: [], kept: [] }]) };
+    const r = await daily.prepare({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13", noSync: true }, d);
+    assert.equal(r.status, "no-candidate");
+    assert.deepEqual(seen, config.secretEnvFiles);
+    assert.match(readFileSync(r.report, "utf8"), /선택 키 파일: trend\.env 있음\(LAW_OC\) · datalab\.env\.txt 없음\(키 없이 동작\)/);
+    // HALT 면 키 파일을 건드리지도 않는다
+    writeFileSync(join(home, "HALT"), "테스트 중지");
+    seen = null;
+    await daily.prepare({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13", noSync: true }, d);
+    assert.equal(seen, null);
+  } finally {
+    cleanup(wt, home);
+  }
+});
+
+// ─────────────────────────────────────────────────────────────
+// publish-approved 사전 조건
+// ─────────────────────────────────────────────────────────────
+test("publish-approved: 해시 불일치 · 카드 만료 · origin/main 2시간 미만 · DEPLOY_HOLD · CF_PURGE_OK 없음", () => {
+  const flags = { halt: null, publishEnabled: true, reviewedUntil: "2026-10-20", cfPurgeOk: true, deployHold: null };
+  const sha = hex(64, "d");
+  const base = {
+    kind: "publish",
+    today: "2026-10-13",
+    flags,
+    calendarBlocks: [],
+    capReasons: [],
+    pending: [],
+    manualPurgeAck: false,
+    originAgeHours: 5,
+    minOriginAgeHours: 2,
+    archive: { draftSha256: sha, cardDate: "2026-10-13", primaryPublishedDate: "2026-10-08", candidate: CAND },
+    argSha: sha,
+    recomputedSha: sha,
+  };
+  assert.deepEqual(checkPreconditions(base), []);
+  assert.ok(checkPreconditions({ ...base, argSha: hex(64, "e") }).some((x) => x.includes("해시")));
+  assert.ok(checkPreconditions({ ...base, recomputedSha: hex(64, "e") }).some((x) => x.includes("해시")));
+  assert.ok(checkPreconditions({ ...base, today: "2026-10-16" }).some((x) => x.includes("만료")));
+  assert.ok(checkPreconditions({ ...base, originAgeHours: 1.5 }).some((x) => x.includes("2시간")));
+  assert.ok(checkPreconditions({ ...base, flags: { ...flags, deployHold: "R4 배포 중" } }).some((x) => x.includes("DEPLOY_HOLD")));
+  assert.ok(checkPreconditions({ ...base, flags: { ...flags, cfPurgeOk: false } }).some((x) => x.includes("CF_PURGE_OK")));
+  assert.deepEqual(checkPreconditions({ ...base, flags: { ...flags, cfPurgeOk: false }, manualPurgeAck: true }), []);
+  assert.ok(checkPreconditions({ ...base, flags: { ...flags, halt: "x" } }).some((x) => x.includes("HALT")));
+  assert.ok(checkPreconditions({ ...base, flags: { ...flags, publishEnabled: false } }).some((x) => x.includes("PUBLISH_ENABLED")));
+  assert.ok(checkPreconditions({ ...base, calendarBlocks: ["동결"] }).some((x) => x.includes("달력")));
+  assert.ok(checkPreconditions({ ...base, pending: [{ slug: "a", at: "d28" }] }).some((x) => x.includes("결정 대기")));
+  assert.ok(checkPreconditions({ ...base, archive: null }).some((x) => x.includes("보관")));
+  // 수정 발행(--update)은 새 URL 이 아니다 — 한도·결정 대기는 보지 않고, 달력은 판정일·배포 배치·로컬 차단만(호출부가 거른다)
+  assert.deepEqual(checkPreconditions({ ...base, kind: "update", archive: null, capReasons: ["하루 1편"], pending: [{ slug: "a", at: "d28" }] }), []);
+  assert.deepEqual(daily.updateCalendarBlocks(["동결 2026-11-01~2027-01-31", "첫 발행일 2026-10-10 이전", "판정일 2026-10-09", "배포 배치 2026-10-10 + 2일", "calendar.local.json 차단 2026-10-20"]), [
+    "판정일 2026-10-09",
+    "배포 배치 2026-10-10 + 2일",
+    "calendar.local.json 차단 2026-10-20",
+  ]);
+  // 철회는 되돌리기 — HALT·달력이 있어도 DEPLOY_HOLD·2시간·Purge 만 본다
+  assert.deepEqual(checkPreconditions({ ...base, kind: "retire", flags: { ...flags, halt: "x" }, calendarBlocks: ["동결"], argSha: undefined }), []);
+});
+
+// ─────────────────────────────────────────────────────────────
+// verify-prod
+// ─────────────────────────────────────────────────────────────
+function fakeFetch(map) {
+  const seen = [];
+  const fn = async (url) => {
+    seen.splice(seen.length, 0, url);
+    const hit = typeof map === "function" ? map(url, seen.length) : map[url];
+    const [status, text] = hit ?? [404, "not found"];
+    return { status, text: async () => text };
+  };
+  return { fn, seen };
+}
+
+test("verify-prod: 자산 추출 · 낡은 청크(404)·GET 상한 · 폴링 · Purge 뒤 재확인", async () => {
+  const O = "https://www.moneysalary.com";
+  const html = (n) => Array.from({ length: n }, (_, i) => `<script src="/_next/static/chunks/c${i}.js"></script>`).join("") + '<link href="/_next/static/css/a.css">';
+  assert.equal(extractAssets(html(3)).length, 4);
+  const pages = ["/", "/calc/samsung-bonus", "/guides/nurse-salary"];
+  const ok = fakeFetch((u) => (u.startsWith(`${O}/_next`) ? [200, ""] : [200, html(30)]));
+  const r = await staleChunkCheck({ fetchFn: ok.fn, origin: O, pages, maxGets: 40 });
+  assert.equal(r.missing.length, 0);
+  assert.equal(r.gets, 40, "자산 GET 은 40건 상한");
+  const bad = fakeFetch((u) => (u.endsWith("c2.js") ? [404, ""] : u.startsWith(`${O}/_next`) ? [200, ""] : [200, html(3)]));
+  const b = await staleChunkCheck({ fetchFn: bad.fn, origin: O, pages: ["/"], maxGets: 40 });
+  assert.deepEqual(b.missing, ["/_next/static/chunks/c2.js"]);
+  let clock = 0;
+  const poll = fakeFetch((u, n) => (n >= 3 ? [200, "<h1>새 글 제목</h1>"] : [404, ""]));
+  const p = await pollPage({ fetchFn: poll.fn, sleep: async (ms) => (clock += ms), url: `${O}/guides/x`, marker: "새 글 제목", timeoutMs: 45 * 60_000, intervalMs: 60_000, now: () => clock });
+  assert.equal(p.ok, true);
+  assert.equal(p.tries, 3);
+  const never = fakeFetch(() => [404, ""]);
+  clock = 0;
+  const n = await pollPage({ fetchFn: never.fn, sleep: async (ms) => (clock += ms), url: `${O}/guides/x`, marker: "m", timeoutMs: 5 * 60_000, intervalMs: 60_000, now: () => clock });
+  assert.equal(n.ok, false);
+  // 자동 Purge 가 있으면 15분 뒤 한 번 더 — 두 번째엔 정상
+  let purged = false;
+  const full = fakeFetch((u) => {
+    if (u.endsWith("/guides/s")) return [200, "제목"];
+    if (u.endsWith("/rss.xml") || u.endsWith("/sitemap.xml")) return [200, "/guides/s"];
+    if (u.endsWith("c1.js")) return purged ? [200, ""] : [404, ""];
+    if (u.startsWith(`${O}/_next`)) return [200, ""];
+    return [200, html(2)];
+  });
+  const sleeps = [];
+  const res = await verifyRun({ slug: "s", marker: "제목", purgeAuto: true, purgeRecheckMin: 15 }, { fetchFn: full.fn, sleep: async (ms) => { sleeps.splice(sleeps.length, 0, ms); purged = true; }, log: () => {}, now: () => 0 });
+  assert.equal(res.ok, true);
+  assert.ok(sleeps.includes(15 * 60_000));
+  purged = false;
+  const noAuto = await verifyRun({ slug: "s", marker: "제목", purgeAuto: false }, { fetchFn: full.fn, sleep: async () => {}, log: () => {}, now: () => 0 });
+  assert.equal(noAuto.ok, false);
+  assert.match(noAuto.summary, /Purge 필요/);
+});
+
+// ─────────────────────────────────────────────────────────────
+// chunk-diff · ad-sequence · heavy
+// ─────────────────────────────────────────────────────────────
+test("chunk-diff: 바뀐·새 청크는 slug 를 담아야 하고 런타임만 예외 · git status 허용목록", () => {
+  const base = { "chunks/a.js": "1", "chunks/webpack-aaa.js": "2", "css/x.css": "3" };
+  const brief = { "chunks/a.js": "1", "chunks/webpack-bbb.js": "9", "chunks/list-new.js": "7", "css/x.css": "3" };
+  const read = (n) => (n === "chunks/list-new.js" ? '"slug":"my-brief-2027"' : "no slug");
+  assert.deepEqual(compareManifests(base, brief, { slug: "my-brief-2027", readChunk: read, runtimeExempt: ["^webpack-[0-9a-f]+\\.js$"] }).errs, []);
+  assert.equal(compareManifests(base, brief, { slug: "my-brief-2027", readChunk: read, runtimeExempt: [] }).errs.length, 1);
+  assert.equal(compareManifests(base, { ...brief, "chunks/home.js": "5" }, { slug: "my-brief-2027", readChunk: read, runtimeExempt: ["^webpack-[0-9a-f]+\\.js$"] }).errs.length, 1);
+  const allow = JSON.parse(readFileSync(join(TP, "config.json"), "utf8")).pathAllowlist.publish;
+  assert.deepEqual(statusViolations(" M src/lib/guides/trend-briefs.ts\n?? src/lib/guides/trend-briefs-2026-10.ts\n M src/lib/guidesMeta.generated.ts\n", allow), []);
+  assert.deepEqual(statusViolations(" M src/config/seasonKey.generated.ts\n M src/app/page.tsx\n", allow), ["src/config/seasonKey.generated.ts", "src/app/page.tsx"]);
+});
+
+test("chunk-diff v2: 청크 id 머리·의존 목록·동적 로드·파일 해시 정규화 · 사이트 수치만 바뀐 청크 · 그 밖은 실패", () => {
+  const reg = ["p", "ush"].join("");
+  const a = `"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).${reg}([[3869,1007],{1:function(e,t,n){n.e(2451).then(x);let m=s(334);u("static/chunks/app/x-0123456789abcdef.js")}},function(e){e.O(0,[8321,3869],function(){return e(e.s=35793)}),_N_E=e.O()}]);`;
+  const b = a.replace("[[3869,1007]", "[[1007,3869]").replace("n.e(2451)", "n.e(9093)").replace("[8321,3869]", "[8321,6993]").replace("0123456789abcdef", "fedcba9876543210");
+  assert.notEqual(a, b);
+  assert.equal(normalizeChunk(a), normalizeChunk(b), "같은 소스 두 번 빌드의 청크 id·의존 목록·이름 해시 차이는 정규화로 사라진다");
+  const man = (name, text) => ({ version: 2, files: { [name]: fileEntry(name, Buffer.from(text)) } });
+  const base = man("chunks/app/layout-aaaa.js", a);
+  const r1 = compareManifests(base, man("chunks/app/layout-bbbb.js", b), { slug: "x-2027", readChunk: () => b });
+  assert.deepEqual(r1.errs, []);
+  assert.equal(r1.renamedOnly, 1);
+  // GUIDE_COUNT 334 → 335 만 바뀐 레이아웃 청크 — 사이트 수치가 실제로 바뀌었을 때만 통과
+  const c = b.replace("s(334)", "s(335)");
+  const metrics = metricChanges("export const GUIDE_COUNT = 335;\nexport const JOB_COUNT = 62;\n", "export const GUIDE_COUNT = 334;\nexport const JOB_COUNT = 62;\n");
+  assert.deepEqual(metrics, [{ name: "GUIDE_COUNT", from: 334, to: 335 }]);
+  assert.deepEqual(compareManifests(base, man("chunks/app/layout-cccc.js", c), { slug: "x-2027", readChunk: () => c, metrics }).metricOnly, ["chunks/app/layout-cccc.js"]);
+  assert.equal(compareManifests(base, man("chunks/app/layout-cccc.js", c), { slug: "x-2027", readChunk: () => c, metrics: [] }).errs.length, 1, "수치가 안 바뀌었으면 실패");
+  // 글자가 바뀐 청크(날짜 의존 시즌 블록 등)는 실패, 브리프 slug 를 담으면 통과
+  const d = b.replace("then(x)", "then(y)");
+  assert.equal(compareManifests(base, man("chunks/app/layout-dddd.js", d), { slug: "x-2027", readChunk: () => d, metrics }).errs.length, 1);
+  assert.deepEqual(compareManifests(base, man("chunks/app/layout-dddd.js", d), { slug: "x-2027", readChunk: () => `${d}"x-2027"`, metrics }).slug, ["chunks/app/layout-dddd.js"]);
+});
+
+test("heavySteps: prebuild-status 는 독립 필수 단계 · 청크 비교는 정규화+사이트 수치 · gate-post 에 후보·--update", () => {
+  const config = JSON.parse(readFileSync(join(TP, "config.json"), "utf8"));
+  const steps = daily.heavySteps({ slug: "s-2027", originSha: "abc", home: "H", wt: "W", config, sibling: "sib", candidate: "C:/h/state/cand.json" });
+  const names = steps.map((s) => s.name);
+  assert.equal(steps.length, 17);
+  assert.equal(names.indexOf("prebuild-status"), names.indexOf("build") + 1);
+  assert.match(steps.find((s) => s.name === "prebuild-status").cmd, /chunk-diff\.mjs status --repo \. --allow/);
+  const cd = steps.find((s) => s.name === "chunk-diff").cmd;
+  assert.ok(!/chunk-diff\.mjs status/.test(cd), "청크 비교 단계와 생성 파일 검사는 따로");
+  assert.ok(cd.includes("--metrics src/config/site-metrics.generated.ts --metrics-base abc"));
+  assert.equal(config.chunkDiff.compare, "strict");
+  assert.ok(!cd.includes("--report-only"));
+  assert.ok(steps.find((s) => s.name === "gate-post").cmd.includes('--candidate "C:/h/state/cand.json"'));
+  assert.ok(daily.heavySteps({ slug: "s", originSha: "abc", home: "H", wt: "W", config, update: true }).find((s) => s.name === "gate-post").cmd.includes(" --update"));
+  const report = { ...config, chunkDiff: { ...config.chunkDiff, compare: "report" } };
+  assert.ok(daily.heavySteps({ slug: "s", originSha: "abc", home: "H", wt: "W", config: report }).find((s) => s.name === "chunk-diff").cmd.includes("--report-only"));
+});
+
+/** 실제 git 은 rev-parse(읽기)만 실행하고 나머지는 기록만 — 관문이 틀려도 저장소를 바꾸지 않는다 */
+function readOnlyRunner() {
+  const calls = [];
+  return {
+    calls,
+    now: () => new Date("2026-10-13T01:00:00Z"),
+    log: () => {},
+    run: async (cmd, args, o) => {
+      calls.splice(calls.length, 0, [cmd, ...args].join(" "));
+      if (cmd === "git" && args.includes("rev-parse") && !args.includes("HEAD")) return daily.realRun(cmd, args, o);
+      return { code: 99, stdout: "", stderr: "테스트: 실행 안 함" };
+    },
+  };
+}
+
+test("워크트리 관문: 메인 저장소 같은 곳을 --worktree 로 줘도 finish·prepare·init·publish-approved 는 아무것도 하지 않는다", async () => {
+  const repo = tmp("main-like-");
+  const home = fakeHome();
+  const parent = tmp("linked-parent-");
+  try {
+    const g = (...a) => execFileSync("git", ["-C", repo, ...a], { stdio: "ignore" });
+    g("init", "-q");
+    g("config", "user.email", "t@example.com");
+    g("config", "user.name", "t");
+    writeFileSync(join(repo, "a.txt"), "base\n");
+    g("add", ".");
+    g("commit", "-qm", "base");
+    // 운영자 파일처럼 보이는 미추적·수정 파일
+    mkdirSync(join(repo, "docs", "drafts"), { recursive: true });
+    writeFileSync(join(repo, "docs", "drafts", "op.md"), "운영자 초안\n");
+    writeFileSync(join(repo, "hf70.html"), "<p>x</p>\n");
+    writeFileSync(join(repo, "a.txt"), "operator edit\n");
+    const draft = join(home, "d.json");
+    writeFileSync(draft, JSON.stringify(JSON.parse(readFileSync(join(ROOT, "src/lib/__tests__/fixtures/trendBriefDrafts.json"), "utf8")).good));
+    // (1) 테스트 플래그 없이: 설정 워크트리(config.worktree)가 아니라 거부 — git 명령 0
+    const d1 = readOnlyRunner();
+    const r1 = await daily.finish({ trendHome: home, worktree: repo, today: "2026-10-13", draft }, d1);
+    assert.equal(r1.status, "error");
+    assert.match(r1.reason, /설정 워크트리/);
+    assert.equal(d1.calls.length, 0);
+    // (2) 플래그로 첫 관문을 넘겨도: git 연결 워크트리가 아니라 거부 — rev-parse(읽기) 말고는 없음
+    const d2 = readOnlyRunner();
+    const r2 = await daily.finish({ allowAnyWorktree: true, trendHome: home, worktree: repo, today: "2026-10-13", draft }, d2);
+    assert.equal(r2.status, "error");
+    assert.match(r2.reason, /연결 워크트리/);
+    assert.ok(d2.calls.length > 0 && d2.calls.every((c) => c.includes("rev-parse --git")), d2.calls.join("\n"));
+    const d3 = readOnlyRunner();
+    assert.match((await daily.prepare({ allowAnyWorktree: true, trendHome: home, worktree: repo, today: "2026-10-13", noSync: true }, d3)).reason, /연결 워크트리/);
+    const d4 = readOnlyRunner();
+    assert.match((await daily.init({ allowAnyWorktree: true, trendHome: home, worktree: repo, yes: true }, d4)).reason, /연결 워크트리/);
+    const d5 = readOnlyRunner();
+    assert.equal(await publishMain(["node", "x", "--slug", "s-2027", "--draft-sha256", hex(64, "d"), "--trend-home", home, "--worktree", repo], d5), 2);
+    for (const d of [d3, d4, d5]) assert.ok(d.calls.every((c) => c.includes("rev-parse --git")), d.calls.join("\n"));
+    // 메인 저장소 경로 자체는 플래그와 무관하게 거부(명령 0)
+    const own = JSON.parse(readFileSync(join(TP, "config.json"), "utf8"));
+    const d6 = readOnlyRunner();
+    assert.match((await daily.finish({ allowAnyWorktree: true, trendHome: home, worktree: own.mainRepo, today: "2026-10-13", draft }, d6)).reason, /메인 저장소/);
+    assert.equal(d6.calls.length, 0);
+    // 운영자 파일 그대로
+    assert.equal(readFileSync(join(repo, "docs", "drafts", "op.md"), "utf8"), "운영자 초안\n");
+    assert.ok(existsSync(join(repo, "hf70.html")));
+    assert.equal(readFileSync(join(repo, "a.txt"), "utf8"), "operator edit\n");
+    // (3) 진짜 연결 워크트리는 통과
+    const linked = join(parent, "wt");
+    g("worktree", "add", "--detach", linked, "HEAD");
+    assert.equal(await daily.worktreeGuard(readOnlyRunner(), { wt: linked, allowAnyWorktree: true }), "");
+    assert.match(await daily.worktreeGuard(readOnlyRunner(), { wt: linked }), /설정 워크트리/, "테스트 플래그 없으면 설정 경로만");
+  } finally {
+    cleanup(repo, home, parent);
+  }
+});
+
+test("safeResetWorktree: 운영자 파일 경로가 보이면 reset·clean 없이 HALT, 아니면 원복", async () => {
+  const home = fakeHome();
+  try {
+    const mk = (status) => {
+      const calls = [];
+      return { calls, run: async (cmd, args) => (calls.splice(calls.length, 0, [cmd, ...args].join(" ")), args.includes("status") ? { code: 0, stdout: status, stderr: "" } : { code: 0, stdout: "", stderr: "" }) };
+    };
+    const bad = mk("?? docs/drafts/x.md\n M .claude/settings.local.json\n M src/lib/guides/trend-briefs.ts\n");
+    assert.equal(await daily.safeResetWorktree(bad, home, "W", "base1234"), false);
+    assert.ok(!bad.calls.some((c) => / reset | clean /.test(`${c} `)), bad.calls.join("\n"));
+    assert.match(readFileSync(join(home, "HALT"), "utf8"), /운영자 파일/);
+    rmSync(join(home, "HALT"));
+    for (const s of ["?? docs/moneysalary-naver-blog-100-2026-09-25.zip\n", "?? docs/revenue-audit-2026-09-24/a.csv\n", "?? hf70.html\n", "R  a.ts -> docs/search-console/x.csv\n"]) {
+      const x = mk(s);
+      assert.equal(await daily.safeResetWorktree(x, home, "W", "base1234"), false, s);
+      rmSync(join(home, "HALT"));
+    }
+    const ok = mk(" M src/lib/guides/trend-briefs.ts\n?? src/lib/guides/trend-briefs-2026-10.ts\n");
+    assert.equal(await daily.safeResetWorktree(ok, home, "W", "base1234"), true);
+    assert.ok(ok.calls.some((c) => c.endsWith("reset --hard base1234")) && ok.calls.some((c) => c.endsWith("clean -fd")));
+  } finally {
+    cleanup(home);
+  }
+});
+
+test("daily finish: render 전 워크트리 변경이면 HALT (render·원복 없음)", async () => {
+  const wt = fakeWorktree();
+  const home = fakeHome({ PUBLISH_ENABLED: "", REVIEWED_UNTIL: "2026-10-20" });
+  try {
+    const { draftPath } = writeState(home, wt, "DRYRUN");
+    const d = fakeRunner(home, { dirty: true });
+    const r = await daily.finish({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13", draft: draftPath }, d);
+    assert.equal(r.status, "halt");
+    assert.ok(existsSync(join(home, "HALT")));
+    assert.ok(!d.calls.some((c) => c.includes("render.ts") || / reset | clean /.test(`${c} `)), d.calls.join("\n"));
+  } finally {
+    cleanup(wt, home);
+  }
+});
+
+test("--today 가 실제 오늘과 다르면: daily 는 PROPOSE 하지 않고 publish-approved 는 --check-only 없이 거부", async () => {
+  const wt = fakeWorktree();
+  const home = fakeHome({ PUBLISH_ENABLED: "", REVIEWED_UNTIL: "2026-10-20" });
+  try {
+    // 실제 오늘(KST) 2026-10-13 — 10/14 로 바꾼 실행은 DRYRUN
+    const shifted = await daily.prepare({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-14", noSync: true }, fakeRunner(home, { candidates: [CAND] }));
+    assert.equal(shifted.mode, "DRYRUN", shifted.reason);
+    assert.match(shifted.reason, /--today 2026-10-14/);
+    const same = await daily.prepare({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13", noSync: true }, fakeRunner(home, { candidates: [CAND] }));
+    assert.equal(same.mode, "PROPOSE", same.reason);
+    assert.deepEqual(daily.demoteForDateOverride({ mode: "PROPOSE", reasons: [] }, "2026-10-14", "2026-10-13").mode, "DRYRUN");
+    // publish-approved: --today 는 --check-only 와 함께일 때만 — 아무 명령도 실행하지 않고 2
+    const d = readOnlyRunner();
+    assert.equal(await publishMain(["node", "x", "--slug", "s-2027", "--draft-sha256", hex(64, "d"), "--today", "2026-10-20", "--trend-home", home], d), 2);
+    assert.equal(d.calls.length, 0);
+    const d2 = readOnlyRunner();
+    assert.equal(await publishMain(["node", "x", "--slug", "s-2027", "--draft-sha256", hex(64, "d"), "--today", "--trend-home", home], d2), 2);
+    assert.equal(d2.calls.length, 0);
+  } finally {
+    cleanup(wt, home);
+  }
+});
+
+test("publish-approved: 보관본에 레이더 후보가 없으면 발행 사전 조건 실패", () => {
+  const flags = { halt: null, publishEnabled: true, reviewedUntil: "2026-10-20", cfPurgeOk: true, deployHold: null };
+  const sha = hex(64, "d");
+  const base = { kind: "publish", today: "2026-10-13", flags, calendarBlocks: [], capReasons: [], pending: [], manualPurgeAck: false, originAgeHours: 5, minOriginAgeHours: 2, argSha: sha, recomputedSha: sha };
+  const archive = { draftSha256: sha, cardDate: "2026-10-13", primaryPublishedDate: "2026-10-08" };
+  assert.ok(checkPreconditions({ ...base, archive }).some((x) => x.includes("레이더 후보")));
+  assert.deepEqual(checkPreconditions({ ...base, archive: { ...archive, candidate: CAND } }), []);
+});
+
+test("ad-sequence: 광고 표식 순서 · 기준 빌드와 동일 · 3분할 형제와 동일", () => {
+  const page = '<div class="ad-container ad-slot-guide-mid" style="x"></div><p>본문</p><div class="ad-container ad-in-article ad-slot-fluid"></div><div data-coupang-banner-size="large-portrait"></div><div class="ad-container ad-slot-sidebar"></div>';
+  const seq = extractAdMarkers(page);
+  assert.deepEqual(seq, ["ad:guide-mid", "ad:fluid", "coupang:large-portrait", "ad:sidebar"]);
+  const base = { "/": ["ad:home-top"], "/guides/nurse-salary": seq };
+  const brief = { "/": ["ad:home-top"], "/guides/nurse-salary": seq, "/guides/b-2027": seq, "/guides/sib": seq };
+  assert.deepEqual(compareSequences(base, brief, { slug: "b-2027", sibling: "sib" }), []);
+  assert.equal(compareSequences(base, { ...brief, "/": ["ad:home-top", "ad:result"] }, { slug: "b-2027", sibling: "sib" }).length, 1);
+  assert.equal(compareSequences(base, { ...brief, "/guides/b-2027": seq.slice(0, 2) }, { slug: "b-2027", sibling: "sib" }).length, 1);
+});
+
+test("heavy: 다른 무거운 프로세스·여유 메모리 판정 (대기 중 래퍼는 무시)", () => {
+  assert.equal(checkResources({ freeMB: 8000, minFreeMB: 6144, processes: [], selfPid: 1 }).ok, true);
+  assert.match(checkResources({ freeMB: 4000, minFreeMB: 6144, processes: [], selfPid: 1 }).reason, /메모리/);
+  assert.equal(checkResources({ freeMB: 8000, minFreeMB: 6144, processes: [{ pid: 2, cmd: "node node_modules/next/dist/bin/next build" }], selfPid: 1 }).ok, false);
+  assert.equal(checkResources({ freeMB: 8000, minFreeMB: 6144, processes: [{ pid: 3, cmd: 'node heavy.mjs "npx vitest run"' }], selfPid: 1 }).ok, true);
+  assert.equal(checkResources({ freeMB: 8000, minFreeMB: 6144, processes: [{ pid: 1, cmd: "vitest" }], selfPid: 1 }).ok, true);
+});
+
+// ─────────────────────────────────────────────────────────────
+// review-ack · decide
+// ─────────────────────────────────────────────────────────────
+test("review-ack: 네 항목 모두 확인·14일 이하만 기록, --halt 는 HALT", () => {
+  const ok = ["node", "x", "--days", "7", "--gsc-manual-actions", "none", "--adsense-policy", "none", "--naver-notice", "none", "--clicks", "ok"];
+  assert.deepEqual(validateAck(ok).errs, []);
+  assert.ok(validateAck(ok.map((a) => (a === "7" ? "15" : a))).errs.length);
+  assert.ok(validateAck(ok.map((a, i) => (i === 7 ? "found" : a))).errs.some((e) => e.includes("--halt")));
+  assert.ok(validateAck(ok.slice(0, 10)).errs.length, "--clicks 누락");
+  const home = tmp("trend-ack-");
+  try {
+    const r = spawnSync(process.execPath, [join(TP, "review-ack.mjs"), ...ok.slice(2), "--trend-home", home, "--today", "2026-10-13"], { encoding: "utf8" });
+    assert.equal(r.status, 0, r.stderr);
+    assert.equal(readFileSync(join(home, "REVIEWED_UNTIL"), "utf8").trim(), "2026-10-20");
+    const h = spawnSync(process.execPath, [join(TP, "review-ack.mjs"), "--halt", "GSC 직접 조치 발견", "--trend-home", home], { encoding: "utf8" });
+    assert.equal(h.status, 0);
+    assert.match(readFileSync(join(home, "HALT"), "utf8"), /직접 조치/);
+  } finally {
+    cleanup(home);
+  }
+});
+
+test("decide: D+28 좀비 비율 ≥ 50% · 30일 수치 오류 2건 → HALT", () => {
+  const ledger = [
+    { slug: "a", publishedDate: "2026-10-13", status: "live" },
+    { slug: "b", publishedDate: "2026-10-14", status: "live" },
+    { slug: "c", publishedDate: "2026-11-02", status: "live" },
+  ];
+  assert.deepEqual(zombieCohortRatio(ledger, [{ slug: "a", at: "d28", zombie: true }], "2026-10"), { ratio: 0.5, zombies: 1, size: 2 });
+  assert.equal(zombieCohortRatio(ledger, [{ slug: "a", at: "d28", zombie: true }, { slug: "a", at: "d28", zombie: false }], "2026-10").zombies, 0, "최신 판정 기준");
+  assert.equal(numberErrors30d([{ numberError: true, today: "2026-10-01" }, { numberError: true, today: "2026-10-20" }, { numberError: true, today: "2026-08-01" }], "2026-10-25"), 2);
+  const wt = fakeWorktree({ ledger: [{ slug: "a", publishedDate: "2026-10-13", cluster: "year-end-tax", primary: { url: "u", sha256: "s" }, reviewBy: "2026-12-12", status: "live" }] });
+  const home = tmp("trend-decide-");
+  try {
+    const args = (extra) => [join(TP, "decide.mjs"), "--slug", "a", "--trend-home", home, "--worktree", wt, "--today", "2026-11-10", ...extra];
+    const z = spawnSync(process.execPath, args(["--decision", "keep", "--at", "d28", "--gsc-impr", "0", "--naver-clicks", "0"]), { encoding: "utf8" });
+    assert.equal(z.status, 0, z.stderr);
+    assert.match(z.stdout, /좀비/);
+    assert.ok(existsSync(join(home, "HALT")), "1편 코호트 전부 좀비 → HALT");
+    rmSync(join(home, "HALT"));
+    spawnSync(process.execPath, args(["--decision", "update", "--number-error"]), { encoding: "utf8" });
+    assert.ok(!existsSync(join(home, "HALT")) || readFileSync(join(home, "HALT"), "utf8").includes("좀비"));
+    if (existsSync(join(home, "HALT"))) rmSync(join(home, "HALT"));
+    spawnSync(process.execPath, args(["--decision", "update", "--number-error"]), { encoding: "utf8" });
+    assert.match(readFileSync(join(home, "HALT"), "utf8"), /수치 오류|좀비/);
+    const lines = readFileSync(join(home, "decisions.jsonl"), "utf8").trim().split("\n");
+    assert.equal(lines.length, 3);
+    const pv = spawnSync(process.execPath, [join(TP, "decide.mjs"), "--pilot-verdict", "continue", "--trend-home", home], { encoding: "utf8" });
+    assert.equal(pv.status, 0);
+  } finally {
+    cleanup(wt, home);
+  }
+});

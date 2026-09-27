@@ -1,0 +1,28 @@
+{
+  "_README": [
+    "네이버 데이터랩 검색어 트렌드 부스터(선택) — 2026-09-27 운영자 결정. 코드: lib/datalab.mjs.",
+    "env NAVER_CLIENT_ID·NAVER_CLIENT_SECRET 가 둘 다 있고 --live 일 때만 돈다(daily.mjs 가 저장소 밖 datalab.env.txt 에서 읽어 넘긴다). 없으면 '키 없음 — 건너뜀'.",
+    "데이터랩 검색어 트렌드 엔드포인트 하나만 쓴다. 네이버 검색 API(뉴스·블로그·웹문서)는 약관상 AI 입력·광고 페이지 사용 제한이라 쓰지 않는다. 새 API 가입도 하지 않는다.",
+    "dailyCap 은 하루(KST) 호출 상한 — 코드 하드 상한 50 보다 크면 50. 한 번 호출에 키워드 그룹 5개(데이터랩 한도)라 아래 9개 군집이면 실행당 2회.",
+    "판정: 군집별 최근 recentDays 일 평균 비율이 그 앞 (windowDays - recentDays)일 평균의 surgeRatio 배 이상이고 minRecentRatio 이상이면 급상승 → 그 군집 후보 점수 +boost(구글 트렌드 부스트와 합쳐 최대 10).",
+    "groups 는 레이더 clusters.json 의 briefEligible 군집만. 키워드는 사람들이 실제로 치는 검색어(군집당 20개 이하). 수치 자료가 아니라 검색어 목록이다.",
+    "결과(비율)는 레이더 점수·보고서에만 쓰고 writer(작성기) 입력·사이트 본문에는 넣지 않는다."
+  ],
+  "dailyCap": 50,
+  "windowDays": 28,
+  "recentDays": 7,
+  "surgeRatio": 1.5,
+  "minRecentRatio": 1,
+  "boost": 10,
+  "groups": [
+    { "cluster": "minimum-wage", "keywords": ["최저임금", "최저시급", "최저임금 인상"] },
+    { "cluster": "social-insurance-rates", "keywords": ["4대보험 요율", "건강보험료율", "고용보험료율", "4대보험료", "건강보험료 인상"] },
+    { "cluster": "civil-servant-pay", "keywords": ["공무원 봉급표", "공무원 보수", "공무원 월급", "공무원 임금인상"] },
+    { "cluster": "year-end-tax", "keywords": ["연말정산", "연말정산 간소화", "연말정산 환급"] },
+    { "cluster": "bok-base-rate", "keywords": ["기준금리", "금통위", "한국은행 기준금리"] },
+    { "cluster": "national-pension", "keywords": ["국민연금 보험료", "연금개혁", "국민연금 인상"] },
+    { "cluster": "unemployment-benefit", "keywords": ["실업급여", "구직급여", "실업급여 조건"] },
+    { "cluster": "retirement-pension", "keywords": ["퇴직금", "퇴직연금", "퇴직금 계산"] },
+    { "cluster": "household-loan-policy", "keywords": ["DSR", "주택담보대출 규제", "가계대출 규제", "대출 규제"] }
+  ]
+}

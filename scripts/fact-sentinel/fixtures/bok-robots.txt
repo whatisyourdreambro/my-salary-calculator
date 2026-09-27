@@ -1,0 +1,8 @@
+User-agent : *
+Disallow: /
+Allow: /portal/
+Allow: /history70/
+Allow: /imer/
+Allow: /imerEng/
+Allow: /museum/
+Allow: /eng/

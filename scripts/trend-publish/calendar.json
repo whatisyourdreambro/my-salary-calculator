@@ -1,0 +1,16 @@
+{
+  "_README": [
+    "발행 달력 (2026-09-26 R5 publisher · 2026-09-27 운영자 결정 반영) — 이 파일과 TREND_HOME/calendar.local.json(차단 추가만 가능)을 함께 본다.",
+    "firstPublishNotBefore 는 types.ts FIRST_PUBLISH_NOT_BEFORE 보다 앞당길 수 없다(늦은 쪽이 이긴다). pilot.from 도 첫 발행일로 친다.",
+    "pilot: 운영자 결정 파일럿 10/13~10/31. 끝나면(pilot.to 다음 날부터) decide.mjs --pilot-verdict continue 기록 전까지 발행 없음.",
+    "freezes: growth-masterplan §5-2 창 B(11/1~1/31 신규 라우트 금지) — 운영자 결정으로 이 기간은 발행 없음(보고만). 연말정산 동결 예외 없음.",
+    "verdictWindows: 광고 판정일 당일 차단. deployBatches: 운영자 배포 배치일과 그 뒤 deployBlackoutDaysAfter 일 차단.",
+    "resumeRequiresPilotVerdictAfter(선택): 이 날짜 이후 재개는 파일럿 판정이 있어야 한다 — 지금은 pilot.to 가 같은 역할을 해 두지 않는다."
+  ],
+  "firstPublishNotBefore": "2026-10-13",
+  "pilot": { "from": "2026-10-13", "to": "2026-10-31", "reason": "운영자 결정 2026-09-27 — 브리프별 승인('발행 <slug>')·하루 1편·주 5편 이하" },
+  "freezes": [{ "from": "2026-11-01", "to": "2027-01-31", "reason": "growth-masterplan §5-2 창 B — 신규 라우트 금지(운영자 결정: 발행 없음)" }],
+  "verdictWindows": [{ "date": "2026-10-09", "reason": "자동광고 판정(10/9)" }],
+  "deployBatches": [{ "date": "2026-10-10", "reason": "R3 배치 배포" }],
+  "deployBlackoutDaysAfter": 2
+}

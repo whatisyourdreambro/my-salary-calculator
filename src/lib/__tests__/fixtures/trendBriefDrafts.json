@@ -1,0 +1,256 @@
+{
+  "_README": [
+    "트렌드 브리프 게이트 합성 픽스처 (2026-09-26 R5 publisher) — 가상의 발표다. 실제 발행 금지(slug 가 synthetic- 로 시작).",
+    "good: 모든 규칙을 통과해야 하는 초안. context: 규칙 실행 문맥(오늘 2026-10-13, publish 모드). 출처 원문은 trendBriefSourceSnapshot.txt 의 '=== source: <id> ===' 구역.",
+    "sources[].sha256 는 그 구역 텍스트(LF 정규화·앞뒤 공백 제거)의 SHA-256 — 픽스처 원문을 고치면 함께 갱신.",
+    "cases: 규칙마다 한 번 이상 일부러 실패시키는 패치. draftPatch 는 경로→값(점·[n] 표기), contextPatch 는 문맥 덮어쓰기(candidate 포함)와 특수 플래그",
+    "(cloneBriefAsGuide · cloneBriefAsStatic · duplicateTitle · primaryContainsBrief · secondaryContainsBrief · renderedWithoutDisclosure · headlineFromLead · snapshotPatch · addMetaDescription).",
+    "context.candidate 는 daily prepare 가 state/<날짜>-candidate.json 에 남기는 레이더 후보 기록 — 1차 출처 URL·게시일·발표 종류 대조용.",
+    "gate.ts --self-test 와 trendBriefRules.test.ts 가 같은 파일을 쓴다."
+  ],
+  "good": {
+    "schemaVersion": 1,
+    "slug": "synthetic-ei-reform-rate-2027",
+    "title": "고용보험 제도개편 방안 정부안, 월급별 부담 변화",
+    "description": "고용노동부가 발표한 고용보험 제도개편 방안 가운데 실업급여 보험료율 인상안을 월 보수별 근로자 부담 표로 계산하고, 적용 시점과 남은 절차를 정리했습니다.",
+    "category": "세금",
+    "tags": ["고용보험", "실업급여 요율", "4대보험", "제도개편"],
+    "level": "중급",
+    "publishedDate": "2026-10-13",
+    "modifiedDate": "2026-10-13",
+    "cluster": "social-insurance-rates",
+    "event": {
+      "name": "고용보험 제도개편 방안",
+      "kind": "보도자료",
+      "ministry": "고용노동부",
+      "announcedDate": "2026-10-08",
+      "effectiveDate": "2027-01-01",
+      "status": "proposed"
+    },
+    "sources": [
+      {
+        "id": "moel-pr",
+        "url": "https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=99999",
+        "title": "고용보험 제도개편 방안 발표 (합성 픽스처)",
+        "publishedDate": "2026-10-08",
+        "fetchedAt": "2026-10-13T00:30:00+09:00",
+        "sha256": "616c1e7e466dced4cb12b07cb03bd964cb2e3fbfec173a208bf12da84ab8fd01",
+        "role": "primary",
+        "kogl": 1
+      },
+      {
+        "id": "law-ei",
+        "url": "https://www.law.go.kr/법령/고용보험및산업재해보상보험의보험료징수등에관한법률시행령",
+        "title": "고용보험 및 산업재해보상보험의 보험료징수 등에 관한 법률 시행령",
+        "publishedDate": "2026-01-01",
+        "fetchedAt": "2026-10-13T00:31:00+09:00",
+        "sha256": "f23fe526295c95200669256e9f73dbd02bfa64d0568d820ca32bd7698b14c076",
+        "role": "statute"
+      }
+    ],
+    "lead": "고용노동부가 10월 8일 발표한 **고용보험 제도개편 방안**은 실업급여 보험료율을 근로자와 사업주 각각 0.9%에서 1.0%로 올리는 정부안을 담았습니다. 아직 확정되지 않은 안이어서 시행령 개정 절차가 남아 있습니다. 이 글은 발표 내용을 요약하고, 머니샐러리 계산 엔진으로 월 보수별 근로자 부담이 한 달에 얼마나 달라지는지 계산해 정리했습니다.",
+    "officialSummary": {
+      "heading": "공식 발표 요약: 무엇이 바뀌나",
+      "paragraphs": [
+        "보도자료에 따르면 이번 방안의 중심은 구직급여 지출이 늘면서 적자가 이어진 실업급여 계정의 재정을 보강하는 일입니다. 정부는 보험료율 조정과 급여 제도 개선을 한 묶음으로 내놓았습니다.",
+        "근로자 몫과 사업주 몫이 같은 폭으로 오르기 때문에 두 몫을 합친 실업급여 보험료율은 1.8%에서 2.0%로 바뀌는 셈입니다. 반복 수급 개선과 조기재취업수당 기준 조정도 방안에 들어 있지만, 이 글은 매달 급여에서 빠지는 보험료의 변화에 초점을 맞춥니다."
+      ],
+      "quotes": [
+        {
+          "text": "고용노동부는 실업급여 보험료율을 근로자와 사업주 각각 0.9%에서 1.0%로 올리는 방안을 추진한다고 밝혔다.",
+          "sourceId": "moel-pr"
+        }
+      ]
+    },
+    "impact": {
+      "heading": "월 보수별 근로자 부담 변화 계산",
+      "intro": "아래 표는 월 보수가 200만원, 300만원, 400만원, 500만원이라고 가정하고 비과세 수당 없이 보험료를 낸다고 보았을 때, 지금 요율과 방안의 실업급여 요율을 각각 넣어 머니샐러리 계산 엔진으로 계산한 결과입니다. 국민연금과 건강·장기요양보험은 이번 방안의 대상이 아니어서 지금 요율 그대로 두었습니다.",
+      "table": {
+        "kind": "insurance-rate-change",
+        "params": {
+          "monthlyPays": [2000000, 3000000, 4000000, 5000000],
+          "base": "2026",
+          "override": { "EMPLOYMENT_INSURANCE": 0.01 }
+        },
+        "caption": "월 보수는 가정값입니다. 보험료 고지 관례에 따른 끝전 절사를 엔진이 그대로 적용했고, 실제 고지액은 보수월액 신고 방식에 따라 조금 다를 수 있습니다."
+      },
+      "notes": [
+        "월 보수를 300만원으로 가정하면 한 달 부담이 {{engine:insurance-rate-change:1:4}} 늘어나고, 고용보험료는 {{engine:insurance-rate-change:1:3}}으로 바뀝니다.",
+        "국민연금 요율은 다음 해에 법정 일정에 따라 따로 오르지만, 이 표는 이번 방안의 효과만 보도록 연금·건강보험 요율을 지금 값으로 고정했습니다."
+      ]
+    },
+    "effective": {
+      "heading": "언제부터, 누구에게 적용되나",
+      "paragraphs": [
+        "정부 계획대로라면 오른 요율은 2027년 1월 1일부터 적용될 예정입니다. 고용보험에 가입한 근로자와 사업주가 대상이며, 매달 급여에서 원천공제되는 근로자 몫과 사업주가 따로 내는 몫이 함께 오릅니다.",
+        "시행령 개정안은 입법예고와 규제 심사를 거쳐야 하므로 최종 요율이나 적용 시점은 달라질 수 있습니다. 개정이 공포되기 전까지는 지금 요율이 그대로 적용됩니다."
+      ],
+      "beforeAfter": [
+        { "label": "실업급여 보험료율(근로자 몫)", "before": "0.9%", "after": "1.0%(정부안)" },
+        { "label": "실업급여 보험료율(근로자·사업주 합계)", "before": "1.8%", "after": "2.0%(정부안)" }
+      ],
+      "caveats": [
+        "월 보수에 비과세 수당이 있으면 보험료를 매기는 보수가 줄어 실제 증가액은 표보다 작을 수 있습니다.",
+        "고용안정·직업능력개발사업 보험료는 사업주만 내며 이번 요율 조정 대상이 아닙니다.",
+        "예술인·노무제공자 같은 특례 가입자는 별도 요율 체계를 따르므로 표를 그대로 적용하기 어렵습니다.",
+        "최종 요율은 시행령 개정 공포로 정해지니 적용 전에 고용노동부 발표를 다시 확인하세요."
+      ]
+    },
+    "calculators": {
+      "heading": "내 급여로 다시 계산하기",
+      "links": [
+        { "href": "/social-insurance-rates-2027", "label": "다음 해 4대보험 요율표", "why": "국민연금·건강보험·고용보험 요율을 한 표에서 비교합니다" },
+        { "href": "/", "label": "연봉 실수령액 계산기", "why": "내 연봉과 비과세 수당을 넣어 월 실수령액을 확인합니다" },
+        { "href": "/unemployment-benefit", "label": "실업급여 계산기", "why": "구직급여 일액과 받을 수 있는 기간을 계산합니다" }
+      ]
+    },
+    "faq": [
+      {
+        "q": "고용보험료 인상은 이미 정해졌나요?",
+        "a": "아니요. 고용노동부가 발표한 정부안이고 시행령 개정 절차가 남아 있습니다. 개정이 공포되기 전까지는 지금 요율이 적용됩니다."
+      },
+      {
+        "q": "월 보수가 300만원이라고 가정하면 얼마나 더 내나요?",
+        "a": "비과세 수당이 없는 월 보수 300만원을 예시로 들면 근로자 몫 보험료가 한 달 {{engine:insurance-rate-change:1:4}} 늘어납니다."
+      },
+      {
+        "q": "사업주 부담도 오르나요?",
+        "a": "네. 방안은 근로자 몫과 사업주 몫을 같은 폭으로 올리는 내용이어서 사업주가 내는 실업급여 보험료도 함께 오릅니다."
+      },
+      {
+        "q": "국민연금이나 건강보험료도 이번에 바뀌나요?",
+        "a": "이번 방안은 실업급여 보험료율만 다룹니다. 다른 보험료의 다음 해 요율은 각 제도의 별도 결정 절차를 따릅니다."
+      }
+    ],
+    "numbers": [
+      { "token": "0.9%", "sourceId": "moel-pr", "locator": "둘째 문단 — 근로자·사업주 각각 요율" },
+      { "token": "1.0%", "sourceId": "moel-pr", "locator": "둘째 문단 — 인상 후 요율" },
+      { "token": "1.8%", "sourceId": "moel-pr", "locator": "둘째 문단 — 합계 요율(현행)" },
+      { "token": "2.0%", "sourceId": "moel-pr", "locator": "둘째 문단 — 합계 요율(인상 후)" },
+      { "token": "200만원", "sourceId": "assumption", "locator": "영향 표 시나리오 월 보수" },
+      { "token": "300만원", "sourceId": "assumption", "locator": "영향 표 시나리오 월 보수" },
+      { "token": "400만원", "sourceId": "assumption", "locator": "영향 표 시나리오 월 보수" },
+      { "token": "500만원", "sourceId": "assumption", "locator": "영향 표 시나리오 월 보수" }
+    ],
+    "humanReview": "none"
+  },
+  "context": {
+    "mode": "publish",
+    "phase": "pre",
+    "today": "2026-10-13",
+    "ledger": [],
+    "calendar": {
+      "firstPublishNotBefore": "2026-10-10",
+      "freezes": [{ "from": "2026-11-01", "to": "2027-01-31", "reason": "growth-masterplan §5-2 창 B" }],
+      "verdictWindows": [{ "date": "2026-10-09", "reason": "자동광고 판정" }],
+      "deployBatches": [{ "date": "2026-10-10", "reason": "R3 배치" }],
+      "deployBlackoutDaysAfter": 2
+    },
+    "cannibalHubs": [
+      { "route": "/social-insurance-rates-2027", "headTerms": ["4대보험 요율", "사회보험 요율"], "title": "2027 4대보험 요율표 — 국민연금 5%·건강보험 동결" }
+    ],
+    "staleRoutes": [],
+    "headlines": [{ "title": "정부, 내년 고용보험료 인상 추진…직장인 부담 늘어" }],
+    "tripWires": ["연 2.75%", "국민연금 4.5%", "590만"],
+    "candidate": {
+      "id": "c1",
+      "cluster": "social-insurance-rates",
+      "route": "new-brief",
+      "title": "고용보험 제도개편 방안 발표 (합성 픽스처)",
+      "url": "https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=99999",
+      "publishedDate": "2026-10-08",
+      "ministry": "고용노동부",
+      "eventKind": "보도자료",
+      "score": 50
+    }
+  },
+  "cases": [
+    { "rule": "impact-kind", "draftPatch": { "impact.table.kind": "no-such-kind" } },
+    { "rule": "no-meta-description", "contextPatch": { "addMetaDescription": true } },
+    {
+      "rule": "caps",
+      "contextPatch": {
+        "ledger": [
+          {
+            "slug": "synthetic-other-2026",
+            "publishedDate": "2026-10-13",
+            "cluster": "year-end-tax",
+            "eventName": "다른 발표",
+            "eventKind": "보도자료",
+            "eventStatus": "final",
+            "primary": { "url": "https://www.nts.go.kr/x", "sha256": "0", "fetchedAt": "2026-10-13T00:00:00+09:00", "publishedDate": "2026-10-12" },
+            "sources": [],
+            "reviewBy": "2026-12-12",
+            "status": "live"
+          }
+        ]
+      }
+    },
+    { "rule": "calendar", "draftPatch": { "publishedDate": "2026-10-11", "modifiedDate": "2026-10-11" }, "contextPatch": { "today": "2026-10-11" } },
+    { "rule": "dates", "draftPatch": { "publishedDate": "2026-10-12" } },
+    { "rule": "citations", "draftPatch": { "sources[1].url": "https://example.com/law" } },
+    { "rule": "robots-kogl", "contextPatch": { "snapshotPatch": { "moel-pr": { "robotsAllowed": false } } } },
+    { "rule": "canonical-release", "contextPatch": { "candidateRoute": "update-existing" } },
+    { "rule": "structure", "draftPatch": { "faq": [{ "q": "고용보험료 인상은 이미 정해졌나요?", "a": "아니요. 고용노동부가 발표한 정부안이고 시행령 개정 절차가 남아 있습니다." }] } },
+    { "rule": "shares", "draftPatch": { "officialSummary.quotes[0].text": "고용노동부는 보험료율을 크게 올린다고 밝혔다." } },
+    { "rule": "title", "draftPatch": { "title": "속보 고용보험 제도개편 방안 정부안" } },
+    { "rule": "description", "draftPatch": { "description": "짧은 설명입니다." } },
+    { "rule": "tags", "draftPatch": { "tags": ["고용보험", "실업급여", "4대보험", "제도개편", "보험료"] } },
+    { "rule": "category", "draftPatch": { "category": "부동산" } },
+    { "rule": "slug", "draftPatch": { "slug": "nurse-salary" } },
+    { "rule": "links", "draftPatch": { "calculators.links[0].href": "/no-such-route-2027" } },
+    { "rule": "link-freshness", "contextPatch": { "staleRoutes": ["/unemployment-benefit"] } },
+    {
+      "rule": "numeric-provenance",
+      "draftPatch": {
+        "effective.paragraphs[1]": "시행령 개정안은 입법예고와 규제 심사를 거쳐야 하므로 최종 요율이나 적용 시점은 달라질 수 있습니다. 약 1,500만 명이 영향을 받습니다."
+      }
+    },
+    { "rule": "unannounced-facts", "draftPatch": { "faq[2].a": "네. 사업주 몫 실업급여 보험료도 같은 폭으로 오르는 것으로 확정됐습니다." } },
+    {
+      "rule": "topic-denylist",
+      "draftPatch": {
+        "officialSummary.paragraphs[0]": "보도자료에 따르면 이번 방안의 중심은 실업급여 계정의 재정을 보강하는 일이며, 발표 뒤 코스피 흐름에도 관심이 쏠렸습니다."
+      }
+    },
+    { "rule": "forbidden-facts", "draftPatch": { "effective.caveats[2]": "국민연금 4.5% 시절과 달리 지금은 요율이 다르니 연금 쪽 부담은 따로 확인하세요." } },
+    {
+      "rule": "tax-literals",
+      "draftPatch": {
+        "description": "최저시급 10,320원 기준으로 고용노동부가 발표한 고용보험 제도개편 방안의 실업급여 보험료율 인상안을 월 보수별 근로자 부담 표로 계산했습니다."
+      }
+    },
+    { "rule": "similarity-guides", "contextPatch": { "cloneBriefAsGuide": true } },
+    { "rule": "similarity-static", "contextPatch": { "cloneBriefAsStatic": true } },
+    { "rule": "similarity-title", "contextPatch": { "duplicateTitle": true } },
+    { "rule": "similarity-source", "contextPatch": { "primaryContainsBrief": true } },
+    { "rule": "similarity-headline", "contextPatch": { "headlineFromLead": 30 } },
+    { "rule": "similarity-source", "contextPatch": { "secondaryContainsBrief": true } },
+    { "rule": "similarity-source", "contextPatch": { "snapshotPatch": { "law-ei": { "url": "https://www.law.go.kr/법령/고용보험법" } } } },
+    {
+      "rule": "citations",
+      "draftPatch": { "sources[0].role": "statute", "sources[1].role": "primary", "sources[1].publishedDate": "2026-10-12" }
+    },
+    { "rule": "citations", "draftPatch": { "sources[0].publishedDate": "2026-10-11" } },
+    { "rule": "citations", "draftPatch": { "event.announcedDate": "2026-10-09" } },
+    { "rule": "citations", "contextPatch": { "candidate": null } },
+    {
+      "rule": "unannounced-facts",
+      "contextPatch": {
+        "candidate": {
+          "id": "c1",
+          "cluster": "social-insurance-rates",
+          "route": "new-brief",
+          "title": "고용보험 제도개편 방안 발표 (합성 픽스처)",
+          "url": "https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=99999",
+          "publishedDate": "2026-10-08",
+          "ministry": "고용노동부",
+          "eventKind": "입법예고",
+          "score": 50
+        }
+      }
+    },
+    { "rule": "unannounced-facts", "contextPatch": { "snapshotPatch": { "moel-pr": { "title": "고용보험료징수법 시행령 일부개정령안 입법예고" } } } },
+    { "rule": "unannounced-facts", "draftPatch": { "impact.table.params.base": "2027" }, "contextPatch": { "renderedWithoutDisclosure": true } }
+  ]
+}

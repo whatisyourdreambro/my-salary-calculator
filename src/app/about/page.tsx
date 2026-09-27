@@ -270,6 +270,13 @@ export default function AboutPage() {
  <HomeTopAd />
  </div>
 
+ {/* 운영자 승인 2026-09-27: 공식 발표 해설(트렌드 브리프) 작성 방식 고지 — '정보를 확인하고 수정하는 기준'의 보충.
+     그 절은 이 페이지 끝 광고보다 위에 있어 거기에 넣으면 모든 폭에서 광고가 아래로 밀리므로, 광고 높이를 바꾸지
+     않도록 페이지 끝 광고 아래에 둔다(docs/trend-publishing-runbook.md §0). */}
+ <p className="mt-12 text-sm text-muted-blue leading-relaxed max-w-xl mx-auto text-center">
+ 공식 발표 해설은 공식 자료를 바탕으로 자동화·AI 보조로 작성하고, 자동 검사 후 운영자 승인으로 게시합니다.
+ </p>
+
  <div className="mt-16 pt-8 border-t border-canvas-200 text-center text-xs text-faint-blue">
  <p>© {new Date().getFullYear()} 머니샐러리 — 모든 콘텐츠는 정보 제공 목적입니다.</p>
  <div className="flex items-center justify-center gap-3 mt-3">

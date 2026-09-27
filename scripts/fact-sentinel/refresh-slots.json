@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "note": "매년 돌아오는 수치 갱신 의무. 저장소 문서에 적힌 것만 넣었다(docRefs = 문서 경로:줄 + 그 줄에 있어야 할 문구). 날짜는 MM-DD, window 가 연말을 넘으면(to < from) 다음 해로 이어진다. 문서에서 줄을 찾지 못한 슬롯(예: '12월 연말정산 계산기 점검'을 12월로 못 박은 문서 줄)은 넣지 않았다 — 가장 가까운 문서 근거(동결기 체크리스트)를 쓴 슬롯만 있다.",
+  "slots": [
+    {
+      "id": "season-set-oct",
+      "title": "시즌 세트 추석→연말정산(OCT) 교체",
+      "date": "09-26",
+      "files": ["src/app/table/2026/SeasonalLinks.tsx", "src/config/seasonLinks.ts", "src/components/header/HeaderSearch.tsx", "src/lib/seasonalCalendar.ts"],
+      "pages": [],
+      "docRefs": [{ "ref": "docs/growth-playbook-2026.md:46", "anchor": "SeasonalLinks 추석→연말정산 세트 교체" }],
+      "note": "문서가 종전 '10월 초' 표기를 폐기하고 9/26 으로 당겼다."
+    },
+    {
+      "id": "hometax-preview",
+      "title": "홈택스 연말정산 미리보기 오픈 대응 + 관련 페이지 수치 총점검",
+      "window": { "from": "10-25", "to": "10-31" },
+      "files": [],
+      "pages": ["/year-end-tax-preview", "/year-end-tax-2027"],
+      "docRefs": [{ "ref": "docs/growth-playbook-2026.md:47", "anchor": "홈택스 연말정산 미리보기 오픈 대응" }]
+    },
+    {
+      "id": "year-end-calc-recheck",
+      "title": "동결기 체크: 연말정산 클러스터·계산기 2026 귀속 한도·요율 재확인",
+      "window": { "from": "11-01", "to": "01-31" },
+      "files": [],
+      "pages": ["/year-end-tax-2027", "/year-end-tax-preview", "/year-end-tax"],
+      "docRefs": [{ "ref": "docs/next-upgrade-plan-2026-09-11.md:115", "anchor": "2026 귀속 한도·요율 재확인" }]
+    },
+    {
+      "id": "season-set-dec",
+      "title": "시즌 세트 OCT→DEC 교체(자동, 미배포 시 3파일 수동) + CF 캐시 퍼지",
+      "date": "12-01",
+      "files": ["src/lib/seasonalCalendar.ts"],
+      "pages": [],
+      "docRefs": [{ "ref": "docs/next-upgrade-plan-2026-09-11.md:114", "anchor": "12/1 OCT→DEC" }]
+    },
+    {
+      "id": "samsung-tai-h2",
+      "title": "삼성 TAI 하반기 지급률 → taiData.ts 3필드",
+      "window": { "from": "12-01", "to": "12-10" },
+      "files": ["src/app/calc/samsung-bonus/taiData.ts"],
+      "pages": ["/calc/samsung-bonus", "/calc/bonus-calculators"],
+      "docRefs": [{ "ref": "docs/growth-playbook-2026.md:49", "anchor": "삼성 TAI 하반기 지급률 발표" }]
+    },
+    {
+      "id": "civil-servant-pay-final",
+      "title": "공무원 봉급표 확정표 교체(예상→확정)",
+      "window": { "from": "12-20", "to": "12-31" },
+      "files": ["src/lib/civilServantPay.ts"],
+      "pages": ["/civil-servant-pay-2027"],
+      "docRefs": [
+        { "ref": "docs/growth-masterplan-2026-09-20.md:228", "anchor": "공무원 2027 확정표 교체" },
+        { "ref": "docs/next-upgrade-plan-2026-09-11.md:117", "anchor": "공무원 2027 확정 봉급표(12월 말)" }
+      ]
+    },
+    {
+      "id": "rates-pointer-0101",
+      "title": "4대보험 현행 요율 포인터 전환(CURRENT_RATES_YEAR) — 운영자 승인 항목",
+      "date": "01-01",
+      "files": ["src/config/currentRates.ts", "src/lib/taxConstants2027.ts"],
+      "pages": [],
+      "docRefs": [{ "ref": "docs/next-upgrade-plan-2026-09-11.md:122", "anchor": "2027-01-01 4대보험 요율 전환 런북" }],
+      "note": "INSURANCE_RATES_2027_STATUS 의 provisional 항목을 먼저 확인."
+    },
+    {
+      "id": "minimum-wage-pointer-0101",
+      "title": "최저임금 포인터 새해 전환 + JAN 시즌 세트(수동, 확인 2건)",
+      "window": { "from": "01-01", "to": "01-02" },
+      "files": ["src/config/minimumWage.ts"],
+      "pages": [],
+      "docRefs": [
+        { "ref": "docs/growth-masterplan-2026-09-20.md:229", "anchor": "최저임금 포인터 2027" },
+        { "ref": "docs/next-upgrade-plan-2026-09-11.md:118", "anchor": "2027 최저임금(1/1" }
+      ]
+    },
+    {
+      "id": "samsung-annual-op",
+      "title": "삼성 연간 잠정실적 → annualOp.ts 4필드",
+      "window": { "from": "01-06", "to": "01-10" },
+      "files": ["src/app/calc/samsung-bonus/annualOp.ts"],
+      "pages": ["/calc/samsung-bonus"],
+      "docRefs": [{ "ref": "docs/growth-playbook-2026.md:63", "anchor": "연간 잠정실적 D0(1월 8일 전후)" }]
+    },
+    {
+      "id": "samsung-opi",
+      "title": "삼성 OPI 발표 24h 런북 → opiAnnouncement.ts 4필드 + 배너 게이트(opiData.ts 단일 소스)",
+      "window": { "from": "01-20", "to": "01-31" },
+      "files": ["src/data/opiAnnouncement.ts", "src/app/calc/samsung-bonus/opiData.ts"],
+      "pages": ["/calc/samsung-bonus", "/calc/bonus-calculators"],
+      "docRefs": [
+        { "ref": "docs/next-upgrade-plan-2026-09-11.md:116", "anchor": "OPI(1월 말)" },
+        { "ref": "docs/revenue-100x-plan-2026-09.md:127", "anchor": "opiData.ts 단일 소스" }
+      ]
+    },
+    {
+      "id": "pension-cap-0701",
+      "title": "국민연금 기준소득월액 상·하한 연례 변경 반영",
+      "date": "07-01",
+      "files": ["src/lib/taxConstants2026.ts"],
+      "pages": ["/national-pension-estimate-2026"],
+      "docRefs": [
+        { "ref": "docs/growth-playbook-2026.md:56", "anchor": "국민연금 기준소득월액 상한 연례 인상" },
+        { "ref": "docs/growth-masterplan-2026-09-20.md:233", "anchor": "연금 상한 갱신" }
+      ]
+    },
+    {
+      "id": "minimum-wage-notice",
+      "title": "최저임금 의결(7월 중순)·고시(8월 5일까지) → 이듬해 최저임금 페이지",
+      "window": { "from": "07-10", "to": "08-05" },
+      "files": ["src/config/minimumWage.ts"],
+      "pages": ["/minimum-wage-2027"],
+      "docRefs": [{ "ref": "docs/growth-playbook-2026.md:83", "anchor": "8월 5일까지 고용노동부 고시" }]
+    },
+    {
+      "id": "civil-servant-budget",
+      "title": "공무원 보수 인상률(정부 예산안) 확인·반영",
+      "window": { "from": "09-01", "to": "09-02" },
+      "files": [],
+      "pages": ["/civil-servant-pay-2027"],
+      "docRefs": [{ "ref": "docs/revenue-masterplan-2026-09.md:159", "anchor": "공무원 2027 예산안 확인·반영" }]
+    }
+  ]
+}
