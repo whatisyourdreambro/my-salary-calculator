@@ -43,6 +43,7 @@
       "src/app/tools/finance/stock-tax/": "'2026 세법 기준' 배지 — 양도소득세, 4대보험 포인터 무관",
       "src/app/tools/real-estate/acquisition-tax/": "'2026 세법 기준' 배지 — 취득세, 4대보험 포인터 무관",
       "src/app/tools/real-estate/gift-tax/": "'2026 세법 기준' 배지 — 증여세, 4대보험 포인터 무관",
+      "src/app/calc/bonus-home-plan/Client.tsx": "연도별 표 캡션 '2026년 요율·세율 기준' — 성과급 세후는 compEngines 가 calcBonusNet 에 INSURANCE_RATES_2026 을 명시하고 삼성은 model.calcSamsungBonusNet(2026 고정)이라 포인터 무관. 삼성 model 을 포인터로 옮기는 런북 P-3 때 compEngines 와 이 문구를 함께 고친다",
       "src/lib/guides/supplements.ts": "간호사 가이드 보강 — 본문 2026년 요율 표(legacy-rewrite-2)를 가리키는 연도 명시 문장. 그 표를 2027 로 다시 계산하면 함께 고친다",
       "src/lib/guidesMeta.generated.ts": "gen-guides-meta 산출물 — 손으로 고치지 않는다. 정본 가이드 파일(manual)을 고친 뒤 재생성하면 따라간다"
     },

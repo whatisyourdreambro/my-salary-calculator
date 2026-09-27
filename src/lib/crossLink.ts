@@ -243,6 +243,12 @@ export const STATIC_CALC_CARDS: Record<
     title: "SK하이닉스 성과급 계산기",
     description: "PS 영업이익 10%·PI — 현금·자사주 신구 체계 세후 실수령 시뮬레이션",
   },
+  // 2026-09-27 신설 — 가이드 역링크용 카드만 둔다(CALC_TO_GUIDES 매핑은 가이드 페이지 광고 위치 검토 후 운영자 결정)
+  "bonus-home-plan": {
+    slug: "bonus-home-plan",
+    title: "성과급 내 집 마련 계산기",
+    description: "삼성·SK 성과급 5년 누적(시나리오 가정) + 동탄·평택·이천 집값·DSR 한도",
+  },
   // 2026-09-06 전수검사 보강: CALC_TO_GUIDES 가 참조하지만 simpleCalculators(101종)
   // 에도 STATIC_CALC_CARDS 에도 없던 실존 정적 라우트 9종. 등재 전에는
   // getGuideRelatedCalcs 결과가 렌더 단계에서 전량 탈락해 '관련 계산기' 블록이

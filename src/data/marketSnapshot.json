@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "fetchedAt": "2026-09-27",
+  "rone": {
+    "medianStatblId": "A_2024_00062",
+    "meanStatblId": "A_2024_00060",
+    "month": "202608",
+    "monthLabel": "2026년 8월",
+    "source": "한국부동산원 전국주택가격동향조사 (월) 중위매매가격_아파트·평균매매가격_아파트",
+    "sourceUrl": "https://www.reb.or.kr/r-one/",
+    "regions": {
+      "suwon-yeongtong": {
+        "clsId": 530063,
+        "fullName": "경기>경부2권>수원시>영통구",
+        "median": 683000000,
+        "mean": 854015576
+      },
+      "hwaseong-dongtan": {
+        "clsId": 530097,
+        "fullName": "경기>서해안권>화성시>동탄구",
+        "median": 852500000,
+        "mean": 930951220
+      },
+      "hwaseong-byeongjeom": {
+        "clsId": 530096,
+        "fullName": "경기>서해안권>화성시>병점구",
+        "median": 389500000,
+        "mean": 444618644
+      },
+      "yongin-giheung": {
+        "clsId": 530057,
+        "fullName": "경기>경부2권>용인시>기흥구",
+        "median": 627000000,
+        "mean": 660823188
+      },
+      "yongin-cheoin": {
+        "clsId": 530056,
+        "fullName": "경기>경부2권>용인시>처인구",
+        "median": 340500000,
+        "mean": 343168681
+      },
+      "pyeongtaek": {
+        "clsId": 520034,
+        "fullName": "경기>서해안권>평택시",
+        "median": 242000000,
+        "mean": 273860698
+      },
+      "icheon": {
+        "clsId": 520041,
+        "fullName": "경기>동부2권>이천시",
+        "median": 176000000,
+        "mean": 212767059
+      },
+      "cheongju": {
+        "clsId": 510071,
+        "fullName": "충북>청주시",
+        "median": 185000000,
+        "mean": 242281667
+      },
+      "cheonan": {
+        "clsId": 510077,
+        "fullName": "충남>천안시",
+        "median": 196500000,
+        "mean": 238175926
+      },
+      "asan": {
+        "clsId": 510080,
+        "fullName": "충남>아산시",
+        "median": 192000000,
+        "mean": 202950916
+      },
+      "seongnam-bundang": {
+        "clsId": 530050,
+        "fullName": "경기>경부1권>성남시>분당구",
+        "median": 1729500000,
+        "mean": 1759079882
+      }
+    },
+    "nationalMedian": 329000000
+  },
+  "ecos": {
+    "statCode": "121Y006",
+    "itemCode": "BECBLA0302",
+    "month": "202607",
+    "monthLabel": "2026년 7월",
+    "ratePct": 4.48,
+    "source": "한국은행 경제통계시스템(ECOS) 예금은행 대출금리(신규취급액 기준) 주택담보대출",
+    "sourceUrl": "https://ecos.bok.or.kr/"
+  }
+}

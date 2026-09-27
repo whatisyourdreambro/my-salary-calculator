@@ -66,6 +66,8 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/samsung-bonus': { lastModified: new Date('2026-09-25'), priority: 0.95 },
  '/calc/sk-hynix-bonus': { lastModified: new Date('2026-09-25'), priority: 0.9 }, // 2026-09-16 임단협 가결 반영
  '/calc/bonus-calculators': { lastModified: new Date('2026-09-20'), priority: 0.9 },
+ // 2026-09-27 신설 — 시세 스냅숏이 매월(16일 이후) 갱신되므로 monthly. lastModified 는 스냅숏을 바꾼 배포에만 올린다.
+ '/calc/bonus-home-plan': { lastModified: new Date('2026-09-27'), changeFrequency: 'monthly' },
  // priority 0.85 는 sitemap() 내 성과급 클러스터 루프와 같은 값 — override 가 있으면
  // 루프가 건너뛰므로 명시 (누락 시 기본 0.8 로 강등됨).
  '/calc/hyundai-bonus': { lastModified: new Date('2026-09-25'), priority: 0.85 },
@@ -218,6 +220,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/calc/pension-hike-2027',
  // 공무원 월급 실수령액 계산기 (2026-09-27 신설) — 9급·교사·경찰·소방 호봉별 세후 월급
  '/calc/civil-servant-net-pay',
+ // 성과급 내 집 마련 계산기 (2026-09-27 신설) — 삼성·SK 성과급 5년 누적 + 한국부동산원 시·구 중위가격
+ '/calc/bonus-home-plan',
  // R2 신규 계산기 5종 (2026-08-31 승인 배치) — 연말정산 시즌·뉴스 트리거·이직
  '/calc/dual-income-year-end',
  '/calc/voluntary-retirement',
