@@ -10,6 +10,8 @@
 // ★주제 클러스터(topicCluster)는 템플릿과 별개 축이다 — 템플릿 표에 섞지 않고 따로 보고한다.
 // ★개인정보: 집계값만 출력한다. 한 줄 로그(renderLogLine)에는 URL·경로를 넣지 않는다.
 // ★CSV 파서·방문 페이지 정규화·리퍼러 집계는 naverReferrerQueries.ts 를 재사용한다(그 파일은 수정하지 않는다).
+// ★완전성: 파일마다 GA4 총계 행을 남겨 창(시작 행으로 나눠 받은 파일들)의 행 합과 대조한다 — 잘린 꼬리가 곧 롱테일·커버리지·
+//   작은 계열·슬레이트라서, 불완전한 창은 한 줄 기록을 거부한다(windowCompleteness · findWindowConflict).
 // 운영 절차·사전 등록 판독: docs/naver-template-panel.md
 
 import nodePath from "node:path";
@@ -18,6 +20,7 @@ import { destTemplate, type DestTemplate } from "./analytics";
 import {
   aggregateNaverRows,
   compareCodeUnits,
+  findHeader,
   HeaderNotFoundError,
   isPathInside,
   normalizeLanding,
@@ -25,6 +28,7 @@ import {
   parseGa4NaverExport,
   sanitizeForTerminal,
   type NaverReport,
+  type NaverRow,
 } from "./naverReferrerQueries";
 
 // ─────────────────────────────────────────────────────────────
@@ -179,39 +183,71 @@ export function landingTemplate(href: string): LandingTemplate {
 export const TOPIC_CLUSTERS = ["company", "bonus", "paytables", "yearend", "rollover", "job", "home-loan", "other"] as const;
 export type TopicCluster = (typeof TOPIC_CLUSTERS)[number];
 
+/**
+ * 분류 규칙 판. 한 줄 기록 머리('NAVER-PANEL v1')에 들어간다. 10/5 첫 기록부터 v1 으로 고정 —
+ * 템플릿·클러스터 규칙을 바꾸면 v2 로 올려 전후 행을 섞어 읽지 않게 한다.
+ * (v1 = 9/27 확정판: 클러스터 키워드를 /guides 밖 모든 경로·디코딩한 경로에 적용. 첫 기록 전이라 판을 올리지 않았다.)
+ */
+export const PANEL_RULES_VERSION = "v1";
+
+// ── 1단계: 경로 규칙(정확한 라우트) ──
 const CLUSTER_COMPANY_RE = /^\/(salary-db|company|industry|public-institutions)(\/|$)/;
 const CLUSTER_YEAREND_CALC_RE = new RegExp(`^/calc/(${[...YEAREND_CALC_SLUGS, YEAREND_SEASON_BONUS_CALC].join("|")})(/|$)`);
-const CLUSTER_BONUS_CALC_RE = /^\/calc\/([a-z0-9-]+-bonus|bonus-calculators|year-end-bonus-tax|incentive-tax)(\/|$)/;
+/** 회사별·시즌 성과급 계산기(/calc/*-bonus), 성과급 도구(/calc/bonus-*), 연말 성과급 세금·인센티브 세금. */
+const CLUSTER_BONUS_CALC_RE = /^\/calc\/([a-z0-9-]+-bonus|bonus-[a-z0-9-]+|year-end-bonus-tax|incentive-tax)(\/|$)/;
+const CLUSTER_BONUS_INSIGHTS_RE = /^\/insights\/bonus-[a-z0-9-]+(\/|$)/;
 const CLUSTER_BONUS_PAGE_RE = /^\/(samsung-negotiation-\d{4}|[a-z0-9-]*bonus[a-z0-9-]*)(\/|$)/;
 const CLUSTER_PAYTABLE_RE = /^\/(teacher|police|firefighter|civil-servant|military)-pay-[a-z0-9-]+(\/|$)/;
+/** 공무원 실수령액 계산기 — 공식 봉급표를 그대로 쓰고 같은 시즌(12~1월 봉급표 확정)을 탄다. */
+const CLUSTER_PAYTABLE_CALC_RE = /^\/calc\/civil-servant-net-pay(\/|$)/;
+/** 실업급여 계산기 · 주휴수당 계산기. */
+const CLUSTER_ROLLOVER_CALC_RE = /^\/calc\/(unemployment-benefit|holiday-allowance-quick)(\/|$)/;
 const CLUSTER_JOB_RE = /^\/job(\/|$)/;
-/** /guides/<slug> 는 slug 키워드로 근사 분류한다(위에서부터 먼저 맞는 것). */
-const GUIDE_SLUG_RULES: readonly [RegExp, TopicCluster][] = [
-  [/year-end-tax|hometax-year-end|yearend|deduction|tax-credit|tax-refund/, "yearend"],
-  [/bonus|incentive|performance-pay/, "bonus"],
-  [/(teacher|police|firefighter|civil-servant|military)-pay/, "paytables"],
-  [/minimum-wage|unemployment|insurance-rates|weekly-holiday/, "rollover"],
+
+// ── 2단계: 키워드 규칙 — 위 경로 규칙에 안 걸린 모든 경로(가이드·계산기·도구·Q&A·용어집·인사이트 등)에 건다 ──
+/** 영문 slug 조각을 단어 단위로만(opi·tai·ps 가 topic·retail·maps 안에서 걸리지 않게). */
+const token = (words: string) => new RegExp(`(^|[/-])(${words})([/-]|$)`);
+/** 위에서부터 먼저 맞는 것. 한글 slug(/qna·/glossary)는 디코딩한 경로로 본다. */
+export const CLUSTER_KEYWORD_RULES: readonly (readonly [RegExp, TopicCluster])[] = [
+  // 연말정산 — 'deduction'과 같은 뜻인 '소득공제', 맞벌이 '부양가족-공제' 포함. 근로장려금(earned-income-credit)은 넣지 않는다.
+  [/year-end|yearend|deduction|tax-credit|tax-refund|연말정산|세액공제|소득공제|부양가족-공제/, "yearend"],
+  // 성과급 — OPI·TAI(삼성)·PS(SK하이닉스)·이익 공유, 임금협상(타결 뉴스 사이클). 개인 연봉협상(salary-negotiation)은 넣지 않는다.
+  [/bonus|incentive|performance-pay|profit-sharing|wage-negotiation|성과급|인센티브|상여|임금협상/, "bonus"],
+  [token("opi|tai|ps"), "bonus"],
+  [/(teacher|police|firefighter|civil-servant|military)-pay|봉급|공무원-보수/, "paytables"],
+  [/minimum-wage|unemployment|insurance-rates|weekly-holiday|holiday-allowance|실업급여|최저임금|주휴/, "rollover"],
 ];
+
+/** 클러스터 규칙용 경로: sitePath + 퍼센트 인코딩 해제(실패 시 원문) + NFC. */
+function clusterPath(href: string): string | null {
+  const path = sitePath(href);
+  if (path === null) return null;
+  let decoded = path;
+  try {
+    decoded = decodeURI(path);
+  } catch {
+    // 잘못된 퍼센트 시퀀스는 원문 유지
+  }
+  return decoded.normalize("NFC");
+}
 
 /**
  * 방문 페이지 → 주제 클러스터. 템플릿(landingTemplate)을 부르지 않는 독립 규칙이다 —
- * 예: /calc/january-bonus 는 템플릿 bonus-calc · 클러스터 yearend, /guides/* 는 템플릿 guide · 클러스터는 slug 키워드.
+ * 예: /calc/january-bonus 는 템플릿 bonus-calc · 클러스터 yearend, /guides/* 는 템플릿 guide · 클러스터는 키워드.
+ * 1단계 경로 규칙 → 2단계 키워드 규칙(CLUSTER_KEYWORD_RULES) 순서. 경로는 디코딩해서 본다.
  * /en/* 는 주제와 무관하게 other(영문판은 네이버 유입 계열이 아니다).
  */
 export function topicCluster(href: string): TopicCluster {
-  const path = sitePath(href);
+  const path = clusterPath(href);
   if (path === null || EN_RE.test(path)) return "other";
   if (CLUSTER_COMPANY_RE.test(path)) return "company";
   if (YEAREND_PAGE_RE.test(path) || CLUSTER_YEAREND_CALC_RE.test(path)) return "yearend";
-  if (CLUSTER_BONUS_CALC_RE.test(path) || CLUSTER_BONUS_PAGE_RE.test(path)) return "bonus";
-  if (CLUSTER_PAYTABLE_RE.test(path)) return "paytables";
-  if (ROLLOVER_RE.test(path)) return "rollover";
+  if (CLUSTER_BONUS_CALC_RE.test(path) || CLUSTER_BONUS_INSIGHTS_RE.test(path) || CLUSTER_BONUS_PAGE_RE.test(path)) return "bonus";
+  if (CLUSTER_PAYTABLE_RE.test(path) || CLUSTER_PAYTABLE_CALC_RE.test(path)) return "paytables";
+  if (ROLLOVER_RE.test(path) || CLUSTER_ROLLOVER_CALC_RE.test(path)) return "rollover";
   if (CLUSTER_JOB_RE.test(path)) return "job";
   if (HOME_LOAN_RE.test(path)) return "home-loan";
-  const guide = /^\/guides\/([^/]+)/.exec(path);
-  if (guide) {
-    for (const [re, cluster] of GUIDE_SLUG_RULES) if (re.test(guide[1])) return cluster;
-  }
+  for (const [re, cluster] of CLUSTER_KEYWORD_RULES) if (re.test(path)) return cluster;
   return "other";
 }
 
@@ -299,11 +335,35 @@ export interface LandingRow {
   views: number;
 }
 
-export interface ParsedLandingExport {
-  rows: LandingRow[];
-  /** 헤더 뒤 데이터 레코드 수(총계·반복 헤더 제외, 소스 필터 전). GA4 행 한도 경고에 쓴다. */
+/** 파일의 GA4 총계 행 값. 조회수 열이 없으면 views 는 null. */
+export interface ExportTotals {
+  sessions: number;
+  views: number | null;
+}
+
+/**
+ * 한 내보내기 파일(한 '페이지')의 완전성 판정 재료 — 방문 페이지 CSV·리퍼러 CSV 공통.
+ * GA4 탐색 표는 '시작 행'·'행 표시'로 나눠 받으므로 여러 파일이 한 창(28일·7일·리퍼러)을 이룬다.
+ */
+export interface ExportPage {
+  /** 헤더 뒤 데이터 레코드 수(총계·반복 헤더 제외, 소스 필터 전). */
   dataRecords: number;
+  /** 데이터 레코드 세션 합(소스 필터 전 — 총계 행과 같은 모집단). */
+  dataSessions: number;
+  /** 데이터 레코드 조회수 합(소스 필터 전). 조회수 열이 없으면 null. */
+  dataViews: number | null;
+  /** 첫 총계 행 값. 총계 행이 없거나, 여러 개인데 값이 서로 다르면 null. */
+  totals: ExportTotals | null;
   totalsRows: number;
+  /**
+   * 원문 행 키(방문 페이지 원문[·세션 소스 원문] 또는 리퍼러 원문·방문 페이지 원문) — 파일 사이 겹침(시작 행 중복) 검사용.
+   * 쿼리 문자열이 들어 있을 수 있어 절대 출력하지 않는다(개수만 쓴다).
+   */
+  rawKeys: string[];
+}
+
+export interface ParsedLandingExport extends ExportPage {
+  rows: LandingRow[];
   hasEngaged: boolean;
   hasViews: boolean;
   hasSource: boolean;
@@ -325,7 +385,8 @@ export class ReferrerExportError extends Error {
 
 /**
  * GA4 탐색 CSV → 네이버 검색 방문 페이지 행. BOM·'#' 주석 블록(파일 어디에 있든)·빈 줄은 parseCsv 가 건너뛰고,
- * 총계 행(방문 페이지 칸이 비었거나 '총계'·'Totals' 등)과 반복 헤더 행은 여기서 버린다.
+ * 총계 행(방문 페이지 칸이 비었거나 '총계'·'Totals' 등)은 집계에서 빼되 값은 totals 로 남기고(완전성 대조),
+ * 반복 헤더 행은 버린다. 행 합(dataSessions·dataViews)은 소스 필터 전 값이라 총계와 같은 모집단이다.
  * 소스 열이 있으면 NAVER_SEARCH_SOURCES 행만 남기고, 없으면 탐색 필터가 이미 네이버 검색으로 걸렸다고 본다.
  * 헤더를 못 찾으면 HeaderNotFoundError(naverReferrerQueries 와 같은 오류형), '페이지 리퍼러' 열이 있으면 ReferrerExportError.
  */
@@ -336,23 +397,31 @@ export function parseGa4LandingCsv(text: string): ParsedLandingExport {
   const { columns } = found;
   if (columns.referrer !== null) throw new ReferrerExportError();
   const rows: LandingRow[] = [];
+  const rawKeys: string[] = [];
+  const totalsSeen: ExportTotals[] = [];
   let dataRecords = 0;
-  let totalsRows = 0;
+  let dataSessions = 0;
+  let dataViews = 0;
   let naverOtherSessions = 0;
   let nonNaverRows = 0;
   let hasOtherRow = false;
+  const viewsOf = (cells: string[]) => (columns.views === null ? 0 : toNumber(cells[columns.views]));
   for (const cells of records.slice(found.index + 1)) {
     const rawLanding = (cells[columns.landing] ?? "").trim();
     const label = normalizeHeader(rawLanding);
     if (LANDING_HEADER_SET.has(label)) continue; // 여러 표를 이어 붙인 내보내기의 반복 헤더
     if (TOTALS_LABELS.has(label)) {
-      totalsRows++;
+      totalsSeen.push({ sessions: toNumber(cells[columns.sessions]), views: columns.views === null ? null : viewsOf(cells) });
       continue;
     }
     dataRecords++;
     const sessions = toNumber(cells[columns.sessions]);
-    if (columns.source !== null) {
-      const source = (cells[columns.source] ?? "").trim().toLowerCase().split(" / ")[0].trim();
+    dataSessions += sessions;
+    dataViews += viewsOf(cells);
+    const rawSource = columns.source === null ? null : (cells[columns.source] ?? "").trim();
+    rawKeys.push(rawSource === null ? rawLanding : `${rawLanding}\u0000${rawSource}`);
+    if (rawSource !== null) {
+      const source = rawSource.toLowerCase().split(" / ")[0].trim();
       if (!NAVER_SEARCH_SOURCES.has(source)) {
         if (source.includes("naver")) naverOtherSessions += sessions;
         else nonNaverRows++;
@@ -365,13 +434,17 @@ export function parseGa4LandingCsv(text: string): ParsedLandingExport {
       landing,
       sessions,
       engagedSessions: columns.engaged === null ? 0 : toNumber(cells[columns.engaged]),
-      views: columns.views === null ? 0 : toNumber(cells[columns.views]),
+      views: viewsOf(cells),
     });
   }
   return {
     rows,
     dataRecords,
-    totalsRows,
+    dataSessions,
+    dataViews: columns.views === null ? null : dataViews,
+    totals: pickTotals(totalsSeen),
+    totalsRows: totalsSeen.length,
+    rawKeys,
     hasEngaged: columns.engaged !== null,
     hasViews: columns.views !== null,
     hasSource: columns.source !== null,
@@ -379,6 +452,163 @@ export function parseGa4LandingCsv(text: string): ParsedLandingExport {
     nonNaverRows,
     hasOtherRow,
   };
+}
+
+/** 총계 행이 여럿이면 값이 모두 같을 때만 쓴다(표 위·아래 반복). 다르면(여러 표·'Grand total' 등) 판정 불가로 null. */
+function pickTotals(seen: ExportTotals[]): ExportTotals | null {
+  if (!seen.length) return null;
+  const [first] = seen;
+  return seen.every((t) => t.sessions === first.sessions && t.views === first.views) ? first : null;
+}
+
+const REFERRER_HEADER_SET = new Set<string>(HEADER_ALIASES.referrer);
+
+/**
+ * 리퍼러 × 방문 페이지 CSV 의 완전성 재료(행 수·행 합·총계 행·원문 키). 집계는 naverReferrerQueries 가 맡고
+ * (그 파일은 고치지 않는다), 여기서는 같은 헤더 규칙(findHeader)으로 한 번 더 읽어 총계만 대조한다.
+ * 총계 행 = 리퍼러 칸과 방문 페이지 칸이 모두 비었거나 '총계'·'Totals' 등. 반복 헤더는 건너뛴다.
+ */
+export function inspectReferrerCsv(text: string): ExportPage {
+  const records = parseCsv(text);
+  const found = findHeader(records);
+  if (!found) throw new HeaderNotFoundError(records[0] ?? []);
+  const { columns } = found;
+  const rawKeys: string[] = [];
+  const totalsSeen: ExportTotals[] = [];
+  let dataSessions = 0;
+  let dataViews = 0;
+  const viewsOf = (cells: string[]) => (columns.views === null ? 0 : toNumber(cells[columns.views]));
+  for (const cells of records.slice(found.index + 1)) {
+    const rawReferrer = (cells[columns.referrer] ?? "").trim();
+    const rawLanding = (cells[columns.landing] ?? "").trim();
+    const refLabel = normalizeHeader(rawReferrer);
+    const landingLabel = normalizeHeader(rawLanding);
+    if (REFERRER_HEADER_SET.has(refLabel) || LANDING_HEADER_SET.has(landingLabel)) continue;
+    if (TOTALS_LABELS.has(refLabel) && TOTALS_LABELS.has(landingLabel)) {
+      totalsSeen.push({ sessions: toNumber(cells[columns.sessions]), views: columns.views === null ? null : viewsOf(cells) });
+      continue;
+    }
+    rawKeys.push(`${rawReferrer}\u0000${rawLanding}`);
+    dataSessions += toNumber(cells[columns.sessions]);
+    dataViews += viewsOf(cells);
+  }
+  return {
+    dataRecords: rawKeys.length,
+    dataSessions,
+    dataViews: columns.views === null ? null : dataViews,
+    totals: pickTotals(totalsSeen),
+    totalsRows: totalsSeen.length,
+    rawKeys,
+  };
+}
+
+// ─────────────────────────────────────────────────────────────
+// 창 완전성 — 총계 대조 · 시작 행 겹침 · 행 표시 한도
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * 조회수(이벤트 수)는 정확한 합이라 총계와 ±1(반올림)까지만 봐준다.
+ * 세션수는 GA4 가 HyperLogLog++(정밀도 12, 95% 구간 약 ±3.3%)로 근사하므로 '행 합 = 총계'가 원래 성립하지 않는다 —
+ * 조회수 열이 없을 때만 세션으로 대조하고, 그때 허용 폭은 총계의 3.3%(최소 1).
+ */
+export const VIEW_TOLERANCE = 1;
+export const SESSION_HLL_TOLERANCE = 0.033;
+
+/**
+ * complete — 총계와 행 합이 맞는다.
+ * short    — 행 합이 총계보다 적다(뒤 페이지 누락·GA4 임계값). 누락분 = 총계 − 행 합.
+ * excess   — 행 합이 총계보다 많다(다른 기간·필터 파일이 섞였거나 시작 행이 겹쳤다).
+ * suspect  — 총계로 확인할 수 없고(총계 행 없음, 또는 세션 근사 대조뿐) 모든 파일이 '행 표시' 값만큼 차 있다 — 잘렸을 수 있다.
+ * unknown  — 총계 행이 없어 확인 불가(마지막 파일이 '행 표시' 값보다 적어 잘림 가능성은 낮다).
+ */
+export type Completeness = "complete" | "short" | "excess" | "suspect" | "unknown";
+
+export interface WindowCheck {
+  status: Completeness;
+  files: number;
+  dataRecords: number;
+  /** 대조 기준 — views(정확, ±1) · sessions(HLL 근사, ±3.3%) · null(총계 없음). */
+  basis: "views" | "sessions" | null;
+  totals: ExportTotals | null;
+  dataSessions: number;
+  dataViews: number | null;
+  /** 총계 − 행 합(양수 = 누락, 음수 = 초과). 총계가 없으면 null. */
+  sessionGap: number | null;
+  viewGap: number | null;
+  /** 다음 내보내기의 GA4 '시작 행' = 지금까지 받은 데이터 행 + 1 (501 · 1001 · 1501 …). */
+  nextStartRow: number;
+  /** 모든 파일의 데이터 행 수가 GA4 '행 표시' 값과 같다 — 표의 마지막 페이지(500행 미만)를 아직 못 받았다. */
+  allPagesFull: boolean;
+}
+
+export type WindowConflict =
+  /** 같은 원문 행이 두 파일에 있다(시작 행 겹침 — 그대로 두면 두 번 센다). */
+  | { kind: "overlap"; rows: number }
+  /** 파일마다 총계가 다르다(다른 기간·필터·탐색의 파일이 섞였다). */
+  | { kind: "totals-mismatch" };
+
+const sameTotals = (a: ExportTotals, b: ExportTotals) =>
+  Math.abs(a.sessions - b.sessions) <= VIEW_TOLERANCE &&
+  (a.views === null || b.views === null || Math.abs(a.views - b.views) <= VIEW_TOLERANCE);
+
+/** 한 창의 파일들 사이 충돌 — 있으면 CLI 가 거부한다(집계하지 않는다). */
+export function findWindowConflict(pages: ExportPage[]): WindowConflict | null {
+  const owner = new Map<string, number>();
+  const overlapping = new Set<string>();
+  pages.forEach((page, i) => {
+    for (const key of new Set(page.rawKeys)) {
+      const first = owner.get(key);
+      if (first === undefined) owner.set(key, i);
+      else if (first !== i) overlapping.add(key);
+    }
+  });
+  if (overlapping.size) return { kind: "overlap", rows: overlapping.size };
+  const withTotals = pages.map((p) => p.totals).filter((t): t is ExportTotals => t !== null);
+  if (withTotals.some((t) => !sameTotals(t, withTotals[0]))) return { kind: "totals-mismatch" };
+  return null;
+}
+
+/** 한 창(파일 여러 개 가능)의 완전성. 충돌 검사(findWindowConflict)를 통과한 입력을 가정한다. */
+export function windowCompleteness(pages: ExportPage[]): WindowCheck {
+  const dataRecords = pages.reduce((s, p) => s + p.dataRecords, 0);
+  const dataSessions = pages.reduce((s, p) => s + p.dataSessions, 0);
+  const hasViews = pages.length > 0 && pages.every((p) => p.dataViews !== null);
+  const dataViews = hasViews ? pages.reduce((s, p) => s + (p.dataViews ?? 0), 0) : null;
+  const totals = pages.find((p) => p.totals !== null)?.totals ?? null;
+  const allPagesFull = pages.length > 0 && pages.every((p) => GA4_ROW_LIMITS.includes(p.dataRecords));
+  const base = { files: pages.length, dataRecords, dataSessions, dataViews, totals, nextStartRow: dataRecords + 1, allPagesFull };
+  if (!totals) {
+    return { ...base, status: allPagesFull ? "suspect" : "unknown", basis: null, sessionGap: null, viewGap: null };
+  }
+  const sessionGap = totals.sessions - dataSessions;
+  const viewGap = totals.views !== null && dataViews !== null ? totals.views - dataViews : null;
+  const basis = viewGap !== null ? "views" : "sessions";
+  const gap = viewGap ?? sessionGap;
+  const tolerance = basis === "views" ? VIEW_TOLERANCE : Math.max(1, Math.ceil(totals.sessions * SESSION_HLL_TOLERANCE));
+  let status: Completeness = gap > tolerance ? "short" : gap < -tolerance ? "excess" : "complete";
+  // 세션 근사 대조로는 작은 꼬리 누락을 못 가린다 — 마지막 페이지를 못 받았으면 의심으로 둔다.
+  if (status === "complete" && basis === "sessions" && allPagesFull) status = "suspect";
+  return { ...base, status, basis, sessionGap, viewGap };
+}
+
+/** 운영자에게 줄 다음 행동(한국어 한 줄). complete 면 null. */
+export function completenessAdvice(check: WindowCheck): string | null {
+  // 시작 행은 GA4 입력칸에 그대로 치는 숫자라 천 단위 쉼표 없이 쓴다.
+  const again = `GA4 '시작 행'을 ${check.nextStartRow} 로 바꿔 한 번 더 받아 함께 넣을 것(500행 미만 파일이 나올 때까지 501·1001·1501…)`;
+  switch (check.status) {
+    case "complete":
+      return null;
+    case "short":
+      return check.allPagesFull
+        ? `${again}`
+        : "마지막 파일이 '행 표시' 값보다 적은데도(표 끝까지 받음) 모자라다 — 빠진 중간 페이지가 없는지(시작 행 1·501·1001… 순서) 확인하고, 그래도 같으면 GA4 임계값 처리다(문서 §9)";
+    case "excess":
+      return "행 합이 총계보다 많다 — 다른 기간·필터의 파일이 섞였는지 확인하고 같은 탐색·같은 기간으로 다시 받을 것";
+    case "suspect":
+      return `총계로 확인할 수 없다 — ${again}`;
+    case "unknown":
+      return "총계 행이 없어 완전성을 확인할 수 없다(마지막 파일이 행 표시 값보다 적어 잘림 가능성은 낮음)";
+  }
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -662,6 +892,24 @@ export function slateReferrer(report: NaverReport, slate: string[]): SlateReferr
   return { landings, pairs };
 }
 
+const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+/**
+ * GA4 REFERRER 탭 '방문 페이지 + 쿼리 문자열' 필터(정규식과 일치)에 붙여 넣을 식 — 슬레이트 경로만 남겨 행 수를 줄인다.
+ * 끝 슬래시·쿼리 문자열을 허용하고 앞뒤를 고정한다(전체 일치·부분 일치 어느 쪽이어도 같은 뜻).
+ * 한글 경로는 GA4 에 퍼센트 인코딩으로 남는 경우가 있어 인코딩 형태도 함께 넣는다.
+ */
+export function slateFilterRegex(slate: string[]): string {
+  const alts: string[] = [];
+  for (const p of slate) {
+    for (const form of [p, encodeURI(p)]) {
+      const body = escapeRegex(form.replace(/^\//, ""));
+      if (!alts.includes(body)) alts.push(body);
+    }
+  }
+  return `^/(${alts.join("|")})/?(\\?.*)?$`;
+}
+
 // ─────────────────────────────────────────────────────────────
 // 출력
 // ─────────────────────────────────────────────────────────────
@@ -690,10 +938,13 @@ export interface PanelInputSummary {
   hasOtherRow: boolean;
   /** 데이터 행 수가 GA4 '행 표시' 값과 같은 파일 수. */
   rowLimitHits: number;
+  /** 총계 대조·행 표시 한도로 본 창 완전성. */
+  check: WindowCheck;
 }
 
 export function summarizeInputs(parsed: ParsedLandingExport[]): PanelInputSummary {
   return {
+    check: windowCompleteness(parsed),
     files: parsed.length,
     dataRecords: parsed.reduce((s, p) => s + p.dataRecords, 0),
     totalsRows: parsed.reduce((s, p) => s + p.totalsRows, 0),
@@ -714,11 +965,48 @@ export interface RenderOptions {
   slate?: string[] | null;
   slateLanding?: SlateLandingStat[] | null;
   slateReferrer?: SlateReferrer | null;
+  /** --referrer 파일들의 완전성(슬레이트 검색어 표). */
+  referrerCheck?: WindowCheck | null;
+}
+
+/** 완전성 판정을 사람이 읽는 줄로. 불완전이면 '⚠ 불완전'으로 시작한다. */
+export function completenessNotes(check: WindowCheck): string[] {
+  const t = check.totals;
+  const gapText = (gap: number | null) => (gap === null ? "-" : gap >= 0 ? `누락 ${fmt(gap)}` : `초과 ${fmt(-gap)}`);
+  const lines: string[] = [];
+  if (t) {
+    const views = t.views !== null && check.dataViews !== null ? `조회수 행 합 ${fmt(check.dataViews)} / 총계 ${fmt(t.views)}(${gapText(check.viewGap)}) · ` : "";
+    lines.push(
+      `총계 대조(${check.basis === "views" ? "조회수 기준 ±1" : "세션 기준 — HLL 근사 ±3.3%"}): ${views}세션 행 합 ${fmt(check.dataSessions)} / 총계 ${fmt(t.sessions)}(${gapText(check.sessionGap)}${check.basis === "views" ? " — 세션은 GA4 근사값이라 참고만" : ""})`,
+    );
+  }
+  const advice = completenessAdvice(check);
+  switch (check.status) {
+    case "complete":
+      lines.push("완전 — 총계와 행 합이 맞는다");
+      break;
+    case "short":
+      lines.push(
+        `⚠ 불완전 — 행이 빠졌다: ${check.basis === "views" ? `조회수 ${fmt(check.viewGap ?? 0)} · ` : ""}세션 약 ${fmt(Math.max(0, check.sessionGap ?? 0))} 누락. ${advice}`,
+      );
+      break;
+    case "excess":
+      lines.push(`⚠ 불완전(초과) — ${advice}`);
+      break;
+    case "suspect":
+      lines.push(`⚠ 불완전(잘림 의심) — 모든 파일의 행 수가 GA4 '행 표시' 값(${GA4_ROW_LIMITS.join("·")})과 같다. ${advice}`);
+      break;
+    case "unknown":
+      lines.push(`총계 행 없음 — ${advice}`);
+      break;
+  }
+  return lines;
 }
 
 function inputNotes(label: string, s: PanelInputSummary): string[] {
   const notes: string[] = [];
   notes.push(`- ${label}: 파일 ${s.files}개 · 데이터 행 ${fmt(s.dataRecords)} · 총계 행 ${fmt(s.totalsRows)}건 제외`);
+  for (const line of completenessNotes(s.check)) notes.push(`  - ${line}`);
   if (s.hasSource) {
     notes.push(`  - 세션 소스 열 사용: 네이버 검색(naver·m.search.naver.com·search.naver.com)만 집계 · 네이버 기타(블로그·카페 등) 세션 ${fmt(s.naverOtherSessions)} 제외 · 네이버 외 행 ${fmt(s.nonNaverRows)}건 제외`);
   } else {
@@ -727,20 +1015,29 @@ function inputNotes(label: string, s: PanelInputSummary): string[] {
   if (!s.hasEngaged) notes.push("  - 참여 세션수 열 없음 — 0 으로 표시");
   if (!s.hasViews) notes.push("  - 조회수 열 없음 — 0 으로 표시");
   if (s.hasOtherRow) notes.push("  - ⚠ '(other)' 행 있음 — GA4 가 행을 뭉쳤다. URL 수·커버리지가 낮게 나온다");
-  if (s.rowLimitHits > 0) {
-    notes.push(
-      `  - ⚠ 데이터 행 수가 GA4 '행 표시' 값(${GA4_ROW_LIMITS.join("·")})과 같은 파일 ${s.rowLimitHits}개 — 잘렸을 수 있다. 행 표시 500 · 시작 행 501 로 한 번 더 내보내 함께 넣을 것`,
-    );
+  if (s.rowLimitHits > 0 && s.check.status === "complete") {
+    notes.push(`  - 행 수가 GA4 '행 표시' 값과 같은 파일 ${s.rowLimitHits}개 — 총계와 맞으므로 잘리지 않았다`);
   }
   return notes;
 }
 
+const isIncomplete = (c: WindowCheck | null | undefined) => !!c && c.status !== "complete" && c.status !== "unknown";
+
 /** 패널 → 마크다운(stdout 전용). 템플릿 표와 주제 클러스터 표는 따로 낸다. */
 export function renderPanelMarkdown(result: PanelResult, options: RenderOptions): string {
-  const { input, week, weekInput, slate, slateLanding, slateReferrer: ref } = options;
+  const { input, week, weekInput, slate, slateLanding, slateReferrer: ref, referrerCheck } = options;
   const t = result.totals;
   const out: string[] = [];
   out.push("# 네이버 템플릿 패널 — GA4 방문 페이지 × 네이버 검색 세션", "");
+  const windows: [string, WindowCheck | null | undefined][] = [
+    ["28일", input.check],
+    ["7일", weekInput?.check],
+    ["리퍼러", ref ? referrerCheck : null],
+  ];
+  const incomplete = windows.filter(([, c]) => isIncomplete(c)).map(([label]) => label);
+  if (incomplete.length) {
+    out.push(`> ⚠ 불완전 입력(${incomplete.join("·")}) — 이 결과로 기준선·판독을 기록하지 말 것. 아래 입력 메모의 안내대로 더 받아 다시 실행`, "");
+  }
   out.push(
     `- 28일: 네이버 검색 세션 ${fmt(t.sessions)} · 참여 세션 ${fmt(t.engagedSessions)} · 조회수 ${fmt(t.views)} · 고유 URL ${fmt(t.urls)} · 롱테일(상위 ${LONG_TAIL_HEAD} URL 밖) 세션 ${fmt(t.longTailSessions)}`,
   );
@@ -787,8 +1084,17 @@ export function renderPanelMarkdown(result: PanelResult, options: RenderOptions)
       out.push(`| ${cell(s.landing)} | ${landingTemplate(s.landing)} | ${fmt(s.sessions)} | ${fmt(s.engagedSessions)} | ${fmt(s.views)} |`);
     }
     out.push("");
+    out.push(`- REFERRER 탭 '방문 페이지 + 쿼리 문자열' 필터(정규식과 일치)용: \`${slateFilterRegex(slate)}\``, "");
     if (ref) {
       out.push("## 슬레이트 검색어 × 방문 페이지 — 네이버 리퍼러(슬레이트 경로만, 리퍼러 원문 미출력)", "");
+      if (referrerCheck) {
+        out.push(`- 리퍼러 입력: 파일 ${referrerCheck.files}개 · 데이터 행 ${fmt(referrerCheck.dataRecords)}`);
+        for (const line of completenessNotes(referrerCheck)) out.push(`  - ${line}`);
+        if (isIncomplete(referrerCheck)) {
+          out.push("  - ⚠ 잘린 리퍼러 표에서는 '(검색어 없음)'·낮은 커버리지가 잘림 때문일 수 있다 — REFERRER 탭에 세션 소스·방문 페이지 정규식 필터를 걸고 다시 받을 것");
+        }
+        out.push("");
+      }
       out.push("| 방문 페이지 | 네이버 리퍼러 세션 | 검색어 확인 세션 | 커버리지 |");
       out.push("|---|---:|---:|---:|");
       for (const l of ref.landings) out.push(`| ${cell(l.landing)} | ${fmt(l.naverSessions)} | ${fmt(l.querySessions)} | ${pct(l.coverage)} |`);
@@ -811,19 +1117,45 @@ export function renderPanelMarkdown(result: PanelResult, options: RenderOptions)
 
 const oneDecimal = (n: number | null) => (n === null ? "-" : (Math.round(n * 10) / 10).toFixed(1));
 
+/** 한 줄 기록용 완전성 표시(URL·슬래시 없음). complete 면 null. label 은 '28d'·'7d'. */
+export function completenessToken(label: string, check: WindowCheck): string | null {
+  switch (check.status) {
+    case "complete":
+      return null;
+    case "short":
+      return check.basis === "views"
+        ? `불완전 ${label} 누락 조회수 ${fmt(check.viewGap ?? 0)} 세션 약 ${fmt(Math.max(0, check.sessionGap ?? 0))}`
+        : `불완전 ${label} 누락 세션 약 ${fmt(check.sessionGap ?? 0)}`;
+    case "excess":
+      return check.basis === "views"
+        ? `불완전 ${label} 초과 조회수 ${fmt(-(check.viewGap ?? 0))}`
+        : `불완전 ${label} 초과 세션 약 ${fmt(-(check.sessionGap ?? 0))}`;
+    case "suspect":
+      return `불완전 ${label} 잘림 의심`;
+    case "unknown":
+      return `총계없음 ${label}`;
+  }
+}
+
 /**
  * metrics-log 비고 칸에 붙일 한 줄. 템플릿·클러스터 이름·숫자·고정 문구만 쓴다 — URL·경로·검색어·날짜(슬래시)·파이프 없음.
  * 형식: NAVER-PANEL v1 28d 세션 N 롱테일 N 사이트맵 N 커버 x% ; 열=세션·페이지당·커버[·7d] ; <템플릿> N·x·x%[·N] ; …
  *       ; 계열 28d <클러스터> N … [; 계열 7d <클러스터> N … ; 7d 세션 N]
  * 28일·7일 세션이 모두 0 인 템플릿은 생략한다(생략 = 0 세션, 커버리지도 0 이다).
- * v1 은 분류 규칙 판 — 템플릿·클러스터 규칙을 바꾸면 v2 로 올려 전후 행을 섞어 읽지 않게 한다.
+ * v1 은 분류 규칙 판(PANEL_RULES_VERSION) — 템플릿·클러스터 규칙을 바꾸면 v2 로 올려 전후 행을 섞어 읽지 않게 한다.
+ * checks 를 주면 완전하지 않은 창마다 둘째 칸에 '불완전 28d 누락 조회수 N 세션 약 N'·'총계없음 7d' 같은 표시가 붙는다.
  */
-export function renderLogLine(result: PanelResult, week?: PanelResult | null): string {
+export function renderLogLine(result: PanelResult, week?: PanelResult | null, checks?: { month: WindowCheck; week?: WindowCheck | null }): string {
   const t = result.totals;
   const parts: string[] = [
-    `NAVER-PANEL v1 28d 세션 ${fmt(t.sessions)} 롱테일 ${fmt(t.longTailSessions)} 사이트맵 ${num(t.sitemapUrls)} 커버 ${pct(t.coverage)}`,
-    `열=세션·페이지당·커버${week ? "·7d" : ""}`,
+    `NAVER-PANEL ${PANEL_RULES_VERSION} 28d 세션 ${fmt(t.sessions)} 롱테일 ${fmt(t.longTailSessions)} 사이트맵 ${num(t.sitemapUrls)} 커버 ${pct(t.coverage)}`,
   ];
+  const flags = [
+    checks ? completenessToken("28d", checks.month) : null,
+    checks?.week ? completenessToken("7d", checks.week) : null,
+  ].filter((x): x is string => x !== null);
+  if (flags.length) parts.push(flags.join(" · "));
+  parts.push(`열=세션·페이지당·커버${week ? "·7d" : ""}`);
   const weekTpl = new Map(week?.templates.map((x) => [x.template, x.sessions]) ?? []);
   for (const s of result.templates) {
     const w = weekTpl.get(s.template) ?? 0;
@@ -846,12 +1178,14 @@ export const USAGE = [
   "사용법: npx tsx scripts/naver-template-panel.ts <ga4-28d.csv> [<ga4-28d-2.csv> …] [--7d <csv>] [--sitemap <file|https-url>]",
   "        [--slate /job/professor,/job/doctor,/home-loan [--referrer <리퍼러 csv>]] [--log-line]",
   "  입력: GA4 탐색 'NAVER-PANEL' 자유 형식 CSV — 열 '방문 페이지 + 쿼리 문자열'·'세션수'(·'참여 세션수'·'조회수'·'세션 소스')",
-  "  여러 28일 파일  GA4 '시작 행'을 바꿔 나눠 받은 같은 창의 CSV 를 함께 넣는다(같은 내용 파일은 거부)",
+  "  여러 28일 파일  GA4 '시작 행'을 501·1001·1501… 로 바꿔 나눠 받은 같은 창의 CSV 를 함께 넣는다(500행 미만 파일이 나올 때까지)",
+  "             같은 내용 파일·같은 행이 두 파일에 있는 겹침·총계가 서로 다른 파일은 거부. 총계 행과 행 합을 대조해 불완전을 알린다",
   "  --7d       7일 창 CSV(여러 번 지정 가능) — 템플릿·클러스터 합계만",
   "  --sitemap  사이트맵 파일 또는 https 주소 — 템플릿별 커버리지(사이트맵 URL 중 네이버 유입 1회 이상 비율)",
-  `  --slate    쉼표로 구분한 경로(최대 ${MAX_SLATE}쪽) — 그 경로의 28일 세션만 표로`,
-  "  --referrer 네이버 리퍼러 CSV(scripts/naver-referrer-queries.ts 와 같은 형식) — 슬레이트 경로의 검색어×방문 페이지만(--slate 필요)",
-  "  --log-line 표 대신 metrics-log 용 한 줄(URL 없음)만 출력(--slate·--referrer 와 함께 쓸 수 없음)",
+  `  --slate    쉼표로 구분한 경로(최대 ${MAX_SLATE}쪽) — 그 경로의 28일 세션만 표로 + REFERRER 탭 필터용 정규식`,
+  "  --referrer 네이버 리퍼러 CSV(scripts/naver-referrer-queries.ts 와 같은 형식, 여러 번 지정 가능) — 슬레이트 경로의 검색어×방문 페이지만(--slate 필요)",
+  "  --log-line 표 대신 metrics-log 용 한 줄(URL 없음)만 출력(--slate·--referrer 와 함께 쓸 수 없음). 불완전 창이 있으면 거부(exit 3)",
+  "  --allow-incomplete  --log-line 을 불완전 창에도 출력(줄에 '불완전 …' 표시가 붙는다) — 문서 §9 의 임계값 경우에만",
   "  ★입력 파일은 저장소 밖에 두세요(저장소 안 경로는 거부, exit 2). 결과는 stdout 뿐, 파일을 쓰지 않습니다.",
 ].join("\n");
 
@@ -859,18 +1193,23 @@ export interface PanelCliArgs {
   files: string[];
   weekFiles: string[];
   sitemap: string | null;
-  referrer: string | null;
+  referrers: string[];
   slate: string[] | null;
   logLine: boolean;
+  allowIncomplete: boolean;
 }
 
 export function parsePanelArgs(argv: string[]): { ok: true; args: PanelCliArgs } | { ok: false; help: boolean; error: string } {
-  const args: PanelCliArgs = { files: [], weekFiles: [], sitemap: null, referrer: null, slate: null, logLine: false };
+  const args: PanelCliArgs = { files: [], weekFiles: [], sitemap: null, referrers: [], slate: null, logLine: false, allowIncomplete: false };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "-h" || a === "--help") return { ok: false, help: true, error: "" };
     if (a === "--log-line") {
       args.logLine = true;
+      continue;
+    }
+    if (a === "--allow-incomplete") {
+      args.allowIncomplete = true;
       continue;
     }
     if (a.startsWith("--")) {
@@ -890,8 +1229,7 @@ export function parsePanelArgs(argv: string[]): { ok: true; args: PanelCliArgs }
         if (args.sitemap !== null) return { ok: false, help: false, error: "--sitemap 은 하나만 지정하세요." };
         args.sitemap = value;
       } else if (name === "referrer") {
-        if (args.referrer !== null) return { ok: false, help: false, error: "--referrer 는 하나만 지정하세요." };
-        args.referrer = value;
+        args.referrers.push(value);
       } else {
         if (args.slate !== null) return { ok: false, help: false, error: "--slate 는 한 번만 지정하세요(쉼표로 여러 경로)." };
         const slate = parseSlate(value);
@@ -903,10 +1241,11 @@ export function parsePanelArgs(argv: string[]): { ok: true; args: PanelCliArgs }
     args.files.push(a);
   }
   if (!args.files.length) return { ok: false, help: false, error: "28일 GA4 CSV 경로가 없습니다." };
-  if (args.referrer !== null && args.slate === null) return { ok: false, help: false, error: "--referrer 는 --slate 와 함께 써야 합니다(슬레이트 경로만 출력)." };
-  if (args.logLine && (args.slate !== null || args.referrer !== null)) {
+  if (args.referrers.length && args.slate === null) return { ok: false, help: false, error: "--referrer 는 --slate 와 함께 써야 합니다(슬레이트 경로만 출력)." };
+  if (args.logLine && (args.slate !== null || args.referrers.length)) {
     return { ok: false, help: false, error: "--log-line 은 경로가 없는 한 줄이라 --slate·--referrer 와 함께 쓸 수 없습니다." };
   }
+  if (args.allowIncomplete && !args.logLine) return { ok: false, help: false, error: "--allow-incomplete 는 --log-line 과 함께만 씁니다(표 출력은 늘 경고와 함께 나옵니다)." };
   return { ok: true, args };
 }
 
@@ -960,7 +1299,7 @@ async function runInner(argv: string[], io: PanelCliIo): Promise<PanelCliResult>
   if (sitemapIsUrl && !/^https:\/\//i.test(args.sitemap!)) {
     return { code: 1, stdout: "", stderr: "--sitemap 주소는 https 만 받습니다.\n" };
   }
-  const inputs = [...args.files, ...args.weekFiles, ...(args.referrer ? [args.referrer] : []), ...(args.sitemap && !sitemapIsUrl ? [args.sitemap] : [])];
+  const inputs = [...args.files, ...args.weekFiles, ...args.referrers, ...(args.sitemap && !sitemapIsUrl ? [args.sitemap] : [])];
   const realRoot = io.realpath(io.repoRoot);
   const resolved = new Map<string, string>();
   for (const file of inputs) {
@@ -1022,6 +1361,8 @@ async function runInner(argv: string[], io: PanelCliIo): Promise<PanelCliResult>
         throw error;
       }
     }
+    const conflict = findWindowConflict(out);
+    if (conflict) return { ok: false, res: conflictResult(label, conflict) };
     return { ok: true, parsed: out };
   };
 
@@ -1062,27 +1403,62 @@ async function runInner(argv: string[], io: PanelCliIo): Promise<PanelCliResult>
   const result = panel(monthRows, sitemapLocs);
   const weekResult = week && week.ok ? panel(week.parsed.flatMap((x) => x.rows)) : null;
 
-  if (args.logLine) return { code: 0, stdout: `${renderLogLine(result, weekResult)}\n`, stderr: "" };
+  const monthCheck = windowCompleteness(month.parsed);
+  const weekCheck = week && week.ok ? windowCompleteness(week.parsed) : null;
+
+  if (args.logLine) {
+    const candidates: [string, WindowCheck | null][] = [
+      ["28일", monthCheck],
+      ["7일", weekCheck],
+    ];
+    const bad = candidates.filter((x): x is [string, WindowCheck] => isIncomplete(x[1]));
+    const advice = bad.map(([label, c]) => `- ${label}: ${completenessNotes(c).filter((l) => l.startsWith("⚠")).join(" ")}`).join("\n");
+    if (bad.length && !args.allowIncomplete) {
+      return {
+        code: 3,
+        stdout: "",
+        stderr:
+          `거부: 불완전한 창이 있어 한 줄 기록을 내지 않습니다(판독 기준선이 틀어집니다).\n${advice}\n` +
+          "더 받아 다시 실행하세요. 마지막 파일이 500행 미만인데도 같으면 문서 §9(임계값)대로 --allow-incomplete 를 붙여 '불완전' 표시와 함께 기록합니다.\n",
+      };
+    }
+    const line = renderLogLine(result, weekResult, { month: monthCheck, week: weekCheck });
+    const stderr = bad.length ? `경고: 불완전 창을 '불완전' 표시와 함께 기록합니다.\n${advice}\n` : "";
+    return { code: 0, stdout: `${line}\n`, stderr };
+  }
 
   // 3) 슬레이트(선택) — 방문 페이지 CSV 의 세션 + (선택) 리퍼러 집계를 naverReferrerQueries 에 맡기고 슬레이트 경로만 고른다
   let slateRef: SlateReferrer | null = null;
-  if (args.referrer !== null && args.slate) {
-    const r = read(args.referrer);
-    if (!r.ok) return r.res;
-    let exported: ReturnType<typeof parseGa4NaverExport>;
-    try {
-      exported = parseGa4NaverExport(r.text);
-    } catch (error) {
-      if (error instanceof HeaderNotFoundError) {
-        return {
-          code: 1,
-          stdout: "",
-          stderr: "리퍼러 CSV 헤더 인식 실패 — '페이지 리퍼러'·'방문 페이지 + 쿼리 문자열'·'세션수' 열이 필요합니다.\n",
-        };
+  let referrerCheck: WindowCheck | null = null;
+  if (args.referrers.length && args.slate) {
+    const texts: string[] = [];
+    const pages: ExportPage[] = [];
+    const rows: NaverRow[] = [];
+    for (const file of args.referrers) {
+      const r = read(file);
+      if (!r.ok) return r.res;
+      if (texts.includes(r.text)) {
+        return { code: 1, stdout: "", stderr: `리퍼러: 같은 내용의 파일이 두 번 들어왔습니다(${file}) — 세션이 두 번 집계됩니다.\n` };
       }
-      throw error;
+      texts.push(r.text);
+      try {
+        rows.push(...parseGa4NaverExport(r.text).rows);
+        pages.push(inspectReferrerCsv(r.text));
+      } catch (error) {
+        if (error instanceof HeaderNotFoundError) {
+          return {
+            code: 1,
+            stdout: "",
+            stderr: "리퍼러 CSV 헤더 인식 실패 — '페이지 리퍼러'·'방문 페이지 + 쿼리 문자열'·'세션수' 열이 필요합니다.\n",
+          };
+        }
+        throw error;
+      }
     }
-    slateRef = slateReferrer(aggregateNaverRows(exported.rows), args.slate);
+    const conflict = findWindowConflict(pages);
+    if (conflict) return conflictResult("리퍼러", conflict);
+    referrerCheck = windowCompleteness(pages);
+    slateRef = slateReferrer(aggregateNaverRows(rows), args.slate);
   }
 
   const md = renderPanelMarkdown(result, {
@@ -1092,6 +1468,32 @@ async function runInner(argv: string[], io: PanelCliIo): Promise<PanelCliResult>
     slate: args.slate,
     slateLanding: args.slate ? slateLandingStats(monthRows, args.slate) : null,
     slateReferrer: slateRef,
+    referrerCheck,
   });
-  return { code: 0, stdout: `${md}\n`, stderr: "" };
+  const warn: [string, WindowCheck | null][] = [
+    ["28일", monthCheck],
+    ["7일", weekCheck],
+    ["리퍼러", referrerCheck],
+  ];
+  const flagged = warn.filter(([, c]) => isIncomplete(c)).map(([label]) => label);
+  const stderr = flagged.length ? `경고: 불완전 입력(${flagged.join("·")}) — 표 맨 위·입력 메모를 보고 더 받아 다시 실행하세요.\n` : "";
+  return { code: 0, stdout: `${md}\n`, stderr };
+}
+
+/** 창 충돌(겹침·총계 불일치) → exit 1. 원문 행(쿼리 문자열 포함 가능)은 출력하지 않고 개수만 쓴다. */
+function conflictResult(label: string, conflict: WindowConflict): PanelCliResult {
+  if (conflict.kind === "overlap") {
+    return {
+      code: 1,
+      stdout: "",
+      stderr:
+        `${label}: 같은 행 ${fmt(conflict.rows)}개가 두 파일에 들어 있습니다(시작 행이 겹침) — 그대로 합치면 두 번 셉니다.\n` +
+        "GA4 '시작 행'을 1·501·1001·1501… 로(행 표시 500) 겹치지 않게 다시 받으세요.\n",
+    };
+  }
+  return {
+    code: 1,
+    stdout: "",
+    stderr: `${label}: 파일마다 총계 행이 다릅니다 — 다른 기간·필터·탭의 파일이 섞였습니다. 같은 탭·같은 기간으로 받은 파일만 함께 넣으세요.\n`,
+  };
 }

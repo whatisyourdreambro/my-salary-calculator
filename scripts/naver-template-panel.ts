@@ -5,12 +5,13 @@
 // 사이트맵을 주면 커버리지(템플릿 사이트맵 URL 중 네이버 유입 1회 이상 비율)를 낸다. 주제 클러스터는 따로 낸다.
 //
 // 사용법:
-//   npx tsx scripts/naver-template-panel.ts <ga4-28d.csv> [--7d <csv>] [--sitemap <file|https-url>]
-//     [--slate /job/professor,/job/doctor,/home-loan [--referrer <리퍼러 csv>]] [--log-line]
+//   npx tsx scripts/naver-template-panel.ts <ga4-28d.csv> [<ga4-28d-p2.csv> …] [--7d <csv>] [--sitemap <file|https-url>]
+//     [--slate /job/professor,/job/doctor,/home-loan [--referrer <리퍼러 csv> …]] [--log-line [--allow-incomplete]]
 //
 // 운영자 절차(GA4 탐색 만들기·월요일 내보내기)·사전 등록 판독: docs/naver-template-panel.md
 // 출력: stdout 마크다운 표만(--log-line 이면 URL 없는 한 줄만). 파일을 쓰지 않는다.
-// 종료 코드: 0 성공 · 1 사용법/읽기/헤더/사이트맵 오류 · 2 저장소 안 경로 거부.
+// 완전성: 파일마다 GA4 총계 행을 행 합과 대조한다(조회수 ±1, 조회수 열이 없으면 세션 ±3.3% — GA4 세션은 HLL 근사).
+// 종료 코드: 0 성공 · 1 사용법/읽기/헤더/사이트맵 오류·파일 겹침·총계 불일치 · 2 저장소 안 경로 거부 · 3 불완전 창이라 한 줄 기록 거부.
 import { readFileSync, realpathSync } from "node:fs";
 import path from "node:path";
 

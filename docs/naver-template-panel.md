@@ -13,7 +13,7 @@
 
 ## 1. 템플릿 — destTemplate 세분화
 
-`destTemplate()` 결과가 company·calc·other 일 때만 더 쪼갭니다. 나머지 14값은 그대로입니다. 오른쪽 수는 9/27 운영 사이트맵(1,950 URL) 기준입니다.
+`destTemplate()` 결과가 company·calc·other 일 때만 더 쪼갭니다. 나머지 14값은 그대로입니다. 오른쪽 수는 9/27 운영 사이트맵(1,952 URL — batch2 계산기 2쪽 반영) 기준이며, 테스트가 같은 스냅샷(`src/lib/__tests__/fixtures/naverPanelSitemap-2026-09-27.txt`)으로 이 분포를 고정합니다.
 
 | 템플릿 | 상위 dest_tpl | 경로 규칙 | 9/27 사이트맵 URL |
 |---|---|---|---:|
@@ -22,7 +22,7 @@
 | salary-db-hub · ranking · compare | 같은 값 | destTemplate 그대로 | 2 · 32 · 0 |
 | job · job-hub | 같은 값 | `/job/*` · `/job` | 62 · 1 |
 | bonus-calc · samsung-bonus | 같은 값 | `/calc/*-bonus`·`/calc/bonus-calculators` · `/calc/samsung-bonus` | 26 · 1 |
-| calc | calc | 그 밖의 `/calc/*` | 216 |
+| calc | calc | 그 밖의 `/calc/*` | 218 |
 | **yearend-calc** | calc | `/calc/child-deduction` · `/calc/dependent-check` · `/calc/dual-income-year-end` | 3 |
 | salary-amount · monthly · table | 같은 값 | `/salary/<금액>` · `/monthly*` · `/table/*` | 211 · 105 · 8 |
 | pay-table | pay-table | `/(teacher\|police\|firefighter\|civil-servant)-pay-*` | 5 |
@@ -38,24 +38,54 @@
 
 - `/calc/january-bonus`(13월의 월급 시뮬레이터)는 destTemplate 이 bonus-calc 라서 **템플릿은 bonus-calc** 로 둡니다(PARENT 일관성). 대신 주제 클러스터에서는 yearend 로 셉니다.
 - 경로는 쿼리·해시를 떼고, 퍼센트 인코딩을 풀고, 끝 슬래시를 무시합니다. 다른 도메인·`(not set)` 은 other 입니다.
-- 새 세분값은 `LANDING_TEMPLATES` 끝에만 추가합니다. 분류 규칙을 바꾸면 한 줄 기록의 `v1` 을 `v2` 로 올려 전후를 섞어 읽지 않게 합니다.
+- 새 세분값은 `LANDING_TEMPLATES` 끝에만 추가합니다. 분류 규칙을 바꾸면 한 줄 기록의 `v1` 을 `v2` 로 올려 전후를 섞어 읽지 않게 합니다(`PANEL_RULES_VERSION`).
 
 ## 2. 주제 클러스터 — 템플릿과 별개 축
 
 판독 (b)·(c)·(d)의 '계열'은 이 클러스터로 봅니다. 템플릿 표에는 섞지 않고 **따로 한 표**로 냅니다.
+규칙은 **9/27 확정판(v1)** 입니다. 10/5 첫 기록 전에 검토 지적(OPI·PS 가이드·성과급 도구·한글 Q&A 가 other 로 빠짐)을 반영했고, 그 뒤로는 v2 없이 바꾸지 않습니다.
+경로는 퍼센트 인코딩을 풀고(NFC) 봅니다 — GA4 가 한글 slug 를 인코딩으로 줘도 같은 결과입니다.
 
-| 클러스터 | 경로 규칙(위에서부터 먼저 맞는 것) |
+**1단계 — 경로 규칙**(위에서부터 먼저 맞는 것)
+
+| 클러스터 | 경로 규칙 |
 |---|---|
+| other | `/en*` 전체(영문판은 네이버 유입 계열이 아님) |
 | company | `/salary-db*` · `/company*` · `/industry*` · `/public-institutions*` |
 | yearend | yearend 템플릿 경로 + `/calc/(child-deduction\|dependent-check\|dual-income-year-end\|january-bonus)` |
-| bonus | `/calc/*-bonus`·`bonus-calculators`·`year-end-bonus-tax`·`incentive-tax` + 첫 경로에 `bonus` 가 든 페이지 + `/samsung-negotiation-YYYY` |
-| paytables | `/(teacher\|police\|firefighter\|civil-servant\|military)-pay-*` |
-| rollover | rollover 템플릿 경로 |
+| bonus | `/calc/*-bonus` · `/calc/bonus-*` · `/calc/year-end-bonus-tax` · `/calc/incentive-tax` · `/insights/bonus-*` · 첫 경로에 `bonus` 가 든 페이지 · `/samsung-negotiation-YYYY` |
+| paytables | `/(teacher\|police\|firefighter\|civil-servant\|military)-pay-*` · `/calc/civil-servant-net-pay`(공식 봉급표를 그대로 쓰고 같은 12~1월 시즌을 탐) |
+| rollover | rollover 템플릿 경로 · `/calc/unemployment-benefit` · `/calc/holiday-allowance-quick`(주휴수당) |
 | job | `/job*` |
 | home-loan | `/home-loan*` |
-| other | 나머지 · `/en*` 전체 |
 
-- `/guides/<slug>` 는 slug 키워드로 근사합니다: `year-end-tax`·`hometax-year-end`·`deduction`·`tax-credit`·`tax-refund` → yearend, `bonus`·`incentive`·`performance-pay` → bonus, `(교원·경찰·소방·공무원·군)-pay` → paytables, `minimum-wage`·`unemployment`·`insurance-rates`·`weekly-holiday` → rollover.
+**2단계 — 키워드 규칙**: 1단계에 안 걸린 **모든 경로**(가이드·계산기·도구·Q&A·용어집·인사이트 등)에 겁니다. 위에서부터 먼저 맞는 것.
+
+| 클러스터 | 키워드(경로 어디든) |
+|---|---|
+| yearend | `year-end` · `yearend` · `deduction` · `tax-credit` · `tax-refund` · 연말정산 · 세액공제 · 소득공제 · 부양가족-공제 |
+| bonus | `bonus` · `incentive` · `performance-pay` · `profit-sharing` · `wage-negotiation` · 성과급 · 인센티브 · 상여 · 임금협상 · 단어 단위 `opi`·`tai`·`ps`(`-ps-` 는 걸리고 `maps` 는 안 걸림) |
+| paytables | `(teacher\|police\|firefighter\|civil-servant\|military)-(net-)pay` · 봉급 · 공무원-보수 |
+| rollover | `minimum-wage` · `unemployment` · `insurance-rates` · `weekly-holiday` · `holiday-allowance` · 실업급여 · 최저임금 · 주휴 |
+| other | 나머지 |
+
+- 일부러 넣지 않은 것: 근로장려금(`earned-income-credit`)은 연말정산이 아닙니다. 개인 연봉협상(`salary-negotiation`)은 성과급이 아닙니다. '공제' 단독(청년내일채움공제 등)은 세금이 아닙니다. `/job/*` 은 공무원·군인 직업이라도 job 입니다.
+- 한 경로에 두 계열 키워드가 있으면 표 위쪽(연말정산 → 성과급 → 봉급표 → 연도 전환)이 이깁니다. 단 `/calc/year-end-bonus`·`/calc/year-end-bonus-tax` 는 1단계에서 bonus 로 정해집니다.
+
+**9/27 운영 사이트맵(1,952 URL) 클러스터 분포** — 테스트가 고정합니다.
+
+| 클러스터 | URL | 구성 |
+|---|---:|---|
+| company | 713 | 회사 430 · lite 219 · 랭킹 32 · 산업 28 · 허브 2 · `/public-institutions`·`/company/simulator` 2 |
+| bonus | 76 | 가이드 40 · 계산기 31 · 최상위 2(`/samsung-negotiation-2026`·`/chuseok-bonus-2026`) · 도구·Q&A·인사이트 각 1 |
+| paytables | 7 | 봉급표 6 · 공무원 실수령액 계산기 1 |
+| yearend | 43 | 가이드 18 · 최상위 11 · Q&A 7 · 계산기 5 · 용어집 2 |
+| rollover | 23 | Q&A 8 · 최상위 6 · 가이드 4 · 용어집 3 · 계산기 2 |
+| job | 63 | `/job` 1 · 직업 62 |
+| home-loan | 1 | `/home-loan` |
+| other | 1,026 | 나머지 |
+
+(검토 전 초안은 bonus 63 · yearend 32 · rollover 10 · paytables 6 · other 1,064 였습니다. 옮겨진 38쪽은 모두 other 에서 왔고, 다른 계열끼리 오간 쪽은 없습니다.)
 
 ## 3. 무엇을 재나
 
@@ -66,6 +96,7 @@
 | 세션/페이지 | 세션 ÷ URL 수 |
 | 커버리지 | 그 템플릿의 **사이트맵 URL** 중 네이버 세션 1 이상인 URL ÷ 그 템플릿의 사이트맵 URL. 사이트맵에 없는 랜딩(옛 주소 등)은 분자에서 뺍니다(그래서 100% 를 넘지 않습니다). 사이트맵 밖 랜딩 수는 따로 보여 줍니다 |
 | 롱테일 | 28일 네이버 세션 상위 30개 URL 을 뺀 나머지 URL 의 세션 합(판독 (e)) |
+| 완전성 | 파일마다 GA4 **총계 행**을 남겨 창(여러 파일)의 행 합과 대조합니다. **조회수**는 정확한 이벤트 수라 ±1 까지만 봐줍니다. **세션수**는 GA4 가 HyperLogLog++ 로 근사(95% 구간 약 ±3.3%)해 행 합과 총계가 원래 조금 다르므로, 조회수 열이 없을 때만 총계의 3.3% 폭으로 대조합니다. 결과는 완전 · ⚠ 불완전(누락·초과·잘림 의심) · 총계없음 중 하나입니다 |
 
 - 네이버 검색 = 세션 소스 `naver`(organic) + `m.search.naver.com` + `search.naver.com`(리퍼럴). 한 채널로 봅니다([100x 계획](revenue-100x-plan-2026-09.md) §10 규칙 2). 블로그·카페·포털 메인(`m.naver.com`)은 뺍니다.
 - GA4 는 작은 행을 임계값 처리합니다. **페이지 판독은 28일 창, 7일 창은 템플릿·클러스터 합계만** 봅니다.
@@ -88,7 +119,15 @@
      ```
 5. **탭 2 이름 `REFERRER`**(탭 옆 `+`) — 슬레이트 검색어 판독용, R4 리퍼러 도구(`scripts/naver-referrer-queries.ts`)와 같은 모양입니다.
    - 행: `페이지 리퍼러`, `방문 페이지 + 쿼리 문자열`. 값: `세션수`, `조회수`. 행 표시 500.
-   - 필터: `이벤트 이름` → **정확히 일치** → `page_view`.
+   - 필터 **3개**(모두 걸어야 합니다 — 하나라도 빠지면 사이트 안 이동·직접 방문 행이 500행을 채워 네이버 검색 행이 잘립니다):
+     1. `이벤트 이름` → **정확히 일치** → `page_view`.
+     2. `세션 소스` → **정규식과 일치** → 탭 1 과 같은 식 `^(naver|m\.search\.naver\.com|search\.naver\.com)$`
+     3. `방문 페이지 + 쿼리 문자열` → **정규식과 일치** → 슬레이트 경로 식. 10/3 값(R6-06 후보 3쪽):
+        ```
+        ^/(job/professor|job/doctor|home-loan)/?(\?.*)?$
+        ```
+        슬레이트가 바뀌면(예: 10/30 B20 패자 추가) Claude 가 새 식을 드립니다(패널 `--slate` 출력의 'REFERRER 탭 … 필터용' 줄).
+   - 이렇게 걸면 표가 보통 수십 행이라 500행 한도에 닿지 않습니다. 도구도 이 파일의 총계 행을 대조해 잘렸으면 알립니다.
 6. 10/3 에는 탭 2 를 28일(9/5~10/2)로 한 번 내보내 둡니다(아래 B 의 방법, 파일 이름 `referrer-28d-20261003.csv`).
 
 ## 5. 운영자 B — 매주 월요일 내보내기 (약 3분)
@@ -100,8 +139,9 @@
 - 순서
   1. 탭 `PANEL` 을 열고 기간을 28일로 → 오른쪽 위 **내보내기(다운로드 아이콘) → CSV**(화면 판에 따라 '공유 → 파일 다운로드 → CSV') → `panel-28d-YYYYMMDD.csv` 로 저장(YYYYMMDD = 그 월요일).
   2. 기간만 7일로 바꿔 같은 방법으로 → `panel-7d-YYYYMMDD.csv`.
-  3. 표 아래 행 수가 500 을 넘으면 **시작 행**을 501 로 바꿔 한 번 더 받아 `panel-28d-YYYYMMDD-p2.csv`. 도구는 행 수가 GA4 '행 표시' 값(10·25·50·100·250·500)과 같으면 '잘렸을 수 있다'고 알려 줍니다.
-  4. 슬레이트 판독이 있는 날(10/5, 10/30, 11/11, 12/7, 12/14, 2/1)에는 탭 `REFERRER` 도 28일로 → `referrer-28d-YYYYMMDD.csv`.
+  3. 표 오른쪽 아래 전체 행 수(예: `1-500 / 1,234`)가 500 을 넘으면 **시작 행**을 501 → 1001 → 1501 … 로 바꿔 가며, **받은 파일이 500행 미만이 될 때까지** 받습니다. 이름은 `panel-28d-YYYYMMDD-p2.csv`, `-p3.csv` … (7일도 넘으면 똑같이 `panel-7d-YYYYMMDD-p2.csv` …). 시작 행을 500 처럼 겹치게 넣으면 도구가 거부합니다(같은 행을 두 번 세지 않도록).
+     - 도구가 파일마다 **총계 행**과 행 합을 대조해 '⚠ 불완전 — 시작 행 N 으로 한 번 더'라고 알려 주면 그 N 부터 더 받습니다.
+  4. 슬레이트 판독이 있는 날(10/5, 10/30, 11/11, 12/7, 12/14, 2/1)에는 탭 `REFERRER` 도 28일로 → `referrer-28d-YYYYMMDD.csv`(필터 3개가 걸려 있는지 먼저 확인).
 - 한 번만 받는 파일(판독 (b) 기준·비교)
   - 10/5: 탭 `PANEL` 기간 **9/1~9/30** → `panel-sep-20260930.csv`
   - 2/1: 탭 `PANEL` 기간 **1/1~1/31** → `panel-jan-20270131.csv`
@@ -115,9 +155,21 @@ npx tsx scripts/naver-template-panel.ts C:/Users/ruby1/moneysalary-exports/ga4/p
 npx tsx scripts/naver-template-panel.ts C:/Users/ruby1/moneysalary-exports/ga4/panel-28d-20261005.csv --slate /job/professor,/job/doctor,/home-loan --referrer C:/Users/ruby1/moneysalary-exports/ga4/referrer-28d-20261005.csv
 ```
 
-- 첫 줄: 템플릿 표 + 클러스터 표(검토용, 저장하지 않음). `-p2` 파일이 있으면 28일 파일 뒤에 이어서 넣습니다(같은 내용 파일을 두 번 넣으면 거부).
+나눠 받은 주(예: 28일 3쪽, 7일 1쪽)는 파일을 모두 넣습니다.
+
+```
+npx tsx scripts/naver-template-panel.ts C:/Users/ruby1/moneysalary-exports/ga4/panel-28d-20261005.csv C:/Users/ruby1/moneysalary-exports/ga4/panel-28d-20261005-p2.csv C:/Users/ruby1/moneysalary-exports/ga4/panel-28d-20261005-p3.csv --7d C:/Users/ruby1/moneysalary-exports/ga4/panel-7d-20261005.csv --sitemap https://www.moneysalary.com/sitemap.xml --log-line
+```
+
+- 첫 줄: 템플릿 표 + 클러스터 표(검토용, 저장하지 않음). `-p2`·`-p3` … 파일이 있으면 28일 파일 뒤에 이어서 넣고, 7일도 `--7d` 를 파일마다 반복합니다. 거부되는 경우: 같은 내용 파일 두 번, 같은 행이 두 파일에 있는 겹침(시작 행 중복), 파일마다 총계가 다름(다른 기간·탭이 섞임) — 모두 exit 1.
+  - 맨 위에 `> ⚠ 불완전 입력(…)` 이 보이면 기록하지 말고 입력 메모의 안내(다음 시작 행)대로 운영자에게 더 받아 달라고 합니다.
 - 둘째 줄(`--log-line`): URL·경로·검색어가 없는 한 줄. [metrics-log.md](metrics-log.md) 에 날짜·창(예: `28일 9/7~10/4 · 7일 9/28~10/4`)을 적은 행을 추가하고 비고 칸에 이 줄을 붙입니다(문서 커밋). 형식은 `NAVER-PANEL v1 28d 세션 N 롱테일 N 사이트맵 N 커버 x% ; 열=세션·페이지당·커버·7d ; <템플릿> N·x·x%·N ; … ; 계열 28d … ; 계열 7d … ; 7d 세션 N` 입니다.
+  - 28일·7일 창 중 하나라도 불완전(누락·초과·잘림 의심)이면 **한 줄을 내지 않고 exit 3** 으로 거부합니다. 더 받아 다시 돌립니다.
+  - 마지막 파일이 500행 미만인데도 계속 모자라면(GA4 임계값, §9) `--allow-incomplete` 를 붙입니다. 그러면 둘째 칸에 `불완전 28d 누락 조회수 N 세션 약 N` 이 붙은 채로 나오고, 그 주는 §8 규칙대로 판독에서 뺍니다.
+  - 총계 행이 없는 내보내기면 둘째 칸에 `총계없음 28d` 가 붙습니다(기록은 유효, 완전성만 미확인).
 - 셋째 줄(`--slate`, 판독일만): 슬레이트 경로의 28일 네이버 세션과, `--referrer` 를 주면 그 경로의 검색어 × 방문 페이지(경로마다 상위 10개)만 나옵니다. 리퍼러 원문은 나오지 않습니다. 경로·검색어가 들어가므로 metrics-log 가 아니라 [gsc-sniping-log.md](gsc-sniping-log.md) Round 4 행에 적습니다.
+  - 리퍼러 파일도 총계 행을 대조합니다. '⚠ 잘린 리퍼러 표' 가 나오면 '(검색어 없음)'·낮은 커버리지가 네이버 때문이 아니라 잘림 때문일 수 있으니, REFERRER 탭 필터 3개를 확인하고 다시 받습니다(여러 파일이면 `--referrer` 반복).
+  - 출력 끝의 'REFERRER 탭 … 필터용' 정규식을 gsc-sniping-log 에 같이 적어 두면 다음 판독일에 운영자에게 그대로 드릴 수 있습니다.
 - 사이트맵 주소가 막히면(403 등) 브라우저로 `sitemap.xml` 을 저장해 `--sitemap <파일>` 로 줍니다(저장소 밖).
 
 ## 7. 슬레이트 선정 (10/5)
@@ -143,6 +195,7 @@ npx tsx scripts/naver-template-panel.ts C:/Users/ruby1/moneysalary-exports/ga4/p
 
 - 판독 결과는 날짜·창·판정만 metrics-log 에(집계값), 경로가 필요한 (a)·(f)는 gsc-sniping-log Round 4 에 적습니다.
 - 파일이 빠진 주는 '기록 없음'으로 남기고 다음 주 값으로 대신하지 않습니다.
+- **데이터 품질(10/5 첫 기록 전에 정함)**: 한 줄 기록에 `불완전` 이 붙은 창은 그 창을 쓰는 판독·KPI((a)·(c)·(d)·(e)·(f)·커버리지)에서 '기록 없음'과 같이 봅니다 — 잘린 꼬리는 바로 롱테일·커버리지·작은 계열·슬레이트 페이지이기 때문입니다. `총계없음` 은 유효한 기록으로 봅니다. 1회 파일(`panel-sep`·`panel-jan`)과 슬레이트 리퍼러 파일도 같은 기준입니다(불완전이면 더 받아 채운 뒤 판독).
 
 ## 9. 문제 해결
 
@@ -151,6 +204,11 @@ npx tsx scripts/naver-template-panel.ts C:/Users/ruby1/moneysalary-exports/ga4/p
 | exit 2 '저장소 작업 트리 안' | CSV 를 `C:/Users/ruby1/moneysalary-exports/ga4/` 로 옮깁니다 |
 | '헤더 인식 실패' | 탭 `PANEL` 이 아닌 표를 받았습니다. 열 `방문 페이지 + 쿼리 문자열`·`세션수` 가 있어야 합니다 |
 | '리퍼러 내보내기입니다' | `REFERRER` 탭 파일을 패널 자리에 넣었습니다. 그 파일은 `--referrer` 로 넣습니다 |
-| '잘렸을 수 있다' | 행 표시 500 인지 보고, 500 을 넘으면 시작 행 501 로 한 번 더 받아 함께 넣습니다 |
+| '⚠ 불완전 — 행이 빠졌다' · '⚠ 불완전(잘림 의심)' | 총계 행보다 행 합이 적거나, 총계 없이 모든 파일이 '행 표시' 값만큼 찼습니다. 행 표시 500 으로 두고 **안내된 시작 행**(501 → 1001 → 1501 …)부터 받은 파일이 500행 미만이 될 때까지 더 받아 모두 함께 넣습니다 |
+| '마지막 파일이 '행 표시' 값보다 적은데도 … 모자라다' | 중간 페이지가 빠지지 않았는지(1·501·1001 … 순서) 봅니다. 그래도 같으면 GA4 임계값(작은 행 숨김)입니다 — Claude 가 `--allow-incomplete` 로 '불완전' 표시와 함께 기록하고 그 주는 §8 대로 판독에서 뺍니다. 2주 연속이면 운영자에게 알립니다 |
+| '같은 행 N개가 두 파일에 (시작 행이 겹침)' | 시작 행을 500·1000 처럼 겹치게 받았습니다. 1·501·1001 … 로 다시 받습니다 |
+| '파일마다 총계 행이 다릅니다' · '⚠ 불완전(초과)' | 다른 기간·다른 탭 파일이 섞였습니다. 같은 탭·같은 기간 파일만 넣습니다 |
+| `총계없음` | 총계 행이 없는 내보내기입니다. 기록은 유효하지만 완전성은 확인되지 않았습니다(마지막 파일이 500행 미만이면 잘림 가능성은 낮음) |
+| 슬레이트 '(검색어 없음)'이 많음 · '⚠ 잘린 리퍼러 표' | REFERRER 탭 필터 3개(이벤트 이름·세션 소스·방문 페이지 정규식) 중 빠진 것이 있는지 보고 다시 받습니다. 잘림이 없는데도 검색어가 없으면 네이버가 query 를 뺀 것입니다 |
 | '세션 소스 열 없음 — 가정' | 정상입니다(필터로 걸었음). 필터가 빠졌는지만 한 번 확인합니다 |
 | `(other)` 경고 | GA4 가 행을 뭉쳤습니다. 기간을 줄이거나 7일·28일을 나눠 봅니다. URL 수·커버리지가 낮게 나옵니다 |
