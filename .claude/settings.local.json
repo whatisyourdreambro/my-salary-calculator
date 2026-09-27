@@ -51,7 +51,11 @@
       "Bash(for *)",
       "Bash(curl *)",
       "Bash(echo \"lint_exit=$?\")",
-      "Bash(grep -B2 \"error\" /tmp/lint_out.txt | grep -v warning | head -60)"
+      "Bash(grep -B2 \"error\" /tmp/lint_out.txt | grep -v warning | head -60)",
+      "Bash(ls -la \"C:/Users/ruby1/.claude/\" 2>/dev/null | head -30; echo \"=====MEMORIES=====\"; find \"C:/Users/ruby1/.claude\" -maxdepth 3 -iname \"*revenue*\" -o -maxdepth 3 -iname \"*.md\" -path \"*memor*\" 2>/dev/null | head -40)",
+      "Bash(awk '{print $6, $7, $9}')",
+      "Bash(npx vitest *)",
+      "Bash(npx tsc *)"
     ]
   }
 }
