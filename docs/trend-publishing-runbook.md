@@ -3,6 +3,19 @@
 2026-09-26 R5 publisher 신설. 코드: `scripts/trend-publish/*` · `src/lib/trendBriefs/*` · 등록 `src/lib/guides/trend-briefs.ts`.
 **이 런북의 모든 자동화는 운영자 승인 없이 사이트에 아무것도 올리지 않는다.** 원격 반영(git 푸시)은 `publish-approved.mjs` 한 곳뿐이고, 그 명령은 운영자가 채팅에서 브리프마다 `발행 <slug>` 라고 승인한 세션만 실행한다.
 
+## 0. 운영자 결정 (2026-09-27) — 이 런북의 다른 절보다 우선
+
+| 항목 | 결정 | 코드·설정 |
+|---|---|---|
+| 발행 승인 | 브리프마다 운영자가 채팅에서 `발행 <slug>` 라고 승인한 뒤에만 게시. 자동 발행 없음 | `publish-approved.mjs` 만 원격 반영 — 예약 작업은 PROPOSE(로컬 브랜치 + 승인 카드)까지 |
+| 파일럿 | **2026-10-13 ~ 10-31**. 10/12 까지는 dry-run 만 | `calendar.json` `pilot`·`firstPublishNotBefore` = 10-13, `types.ts` `FIRST_PUBLISH_NOT_BEFORE` = 2026-10-13 |
+| 발행 한도 | **하루 1편 이하 · ISO 주 5편 이하**(월 16편·첫 90일 게시 30편 하드 상한도 그대로) | `config.json` `caps` perKstDay 1 · perIsoWeek 5 |
+| 동결 | **11/1 ~ 1/31 발행 없음**(보고만, FREEZE). 연말정산 시즌 예외 없음 | `calendar.json` `freezes` |
+| 재개 | 파일럿이 끝나면(11/1 부터) D+28 파일럿 판정 `decide.mjs --pilot-verdict continue` 기록 전까지 발행 없음 — 동결이 풀려도 같음 | `calendarBlocks` 파일럿 규칙(rules.ts·daily.mjs 같은 결과, 테스트가 대조) |
+| 무료 공식 키(선택) | 법제처 `LAW_OC`·한국은행 `ECOS_API_KEY` 는 `C:/Users/ruby1/.moneysalary-secrets/trend.env` 에 **있으면** 자동으로 읽는다. 없으면 키 없이 동작 | `config.json` `secretEnvFiles` → `secret-env.mjs` (§11) |
+| 네이버 데이터랩(선택) | `C:/Users/ruby1/.moneysalary-secrets/naver/datalab.env.txt` 의 `NAVER_CLIENT_ID`·`NAVER_CLIENT_SECRET` 이 **있으면** 레이더 부스터로만 사용. **하루 50회 하드 상한.** 데이터랩(검색어 트렌드)만 — 네이버 검색·뉴스 API 는 약관(AI 입력·광고 페이지 금지) 때문에 절대 쓰지 않는다. 새 API 가입도 하지 않는다 | `scripts/trend-radar/lib/datalab.mjs`·`datalab.json` (§11) |
+| 사이트 고지 | /about 에 "공식 발표 해설은 공식 자료를 바탕으로 자동화·AI 보조로 작성하고, 자동 검사 후 운영자 승인으로 게시합니다." — 광고 위 높이를 바꾸지 않도록 페이지 끝 광고 아래에 둔다 | `src/app/about/page.tsx` |
+
 ---
 
 ## 1. 목적과 이유
@@ -16,7 +29,7 @@
   - 금융·세금은 YMYL — 숫자는 공식 출처(법제처·국세청·정책브리핑·기재부·고용부·복지부·금융위·금감원·한은·국민연금·건보·인사처 등)에서만.
 - **그래서 이렇게 만든다**: 하루 1편·ISO 주 5편·월 16편·첫 90일 게시 30편 이하, 공식 출처 2건 이상(1차 출처 7일 이내), 뉴스 문장 재작성 금지, 엔진이 계산한 영향 표 필수, 게이트 하나라도 실패하면 그날은 SKIP(발행 안 함 — noindex 발행 같은 우회 없음). 글쓴이는 운영자 플랜의 **Claude 예약 작업**(유료 LLM API·로컬 LLM 없음, 비용 0).
 - **발행 매체**: 새 라우트 없이 일반 한국어 가이드(`/guides/<slug>`). 정적 생성·sitemap·rss.xml·IndexNow(postbuild 차분)·목록·허브·검색·OG·JSON-LD 가 기존 경로로 자동 적용된다. 광고 순서는 3분할 가이드와 같다(GuideMidAd 1/3 · InArticleAd 2/3) — 광고 코드·JSX 무변경. 홈 추천(FeaturedGuides) 최근 슬롯에는 들어가지 않는다(태그 `공식발표해설` 필터).
-- **첫 발행 가능일**: 2026-10-10 이후, 그리고 10/10 R3 배포 배치 + 2일 차단 → **실제 첫날은 10/13**. 그 전에는 dry-run 만.
+- **첫 발행 가능일**: **2026-10-13**(운영자 결정 파일럿 10/13~10/31 — 10/9 광고 판정·10/10 R3 배포 배치 + 2일 뒤). 그 전에는 dry-run 만.
 
 ## 2. TREND_HOME 과 플래그 파일
 
@@ -48,7 +61,7 @@ daily.mjs 는 운영자 플래그와 저장소의 운영자 파일(docs/drafts·
 
 트렌드 전용 워크트리 `C:/dev/moneysalary/trend-wt`(origin/main 분리 HEAD)에서만 돈다. 사람의 작업 트리·main 브랜치는 건드리지 않는다.
 
-1. `daily.mjs prepare` — 잠금(daily.lock) → HALT 확인 → `git fetch` → 워크트리가 깨끗해야 함(아니면 HALT) → origin/main 으로 맞춘 뒤 **새 코드로 자기 자신을 다시 실행** → 레이더·센티널 → 모드 결정 → 후보 선택(new-brief · 대상 군집 · 원장에 없는 문서 · 군집 30일 공백 · 1차 7일 이내) → 기준 빌드(heavy.mjs, RAM 부족이면 그날 SKIP) + 청크·광고 순서·자동광고 목록 → 1차 + 보조 공식 출처 스냅숏 → writer-input.json. 마지막 줄 JSON `{status, mode, reason, report, writerInput?, draftPath?}`.
+1. `daily.mjs prepare` — 잠금(daily.lock) → HALT 확인 → 워크트리 관문 → 선택 키 파일 적용(§11, 보고서에 파일·이름만) → `git fetch` → 워크트리가 깨끗해야 함(아니면 HALT) → origin/main 으로 맞춘 뒤 **새 코드로 자기 자신을 다시 실행** → 레이더·센티널 → 모드 결정 → 후보 선택(new-brief · 대상 군집 · 원장에 없는 문서 · 군집 30일 공백 · 1차 7일 이내) → 기준 빌드(heavy.mjs, RAM 부족이면 그날 SKIP) + 청크·광고 순서·자동광고 목록 → 1차 + 보조 공식 출처 스냅숏 → writer-input.json. 마지막 줄 JSON `{status, mode, reason, report, writerInput?, draftPath?}`.
 2. 예약 작업이 `status: "write"` 면 writer-input.json 을 읽고 `writer-rules.md` 대로 초안 JSON 을 `draftPath` 에 쓴다(쓸 수 없으면 `{"skip": true, "reason": "…"}`).
 3. `daily.mjs finish --draft <draftPath>` — 워크트리가 깨끗한지 확인(아니면 원복 없이 HALT) → render(오늘 날짜) → gate pre(규칙 27개 + 비밀값 + 경로 허용목록, 레이더 후보 `state/<날짜>-candidate.json` 대조) → 무거운 17단계(생성 파일 → url 원장 → vitest 전체 → node --test → verify:tax·site·sitemap → eslint → build → **prebuild-status**(빌드 뒤 생성 파일 허용목록, 필수) → edge 번들 → verify:autoads → qa:quality → ad-audit --diff → 광고 순서 → 청크 차분(정규화 v2) → gate post) → 결과.
 
@@ -63,9 +76,9 @@ daily.mjs 는 운영자 플래그와 저장소의 운영자 파일(docs/drafts·
 
 | 모드 | 조건 | 결과 |
 |---|---|---|
-| **PROPOSE** | 10/10 이후 · PUBLISH_ENABLED · REVIEWED_UNTIL 유효 · 달력 통과 · 결정 대기 없음 · 한도 여유 — **모두** | 로컬 브랜치 `trend/<날짜>-<slug>` 에 커밋(원격 반영 없음) + 승인 카드 |
+| **PROPOSE** | 10/13 이후(파일럿 10/13~10/31, 그 뒤는 파일럿 판정 continue 기록 후) · PUBLISH_ENABLED · REVIEWED_UNTIL 유효 · 달력 통과 · 결정 대기 없음 · 한도 여유(하루 1·주 5) — **모두** | 로컬 브랜치 `trend/<날짜>-<slug>` 에 커밋(원격 반영 없음) + 승인 카드 |
 | **DRYRUN** | 위 조건 중 하나라도 아님 | 전 과정 실행 후 워크트리 원복, 보고만 |
-| **FREEZE** | 동결 기간(11/1~1/31) | 초안·빌드 없이 보고만(결정 대기 목록 포함) |
+| **FREEZE** | 동결 기간(11/1~1/31 — 운영자 결정: 발행 없음) | 초안·빌드 없이 보고만(결정 대기 목록 포함) |
 
 상태값: `halt` · `freeze-report-only` · `no-candidate` · `skip`(게이트 실패·RAM·출처 부족) · `write` / `dryrun-pass` · `proposed` · `error`.
 
@@ -101,7 +114,7 @@ publish-approved 사전 조건: HALT 없음 · PUBLISH_ENABLED · REVIEWED_UNTIL
   - 같은 달 발행분의 좀비 비율 ≥ 50% → 자동 HALT(운영자 검토 전까지).
   - 판정이 없으면 '결정 대기' 로 PROPOSE·발행이 막힌다.
 - **reviewBy**(발행 +60일): 새 공식 자료로 실질 갱신(`--update`)하거나 철회. `decide.mjs --slug <slug> --decision update|retire --at reviewBy`.
-- **2월 재개**: 동결(11/1~1/31) 뒤 재개하려면 D+28 파일럿 판정 기록 필요 — `decide.mjs --pilot-verdict continue`(중지는 `halt`).
+- **파일럿 판정**: 파일럿(10/13~10/31)이 끝나면 D+28 파일럿 판정 기록 전까지 발행이 없다(동결 11/1~1/31 뒤 2월 재개도 이 기록이 있어야 한다). 마지막 파일럿 브리프의 D+28(11월 말) 결과까지 본 뒤 `decide.mjs --pilot-verdict continue`(중지는 `halt`).
 
 ## 7. 배포 후 캐시 Purge — A35 자동 vs 수동
 
@@ -123,17 +136,27 @@ publish-approved 사전 조건: HALT 없음 · PUBLISH_ENABLED · REVIEWED_UNTIL
 
 ## 10. 동결 정책
 
-- 11/1~1/31 은 growth-masterplan §5-2 창 B(신규 라우트 금지)라 FREEZE — 보고만. 연말정산 시즌 예외는 운영자 결정이며 기본은 **아니오**.
+- 11/1~1/31 은 growth-masterplan §5-2 창 B(신규 라우트 금지)라 FREEZE — 보고만. **운영자 결정(2026-09-27): 이 기간 발행 없음, 연말정산 시즌 예외 없음.**
+- 파일럿 10/13~10/31 이 끝나면 파일럿 판정(§6) 전까지 발행 없음 — `calendar.json` `pilot`.
 - 광고 판정일(10/9)·배포 배치일과 그 뒤 2일(10/10~10/12)은 차단. 추가 차단은 `calendar.local.json` 에만(해제는 불가).
 
-## 11. 키 등록과 trend.env
+## 11. 키 등록과 trend.env · 데이터랩 키 파일
 
-현재 파이프라인은 키 없이 동작한다(공식 페이지 공개 HTML·RSS). 레이더가 공식 API 를 쓰게 되면 운영자가 발급한다:
+현재 파이프라인은 키 없이 동작한다(공식 페이지 공개 HTML·RSS). 아래 키는 모두 **선택**이다 — 파일이 있으면 쓰고, 없으면 해당 기능만 `키 없음 — 건너뜀`.
+
+**자동 적용(운영자 결정 2026-09-27)**: `daily.mjs prepare`·`finish` 와 `publish-approved.mjs` 가 워크트리 관문 통과 직후 `config.json` `secretEnvFiles` 의 파일을 읽는다(`scripts/trend-publish/secret-env.mjs`). 허용 이름만, 이미 환경변수에 값이 있으면 덮지 않음(아래 `--env-file` 로 넘긴 값이 이긴다), 16KB 넘는 파일은 읽지 않음. 보고서에는 `선택 키 파일: trend.env 있음(LAW_OC·ECOS_API_KEY) · datalab.env.txt 없음(키 없이 동작)` 처럼 **파일·이름만** 적힌다. 읽은 값은 자식(레이더·감시기·게이트)에 상속되고, secret-scan 이 그 값(원문·URL 인코딩·base64)을 diff·.next·로그에서 찾는다(이름 규칙에 `CLIENT_ID` 추가).
+
+| 파일 | 이름 | 쓰는 곳 |
+|---|---|---|
+| `C:\Users\ruby1\.moneysalary-secrets\trend.env` | `LAW_OC` · `ECOS_API_KEY` | 레이더 법령 공포 감시(DRF) · 감시기 기준금리(ECOS) |
+| `C:\Users\ruby1\.moneysalary-secrets\naver\datalab.env.txt` | `NAVER_CLIENT_ID` · `NAVER_CLIENT_SECRET` | 레이더 데이터랩 부스터(검색어 트렌드만, 하루 50회) |
+
+발급처(운영자 본인, 무료):
 
 - 법제처 국가법령정보 Open API **OC**: https://open.law.go.kr → 회원가입 후 OC(이메일 ID) 등록.
 - 한국은행 **ECOS** 인증키: https://ecos.bok.or.kr/api/ → 인증키 신청.
 
-키는 **환경변수로만** 코드에 들어간다. 저장소 밖 파일에 두고 실행 때 `--env-file` 로 넘긴다:
+키는 **환경변수로만** 코드에 들어간다. 저장소 밖 파일에 둔다(위 자동 적용). 형식:
 
 ```
 # C:\Users\ruby1\.moneysalary-secrets\trend.env  (운영자만 편집 · 저장소에 두지 않음)
@@ -141,8 +164,14 @@ LAW_OC=<법제처에 등록한 OC 값>
 ECOS_API_KEY=<ECOS 인증키>
 ```
 
-`node --env-file=C:\Users\ruby1\.moneysalary-secrets\trend.env scripts/trend-publish/daily.mjs prepare`
-이름이 `…KEY`·`…SECRET`·`…TOKEN`·`…PASSWORD`·`…_OC` 로 끝나는 환경변수는 secret-scan 이 diff·.next·public·로그에서 원문·URL 인코딩·base64 로 찾아 적중 시 HALT 한다. 키 값은 로그·파일·커밋 메시지에 절대 쓰지 않는다. 네이버 검색·데이터랩 API 와 금감원 금융상품 비교 API 는 쓰지 않는다(정책상 제외).
+```
+# C:\Users\ruby1\.moneysalary-secrets\naver\datalab.env.txt  (운영자만 편집 · 저장소에 두지 않음)
+NAVER_CLIENT_ID=<데이터랩 애플리케이션 Client ID>
+NAVER_CLIENT_SECRET=<Client Secret>
+```
+
+자동 적용 대신 직접 넘기려면(선택): `node --env-file=C:\Users\ruby1\.moneysalary-secrets\trend.env scripts/trend-publish/daily.mjs prepare`
+이름이 `…KEY`·`…SECRET`·`…TOKEN`·`…PASSWORD`·`…_OC` 로 끝나는 환경변수는 secret-scan 이 diff·.next·public·로그에서 원문·URL 인코딩·base64 로 찾아 적중 시 HALT 한다. 키 값은 로그·파일·커밋 메시지에 절대 쓰지 않는다. **네이버 데이터랩**(운영자 결정 2026-09-27): 검색어 트렌드 엔드포인트 하나만, 레이더 점수 부스터(급상승 군집 후보 +10, 구글 트렌드와 합쳐 최대 10)로만 쓴다. 하루(KST) 50회 하드 상한 — 호출 전에 `TREND_HOME/state/datalab-usage.json` 에 기록(실행당 2회). 결과(군집별 배수)는 레이더 JSON·보고서에만 남고 작성기(writer) 입력·사이트 본문에는 들어가지 않는다. **네이버 검색·뉴스 API 는 쓰지 않는다**(약관: AI 입력·광고 페이지 사용 금지) — 테스트가 트렌드 스크립트에서 데이터랩 밖 네이버 API 경로를 grep 으로 막는다. 새 API 신청·API HUB 가입도 하지 않는다. 금감원 금융상품 비교 API 도 쓰지 않는다(정책상 제외).
 
 ## 12. 권한 허용목록 (운영자 승인 항목 — 이 워크플로는 설정을 바꾸지 않았다)
 
@@ -213,6 +242,6 @@ ECOS_API_KEY=<ECOS 인증키>
 ## 17. 1회 설정 순서 (운영자 승인 후)
 
 1. `node scripts/trend-publish/daily.mjs init` → 계획 확인 → `--yes` 로 워크트리·정션·TREND_HOME 생성.
-2. 10/10 전까지 dry-run 을 몇 번 돌려 §14 값을 고정.
+2. 10/12 까지 dry-run 을 몇 번 돌려 §14 값을 고정(파일럿 첫날 10/13). 선택 키 파일(§11)을 두었다면 보고서의 `선택 키 파일` 줄로 인식 여부만 확인.
 3. `CF_PURGE_OK`(A35 확인 시)·`PUBLISH_ENABLED` 생성, '점검 완료' 로 REVIEWED_UNTIL 기록.
 4. 예약 작업 등록(§12 지시문) — 운영자 승인 항목.
