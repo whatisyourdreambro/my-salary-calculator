@@ -25,6 +25,7 @@ import {
   POSITION_ALLOWANCE_2026,
   TEACHER_PAY_ROWS_2026,
 } from "@/lib/civilServantPay";
+import { AGREEMENT_2026, H1_2026_PROFIT_TRIL, PS_HISTORY } from "@/app/calc/sk-hynix-bonus/psData";
 
 /** 원 단위 천 단위 구분 — en-US 그룹핑은 ko-KR 과 동일하고 ICU 유무에 좌우되지 않는다 */
 const won = (n: number): string => n.toLocaleString("en-US");
@@ -109,10 +110,38 @@ const nurseSalarySupplement = `
 <p><em>출처: 위 두 섹션과 같습니다(고용24 재직자 조사 2023 · 보건복지부 보건의료인력 실태조사 2020년 기준 · 인사혁신처 2026년 봉급표 · 의료법 시행규칙 별표 5 · 머니샐러리 직업 DB와 본문 실수령 표). 간호사 직업 정보와 병원별 데이터는 <a href="/job/nurse">간호사 연봉 상세 페이지</a>에 정리돼 있습니다.</em></p>
 `;
 
+// ── sk-hynix-wage-2026 (반도체 심층 가이드, 2026-05-13 작성) — 2026-09-27 기준 확인 사항 ──
+// 본문(semiconductor-deepdive.ts)은 광고 사이 표·문단이라 폭 맞춤 정정만 했다(2025년 행 psData 값, 2026년 전망 행 취소선·'(정정)',
+// '합의선 추정'→'당시의 추정'). 확정된 값과 날짜는 여기(레이아웃 푸터 광고 아래)에 둔다.
+// 수치는 전부 계산기 정본 psData.ts 에서 끼워 넣는다 — AGREEMENT_2026(2026-09-16 총투표 가결: 헤럴드경제·파이낸셜뉴스 2026-09-16 보도),
+// PS_HISTORY 2025(영업이익 47.2조 = DART 사업보고서 rcpNo 20260317000635, PS 2,964% = 보도·2026-02-05 지급),
+// H1_2026_PROFIT_TRIL(상반기 영업이익 98.2조 — 회사 실적 발표). psData 의 합의 상태가 ratified 가 아니면 '가결' 문구가 틀리므로 로드 시 실패.
+if (AGREEMENT_2026.status !== "ratified") {
+  throw new Error("[guideSupplements] psData AGREEMENT_2026.status 가 ratified 가 아니다 — sk-hynix-wage-2026 보강 문구를 고칠 것");
+}
+const SKH_PS_2025 = PS_HISTORY.find((r) => r.year === 2025);
+if (!SKH_PS_2025 || SKH_PS_2025.psRatePct == null) throw new Error("[guideSupplements] psData PS_HISTORY 에 2025년 PS 가 없습니다");
+const SKH_PS_2025_RATE = won(SKH_PS_2025.psRatePct);
+const SKH_SPLIT = AGREEMENT_2026.newSplit;
+const SKH_POOL_PCT = Math.round(AGREEMENT_2026.poolRate * 100);
+
+const skHynixWage2026Supplement = `
+<h2>2026년 9월 27일 기준 확인 사항</h2>
+<p>이 글은 2026년 5월 임금협상 초기에 쓴 분석입니다. 그 뒤 확정된 내용을 날짜와 출처를 붙여 정리합니다. 본문 PS 추이 표의 2026년 행은 작성 당시의 전망으로, 상반기 실적과 맞지 않아 취소선으로 철회했습니다.</p>
+<ul>
+<li><strong>2026 임금협상 타결</strong> — 2026년 9월 16일 조합원 총투표에서 수정 잠정합의안이 가결됐습니다(헤럴드경제·파이낸셜뉴스 2026-09-16 보도 기준). 기본급 인상률은 ${AGREEMENT_2026.wageIncreasePct}%로, 본문의 당시 추정(5.5~7.0%) 범위 안입니다.</li>
+<li><strong>성과급(PS) 지급 방식</strong> — 재원은 영업이익의 ${SKH_POOL_PCT}%(상한 없음)입니다. ${AGREEMENT_2026.appliesFrom} 당해 ${SKH_SPLIT.cashNowPct + SKH_SPLIT.stockNowPct}%(현금 ${SKH_SPLIT.cashNowPct}% + 자사주 ${SKH_SPLIT.stockNowPct}%)를 지급하고, 나머지 ${SKH_SPLIT.stockYear1Pct + SKH_SPLIT.stockYear2Pct}%는 1년 뒤·2년 뒤 주식으로 ${SKH_SPLIT.stockYear1Pct}%씩 나눠 지급합니다(보도 기준).</li>
+<li><strong>2025년 실적분 PS</strong> — 기본급 대비 ${SKH_PS_2025_RATE}%(2026년 2월 5일 지급, 보도 기준). 같은 해 연결 영업이익은 ${SKH_PS_2025.opTril}조원(DART 사업보고서)입니다.</li>
+<li><strong>2026년 실적</strong> — 상반기 영업이익 약 ${H1_2026_PROFIT_TRIL}조원(회사 실적 발표). 2026년분 PS 지급률은 2027년 초 연간 실적 발표 뒤 확정됩니다.</li>
+</ul>
+<p>연도별 PS·PI 이력은 <a href="/guides/sk-hynix-ps-history-2026-prospect">SK하이닉스 PS 연도별 지급률과 2026 지급 방식</a>에, 새 지급 방식의 세후 금액은 <a href="/calc/sk-hynix-bonus">SK하이닉스 성과급 계산기</a>에 정리돼 있습니다. 계산기 결과는 입력한 영업이익을 가정한 시나리오이며 전망이 아닙니다.</p>
+`;
+
 /**
  * 슬러그 → 보강 HTML. 항목이 없는 가이드는 GuideSupplement 가 아무것도 렌더하지 않는다.
  * 새 항목을 넣을 때도 같은 규칙: 레이아웃 푸터 광고(PageFooterAds) 아래에서만 렌더, 본문 정본 무접촉, 수치는 검증 로그에 기록.
  */
 export const guideSupplements: Record<string, string> = {
   "nurse-salary": nurseSalarySupplement,
+  "sk-hynix-wage-2026": skHynixWage2026Supplement,
 };

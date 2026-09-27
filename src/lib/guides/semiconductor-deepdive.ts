@@ -4,6 +4,8 @@
 // 삼성전자/SK하이닉스/반도체 직장인 키워드를 광범위하게 흡수하는 7개 가이드.
 // 면책: 모든 수치는 공개된 보도·잡플래닛·블라인드·전자공시(DART) 기반 추정치이며 회사 공식 입장이 아님.
 
+import { PS_HISTORY } from "@/app/calc/sk-hynix-bonus/psData";
+
 const DISCLAIMER_HTML = `
 <div class="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-5 my-8 text-sm">
  <p class="font-bold text-amber-900 dark:text-amber-200 mb-2">⚠️ 본 가이드 이용 안내</p>
@@ -137,9 +139,28 @@ ${DISCLAIMER_HTML}
 </div>
 `;
 
-// PS 5년 추이 표 2022년 행(2026-09-27 대조): PS 820%는 회사 사내 공지 인용 보도 기준(이투데이 2023-02-01,
-// https://www.etoday.co.kr/news/view/2217429 — 월 기본급의 820%·연봉의 41%), 영업이익은 DART 사업보고서 감사 후
-// 연결 영업이익 6조8,094억원(rcpNo 20230321001209 — 잠정 공시 7조66억원과 다름). 계산기 psData.ts 와 같은 값.
+// PS 5년 추이 표(2026-09-27 대조). 표는 본문 광고 GuideMidAd 와 InArticleAd 사이라 셀 폭이 바뀌면 열 너비·줄바꿈이 달라져
+// 아래 광고가 움직인다 — 아래 정정은 모두 320~1440px 1px 간격 + 1536·1920px 에서 광고 top 차이 0 을 확인한 폭 맞춤이다.
+// - 2022·2025년 행: 계산기 psData.ts PS_HISTORY 값을 그대로 끼워 넣는다(영업이익 = DART 사업보고서 감사 후 연결, PS = 보도 기준).
+//   2022년 PS 820% = 회사 사내 공지 인용 보도(이투데이 2023-02-01, https://www.etoday.co.kr/news/view/2217429), 영업이익 6.8조
+//   (rcpNo 20230321001209 — 잠정 공시 7조66억원과 다름). 2025년 47.2조(rcpNo 20260317000635)·PS 2,964%(2026-02-05 지급, 보도):
+//   옛 '30조원+'·'1,500% 안팎' 정정. PS 칸 뒤의 ' 지급'은 옛 ' 안팎'과 같은 한글 2음절 — 표 숫자는 tabular-nums 라 폭이 같다.
+// - 2021·2024년 행(12조·23조)은 psData(12.4·23.5)를 내림한 옛 표기 그대로다 — 소수점을 붙이면 셀 폭이 바뀌므로 전 폭을 다시 잰 뒤에만.
+// - 2026년 행: 5월 작성 당시 전망(연 30~35조·PS 1,000~1,500%)은 상반기 영업이익 98.2조(회사 발표, psData H1_2026_PROFIT_TRIL)와
+//   맞지 않아 철회했다. 두 숫자는 영업이익·PS 열의 최소 폭(줄바꿈 없는 가장 긴 덩어리)을 정하는 값이라 지우거나 바꾸면
+//   320~544px 에서 표 높이가 바뀐다(2026-09-27 측정) — 그래서 글자는 두고 <s> 취소선과 '(정정)'·'기존 전망 철회'
+//   (옛 '(예상)'·'삼성 경쟁 격화'와 같은 음절 구조)로 철회를 표시한다. 실제 수치·9/16 가결 내용은 레이아웃 푸터 광고 아래
+//   보강 섹션(src/lib/guides/supplements.ts)에 있다. 2026년 행은 2027년 초 연간 실적·PS 확정 뒤 글 재작성(또는 PS 이력
+//   가이드로 308 통합) 때 실제 값으로 바꾼다.
+// - 본문 '합의선 추정: 5.5~7.0%' → '당시의 추정: 5.5~7.0%'(같은 3·2음절). 실제 타결 인상률 6.3% 는 보강 섹션.
+const psGuideRow = (year: number) => {
+ const row = PS_HISTORY.find((r) => r.year === year);
+ if (!row || row.psRatePct == null) throw new Error(`[semiconductor-deepdive] psData PS_HISTORY 에 ${year}년 PS 가 없습니다`);
+ return { op: `${row.opTril}조원`, ps: `${row.psRatePct.toLocaleString("en-US")}%` };
+};
+const PS_ROW_2022 = psGuideRow(2022);
+const PS_ROW_2025 = psGuideRow(2025);
+
 const skHynixWage2026 = `
 <p class="lead">
  SK하이닉스는 2024~2025년 HBM3E 슈퍼사이클로 분기 영업이익 7조원대를 기록하며 사상 최대 PS(이익분배금)를 직원에게 지급했습니다.
@@ -184,8 +205,8 @@ const skHynixWage2026 = `
    </tr>
    <tr class="border-t border-border">
     <td class="p-3">2022</td>
-    <td class="p-3">6.8조원</td>
-    <td class="p-3">820%</td>
+    <td class="p-3">${PS_ROW_2022.op}</td>
+    <td class="p-3">${PS_ROW_2022.ps}</td>
     <td class="p-3">하반기 둔화</td>
    </tr>
    <tr class="border-t border-border bg-red-50 dark:bg-red-950/20">
@@ -202,15 +223,15 @@ const skHynixWage2026 = `
    </tr>
    <tr class="border-t border-border bg-primary/10">
     <td class="p-3 font-bold">2025</td>
-    <td class="p-3 font-bold">30조원+</td>
-    <td class="p-3 font-bold text-primary">1,500% 안팎</td>
+    <td class="p-3 font-bold">${PS_ROW_2025.op}</td>
+    <td class="p-3 font-bold text-primary">${PS_ROW_2025.ps} 지급</td>
     <td class="p-3">HBM3E 양산 안정화</td>
    </tr>
    <tr class="border-t border-border">
-    <td class="p-3 font-bold">2026 (예상)</td>
-    <td class="p-3">30~35조원</td>
-    <td class="p-3">1,000~1,500%</td>
-    <td class="p-3">HBM4 진입, 삼성 경쟁 격화</td>
+    <td class="p-3 font-bold">2026 (정정)</td>
+    <td class="p-3"><s>30~35조원</s></td>
+    <td class="p-3"><s>1,000~1,500%</s></td>
+    <td class="p-3">HBM4 진입, 기존 전망 철회</td>
    </tr>
   </tbody>
  </table>
@@ -222,7 +243,7 @@ const skHynixWage2026 = `
 <p>
  2025년 임단협에서는 약 5.5% 수준에서 타결됐습니다.
  2026년은 사상 최대 이익 행진 중인 만큼 노조 요구안이 7~9%대로 상향될 가능성이 큽니다.
- <strong>합의선 추정: 5.5~7.0%</strong>
+ <strong>당시의 추정: 5.5~7.0%</strong>
 </p>
 
 <h3 class="text-xl font-bold mt-8 mb-3">변수 2. PS 산정 기준 변경 가능성</h3>
