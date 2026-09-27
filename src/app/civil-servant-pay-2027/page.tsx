@@ -427,6 +427,14 @@ export default function CivilServantPay2027Page() {
         <div className="mt-10 max-w-3xl mx-auto">
           <MultiplexAd />
         </div>
+        {/* 세후 월급 계산기 역링크 — 광고 아래 마지막 줄 (2026-09-27) */}
+        <p className="mt-8 max-w-3xl mx-auto text-sm text-muted-blue dark:text-canvas-300">
+          2026년 확정 봉급 기준 세후 월급은{" "}
+          <Link href="/calc/civil-servant-net-pay#general" className="font-bold text-electric hover:underline">
+            공무원 월급 실수령액 계산기
+          </Link>
+          에서 호봉별로 바로 계산할 수 있습니다.
+        </p>
       </div>
     </main>
   );

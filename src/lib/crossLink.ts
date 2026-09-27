@@ -225,6 +225,13 @@ export const STATIC_CALC_CARDS: Record<
     description: "국민연금 10% 확정 — 내 월급 공제 변화 미리 확인",
     href: "/social-insurance-rates-2027",
   },
+  // 공무원 월급 실수령액 계산기 (2026-09-27) — 가이드가 CALC_TO_GUIDES 로 매핑될 때만 렌더(현재 매핑 없음)
+  "civil-servant-net-pay": {
+    slug: "civil-servant-net-pay",
+    title: "공무원 월급 실수령액 계산기",
+    description: "9급·교사·경찰·소방 호봉별 세후 월급 — 기여금 9%·수당 자동 반영",
+    href: "/calc/civil-servant-net-pay",
+  },
   // 반도체 성과급 전용 계산기 2종 (2026-09-03 뉴스 게시글 5편 역링크용)
   "samsung-bonus": {
     slug: "samsung-bonus",
@@ -235,6 +242,12 @@ export const STATIC_CALC_CARDS: Record<
     slug: "sk-hynix-bonus",
     title: "SK하이닉스 성과급 계산기",
     description: "PS 영업이익 10%·PI — 현금·자사주 신구 체계 세후 실수령 시뮬레이션",
+  },
+  // 2026-09-27 신설 — 가이드 역링크용 카드만 둔다(CALC_TO_GUIDES 매핑은 가이드 페이지 광고 위치 검토 후 운영자 결정)
+  "bonus-home-plan": {
+    slug: "bonus-home-plan",
+    title: "성과급 내 집 마련 계산기",
+    description: "삼성·SK 성과급 5년 누적(시나리오 가정) + 동탄·평택·이천 집값·DSR 한도",
   },
   // 2026-09-06 전수검사 보강: CALC_TO_GUIDES 가 참조하지만 simpleCalculators(101종)
   // 에도 STATIC_CALC_CARDS 에도 없던 실존 정적 라우트 9종. 등재 전에는

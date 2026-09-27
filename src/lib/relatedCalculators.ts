@@ -247,6 +247,8 @@ const PATH_RECOMMENDATIONS: Record<string, string[]> = {
  "/calc/ordinary-wage": ["salary", "tax"],
  "/calc/annual-leave-days": ["salary"],
  "/calc/pension-hike-2027": ["tax", "investment"],
+ // 2026-09-27 — 성과급 내 집 마련 계산기(신설): 성과급 클러스터 → 부동산(취득세·주담대·DSR) 순
+ "/calc/bonus-home-plan": ["bonus", "realEstate"],
  // 2026-08-31 — R2 신규 8종 dead-end 차단
  "/calc/dual-income-year-end": ["yearEnd", "tax"],
  "/calc/voluntary-retirement": ["salary", "tax"],
@@ -258,6 +260,8 @@ const PATH_RECOMMENDATIONS: Record<string, string[]> = {
  "/donation-tax-credit-2026": ["yearEnd", "tax"],
  "/health-insurance-dependent": ["tax", "salary"],
  "/social-insurance-rates-2027": ["tax", "salary"],
+ // 2026-09-27 — 공무원 월급 실수령액 계산기 (카테고리 배열은 그대로, 경로 매핑만 추가)
+ "/calc/civil-servant-net-pay": ["salary", "tax"],
 };
 
 /**

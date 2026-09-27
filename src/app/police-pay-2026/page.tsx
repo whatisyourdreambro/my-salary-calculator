@@ -258,6 +258,14 @@ export default function PolicePay2026Page() {
                 description="순경 1호봉 213만원부터 경감까지, 위험근무수당·수당 구조 총정리"
               />
             </div>
+            {/* 세후 월급 계산기 역링크 — 광고 아래 마지막 줄 (2026-09-27) */}
+            <p className="mt-8 text-sm text-muted-blue dark:text-canvas-300">
+              위험근무수당·공무원연금 기여금을 반영한 경찰 세후 월급은{" "}
+              <Link href="/calc/civil-servant-net-pay#police" className="font-bold text-electric hover:underline">
+                경찰 실수령액 계산기
+              </Link>
+              에서 호봉별로 바로 계산할 수 있습니다.
+            </p>
           </div>
 
           <aside
