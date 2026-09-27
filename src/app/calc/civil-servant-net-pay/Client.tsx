@@ -34,10 +34,13 @@ import {
 } from "@/lib/civilServantNetPay";
 import { CIVIL_PENSION_2026, CIVIL_OVERTIME_2026 } from "@/lib/civilServantAllowances2026";
 import { RAISE_2027_BUDGET } from "@/lib/civilServantPay";
+import { INSURANCE_RATES_2026 } from "@/lib/taxConstants2026";
 
 const fmt = (n: number) => (Number.isFinite(n) ? Math.round(n) : 0).toLocaleString("ko-KR");
 const won = (n: number) => `${fmt(n)}원`;
 const RAISE_LABEL = `${(RAISE_2027_BUDGET * 100).toFixed(1)}%`;
+/** 요율 표기 — 부동소수 꼬리 제거 (소수 셋째 자리까지) */
+const RATE_TEXT = (rate: number) => `${Number((rate * 100).toFixed(3))}%`;
 
 const HOURS_OPTIONS = Array.from({ length: 121 }, (_, i) => i);
 const COUNT_OPTIONS = Array.from({ length: 7 }, (_, i) => i);
@@ -613,7 +616,10 @@ export default function CivilNetPayClient({ initialKind = "general" }: { initial
             2026-04-30) × 160%, 36년 초과 납부 시 면제(공무원연금법 제67조). 기준소득월액 추정 = (연간 세전 − 비과세) ÷ 12 — 실제 값은 전년도 과세소득
             기준으로 매년 5월 정해집니다.
           </li>
-          <li>건강보험·장기요양: 기준소득월액(추정)을 보수월액으로 보고 2026년 요율 적용. 공무원은 고용보험 적용 제외.</li>
+          <li>
+            건강보험·장기요양: 기준소득월액(추정)을 보수월액으로 보고 직장가입자 요율(건강보험 {RATE_TEXT(INSURANCE_RATES_2026.HEALTH_INSURANCE)}, 장기요양 = 건강보험료의{" "}
+            {RATE_TEXT(INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO)}) 적용. 공무원은 고용보험 적용 제외.
+          </li>
           <li>
             소득세: 근로소득 간이세액표(소득세법 시행령 별표 2) — 공제대상가족 = 본인 + 배우자 + 자녀 + 기타 부양가족(소득요건 충족 가정), 8~20세 자녀 공제
             반영. 지방소득세 = 소득세의 10%. 정액급식비는 식사대 비과세(소득세법 제12조제3호러목, 월 20만원 이하).
