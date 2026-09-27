@@ -1,6 +1,18 @@
 // src/app/samsung-negotiation-2026/page.tsx
-// 삼성전자 2026 임금협상(5월 12일 본격 시작) 시즌 랜딩.
+// 삼성전자 2026 임금협상(5월 12일 본격 시작 → 5월 20일 잠정합의 → 5월 27일 가결·조인식) 시즌 랜딩.
 // 반도체 가이드 7개로 깊은 회유, 회사 페이지 2개로 추가 트래픽 분산.
+//
+// 2026-09-27 타결 결과 반영 (협상 전 시점 문구 정정):
+//  - 투표·조인식: 삼성전자 뉴스룸 2026-05-27 '삼성전자 노사, 2026년 임금협약 체결' — 5월 20일 밤 잠정합의,
+//    5월 22일 14시~27일 10시 조합원 찬반투표 투표 95.5%·찬성 73.7% 가결, 5월 27일 조인식.
+//  - 인상률 6.2%(기본 4.1% + 성과 평균 2.1%)·3월 급여부터 소급·셀러리캡·DS부문 특별경영성과급·DX 자사주는
+//    회사·노조 발표를 인용한 보도 기준(주간경향 2026-05-21, 오피니언뉴스 2026-05-20, MTN 2026-05-20) —
+//    src/data/seedCompanies.ts 삼성전자 설명과 같은 값.
+//  - 광고 위 문구(히어로 날짜 배지·쟁점 1 카드 끝 문장)는 줄 수 불변 폭 맞춤. 쟁점 카드 끝 구절은 문단 끝이라
+//    끝 구절 전체 폭만 맞추면 된다(-0.30px, 320~1440px 1px 간격 + 1536·1920 전 폭 높이 불변 확인).
+//    결과 요약은 마지막 광고(HomeTopAd) 아래에만 둔다.
+//  - 메타 제목·설명 교체는 R6-06 규칙의 이 URL 35일 1회 교정으로 기록한다(T0 = 배포일, 다음 메타 변경은
+//    T0+35 판독 뒤). og:title 은 buildPageMetadata 가 title 에서 만든다(따로 두지 않음).
 
 import type { Metadata } from "next";
 import ShareSection from "@/components/ShareSection";
@@ -22,9 +34,9 @@ import { InArticleAd, HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "삼성전자 2026 임금협상 - 5월 12일 본격 시작, 인상률·OPI·복지 핵심 쟁점",
+ title: "삼성전자 2026 임금협상 타결 - 평균 6.2% 인상, 5/27 가결·특별성과급",
  description:
- "2026년 5월 12일 본격 교섭에 들어간 삼성전자 노사 임금협상. 5가지 핵심 쟁점, 직급별 예상 인상폭, SK하이닉스 비교까지 모두 정리.",
+ "삼성전자 2026년 임금협약: 5월 20일 잠정합의, 5월 27일 조합원 투표 찬성 73.7%로 가결. 평균 6.2%(기본 4.1%+성과 2.1%) 인상·3월 급여부터 소급, DS부문 특별경영성과급 신설. 쟁점·직급별 인상폭·SK하이닉스 비교.",
  path: "/samsung-negotiation-2026",
  keywords: [
  "삼성전자 임금협상 2026",
@@ -37,14 +49,14 @@ export const metadata: Metadata = buildPageMetadata({
  ],
  ogType: "article",
  publishedTime: "2026-05-12",
- modifiedTime: "2026-05-12",
+ modifiedTime: "2026-09-27",
 });
 
 const KEY_ISSUES = [
  {
  title: "쟁점 1. 기본급 인상률",
  body:
- "노조 7~9% 요구 vs 사측 3~5% 제시. 메모리 호황·HBM3E 매출로 노조 요구안 상향 가능성. 합의선 추정: 5.0~6.5%.",
+ "노조 7~9% 요구 vs 사측 3~5% 제시. 메모리 호황·HBM3E 매출로 노조 요구안 상향 가능성. 타결 인상률: 평균 6.2%.",
  },
  {
  title: "쟁점 2. OPI 산정 기준",
@@ -124,12 +136,12 @@ const FAQ_ITEMS = [
  {
  question: "삼성전자 2026 임금협상은 언제 시작했나요?",
  answer:
- "2026년 5월 12일 본격 본교섭이 개시됐습니다. 노조 측 요구안 제시와 사측 제시안 교환을 시작으로 통상 6~8주에 걸쳐 5~10차 본교섭을 거쳐 잠정 합의에 도달합니다. 과거 패턴상 최종 타결은 6~8월, 소급 적용은 1월 1일자입니다.",
+ "2026년 5월 12일 본격 본교섭이 개시됐고, 5월 20일 밤 잠정합의안이 나왔습니다. 5월 22일부터 27일까지 진행된 조합원 찬반투표에서 투표율 95.5%, 찬성 73.7%로 가결돼 5월 27일 임금협약 조인식을 마쳤습니다(삼성전자 뉴스룸 2026년 5월 27일).",
  },
  {
  question: "예상 인상률은 얼마인가요?",
  answer:
- "2025년 임단협에서는 약 5%대에서 타결됐습니다. 2026년은 메모리 호황과 HBM3E 매출 본격 반영으로 노조 요구안이 7~9%대로 상향될 가능성이 있어 합의선은 5.0~6.5% 정도로 추정됩니다.",
+ "5월 27일 가결된 2026년 임금협약의 평균 인상률은 6.2%(기본인상률 4.1% + 성과인상률 평균 2.1%)입니다(보도 기준). 협상 전 이 페이지는 합의선을 5.0~6.5%로 추정했고, 실제 타결은 그 범위 안이었습니다. 개인별 인상률은 성과인상률이 평가에 따라 달라 사람마다 다릅니다.",
  },
  {
  question: "OPI와 TAI는 무엇이 다른가요?",
@@ -139,7 +151,7 @@ const FAQ_ITEMS = [
  {
  question: "소급분은 언제, 얼마나 들어오나요?",
  answer:
- "잠정합의가 6~8월에 이뤄지면 1월부터 합의 시점까지 5~8개월치가 한 번에 입금됩니다. 합의 인상률이 5%일 경우, 연봉 1억원 직원 기준 약 200~300만원 수준의 일시 입금이 발생합니다.",
+ "2026년 임금 인상과 셀러리캡 상향은 2026년 3월 급여부터 소급 적용됩니다(보도 기준). 3월부터 협약 반영 전까지의 인상 차액이 한꺼번에 정산되는 구조이며, 실제 지급일과 금액은 회사 공지와 급여명세서로 확인하세요. 대략적인 크기는 '월 기본급 × 인상률 × 소급 개월 수'로 가늠할 수 있습니다.",
  },
  {
  question: "SK하이닉스 PS와 비교하면 어떤가요?",
@@ -159,12 +171,12 @@ export default function SamsungNegotiation2026Page() {
  ]),
  faqLd(FAQ_ITEMS),
  articleLd({
- title: "삼성전자 2026 임금협상 - 5월 12일 본격 시작",
- description: "5가지 핵심 쟁점, 직급별 예상 인상폭, 소급분 가계 준비까지",
+ title: "삼성전자 2026 임금협상 타결 - 평균 6.2% 인상, 5월 27일 가결",
+ description: "5월 20일 잠정합의·5월 27일 가결 결과, 5가지 핵심 쟁점, 직급별 인상폭, 소급분 가계 준비까지",
  slug: "samsung-negotiation-2026",
  url: "/samsung-negotiation-2026",
  publishedDate: "2026-05-12",
- modifiedDate: "2026-05-12",
+ modifiedDate: "2026-09-27",
  }),
  speakableLd({
  url: "/samsung-negotiation-2026",
@@ -178,12 +190,12 @@ export default function SamsungNegotiation2026Page() {
  <div className="text-center mb-12">
  <p className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-electric-10 text-electric font-bold text-sm mb-6">
  <TrendingUp className="w-4 h-4" />
- <time dateTime="2026-05-12">2026년 5월 12일 본격 협상 시작</time>
+ <time dateTime="2026-05-27">2026년 5월 27일 임금협약 가결</time>
  </p>
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  삼성전자 2026 <span className="text-electric">임금협상</span> 가이드
  </h1>
- <PublishedMeta publishedDate="2026-05-12" className="mb-2" />
+ <PublishedMeta publishedDate="2026-05-12" updatedDate="2026-09-27" className="mb-2" />
  <p className="guide-tldr text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  매출 300조·영업이익 50조원대 회복 시점의 임단협. <br />
  5가지 핵심 쟁점, 직급별 예상 인상폭, SK하이닉스 비교까지 한눈에.
@@ -359,6 +371,45 @@ export default function SamsungNegotiation2026Page() {
  <div className="mt-8">
  <HomeTopAd />
  </div>
+
+ {/* 2026 임금협약 타결 결과 요약 — 마지막 광고(HomeTopAd) 아래에만 추가(2026-09-27). 광고 위 높이 불변.
+ 출처·검증 메모는 파일 머리 주석. 회사 발표(뉴스룸)와 보도 기준 항목을 구분해 적는다. */}
+ <section className="mt-10 max-w-3xl mx-auto p-6 bg-white rounded-2xl border border-canvas-200">
+ <h2 className="text-lg font-black text-navy mb-3">
+ 2026 임금협약 타결 결과 (5월 27일 가결)
+ </h2>
+ <ul className="text-sm text-muted-blue leading-relaxed space-y-2 list-disc pl-5">
+ <li>
+ <strong>일정</strong>: 5월 20일 밤 잠정합의 → 5월 22~27일 조합원 찬반투표에서
+ 투표율 95.5%, 찬성 73.7%로 가결 → 5월 27일 임금협약 조인식(삼성전자 뉴스룸 발표).
+ </li>
+ <li>
+ <strong>임금 인상률</strong>: 평균 6.2%(기본인상률 4.1% + 성과인상률 평균 2.1%), 2026년
+ 3월 급여부터 소급 적용(보도 기준).
+ </li>
+ <li>
+ <strong>셀러리캡 상향</strong>: CL2 8,000만원, CL3 1억 1,000만원, CL4 1억 3,000만원(개발·비개발
+ 통합)(보도 기준).
+ </li>
+ <li>
+ <strong>DS부문 특별경영성과급 신설</strong>: 재원은 영업이익의 10.5%(상한 없음), 세후 전액
+ 자사주로 지급하고 3분의 1은 바로, 나머지는 1년·2년 뒤 매각할 수 있습니다. DX부문·CSS사업팀은
+ 600만원 상당 자사주(보도 기준).
+ </li>
+ <li>
+ 위 쟁점 카드와 직급별 인상폭 표(5·6·7%)는 협상 전 시나리오입니다. 개인별 인상률은 성과인상률
+ 평가에 따라 평균 6.2%와 다를 수 있습니다.
+ </li>
+ </ul>
+ <p className="mt-4 text-xs text-muted-blue leading-relaxed">
+ 출처: 삼성전자 뉴스룸 「삼성전자 노사, 2026년 임금협약 체결」(2026-05-27, 투표 결과·조인식). 인상률·소급·셀러리캡·성과급
+ 세부는 회사·노조 발표를 인용한 2026년 5월 20~21일 보도 기준입니다. 성과급 세후 금액은{" "}
+ <Link href="/calc/samsung-bonus" className="text-electric font-bold hover:underline">
+ 삼성 OPI·TAI 계산기
+ </Link>
+ 에서 계산할 수 있습니다.
+ </p>
+ </section>
  </div>
  </main>
  );

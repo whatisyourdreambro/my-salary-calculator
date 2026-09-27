@@ -10,6 +10,8 @@
 //   평균·지급의무·떡값·연휴수당 정보 허브 + 두 페이지로의 내부링크 역할.
 // 사실관계 출처(2026-08-16 교차 확인): 추석 날짜 4개 독립 출처 일치,
 //   근로기준법 제55·56조 + 고용노동부 자료, 사람인 2025 조사(950개사) 보도.
+// 2026-09-27: 연휴(9/24~26)가 지나 히어로 문구 '추석 앞두고' → '추석 전후로'(같은 2·3음절, 광고 위 줄 수 불변).
+//   날짜·수치는 그대로라 발행·수정일(8/16)도 그대로 둔다. 시즌 링크 교체는 SeasonalLinks 루틴 담당.
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -137,7 +139,7 @@ export default function ChuseokBonus2026Page() {
           <PublishedMeta publishedDate="2026-08-16" updatedDate="2026-08-16" className="mb-2" />
           <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
             남들은 얼마나 받는지, 우리 회사는 안 줘도 되는 건지, 떡값과 선물엔 세금이
-            붙는지 — 추석 앞두고 궁금한 돈 문제를 조사 통계와 법 기준으로 정리했습니다.
+            붙는지 — 추석 전후로 궁금한 돈 문제를 조사 통계와 법 기준으로 정리했습니다.
           </p>
         </div>
 
