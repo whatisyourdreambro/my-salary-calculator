@@ -137,7 +137,9 @@ test("validator catches single-cell defects", () => {
 
 test("--compare: identical transcriptions exit 0, a single altered cell exits 1", () => {
   const a = writeJson("typed-a.json", tablesOnly(y2026));
-  const b = writeJson("typed-b.json", tablesOnly(y2026));
+  // 메모장 등이 붙이는 BOM 이 있어도 읽는다
+  const b = join(tmp, "typed-b.json");
+  writeFileSync(b, String.fromCharCode(0xfeff) + JSON.stringify(tablesOnly(y2026)));
   const same = run("--compare", a, b);
   assert.equal(same.status, 0, same.stdout + same.stderr);
   assert.match(same.stdout, /모든 칸에서 같습니다/);
@@ -219,7 +221,10 @@ test("tables are chosen by caption, not by position; missing or duplicate tables
   const univ = teacher
     .replace("유치원ㆍ초등학교ㆍ중학교ㆍ고등학교 교원 등의 봉급표", "국립대학 교원 등의 봉급표")
     .replace("2,495,600", "2,495,700");
-  const shuffled = `<h4>2026년 직종별 공무원 봉급표</h4>${univ}${teacher}${gongan}${police}${general}`;
+  // 머리글 속 엔티티·폭 없는 공백(&#8203;)도 계급 이름 매칭을 깨지 않는다
+  assert.ok(police.includes("<p>순 경</p>"));
+  const policeEntities = police.replace("<p>순 경</p>", "<p>순&#8203;경&nbsp;</p>");
+  const shuffled = `<h4>2026년 직종별 공무원 봉급표</h4>${univ}${teacher}${gongan}${policeEntities}${general}`;
   assert.deepEqual(tablesOnly(parsePayPage(shuffled)), tablesOnly(y2026));
 
   assert.throws(() => parsePayPage(`${general}${police}`), /\[별표 11\] 교원 표를 찾지 못했습니다/);

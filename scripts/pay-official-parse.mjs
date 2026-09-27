@@ -106,11 +106,16 @@ function decodeEntities(s) {
 /** 태그를 지우고 공백(U+00A0·U+3000 포함)을 하나로 */
 function textOf(html) {
   return decodeEntities(html.replace(/<br\s*\/?>/gi, " ").replace(/<[^>]*>/g, " "))
-    .replace(/[\s 　​﻿]+/g, " ")
+    .split(ZWSP)
+    .join("")
+    .replace(/\s+/g, " ") // JS \s 는 U+00A0·U+3000(원문 빈 칸)·U+FEFF 도 포함
     .trim();
 }
 
 const squash = (s) => s.replace(/\s+/g, "");
+
+const ZWSP = String.fromCharCode(0x200b);
+const stripBom = (s) => (s.charCodeAt(0) === 0xfeff ? s.slice(1) : s);
 
 function rowsOf(html) {
   return [...html.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)].map((m) =>
@@ -397,7 +402,7 @@ export function loadTablesJson(file) {
   if (!existsSync(file)) throw new PayParseError(`${file}: 파일이 없습니다`, 2);
   let data;
   try {
-    data = JSON.parse(readFileSync(file, "utf8").replace(/^﻿/, ""));
+    data = JSON.parse(stripBom(readFileSync(file, "utf8")));
   } catch (e) {
     throw new PayParseError(`${file}: JSON 을 읽을 수 없습니다 (${e.message})`, 2);
   }
