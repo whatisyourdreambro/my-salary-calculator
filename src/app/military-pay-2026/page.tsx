@@ -308,6 +308,14 @@ export default function MilitaryPay2026Page() {
                 description="병사 봉급표와 장병내일준비적금 전역 시 수령액 계산까지"
               />
             </div>
+            {/* 세후 월급 계산기 역링크 — 광고 아래 마지막 줄 (2026-09-27) */}
+            <p className="mt-8 text-sm text-muted-blue dark:text-canvas-300">
+              병사 월급(비과세·공제 없음)과 공무원 직종별 세후 월급 비교는{" "}
+              <Link href="/calc/civil-servant-net-pay#soldier" className="font-bold text-electric hover:underline">
+                공무원 월급 실수령액 계산기
+              </Link>
+              에서 호봉별로 바로 계산할 수 있습니다.
+            </p>
           </div>
 
           {/* Desktop sticky sidebar — civil-servant 동일 조합 */}
