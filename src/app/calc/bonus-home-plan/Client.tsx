@@ -47,7 +47,7 @@ const CONTROL =
   "mt-1 block h-11 w-full min-w-0 rounded-xl border border-canvas-200 bg-white px-2 font-bold text-navy focus:border-electric focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-canvas-700 dark:bg-canvas-800 dark:text-canvas-50";
 // 320px 두 칸에서 '화성시 동탄구'·'80,000,000' 이 잘리지 않게 sm 미만은 좌우 여백을 줄이고 선택 칸은 14px
 const SELECT = `${CONTROL} text-sm sm:px-3 sm:text-base`;
-const INPUT = `${CONTROL} pr-6 text-base sm:px-3 sm:pr-8`;
+const INPUT = `${CONTROL} pr-5 text-base sm:px-3 sm:pr-8`;
 
 /** 문자열 입력 → 숫자(빈 칸·비유한 = fallback) */
 const num = (raw: string, fallback = 0): number => {
@@ -194,7 +194,7 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
   return (
     <div className="space-y-5 mb-10">
       {/* 1) 입력 — 6칸 고정 + 시나리오 4칸 고정 */}
-      <section {...measurement.inputProps} aria-label="내 조건" className="rounded-2xl border border-canvas-200 bg-white p-4 dark:border-canvas-800 dark:bg-canvas-900 sm:p-6">
+      <section {...measurement.inputProps} aria-label="내 조건" className="rounded-2xl border border-canvas-200 bg-white p-3 dark:border-canvas-800 dark:bg-canvas-900 sm:p-6">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           <div className="min-w-0">
             <label htmlFor="bhp-company" className={LABEL}>회사</label>
@@ -231,7 +231,7 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
                 <label htmlFor="bhp-custom-bonus" className={LABEL}>연 성과급 (연봉 대비 %)</label>
                 <div className="relative">
                   <NumberInput id="bhp-custom-bonus" inputMode="decimal" maxLength={6} value={raw.customBonusPct} onValueChange={(v) => set("customBonusPct", v)} className={INPUT} />
-                  <span className="pointer-events-none absolute right-2 top-1/2 translate-y-[-40%] sm:right-3 text-xs font-bold text-electric">%</span>
+                  <span className="pointer-events-none absolute right-1.5 top-1/2 translate-y-[-40%] sm:right-3 text-xs font-bold text-electric">%</span>
                 </div>
               </>
             )}
@@ -240,7 +240,7 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
             <label htmlFor="bhp-salary" className={LABEL}>연봉 (세전, 2026년)</label>
             <div className="relative">
               <NumberInput id="bhp-salary" inputMode="numeric" maxLength={11} value={raw.salary} onValueChange={(v) => set("salary", v)} className={INPUT} />
-              <span className="pointer-events-none absolute right-2 top-1/2 translate-y-[-40%] sm:right-3 text-xs font-bold text-electric">원</span>
+              <span className="pointer-events-none absolute right-1.5 top-1/2 translate-y-[-40%] sm:right-3 text-xs font-bold text-electric">원</span>
             </div>
           </div>
           <div className="min-w-0">
@@ -255,14 +255,14 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
             <label htmlFor="bhp-assets" className={LABEL}>현재 모은 돈</label>
             <div className="relative">
               <NumberInput id="bhp-assets" inputMode="numeric" maxLength={12} value={raw.startAssets} onValueChange={(v) => set("startAssets", v)} className={INPUT} />
-              <span className="pointer-events-none absolute right-2 top-1/2 translate-y-[-40%] sm:right-3 text-xs font-bold text-electric">원</span>
+              <span className="pointer-events-none absolute right-1.5 top-1/2 translate-y-[-40%] sm:right-3 text-xs font-bold text-electric">원</span>
             </div>
           </div>
           <div className="min-w-0">
             <label htmlFor="bhp-savings" className={LABEL}>월 저축률 (실수령 대비)</label>
             <div className="relative">
               <NumberInput id="bhp-savings" inputMode="decimal" maxLength={5} value={raw.savingsRate} onValueChange={(v) => set("savingsRate", v)} className={INPUT} />
-              <span className="pointer-events-none absolute right-2 top-1/2 translate-y-[-40%] sm:right-3 text-xs font-bold text-electric">%</span>
+              <span className="pointer-events-none absolute right-1.5 top-1/2 translate-y-[-40%] sm:right-3 text-xs font-bold text-electric">%</span>
             </div>
           </div>
         </div>
