@@ -92,6 +92,8 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/year-end-tax-checklist': { lastModified: new Date('2026-09-09') },
  '/weekly-holiday-allowance-2026': { lastModified: new Date('2026-09-09') },
  '/civil-servant-pay-2026': { lastModified: new Date('2026-09-09') },
+ // 공무원 월급 실수령액 계산기 (2026-09-27 신설 — 운영자 승인 동결 예외)
+ '/calc/civil-servant-net-pay': { lastModified: new Date('2026-09-27'), priority: 0.8, changeFrequency: 'monthly' },
  '/tools/finance/compound': { lastModified: new Date('2026-09-09') },
  '/tools/finance/bonus': { lastModified: new Date('2026-09-09') },
  '/donation-tax-credit-2026': { lastModified: new Date('2026-08-31') },
@@ -214,6 +216,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/calc/annual-leave-days',
  // 국민연금 인상 계산기 (2026-08-30 신설) — 2027-01 요율 10% 시행 이벤트
  '/calc/pension-hike-2027',
+ // 공무원 월급 실수령액 계산기 (2026-09-27 신설) — 9급·교사·경찰·소방 호봉별 세후 월급
+ '/calc/civil-servant-net-pay',
  // R2 신규 계산기 5종 (2026-08-31 승인 배치) — 연말정산 시즌·뉴스 트리거·이직
  '/calc/dual-income-year-end',
  '/calc/voluntary-retirement',

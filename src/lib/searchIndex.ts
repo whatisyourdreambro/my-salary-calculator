@@ -193,6 +193,13 @@ const bonusCalcEntries: SearchEntry[] = BONUS_CALCS.filter((c) => !explicitBonus
  priority: 2,
 }));
 
+// 헤더 검색에만 싣는 전용 계산기 — getDedicatedCalculatorEntries(/calc 디렉터리 카드)에는 넣지 않는다.
+// /calc 디렉터리에 카드를 더하면 MultiplexAd·레이아웃 쿠팡 위 높이가 늘어난다(광고 위 UI 규칙) — 등재는 운영자 결정.
+// 2026-09-27 공무원 월급 실수령액 계산기 (운영자 승인 동결 예외)
+const searchOnlyCalcPages: SearchEntry[] = [
+ { title: "공무원 월급 실수령액 계산기", href: "/calc/civil-servant-net-pay", category: "계산기", description: "공무원 실수령액 — 9급·교사·경찰·소방 호봉별 세후 월급, 기여금 9% 반영", priority: 1 },
+];
+
 /** Dedicated calculator discovery reuses the same labels as header search. */
 export function getDedicatedCalculatorEntries(): SearchEntry[] {
  const toolsHubs = new Set(["/tools", "/tools/finance", "/tools/life", "/tools/real-estate"]);
@@ -244,6 +251,7 @@ const companyEntries: SearchEntry[] = companyRepository.getAll().map((c) => ({
 export const searchIndex: SearchEntry[] = [
  ...toolPages,
  ...seasonPages,
+ ...searchOnlyCalcPages,
  ...calculatorEntries,
  ...guideEntries,
  ...glossaryEntries,
