@@ -82,7 +82,8 @@ export default function TetrisPage() {
  });
  }, []);
 
- const checkCollision = (piece: typeof activePiece, moveX = 0, moveY = 0, rotatedShape?: number[][]) => {
+ // grid 가 바뀔 때만 새로 만든다 — 매 렌더 새 함수면 move·rotate 의 useCallback 이 매번 무효화됐다
+ const checkCollision = useCallback((piece: typeof activePiece, moveX = 0, moveY = 0, rotatedShape?: number[][]) => {
  if (!piece) return false;
  const shape = rotatedShape || piece.shape;
 
@@ -98,7 +99,7 @@ export default function TetrisPage() {
  }
  }
  return false;
- };
+ }, [grid]);
 
  const lockPiece = useCallback(() => {
  if (!activePiece) return;
@@ -172,27 +173,37 @@ export default function TetrisPage() {
  }
  }, [activePiece, gameOver, isPlaying, checkCollision]);
 
+ // 중력 틱은 ref 로 최신 move 를 부른다. move(=activePiece·grid 의존)를 effect 의존성에 두면
+ // 블록이 한 칸 움직이거나 재렌더될 때마다 setInterval 이 지워지고 다시 걸려(중력 타이머 리셋)
+ // 좌우 이동·회전을 틱 간격보다 빨리 누르면 블록이 떨어지지 않았다.
+ const moveRef = useRef(move);
+ useEffect(() => {
+ moveRef.current = move;
+ }, [move]);
+
  // --- Game Loop ---
+ // 타이머는 시작/종료·레벨(속도)·새 블록 등장(hasActivePiece false→true) 때만 다시 건다
+ const hasActivePiece = activePiece !== null;
  useEffect(() => {
  if (!isPlaying || gameOver) {
  if (gameLoopRef.current) clearInterval(gameLoopRef.current);
  return;
  }
 
- if (!activePiece) {
+ if (!hasActivePiece) {
  spawnPiece();
  return;
  }
 
  const speed = Math.max(100, TICK_RATE_MS * Math.pow(SPEED_INCREMENT, level - 1));
  gameLoopRef.current = setInterval(() => {
- move(0, 1);
+ moveRef.current(0, 1);
  }, speed);
 
  return () => {
  if (gameLoopRef.current) clearInterval(gameLoopRef.current);
  };
- }, [isPlaying, gameOver, activePiece, level, move, spawnPiece]);
+ }, [isPlaying, gameOver, hasActivePiece, level, spawnPiece]);
 
  // --- Controls ---
  useEffect(() => {
