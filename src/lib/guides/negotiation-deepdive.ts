@@ -87,10 +87,10 @@ export const negotiationGuides = [
  content: `
 <p class="lead">한 회사에 머무르면 매년 <strong>3~5% 인상</strong>이 평균. 하지만 이직하면 <strong>15~30% 점프</strong>가 일반적입니다. 같은 능력이라도 회사가 바뀌면 가치 평가가 달라지기 때문입니다.</p>
 
-<h2>📊 직군별 이직 평균 인상률 (2026 기준)</h2>
+<h2>📊 직군별 이직 인상률 (업계 통념 참고치)</h2>
 <div class="bg-secondary/30 p-6 rounded-xl mt-6 border border-primary/10">
 <table class="w-full text-sm">
-<thead><tr><th>직군</th><th>이직 평균 인상률</th></tr></thead>
+<thead><tr><th>직군</th><th>이직 인상률 통념</th></tr></thead>
 <tbody>
 <tr><td>IT 개발자 (백엔드/프론트)</td><td>20~35%</td></tr>
 <tr><td>데이터·AI 엔지니어</td><td>25~40%</td></tr>
