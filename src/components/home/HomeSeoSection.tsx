@@ -8,6 +8,22 @@ import { SALARY_CALCULATION_METHOD_HREF, SALARY_MODEL_2026 } from "@/lib/salaryM
 import { JOB_COUNT, companyCountKo } from "@/config/site";
 // 본문의 연도·요율은 현행 요율 포인터 — 1/1 전환 시 계산과 함께 바뀐다 (2026-09-25 N3)
 import { CURRENT_RATES_YEAR, CURRENT_RATE_LABELS } from "@/config/currentRates";
+import { pickPropertyTaxPeriodKey, type PropertyTaxPeriodKey } from "@/lib/propertyTaxPeriod";
+
+// 목적별 계산기 칩의 보유세 라벨 — 납부기간 게이트(propertyTaxPeriod.ts, 지방세법 제115조·종부세 12/1~15)로
+// 빌드 시점(KST)에 고른다 (MI-05, 2026-09-29). 종전 '9월 재산세 2기분 납부 (9/16~30)' 고정 칩은 10/1 부터
+// 지난 기한을 광고했다. 10/1·11/25·12/16 예약 재빌드가 자동 전환한다. OFFSEASON 문구는 푸터 라벨과 같다.
+export const HOME_PROPERTY_TAX_CHIP_LABELS: Readonly<Record<PropertyTaxPeriodKey, string>> = {
+  JULY: "7월 재산세 1기분 납부 (7/16~31)",
+  SEPT: "9월 재산세 2기분 납부 (9/16~30)",
+  COMPREHENSIVE: "12월 종부세 납부 (12/1~15)",
+  OFFSEASON: "재산세·보유세 계산기",
+};
+
+/** 빌드 시점 보유세 칩 (정적 프리렌더라 모듈 평가 시각 = 빌드 시각) */
+export function homePropertyTaxChip(now: Date = new Date()): { label: string; href: string } {
+  return { label: HOME_PROPERTY_TAX_CHIP_LABELS[pickPropertyTaxPeriodKey(now)], href: "/property-holding-tax-2026" };
+}
 
 export default function HomeSeoSection() {
   return (
@@ -88,7 +104,8 @@ export default function HomeSeoSection() {
                 href: "/calc/sk-hynix-bonus",
               },
               { label: "2027 최저임금 10,700원 확정", href: "/minimum-wage-2027" },
-              { label: "9월 재산세 2기분 납부 (9/16~30)", href: "/property-holding-tax-2026" },
+              // 보유세 납부기간 칩 — 빌드 시점 게이트 (MI-05)
+              homePropertyTaxChip(),
               { label: "연봉 실수령액표 2026", href: "/table/2026/annual" },
               { label: "퇴직금 간편 계산", href: "/calc/severance-pay-quick" },
               { label: "실업급여 계산기", href: "/calc/unemployment-benefit" },
