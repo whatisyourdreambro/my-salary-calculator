@@ -2213,7 +2213,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-16",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3532
+  "contentChars": 3534
  },
  {
   "slug": "parental-leave-complete-guide",
@@ -2232,7 +2232,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-16",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3572
+  "contentChars": 3573
  },
  {
   "slug": "earned-income-credit-2026",

@@ -26,7 +26,7 @@ export const hotKeywordsGuides = [
 <ul>
 <li><strong>임금 체불:</strong> 2개월 이상 임금이 지급되지 않은 경우</li>
 <li><strong>직장 내 괴롭힘·성희롱 피해:</strong> 사업주에게 신고했지만 적절한 조치가 없는 경우</li>
-<li><strong>통근 불가:</strong> 사업장 이전 등으로 편도 통근 시간이 3시간 이상인 경우</li>
+<li><strong>통근 불가:</strong> 사업장 이전 등으로 왕복 통근 시간이 3시간 이상인 경우</li>
 <li><strong>건강 악화:</strong> 의사 진단으로 현 직무 수행이 불가한 경우</li>
 <li><strong>배우자 동반 이주:</strong> 배우자의 직장 이전으로 원거리 이사가 필요한 경우</li>
 <li><strong>부양가족 간호:</strong> 가족의 질병·부상으로 30일 이상 간호가 필요한 경우</li>
@@ -49,7 +49,7 @@ export const hotKeywordsGuides = [
 <tr class="border-b"><td class="p-2">5년 이상 ~ 10년 미만</td><td class="p-2 text-right font-bold">210일</td></tr>
 <tr><td class="p-2">10년 이상</td><td class="p-2 text-right font-bold">240일</td></tr>
 </table>
-<p class="text-sm text-muted-foreground mt-2">※ 50세 이상 또는 장애인은 각 구간에 30일 추가. 최대 270일.</p>
+<p class="text-sm text-muted-foreground mt-2">※ 50세 이상·장애인은 1년 이상 가입 시 30일 더(최대 270일).</p>
 </div>
 
 <h2>📋 실업급여 신청 절차 (단계별)</h2>
@@ -57,7 +57,7 @@ export const hotKeywordsGuides = [
 <li><strong>이직확인서 제출 요청:</strong> 회사에 고용보험 EDI 이직확인서 제출을 요청합니다. 지연 시 고용노동부(1350)에 신고.</li>
 <li><strong>수급자격 신청:</strong> 퇴직일 다음 날부터 12개월 이내에 관할 고용센터 방문 또는 고용24(www.work24.go.kr) 온라인 신청.</li>
 <li><strong>수급자격 인정:</strong> 고용센터에서 수급 자격 심사 후 인정 여부 통보 (보통 2~3주 소요).</li>
-<li><strong>대기기간 7일:</strong> 수급 자격 인정 후 7일간 대기. 이 기간은 급여 미지급.</li>
+<li><strong>대기기간 7일:</strong> 실업 신고 이후 첫 7일간 대기. 이 기간은 급여 미지급.</li>
 <li><strong>취업특강 참석:</strong> 1회 필수. 온라인 또는 오프라인 모두 가능.</li>
 <li><strong>1차 급여 수령:</strong> 대기기간 이후 첫 구직급여 지급 시작.</li>
 <li><strong>4주마다 실업 인정:</strong> 4주마다 고용센터에 구직활동 실적 신고 → 급여 지급 반복.</li>
@@ -67,7 +67,7 @@ export const hotKeywordsGuides = [
 <ul>
 <li>4주 기간 중 2회 이상 구직활동 증명</li>
 <li>인정되는 활동: 입사지원, 면접 참가, 직업훈련 수강, 직업안정기관 상담, 고용센터 취업특강</li>
-<li>워크넷에 이력서 등록 + 입사지원은 구직활동으로 자동 연계</li>
+<li>고용24에 이력서 등록 / 입사지원은 구직활동으로 자동 연계</li>
 </ul>
 
 <h2>🎁 조기재취업수당 — 빨리 취업하면 더 받는다</h2>
@@ -75,13 +75,13 @@ export const hotKeywordsGuides = [
 <ul>
 <li><strong>조건:</strong> 잔여 급여 일수 30일 이상, 취업 후 6개월 이상 근무 예정</li>
 <li><strong>금액:</strong> 잔여 일수 × 일 구직급여액 × 50%</li>
-<li><strong>신청:</strong> 재취업일 다음 날부터 12개월 이내</li>
+<li><strong>신청:</strong> 재취업일부터 12개월 지난 뒤 청구</li>
 </ul>
 
 <h2>⚠️ 주의사항 — 부정수급 절대 금지</h2>
 <ul>
-<li>알바·부업 시 반드시 신고 (주 15시간 이상 또는 월 60만원 초과)</li>
-<li>부정수급 적발 시: 전액 반환 + 추가 징수(최대 5배) + 5년간 수급 자격 박탈</li>
+<li>알바·부업 시 반드시 신고 (주 15시간 이상 또는 월 60시간 이상)</li>
+<li>부정수급 적발 시: 전액 반환 + 추가 징수(최대 5배) + 최대 5년 징역형 처벌</li>
 <li>근로소득이 생기면 취업 신고를 해야 지급일수가 연장됩니다 (총 수령액은 동일)</li>
 </ul>
 
@@ -110,7 +110,7 @@ export const hotKeywordsGuides = [
 <li><strong>자녀 나이:</strong> 만 8세 이하 또는 초등학교 2학년 이하</li>
 <li><strong>고용보험 기간:</strong> 육아휴직 시작일 기준 고용보험 피보험 기간 180일 이상</li>
 <li><strong>고용 형태:</strong> 정규직·계약직·기간제 모두 가능 (30인 미만 사업장도 동일)</li>
-<li><strong>사용 기간:</strong> 자녀 1명당 최대 1년, 3회까지 분할 사용 가능</li>
+<li><strong>사용 기간:</strong> 자녀당 1년, 최대 18개월, 3회 분할 사용 가능</li>
 </ul>
 
 <h2>💰 육아휴직 급여 계산 (2026년 기준)</h2>
@@ -125,21 +125,21 @@ export const hotKeywordsGuides = [
 <p>부모가 모두 육아휴직을 사용하면 첫 6개월간 급여가 크게 상향됩니다.</p>
 <table class="w-full text-sm border-collapse mt-2">
 <tr class="bg-primary/10"><th class="p-2 text-left">사용 월</th><th class="p-2 text-right">상한액 (1인 기준)</th><th class="p-2 text-right">부부 합산 상한</th></tr>
-<tr class="border-b"><td class="p-2">1개월</td><td class="p-2 text-right font-bold">월 200만원</td><td class="p-2 text-right">월 400만원</td></tr>
+<tr class="border-b"><td class="p-2">1개월</td><td class="p-2 text-right font-bold">월 250만원</td><td class="p-2 text-right">월 500만원</td></tr>
 <tr class="border-b"><td class="p-2">2개월</td><td class="p-2 text-right font-bold">월 250만원</td><td class="p-2 text-right">월 500만원</td></tr>
 <tr class="border-b"><td class="p-2">3개월</td><td class="p-2 text-right font-bold">월 300만원</td><td class="p-2 text-right">월 600만원</td></tr>
 <tr class="border-b"><td class="p-2">4개월</td><td class="p-2 text-right font-bold">월 350만원</td><td class="p-2 text-right">월 700만원</td></tr>
 <tr class="border-b"><td class="p-2">5개월</td><td class="p-2 text-right font-bold">월 400만원</td><td class="p-2 text-right">월 800만원</td></tr>
 <tr><td class="p-2">6개월</td><td class="p-2 text-right font-bold">월 450만원</td><td class="p-2 text-right">월 900만원</td></tr>
 </table>
-<p class="text-sm text-muted-foreground mt-2">※ 7~12개월은 일반 급여(통상임금 80%, 상한 150만원) 적용</p>
+<p class="text-sm text-muted-foreground mt-2">※ 7~12개월은 일반 급여(통상임금 80%, 상한 160만원) 적용</p>
 </div>
 
 <h2>👶 출산전후휴가 vs 육아휴직 차이</h2>
 <table class="w-full text-sm border-collapse mt-4">
 <tr class="bg-primary/10"><th class="p-2 text-left">구분</th><th class="p-2">출산전후휴가</th><th class="p-2">육아휴직</th></tr>
-<tr class="border-b"><td class="p-2 font-bold">기간</td><td class="p-2">90일 (다태아 120일)</td><td class="p-2">최대 12개월</td></tr>
-<tr class="border-b"><td class="p-2 font-bold">급여</td><td class="p-2">통상임금 100% (상한 월 210만원)</td><td class="p-2">통상임금 80% (상한 월 150만원)</td></tr>
+<tr class="border-b"><td class="p-2 font-bold">기간</td><td class="p-2">90일 (다태아 120일)</td><td class="p-2">최대 18개월</td></tr>
+<tr class="border-b"><td class="p-2 font-bold">급여</td><td class="p-2">통상임금 100% (상한 월 220만원)</td><td class="p-2">통상임금 80% (상한 월 150만원)</td></tr>
 <tr class="border-b"><td class="p-2 font-bold">재원</td><td class="p-2">고용보험 (대기업 초과분은 회사)</td><td class="p-2">고용보험 100%</td></tr>
 <tr><td class="p-2 font-bold">중복 가능</td><td class="p-2 text-center" colspan="2">불가. 순차 사용 (출산휴가 → 육아휴직)</td></tr>
 </table>
@@ -147,7 +147,7 @@ export const hotKeywordsGuides = [
 <h2>📋 육아휴직 신청 절차</h2>
 <ol>
 <li><strong>사전 신청:</strong> 시작 30일 전까지 회사에 서면으로 신청</li>
-<li><strong>고용센터 신청:</strong> 육아휴직 시작 후 1개월 이내 고용24(www.work24.go.kr)에서 급여 신청</li>
+<li><strong>고용센터 신청:</strong> 육아휴직 시작 1개월 후 매월 고용24(www.work24.go.kr)에서 급여 신청</li>
 <li><strong>급여 지급:</strong> 매월 25일 고용보험에서 지급. 단 매달 급여의 25%는 복직 후 일괄 지급</li>
 <li><strong>복직 신청:</strong> 복직 후 6개월 이상 근무 시 사후 지급분 청구</li>
 </ol>
@@ -158,11 +158,11 @@ export const hotKeywordsGuides = [
 <li><strong>대상:</strong> 만 8세 이하 자녀를 둔 근로자</li>
 <li><strong>단축 범위:</strong> 주 15~35시간으로 단축 (기존 40시간 대비 최대 25시간 단축)</li>
 <li><strong>급여 지원:</strong> 단축 시간 중 첫 주 5시간은 통상임금 100% 지원</li>
-<li><strong>사용 기간:</strong> 자녀 1명당 최대 2년</li>
+<li><strong>사용 기간:</strong> 자녀 1명당 최대 3년</li>
 </ul>
 
 <h2>🚫 회사가 거부하면?</h2>
-<p>회사는 정당한 사유 없이 육아휴직을 거부할 수 없습니다. 거부 시 <strong>500만원 이하 과태료</strong>가 부과됩니다. 불이익 처우(해고, 임금 삭감 등)는 <strong>3년 이하 징역 또는 3,000만원 이하 벌금</strong> 대상입니다.</p>
+<p>회사는 정당한 사유 없이 육아휴직을 거부할 수 없습니다. 거부 시 <strong>500만원 이하의 벌금</strong>가 부과됩니다. 불이익 처우(해고, 임금 삭감 등)는 <strong>3년 이하 징역 또는 3,000만원 이하 벌금</strong> 대상입니다.</p>
 <p>권리 침해 시 고용노동부(1350)에 신고하거나 근로복지공단에 구제 신청을 할 수 있습니다.</p>
 `
  },
