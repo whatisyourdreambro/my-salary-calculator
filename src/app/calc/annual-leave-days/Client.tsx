@@ -1,18 +1,14 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import {
   entryBasedSchedule,
   fiscalYearSchedule,
+  toISO,
   totalDays,
   type LeaveGrant,
 } from "@/lib/annualLeave";
-
-function toISO(d: Date): string {
-  const p = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
-}
 
 function GrantTable({ grants, empty }: { grants: LeaveGrant[]; empty: string }) {
   if (grants.length === 0) {
@@ -48,10 +44,17 @@ function GrantTable({ grants, empty }: { grants: LeaveGrant[]; empty: string }) 
   );
 }
 
-export default function AnnualLeaveDaysClient() {
-  const today = toISO(new Date());
+export default function AnnualLeaveDaysClient({ initialUntil }: { initialUntil: string }) {
   const [entry, setEntry] = useState("2023-03-02");
-  const [until, setUntil] = useState(today);
+  // 서버 HTML·첫 클라이언트 렌더는 page 가 넘긴 같은 기준일(정적 빌드 날짜)로 그린다. 렌더 중 new Date() 는
+  // 빌드일과 방문일이 다르면 합계·발생 내역 텍스트가 어긋나 하이드레이션 실패 → 루트 전체 클라이언트 재렌더였다
+  // (회계연도 방식은 매년 1/1 에 합계가 바뀜). 오늘 날짜는 마운트 뒤 effect 에서만 넣는다.
+  const [until, setUntil] = useState(initialUntil);
+  useEffect(() => {
+    const today = toISO(new Date());
+    // 사용자가 이미 기준일을 고쳤다면 덮어쓰지 않는다
+    setUntil((prev) => (prev === initialUntil ? today : prev));
+  }, [initialUntil]);
 
   const { entryGrants, fiscalGrants, entryTotal, fiscalTotal, valid } = useMemo(() => {
     const ok = /^\d{4}-\d{2}-\d{2}$/.test(entry) && /^\d{4}-\d{2}-\d{2}$/.test(until) && entry <= until;

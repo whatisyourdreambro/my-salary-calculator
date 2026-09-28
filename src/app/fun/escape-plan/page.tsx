@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import Link from "@/components/AppLink";
 import CurrencyInput from "@/components/CurrencyInput";
 import NumberStepper from "@/components/NumberStepper";
@@ -53,6 +53,12 @@ export default function EscapePlanPage() {
   const [monthlyCost, setMonthlyCost] = useState("3,000,000");
   const [returnRate, setReturnRate] = useState(8);
   const [toast, setToast] = useState<string | null>(null);
+  // 올해 연도는 마운트 뒤 effect 에서만 채운다. 렌더 중 new Date() 는 빌드 연도가 정적 HTML 에 박혀
+  // 해가 바뀐 뒤(1/1~) '(2045년)' 텍스트가 어긋나 하이드레이션 실패 → 루트 전체 클라이언트 재렌더였다.
+  const [thisYear, setThisYear] = useState<number | null>(null);
+  useEffect(() => {
+    setThisYear(new Date().getFullYear());
+  }, []);
   const shareRef = useRef<HTMLDivElement>(null);
 
   const vals = useMemo(() => ({
@@ -69,7 +75,8 @@ export default function EscapePlanPage() {
   // 월 생활비를 비우면 targetAmount 가 0 이 되어 진행률이 Infinity/NaN 으로 렌더됐다.
   const progress =
     targetAmount > 0 ? (vals.currentAssets / targetAmount) * 100 : 0;
-  const escapeYear = new Date().getFullYear() + Math.floor(yearsToTarget);
+  // 서버·첫 렌더에서는 null — 연도 칸은 비워 두고 마운트 뒤 채운다(같은 줄 안이라 높이 변화 없음)
+  const escapeYear = thisYear === null ? null : thisYear + Math.floor(yearsToTarget);
 
   const funMetrics = [
     { name: "월요병",    value: Math.floor(yearsToTarget * 52),      icon: BedDouble, unit: "번" },
@@ -87,7 +94,7 @@ export default function EscapePlanPage() {
     yearsToTarget === 0
       ? "🔥 나의 회사 탈출 계획: 지금 당장 탈출 가능!"
       : isFinite(yearsToTarget)
-        ? `🔥 나의 회사 탈출 계획: ${yearsToTarget.toFixed(1)}년 후 (${escapeYear}년) 탈출!`
+        ? `🔥 나의 회사 탈출 계획: ${yearsToTarget.toFixed(1)}년 후${escapeYear === null ? "" : ` (${escapeYear}년)`} 탈출!`
         : "🔥 나의 회사 탈출 계획 세우기";
 
   const captureResultImage = async (): Promise<Blob | null> => {
@@ -216,7 +223,7 @@ export default function EscapePlanPage() {
                       <div className="flex items-baseline gap-3">
                         <span className="text-4xl font-bold text-white">{yearsToTarget.toFixed(1)}</span>
                         <span className="text-xl text-white/70">년 후</span>
-                        <span className="text-sm text-white/60 ml-2">({escapeYear}년)</span>
+                        <span className="text-sm text-white/60 ml-2">{escapeYear === null ? null : `(${escapeYear}년)`}</span>
                       </div>
                     ) : (
                       <span className="text-2xl font-bold text-white/80">계획 수정이 필요합니다... 🥲</span>

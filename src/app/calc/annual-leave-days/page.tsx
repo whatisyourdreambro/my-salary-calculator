@@ -10,6 +10,7 @@ import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { CalendarDays, Info } from "lucide-react";
+import { toISO } from "@/lib/annualLeave";
 import AnnualLeaveDaysClient from "./Client";
 
 const FAQ_ITEMS = [
@@ -77,7 +78,8 @@ export default function AnnualLeaveDaysPage() {
             </p>
           </header>
 
-          <AnnualLeaveDaysClient />
+          {/* 기준일 초기값은 서버에서 한 번 정해 넘긴다 — 정적 HTML 과 첫 클라이언트 렌더가 같은 값으로 하이드레이션 */}
+          <AnnualLeaveDaysClient initialUntil={toISO(new Date())} />
 
           <article className="prose prose-sm sm:prose-base dark:prose-invert max-w-none mb-10 mt-10">
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-8 mb-4">연차 발생 규칙 (근로기준법 60조)</h2>

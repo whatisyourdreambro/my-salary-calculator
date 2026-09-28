@@ -31,7 +31,8 @@ function parseISO(iso: string): Date {
   return new Date(y, m - 1, d);
 }
 
-function toISO(d: Date): string {
+/** 로컬 날짜 → YYYY-MM-DD (계산기 Client·page 가 기준일 초기값에 같이 쓴다) */
+export function toISO(d: Date): string {
   const p = (n: number) => String(n).padStart(2, "0");
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
