@@ -114,7 +114,7 @@ const samsungEmployeeRsu = `
  </div>
  <div class="bg-card p-5 rounded-xl border border-border">
   <h4 class="font-bold mb-2">③ 임원 RSU/스톡옵션</h4>
-  <p class="text-sm text-muted-foreground">상무 이상 일부 직군. 일정 베스팅 기간 후 부여. 양도소득세 적용.</p>
+  <p class="text-sm text-muted-foreground">상무 이상 일부 직군. 일정 베스팅 기간 후 부여. 근로소득세 적용.</p>
  </div>
 </div>
 
