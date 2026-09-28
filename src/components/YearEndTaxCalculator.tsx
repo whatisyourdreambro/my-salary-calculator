@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useId, type HTMLAttributes } from "react";
 import CurrencyInput from "./CurrencyInput";
-import CountUp from "react-countup";
+import AnimatedNumber from "./AnimatedNumber";
 import {
  calculateYearEndTax,
  deriveAnnualSocialInsurance2026,
@@ -305,7 +305,7 @@ export default function YearEndTaxCalculator() {
  result.finalRefund >= 0 ? "text-primary" : "text-destructive"
  }`}
  >
- <CountUp end={Math.abs(result.finalRefund)} separator="," duration={0.5} /> 원
+ <AnimatedNumber value={Math.round(Math.abs(result.finalRefund))} duration={0.5} /> 원
  </p>
  {/* 지방세 기준 고지 — 엔진(소득세 기준)과 안내 문구(16.5% 등 지방세 포함)
  의 표기 정합 (2026-08-23) */}
