@@ -3,7 +3,7 @@
   "note_current_rates": "2026-09-25 N3: 연도 표기가 없는 상시 표면의 요율 문구(4.75% 등)와 월 실수령 엔진 기본값은 src/config/currentRates.ts 포인터에서 나온다 — 1/1 전환은 CURRENT_RATES_YEAR 한 줄. 이 목록의 파일은 연도 표기 페이지(2026 요율을 설명하는 글)이거나 최저임금·실업급여 표시 텍스트라 포인터 전환과 별개로 둔다(런북 docs/next-upgrade-plan-2026-09-11.md §5).",
   "note_format": "항목은 두 형식을 섞어 쓸 수 있으나 현재는 전부 객체 형식이다. 문자열 = 모든 패턴 허용(구 형식 — 새 항목에 쓰지 말 것). 객체 { 경로: [패턴명…] } = 나열한 패턴만 허용(2026-09-12 S2-1 SI-08 부터). 패턴명은 verify-tax-constants.mjs 의 PATTERNS name 과 일치해야 한다. 요율 8곳은 2026-09-12 리뷰에서 객체 형식으로 전환했다 — 문자열 형식은 최저임금·실업급여 패턴까지 묵시 허용해, 그 파일에 새 10,320 같은 리터럴이 들어와도 잡지 못했다.",
   "note_minimum_wage": "2026-09-12 S2-1 SI-08: 아래 객체 항목 20곳은 전부 표시용 텍스트(메타 설명·FAQ·본문·용어사전·검색 인덱스·가이드 본문)만 갖는다 — 표시 텍스트는 허용하되, 계산·기본값·프리셋은 반드시 src/config/minimumWage.ts(MINIMUM_WAGE_2026·MONTHLY_HOURS)·src/config/unemploymentBenefit.ts(UNEMPLOYMENT_BENEFIT_2026·unemploymentDailyLowerBound)를 import 할 것. 목록은 파일 단위라 같은 파일 안의 계산 리터럴 회귀는 잡지 못하므로, 이 파일들의 계산 라인은 src/lib/__tests__/wageConversion.test.ts 의 소스 스캔이 별도로 지킨다.",
-  "note_guides_meta": "2026-09-25 B9: src/lib/guidesMeta.generated.ts 는 scripts/gen-guides-meta.ts 가 가이드 정본에서 뽑은 카드 메타(제목·설명) 산출물이다. 정본 가이드(hot-news-2026-deep-dive.ts)는 구직급여 상·하한을 src/config/unemploymentBenefit.ts 상수로 끼워 넣고, 산출물에는 그 표시 텍스트만 남는다 — 손으로 고치지 말고 정본 상수를 바꾼 뒤 재생성할 것.",
+  "note_guides_meta": "2026-09-25 B9: src/lib/guidesMeta.generated.ts 는 scripts/gen-guides-meta.ts 가 가이드 정본에서 뽑은 카드 메타(제목·설명) 산출물이다 — 손으로 고치지 말고 정본 가이드·상수를 바꾼 뒤 재생성할 것. 2026-09-26 GUIDES-07 로 구직급여 두 편(hot-news-2026-deep-dive.ts)이 /guides/unemployment-benefits-complete 에 308 통합되며 상·하한 표시 텍스트가 산출물에서 사라져, 2026-09-28 감사 S31 에서 files 항목을 뺐다(verify:tax 상시 WARN 해소). 재생성 뒤 리터럴이 다시 생기면 verify:tax 가 실패하므로 그때 사유와 함께 재등재. switch_scan.fixed 항목은 별개라 유지.",
   "files": [
     { "src/app/health-insurance-fee-2026/HealthInsuranceFeeClient.tsx": ["건강보험 3.595%", "장기요양 13.14%"] },
     { "src/app/social-insurance-rates-2026/page.tsx": ["국민연금 4.75%", "건강보험 3.595%", "장기요양 13.14%", "연금 상한 월 659만"] },
@@ -20,7 +20,6 @@
     { "src/data/glossaryData.ts": ["최저시급 10,320", "최저임금 월 2,156,880", "실업급여 일 하한 66,048"] },
     { "src/data/qnaData.ts": ["최저시급 10,320", "최저임금 월 2,156,880", "실업급여 일 상한 68,100", "실업급여 일 하한 66,048"] },
     { "src/lib/guides/hot-keywords-deepdive.ts": ["실업급여 일 상한 68,100", "실업급여 일 하한 66,048"] },
-    { "src/lib/guidesMeta.generated.ts": ["실업급여 일 상한 68,100", "실업급여 일 하한 66,048"] },
     { "src/lib/guides/legacy-rewrite-1.ts": ["최저시급 10,320", "최저임금 월 2,156,880"] },
     { "src/lib/guides/legacy-rewrite-2.ts": ["최저시급 10,320"] },
     { "src/lib/guides/lifecycle-deepdive.ts": ["최저시급 10,320"] },
