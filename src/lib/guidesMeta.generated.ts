@@ -2251,7 +2251,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-16",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3291
+  "contentChars": 3289
  },
  {
   "slug": "national-pension-strategy-2026",

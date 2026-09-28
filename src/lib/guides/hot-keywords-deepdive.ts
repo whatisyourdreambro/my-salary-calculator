@@ -191,7 +191,7 @@ export const hotKeywordsGuides = [
 
 <h2>👶 자녀장려금도 함께 받기</h2>
 <ul>
-<li><strong>대상:</strong> 만 18세 미만 자녀가 있는 가구, 총소득 4,000만원 미만</li>
+<li><strong>대상:</strong> 만 18세 미만 자녀가 있는 가구(총소득 7,000만원 미만)</li>
 <li><strong>지급액:</strong> 자녀 1명당 최대 100만원</li>
 <li><strong>중복 수령 가능:</strong> 근로장려금 + 자녀장려금 동시 신청·수령</li>
 <li><strong>예시:</strong> 홑벌이 + 자녀 2명 → 최대 285만원 + 200만원 = <strong>485만원</strong></li>
@@ -200,9 +200,9 @@ export const hotKeywordsGuides = [
 <h2>📅 2026년 신청 일정</h2>
 <table class="w-full text-sm border-collapse mt-4">
 <tr class="bg-primary/10"><th class="p-2 text-left">신청 유형</th><th class="p-2">신청 기간</th><th class="p-2">지급 시기</th></tr>
-<tr class="border-b"><td class="p-2 font-bold">반기 (상반기)</td><td class="p-2">2026년 3월 1일~15일</td><td class="p-2">2026년 9월</td></tr>
+<tr class="border-b"><td class="p-2 font-bold">반기 (하반기)</td><td class="p-2">2026년 3월 1일~15일</td><td class="p-2">2026년 6월</td></tr>
 <tr class="border-b"><td class="p-2 font-bold">정기 신청</td><td class="p-2">2026년 5월 1일~31일</td><td class="p-2">2026년 9월</td></tr>
-<tr><td class="p-2 font-bold">반기 (하반기)</td><td class="p-2">2026년 9월 1일~15일</td><td class="p-2">2027년 3월</td></tr>
+<tr><td class="p-2 font-bold">반기 (상반기)</td><td class="p-2">2026년 9월 1일~15일</td><td class="p-2">12월 30일</td></tr>
 </table>
 
 <h2>🖥️ 신청 방법 (3가지)</h2>
@@ -216,7 +216,7 @@ export const hotKeywordsGuides = [
 <table class="w-full text-sm border-collapse mt-4">
 <tr class="bg-primary/10"><th class="p-2 text-left">구분</th><th class="p-2">반기 신청</th><th class="p-2">정기 신청</th></tr>
 <tr class="border-b"><td class="p-2 font-bold">지급 방식</td><td class="p-2">상·하반기 2회 분할</td><td class="p-2">1년치 일시 지급</td></tr>
-<tr class="border-b"><td class="p-2 font-bold">지급액</td><td class="p-2">추정액의 35% × 2회</td><td class="p-2">확정액 100%</td></tr>
+<tr class="border-b"><td class="p-2 font-bold">지급액</td><td class="p-2">추정액의 35% +정산</td><td class="p-2">확정액 100%</td></tr>
 <tr class="border-b"><td class="p-2 font-bold">정확도</td><td class="p-2">추정 기반 (차액 정산)</td><td class="p-2">확정 소득 기반</td></tr>
 <tr><td class="p-2 font-bold">적합 대상</td><td class="p-2">현금 흐름이 빠듯한 경우</td><td class="p-2">정확한 금액을 원하는 경우</td></tr>
 </table>
