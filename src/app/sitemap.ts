@@ -98,6 +98,9 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/civil-servant-net-pay': { lastModified: new Date('2026-09-27'), priority: 0.8, changeFrequency: 'monthly' },
  '/tools/finance/compound': { lastModified: new Date('2026-09-09') },
  '/tools/finance/bonus': { lastModified: new Date('2026-09-09') },
+ // A31: 법정 퇴직금을 정본 엔진(입·퇴사일·연간 상여금·연차수당)으로 교체 — 결과·기본값이 바뀐 날.
+ // 날짜는 실제 배포일과 같게 둔다 — 10/22 슬롯으로 나가면 2026-10-22 로 고치고, 10/15 전에는 배포하지 않는다(미래 lastmod).
+ '/tools/finance/severance': { lastModified: new Date('2026-10-15') },
  '/donation-tax-credit-2026': { lastModified: new Date('2026-08-31') },
  '/health-insurance-dependent': { lastModified: new Date('2026-08-31') },
  '/social-insurance-rates-2027': { lastModified: new Date('2026-09-25') },
