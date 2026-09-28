@@ -1,5 +1,11 @@
 // src/lib/guides/lifecycle-deepdive.ts
 // 사회초년생·노후·실업 등 라이프 사이클 가이드 10편
+import { UNEMPLOYMENT_BENEFIT_2026, unemploymentDailyLowerBound } from "@/config/unemploymentBenefit";
+
+// 구직급여 1일 상·하한과 30일 환산(만원) — 정본 상수에서 끼워 넣는다(verify:tax 리터럴 감시, 2026-10 guidesb GB-05).
+const UB_UPPER = UNEMPLOYMENT_BENEFIT_2026.DAILY_UPPER.toLocaleString("en-US");
+const UB_UPPER_30_MAN = Math.floor((UNEMPLOYMENT_BENEFIT_2026.DAILY_UPPER * 30) / 10000);
+const UB_LOWER_30_MAN = Math.floor((unemploymentDailyLowerBound() * 30) / 10000);
 
 export const lifecycleGuides = [
  {
@@ -161,17 +167,17 @@ export const lifecycleGuides = [
  publishedDate: "2026-04-18",
  views: 0,
  content: `
-<p class="lead">"퇴사하면 실업급여 받을 수 있나?" — 자발적 퇴사도 일부 사유는 가능합니다. <strong>2026년 일급 한도 6만(실수령 약 180만/월), 최대 270일</strong>. 신청 자격과 절차.</p>
+<p class="lead">"퇴사하면 실업급여 받을 수 있나?" — 자발적 퇴사도 일부 사유는 가능합니다. <strong>2026년 일 상한 ${UB_UPPER}원(월 약 ${UB_UPPER_30_MAN}만원), 최대 270일</strong>. 신청 자격과 절차.</p>
 
 <h2>💰 실업급여 금액 (2026)</h2>
-<p>퇴직 전 평균임금의 60%, 일급 한도 약 6만 → 월 약 180만 (30일 기준). 최저 약 90만.</p>
+<p>퇴직 전 평균임금의 60%, 일 상한 ${UB_UPPER}원 → 월 약 ${UB_UPPER_30_MAN}만 (30일 기준). 하한 ${UB_LOWER_30_MAN}만.</p>
 
 <h2>📋 신청 자격 4가지</h2>
 <ul>
 <li>고용보험 가입 기간 <strong>180일 이상</strong> (지난 18개월 중)</li>
 <li>비자발적 이직 (해고·계약만료·권고사직 등)</li>
 <li>또는 자발적 이직이지만 정당한 사유 (괴롭힘·임금체불·통근 거리 1.5시간+ 등)</li>
-<li>적극적 구직 활동 (월 4회 이상)</li>
+<li>재취업 활동 (인정 때마다 증명)</li>
 </ul>
 
 <h2>⏰ 수급 기간 (가입 기간·연령에 따라)</h2>
@@ -191,7 +197,7 @@ export const lifecycleGuides = [
 <h2>🚀 신청 절차 (이직 후 1년 이내)</h2>
 <ol>
 <li><strong>퇴사 후 즉시</strong>: 회사가 이직확인서 고용센터 신고</li>
-<li><strong>워크넷 회원가입</strong> + 구직신청</li>
+<li><strong>고용24 회원가입</strong> + 구직신청</li>
 <li><strong>고용센터 방문 또는 온라인 수급자격 신청</strong></li>
 <li><strong>실업인정 교육 이수</strong> (1차 인정일에)</li>
 <li><strong>매 4주마다 실업인정 신청</strong> + 구직활동 증명</li>
@@ -200,7 +206,7 @@ export const lifecycleGuides = [
 
 <h2>⚠️ 자발적 이직도 신청 가능한 경우</h2>
 <ul>
-<li>임금 체불 (3개월+)</li>
+<li>임금 체불 (1년 내 2개월+)</li>
 <li>최저임금 미달</li>
 <li>괴롭힘·성희롱·차별</li>
 <li>통근 거리 왕복 3시간+ 변경</li>
@@ -213,8 +219,8 @@ export const lifecycleGuides = [
 <h2>🚨 흔한 함정</h2>
 <ul>
 <li><strong>퇴사 후 12개월 내 신청</strong>: 미이행 시 자격 소멸</li>
-<li><strong>구직활동 증명 부족</strong>: 매 4주 4회 이상 (이력서 송부·면접·교육 참여)</li>
-<li><strong>아르바이트 신고 안 함</strong>: 월 50만 초과 부정 수급으로 환수 + 가산금</li>
+<li><strong>구직활동 증명 부족</strong>: 차수별 횟수미달 (이력서 송부·면접·교육 참여)</li>
+<li><strong>아르바이트 신고 안 함</strong>: 하루만 일해도 부정수급으로 환수 + 가산금</li>
 <li><strong>회사 거짓 사유</strong>: 회사가 사유 잘못 신고 시 본인이 정정 요구</li>
 <li><strong>해외 거주 중 수급</strong>: 신청 불가</li>
 </ul>
@@ -223,7 +229,7 @@ export const lifecycleGuides = [
 <ul>
 <li><strong>국민연금 임의가입</strong>: 가입 기간 단절 방지 (월 9만~)</li>
 <li><strong>건강보험 지역가입자 전환</strong>: 직장 떠나면 자동. 정산 후 환급 가능</li>
-<li><strong>자기계발</strong>: 무료 직업훈련(내일배움카드) 활용. 수강료 100% 지원</li>
+<li><strong>자기계발</strong>: 무료 직업훈련(내일배움카드) 활용. 수강료 과정별 지원</li>
 <li><strong>이직 활동</strong>: 평균 3~6개월 소요. 실업급여 기간 활용</li>
 </ul>
 

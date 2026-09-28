@@ -8,6 +8,7 @@
 // (2) 사실 고정: 정정한 수치가 옛 값으로 되돌아가지 않게 글별로 핀을 둔다(공식 출처는 각 커밋 메시지).
 import { describe, expect, it } from "vitest";
 import { koGuides } from "@/lib/guidesContent";
+import { UNEMPLOYMENT_BENEFIT_2026, unemploymentDailyLowerBound } from "@/config/unemploymentBenefit";
 
 const H2_OPEN_RE = /<h2[\s>]/gi;
 
@@ -113,6 +114,17 @@ const FACT_PINS: Array<[string, string[], string[]]> = [
   ["real-estate-capital-gains-2026", ["(조정대상지역 취득 주택은 2년 거주 요건 추가)", "href=\"/calc/real-estate-capital-gains-quick\">양도세 계산기</a>"], ["한시 유예", "acquisition-tax\">취득세 계산기"]],
   // GB-20 장례비 공제 1천만원 한도 + 봉안시설 5백만원 별도 (상증세법 시행령 §9②)
   ["inheritance-tax-strategy", ["1천만원 (봉안시설은 5백만원 별도)"], ["영수증 5천만원까지 인정"]],
+  // GB-05·MISSED-gb-1 구직급여 상·하한(정본 상수 보간)·고용24·임금체불 2개월(시행규칙 별표 2)
+  [
+    "unemployment-insurance-2026",
+    [
+      `일 상한 ${UNEMPLOYMENT_BENEFIT_2026.DAILY_UPPER.toLocaleString("en-US")}원`,
+      `하한 ${Math.floor((unemploymentDailyLowerBound() * 30) / 10000)}만`,
+      "고용24 회원가입",
+      "임금 체불 (1년 내 2개월+)",
+    ],
+    ["일급 한도", "최저 약 90만", "워크넷 회원가입", "매 4주 4회", "월 50만 초과", "수강료 100% 지원"],
+  ],
 ];
 
 describe("(2) guidesb 사실 정정 고정", () => {
