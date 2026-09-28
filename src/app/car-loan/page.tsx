@@ -26,7 +26,7 @@ import {
  ShieldCheck
 } from "lucide-react";
 import { motion } from "framer-motion";
-import CountUp from "react-countup";
+import AnimatedNumber from "@/components/AnimatedNumber";
 import {
  calculateCarLoan,
  recommendCarsBySalary,
@@ -322,7 +322,7 @@ export default function CarLoanPage() {
  <span className="text-sm font-bold">월 예상 실수령액 (약)</span>
  </div>
  <p className="text-2xl font-bold text-foreground">
- <CountUp end={monthlySalary * 0.85} separator="," /> 원
+ <AnimatedNumber value={Math.round(monthlySalary * 0.85)} duration={2} /> 원
  </p>
  <p className="text-xs text-muted-foreground mt-1">
  * 세금 및 공제 제외 (약 15% 공제 가정)
@@ -353,11 +353,11 @@ export default function CarLoanPage() {
  <h3 className="text-lg font-medium opacity-90 mb-1">차량 구매 적정 예산</h3>
  <div className="flex items-baseline gap-2">
  <span className="text-4xl font-bold">
- <CountUp end={salaryNum * 0.4} separator="," />
+ <AnimatedNumber value={Math.round(salaryNum * 0.4)} duration={2} />
  </span>
  <span className="text-xl">원 ~</span>
  <span className="text-4xl font-bold">
- <CountUp end={salaryNum * 0.7} separator="," />
+ <AnimatedNumber value={Math.round(salaryNum * 0.7)} duration={2} />
  </span>
  <span className="text-xl">원</span>
  </div>
@@ -418,7 +418,7 @@ export default function CarLoanPage() {
  <div className="flex justify-between items-center py-2 border-t border-border/50">
  <span className="text-sm text-muted-foreground">월 할부금</span>
  <span className="font-bold text-lg">
- <CountUp end={loan.monthlyPayment} separator="," />원
+ <AnimatedNumber value={Math.round(loan.monthlyPayment)} duration={2} />원
  </span>
  </div>
 

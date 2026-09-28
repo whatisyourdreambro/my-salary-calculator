@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import CountUp from "react-countup";
+import AnimatedNumber from "@/components/AnimatedNumber";
 import {
   ChevronDown, ChevronUp, Info, Users,
   Zap, Shield,
@@ -481,13 +481,7 @@ export default function BonusCalculatorPage() {
                 실수령 성과급 (세후)
               </p>
               <div className="text-5xl sm:text-6xl font-black tracking-tight" style={{ color: "#FFFFFF", letterSpacing: "-0.04em" }}>
-                <CountUp
-                  end={r.netBonus}
-                  duration={0.8}
-                  separator=","
-                  suffix="원"
-                  preserveValue
-                />
+                <AnimatedNumber value={Math.round(r.netBonus)} duration={0.8} />원
               </div>
               <p className="text-sm font-bold mt-1 mb-5" style={{ color: "rgba(255,255,255,0.6)" }}>
                 세전 {fmt(bonus)}원의 실수령
