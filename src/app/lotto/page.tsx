@@ -1,7 +1,7 @@
 // src/app/lotto/page.tsx
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, type CSSProperties } from "react";
 import {
  generateLottoSets,
  type GenerationStrategy,
@@ -37,6 +37,19 @@ type GeneratedSet = {
  analysis: LottoSetAnalysis;
 };
 
+// 배경 블롭 20개의 크기·위치·애니메이션 — 마운트 뒤 effect 에서 한 번만 만든다.
+// 렌더 중 Math.random() 은 입력 한 글자·세트 공개마다 블롭이 튀고, 서버 HTML 과 style 이 달라
+// 하이드레이션 불일치를 냈다 (2026-09-27 감사 RT-08).
+const makeBackgroundBlobs = (): CSSProperties[] =>
+ Array.from({ length: 20 }, () => ({
+ width: `${Math.random() * 200 + 50}px`,
+ height: `${Math.random() * 200 + 50}px`,
+ top: `${Math.random() * 100}%`,
+ left: `${Math.random() * 100}%`,
+ animationDelay: `${Math.random() * 5}s`,
+ animationDuration: `${Math.random() * 10 + 10}s`,
+ }));
+
 export default function LottoPage() {
  const [numberOfSets, setNumberOfSets] = useState(5);
  const [includeInput, setIncludeInput] = useState("");
@@ -46,6 +59,12 @@ export default function LottoPage() {
  const [isLoading, setIsLoading] = useState(false);
  const [showAdvanced, setShowAdvanced] = useState(false);
  const [revealedSets, setRevealedSets] = useState<GeneratedSet[]>([]);
+ // 서버·첫 렌더는 빈 배열(배경 컨테이너만) — 절대 위치라 레이아웃·광고 위치와 무관
+ const [backgroundBlobs, setBackgroundBlobs] = useState<CSSProperties[]>([]);
+
+ useEffect(() => {
+ setBackgroundBlobs(makeBackgroundBlobs());
+ }, []);
 
  const parseNumbers = (input: string) =>
  input
@@ -122,18 +141,11 @@ export default function LottoPage() {
  <main className="relative w-full min-h-screen bg-background text-foreground overflow-hidden pb-20">
  {/* Background Effects */}
  <div className="absolute inset-0 z-0 opacity-10 30 pointer-events-none">
- {[...Array(20)].map((_, i) => (
+ {backgroundBlobs.map((style, i) => (
  <div
  key={i}
  className="absolute bg-primary/50 rounded-full blur-3xl animate-pulse"
- style={{
- width: `${Math.random() * 200 + 50}px`,
- height: `${Math.random() * 200 + 50}px`,
- top: `${Math.random() * 100}%`,
- left: `${Math.random() * 100}%`,
- animationDelay: `${Math.random() * 5}s`,
- animationDuration: `${Math.random() * 10 + 10}s`,
- }}
+ style={style}
  />
  ))}
  </div>
