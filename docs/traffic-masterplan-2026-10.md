@@ -589,7 +589,7 @@ ID 순서가 곧 우선순위입니다. '담당'의 **둘 다**는 Claude가 만
 
 1. 지금: r6-paykit.
 2. **10/28 R6-3 푸시**(10/21~10/27 작성, 공무원 실수령 계산기와 A06 이후 main 위에서)
-   - (a) /civil-servant-pay-2027: 광고 위 문구(배지·H1 강조 단어·리드·일정 라벨·FAQ 답·공유 문구)의 확정 변형을 PAY_2027_CONFIRMED로 고릅니다.
+   - (a) /civil-servant-pay-2027: 광고 위 문구(배지·H1 강조 단어·리드·일정 라벨·FAQ 답·공유 문구, 그리고 예상 선택기 위젯·예상 봉급표 제목/열 머리·계산기 미리보기 — [런북](pay-2027-dday-runbook.md) 5-b, 9/29 PT-04 보강)의 확정 변형을 PAY_2027_CONFIRMED로 고릅니다.
      - false인 동안 HTML이 바이트 동일해야 합니다(픽스처 테스트).
      - 단어마다 폭을 맞추고(wordfit·variants·glyphcheck), 숫자는 같은 모양 자리표시자로 둡니다. bonusDealStatusR4.test.ts 5번 방식으로 고정합니다.
      - 제목 후보는 B20 두 결과 모두 준비하고, 10/30 판정이 12월 전환안을 고릅니다.
@@ -620,7 +620,7 @@ ID 순서가 곧 우선순위입니다. '담당'의 **둘 다**는 Claude가 만
    - E0 홈택스 미리보기: 10/27부터 감시하고, 10/31 전에 열리면 구조 창에 반영합니다.
    - E1 장기요양 2027: /social-insurance-rates-2027, /table/2027 라벨, INSURANCE_RATES_2027 상태(C-01).
    - E2 12/1 DEC 세트.
-   - E3 예산 의결(약 12/2): 세제개편 배지, /year-end-tax-2027 행, policy2027Facts·militaryBudget2027 상태, 공무원 2027 인상 상태 문구(폭 맞춤).
+   - E3 예산 의결(약 12/2): 세제개편 배지, /year-end-tax-2027 행, policy2027Facts·militaryBudget2027 상태, 공무원 2027 인상 상태 문구(폭 맞춤). seasonLinks 헤더·/calc/civil-servant-net-pay 의 '정부안' 표기 상태도 같이 바꿉니다(런북 5-b).
    - E4 삼성 TAI 하반기.
    - E5 금통위 → 기준금리 상수.
    - E6 기획재정부 '달라지는 것' → 2027 변경 가이드 사실.

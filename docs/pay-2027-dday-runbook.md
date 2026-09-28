@@ -17,7 +17,7 @@
 |---|---|---|
 | r2-l2: `src/lib/payTablesFull2026.ts`, `src/lib/payTablesFull2027.ts`(`PAY_FULL_2027 = null`, `validatePayFull2027`), 2027 교사·경찰·소방 3쪽, 테스트 `payTablesFull2027`·`pay2027ConfirmedSlot` | 10/14 09:10 예약 배포 | 3(a)·5·7단계 |
 | R4-RSS: `src/lib/rssTablesFeed.ts`(`TABLES_FEED_META`, 2027 봉급 3쪽을 `FEED_PATHS` 로 옮김), `rssTablesFeed.test.ts` | 10/16 | 6단계 |
-| b2-civilpay(공무원 실수령 계산기) | 10/20 | 게이트 |
+| b2-civilpay(공무원 실수령 계산기 `/calc/civil-servant-net-pay`) | **9/27 배포 완료**(origin/main `41fb5ff4`) | 게이트·5-b ④ |
 | **R6-3**: `/civil-servant-pay-2027` 광고 위 확정 문구 변형(`PAY_2027_CONFIRMED` 로 선택, 꺼진 동안 바이트 동일, 폭 맞춤) + 교원·경찰·소방 확정 문구 1,123폭 증명 | 10/28 | 5단계 |
 | 이 키트(파서·픽스처·이 문서) | R6-1 푸시(10/4) | 3·4-B단계 |
 | r6-announce 등록부 `docs/season-urls-2026-27.json` + `scripts/season-announce.ts` | R6-1 푸시(10/4) | 9단계 |
@@ -124,6 +124,19 @@ export const PAY_FULL_2027 = {
 - **공무원 2027 문구 전환(R6-3 상수):** `PAY_FULL_2027` 이 null 이 아니면 `PAY_2027_CONFIRMED` 가 true 가 되어 R6-3 의 확정 변형이 자동으로 골라집니다. R6-3 이 남긴 숫자 자리표시자 상수(같은 모양 자리표시자)는 파서 출력(앵커 값)과 `commonRate` 로 채웁니다. 상수 이름·위치는 R6-3 커밋 본문과 파일 머리 주석을 따르고, **10/29 드라이런에서 이 줄에 실제 이름을 적어 둡니다.** 12월 제목안은 10/30 B20 판정이 고른 것을 씁니다.
 - 교원·경찰·소방 2027 제목·설명은 이 D-Day 에만 바뀝니다(r2-l2 의 확정 문구, R6-3 에서 폭 증명 완료).
 
+## 5-b. 연관 표면 확정 전환 (PT-04, 2026-09-29 보강)
+
+`PAY_FULL_2027` 만 넣으면 `/civil-servant-pay-2027` 맨 끝 확정표·Dataset 은 '확정'을 말하는데, 아래 표면은 계속 '예산안 3.9% 단순 적용 예상'을 보여 한 페이지·한 사이트 안에서 모순이 생깁니다(저연차 추가 인상이 있으면 수치도 틀림). 5단계와 같은 커밋에서 함께 전환합니다. **광고 위 문구는 R6-3 에서 폭 증명된 변형만** 쓰고, 증명이 없으면 그 표면은 예상 상태로 두고 광고 아래 데이터만 냅니다.
+
+1. **예상 선택기 위젯** `src/app/civil-servant-pay-2027/CivilPayForecastSelector.tsx`(HomeTopAd 위) — '2026년 확정 봉급에 예산안 인상률 {percent}%를 단순 적용'(46행 부근)·'2027년 예상 월 기본급'(64행 부근)·면책 문구. 값 계산 `src/lib/civilServantForecast.ts` 는 `PAY_FULL_2027` 이 있으면 general 표의 같은 칸을 돌려주게(r2-l2 `payForecast2027.compareRow` 방식).
+2. **예상 봉급표** `page.tsx` `#civil-forecast-table`(HomeTopAd 와 CalcResultAd 사이) — 제목 '2027 예상 봉급표 … 예산안 인상률 적용', ⚠ 캡션, 열 머리 '9급 (예상)'~'5급 (예상)' → '(확정)'(같은 폭), 값은 확정표에서.
+3. **권고안 해설·참고 기준 문단**과 일정 단계 3·4 설명(같은 파일).
+4. **공무원 월급 실수령액 계산기** `/calc/civil-servant-net-pay` — `page.tsx` metadata description의 '2027 정부안(3.9%) 미리보기', softwareApplication featureList '2027 정부안 인상률 미리보기', FAQ 5 '(정부안)', H2 '2027 정부안 {RAISE}는 확정이 아닙니다', `Client.tsx` '2027 정부안 미리보기 (확정 아님)'·'2027 봉급표 전망', `src/lib/civilServantNetPay.ts` `previewCivilNetPay2027` 을 확정 봉급표(general·teacher·policeFire) 기반으로. 메타 설명·H2 는 동결·폭 규칙 대상이라 R6-3 과 같은 방식으로 폭 증명 후에만.
+5. **사이트 전역·보조 표면** — `src/config/seasonLinks.ts` DEC·JAN 헤더('2027 공무원 봉급표 — 예산안 3.9%'·'9급 1호봉 예상 월급', PT-05 로 9/29 예산안 표기), `src/lib/searchIndex.ts` 설명, `src/lib/trendBriefs/impacts.ts` 의 provisional `RAISE_2027_BUDGET`, `civilServantPay.ts` `RAISE_2027_BUDGET` 주석.
+
+- 이 목록의 광고 위 문구(1·2·4)를 바꾸면 7단계 스윕 대상에 해당 페이지를 넣습니다(`/calc/civil-servant-net-pay` 포함).
+- E3(국회 예산 의결, 12/2 무렵)에는 확정 봉급표 전이라도 1·4·5의 '정부안' 표기 상태(정부안 → 국회 의결)를 같이 바꿉니다(masterplan E3 줄).
+
 ## 6. 피드 메타 맞추기 (10분) — `src/lib/rssTablesFeed.ts`
 
 - 봉급 2027 피드 4개(`/civil-servant-pay-2027`, `/teacher-pay-2027`, `/police-pay-2027`, `/firefighter-pay-2027`)의 `TABLES_FEED_META` title·description 을 확정 상태 페이지 metadata 문자열과 **똑같이** 다시 복사합니다.
@@ -148,7 +161,7 @@ npm run verify:autoads                                # 0.0% 손실
 - 병렬 작업이 있으면 무거운 명령(build·vitest 전체)은 잠금 실행기(lockrun)로 하나씩 돌립니다.
 - `payTableSnippets.test.ts` (5)는 2027 페이지가 예산안 수치를 '확정 전'으로만 말하는지 봅니다. R6-3 이 두 상태 모두 통과하게 고쳐 두었어야 합니다 — 확정 상태에서 깨지면 R6-3 결함이므로 멈춥니다.
 - **광고 위치 스윕(1,123폭):** 두 서버를 띄웁니다 — A = `origin/main` 빌드, B = 후보 빌드(`next start`). 폭 320~1440 을 1px 마다 + 1536 + 1920, 768 미만은 모바일 문맥, 페이지를 다시 읽지 않고 뷰포트만 바꾸며, 모든 `.ad-container` 의 top(px, 반올림)과 개수를 비교합니다. localhost 밖 요청은 모두 막습니다. 도구: R4 의 `sweepcompare.mjs`(세션 스크래치 — 없으면 이 설명대로 다시 만듦).
-  - 대상: 봉급 6쪽 `/civil-servant-pay-2026`, `/civil-servant-pay-2027`, `/teacher-pay-2026`, `/police-pay-2026`, `/firefighter-pay-2026`, `/military-pay-2026` + 이날 바뀌는 `/teacher-pay-2027`, `/police-pay-2027`, `/firefighter-pay-2027`.
+  - 대상: 봉급 6쪽 `/civil-servant-pay-2026`, `/civil-servant-pay-2027`, `/teacher-pay-2026`, `/police-pay-2026`, `/firefighter-pay-2026`, `/military-pay-2026` + 이날 바뀌는 `/teacher-pay-2027`, `/police-pay-2027`, `/firefighter-pay-2027` + 5-b ④ 에서 광고 위 문구가 바뀌면 `/calc/civil-servant-net-pay`.
   - 기대: **9쪽 모두 1,123폭에서 광고 top 차이 0.** 확정표는 마지막 광고 아래에 붙으므로 문서 높이만 광고 아래에서 늘어납니다.
   - 차이가 하나라도 있으면 푸시하지 않습니다. 원인 문구를 폭 맞춤하거나, 맞출 수 없으면 광고 아래 데이터(확정표·Dataset)만 내보내고 광고 위 문구는 예상 상태로 둡니다.
 
@@ -224,12 +237,13 @@ npm run verify:autoads                                # 0.0% 손실
 
 Goal: publish the official 2027 pay tables within 24 hours of the Ministry of Personnel Management (MPM) posting them. Numbers are never hand-copied: parse the official HTML, or, if the table is image/HWP/PDF only, transcribe it twice independently and require zero differences. This is a data/constants/strings change, so it is allowed during the 11/1–1/31 structural freeze (no new URLs, no ad changes).
 
-0. **Prerequisites on main:** r2-l2 (10/14: `payTablesFull2026.ts`, `payTablesFull2027.ts` with `PAY_FULL_2027 = null`, three 2027 pages, tests), R4-RSS (10/16: `TABLES_FEED_META`), b2-civilpay (10/20), R6-3 (10/28: confirmed copy variants for `/civil-servant-pay-2027` selected by `PAY_2027_CONFIRMED`, width-proven), this kit (R6-1, 10/4), r6-announce registry (10/4), A35 auto purge. If R6-3 is missing, ship only the below-the-last-ad table and Dataset; keep the copy above ads in the forecast state.
+0. **Prerequisites on main:** r2-l2 (10/14: `payTablesFull2026.ts`, `payTablesFull2027.ts` with `PAY_FULL_2027 = null`, three 2027 pages, tests), R4-RSS (10/16: `TABLES_FEED_META`), b2-civilpay (already live since 9/27, origin/main `41fb5ff4`), R6-3 (10/28: confirmed copy variants for `/civil-servant-pay-2027` selected by `PAY_2027_CONFIRMED`, width-proven), this kit (R6-1, 10/4), r6-announce registry (10/4), A35 auto purge. If R6-3 is missing, ship only the below-the-last-ad table and Dataset; keep the copy above ads in the forecast state.
 1. **Watch from 12/20, daily 09:00 and 18:00 KST:** the MPM page `https://www.mpm.go.kr/mpm/info/resultPay/bizSalary/2027/` (T0 = the 2027 tab shows the tables), MPM press releases (the 2027 common raise = `commonRate`), the Official Gazette (gwanbo.go.kr), and the law.go.kr web view of 공무원보수규정 [별표 3·10·11]. No law.go.kr Open API key, no sign-up. News is a trigger only, never a number source.
 2. **Save** the MPM page with a browser as "HTML only" outside the repo (e.g. `C:/Users/ruby1/moneysalary-exports/pay-official/`). Record fetch time (KST) and SHA-256 for the commit body. Image/HWP/PDF only: go to 4-B.
 3. **Parse and validate** (commands in section 3): run `--against-module` on the 2026 fixture (must report a full match), then parse the saved 2027 page with `--prev scripts/__tests__/fixtures/pay-official/mpm-2026.html`, `--json` (outside repo) and `--emit-ts`. Read each exit code directly (0 pass, 1 validation failure, 2 usage/input error). Hand-check the four anchors (9급 1호봉, 경사 1호봉, 경감 1호봉, 교원 9호봉) against the official page, check that the modal raise matches the announced common raise, and that the year is 2027. A shape change versus 2026 means stop: publish nothing and tell the operator.
 4-B. **Double entry** (image/HWP/PDF only): build two zero-filled skeletons from the 2026 JSON, fill them in two independent passes, then `--compare a.json b.json --prev <2026 fixture> --emit-ts`. Fix only the wrong side until the exit code is 0. Do the same hand checks.
 5. **Paste** into `src/lib/payTablesFull2027.ts`: `PAY_FULL_2027 = { commonRate, basis (≤ 40 chars), sourceUrl, checked, …fragment } as PayFull2027 | null`. The parser never writes into `src/`. Fill the R6-3 number placeholders from the parser anchors and `commonRate` (names recorded at the 10/29 dry run); the copy flips through `PAY_2027_CONFIRMED`. Use the December title chosen by the 10/30 B20 read.
+5-b. **Related surfaces (added 2026-09-29):** in the same commit, flip the forecast selector widget (`CivilPayForecastSelector.tsx` + `civilServantForecast.ts`, return the confirmed cell when `PAY_FULL_2027` is set), the forecast table `#civil-forecast-table` (title, caption, '(예상)' → '(확정)' column heads, confirmed values), the recommendation/basis paragraphs and schedule steps 3–4, the `/calc/civil-servant-net-pay` 2027 preview (metadata description, featureList, FAQ 5, H2, `Client.tsx` preview box, `previewCivilNetPay2027`), and the season header/search/trend-brief strings. Above-ad copy only in R6-3 width-proven variants; add `/calc/civil-servant-net-pay` to the sweep when its above-ad copy changes. At E3 (~12/2) switch the '정부안' status wording even before the tables are confirmed.
 6. **Feed meta:** recopy `TABLES_FEED_META` title and description for the four pay-2027 items from the confirmed page metadata; `rssTablesFeed.test.ts` must pass. Lengths no longer than today; og:title = title.
 7. **Gates** (exit codes read directly): `npx tsc --noEmit`; vitest `payTablesFull2027`, `pay2027ConfirmedSlot`, `payTableSnippets`, `rssTablesFeed`; `npm test`; `node --test scripts/__tests__/*.test.mjs`; `verify:tax`, `verify:site`, `verify:sitemap`; `ad-audit --diff --base origin/main` ERROR 0 / WARN 0; `npm run build`; `verify:autoads` 0.0% loss; build-vs-build ad-top sweep at 1,123 widths (320–1440 every px, 1536, 1920; viewport resize without reload; all `.ad-container` tops and counts; non-localhost requests blocked) on the six pay pages (`/civil-servant-pay-2026`, `/civil-servant-pay-2027`, `/teacher-pay-2026`, `/police-pay-2026`, `/firefighter-pay-2026`, `/military-pay-2026`) plus `/teacher-pay-2027`, `/police-pay-2027`, `/firefighter-pay-2027`. Expect zero differences. Any difference: do not push.
 8. **Deploy:** show the operator the gate table and wait for '메인 푸시'; `git push origin HEAD:main`; cf-purge (automatic with A35, otherwise the operator purges); markers with a browser UA and `?cb=<n>`: `/civil-servant-pay-2027` title contains 확정 and not 예상 plus `id="general-full-table"`, `/teacher-pay-2027` `id="teacher-full-table"`, `/police-pay-2027` `id="police-full-table"`, `/firefighter-pay-2027` `id="fire-full-table"`; `node scripts/health-check.mjs`; record push, CF success and purge times in `docs/ad-experiments.md` 3(c).
