@@ -3,6 +3,7 @@
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import Link from "@/components/AppLink";
 import { ArrowRight, BookOpen, Sparkles, Hash, TrendingUp, Calculator } from "lucide-react";
 import {
@@ -33,6 +34,10 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 // 검증된 /salary/[amount] 패턴과 동일하게 edge 요청 렌더로 전환.
 export const runtime = "edge";
 
+// generateMetadata 와 페이지 본문이 한 요청 안에서 조회 결과를 공유하도록 React cache 로 감싼다 (S24).
+// cache 는 Next 서버 컴포넌트용 React 빌드에만 있다 — react 18 안정판으로 도는 vitest 에서는 원 함수 그대로.
+const getGlossaryItem = typeof cache === "function" ? cache(getGlossaryBySlug) : getGlossaryBySlug;
+
 /** 메타 설명 — "{용어}는 {요약}. {본문 첫 완결 문장}" (약 120자 이내, 말줄임 없이 문장 끝에서 끝낸다).
  *  첫 문장까지 넣으면 넘치는 용어는 요약 뒤에 카테고리 안내로 마무리한다 (META-10, 2026-09-25). */
 const GLOSSARY_DESCRIPTION_MAX = 120;
@@ -56,7 +61,7 @@ export async function generateMetadata({
 }: {
  params: { slug: string };
 }): Promise<Metadata> {
- const item = getGlossaryBySlug(params.slug);
+ const item = getGlossaryItem(params.slug);
  if (!item) notFound();
 
  return buildPageMetadata({
@@ -89,7 +94,7 @@ export default function GlossaryDetailPage({
 }: {
  params: { slug: string };
 }) {
- const item = getGlossaryBySlug(params.slug);
+ const item = getGlossaryItem(params.slug);
  // 허브는 이 용어를 대체하지 않는다. 실제 대응 URL이 없는 주소는 404로 응답한다.
  if (!item) notFound();
 

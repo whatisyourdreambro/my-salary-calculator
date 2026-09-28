@@ -8,6 +8,7 @@ import {
  ArrowLeftRight, Equal, ShieldAlert, Globe2,
  type LucideIcon
 } from "lucide-react";
+import { slugCandidates } from "@/lib/slugCandidates";
 
 export interface GlossaryRelatedLink {
  label: string;
@@ -48,52 +49,31 @@ export function toGlossarySlug(title: string): string {
  .replace(/^-+|-+$/g, "");
 }
 
+/** slug → 용어 맵 — isolate 당 첫 조회 때 한 번만 만든다 (S24).
+ * 종전에는 요청마다 후보 × 전 항목 toGlossarySlug 정규식을 다시 돌렸다. */
+let glossaryBySlug: Map<string, GlossaryItem> | undefined;
+
+function getGlossarySlugMap(): Map<string, GlossaryItem> {
+ if (!glossaryBySlug) {
+ const map = new Map<string, GlossaryItem>();
+ for (const item of glossaryData) {
+ const key = toGlossarySlug(item.title);
+ // 종전 find()와 같게 slug 가 겹치면 배열에서 먼저 나온 항목이 이긴다
+ if (!map.has(key)) map.set(key, item);
+ }
+ glossaryBySlug = map;
+ }
+ return glossaryBySlug;
+}
+
 export function getGlossaryBySlug(slug: string): GlossaryItem | undefined {
- // CF edge(workerd)는 런타임에 따라 params.slug가 원문/1회 인코딩/이중 인코딩으로
- // 도착할 수 있음 — 2026-08-08 실측: 프로덕션에서 실존 한글 슬러그 전량이 미매칭돼
- // 목차로 308되던 원인. 최대 2회 디코드한 모든 후보 형태로 매칭한다.
- // (깨진 % 시퀀스는 try/catch로 500 대신 미매칭 처리)
- const candidates: string[] = [slug];
- let cur = slug;
- for (let i = 0; i < 2; i++) {
- try {
- const d = decodeURIComponent(cur);
- if (d === cur) break;
- candidates.push(d);
- cur = d;
- } catch {
- break;
- }
- }
- // Latin-1 모지바케 복구: 구버전 빌드 툴체인이 UTF-8 바이트를 Latin-1 문자로
- // 해석해 넘기는 경우("연봉" → "ì—°ë´‰") 원문 복원 후보를 추가한다.
- for (const c of [...candidates]) {
- const r = recoverMojibakeUtf8(c);
- if (r) candidates.push(r);
- }
- for (const c of candidates) {
- const found = glossaryData.find((item) => toGlossarySlug(item.title) === toGlossarySlug(c));
+ // 원문/1회·2회 디코드/모지바케 복구 후보를 순서대로 — 근거는 slugCandidates 주석
+ const map = getGlossarySlugMap();
+ for (const c of slugCandidates(slug)) {
+ const found = map.get(toGlossarySlug(c));
  if (found) return found;
  }
  return undefined;
-}
-
-/** 문자열 전체가 0x00~0xFF 범위이고 그 바이트열이 유효한 UTF-8이면 재해석 결과를 반환 */
-export function recoverMojibakeUtf8(s: string): string | null {
- let hasHighByte = false;
- for (const ch of s) {
- const code = ch.charCodeAt(0);
- if (code > 0xff) return null; // Latin-1 범위 밖 문자 → 모지바케 아님
- if (code >= 0x80) hasHighByte = true;
- }
- if (!hasHighByte) return null; // 순수 ASCII → 복구 불필요
- try {
- const bytes = Uint8Array.from(s, (c) => c.charCodeAt(0));
- const d = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
- return d !== s ? d : null;
- } catch {
- return null;
- }
 }
 
 export function getRelatedGlossaryItems(item: GlossaryItem, limit = 5): GlossaryItem[] {

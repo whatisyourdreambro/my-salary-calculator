@@ -3,6 +3,7 @@
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import Link from "@/components/AppLink";
 import { ArrowRight, HelpCircle, Sparkles, GraduationCap } from "lucide-react";
 import {
@@ -28,12 +29,16 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 // 검증된 /salary/[amount] 패턴과 동일하게 edge 요청 렌더로 전환.
 export const runtime = "edge";
 
+// generateMetadata 와 페이지 본문이 한 요청 안에서 조회 결과를 공유하도록 React cache 로 감싼다 (S24).
+// cache 는 Next 서버 컴포넌트용 React 빌드에만 있다 — react 18 안정판으로 도는 vitest 에서는 원 함수 그대로.
+const getQnaItem = typeof cache === "function" ? cache(getQnaBySlug) : getQnaBySlug;
+
 export async function generateMetadata({
  params,
 }: {
  params: { slug: string };
 }): Promise<Metadata> {
- const item = getQnaBySlug(params.slug);
+ const item = getQnaItem(params.slug);
  if (!item) notFound();
 
  // SERP CTR 최적화: 질문 그대로 title + 결론 그대로 description
@@ -50,7 +55,7 @@ export default function QnaDetailPage({
 }: {
  params: { slug: string };
 }) {
- const item = getQnaBySlug(params.slug);
+ const item = getQnaItem(params.slug);
  // 허브는 이 질문을 대체하지 않는다. 실제 대응 URL이 없는 주소는 404로 응답한다.
  if (!item) notFound();
 
