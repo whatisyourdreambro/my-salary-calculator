@@ -137,6 +137,11 @@ const FACT_PINS: Array<[string, string[], string[]]> = [
   ["stock-investment-beginner-2026", ["국내주식형만 차익 비과세, 나머지 15.4%"], ["매매차익 비과세, 분배금 15.4% 분리과세"]],
   // GB-26 근거 없는 평균 환급액 삭제 — 환급은 낸 세금(결정세액) 안에서만
   ["tax-refund-mistakes-2026", ["낸 세금(결정세액) 안에서 더 돌려받음"], ["평균 50만, 운 좋으면 100만+"]],
+  // GB-09 2026-01-02 이후 코스피 증권거래세 0.05% + 농특세 0.15% = 0.20%
+  ["sk-hynix-ps-cash-vs-stock-scenarios-2026", ["농특세 포함 0.20%", "거래세 0.20% 외에", "증권거래세 0.20%"], ["0.15%"]],
+  ["samsung-bonus-treasury-stock-15-trillion-2026", ["농특세 포함 0.20%", "증권거래세 0.20%"], ["0.15%"]],
+  ["samsung-vs-sk-hynix-stock-bonus-2026", ["농특세 포함 0.20%"], ["0.15%"]],
+  ["samsung-special-bonus-q3-preview-2027", ["농특세 포함 0.20%", "증권거래세 0.20%"], ["0.15%"]],
 ];
 
 describe("(2) guidesb 사실 정정 고정", () => {
