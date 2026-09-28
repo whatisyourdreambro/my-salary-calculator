@@ -30,6 +30,8 @@ export interface GlossaryItem {
  relatedNote: string;
  /** 본문에서 바로 이동할 수 있는 내부 링크 */
  relatedLinks: GlossaryRelatedLink[];
+ /** 용어 본문을 실제로 고친 날(YYYY-MM-DD, 커밋일 KST) — 사이트맵 lastmod = max(기준일, 템플릿 검수일, modifiedAt). */
+ modifiedAt?: string;
 }
 
 /**

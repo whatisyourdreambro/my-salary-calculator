@@ -444,6 +444,7 @@ const BUSINESS: CalculatorDef[] = [
  },
  {
  slug: "employee-cost-quick",
+ modifiedAt: "2026-09-25", // FAQ 건강보험 회사 부담률 약 3.6% → 약 4.07% 정정 (enrichments-ext-b.ts 5061989)
  title: "직원 인건비 (회사 부담)",
  description: "월 급여 + 4대보험 회사 부담분 + 퇴직금 적립",
  category: "business",

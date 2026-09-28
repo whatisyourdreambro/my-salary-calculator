@@ -115,6 +115,72 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/en/guides': { lastModified: new Date('2026-09-09') },
 };
 
+// ── 2026-09-25~26 실질 수정분 lastmod (S10, 10/15 배포) ─────────────────────────────────────
+// 위 ROUTE_OVERRIDES 행과 sitemap() 본문은 되도록 고치지 않고 여기에 덧붙인다 — 10/7·10/13·10/14 배포가 같은 줄
+// ('/' 등)을 먼저 고쳐도 체리픽이 충돌하지 않고, 늦게 들어온 이 날짜가 그보다 최신인 값을 되돌리지 않게 max 로 합친다.
+// 날짜는 전부 해당 파일 git log 의 커밋일(KST 달력일)이다 — 추정 금지. 다음 갱신도 본문·수치를 실제로 고친 커밋과 함께만.
+
+/** 가장 늦은 날짜 — 없는 값(undefined)·잘못된 날짜는 건너뛴다. base 는 항상 있는 기준일(STATIC_LAST_MODIFIED 등). */
+export function latestDate(base: Date, ...dates: Array<Date | undefined>): Date {
+ return dates.reduce<Date>((latest, d) => (d && d.getTime() > latest.getTime() ? d : latest), base);
+}
+
+/** 'YYYY-MM-DD' → 그날 UTC 자정 (ROUTE_OVERRIDES·가이드 modifiedDate 와 같은 규칙). */
+function utcDay(day?: string): Date | undefined {
+ return day ? new Date(day) : undefined;
+}
+
+/** 'YYYY-MM-DD' → 그날 KST 자정 (간이 계산기 publishedAt 의 종전 규칙 — modifiedAt 도 같은 규칙으로 읽는다). */
+function kstDay(day?: string): Date | undefined {
+ return day ? new Date(`${day}T00:00:00+09:00`) : undefined;
+}
+
+/** /calc/[slug] lastmod = max(기준일, publishedAt, modifiedAt). publishedAt 만 있을 때는 종전(publishedAt ?? 기준일)과 같다 — 발행일이 전부 기준일 뒤. */
+export function calcLastModified(c: { publishedAt?: string; modifiedAt?: string }): Date {
+ return latestDate(STATIC_LAST_MODIFIED, kstDay(c.publishedAt), kstDay(c.modifiedAt));
+}
+
+/** /qna/[slug] lastmod = max(기준일, 답변 수정일 modifiedAt). */
+export function qnaLastModified(item: { modifiedAt?: string }): Date {
+ return latestDate(STATIC_LAST_MODIFIED, utcDay(item.modifiedAt));
+}
+
+// 용어 상세 전 쪽 공통 — 메타 설명을 문장 단위로 재작성, FAQ 질문 조사·DefinedTerm(about → description) 구조화
+// 데이터 정정, 쪽마다 싣던 DefinedTermSet 제거 (glossary/[slug]/page.tsx 8a4c568, META-10). glossaryData.ts 는
+// 9/19 이후 그대로라 용어별 modifiedAt 은 아직 없다 — 용어 본문을 고치면 그 항목에 modifiedAt 을 적는다.
+const GLOSSARY_PAGE_REVIEW_DATE = new Date('2026-09-25');
+
+/** /glossary/[slug] lastmod = max(기준일, 용어 상세 템플릿 검수일, 용어 수정일 modifiedAt). */
+export function glossaryLastModified(item: { modifiedAt?: string }): Date {
+ return latestDate(STATIC_LAST_MODIFIED, GLOSSARY_PAGE_REVIEW_DATE, utcDay(item.modifiedAt));
+}
+
+// EN 정적 경로 일괄 기준일. 수기 override 가 있으면 그 날짜가 이긴다 — 종전 sitemap() 의 EN 루프는 이 날짜로
+// override 를 덮어써 /en·/en/help 9/25 정정이 사이트맵에 나가지 않았다.
+const EN_STATIC_LAST_MODIFIED = new Date('2026-09-09');
+
+/** EN 정적 경로 lastmod = routeOverrides[path]?.lastModified ?? EN 기준일. */
+export function enStaticLastModified(override: RouteOverride | undefined): Date {
+ return override?.lastModified ?? EN_STATIC_LAST_MODIFIED;
+}
+
+// 수기 override 하한 — 위 목록에 행이 있으면 max(그 행, 여기 날짜), 없으면 새 행으로 들어간다.
+const CONTENT_FIX_LASTMOD: Record<string, Date> = {
+ // 홈 FAQ 실수령 예시(연봉 3,000만·5,000만원) 재산출 c95c183 + 요율·연도 문구 현행 포인터 파생 02eb0cc (homeContent.ts)
+ '/': new Date('2026-09-25'),
+ // EN 홈 FAQ·계산기 설명과 /en/help 계산 방법을 간이세액표 기준으로 정정 c95c183·a465c0a
+ '/en': new Date('2026-09-25'),
+ '/en/help': new Date('2026-09-25'),
+ // 허브 카드 출처 문구 정정('공식 수치' → '공시 기반'·'급여총액÷인원 산정') 659e1b4 (A19). 표 수치는 9/19 이후 그대로
+ '/salary-db': new Date('2026-09-25'),
+ '/salary-db/ranking': new Date('2026-09-25'),
+ // Q&A 목록은 아코디언에 답변 결론·본문을 그대로 싣는다 — 항목 수정일 중 최신값(지금은 9/26 육아휴직·출산휴가 정정)
+ '/qna': latestDate(STATIC_LAST_MODIFIED, ...qnaData.map((item) => qnaLastModified(item))),
+};
+for (const [route, date] of Object.entries(CONTENT_FIX_LASTMOD)) {
+ ROUTE_OVERRIDES[route] = { ...ROUTE_OVERRIDES[route], lastModified: latestDate(date, ROUTE_OVERRIDES[route]?.lastModified) };
+}
+
 // 2026-09-10: 연봉 상세의 계산 방법과 회사 상세 FAQ를 실질적으로 수정한 날.
 // 2026-09-25: 월 소득세를 근로소득 간이세액표 기준으로 바꿔 /salary 실수령액·제목·계산 방법이 바뀐 날(A17).
 // 이후 일반 배포 때 자동 갱신하지 않는다.
@@ -405,7 +471,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
        : { en: `${baseUrl}${path}`, 'x-default': `${baseUrl}${path}` };
      if (koPath) EN_STATIC_ALTERNATES[koPath] = EN_STATIC_ALTERNATES[path];
    }
-   routeOverrides[path] = { ...routeOverrides[path], lastModified: new Date('2026-09-09') };
+   routeOverrides[path] = { ...routeOverrides[path], lastModified: enStaticLastModified(routeOverrides[path]) };
  }
  EN_STATIC_ALTERNATES['/'] = EN_STATIC_ALTERNATES['/en'];
  EN_STATIC_ALTERNATES['/guides'] = EN_STATIC_ALTERNATES['/en/guides'];
@@ -541,13 +607,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const companyUrls: MetadataRoute.Sitemap = [
  {
  url: `${baseUrl}/salary-db`,
- lastModified: STATIC_LAST_MODIFIED,
+ lastModified: routeOverrides['/salary-db']?.lastModified ?? STATIC_LAST_MODIFIED,
  changeFrequency: 'weekly',
  priority: 0.9,
  },
  {
  url: `${baseUrl}/salary-db/ranking`,
- lastModified: STATIC_LAST_MODIFIED,
+ lastModified: routeOverrides['/salary-db/ranking']?.lastModified ?? STATIC_LAST_MODIFIED,
  changeFrequency: 'weekly',
  priority: 0.8,
  },
@@ -557,12 +623,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // GSC "발견됨-색인 안 됨" 358개 차단(7차): thin page는 sitemap에서 제외 + page.tsx에서 noindex.
  // eslint-disable-next-line @typescript-eslint/no-require-imports -- 대용량 데이터 지연 로드
  const { allCalculators } = require('@/lib/simpleCalculators');
- (allCalculators as Array<{ slug: string; explanation?: string; faqs?: Array<unknown>; publishedAt?: string }>)
+ (allCalculators as Array<{ slug: string; explanation?: string; faqs?: Array<unknown>; publishedAt?: string; modifiedAt?: string }>)
  .filter((c) => c.explanation && c.faqs && c.faqs.length >= 3)
  .forEach((c) => {
  companyUrls.push({
  url: `${baseUrl}/calc/${c.slug}`,
- lastModified: c.publishedAt ? new Date(`${c.publishedAt}T00:00:00+09:00`) : STATIC_LAST_MODIFIED,
+ lastModified: calcLastModified(c),
  changeFrequency: 'monthly',
  priority: 0.7,
  });
@@ -644,7 +710,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // 한글 슬러그는 사이트맵 프로토콜상 percent-encoding이 안전 (encodeURIComponent)
  const glossaryUrls: MetadataRoute.Sitemap = glossaryData.map((item) => ({
  url: `${baseUrl}/glossary/${encodeURIComponent(toGlossarySlug(item.title))}`,
- lastModified: STATIC_LAST_MODIFIED,
+ lastModified: glossaryLastModified(item),
  changeFrequency: 'yearly',
  priority: 0.6,
  }));
@@ -652,7 +718,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // Q&A 동적 페이지 — 질문별 long-tail
  const qnaUrls: MetadataRoute.Sitemap = qnaData.map((item) => ({
  url: `${baseUrl}/qna/${encodeURIComponent(toQnaSlug(item.question))}`,
- lastModified: STATIC_LAST_MODIFIED,
+ lastModified: qnaLastModified(item),
  changeFrequency: 'monthly',
  priority: 0.65,
  }));

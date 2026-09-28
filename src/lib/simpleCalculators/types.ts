@@ -78,6 +78,9 @@ export interface CalculatorDef {
  publishedAt?: string;
  /** Public references explaining the model or calculation method. */
  sources?: CalculatorSource[];
+ /** 본문(설명·FAQ·주의 등)을 실제로 고친 날(YYYY-MM-DD, 커밋일 KST) — 사이트맵 lastmod = max(기준일, publishedAt, modifiedAt).
+  *  publishedAt 은 신설일이라 수정 때 바꾸지 않는다(/calc 인덱스의 '확장 100종' 필터가 publishedAt 을 읽는다). */
+ modifiedAt?: string;
 }
 
 /**

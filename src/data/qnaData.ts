@@ -12,6 +12,8 @@ export interface QnaItem {
  href: string;
  };
  };
+ /** 답변을 실제로 고친 날(YYYY-MM-DD, 커밋일 KST) — 사이트맵 lastmod = max(기준일, modifiedAt). /qna 목록은 그중 최신값. */
+ modifiedAt?: string;
 }
 
 /**
@@ -68,6 +70,7 @@ export const qnaData: QnaItem[] = [
  {
  category: "연봉 & 수당",
  question: "연봉 5,000만원인데 실수령액은 왜 350만원 정도인가요?",
+ modifiedAt: "2026-09-25", // 식대 비과세 효과 약 3~4만 → 약 5만원 (A17 c95c183·8e86548)
  answer: {
  conclusion: "연봉은 '세전' 기준이며, 4대 보험료(약 9%)와 소득세(지방소득세 포함)를 원천징수한 후 지급되기 때문입니다.",
  details: [
@@ -162,6 +165,7 @@ export const qnaData: QnaItem[] = [
  {
  category: "사회초년생 & 재테크",
  question: "청년도약계좌, 5년 묶이는 게 부담스러운데 할까요?",
+ modifiedAt: "2026-09-25", // 신규 가입 종료·후속 청년미래적금 정정 (B9 142921e·8e86548)
  answer: {
  conclusion: "청년도약계좌는 2025년 말 신규 가입이 종료됐습니다. 기존 가입자는 만기까지 유지하고, 신규라면 청년미래적금을 보세요.",
  details: [
@@ -657,6 +661,7 @@ export const qnaData: QnaItem[] = [
  {
   category: "육아휴직 & 출산",
   question: "육아휴직 신청 조건이 뭔가요? 계약직·알바도 가능한가요?",
+  modifiedAt: "2026-09-26", // 휴직 요건(6개월)·급여 요건(180일) 분리·기간·벌칙 정정 (76f40f0·8258c1e)
   answer: {
    conclusion: "만 8세 이하(또는 초등학교 2학년 이하) 자녀가 있고 같은 회사 6개월 이상 근무했다면 회사가 거부할 수 없습니다. 계약직도 가능합니다.",
    details: [
@@ -672,6 +677,7 @@ export const qnaData: QnaItem[] = [
  {
   category: "육아휴직 & 출산",
   question: "출산휴가와 육아휴직은 다른 건가요? 둘 다 받을 수 있나요?",
+  modifiedAt: "2026-09-26", // 급여 상한 220만원·배우자 출산휴가 사용 기간·급여 출처 정정 (76f40f0)
   answer: {
    conclusion: "출산휴가(90일, 유급)와 육아휴직(최대 1년 6개월)은 별개 제도입니다. 둘 다 사용 가능하며 이어서 쓰는 경우가 일반적입니다.",
    details: [
@@ -753,6 +759,7 @@ export const qnaData: QnaItem[] = [
  {
   category: "건강보험 & 의료비",
   question: "본인부담상한제가 뭔가요? 의료비가 너무 많이 나왔을 때 어떻게 하나요?",
+  modifiedAt: "2026-09-25", // 2026 상한액·신청 환급 절차 정정 (B9 142921e·8e86548)
   answer: {
    conclusion: "연간 의료비 본인 부담이 소득별 상한액을 넘으면 공단이 초과분을 돌려줍니다. 다음 해 8월 말 안내문을 받고 신청하면 환급됩니다.",
    details: [
@@ -817,6 +824,7 @@ export const qnaData: QnaItem[] = [
  {
   category: "청년 지원 & 정책",
   question: "청년내일채움공제가 뭔가요? 아직 신청 가능한가요?",
+  modifiedAt: "2026-09-25", // 대체 제도 청년도약계좌 → 청년미래적금 (B9 142921e·8e86548)
   answer: {
    conclusion: "청년이 2년간 400만원을 적립하면 정부·기업이 함께 1,200만원을 채워주던 제도였지만, 2024년부터 신규 가입이 중단된 종료 사업입니다. 지금은 청년미래적금 등 대체 제도를 활용해야 합니다.",
    details: [
@@ -896,6 +904,7 @@ export const qnaData: QnaItem[] = [
  {
   category: "연봉 & 수당",
   question: "연봉 1억을 넘으면 세금이 얼마나 되나요?",
+  modifiedAt: "2026-09-25", // 실효세율·실수령액·연간 공제액을 현재 엔진으로 재산출 (B9 142921e·8e86548)
   answer: {
    conclusion: "연봉 1억원이면 소득세 실효세율은 약 9~12%, 4대 보험을 빼면 월 실수령액은 약 653만~678만원(부양가족 1~4인)입니다.",
    details: [

@@ -21,7 +21,8 @@
 //  - add-on-event      : 지금은 손잡이가 없다(STATIC_LAST_MODIFIED 폴백 등). 발표 반영 커밋에서 손잡이를 새로 둔다.
 //                        ref 가 '/' 로 시작하면 그 라우트의 ROUTE_OVERRIDES 한 줄 추가, 아니면 설명.
 //  - guide-modified    : 가이드 modifiedDate → gen-guides-meta. ref = 슬러그.
-//  - calc-publishedAt  : 간이 계산기 CalculatorDef.publishedAt(사이트맵이 읽는 유일한 날짜). ref = 슬러그.
+//  - calc-publishedAt  : 간이 계산기 날짜 — 사이트맵은 max(기준일, CalculatorDef.publishedAt, modifiedAt) 를 읽는다.
+//                        발표 반영은 modifiedAt 으로 올린다(publishedAt 은 신설일 — 종류 이름은 등록부 호환으로 유지). ref = 슬러그.
 //  - bonus-engine      : sitemap.ts 성과급 엔진 루프의 공유 날짜 — 루프가 ROUTE_OVERRIDES 의 날짜를 덮어쓰므로
 //                        한 URL 만 올릴 수 없다(올리면 루프의 모든 라우트가 [indexnow] 대상).
 //                        (11/1 전 결정 대기: 루프를 max(ROUTE_OVERRIDES 날짜, BONUS_ENGINE_REVIEW_DATE) 로 바꾸면
@@ -461,7 +462,7 @@ export function lastmodAction(handle: LastmodHandle): string {
     case "guide-modified":
       return `가이드 '${ref}' modifiedDate → 반영 배포일, 그다음 npx tsx scripts/gen-guides-meta.ts`;
     case "calc-publishedAt":
-      return `간이 계산기 '${ref}' publishedAt(없으면 추가) → 반영 배포일`;
+      return `간이 계산기 '${ref}' modifiedAt(없으면 추가) → 반영 배포일 (publishedAt 은 신설일이라 그대로)`;
     case "bonus-engine":
       return `공유 날짜 ${ref} — 한 URL 만 올릴 수 없음(올리면 성과급 엔진 루프 전체가 [indexnow] 대상). 날짜는 그대로 두고, 내용이 바뀌었으면 'diff 밖 수동 요청'으로 수집 요청`;
     case "data-checked":
