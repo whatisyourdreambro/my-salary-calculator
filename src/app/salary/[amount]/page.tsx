@@ -41,6 +41,7 @@ import {
  getStaticSalaryAmounts,
  getSalaryNeighborAmounts,
 } from "@/lib/salaryStaticParams";
+import { buildSalaryNeighborRows, formatManwonDiff } from "@/lib/salaryNeighborTable";
 
 // 무거운 recharts는 클라이언트 래퍼(WealthChartLazy)에서 dynamic(ssr:false) 처리 —
 // 서버 컴포넌트에서 직접 선언하면 코드 분할이 안 돼 첫 로드에 recharts가 포함됨
@@ -170,12 +171,16 @@ export default function SalaryAmountPage({ params }: Props) {
  // 인근 연봉 cross-link — 정적 생성 집합(사이트맵 격자) 안의 값만 가리키도록
  // generateStaticParams 와 같은 격자 함수를 공유 (내부 404 링크 0건)
  const neighbors = getSalaryNeighborAmounts(amount);
+ // 하단 비교표 행 — 현재 행은 위 tax 값 그대로, 인근 연봉은 같은 기본 조건의 calculateSalary2026 (S21)
+ const neighborRows = buildSalaryNeighborRows(amount, tax.netPay, neighbors);
 
  const faqItems = buildSalaryFaq(amount, tax.netPay, tax.totalDeductions);
 
+ // 가운데 단계는 연봉별 실수령액 표(/monthly 의 /table/2026/monthly 와 같은 구조) — 종전에는 홈("/")을
+ // 두 번 가리켰다 (S21, 2026-09-28). 보이는 이름은 그대로라 빵부스러기 높이 불변. BreadcrumbList 도 이 배열을 쓴다.
  const breadcrumbItems = [
  { name: "홈", path: "/" },
- { name: "연봉별 실수령액", path: "/" },
+ { name: "연봉별 실수령액", path: "/table/2026/annual" },
  { name: `연봉 ${formattedAmount}`, path: `/salary/${params.amount}` },
  ];
 
@@ -329,23 +334,55 @@ export default function SalaryAmountPage({ params }: Props) {
  무음 차단되고 있었다 — 415개 URL의 데스크톱 쿠팡 인벤토리가 0이던
  문제. 본문 1개 + 사이드바 1개 구성으로 정리 (docs/ad-experiments.md) */}
 
- {/* 인근 연봉 리포트 */}
+ {/* 인근 연봉 리포트 — 연봉 | 예상 월 실수령 | 차이 비교표 (S21, 2026-09-28. 종전 링크 카드 격자를 표로).
+ 마지막 본문 광고(GuideMidAd) 아래 블록이라 광고 위 높이 불변. 바깥 래퍼·제목은 그대로 */}
  {neighbors.length > 0 && (
  <div className="pt-8 border-t border-canvas px-2 sm:px-6">
  <h2 className="text-sm font-black text-faint-blue uppercase tracking-widest mb-4 text-center">
  다른 연봉 리포트
  </h2>
- <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
- {neighbors.map((s) => (
- <Link
- key={s}
- href={`/salary/${s}`}
- className="p-4 bg-white border border-canvas rounded-2xl text-xs font-bold text-muted-blue flex justify-between items-center hover:border-primary hover:text-primary transition-colors shadow-sm"
+ <div className="overflow-x-auto rounded-2xl border border-canvas bg-white shadow-sm">
+ <table className="w-full text-xs sm:text-sm break-keep">
+ <caption className="sr-only">
+ 연봉별 예상 월 실수령액과 연봉 {formattedAmount} 대비 차이 ({SALARY_MODEL_2026.defaultConditions} 기준)
+ </caption>
+ <thead>
+ <tr className="border-b border-canvas text-faint-blue">
+ <th scope="col" className="py-2.5 px-3 text-left font-bold">연봉</th>
+ <th scope="col" className="py-2.5 px-3 text-right font-bold">예상 월 실수령</th>
+ <th scope="col" className="py-2.5 px-3 text-right font-bold">차이</th>
+ </tr>
+ </thead>
+ <tbody>
+ {neighborRows.map((row) => (
+ <tr
+ key={row.amount}
+ aria-current={row.isCurrent ? "page" : undefined}
+ className={`border-b border-canvas last:border-b-0 ${row.isCurrent ? "bg-primary/5 text-navy" : "text-muted-blue"}`}
  >
- 연봉 {Math.round(s / 10000).toLocaleString("ko-KR")}만원
- <ChevronRight size={14} className="text-faint-blue" />
+ <th scope="row" className="py-2.5 px-3 text-left font-bold">
+ {row.isCurrent ? (
+ <span className="text-primary">연봉 {formatSalaryKorean(row.amount)} (현재)</span>
+ ) : (
+ <Link
+ href={`/salary/${row.amount}`}
+ className="inline-flex items-center gap-1 hover:text-primary transition-colors"
+ >
+ 연봉 {formatSalaryKorean(row.amount)}
+ <ChevronRight size={14} className="text-faint-blue shrink-0" aria-hidden="true" />
  </Link>
+ )}
+ </th>
+ <td className="py-2.5 px-3 text-right tabular-nums whitespace-nowrap font-bold">
+ {row.monthlyNetManwon.toLocaleString("ko-KR")}만원
+ </td>
+ <td className="py-2.5 px-3 text-right tabular-nums whitespace-nowrap">
+ {row.isCurrent ? "기준" : formatManwonDiff(row.diffManwon)}
+ </td>
+ </tr>
  ))}
+ </tbody>
+ </table>
  </div>
  </div>
  )}
