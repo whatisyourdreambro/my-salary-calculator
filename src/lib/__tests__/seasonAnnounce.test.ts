@@ -169,7 +169,8 @@ describe("등록부 구조", () => {
   });
 
   it("R4 가이드 7편 — guide-modified(ref = 슬러그) · rss (status 는 배포 따라 바뀌므로 값을 고정하지 않음)", () => {
-    const guides = REG.rows.filter((r) => r.url.startsWith("/guides/"));
+    // 2026-09-29 seo-tax: 연말정산 클러스터에 E3 가이드 2행(IRP·ISA)이 더해져 R4 7편은 guides-2027 클러스터로 고정
+    const guides = REG.rows.filter((r) => r.cluster === "guides-2027");
     expect(guides.map((g) => g.url.slice("/guides/".length)).sort()).toEqual(
       [
         "basic-pension-reform-2027",
@@ -183,6 +184,24 @@ describe("등록부 구조", () => {
     );
     for (const g of guides) {
       expect(STATUSES).toContain(g.status);
+      expect(g.lastmodHandle).toEqual({ kind: "guide-modified", ref: g.url.slice("/guides/".length) });
+      expect(g.feeds).toEqual(["rss"]);
+    }
+  });
+
+  it("12/2 국회 의결(E3)·장기요양(E1) 갱신 대상 — 세제개편 가이드 2편·보유세·요율표·최저임금 2027 (2026-09-29 seo-tax)", () => {
+    const byUrl = new Map(REG.rows.map((r) => [r.url, r]));
+    for (const slug of ["irp-pension-year-end-2026", "isa-account-guide"]) {
+      const row = byUrl.get(`/guides/${slug}`);
+      expect(row?.events).toContain("E3");
+      expect(row?.lastmodHandle).toEqual({ kind: "guide-modified", ref: slug });
+      expect(row?.feeds).toEqual(["rss"]);
+    }
+    expect(byUrl.get("/property-holding-tax-2026")?.events).toContain("E3");
+    expect(byUrl.get("/social-insurance-rates-2026")?.events).toEqual(expect.arrayContaining(["E1", "E8"]));
+    expect(byUrl.get("/minimum-wage-2027")?.events).toEqual(expect.arrayContaining(["E1", "E8"]));
+    // 모든 가이드 행은 guide-modified + rss
+    for (const g of REG.rows.filter((r) => r.url.startsWith("/guides/"))) {
       expect(g.lastmodHandle).toEqual({ kind: "guide-modified", ref: g.url.slice("/guides/".length) });
       expect(g.feeds).toEqual(["rss"]);
     }
