@@ -6,7 +6,8 @@
 //      '목표 이상이 되는 가장 낮은 연봉'과 같다 — 실수령액이 간이세액표 경계에서 수천원씩 되돌아가도
 //      (엄밀한 단조가 아님) 이분법이 더 뒤의 경계점을 고르지 않았음을 증명
 //  (3) 표 연봉(2026 요율 고정)과 같은 엔진·기준 — generateAnnualSalaryTableData2026 행과 교차 확인
-//  (4) 페이지: 섹션은 Display2Ad·각주보다 아래(광고 위 UI 금지), 행 링크는 정적 /salary 격자 원소,
+//  (4) 페이지: 섹션은 Display2Ad·각주보다 아래(광고 위 UI 금지), 행 링크는 사이트맵 /salary 격자 원소
+//      (sitemapSalaryHref — S3-2 2단계, salarySitemapGrid.test.ts '표 8쪽' 게이트와 같은 규칙),
 //      제목·설명 메타 불변, 새 문구는 기본 한글/라틴 폰트 서브셋 안
 
 import { readFileSync } from "node:fs";
@@ -39,7 +40,8 @@ import {
 } from "@/lib/generateData2026";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
 import { INSURANCE_RATES_2026 } from "@/lib/taxConstants2026";
-import { SALARY_HREF_MAX_GAP, salaryReportHrefOrNearest } from "@/lib/salaryRedirect";
+import { SALARY_HREF_MAX_GAP } from "@/lib/salaryRedirect";
+import { SITEMAP_SALARY_GRID, sitemapSalaryHref } from "@/lib/salarySitemapGrid";
 import { SALARY_STATIC_AMOUNTS } from "@/lib/salaryStaticAmounts.generated";
 
 const MANWON = 10_000;
@@ -109,11 +111,12 @@ describe("annualGrossForMonthlyNet2026 — 만원 단위 이분법", () => {
     expect(generateNetToGrossTable2026([0, 3_000_000, 1e12])).toEqual([{ monthlyNet: 3_000_000, preTax: 40_960_000 }]);
   });
 
-  it("행 링크는 salaryReportHrefOrNearest — 정적 격자 원소이고 역산 연봉과 2% 안", () => {
+  it("행 링크는 sitemapSalaryHref — 사이트맵 격자(정적 생성 집합 안) 원소이고 역산 연봉과 2% 안", () => {
     for (const { preTax } of generateNetToGrossTable2026()) {
-      const href = salaryReportHrefOrNearest(preTax)!;
+      const href = sitemapSalaryHref(preTax)!;
       expect(href).toMatch(/^\/salary\/\d+$/);
       const amount = Number(href.slice("/salary/".length));
+      expect(SITEMAP_SALARY_GRID).toContain(amount);
       expect(SALARY_STATIC_AMOUNTS).toContain(amount);
       expect(Math.abs(amount - preTax) / preTax).toBeLessThanOrEqual(SALARY_HREF_MAX_GAP);
     }
@@ -138,7 +141,7 @@ describe("/table/2026/annual 역산표 섹션", () => {
     const section = html.slice(html.indexOf(`>${HEADING}</h2>`));
     for (const { monthlyNet, preTax } of generateNetToGrossTable2026()) {
       expect(section).toContain(`월 ${(monthlyNet / MANWON).toLocaleString("ko-KR")}만원`);
-      expect(section).toContain(`href="${salaryReportHrefOrNearest(preTax)}"`);
+      expect(section).toContain(`href="${sitemapSalaryHref(preTax)}"`);
     }
     expect(section).toContain("약 4,096만원");
     expect(section).toContain("약 1억 812만원");

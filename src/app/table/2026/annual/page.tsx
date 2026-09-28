@@ -4,7 +4,7 @@
 import { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { generateAnnualSalaryTableData2026, generateNetToGrossTable2026 } from "@/lib/generateData2026";
-import { salaryReportHrefOrNearest } from "@/lib/salaryRedirect";
+import { sitemapSalaryHref } from "@/lib/salarySitemapGrid";
 import { formatManwonKorean } from "@/lib/manwonFormat";
 import { ChevronRight } from "lucide-react";
 import SalaryTable from "@/components/SalaryTable";
@@ -215,7 +215,8 @@ function AnnualTable() {
         {/* 실수령액 역산표 (S22, 2026-09-28 — 운영자 승인 후 10/10~10/31 비광고 슬롯 배포).
             '실수령 300이면 세전 연봉?' 검색 수요용. ★반드시 이 자리(각주 아래, Display2Ad 보다 아래) — 광고 위로 옮기지 말 것.
             이 페이지의 layout PageFooterAds 는 HomeTop·InArticle 사본이 dedup 으로 죽고(위 표의 interstitial 이 산다)
-            쿠팡 배너만 이 블록 아래에 남는다. 행 링크는 가장 가까운 정적 /salary 리포트(링크 문구는 금액이 아님). */}
+            쿠팡 배너만 이 블록 아래에 남는다. 행 링크는 사이트맵 격자의 가장 가까운 /salary 리포트
+            (sitemapSalaryHref — S3-2 2단계 정본, 위 표 행 링크와 같은 규칙. 링크 문구는 금액이 아님). */}
         <section className="mb-8 max-w-4xl mx-auto">
           <div
             className="rounded-2xl p-6 sm:p-8"
@@ -239,7 +240,7 @@ function AnnualTable() {
                 </thead>
                 <tbody>
                   {reverseRows.map((row) => {
-                    const href = salaryReportHrefOrNearest(row.preTax);
+                    const href = sitemapSalaryHref(row.preTax);
                     return (
                       <tr key={row.monthlyNet} className="border-b border-canvas-100">
                         <td className="py-2.5 pr-4 font-bold text-navy">
