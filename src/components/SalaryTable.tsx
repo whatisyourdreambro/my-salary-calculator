@@ -3,6 +3,8 @@
 import { Fragment, useEffect, useState, type ReactNode } from "react";
 import Link from "@/components/AppLink";
 import { subscribeMediaQuery } from "@/lib/mediaQueryListener";
+// 데이터 import 0 인 리프 모듈 — 클라이언트 번들에 회사 DB 등을 싣지 않는다
+import { sitemapSalaryHref } from "@/lib/salarySitemapGrid";
 
 
 type TableRow = { [key: string]: string | number };
@@ -60,11 +62,15 @@ export default function SalaryTable({
  </tr>
  );
  };
- // 첫 열 링크 href — 월급/주급/시급 값도 연봉으로 환산해 /salary/{연봉} 으로 연결
+ // 첫 열 링크 href — 월급/주급/시급 값도 연봉으로 환산해 /salary/{연봉} 으로 연결.
+ // /salary 는 사이트맵 격자 금액으로 스냅한다(S3-2 2단계) — 1억 100만·시급 환산 2,683만 5,600 같은 격자 밖
+ // 레거시 쪽으로 내부 링크를 보내지 않는다. 격자로 맞출 수 없는 금액(2억 초과)은 링크 없이 평문.
  const buildHref = (row: TableRow) => {
  if (!linkColumnBaseHref) return undefined;
  const raw = Number(linkValueKey ? row[linkValueKey] : row[headers[0].key]);
- return `${linkColumnBaseHref}/${Math.round(raw * linkValueMultiplier)}`;
+ const annual = Math.round(raw * linkValueMultiplier);
+ if (linkColumnBaseHref !== "/salary") return `${linkColumnBaseHref}/${annual}`;
+ return sitemapSalaryHref(annual) ?? undefined;
  };
 
  return (

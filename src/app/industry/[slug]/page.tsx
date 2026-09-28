@@ -12,8 +12,13 @@ import JsonLd from "@/components/JsonLd";
 import { CalcResultAd, InArticleAd, HomeTopAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareSection from "@/components/ShareSection";
+import { sitemapSalaryHref } from "@/lib/salarySitemapGrid";
 
 export const dynamic = "force-static";
+
+/** 평균 연봉(만원) → /salary 리포트 링크. 사이트맵 격자 금액으로 스냅(S3-2 2단계) — 격자가 없는 2억 초과
+ *  평균(컨설팅·회계 시니어 2.5억)은 클램프하지 않고 같은 자리 링크를 홈 계산기로(문구·자리 불변). */
+const salaryLink = (manwon: number) => sitemapSalaryHref(manwon * 10000) ?? "/";
 
 interface Props {
   params: { slug: string };
@@ -145,7 +150,7 @@ export default function IndustryPage({ params }: Props) {
                   {industry.salary.overall.toLocaleString()}만원
                 </div>
                 <Link
-                  href={`/salary/${industry.salary.overall * 10000}`}
+                  href={salaryLink(industry.salary.overall)}
                   className="mt-2 inline-block text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
                 >
                   실수령액 계산 →
@@ -172,7 +177,7 @@ export default function IndustryPage({ params }: Props) {
                     {data.min.toLocaleString()}~{data.max.toLocaleString()}만원
                   </div>
                   <Link
-                    href={`/salary/${data.avg * 10000}`}
+                    href={salaryLink(data.avg)}
                     className="mt-2 inline-block text-xs text-blue-500 hover:text-blue-700 underline"
                   >
                     실수령액 →

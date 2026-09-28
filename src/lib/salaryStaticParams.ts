@@ -9,6 +9,7 @@
 //
 // 집합 구성 (2026-08-07 전수 조사 기준 — 링크 생성 지점과 1:1 대응):
 //   1. 사이트맵 격자        — src/app/sitemap.ts 의 /salary/* 등재 구간과 동일
+//                             (정의는 src/lib/salarySitemapGrid.ts 가 단일 소스)
 //   2. 표 4종 행 링크       — /table/2026/{annual,monthly,weekly,hourly} 의
 //                             linkColumnBaseHref="/salary" (행 데이터 생성 함수를
 //                             직접 import 해 링크 환산식까지 그대로 재현 — 드리프트 방지)
@@ -18,14 +19,19 @@
 //   5. 고정 링크            — 홈 인기 구간(POPULAR_SALARY_LINKS)·/region 하단·
 //                             glossary/qna/가이드 본문의 하드코딩 링크
 //
-// ★ 새 내부 링크 지점을 추가할 때는 반드시 이 집합 안의 값만 가리키거나,
-//   해당 값을 이 파일에 추가할 것. (검증: 아래 각 수집 함수와 대조)
+// S3-2 2단계(2026-09-28 준비): 표·월급·직업·업종 링크는 salarySitemapGrid.sitemapSalaryHref 로
+// 격자(1)에 스냅한다. 그 링크들에 대해 2·4 는 이제 격자 밖 레거시 URL(205쪽 일부)을 계속 정적 생성하는
+// 유지 목록이다 — 색인된 URL 이 404 가 되지 않도록 지우지 않는다.
+//
+// ★ 새 내부 링크 지점은 salarySitemapGrid.sitemapSalaryHref(격자 금액)만 쓸 것.
+//   (검증: src/lib/__tests__/salarySitemapGrid.test.ts — 렌더 href ⊂ 격자 + 원시 템플릿 소스 스캔)
 
 import { allCompanies } from "@/data/companies";
 import { jobsData } from "@/data/jobsData";
 import { regionsData } from "@/data/regionsData";
 import { industriesData } from "@/data/industriesData";
 import { POPULAR_SALARY_LINKS } from "@/lib/homeContent";
+import { SITEMAP_SALARY_GRID } from "@/lib/salarySitemapGrid";
 import { generateAnnualSalaryTableData2026 } from "@/lib/generateData2026";
 import {
   generateWeeklyPayTableData2026,
@@ -43,24 +49,18 @@ export const MAX_SALARY = 1_000_000_000; // 연 10억
 /**
  * 사이트맵 격자 — src/app/sitemap.ts 의 /salary/* 루프와 반드시 동일하게 유지.
  * (500만~1,950만 50만 단위 / 2,000만~1억 50만 단위 / 1억 500만~2억 500만 단위)
+ * 정의는 클라이언트 안전 리프 모듈 salarySitemapGrid.ts — 내부 링크 스냅과 같은 배열을 쓴다 (S3-2 2단계).
+ * (종전 specials 13건은 전부 이 격자 안이라 집합이 같다 — sitemap.ts 쪽 specials 는 2026-08-08 제거)
  */
 export function sitemapGridAmounts(): number[] {
-  const out: number[] = [];
-  for (let i = 5; i < 20; i += 0.5) out.push(Math.round(i * 1_000_000));
-  for (let i = 20; i <= 100; i += 0.5) out.push(Math.round(i * 1_000_000));
-  for (let i = 105; i <= 200; i += 5) out.push(i * 1_000_000);
-  // sitemap.ts 의 specials 목록 (전부 위 격자에 이미 포함되지만 방어적으로 명시)
-  out.push(
-    24_000_000, 26_000_000, 28_000_000, 32_000_000, 35_000_000, 38_000_000,
-    42_000_000, 45_000_000, 55_000_000, 65_000_000, 75_000_000, 85_000_000,
-    95_000_000
-  );
-  return out;
+  return [...SITEMAP_SALARY_GRID];
 }
 
 /**
  * 표 4종의 행 링크 amount — 실제 행 데이터 생성 함수를 그대로 사용해
  * SalaryTable buildHref(= Math.round(preTax × multiplier))와 동일하게 환산.
+ * (S3-2 2단계부터 buildHref 는 이 값을 사이트맵 격자로 스냅해 링크한다 — 여기는 종전 링크 대상이던
+ *  레거시 URL 을 계속 정적 생성하는 유지 목록)
  */
 function tableRowLinkAmounts(): number[] {
   const out: number[] = [];

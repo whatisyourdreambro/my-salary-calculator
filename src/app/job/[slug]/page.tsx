@@ -13,6 +13,7 @@ import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { formatSalaryKorean } from "@/lib/companyContentBuilder";
 import { formatManwonKorean } from "@/lib/manwonFormat";
 import { resolveJobMeta } from "@/lib/jobSeoOverrides";
+import { sitemapSalaryHref } from "@/lib/salarySitemapGrid";
 
 export const dynamic = "force-static";
 
@@ -29,6 +30,10 @@ const JOB_PAY_TABLE_LINKS: Record<string, { href: string; label: string }> = {
   "civil-servant-7": { href: "/civil-servant-pay-2026", label: "2026 공무원 봉급표 — 9급~고위직" },
   "civil-servant-5": { href: "/civil-servant-pay-2026", label: "2026 공무원 봉급표 — 9급~고위직" },
 };
+
+/** 평균 연봉(만원) → /salary 리포트 링크. 사이트맵 격자 금액으로 스냅(S3-2 2단계) — 격자가 없는 2억 초과
+ *  평균(의사·IB 등 시니어 2.2억~3억)은 클램프하지 않고 같은 자리 링크를 홈 계산기로(문구·자리 불변). */
+const salaryLink = (manwon: number) => sitemapSalaryHref(manwon * 10000) ?? "/";
 
 interface Props {
   params: { slug: string };
@@ -208,7 +213,7 @@ export default function JobPage({ params }: Props) {
                   {job.salary.overall.toLocaleString()}만원
                 </div>
                 <Link
-                  href={`/salary/${job.salary.overall * 10000}`}
+                  href={salaryLink(job.salary.overall)}
                   className="mt-2 inline-block text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
                 >
                   실수령액 계산 →
@@ -224,9 +229,9 @@ export default function JobPage({ params }: Props) {
             </h2>
             <div className="space-y-5">
               {[
-                { label: "신입 (0~2년)", data: job.salary.entry, href: `/salary/${job.salary.entry.avg * 10000}` },
-                { label: "주니어 (3~5년)", data: job.salary.junior, href: `/salary/${job.salary.junior.avg * 10000}` },
-                { label: "시니어 (10년+)", data: job.salary.senior, href: `/salary/${job.salary.senior.avg * 10000}` },
+                { label: "신입 (0~2년)", data: job.salary.entry, href: salaryLink(job.salary.entry.avg) },
+                { label: "주니어 (3~5년)", data: job.salary.junior, href: salaryLink(job.salary.junior.avg) },
+                { label: "시니어 (10년+)", data: job.salary.senior, href: salaryLink(job.salary.senior.avg) },
               ].map(({ label, data, href }) => (
                 <div key={label}>
                   <div className="flex items-center justify-between mb-1">
@@ -272,7 +277,7 @@ export default function JobPage({ params }: Props) {
               {[job.salary.entry.avg, job.salary.junior.avg, job.salary.senior.avg].map((amt) => (
                 <Link
                   key={amt}
-                  href={`/salary/${amt * 10000}`}
+                  href={salaryLink(amt)}
                   className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors"
                 >
                   연봉 {amt.toLocaleString()}만원 →

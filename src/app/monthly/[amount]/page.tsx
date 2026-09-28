@@ -34,6 +34,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import { formatManwonKorean } from "@/lib/manwonFormat";
 import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import { salaryReportHrefOrNearest } from "@/lib/salaryRedirect";
+import { sitemapSalaryHref } from "@/lib/salarySitemapGrid";
 import { getStaticMonthlyAmounts, MIN_MONTHLY, MAX_MONTHLY } from "@/lib/monthlyStaticParams";
 import { PENSION_BASE_2026 } from "@/lib/taxConstants2026";
 // 요율 문구·연도 표기(제목·설명·요약·FAQ)는 현행 포인터 — 1/1 전환 시 계산(calculateSalary2026 기본 요율)과 함께 바뀐다 (2026-09-25 N3)
@@ -57,9 +58,15 @@ function parseMonthlyParam(param: string): number | null {
   return amount;
 }
 
-// /salary 링크의 격자 스냅은 정본 salaryReportHrefOrNearest(src/lib/salaryRedirect) — 종전의 로컬 선형 탐색
-// 복제는 2026-09-12 S2-2 에서 제거. 집합 범위 안이면 가장 가까운 정적 페이지, 범위 밖(상여 800% 환산이
-// 3.5억을 넘는 고월급 행 등)은 집합 끝 페이지로 클램프하지 않고 null → 링크 생략.
+// /salary 링크 대상은 사이트맵 격자 금액 — 정본 sitemapSalaryHref(src/lib/salarySitemapGrid, S3-2 2단계).
+// 종전 salaryReportHrefOrNearest(정적 416 기준)는 격자 밖 레거시 쪽(2억 700만 등)을 가리켰다.
+// 격자로 맞출 수 없는 2억 초과 금액은 클램프하지 않고 같은 자리 링크를 홈 계산기(/)로 돌린다.
+// 링크를 두느냐('—' 이냐)는 종전(S2-2) 규칙 그대로 — 정적 집합 범위(최대 3.5억) 밖만 '—'. 링크·'—' 배치가
+// 그대로여야 상여 환산표 열 폭·행 높이, 곧 아래 Display2Ad 위치가 바뀌지 않는다.
+function salaryReportLink(annualWon: number): string | null {
+  if (salaryReportHrefOrNearest(annualWon) === null) return null;
+  return sitemapSalaryHref(annualWon) ?? "/";
+}
 
 /** 인근 월급 링크 — 격자 위 값만 (±10만/±20만/±50만/±100만) */
 function monthlyNeighbors(amount: number): number[] {
@@ -134,8 +141,9 @@ export default function MonthlyPage({ params }: Props) {
     annual: Math.round(annual + (monthly * pct) / 100),
   }));
 
-  // 월 160만~2,000만 × 12 는 항상 집합 범위 안 — null 분기는 방어용
-  const salaryHref = salaryReportHrefOrNearest(annual);
+  // 월 160만~2,000만 × 12 는 항상 정적 집합 범위 안(종전에도 항상 링크) — 월 1,700만 이상(연 2억 초과 7쪽)은
+  // 격자가 없어 홈 계산기로. 버튼 문구·자리는 그대로(아래 쿠팡·HOME_TOP 광고 위 높이 불변).
+  const salaryHref = salaryReportLink(annual);
   const neighbors = monthlyNeighbors(monthly);
 
   const faqItems = [
@@ -240,7 +248,7 @@ export default function MonthlyPage({ params }: Props) {
               </thead>
               <tbody>
                 {bonusScenarios.map((s) => {
-                  const href = salaryReportHrefOrNearest(s.annual);
+                  const href = salaryReportLink(s.annual);
                   return (
                     <tr key={s.pct} className="border-b border-canvas-100">
                       <td className="py-2.5 pr-4 font-bold text-navy">
