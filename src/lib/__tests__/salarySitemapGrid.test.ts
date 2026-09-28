@@ -5,7 +5,7 @@
 // 계속 생성하되(404 금지), 내부 링크는 격자 금액만 가리켜야 한다. 이 파일은
 //   (a) 격자 단일 소스 — SITEMAP_SALARY_GRID = 실제 sitemap() 의 /salary/* = sitemapGridAmounts() ⊂ 정적 생성 집합,
 //   (b) snapToSitemapSalary 계약 — 격자 위는 그대로, 5백만~2억은 최근접, 그 밖은 null(클램프 금지),
-//   (c) 실제 렌더한 페이지의 /salary/{n} href 전부 ⊂ 격자 — 표 8쪽·/monthly 105쪽·직업·업종·지역,
+//   (c) 실제 렌더한 페이지의 /salary/{n} href 전부 ⊂ 격자 — 표 8쪽·/monthly 105쪽·직업·업종·지역·회사 430곳,
 //       그리고 링크 자리 수 불변(광고 위 높이 불변: 링크가 사라지거나 '—' 로 바뀌지 않는다),
 //   (d) 원시 `/salary/${…}` 템플릿 소스 스캔 — 허용 목록 밖 신규 생성 지점 금지
 // 를 고정한다. 렌더는 companySalaryNetHop·currentRatesDryRun2027 과 같은 방식(react-dom/server, 광고 stub).
@@ -60,6 +60,10 @@ import { POPULAR_SALARY_LINKS } from "@/lib/homeContent";
 import { jobsData } from "@/data/jobsData";
 import { industriesData } from "@/data/industriesData";
 import { regionsData } from "@/data/regionsData";
+import { allCompanies } from "@/data/companies";
+import CompanyNarrative from "@/components/CompanyNarrative";
+import CompanyBonusCalculatorLink from "@/components/CompanyBonusCalculatorLink";
+import CompanySalaryTable from "@/components/CompanySalaryTable";
 import MonthlyPage from "@/app/monthly/[amount]/page";
 import JobPage from "@/app/job/[slug]/page";
 import IndustryPage from "@/app/industry/[slug]/page";
@@ -246,6 +250,30 @@ describe("(c) 렌더한 페이지의 /salary href ⊂ 사이트맵 격자", () =
     }
   });
 
+  it("회사 430곳 — 본문 3곳·폴백 CTA·연봉 표 링크 전부 격자, 본문·CTA 링크 자리 불변(격자 없으면 홈 계산기)", () => {
+    expect(allCompanies.length).toBeGreaterThanOrEqual(400);
+    let home = 0;
+    for (const c of allCompanies) {
+      const entry = c.salary.entry.base + (c.salary.entry.incentive.avgAmount || 0);
+      const snapped = snapToSitemapSalary(entry);
+      const narrative = render(CompanyNarrative, { company: c });
+      expect(offGrid(salaryHrefs(narrative)), `${c.id} 본문`).toEqual([]);
+      // 링크 문구(금액)는 그대로 — 목적지만 격자(오차 2% 미만) 또는 홈 계산기
+      const narrativeLinks = [...narrative.matchAll(/<a href="([^"]+)"[^>]*>([^<]*)만원 실수령액/g)];
+      expect(narrativeLinks.length, `${c.id} 본문 실수령액 링크 수`).toBe(3);
+      for (const [, href, text] of narrativeLinks) {
+        expect(href).toBe(snapped === null ? "/" : `/salary/${snapped}`);
+        expect(text.replace(/^연봉 /, "")).toBe(Math.round(entry / 10_000).toLocaleString("ko-KR"));
+      }
+      if (snapped === null) home++;
+      else expect(Math.abs(snapped - entry) / entry, `${c.id} 신입 스냅 오차`).toBeLessThan(0.02);
+      const cta = render(CompanyBonusCalculatorLink, { companyId: c.id, entryTotalWon: entry });
+      expect(offGrid(salaryHrefs(cta)), `${c.id} CTA`).toEqual([]);
+      expect(offGrid(salaryHrefs(render(CompanySalaryTable, { company: c }))), `${c.id} 연봉 표`).toEqual([]);
+    }
+    expect(home, "신입부터 2억 초과 회사의 홈 계산기 폴백").toBeGreaterThan(0);
+  });
+
   it("홈 인기 구간·/salary 이웃 링크 — 격자 위", () => {
     expect(offGrid(POPULAR_SALARY_LINKS.map((l) => l.amount))).toEqual([]);
     for (const a of getStaticSalaryAmounts()) expect(offGrid(getSalaryNeighborAmounts(a)), `/salary/${a} 이웃`).toEqual([]);
@@ -256,7 +284,7 @@ describe("(d) 원시 `/salary/${…}` 템플릿 — 허용 목록 밖 신규 금
   // 새 링크 지점은 sitemapSalaryHref 를 쓸 것. 여기 있는 파일만 템플릿을 직접 쓴다 (사유 필수).
   const ALLOWED: Record<string, string> = {
     "src/lib/salarySitemapGrid.ts": "정본 — sitemapSalaryHref",
-    "src/lib/salaryRedirect.ts": "308 정규화·정적 416 기준 레거시 API(회사 표·공유 결과) — 링크 스냅 정본 아님",
+    "src/lib/salaryRedirect.ts": "308 정규화(정적 416) + salaryReportHref 계열(amounts 인자 — 회사 표는 격자를 넘긴다, (c) 검증)",
     "src/app/sitemap.ts": "사이트맵 자체 (격자 = (a) 에서 대조)",
     "src/lib/seo.ts": "페이지 자기 canonical 경로",
     "src/app/salary/[amount]/page.tsx": "자기 경로(breadcrumb·JSON-LD) + 이웃 getSalaryNeighborAmounts(격자, (c) 검증)",
@@ -265,8 +293,6 @@ describe("(d) 원시 `/salary/${…}` 템플릿 — 허용 목록 밖 신규 금
     "src/components/home/HomeSeoSection.tsx": "POPULAR_SALARY_LINKS 리터럴 ((c) 검증)",
     "src/lib/guides/supplements.ts":
       "/guides/nurse-salary 최저임금 연 환산(25,882,560) — verify:autoads 기준 페이지라 무접촉(guideSpec (4) 해시 고정). 알려진 격자 밖 링크 1건",
-    "src/components/CompanyNarrative.tsx": "회사 링크 — 회사 페이지 전용 커밋에서 이관 (experiment #3·L10' 창 분리)",
-    "src/components/CompanyBonusCalculatorLink.tsx": "회사 링크 — 회사 페이지 전용 커밋에서 이관",
   };
   const ROOT = resolve(process.cwd());
   const walk = (dir: string): string[] =>
@@ -287,11 +313,19 @@ describe("(d) 원시 `/salary/${…}` 템플릿 — 허용 목록 밖 신규 금
     expect(Object.keys(ALLOWED).filter((f) => !hits.includes(f))).toEqual([]);
   });
 
-  it("표·월급·직업·업종은 정본 헬퍼를 쓴다", () => {
+  it("표·월급·직업·업종·회사는 정본 헬퍼를 쓴다", () => {
     const read = (f: string) => readFileSync(join(ROOT, f), "utf8");
-    for (const f of ["src/components/SalaryTable.tsx", "src/app/monthly/[amount]/page.tsx", "src/app/job/[slug]/page.tsx", "src/app/industry/[slug]/page.tsx"]) {
+    for (const f of [
+      "src/components/SalaryTable.tsx",
+      "src/app/monthly/[amount]/page.tsx",
+      "src/app/job/[slug]/page.tsx",
+      "src/app/industry/[slug]/page.tsx",
+      "src/components/CompanyNarrative.tsx",
+      "src/components/CompanyBonusCalculatorLink.tsx",
+    ]) {
       expect(read(f), f).toMatch(/import \{ sitemapSalaryHref \} from "@\/lib\/salarySitemapGrid";/);
     }
+    expect(read("src/components/CompanySalaryTable.tsx")).toContain("salaryReportHref(total, SITEMAP_SALARY_GRID)");
     // SalaryTable 은 클라이언트 컴포넌트 — 데이터 모듈(salaryStaticParams)을 끌어오지 않는다
     expect(read("src/components/SalaryTable.tsx")).not.toContain("salaryStaticParams");
     expect(read("src/lib/salarySitemapGrid.ts")).not.toMatch(/^import /m);

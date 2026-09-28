@@ -7,7 +7,8 @@
 //   (c) 클램프 누출 0,
 //   (d)(e) 소스 스캔 — 높이 0 인라인 링크·AppLink·모듈 속성·로컬 스냅 복제 2벌 제거
 //   (f) title — 스냅된 링크(≤2%, 1,890건 중 112건)는 행 총액이 아니라 href 금액을 '구간'으로 말한다 (2026-09-12 리뷰)
-// 를 고정한다. 소스 스캔은 internalLinkModules.test.ts 와 같은 방식(jsdom 없음); (f) 는 react-dom/server 로 렌더한다.
+// 를 고정한다. S3-2 2단계(2026-09-28 준비)부터 기준 집합은 사이트맵 격자(SITEMAP_SALARY_GRID ⊂ 정적 생성 집합)라
+// (a)(b)(c) 는 격자 기준 — 격자 최대(2억)를 넘는 행은 평문, 신입부터 2억을 넘는 회사(구글·메타·넷플릭스)는 링크 0건. 소스 스캔은 internalLinkModules.test.ts 와 같은 방식(jsdom 없음); (f) 는 react-dom/server 로 렌더한다.
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createElement, type ReactNode } from "react";
@@ -17,6 +18,7 @@ import { allCompanies } from "@/data/companies";
 import { getStaticSalaryAmounts } from "@/lib/salaryStaticParams";
 import { SALARY_STATIC_AMOUNTS } from "@/lib/salaryStaticAmounts.generated";
 import { SALARY_HREF_MAX_GAP, salaryReportHref } from "@/lib/salaryRedirect";
+import { SITEMAP_SALARY_GRID } from "@/lib/salarySitemapGrid";
 import type { CompanyProfile, JobLevel } from "@/types/company";
 
 // (f) 렌더용 — next/link 대신 평범한 <a> (속성 순서: href, class, title)
@@ -30,12 +32,15 @@ const RANKS: JobLevel[] = ["entry", "junior", "senior", "lead", "executive"];
 /** CompanySalaryTable 의 행 총액 식과 동일 (기본급 + 인센티브 평균, 주식·사인온 제외) */
 const rowTotal = (c: CompanyProfile, rank: JobLevel) =>
   c.salary[rank].base + (c.salary[rank].incentive.avgAmount || 0);
+/** CompanySalaryTable 과 같은 호출 — 기준 집합 = 사이트맵 격자 (S3-2 2단계) */
+const hrefOf = (total: number) => salaryReportHref(total, SITEMAP_SALARY_GRID);
 
 describe("CompanySalaryTable 연 실수령 hop — 회사 전수 × 5행", () => {
   const staticSet = new Set(getStaticSalaryAmounts());
-  const gridMax = SALARY_STATIC_AMOUNTS[SALARY_STATIC_AMOUNTS.length - 1];
+  const gridSet = new Set(SITEMAP_SALARY_GRID);
+  const gridMax = SITEMAP_SALARY_GRID[SITEMAP_SALARY_GRID.length - 1];
 
-  it("(a) 모든 셀의 href 는 null 이거나 실제 정적 생성 집합의 /salary/{n}", () => {
+  it("(a) 모든 셀의 href 는 null 이거나 사이트맵 격자(⊂ 실제 정적 생성 집합)의 /salary/{n}", () => {
     expect(allCompanies.length).toBeGreaterThanOrEqual(400);
     let linked = 0;
     let text = 0;
@@ -45,7 +50,7 @@ describe("CompanySalaryTable 연 실수령 hop — 회사 전수 × 5행", () =>
     for (const c of allCompanies) {
       for (const rank of RANKS) {
         const total = rowTotal(c, rank);
-        const href = salaryReportHref(total);
+        const href = hrefOf(total);
         if (href === null) {
           text++;
           if (total > gridMax) overRange++;
@@ -56,6 +61,7 @@ describe("CompanySalaryTable 연 실수령 hop — 회사 전수 × 5행", () =>
         const m = href.match(/^\/salary\/(\d+)$/);
         expect(m, `${c.id}/${rank}: ${href}`).not.toBeNull();
         const n = Number(m![1]);
+        expect(gridSet.has(n), `${c.id}/${rank}: ${href} 격자 밖`).toBe(true);
         expect(staticSet.has(n), `${c.id}/${rank}: ${href} 집합 밖`).toBe(true);
         expect(Math.abs(n - total) / total, `${c.id}/${rank}: 오차`).toBeLessThanOrEqual(SALARY_HREF_MAX_GAP);
         if (n !== total) snapped++;
@@ -68,26 +74,41 @@ describe("CompanySalaryTable 연 실수령 hop — 회사 전수 × 5행", () =>
     );
   });
 
-  it("(b) 쪽당 링크 1~5건 — 신입 총보상은 항상 집합 위(companyEntryAmounts 회귀 가드)", () => {
+  it("(b) 쪽당 링크 ≤5건 — 신입 총보상이 격자 최대 이하면 신입 행은 항상 링크(최근접 격자, 오차 ≤2%)", () => {
+    let noLink = 0;
     for (const c of allCompanies) {
-      const count = RANKS.filter((rank) => salaryReportHref(rowTotal(c, rank)) !== null).length;
+      const count = RANKS.filter((rank) => hrefOf(rowTotal(c, rank)) !== null).length;
       expect(count, `${c.id}: ${count}건`).toBeLessThanOrEqual(5);
-      expect(count, `${c.id}: 링크 0건`).toBeGreaterThanOrEqual(1);
       const entry = rowTotal(c, "entry");
-      expect(salaryReportHref(entry), `${c.id}: 신입 ${entry}`).toBe(`/salary/${entry}`);
+      if (entry > gridMax) {
+        expect(hrefOf(entry), `${c.id}: 신입 ${entry}`).toBeNull();
+        if (count === 0) noLink++;
+        continue;
+      }
+      expect(count, `${c.id}: 링크 0건`).toBeGreaterThanOrEqual(1);
+      const href = hrefOf(entry);
+      expect(href, `${c.id}: 신입 ${entry}`).not.toBeNull();
+      const n = Number(href!.slice("/salary/".length));
+      expect(gridSet.has(n), `${c.id}: 신입 ${entry} → ${href}`).toBe(true);
+      expect(Math.abs(n - entry) / entry, `${c.id}: 신입 오차`).toBeLessThanOrEqual(SALARY_HREF_MAX_GAP);
     }
+    // 신입부터 2억 초과(구글 2.07억·메타 2.185억·넷플릭스 3.5억) — 데이터가 바뀌면 이 수도 바뀐다
+    expect(noLink).toBeLessThanOrEqual(5);
   });
 
-  it("(c) 클램프 누출 없음 — 집합 최대 초과는 null, 정확 금액·양끝은 링크", () => {
-    for (const a of [410_000_000, 450_000_000, 900_000_000]) expect(salaryReportHref(a), String(a)).toBeNull();
-    expect(salaryReportHref(50_000_000)).toBe("/salary/50000000");
-    expect(salaryReportHref(SALARY_STATIC_AMOUNTS[0])).not.toBeNull();
-    expect(salaryReportHref(gridMax)).not.toBeNull();
+  it("(c) 클램프 누출 없음 — 격자 최대 초과는 null, 정확 금액·양끝은 링크", () => {
+    for (const a of [207_000_000, 218_500_000, 350_000_000, 410_000_000, 900_000_000]) expect(hrefOf(a), String(a)).toBeNull();
+    expect(hrefOf(50_000_000)).toBe("/salary/50000000");
+    expect(hrefOf(SITEMAP_SALARY_GRID[0])).not.toBeNull();
+    expect(hrefOf(gridMax)).not.toBeNull();
+    // 격자 밖 레거시 정적 쪽으로는 가지 않는다 — 1억 300만(정적 생성됨)은 1억 500만 격자로
+    expect(SALARY_STATIC_AMOUNTS).toContain(103_000_000);
+    expect(hrefOf(103_000_000)).toBe("/salary/105000000");
     // 회사 데이터 전수: 최대 초과 행에 /salary/{max} 가 붙는 일이 없다
     for (const c of allCompanies) {
       for (const rank of RANKS) {
         const total = rowTotal(c, rank);
-        if (total > gridMax) expect(salaryReportHref(total), `${c.id}/${rank}: ${total}`).toBeNull();
+        if (total > gridMax) expect(hrefOf(total), `${c.id}/${rank}: ${total}`).toBeNull();
       }
     }
   });
@@ -102,7 +123,8 @@ describe("CompanySalaryTable 소스 — 높이 0 링크·계측 속성", () => {
     expect(src).not.toContain('from "next/link"');
     expect(src).not.toContain('"use client"');
     expect(src).toContain('data-msy-module="company-salary-net"');
-    expect(src).toContain("salaryReportHref(total)");
+    expect(src).toContain("salaryReportHref(total, SITEMAP_SALARY_GRID)");
+    expect(src).toContain('import { SITEMAP_SALARY_GRID } from "@/lib/salarySitemapGrid";');
     expect(src).not.toContain("onClick="); // 속성 형태만 금지 (주석의 언급은 허용)
   });
 
@@ -157,7 +179,7 @@ describe("CompanySalaryTable title — 스냅된 링크는 href 금액을 '구�
     for (const c of allCompanies) {
       const html = renderToStaticMarkup(createElement(CompanySalaryTable, { company: c }));
       const links = [...html.matchAll(LINK_RE)];
-      const expected = RANKS.map((rank) => ({ total: rowTotal(c, rank), href: salaryReportHref(rowTotal(c, rank)) })).filter(
+      const expected = RANKS.map((rank) => ({ total: rowTotal(c, rank), href: hrefOf(rowTotal(c, rank)) })).filter(
         (r) => r.href !== null,
       );
       expect(links.length, `${c.id}: 링크 수`).toBe(expected.length);

@@ -14,6 +14,7 @@ import {
   industryLabelKo,
 } from "@/lib/companyContentBuilder";
 import { josa, josaParticle } from "@/lib/josa";
+import { sitemapSalaryHref } from "@/lib/salarySitemapGrid";
 
 interface Props {
   company: CompanyProfile;
@@ -65,6 +66,9 @@ export default function CompanyNarrative({ company }: Props) {
     (company.salary.executive.incentive.avgAmount || 0)
   );
   const dsrCapacity = Math.round((entryTotal * 0.4) / 10000);
+  // 신입 영끌 실수령액 링크 3곳 — 사이트맵 격자 금액으로 스냅(S3-2 2단계, 오차 2% 미만). 링크 문구(금액)는
+  // 그대로 둔다(실험 #3·L10' 창). 격자가 없는 2억 초과(구글·메타·넷플릭스)는 클램프하지 않고 같은 자리 링크를 홈 계산기로.
+  const entrySalaryHref = sitemapSalaryHref(entryTotal) ?? "/";
 
   // 실수령률 — 고정 문구(82~87%) 대신 회사별 실제 계산값 (상세 표와 동일 엔진·기준).
   // 고연봉 회사는 실효 70%대까지 내려가므로 고정 범위는 자체 표와 모순을 만들었다.
@@ -191,7 +195,7 @@ export default function CompanyNarrative({ company }: Props) {
           <strong>{Math.round(monthlyEntry / 10000).toLocaleString("ko-KR")}만원</strong>
           입니다. 4대보험·소득세 공제 후 실수령액은 머니샐러리{" "}
           <Link
-            href={`/salary/${entryTotal}`}
+            href={entrySalaryHref}
             className="text-electric font-bold underline-offset-2 hover:underline"
           >
             연봉 {Math.round(entryTotal / 10000).toLocaleString("ko-KR")}만원 실수령액
@@ -239,7 +243,7 @@ export default function CompanyNarrative({ company }: Props) {
           수준이며, 부양가족 수와 비과세 항목에 따라 변동 폭이 있습니다. {koName} 월급
           실수령액의 정확한 금액은{" "}
           <Link
-            href={`/salary/${entryTotal}`}
+            href={entrySalaryHref}
             className="text-electric font-bold underline-offset-2 hover:underline"
           >
             연봉 {Math.round(entryTotal / 10000).toLocaleString("ko-KR")}만원
@@ -302,7 +306,7 @@ export default function CompanyNarrative({ company }: Props) {
             </Link>
           </li>
           <li>
-            <Link href={`/salary/${entryTotal}`} className="text-electric hover:underline">
+            <Link href={entrySalaryHref} className="text-electric hover:underline">
               {Math.round(entryTotal / 10000).toLocaleString("ko-KR")}만원 실수령액 시뮬레이션
             </Link>
           </li>

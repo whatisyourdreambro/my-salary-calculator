@@ -8,6 +8,8 @@
 //     48px 행 높이가 그대로다 (탭 타깃은 셀이 아니라 글자 — 접근성 트레이드오프, 의도된 것).
 //   · href 는 정본 salaryReportHref: 정적 집합 범위 밖(임원 3.5억 초과 등)·최근접 금액 오차 2% 초과는
 //     null → 평문 유지. dynamicParams=false 라 클램프해 보내면 틀린 목적지, 1원 어긋나면 404 라서다.
+//   · 기준 집합은 사이트맵 격자(S3-2 2단계, salarySitemapGrid) — 격자 밖 레거시 쪽(1억 300만·2억 700만 등)으로
+//     내부 링크를 보내지 않는다. 2억 초과 행은 격자가 없어 평문. 링크 텍스트(연 실수령 금액)는 그대로.
 //   · 클릭 계측은 루트 InternalLinkTracker 가 data-msy-module 로 잡는다 — onClick 금지(서버 컴포넌트).
 
 import type { CompanyProfile, JobLevel } from "@/types/company";
@@ -16,6 +18,7 @@ import { calculateSalary2026 } from "@/lib/TaxLogic";
 // 표 제목의 세법 연도 = 현행 요율 포인터 (실수령 열이 같은 포인터로 계산됨 — 2026-09-25 N3)
 import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import { salaryReportHref } from "@/lib/salaryRedirect";
+import { SITEMAP_SALARY_GRID } from "@/lib/salarySitemapGrid";
 
 /** 사이트 공통 기준 — /salary/[amount]·/table 과 같은 비과세 식대 월 20만원 */
 const NON_TAXABLE_MONTHLY = 200_000;
@@ -61,8 +64,8 @@ export default function CompanySalaryTable({ company }: { company: CompanyProfil
     const stockValue = comp.stock?.amount || 0;
     const totalWithStock = total + stockValue;
     const net = estimateNetSalary(total);
-    // 연 실수령 셀의 /salary 리포트 링크 — 집합 밖·오차 2% 초과는 null(평문)
-    const salaryHref = salaryReportHref(total);
+    // 연 실수령 셀의 /salary 리포트 링크 — 사이트맵 격자 기준, 범위 밖·오차 2% 초과는 null(평문)
+    const salaryHref = salaryReportHref(total, SITEMAP_SALARY_GRID);
     // href 가 실제로 가리키는 정적 금액(최근접 스냅, 오차 ≤2%). 총액과 다르면 title 에 '구간'으로 밝힌다 —
     // 1,890 링크 중 112건이 스냅인데 title 은 행 총액을 정확한 목적지처럼 말했다 (2026-09-12 리뷰 지적).
     const salaryHrefAmount = salaryHref ? Number(salaryHref.slice("/salary/".length)) : null;

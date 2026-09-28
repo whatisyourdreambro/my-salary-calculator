@@ -7,6 +7,7 @@
 import Link from "@/components/AppLink";
 import { Calculator, ArrowRight } from "lucide-react";
 import { bonusCalcCountKo } from "@/config/site";
+import { sitemapSalaryHref } from "@/lib/salarySitemapGrid";
 
 // 회사 ID → 계산기 경로 + 라벨 매핑
 const COMPANY_BONUS_MAP: Record<
@@ -148,15 +149,13 @@ export default function CompanyBonusCalculatorLink({
   // 미매핑 회사(~470여 곳): 연봉표 직후 최고 의도 지점이 비지 않도록
   // 축소형 fallback CTA — 신입 연봉 실수령액 상세 + 일반 성과급 계산기
   if (!target) {
-    const amount =
-      entryTotalWon && entryTotalWon >= 1_000_000 && entryTotalWon <= 1_000_000_000
-        ? Math.round(entryTotalWon)
-        : null;
+    // /salary 리포트는 사이트맵 격자 금액으로(S3-2 2단계) — 격자로 맞출 수 없으면(2억 초과·비정상 값) 홈 계산기
+    const salaryHref = entryTotalWon ? sitemapSalaryHref(entryTotalWon) : null;
     return (
       <section data-msy-module="company-bonus-calc" className="page-width py-6" aria-label="연봉·성과급 계산기 바로가기">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <Link
-            href={amount ? `/salary/${amount}` : "/"}
+            href={salaryHref ?? "/"}
             className="group flex items-center gap-3 rounded-2xl border border-canvas-200 bg-white p-5 hover:border-electric hover:shadow-md transition-all"
           >
             <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-electric-10 flex items-center justify-center">

@@ -19,9 +19,9 @@
 //   5. 고정 링크            — 홈 인기 구간(POPULAR_SALARY_LINKS)·/region 하단·
 //                             glossary/qna/가이드 본문의 하드코딩 링크
 //
-// S3-2 2단계(2026-09-28 준비): 표·월급·직업·업종 링크는 salarySitemapGrid.sitemapSalaryHref 로
-// 격자(1)에 스냅한다. 그 링크들에 대해 2·4 는 이제 격자 밖 레거시 URL(205쪽 일부)을 계속 정적 생성하는
-// 유지 목록이다 — 색인된 URL 이 404 가 되지 않도록 지우지 않는다.
+// S3-2 2단계(2026-09-28 준비): 표·월급·직업·업종·회사 링크는 salarySitemapGrid.sitemapSalaryHref 로
+// 격자(1)에 스냅한다(회사 연봉 표는 salaryReportHref(총액, SITEMAP_SALARY_GRID)). 2~4 는 이제 격자 밖
+// 레거시 URL(205쪽)을 계속 정적 생성하는 유지 목록이다 — 색인된 URL 이 404 가 되지 않도록 지우지 않는다.
 //
 // ★ 새 내부 링크 지점은 salarySitemapGrid.sitemapSalaryHref(격자 금액)만 쓸 것.
 //   (검증: src/lib/__tests__/salarySitemapGrid.test.ts — 렌더 href ⊂ 격자 + 원시 템플릿 소스 스캔)
@@ -82,6 +82,7 @@ function tableRowLinkAmounts(): number[] {
 /**
  * 전 회사 신입 총보상(영끌) — CompanyNarrative·CompanyBonusCalculatorLink·
  * RelatedCompanies 가 쓰는 entry.base + entry.incentive.avgAmount 식과 동일.
+ * (S3-2 2단계부터 회사 링크는 격자로 스냅 — 여기는 종전 링크 대상이던 레거시 URL 유지 목록)
  */
 function companyEntryAmounts(): number[] {
   return allCompanies.map(
