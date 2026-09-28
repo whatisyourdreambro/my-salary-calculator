@@ -473,9 +473,9 @@ export const lifecycleGuides = [
 <tbody>
 <tr><td>광고 수익률</td><td>연 10%</td></tr>
 <tr><td>플랫폼 수수료</td><td>-1~2%</td></tr>
-<tr><td>이자 소득세 27.5%</td><td>-2.7%</td></tr>
+<tr><td>이자 소득세 15.4%</td><td>-1.5%</td></tr>
 <tr><td>부도 손실 (평균 5~10%)</td><td>-5~10%</td></tr>
-<tr><td><strong>실 수익률</strong></td><td><strong>-3% ~ +1%</strong></td></tr>
+<tr><td><strong>실 수익률</strong></td><td><strong>-3.5~2.5%</strong></td></tr>
 </tbody>
 </table>
 </div>
@@ -490,8 +490,8 @@ export const lifecycleGuides = [
 <h3>3. 유동성 부족</h3>
 <p>중도 매도 X. 대출 만기까지 자금 잠김. 보통 6~24개월.</p>
 
-<h3>4. 세금 부담 큼</h3>
-<p>이자소득 15.4% + 지방세 1.5% + 분리과세 X 시 종합과세. 실 세율 27.5%.</p>
+<h3>4. 이자세 15.4%</h3>
+<p>온투업 이자 14% + 지방세 1.4% = 15.4% 원천징수. 2천만 초과, 종합과세.</p>
 
 <h3>5. 정보 비대칭</h3>
 <p>차주 신용·담보 정보를 본인이 직접 검증 어려움. 플랫폼 정보에 의존.</p>
