@@ -21,6 +21,14 @@ describe("MI-21·MI-22·MI-23", () => {
     expect(src).not.toContain("item.question.slice(0, 30)");
   });
 
+  it("MI-07 /tips 공식 수치: 디딤돌 최저 2.85%·신생아 특례(신청 2년 내 출산, 최저 1.8%, 최대 4억)·부업 사업소득 금액 무관", () => {
+    const src = read("src/app/tips/page.tsx");
+    expect(src).toContain("디딤돌 대출(최저 2.85% 금리)");
+    expect(src).toContain("대출 신청 24개월 내 출산 가구는 최저 1.8% 특례금리(5년)로 최대 4억원까지");
+    expect(src).toContain("부업 사업소득은 금액 무관, 5월 종합소득세 신고 대상입니다.");
+    for (const old of ["2.35% 금리", "2023년 이후 출생아", "최저 1.6%", "최대 5억원", "연간 500만원 이상 부업"]) expect(src).not.toContain(old);
+  });
+
   it("근무일수 계산기 설명은 휴일 제외", () => {
     for (const p of ["src/app/tools/page.tsx", "src/app/tools/life/page.tsx"]) {
       const src = read(p);
