@@ -160,7 +160,7 @@ export const taxDeepdiveGuides = [
 <h2>🏠 1주택자 비과세 — 가장 큰 절세 카드</h2>
 <p>2026년 기준, 1세대 1주택자는 양도가액 <strong>12억원까지 비과세</strong>입니다. 단, 다음 요건을 모두 충족해야 합니다.</p>
 <ul>
-<li><strong>2년 이상 보유</strong> (조정대상지역은 2년 거주 추가 요건 한시 유예)</li>
+<li><strong>2년 이상 보유</strong> (조정대상지역 취득 주택은 2년 거주 요건 추가)</li>
 <li>양도일 기준 <strong>1세대 1주택</strong></li>
 <li>양도가 12억 초과 시 초과분만 과세 (전체 X)</li>
 </ul>
@@ -225,7 +225,7 @@ export const taxDeepdiveGuides = [
 
 <h2>📝 결론</h2>
 <p>양도세는 단순한 세금 계산이 아니라 <strong>전략 게임</strong>입니다. 매도 시점, 보유 기간, 명의, 필요경비 — 작은 차이가 수천만원의 세금 차이를 만듭니다. 매도 결정 전 반드시 세무사 상담을 권장합니다.</p>
-<p>예상 양도세를 즉시 계산해보고 싶다면 <a href="/tools/real-estate/acquisition-tax">취득세 계산기</a>로 시작하고, 자세한 양도세 시뮬은 국세청 홈택스 양도세 모의계산기를 활용하세요.</p>
+<p>예상 양도세를 즉시 계산해보고 싶다면 <a href="/calc/real-estate-capital-gains-quick">양도세 계산기</a>로 시작하고, 자세한 양도세 시뮬은 국세청 홈택스 양도세 모의계산기를 활용하세요.</p>
 `.trim(),
  },
 
