@@ -361,7 +361,7 @@ export const lifecycleGuides = [
 <h2>💰 주식 세금 처리 (2026)</h2>
 <ul>
 <li><strong>국내 주식</strong>: 양도세 면세 (대주주 제외)</li>
-<li><strong>국내 ETF</strong>: 매매차익 비과세, 분배금 15.4% 분리과세</li>
+<li><strong>국내 ETF</strong>: 국내주식형만 차익 비과세, 나머지 15.4%</li>
 <li><strong>해외 주식·ETF</strong>: 양도차익 250만 공제 후 22% (지방세 포함)</li>
 <li><strong>ISA 계좌 운용</strong>: 200만(서민형 400만) 비과세</li>
 </ul>
