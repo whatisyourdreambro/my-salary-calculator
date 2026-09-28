@@ -15,10 +15,7 @@ import {
 import { josa } from "@/lib/josa";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
-import {
- autoBreadcrumbLd,
- faqLd,
-} from "@/lib/structuredData";
+import { autoBreadcrumbLd } from "@/lib/structuredData";
 import {
  HomeTopAd,
  InArticleAd,
@@ -101,29 +98,9 @@ export default function GlossaryDetailPage({
  const Icon = item.icon;
  const related = getRelatedGlossaryItems(item, 5);
 
- const faqItems = [
- {
- question: `${josa(item.title, "이/가")} 무엇인가요?`,
- answer: `${summarySentence(item.summary)} ${item.content}`,
- },
- {
- question: `${josa(item.title, "을/를")} 쉽게 비유하면?`,
- answer: item.analogy,
- },
- {
- question: `2026년 기준 ${item.title} 핵심 수치는?`,
- answer: item.stat2026,
- },
- {
- question: `월급 300만원 직장인 기준 ${item.title} 계산 예시는?`,
- answer: item.example300,
- },
- {
- question: `${item.title} 관련 알아두면 좋은 팁은?`,
- answer: item.tip,
- },
- ];
-
+ // JSON-LD 는 BreadcrumbList·DefinedTerm 만. FAQPage 는 싣지 않는다 — 생성 질문 5개가 본문에 보이지 않아
+ // 구조화 데이터·본문 불일치였다(S29, 2026-09-28. 이 사이트는 2023-08 이후 FAQ 리치 결과 대상도 아님).
+ // 이를 맞추려고 보이는 FAQ 제목을 새로 넣지 말 것 — 레이아웃 광고가 본문 뒤를 따른다.
  return (
  <main className="w-full min-h-screen bg-canvas pb-20">
  <JsonLd
@@ -132,7 +109,6 @@ export default function GlossaryDetailPage({
  leafName: item.title,
  }),
  buildDefinedTermLd(item),
- faqLd(faqItems),
  ]}
  />
 
@@ -198,7 +174,7 @@ export default function GlossaryDetailPage({
  <GuideMidAd />
  </div>
 
- {/* 2026 확정 수치 — thin content 해소: 용어별 고유 본문 (faqLd와 동일 텍스트) */}
+ {/* 2026 확정 수치 — thin content 해소: 용어별 고유 본문 */}
  <h2 className="text-2xl font-black text-navy dark:text-canvas-50 !mt-10 !mb-4 flex items-center gap-2">
  <TrendingUp className="w-6 h-6 text-electric" />
  2026년 기준 핵심 수치
