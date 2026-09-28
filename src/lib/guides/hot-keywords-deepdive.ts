@@ -519,13 +519,13 @@ export const hotKeywordsGuides = [
 <li><strong>IRP + 연금저축 (최대 148만원 환급):</strong> 연간 900만원 한도 납입 시 13.2~16.5% 세액공제. 총급여 5,500만원 이하라면 16.5% 적용으로 최대 148.5만원 환급.</li>
 <li><strong>월세 세액공제 (최대 170만원 환급):</strong> 총급여 8,000만원 이하(종합소득 7,000만원 이하) 무주택 세대주. 연 1,000만원 한도의 15%(총급여 5,500만원 초과)~17%(5,500만원 이하). 집주인 동의 불필요.</li>
 <li><strong>의료비 세액공제:</strong> 총급여의 3% 초과분의 15%. 본인·부양가족 합산. 본인·장애인·65세 이상 의료비는 한도 없음.</li>
-<li><strong>교육비 세액공제:</strong> 본인 교육비 15%(한도 없음), 자녀 교육비 15%(1인 한도 300만원), 미취학 아동 15%(1인 한도 300만원).</li>
-<li><strong>기부금 세액공제:</strong> 법정·지정 기부금 15%(1,000만원 초과분 30%). 노동조합비 포함.</li>
+<li><strong>교육비 세액공제:</strong> 본인 교육비 15%(한도 없음), 자녀 교육비 15%(1인 한도 300만원), 대학생 자녀 15%(1인 한도 900만원).</li>
+<li><strong>기부금 세액공제:</strong> 특례·일반 기부금 15%(1,000만원 초과분 30%). 노동조합비 포함.</li>
 </ol>
 
 <h2>🥈 TOP 5 — 소득공제 효과 우수</h2>
 <ol>
-<li><strong>인적공제 (1인 150만원):</strong> 본인·배우자·자녀·부모(소득 요건 충족 시). 장애인·경로우대 추가공제 포함 시 1인 최대 500만원 이상.</li>
+<li><strong>인적공제 (1인 150만원):</strong> 본인·배우자·자녀·부모(소득 요건 충족 시). 장애인·경로우대 추가공제 포함 시 1인 최대 450만원 공제.</li>
 <li><strong>신용카드·체크카드:</strong> 총급여의 25% 초과분에 대해 신용카드 15%, 체크카드·현금영수증 30% 공제. 한도 300만원.</li>
 <li><strong>주택청약종합저축:</strong> 총급여 7,000만원 이하 무주택자. 연 납입액의 40% (한도 300만원 → 공제액 최대 120만원).</li>
 <li><strong>전세·주담대 이자상환액:</strong> 장기주택저당차입금 이자 공제. 요건 충족 시 최대 2,000만원까지 소득공제.</li>
@@ -605,15 +605,15 @@ export const hotKeywordsGuides = [
 <p>연간 의료비 본인 부담이 소득 수준별 상한액을 초과하면 초과분을 환급받습니다.</p>
 <table class="w-full text-sm border-collapse mt-4">
 <tr class="bg-primary/10"><th class="p-2">소득 분위</th><th class="p-2 text-right">연간 상한액</th></tr>
-<tr class="border-b"><td class="p-2">1분위 (최저소득)</td><td class="p-2 text-right font-bold">약 83만원</td></tr>
-<tr class="border-b"><td class="p-2">2~3분위</td><td class="p-2 text-right font-bold">약 103만원</td></tr>
-<tr class="border-b"><td class="p-2">4~5분위</td><td class="p-2 text-right font-bold">약 153만원</td></tr>
-<tr class="border-b"><td class="p-2">6~7분위</td><td class="p-2 text-right font-bold">약 289만원</td></tr>
-<tr class="border-b"><td class="p-2">8분위</td><td class="p-2 text-right font-bold">약 360만원</td></tr>
-<tr class="border-b"><td class="p-2">9분위</td><td class="p-2 text-right font-bold">약 443만원</td></tr>
-<tr><td class="p-2">10분위 (최고소득)</td><td class="p-2 text-right font-bold">약 780만원</td></tr>
+<tr class="border-b"><td class="p-2">1분위 (최저소득)</td><td class="p-2 text-right font-bold">약 90만원</td></tr>
+<tr class="border-b"><td class="p-2">2~3분위</td><td class="p-2 text-right font-bold">약 112만원</td></tr>
+<tr class="border-b"><td class="p-2">4~5분위</td><td class="p-2 text-right font-bold">약 173만원</td></tr>
+<tr class="border-b"><td class="p-2">6~7분위</td><td class="p-2 text-right font-bold">약 326만원</td></tr>
+<tr class="border-b"><td class="p-2">8분위</td><td class="p-2 text-right font-bold">약 446만원</td></tr>
+<tr class="border-b"><td class="p-2">9분위</td><td class="p-2 text-right font-bold">약 536만원</td></tr>
+<tr><td class="p-2">10분위 (최고소득)</td><td class="p-2 text-right font-bold">약 843만원</td></tr>
 </table>
-<p class="text-sm text-muted-foreground mt-2">※ 공단이 자동 계산해 익년도 8월경 환급. 별도 신청 불필요.</p>
+<p class="text-sm text-muted-foreground mt-2">※ 공단이 자동 계산해 익년도 8월경 안내. 신청 후 환급받음.</p>
 
 <h2>📞 건강보험 관련 민원 기관</h2>
 <ul>
