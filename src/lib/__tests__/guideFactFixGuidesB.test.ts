@@ -142,6 +142,8 @@ const FACT_PINS: Array<[string, string[], string[]]> = [
   ["samsung-bonus-treasury-stock-15-trillion-2026", ["농특세 포함 0.20%", "증권거래세 0.20%"], ["0.15%"]],
   ["samsung-vs-sk-hynix-stock-bonus-2026", ["농특세 포함 0.20%"], ["0.15%"]],
   ["samsung-special-bonus-q3-preview-2027", ["농특세 포함 0.20%", "증권거래세 0.20%"], ["0.15%"]],
+  // GB-27 2024 실적분 PS 기본급 1,500%(psData PS_HISTORY) · GB-10 ISA 연 2,000만원은 납입 한도
+  ["sk-hynix-wage-2026", ["2024년 실적분 PS는 기본급 1,500%", "ISA 납입 한도(연 2,000만원)"], ["연봉의 1000%", "ISA 비과세 한도(연 2,000만원)"]],
 ];
 
 describe("(2) guidesb 사실 정정 고정", () => {

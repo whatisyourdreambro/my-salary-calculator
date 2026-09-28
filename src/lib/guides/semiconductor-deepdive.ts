@@ -176,7 +176,7 @@ const skHynixWage2026 = `
  </div>
  <div class="bg-card p-5 rounded-xl border border-border border-l-4 border-l-primary">
   <h4 class="font-bold mb-2">② PS (이익분배금)</h4>
-  <p class="text-sm text-muted-foreground">영업이익 기반. 연 1회(1~2월) 지급. 2024년 호황기 연봉의 1000% 수준(기본급 기준)을 기록.</p>
+  <p class="text-sm text-muted-foreground">영업이익 기반. 연 1회(1~2월) 지급. 2024년 실적분 PS는 기본급 1,500% (연봉 아님)를 기록.</p>
  </div>
  <div class="bg-card p-5 rounded-xl border border-border">
   <h4 class="font-bold mb-2">③ PI (생산성 격려금)</h4>
@@ -262,7 +262,7 @@ const skHynixWage2026 = `
 <h2 class="mt-12 text-2xl font-bold text-primary">💡 PS 받고 나면 해야 할 3가지</h2>
 
 <ul class="space-y-3 mt-4">
- <li><strong>① ISA 한도 풀로 채우기:</strong> ISA 비과세 한도(연 2,000만원)는 매년 새로 부여되므로 1~3월에 PS 입금 시 그해 한도를 즉시 채우는 게 유리합니다.</li>
+ <li><strong>① ISA 한도 풀로 채우기:</strong> ISA 납입 한도(연 2,000만원)는 해마다 새로 더해지므로 1~3월에 PS 입금 시 그해 한도를 즉시 채우는 게 유리합니다.</li>
  <li><strong>② 변동성 인지 비상금:</strong> PS는 2023년처럼 0이 될 수 있는 변동성이 큰 보상입니다. 호황기 PS의 30% 이상을 채권형 ETF·정기예금에 분산하면 다음 다운사이클 충격을 완화할 수 있습니다.</li>
  <li><strong>③ 대출 한도 늘리지 말 것:</strong> PS가 큰 해에 주택대출 한도를 늘리면 다음 사이클에서 PS 0일 때 원리금 부담이 가계를 무너뜨립니다. 고정비는 기본급으로만 충당할 수 있게 설계.</li>
 </ul>
