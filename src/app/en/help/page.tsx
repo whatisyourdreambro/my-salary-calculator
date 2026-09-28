@@ -12,7 +12,7 @@ export const metadata = buildEnglishMetadata({
 export default function EnglishHelpPage() {
   return (
     <EnglishPageShell title="Methods, sources and help" description="Choose a tool by the question you need to answer: Korean take-home pay, a limited income-tax comparison or a planning scenario. These tools do not establish eligibility, an actual payslip or an investment return." breadcrumbs={[{ name: "Methods and help", href: "/en/help" }]}>
-      <p className="mt-3 text-sm text-muted-foreground">Method review: 9 September 2026. Check the applicable tax year in the official source before filing.</p>
+      <p className="mt-3 text-sm text-muted-foreground">Method review: 25 September 2026. Check the applicable tax year in the official source before filing.</p>
       <nav aria-label="Help topics" className="my-8 flex flex-wrap gap-4">
         {[["#salary", "Take-home pay"], ["#flat-tax", "Income tax"], ["#currency", "Currency"], ["#planning", "Planning tools"], ["#insurance", "Insurance"], ["#privacy", "Data and support"]].map(([href, label]) => <a key={href} href={href} className="inline-flex min-h-11 items-center text-primary underline">{label}</a>)}
       </nav>
