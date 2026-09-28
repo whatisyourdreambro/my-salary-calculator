@@ -278,7 +278,7 @@ export default function BonusCalculatorPage() {
         {/* ── Hero ── */}
         <div className="text-center mb-10">
           <motion.div
-            initial={{ opacity: 0, y: -12 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-5"
             style={{ backgroundColor: "#0145F21A", color: "#0145F2", border: "1.5px solid #0145F233" }}
@@ -286,7 +286,7 @@ export default function BonusCalculatorPage() {
             <Sparkles size={12} /> {CURRENT_RATES_YEAR} 기준 · 성과급 세후 비교
           </motion.div>
           <motion.h1
-            initial={{ opacity: 0, y: 12 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.08 }}
             className="text-4xl sm:text-5xl font-black tracking-tight mb-3"
@@ -295,7 +295,7 @@ export default function BonusCalculatorPage() {
             성과급 세금 계산기
           </motion.h1>
           <motion.p
-            initial={{ opacity: 0 }}
+            initial={false}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.15 }}
             className="text-lg font-medium"
@@ -458,7 +458,7 @@ export default function BonusCalculatorPage() {
         </div>
 
         {/* ── 결과 카드 ── */}
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={`${r.netBonus}-${r.totalDeduction}`}
             initial={{ opacity: 0, y: 16 }}
@@ -830,7 +830,7 @@ function BonusComparison({
           <div className="col-span-2 text-right">세율</div>
         </div>
 
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div key={activeGroup} initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }}>
             {rows.map((row, i) => {
               const barPct = (row.res.netBonus / maxNet) * 100;

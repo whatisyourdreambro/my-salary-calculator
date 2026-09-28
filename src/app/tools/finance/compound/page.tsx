@@ -1,6 +1,5 @@
 "use client";
 import { useState, useMemo } from "react";
-import { motion } from "framer-motion";
 import { TrendingUp } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import { compoundDisplayRatios } from "@/lib/compoundDisplay";
@@ -68,8 +67,8 @@ export default function CompoundCalculatorPage() {
  </div>
  </div>
 
- <motion.div key={r.finalBalance} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
- className="rounded-2xl overflow-hidden border border-primary shadow-lg mb-6">
+ <div key={r.finalBalance}
+ className="rounded-2xl overflow-hidden border border-primary shadow-lg mb-6 animate-in fade-in-0 slide-in-from-bottom-2 duration-300">
  <div className="bg-primary p-8 text-center">
  <p className="text-navy/70 text-xs font-black uppercase tracking-widest mb-2">{years}년 후 최종 자산</p>
  <p className="text-5xl font-black text-navy tracking-tight">{fmt(r.finalBalance)}<span className="text-2xl ml-1">원</span></p>
@@ -92,7 +91,7 @@ export default function CompoundCalculatorPage() {
  </div>
  {r.totalPrincipal === 0 && <p className="mt-3 text-sm text-faint-blue">투자금이 0원이므로 수익 배율은 계산하지 않습니다. 초기 투자금이나 월 적립금을 입력해보세요.</p>}
  </div>
- </motion.div>
+ </div>
 
  {/* 결과 직후 광고 */}
  <CalcResultAd />

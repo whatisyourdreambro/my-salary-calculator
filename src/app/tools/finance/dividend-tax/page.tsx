@@ -1,6 +1,5 @@
 "use client";
 import { useState, useMemo } from "react";
-import { motion } from "framer-motion";
 import { PiggyBank, Info } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import { calcDividendTax } from "@/lib/dividendTax";
@@ -96,11 +95,9 @@ export default function DividendTaxPage() {
           </div>
         </div>
 
-        <motion.div
+        <div
           key={r.total}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl overflow-hidden border border-primary shadow-lg mb-6"
+          className="rounded-2xl overflow-hidden border border-primary shadow-lg mb-6 animate-in fade-in-0 slide-in-from-bottom-2 duration-300"
         >
           <div className="bg-primary p-8 text-center">
             <p className="text-navy/70 text-xs font-black uppercase tracking-widest mb-2">
@@ -142,7 +139,7 @@ export default function DividendTaxPage() {
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* 결과 직하 광고 */}
         <CalcResultAd />

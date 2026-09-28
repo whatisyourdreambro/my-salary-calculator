@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { motion } from "framer-motion";
 import { Briefcase, Info } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import NumberInput from "@/components/NumberInput";
@@ -164,8 +163,8 @@ export default function SeveranceCalculatorPage() {
  </div>
 
  {/* Result */}
- <motion.div key={r.netPay} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
- className="rounded-2xl overflow-hidden border border-primary shadow-lg mb-6">
+ <div key={r.netPay}
+ className="rounded-2xl overflow-hidden border border-primary shadow-lg mb-6 animate-in fade-in-0 slide-in-from-bottom-2 duration-300">
  <div className="bg-primary p-8 text-center">
  <p className="text-navy/70 text-xs font-black uppercase tracking-widest mb-2">실수령 퇴직금 (세후)</p>
  <p className="text-5xl font-black text-navy tracking-tight">{fmt(r.netPay)}<span className="text-2xl ml-1">원</span></p>
@@ -190,7 +189,7 @@ export default function SeveranceCalculatorPage() {
  </div>
  ))}
  </div>
- </motion.div>
+ </div>
 
  {/* 결과 직후 광고 */}
  <CalcResultAd />

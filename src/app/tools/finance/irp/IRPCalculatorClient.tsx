@@ -3,7 +3,6 @@
 // 계산기 폼 + 결과만 담당하는 클라이언트 컴포넌트.
 // 제목·FAQ·JSON-LD·가이드 본문은 서버 컴포넌트인 page.tsx가 보유한다 (이중 H1/FAQ 방지).
 import { useId, useState, useMemo } from "react";
-import { motion } from "framer-motion";
 import { Info } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import NumberInput from "@/components/NumberInput";
@@ -65,11 +64,9 @@ export default function IRPCalculatorClient() {
  </div>
 
  {/* Result */}
- <motion.div
+ <div
  key={result.taxCredit}
- initial={{ opacity: 0, y: 10 }}
- animate={{ opacity: 1, y: 0 }}
- className="mt-8 p-8 bg-primary rounded-xl text-center"
+ className="mt-8 p-8 bg-primary rounded-xl text-center animate-in fade-in-0 slide-in-from-bottom-2 duration-300"
  >
  <p className="text-primary-foreground/70 text-sm font-bold uppercase tracking-widest mb-2">예상 세액공제 환급액</p>
  <p className="text-5xl font-black text-navy tracking-tight">
@@ -78,7 +75,7 @@ export default function IRPCalculatorClient() {
  <p className="text-primary-foreground/70 text-sm mt-2">
  공제 대상 납입액: {result.deductibleBase.toLocaleString('ko-KR')}원 × {(result.rate * 100).toFixed(1)}%
  </p>
- </motion.div>
+ </div>
 
  {/* 결과 직하 광고 */}
  <CalcResultAd />

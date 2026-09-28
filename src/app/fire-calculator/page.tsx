@@ -414,7 +414,7 @@ export default function FireCalculatorPage() {
  </div>
 
  <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative">
- <AnimatePresence mode="wait">
+ <AnimatePresence mode="wait" initial={false}>
  {step === "intro" ? (
  <motion.div
  key="intro"

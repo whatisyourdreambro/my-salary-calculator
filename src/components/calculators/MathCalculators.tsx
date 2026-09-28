@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Divide, ArrowRightLeft, Percent } from "lucide-react";
 import { UnitConverter } from "@/components/calculators/life/LifeCalculators";
 import NumberInput from "@/components/NumberInput";
@@ -35,14 +34,12 @@ export default function MathCalculators() {
  </div>
  </div>
 
- <motion.div
+ <div
  key={activeTab}
- initial={{ opacity: 0, y: 10 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ duration: 0.3 }}
+ className="animate-in fade-in-0 slide-in-from-bottom-2 duration-300"
  >
  {activeTab === "percent" ? <PercentCalculator /> : <UnitConverter />}
- </motion.div>
+ </div>
  </div>
  );
 }

@@ -1,6 +1,5 @@
 "use client";
 import { useState, useMemo } from "react";
-import { motion } from "framer-motion";
 import { CreditCard } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import NumberInput from "@/components/NumberInput";
@@ -71,8 +70,8 @@ export default function InstallmentPage() {
  </div>
  </div>
 
- <motion.div key={r.monthly} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
- className="rounded-2xl overflow-hidden border border-primary shadow-lg mb-8">
+ <div key={r.monthly}
+ className="rounded-2xl overflow-hidden border border-primary shadow-lg mb-8 animate-in fade-in-0 slide-in-from-bottom-2 duration-300">
  <div className="bg-primary p-8 text-center">
  <p className="text-navy/70 text-xs font-black uppercase tracking-widest mb-2">월 납부액</p>
  <p className="text-5xl font-black text-navy tracking-tight">{fmt(r.monthly)}<span className="text-2xl ml-1">원</span></p>
@@ -84,7 +83,7 @@ export default function InstallmentPage() {
  <div className="text-center"><p className="text-navy/60 text-xs mb-1">이자 비율</p><p className="text-navy font-black">{r.totalPayment > 0 ? (r.totalInterest / r.totalPayment * 100).toFixed(1) : 0}%</p></div>
  </div>
  </div>
- </motion.div>
+ </div>
 
  </div>
  </main>

@@ -243,7 +243,7 @@ export default function CarLoanPage() {
  {/* Left Panel: Inputs */}
  <div className="lg:col-span-4 space-y-6">
  <motion.div
- initial={{ opacity: 0, x: -20 }}
+ initial={false}
  animate={{ opacity: 1, x: 0 }}
  className="bg-card rounded-2xl shadow-xl border border-border p-6 sticky top-24"
  >
@@ -342,7 +342,7 @@ export default function CarLoanPage() {
  <div className="lg:col-span-8 space-y-8">
  {/* Analysis Card */}
  <motion.div
- initial={{ opacity: 0, y: 20 }}
+ initial={false}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: 0.2 }}
  className="bg-gradient-to-br from-[#0145F2] to-primary/80 rounded-2xl shadow-xl p-6 text-white relative overflow-hidden"
@@ -374,7 +374,7 @@ export default function CarLoanPage() {
  return (
  <Fragment key={category}>
  <motion.div
- initial={{ opacity: 0, y: 20 }}
+ initial={false}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: 0.3 + idx * 0.1 }}
  >
