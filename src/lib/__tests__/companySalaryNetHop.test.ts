@@ -18,7 +18,7 @@ import { allCompanies } from "@/data/companies";
 import { getStaticSalaryAmounts } from "@/lib/salaryStaticParams";
 import { SALARY_STATIC_AMOUNTS } from "@/lib/salaryStaticAmounts.generated";
 import { SALARY_HREF_MAX_GAP, salaryReportHref } from "@/lib/salaryRedirect";
-import { SITEMAP_SALARY_GRID } from "@/lib/salarySitemapGrid";
+import { SITEMAP_SALARY_GRID, SITEMAP_SALARY_MAX } from "@/lib/salarySitemapGrid";
 import type { CompanyProfile, JobLevel } from "@/types/company";
 
 // (f) 렌더용 — next/link 대신 평범한 <a> (속성 순서: href, class, title)
@@ -74,14 +74,16 @@ describe("CompanySalaryTable 연 실수령 hop — 회사 전수 × 5행", () =>
     );
   });
 
-  it("(b) 쪽당 링크 ≤5건 — 신입 총보상이 격자 최대 이하면 신입 행은 항상 링크(최근접 격자, 오차 ≤2%)", () => {
+  it("(b) 쪽당 링크 ≤5건 — 신입 총보상이 규칙 격자(5백만~2억) 안이면 신입 행은 항상 링크(최근접 격자, 오차 ≤2%)", () => {
     let noLink = 0;
     for (const c of allCompanies) {
       const count = RANKS.filter((rank) => hrefOf(rowTotal(c, rank)) !== null).length;
       expect(count, `${c.id}: ${count}건`).toBeLessThanOrEqual(5);
       const entry = rowTotal(c, "entry");
-      if (entry > gridMax) {
-        expect(hrefOf(entry), `${c.id}: 신입 ${entry}`).toBeNull();
+      if (entry > SITEMAP_SALARY_MAX) {
+        // 2억 초과는 사이트맵 추가 등재 금액(±2%)일 때만 링크
+        const h = hrefOf(entry);
+        if (h !== null) expect(gridSet.has(Number(h.slice("/salary/".length))), `${c.id}: 신입 ${entry} → ${h}`).toBe(true);
         if (count === 0) noLink++;
         continue;
       }
@@ -97,7 +99,19 @@ describe("CompanySalaryTable 연 실수령 hop — 회사 전수 × 5행", () =>
   });
 
   it("(c) 클램프 누출 없음 — 격자 최대 초과는 null, 정확 금액·양끝은 링크", () => {
-    for (const a of [207_000_000, 218_500_000, 350_000_000, 410_000_000, 900_000_000]) expect(hrefOf(a), String(a)).toBeNull();
+    // 2억 초과: 2억 페이지로 클램프하지 않는다. 사이트맵 추가 등재(SITEMAP_EXTRA_SALARY_AMOUNTS)가 없으면 전부 평문,
+    // 있으면 그 금액 ±2% 만 링크
+    const hasExtraAboveMax = gridMax > SITEMAP_SALARY_MAX;
+    for (const a of [207_000_000, 218_500_000, 350_000_000, 410_000_000, 900_000_000]) {
+      const h = hrefOf(a);
+      expect(h, String(a)).not.toBe(`/salary/${SITEMAP_SALARY_MAX}`);
+      if (!hasExtraAboveMax) expect(h, String(a)).toBeNull();
+      if (h !== null) {
+        const n = Number(h.slice("/salary/".length));
+        expect(gridSet.has(n), `${a} → ${h}`).toBe(true);
+        expect(Math.abs(n - a) / a, `${a} → ${h}`).toBeLessThanOrEqual(SALARY_HREF_MAX_GAP);
+      }
+    }
     expect(hrefOf(50_000_000)).toBe("/salary/50000000");
     expect(hrefOf(SITEMAP_SALARY_GRID[0])).not.toBeNull();
     expect(hrefOf(gridMax)).not.toBeNull();

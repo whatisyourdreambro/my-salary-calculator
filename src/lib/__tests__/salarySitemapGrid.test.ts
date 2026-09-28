@@ -3,7 +3,8 @@
 //
 // /salary/[amount] 는 416쪽을 정적 생성하지만 사이트맵에는 격자 211쪽만 있다. 격자 밖 205쪽은 레거시 URL 로
 // 계속 생성하되(404 금지), 내부 링크는 격자 금액만 가리켜야 한다. 이 파일은
-//   (a) 격자 단일 소스 — SITEMAP_SALARY_GRID = 실제 sitemap() 의 /salary/* = sitemapGridAmounts() ⊂ 정적 생성 집합,
+//   (a) 격자 단일 소스 — SITEMAP_SALARY_GRID(규칙 격자 ∪ 추가 등재) = 실제 sitemap() 의 /salary/* ⊂ 정적 생성 집합,
+//       추가 등재(SITEMAP_EXTRA_SALARY_AMOUNTS)는 이미 생성되는 레거시 금액만(새 URL 금지),
 //   (b) snapToSitemapSalary 계약 — 격자 위는 그대로, 5백만~2억은 최근접, 그 밖은 null(클램프 금지),
 //   (c) 실제 렌더한 페이지의 /salary/{n} href 전부 ⊂ 격자 — 표 8쪽·/monthly 105쪽·직업·업종·지역·회사 430곳,
 //       그리고 링크 자리 수 불변(광고 위 높이 불변: 링크가 사라지거나 '—' 로 바뀌지 않는다),
@@ -46,14 +47,16 @@ vi.mock("next/navigation", () => ({
 }));
 
 import {
+  SITEMAP_EXTRA_SALARY_AMOUNTS,
   SITEMAP_SALARY_GRID,
   SITEMAP_SALARY_MAX,
   SITEMAP_SALARY_MIN,
+  SITEMAP_SALARY_REGULAR_GRID,
   isSitemapSalaryAmount,
   sitemapSalaryHref,
   snapToSitemapSalary,
 } from "@/lib/salarySitemapGrid";
-import { getSalaryNeighborAmounts, getStaticSalaryAmounts, sitemapGridAmounts } from "@/lib/salaryStaticParams";
+import { MAX_SALARY, MIN_SALARY, getSalaryNeighborAmounts, getStaticSalaryAmounts, sitemapGridAmounts } from "@/lib/salaryStaticParams";
 import { salaryReportHrefOrNearest } from "@/lib/salaryRedirect";
 import { getStaticMonthlyAmounts } from "@/lib/monthlyStaticParams";
 import { POPULAR_SALARY_LINKS } from "@/lib/homeContent";
@@ -86,7 +89,7 @@ const salaryHrefs = (html: string) => [...html.matchAll(SALARY_HREF_RE)].map((m)
 const offGrid = (hrefs: number[]) => hrefs.filter((n) => !GRID.has(n));
 
 describe("(a) 격자 단일 소스", () => {
-  it("SITEMAP_SALARY_GRID = 실제 sitemap() 의 /salary/* 금액 (211)", { timeout: 60_000 }, () => {
+  it("SITEMAP_SALARY_GRID = 실제 sitemap() 의 /salary/* 금액 (규칙 격자 211 ∪ 추가 등재)", { timeout: 60_000 }, () => {
     // sitemap.ts 는 @/ alias require 지연 로드를 써서 vitest 에서 직접 부를 수 없다(verify-sitemap.ts 머리말) → tsx 로 실행
     const code = [
       'import sitemap from "./src/app/sitemap";',
@@ -102,18 +105,32 @@ describe("(a) 격자 단일 소스", () => {
     const fromSitemap = JSON.parse(run.stdout) as number[];
     expect(new Set(fromSitemap).size, "사이트맵 /salary 중복").toBe(fromSitemap.length);
     expect([...fromSitemap].sort((a, b) => a - b)).toEqual([...SITEMAP_SALARY_GRID]);
-    expect(SITEMAP_SALARY_GRID.length).toBe(211);
-    expect(SITEMAP_SALARY_GRID[0]).toBe(SITEMAP_SALARY_MIN);
-    expect(SITEMAP_SALARY_GRID[SITEMAP_SALARY_GRID.length - 1]).toBe(SITEMAP_SALARY_MAX);
+    expect(SITEMAP_SALARY_REGULAR_GRID.length).toBe(211);
+    expect(SITEMAP_SALARY_REGULAR_GRID[0]).toBe(SITEMAP_SALARY_MIN);
+    expect(SITEMAP_SALARY_REGULAR_GRID[SITEMAP_SALARY_REGULAR_GRID.length - 1]).toBe(SITEMAP_SALARY_MAX);
+    expect([...SITEMAP_SALARY_GRID]).toEqual([...new Set([...SITEMAP_SALARY_REGULAR_GRID, ...SITEMAP_EXTRA_SALARY_AMOUNTS])].sort((a, b) => a - b));
   });
 
-  it("오름차순·중복 없음, sitemapGridAmounts() 와 같고 전부 정적 생성 집합 안 (레거시 205쪽도 계속 생성)", () => {
+  it("추가 등재는 규칙 격자 밖·오름차순 정수이고, 이미 정적 생성되는 레거시 금액만 (새 URL 0)", () => {
+    const regular = new Set(SITEMAP_SALARY_REGULAR_GRID);
+    // sitemapGridAmounts() 는 규칙 격자만 — 그래서 아래 '정적 생성 집합 안' 은 추가 등재가 새 페이지를 만들지 않는다는 뜻이다
+    const statics = new Set(getStaticSalaryAmounts());
+    SITEMAP_EXTRA_SALARY_AMOUNTS.forEach((a, i) => {
+      expect(Number.isInteger(a), String(a)).toBe(true);
+      expect(a >= MIN_SALARY && a <= MAX_SALARY, String(a)).toBe(true);
+      expect(regular.has(a), `${a} 는 이미 규칙 격자`).toBe(false);
+      expect(statics.has(a), `${a} 는 정적 생성되지 않는 금액 — 새 URL 금지`).toBe(true);
+      if (i > 0) expect(a).toBeGreaterThan(SITEMAP_EXTRA_SALARY_AMOUNTS[i - 1]);
+    });
+  });
+
+  it("오름차순·중복 없음, sitemapGridAmounts() = 규칙 격자, 전부 정적 생성 집합 안 (레거시 205쪽도 계속 생성)", () => {
     for (let i = 1; i < SITEMAP_SALARY_GRID.length; i++) expect(SITEMAP_SALARY_GRID[i]).toBeGreaterThan(SITEMAP_SALARY_GRID[i - 1]);
-    expect([...new Set(sitemapGridAmounts())].sort((a, b) => a - b)).toEqual([...SITEMAP_SALARY_GRID]);
+    expect([...new Set(sitemapGridAmounts())].sort((a, b) => a - b)).toEqual([...SITEMAP_SALARY_REGULAR_GRID]);
     const statics = new Set(getStaticSalaryAmounts());
     for (const a of SITEMAP_SALARY_GRID) expect(statics.has(a), `/salary/${a} 정적 생성 안 됨`).toBe(true);
     // 링크를 격자로 옮겨도 generateStaticParams 는 줄이지 않는다 — 격자 밖 레거시 URL 이 남아 있어야 한다
-    expect(getStaticSalaryAmounts().length).toBeGreaterThan(SITEMAP_SALARY_GRID.length + 150);
+    expect(getStaticSalaryAmounts().length).toBeGreaterThan(SITEMAP_SALARY_REGULAR_GRID.length + 150);
   });
 });
 
@@ -124,31 +141,37 @@ describe("(b) snapToSitemapSalary", () => {
       expect(isSitemapSalaryAmount(a)).toBe(true);
       expect(sitemapSalaryHref(a)).toBe(`/salary/${a}`);
     }
-    expect(isSitemapSalaryAmount(101_000_000)).toBe(false);
+    expect(isSitemapSalaryAmount(101_000_001)).toBe(false);
   });
 
+  // 아래 두 테스트는 규칙 격자로 고정 — 추가 등재(운영자 목록)가 바뀌어도 계약 검증은 그대로
+  const snapRegular = (a: number) => snapToSitemapSalary(a, SITEMAP_SALARY_REGULAR_GRID);
+
   it("5백만~2억 사이 격자 밖 금액은 최근접 격자 금액 (동률은 큰 쪽)", () => {
-    expect(snapToSitemapSalary(101_000_000)).toBe(100_000_000);
-    expect(snapToSitemapSalary(102_000_000)).toBe(100_000_000);
-    expect(snapToSitemapSalary(103_000_000)).toBe(105_000_000);
-    expect(snapToSitemapSalary(117_000_000)).toBe(115_000_000);
-    expect(snapToSitemapSalary(26_835_600)).toBe(27_000_000); // 2027 최저시급 × 2,508 (2026-09-06 사건 금액)
-    expect(snapToSitemapSalary(25_882_560)).toBe(26_000_000); // 2026 최저시급 × 2,508
-    expect(snapToSitemapSalary(10_400_000)).toBe(10_500_000);
-    expect(snapToSitemapSalary(198_000_000)).toBe(200_000_000);
-    expect(snapToSitemapSalary(102_500_000)).toBe(105_000_000); // 동률 → 큰 쪽
-    expect(snapToSitemapSalary(50_250_000)).toBe(50_500_000); // 동률 → 큰 쪽
-    expect(snapToSitemapSalary(42_800_000.4)).toBe(43_000_000); // 반올림 후 스냅
-    expect(sitemapSalaryHref(101_000_000)).toBe("/salary/100000000");
+    expect(snapRegular(101_000_000)).toBe(100_000_000);
+    expect(snapRegular(102_000_000)).toBe(100_000_000);
+    expect(snapRegular(103_000_000)).toBe(105_000_000);
+    expect(snapRegular(117_000_000)).toBe(115_000_000);
+    expect(snapRegular(26_835_600)).toBe(27_000_000); // 2027 최저시급 × 2,508 (2026-09-06 사건 금액)
+    expect(snapRegular(25_882_560)).toBe(26_000_000); // 2026 최저시급 × 2,508
+    expect(snapRegular(10_400_000)).toBe(10_500_000);
+    expect(snapRegular(198_000_000)).toBe(200_000_000);
+    expect(snapRegular(102_500_000)).toBe(105_000_000); // 동률 → 큰 쪽
+    expect(snapRegular(50_250_000)).toBe(50_500_000); // 동률 → 큰 쪽
+    expect(snapRegular(42_800_000.4)).toBe(43_000_000); // 반올림 후 스냅
+    expect(sitemapSalaryHref(100_000_000)).toBe("/salary/100000000");
+    const a = snapToSitemapSalary(101_000_000);
+    expect(sitemapSalaryHref(101_000_000)).toBe(`/salary/${a}`);
   });
 
   it("범위 밖·비정상 값은 null — 2억 초과를 2억 페이지로 클램프하지 않는다", () => {
     for (const a of [200_000_001, 207_000_000, 218_500_000, 220_000_000, 250_000_000, 300_000_000, 350_000_000, 1_000_000_000]) {
-      expect(snapToSitemapSalary(a), String(a)).toBeNull();
-      expect(sitemapSalaryHref(a), String(a)).toBeNull();
+      expect(snapRegular(a), String(a)).toBeNull();
+      // 기본(사이트맵) 격자: 추가 등재된 금액이면 그 금액 그대로, 아니면 null
+      expect(sitemapSalaryHref(a), String(a)).toBe(isSitemapSalaryAmount(a) ? `/salary/${a}` : null);
     }
     for (const a of [4_999_999, 1_000_000, 0, -50_000_000, Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]) {
-      expect(snapToSitemapSalary(a), String(a)).toBeNull();
+      expect(snapRegular(a), String(a)).toBeNull();
     }
   });
 
@@ -198,6 +221,7 @@ describe("(c) 렌더한 페이지의 /salary href ⊂ 사이트맵 격자", () =
     const amounts = getStaticMonthlyAmounts();
     expect(amounts.length).toBeGreaterThanOrEqual(100);
     let home = 0;
+    let expectedHome = 0;
     for (const monthly of amounts) {
       const html = render(MonthlyPage, { params: { amount: String(monthly) } });
       expect(offGrid(salaryHrefs(html)), `/monthly/${monthly}`).toEqual([]);
@@ -214,9 +238,10 @@ describe("(c) 렌더한 페이지의 /salary href ⊂ 사이트맵 격자", () =
       const button = cross.match(/<a href="([^"]+)"[^>]*>연봉 ([\d,]+)만원 리포트 보기/);
       expect(button, `/monthly/${monthly} 연봉 리포트 버튼`).not.toBeNull();
       expect(button![2]).toBe(Math.round(annual / 10_000).toLocaleString("ko-KR"));
-      expect(button![1]).toBe(annual > SITEMAP_SALARY_MAX ? "/" : `/salary/${snapToSitemapSalary(annual)}`);
+      expect(button![1]).toBe(sitemapSalaryHref(annual) ?? "/");
+      expectedHome += scenarios.filter((a) => salaryReportHrefOrNearest(a) !== null && sitemapSalaryHref(a) === null).length;
     }
-    expect(home, "2억 초과 행의 홈 계산기 폴백이 실제로 쓰인다").toBeGreaterThan(0);
+    expect(home, "2억 초과 행의 홈 계산기 폴백 수").toBe(expectedHome);
   });
 
   it("직업 전수 — 헤더·경력별·바로 계산 7곳 모두 격자 링크이거나 홈 계산기", () => {
@@ -271,7 +296,9 @@ describe("(c) 렌더한 페이지의 /salary href ⊂ 사이트맵 격자", () =
       expect(offGrid(salaryHrefs(cta)), `${c.id} CTA`).toEqual([]);
       expect(offGrid(salaryHrefs(render(CompanySalaryTable, { company: c }))), `${c.id} 연봉 표`).toEqual([]);
     }
-    expect(home, "신입부터 2억 초과 회사의 홈 계산기 폴백").toBeGreaterThan(0);
+    expect(home, "신입부터 2억 초과 회사의 홈 계산기 폴백 수").toBe(
+      allCompanies.filter((c) => snapToSitemapSalary(c.salary.entry.base + (c.salary.entry.incentive.avgAmount || 0)) === null).length,
+    );
   });
 
   it("홈 인기 구간·/salary 이웃 링크 — 격자 위", () => {

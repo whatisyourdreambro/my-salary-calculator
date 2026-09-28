@@ -26,8 +26,23 @@ function buildGrid(): number[] {
   return Array.from(new Set(out)).sort((a, b) => a - b);
 }
 
-/** 사이트맵에 등재된 /salary 금액 전량 (원 단위, 오름차순·중복 없음) */
-export const SITEMAP_SALARY_GRID: readonly number[] = buildGrid();
+/** 규칙 격자 211 — 사이트맵 /salary 루프 3개 = 정적 생성 집합의 격자 부분(salaryStaticParams.sitemapGridAmounts) */
+export const SITEMAP_SALARY_REGULAR_GRID: readonly number[] = buildGrid();
+
+/**
+ * 규칙 격자 밖이지만 사이트맵에 올릴 레거시 /salary 금액 (원 단위, 오름차순).
+ * S3-2 1단계(운영자 GSC 내보내기)에서 KR 노출이 확인된 금액만 넣는다 — 확인 전에는 비워 둔다(추측 등재 금지).
+ *   · 이미 정적 생성되는 레거시 금액만(새 URL 금지 — 테스트가 막는다). 넣으면 sitemap.ts·내부 링크 스냅이 같이 따라온다.
+ *   · 5백만~2억 안 금액은 최근접 스냅 후보가 되고, 2억 초과 금액은 정확히 같은 금액일 때만 링크된다
+ *     (회사 연봉 표는 2% 규칙으로 근사). 후보: 내부 링크를 받던 2억 초과 레거시 207M·218.5M·220M·250M·300M·350M.
+ *   · 바꾼 뒤 npm run ledger:update(URL 원장)·npm run verify:sitemap.
+ */
+export const SITEMAP_EXTRA_SALARY_AMOUNTS: readonly number[] = [];
+
+/** 사이트맵에 등재된 /salary 금액 전량 = 규칙 격자 ∪ 추가 등재 (원 단위, 오름차순·중복 없음) — 내부 링크 스냅 대상 */
+export const SITEMAP_SALARY_GRID: readonly number[] = Array.from(
+  new Set([...SITEMAP_SALARY_REGULAR_GRID, ...SITEMAP_EXTRA_SALARY_AMOUNTS]),
+).sort((a, b) => a - b);
 
 const GRID_SET: ReadonlySet<number> = new Set(SITEMAP_SALARY_GRID);
 

@@ -11,13 +11,13 @@
 //
 // 검사 항목 (오류 누적 후 일괄 출력, 위반 시 exit 1 — verify-company-data.ts 와 같은 방식):
 //  1. 생성된 href 전부 /salary/{n} 형식이고 n ∈ 사이트맵 격자 ⊂ getStaticSalaryAmounts() (실제 generateStaticParams 소스)
-//  2. 쪽당 링크 ≤ 5 (행 5개 × 이 열 1개) 그리고 ≥ 1 — 신입 총보상이 격자 최대 이하인 회사는 신입 행이 항상 링크
+//  2. 쪽당 링크 ≤ 5 (행 5개 × 이 열 1개) 그리고 ≥ 1 — 신입 총보상이 규칙 격자(5백만~2억) 안인 회사는 신입 행이 항상 링크
 //  3. 클램프 누출 0 — 격자 최대를 넘는 총액에는 href 가 붙지 않는다 (특히 /salary/{최대})
 //  4. 스냅 오차 ≤ SALARY_HREF_MAX_GAP
 import { allCompanies } from "../src/data/companies/index";
 import { getStaticSalaryAmounts } from "../src/lib/salaryStaticParams";
 import { SALARY_HREF_MAX_GAP, salaryReportHref } from "../src/lib/salaryRedirect";
-import { SITEMAP_SALARY_GRID } from "../src/lib/salarySitemapGrid";
+import { SITEMAP_SALARY_GRID, SITEMAP_SALARY_MAX, SITEMAP_SALARY_MIN } from "../src/lib/salarySitemapGrid";
 import type { JobLevel } from "../src/types/company";
 
 const RANKS: JobLevel[] = ["entry", "junior", "senior", "lead", "executive"];
@@ -69,9 +69,10 @@ for (const c of allCompanies) {
   if (perPage > MAX_PER_PAGE) errors.push(`${c.id}: 쪽당 링크 ${perPage}건 > ${MAX_PER_PAGE}`);
   if (perPage === 0) {
     const entry = c.salary.entry.base + (c.salary.entry.incentive.avgAmount || 0);
-    if (entry <= gridMax) {
+    // 규칙 격자(5백만~2억) 안 신입은 최근접 격자가 2% 안이라 링크가 있어야 한다. 2억 초과는 사이트맵 추가 등재(±2%)일 때만.
+    if (entry >= SITEMAP_SALARY_MIN && entry <= SITEMAP_SALARY_MAX) {
       errors.push(
-        `${c.id}: 링크 0건 — 신입 총보상 ${entry.toLocaleString()}원이 격자 최대 이하인데 링크가 없음 (오차 2% 초과?)`,
+        `${c.id}: 링크 0건 — 신입 총보상 ${entry.toLocaleString()}원이 규칙 격자 안인데 링크가 없음 (오차 2% 초과 — 격자·데이터 확인)`,
       );
     } else {
       noLinkPages++;

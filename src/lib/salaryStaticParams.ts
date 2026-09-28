@@ -31,7 +31,7 @@ import { jobsData } from "@/data/jobsData";
 import { regionsData } from "@/data/regionsData";
 import { industriesData } from "@/data/industriesData";
 import { POPULAR_SALARY_LINKS } from "@/lib/homeContent";
-import { SITEMAP_SALARY_GRID } from "@/lib/salarySitemapGrid";
+import { SITEMAP_SALARY_REGULAR_GRID } from "@/lib/salarySitemapGrid";
 import { generateAnnualSalaryTableData2026 } from "@/lib/generateData2026";
 import {
   generateWeeklyPayTableData2026,
@@ -49,11 +49,12 @@ export const MAX_SALARY = 1_000_000_000; // 연 10억
 /**
  * 사이트맵 격자 — src/app/sitemap.ts 의 /salary/* 루프와 반드시 동일하게 유지.
  * (500만~1,950만 50만 단위 / 2,000만~1억 50만 단위 / 1억 500만~2억 500만 단위)
- * 정의는 클라이언트 안전 리프 모듈 salarySitemapGrid.ts — 내부 링크 스냅과 같은 배열을 쓴다 (S3-2 2단계).
+ * 정의는 클라이언트 안전 리프 모듈 salarySitemapGrid.ts (S3-2 2단계). 규칙 격자만 — 사이트맵 추가 등재
+ * (SITEMAP_EXTRA_SALARY_AMOUNTS)는 이미 정적 생성되는 레거시 금액이어야 해서 여기 넣지 않는다(새 URL 금지 검사가 성립하도록).
  * (종전 specials 13건은 전부 이 격자 안이라 집합이 같다 — sitemap.ts 쪽 specials 는 2026-08-08 제거)
  */
 export function sitemapGridAmounts(): number[] {
-  return [...SITEMAP_SALARY_GRID];
+  return [...SITEMAP_SALARY_REGULAR_GRID];
 }
 
 /**

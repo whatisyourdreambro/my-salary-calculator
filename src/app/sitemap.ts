@@ -13,6 +13,7 @@ import { companyPageModified } from '@/lib/pageModified';
 import { getGuideModifiedDate } from '@/lib/guideDates';
 import { EN_INDEXABLE_STATIC_PATHS } from '@/lib/englishRoutes';
 import { englishPolicyCounterpart } from '@/lib/englishSite';
+import { SITEMAP_EXTRA_SALARY_AMOUNTS } from '@/lib/salarySitemapGrid';
 
 type ChangeFrequency =
  | 'always'
@@ -585,6 +586,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
  lastModified: SALARY_METHOD_REVIEW_DATE,
  changeFrequency: 'yearly',
  priority: 0.5,
+ });
+ }
+
+ // S3-2 2단계 — 격자 밖 레거시 금액 중 KR 노출이 확인된 것(salarySitemapGrid.SITEMAP_EXTRA_SALARY_AMOUNTS,
+ // 1단계 GSC 확인분만). 내부 링크 스냅과 같은 목록이라 사이트맵·링크가 함께 움직인다. 비어 있으면 출력 변화 0.
+ for (const amount of SITEMAP_EXTRA_SALARY_AMOUNTS) {
+ salaryUrls.push({
+ url: `${baseUrl}/salary/${amount}`,
+ lastModified: SALARY_METHOD_REVIEW_DATE,
+ changeFrequency: 'yearly',
+ priority: 0.45,
  });
  }
 
