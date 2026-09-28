@@ -103,11 +103,8 @@ export default function CompanyDetailClient({ company, summary }: { company: Com
  <p className="ms-description max-w-3xl">{company.description}</p>
  <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground">공시 자료와 머니샐러리 DB의 추정값을 구분해 확인하세요. 회사 평균과 개인의 계약 연봉은 다를 수 있습니다.</p>
  <div className="mt-6">
- <ShareButtons
- title={`${company.name.ko} 연봉 및 기업 정보 | Moneysalary`}
- description={`${company.name.ko}의 신입 초봉, 평균 연봉, 복지 정보를 확인하세요.`}
- className="justify-start"
- />
+ {/* 공유 제목·설명·카드는 이 페이지 <title>·메타 설명·og:image 기본값 (S23 — 종전 '| Moneysalary' 고정 문구 제거) */}
+ <ShareButtons className="justify-start" />
  </div>
  {/* 재방문 루프 — 회사 페이지가 즐겨찾기 효과 최대 지점 ("{회사명} 연봉" 재검색 대체) */}
  <div className="mt-4 flex justify-start">

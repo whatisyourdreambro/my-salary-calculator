@@ -342,9 +342,9 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
 
  <div className="flex items-center gap-4">
  <span className="text-sm font-medium text-muted-foreground">유익하셨나요? 공유하기</span>
+ {/* 공유 설명·카드는 이 글의 메타 설명·og:image 기본값 (S23 — 종전 '{분류} 가이드 | Moneysalary' 고정 문구 제거) */}
  <ShareButtons
  title={guide.title}
- description={`${guide.category} 가이드 | Moneysalary`}
  className="justify-end"
  />
  </div>

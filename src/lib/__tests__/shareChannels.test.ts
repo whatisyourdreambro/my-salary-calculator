@@ -7,6 +7,7 @@
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { kakaoFeedImageSize, SHARE_CHANNELS, tryKakaoFeedShare, withUtm } from "@/lib/shareChannels";
+import { resolvePublicShare } from "@/lib/sharePolicy";
 
 const HOME = "https://www.moneysalary.com";
 
@@ -142,5 +143,30 @@ describe("kakaoFeedImageSize — 우리 OG 카드에만 크기 힌트", () => {
     const content = sendDefault.mock.calls[1][0].content;
     expect(content).not.toHaveProperty("imageWidth");
     expect(content).not.toHaveProperty("imageHeight");
+  });
+});
+
+// S02 (2026-10 비광고 슬롯): 카카오 피드 이미지·설명 = 이 페이지의 og:image·메타 설명 — 같은 사이트 카드일 때만.
+describe("tryKakaoFeedShare — 페이지 og:image·메타 설명 기본값 (S02)", () => {
+  afterEach(() => vi.unstubAllGlobals());
+  const context = { pathname: "/salary/50000000", canonical: `${HOME}/salary/50000000`, title: "연봉 5000만원 실수령액 | 머니샐러리", notFound: false, description: "연봉 5,000만원의 월 실수령액은 약 357만원입니다." };
+
+  it("페이지 og:image(연봉 카드)와 메타 설명이 카카오 content 에 실리고 크기 힌트가 붙는다", () => {
+    const sendDefault = vi.fn();
+    vi.stubGlobal("window", { location: { host: "www.moneysalary.com" }, Kakao: { isInitialized: () => true, Share: { sendDefault } } });
+    const ogImage = `${HOME}/api/og?type=salary&amount=50000000&net=3570000&v=20260924`;
+    expect(tryKakaoFeedShare(resolvePublicShare({ ...context, ogImage }))).toBe(true);
+    expect(sendDefault.mock.calls[0][0].content).toMatchObject({ title: context.title, description: context.description, imageUrl: ogImage, imageWidth: 1200, imageHeight: 630 });
+  });
+
+  it("다른 사이트 og:image 는 카카오 페이로드에 실리지 않고 우리 경로 카드로 대체된다", () => {
+    const sendDefault = vi.fn();
+    vi.stubGlobal("window", { location: { host: "www.moneysalary.com" }, Kakao: { isInitialized: () => true, Share: { sendDefault } } });
+    expect(tryKakaoFeedShare(resolvePublicShare({ ...context, ogImage: "https://evil.example/api/og?type=salary" }))).toBe(true);
+    const { imageUrl } = sendDefault.mock.calls[0][0].content;
+    expect(imageUrl).not.toContain("evil.example");
+    expect(new URL(imageUrl).origin).toBe(HOME);
+    expect(new URL(imageUrl).pathname).toBe("/api/og");
+    expect(JSON.stringify(sendDefault.mock.calls)).not.toContain("evil.example");
   });
 });

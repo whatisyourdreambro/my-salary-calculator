@@ -42,6 +42,28 @@ export interface SharePageContext {
   notFound: boolean;
   /** Calculator-declared result URL ([data-share-result-url], same-site + fragment). Page-mode share never carries it. */
   resultUrl?: string | null;
+  /** This page's meta[name=description] (S02). Default share description for this same page only. */
+  description?: string | null;
+  /** This page's raw meta[property=og:image] (S02). Used only after publicShareImageUrl() accepts it. */
+  ogImage?: string | null;
+}
+
+const SHARE_IMAGE_PATHS = new Set(["/api/og", "/og-default.png"]);
+
+/**
+ * The page's own OG card as the Kakao feed image (S02) — never an arbitrary URL in the payload.
+ * Only this site's origin (https://www.moneysalary.com, no credentials or port) and only its two
+ * 1200x630 card routes (/api/og, /og-default.png) pass; the fragment is dropped. Anything else is null.
+ */
+export function publicShareImageUrl(input: string | null | undefined): string | null {
+  if (!input || input.length > 2048 || /[\\\u0000-\u001f\u007f]/.test(input)) return null;
+  try {
+    const url = new URL(input);
+    if (url.origin !== SHARE_ORIGIN || url.username || url.password || !SHARE_IMAGE_PATHS.has(url.pathname)) return null;
+    return `${SHARE_ORIGIN}${url.pathname}${url.search}`;
+  } catch {
+    return null;
+  }
 }
 
 /** A previous route's head must not become the next route's share title. */
@@ -67,9 +89,13 @@ export function resolvePublicShare(
   const legacy = isLegacyResultPath(context.pathname);
   const currentUrl = publicShareUrl(context.pathname) ?? `${SHARE_ORIGIN}/`;
   const resolvedUrl = (overrides.url ? publicShareUrl(overrides.url) : null) ?? currentUrl;
-  const title = (overrides.title ?? (!legacy && resolvedUrl === currentUrl ? context.title.trim() : "")) || defaultShareTitle(locale);
-  const description = overrides.description ?? (locale === "en" ? "Explore salary tools and practical guides." : "연봉 계산기와 생활에 필요한 가이드를 확인하세요.");
-  const imageUrl = overrides.imageUrl ?? `${SHARE_ORIGIN}/api/og?path=${encodeURIComponent(new URL(resolvedUrl).pathname)}&title=${encodeURIComponent(title)}&lang=${locale}`;
+  // This page's head (title, description, og:image) describes this page only: never a cross-page target or a legacy result.
+  const samePage = !legacy && resolvedUrl === currentUrl;
+  const title = (overrides.title ?? (samePage ? context.title.trim() : "")) || defaultShareTitle(locale);
+  const pageDescription = samePage ? context.description?.replace(/\s+/g, " ").trim() : "";
+  const description = overrides.description ?? (pageDescription || (locale === "en" ? "Explore salary tools and practical guides." : "연봉 계산기와 생활에 필요한 가이드를 확인하세요."));
+  const pageImage = samePage ? publicShareImageUrl(context.ogImage) : null;
+  const imageUrl = overrides.imageUrl ?? pageImage ?? `${SHARE_ORIGIN}/api/og?path=${encodeURIComponent(new URL(resolvedUrl).pathname)}&title=${encodeURIComponent(title)}&lang=${locale}`;
   return { url: resolvedUrl, title, description, imageUrl, locale };
 }
 
