@@ -3,7 +3,10 @@
 
 import { Metadata } from "next";
 import Link from "@/components/AppLink";
-import { generateAnnualSalaryTableData2026 } from "@/lib/generateData2026";
+import { generateAnnualSalaryTableData2026, generateNetToGrossTable2026 } from "@/lib/generateData2026";
+import { salaryReportHrefOrNearest } from "@/lib/salaryRedirect";
+import { formatManwonKorean } from "@/lib/manwonFormat";
+import { ChevronRight } from "lucide-react";
 import SalaryTable from "@/components/SalaryTable";
 import TableHero from "@/components/TableHero";
 import { CalcResultAd, Display2Ad, HomeTopAd, InArticleAd } from "@/components/AdPlacement";
@@ -89,6 +92,8 @@ const tableJsonLd = [
 function AnnualTable() {
   const allData = generateAnnualSalaryTableData2026();
   const highlightRows = [26000000, 30000000, 50000000, 80000000, 100000000];
+  // 실수령액 역산표(S22) — 빌드 시 위 표와 같은 엔진으로 만원 단위 이분법 (generateData2026.ts)
+  const reverseRows = generateNetToGrossTable2026();
 
   return (
     <main className="w-full bg-background min-h-screen pb-20">
@@ -206,6 +211,67 @@ function AnnualTable() {
           * {SALARY_MODEL_2026.defaultConditions} 기준으로, 각 행의 상세 페이지와 같은 계산 모델을 사용합니다.{" "}
           <Link href={SALARY_CALCULATION_METHOD_HREF} className="text-link underline underline-offset-4">계산 방식과 적용 조건</Link>을 확인하세요.
         </div>
+
+        {/* 실수령액 역산표 (S22, 2026-09-28 — 운영자 승인 후 10/10~10/31 비광고 슬롯 배포).
+            '실수령 300이면 세전 연봉?' 검색 수요용. ★반드시 이 자리(각주 아래, Display2Ad 보다 아래) — 광고 위로 옮기지 말 것.
+            이 페이지의 layout PageFooterAds 는 HomeTop·InArticle 사본이 dedup 으로 죽고(위 표의 interstitial 이 산다)
+            쿠팡 배너만 이 블록 아래에 남는다. 행 링크는 가장 가까운 정적 /salary 리포트(링크 문구는 금액이 아님). */}
+        <section className="mb-8 max-w-4xl mx-auto">
+          <div
+            className="rounded-2xl p-6 sm:p-8"
+            style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #DDE4EC" }}
+          >
+            <h2 className="text-2xl font-black text-navy mb-4">
+              월 실수령액으로 세전 연봉 역산
+            </h2>
+            <p className="text-faint-blue leading-relaxed mb-4">
+              월 실수령액 목표가 있다면 필요한 세전 연봉을 거꾸로 찾아보세요. 위 표와 같은 계산 모델로
+              월 실수령액이 목표 이상이 되는 가장 낮은 연봉을 만원 단위로 구했습니다.
+            </p>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-canvas-200 text-left text-faint-blue">
+                    <th className="py-2 pr-4">월 실수령액</th>
+                    <th className="py-2 pr-4">필요한 세전 연봉</th>
+                    <th className="py-2">연봉 리포트</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {reverseRows.map((row) => {
+                    const href = salaryReportHrefOrNearest(row.preTax);
+                    return (
+                      <tr key={row.monthlyNet} className="border-b border-canvas-100">
+                        <td className="py-2.5 pr-4 font-bold text-navy">
+                          월 {formatManwonKorean(row.monthlyNet / 10_000)}
+                        </td>
+                        <td className="py-2.5 pr-4 tabular-nums">
+                          약 {formatManwonKorean(row.preTax / 10_000)}
+                        </td>
+                        <td className="py-2.5">
+                          {href ? (
+                            <Link
+                              href={href}
+                              className="inline-flex items-center gap-1 text-primary font-bold hover:underline"
+                            >
+                              실수령 보기 <ChevronRight className="w-3.5 h-3.5" />
+                            </Link>
+                          ) : (
+                            <span className="text-faint-blue">—</span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-4 text-xs text-faint-blue leading-relaxed">
+              * {SALARY_MODEL_2026.defaultConditions}, 연봉을 12개월로 나눠 받는 기준의 추정치입니다. 상여금을 따로
+              받거나 조건이 다르면 달라지며, 연봉 리포트는 가장 가까운 금액의 상세 페이지로 연결됩니다.
+            </p>
+          </div>
+        </section>
       </div>
     </main>
   );

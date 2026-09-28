@@ -98,3 +98,61 @@ export function generateAnnualSalaryTableData2026(): SalaryData[] {
  }
  return data;
 }
+
+// ─── 실수령액 역산표 (S22, 2026-09-28) ─────────────────────────────────────
+// /table/2026/annual 하단 '월 실수령액으로 세전 연봉 역산' 표의 데이터. 위 연봉 표와 같은 함수·같은 기준
+// (calculateSalary2026 · 비과세 식대 월 20만원 · 본인 1인 · 2026 요율 고정)으로 빌드 시 만원 단위 이분법.
+// 실수령액은 연봉에 대해 엄밀한 단조가 아니다 — 간이세액표 구간 경계에서 월 수천원씩 되돌아간다
+// (연봉 2,000만~1.2억 1만원 격자 실측 최대 21,146원, 7,248만원 지점). 이분법은 불변식 net(lo) < 목표 ≤ net(hi) 만 보장하므로, 표에 싣는 9행이 '목표 이상이 되는
+// 가장 낮은 만원 단위 연봉'과 같은지는 단위 테스트(netToGross2026.test.ts)가 전수 스캔으로 고정한다.
+
+/** 역산표 목표 — 월 실수령 200·250·300·350·400·450·500·600·700만원 */
+export const NET_TO_GROSS_TARGETS_2026: readonly number[] = [
+ 2_000_000, 2_500_000, 3_000_000, 3_500_000, 4_000_000, 4_500_000, 5_000_000, 6_000_000, 7_000_000,
+];
+
+// 탐색 격자 — 만원 단위, 상한 연봉 10억(월 실수령 약 5,000만원 수준 — 그 이상 목표는 null)
+const REVERSE_STEP = 10_000;
+const REVERSE_MAX_ANNUAL = 1_000_000_000;
+
+/** 표와 같은 기준의 월 실수령액 (역산 전용) */
+function monthlyNet2026(annualSalary: number): number {
+ return calculateSalary2026(annualSalary, NON_TAXABLE_MONTHLY, 1, 0, INSURANCE_RATES_2026).netPay;
+}
+
+/**
+ * 월 실수령 목표 → 세전 연봉(원, 만원 단위). 반환값 g 는 net(g) ≥ 목표 > net(g − 1만원) 을 만족한다.
+ * 목표가 0 이하·비유한이거나 탐색 상한(10억)으로도 닿지 않으면 null.
+ */
+export function annualGrossForMonthlyNet2026(targetMonthlyNet: number): number | null {
+ if (!Number.isFinite(targetMonthlyNet) || targetMonthlyNet <= 0) return null;
+ // 단위: 만원. lo = 0 은 calculateSalary2026 이 실수령 0 을 돌려주므로 항상 목표 미만.
+ let lo = 0;
+ let hi = REVERSE_MAX_ANNUAL / REVERSE_STEP;
+ if (monthlyNet2026(hi * REVERSE_STEP) < targetMonthlyNet) return null;
+ while (hi - lo > 1) {
+ const mid = Math.floor((lo + hi) / 2);
+ if (monthlyNet2026(mid * REVERSE_STEP) >= targetMonthlyNet) hi = mid;
+ else lo = mid;
+ }
+ return hi * REVERSE_STEP;
+}
+
+export interface NetToGrossRow {
+ /** 월 실수령 목표(원) */
+ monthlyNet: number;
+ /** 목표 이상이 되는 세전 연봉(원, 만원 단위) */
+ preTax: number;
+}
+
+/** 역산표 행 — 목표 순서 그대로, 역산 불가(null) 목표는 뺀다 */
+export function generateNetToGrossTable2026(
+ targets: readonly number[] = NET_TO_GROSS_TARGETS_2026
+): NetToGrossRow[] {
+ const rows: NetToGrossRow[] = [];
+ for (const monthlyNet of targets) {
+ const preTax = annualGrossForMonthlyNet2026(monthlyNet);
+ if (preTax !== null) rows.push({ monthlyNet, preTax });
+ }
+ return rows;
+}
