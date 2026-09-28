@@ -150,6 +150,8 @@ const FACT_PINS: Array<[string, string[], string[]]> = [
   // GB-11 재직 중 스톡옵션 행사이익·RSU 는 근로소득(소득세법 시행령 §38①17호)
   ["samsung-employee-rsu-stock", ["베스팅 기간 후 부여. 근로소득세 적용."], ["부여. 양도소득세 적용."]],
   ["stock-options-rsu-valuation", ["행사 시 근로소득 과세", "(매도가 - 베스팅 시 시가)가 양도차익"], ["행사 시 차익에 양도세", "1년 보유 후 매도가 절세"]],
+  // MISSED-gb-7 HBM4 개발 완료·양산 체제 구축(SK하이닉스 뉴스룸, 2025-09)
+  ["sk-hynix-stock-2026", ["HBM4도 2025년 9월 세계 첫 양산 체제를 갖췄습니다"], ["2026년 하반기 양산을 목표로"]],
 ];
 
 describe("(2) guidesb 사실 정정 고정", () => {
