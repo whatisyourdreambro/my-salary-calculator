@@ -38,6 +38,7 @@ import { getStaticMonthlyAmounts, MIN_MONTHLY, MAX_MONTHLY } from "@/lib/monthly
 import { PENSION_BASE_2026 } from "@/lib/taxConstants2026";
 // 요율 문구·연도 표기(제목·설명·요약·FAQ)는 현행 포인터 — 1/1 전환 시 계산(calculateSalary2026 기본 요율)과 함께 바뀐다 (2026-09-25 N3)
 import { CURRENT_RATES_YEAR, CURRENT_RATE_LABELS } from "@/config/currentRates";
+import { SALARY_MODEL_2026 } from "@/lib/salaryModelContent";
 
 /** 이 페이지 전 계산의 비과세 식대 기준 (calculateSalary2026 호출과 공유) */
 const NON_TAXABLE_MONTHLY = 200_000;
@@ -115,10 +116,12 @@ export default function MonthlyPage({ params }: Props) {
   const netManwon = fmtManwon(tax.netPay);
   const deductManwon = fmtManwon(tax.totalDeductions);
 
-  // 시급·주급·일급 환산 (근로기준법 월 소정근로 209시간 기준)
+  // 시급·주급·일급 환산 — 월 209시간(주 소정근로 40시간 + 유급 주휴, 최저임금 월 환산과 같은 기준)
   const hourly = Math.round(monthly / 209);
   const daily = Math.round((monthly / 209) * 8);
   const weekly = Math.round((monthly / 209) * 40);
+  // 주휴수당 포함 주급 — /table/2026/weekly 의 '주 40시간(주휴 포함 48시간분)' 정의와 같다 (SG-09)
+  const weeklyWithHoliday = Math.round((monthly / 209) * 48);
 
   // 국민연금 상한(기준소득월액 659만, 2026-07-01~) 도달 여부.
   // 페이지 전체가 비과세 식대 월 20만원을 전제로 계산하므로(아래 calculateSalary2026
@@ -141,7 +144,7 @@ export default function MonthlyPage({ params }: Props) {
   const faqItems = [
     {
       question: `월급 ${m}만원의 실수령액은 얼마인가요?`,
-      answer: `세전 월급 ${m}만원 기준 ${CURRENT_RATES_YEAR}년 실수령액은 약 ${netManwon}만원입니다. 국민연금 ${CURRENT_RATE_LABELS.pension}, 건강보험 ${CURRENT_RATE_LABELS.health}(+장기요양), 고용보험 ${CURRENT_RATE_LABELS.employment}와 근로소득세·지방소득세를 공제한 값입니다 (비과세 식대 20만원, 본인 1인 공제 기준).`,
+      answer: `세전 월급 ${m}만원 기준 ${CURRENT_RATES_YEAR}년 실수령액은 약 ${netManwon}만원입니다. 국민연금 ${CURRENT_RATE_LABELS.pension}, 건강보험 ${CURRENT_RATE_LABELS.health}(+장기요양), 고용보험 ${CURRENT_RATE_LABELS.employment}와 근로소득세·지방소득세를 공제한 값입니다 (비과세 식대 20만원, 본인 1인 공제 기준). ${SALARY_MODEL_2026.incomeTaxMethod}`,
     },
     {
       question: "월급 실수령액과 '연봉 ÷ 12'가 왜 다른가요?",
@@ -149,13 +152,13 @@ export default function MonthlyPage({ params }: Props) {
     },
     {
       question: `월급 ${m}만원은 시급으로 얼마인가요?`,
-      answer: `근로기준법 월 소정근로시간 209시간 기준으로 시급 약 ${hourly.toLocaleString("ko-KR")}원입니다. 주급(40시간)으로는 약 ${fmtManwon(weekly)}만원, 일급(8시간)은 약 ${Math.round(daily / 10000)}만원 수준입니다.`,
+      answer: `월 209시간(주 소정근로 40시간+유급 주휴, 최저임금 월 환산과 같은 기준)으로 나누면 시급 약 ${hourly.toLocaleString("ko-KR")}원입니다. 주 40시간 근무분은 약 ${fmtManwon(weekly)}만원이고, 주휴수당(8시간분)을 더한 주급은 약 ${fmtManwon(weeklyWithHoliday)}만원입니다(주급 실수령액 표와 같은 48시간분 기준). 일급(8시간)은 약 ${Math.round(daily / 10000)}만원 수준입니다.`,
     },
     {
       question: "4대보험은 월급 기준으로 어떻게 계산되나요?",
       answer: pensionCapped
         ? `국민연금은 기준소득월액 상한(2026년 7월부터 월 ${fmtManwon(PENSION_BASE_2026.MAX_MONTHLY)}만원)이 있어, 월급 ${m}만원은 상한을 초과하므로 상한 기준으로만 부과됩니다. 건강보험·고용보험은 상한 없이 보수월액 비례로 부과됩니다.`
-        : `국민연금·건강보험·고용보험 모두 세전 보수월액(비과세 제외)에 요율을 곱해 매월 부과됩니다. 국민연금에는 기준소득월액 상한(2026년 7월부터 월 ${fmtManwon(PENSION_BASE_2026.MAX_MONTHLY)}만원)이 있으며, 월급 ${m}만원은 상한 미만이라 전액 부과 대상입니다.`,
+        : `국민연금·건강보험·고용보험 모두 세전 보수월액(비과세 제외)에 요율을 곱해 매월 부과됩니다. 국민연금에는 기준소득월액 상한(2026년 7월부터 월 ${fmtManwon(PENSION_BASE_2026.MAX_MONTHLY)}만원)이 있으며, 월급 ${m}만원에서 비과세 식대 20만원을 뺀 보수월액 ${fmtManwon(monthly - NON_TAXABLE_MONTHLY)}만원은 상한 미만이라 전액 부과 대상입니다.`,
     },
   ];
 
@@ -322,7 +325,7 @@ export default function MonthlyPage({ params }: Props) {
                 7월 인상)까지는 월급에 비례해 공제액이 늘어납니다.
               </>
             )}{" "}
-            시급 환산은 근로기준법 월 소정근로 209시간(주휴 포함) 기준입니다.
+            시급 환산은 근로기준법 월 유급근로 209시간(주휴 포함) 기준입니다.
           </p>
         </section>
 
