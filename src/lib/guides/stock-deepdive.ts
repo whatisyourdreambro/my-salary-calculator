@@ -407,7 +407,7 @@ ${DISCLAIMER_HTML}
  <ul class="space-y-1 text-sm">
   <li>· <a href="/tools/finance/bonus" class="text-primary underline">성과급(보너스) 세금 계산기</a></li>
   <li>· <a href="/calc/incentive-tax" class="text-primary underline">인센티브 세후 계산기</a></li>
-  <li>· <a href="/salary-db" class="text-primary underline">SK하이닉스 직급별 연봉 DB</a></li>
+  <li>· <a href="/salary-db/sk-hynix" class="text-primary underline">SK하이닉스 직급별 연봉 DB</a></li>
  </ul>
 </div>
 `;
@@ -503,7 +503,7 @@ ${DISCLAIMER_HTML}
  <p class="font-bold text-primary mb-2">🛠 함께 사용하면 좋은 도구</p>
  <ul class="space-y-1 text-sm">
   <li>· <a href="/fire-calculator" class="text-primary underline">FIRE 은퇴 계산기</a> — 사이클 변동을 반영한 자산 시뮬레이션</li>
-  <li>· <a href="/dashboard" class="text-primary underline">내 대시보드</a> — 자산 추적</li>
+  <li>· <a href="/calc/portfolio-allocation" class="text-primary underline">자산 배분 계산기</a></li>
  </ul>
 </div>
 `;

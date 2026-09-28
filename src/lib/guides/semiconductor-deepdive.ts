@@ -611,7 +611,7 @@ ${DISCLAIMER_HTML}
   <li>· <a href="/calc/incentive-tax" class="text-primary underline">인센티브 세후 계산기</a></li>
   <li>· <a href="/tools/finance/bonus" class="text-primary underline">성과급 세금 계산기</a></li>
   <li>· <a href="/tools/finance/irp" class="text-primary underline">IRP 세액공제 계산기</a></li>
-  <li>· <a href="/year-end-tax-2026" class="text-primary underline">2026 연말정산 종합 가이드</a></li>
+  <li>· <a href="/year-end-tax-2027" class="text-primary underline">2026 연말정산 종합 가이드</a></li>
   <li>· <a href="/guides/sk-hynix-wage-2026" class="text-primary underline">SK하이닉스 PS 가이드</a></li>
  </ul>
 </div>

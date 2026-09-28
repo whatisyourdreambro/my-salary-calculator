@@ -162,6 +162,13 @@ const FACT_PINS: Array<[string, string[], string[]]> = [
   ["financial-income-tax", ["분리과세 선택은 원칙적 불가", "2026년부터 고배당기업 배당만 분리과세 특례 대상"], ["무조건 종합과세 대상"]],
   // GB-18 연납 신청은 1·3·6·9월 — 10월 1일부터 틀리는 '올해 안이라면 9월' 문장 제거
   ["car-tax-annual-payment", ["9월 16~30일이 그해 마지막이고, 놓쳤다면 이듬해 1월 연납(2~12월분 공제)"], ["올해 안이라면 9월 16~30일"]],
+  // GB-28 앵커와 목적지 일치(/year-end-tax-2026 은 종합소득세 페이지, 연말정산 허브는 /year-end-tax-2027) · noindex 링크 제거
+  ["donation-tax-credit", ["href=\"/year-end-tax-2027\">2026 연말정산 가이드"], ["href=\"/year-end-tax-2026\""]],
+  ["semiconductor-performance-bonus-tax", ["href=\"/year-end-tax-2027\" class=\"text-primary underline\">2026 연말정산 종합 가이드"], ["href=\"/year-end-tax-2026\""]],
+  ["sk-hynix-employee-bonus-stock", ["href=\"/salary-db/sk-hynix\" class=\"text-primary underline\">SK하이닉스 직급별 연봉 DB"], ["href=\"/salary-db\" class=\"text-primary underline\">SK하이닉스"]],
+  ["interview-questions-100", ["href=\"/\">연봉 계산기"], ["href=\"/calc\">연봉 계산기"]],
+  ["mbti-work-style", ["href=\"/\">연봉 계산기"], ["href=\"/calc\">연봉 계산기"]],
+  ["semiconductor-cycle-2026", ["href=\"/calc/portfolio-allocation\""], ["href=\"/dashboard\""]],
 ];
 
 describe("(2) guidesb 사실 정정 고정", () => {
