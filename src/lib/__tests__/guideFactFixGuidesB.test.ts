@@ -111,6 +111,8 @@ const FACT_PINS: Array<[string, string[], string[]]> = [
   ["crypto-tax-2026", ["2027년 1월 1일 이후 양도·대여분부터 과세", "1년 동안의 손익을 통산해 과세함", "2026년 말 시가와 실제 취득가 중 큰 금액"], ["World-Crossing", "추가 유예되었거나", "시행 직전에 매도하면 과세 대상 아님"]],
   // GB-19 조정대상지역 취득 주택 2년 거주 요건(유예된 적 없음) + 양도세 계산기 링크
   ["real-estate-capital-gains-2026", ["(조정대상지역 취득 주택은 2년 거주 요건 추가)", "href=\"/calc/real-estate-capital-gains-quick\">양도세 계산기</a>"], ["한시 유예", "acquisition-tax\">취득세 계산기"]],
+  // GB-20 장례비 공제 1천만원 한도 + 봉안시설 5백만원 별도 (상증세법 시행령 §9②)
+  ["inheritance-tax-strategy", ["1천만원 (봉안시설은 5백만원 별도)"], ["영수증 5천만원까지 인정"]],
 ];
 
 describe("(2) guidesb 사실 정정 고정", () => {

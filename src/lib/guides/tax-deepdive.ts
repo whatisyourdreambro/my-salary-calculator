@@ -393,7 +393,7 @@ export const taxDeepdiveGuides = [
 <li><strong>배우자 공제 최대 30억</strong> (실제 상속분 기준)</li>
 <li><strong>자녀 공제 1인당 5천만원</strong> (미성년은 19세까지 매년 1천만원 추가)</li>
 <li><strong>금융재산 상속공제</strong>: 금융재산의 20%, 최대 2억</li>
-<li><strong>장례비 공제</strong>: 1천만원 (영수증 5천만원까지 인정)</li>
+<li><strong>장례비 공제</strong>: 1천만원 (봉안시설은 5백만원 별도)</li>
 </ul>
 
 <h2>🚀 사전 증여 5단계 전략</h2>
