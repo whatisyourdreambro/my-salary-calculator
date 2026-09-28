@@ -58,6 +58,8 @@ const MODULES: Record<string, string[]> = {
   "src/app/salary-db/ranking/page.tsx": ["ranking-list"],
   "src/app/job/page.tsx": ["job-hub"],
   "src/app/industry/[slug]/page.tsx": ["industry-list"],
+  // 2026-09-28 S18 — calc/layout 맨 끝(모든 광고 아래) 페이지별 정적 링크 한 줄. 첫 항목은 성과급 허브 → /calc/bonus-home-plan
+  "src/components/CalcAfterAdsLink.tsx": ["calc-after-ads"],
 };
 
 /**
@@ -74,6 +76,7 @@ const P1_FOLLOW_UP_FILES: Record<string, string[]> = {
   "/calc/bonus-calculators": [
     "src/app/calc/bonus-calculators/page.tsx",
     "src/components/RelatedCalculators.tsx",
+    "src/components/CalcAfterAdsLink.tsx", // calc/layout 맨 끝 — 광고 아래 링크 한 줄(S18)
   ],
   "/salary-db/[id]": [
     "src/app/salary-db/[id]/SamsungCompanySummaryLinks.tsx", // onClick 직접 계측(module_view 짝)

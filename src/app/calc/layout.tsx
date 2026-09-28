@@ -2,6 +2,7 @@ import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import AutoShareSection from "@/components/AutoShareSection";
 import FloatingShareBar from "@/components/FloatingShareBar";
+import CalcAfterAdsLink from "@/components/CalcAfterAdsLink";
 
 export default function CalcLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -19,6 +20,9 @@ export default function CalcLayout({ children }: { children: React.ReactNode }) 
       {/* 공유 fallback은 광고 블록 아래 — 광고 밀림 방지 (2026-08-16 수익 대응) */}
       <AutoShareSection contentType="calc_result" maxWidth="4xl" className="pb-10" />
       <FloatingShareBar />
+      {/* 페이지별 정적 링크 한 줄(S18, 2026-09-28) — 반드시 맨 끝(모든 광고 아래 + 기존 형제의 자동광고 CSS 경로 불변).
+          layout 에는 params 가 없어 pathname 으로 고른다(GuideSupplement 패턴). 항목 없는 경로는 null */}
+      <CalcAfterAdsLink />
     </>
   );
 }
