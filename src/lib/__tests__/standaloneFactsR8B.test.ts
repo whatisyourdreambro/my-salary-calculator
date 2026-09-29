@@ -20,6 +20,8 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { seedCompanies } from "@/data/seedCompanies";
+import { FIXED_RERATE, getThreshold } from "@/app/calc/samsung-bonus/model";
+import { PS_HISTORY } from "@/app/calc/sk-hynix-bonus/psData";
 
 const readSrc = (rel: string) => readFileSync(resolve(process.cwd(), rel), "utf8");
 const flat = (s: string) => s.replace(/\s+/g, " ");
@@ -140,9 +142,55 @@ describe("/samsung-negotiation-2026 2026 임금협약 타결 결과(5/27 가결)
 
   it("접힌 FAQ: 소급은 3월 급여부터(1월 1일자 아님), 결과 날짜 명시", () => {
     expect(src).toContain("2026년 3월 급여부터 소급 적용됩니다(보도 기준)");
-    expect(src).toContain("5월 20일 밤 잠정합의안이 나왔습니다");
+    expect(src).toContain("5월 20일 고용노동부 장관 중재 교섭에서 잠정합의안이 나왔습니다");
     expect(src).not.toContain("소급 적용은 1월 1일자입니다");
     expect(src).not.toContain("잠정합의가 6~8월에 이뤄지면");
+  });
+
+  // 2026-09-30 후속 정정(R8-B 후속, dedupe 12 — 번들 S09 에서 옮긴 사실): 협상 시작은 5월 12일이 아니라 2025-12-11 상견례·12-16
+  // 1차 본교섭(파이낸셜뉴스 2026-05-27 일지 보도), 특별경영성과급 재원은 노사가 합의한 사업성과의 10.5%·지급 조건 200조/100조
+  // (파이낸셜뉴스 2026-09-27 보도), SK하이닉스 PS 는 psData 정본 값.
+  it("접힌 FAQ·요약: 협상 시작은 2025년 12월 11일 상견례·12월 16일 1차 본교섭이고 '5월 12일 본격 본교섭'이 없다", () => {
+    expect(src).toContain("2026년 임금교섭은 2025년 12월 11일 상견례와 12월 16일 1차 본교섭으로 시작됐습니다");
+    expect(src).toContain("2025년 12월 11일 상견례");
+    expect(src).not.toContain("5월 12일 본격 본교섭이 개시");
+    expect(src).not.toContain("5월 12일 본격 시작");
+    expect(src).toContain("5월 11~12일 1차 사후조정(13일 새벽 결렬)과 5월 18~20일 2차 사후조정이 결렬됐고");
+    expect(src).toContain(
+      "2025년 12월 11일 상견례·12월 16일 1차 본교섭 → 2월 19일 결렬·3월 3일 중노위 조정 중지 → 5월 11~12일·18~20일 사후조정 결렬 → 5월 20일 밤 고용노동부 장관 중재로 잠정합의",
+    );
+  });
+
+  it("요약의 특별경영성과급: 노사가 합의한 사업성과의 10.5%·지급 조건이 정본(FIXED_RERATE·getThreshold)과 같다", () => {
+    expect(src).toContain(`재원은 노사가 합의한 DS부문 사업성과의 ${FIXED_RERATE}%(상한 없음)이고`);
+    expect(src).toContain(
+      `2026~2028년 DS부문 연간 영업이익 ${getThreshold(2026)}조원·2029~2035년 ${getThreshold(2029)}조원 이상일 때만 지급됩니다`,
+    );
+    expect(src).toContain("사업성과의 10.5%");
+    expect(src).toContain("200조원");
+    expect(src).not.toContain("재원은 영업이익의 10.5%");
+    expect([getThreshold(2028), getThreshold(2035)]).toEqual([getThreshold(2026), getThreshold(2029)]);
+  });
+
+  it("FAQ 인상률: 합계 6.2%는 추정 범위 안이지만 기본인상률 4.1%는 추정보다 낮았다", () => {
+    expect(src).toContain("합계 6.2%는 그 범위 안이지만 기본인상률만 보면 4.1%로 추정보다 낮았습니다");
+    expect(src).not.toContain("실제 타결은 그 범위 안이었습니다");
+  });
+
+  it("FAQ SK하이닉스 PS: psData PS_HISTORY 의 2024·2025 실적분 지급률과 같다", () => {
+    const ps = (y: number) => PS_HISTORY.find((r) => r.year === y)?.psRatePct;
+    expect(ps(2024)).toBe(1500);
+    expect(ps(2025)).toBe(2964);
+    expect(src).toContain(
+      `2024년 실적분은 기본급의 ${ps(2024)!.toLocaleString("en-US")}%, 2025년 실적분은 ${ps(2025)!.toLocaleString("en-US")}%(2026년 2월 5일 지급)였습니다(보도 기준)`,
+    );
+    expect(src).not.toContain("2024~2025년 호황기에는 기본급 기준 1,500% 수준");
+  });
+
+  it("요약 시나리오 li 가 광고 위 표 주석의 1월 1일자 소급이 협상 전 가정임을 밝힌다(주석 자체는 11/2 결정 12)", () => {
+    expect(src).toContain("표 아래 주석의 1월 1일자 소급도 협상 전 가정이며, 실제 소급은 3월 급여부터입니다.");
+    // 광고 위 표 주석은 이번 푸시에서 그대로다(폭 맞춤 실패 — 11/2 결정 12 에서 1회 교정)
+    expect(src).toContain("※ 기본 연봉만 반영. OPI/TAI 성과급은 별도. 합의 후 1월 1일자 소급 적용 시 일시 입금.");
   });
 
   it("타결 결과 요약은 마지막 광고(HomeTopAd) 아래에만 있다", () => {
