@@ -174,7 +174,7 @@ export default function SavingsInterestClient() {
             className="w-4 h-4"
           />
           <span className="text-sm font-medium text-navy dark:text-canvas-100">
-            비과세 상품 (ISA·청년도약계좌·조합예탁금 등)
+            비과세 상품 (ISA·청년미래적금·조합예탁금 등)
           </span>
         </label>
 
