@@ -1,6 +1,6 @@
 // 기타 페이지 사실·정합성 정정 고정 (SEO 신선도 정비 2026-09-29, MI 계열)
 //
-//  - MI-21 /en/help 방법 검토일 = 실제 방법 정정일(a465c0a, 2026-09-25)
+//  - MI-21 /en/help 방법 검토일은 11/2 문자열 푸시까지 원문(9 September) 유지 — 25 September 는 한 줄이 넘쳐 광고 2개가 내려간다
 //  - MI-22 /qna 상세 BreadcrumbList 잎 이름 = 화면 빵부스러기(질문 전체, 30자 절단 금지)
 //  - MI-23 /tools·/tools/life 근무일수 계산기 설명 = 공휴일 제외 기능 반영(같은 2음절 교체)
 import { readFileSync } from "node:fs";
@@ -9,10 +9,9 @@ import { describe, expect, it } from "vitest";
 const read = (p: string) => readFileSync(p, "utf8");
 
 describe("MI-21·MI-22·MI-23", () => {
-  it("/en/help 방법 검토일은 25 September 2026", () => {
+  it("MI-21 /en/help 방법 검토일은 원문 유지 — 25 September 는 644~651px 에서 한 줄이 늘어 EnglishPageExtras 광고 2개가 20px 내려감(11/2 문자열 푸시 몫)", () => {
     const src = read("src/app/en/help/page.tsx");
-    expect(src).toContain("Method review: 25 September 2026.");
-    expect(src).not.toContain("Method review: 9 September");
+    expect(src).toContain("Method review: 9 September 2026. Check the applicable tax year in the official source before filing.");
   });
 
   it("/qna 상세 BreadcrumbList 잎 이름은 질문 전체", () => {
