@@ -266,7 +266,7 @@ export const krCompanies_Batch15: CompanyProfile[] = [
     industry: "Heavy Equipment",
     tier: "conglomerate",
     logo: "🚧",
-    description: "두산인프라코어에서 HD현대로 품을 옮긴 굴착기 전문. 건설기계 글로벌 탑10.",
+    description: "두산인프라코어에서 HD현대로 옮겨 계열 법인에 합병. 건설기계 글로벌 탑10.",
     salary: {
       entry: { base: 55000000, incentive: { target: 20, max: 45, avgAmount: 14000000 } },
       junior: { base: 67000000, incentive: { target: 20, max: 45, avgAmount: 18000000 } },
