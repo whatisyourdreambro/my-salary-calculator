@@ -8,7 +8,6 @@
 // (2) 사실 고정: 정정한 수치가 옛 값으로 되돌아가지 않게 글별로 핀을 둔다(공식 출처는 각 커밋 메시지).
 import { describe, expect, it } from "vitest";
 import { koGuides } from "@/lib/guidesContent";
-import { UNEMPLOYMENT_BENEFIT_2026, unemploymentDailyLowerBound } from "@/config/unemploymentBenefit";
 
 const H2_OPEN_RE = /<h2[\s>]/gi;
 
