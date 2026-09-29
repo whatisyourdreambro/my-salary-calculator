@@ -44,17 +44,14 @@ describe("Q&A CTA 목적지 (MI-06)", () => {
   });
 });
 
-describe("Q&A 사실 정정 (MI-08·MI-10)", () => {
+describe("Q&A 사실 정정 (MI-08)", () => {
   it("중소기업 취업 청년 감면 연령 상한은 만 40세", () => {
     const item = qnaData.find((i) => i.question.startsWith("중소기업 취업 청년 소득세 감면"))!;
     const text = item.answer.details.join(" ");
     expect(text).toContain("최대 만 40세까지");
     expect(text).not.toContain("만 39세");
   });
-
-  it("배당소득세 팁의 ISA 비과세 한도는 200만원", () => {
-    const item = qnaData.find((i) => i.question.startsWith("배당소득세가 뭔가요"))!;
-    expect(item.answer.tip).toContain("200만원 한도 이내 비과세");
-    expect(item.answer.tip).not.toContain("2,000만원");
-  });
+  // MI-10(배당소득세 팁 ISA 비과세 한도 2,000만원 -> 200만원)은 광고 위 팁이라 같은 폭이어야 하는데,
+  // 숫자 2,000 -> 200 은 어떤 문구로도 폭을 맞추지 못해(Chrome 하네스: 팁 폭 338px·507px 에서 줄 수 변화) 보류했다.
+  // 같은 항목 상세 설명(200~400만원 비과세)과 /tax-changes-2026 은 이미 맞는 값이다.
 });
