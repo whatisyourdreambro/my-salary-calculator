@@ -316,7 +316,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-15",
   "views": 29000,
   "lang": "ko",
-  "contentChars": 5063
+  "contentChars": 5066
  },
  {
   "slug": "donation-tax-credit",
@@ -348,7 +348,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-15",
   "views": 130000,
   "lang": "ko",
-  "contentChars": 5969
+  "contentChars": 5968
  },
  {
   "slug": "etf-investment-starter",
@@ -396,7 +396,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-15",
   "views": 67000,
   "lang": "ko",
-  "contentChars": 5498
+  "contentChars": 5474
  },
  {
   "slug": "gold-investment-methods",
@@ -831,7 +831,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-25",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2841
+  "contentChars": 2840
  },
  {
   "slug": "n-job-tax-2026",
@@ -884,7 +884,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-05",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1888
+  "contentChars": 1883
  },
  {
   "slug": "social-insurance-reduction",
@@ -901,7 +901,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-03-28",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2298
+  "contentChars": 2300
  },
  {
   "slug": "inheritance-tax-strategy",
@@ -935,7 +935,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-03-15",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2228
+  "contentChars": 2229
  },
  {
   "slug": "year-end-tax-13-tips-2026",
@@ -988,7 +988,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-15",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2664
+  "contentChars": 2665
  },
  {
   "slug": "stock-options-rsu-valuation",
@@ -1005,7 +1005,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-10",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2714
+  "contentChars": 2716
  },
  {
   "slug": "signing-bonus-strategy",
@@ -1366,7 +1366,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-22",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2256
+  "contentChars": 2258
  },
  {
   "slug": "unemployment-insurance-2026",
@@ -1383,7 +1383,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-18",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2358
+  "contentChars": 2361
  },
  {
   "slug": "marriage-tax-benefits-2026",
@@ -1452,7 +1452,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-05",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1918
+  "contentChars": 1917
  },
  {
   "slug": "personal-loan-vs-debt-consolidation",
@@ -1486,7 +1486,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-03-28",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2542
+  "contentChars": 2546
  },
  {
   "slug": "tax-refund-mistakes-2026",
@@ -1503,7 +1503,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-03-25",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2905
+  "contentChars": 2908
  },
  {
   "slug": "health-insurance-vs-life-insurance",
@@ -1726,7 +1726,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-06",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3360
+  "contentChars": 3359
  },
  {
   "slug": "sk-hynix-employee-bonus-stock",
@@ -1798,7 +1798,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-06",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2913
+  "contentChars": 2911
  },
  {
   "slug": "kospi-leader-stock-strategy",
@@ -2002,7 +2002,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-13",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5072
+  "contentChars": 5070
  },
  {
   "slug": "samsung-hynix-2026-deepdive",

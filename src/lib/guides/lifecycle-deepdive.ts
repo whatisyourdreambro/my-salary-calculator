@@ -1,11 +1,5 @@
 // src/lib/guides/lifecycle-deepdive.ts
 // 사회초년생·노후·실업 등 라이프 사이클 가이드 10편
-import { UNEMPLOYMENT_BENEFIT_2026, unemploymentDailyLowerBound } from "@/config/unemploymentBenefit";
-
-// 구직급여 1일 상·하한과 30일 환산(만원) — 정본 상수에서 끼워 넣는다(verify:tax 리터럴 감시, 2026-10 guidesb GB-05).
-const UB_UPPER = UNEMPLOYMENT_BENEFIT_2026.DAILY_UPPER.toLocaleString("en-US");
-const UB_UPPER_30_MAN = Math.floor((UNEMPLOYMENT_BENEFIT_2026.DAILY_UPPER * 30) / 10000);
-const UB_LOWER_30_MAN = Math.floor((unemploymentDailyLowerBound() * 30) / 10000);
 
 export const lifecycleGuides = [
  {
@@ -90,7 +84,7 @@ export const lifecycleGuides = [
  publishedDate: "2026-04-22",
  views: 0,
  content: `
-<p class="lead">"노후 자산 10억 필요"는 막연하게 들리지만, <strong>30대부터 월 80만 + ETF 운용 = 60세 10억 근접</strong>. 단, 시작 시점이 결정적입니다.</p>
+<p class="lead">"노후 자산 10억 필요"는 막연하게 들리지만, <strong>30대부터 월 50만 + ETF 운용 = 60세 10억 목표</strong>. 단, 시작 시점이 결정적입니다.</p>
 
 <h2>💰 노후 필요 자산 — 솔직한 계산</h2>
 <p>은퇴 후 월 생활비 250만 × 12개월 = 연 3,000만. 자산의 3.5%로 인출하면 자산 8.6억 필요.</p>
@@ -103,7 +97,7 @@ export const lifecycleGuides = [
 
 <h2>🏛️ 한국의 3층 보장 체계</h2>
 <h3>1층: 국민연금 (모든 직장인)</h3>
-<p>월급의 9.5% 납부 (회사 4.75% + 본인 4.75%). 65세부터 수령. 기간·소득마다 다름.</p>
+<p>월급의 9.5% 납부 (회사 4.75% + 본인 4.75%). 65세부터 수령. 평균 월 90~150만.</p>
 
 <h3>2층: 퇴직연금 (DC/DB)</h3>
 <p>회사가 매년 1개월치 적립. 25년 근속 시 약 2~3억 누적.</p>
@@ -167,10 +161,10 @@ export const lifecycleGuides = [
  publishedDate: "2026-04-18",
  views: 0,
  content: `
-<p class="lead">"퇴사하면 실업급여 받을 수 있나?" — 자발적 퇴사도 일부 사유는 가능합니다. <strong>2026년 일 상한 ${UB_UPPER}원(월 약 ${UB_UPPER_30_MAN}만원), 최대 270일</strong>. 신청 자격과 절차.</p>
+<p class="lead">"퇴사하면 실업급여 받을 수 있나?" — 자발적 퇴사도 일부 사유는 가능합니다. <strong>2026년 일급 한도 6만(실수령 약 180만/월), 최대 270일</strong>. 신청 자격과 절차.</p>
 
 <h2>💰 실업급여 금액 (2026)</h2>
-<p>퇴직 전 평균임금의 60%, 일 상한 ${UB_UPPER}원 → 월 약 ${UB_UPPER_30_MAN}만 (30일 기준). 하한 ${UB_LOWER_30_MAN}만.</p>
+<p>퇴직 전 평균임금의 60%, 일급 한도 약 6만 → 월 약 180만 (30일 기준). 최저 약 90만.</p>
 
 <h2>📋 신청 자격 4가지</h2>
 <ul>
@@ -219,8 +213,8 @@ export const lifecycleGuides = [
 <h2>🚨 흔한 함정</h2>
 <ul>
 <li><strong>퇴사 후 12개월 내 신청</strong>: 미이행 시 자격 소멸</li>
-<li><strong>구직활동 증명 부족</strong>: 차수별 횟수미달 (이력서 송부·면접·교육 참여)</li>
-<li><strong>아르바이트 신고 안 함</strong>: 하루만 일해도 부정수급으로 환수 + 가산금</li>
+<li><strong>구직활동 증명 부족</strong>: 매 4주 4회 이상 (이력서 송부·면접·교육 참여)</li>
+<li><strong>아르바이트 신고 안 함</strong>: 월 50만 초과 부정 수급으로 환수 + 가산금</li>
 <li><strong>회사 거짓 사유</strong>: 회사가 사유 잘못 신고 시 본인이 정정 요구</li>
 <li><strong>해외 거주 중 수급</strong>: 신청 불가</li>
 </ul>
@@ -229,7 +223,7 @@ export const lifecycleGuides = [
 <ul>
 <li><strong>국민연금 임의가입</strong>: 가입 기간 단절 방지 (월 9만~)</li>
 <li><strong>건강보험 지역가입자 전환</strong>: 직장 떠나면 자동. 정산 후 환급 가능</li>
-<li><strong>자기계발</strong>: 무료 직업훈련(내일배움카드) 활용. 수강료 과정별 지원</li>
+<li><strong>자기계발</strong>: 무료 직업훈련(내일배움카드) 활용. 수강료 100% 지원</li>
 <li><strong>이직 활동</strong>: 평균 3~6개월 소요. 실업급여 기간 활용</li>
 </ul>
 
@@ -475,7 +469,7 @@ export const lifecycleGuides = [
 <tr><td>플랫폼 수수료</td><td>-1~2%</td></tr>
 <tr><td>이자 소득세 15.4%</td><td>-1.5%</td></tr>
 <tr><td>부도 손실 (평균 5~10%)</td><td>-5~10%</td></tr>
-<tr><td><strong>실 수익률</strong></td><td><strong>-3.5~2.5%</strong></td></tr>
+<tr><td><strong>실 수익률</strong></td><td><strong>-3% ~ +1%</strong></td></tr>
 </tbody>
 </table>
 </div>
@@ -490,8 +484,8 @@ export const lifecycleGuides = [
 <h3>3. 유동성 부족</h3>
 <p>중도 매도 X. 대출 만기까지 자금 잠김. 보통 6~24개월.</p>
 
-<h3>4. 이자세 15.4%</h3>
-<p>온투업 이자 14% + 지방세 1.4% = 15.4% 원천징수. 2천만 초과, 종합과세.</p>
+<h3>4. 세금 부담 큼</h3>
+<p>이자소득 15.4% + 지방세 1.5% + 분리과세 X 시 종합과세. 실 세율 27.5%.</p>
 
 <h3>5. 정보 비대칭</h3>
 <p>차주 신용·담보 정보를 본인이 직접 검증 어려움. 플랫폼 정보에 의존.</p>
@@ -602,7 +596,7 @@ export const lifecycleGuides = [
 
 <h3>개인회생 (법원 절차)</h3>
 <ul>
-<li>대상: 무담보 10억·담보 15억원 이하</li>
+<li>대상: 채무 5억 이하, 변제 능력 부족</li>
 <li>효과: 5년 분할 변제 후 잔여 채무 면책</li>
 <li>신용 영향: 5~10년 신용 정보 등재</li>
 </ul>
@@ -645,14 +639,14 @@ export const lifecycleGuides = [
 <h2>🏥 4대보험 처리</h2>
 
 <h3>1. 건강보험 — 지역가입자 전환</h3>
-<p>퇴사 시 지역가입자로 전환(휴직 땐 직장가입자 유지, 고지 유예 가능). 지역 보험료는 소득·재산 기준 계산, 월 수십만.</p>
+<p>퇴사자라면 → 지역가입자 자동 전환. 본인 자산·소득·재산 기준 계산. 자가 1채 + 자동차 + 예금 있으면 월 50~80만.</p>
 <p><strong>대안:</strong> 배우자 직장가입자 피부양자 등재 가능 (소득 기준 충족 시).</p>
 
 <h3>2. 국민연금 — 임의가입</h3>
 <p>가입 기간 단절 방지 위해 임의가입 추천. 월 9만~ (소득 신고에 따라).</p>
 
 <h3>3. 고용보험 — 휴직 중 유지</h3>
-<p>휴직 중에도 자격 유지 (회사가 휴직 신고). 실업급여는 퇴사 때만 따짐.</p>
+<p>휴직 중에도 상실 X. 회사 측 휴직 사실 신고. 단, 실업급여 대상은 아님.</p>
 
 <h3>4. 산재보험 — 자격 일시 정지</h3>
 
@@ -682,7 +676,7 @@ export const lifecycleGuides = [
 <h2>⚠️ 휴직 흔한 실수</h2>
 <ul>
 <li><strong>자금 부족 + 복귀 안 보장</strong>: 6개월 후 자금 바닥 + 회사 거절</li>
-<li><strong>건보 지역가입 부담 미고려</strong>: 퇴사 시 소득·재산 따라 월 수십만</li>
+<li><strong>건보 지역가입 부담 미고려</strong>: 소득·재산이 많으면 월 80만 부담</li>
 <li><strong>국민연금 단절</strong>: 가입 기간 부족 → 노후 연금 줄어듦</li>
 <li><strong>경력 공백 부정적 평가</strong>: 1년 공백을 어떻게 설명할지 사전 준비</li>
 <li><strong>휴직 후 무계획 일상</strong>: 1년이 6개월처럼 쏜살. 명확한 목표 필수</li>
@@ -781,7 +775,7 @@ export const lifecycleGuides = [
 </ul>
 
 <h2>📝 결론</h2>
-<p>연말정산은 <strong>아는 만큼 환급받는 게임</strong>. 위 7가지 + 추가 5가지를 챙기면 낸 세금(결정세액) 안에서 더 돌려받음. 12월 31일 전 마지막 점검을 잊지 마세요.</p>
+<p>연말정산은 <strong>아는 만큼 환급받는 게임</strong>. 위 7가지 + 추가 5가지를 챙기면 가령 50만, 운 좋으면 100만+ 더 환급. 12월 31일 전 마지막 점검을 잊지 마세요.</p>
 <p>본인의 환급금 시뮬은 <a href="/year-end-tax">연말정산 계산기</a>에서 즉시 확인 가능합니다.</p>
 `.trim(),
  },
