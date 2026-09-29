@@ -682,7 +682,7 @@ export const lifecycleGuides = [
 <h2>⚠️ 휴직 흔한 실수</h2>
 <ul>
 <li><strong>자금 부족 + 복귀 안 보장</strong>: 6개월 후 자금 바닥 + 회사 거절</li>
-<li><strong>건보 지역가입 부담 미고려</strong>: 자가·자동차 있으면 월 80만 부담</li>
+<li><strong>건보 지역가입 부담 미고려</strong>: 퇴사 시 소득·재산 따라 월 수십만</li>
 <li><strong>국민연금 단절</strong>: 가입 기간 부족 → 노후 연금 줄어듦</li>
 <li><strong>경력 공백 부정적 평가</strong>: 1년 공백을 어떻게 설명할지 사전 준비</li>
 <li><strong>휴직 후 무계획 일상</strong>: 1년이 6개월처럼 쏜살. 명확한 목표 필수</li>
