@@ -24,6 +24,10 @@
 //    폭(10글자·13,083 유닛)의 자연스러운 문구가 없어 바꾸지 않았다.
 //
 // 제목·meta description·aliases·dartInjection·lastUpdated 는 건드리지 않았다.
+//
+// 2026-09-30 R8-C 리뷰(사실 렌즈 verdict=fix): '업계 1위'는 공정거래위원회 2026-01-26 심사결과(정책브리핑
+// korea.kr newsId=156741347 — 장기·단기 렌터카 모두 1위 롯데렌탈, 2위 SK렌터카)에 비춰 사실이 아니다. 테스트가 이 앞 문장을
+// 통째로 고정하지 않도록 뒤 문장(매각 사실)과 폭 서명만 단언한다. 순위 문구 교정(sk-rent·lotte-rental)은 운영자 결정 대기.
 import { describe, expect, it } from "vitest";
 import { krCompanies_Batch14 } from "@/data/krCompanies_Batch14";
 import { krCompanies_Batch17 } from "@/data/krCompanies_Batch17";
@@ -42,8 +46,15 @@ describe("R8 fix C 회사 히어로 소개문 — SK렌터카 매각 반영", ()
   it("SK렌터카: 어피니티 인수·SK 계열 분리를 담은 새 문구가 그대로 노출된다", () => {
     const inBatch = krCompanies_Batch14.find((c) => c.id === "sk-rent");
     const merged = allCompanies.find((c) => c.id === "sk-rent");
-    expect(inBatch?.description).toBe(SK_RENT_NEW);
-    expect(merged?.description).toBe(SK_RENT_NEW);
+    // ★ 앞 문장 '업계 1위 법인 렌터카.'는 사실로 고정하지 않는다(R8-C 리뷰, 2026-09-30). 공정거래위원회 2026-01-26
+    //   SK렌터카·롯데렌탈 기업결합 심사결과(주식취득 금지)에 비춰 장기·단기(내륙·제주) 세 시장 모두 1위는 롯데렌탈, 2위가
+    //   SK렌터카다(장기 렌터카 합산 38.3% = 롯데렌탈 21.8% + SK렌터카 16.5%). 옛 문구에서 물려받은 앞 문장은 같은 폭 문구나
+    //   운영자 폭 예외를 기다리는 중이다('2위'로 바꾸면 +304 유닛 — 광고 위 폭 불일치). 그래서 여기서는 매각 사실을 담은
+    //   뒤 문장과 단어별 폭 서명만 고정한다. 앞 문장을 고칠 때도 단어별 폭 서명이 옛 문구와 같아야 한다.
+    for (const description of [inBatch?.description ?? "", merged?.description ?? ""]) {
+      expect(description.endsWith("어피니티 인수 이후로 SK 계열에서 분리됨.")).toBe(true);
+      expect(widthSignature(description)).toEqual(widthSignature(SK_RENT_OLD));
+    }
     expect(SK_RENT_NEW).toContain("어피니티");
     expect(SK_RENT_NEW).toContain("SK 계열에서 분리");
     expect(SK_RENT_NEW).not.toContain("SK 모빌리티 플랫폼");
