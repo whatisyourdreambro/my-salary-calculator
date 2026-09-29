@@ -1638,7 +1638,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-03-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2553
+  "contentChars": 2552
  },
  {
   "slug": "remote-work-tax-2026",
