@@ -5114,7 +5114,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5937
+  "contentChars": 5935
  },
  {
   "slug": "hometax-year-end-preview-2026",
