@@ -188,11 +188,14 @@ describe("/samsung-negotiation-2026 2026 임금협약 타결 결과(5/27 가결)
 
   // 2026-09-30 WP-02(SJ-09(c) 잔여): OPI 는 기본급의 배수가 아니라 연봉 대비 %(상한 50%), TAI 는 월 기본급 대비 %·반기 지급.
   // 근거: /guides/samsung-opi-tai-complete-2026 표(정본 opiData OPI1_MAX_RATE)·대법원 2021다248299 판결. 접힌 details 라 광고 위 높이 0.
+  // 2026-09-30 WP-02 리뷰 정정: 위 판결과 그 보도는 재원을 사업부 EVA(경제적 부가가치)의 20%로 적고(사이트 가이드 표도 EVA),
+  // 영업이익 기반이라는 보도와 엇갈려 공식 출처가 없다. 그래서 '사업부 영업이익 기반' 구절은 답에서 빼고, 다시 들어오지 않게 막는다.
   it("접힌 FAQ OPI·TAI: OPI 는 연봉 대비 %(상한 = 정본 OPI1_MAX_RATE), 기본급의 배수가 아니다", () => {
     expect(OPI1_MAX_RATE).toBe(50);
     expect(src).toContain(
-      `OPI는 사업부 영업이익 기반으로 연 1회, 연봉 대비 %(상한 ${OPI1_MAX_RATE}%)로 지급되고, TAI는 월 기본급 대비 %로 반기마다 지급됩니다. 노조는 두 제도를 통합·단순화하자는 요구를 지속하고 있습니다.`,
+      `OPI는 연 1회, 연봉 대비 %(상한 ${OPI1_MAX_RATE}%)로 지급되고, TAI는 월 기본급 대비 %로 반기마다 지급됩니다. 노조는 두 제도를 통합·단순화하자는 요구를 지속하고 있습니다.`,
     );
+    expect(src).not.toContain("OPI는 사업부 영업이익 기반");
     expect(src).not.toContain("기본급의 배수로 환산");
     expect(src).not.toContain("Operating Profit Incentive");
   });
