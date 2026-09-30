@@ -3,6 +3,14 @@
  * Run after next build: node scripts/qa-page-quality.mjs
  * Tests: node --test scripts/__tests__/qa-page-quality.test.mjs
  * This checks generated structure, never content accuracy or actual search indexing.
+ *
+ * 2026-09-30 WP-01 LT-07 (link gate, extends this script instead of a new verify-links):
+ *  - exit 1 when a followed link on an indexable page points at a next.config redirect (incl. a generated page that a redirect
+ *    rule shadows) or at a /salary amount the middleware 308-snaps (baseline 0);
+ *  - exit 1 when a followed link on an indexable page points at a noindex page outside NOINDEX_LINK_ALLOW(_PREFIX);
+ *  - weak pages (sitemap pages with <= 2 distinct content links, seasonal-links module excluded, R4 release-holdback guides
+ *    allowlisted) go to .artifacts/page-quality/weak.json; only the difference to the committed baseline
+ *    (scripts/qa-page-quality-weak-baseline.json) is printed, never a failure. Edge qna/glossary stay inventory-only.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -109,13 +117,15 @@ export function analyzeHtml(raw) {
     }
     if (name === "link" && attrs.rel?.toLowerCase().split(/\s+/).includes("canonical")) result.canonical.push(attrs.href ?? "");
     const skip = "hidden" in attrs || attrs["aria-hidden"] === "true" || /display\s*:\s*none|visibility\s*:\s*hidden/i.test(attrs.style ?? "") || ["svg", "nav", "aside", "footer"].includes(name) || (name === "header" && !mainDepth);
-    if (name === "a" && attrs.href !== undefined) result.links.push({ href: attrs.href, rel: attrs.rel ?? "", inContent: !!mainDepth && !skippedDepth && !skip });
+    // Nearest data-msy-module ancestor (or the tag itself): lets the weak-page report ignore rotating modules such as seasonal-links.
+    const msyModule = attrs["data-msy-module"] || (stack.length ? stack[stack.length - 1].module : "");
+    if (name === "a" && attrs.href !== undefined) result.links.push({ href: attrs.href, rel: attrs.rel ?? "", inContent: !!mainDepth && !skippedDepth && !skip, module: msyModule });
     if (mainDepth && !skippedDepth && !skip) {
       const keys = { input: "inputs", button: "buttons", table: "tables", tr: "rows" };
       if (keys[name]) result.content[keys[name]]++;
     }
     if (!VOID.has(name)) {
-      stack.push({ tag: name, skip });
+      stack.push({ tag: name, skip, module: msyModule });
       if (name === "head") headDepth++;
       if (name === "body") bodyDepth++;
       if (name === "main" || name === "article") { mainDepth++; result.content.mainPresent = true; }
@@ -145,6 +155,57 @@ function compiledRules(rules) {
 }
 const matching = (rules, pathname) => rules.find(rule => rule.test.test(pathname));
 
+// ── Link gate (2026-09-30 WP-01 LT-07) ────────────────────────────────────────────────────────────
+// Mirrors src/lib/salaryRedirect.ts (SALARY_PATH + parseSalaryPathAmount; the node test guards drift): the middleware
+// 308-snaps /salary/<amount> that is not a generated page (off-grid amount, legacy N-manwon / N-eok / N-5-eok forms).
+const SALARY_PATH = /^\/salary\/([^/]+)$/;
+export function middlewareSalaryAmount(segment) {
+  let m;
+  if ((m = segment.match(/^(\d{1,10})$/))) return Number(m[1]);
+  if ((m = segment.match(/^(\d{1,6})-manwon$/))) return Number(m[1]) * 10_000;
+  if ((m = segment.match(/^(\d{1,3})-5-eok$/))) return Number(m[1]) * 100_000_000 + 50_000_000;
+  if ((m = segment.match(/^(\d{1,3})-eok$/))) return Number(m[1]) * 100_000_000;
+  return null;
+}
+/** True when the middleware would answer 308 for this pathname (a /salary/* amount with no generated HTML). */
+export function isMiddlewareSalaryRedirect(target, htmlPaths) {
+  const m = SALARY_PATH.exec(target);
+  if (!m || htmlPaths.has(target)) return false;
+  const amount = middlewareSalaryAmount(m[1]);
+  return amount !== null && Number.isFinite(amount) && amount > 0;
+}
+/** Intentional noindex utility pages that indexable pages may link to (header/footer/tools). Anything else fails qa:quality. */
+export const NOINDEX_LINK_ALLOW = ["/dashboard", "/report", "/contact", "/en/contact", "/en/dashboard"];
+export const NOINDEX_LINK_ALLOW_PREFIX = ["/company/compare"];
+export const isNoindexLinkAllowed = (target) => NOINDEX_LINK_ALLOW.includes(target) || NOINDEX_LINK_ALLOW_PREFIX.some(p => target === p || target.startsWith(p + "/"));
+/** Weak page = sitemap page with at most this many distinct indexable pages linking to it from <main> content (seasonal-links excluded). */
+export const WEAK_MAX_INCOMING = 2;
+export const SEASONAL_MODULE = "seasonal-links";
+
+/** R4 release-holdback guide slugs (src/lib/guideReleaseHoldback.ts, lands 10/19) are expected to have no list links until released. */
+export function readHeldBackGuidePaths(root) {
+  let source;
+  try { source = fs.readFileSync(path.join(root, "src/lib/guideReleaseHoldback.ts"), "utf8"); } catch { return []; }
+  const body = source.match(/RELEASE_HOLDBACK_SLUGS[^=]*=\s*new Set\(\[([\s\S]*?)\]\)/)?.[1] ?? "";
+  return [...body.replace(/\/\/.*$/gm, "").matchAll(/["']([^"']+)["']/g)].map(match => `/guides/${match[1]}`);
+}
+
+/** Report family for weak pages (URL shape only). */
+export function pageFamily(pathname) {
+  if (pathname === "/") return "home";
+  const parts = pathname.split("/").filter(Boolean);
+  if (parts[0] === "en") return "en";
+  if (parts[0] === "salary-db") {
+    if (parts[1] === "listed") return parts[2] === "industry" ? "listed-industry" : parts.length === 3 ? "listed" : "salary-db-other";
+    if (parts[1] === "compare") return "compare";
+    return parts.length === 2 ? "company" : "salary-db-other";
+  }
+  if (parts[0] === "guides" && parts[1] === "category") return "guides-category";
+  if (parts[0] === "salary") return "salary-amount";
+  if (parts[0] === "monthly") return "monthly-amount";
+  return parts.length === 1 ? "single" : parts[0];
+}
+
 export function classifyLink(href, sourcePath, context) {
   if (!href || href.startsWith("#")) return { kind: "same-page-fragment" };
   let url;
@@ -159,6 +220,7 @@ export function classifyLink(href, sourcePath, context) {
   if (context.publicFiles.has(target)) return { ...base, kind: "public-asset" };
   if (context.htmlPaths.has(target)) return { ...base, kind: "generated-html" };
   if (matching(context.redirects, target)) return { ...base, kind: "configured-redirect" };
+  if (isMiddlewareSalaryRedirect(target, context.htmlPaths)) return { ...base, kind: "middleware-salary-redirect" };
   if (context.sitemapPaths.has(target)) return { ...base, kind: "sitemap-runtime-unchecked" };
   if (matching(context.dynamic, target)) return { ...base, kind: "dynamic-pattern-unchecked" };
   return { ...base, kind: ASSET.test(target) ? "unresolved-asset" : "unresolved-page" };
@@ -231,15 +293,32 @@ export function buildLedger({ root, buildDir = path.join(root, ".next") }) {
   const byPath = new Map(records.map(record => [record.path, record]));
   const incoming = new Map(records.map(record => [record.path, new Set()]));
   const incomingContent = new Map(records.map(record => [record.path, new Set()]));
+  const incomingContentExSeasonal = new Map(records.map(record => [record.path, new Set()]));
+  const redirectLinks = new Map();
+  const noindexLinks = new Map();
+  const bump = (map, item) => {
+    const key = JSON.stringify(item);
+    map.set(key, (map.get(key) ?? 0) + 1);
+  };
   for (const link of allLinks) {
     const classified = classifyLink(link.href, link.source, context);
     const source = byPath.get(link.source);
-    const key = JSON.stringify({ ...classified, inContent: link.inContent, nofollow: /\bnofollow\b/i.test(link.rel) });
+    const nofollow = /\bnofollow\b/i.test(link.rel);
+    const key = JSON.stringify({ ...classified, inContent: link.inContent, nofollow });
     source._linkCounts ??= new Map();
     source._linkCounts.set(key, (source._linkCounts.get(key) ?? 0) + 1);
     if (source.classification === "indexable-candidate" && classified.target && incoming.has(classified.target)) {
       incoming.get(classified.target).add(source.path);
-      if (link.inContent && !/\bnofollow\b/i.test(link.rel)) incomingContent.get(classified.target).add(source.path);
+      if (link.inContent && !nofollow) incomingContent.get(classified.target).add(source.path);
+      if (link.inContent && !nofollow && link.module !== SEASONAL_MODULE && classified.target !== source.path) incomingContentExSeasonal.get(classified.target).add(source.path);
+    }
+    // LT-07 gate: followed links on indexable pages must not land on a 308 (next.config redirect, including a generated page that a
+    // redirect rule shadows, or the /salary grid snap) nor on a noindex page outside the utility allowlist.
+    if (source.classification === "indexable-candidate" && !nofollow && classified.target) {
+      const target = byPath.get(classified.target);
+      const redirectKind = ["configured-redirect", "middleware-salary-redirect"].includes(classified.kind) ? classified.kind : target?.classification === "redirect" ? "configured-redirect" : null;
+      if (redirectKind) bump(redirectLinks, { source: source.path, target: classified.target, kind: redirectKind });
+      if (target?.classification === "noindex" && !isNoindexLinkAllowed(classified.target)) bump(noindexLinks, { source: source.path, target: classified.target });
     }
   }
   const linkKinds = {};
@@ -249,7 +328,22 @@ export function buildLedger({ root, buildDir = path.join(root, ".next") }) {
     for (const link of record.links) linkKinds[link.kind] = (linkKinds[link.kind] ?? 0) + link.occurrences;
     record.incomingGeneratedPages = incoming.get(record.path).size;
     record.incomingContentPages = incomingContent.get(record.path).size;
+    record.incomingContentPagesExSeasonal = incomingContentExSeasonal.get(record.path).size;
   }
+  const listed = (map) => [...map].map(([key, occurrences]) => ({ ...JSON.parse(key), occurrences })).sort((a, b) => a.target.localeCompare(b.target) || a.source.localeCompare(b.source));
+  const linkGate = { redirectLinks: listed(redirectLinks), noindexLinks: listed(noindexLinks), noindexAllow: [...NOINDEX_LINK_ALLOW, ...NOINDEX_LINK_ALLOW_PREFIX.map(p => p + "*")] };
+  const heldBack = new Set(readHeldBackGuidePaths(root));
+  const weakCandidates = records.filter(record => record.inSitemap && record.artifact && record.classification === "indexable-candidate" && record.incomingContentPagesExSeasonal <= WEAK_MAX_INCOMING);
+  const weakFamilies = {};
+  for (const record of weakCandidates.filter(item => !heldBack.has(item.path))) (weakFamilies[pageFamily(record.path)] ??= []).push({ path: record.path, incoming: record.incomingContentPagesExSeasonal });
+  const weak = {
+    threshold: WEAK_MAX_INCOMING,
+    metric: "distinct indexable pages linking from <main>/<article> content (nofollow, seasonal-links module and self links excluded)",
+    total: weakCandidates.length - weakCandidates.filter(item => heldBack.has(item.path)).length,
+    families: Object.fromEntries(Object.entries(weakFamilies).sort(([a], [b]) => a.localeCompare(b)).map(([family, items]) => [family, items.sort((a, b) => a.path.localeCompare(b.path))])),
+    heldBack: weakCandidates.filter(item => heldBack.has(item.path)).map(item => ({ path: item.path, incoming: item.incomingContentPagesExSeasonal })),
+    inventoryOnlySitemapPaths: records.filter(record => record.inSitemap && !record.artifact).length,
+  };
   const duplicates = {};
   for (const field of ["titles", "descriptions", "h1"]) {
     const groups = new Map();
@@ -263,28 +357,83 @@ export function buildLedger({ root, buildDir = path.join(root, ".next") }) {
   const issueRecords = records.filter(record => record.issues.length);
   const unresolvedLinks = records.flatMap(record => record.links.filter(link => ["invalid-url", "unresolved-page", "unresolved-asset"].includes(link.kind)).map(link => ({ source: record.path, ...link })));
   const shortContentReview = records.filter(record => record.classification === "indexable-candidate" && record.content.characters < 500).map(record => ({ path: record.path, ...record.content, status: "review-only-not-a-quality-or-noindex-verdict" }));
-  return { schemaVersion: 1, generatedAt: new Date().toISOString(), origin, build: { id: fs.readFileSync(path.join(buildDir, "BUILD_ID"), "utf8").trim(), prerenderManifestMtime: fs.statSync(path.join(buildDir, "prerender-manifest.json")).mtime.toISOString(), manifestHash: hash(fs.readFileSync(path.join(buildDir, "prerender-manifest.json"))), sourceCommitVerified: false }, scope: { networkRequests: 0, contentReviewed: 0, generatedHtmlMachineChecked: true, runtimeResponsesChecked: false, limitations: ["Sitemap runtime entries are inventoried, not response-checked.", "HTML metadata and link checks do not prove Google indexing or factual accuracy.", "Dynamic pattern matches do not prove every data slug exists.", "Content length and duplicate headings are review flags, never automatic noindex recommendations.", "CSS visibility, hydration, CDN headers and input interactions are not reproduced.", "The ledger covers the build artifacts; current source may have changed since that build."] }, counts: { generatedHtml: files.length, uniquePagePaths: records.length, sitemapEntries: sitemap.length, sitemapUniquePaths: sitemapPaths.size, sitemapDuplicatePaths: sitemap.length - sitemapPaths.size, sitemapQueryEntries: sitemap.filter(item => item.hasQuery).length, prerenderManifestRoutes: Object.keys(prerender.routes ?? {}).length, declaredRuntimeEntries: records.filter(record => record.classification === "declared-runtime-unchecked").length, classification: tally("classification"), machineStatus: tally("machineStatus"), issuePages: issueRecords.length, unresolvedLinkOccurrences: unresolvedLinks.reduce((sum, link) => sum + link.occurrences, 0) }, linkKinds, duplicates, shortContentReview, unresolvedLinks, records: records.sort((a, b) => a.path.localeCompare(b.path)) };
+  return { schemaVersion: 1, generatedAt: new Date().toISOString(), origin, build: { id: fs.readFileSync(path.join(buildDir, "BUILD_ID"), "utf8").trim(), prerenderManifestMtime: fs.statSync(path.join(buildDir, "prerender-manifest.json")).mtime.toISOString(), manifestHash: hash(fs.readFileSync(path.join(buildDir, "prerender-manifest.json"))), sourceCommitVerified: false }, scope: { networkRequests: 0, contentReviewed: 0, generatedHtmlMachineChecked: true, runtimeResponsesChecked: false, limitations: ["Sitemap runtime entries are inventoried, not response-checked.", "HTML metadata and link checks do not prove Google indexing or factual accuracy.", "Dynamic pattern matches do not prove every data slug exists.", "Content length and duplicate headings are review flags, never automatic noindex recommendations.", "CSS visibility, hydration, CDN headers and input interactions are not reproduced.", "The ledger covers the build artifacts; current source may have changed since that build."] }, counts: { generatedHtml: files.length, uniquePagePaths: records.length, sitemapEntries: sitemap.length, sitemapUniquePaths: sitemapPaths.size, sitemapDuplicatePaths: sitemap.length - sitemapPaths.size, sitemapQueryEntries: sitemap.filter(item => item.hasQuery).length, prerenderManifestRoutes: Object.keys(prerender.routes ?? {}).length, declaredRuntimeEntries: records.filter(record => record.classification === "declared-runtime-unchecked").length, classification: tally("classification"), machineStatus: tally("machineStatus"), issuePages: issueRecords.length, unresolvedLinkOccurrences: unresolvedLinks.reduce((sum, link) => sum + link.occurrences, 0), redirectLinkOccurrences: linkGate.redirectLinks.reduce((sum, link) => sum + link.occurrences, 0), noindexLinkOccurrences: linkGate.noindexLinks.reduce((sum, link) => sum + link.occurrences, 0), weakPages: weak.total }, linkKinds, duplicates, shortContentReview, unresolvedLinks, linkGate, weak, records: records.sort((a, b) => a.path.localeCompare(b.path)) };
+}
+
+// ── Weak-page baseline (report only) ──────────────────────────────────────────────────────────────
+export const WEAK_BASELINE_FILE = "scripts/qa-page-quality-weak-baseline.json";
+
+export function weakBaselineFromLedger(ledger, source) {
+  return { note: "qa:quality weak-page baseline (report only; diff printed after next build). Regenerate: node scripts/qa-page-quality.mjs --update-weak-baseline", source, threshold: ledger.weak.threshold, metric: ledger.weak.metric, total: ledger.weak.total, families: Object.fromEntries(Object.entries(ledger.weak.families).map(([family, items]) => [family, items.map(item => item.path)])) };
+}
+
+/** Difference between the current weak list and the committed baseline (paths only). */
+export function weakDiff(weak, baseline) {
+  const now = new Map(Object.entries(weak.families).flatMap(([family, items]) => items.map(item => [item.path, { family, incoming: item.incoming }])));
+  const before = new Map(Object.entries(baseline?.families ?? {}).flatMap(([family, paths]) => paths.map(p => [p, family])));
+  const added = [...now].filter(([p]) => !before.has(p)).map(([p, v]) => ({ path: p, ...v }));
+  const resolved = [...before].filter(([p]) => !now.has(p)).map(([p, family]) => ({ path: p, family }));
+  const families = [...new Set([...Object.keys(weak.families), ...Object.keys(baseline?.families ?? {})])].sort();
+  const byFamily = Object.fromEntries(families.map(family => [family, { baseline: baseline?.families?.[family]?.length ?? 0, now: weak.families[family]?.length ?? 0 }]));
+  return { baselineTotal: before.size, total: now.size, added, resolved, byFamily };
+}
+
+export function weakDiffLines(diff, limit = 30) {
+  const changed = Object.entries(diff.byFamily).filter(([, v]) => v.baseline !== v.now).map(([family, v]) => `${family} ${v.baseline}→${v.now}`);
+  const lines = [`[qa:quality] weak pages (<=${WEAK_MAX_INCOMING} content links, report only): ${diff.total} (baseline ${diff.baselineTotal}) · +${diff.added.length} new · -${diff.resolved.length} resolved${changed.length ? ` · ${changed.join(" · ")}` : ""}`];
+  for (const item of diff.added.slice(0, limit)) lines.push(`  + ${item.path} (${item.family}, ${item.incoming})`);
+  if (diff.added.length > limit) lines.push(`  + … ${diff.added.length - limit} more (see .artifacts/page-quality/weak.json)`);
+  for (const item of diff.resolved.slice(0, limit)) lines.push(`  - ${item.path} (${item.family})`);
+  if (diff.resolved.length > limit) lines.push(`  - … ${diff.resolved.length - limit} more`);
+  return lines;
+}
+
+export function linkGateLines(ledger, limit = 20) {
+  const { redirectLinkOccurrences, noindexLinkOccurrences } = ledger.counts;
+  const lines = [`[qa:quality] link gate: ${redirectLinkOccurrences} followed links to a 308 (next.config redirect or /salary snap), ${noindexLinkOccurrences} to a noindex page outside ${ledger.linkGate.noindexAllow.join(" ")}.`];
+  for (const link of ledger.linkGate.redirectLinks.slice(0, limit)) lines.push(`  308 ${link.kind}: ${link.source} -> ${link.target} (x${link.occurrences})`);
+  for (const link of ledger.linkGate.noindexLinks.slice(0, limit)) lines.push(`  noindex: ${link.source} -> ${link.target} (x${link.occurrences})`);
+  return lines;
+}
+
+/** qa:quality exit status: structural issues, unresolved links, sitemap hygiene and the LT-07 link gate. Weak pages never fail. */
+export function qualityFailed(ledger) {
+  const c = ledger.counts;
+  return !!(c.issuePages || c.unresolvedLinkOccurrences || c.sitemapDuplicatePaths || c.sitemapQueryEntries || c.redirectLinkOccurrences || c.noindexLinkOccurrences);
 }
 
 export function summaryMarkdown(ledger) {
   const { counts } = ledger;
-  return `# Offline page quality ledger\n\nGenerated: ${ledger.generatedAt}\nBuild: ${ledger.build.id}\n\n| Coverage | Count |\n|---|---:|\n| Generated HTML checked | ${counts.generatedHtml} |\n| Unique paths in ledger | ${counts.uniquePagePaths} |\n| Sitemap URL entries / unique paths | ${counts.sitemapEntries} / ${counts.sitemapUniquePaths} |\n| Runtime URLs inventoried, response unchecked | ${counts.declaredRuntimeEntries} |\n| Pages with structural issues | ${counts.issuePages} |\n| Unresolved internal link occurrences | ${counts.unresolvedLinkOccurrences} |\n| Pages factually reviewed | 0 |\n\n## Machine status\n\n${Object.entries(counts.machineStatus).map(([key, value]) => `- ${key}: ${value}`).join("\n")}\n\n## Page classification\n\n${Object.entries(counts.classification).map(([key, value]) => `- ${key}: ${value}`).join("\n")}\n\n## Interpretation\n\nEvery record has a separate machine status and contentReview=not-reviewed. A declared Edge URL is not an HTTP PASS. Missing sitemap inclusion, a short body, or a duplicate H1 is not by itself a defect. Known route handlers and actual public assets are classified separately from pages. No request was made to a website.\n\n${ledger.scope.limitations.map(line => `- ${line}`).join("\n")}\n\nSee ledger.json for every URL, issues, canonical/robots/headings/description/JSON-LD, and classified links.\n`;
+  return `# Offline page quality ledger\n\nGenerated: ${ledger.generatedAt}\nBuild: ${ledger.build.id}\n\n| Coverage | Count |\n|---|---:|\n| Generated HTML checked | ${counts.generatedHtml} |\n| Unique paths in ledger | ${counts.uniquePagePaths} |\n| Sitemap URL entries / unique paths | ${counts.sitemapEntries} / ${counts.sitemapUniquePaths} |\n| Runtime URLs inventoried, response unchecked | ${counts.declaredRuntimeEntries} |\n| Pages with structural issues | ${counts.issuePages} |\n| Unresolved internal link occurrences | ${counts.unresolvedLinkOccurrences} |\n| Followed links to a 308 (gate) | ${counts.redirectLinkOccurrences} |\n| Followed links to noindex outside the allowlist (gate) | ${counts.noindexLinkOccurrences} |\n| Weak sitemap pages, report only (weak.json) | ${counts.weakPages} |\n| Pages factually reviewed | 0 |\n\n## Machine status\n\n${Object.entries(counts.machineStatus).map(([key, value]) => `- ${key}: ${value}`).join("\n")}\n\n## Page classification\n\n${Object.entries(counts.classification).map(([key, value]) => `- ${key}: ${value}`).join("\n")}\n\n## Interpretation\n\nEvery record has a separate machine status and contentReview=not-reviewed. A declared Edge URL is not an HTTP PASS. Missing sitemap inclusion, a short body, or a duplicate H1 is not by itself a defect. Known route handlers and actual public assets are classified separately from pages. No request was made to a website.\n\n${ledger.scope.limitations.map(line => `- ${line}`).join("\n")}\n\nSee ledger.json for every URL, issues, canonical/robots/headings/description/JSON-LD, and classified links.\n`;
 }
 
-export function runQuality({ root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), ".."), buildDir, outputDir = path.join(root, ".artifacts/page-quality") } = {}) {
+export function runQuality({ root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), ".."), buildDir, outputDir = path.join(root, ".artifacts/page-quality"), weakBaselineFile = path.join(root, WEAK_BASELINE_FILE) } = {}) {
   const ledger = buildLedger({ root, buildDir });
   fs.mkdirSync(outputDir, { recursive: true });
   fs.writeFileSync(path.join(outputDir, "ledger.json"), JSON.stringify(ledger, null, 2) + "\n");
   fs.writeFileSync(path.join(outputDir, "summary.md"), summaryMarkdown(ledger));
+  const baseline = readJson(weakBaselineFile, null);
+  ledger.weakDiff = baseline ? weakDiff(ledger.weak, baseline) : null;
+  fs.writeFileSync(path.join(outputDir, "weak.json"), JSON.stringify({ generatedAt: ledger.generatedAt, build: ledger.build.id, ...ledger.weak, baselineFile: baseline ? path.relative(root, weakBaselineFile).split(path.sep).join("/") : null, diff: ledger.weakDiff }, null, 2) + "\n");
   return ledger;
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try {
-    if (process.argv.slice(2).length) throw new Error("Usage: node scripts/qa-page-quality.mjs (reads .next; no network)");
+    const args = process.argv.slice(2);
+    const updateBaseline = args.length === 1 && args[0] === "--update-weak-baseline";
+    if (args.length && !updateBaseline) throw new Error("Usage: node scripts/qa-page-quality.mjs [--update-weak-baseline] (reads .next; no network)");
     const ledger = runQuality();
     console.log(`[qa:quality] ${ledger.counts.generatedHtml} HTML checked; ${ledger.counts.declaredRuntimeEntries} runtime URLs inventoried only; ${ledger.counts.issuePages} structural issue pages; ${ledger.counts.unresolvedLinkOccurrences} unresolved link occurrences. Output: .artifacts/page-quality`);
-    if (ledger.counts.issuePages || ledger.counts.unresolvedLinkOccurrences || ledger.counts.sitemapDuplicatePaths || ledger.counts.sitemapQueryEntries) process.exitCode = 1;
+    for (const line of linkGateLines(ledger)) console.log(line);
+    if (ledger.weakDiff) for (const line of weakDiffLines(ledger.weakDiff)) console.log(line);
+    else console.log(`[qa:quality] weak pages (<=${WEAK_MAX_INCOMING} content links, report only): ${ledger.weak.total} — no committed baseline (${WEAK_BASELINE_FILE}).`);
+    if (updateBaseline) {
+      const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+      fs.writeFileSync(path.join(root, WEAK_BASELINE_FILE), JSON.stringify(weakBaselineFromLedger(ledger, `next build ${ledger.build.id}`), null, 2) + "\n");
+      console.log(`[qa:quality] wrote ${WEAK_BASELINE_FILE} (${ledger.weak.total} weak pages)`);
+    }
+    if (qualityFailed(ledger)) process.exitCode = 1;
   } catch (error) {
     console.error(`[qa:quality] ${error.message}`);
     process.exitCode = 1;
