@@ -6,7 +6,7 @@
 // 사용법:
 //   node scripts/crawl-cache-sampler.mjs [--passes 3] [--interval 600] [--seed YYYY-MM-DD]
 //        [--sitemap-file <path>] [--limit N] [--out <저장소 밖 json>] [--prev <앞선 실행 --out json>]
-//        [--label D0] [--dry-run]
+//        [--label D0] [--og] [--dry-run]
 //
 // 대표 지표 = 계열별 pass-1 HIT 비율. pass 1 은 이 도구가 아직 건드리지 않은 URL 이라 실제 방문·크롤러가
 //   데워 둔 정도(엣지 캐시 온기)를 보여 준다. pass 2 이후 HIT 는 이 도구가 pass 1 에서 스스로 데운 값이라
@@ -41,11 +41,20 @@
 //   --interval 은 pass 가 끝난 뒤 다음 pass 를 시작하기까지 기다리는 초. 기본 3 pass × 간격 600초 ≈ 21분.
 //   운영 사이트맵을 직접 받은 경우 그 응답이 곧 /sitemap.xml 의 pass-1 기록이다(두 번 받아 스스로 데우지 않게).
 //
+// 콜로(2026-09-30 WP-01 CF-05): 무료 플랜의 KR 요청이 해외 콜로(MAD·SJC·ATL 등)로 분 단위로 바뀌고, 콜로마다 엣지 캐시가
+//   따로라 pass-1 HIT 비교가 콜로 차이에 오염된다. 그래서 응답마다 cf-ray 의 마지막 '-' 뒤 3글자(대문자)를 colo 로
+//   기록하고(헤더가 없으면 '?'), 보고서에 계열×콜로 pass-1 HIT 표를, 집계 줄 맨 끝에 'colo MAD n · SJC n' 을 붙인다
+//   (pass 1 표본 요청의 콜로 분포 — 기존 세그먼트의 내용·순서는 한 글자도 바꾸지 않아 9/28 D0·9/29 D+1 줄과 그대로 비교된다).
+// --og(옵트인, 기본 꺼짐): pass 1 에서 받은 계열별 첫 표본 HTML 의 og:image 가 https://www.moneysalary.com/api/og 로
+//   시작하면 계열당 1개(총 6개 이하)를 pass 1 끝에 한 번만 요청해 status·cf-cache-status·X-OG-Cache·X-OG-Error·TTFB·colo 를
+//   기록한다. 결과는 별도 'og' 표와 집계 줄의 og 세그먼트(colo 앞)로만 내고 pass-1 HIT 집계에는 넣지 않는다.
+//   OG 5xx·망 오류도 종료 코드 1 이다. UA 는 바꾸지 않는다(--ua 없음 — Yeti 위장은 CF 분석의 Yeti 분류를 오염시킨다).
+//
 // 출력: stdout 에 마크다운 표 + 마지막 줄에 집계 한 줄(URL 없음 — metrics-ingest log --note 에 그대로 붙인다).
 //   --out 은 요청별 원자료 JSON(URL·요청 시각 포함)을 저장소 밖 경로에만 쓴다. 저장소 안 경로(정션·링크를 푼 실제
 //   경로 포함)는 읽거나 요청하기 전에 거부하고 exit 2(scripts/naver-referrer-queries.ts 와 같은 판정).
 //   --prev 도 원자료 JSON 이라 같은 규칙(저장소 안이면 exit 2). --dry-run 결과 파일은 요청 기록이 없어 받지 않는다.
-// 종료 코드: 0 정상 · 1 5xx 또는 망 오류가 한 건이라도 있음(피드 포함)·사이트맵 읽기 실패·인자 오류·--prev 읽기 실패
+// 종료 코드: 0 정상 · 1 5xx 또는 망 오류가 한 건이라도 있음(피드·--og 포함)·사이트맵 읽기 실패·인자 오류·--prev 읽기 실패
 //   · 2 저장소 안 --out/--prev 거부.
 //   403·기타 non-200 은 exit 코드를 바꾸지 않고 표와 집계 줄에만 드러낸다.
 
@@ -71,6 +80,12 @@ export const FETCH_TIMEOUT_MS = 20000;
 /** 앞선 실행과의 겹침 창 — 엣지 캐시 TTL 중 가장 긴 /salary/* 4h 를 모든 계열에 보수적으로 쓴다. */
 export const OVERLAP_WINDOW_MS = 4 * 3600 * 1000;
 export const NA_MARK = "n/a (overlaps earlier run)";
+/** --og 대상 og:image 접두 — 이 사이트의 동적 OG 라우트만(정적 이미지·다른 호스트 제외). */
+export const OG_PREFIX = `${BASE}/api/og`;
+/** --og 로 요청하는 OG 이미지 상한(계열당 1개). */
+export const OG_MAX = FAMILIES.length;
+/** cf-ray 가 없거나 콜로를 읽을 수 없을 때의 표지. */
+export const UNKNOWN_COLO = "?";
 
 const COMPANY_RESERVED = new Set(["compare", "ranking", "listed", "submit"]);
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -88,7 +103,11 @@ export const USAGE = [
   "  --prev P         앞선 실행의 --out JSON. 4시간 안에 요청한 URL 을 pass-1 에서 빼고(carried k),",
   "                   계열 표본의 과반이 겹치면 그 계열을 'n/a (overlaps earlier run)' 로 찍는다",
   "  --label L        집계 줄 날짜 뒤에 붙일 표지(예: D0, D+1, pre-C01)",
+  "  --og             (옵트인) pass 1 계열별 첫 표본의 og:image(/api/og)를 계열당 1개만 한 번 더 잰다 —",
+  "                   별도 og 표·세그먼트로만 내고 pass1 HIT 집계에는 넣지 않는다",
   "  --dry-run        요청 없이 표본 URL 만 출력(사이트맵 파일이 없으면 사이트맵 1회만 받는다)",
+  "",
+  "  UA 는 scripts/health-check.mjs 와 같은 브라우저 UA 로 고정(바꾸는 옵션 없음).",
   "",
   "  같은 날(4시간 안) 두 번째 실행: --seed <다른 날짜> --prev <첫 실행 --out>",
   "    재시드는 company·lite·calc·guides·salary 만 겹침을 줄인다. pay-table(모집단 6·몫 5)은 어떤 시드로도",
@@ -254,8 +273,53 @@ export function hasBodyMarker(p, contentType, text) {
   return text.length > 0;
 }
 
-/** 한 번 가져오기. 예외는 던지지 않고 기록의 error 로 남긴다. { rec, text } — at 은 요청 시작 시각(epoch ms, --prev 판정용). */
-export async function fetchOnce(target, pass, io) {
+/**
+ * cf-ray 헤더 → 콜로 3글자(대문자). 'a42e346b7cb52599-SJC' → 'SJC'. 마지막 '-' 뒤 3글자가 영문이 아니거나
+ * 헤더가 없으면 UNKNOWN_COLO('?').
+ */
+export function coloFromRay(ray) {
+  if (typeof ray !== "string") return UNKNOWN_COLO;
+  const s = ray.trim();
+  const i = s.lastIndexOf("-");
+  if (i < 0) return UNKNOWN_COLO;
+  const code = s.slice(i + 1, i + 4).toUpperCase();
+  return /^[A-Z]{3}$/.test(code) ? code : UNKNOWN_COLO;
+}
+
+/** HTML 의 <meta property="og:image" content="…"> 값들(엔티티 해독, 문서 순서). og:image:width 등 하위 속성은 제외. */
+export function extractOgImages(html) {
+  const out = [];
+  for (const m of String(html).matchAll(/<meta\b[^>]*>/gi)) {
+    const tag = m[0];
+    const prop = /\bproperty\s*=\s*(?:"([^"]*)"|'([^']*)')/i.exec(tag);
+    if (!prop || (prop[1] ?? prop[2]).trim().toLowerCase() !== "og:image") continue;
+    const content = /\bcontent\s*=\s*(?:"([^"]*)"|'([^']*)')/i.exec(tag);
+    if (content) out.push(decodeXml((content[1] ?? content[2]).trim()));
+  }
+  return out;
+}
+
+/** --og 대상: og:image 중 OG_PREFIX(https://www.moneysalary.com/api/og)로 시작하고 경로가 정확히 /api/og 인 첫 URL, 없으면 null. */
+export function pickOgImage(html) {
+  for (const raw of extractOgImages(html)) {
+    if (!raw.startsWith(OG_PREFIX)) continue;
+    let u;
+    try {
+      u = new URL(raw);
+    } catch {
+      continue;
+    }
+    if (u.origin === BASE && u.pathname === "/api/og") return u.href;
+  }
+  return null;
+}
+
+/**
+ * 한 번 가져오기. 예외는 던지지 않고 기록의 error 로 남긴다. { rec, text } — at 은 요청 시작 시각(epoch ms, --prev 판정용).
+ * colo 는 cf-ray 의 콜로(없으면 '?'), ttfb 는 응답 헤더까지의 ms. og: true 면 X-OG-Cache·X-OG-Error 를 기록하고
+ * 본문 표지는 이미지 content-type 으로 본다(본문 텍스트는 돌려주지 않는다).
+ */
+export async function fetchOnce(target, pass, io, { og = false } = {}) {
   const rec = {
     pass,
     family: target.family,
@@ -265,12 +329,19 @@ export async function fetchOnce(target, pass, io) {
     status: null,
     cache: null,
     age: null,
+    colo: UNKNOWN_COLO,
     bytes: null,
+    ttfb: null,
     ms: null,
     marker: null,
     contentType: null,
     error: null,
   };
+  if (og) {
+    rec.source = target.source ?? null;
+    rec.ogCache = null;
+    rec.ogError = null;
+  }
   const t0 = io.now();
   let text = "";
   try {
@@ -279,6 +350,8 @@ export async function fetchOnce(target, pass, io) {
       redirect: "manual",
       signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });
+    rec.ttfb = Math.round(io.now() - t0);
+    rec.colo = coloFromRay(res.headers.get("cf-ray"));
     const buf = new Uint8Array(await res.arrayBuffer());
     rec.ms = Math.round(io.now() - t0);
     rec.status = res.status;
@@ -288,8 +361,16 @@ export async function fetchOnce(target, pass, io) {
     rec.age = age && /^\d+$/.test(age.trim()) ? Number(age.trim()) : null;
     rec.contentType = res.headers.get("content-type");
     rec.bytes = buf.byteLength;
-    text = new TextDecoder().decode(buf);
-    if (res.status === 200) rec.marker = hasBodyMarker(target.path, rec.contentType, text);
+    if (og) {
+      const oc = res.headers.get("x-og-cache");
+      rec.ogCache = oc ? oc.trim().toUpperCase() : null;
+      const oe = res.headers.get("x-og-error");
+      rec.ogError = oe ? oe.trim().slice(0, 200) : null;
+      if (res.status === 200) rec.marker = /^image\//i.test(String(rec.contentType || "").trim()) && buf.byteLength > 0;
+    } else {
+      text = new TextDecoder().decode(buf);
+      if (res.status === 200) rec.marker = hasBodyMarker(target.path, rec.contentType, text);
+    }
   } catch (e) {
     rec.ms = Math.round(io.now() - t0);
     rec.error = e?.name === "TimeoutError" ? "timeout" : String(e?.cause?.code ?? e?.message ?? e).slice(0, 200);
@@ -300,9 +381,12 @@ export async function fetchOnce(target, pass, io) {
 /**
  * passes 번 순차로 잰다. 요청 사이에는 항상 gapMs 이상 쉬고, pass 사이에는 intervalSec 초를 더 쉰다.
  * prefetched: pass 1 에서 이미 받은 기록(경로 → rec, 예: 표본용으로 받은 /sitemap.xml) — 다시 받지 않는다.
+ * og: { records: [], skipped: [] } 를 주면(--og) pass 1 이 끝난 직후 계열별 첫 표본 HTML 의 og:image(/api/og)를
+ *   계열당 1개씩 한 번만 요청해 og.records 에 넣는다(반환 records 에는 섞지 않는다 — pass1 HIT 집계와 분리).
  */
-export async function runPasses(targets, { passes, intervalSec, gapMs = MIN_GAP_MS }, io, prefetched = new Map()) {
+export async function runPasses(targets, { passes, intervalSec, gapMs = MIN_GAP_MS, og = null }, io, prefetched = new Map()) {
   const records = [];
+  const firstHtml = new Map(); // 계열 → pass 1 첫 표본 { path, html }
   let fetchedAny = prefetched.size > 0;
   for (let pass = 1; pass <= passes; pass++) {
     if (pass > 1 && intervalSec > 0) await io.sleep(intervalSec * 1000);
@@ -313,13 +397,33 @@ export async function runPasses(targets, { passes, intervalSec, gapMs = MIN_GAP_
       }
       if (fetchedAny) await io.sleep(gapMs);
       fetchedAny = true;
-      records.push((await fetchOnce(t, pass, io)).rec);
+      const { rec, text } = await fetchOnce(t, pass, io);
+      records.push(rec);
+      if (og && pass === 1 && FAMILIES.includes(t.family) && !firstHtml.has(t.family))
+        firstHtml.set(t.family, { path: t.path, html: rec.status === 200 ? text : "" });
+    }
+    if (og && pass === 1) {
+      for (const family of FAMILIES) {
+        const first = firstHtml.get(family);
+        if (!first) continue;
+        if (og.records.length >= OG_MAX) break;
+        const url = pickOgImage(first.html);
+        if (!url) {
+          og.skipped.push({ family, source: first.path, reason: first.html ? "no-api-og-image" : "first-sample-not-200" });
+          continue;
+        }
+        if (fetchedAny) await io.sleep(gapMs);
+        fetchedAny = true;
+        const u = new URL(url);
+        og.records.push((await fetchOnce({ family, path: u.pathname + u.search, url, source: first.path }, 1, io, { og: true })).rec);
+      }
     }
     const inPass = records.filter((r) => r.pass === pass);
     const s5 = inPass.filter((r) => r.status >= 500).length;
     const net = inPass.filter((r) => r.error != null).length;
     io.progress?.(
       `pass ${pass}/${passes} 완료 — ${inPass.length}건 · 5xx ${s5} · 망 오류 ${net}` +
+        (og && pass === 1 ? ` · og ${og.records.length}건` : "") +
         (pass < passes ? ` · 다음 pass 까지 ${intervalSec}초 대기` : "")
     );
   }
@@ -356,6 +460,15 @@ export function aggregate(records, { families = [...FAMILIES, "feeds"], carried 
       const k = r.error != null ? "ERR" : r.cache ?? "NONE";
       p1Cache[k] = (p1Cache[k] ?? 0) + 1;
     }
+    // 콜로별 — p1ByColo 는 pass-1 HIT 와 같은 분모(겹침 제외), p1Colo 는 pass 1 전체 요청의 콜로 분포(집계 줄 끝 세그먼트용)
+    const p1ByColo = {};
+    for (const r of p1) {
+      const c = (p1ByColo[r.colo ?? UNKNOWN_COLO] ??= { n: 0, hit: 0 });
+      c.n++;
+      if (isHit(r)) c.hit++;
+    }
+    const p1Colo = {};
+    for (const r of p1All) p1Colo[r.colo ?? UNKNOWN_COLO] = (p1Colo[r.colo ?? UNKNOWN_COLO] ?? 0) + 1;
     const ok200 = rs.filter((r) => responded(r) && r.status === 200);
     return {
       family,
@@ -370,6 +483,8 @@ export function aggregate(records, { families = [...FAMILIES, "feeds"], carried 
       p1Na: p1Carried > 0 && p1Carried * 2 > p1All.length,
       pn: { n: pn.length, hit: pn.filter(isHit).length },
       p1Cache,
+      p1ByColo,
+      p1Colo,
       ageMedP1: median(p1.filter(responded).map((r) => r.age ?? NaN)),
       msMedP1: median(p1.filter(responded).map((r) => r.ms)),
       msMedPn: median(pn.filter(responded).map((r) => r.ms)),
@@ -405,11 +520,54 @@ const pct = (hit, n) => (n ? `${Math.round((hit / n) * 100)}%` : "-");
 const p1HitText = (r) =>
   r.p1Na ? NA_MARK : `${pct(r.p1.hit, r.p1.n)}${r.p1Carried ? ` (carried ${r.p1Carried})` : ""}`;
 
+/** 값 → 개수 표를 '많은 순, 같으면 이름 순' 'K n K n' 문자열로. */
+const countsText = (obj) =>
+  Object.entries(obj)
+    .sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
+    .map(([k, v]) => `${k} ${v}`);
+
+/** pass 1 표본(피드 제외) 요청의 콜로 분포 — 'colo MAD 58 · SJC 2', 표본이 없으면 null. */
+export function coloSegment(rows) {
+  const total = {};
+  for (const r of rows) {
+    if (r.family === "feeds") continue;
+    for (const [c, n] of Object.entries(r.p1Colo ?? {})) total[c] = (total[c] ?? 0) + n;
+  }
+  const parts = countsText(total);
+  return parts.length ? `colo ${parts.join(" · ")}` : null;
+}
+
+/**
+ * --og 기록 요약(URL 없음) — 'og 200 6/6 (cf HIT 2 MISS 4, x-og-cache HIT 3 MISS 3, x-og-error 0, 5xx 0, net 0, ttfb med 412ms)'.
+ * OG 이미지가 하나도 없으면 'og none (no api og image)'.
+ */
+export function ogSegment(ogRecords) {
+  if (!ogRecords.length) return "og none (no api og image)";
+  const got = ogRecords.filter(responded);
+  const tally = (key) => {
+    const t = {};
+    for (const r of got) if (r[key]) t[r[key]] = (t[r[key]] ?? 0) + 1;
+    const parts = countsText(t);
+    return parts.length ? parts.join(" ") : "-";
+  };
+  const ok = got.filter((r) => r.status === 200).length;
+  const s5 = got.filter((r) => r.status >= 500).length;
+  const net = ogRecords.length - got.length;
+  const xerr = got.filter((r) => r.ogError).length;
+  const ttfb = median(got.map((r) => r.ttfb));
+  return (
+    `og 200 ${ok}/${ogRecords.length} (cf ${tally("cache")}, x-og-cache ${tally("ogCache")}, x-og-error ${xerr}, ` +
+    `5xx ${s5}, net ${net}, ttfb med ${ttfb == null ? "-" : `${ttfb}ms`})`
+  );
+}
+
 /**
  * 집계 한 줄 — URL·경로를 싣지 않는다(계열 이름·피드 이름·숫자만). metrics-ingest --note 용.
  * overlap: { source: "prev" | "reseed", carried } — 겹침 점검을 했으면 끝에 'overlap-check …' 를 붙인다.
+ * 2026-09-30(CF-05): 그 뒤에 --og 였으면 og 세그먼트, 맨 끝에 pass 1 표본의 콜로 분포 'colo …' 를 붙인다.
+ *   앞의 세그먼트는 내용·순서 모두 종전과 같다(9/28 D0·9/29 D+1 줄의 접두부와 그대로 비교된다).
  */
-export function aggregateLine(rows, feeds, { runDate, label, overlap = null }) {
+export function aggregateLine(rows, feeds, { runDate, label, overlap = null, ogRecords = null }) {
   const md = `${Number(runDate.slice(5, 7))}/${Number(runDate.slice(8, 10))}`;
   const head = `crawl-sampler ${md}${label ? ` ${label}` : ""}:`;
   const sampled = rows.filter((r) => r.family !== "feeds");
@@ -430,6 +588,9 @@ export function aggregateLine(rows, feeds, { runDate, label, overlap = null }) {
     segs.push(s);
   }
   if (overlap?.source) segs.push(`overlap-check ${overlap.source} (carried ${overlap.carried})`);
+  if (ogRecords) segs.push(ogSegment(ogRecords));
+  const colo = coloSegment(rows);
+  if (colo) segs.push(colo);
   return `${head} ${segs.join(" · ")}`;
 }
 
@@ -452,8 +613,57 @@ export function overlapNote(overlap, { seed, runDate }) {
   ];
 }
 
+/** 표 칸 안전 문자열 — '|'·줄바꿈 제거, 길이 제한. */
+const cell = (v, max = 60) => {
+  const s = String(v ?? "-").replace(/[|\r\n]+/g, " ");
+  return s.length > max ? `${s.slice(0, max - 1)}…` : s;
+};
+
+/** 계열×콜로 pass-1 HIT 표(겹침 제외 분모 — 위 표의 pass1 HIT 와 같은 기준). 표본 기록이 없으면 빈 배열. */
+export function coloTable(rows) {
+  const sampled = rows.filter((r) => r.family !== "feeds" && Object.keys(r.p1Colo ?? {}).length);
+  if (!sampled.length) return [];
+  const totals = {};
+  for (const r of sampled) for (const [c, n] of Object.entries(r.p1Colo)) totals[c] = (totals[c] ?? 0) + n;
+  const colos = countsText(totals).map((s) => s.split(" ")[0]);
+  const lines = [
+    "### pass1 HIT — 계열 × 콜로(cf-ray)",
+    "",
+    `| 계열 | ${colos.join(" | ")} |`,
+    `|---|${colos.map(() => "---:").join("|")}|`,
+  ];
+  for (const r of sampled) {
+    const cells = colos.map((c) => {
+      const x = r.p1ByColo?.[c];
+      if (!x || !x.n) return (r.p1Colo[c] ?? 0) > 0 ? "겹침만" : "-";
+      return r.p1Na ? "n/a" : `${pct(x.hit, x.n)} (${x.hit}/${x.n})`;
+    });
+    lines.push(`| ${r.family} | ${cells.join(" | ")} |`);
+  }
+  lines.push(`콜로 분포(pass 1 표본 요청): ${countsText(totals).join(" · ")}`);
+  return lines;
+}
+
+/** --og 표 — 계열당 1행. pass1 HIT 집계와 별개. */
+export function ogTable(ogRecords, ogSkipped = []) {
+  const lines = ["### OG 이미지(--og · pass 1 끝에 계열당 1개 · pass1 HIT 집계와 별개)", ""];
+  if (ogRecords.length) {
+    lines.push("| 계열 | 원본 쪽 | og:image | status | cf-cache-status | X-OG-Cache | X-OG-Error | TTFB ms | colo |");
+    lines.push("|---|---|---|---:|---|---|---|---:|---|");
+    for (const r of ogRecords) {
+      const status = r.error != null ? `망 오류 ${cell(r.error, 40)}` : r.status;
+      lines.push(
+        `| ${r.family} | ${cell(r.source)} | ${cell(r.path, 48)} | ${status} | ${cell(r.cache)} | ${cell(r.ogCache)} | ` +
+          `${cell(r.ogError)} | ${r.ttfb ?? "-"} | ${r.colo ?? UNKNOWN_COLO} |`
+      );
+    }
+  } else lines.push("(요청한 OG 이미지 없음)");
+  for (const s of ogSkipped) lines.push(`- ${s.family}: ${s.source} → 건너뜀(${s.reason})`);
+  return lines;
+}
+
 /** 마크다운 보고서(표 + 이상 상세). 마지막 줄 집계 줄은 main 이 따로 붙인다. */
-export function formatReport({ rows, feeds, records, runDate, seed, passes, intervalSec, sampleSize, limit, pools, shortfall, overlap = null }) {
+export function formatReport({ rows, feeds, records, runDate, seed, passes, intervalSec, sampleSize, limit, pools, shortfall, overlap = null, ogRecords = null, ogSkipped = [] }) {
   const lines = [];
   lines.push(`## crawl-cache-sampler — ${runDate} KST`);
   lines.push("");
@@ -489,6 +699,9 @@ export function formatReport({ rows, feeds, records, runDate, seed, passes, inte
         `${r.body.ok}/${r.body.of} |`
     );
   }
+  const colo = coloTable(rows);
+  if (colo.length) lines.push("", ...colo);
+  if (ogRecords) lines.push("", ...ogTable(ogRecords, ogSkipped));
   if (feeds.length) {
     lines.push("");
     lines.push(
@@ -523,7 +736,7 @@ function isValidDate(s) {
 }
 
 export function parseArgs(argv) {
-  const o = { passes: 3, interval: 600, seed: null, sitemapFile: null, limit: null, out: null, prev: null, label: null, dryRun: false, help: false };
+  const o = { passes: 3, interval: 600, seed: null, sitemapFile: null, limit: null, out: null, prev: null, label: null, og: false, dryRun: false, help: false };
   const int = (name, v, lo, hi) => {
     if (!/^\d+$/.test(v) || Number(v) < lo || Number(v) > hi) throw new Error(`--${name} 는 ${lo}~${hi} 정수여야 합니다: ${v}`);
     return Number(v);
@@ -533,6 +746,10 @@ export function parseArgs(argv) {
       const a = argv[i];
       if (a === "--dry-run") {
         o.dryRun = true;
+        continue;
+      }
+      if (a === "--og") {
+        o.og = true;
         continue;
       }
       if (a === "--help" || a === "-h") {
@@ -743,6 +960,7 @@ export async function main(argv, ioOverrides = {}) {
       ...picked.map((s) => `${s.family}\t${s.url}`),
       "",
       `피드(60 에 미포함, 매 pass 함께 잰다): ${FEED_PATHS.map(feedName).join(" · ")}`,
+      ...(o.og ? ["--og: 실제 실행에서 pass 1 계열별 첫 표본 HTML 의 og:image(/api/og)를 계열당 1개 잰다(dry-run 은 요청 없음)."] : []),
     ];
     io.stdout(`${lines.join("\n")}\n`);
     if (outPath) {
@@ -754,13 +972,14 @@ export async function main(argv, ioOverrides = {}) {
     return 0;
   }
 
-  // 3) 요청
-  const records = await runPasses(targets, { passes: o.passes, intervalSec: o.interval }, io, prefetched);
+  // 3) 요청 (--og 는 pass 1 끝에 계열당 1개 — 기록은 따로 둔다)
+  const og = o.og ? { records: [], skipped: [] } : null;
+  const records = await runPasses(targets, { passes: o.passes, intervalSec: o.interval, og }, io, prefetched);
 
-  // 4) 집계
+  // 4) 집계 (og 기록은 pass1 HIT 집계에 넣지 않는다)
   const rows = aggregate(records, { carried });
   const feeds = feedVerdicts(records, runDate);
-  const line = aggregateLine(rows, feeds, { runDate, label: o.label, overlap });
+  const line = aggregateLine(rows, feeds, { runDate, label: o.label, overlap, ogRecords: og ? og.records : null });
   const report = formatReport({
     rows,
     feeds,
@@ -774,6 +993,8 @@ export async function main(argv, ioOverrides = {}) {
     pools,
     shortfall,
     overlap,
+    ogRecords: og ? og.records : null,
+    ogSkipped: og ? og.skipped : [],
   });
   io.stdout(`${report}\n\n${line}\n`);
 
@@ -795,6 +1016,7 @@ export async function main(argv, ioOverrides = {}) {
       carried: [...carried],
       sample: picked,
       records,
+      og,
       rows,
       feeds,
       line,
@@ -807,7 +1029,8 @@ export async function main(argv, ioOverrides = {}) {
     }
   }
 
-  const failed = records.some((r) => r.error != null || (r.status != null && r.status >= 500));
+  const bad = (r) => r.error != null || (r.status != null && r.status >= 500);
+  const failed = records.some(bad) || (og ? og.records.some(bad) : false);
   return failed ? 1 : 0;
 }
 
