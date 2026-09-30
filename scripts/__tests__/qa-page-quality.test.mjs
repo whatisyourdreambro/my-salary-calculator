@@ -169,10 +169,34 @@ test("LT-07 /salary grid snap: off-grid amounts and legacy forms are middleware 
   assert.equal(classifyLink("/salary/abc", "/", ctx).kind, "dynamic-pattern-unchecked");
 });
 
+/** source 에서 header 로 시작하는 함수의 본문(매개변수 뒤 첫 { 다음부터 짝 맞는 } 앞까지). 정규식의 {1,10} 같은 중괄호는 짝이 맞아 그대로 센다. */
+function functionBody(source, header) {
+  const start = source.indexOf(header);
+  assert.ok(start >= 0, `${header} 를 찾지 못함`);
+  const open = source.indexOf("{", source.indexOf(")", start));
+  let depth = 0;
+  for (let i = open; i < source.length; i++) {
+    if (source[i] === "{") depth++;
+    else if (source[i] === "}" && --depth === 0) return source.slice(open + 1, i);
+  }
+  assert.fail(`${header} 본문의 짝 맞는 } 가 없음`);
+}
+/** 스냅 분기 한 줄: if ((m = segment.match(/…/))) return <식>; — [정규식 리터럴, 반환식] 을 잡는다. */
+const SNAP_BRANCH = /if \(\(m = segment\.match\((\/(?:\\.|[^/\\\r\n])+\/[a-z]*)\)\)\) return ([^;\r\n]+);/g;
+
 test("LT-07 salary snap mirror matches src/lib/salaryRedirect.ts (drift guard)", () => {
   const source = fs.readFileSync(path.join(REPO, "src/lib/salaryRedirect.ts"), "utf8");
   for (const literal of ["/^\\/salary\\/([^/]+)$/", "/^(\\d{1,10})$/", "/^(\\d{1,6})-manwon$/", "/^(\\d{1,3})-5-eok$/", "/^(\\d{1,3})-eok$/", "100_000_000 + 50_000_000", "* 10_000"])
     assert.ok(source.includes(literal), `salaryRedirect.ts 에 ${literal} 가 없음 — qa-page-quality.mjs 의 사본도 함께 고칠 것`);
+  // 정확도 단언(9/30 WP-01 리뷰): 포함 검사만으로는 parseSalaryPathAmount 에 새 URL 형태(다섯 번째 segment.match)가 생겨도
+  // 통과하고, 사본은 그 형태의 308 링크를 놓친다. 원본 본문을 잘라 분기 수가 정확히 4인지, 분기별 정규식·반환식이 사본과 같은지 본다.
+  const original = functionBody(source, "export function parseSalaryPathAmount(");
+  const mirror = functionBody(fs.readFileSync(path.join(REPO, "scripts/qa-page-quality.mjs"), "utf8"), "export function middlewareSalaryAmount(");
+  const fix = "— scripts/qa-page-quality.mjs 의 middlewareSalaryAmount 사본도 함께 고칠 것";
+  assert.equal(original.split("segment.match(").length - 1, 4, `parseSalaryPathAmount 의 segment.match( 가 4개가 아님 ${fix}`);
+  const branches = (body) => [...body.matchAll(SNAP_BRANCH)].map(m => [m[1], m[2].trim()]);
+  assert.equal(branches(original).length, 4, `parseSalaryPathAmount 의 분기가 if ((m = segment.match(/…/))) return …; 꼴 4개가 아님 ${fix}`);
+  assert.deepEqual(branches(mirror), branches(original), `정규식·반환식 목록이 원본과 다름 ${fix}`);
 });
 
 test("LT-07 noindex allowlist: utilities and /company/compare* only", () => {
