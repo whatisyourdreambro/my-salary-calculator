@@ -22,6 +22,7 @@ import { describe, expect, it } from "vitest";
 import { seedCompanies } from "@/data/seedCompanies";
 import { FIXED_RERATE, getThreshold } from "@/app/calc/samsung-bonus/model";
 import { PS_HISTORY } from "@/app/calc/sk-hynix-bonus/psData";
+import { OPI1_MAX_RATE } from "@/app/calc/samsung-bonus/opiData";
 
 const readSrc = (rel: string) => readFileSync(resolve(process.cwd(), rel), "utf8");
 const flat = (s: string) => s.replace(/\s+/g, " ");
@@ -183,6 +184,17 @@ describe("/samsung-negotiation-2026 2026 임금협약 타결 결과(5/27 가결)
   it("FAQ 인상률: 합계 6.2%는 추정 범위 안이지만 기본인상률 4.1%는 추정보다 낮았다", () => {
     expect(src).toContain("합계 6.2%는 그 범위 안이지만 기본인상률만 보면 4.1%로 추정보다 낮았습니다");
     expect(src).not.toContain("실제 타결은 그 범위 안이었습니다");
+  });
+
+  // 2026-09-30 WP-02(SJ-09(c) 잔여): OPI 는 기본급의 배수가 아니라 연봉 대비 %(상한 50%), TAI 는 월 기본급 대비 %·반기 지급.
+  // 근거: /guides/samsung-opi-tai-complete-2026 표(정본 opiData OPI1_MAX_RATE)·대법원 2021다248299 판결. 접힌 details 라 광고 위 높이 0.
+  it("접힌 FAQ OPI·TAI: OPI 는 연봉 대비 %(상한 = 정본 OPI1_MAX_RATE), 기본급의 배수가 아니다", () => {
+    expect(OPI1_MAX_RATE).toBe(50);
+    expect(src).toContain(
+      `OPI는 사업부 영업이익 기반으로 연 1회, 연봉 대비 %(상한 ${OPI1_MAX_RATE}%)로 지급되고, TAI는 월 기본급 대비 %로 반기마다 지급됩니다. 노조는 두 제도를 통합·단순화하자는 요구를 지속하고 있습니다.`,
+    );
+    expect(src).not.toContain("기본급의 배수로 환산");
+    expect(src).not.toContain("Operating Profit Incentive");
   });
 
   it("FAQ SK하이닉스 PS: psData PS_HISTORY 의 2024·2025 실적분 지급률과 같다", () => {
