@@ -114,7 +114,7 @@ const samsungEmployeeRsu = `
  </div>
  <div class="bg-card p-5 rounded-xl border border-border">
   <h4 class="font-bold mb-2">③ 임원 RSU/스톡옵션</h4>
-  <p class="text-sm text-muted-foreground">상무 이상 일부 직군. 일정 베스팅 기간 후 부여. 양도소득세 적용.</p>
+  <p class="text-sm text-muted-foreground">상무 이상 일부 직군. 일정 베스팅 기간 후 부여. 근로소득세 적용.</p>
  </div>
 </div>
 
@@ -379,8 +379,8 @@ const skHynixEmployeeBonus = `
 
 <h3 class="text-xl font-bold mt-8 mb-3">선택지 2. ISA + S&P500/KOSPI 분산</h3>
 <p>
- ISA 계좌의 비과세 한도(연 2,000만원, 누적 1억) 내에서 SP500 ETF·KOSPI ETF로 분산하면
- 회사 외 다른 산업·국가에 베팅하면서 매매차익을 비과세로 가져갈 수 있습니다.
+ ISA 계좌의 납입액 한도(연 2,000만원, 누적 1억) 내에서 SP500 ETF·KOSPI ETF로 분산하면
+ 회사 외 다른 산업·국가에 베팅하면서 매매차익을 절세하며 가져갈 수 있습니다.
  PS를 받은 1월~3월에 한 번에 ISA 한도를 채우는 직원이 많습니다.
 </p>
 
@@ -407,7 +407,7 @@ ${DISCLAIMER_HTML}
  <ul class="space-y-1 text-sm">
   <li>· <a href="/tools/finance/bonus" class="text-primary underline">성과급(보너스) 세금 계산기</a></li>
   <li>· <a href="/calc/incentive-tax" class="text-primary underline">인센티브 세후 계산기</a></li>
-  <li>· <a href="/salary-db" class="text-primary underline">SK하이닉스 직급별 연봉 DB</a></li>
+  <li>· <a href="/salary-db/sk-hynix" class="text-primary underline">SK하이닉스 직급별 연봉 DB</a></li>
  </ul>
 </div>
 `;
@@ -503,7 +503,7 @@ ${DISCLAIMER_HTML}
  <p class="font-bold text-primary mb-2">🛠 함께 사용하면 좋은 도구</p>
  <ul class="space-y-1 text-sm">
   <li>· <a href="/fire-calculator" class="text-primary underline">FIRE 은퇴 계산기</a> — 사이클 변동을 반영한 자산 시뮬레이션</li>
-  <li>· <a href="/dashboard" class="text-primary underline">내 대시보드</a> — 자산 추적</li>
+  <li>· <a href="/calc/portfolio-allocation" class="text-primary underline">자산 배분 계산기</a></li>
  </ul>
 </div>
 `;
@@ -624,7 +624,7 @@ ${DISCLAIMER_HTML}
 
 const chipStockTax = `
 <p class="lead">
- 직장인이 삼성전자나 SK하이닉스 주식을 일반 증권 계좌로 직접 매수해 보유하다 매도하면 양도소득세 과세 대상이 될 수 있습니다.
+ 직장인이 삼성전자나 SK하이닉스 주식을 일반 증권 계좌로 직접 매수해 보유하다 매도하면 대주주만이 과세 대상이 될 수 있습니다.
  (현재 한국 주식 양도소득세는 대주주 기준이며, 2026년 정책 변동 가능성이 있어 본 가이드는 일반 원칙 위주로 정리합니다.)
 </p>
 
@@ -645,10 +645,10 @@ const chipStockTax = `
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💡 직장인을 위한 절세 4가지 전략</h2>
 
-<h3 class="text-xl font-bold mt-8 mb-3">전략 1. ISA 계좌 활용 (최우선)</h3>
+<h3 class="text-xl font-bold mt-8 mb-3">전략 1. ISA 계좌 활용 (배당용)</h3>
 <p>
- ISA(개인종합자산관리계좌)는 연 2,000만원, 누적 1억까지 비과세 한도가 있습니다.
- 일반 직장인이 삼성전자/SK하이닉스를 ISA 안에서 매매하면 매매차익이 비과세입니다.
+ ISA(개인종합자산관리계좌)는 연 2,000만원, 누적 1억까지 납입액 한도가 있습니다.
+ 일반 직장인이 삼성전자/SK하이닉스를 ISA 밖에서 매매해도 매매차익은 비과세입니다.
  단, 만기 3년 이상 유지 조건과 출금 제한이 있습니다.
 </p>
 

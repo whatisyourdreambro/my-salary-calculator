@@ -155,6 +155,7 @@
    - `node scripts/ad-audit.mjs --diff --base <직전 main>` → ERROR 0 / WARN 0 (광고 무접촉)
    - `npm run verify:site` · `npm run verify:sitemap`
 4. main 푸시 → CF Pages 빌드 완료 → **운영자 Purge Everything** → 운영 HTML 확인: `/salary/50000000` 제목 '(2027 세후 월급)'·HowTo '국민연금 5.0%' · `/monthly/3000000` '(2027 기준)' · 홈 FAQ '2027년 기준 … 국민연금 5.0%' · `/table/2026/annual` 5,000만 행이 여전히 3,571,546원 · `/widget/salary` '2027 연봉' · `/api/og?type=salary&amount=50000000&net=…&v=20270101` 카드 '2027 연봉 리포트'.
+   - (2026-09-29 SG-08 추가) `/salary/50000000`·`/monthly/4200000` 의 마지막 광고 아래 부양가족 수별 실수령 표 섹션 끝에서 '2027년 1월부터 국민연금 근로자 부담률이 4.75%에서 5.0%로 오릅니다(확정) …' 문단(끝의 '2027 연봉/월급 실수령액 표' 링크 포함)이 **사라졌는지** 확인 — `src/lib/salaryDependentsTable.ts` `pension2027Notice()` 는 `CURRENT_RATES_YEAR !== 2026` 이면 null(고정 테스트 `salaryDependentsTable.test.ts`). 남아 있으면 포인터가 2027 로 안 바뀐 빌드이거나 캐시이므로 1번·Purge 를 다시 확인한다.
 5. 되돌리기: 1번 한 줄을 2026 으로 되돌려 푸시 + Purge (다른 파일 무관).
 
 **포인터 밖 (이 런북으로 바뀌지 않는 것)**: 근로소득 간이세액표(2027 개정 시 `withholdingTaxTable2026` 교체는 별도 작업) · 국민연금 기준소득월액 상·하한(2027-07 재조정 — `PENSION_BASE_2026` 을 쓰는 `toNetSalaryRates`·`TaxLogic` 상한을 그때 별도로, 같은 날 `currentRates.ts` `RATES_AS_OF_BY_YEAR[2027]` 을 "2027-07" 로 — 회사 상세 FAQ '(YYYY-MM 반영)') · 최저임금 소비처(위 불릿) · 연도 라벨이 박힌 제목(홈·회사·/calc·영문 페이지 — 자동 전환은 안 되고 P-6·P-4 에서 같은 커밋으로 수동 처리, 회사 title 제외) · `-2026` 가이드·용어집 계산 예시.

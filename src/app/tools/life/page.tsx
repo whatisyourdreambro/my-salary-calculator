@@ -32,7 +32,7 @@ const CATEGORIES: HubCategory[] = [
     items: [
       { title: "나이 계산기", desc: "만 나이·한국 나이 계산", href: "/tools/date/age", icon: Calendar },
       { title: "D-Day 계산기", desc: "날짜 차이·남은 일수", href: "/tools/date/d-day", icon: Calendar },
-      { title: "근무일수 계산기", desc: "주말 제외 영업일 계산", href: "/tools/date/work-days", icon: Calendar },
+      { title: "근무일수 계산기", desc: "휴일 제외 영업일 계산", href: "/tools/date/work-days", icon: Calendar },
     ],
   },
   {

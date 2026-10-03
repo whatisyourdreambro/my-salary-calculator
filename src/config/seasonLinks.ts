@@ -52,7 +52,7 @@ export const SEASON_TOP_SEP: SeasonLink[] = [
   },
   {
     href: "/civil-servant-pay-2027",
-    header: { name: "2027 공무원 봉급표 — 3.9% 인상", description: "16년 만 최대 인상 · 9급 1호봉 예상 월급", badge: "HOT" },
+    header: { name: "2027 공무원 봉급표 — 예산안 3.9%", description: "16년 만 최대 인상 · 9급 1호봉 예상 월급", badge: "HOT" },
   },
   {
     href: "/social-insurance-rates-2027",
@@ -93,7 +93,7 @@ export const SEASON_TOP_OCT: SeasonLink[] = [
   },
   {
     href: "/civil-servant-pay-2027",
-    header: { name: "2027 공무원 봉급표 — 3.9% 인상", description: "16년 만 최대 인상 · 9급 1호봉 예상 월급", badge: "HOT" },
+    header: { name: "2027 공무원 봉급표 — 예산안 3.9%", description: "16년 만 최대 인상 · 9급 1호봉 예상 월급", badge: "HOT" },
   },
   {
     href: "/social-insurance-rates-2027",
@@ -143,7 +143,7 @@ export const SEASON_TOP_DEC: SeasonLink[] = [
   },
   {
     href: "/civil-servant-pay-2027",
-    header: { name: "2027 공무원 봉급표 — 3.9% 인상", description: "16년 만 최대 인상 · 9급 1호봉 예상 월급", badge: "HOT" },
+    header: { name: "2027 공무원 봉급표 — 예산안 3.9%", description: "16년 만 최대 인상 · 9급 1호봉 예상 월급", badge: "HOT" },
   },
   {
     href: "/social-insurance-rates-2027",
@@ -184,7 +184,7 @@ export const SEASON_TOP_JAN: SeasonLink[] = [
   },
   {
     href: "/civil-servant-pay-2027",
-    header: { name: "2027 공무원 봉급표 — 3.9% 인상", description: "16년 만 최대 인상 · 9급 1호봉 예상 월급", badge: "HOT" },
+    header: { name: "2027 공무원 봉급표 — 예산안 3.9%", description: "16년 만 최대 인상 · 9급 1호봉 예상 월급", badge: "HOT" },
   },
   {
     href: "/social-insurance-rates-2027",

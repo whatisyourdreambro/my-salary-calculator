@@ -396,7 +396,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-15",
   "views": 67000,
   "lang": "ko",
-  "contentChars": 5473
+  "contentChars": 5474
  },
  {
   "slug": "gold-investment-methods",
@@ -717,7 +717,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-15",
   "views": 91000,
   "lang": "ko",
-  "contentChars": 7471
+  "contentChars": 7467
  },
  {
   "slug": "mbti-work-style",
@@ -733,7 +733,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-15",
   "views": 105000,
   "lang": "ko",
-  "contentChars": 5073
+  "contentChars": 5069
  },
  {
   "slug": "credit-score-management",
@@ -867,7 +867,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-10",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2746
+  "contentChars": 2749
  },
  {
   "slug": "crypto-tax-2026",
@@ -884,7 +884,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-05",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1888
+  "contentChars": 1883
  },
  {
   "slug": "social-insurance-reduction",
@@ -1383,7 +1383,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-18",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2356
+  "contentChars": 2361
  },
  {
   "slug": "marriage-tax-benefits-2026",
@@ -1486,7 +1486,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-03-28",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2547
+  "contentChars": 2546
  },
  {
   "slug": "tax-refund-mistakes-2026",
@@ -1638,7 +1638,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-03-30",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2553
+  "contentChars": 2552
  },
  {
   "slug": "remote-work-tax-2026",
@@ -1744,7 +1744,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-06",
   "views": 0,
   "lang": "ko",
-  "contentChars": 4320
+  "contentChars": 4329
  },
  {
   "slug": "semiconductor-cycle-2026",
@@ -1762,7 +1762,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-06",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3929
+  "contentChars": 3940
  },
  {
   "slug": "samsung-vs-hynix-employee-comparison",
@@ -2213,7 +2213,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-16",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3532
+  "contentChars": 3534
  },
  {
   "slug": "parental-leave-complete-guide",
@@ -2232,7 +2232,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-16",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3572
+  "contentChars": 3573
  },
  {
   "slug": "earned-income-credit-2026",
@@ -2251,7 +2251,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-16",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3291
+  "contentChars": 3289
  },
  {
   "slug": "national-pension-strategy-2026",

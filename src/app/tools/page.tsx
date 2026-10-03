@@ -80,7 +80,7 @@ const CATEGORIES: { title: string; color: string; items: CalcItem[] }[] = [
  { title: "BMI 비만도 계산기", desc: "체질량지수·비만 등급", href: "/tools/health/bmi", icon: Activity },
  { title: "나이 계산기", desc: "만 나이·한국 나이 계산", href: "/tools/date/age", icon: Calendar },
  { title: "D-Day 계산기", desc: "날짜 차이·남은 일수", href: "/tools/date/d-day", icon: Calendar },
- { title: "근무일수 계산기", desc: "주말 제외 영업일 계산", href: "/tools/date/work-days", icon: Calendar },
+ { title: "근무일수 계산기", desc: "휴일 제외 영업일 계산", href: "/tools/date/work-days", icon: Calendar },
  { title: "더치페이 계산기", desc: "인원별 금액 분배", href: "/tools/life/dutch-pay", icon: Users },
  { title: "연비·유류비 계산기", desc: "주유비용 계산", href: "/tools/life/fuel-cost", icon: Fuel },
  { title: "단위 변환기", desc: "길이·무게·온도 변환", href: "/tools/life/unit-converter", icon: RefreshCw },

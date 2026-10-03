@@ -11,7 +11,7 @@ import type { FaqItem } from "@/lib/structuredData";
 const FAQ_SECTION_RE =
   /<h2>[^<]*자주 묻는 질문[^<]*<\/h2>\s*<ul>([\s\S]*?)<\/ul>/g;
 const FAQ_ITEM_RE =
-  /<li><strong>([\s\S]*?)<\/strong>\s*(?:—|-|:)?\s*([\s\S]*?)<\/li>/g;
+  /<li><strong>([\s\S]*?)<\/strong>\s*(?:—|-|:|→)?\s*([\s\S]*?)<\/li>/g;
 
 function stripTags(html: string): string {
   return html

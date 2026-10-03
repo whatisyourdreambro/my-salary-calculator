@@ -87,10 +87,10 @@ export const negotiationGuides = [
  content: `
 <p class="lead">한 회사에 머무르면 매년 <strong>3~5% 인상</strong>이 평균. 하지만 이직하면 <strong>15~30% 점프</strong>가 일반적입니다. 같은 능력이라도 회사가 바뀌면 가치 평가가 달라지기 때문입니다.</p>
 
-<h2>📊 직군별 이직 평균 인상률 (2026 기준)</h2>
+<h2>📊 직군별 이직 통념 인상률 (2026 기준)</h2>
 <div class="bg-secondary/30 p-6 rounded-xl mt-6 border border-primary/10">
 <table class="w-full text-sm">
-<thead><tr><th>직군</th><th>이직 평균 인상률</th></tr></thead>
+<thead><tr><th>직군</th><th>이직 인상률 통념</th></tr></thead>
 <tbody>
 <tr><td>IT 개발자 (백엔드/프론트)</td><td>20~35%</td></tr>
 <tr><td>데이터·AI 엔지니어</td><td>25~40%</td></tr>
@@ -192,7 +192,7 @@ export const negotiationGuides = [
 <tbody>
 <tr><td>지급 형태</td><td>주식 무상</td><td>매수 권리</td></tr>
 <tr><td>회사 주가 하락 시</td><td>가치 줄지만 0 아님</td><td>가치 0 (행사 안 함)</td></tr>
-<tr><td>세금</td><td>베스팅 시 근로소득세</td><td>행사 시 차익에 양도세</td></tr>
+<tr><td>세금</td><td>베스팅 시 근로소득세</td><td>행사 시 근로소득 과세</td></tr>
 <tr><td>보통 부여 회사</td><td>대기업 (네이버·카카오·삼성·SK)</td><td>스타트업·외국계</td></tr>
 </tbody>
 </table>
@@ -215,7 +215,7 @@ export const negotiationGuides = [
 </div>
 
 <h3>매도 시점</h3>
-<p>(매도가 - 베스팅 시 시가) × 양도세율. 1년 보유 후 매도가 절세 효과 있음(국가별 다름).</p>
+<p>(매도가 - 베스팅 시 시가) × 양도세율. 1년 보유 후 매도가 절세 효과 없음(대주주 예외).</p>
 
 <h2>🚀 스톡옵션 가치 평가</h2>
 <p>스톡옵션은 옵션 가격 모델(블랙-숄즈)로 평가하는 게 정확하지만, 직장인 기준으로 간단히:</p>

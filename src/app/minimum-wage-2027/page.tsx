@@ -83,7 +83,7 @@ const FAQ_ITEMS = [
   {
     question: "월 2,236,300원의 세후 실수령액은 얼마인가요?",
     answer:
-      "이 페이지 본문의 실수령액 표에서 참고치를 확인할 수 있습니다. 국민연금 보험료율은 법정 인상 일정 확정에 따라 2026년 9.5%에서 2027년 10.0%(직장인 본인부담 5.0%)로 오르며, 표에는 이 5.0%를 반영했습니다. 건강보험·장기요양·고용보험·간이세액표(소득세)는 2026년 기준을 준용했으므로 실제 공제액과 다를 수 있습니다. 또 식대 비과세 0원을 가정했기 때문에, 식대 비과세 월 20만원을 가정한 2027 시급·월급 환산표보다 실수령액이 조금 적게 나옵니다.",
+      "이 페이지 본문의 실수령액 표에서 참고치를 확인할 수 있습니다. 국민연금 보험료율은 법정 인상 일정 확정에 따라 2026년 9.5%에서 2027년 10.0%(직장인 본인부담 5.0%)로 오르며, 표에는 이 5.0%를 반영했습니다. 건강보험은 2026년 9월 8일 건강보험정책심의위원회에서 2027년 요율이 동결(총 7.19%, 본인 3.595%)돼 표의 값이 그대로 2027년 값입니다. 장기요양·고용보험·간이세액표(소득세)는 2026년 기준을 준용했으므로 실제 공제액과 다를 수 있습니다(고용보험 실업급여 요율은 2027년 2.0%, 근로자 1.0% 인상안이 2026년 9월 1일 고용보험위원회에서 심의돼 법령 개정 전입니다). 또 식대 비과세 0원을 가정했기 때문에, 식대 비과세 월 20만원을 가정한 2027 시급·월급 환산표보다 실수령액이 조금 적게 나옵니다.",
   },
   {
     question: "최저임금 시급에 주휴수당이 포함되나요?",
@@ -104,7 +104,8 @@ const FAQ_ITEMS = [
 
 export default function MinimumWage2027Page() {
   // 세후 실수령액 — /table/2027 과 같은 2027 요율 엔진(generateData2027)으로 렌더 시 계산.
-  // 국민연금만 2027 법정 요율 5.0%, 건강보험·장기요양·고용보험·간이세액표는 2026 준용.
+  // 국민연금 2027 법정 요율 5.0%, 건강보험 3.595%는 2027 동결 확정(2026-09-08 건정심)이라 2026 값 = 2027 값,
+  // 장기요양·고용보험·간이세액표는 2026 준용(광고 위 ※ 각주는 같은 폭 교체가 불가해 그대로 둠 — FAQ 에서 정정).
   // 식대 비과세 0원 가정(/table/2027은 20만원 가정) — 최저임금 근로자는 식대 비과세가
   // 없는 경우가 많아 0원을 유지한다. 부양가족 본인 1인 기준 (2026-09-25 감사 CALC-08).
   const net = calculateNetSalary2027(YEARLY_2027, 0, 1, 0, DEFAULT_SETTINGS);
@@ -325,11 +326,11 @@ export default function MinimumWage2027Page() {
             <p className="text-sm text-muted-blue">올해 12월 31일까지 적용 기준</p>
           </Link>
           <Link
-            href="/social-insurance-rates-2026"
+            href="/social-insurance-rates-2027"
             className="block p-6 bg-white border border-canvas-200 rounded-3xl text-navy hover:border-electric transition-colors"
           >
             <FileText className="w-8 h-8 text-electric mb-3" />
-            <h3 className="text-lg font-black mb-2">2026 4대보험 요율</h3>
+            <h3 className="text-lg font-black mb-2">2027 4대보험 요율</h3>
             <p className="text-sm text-muted-blue">실수령액 계산의 기준 요율</p>
           </Link>
         </section>

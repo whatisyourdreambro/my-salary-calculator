@@ -1325,7 +1325,7 @@ const parentalLeave66 = `
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 6+6 부모 육아휴직 핵심</h2>
 <ul class="space-y-3 mt-4">
 <li><strong>① 첫 6개월</strong>: 통상임금 100% (월 상한 250만원~450만원, 차수별 인상)</li>
-<li><strong>② 7~12개월</strong>: 통상임금 80% (월 상한 150만원)</li>
+<li><strong>② 7~12개월</strong>: 통상임금 80% (월 상한 160만원)</li>
 <li><strong>③ 부모 모두 사용 시</strong>: 둘 다 6개월 100% 지원</li>
 <li><strong>④ 사용 기간 제한</strong>: 자녀 만 18세까지 (영유아는 통상 출산 1~2년 내 권장)</li>
 </ul>
@@ -1352,7 +1352,7 @@ const parentalLeave66 = `
 
 <h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 함정 — 회사 권유 거부 가능</h2>
 <p>
-법적으로 회사는 육아휴직 신청을 거부할 수 없음. 단 인사 평가나 복귀 후 보직 등에서 불이익 발생 시 노동부·노동위원회 진정 가능. 또한 휴직 후 복귀하지 않으면 지원금 일부 환수.
+법적으로 회사는 육아휴직 신청을 거부할 수 없음. 단 인사 평가나 복귀 후 보직 등에서 불이익 발생 시 노동부·노동위원회 진정 가능. 또한 휴직 후 복귀하지 않아도 지원금 환수 없음.
 </p>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20">

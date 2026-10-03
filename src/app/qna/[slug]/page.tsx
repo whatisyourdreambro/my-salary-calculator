@@ -61,7 +61,7 @@ export default function QnaDetailPage({
  <main className="w-full min-h-screen bg-canvas pb-20">
  <JsonLd
  data={[
- autoBreadcrumbLd(`/qna/${slug}`, { leafName: item.question.slice(0, 30) }),
+ autoBreadcrumbLd(`/qna/${slug}`, { leafName: item.question }),
  // 이 페이지 자체가 하나의 큰 FAQ — Google FAQ rich result 노출
  faqLd([
  {

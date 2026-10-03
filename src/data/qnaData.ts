@@ -92,7 +92,7 @@ export const qnaData: QnaItem[] = [
  "<strong>입증 책임:</strong> 출퇴근 기록, 교통카드 내역, 업무 이메일 등 실제 근무시간을 증명할 자료를 평소에 모아두는 것이 중요합니다."
  ],
  tip: "IT 업계 등에서 '공짜 야근' 관행을 막기 위해 포괄임금제 폐지 움직임이 늘고 있습니다. 입사 전 계약 조건을 꼼꼼히 따져보세요.",
- action: { text: "내 야근수당 계산해보기", href: "/?tab=salary" }
+ action: { text: "내 야근수당 계산해보기", href: "/calc/overtime-pay-quick" }
  }
  },
 
@@ -110,7 +110,7 @@ export const qnaData: QnaItem[] = [
  "<strong>임금피크제:</strong> 임금피크제 실시로 임금이 줄어들 때."
  ],
  tip: "퇴직금은 노후 자금의 성격이 강하므로, 정말 급한 상황이 아니라면 중간정산보다는 퇴직연금 담보대출을 먼저 고려해보세요.",
- action: { text: "퇴직금 계산기 바로가기", href: "/?tab=severance" }
+ action: { text: "퇴직금 계산기 바로가기", href: "/calc/severance-pay-quick" }
  }
  },
  {
@@ -140,7 +140,7 @@ export const qnaData: QnaItem[] = [
  "<strong>추가 공제:</strong> 전통시장, 대중교통, 도서/공연비는 별도 한도로 추가 공제되니 적극 활용하세요."
  ],
  tip: "맞벌이 부부라면 연봉이 낮은 쪽의 카드를 몰아서 써야 25% 문턱을 넘기 쉽고 공제 효과를 극대화할 수 있습니다.",
- action: { text: "연말정산 미리보기", href: "/year-end-tax" }
+ action: { text: "연말정산 미리보기", href: "/year-end-tax-preview" }
  }
  },
  {
@@ -200,7 +200,7 @@ export const qnaData: QnaItem[] = [
  "<strong>퇴직금·성과급 별도 확인:</strong> 제시받은 연봉이 퇴직금 포함(13분할)인지, 성과급이 연봉에 포함되는지 반드시 물어보세요. 같은 숫자라도 실수령액이 크게 달라집니다."
  ],
  tip: "협상 전 희망 세전 연봉에 대한 실수령액을 미리 계산해두면, 회사 제시안이 내 기대치에 맞는지 즉시 판단할 수 있습니다.",
- action: { text: "세전 연봉으로 실수령액 계산", href: "/calc" }
+ action: { text: "세전 연봉으로 실수령액 계산", href: "/" }
  }
  },
  {
@@ -215,7 +215,7 @@ export const qnaData: QnaItem[] = [
  "<strong>현물 식사와 중복 불가:</strong> 회사가 구내식당·식권으로 밥을 제공하면서 동시에 식대를 현금 지급하면 비과세가 중복 적용되지 않습니다."
  ],
  tip: "이직·연봉협상 시 '식대 항목을 따로 잡아달라'고 요청하면, 같은 연봉이라도 실수령액을 합법적으로 높일 수 있습니다.",
- action: { text: "비과세 반영 실수령액 계산", href: "/calc" }
+ action: { text: "비과세 반영 실수령액 계산", href: "/" }
  }
  },
  {
@@ -230,7 +230,7 @@ export const qnaData: QnaItem[] = [
  "<strong>세후 실수령:</strong> 최저임금 월급에서도 4대 보험은 공제됩니다. 실수령액은 약 195만원 안팎입니다."
  ],
  tip: "최저임금은 매년 8월 다음 해 금액이 고시됩니다. 근로계약서 시급이 최저임금 미만이면 그 부분은 무효이며, 차액을 청구할 수 있습니다.",
- action: { text: "시급·월급 변환 계산기", href: "/calc" }
+ action: { text: "시급·월급 변환 계산기", href: "/calc/hourly-to-yearly" }
  }
  },
  {
@@ -245,7 +245,7 @@ export const qnaData: QnaItem[] = [
  "<strong>유연근로제 예외:</strong> 탄력근로제·선택근로제를 도입하면 특정 주에 52시간을 넘겨도 평균으로 맞추는 방식이 허용됩니다."
  ],
  tip: "출퇴근 기록(지문, 사원증 태그, PC 온·오프 시간)은 연장근로를 입증하는 핵심 증거입니다. 평소에 캡처해 보관하세요.",
- action: { text: "연장근로수당 계산하기", href: "/calc" }
+ action: { text: "연장근로수당 계산하기", href: "/calc/overtime-pay-quick" }
  }
  },
 
@@ -262,7 +262,7 @@ export const qnaData: QnaItem[] = [
  "<strong>산재보험:</strong> 100% 회사 부담이며 업종별 위험도에 따라 요율이 다릅니다. 근로자 급여에서는 한 푼도 빠지지 않습니다."
  ],
  tip: "급여명세서의 공제 항목 합계가 세전 급여의 9~10%를 크게 벗어난다면, 회사가 요율을 잘못 적용했을 수 있으니 점검해보세요.",
- action: { text: "4대 보험 공제 후 실수령액 보기", href: "/calc" }
+ action: { text: "4대 보험 공제 후 실수령액 보기", href: "/" }
  }
  },
  {
@@ -277,7 +277,7 @@ export const qnaData: QnaItem[] = [
  "<strong>전환 후 부담:</strong> 지역가입자는 소득뿐 아니라 재산·자동차에도 보험료가 매겨져, 직장가입자였을 때보다 부담이 커질 수 있습니다."
  ],
  tip: "퇴직 후 소득이 줄었다면 '임의계속가입' 제도를 활용해 최대 36개월간 직장가입자 수준의 보험료로 유지할 수 있습니다.",
- action: { text: "내 소득 기준 보험료 확인", href: "/calc" }
+ action: { text: "내 소득 기준 보험료 확인", href: "/health-insurance-fee-2026" }
  }
  },
  {
@@ -292,7 +292,7 @@ export const qnaData: QnaItem[] = [
  "<strong>실질이 근로자라면:</strong> 출퇴근·업무지시를 받는 '무늬만 프리랜서'라면 근로자로 인정받아 4대 보험과 퇴직금을 소급 청구할 수 있습니다."
  ],
  tip: "3.3% 프리랜서는 단순경비율·기준경비율로 경비를 인정받습니다. 소득이 적다면 환급액이 꽤 크니 5월 신고를 절대 놓치지 마세요.",
- action: { text: "종합소득세 신고 가이드", href: "/year-end-tax" }
+ action: { text: "종합소득세 신고 가이드", href: "/year-end-tax-2026" }
  }
  },
 
@@ -324,7 +324,7 @@ export const qnaData: QnaItem[] = [
  "<strong>신용카드도 마찬가지:</strong> 카드 소득공제는 총급여 25% 초과분만 인정되므로, 소득이 낮은 쪽이 더 유리한 경우가 많습니다."
  ],
  tip: "국세청 홈택스 '편리한 연말정산'의 맞벌이 절세 안내 기능을 쓰면, 부양가족을 누구에게 배분할 때 부부 합산 세금이 최소인지 자동으로 알려줍니다.",
- action: { text: "연말정산 절세 시뮬레이션", href: "/year-end-tax" }
+ action: { text: "연말정산 절세 시뮬레이션", href: "/calc/dual-income-year-end" }
  }
  },
  {
@@ -339,7 +339,7 @@ export const qnaData: QnaItem[] = [
  "<strong>연금 수령 시 과세:</strong> 나중에 연금으로 받을 때 3.3~5.5% 연금소득세가 붙지만, 공제받을 때 세율보다 훨씬 낮아 전체적으로 이득입니다."
  ],
  tip: "연봉이 높아 13.2%만 적용된다면, 그해 연말에 한꺼번에 넣기보다 ISA 만기 자금을 연금계좌로 전환해 추가 공제(전환액의 10%, 최대 300만원)를 노리세요.",
- action: { text: "연금계좌 세액공제 계산", href: "/year-end-tax" }
+ action: { text: "연금계좌 세액공제 계산", href: "/tools/finance/irp" }
  }
  },
  {
@@ -354,7 +354,7 @@ export const qnaData: QnaItem[] = [
  "<strong>놓쳤다면:</strong> 연말정산 때 합산을 못 했어도, 다음 해 5월 종합소득세 확정신고로 바로잡으면 가산세를 피하거나 줄일 수 있습니다."
  ],
  tip: "퇴사할 때 전 직장에서 원천징수영수증을 미리 받아두면, 새 회사 연말정산 시즌에 발급을 독촉하느라 마음 졸일 일이 없습니다.",
- action: { text: "연말정산 준비물 체크", href: "/year-end-tax" }
+ action: { text: "연말정산 준비물 체크", href: "/year-end-tax-mid-resign" }
  }
  },
  {
@@ -369,7 +369,7 @@ export const qnaData: QnaItem[] = [
  "<strong>월세 공제와 구분:</strong> 이건 '전세대출 원리금' 공제입니다. 월세 사는 사람이 받는 월세 세액공제와는 별개 항목입니다."
  ],
  tip: "주택담보대출(집을 산 경우) 이자는 '장기주택저당차입금 이자상환액 공제'라는 다른 항목으로, 한도가 훨씬 큽니다. 내 상황에 맞는 항목을 정확히 골라 신청하세요.",
- action: { text: "주택자금 공제 가이드", href: "/guides" }
+ action: { text: "주택자금 공제 가이드", href: "/year-end-tax-checklist" }
  }
  },
  {
@@ -384,7 +384,7 @@ export const qnaData: QnaItem[] = [
  "<strong>중복 불가:</strong> 형은 부모님을 부양가족으로 올리고, 동생이 의료비만 따로 공제받는 식은 안 됩니다. 부양과 의료비 공제자는 일치해야 합니다."
  ],
  tip: "실손보험으로 돌려받은 의료비는 공제 대상에서 빼야 합니다. 보험금 수령액을 의료비에서 차감하고 신고하세요.",
- action: { text: "의료비 세액공제 계산", href: "/year-end-tax" }
+ action: { text: "의료비 세액공제 계산", href: "/medical-tax-credit-2026" }
  }
  },
 
@@ -401,7 +401,7 @@ export const qnaData: QnaItem[] = [
  "<strong>4대 보험 가입 여부 무관:</strong> 4대 보험에 가입 안 됐어도 실제 1년 이상 일했다면 퇴직금은 받을 수 있습니다."
  ],
  tip: "입사일과 퇴사일은 '퇴사일 다음 날'까지 계산에 넣습니다. 퇴직금이 걸린 상황이라면 마지막 근무일을 하루 단위로 정확히 따져보세요.",
- action: { text: "퇴직금 예상액 계산하기", href: "/calc" }
+ action: { text: "퇴직금 예상액 계산하기", href: "/tools/finance/severance" }
  }
  },
  {
@@ -416,7 +416,7 @@ export const qnaData: QnaItem[] = [
  "<strong>DC가 유리한 사람:</strong> 임금상승률이 낮거나, 임금피크제 적용 예정이거나, 투자에 자신 있는 경우. 임금피크제 진입 전 DC로 전환하면 깎인 임금의 영향을 피할 수 있습니다."
  ],
  tip: "DC형은 퇴직 후에도 IRP로 옮겨 운용을 이어갈 수 있습니다. 임금피크제 적용이 예정돼 있다면 그 전에 DC 전환을 적극 검토하세요.",
- action: { text: "퇴직금 제도별 가이드", href: "/guides" }
+ action: { text: "퇴직금 제도별 가이드", href: "/retirement-pension-2026" }
  }
  },
  {
@@ -431,7 +431,7 @@ export const qnaData: QnaItem[] = [
  "<strong>중간에 해지하면:</strong> IRP를 중도 해지해 일시금으로 찾으면 이연됐던 퇴직소득세를 그때 전액 내야 합니다."
  ],
  tip: "퇴직금이 당장 급하지 않다면 IRP에서 그대로 운용하다가 55세 이후 연금으로 나눠 받는 것이 세금 측면에서 가장 유리합니다.",
- action: { text: "퇴직금·연금 운용 가이드", href: "/guides" }
+ action: { text: "퇴직금·연금 운용 가이드", href: "/guides/severance-lump-vs-irp-2026" }
  }
  },
  {
@@ -461,7 +461,7 @@ export const qnaData: QnaItem[] = [
  "<strong>신청 시한:</strong> 퇴직 다음 날부터 12개월 안에 받아야 합니다. 늦게 신청하면 12개월이 지난 분은 소멸하니 퇴직 후 바로 신청하세요."
  ],
  tip: "실업급여 수급 중 재취업에 성공하면 남은 급여의 일부를 '조기재취업수당'으로 받을 수 있습니다. 빨리 취업해도 손해가 아닙니다.",
- action: { text: "실업급여 가이드 보기", href: "/guides" }
+ action: { text: "실업급여 가이드 보기", href: "/guides/unemployment-benefits-complete" }
  }
  },
 
@@ -540,7 +540,7 @@ export const qnaData: QnaItem[] = [
  "<strong>납입 한도:</strong> 연 2,000만원, 총 1억원까지 납입할 수 있고 미납입분은 다음 해로 이월됩니다."
  ],
  tip: "중개형 ISA를 고르면 국내 주식·ETF까지 한 계좌에서 거래할 수 있습니다. 사회초년생이라면 중개형으로 열어두는 것이 활용도가 높습니다.",
- action: { text: "ISA 활용 재테크 가이드", href: "/guides" }
+ action: { text: "ISA 활용 재테크 가이드", href: "/guides/isa-account-guide" }
  }
  },
  {
@@ -762,7 +762,7 @@ export const qnaData: QnaItem[] = [
     "<strong>비급여 제외:</strong> 비급여 진료비(미용, 선택 진료 등)는 상한액 계산에 포함되지 않습니다."
    ],
    tip: "큰 수술이나 항암 치료 등 고액 의료비 발생 시 건강보험공단 고객센터(1577-1000)에 본인부담상한제 적용 여부와 예상 환급액을 미리 문의해보세요.",
-   action: { text: "의료비 세액공제 가이드", href: "/year-end-tax" }
+   action: { text: "의료비 세액공제 가이드", href: "/medical-tax-credit-2026" }
   }
  },
 
@@ -779,7 +779,7 @@ export const qnaData: QnaItem[] = [
     "<strong>미사용 연차 수당:</strong> 1년간 사용하지 못한 연차는 '연차수당'으로 정산받을 수 있습니다. 단, 회사가 촉진 제도를 적법하게 운영했다면 수당 지급 의무가 면제됩니다."
    ],
    tip: "연차사용촉진제를 받았다면 기한 내 미신청 시 수당 청구가 어렵습니다. 촉진 통보를 받으면 반드시 사용 계획을 제출하거나 실제 사용하세요.",
-   action: { text: "연차수당 계산기", href: "/calc" }
+   action: { text: "연차수당 계산기", href: "/calc/annual-leave-pay-quick" }
   }
  },
  {
@@ -794,7 +794,7 @@ export const qnaData: QnaItem[] = [
     "<strong>월급에 포함 여부:</strong> 일부 계약서에 '주휴수당 포함' 문구가 있으면 이미 반영된 것입니다. 반영 여부를 꼭 확인하세요."
    ],
    tip: "최저임금 고지 시 209시간 기준을 사용하는데, 여기에는 주휴시간 약 35시간(주 8시간 × 4.345주)이 포함돼 있습니다. 시급이 10,320원 미만이라면 위반입니다.",
-   action: { text: "시급·주휴수당 계산기", href: "/calc" }
+   action: { text: "시급·주휴수당 계산기", href: "/weekly-holiday-allowance-2026" }
   }
  },
  {
@@ -809,7 +809,7 @@ export const qnaData: QnaItem[] = [
     "<strong>중복 적용 예시:</strong> 휴일 야간 연장근로라면 1.5(휴일) + 0.5(야간) + 0.5(연장) = 통상임금의 2.5배."
    ],
    tip: "포괄임금제 계약이라도 계약서에 명시된 고정OT 시간을 초과한 부분은 추가 수당을 받을 수 있습니다.",
-   action: { text: "야간·휴일수당 계산기", href: "/calc" }
+   action: { text: "야간·휴일수당 계산기", href: "/calc/night-shift-pay-quick" }
   }
  },
 
@@ -835,7 +835,7 @@ export const qnaData: QnaItem[] = [
   answer: {
    conclusion: "만 15~34세 청년이 중소기업에 취업하면 5년간 소득세 90%(연 200만원 한도)를 감면받는 제도입니다. 취업 전에 신청해야 혜택을 받을 수 있습니다.",
    details: [
-    "<strong>감면 요건:</strong> 만 15~34세 (군 복무 기간 차감, 최대 만 39세까지), 중소기업 취업, 2012년 이후 취업자.",
+    "<strong>감면 요건:</strong> 만 15~34세 (군 복무 기간 차감, 최대 만 40세까지), 중소기업 취업, 2012년 이후 취업자.",
     "<strong>감면율·한도:</strong> 소득세의 90% 감면, 연간 200만원 한도.",
     "<strong>신청 방법:</strong> 취업한 중소기업에 '중소기업 취업 청년 소득세 감면 신청서'를 제출 → 회사가 원천징수 시 감면 적용.",
     "<strong>주의사항:</strong> 이전 직장에서 동일 감면을 받은 기간은 5년 한도에서 공제됩니다. 이직 시 새 직장에 반드시 재신청해야 합니다."
@@ -905,7 +905,7 @@ export const qnaData: QnaItem[] = [
     "<strong>연간 총 공제:</strong> 소득세 + 지방소득세 + 4대 보험 합산 시 연봉 1억 근로자는 연 약 1,870~2,160만원 공제."
    ],
    tip: "연봉 1억을 넘으면 IRP·연금저축 세액공제(13.2%)가 특히 유리합니다. 900만원 납입 시 118.8만원 환급.",
-   action: { text: "연봉 1억 실수령액 계산", href: "/calc" }
+   action: { text: "연봉 1억 실수령액 계산", href: "/salary/100000000" }
   }
  },
  {
@@ -920,7 +920,7 @@ export const qnaData: QnaItem[] = [
     "<strong>증빙 관리:</strong> 부업 관련 경비(장비, 재료, 교통, 통신비 일부)를 영수증으로 보관하면 비용 인정으로 세금을 줄일 수 있습니다."
    ],
    tip: "유튜브 애드센스 수익, 쿠팡 파트너스 수익도 사업소득으로 신고 대상입니다. 소득이 소액이더라도 적법하게 신고해두는 것이 이후 대출·보증 심사에 유리합니다.",
-   action: { text: "종합소득세 가이드", href: "/year-end-tax" }
+   action: { text: "종합소득세 가이드", href: "/year-end-tax-2026" }
   }
  },
 

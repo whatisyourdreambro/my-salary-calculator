@@ -28,11 +28,11 @@ export const YEAR_END_STEPS: YearEndStep[] = [
     id: "preview",
     period: "지금 ~ 11월",
     title: "미리보기로 환급 전망 파악",
-    desc: "홈택스 미리보기(예년 기준 10월 말 오픈) 전에도 예상 환급액을 계산해 남은 기간의 절세 전략을 세울 수 있습니다.",
+    desc: "홈택스 미리보기(예년 기준 10월 말 이후) 전에도 예상 환급액을 계산해 남은 기간의 절세 전략을 세울 수 있습니다.",
     entries: [
       { href: "/year-end-tax", title: "연말정산 계산기", desc: "예상 환급·추가납부 즉시 계산 + 절세 시뮬레이터", kind: "calculator" },
       { href: "/year-end-tax-preview", title: "홈택스 미리보기 이용법", desc: "오픈 시점·이용 절차·확인 포인트", kind: "guide" },
-      { href: "/guides/hometax-year-end-preview-2026", title: "미리보기 200% 활용 가이드", desc: "미리보기 숫자 읽는 법", kind: "guide" },
+      { href: "/guides/hometax-year-end-preview-2026", title: "미리보기 100% 활용 가이드", desc: "미리보기 숫자 읽는 법", kind: "guide" },
     ],
   },
   {
