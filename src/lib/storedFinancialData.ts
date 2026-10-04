@@ -5,6 +5,7 @@
 // 구조 분해·calculateHealthScore 로 그대로 들어가지 않게 한다. (parseSavedHomeInputs 와 같은 방식)
 
 import type { StoredFinancialData } from "@/app/types";
+import { isStoredReportData } from "@/lib/reportStoredData";
 
 export const FINANCIAL_DATA_KEY = "moneysalary-financial-data";
 
@@ -17,4 +18,12 @@ const isPlainObject = (value: unknown): value is Record<string, unknown> =>
 export function isStoredFinancialData(value: unknown): value is StoredFinancialData {
   if (!isPlainObject(value)) return false;
   return SECTION_KEYS.every((key) => value[key] === undefined || isPlainObject(value[key]));
+}
+
+/** Dashboard rendering needs valid report fields and its optional saved rank. */
+export function isStoredDashboardData(value: unknown): value is StoredFinancialData {
+  if (!isStoredReportData(value)) return false;
+  return value.rank === undefined || (isPlainObject(value.rank)
+    && typeof value.rank.rank === "number" && Number.isFinite(value.rank.rank)
+    && value.rank.rank >= 0 && value.rank.rank <= 100);
 }

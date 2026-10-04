@@ -174,7 +174,7 @@ export default function SavingsInterestClient() {
             className="w-4 h-4"
           />
           <span className="text-sm font-medium text-navy dark:text-canvas-100">
-            비과세 상품 (ISA·청년도약계좌·조합예탁금 등)
+            이자 전액 비과세 조건 적용 (세율 0% 가정)
           </span>
         </label>
 
@@ -209,9 +209,9 @@ export default function SavingsInterestClient() {
         </div>
 
         <p className="mt-4 text-xs text-faint-blue leading-relaxed">
-          ※ 일반 시중은행 정기예적금은 대부분 단리입니다. 복리는 일부 상품(예: 적립식 펀드, 일부
-          저축은행 상품)에만 적용됩니다. 정확한 금리·세금·우대조건은 가입 전 은행 공시 자료를
-          확인하세요. 본 계산기는 시뮬레이션 추정치입니다.
+          ※ 단리 또는 월복리는 실제 상품의 이자 계산 방식에 맞춰 선택하세요. 펀드 수익률은 확정 이자가 아닙니다.
+          비과세 선택은 이자 전액에 세율 0%를 적용하는 가정이며, ISA 등 상품별 비과세 한도와 초과분 과세는 반영하지 않습니다.
+          정확한 금리·세금·우대조건은 가입 전 상품 공시 자료를 확인하세요. 본 계산기는 시뮬레이션 추정치입니다.
         </p>
       </div>
     </section>

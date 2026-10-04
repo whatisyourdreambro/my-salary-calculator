@@ -96,9 +96,9 @@ export default function PropertyHoldingTaxClient() {
             aria-label="주택 공시가격 (원)"
           />
           <p className="mt-2 text-xs text-faint-blue">
-            {fmt(publishedValue / 100_000_000)}억{" "}
+            {fmt(Math.floor(publishedValue / 100_000_000))}억{" "}
             {fmt((publishedValue % 100_000_000) / 10000)}만원
-            (시세 약 {fmt((publishedValue * 1.5) / 100_000_000)}억 수준)
+            (공시가격과 시세는 다릅니다. 실제 시세는 별도로 확인하세요)
           </p>
         </div>
 

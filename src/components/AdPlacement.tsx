@@ -103,8 +103,11 @@ function AdSlot({
       return;
     }
     const target = containerRef.current;
+    let active = true;
     const observer = new IntersectionObserver(
       (entries) => {
+        // disconnect() does not cancel entries already queued before a route/dedup cleanup.
+        if (!active) return;
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setVisible(true);
@@ -115,7 +118,10 @@ function AdSlot({
       { rootMargin: "200px 0px" }
     );
     observer.observe(target);
-    return () => observer.disconnect();
+    return () => {
+      active = false;
+      observer.disconnect();
+    };
   }, [slot, pathname, allowed]);
 
   // 광고 클릭 감지 — iframe 내부 클릭은 이벤트가 버블되지 않으므로
@@ -140,7 +146,9 @@ function AdSlot({
   }, [visible, slot, slotKind, pathname]);
 
   useEffect(() => {
-    if (!visible || pushed.current || !slot) return;
+    if (!visible || pushed.current || !slot || !allowed) return;
+    const ins = containerRef.current?.querySelector("ins.adsbygoogle[data-ad-slot]");
+    if (!ins || ins.getAttribute("data-ad-slot") !== slot) return;
     pushed.current = true;
     trackAdRequestAttempt(slotKind ?? "unknown");
     try {
@@ -150,7 +158,7 @@ function AdSlot({
       // AdSense push errors are non-fatal
       trackAdRequestError(slotKind ?? "unknown");
     }
-  }, [visible, slot, slotKind]);
+  }, [visible, slot, slotKind, allowed]);
 
   // 미충족(unfilled) 광고 감지 → 컨테이너째 접기.
   // 이전에는 unfilled 여도 "광고 (Sponsored)" 라벨 + minHeight 공백이 남아 UX·정책 양쪽 손해.

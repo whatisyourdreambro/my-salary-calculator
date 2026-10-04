@@ -82,11 +82,11 @@ export default function RankClient() {
  <span>연봉 분포 시뮬레이터 (간단 버전)</span>
  </div>
  <h1 className="text-4xl sm:text-6xl font-black tracking-tight mb-5 text-navy ">
- 나는 대한민국 상위 <br className="sm:hidden" />
+ 자체 참고 구간에서 <br className="sm:hidden" />
  <span className="text-primary">몇 %일까요?</span>
  </h1>
  <p className="text-lg text-faint-blue max-w-2xl mx-auto font-medium">
- 통계 기반 자체 추정 모델로 당신의 대략적인 위치를 시뮬레이션해드립니다.
+ 고정된 자체 참고 구간으로 입력 연봉을 분류합니다. 공식 전국 순위나 실제 인구 비율은 아닙니다.
  </p>
  </motion.div>
  </div>
@@ -144,7 +144,7 @@ export default function RankClient() {
  className="space-y-12"
  >
  <div className="text-center">
- <p className="text-lg text-faint-blue mb-4 font-medium">당신은 대한민국 상위</p>
+ <p className="text-lg text-faint-blue mb-4 font-medium">자체 참고 구간 기준 상위</p>
  <h2 className="text-7xl sm:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary/50 to-primary/80 mb-6 drop-shadow-2xl">
  <CountUp end={percentile} decimals={1} duration={2} />%
  </h2>
@@ -159,7 +159,7 @@ export default function RankClient() {
  <div className="h-80 w-full relative bg-electric/20 rounded-3xl p-4 border border-white/5">
  <RankChart data={distributionData} salary={salary} />
  <div className="absolute bottom-4 left-0 right-0 text-center text-xs text-muted-blue font-sans">
- * 통계 기반 자체 추정 모델 (실제 분포와 다를 수 있음)
+ * 가상 분포 곡선과 자체 참고 구간입니다. 공식 통계의 원자료·기준연도는 확인되지 않았습니다.
  </div>
  </div>
 
@@ -171,7 +171,7 @@ export default function RankClient() {
  <div className="bg-white/5 p-6 rounded-3xl text-center border border-white/5 hover:border-primary/30 transition-colors">
  <Users className="w-8 h-8 mx-auto mb-3 text-electric" />
  <p className="text-sm text-faint-blue mb-1">비슷한 연봉</p>
- <p className="font-bold text-2xl text-navy">약 45만명</p>
+ <p className="font-bold text-2xl text-navy">인원 통계 미제공</p>
  </div>
  <div className="bg-white/5 p-6 rounded-3xl text-center border border-white/5 hover:border-primary/30 transition-colors">
  <Trophy className="w-8 h-8 mx-auto mb-3 text-primary" />
@@ -192,8 +192,8 @@ export default function RankClient() {
 
  <div className="flex-1">
  <ResultSharePanel resultKey={JSON.stringify([salaryInput, percentile])}
- title={`내 연봉은 상위 ${percentile}%!`}
- description="대한민국 연봉 랭킹 확인하기"
+ title={`자체 참고 구간 기준 상위 ${percentile}% · 연봉 시뮬레이터`}
+ description="공식 전국 순위가 아닌 자체 참고 구간 분류입니다."
  />
  </div>
  </div>
@@ -201,7 +201,7 @@ export default function RankClient() {
  href="/fun/salary-rank"
  className="w-full py-4 rounded-xl bg-electric text-white font-bold transition-all flex items-center justify-center gap-2 hover:opacity-90"
  >
- <Trophy size={18} /> 정밀 버전: 내 연봉 순위 계산기
+ <Trophy size={18} /> 나이대별 자체 참고표: 연봉 순위 계산기
  </Link>
  <Link
  href="/fun"

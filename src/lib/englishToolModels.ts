@@ -190,7 +190,7 @@ export function calculateEnglishTool(slug: EnglishToolSlug, values: EnglishToolV
       if (!Number.isSafeInteger(totalUnits)) return null;
       const lowerUnits = Math.floor(totalUnits / v.people); const remainder = totalUnits % v.people;
       metrics = [metric('total', 'Rounded bill including extras', totalUnits / scale), metric('lower', 'Standard payment per person', lowerUnits / scale), metric('upper', 'Payment for a remainder recipient', (lowerUnits + (remainder > 0 ? 1 : 0)) / scale), metric('remainder', 'People assigned one rounding unit', remainder, 'number')];
-      explanations.push(remainder ? `${v.people - remainder} people pay the standard amount; ${remainder} people pay one smallest currency unit more. The individual shares add up to the rounded total.` : `All ${v.people} people pay the same amount. The individual shares add up to the rounded total.`);
+      explanations.push(remainder ? `${v.people - remainder} ${v.people - remainder === 1 ? 'person pays' : 'people pay'} the standard amount; ${remainder} ${remainder === 1 ? 'person pays' : 'people pay'} one smallest currency unit more. The individual shares add up to the rounded total.` : `${v.people === 1 ? 'One person pays' : `All ${v.people} people pay`} the same amount. The individual shares add up to the rounded total.`);
       break;
     }
     case 'fire': {

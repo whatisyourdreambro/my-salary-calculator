@@ -46,7 +46,7 @@ export async function generateStaticParams() {
 const LEVELS: { key: JobLevel; label: string }[] = [
   { key: "entry", label: "신입" },
   { key: "junior", label: "주니어 (3~5년)" },
-  { key: "senior", label: "시니어 (10년+)" },
+  { key: "senior", label: "시니어 (6~10년)" },
   { key: "lead", label: "리드·팀장" },
   { key: "executive", label: "임원" },
 ];
@@ -98,7 +98,7 @@ function overallGapText(a: CompanyProfile, b: CompanyProfile): string {
   const abs = Math.abs(Math.round(avg));
   if (abs < 3) return `${josa(a.name.ko, "과/와")} ${josa(b.name.ko, "은/는")} 직급별 평균 격차가 ${abs}% 이내로 거의 동등한 수준`;
   if (avg > 0) return `직급 전반에 걸쳐 ${josa(a.name.ko, "이/가")} 평균 약 ${abs}% 높은 보상 수준`;
-  return `직급 전반에 걸쳐 ${josa(b.name.ko, "이/가")} 평균 약 ${abs}% 높은 보상 수준`;
+  return `직급 전반에 걸쳐 ${josa(a.name.ko, "은/는")} ${b.name.ko} 대비 평균 약 ${abs}% 낮은 보상 수준`;
 }
 
 /** 인센티브 비중 차이 분석. */
@@ -400,7 +400,7 @@ export default function ComparePage({ params }: Props) {
     },
     {
       question: `${josa(a.name.ko, "과/와")} ${b.name.ko} 시니어 연봉은 어디가 높나요?`,
-      answer: `시니어(10년+) 영끌 연봉은 ${a.name.ko} 약 ${formatSalaryKorean(
+      answer: `시니어(6~10년) 영끌 연봉은 ${a.name.ko} 약 ${formatSalaryKorean(
         aSenior
       )}, ${b.name.ko} 약 ${formatSalaryKorean(bSenior)} 수준으로 ${compareText(
         a.name.ko,
@@ -419,7 +419,7 @@ export default function ComparePage({ params }: Props) {
     },
     {
       question: `${josa(a.name.ko, "과/와")} ${b.name.ko}의 재택근무·근무 형태는 어떻게 다른가요?`,
-      answer: `${josa(a.name.ko, "은/는")} ${REMOTE_LABEL[a.workLife.remoteWork.policy]}${a.workLife.remoteWork.daysPerWeek ? ` (주 ${a.workLife.remoteWork.daysPerWeek}일)` : ""}, ${josa(b.name.ko, "은/는")} ${REMOTE_LABEL[b.workLife.remoteWork.policy]}${b.workLife.remoteWork.daysPerWeek ? ` (주 ${b.workLife.remoteWork.daysPerWeek}일)` : ""} 정책을 운영합니다. 입사 전 본인 라이프스타일과 맞는지 확인하세요.`,
+      answer: `${josa(a.name.ko, "은/는")} ${REMOTE_LABEL[a.workLife.remoteWork.policy]}, ${josa(b.name.ko, "은/는")} ${REMOTE_LABEL[b.workLife.remoteWork.policy]} 정책을 운영합니다. 입사 전 본인 라이프스타일과 맞는지 확인하세요.`,
     },
     {
       question: `${a.name.ko} vs ${b.name.ko} 기업 문화는 어떻게 다른가요?`,
@@ -558,7 +558,7 @@ export default function ComparePage({ params }: Props) {
             단계인 주니어·시니어 연봉 상승 곡선까지 함께 보는 것이 중요합니다.
           </p>
           <p>
-            <strong>시니어 비교</strong> — 경력 10년 이상 시니어급은 {a.name.ko}{" "}
+            <strong>시니어 비교</strong> — 경력 6~10년 시니어급은 {a.name.ko}{" "}
             {formatSalaryKorean(aSenior)}, {b.name.ko} {formatSalaryKorean(bSenior)},{" "}
             {compareText(a.name.ko, aSenior, b.name.ko, bSenior)}입니다. 신입 대비 시니어의 연봉
             상승률은 {a.name.ko} 약 {pct(aSenior, aEntry)}%, {b.name.ko} 약 {pct(bSenior, bEntry)}%

@@ -241,7 +241,7 @@ export default function MedicalTaxCreditClient() {
           <p className={helpCls}>
             실손보험금은 의료비를 <strong>지출한 연도</strong>의 의료비에서 차감합니다(수령 연도 아님).
             본 계산기는 일반 의료비부터 순서대로 차감하며, 실손금이 어느 의료비에 대응하는지 아는 경우
-            해당 항목에서 미리 뺀 금액을 입력하면 더 정확합니다.
+            해당 항목에서 미리 빼고 실손보험금 입력란은 0원으로 두세요.
           </p>
         </div>
 

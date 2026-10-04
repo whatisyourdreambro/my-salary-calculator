@@ -65,7 +65,7 @@ const resultTypes = {
     emoji: "🐢",
     icon: Turtle,
     description:
-      "한 걸음 한 걸음, 목표를 향해 나아가는 당신. 모든 소비는 계획 안에서 이루어져야 직성이 풀립니다. 안정적인 미래가 보장되지만, 가끔은 즉흥적인 소비로 작은 행복을 느껴보는 것도 좋아요!",
+      "한 걸음 한 걸음, 목표를 향해 나아가는 당신. 모든 소비는 계획 안에서 이루어져야 직성이 풀립니다. 안정적인 미래를 준비하는 데 도움이 될 수 있지만, 가끔은 즉흥적인 소비로 작은 행복을 느껴보는 것도 좋아요!",
     gradient: "from-emerald-500 to-teal-500",
     bg: "bg-emerald-500/10",
     border: "border-emerald-500/30",
@@ -82,7 +82,7 @@ const resultTypes = {
     bg: "bg-sky-500/10",
     border: "border-sky-500/30",
     textColor: "text-sky-400",
-    tip: "💡 TIP: 모은 돈을 ETF 투자로 굴려보면 복리의 마법을 경험할 수 있어요!",
+    tip: "💡 TIP: ETF도 원금 손실 위험이 있으니, 저축과 투자 선택은 기간·목표·감당할 수 있는 위험을 함께 살펴보세요.",
   },
   social: {
     title: "인싸 토끼",
@@ -100,6 +100,7 @@ const resultTypes = {
 
 export default function SpendingTestPage() {
   const [step, setStep] = useState(0);
+  const activeStepRef = useRef(0);
   const [scores, setScores] = useState({ yolo: 0, plan: 0, save: 0, social: 0 });
   const [toast, setToast] = useState<string | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
@@ -110,8 +111,10 @@ export default function SpendingTestPage() {
   };
 
   const handleAnswer = (type: keyof typeof scores) => {
+   if (step !== activeStepRef.current || step >= questions.length) return;
+   activeStepRef.current = step + 1;
     setScores(prev => ({ ...prev, [type]: prev[type] + 1 }));
-    setStep(prev => prev + 1);
+    setStep(step + 1);
   };
 
   const getResultType = () => {
@@ -120,6 +123,7 @@ export default function SpendingTestPage() {
   };
 
   const resetTest = () => {
+   activeStepRef.current = 0;
     setStep(0);
     setScores({ yolo: 0, plan: 0, save: 0, social: 0 });
   };

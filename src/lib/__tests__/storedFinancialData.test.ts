@@ -36,14 +36,14 @@ describe("dashboard page storage handling", () => {
   const src = readFileSync(path.resolve(process.cwd(), "src/app/dashboard/page.tsx"), "utf8");
 
   it("validates the parsed value before rendering it", () => {
-    expect(src).toContain("if (isStoredFinancialData(parsed)) setDashboardData(parsed);");
+    expect(src).toContain("if (isStoredDashboardData(parsed)) setDashboardData(parsed);");
     expect(src).not.toContain("setDashboardData(JSON.parse(");
   });
 
   it("every removeItem is guarded so a blocked storage cannot reach error.tsx", () => {
     const calls = src.match(/localStorage\.removeItem\(/g) ?? [];
     const guarded = src.match(/try \{ localStorage\.removeItem\(FINANCIAL_DATA_KEY\); \} catch \{/g) ?? [];
-    expect(calls.length).toBe(2);
+    expect(calls.length).toBe(1);
     expect(guarded.length).toBe(calls.length);
   });
 

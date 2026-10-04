@@ -36,6 +36,8 @@ export default function NumberStepper({
  <label className="text-sm font-medium text-muted-foreground">{label}</label>
  <div className="flex items-center justify-between p-2 mt-2 bg-secondary/50 rounded-lg">
  <button
+ type="button"
+ aria-label={`${label} 줄이기`}
  onClick={handleDecrement}
  disabled={value <= min}
  className="w-8 h-8 text-xl rounded-full hover:bg-secondary disabled:opacity-50 disabled:cursor-not-allowed"
@@ -46,6 +48,8 @@ export default function NumberStepper({
  {value} {unit}
  </span>
  <button
+ type="button"
+ aria-label={`${label} 늘리기`}
  onClick={handleIncrement}
  disabled={max !== undefined && value >= max}
  className="w-8 h-8 text-xl rounded-full hover:bg-secondary disabled:opacity-50 disabled:cursor-not-allowed"

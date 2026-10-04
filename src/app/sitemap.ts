@@ -41,6 +41,8 @@ export type RouteOverride = {
 // 2026-09-03: 현대차·기아 2026 임협 타결안 반영(3adf9ed) + 공무원 2027 예산안
 //             3.9% 예상표 전환(bbd8623).
 export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
+ // 2026-10-04: 10월 시행 건강보험 정산 분할납부 기준과 경과조치 본문을 공식 자료로 정정.
+ '/health-insurance-2026': { lastModified: new Date('2026-10-04') },
  // 2026-09-25 A17: 기관별 세후 월급이 간이세액표 엔진으로 바뀜
  '/public-institutions': { lastModified: new Date('2026-09-25'), priority: 0.8, changeFrequency: 'monthly' },
  '/work-clock': { lastModified: new Date('2026-09-19'), priority: 0.8, changeFrequency: 'monthly' },

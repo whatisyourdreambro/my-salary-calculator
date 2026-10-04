@@ -14,9 +14,9 @@ import { ArrowRight, Info, AlertTriangle, Scale } from "lucide-react";
 
 export const metadata: Metadata = buildToolMetadata({
   name: "LTV 계산기",
-  tagline: "담보인정비율 한도 자동 산정 (규제·비규제·생애최초)",
+  tagline: "주택 가격과 대출 금액의 비율 계산",
   description:
-    "LTV(담보인정비율) 계산기. 주택 가격과 대출액으로 본인 LTV % 자동 산출. 규제지역 50%/비규제 70%/생애최초(비수도권 80%·수도권 70%) 기준 한도 비교, DSR과의 차이까지 상세 가이드.",
+    "주택 가격과 대출 금액으로 LTV 비율을 계산합니다. 지역 규정·자격·대출 상한·DSR과 승인 가능 여부는 자동 판정하지 않는 단순 비율 계산기입니다.",
   path: "/tools/real-estate/ltv",
   keywords: [
     "LTV 계산기",
@@ -101,7 +101,7 @@ export default function LtvPage() {
           softwareApplicationLd({
             name: "LTV 계산기",
             description:
-              "LTV(담보인정비율) 한도를 주택 가격과 대출액으로 자동 계산.",
+              "입력한 대출 금액을 주택 가격으로 나눈 LTV 비율 계산. 승인 한도 자동 판정은 제외합니다.",
             url: "/tools/real-estate/ltv",
           }),
           autoBreadcrumbLd("/tools/real-estate/ltv", {
@@ -111,7 +111,7 @@ export default function LtvPage() {
           howToLd({
             name: "LTV 계산하는 방법",
             description:
-              "주택 위치·본인 자격·가격·대출액 입력으로 LTV % 자동 산출, DSR과 함께 검증까지 5단계.",
+              "주택 가격·대출 금액을 입력해 비율을 계산하고 금융기관의 심사 기준을 별도로 확인하는 5단계.",
             steps: HOW_TO_STEPS,
             totalTime: "PT3M",
           }),
@@ -121,14 +121,14 @@ export default function LtvPage() {
       <div className="max-w-3xl mx-auto">
         <header className="text-center mb-10">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-5 bg-electric-10 text-electric border border-electric-30">
-            <Scale size={12} aria-hidden /> 규제·비규제·생애최초 한눈
+            <Scale size={12} aria-hidden /> 담보 가치 대비 대출 비율
           </div>
           <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-navy mb-3">
             LTV 계산기
           </h1>
           <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-xl mx-auto">
-            담보인정비율 — 주택 가격 대비 대출 가능 비율로 본인 LTV %와 한도
-            확인.
+            주택 가격 대비 입력한 대출 금액의 비율을 확인합니다.
+            대출 가능 금액이나 승인 여부는 계산하지 않습니다.
           </p>
         </header>
 
@@ -232,7 +232,7 @@ export default function LtvPage() {
             </p>
             <p className="font-bold text-navy text-sm mb-1">DSR 계산기</p>
             <p className="text-xs text-muted-blue mb-3">
-              연봉 기준 실제 한도 검증
+              연소득 대비 원리금 비율 계산
             </p>
             <span className="text-xs font-bold text-electric inline-flex items-center gap-1">
               DSR 계산{" "}
@@ -295,8 +295,8 @@ export default function LtvPage() {
             aria-hidden
           />
           <p className="text-xs text-muted-blue leading-relaxed">
-            본 계산기는 2026 LTV 기본 규제 기준 추정치. 정부 정책 변경·은행별
-            특례·다주택자 규제 등은 별도 확인 필수.
+            계산식은 대출 금액 ÷ 주택 가격 × 100입니다. 지역 규정·자격·대출 상한·
+            DSR 및 승인 여부는 금융기관에서 별도로 확인하세요.
           </p>
         </div>
       </div>

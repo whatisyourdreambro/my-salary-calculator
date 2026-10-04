@@ -115,7 +115,7 @@ export default function NewEmployee2026Page() {
  <PublishedMeta publishedDate="2026-02-15" updatedDate="2026-05-12" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  직군별 평균 초봉, 협상 멘트, 패키지 협상까지.
- 첫 직장에서 ±10% 차이가 5년 후 ±20% 이상 격차를 만듭니다.
+ 첫 연봉 차이는 이후에도 영향을 줍니다. 동일한 인상률이면 10% 차이는 5년 뒤에도 10%입니다.
  </p>
  </div>
 

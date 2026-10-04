@@ -162,8 +162,8 @@ const calculateFireDate = (inputs: FireInputs, lifeEvents: LifeEvent[]) => {
  futureValue = futureValue * (1 + annualReturnRate);
  futureValue += currentMonthlySavings * 12;
 
- const eventForYear = lifeEvents.find((e) => e.year === years);
- if (eventForYear) {
+ const eventsForYear = lifeEvents.filter((e) => e.year === years);
+ for (const eventForYear of eventsForYear) {
  const eventAmount = parseNumber(eventForYear.amount);
  if (eventForYear.type === "oneTimeExpense") {
  futureValue -= eventAmount;

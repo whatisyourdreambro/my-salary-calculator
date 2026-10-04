@@ -63,7 +63,7 @@ function buildHtml(): string {
   render();
 })();`,
     ctaHref: "/home-loan",
-    ctaLabel: "LTV·월 상환액까지 정확히 계산하기 →",
+    ctaLabel: "LTV·월 상환액 조건 비교하기 →",
   });
 }
 

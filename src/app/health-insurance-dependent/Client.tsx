@@ -145,7 +145,7 @@ export default function HealthInsuranceDependentClient() {
     <section className="my-6">
       <div className="rounded-3xl border border-canvas-200 dark:border-canvas-700 bg-white dark:bg-canvas-900 p-5 sm:p-6">
         <h2 className="text-lg font-black text-navy dark:text-canvas-50 mb-4">
-          피부양자 자격 즉시 판정
+          피부양자 간이조건 확인
         </h2>
 
         {/* ① 관계 */}
@@ -292,8 +292,7 @@ export default function HealthInsuranceDependentClient() {
           />
           <p className="mt-2 text-xs text-faint-blue leading-5">
             수입금액이 아니라 필요경비를 뺀 사업소득금액 기준입니다. 프리랜서(3.3% 원천징수)
-            소득도 사업소득입니다. 주택임대소득은 소득금액이 있으면 등록 여부와 관계없이
-            탈락하니 아래 안내를 확인하세요.
+            소득도 사업소득입니다. 주택임대소득 등 예외는 이 계산기로 판정하지 않습니다.
           </p>
         </div>
 
@@ -322,10 +321,10 @@ export default function HealthInsuranceDependentClient() {
         {result.eligible ? (
           <div className="mt-6 p-5 rounded-2xl bg-electric-5 border border-electric-20">
             <p className="text-xs font-bold text-electric uppercase tracking-wider mb-2">
-              판정 결과 — 별표 1의2 기준
+              입력 조건의 간이 결과
             </p>
             <p className="text-3xl sm:text-4xl font-black text-electric mb-3">
-              피부양자 자격 유지 가능
+              입력한 간이조건 충족
             </p>
             <ul className="space-y-1.5 text-sm leading-6 text-muted-blue dark:text-canvas-300 pt-3 border-t border-electric-20">
               <li>
@@ -357,10 +356,10 @@ export default function HealthInsuranceDependentClient() {
         ) : (
           <div className="mt-6 p-5 rounded-2xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30">
             <p className="text-xs font-bold text-red-600 dark:text-red-400 uppercase tracking-wider mb-2">
-              판정 결과 — 별표 1의2 기준
+              입력 조건의 간이 결과
             </p>
             <p className="text-2xl font-black text-red-600 dark:text-red-400 mb-3">
-              피부양자 탈락 (지역가입자 전환)
+              입력한 간이조건 미충족
             </p>
             <ul className="space-y-2 text-sm leading-6 text-red-800 dark:text-red-300 list-disc list-inside">
               {result.reasons.map((reason, i) => (
@@ -369,8 +368,8 @@ export default function HealthInsuranceDependentClient() {
             </ul>
             <div className="mt-4 pt-4 border-t border-red-200 dark:border-red-500/30">
               <p className="text-sm text-red-800 dark:text-red-300 mb-3">
-                탈락하면 지역가입자로 전환되어 소득·재산 기준으로 보험료가 부과됩니다. 예상
-                보험료는 기존 건강보험료 계산기에서 확인하세요.
+                실제 자격은 공단에서 확인하세요. 연결된 계산기는 지역가입자의 재산분 보험료만
+                계산하며 소득분 보험료는 포함하지 않습니다.
               </p>
               <Link
                 href="/health-insurance-fee-2026"
@@ -383,9 +382,8 @@ export default function HealthInsuranceDependentClient() {
         )}
 
         <p className="mt-4 text-xs text-faint-blue leading-relaxed">
-          ※ 간이 판정입니다. 소득은 국세청 확정 자료(전년도 귀속), 재산은 지방자치단체 재산세
-          과세 자료를 기준으로 국민건강보험공단이 최종 판정하며, 개인별 자료에 따라 결과가 달라질
-          수 있습니다. 근거: 국민건강보험법 시행규칙 별표 1의2 (2026년 8월 조회 기준).
+          ※ 입력한 관계·소득·재산의 일부 조건만 확인합니다. 동거·부양, 배우자 소득, 주택임대소득과
+          사업소득 예외는 별도 확인이 필요합니다. 실제 자격은 국민건강보험공단에서 확인하세요.
         </p>
       </div>
     </section>

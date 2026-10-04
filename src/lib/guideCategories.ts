@@ -37,7 +37,7 @@ export const GUIDE_CATEGORY_HUBS: GuideCategoryHub[] = [
     categoryId: "세금",
     title: "세금 가이드",
     intro:
-      "연말정산 공제 항목부터 종합소득세, 상여금 세금, 절세 전략까지 — 직장인이 내는 세금의 구조와 돌려받는 방법을 정리했습니다. 매년 바뀌는 세법의 핵심만 골라, 계산기로 바로 확인할 수 있게 연결해 두었습니다.",
+      "연말정산 공제 항목부터 종합소득세, 상여금 세금, 절세 전략까지 — 직장인이 내는 세금의 구조와 공제 적용 조건·정산 자료 확인 방법을 정리했습니다. 매년 바뀌는 세법의 핵심만 골라, 계산기로 바로 확인할 수 있게 연결해 두었습니다.",
     related: [
       { href: "/year-end-tax", label: "연말정산 계산기" },
       { href: "/hub/tax-saving", label: "절세 전략 허브" },
@@ -73,7 +73,7 @@ export const GUIDE_CATEGORY_HUBS: GuideCategoryHub[] = [
     categoryId: "투자",
     title: "투자 가이드",
     intro:
-      "예적금과 ISA·연금저축 같은 절세 계좌부터 ETF, 배당, 자산 배분까지 — 월급을 자산으로 바꾸는 투자 기초를 정리했습니다. 복리 계산기와 FIRE 계산기로 목표 금액까지의 거리를 직접 확인해 보세요.",
+      "예적금과 ISA·연금저축 같은 절세 계좌부터 ETF, 배당, 자산 배분까지 — 월급을 자산으로 바꾸는 투자 기초를 정리했습니다. 복리 계산기와 FIRE 계산기로 수익률·지출 가정에 따른 목표 자금을 비교해 보세요.",
     related: [
       { href: "/hub/invest", label: "투자 허브" },
       { href: "/fire-calculator", label: "FIRE 은퇴 계산기" },

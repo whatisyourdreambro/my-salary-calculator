@@ -66,7 +66,8 @@ export function calcSamsungBonusNet(
     const pensionBase = Math.max(0, PENSION_BASE_2026.MAX_ANNUAL - salary);
     nationalPension =
       Math.min(bonusWon, pensionBase) * INSURANCE_RATES_2026.NATIONAL_PENSION;
-    // 건강·고용은 상한 없음. 다만 보수정산 시점에 일시 부과되며 회사가 일부 분담.
+    // 건강·요양보험의 법정 상한과 실제 보수 신고·정산 시점은 이 간이 모형에 미반영.
+    // 고용보험도 입력 성과급에 근로자 요율을 적용하는 비교용 추정이다.
     healthIns = bonusWon * INSURANCE_RATES_2026.HEALTH_INSURANCE;
     longTermCare = healthIns * INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO;
     employment = bonusWon * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE;

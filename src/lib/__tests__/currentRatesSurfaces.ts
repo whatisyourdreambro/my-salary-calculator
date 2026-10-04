@@ -126,7 +126,7 @@ export const RATE_YEAR_SURFACES: RateYearSurface[] = [
   {
     id: "/tools/finance/bonus 배지",
     load: async () => render((await import("@/app/tools/finance/bonus/page")).default),
-    expected: (y) => [` ${y} 기준 · 성과급 세후 비교`],
+    expected: (y) => [` ${y} 기준 · 성과급 연간 간이 추정`],
   },
   {
     id: "/pro/career-planner FAQ",

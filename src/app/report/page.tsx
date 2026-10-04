@@ -9,6 +9,7 @@ import { GuideMidAd } from "@/components/AdPlacement";
 import type { StoredFinancialData } from "@/app/types";
 // [수정] findSalaryRank -> calculateRank 로 변경
 import { calculateRank } from "@/lib/salaryData";
+import { isStoredReportData } from "@/lib/reportStoredData";
 import Link from "@/components/AppLink";
 import CountUp from "react-countup";
 import { Info, BarChart2, TrendingUp } from "lucide-react";
@@ -31,13 +32,18 @@ const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 const Report = () => {
  const [data, setData] = useState<StoredFinancialData | null>(null);
  const [rank, setRank] = useState<number | null>(null);
+ const [loadError, setLoadError] = useState("");
  const reportRef = useRef<HTMLDivElement>(null);
 
  useEffect(() => {
  try {
  const savedData = localStorage.getItem("moneysalary-financial-data");
  if (savedData) {
- const parsedData = JSON.parse(savedData);
+ const parsedData: unknown = JSON.parse(savedData);
+ if (!isStoredReportData(parsedData)) {
+ setLoadError("저장된 결과 형식을 확인할 수 없습니다. 기존 값은 삭제하지 않았습니다. 홈 계산기에서 다시 계산해 저장해 주세요.");
+ return;
+ }
  setData(parsedData);
  if (parsedData.salary) {
  // [수정] findSalaryRank -> calculateRank 로 변경
@@ -50,6 +56,7 @@ const Report = () => {
  }
  } catch (e) {
  console.error("Failed to load data from localStorage", e);
+ setLoadError("저장된 결과를 읽지 못했습니다. 기존 값은 삭제하지 않았으며, 브라우저 저장소 설정을 확인한 뒤 다시 계산해 주세요.");
  }
  }, []);
 
@@ -72,6 +79,7 @@ const Report = () => {
  return (
  <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 text-center">
  <h1 className="text-3xl font-bold">저장된 리포트가 없습니다</h1>
+ {loadError && <p role="alert" className="mb-4 text-sm text-muted-blue">{loadError}</p>}
  <p className="mt-4 text-muted-blue">
  홈 계산기에서 연봉을 계산하고 결과를 저장하면
  <br className="hidden sm:block" />
@@ -156,9 +164,9 @@ const Report = () => {
  {rank !== null && (
  <div className="p-3 bg-canvas/50 rounded-xl">
  <p className="text-sm font-semibold text-muted-blue ">
- 연봉 순위
+ 연봉 참고표
  </p>
- <p className="text-2xl font-bold">상위 {rank}%</p>
+ <p className="text-2xl font-bold">참고표 상위 {rank}%</p>
  </div>
  )}
  {severance && (
@@ -208,15 +216,15 @@ const Report = () => {
  </div>
  {homeLoan && (
  <div className="flex justify-between p-2 bg-canvas/50 rounded">
- <span>소득 대비 부채 비율(DTI):</span>
+ <span>연간 상환액 / 세전 연봉:</span>
  <strong className="text-danger">
  {financialRatios.debtToIncomeRatio}%
  </strong>
  </div>
  )}
  <p className="text-xs text-faint-blue p-2">
- 소득 대비 부채 비율이 40%를 초과할 경우 재정적 위험이 높을 수
- 있습니다.
+ 저장한 월 상환액 × 12를 세전 연봉으로 나눈 참고 비율입니다.
+ 다른 부채·인정 소득을 심사하는 DTI·DSR이나 대출 승인 한도를 계산하지 않습니다.
  </p>
  </div>
  </div>
@@ -228,7 +236,7 @@ const Report = () => {
  <section>
  <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
  <TrendingUp className="text-primary" />
- {futureSalary.years}년 후 미래 연봉 예측
+ {futureSalary.years}년 목표 연봉 선형 시나리오
  </h2>
  <div className="h-64">
  <FutureProjectionBarChart data={futureProjectionData} />

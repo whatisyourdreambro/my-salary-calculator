@@ -299,7 +299,7 @@ export default function SocialInsuranceRates2027Page() {
             연봉별 월 4대보험료 시뮬 (2027)
           </h2>
           <p className="text-sm text-faint-blue mb-6">
-            본인 부담 기준. &ldquo;2026 대비&rdquo;는 연금 5.0% 인상으로 늘어나는 월
+            본인 부담 기준. &ldquo;2026 대비&rdquo;는 연금 본인 요율 5.0% 적용으로 늘어나는 월
             부담분.
           </p>
           <div className="overflow-x-auto">

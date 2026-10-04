@@ -90,7 +90,7 @@ function calcInsurance(bonus: number, annualSalary: number): {
   const pensionBase = Math.min(bonus, Math.max(0, pensionCeiling - annualSalary));
   const pension = Math.round(pensionBase * CURRENT_INSURANCE_RATES.NATIONAL_PENSION);
 
-  // 건강보험 + 장기요양 (상한 없음, 정산 방식)
+  // 건강보험 + 장기요양 — 법적 상한·정산은 이 간이 모델에 미반영
   const health    = Math.round(bonus * CURRENT_INSURANCE_RATES.HEALTH_INSURANCE);
   const longTerm  = Math.round(health * CURRENT_INSURANCE_RATES.LONG_TERM_CARE_RATIO); // 건강보험료 × 장기요양 비율
 
@@ -257,16 +257,10 @@ export default function BonusCalculatorPage() {
   }, []);
 
   // 공유 문구
-  const shareText = `💰 성과급 세금 계산 결과 — 세전 ${fmt(bonus)}원의 실수령은 ${fmt(r.netBonus)}원 (${receiveRatio}%)! 성과급 세금 계산기로 확인하세요.`;
+  const shareText = `성과급 연간 간이 추정 — 세전 ${fmt(bonus)}원, 세금 ${fmt(r.totalIncomeTax)}원·보험료 ${fmt(r.insurance.total)}원, 공제 후 예상액 ${fmt(r.netBonus)}원. 실제 지급일 원천징수·입금액과 다를 수 있습니다.`;
 
-  // 충격 메시지
-  const shockMsg = (() => {
-    const rate = r.effectiveRate;
-    if (rate >= 40) return { emoji: "😱", text: `성과급의 절반 가까이 세금으로!`, color: "#E63B5A" };
-    if (rate >= 30) return { emoji: "😤", text: `3분의 1이 세금으로 빠져나가요`, color: "#F59E0B" };
-    if (rate >= 20) return { emoji: "😅", text: `5분의 1이 세금입니다`, color: "#0145F2" };
-    return { emoji: "😊", text: `비교적 합리적인 세율이에요`, color: "#10B981" };
-  })();
+  // 보험료를 포함한 비율이므로 세율과 구분한다.
+  const deductionSummary = `세금·보험료 합계 ${r.effectiveRate.toFixed(1)}%`;
 
   return (
     <main
@@ -283,7 +277,7 @@ export default function BonusCalculatorPage() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-5"
             style={{ backgroundColor: "#0145F21A", color: "#0145F2", border: "1.5px solid #0145F233" }}
           >
-            <Sparkles size={12} /> {CURRENT_RATES_YEAR} 기준 · 성과급 세후 비교
+            <Sparkles size={12} /> {CURRENT_RATES_YEAR} 기준 · 성과급 연간 간이 추정
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 12 }}
@@ -301,7 +295,7 @@ export default function BonusCalculatorPage() {
             className="text-lg font-medium"
             style={{ color: "#3D5E78" }}
           >
-            소득세와 보험료를 <strong style={{ color: "#0145F2" }}>간이 추정</strong>해 지급 전후를 비교합니다
+            성과급을 더한 연간 세금 차이와 보험료를 <strong style={{ color: "#0145F2" }}>간이 추정</strong>합니다
           </motion.p>
         </div>
 
@@ -349,7 +343,7 @@ export default function BonusCalculatorPage() {
             {/* 연봉 */}
             <div>
               <label htmlFor="bonus-annual-salary" className="text-xs font-bold uppercase tracking-widest block mb-2" style={{ color: "#526176" }}>
-                연간 기본급 (세전 연봉)
+                성과급 제외 연간 과세급여
               </label>
               <div className="relative">
                 <NumberInput
@@ -378,7 +372,7 @@ export default function BonusCalculatorPage() {
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold" style={{ color: "#526176" }}>원</span>
               </div>
               <p className="text-xs mt-1.5 font-medium" style={{ color: "#526176" }}>
-                = {toEok(salary)}
+                = {toEok(salary)} · 비과세 금액과 이번 성과급은 제외
               </p>
             </div>
 
@@ -418,7 +412,7 @@ export default function BonusCalculatorPage() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label htmlFor="bonus-dependents" className="text-xs font-bold uppercase tracking-widest block mb-2" style={{ color: "#526176" }}>
-                  <Users size={11} className="inline mr-1" />부양가족 (본인 제외)
+                  <Users size={11} className="inline mr-1" />공제 대상 가족 (본인·배우자 제외)
                 </label>
                 <select
                   id="bonus-dependents"
@@ -478,7 +472,7 @@ export default function BonusCalculatorPage() {
                 style={{ backgroundColor: "rgba(255,255,255,0.1)", transform: "translate(30%,-30%)" }}
               />
               <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.65)" }}>
-                실수령 성과급 (세후)
+                공제 후 예상액 · 연간 간이 추정
               </p>
               <div className="text-5xl sm:text-6xl font-black tracking-tight" style={{ color: "#FFFFFF", letterSpacing: "-0.04em" }}>
                 <CountUp
@@ -490,7 +484,7 @@ export default function BonusCalculatorPage() {
                 />
               </div>
               <p className="text-sm font-bold mt-1 mb-5" style={{ color: "rgba(255,255,255,0.6)" }}>
-                세전 {fmt(bonus)}원의 실수령
+                세전 {fmt(bonus)}원에서 추정 세금·보험료를 뺀 금액
               </p>
 
               {/* 충격 배지 */}
@@ -498,8 +492,8 @@ export default function BonusCalculatorPage() {
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold mb-5"
                 style={{ backgroundColor: "rgba(255,255,255,0.15)", color: "#FFFFFF" }}
               >
-                <span>{shockMsg.emoji}</span>
-                <span>{shockMsg.text}</span>
+                <span>💰</span>
+                <span>{deductionSummary}</span>
               </div>
 
               {/* 3열 요약 */}
@@ -509,8 +503,8 @@ export default function BonusCalculatorPage() {
               >
                 {[
                   { label: "총 공제액",    value: fmt(r.totalDeduction) + "원" },
-                  { label: "실효세율",     value: r.effectiveRate.toFixed(1) + "%" },
-                  { label: "실수령 비율",  value: receiveRatio + "%" },
+                  { label: "총 공제율",     value: r.effectiveRate.toFixed(1) + "%" },
+                  { label: "공제 후 비율",  value: receiveRatio + "%" },
                 ].map((s) => (
                   <div key={s.label} className="text-center">
                     <div className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.55)" }}>{s.label}</div>
@@ -552,7 +546,7 @@ export default function BonusCalculatorPage() {
                 className="flex justify-between items-center py-4 mt-1"
                 style={{ borderTop: "2px solid #0145F2" }}
               >
-                <span className="font-black text-base" style={{ color: "#0A1829" }}>세후 실수령액</span>
+                <span className="font-black text-base" style={{ color: "#0A1829" }}>공제 후 예상액</span>
                 <span className="text-xl font-black" style={{ color: "#0145F2" }}>
                   {fmt(r.netBonus)}원
                 </span>
@@ -563,6 +557,23 @@ export default function BonusCalculatorPage() {
 
         {/* ── 결과 직후 광고 ── */}
         <CalcResultAd />
+
+        <div className="mb-5 rounded-xl px-4 py-3 text-xs leading-relaxed" style={{ backgroundColor: "#F8FAFB", color: "#526176" }}>
+          <p>
+            <strong style={{ color: "#0A1829" }}>연간 간이 모델입니다.</strong>{" "}
+            실제 상여 원천징수는 지급대상기간·그 기간의 급여·이미 낸 세금에 따라 달라집니다.
+            이 결과는 지급일 입금액이나 연말정산 확정액이 아닙니다.
+          </p>
+          <p className="mt-1">
+            보험료의 소득공제, 추가 소득·세액공제와 보험별 실제 정산은 반영하지 않습니다.
+            입력한 가족은 공제 요건을 충족한다고 가정합니다.
+          </p>
+          <p className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
+            <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7862&mi=6426" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">국세청 상여 원천징수</a>
+            <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7870&mi=6490" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">국세청 연말정산 계산 구조</a>
+            <a href="https://www.law.go.kr/법령/소득세법/제136조" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">소득세법 제136조</a>
+          </p>
+        </div>
 
         {/* ── 한계세율 경고 배너 ── */}
         {r.marginalRate >= 35 && bonus > 0 && (
@@ -578,12 +589,11 @@ export default function BonusCalculatorPage() {
             <AlertCircle size={20} style={{ color: "#F59E0B", flexShrink: 0, marginTop: "2px" }} />
             <div>
               <p className="text-sm font-black mb-1" style={{ color: "#92400E" }}>
-                한계세율 {r.marginalRate}% 구간 진입!
+                합산 과세표준의 한계세율 {r.marginalRate}%
               </p>
               <p className="text-xs leading-relaxed" style={{ color: "#78350F" }}>
-                성과급으로 인해 소득이 상위 세율 구간에 진입했습니다.
-                IRP 추가 납입(연 900만원 한도, 세액공제 16.5%)이나
-                연금저축으로 절세 효과를 높이는 것을 검토하세요.
+                현재 입력의 합산 과세표준에 해당하는 최고 구간 세율입니다.
+                성과급 전체에 이 세율을 동일하게 적용한다는 뜻은 아닙니다.
               </p>
             </div>
           </motion.div>
@@ -595,7 +605,7 @@ export default function BonusCalculatorPage() {
           style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #DDE4EC" }}
         >
           <p className="text-sm font-bold" style={{ color: "#3D5E78" }}>
-            결과 공유하기 — 친구한테 세금 자랑(?)하기
+            연간 간이 추정 결과 공유하기
           </p>
           <ResultSharePanel resultKey={JSON.stringify([salaryFmt, bonusFmt, dependents, hasSpouse, r])} title={shareText} />
         </div>
@@ -635,7 +645,7 @@ export default function BonusCalculatorPage() {
                 <div className="px-6 py-4 flex items-center gap-2" style={{ backgroundColor: "#0145F2" }}>
                   <Zap size={14} style={{ color: "rgba(255,255,255,0.8)" }} />
                   <h3 className="font-black text-sm" style={{ color: "#FFFFFF" }}>
-                    2026 근로소득세 계산 과정 (누진세 합산 방식)
+                    2026 연간 소득세 차이 계산 (간이 모델)
                   </h3>
                 </div>
 
@@ -678,11 +688,9 @@ export default function BonusCalculatorPage() {
                 <div className="px-6 py-4 flex gap-3" style={{ backgroundColor: "#F8FAFB", borderTop: "1px solid #DDE4EC" }}>
                   <Info size={14} style={{ color: "#0145F2", flexShrink: 0, marginTop: "2px" }} />
                   <p className="text-xs leading-relaxed" style={{ color: "#526176" }}>
-                    본 계산기는 <strong style={{ color: "#0A1829" }}>2026년 소득세법 기준</strong>으로,
-                    누진세 합산 방식(연간 정산)으로 산출됩니다. 실제 원천징수는 월 지급 시점의
-                    간이세액표를 적용하므로 차이가 있을 수 있으며, 연말정산에서 정산됩니다.
-                    국민연금 상한액(월 659만원, 2026.7~2027.6)은 연봉 기준으로 적용되어 이미 상한을 초과하면
-                    성과급에 추가 국민연금이 부과되지 않습니다.
+                    근로소득공제·기본 인적공제·근로소득세액공제를 적용한 연간 세액의 전후 차이입니다.
+                    국민연금은 월 상한 659만원(2026.7~2027.6)을 12개월로 환산해 단순 추정합니다.
+                    실제 국민연금은 결정된 기준소득월액을 따르며, 건강보험 등의 상한·정산 일정도 이 모델과 다를 수 있습니다.
                   </p>
                 </div>
               </div>
@@ -703,10 +711,10 @@ export default function BonusCalculatorPage() {
           </div>
           <div className="space-y-3">
             {[
-              { title: "IRP 추가 납입",     desc: "연 900만원 한도로 세액공제 최대 16.5% = 최대 148.5만원 절세" },
-              { title: "연금저축 납입",      desc: "연 600만원 한도, IRP 포함 900만원까지 공제. 소득에 따라 13.2~16.5% 공제" },
+              { title: "IRP 추가 납입",     desc: "연금저축과 합산한 기본 공제대상 한도는 900만원. 근로소득만 있다면 총급여 5,500만원 이하 16.5%, 초과 13.2%(지방소득세 포함)" },
+              { title: "연금저축 납입",      desc: "기본 공제대상 한도는 연 600만원이며, IRP 등 퇴직연금과 합산해 900만원 한도 적용" },
               { title: "의료비·교육비 공제", desc: "연말정산 시 성과급으로 인한 세 부담을 의료비 공제로 상쇄 가능" },
-              { title: "주택청약 납입",      desc: "소득공제 연 최대 300만원 (납입액 40% 공제), 급여 7천만원 이하 적용" },
+              { title: "주택청약 납입",      desc: "연 납입액 300만원 한도에서 40% 소득공제, 급여 7천만원 이하 적용" },
             ].map((tip) => (
               <div key={tip.title} className="flex gap-3">
                 <Zap size={14} style={{ color: "#0145F2", flexShrink: 0, marginTop: "3px" }} />
@@ -717,6 +725,10 @@ export default function BonusCalculatorPage() {
               </div>
             ))}
           </div>
+          <p className="mt-3 text-xs leading-relaxed" style={{ color: "#526176" }}>
+            세액공제와 실제 환급은 다릅니다. 환급액은 공제 가능한 세액·이미 납부한 세금·다른 공제에 따라 달라집니다.{" "}
+            <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7875&mi=6596" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">국세청 연금계좌 세액공제 기준</a>
+          </p>
         </div>
 
         {/* ── 성과급 비교하기 ── */}
@@ -805,7 +817,7 @@ function BonusComparison({
         </div>
         <div>
           <h2 className="font-black text-lg" style={{ color: "#0A1829", letterSpacing: "-0.03em" }}>성과급 비교하기</h2>
-          <p className="text-xs" style={{ color: "#526176" }}>직급·업종·비율별 실수령액 한눈에 비교</p>
+          <p className="text-xs" style={{ color: "#526176" }}>본인 공제만 적용한 연간 간이 모델 비교</p>
         </div>
       </div>
 
@@ -831,9 +843,9 @@ function BonusComparison({
         <div className="grid grid-cols-12 gap-1 px-4 py-3 text-xs font-black uppercase tracking-widest" style={{ backgroundColor: "#0145F2", color: "rgba(255,255,255,0.75)" }}>
           <div className="col-span-2">구분</div>
           <div className="col-span-3 text-right">세전 성과급</div>
-          <div className="col-span-2 text-right">세금</div>
-          <div className="col-span-3 text-right">실수령</div>
-          <div className="col-span-2 text-right">세율</div>
+          <div className="col-span-2 text-right">총 공제</div>
+          <div className="col-span-3 text-right">예상 잔액</div>
+          <div className="col-span-2 text-right">공제율</div>
         </div>
 
         <AnimatePresence mode="wait">
@@ -897,8 +909,8 @@ function BonusComparison({
         <Sparkles size={13} style={{ color: "#0145F2", flexShrink: 0, marginTop: "2px" }} />
         <p className="text-xs leading-relaxed" style={{ color: "#3D5E78" }}>
           <strong style={{ color: "#0145F2" }}>세율 구간 주의:</strong>{" "}
-          연봉 + 성과급 합계가 <strong>{fmt(88_000_000)}원</strong>을 넘으면 한계세율이 <strong style={{ color: "#E63B5A" }}>24% → 35%</strong>로 올라갑니다.
-          IRP·연금저축으로 과세표준을 낮추면 구간 진입을 피할 수 있습니다.
+          소득공제 후 과세표준이 <strong>{fmt(88_000_000)}원</strong>을 넘으면 한계세율이 <strong style={{ color: "#E63B5A" }}>24% → 35%</strong>로 올라갑니다.
+          IRP·연금저축은 과세표준 차감이 아닌 세액공제 항목입니다.
         </p>
       </div>
     </section>
@@ -911,15 +923,15 @@ function BonusComparison({
 
 const GLOSSARY_TERMS = [
   { term: "성과급 (Performance Bonus)",   emoji: "🎯", def: "개인·팀·회사의 목표 달성도에 따라 기본급 외 추가 지급되는 변동 급여. 취업규칙·근로계약서에 명시된 경우 지급 의무가 생깁니다.", tip: "근로계약서에 지급 기준이 명시되면 회사가 임의 삭감 불가. 계약 시 반드시 확인하세요." },
-  { term: "인센티브 (Incentive)",          emoji: "💡", def: "목표 달성을 독려하기 위한 변동 보상. 영업직 실적 비례 보상을 자주 가리키며, 근로소득으로 분류되어 누진세 적용을 받습니다.", tip: "인센티브가 클수록 연 세금이 급증합니다. 연말 IRP 납입으로 환급을 극대화하세요." },
+  { term: "인센티브 (Incentive)",          emoji: "💡", def: "목표 달성을 독려하기 위한 변동 보상. 영업직 실적 비례 보상을 자주 가리키며, 근로소득으로 분류되어 누진세 적용을 받습니다.", tip: "성과급을 포함한 연간 소득과 공제 조건을 함께 확인하세요." },
   { term: "PS (이익배분제)",               emoji: "📊", def: "회사 영업이익 일부를 직원과 나누는 제도. 회사 전체 실적이 좋아야 지급됩니다. IT 대기업·외국계에서 많이 운영합니다.", tip: "PS는 매년 지급 여부가 달라지므로 생활비 계획에 고정 수입으로 반영하면 위험합니다." },
-  { term: "누진세 (Progressive Tax)",      emoji: "📈", def: "소득이 많을수록 더 높은 세율이 적용되는 구조. 성과급이 클수록 합산 과세표준이 높아져 한계세율 구간이 올라갑니다. 한국은 6%~45% 8단계.", tip: "세전 1억 vs 500만원 성과급의 실효세율은 전혀 다릅니다. 반드시 합산 기준으로 계산하세요." },
-  { term: "한계세율 (Marginal Rate)",       emoji: "⚠️", def: "추가 소득 1원에 적용되는 가장 높은 세율. 성과급 전체에 적용되는 게 아니라, 성과급으로 진입한 구간의 세율입니다.", tip: "한계세율 ≠ 실효세율. 성과급 전체가 35%인 게 아닙니다. 이 계산기로 정확히 확인하세요." },
-  { term: "실효세율 (Effective Rate)",      emoji: "🔢", def: "실제로 낸 총세금 ÷ 성과급. 평균 세율이라고도 합니다. 한계세율보다 항상 낮습니다.", tip: "실효세율 20% = 성과급 1,000만원 중 200만원이 세금. 800만원 실수령." },
-  { term: "근로소득세액공제",               emoji: "🛡️", def: "근로소득자에게만 주어지는 세액공제. 산출세액의 55%(130만원 이하) 또는 30%(초과분)를 차감. 총급여 기준으로 한도 50~74만원 적용.", tip: "성과급으로 총급여가 1.2억을 초과하면 세액공제 한도가 50만원으로 줄어 부담이 더 늘어납니다." },
-  { term: "원천징수 vs 연말정산",           emoji: "💸", def: "회사는 성과급 지급 시 간이세액표 기준으로 미리 세금을 공제합니다. 확정 세액은 다음해 2월 연말정산에서 계산, 차액 환급·추납합니다.", tip: "연말정산 전 IRP 납입으로 공제를 늘리면 환급액을 키울 수 있습니다." },
-  { term: "IRP (개인형 퇴직연금)",          emoji: "🏦", def: "연 최대 900만원 납입, 납입액의 13.2~16.5% 세액공제. 성과급 수령 후 IRP에 추가 납입하면 절세 효과가 극대화됩니다.", tip: "성과급 1,000만원 수령 → IRP 900만원 납입 → 최대 148.5만원 환급 가능." },
-  { term: "4대보험 (성과급 부과)",          emoji: "🔐", def: "성과급도 근로소득이므로 국민연금·건강보험·고용보험이 부과됩니다. 단, 국민연금은 월 659만원 상한(2026.7~2027.6)이 있어 연봉이 이미 초과하면 추가 없습니다.", tip: "산재보험료는 사업주 전액 부담이므로 근로자 부담 4대보험은 3가지입니다." },
+  { term: "누진세 (Progressive Tax)",      emoji: "📈", def: "소득이 많을수록 더 높은 세율이 적용되는 구조. 성과급이 클수록 합산 과세표준이 높아져 한계세율 구간이 올라갑니다. 한국은 6%~45% 8단계.", tip: "성과급에 따른 세금 차이는 기존 과세급여와 공제 조건에 따라 달라집니다." },
+  { term: "한계세율 (Marginal Rate)",       emoji: "⚠️", def: "추가 소득 1원에 적용되는 가장 높은 세율. 성과급을 합산한 과세표준의 최고 구간 세율이며, 성과급 전체에 일률적으로 적용하는 비율은 아닙니다.", tip: "한계세율은 성과급 전체의 세금 비율이나 보험료를 포함한 총 공제율과 다릅니다." },
+  { term: "총 공제율",                       emoji: "🔢", def: "성과급 대비 추정 소득세·지방소득세와 근로자 보험료 합계의 비율입니다. 보험료가 포함되므로 소득세율과 다릅니다.", tip: "총 공제율 20%라면 성과급 1,000만원에서 세금·보험료 합계 200만원을 뺀 예상액은 800만원입니다." },
+  { term: "근로소득세액공제",               emoji: "🛡️", def: "근로소득자에게만 주어지는 세액공제. 산출세액의 55%(130만원 이하) 또는 30%(초과분)를 차감. 총급여별 한도를 적용하며 이 계산기는 20~74만원 범위를 반영합니다.", tip: "총급여가 늘면 세액공제 한도가 줄 수 있습니다. 계산 결과는 해당 총급여의 한도를 반영한 추정치입니다." },
+  { term: "원천징수 vs 연말정산",           emoji: "💸", def: "상여 지급 시에는 지급대상기간·기간 내 급여·이미 원천징수한 세액 등을 반영해 공제합니다. 연간 세금은 공제 자료를 반영한 연말정산에서 확정하며, 계속 근로자는 통상 다음 해 2월, 중도 퇴직자는 퇴직하는 달에 정산합니다.", tip: "세액공제액과 현금 환급액은 다릅니다. 실제 환급은 이미 납부한 세금과 다른 공제에 따라 달라집니다." },
+  { term: "IRP (개인형 퇴직연금)",          emoji: "🏦", def: "연금저축과 퇴직연금의 기본 세액공제 대상 납입액은 합산 연 900만원 한도(연금저축은 600만원)입니다. 근로소득만 있다면 총급여 5,500만원 이하 16.5%, 초과 13.2%(지방소득세 포함)를 적용합니다.", tip: "계산된 세액공제액을 전부 현금으로 받는 것은 아닙니다. 공제 가능한 세액, 이미 납부한 세금과 다른 공제를 함께 확인하세요." },
+  { term: "4대보험 (성과급 부과)",          emoji: "🔐", def: "이 도구는 성과급에 따른 근로자 보험료를 단순 추정합니다. 실제 공제는 보험별 기준소득·보수, 상한과 신고·정산 시점에 따라 달라지므로 지급월 공제액과 일치하지 않을 수 있습니다.", tip: "산재보험료는 사업주 전액 부담이므로 근로자 부담 4대보험은 3가지입니다." },
 ];
 
 function BonusGlossary() {

@@ -88,7 +88,7 @@ function buildHtml(): string {
   render();
 })();`,
     ctaHref: "/?tab=severance",
-    ctaLabel: "입사·퇴사일 기준 정확히 계산하기 →",
+    ctaLabel: "입사·퇴사일 기준 예상액 계산하기 →",
   });
 }
 

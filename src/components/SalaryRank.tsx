@@ -31,18 +31,14 @@ type CustomTooltipProps = {
 
 const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
  if (active && payload && payload.length && label) {
- // 대한민국 근로자 수 (대략적인 값, 필요시 업데이트)
- const totalWorkers = 21869000;
  const rank = payload[0].value; // 상위 %
- const rankNum = Math.round((totalWorkers * rank) / 100);
 
  return (
  <div className="p-3 bg-background/90 border rounded-lg shadow-lg text-sm">
  <p className="font-bold text-lg">{`${formatNumber(
  parseInt(label) * 10000
  )}원`}</p>
- <p className="text-primary font-semibold">{`상위 ${rank}%`}</p>
- <p className="text-muted-foreground">{`(약 ${rankNum.toLocaleString('ko-KR')}등 이내)`}</p>
+ <p className="text-primary font-semibold">{`참고표 상위 ${rank}%`}</p>
  </div>
  );
  }
@@ -55,7 +51,7 @@ const chartDistribution = Object.entries(
 )
  .map(([p, s]) => ({
  salaryRange: Math.round(s / 10000), // 만원 단위
- percentage: 100 - parseInt(p, 10), // 상위 %로 변환
+ percentage: parseInt(p, 10), // 참고표 키는 이미 상위 백분위다.
  }))
  .sort((a, b) => a.salaryRange - b.salaryRange); // 연봉 오름차순 정렬
 
@@ -150,7 +146,7 @@ export default function SalaryRank() {
 
  <div className="bg-card p-6 rounded-2xl shadow-lg border">
  <h2 className="text-2xl font-bold text-center mb-4">
- 💰 연봉 순위 결과
+ 💰 연봉 참고 순위
  </h2>
  {rankResult && rankResult.rank !== null ? ( // rankResult.rank null 체크 추가
  <div className="text-center">
@@ -171,7 +167,7 @@ export default function SalaryRank() {
  <div className="mt-6 pt-6 border-t">
  <h3 className="text-lg font-bold text-center mb-2">
  <Users className="inline-block w-5 h-5 mr-2" />
- 전체 근로자 기준
+ 자체 참고표 기준
  </h3>
  <div className="grid grid-cols-2 gap-2 text-sm">
  <div className="bg-secondary p-3 rounded">
@@ -195,7 +191,7 @@ export default function SalaryRank() {
 
  <div className="mt-8 bg-card p-6 rounded-xl border">
  <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
- <BarChart2 /> 연봉 분포 차트 (전체 근로자)
+ <BarChart2 /> 연봉 분포 차트 (자체 참고표)
  </h2>
  <div className="h-80">
  <ResponsiveContainer width="100%" height="100%">
@@ -205,7 +201,7 @@ export default function SalaryRank() {
  >
  <XAxis
  dataKey="salaryRange"
- tickFormatter={(value) => `${value / 1000}억`} // 억원 단위
+ tickFormatter={(value) => `${value / 10000}억`} // 만원 단위를 억원으로 환산
  stroke="hsl(var(--muted-foreground))"
  interval={Math.floor(chartDistribution.length / 10)} // 눈금 간격 조정
  />
@@ -246,7 +242,7 @@ export default function SalaryRank() {
  </ResponsiveContainer>
  </div>
  <p className="text-xs text-muted-foreground text-center mt-2">
- * X축: 연봉(만원), Y축: 해당 연봉 이상을 받는 근로자의 비율(상위 %)
+ * 자체 참고표의 연봉(만원)·상위 비율입니다. 공식 통계의 기준연도·원자료는 미확인입니다.
  </p>
  </div>
  </div>

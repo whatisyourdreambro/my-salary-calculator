@@ -76,6 +76,8 @@ const SHARE_DEFAULTS: SamsungShareState = {
   o1: FIXED_OPI1_RATE,
   ac: DEFAULT_BONUS_CREDIT_RATE,
   ins: true,
+  counts: Object.fromEntries(DIVISIONS.map((d) => [d.id, d.defaultCount])),
+  ratios: Object.fromEntries(DIVISIONS.map((d) => [d.id, d.defaultRatio])),
 };
 const DIVISION_IDS = DIVISIONS.map((d) => d.id);
 
@@ -145,7 +147,7 @@ export default function SamsungBonusClient() {
     resultKey: result,
   });
 
-  // ── 공유 상태 URL 해시 (S2-0, CALC-06 흡수) — #d/s/p/y/o1/cr/ins, ?v= 쿼리 신설 금지 ──
+  // ── 공유 상태 URL 해시 — 기본 조건 및 사업부 인원·가중치, ?v= 쿼리 신설 금지 ──
   // 마운트 시 1회 복원. 앵커 해시(#tai-title 등, '=' 없음)는 무시한다.
   useEffect(() => {
     const parsed = parseShareHash(window.location.hash, { divisionIds: DIVISION_IDS, maxOpi1: OPI1_MAX_RATE });
@@ -157,9 +159,18 @@ export default function SamsungBonusClient() {
     if (parsed.o1 !== undefined) setOpi1Rate(parsed.o1);
     if (parsed.ac !== undefined) setCreditRate(parsed.ac);
     if (parsed.ins !== undefined) setApplyInsurance(parsed.ins);
+    if (parsed.counts) setCounts((current) => ({
+      ...current, ...Object.fromEntries(Object.entries(parsed.counts!).map(([id, value]) => [id, value.toLocaleString("ko-KR")])),
+    }));
+    if (parsed.ratios) setRatios((current) => ({
+      ...current, ...Object.fromEntries(Object.entries(parsed.ratios!).map(([id, value]) => [id, String(value)])),
+    }));
   }, []);
   const shareHash = buildShareHash(
-    { d: selectedDivId, s: parseNumberInput(salaryFmt), p: profit, y: year, o1: opi1Rate, ac: creditRate, ins: applyInsurance },
+    { d: selectedDivId, s: parseNumberInput(salaryFmt), p: profit, y: year, o1: opi1Rate, ac: creditRate, ins: applyInsurance,
+      counts: Object.fromEntries(DIVISION_IDS.map((id) => [id, parseNumberInput(counts[id])])),
+      ratios: Object.fromEntries(DIVISION_IDS.map((id) => [id, Number(ratios[id])])),
+    },
     SHARE_DEFAULTS
   );
   const shareStateUrl = `${SHARE_URL}${shareHash}`;
@@ -598,8 +609,8 @@ export default function SamsungBonusClient() {
           position="samsung-pool-next"
           links={[
             {
-              href: "/salary-db/samsung-electronics",
-              label: "삼성전자 직급(CL)별 연봉표·복지 보기",
+              href: "#my-calc-title",
+              label: "내 연봉으로 세후 계산하기",
             },
           ]}
         />

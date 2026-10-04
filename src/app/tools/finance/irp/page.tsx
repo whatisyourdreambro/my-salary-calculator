@@ -14,9 +14,9 @@ import { ArrowRight, Info, AlertTriangle, PiggyBank } from "lucide-react";
 
 export const metadata: Metadata = buildToolMetadata({
   name: "IRP·연금저축 세액공제 계산기",
-  tagline: "연 900만 한도 환급 + 노후 자산 시뮬",
+  tagline: "납입액·총급여별 세액공제 예상액",
   description:
-    "IRP(개인형 퇴직연금)와 연금저축 세액공제 환급액을 2026년 기준 자동 계산. 연봉별 환급률(16.5% vs 13.2%), 노후 자산 누적 시뮬레이션, 운용 수익 과세이연 효과까지.",
+    "총급여와 IRP·연금저축 납입액으로 세액공제 예상액을 계산합니다. 운용 수익, 미래 자산, 인출 세금 및 최종 환급액은 계산하지 않습니다.",
   path: "/tools/finance/irp",
   keywords: [
     "IRP 계산기",
@@ -86,7 +86,7 @@ const HOW_TO_STEPS = [
   },
   {
     name: "환급액 시뮬",
-    text: "납입액 × 환급률 = 연 환급액. 매년 동일하므로 30년 누적은 곱셈으로.",
+    text: "공제 대상 납입액 × 공제율 = 세액공제 예상액. 실제 적용액과 환급액은 해당 연도의 세액·다른 공제에 따라 달라집니다.",
   },
   {
     name: "운용 수익 과세이연 효과",
@@ -106,7 +106,7 @@ export default function IRPPage() {
           softwareApplicationLd({
             name: "IRP·연금저축 세액공제 계산기",
             description:
-              "IRP·연금저축 납입액으로 연 환급액과 노후 자산 시뮬을 즉시 계산.",
+              "총급여와 IRP·연금저축 납입액으로 세액공제 예상액을 계산.",
             url: "/tools/finance/irp",
           }),
           autoBreadcrumbLd("/tools/finance/irp", {
@@ -133,8 +133,8 @@ export default function IRPPage() {
               IRP·연금저축 계산기
             </h1>
             <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-xl mx-auto">
-              연봉별 환급률 자동 적용 + 노후 자산 누적 시뮬 + 운용 수익 과세이연
-              효과까지.
+              총급여와 납입액으로 세액공제 예상액을 확인하세요.
+              운용 수익과 최종 환급액은 별도 확인이 필요합니다.
             </p>
           </header>
 
@@ -195,14 +195,13 @@ export default function IRPPage() {
               과세이연의 진짜 가치
             </h2>
             <p className="text-muted-blue leading-relaxed">
-              일반 펀드는 매년 운용 수익에 15.4% 배당소득세. IRP·연금저축은
-              인출 시까지 0% (과세이연). 30년 운용 시 같은 7% 수익률이라도 일반
-              펀드 대비 IRP가 약 25~30% 더 큰 만기 자산을 보장합니다. 단순 환급
-              + 과세이연의 복리 효과 = IRP의 진짜 가치.
+              연금계좌의 과세이연 효과는 투자 상품의 과세 방식, 운용 결과와
+              인출 시 적용되는 세금에 따라 달라집니다. 이 계산기는 운용 수익이나
+              미래 자산을 계산하지 않으며, 만기 자산의 증가를 보장하지 않습니다.
             </p>
 
             <h2 className="text-xl font-black text-navy mt-8 mb-4">
-              주의 — 55세 전 인출은 절대 금지
+              주의 — 중도인출 조건과 세금 확인
             </h2>
             <p className="text-muted-blue leading-relaxed">
               기타소득세 16.5% = 그동안 받은 세액공제 환수. 예) 5년 납입 후 인출

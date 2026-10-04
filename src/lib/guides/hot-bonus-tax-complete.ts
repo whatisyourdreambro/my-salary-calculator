@@ -503,7 +503,7 @@ const foreignBonus = `
 `;
 
 const signOnBonus = `
-<p class="lead">사인온 보너스(Signing Bonus)는 입사 시 받는 일회성 보너스. 통상 1~2년 의무 근속 조건 → 조기 퇴직 시 환수. 한 번에 큰 금액이라 한계세율 점프 + 4대보험 상한 초과로 실수령액 약 50~60% 수준.</p>
+<p class="lead">사인온 보너스(Signing Bonus)는 입사 시 받는 일회성 보너스. 통상 1~2년 의무 근속 조건 → 조기 퇴직 시 환수. 실수령액은 연간 급여·공제·보험료와 보너스 귀속연도에 따라 달라집니다.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 사인온 일반 구조</h2>
 <ul class="space-y-2 mt-4">
@@ -513,16 +513,10 @@ const signOnBonus = `
 <li>· 지급 시기: 입사일·3개월 후·1년 후 분할 일반적</li>
 </ul>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 사인온 5,000만원 일시 지급</h2>
-<ul class="space-y-2 mt-4">
-<li>· 한계세율 35%(연봉 약 1억 이상 가정): 약 1,750만원 세금</li>
-<li>· 4대보험 약 200만원</li>
-<li>· 지방세 175만원</li>
-<li>· <strong>실수령 약 2,875만원</strong> (약 57.5%)</li>
-</ul>
-
-<h2 class="mt-12 text-2xl font-bold text-primary">🎯 절세 — 분할 지급 협상</h2>
-<p>5,000만원을 2년 분할(각 2,500만원) 시 한계세율 24% 유지 → 약 600만원 절감.</p>
+<h2 class="mt-12 text-2xl font-bold text-primary">💰 사인온 5,000만원 — 연간 세금 차이를 계산</h2>
+<p>한계세율을 보너스 전액에 곱해 세금을 확정할 수 없습니다. 같은 해 급여·공제를 반영해 보너스 유무에 따른 결정세액 차이를 비교하세요. 지급 시 원천징수와 최종 세금은 다를 수 있습니다.</p>
+<h2 class="mt-12 text-2xl font-bold text-primary">🎯 분할 지급 — 같은 총보상과 귀속연도로 비교</h2>
+<p>귀속연도·급여·공제·근속·반환 조건을 비교하세요. 절세 보장은 없습니다.</p>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/tools/finance/bonus" class="text-primary underline">성과급 세금 계산</a></li></ul></div>
 `;
@@ -538,12 +532,12 @@ const retentionBonus = `
 <li><strong>스타트업 시리즈 라운드</strong>: 시리즈 B·C 후 핵심 인재</li>
 </ul>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">💰 절세 — 3년 분할 권장</h2>
-<p>3년 후 1억 일시 지급 vs 매년 3,300만 분할:</p>
+<h2 class="mt-12 text-2xl font-bold text-primary">💰 분할 지급 — 같은 3년의 총세금을 비교</h2>
+<p>1억원을 한 번에 받는 경우와 3년에 나눠 받는 경우의 세금 차이는 매년 급여·공제와 보너스의 귀속연도에 따라 달라집니다. 한계세율을 보너스 전액에 곱해 총세금이나 절감액을 확정할 수는 없습니다.</p>
 <ul class="space-y-2 mt-4">
-<li>· 일시: 한계세율 38% → 약 3,800만원 세금</li>
-<li>· 분할: 한계세율 24~35% → 약 2,500만원 세금</li>
-<li>· <strong>차이 1,300만원</strong></li>
+<li>· 비교할 총보너스는 1억원으로 맞추세요. 매년 3,300만원이면 3년 합계가 9,900만원이라 같은 총액 비교가 아닙니다.</li>
+<li>· 지급일뿐 아니라 근속 조건 충족일과 금액 확정일을 확인하고, 실제로 어느 해의 근로소득으로 신고되는지 회사 급여 담당자에게 확인하세요.</li>
+<li>· 같은 3년 동안의 연간 결정세액과 4대보험, 중도 퇴사 시 반환 조건, 현금흐름을 함께 비교하세요. 분할만으로 특정 절감액이 보장되지는 않습니다.</li>
 </ul>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/tools/finance/bonus" class="text-primary underline">성과급 세금 계산</a></li></ul></div>
@@ -760,22 +754,22 @@ ${GROSS_AT_BRACKET.map((g) => `<tr><td>${manwon(g.base)}</td><td>약 ${manwon(g.
 `;
 
 const splitPayoutLower = `
-<p class="lead">성과급 1억을 한 번에 받으면 한계세율 38% 점프. 2년 분할 시 각 5,000만원으로 한계세율 35% 유지. 절세 약 600만원. 회사와 분할 지급 협상이 가능하다면 적극 시도 권장.</p>
+<p class="lead">성과급 1억원을 2년에 나누어 받는다고 세금이 자동으로 줄지는 않습니다. 지급 일정과 소득 귀속연도를 먼저 구분하고, 두 해의 급여·공제·세금을 같은 조건으로 비교해야 합니다. 귀속연도와 원천징수는 <a href="/guides/bonus-payout-timing-2026">성과급 지급 시점과 세금</a>에서 확인하세요.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 분할 vs 일시 비교</h2>
-<p>연봉 8,000만 + 성과급 1억:</p>
+<p>매년 연봉 8,000만원에 성과급 총액 1억원을 받는다고 가정한 비교 기준:</p>
 <ul class="space-y-2 mt-4">
-<li>· <strong>일시 지급</strong>: 1.8억 합산 → 한계세율 38% → 약 3,800만원 세금</li>
-<li>· <strong>2년 분할</strong>: 매년 1.3억 → 한계세율 35% → 매년 2,500만원 = 합 5,000만원</li>
-<li>· 일시 6,000만 vs 분할 5,000만 → <strong>1,000만 절감</strong></li>
+<li>· <strong>일시 지급</strong>: 첫해 총급여 1억8,000만원과 다음 해 총급여 8,000만원의 세금을 모두 비교합니다.</li>
+<li>· <strong>2년 분할</strong>: 소득이 실제로 각 해에 귀속되는 경우에만 매년 총급여 1억3,000만원으로 비교할 수 있습니다. 입금일만 미룬 경우와 구분하세요.</li>
+<li>· 세율은 총급여가 아니라 <strong>공제 후 과세표준</strong>에 적용됩니다. 급여·공제·귀속연도 확인 없이 절세액을 특정할 수 없습니다.</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 회사 협상 포인트</h2>
 <ul class="space-y-2 mt-4">
-<li>· 인사·임원과 분할 지급 가능성 확인</li>
-<li>· 잔류 의무·근속 조건 부가 가능</li>
-<li>· 회사도 손금 처리 시점 분산 → 일부 유리</li>
-<li>· 직원 입장에서는 한계세율 점프 회피로 절세</li>
+<li>· 회사 급여 담당자에게 개인별 금액 확정일·귀속연도·원천징수 방법 확인</li>
+<li>· 지급일·미수령 잔액과 퇴사·휴직 시 지급 조건을 서면으로 확인</li>
+<li>· 회사의 비용 처리와 직원의 세금을 구분해 확인</li>
+<li>· 절세를 전제로 결정하기보다 두 해의 세금과 현금흐름을 함께 비교</li>
 </ul>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/tools/finance/bonus" class="text-primary underline">성과급 세금 계산</a></li></ul></div>
@@ -884,7 +878,7 @@ ${INSURANCE_BY_SALARY.map((x) => `<tr><td>${manwon(x.salary)}</td><td>${won(x.pe
 `;
 
 const dependentBeforeBonus = `
-<p class="lead">성과급 받기 전 가족 피부양자 자격 점검 필수. 2022년 11월 피부양자 요건 강화 — 연소득 2,000만원 + 재산세 과세표준 5.4억 이하. 본인 성과급으로 가족 피부양자 자격 박탈 가능성.</p>
+<p class="lead">성과급 받기 전 가족 피부양자 자격 점검 필수. 2022년 11월 피부양자 요건 강화 — 연소득 2,000만원 + 재산세 과세표준 5.4억 이하. 가족 본인의 소득·재산 조건을 확인해야 합니다.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 피부양자 자격 점검</h2>
 <ul class="space-y-2 mt-4">
@@ -1233,7 +1227,7 @@ const bonusPropertySell = `
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 절세 — 매도 시점 분산</h2>
-<p>부동산 매도와 성과급 같은 해 발생 시 한계세율 점프. 가능하면 매도 시점 다음해로 미루기.</p>
+<p>위에서 구분한 근로소득과 부동산 양도소득은 각각의 과세 방식으로 계산합니다. 두 거래가 같은 해에 생겼다는 이유만으로 누진세율이 합산 상승한다고 계산하지 말고, 각 세목의 세액·납부 시기와 현금흐름을 확인하세요.</p>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/calc/real-estate-capital-gains-quick" class="text-primary underline">부동산 양도세 계산</a></li></ul></div>
 `;
@@ -1250,8 +1244,10 @@ export const hotBonusTaxComplete: Guide[] = [
   { slug: "lg-hyundai-posco-bonus-2026", title: "LG·현대차·기아·포스코 성과급 비교 2026", description: "현대차·기아 400%+1,270만원, LG엔솔 최대 75%·LG디스플레이 150%(2025년 실적분), 포스코 구분법과 세후 환산.", metaDescription: "현대차·기아 2026 임단협 성과급(400%+정액 1,270만원+주식), LG에너지솔루션 최대 75%·LG디스플레이 150%, LG전자와 포스코의 지급 구조를 비교하고 연봉 8,000만원 기준 세후를 계산했습니다.", category: "연봉", tags: ["현대차", "기아", "LG에너지솔루션", "포스코", "성과급", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-26", views: 0, content: lgPoscoBonus, lang: "ko" },
   { slug: "it-rsu-vs-cash-bonus-2026", title: "RSU·현금 성과급 세금 2026 — 네이버·카카오·쿠팡", description: "RSU도 받는 날 시가로 근로소득 과세돼 세금은 현금 성과급과 같습니다. 차이는 이후 주가와, 국내·해외 상장에 따라 갈리는 매도 세금입니다.", metaDescription: "RSU는 주식을 받는 날의 시가로 근로소득세가 정해져 같은 금액 현금 성과급과 세금이 같습니다. 네이버·카카오(국내 상장)와 쿠팡(미국 상장) RSU의 매도 세금과 주가 하락 때 손익을 비교했습니다.", category: "주식", tags: ["RSU", "네이버", "카카오", "쿠팡", "성과급", "2026"], level: "고급", publishedDate: "2026-05-23", modifiedDate: "2026-09-26", views: 0, content: itRsuVsCash, lang: "ko" },
   { slug: "foreign-bonus-structure-2026", title: "외국계 보너스 — 구글·아마존·메타·MS 한국지사 RSU 구조", description: "구글 Alphabet RSU + 사인온, 아마존 분할 사인온 + 4년 비균등 RSU, 메타·MS 분기 성과 + RSU. 외국 모회사 직접 지급 시 본인 종소세 신고 의무.", category: "주식", tags: ["외국계", "구글", "아마존", "메타", "RSU", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: foreignBonus, lang: "ko" },
-  { slug: "sign-on-bonus-tax-2026", title: "사인온 보너스 5,000만 — 실수령 2,875만, 분할로 600만 절감", description: "입사 시 일회성 보너스. 한계세율 35%+ + 4대보험 + 지방세 = 약 43% 부담. 5,000만 일시 vs 2년 분할 시 600만 절감.", category: "연봉", tags: ["사인온", "Signing Bonus", "입사", "절세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: signOnBonus, lang: "ko" },
-  { slug: "retention-bonus-3year-split-2026", title: "리텐션 보너스 1억 3년 분할 vs 일시 — 1,300만원 절감", description: "M&A·구조조정 후 잔존 보너스. 3년 일시 1억 38% vs 매년 3,300만 24~35% = 절감 1,300만. 분할 지급 협상 권장.", category: "연봉", tags: ["리텐션", "잔존보너스", "M&A", "구조조정", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: retentionBonus, lang: "ko" },
+  { slug: "sign-on-bonus-tax-2026", title: "사인온 보너스 5,000만원 — 세금과 분할 지급 조건 확인", description: "사인온 보너스는 연간 급여와 합산해 세금을 계산합니다. 분할 지급의 귀속연도·총보상·반환 조건을 함께 비교하세요.", category: "연봉", tags: ["사인온", "Signing Bonus", "입사", "절세", "2026"], level: "중급", publishedDate: "2026-05-23",
+    modifiedDate: "2026-10-03", views: 0, content: signOnBonus, lang: "ko" },
+  { slug: "retention-bonus-3year-split-2026", title: "리텐션 보너스 1억 — 분할 조건과 3년 총세금 비교", description: "리텐션 보너스의 세금은 귀속연도·연봉·공제에 따라 달라집니다. 3년의 총보상과 지급·반환 조건을 함께 비교하세요.", category: "연봉", tags: ["리텐션", "잔존보너스", "M&A", "구조조정", "2026"], level: "고급", publishedDate: "2026-05-23",
+    modifiedDate: "2026-10-03", views: 0, content: retentionBonus, lang: "ko" },
   { slug: "executive-bonus-corporate-limit-2026", title: "비상장 임원 성과급 한도 — 초과 시 회사·임원 모두 손해", description: "정관·주총 한도 명시. 한도 5억 + 실 지급 8억 시 초과 3억 법인세 7,200만 추가 + 임원 근로소득세 그대로. 한도 내 운용 필수.", category: "연봉", tags: ["임원", "비상장", "성과급한도", "법인세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: executiveBonusLimit, lang: "ko" },
   // 영역 B — 성과급 소득세 10편
   {
@@ -1296,7 +1292,7 @@ export const hotBonusTaxComplete: Guide[] = [
     content: bracket8Step,
     lang: "ko",
   },
-  { slug: "bonus-split-payout-1000-saving-2026", title: "성과급 1억 분할 지급 — 1년 vs 2년 = 1,000만 절감", description: "일시 지급 한계세율 38% vs 2년 분할 35%. 절감 1,000만. 인사·임원과 분할 협상 가능 시 적극 시도. 잔류 의무 부가 가능.", category: "세금", tags: ["성과급", "분할지급", "한계세율", "협상", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: splitPayoutLower, lang: "ko" },
+  { slug: "bonus-split-payout-1000-saving-2026", title: "성과급 1억 분할 지급 — 귀속연도와 2년 총세금 비교", description: "분할 지급의 세금은 귀속연도·급여·공제에 따라 달라집니다. 금액 확정일과 두 해의 세금·현금흐름을 함께 확인하세요.", category: "세금", tags: ["성과급", "분할지급", "귀속연도", "지급조건", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-10-03", views: 0, content: splitPayoutLower, lang: "ko" },
   // 영역 C — 성과급 4대보험·건강보험 10편
   {
     slug: "bonus-health-4-percent-2026",
@@ -1326,7 +1322,7 @@ export const hotBonusTaxComplete: Guide[] = [
     content: bonusInsuranceCeiling,
     lang: "ko",
   },
-  { slug: "dependent-check-before-bonus-2026", title: "성과급 받기 전 가족 피부양자 점검 — 임대 2,000만 + 박탈", description: "본인 성과급으로 피부양자 자격 직접 영향 없음. 단 가족 임대·연금·이자 합산 2,000만+ 시 박탈 → 지역가입자 월 50~150만 부담.", category: "기초", tags: ["피부양자", "건강보험", "성과급", "지역가입자", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: dependentBeforeBonus, lang: "ko" },
+  { slug: "dependent-check-before-bonus-2026", title: "성과급 받기 전 가족 피부양자 점검 — 임대 2,000만 + 박탈", description: "본인 성과급으로 피부양자 자격 직접 영향 없음. 단 가족 임대·연금·이자 합산 2,000만+ 시 박탈 → 지역가입자 월 50~150만 부담.", category: "기초", tags: ["피부양자", "건강보험", "성과급", "지역가입자", "2026"], level: "고급", modifiedDate: "2026-10-03", publishedDate: "2026-05-23", views: 0, content: dependentBeforeBonus, lang: "ko" },
   { slug: "total-income-adjustment-bonus-2026", title: "성과급 + 임대 + 금융 + 사업 종합 정산 — 영끌 2억 시 추가 5,750만", description: "성과급 5,000만 + 임대 3,000만 + 배당 2,000만 + 사업 3,000만 = 영끌 2억. 종소세 4,500만 + 지방세 + 정산 800만 = 약 5,750만 추가.", category: "기초", tags: ["종합과세", "성과급", "임대소득", "정산", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: incomeAdjustmentTotal, lang: "ko" },
   { slug: "optional-continue-after-bonus-2026", title: "성과급 큰 임원 퇴직 후 임의계속가입 — 신청 기한·36개월", description: "성과급 큰 임원이 퇴직하면 지역보험료가 커질 수 있다. 임의계속가입은 퇴직 전 12개월 평균 보수월액 기준으로 최대 36개월.", category: "기초", tags: ["임의계속가입", "퇴직", "건강보험", "임원", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: optionalContinueAfterBonus, lang: "ko" },
   // 영역 D — 성과급 절세 심화 10편
@@ -1337,5 +1333,5 @@ export const hotBonusTaxComplete: Guide[] = [
   { slug: "moving-company-bonus-2026", title: "이직 중 성과급 — 전·신 회사 합산 1,000만+ 추가 세금", description: "전 회사 + 신 회사 성과급 모두 근로소득 합산. 5월 종소세 신고 시 합산 신고 의무. 한계세율 점프 시 추가 1,000만+ 세금.", category: "커리어", tags: ["이직", "성과급", "전회사", "종합소득세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: moveCompanyBonus, lang: "ko" },
   { slug: "bonus-retire-impact-severance-2026", title: "성과급 퇴직금 포함 기준 2026 — 평균임금·대법원 판례", description: "퇴직금은 평균임금으로 계산합니다. 정기상여·목표 인센티브는 들어가고, 해마다 노사합의로 정한 경영성과급은 빠질 수 있습니다.", metaDescription: "성과급이 퇴직금에 들어가는지는 평균임금 포함 여부로 갈립니다. 2026년 대법원 판결(삼성전자 목표 인센티브 포함·경영성과급 제외)과 월 500만원·10년 근속 예시로 퇴직금 차이와 퇴직소득세를 계산했습니다.", category: "커리어", tags: ["퇴직금", "평균임금", "성과급", "퇴직소득세", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-26", views: 0, content: bonusRetireImpact, lang: "ko" },
   { slug: "stock-option-with-bonus-2026", title: "성과급 + 스톡옵션 일반 vs 적격 — 과세 시점·세금 차이", description: "일반: 행사이익은 근로소득으로 성과급과 합산 과세. 적격(벤처)은 요건 충족 시 행사 때 과세를 미루고 매도 때 양도세.", category: "주식", tags: ["스톡옵션", "적격", "벤처", "양도세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: stockOptionTimingBonus, lang: "ko" },
-  { slug: "bonus-property-sell-same-year-2026", title: "성과급 + 부동산 양도 동시 — 종합 세금 점검 필수", description: "근로소득(성과급) 종합과세 + 부동산 분류과세 별도. 건보료 정산에도 반영. 1주택 비과세 + 80% 공제 시 5억 양도차익 약 200만, 성과급 5,000만 + 합산 약 2,700만.", category: "부동산", tags: ["성과급", "부동산양도", "종합세금", "정산", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: bonusPropertySell, lang: "ko" },
+  { slug: "bonus-property-sell-same-year-2026", title: "성과급 + 부동산 양도 동시 — 종합 세금 점검 필수", description: "근로소득(성과급) 종합과세 + 부동산 분류과세 별도. 건보료 정산에도 반영. 1주택 비과세 + 80% 공제 시 5억 양도차익 약 200만, 성과급 5,000만 + 합산 약 2,700만.", category: "부동산", tags: ["성과급", "부동산양도", "종합세금", "정산", "2026"], level: "고급", modifiedDate: "2026-10-03", publishedDate: "2026-05-23", views: 0, content: bonusPropertySell, lang: "ko" },
 ];

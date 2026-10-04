@@ -33,11 +33,11 @@ export default function CompareSelectionPage() {
  <div className="flex flex-col md:flex-row items-center justify-between gap-8">
  {/* Company A Selection */}
  <div className="w-full md:w-5/12">
- <label className="block text-sm font-bold text-muted-foreground mb-2 text-center">
+ <label htmlFor="ms-company-compare-a" className="block text-sm font-bold text-muted-foreground mb-2 text-center">
  CHALLENGER 1
  </label>
  <div className="relative">
- <select
+ <select id="ms-company-compare-a"
  className="w-full p-4 bg-secondary/50 border border-border rounded-xl appearance-none text-center font-bold text-lg focus:ring-2 focus:ring-primary outline-none cursor-pointer hover:bg-secondary/70 transition-colors"
  onChange={(e) => setSelectedA(e.target.value)}
  value={selectedA || ""}
@@ -76,11 +76,11 @@ export default function CompareSelectionPage() {
 
  {/* Company B Selection */}
  <div className="w-full md:w-5/12">
- <label className="block text-sm font-bold text-muted-foreground mb-2 text-center">
+ <label htmlFor="ms-company-compare-b" className="block text-sm font-bold text-muted-foreground mb-2 text-center">
  CHALLENGER 2
  </label>
  <div className="relative">
- <select
+ <select id="ms-company-compare-b"
  className="w-full p-4 bg-secondary/50 border border-border rounded-xl appearance-none text-center font-bold text-lg focus:ring-2 focus:ring-primary outline-none cursor-pointer hover:bg-secondary/70 transition-colors"
  onChange={(e) => setSelectedB(e.target.value)}
  value={selectedB || ""}

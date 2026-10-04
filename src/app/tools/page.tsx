@@ -83,7 +83,7 @@ const CATEGORIES: { title: string; color: string; items: CalcItem[] }[] = [
  { title: "근무일수 계산기", desc: "휴일 제외 영업일 계산", href: "/tools/date/work-days", icon: Calendar },
  { title: "더치페이 계산기", desc: "인원별 금액 분배", href: "/tools/life/dutch-pay", icon: Users },
  { title: "연비·유류비 계산기", desc: "주유비용 계산", href: "/tools/life/fuel-cost", icon: Fuel },
- { title: "단위 변환기", desc: "길이·무게·온도 변환", href: "/tools/life/unit-converter", icon: RefreshCw },
+ { title: "단위 변환기", desc: "길이·무게 변환", href: "/tools/life/unit-converter", icon: RefreshCw },
  { title: "백분율 계산기", desc: "퍼센트·할인율 계산", href: "/tools/math/percent", icon: Percent },
  { title: "랜덤 번호 생성기", desc: "로또·추첨 번호", href: "/tools/math/number-gen", icon: Calculator },
  ],

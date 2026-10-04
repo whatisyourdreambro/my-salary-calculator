@@ -125,7 +125,7 @@ export default function SimulatorPage() {
  <div className="group relative">
  <Info className="w-4 h-4 text-muted-foreground cursor-help" />
  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-electric/90 text-xs text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
- 중소기업에 취업한 만 15~34세 청년에게 소득세의 90%를 감면해주는 제도입니다.
+ 감면 대상·기간·신청 조건을 별도로 확인한 경우의 비교입니다. 소득세 90% 감면·연 200만원 한도를 월균등 적용하고, 비과세 월 20만원·본인 1인·자녀 0명으로 계산합니다.
  </div>
  </div>
  </label>

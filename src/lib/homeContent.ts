@@ -22,7 +22,7 @@ const EXAMPLE_NET = HOME_EXAMPLE_NET_MANWON[CURRENT_RATES_YEAR];
 
 export const HOME_META_TITLE = "2026 연봉 계산기 | 세후 월급·4대보험 공제액 — 머니샐러리";
 export const HOME_META_DESCRIPTION =
-  "연봉·월급과 비과세·부양가족 조건을 입력해 예상 실수령액과 4대보험·소득세 공제 내역을 확인하세요. 연간 세액 추정을 월로 환산한 참고용 계산이며, 실제 급여와 차이가 날 수 있습니다.";
+  "연봉·월급과 비과세·부양가족 조건을 입력해 예상 실수령액과 4대보험·소득세 공제 내역을 확인하세요. 근로소득 간이세액표 기준 월 원천징수 추정이며, 실제 급여와 차이가 날 수 있습니다.";
 
 export interface HomeFaqItem {
   question: string;

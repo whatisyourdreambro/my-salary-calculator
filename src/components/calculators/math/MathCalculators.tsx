@@ -14,7 +14,11 @@ export function PercentCalculator() {
  const calculate = () => {
  const v1 = Number(val1);
  const v2 = Number(val2);
- if (!v1 || !v2) return;
+ if (val1.trim() === "" || val2.trim() === "" || !Number.isFinite(v1) || !Number.isFinite(v2)
+   || (mode === "is" && v2 === 0)) {
+ setResult(null);
+ return;
+ }
 
  if (mode === "of") {
  // X% of Y = Y * (X/100)

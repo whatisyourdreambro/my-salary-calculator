@@ -4,6 +4,7 @@
 //     조각 사이에 GuideMidAd·InArticleAd 를 넣는다. 이 배치에서 본문을 고친 글마다 수정 전(4ef59a4b) 분할 수·분할 H2 순번·
 //     4,000자 경계의 어느 쪽인지·읽기 시간(히어로의 'N분 분량', 광고 위)을 고정한다. 본문을 다시 고칠 때 값이 바뀌면
 //     광고 위치가 움직인 것이므로 문구 폭부터 다시 맞출 것(값을 그냥 갱신하지 말 것).
+//     2026-10-03 예외: 아래 개인회생·상환조건 교정으로 늘어난 읽기 시간은 사유를 기록해 갱신. 분할 수·H2는 유지한다.
 //     분할 함수 복제본의 원본 일치는 guideSpec.test.ts 의 SPLIT_FN_SHA 드리프트 가드가 맡는다.
 // (2) 사실 고정: 정정한 수치가 옛 값으로 되돌아가지 않게 글별로 핀을 둔다(공식 출처는 각 커밋 메시지).
 import { describe, expect, it } from "vitest";
@@ -37,7 +38,7 @@ interface SplitPin {
   readingMinutes: number;
 }
 
-// 수정 전(4ef59a4b) 실측값 — 이 배치의 본문 수정 뒤에도 같아야 한다.
+// 수정 전(4ef59a4b) 실측값. 2026-10-03 법령·계산 조건 정정에 따른 읽기 시간 변경은 아래에 명시한다.
 const SPLIT_PINS: Record<string, SplitPin> = {
   "individual-vs-corporate-tax": { segs: 2, splitH2: [2], side: "under", readingMinutes: 3 },
   "social-insurance-reduction": { segs: 2, splitH2: [2], side: "under", readingMinutes: 3 },
@@ -48,7 +49,8 @@ const SPLIT_PINS: Record<string, SplitPin> = {
   "inheritance-tax-strategy": { segs: 2, splitH2: [2], side: "under", readingMinutes: 3 },
   "unemployment-insurance-2026": { segs: 2, splitH2: [4], side: "under", readingMinutes: 3 },
   "p2p-investment-risk": { segs: 2, splitH2: [3], side: "under", readingMinutes: 2 },
-  "personal-loan-vs-debt-consolidation": { segs: 2, splitH2: [3], side: "under", readingMinutes: 2 },
+  // 2026-10-03: 상환 가정·현행 개인회생 요건·공식 출처 보강. 광고 분할은 유지하고 읽기 시간만 3분으로 갱신.
+  "personal-loan-vs-debt-consolidation": { segs: 2, splitH2: [3], side: "under", readingMinutes: 3 },
   "career-break-financial-plan": { segs: 2, splitH2: [2], side: "under", readingMinutes: 3 },
   "retirement-planning-30s": { segs: 2, splitH2: [3], side: "under", readingMinutes: 3 },
   "stock-investment-beginner-2026": { segs: 2, splitH2: [2], side: "under", readingMinutes: 3 },
@@ -122,14 +124,14 @@ const FACT_PINS: Array<[string, string[], string[]]> = [
   ["p2p-investment-risk", ["<td>이자 소득세 15.4%</td><td>-1.5%</td>"], ["이자 소득세 27.5%"]],
   // GB-23·MISSED-gb-2 휴직 = 직장가입자·고용보험 자격 유지 — 자동차·예금 문구와 납입고지 유예는 보강으로
   ["career-break-financial-plan", ["퇴사자라면 → 지역가입자 자동 전환", "3. 고용보험 — 휴직 중 유지", "휴직 중에도 상실 X. 회사 측 휴직 사실 신고.", "소득·재산이 많으면 월 80만 부담"], ["직장가입자 → 지역가입자 자동 전환", "휴직 중에는 가입 X", "자가·자동차 있으면"]],
-  // GB-24 리드의 10억 가능 과장 제거 — 적립액 검산·국민연금 수령액은 보강으로
-  ["retirement-planning-30s", ["월 50만 + ETF 운용 = 60세 10억 목표"], ["60세 10억 가능"]],
+  // GB-24: 월말 적립 50만원 × 30년, 월 수익률 7%/12의 미래가치는 약 6.1억원. 10억 목표를 계산 결과처럼 쓰지 않는다.
+  ["retirement-planning-30s", ["30세부터 월 50만원을 30년 동안 연 7%", "약 6.1억원", "세금·수수료·물가를 제외한 예시", "13.2% 또는 16.5%", "실제 절세액"], ["60세 10억 가능", "60세 10억 목표", "평균 월 90~150만", "연 약 148만 환급"]],
   // GB-25 국내상장 ETF 중 국내주식형만 매매차익 비과세(소득세법 시행령 §26의2)
   ["stock-investment-beginner-2026", ["국내주식형만 차익 비과세, 나머지 15.4%"], ["매매차익 비과세, 분배금 15.4% 분리과세"]],
   // GB-26 평균 환급액을 통계처럼 쓰지 않는다 — 환급 한도(결정세액)는 보강으로
   ["tax-refund-mistakes-2026", ["챙기면 가령 50만"], ["평균 50만"]],
-  // GB-09 2026-01-02 이후 코스피 증권거래세 0.20% — 삼성 특별성과급 FAQ 만 본문, 나머지는 보강으로
-  ["samsung-special-bonus-q3-preview-2027", ["매도 시 증권거래세 0.20%가 붙습니다"], []],
+  // GB-09: 2027년 이후 매도 가능 주식에 2026년 세율을 확정 적용하지 않는다. 거래세·농특세 구분과 매도 시점 확인을 유지.
+  ["samsung-special-bonus-q3-preview-2027", ["매도 시점에 적용되는 증권거래세·농어촌특별세와 수수료는 별도로 확인"], ["매도 시 증권거래세 0.20%가 붙습니다"]],
   // GB-27 2024 실적분 PS 기본급 1,500%(psData PS_HISTORY) · GB-10 ISA 연 2,000만원은 납입 한도
   ["sk-hynix-wage-2026", ["2024년 실적분 월급의 1500% 수준(기본급 기준)", "ISA 납입액 한도(연 2,000만원)"], ["연봉의 1000%", "ISA 비과세 한도(연 2,000만원)"]],
   // GB-10 ISA 연 2,000만원·총 1억은 납입 한도(조특법 §91의18), 소액주주 상장주식 장내 매도 차익은 일반 계좌도 비과세
@@ -140,8 +142,10 @@ const FACT_PINS: Array<[string, string[], string[]]> = [
   ["stock-options-rsu-valuation", ["행사 시 근로소득 과세", "1년 보유 후 매도가 절세 효과 없음(대주주 예외)"], ["행사 시 차익에 양도세", "절세 효과 있음(국가별 다름)"]],
   // GB-35 출처 없는 인상률을 통계처럼 쓰지 않는다(추정 금지 원칙)
   ["job-change-salary-jump-2026", ["직군별 이직 통념 인상률 (2026 기준)", "<th>이직 인상률 통념</th>"], ["이직 평균 인상률"]],
-  // GB-13 연준 2026-09-16 인상 — 제목·투자 시사점만 본문, 인상 폭·범위는 보강으로 (8월까지의 동결 서술은 그대로)
-  ["us-treasury-bond", ["인하 멈춘 연준 9월엔 인상", "2026년 8월 이후는 <strong>인하 대신에 인상 리스크가 현실화된 구간</strong>"], ["인하 재개와 인상 리스크가 공존"]],
+  // GB-13: 공식 FOMC 성명(2026-09-16)의 결정일·인상폭·목표범위를 고정하고, 이후 전망과 구분.
+  ["us-treasury-bond", ["2026년 9월 16일 FOMC 성명", "0.25%p 인상해 3.75~4.00%", "이후 인상·동결·인하 전망은 별개", "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a.htm"], ["8월 현재까지", "인하 재개와 인상 리스크가 공존"]],
+  // GB-22: 이자만 비교한 예시와 현행 채무자회생법 §579·§611, 금융위 대환대출 신용점수 안내를 구분한다.
+  ["personal-loan-vs-debt-consolidation", ["연225만원 차이", "원금 상환액·수수료·잔액 변화는 별도", "무담보채무 10억원·담보채무 15억원 이하", "원칙 3년 이내", "특별한 사정이 있으면 5년 이내", "대환 여부만으로 일률 판단 불가"], ["채무 5억 이하", "신청 시점 -5~10점", "신용점수 800점+", "즉시 월 20~30만원 절약"]],
   // GB-14 2026-01-01 시행 조특법 §104의27 고배당기업 배당소득 분리과세 특례 — 특례 설명은 보강(GB-15)
   ["financial-income-tax", ["초과하면 원칙상 종합과세 대상입니다"], ["무조건 종합과세 대상"]],
   // GB-18 연납 신청은 1·3·6·9월 — 10월 1일부터 틀리는 '올해 안이라면 9월' 문장 제거
@@ -162,5 +166,18 @@ describe("(2) guidesb 사실 정정 고정", () => {
       for (const s of must) expect(html, `있어야 함: ${s}`).toContain(s);
       for (const s of mustNot) expect(html, `없어야 함: ${s}`).not.toContain(s);
     });
+  }
+});
+
+it("노후 적립표의 자산·인출 예시는 본문에 명시한 월말 적립 가정과 일치한다", () => {
+  const html = body("retirement-planning-30s");
+  const rows = [...html.matchAll(/<tr><td>(\d+)세<\/td><td>(\d+)만<\/td><td>약 ([\d.]+)억<\/td><td>(\d+)만<\/td><\/tr>/g)];
+  expect(rows).toHaveLength(5);
+  for (const [, startAge, monthlyMan, assetEok, withdrawalMan] of rows) {
+    const monthlyRate = 0.07 / 12;
+    const months = (60 - Number(startAge)) * 12;
+    const asset = Number(monthlyMan) * 10_000 * ((1 + monthlyRate) ** months - 1) / monthlyRate;
+    expect(Number(assetEok)).toBe(Number((asset / 100_000_000).toFixed(1)));
+    expect(Number(withdrawalMan)).toBe(Math.round(asset * 0.035 / 12 / 10_000));
   }
 });

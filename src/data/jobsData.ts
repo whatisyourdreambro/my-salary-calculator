@@ -26,7 +26,9 @@ export interface JobSalaryRange {
  * 검증된 정부·공공 통계만 기입 — 임의 추정치 금지.
  */
 export interface JobOfficialStats {
-  /** 중위(50분위) 연봉, 만원 단위 */
+  /** 미지정이면 중위 통계. 초임 보수는 조사 중위값과 구분한다. */
+  statisticKind?: "median" | "starting-compensation";
+  /** 연 보수, 만원 단위. 기존 키를 유지하며 statisticKind로 중위/초임을 구분한다. */
   medianAnnualManwon: number;
   /** 하위 25% 연봉, 만원 단위 */
   lowerQuartileManwon?: number;
@@ -363,6 +365,7 @@ export const jobsData: JobProfile[] = [
     ],
     keywords: ["9급 공무원 연봉", "공무원 9급 월급", "9급 공무원 신입 연봉", "공무원 연봉", "공무원 월급 2026"],
     officialStats: {
+      statisticKind: "starting-compensation",
       medianAnnualManwon: 3428,
       year: "2026",
       source: "인사혁신처 2026년 공무원 봉급표·공무원보수규정 개정(2025.12.30 국무회의 통과, 인사혁신처 발표 인용 보도)",

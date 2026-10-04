@@ -147,7 +147,7 @@ export default function JobPage({ params }: Props) {
 
   // Occupation 스키마 (구글 연봉 리치결과) — 정부 공식 통계(officialStats)가 있는
   // 직업만 주입. 임의 수치 금지 원칙: 공식 조사값(중위·사분위, 만원→원 환산)만 사용.
-  const occupationSchema = job.officialStats
+  const occupationSchema = job.officialStats && job.officialStats.statisticKind !== "starting-compensation"
     ? occupationLd({
         name: job.name,
         description: job.description,

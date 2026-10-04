@@ -37,7 +37,7 @@ export const hubs: Hub[] = [
     title: "FIRE·조기은퇴 완벽 가이드 — 경제적 자유 로드맵",
     tagline: "은퇴 자산 목표부터 복리 시뮬레이션까지 한 곳에서",
     intro: [
-      "FIRE(Financial Independence, Retire Early)는 충분한 자산을 모아 노동 소득에 의존하지 않는 상태를 말합니다. 핵심은 '연 생활비의 25~30배'를 모으면 매년 자산의 3~4%만 인출해도 원금이 유지된다는 안전인출률 개념입니다. 한국은 물가·의료비를 고려해 4%보다 보수적인 3~3.5% 룰을 권장합니다.",
+      "FIRE(Financial Independence, Retire Early)는 자산으로 생활비를 마련해 노동 소득 의존도를 낮추려는 계획입니다. 연 생활비를 가정한 인출률로 나누어 목표 자산을 계산하지만, 이는 원금 유지나 은퇴 성공을 보장하지 않습니다. 수익률·물가·세금·의료비와 인출 기간을 바꾸어 여러 시나리오를 비교하세요.",
       "FIRE의 출발점은 두 가지 숫자입니다. 첫째, 은퇴 후 월 생활비 — 이것에 12를 곱하고 안전인출률로 나누면 목표 자산이 나옵니다. 둘째, 현재 저축 여력과 기대 수익률 — 이것으로 목표 도달까지 걸리는 시간을 계산할 수 있습니다. 아래 계산기로 두 숫자를 모두 확인해 보세요.",
       "조기은퇴의 진짜 엔진은 복리입니다. 같은 금액도 일찍 시작할수록, 수수료가 낮을수록, 인플레이션을 이긴 실질 수익률이 높을수록 자산은 기하급수적으로 커집니다.",
     ],
@@ -86,7 +86,7 @@ export const hubs: Hub[] = [
     tagline: "투자 손익·배당·세금 계산을 한 곳에서",
     intro: [
       "직장인 투자의 시작은 '내 손익을 정확히 아는 것'입니다. 매수가·매도가·수량만으로 손익과 수익률이 나오고, 장기 투자라면 연평균 수익률(CAGR)로 성과를 객관적으로 평가할 수 있습니다.",
-      "투자에서 의외로 자주 놓치는 것이 세금과 수수료입니다. 국내 상장 ETF·해외주식 양도차익, 배당소득, 예금 이자에는 각각 다른 세율이 적용되며, 운용수수료 0.1%p 차이도 30년 누적되면 수천만 원의 차이를 만듭니다.",
+      "투자에서 의외로 자주 놓치는 것이 세금과 수수료입니다. 국내 상장 ETF·해외주식 양도차익, 배당소득, 예금 이자에는 각각 다른 세율이 적용되며, 운용수수료 차이의 누적 영향도 투자금·기간·수익률 가정에 따라 달라집니다.",
       "아래 도구로 손익·세금·수수료를 모두 점검하고, 자산배분으로 리스크를 관리하세요.",
     ],
     keywords: ["주식 투자", "ETF 투자", "배당주", "주식 양도세", "투자 수익률", "자산배분"],
@@ -146,7 +146,7 @@ export const hubs: Hub[] = [
         links: [
           { label: "내가 살 수 있는 집값", href: "/calc/housing-affordability-quick", desc: "자기자본+DSR 한도로 매수 가능액" },
           { label: "DSR 한도 계산", href: "/calc/dsr-quick", desc: "연소득 기준 대출 한도 추정" },
-          { label: "LTV 한도 계산", href: "/calc/ltv-quick", desc: "집값 대비 가능 대출액" },
+          { label: "LTV 비율 계산", href: "/calc/ltv-quick", desc: "집값 대비 입력 대출액의 비율" },
           { label: "DSR 계산기", href: "/tools/real-estate/dsr", desc: "DSR 상세 계산" },
         ],
       },
@@ -173,7 +173,7 @@ export const hubs: Hub[] = [
         heading: "전세 vs 월세",
         links: [
           { label: "전세 vs 월세 비용", href: "/calc/jeonse-vs-monthly-cost", desc: "전세 이자+기회비용 vs 월세" },
-          { label: "월세 세액공제 환급", href: "/calc/monthly-rent-tax-credit-quick", desc: "월세 17% 세액공제 환급액" },
+          { label: "월세 세액공제 추정", href: "/calc/monthly-rent-tax-credit-quick", desc: "입력 요건에 따른 예상 공제액" },
           { label: "월세 → 전세금 환산", href: "/calc/deposit-equivalent", desc: "전월세 전환율로 보증금 환산" },
           { label: "임대 수익률", href: "/calc/rental-yield", desc: "월세 수익률 연 환산" },
         ],
@@ -220,7 +220,7 @@ export const hubs: Hub[] = [
           { label: "중도퇴사 연말정산", href: "/year-end-tax-mid-resign", desc: "퇴사·이직자 정산 방법" },
           { label: "신용카드 공제 계산기", href: "/credit-card-deduction-2026", desc: "결제수단별 정밀 계산" },
           { label: "의료비 세액공제 계산기", href: "/medical-tax-credit-2026", desc: "3% 문턱·한도 자동 계산" },
-          { label: "월세 세액공제 계산기", href: "/rent-tax-credit-2026", desc: "요건 판정 + 환급액 계산" },
+          { label: "월세 세액공제 계산기", href: "/rent-tax-credit-2026", desc: "입력 요건 점검 + 예상 공제액" },
           // 슬러그 주의: /year-end-tax-2026 은 실제로는 5월 종합소득세(프리랜서)
           // 가이드 — 설명 오기 정정 (2026-08-23)
           { label: "프리랜서 5월 종합소득세", href: "/year-end-tax-2026", desc: "프리랜서·N잡러 신고 가이드" },
@@ -243,7 +243,7 @@ export const hubs: Hub[] = [
       {
         heading: "절세 계좌 활용",
         links: [
-          { label: "IRP 계산기", href: "/tools/finance/irp", desc: "연 최대 900만원 세액공제" },
+          { label: "IRP 계산기", href: "/tools/finance/irp", desc: "공제 대상 납입 한도·예상 세액공제" },
           { label: "퇴직소득세 계산", href: "/calc/retirement-income-tax-quick", desc: "퇴직금 환산급여 방식 세금" },
         ],
       },
@@ -314,7 +314,7 @@ export const hubs: Hub[] = [
         heading: "이직·신입 준비",
         links: [
           { label: "삼성 연봉협상 가이드", href: "/samsung-negotiation-2026", desc: "대기업 연봉협상 전략" },
-          { label: `성과급 계산기 ${bonusCalcCountKo} 모음`, href: "/calc/bonus-calculators", desc: "회사별 최신 지급률·시즌 캘린더" },
+          { label: `성과급 계산기 ${bonusCalcCountKo} 모음`, href: "/calc/bonus-calculators", desc: "회사별 입력 시나리오·시즌 캘린더" },
           { label: "삼성전자 성과급 계산기", href: "/calc/samsung-bonus", desc: "OPI·TAI 세후 실수령" },
           { label: "2026 신입사원 가이드", href: "/new-employee-2026", desc: "사회초년생 필수 금융 세팅" },
           { label: "성과급 세금 계산기", href: "/tools/finance/bonus", desc: "성과급·인센티브 세금 계산" },
@@ -426,7 +426,7 @@ export const hubs: Hub[] = [
     intro: [
       "생활비 관리의 시작은 '보이지 않던 돈을 보이게 만드는 것'입니다. 매달 빠져나가는 구독료 합계, 전기·수도 요금, 주유비 — 항목별로 숫자를 확인하면 줄일 곳이 보입니다.",
       "건강도 숫자로 관리할 수 있습니다. BMI와 기초대사량(BMR)으로 내 몸의 기준선을 확인하고, 권장 칼로리·수분 섭취량·수면 주기로 일상 루틴을 설계해 보세요.",
-      "결혼·출산·육아를 앞두고 있다면 평균 비용을 미리 아는 것이 재무 계획의 첫걸음입니다. 결혼 비용부터 자녀 양육비, 18년 교육비 누적까지 인생 이벤트별 비용을 확인하세요.",
+      "결혼·출산·육아를 앞두고 있다면 평균 비용을 미리 아는 것이 재무 계획의 첫걸음입니다. 결혼 비용부터 자녀 양육비, 19년 교육비 누적까지 인생 이벤트별 비용을 확인하세요.",
     ],
     keywords: ["생활비 계산기", "더치페이", "구독료", "BMI 계산", "결혼 비용", "양육비 계산"],
     sections: [
@@ -449,9 +449,9 @@ export const hubs: Hub[] = [
           { label: "전기료 추정", href: "/calc/electricity-bill", desc: "kWh 사용량별 요금" },
           { label: "수도료 추정", href: "/calc/water-bill", desc: "월 사용량 × 단가" },
           { label: "주유비 계산", href: "/calc/fuel-cost-trip", desc: "거리·연비·유가로 주유비" },
-          { label: "환율 환산", href: "/calc/currency-converter", desc: "원화 ↔ USD/JPY/EUR/CNY" },
+          { label: "환율 환산", href: "/calc/currency-converter", desc: "입력 환율로 원화 → USD 환산" },
           { label: "시차 계산기", href: "/calc/time-zone-converter", desc: "한국 시간 → 현지 시간" },
-          { label: "길이 단위 변환", href: "/calc/unit-converter-length", desc: "m·km·마일·피트 환산" },
+          { label: "길이 단위 변환", href: "/calc/unit-converter-length", desc: "m·km·마일 환산" },
         ],
       },
       {
@@ -469,9 +469,9 @@ export const hubs: Hub[] = [
         links: [
           { label: "결혼 평균 비용", href: "/calc/wedding-cost-quick", desc: "예식·예단·신혼집 합산" },
           { label: "자녀 양육비 1년차", href: "/calc/baby-yearly-cost", desc: "출산·기저귀·분유 합산" },
-          { label: "교육비 18년 누적", href: "/calc/education-cost-cumulative", desc: "유치원~대학 누적 교육비" },
+          { label: "교육비 19년 누적", href: "/calc/education-cost-cumulative", desc: "유치원~대학 누적 교육비" },
           { label: "어린이집 보육료", href: "/calc/childcare-fee", desc: "유형·시간별 월 보육료" },
-          { label: "양육비 산정", href: "/calc/alimony-quick", desc: "양육비 산정기준표 참고" },
+          { label: "양육비 산정", href: "/calc/alimony-quick", desc: "자체 비율에 따른 참고 금액" },
           { label: "육아휴직 급여 계산기", href: "/parental-leave", desc: "월 급여별 육아휴직 수령액" },
         ],
       },

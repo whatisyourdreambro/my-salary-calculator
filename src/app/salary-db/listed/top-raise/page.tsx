@@ -37,10 +37,10 @@ const minWageLabel = (year: string) =>
   `${Math.round(MIN_WAGE_ANNUAL_MANWON[year]).toLocaleString("ko-KR")}만원`;
 
 export const metadata: Metadata = buildPageMetadata({
-  title: `연봉 인상률 TOP ${topRaiseRows.length} — 상장사 공시 기준 (${DART_RANKING_YEAR})`,
-  description: `전년 대비 평균연봉 인상률이 가장 높은 상장사 TOP ${topRaiseRows.length}. DART 사업보고서 공시 원값 기준(비교 가능 ${raiseEligibleCount.toLocaleString("ko-KR")}곳), 직원 수 급변·최저임금 미달·이상치 제외 — 추정 0.`,
+  title: `연봉 인상률 TOP ${topRaiseRows.length} — 공시기업 공시 기준 (${DART_RANKING_YEAR})`,
+  description: `전년 대비 평균연봉 인상률이 가장 높은 공시기업 TOP ${topRaiseRows.length}. DART 사업보고서 공시 원값 기준(비교 가능 ${raiseEligibleCount.toLocaleString("ko-KR")}곳), 직원 수 급변·최저임금 미달·이상치 제외 — 추정 0.`,
   path: PATH,
-  keywords: ["연봉 인상률 높은 기업", "연봉 인상률 순위", "상장사 연봉 인상", "연봉 많이 오른 회사"],
+  keywords: ["연봉 인상률 높은 기업", "연봉 인상률 순위", "공시기업 연봉 인상", "연봉 많이 오른 회사"],
 });
 
 /** 순위에서 뺀 이상치 목록 — 계산 방법 FAQ(접힌 details) 답변 아래에만 보인다 */
@@ -94,8 +94,8 @@ export default function TopRaisePage() {
         h1: `연봉 인상률 TOP ${topRaiseRows.length}`,
         heroLead: (
           <>
-            {DART_RANKING_YEAR} 사업연도 공시 평균연봉이 전년({RAISE_PREV_YEAR}) 대비 가장 많이 오른 상장사
-            순위입니다. 비교 가능한 상장사 {raiseEligibleCount.toLocaleString("ko-KR")}곳 기준이며,
+            {DART_RANKING_YEAR} 사업연도 공시 평균연봉이 전년({RAISE_PREV_YEAR}) 대비 가장 많이 오른 공시기업
+            순위입니다. 비교 가능한 공시기업 {raiseEligibleCount.toLocaleString("ko-KR")}곳 기준이며,
             1위는 <strong className="text-navy">{top1.nameKo}</strong>(
             {pct(top1.raisePct)}%,{" "}
             {fmtManwon(top1.prevSalaryManwon ?? 0)} → {fmtManwon(top1.avgSalaryManwon)})입니다.
@@ -115,18 +115,18 @@ export default function TopRaisePage() {
         ),
         faqItems: [
           {
-            question: "연봉 인상률이 가장 높은 상장사는 어디인가요?",
+            question: "연봉 인상률이 가장 높은 공시기업는 어디인가요?",
             answer: `${DART_RANKING_YEAR} 공시 기준 ${top1.nameKo}로, 전년 대비 ${pct(top1.raisePct)}%(${fmtManwon(
               top1.prevSalaryManwon ?? 0
             )} → ${fmtManwon(top1.avgSalaryManwon)}) 올랐습니다.`,
           },
           {
             question: "인상률은 어떻게 계산하나요?",
-            answer: `각 회사의 ${DART_RANKING_YEAR} 사업보고서 공시 평균연봉을 ${RAISE_PREV_YEAR} 사업연도 공시값과 비교한 증감률입니다. 두 해 모두 공시가 있는 상장사만 비교하며, 직원 수가 30% 넘게 변한 회사(합병·분할 등)와 두 해 중 한 해라도 평균연봉이 그해 연간 최저임금 환산액(${RAISE_PREV_YEAR}년 ${minWageLabel(
+            answer: `각 회사의 ${DART_RANKING_YEAR} 사업보고서 공시 평균연봉을 ${RAISE_PREV_YEAR} 사업연도 공시값과 비교한 증감률입니다. 두 해 모두 공시가 있는 공시기업만 비교하며, 직원 수가 30% 넘게 변한 회사(합병·분할 등)와 두 해 중 한 해라도 평균연봉이 그해 연간 최저임금 환산액(${RAISE_PREV_YEAR}년 ${minWageLabel(
               RAISE_PREV_YEAR
             )}·${DART_RANKING_YEAR}년 ${minWageLabel(
               DART_RANKING_YEAR
-            )}, 시급×209시간×12)보다 낮은 회사(부분연도·단시간 인력 혼입 신호), 급여총액÷인원 값과 회사 공시 1인평균급여액의 차이가 ${RANKING_DIVERGENCE_MAX_PCT}%를 넘는 회사(두 집계 방식이 어긋나 평균을 대표하지 못함 — 상장사 ${LISTED_DIVERGENCE_EXCLUDED.toLocaleString("ko-KR")}곳)는 제외합니다. 인상률 +${RAISE_OUTLIER_MAX_PCT}% 초과 또는 직원 ${RAISE_MIN_EMPLOYEES}명 미만은 이상치로 보고 순위에서 빼 이 답변 아래 목록에 따로 표시합니다(${CORRECTION_DATE} 기준 변경).`,
+            )}, 시급×209시간×12)보다 낮은 회사(부분연도·단시간 인력 혼입 신호), 급여총액÷인원 값과 회사 공시 1인평균급여액의 차이가 ${RANKING_DIVERGENCE_MAX_PCT}%를 넘는 회사(두 집계 방식이 어긋나 평균을 대표하지 못함 — 공시기업 ${LISTED_DIVERGENCE_EXCLUDED.toLocaleString("ko-KR")}곳)는 제외합니다. 인상률 +${RAISE_OUTLIER_MAX_PCT}% 초과 또는 직원 ${RAISE_MIN_EMPLOYEES}명 미만은 이상치로 보고 순위에서 빼 이 답변 아래 목록에 따로 표시합니다(${CORRECTION_DATE} 기준 변경).`,
             extra: <OutlierList />,
           },
           {
@@ -140,13 +140,13 @@ export default function TopRaisePage() {
         )}곳 비교). [${CORRECTION_DATE} 정정] 최저임금 미달·이상치 제외.`,
         // 연봉 순위 모수 — 두 급여 집계 방식 괴리 초과 제외를 밝힌다 (종전 '상장사 전체 모수' 표기 정정).
         // 괴리 기준(10%)·제외 수는 계산 방법 FAQ 가 담는다 — 광고 위 방법론 문단은 기준선 길이 유지
-        poolNote: `상장사 모수 ${LISTED_TOTAL.toLocaleString("ko-KR")}곳(집계 괴리 제외).`,
+        poolNote: `공시기업 모수 ${LISTED_TOTAL.toLocaleString("ko-KR")}곳(집계 괴리 제외).`,
         poolTotal: raiseEligibleCount,
-        datasetName: `상장사 연봉 인상률 TOP ${topRaiseRows.length} (${DART_RANKING_YEAR})`,
+        datasetName: `공시기업 연봉 인상률 TOP ${topRaiseRows.length} (${DART_RANKING_YEAR})`,
         rows: topRaiseRows,
         // R2 B4 (2026-08-31) — 데이터 변수 기반 인용문 (하드코딩 금지). 순위 행(top1)만 사용 — 이상치 인용 금지
         citation: {
-          quote: `${DART_RANKING_YEAR} 사업연도 DART 공시 기준 평균연봉 인상률 1위 상장사는 ${top1.nameKo}로, 전년 대비 ${pct(top1.raisePct)}%(${fmtManwon(top1.prevSalaryManwon ?? 0)} → ${fmtManwon(top1.avgSalaryManwon)}) 올랐다. 비교 가능한 상장사 ${raiseEligibleCount.toLocaleString("ko-KR")}곳 기준이며 직원 수 급변·최저임금 미달·이상치 기업은 제외했다.`,
+          quote: `${DART_RANKING_YEAR} 사업연도 DART 공시 기준 평균연봉 인상률 1위 공시기업는 ${top1.nameKo}로, 전년 대비 ${pct(top1.raisePct)}%(${fmtManwon(top1.prevSalaryManwon ?? 0)} → ${fmtManwon(top1.avgSalaryManwon)}) 올랐다. 비교 가능한 공시기업 ${raiseEligibleCount.toLocaleString("ko-KR")}곳 기준이며 직원 수 급변·최저임금 미달·이상치 기업은 제외했다.`,
           quoteId: "top-raise-no1",
         },
       }}

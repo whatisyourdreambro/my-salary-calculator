@@ -9,7 +9,7 @@ export const financeGuides = [
  category: "투자",
  tags: ["ISA", "연금저축", "IRP", "절세 계좌"],
  level: "중급" as const,
- publishedDate: "2026-04-22",
+ publishedDate: "2026-04-22", modifiedDate: "2026-10-03",
  views: 0,
  content: `
 <p class="lead">"ISA 좋다고 해서 가입했는데 연금저축도 해야 한다고? IRP는 또 뭐야?" — 직장인 절세 계좌 3대장은 각자 역할이 다릅니다. <strong>제대로 이해하면 연 200만원+ 절세 가능</strong>.</p>
@@ -75,7 +75,7 @@ export const financeGuides = [
 
 <h2>⚠️ 주의사항</h2>
 <ul>
-<li><strong>ISA 만기 후 미인출</strong>: 자동 일반 계좌 전환되어 비과세 혜택 사라짐</li>
+<li><strong>ISA 만기 후 미인출</strong>: 만기 연장·해지·연금계좌 전환 등 가능한 절차와 처리기한을 금융회사에 확인해야 함. 만기 후의 과세·자산 처리 방식을 자동 전환으로 단정하지 말 것</li>
 <li><strong>연금저축 중도 해지</strong>: 그동안 받은 환급금 + 추가 세금까지 회수당함</li>
 <li><strong>IRP 30% 안전자산</strong>: 주식형 100%로 못 굴림. 일부 예금·채권 필수</li>
 <li><strong>ISA 손실 시</strong>: 만기에도 손실분은 비과세 의미 없음. 환매 시점 주의</li>
@@ -345,11 +345,12 @@ export const financeGuides = [
 
  {
  slug: "etf-portfolio-2026",
- title: "ETF 적립식 포트폴리오: 월 50만으로 10년 1억 만들기",
+ title: "ETF 적립식 포트폴리오: 월 50만·10년 투자 시뮬레이션",
  description: "S&P500·KOSPI·채권·금 ETF 4종 분산. 월 30~100만 적립 시뮬과 리밸런싱 주기, 위험 수준별 포트폴리오 추천.",
  category: "투자",
  tags: ["ETF 투자", "적립식", "S&P500", "분산 투자", "포트폴리오"],
  level: "중급" as const,
+ modifiedDate: "2026-10-03",
  publishedDate: "2026-04-08",
  views: 0,
  content: `
@@ -416,7 +417,7 @@ export const financeGuides = [
 <p>키움·삼성·미래에셋 모바일 앱으로 5분 내 가능. ISA 계좌 동시 개설 권장.</p>
 
 <h3>Step 2. ETF 종목 선정</h3>
-<p>한국 상장 미국 ETF 추천 (TIGER 미국S&P500, KODEX 미국S&P500). 환율 영향 줄이려면 KRX 상장 추천.</p>
+<p>한국 상장 미국 ETF 추천 (TIGER 미국S&P500, KODEX 미국S&P500). 환율 영향을 줄이려면 상장 시장뿐 아니라 환헤지 여부도 확인하세요.</p>
 
 <h3>Step 3. 자동 매수 설정</h3>
 <p>매월 급여일 다음날 자동 매수 설정. 시장 변동에 흔들리지 않게 자동화.</p>

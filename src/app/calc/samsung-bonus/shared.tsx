@@ -113,7 +113,17 @@ export function ResultNextLinks({
           <Link
             key={l.href + l.label}
             href={l.href}
-            onClick={() => trackGuideCTAClick(l.href, position ?? "next-action")}
+            onClick={(event) => {
+              trackGuideCTAClick(l.href, position ?? "next-action");
+              // 계산 조건도 해시에 있으므로 이 페이지의 개인 계산 이동만 URL 변경 없이 처리한다.
+              if (pathname !== "/calc/samsung-bonus" || l.href !== "#my-calc-title" ||
+                event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+              const target = document.getElementById("my-calc-title");
+              if (!target) return;
+              event.preventDefault();
+              target.focus({ preventScroll: true });
+              target.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" });
+            }}
             className={`group inline-flex items-center gap-1 text-xs font-bold border rounded-full px-3 py-1.5 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric ${l.primary ? "min-h-11 text-white bg-electric border-electric hover:bg-electric/90" : "text-electric bg-electric-5 border-electric-20 hover:bg-electric hover:text-white"}`}
           >
             {l.label}

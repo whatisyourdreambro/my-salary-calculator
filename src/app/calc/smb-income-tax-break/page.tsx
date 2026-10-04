@@ -135,7 +135,7 @@ export default function SmbIncomeTaxBreakPage() {
               <p>③ 감면세액 = 1,338,750원 × 90% = <strong>1,204,875원</strong> (한도 200만원 이내)</p>
               <p>④ 근로소득세액공제 726,625원 → 연동 축소 후 <strong>72,662원</strong> (× (1 − 90%))</p>
               <p>⑤ 결정세액 = 1,338,750 − 1,204,875 − 72,662 = <strong>약 61,213원</strong> (감면이 없었다면 612,125원)</p>
-              <p className="pt-1">→ 연간 절감액 약 <strong>60만 6,000원</strong>(지방소득세 10% 포함), 5년이면 약 303만원. 만약 ④의 축소를 빼먹으면 결정세액이 0원으로 잘못 계산되어 절감액이 60만원 이상 부풀려집니다.</p>
+              <p className="pt-1">→ 연간 절감액 약 <strong>60만 6,000원</strong>(지방소득세 10% 포함), 5년이면 약 303만원. 만약 ④의 축소를 빼먹으면 결정세액이 0원으로 잘못 계산되어 절감액이 과대 계산됩니다.</p>
             </div>
 
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-8 mb-4">감면 대상이 아닌 경우 — 업종·기관·사람</h2>

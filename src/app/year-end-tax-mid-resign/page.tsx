@@ -29,7 +29,7 @@ export const metadata: Metadata = buildPageMetadata({
   // 의도: 퇴사·이직자의 연말정산 처리 절차 (evergreen — 매년 반복 수요, 11월~5월 피크)
   title: "중도퇴사자 연말정산 — 퇴사 후 환급 방법·이직 합산·경정청구 총정리",
   description:
-    "퇴사하면 회사가 기본공제만 반영한 약식 연말정산을 합니다. 놓친 신용카드·의료비·월세 공제는 다음해 5월 종합소득세 확정신고 또는 경정청구(5년 이내)로 환급. 이직자는 전 직장 원천징수영수증 제출로 합산, 무직 기간 건강보험 임의계속가입(신청기한 2개월)까지 한 번에.",
+    "퇴사하면 회사가 확인 가능한 공제항목으로 약식 연말정산을 합니다. 놓친 신용카드·의료비·월세 공제는 다음해 5월 종합소득세 확정신고 또는 경정청구(5년 이내)로 환급. 이직자는 전 직장 원천징수영수증 제출로 합산, 무직 기간 건강보험 임의계속가입(신청기한 2개월)까지 한 번에.",
   path: "/year-end-tax-mid-resign",
   ogType: "article",
   publishedTime: "2026-08-15",
@@ -129,7 +129,7 @@ export default function YearEndTaxMidResignPage() {
           </h1>
           <PublishedMeta publishedDate="2026-08-15" updatedDate="2026-08-15" className="mb-2" />
           <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
-            퇴사하면 회사가 <strong>기본공제만 반영한 약식 연말정산</strong>을 하고 끝냅니다.
+            퇴사하면 회사가 <strong>확인 가능한 공제를 반영한 약식 연말정산</strong>을 하고 끝냅니다.
             신용카드·의료비·월세 공제가 통째로 빠진 상태 — 놓친 환급은{" "}
             <strong>다음해 5월 종합소득세 확정신고</strong>로 직접 되찾을 수 있고, 그마저
             놓쳤어도 <strong>5년 이내 경정청구</strong>가 가능합니다.
@@ -165,7 +165,7 @@ export default function YearEndTaxMidResignPage() {
             {
               step: "1단계 · 퇴사월",
               title: "회사가 약식 정산",
-              desc: "퇴사월 급여 지급 시 기본공제만 반영해 정산 (소득세법 제137조). 원천징수영수증 꼭 받아두기.",
+              desc: "퇴사월 급여 지급 시 확인 가능한 공제항목으로 정산 (소득세법 제137조). 원천징수영수증 꼭 받아두기.",
             },
             {
               step: "2단계 · 다음해 5월",
@@ -197,8 +197,8 @@ export default function YearEndTaxMidResignPage() {
             <strong>퇴직하는 달의 근로소득(급여)을 지급할 때</strong> 그 해 1월부터 퇴사월까지
             소득을 정산합니다. 문제는 이때 회사가{" "}
             <strong>증빙 없이 확인할 수 있는 항목만 반영</strong>한다는 점입니다. 근로자가
-            간소화 자료를 제출하지 않은 상태이므로 사실상 &lsquo;기본공제만 넣은
-            가계산&rsquo;에 가깝고, 그 결과 세금을 더 낸 상태로 끝나는 경우가 많습니다.
+            간소화 자료를 제출하지 않았다면 추가 증빙이 필요한 공제는 빠질 수 있습니다.
+            이후 증빙과 기납부세액을 확인해 과다 납부 여부를 점검하세요.
           </p>
           <p className="text-sm leading-7 text-muted-blue mt-4">
             국세청 상담센터 안내 기준, 회사는{" "}

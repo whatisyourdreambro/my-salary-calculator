@@ -177,7 +177,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "year-end-tax-2026",
   "title": "2026년 귀속 연말정산(2027년 1월) 공제 총정리 — 한도표·달라진 점",
-  "description": "바뀐 세법 완벽 반영! 남들은 모르는 소득공제, 세액공제 꿀팁으로 환급액 200만원 더 받는 법.",
+  "description": "2026년 귀속 소득공제·세액공제 한도와 적용 조건, 실제 환급액을 확인할 자료를 정리했습니다.",
   "category": "세금",
   "tags": [
    "연말정산",
@@ -186,9 +186,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-08-15",
+  "modifiedDate": "2026-10-03",
   "views": 200000,
   "lang": "ko",
-  "contentChars": 5384
+  "contentChars": 5436
  },
  {
   "slug": "comprehensive-income-tax",
@@ -218,9 +219,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "고급",
   "publishedDate": "2026-08-15",
+  "modifiedDate": "2026-10-03",
   "views": 89000,
   "lang": "ko",
-  "contentChars": 5030
+  "contentChars": 5124
  },
  {
   "slug": "capital-gains-tax-stock",
@@ -321,7 +323,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "donation-tax-credit",
   "title": "기부금 세액공제: 기부하고 세금 환급 ❤️",
-  "description": "정치자금, 종교단체, 고향사랑기부제... 100% 환급 꿀팁.",
+  "description": "기부금 공제율·한도 정리. 환급 전 남은 세액을 확인하세요.",
   "category": "세금",
   "tags": [
    "기부금",
@@ -336,7 +338,7 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "isa-account-guide",
-  "title": "만능통장 ISA: 3년 만기 1억 만들기 로드맵 💎",
+  "title": "만능통장 ISA: 납입 한도와 만기 활용 로드맵 💎",
   "description": "비과세 혜택 끝판왕 ISA 계좌 활용법. 중개형 vs 신탁형 비교부터 추천 포트폴리오까지.",
   "category": "투자",
   "tags": [
@@ -346,9 +348,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-08-15",
+  "modifiedDate": "2026-10-03",
   "views": 130000,
   "lang": "ko",
-  "contentChars": 5968
+  "contentChars": 6000
  },
  {
   "slug": "etf-investment-starter",
@@ -394,9 +397,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-08-15",
+  "modifiedDate": "2026-10-03",
   "views": 67000,
   "lang": "ko",
-  "contentChars": 5474
+  "contentChars": 5403
  },
  {
   "slug": "gold-investment-methods",
@@ -442,9 +446,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-08-15",
+  "modifiedDate": "2026-10-03",
   "views": 62000,
   "lang": "ko",
-  "contentChars": 5271
+  "contentChars": 5304
  },
  {
   "slug": "ipo-strategy",
@@ -490,9 +495,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-08-15",
+  "modifiedDate": "2026-10-03",
   "views": 71000,
   "lang": "ko",
-  "contentChars": 5353
+  "contentChars": 5403
  },
  {
   "slug": "jeonse-scam-prevention",
@@ -828,10 +834,11 @@ export const guideCards: GuideCardMeta[] = [
    "절세"
   ],
   "level": "중급",
+  "modifiedDate": "2026-10-03",
   "publishedDate": "2026-04-25",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2840
+  "contentChars": 2860
  },
  {
   "slug": "n-job-tax-2026",
@@ -916,14 +923,15 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "고급",
   "publishedDate": "2026-03-20",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2531
+  "contentChars": 2612
  },
  {
   "slug": "individual-vs-corporate-tax",
   "title": "개인사업자 vs 법인 전환 시점: 매출 얼마부터 법인이 유리할까?",
-  "description": "개인사업자 종합소득세(누진 6~45%) vs 법인세(9~24%). 매출 7천만원 돌파 시점부터 전환 검토. 4대보험·대표급여 시뮬.",
+  "description": "개인·법인의 세금은 대표 급여·배당·공제에 따라 달라집니다. 2026년 일반 영리법인 세율과 비교 조건을 정리합니다.",
   "category": "세금",
   "tags": [
    "개인사업자",
@@ -933,9 +941,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "고급",
   "publishedDate": "2026-03-15",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2229
+  "contentChars": 2347
  },
  {
   "slug": "year-end-tax-13-tips-2026",
@@ -1037,10 +1046,11 @@ export const guideCards: GuideCardMeta[] = [
    "협상"
   ],
   "level": "초급",
+  "modifiedDate": "2026-10-03",
   "publishedDate": "2026-04-01",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2826
+  "contentChars": 2829
  },
  {
   "slug": "career-change-mid-level",
@@ -1072,9 +1082,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-04-22",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2512
+  "contentChars": 2570
  },
  {
   "slug": "youth-jump-account-2026",
@@ -1129,7 +1140,7 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "etf-portfolio-2026",
-  "title": "ETF 적립식 포트폴리오: 월 50만으로 10년 1억 만들기",
+  "title": "ETF 적립식 포트폴리오: 월 50만·10년 투자 시뮬레이션",
   "description": "S&P500·KOSPI·채권·금 ETF 4종 분산. 월 30~100만 적립 시뮬과 리밸런싱 주기, 위험 수준별 포트폴리오 추천.",
   "category": "투자",
   "tags": [
@@ -1140,10 +1151,11 @@ export const guideCards: GuideCardMeta[] = [
    "포트폴리오"
   ],
   "level": "중급",
+  "modifiedDate": "2026-10-03",
   "publishedDate": "2026-04-08",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2765
+  "contentChars": 2781
  },
  {
   "slug": "real-estate-vs-stock",
@@ -1261,10 +1273,11 @@ export const guideCards: GuideCardMeta[] = [
    "30대 부동산"
   ],
   "level": "중급",
+  "modifiedDate": "2026-10-03",
   "publishedDate": "2026-04-25",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2697
+  "contentChars": 2721
  },
  {
   "slug": "loan-types-comparison-2026",
@@ -1312,10 +1325,11 @@ export const guideCards: GuideCardMeta[] = [
    "캐피탈"
   ],
   "level": "초급",
+  "modifiedDate": "2026-10-03",
   "publishedDate": "2026-04-10",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2590
+  "contentChars": 2642
  },
  {
   "slug": "rent-deposit-protection",
@@ -1353,8 +1367,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "retirement-planning-30s",
-  "title": "30대부터 시작하는 노후 준비: 60세 자산 10억 만들기",
-  "description": "30대부터 매달 50만 적립 + ETF 운용 시 60세 10억 시뮬. 국민연금·퇴직연금·개인연금 3층 보장 활용법.",
+  "title": "30대부터 시작하는 노후 준비: 적립액별 60세 자산 비교",
+  "description": "30세부터 월 50만원을 연 7%로 적립하는 가정과, 적립액별 60세 자산·3층 연금을 비교합니다.",
   "category": "기초",
   "tags": [
    "노후 준비",
@@ -1364,9 +1378,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-04-22",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2258
+  "contentChars": 2695
  },
  {
   "slug": "unemployment-insurance-2026",
@@ -1416,9 +1431,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-04-12",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2137
+  "contentChars": 2219
  },
  {
   "slug": "minimum-wage-impact-2026",
@@ -1433,9 +1449,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-04-08",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1500
+  "contentChars": 1510
  },
  {
   "slug": "p2p-investment-risk",
@@ -1467,9 +1484,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-04-02",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1986
+  "contentChars": 2320
  },
  {
   "slug": "career-break-financial-plan",
@@ -1483,6 +1501,7 @@ export const guideCards: GuideCardMeta[] = [
    "휴직"
   ],
   "level": "고급",
+  "modifiedDate": "2026-10-03",
   "publishedDate": "2026-03-28",
   "views": 0,
   "lang": "ko",
@@ -2039,9 +2058,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-14",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 6498
+  "contentChars": 6049
  },
  {
   "slug": "hbm-supercycle-worker-2026",
@@ -2096,10 +2116,11 @@ export const guideCards: GuideCardMeta[] = [
    "반도체"
   ],
   "level": "고급",
+  "modifiedDate": "2026-10-03",
   "publishedDate": "2026-05-13",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5885
+  "contentChars": 5938
  },
  {
   "slug": "year-end-tax-refund-secrets-2026",
@@ -2136,9 +2157,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-13",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3648
+  "contentChars": 3859
  },
  {
   "slug": "salary-negotiation-real-scripts-2026",
@@ -2345,9 +2367,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-16",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2482
+  "contentChars": 2573
  },
  {
   "slug": "health-insurance-2026-guide",
@@ -2364,9 +2387,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-05-16",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2891
+  "contentChars": 3007
  },
  {
   "slug": "retirement-planning",
@@ -2384,9 +2408,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-16",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3187
+  "contentChars": 3230
  },
  {
   "slug": "earned-income-credit-2026",
@@ -2473,7 +2498,7 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "Intermediate",
   "publishedDate": "2026-05-23",
-  "modifiedDate": "2026-09-09",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "en",
   "contentChars": 3561
@@ -2557,8 +2582,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "youth-leap-account-2026",
-  "title": "청년도약계좌 기존 가입자 — 정부기여금 144만원·만기 5,083만원",
-  "description": "2025-12-31 신규 가입 종료(청년미래적금 참고). 월 70만원 × 5년 = 원금 4,200만원 + 정부기여금 144만원 + 이자 비과세 99만원 절감 = 만기 5,083만원.",
+  "title": "청년도약계좌 기존 가입자 — 만기 금액과 비과세 효과 구분",
+  "description": "신규 가입 종료 후 기존 가입자의 만기 금액을 계산합니다. 원금·기여금·이자와 비과세로 줄어드는 세금을 구분하세요.",
   "category": "투자",
   "tags": [
    "청년도약계좌",
@@ -2570,9 +2595,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "초급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1374
+  "contentChars": 1479
  },
  {
   "slug": "isa-maturity-tax-saving-2026",
@@ -2710,7 +2736,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "credit-score-850-strategy-2026",
   "title": "신용점수 6개월 850 만드는 5가지 — 대출 금리 2~4%p 절감",
-  "description": "카드 사용액 한도 30% 이하·자동이체 6건·카뱅/토스 신용관리·마통 자제·카드론 즉시 정리. 750점 → 900점 시 5천만원 1년 대출 이자 약 175만원 절감.",
+  "description": "신용점수 관리 방법과 대출 심사 조건을 확인하세요. 금리·절감액은 금융기관·상품·개인 조건에 따라 달라집니다.",
   "category": "기초",
   "tags": [
    "신용점수",
@@ -2720,6 +2746,7 @@ export const guideCards: GuideCardMeta[] = [
    "2026"
   ],
   "level": "초급",
+  "modifiedDate": "2026-10-03",
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
@@ -2861,8 +2888,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "one-home-capital-gains-12eok-2026",
-  "title": "1세대 1주택 양도세 12억 비과세 — 15억 매도 시 세금 1,265만원",
-  "description": "1세대 1주택 + 보유 2년 + 거주 2년(조정) + 12억 이하 = 양도세 0원. 15억 매도 시 초과분 3억만 과세, 장기보유공제 48% 적용 시 약 1,265만원. 10년+10년 시 80% 공제.",
+  "title": "1세대 1주택 양도세 12억 비과세 — 15억 매도 시 예시 세금 약 1,666만원",
+  "description": "15억 매도·8억 취득 예시의 보유·거주 공제와 세액 계산",
   "category": "부동산",
   "tags": [
    "양도세",
@@ -2874,9 +2901,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "고급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1732
+  "contentChars": 1941
  },
  {
   "slug": "multi-home-heavy-tax-2026",
@@ -2987,10 +3015,11 @@ export const guideCards: GuideCardMeta[] = [
    "2026"
   ],
   "level": "초급",
+  "modifiedDate": "2026-10-03",
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1797
+  "contentChars": 1859
  },
  {
   "slug": "newlywed-asset-tax-saving-2026",
@@ -3031,8 +3060,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "youth-subscription-60points-2026",
-  "title": "청약 가점 60점+ 5년 안에 만드는 5가지 전략",
-  "description": "청약통장 만 17점·무주택 10점·부양가족 25점 = 60점. 청년주택드림 + 특별공급 활용.",
+  "title": "청약 가점 점검 5가지 — 가입기간·무주택·부양가족",
+  "description": "청약 가점은 가입기간·무주택·부양가족 요건으로 계산합니다. 납입횟수와 기간을 구분하세요.",
   "category": "부동산",
   "tags": [
    "청약",
@@ -3043,9 +3072,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 866
+  "contentChars": 1102
  },
  {
   "slug": "youth-housing-dream-account-detail-2026",
@@ -3142,7 +3172,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "newlywed-loan-limit-2x-2026",
   "title": "신혼부부 대출 한도 부부 합산 — 단독 대비 2배 가능",
-  "description": "부부 합산 DSR 40% + LTV 70%. 부부 연 1.2억 시 8.5억 대출 + 12억 주택 매수 가능. 공동 채무자 리스크 점검 필수.",
+  "description": "부부 연소득 1.2억·30년·4%의 단순 DSR 예시는 약 8.38억. 실제 규제·심사는 별도입니다.",
   "category": "부동산",
   "tags": [
    "신혼부부",
@@ -3154,9 +3184,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 889
+  "contentChars": 931
  },
  {
   "slug": "newlywed-joint-ownership-2026",
@@ -3197,7 +3228,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "parcel-vs-occupancy-right-tax-2026",
   "title": "분양권 vs 입주권 양도세 — 단기 양도세 70%·60% 점검",
-  "description": "분양권 단기 양도세 2년 미만 70%, 입주권 보유기간 합산(원조합원+본인). 8억 입주권 매도 시 양도세 약 6,800만원.",
+  "description": "분양권의 1년 기준 70%·60% 세율과 승계취득 입주권의 보유기간·공제 차이를 확인합니다.",
   "category": "부동산",
   "tags": [
    "분양권",
@@ -3208,9 +3239,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "고급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 932
+  "contentChars": 1105
  },
  {
   "slug": "temp-two-home-3year-rule-2026",
@@ -3279,10 +3311,11 @@ export const guideCards: GuideCardMeta[] = [
    "2026"
   ],
   "level": "고급",
+  "modifiedDate": "2026-10-03",
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 781
+  "contentChars": 821
  },
  {
   "slug": "commercial-office-capital-gains-2026",
@@ -3464,10 +3497,11 @@ export const guideCards: GuideCardMeta[] = [
    "2026"
   ],
   "level": "고급",
+  "modifiedDate": "2026-10-03",
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 975
+  "contentChars": 999
  },
  {
   "slug": "domestic-vs-overseas-etf-tax-2026",
@@ -3544,8 +3578,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "child-fund-gift-strategy-2026",
-  "title": "자녀 명의 펀드 — 18세 7,800만원 만들기",
-  "description": "자녀 0세에 2,000만원 비과세 증여 → 연 7% 운용 → 18세 7,800만원. 부모 종합소득과 분리 운용으로 세대 간 자산 이전.",
+  "title": "자녀 명의 펀드 — 18년 연 7% 가정 시 약 6,760만원",
+  "description": "2,000만원을 연 7%로 18년 운용하면 세금·수수료 전 약 6,760만원. 가정 수익률은 보장되지 않습니다.",
   "category": "투자",
   "tags": [
    "자녀",
@@ -3555,10 +3589,11 @@ export const guideCards: GuideCardMeta[] = [
    "2026"
   ],
   "level": "중급",
+  "modifiedDate": "2026-10-03",
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 849
+  "contentChars": 892
  },
  {
   "slug": "dividend-vs-growth-tax-2026",
@@ -3609,10 +3644,11 @@ export const guideCards: GuideCardMeta[] = [
    "2026"
   ],
   "level": "고급",
+  "modifiedDate": "2026-10-03",
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 799
+  "contentChars": 792
  },
  {
   "slug": "p2p-investment-tax-2026",
@@ -3706,8 +3742,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "business-trip-expense-tax-2026",
-  "title": "출장비 비과세 — 국내 1일 2만원·해외 1일 5만원",
-  "description": "실비 영수증 출장비 비과세. 일비 정액은 국내 2만원·해외 5만원까지. 초과분은 근로소득으로 과세.",
+  "title": "출장비 비과세 — 실비 변상 여부와 정액 일비 확인",
+  "description": "출장비의 실비변상 성격과 지급 규정·증빙으로 비과세 여부를 확인합니다.",
   "category": "연봉",
   "tags": [
    "출장비",
@@ -3717,10 +3753,11 @@ export const guideCards: GuideCardMeta[] = [
    "2026"
   ],
   "level": "초급",
+  "modifiedDate": "2026-10-03",
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 786
+  "contentChars": 816
  },
  {
   "slug": "child-tuition-tax-free-2026",
@@ -3881,10 +3918,11 @@ export const guideCards: GuideCardMeta[] = [
    "2026"
   ],
   "level": "고급",
+  "modifiedDate": "2026-10-03",
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 847
+  "contentChars": 913
  },
  {
   "slug": "other-income-tax-strategy-2026",
@@ -3906,8 +3944,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "personal-vs-corporation-tax-2026",
-  "title": "개인사업자 vs 법인 — 순이익 1.5억 이상 법인 유리",
-  "description": "개인 6~45% vs 법인 9~24% + 배당 15.4%. 매출 5억 + 순이익 1.5억 이상부터 법인 전환 검토.",
+  "title": "개인사업자 vs 법인 — 세금과 보수 구조 비교",
+  "description": "개인·법인의 세금과 보수 구조 비교. 2026년 일반 영리법인 세율은 10~25%, 배당 과세는 별도입니다.",
   "category": "세금",
   "tags": [
    "개인사업자",
@@ -3918,9 +3956,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "고급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1246
+  "contentChars": 1422
  },
  {
   "slug": "vat-refund-2026",
@@ -4008,9 +4047,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 881
+  "contentChars": 959
  },
  {
   "slug": "out-of-pocket-limit-2026",
@@ -4123,7 +4163,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "gift-vs-transfer-asset-2026",
   "title": "증여 vs 양도 — 자산별 최적 이전 방법",
-  "description": "10억 주택 단순 증여 2.4억 vs 부담부증여 1.1억. 현금은 증여, 부동산은 부담부증여, 주식은 저평가 시기 증여.",
+  "description": "10억 자산 이전의 전제와 세금을 비교합니다. 성인 자녀 단순 증여 예시는 2.25억(신고공제 전).",
   "category": "부동산",
   "tags": [
    "증여",
@@ -4134,9 +4174,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "고급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1009
+  "contentChars": 1068
  },
  {
   "slug": "family-trust-2026",
@@ -4231,7 +4272,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "health-insurance-continue-after-retire-2026",
   "title": "퇴직 후 임의계속가입 — 직장 보험료로 36개월 유지",
-  "description": "퇴직 후 2개월 이내 신청. 직장가입자 시절 본인+회사분 모두 본인 부담이지만 지역가입자 대비 50~70% 저렴.",
+  "description": "최초 지역보험료 납부기한에서 2개월이 지나기 전 신청. 보험료와 가입 조건을 비교합니다.",
   "category": "기초",
   "tags": [
    "임의계속가입",
@@ -4242,9 +4283,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 782
+  "contentChars": 854
  },
  {
   "slug": "child-lifecycle-savings-2026",
@@ -4314,9 +4356,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 952
+  "contentChars": 974
  },
  {
   "slug": "dismissal-procedure-2026",
@@ -4603,10 +4646,11 @@ export const guideCards: GuideCardMeta[] = [
    "2026"
   ],
   "level": "초급",
+  "modifiedDate": "2026-10-03",
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 718
+  "contentChars": 733
  },
  {
   "slug": "bonus-vs-incentive-vs-allowance-2026",
@@ -4729,8 +4773,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "sign-on-bonus-tax-2026",
-  "title": "사인온 보너스 5,000만 — 실수령 2,875만, 분할로 600만 절감",
-  "description": "입사 시 일회성 보너스. 한계세율 35%+ + 4대보험 + 지방세 = 약 43% 부담. 5,000만 일시 vs 2년 분할 시 600만 절감.",
+  "title": "사인온 보너스 5,000만원 — 세금과 분할 지급 조건 확인",
+  "description": "사인온 보너스는 연간 급여와 합산해 세금을 계산합니다. 분할 지급의 귀속연도·총보상·반환 조건을 함께 비교하세요.",
   "category": "연봉",
   "tags": [
    "사인온",
@@ -4741,14 +4785,15 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1037
+  "contentChars": 958
  },
  {
   "slug": "retention-bonus-3year-split-2026",
-  "title": "리텐션 보너스 1억 3년 분할 vs 일시 — 1,300만원 절감",
-  "description": "M&A·구조조정 후 잔존 보너스. 3년 일시 1억 38% vs 매년 3,300만 24~35% = 절감 1,300만. 분할 지급 협상 권장.",
+  "title": "리텐션 보너스 1억 — 분할 조건과 3년 총세금 비교",
+  "description": "리텐션 보너스의 세금은 귀속연도·연봉·공제에 따라 달라집니다. 3년의 총보상과 지급·반환 조건을 함께 비교하세요.",
   "category": "연봉",
   "tags": [
    "리텐션",
@@ -4759,9 +4804,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "고급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 974
+  "contentChars": 1201
  },
  {
   "slug": "executive-bonus-corporate-limit-2026",
@@ -4840,21 +4886,22 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "bonus-split-payout-1000-saving-2026",
-  "title": "성과급 1억 분할 지급 — 1년 vs 2년 = 1,000만 절감",
-  "description": "일시 지급 한계세율 38% vs 2년 분할 35%. 절감 1,000만. 인사·임원과 분할 협상 가능 시 적극 시도. 잔류 의무 부가 가능.",
+  "title": "성과급 1억 분할 지급 — 귀속연도와 2년 총세금 비교",
+  "description": "분할 지급의 세금은 귀속연도·급여·공제에 따라 달라집니다. 금액 확정일과 두 해의 세금·현금흐름을 함께 확인하세요.",
   "category": "세금",
   "tags": [
    "성과급",
    "분할지급",
-   "한계세율",
-   "협상",
+   "귀속연도",
+   "지급조건",
    "2026"
   ],
   "level": "중급",
   "publishedDate": "2026-05-23",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 951
+  "contentChars": 1175
  },
  {
   "slug": "bonus-health-4-percent-2026",
@@ -4907,10 +4954,11 @@ export const guideCards: GuideCardMeta[] = [
    "2026"
   ],
   "level": "고급",
+  "modifiedDate": "2026-10-03",
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1065
+  "contentChars": 1064
  },
  {
   "slug": "total-income-adjustment-bonus-2026",
@@ -5071,10 +5119,11 @@ export const guideCards: GuideCardMeta[] = [
    "2026"
   ],
   "level": "고급",
+  "modifiedDate": "2026-10-03",
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1173
+  "contentChars": 1240
  },
  {
   "slug": "performance-pay-complete-2026",
@@ -5093,9 +5142,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-06-16",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5340
+  "contentChars": 5420
  },
  {
   "slug": "chuseok-bonus-tax-2026",
@@ -5321,9 +5371,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-08-09",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 4647
+  "contentChars": 4670
  },
  {
   "slug": "public-company-salary-ranking-2026",
@@ -5340,9 +5391,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-08-09",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5177
+  "contentChars": 5216
  },
  {
   "slug": "it-service-big3-salary-2026",
@@ -5378,9 +5430,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-08-09",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5625
+  "contentChars": 5627
  },
  {
   "slug": "irp-pension-year-end-2026",
@@ -5397,9 +5450,10 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "중급",
   "publishedDate": "2026-08-09",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5879
+  "contentChars": 5935
  },
  {
   "slug": "minus-loan-vs-credit-loan-2026",
@@ -5516,8 +5570,9 @@ export const guideCards: GuideCardMeta[] = [
   ],
   "level": "고급",
   "publishedDate": "2026-09-03",
+  "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 12928
+  "contentChars": 12959
  }
 ];

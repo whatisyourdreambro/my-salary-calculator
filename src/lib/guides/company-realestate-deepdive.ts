@@ -392,6 +392,7 @@ export const companyRealEstateGuides = [
  category: "부동산",
  tags: ["내집 마련", "주택담보대출", "디딤돌", "청약", "30대 부동산"],
  level: "중급" as const,
+ modifiedDate: "2026-10-03",
  publishedDate: "2026-04-25",
  views: 0,
  content: `
@@ -422,7 +423,7 @@ export const companyRealEstateGuides = [
 <p>주택담보대출 한도는 LTV(담보가치)와 DSR(소득) 두 가지로 결정. <strong>둘 중 작은 금액이 한도</strong>.</p>
 <ul>
 <li>LTV: 주택가격 × 60~70% (지역·규제별)</li>
-<li>DSR: 연소득 × 40% ÷ 연 원리금 = 가능 대출액</li>
+<li>DSR = 연 원리금 ÷ 연소득 × 100%. 원리금 한도를 계산한 뒤 금리·만기로 대출원금을 역산</li>
 </ul>
 <p>예: 연봉 5,000만 → DSR 40% × 5,000만 = 연 2,000만 원리금 → 30년 4% 금리 시 약 3.5억 한도.</p>
 
@@ -669,6 +670,7 @@ export const companyRealEstateGuides = [
  category: "기초",
  tags: ["자동차 할부", "자동차 리스", "차량 구매", "캐피탈"],
  level: "초급" as const,
+ modifiedDate: "2026-10-03",
  publishedDate: "2026-04-10",
  views: 0,
  content: `
@@ -686,7 +688,7 @@ export const companyRealEstateGuides = [
 </tbody>
 </table>
 </div>
-<p>단순 비용만 보면 <strong>일시불 > 할부 > 리스</strong> 순. 하지만 절세·자금 흐름 고려하면 다름.</p>
+<p>표의 리스+인수 시나리오는 매도가를 1,000만원으로, 일시불·할부는 3,000만원으로 가정해 비교 조건이 다릅니다. 같은 보유 기간과 같은 매도가로 실비용을 다시 계산한 뒤 절세·자금 흐름을 함께 비교하세요.</p>
 
 <h2>💰 일시불의 진짜 장단점</h2>
 <h3>장점</h3>

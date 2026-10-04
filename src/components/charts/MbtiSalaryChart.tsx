@@ -46,7 +46,7 @@ export default function MbtiSalaryChart({ data }: { data: SalaryDatum[] }) {
  <Line
  type="monotone"
  dataKey="salary"
- name="예상 연봉(억)"
+ name="가상 예시 연봉(억)"
  stroke="#8884d8"
  strokeWidth={3}
  dot={{ r: 4 }}

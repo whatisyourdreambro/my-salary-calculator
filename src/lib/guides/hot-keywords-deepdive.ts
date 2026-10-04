@@ -501,6 +501,7 @@ export const hotKeywordsGuides = [
   tags: ["연말정산", "소득공제", "세액공제", "IRP", "연금저축", "월세공제", "2026"],
   level: "중급" as const,
   publishedDate: "2026-05-16",
+    modifiedDate: "2026-10-03",
   views: 0,
   content: `
 <p class="lead">이 글은 2026년 귀속 연말정산의 <strong>공제 항목</strong> 20가지를 소득공제·세액공제로 나눠 한 번에 훑어보는 목록입니다. 항목마다 정확한 한도와 계산은 <a href="/guides/year-end-tax-2026">2026년 귀속 연말정산 공제 총정리</a>에서, 항목별로 받을 수 있는 조건은 <a href="/guides/year-end-tax-13-tips-2026">연말정산 공제 조건 13가지</a>에서 확인하세요.</p>
@@ -509,15 +510,15 @@ export const hotKeywordsGuides = [
 <div class="bg-secondary/30 p-4 rounded-xl mt-4">
 <ul>
 <li><strong>소득공제:</strong> 과세 소득 자체를 줄임. 세율 높을수록 효과 큼. (예: 신용카드, 인적공제)</li>
-<li><strong>세액공제:</strong> 산출된 세금에서 직접 차감. 세율과 무관하게 정액 환급. (예: IRP, 의료비, 교육비)</li>
+<li><strong>세액공제:</strong> 산출된 세금에서 법정 공제액을 차감. 적용 한도와 남은 세액을 확인하고, 실제 환급은 기납부세액과 결정세액의 차이로 계산. (예: IRP, 의료비, 교육비)</li>
 <li><strong>결론:</strong> 세액공제가 일반적으로 더 확실하고 예측 가능. 고소득자는 소득공제도 효과 큼.</li>
 </ul>
 </div>
 
 <h2>🥇 TOP 5 — 세액공제 효과 최강</h2>
 <ol>
-<li><strong>IRP + 연금저축 (최대 148만원 환급):</strong> 연간 900만원 한도 납입 시 13.2~16.5% 세액공제. 총급여 5,500만원 이하라면 16.5% 적용으로 최대 148.5만원 환급.</li>
-<li><strong>월세 세액공제 (최대 170만원 환급):</strong> 총급여 8,000만원 이하(종합소득 7,000만원 이하) 무주택 세대주. 연 1,000만원 한도의 15%(총급여 5,500만원 초과)~17%(5,500만원 이하). 집주인 동의 불필요.</li>
+<li><strong>IRP + 연금저축 (최대 세액공제액 확인):</strong> 연간 900만원 한도 납입 시 13.2~16.5% 세액공제. 총급여 5,500만원 이하라면 지방소득세 효과 포함 16.5%로 계산한 최대 세액공제액은 148.5만원이며, 실제 적용액과 환급액은 남은 세액·기납부세액에 따라 달라집니다.</li>
+<li><strong>월세 세액공제 (최대 170만원 공제):</strong> 총급여 8,000만원 이하(종합소득 7,000만원 이하) 무주택 세대주. 연 1,000만원 한도의 15%(총급여 5,500만원 초과)~17%(5,500만원 이하). 집주인 동의 불필요.</li>
 <li><strong>의료비 세액공제:</strong> 총급여의 3% 초과분의 15%. 본인·부양가족 합산. 본인·장애인·65세 이상 의료비는 한도 없음.</li>
 <li><strong>교육비 세액공제:</strong> 본인 교육비 15%(한도 없음), 자녀 교육비 15%(1인 한도 300만원), 대학생 자녀 15%(1인 한도 900만원).</li>
 <li><strong>기부금 세액공제:</strong> 특례·일반 기부금 15%(1,000만원 초과분 30%). 노동조합비 포함.</li>
@@ -562,7 +563,7 @@ export const hotKeywordsGuides = [
   category: "기초",
   tags: ["건강보험", "건강보험료", "피부양자", "지역가입자", "본인부담상한제", "2026"],
   level: "초급" as const,
-  publishedDate: "2026-05-16",
+  publishedDate: "2026-05-16", modifiedDate: "2026-10-03",
   views: 0,
   content: `
 <p class="lead">건강보험은 대한민국 국민이라면 누구나 가입해야 하는 의무 보험입니다. 2026년 건강보험료율은 7.19%이며, 직장가입자와 지역가입자의 계산 방식이 완전히 다릅니다. 나에게 유리한 가입 방식과 절세 방법을 알아보겠습니다.</p>
@@ -570,7 +571,7 @@ export const hotKeywordsGuides = [
 <h2>📊 직장가입자 vs 지역가입자 보험료 차이</h2>
 <table class="w-full text-sm border-collapse mt-4">
 <tr class="bg-primary/10"><th class="p-2 text-left">구분</th><th class="p-2">직장가입자</th><th class="p-2">지역가입자</th></tr>
-<tr class="border-b"><td class="p-2 font-bold">부과 기준</td><td class="p-2">보수월액(급여)</td><td class="p-2">소득+재산+자동차</td></tr>
+<tr class="border-b"><td class="p-2 font-bold">부과 기준</td><td class="p-2">보수월액(급여)</td><td class="p-2">소득+재산 (자동차 보험료는 2024년 2월 폐지)</td></tr>
 <tr class="border-b"><td class="p-2 font-bold">보험료율</td><td class="p-2">7.19% (절반 회사 부담)</td><td class="p-2">소득 7.19% + 재산점수</td></tr>
 <tr class="border-b"><td class="p-2 font-bold">실부담률</td><td class="p-2">약 3.595% (+ 장기요양)</td><td class="p-2">전액 본인 부담</td></tr>
 <tr><td class="p-2 font-bold">유리한 경우</td><td class="p-2">고소득 직장인</td><td class="p-2">소득·재산이 낮은 경우</td></tr>
@@ -595,9 +596,9 @@ export const hotKeywordsGuides = [
 <h2>🔄 임의계속가입 — 퇴직 후 보험료 아끼는 방법</h2>
 <p>퇴직 후 지역가입자로 전환되면 보험료가 크게 오를 수 있습니다. 임의계속가입으로 최대 36개월간 직장가입자 수준의 보험료를 유지할 수 있습니다.</p>
 <ul>
-<li><strong>신청 기한:</strong> 퇴직일로부터 2개월 이내 건강보험공단에 신청</li>
+<li><strong>신청 기한:</strong> 지역가입 전환 후 최초 지역보험료 고지서의 납부기한에서 2개월이 지나기 전에 건강보험공단에 신청</li>
 <li><strong>유지 기간:</strong> 최대 36개월</li>
-<li><strong>보험료:</strong> 퇴직 전 보수월액 기준 보험료 (회사 부담분까지 본인 납부)</li>
+<li><strong>보험료:</strong> 최근 12개월 보수월액의 평균을 기준으로 산정하며 본인이 전액 부담합니다. 고시에 따른 경감도 적용될 수 있어 직장 시절 본인 부담의 두 배로 단정하지 말고 지역보험료와 비교합니다.</li>
 <li><strong>효과:</strong> 고소득자였다면 보험료가 오히려 낮아질 수 있음</li>
 </ul>
 
@@ -631,6 +632,7 @@ export const hotKeywordsGuides = [
   tags: ["노후준비", "연금", "퇴직연금", "IRP", "연금저축", "국민연금", "FIRE"],
   level: "중급" as const,
   publishedDate: "2026-05-16",
+    modifiedDate: "2026-10-03",
   views: 0,
   content: `
 <p class="lead">노후 준비는 이르게 시작할수록 유리합니다. 대한민국의 노후 보장은 <strong>3층 연금 구조</strong>(국민연금 + 퇴직연금 + 개인연금)로 이루어집니다. 각 층의 역할과 최대화 전략을 알면 은퇴 후 월 수입이 크게 달라집니다.</p>
@@ -664,7 +666,7 @@ export const hotKeywordsGuides = [
 </ul>
 <div class="bg-primary/5 p-4 rounded-xl mt-4">
 <strong>절세 황금 루트:</strong><br/>
-ISA 3년 납입 → 만기 수령액을 IRP·연금저축으로 이전 → 이전 금액의 10% (최대 300만원) 추가 세액공제<br/>
+ISA 3년 납입 → 만기 수령액을 IRP·연금저축으로 이전 → 이전 금액의 10% (최대 300만원)만큼 세액공제 대상 납입한도 확대 — 실제 세액공제액은 적용 공제율과 남은 세액에 따라 계산<br/>
 이 루트를 활용하면 연간 최대 세액공제 합산 가능
 </div>
 

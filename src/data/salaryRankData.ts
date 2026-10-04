@@ -1,5 +1,5 @@
 // 연령대별 연봉 백분위 데이터 (단위: 만원)
-// 통계청·고용노동부 자료 기반 추정치 (참고용)
+// 자체 참고표 (공식 원자료·기준연도 미검증)
 
 export const SALARY_PERCENTILES: Record<string, number[]> = {
   // [상위 1%, 상위 5%, 상위 10%, 상위 25%, 상위 50%, 상위 75%]
@@ -31,7 +31,7 @@ export const TIER_CONFIG = [
   { percentile: 5,   name: "GRANDMASTER",  color: "from-yellow-400 to-orange-400", icon: "👑", message: "어딜 가나 대우받는 최상위권!" },
   { percentile: 10,  name: "MASTER",       color: "from-red-500 to-orange-400",   icon: "🦁", message: "성공한 커리어의 상징입니다." },
   { percentile: 25,  name: "DIAMOND",      color: "from-sky-400 to-blue-500",     icon: "💠", message: "남부럽지 않은 고연봉자!" },
-  { percentile: 50,  name: "PLATINUM",     color: "from-teal-400 to-green-400",   icon: "☘️", message: "대한민국 평균 이상입니다." },
+  { percentile: 50,  name: "PLATINUM",     color: "from-teal-400 to-green-400",   icon: "☘️", message: "이 참고표의 중위값 이상입니다." },
   { percentile: 75,  name: "GOLD",         color: "from-yellow-500 to-amber-400", icon: "🥇", message: "성실하게 미래를 쌓아가는 중!" },
   { percentile: 100, name: "SILVER",       color: "from-slate-300 to-slate-400",  icon: "🥈", message: "무한한 잠재력을 가진 시작!" },
 ];

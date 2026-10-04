@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${c.nameKo} 평균연봉 ${fmtManwon(c.avgSalaryManwon)} — ${c.fiscalYear} 사업보고서 공시`,
     description: `${c.nameKo}의 ${c.fiscalYear} 사업연도 공시 평균연봉은 ${fmtManwon(
       c.avgSalaryManwon
-    )}(직원 ${c.employeeCount.toLocaleString("ko-KR")}명)입니다. 월 실수령액 환산, 상장사 ${c.listedTotal.toLocaleString(
+    )}(직원 ${c.employeeCount.toLocaleString("ko-KR")}명)입니다. 월 실수령액 환산, 공시기업 ${c.listedTotal.toLocaleString(
       "ko-KR"
     )}곳 중 순위, ${c.industryKo} 업종 내 위치까지 한 번에 확인하세요.`,
     path: `/salary-db/listed/${c.stockCode}`,
@@ -91,7 +91,7 @@ export default function ListedCompanyPage({ params }: Props) {
   const crumbs = [
     { name: "홈", path: "/" },
     { name: "회사 연봉 DB", path: "/salary-db" },
-    { name: "상장사 공시 연봉", path: "/salary-db/listed" },
+    { name: "공시기업 공시 연봉", path: "/salary-db/listed" },
     { name: c.nameKo, path },
   ];
 
@@ -112,9 +112,9 @@ export default function ListedCompanyPage({ params }: Props) {
       question: `${c.nameKo} 연봉은 업계에서 어느 수준인가요?`,
       answer:
         c.industryTotal >= 5
-          ? `${c.fiscalYear} 공시 기준 상장사 ${c.listedTotal.toLocaleString("ko-KR")}곳 중 ${c.listedRank.toLocaleString(
+          ? `${c.fiscalYear} 공시 기준 공시기업 ${c.listedTotal.toLocaleString("ko-KR")}곳 중 ${c.listedRank.toLocaleString(
               "ko-KR"
-            )}위, ${c.industryKo} 업종 상장사 ${c.industryTotal.toLocaleString("ko-KR")}곳 중 ${
+            )}위, ${c.industryKo} 업종 공시기업 ${c.industryTotal.toLocaleString("ko-KR")}곳 중 ${
               c.industryRank
             }위입니다.${
               vsIndustry != null
@@ -123,7 +123,7 @@ export default function ListedCompanyPage({ params }: Props) {
                   }% 수준입니다.`
                 : ""
             }`
-          : `${c.fiscalYear} 공시 기준 상장사 ${c.listedTotal.toLocaleString("ko-KR")}곳 중 ${c.listedRank.toLocaleString(
+          : `${c.fiscalYear} 공시 기준 공시기업 ${c.listedTotal.toLocaleString("ko-KR")}곳 중 ${c.listedRank.toLocaleString(
               "ko-KR"
             )}위입니다.`,
     },
@@ -158,7 +158,7 @@ export default function ListedCompanyPage({ params }: Props) {
       />
 
       <div className="page-width pt-24 pb-3">
-        <Breadcrumbs path={path} leafName={c.nameKo} overrides={{ listed: "상장사 공시 연봉" }} />
+        <Breadcrumbs path={path} leafName={c.nameKo} overrides={{ listed: "공시기업 공시 연봉" }} />
       </div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -254,11 +254,11 @@ export default function ListedCompanyPage({ params }: Props) {
         <section className="mb-8 rounded-2xl border border-canvas-200 bg-white p-5 sm:p-6" aria-labelledby="rank-heading">
           <h2 id="rank-heading" className="text-lg sm:text-xl font-black text-navy mb-3 inline-flex items-center gap-2">
             <TrendingUp size={18} className="text-electric" aria-hidden="true" />
-            상장사 전체·업종 내 위치
+            공시기업 전체·업종 내 위치
           </h2>
           <ul className="space-y-2 text-sm leading-7 text-muted-blue">
             <li>
-              · {c.fiscalYear} 공시 상장사 <strong className="text-navy">{c.listedTotal.toLocaleString("ko-KR")}곳</strong>{" "}
+              · {c.fiscalYear} 공시 공시기업 <strong className="text-navy">{c.listedTotal.toLocaleString("ko-KR")}곳</strong>{" "}
               중 평균연봉 <strong className="text-primary">{c.listedRank.toLocaleString("ko-KR")}위</strong>
             </li>
             {c.industryTotal >= 5 && (
@@ -274,7 +274,7 @@ export default function ListedCompanyPage({ params }: Props) {
                 ) : (
                   <>{c.industryKo} 업종</>
                 )}{" "}
-                상장사 <strong className="text-navy">{c.industryTotal}곳</strong> 중{" "}
+                공시기업 <strong className="text-navy">{c.industryTotal}곳</strong> 중{" "}
                 <strong className="text-primary">{c.industryRank}위</strong>
                 {vsIndustry != null && (
                   <> — 업종 가중 평균({fmtManwon(c.industryWeightedAvgManwon!)}) 대비{" "}
@@ -361,7 +361,7 @@ export default function ListedCompanyPage({ params }: Props) {
         {neighbors.length > 0 && (
           <section className="mb-8" aria-labelledby="neighbors-heading">
             <h2 id="neighbors-heading" className="text-lg font-black text-navy mb-4">
-              평균연봉이 비슷한 상장사
+              평균연봉이 비슷한 공시기업
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {neighbors.map((n) => (
@@ -420,7 +420,7 @@ export default function ListedCompanyPage({ params }: Props) {
             금융감독원 전자공시시스템(DART) {c.fiscalYear} 사업연도 사업보고서의 「직원 등의
             현황」 기준 — 연간 급여총액 ÷ 직원 수(등기임원 제외). 기간제·단시간 근로자 포함
             범위는 회사 공시에 따르며, <strong className="text-navy">신입 초봉이 아닙니다</strong>.
-            성과급 지급 시점에 따라 연도별 변동이 있을 수 있습니다. 데이터 기준일: {DART_LITE_DATE}.{" "}
+            성과급 지급 시점에 따라 연도별 변동이 있을 수 있습니다. 종목코드가 기록된 공시기업 기준이며, 현재 상장 여부를 보증하지 않습니다. 데이터 기준일: {DART_LITE_DATE}.{" "}
             <a
               href={dartUrl}
               target="_blank"

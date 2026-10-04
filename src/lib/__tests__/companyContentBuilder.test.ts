@@ -9,16 +9,43 @@ import { describe, expect, it } from "vitest";
 import { allCompanies } from "@/data/companies";
 import {
   getIndustryBenchmark,
+  getBenefitsValue,
   getIndustryRanking,
   getOverallRank,
   getSimilarSalaryCompanies,
   overallRankLabel,
 } from "@/lib/companyContentBuilder";
+import { normalizeIndustry } from "@/lib/salary-data/industryTaxonomy";
 
 const domestic = allCompanies.filter((c) => !c.isGlobal);
 const globals = allCompanies.filter((c) => c.isGlobal);
 const entryTotal = (c: (typeof allCompanies)[number]) =>
   c.salary.entry.base + (c.salary.entry.incentive.avgAmount || 0);
+
+describe("getBenefitsValue — domestic pool membership", () => {
+  it("global reference values do not change the domestic industry average", () => {
+    for (const company of globals) {
+      const result = getBenefitsValue(company);
+      if (!result?.industryAvg) continue;
+      const peers = domestic.filter(
+        (peer) => normalizeIndustry(peer.industry) === normalizeIndustry(company.industry),
+      ).map((peer) => getBenefitsValue(peer)?.totalAnnualValue ?? 0).filter((value) => value > 0);
+      expect(result.industryAvg, company.id).toBe(
+        Math.round(peers.reduce((sum, value) => sum + value, 0) / peers.length),
+      );
+    }
+  });
+
+  it("a domestic member is excluded from its own peer average", () => {
+    const company = domestic.find((item) => item.id === "samsung-electronics")!;
+    const peers = domestic.filter(
+      (peer) => peer.id !== company.id && normalizeIndustry(peer.industry) === normalizeIndustry(company.industry),
+    ).map((peer) => getBenefitsValue(peer)?.totalAnnualValue ?? 0).filter((value) => value > 0);
+    expect(getBenefitsValue(company)?.industryAvg).toBe(
+      Math.round(peers.reduce((sum, value) => sum + value, 0) / peers.length),
+    );
+  });
+});
 
 describe("isGlobal 태깅", () => {
   it("글로벌 기업이 존재하고 nvidia가 포함된다", () => {

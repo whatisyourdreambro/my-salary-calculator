@@ -314,7 +314,7 @@
     },
     "youth-subscription-60points-2026": {
       "h2": [
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 5년 안에 가점 60점+ 만들기</h2>"
+        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 현재 인정되는 기간과 자격 점검</h2>"
       ],
       "split": []
     },
@@ -1156,8 +1156,8 @@
     "sign-on-bonus-tax-2026": {
       "h2": [
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 사인온 일반 구조</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 시뮬 — 사인온 5,000만원 일시 지급</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 절세 — 분할 지급 협상</h2>"
+        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 사인온 5,000만원 — 연간 세금 차이를 계산</h2>",
+        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">🎯 분할 지급 — 같은 총보상과 귀속연도로 비교</h2>"
       ],
       "split": [
         1
@@ -1166,7 +1166,7 @@
     "retention-bonus-3year-split-2026": {
       "h2": [
         "<h2 class=\"mt-12 text-2xl font-bold text-primary\">📋 리텐션 보너스 유형</h2>",
-        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 절세 — 3년 분할 권장</h2>"
+        "<h2 class=\"mt-12 text-2xl font-bold text-primary\">💰 분할 지급 — 같은 3년의 총세금을 비교</h2>"
       ],
       "split": [
         1

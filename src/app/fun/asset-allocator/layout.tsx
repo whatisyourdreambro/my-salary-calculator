@@ -4,7 +4,7 @@ import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "자산 배분 마스터 (Asset Allocator) - 투자 미니게임",
- description: "떨어지는 금·주식·달러·코인을 잡고 세금폭탄을 피하는 60초 투자 미니게임. 회사가 정해주지 않은 내 자산 분배 본능을 무료로 시험해보세요. 친구와 점수 공유 가능.",
+ description: "떨어지는 금·다이아·동전을 잡고 폭탄을 피하는 60초 미니게임. 실제 투자나 자산 배분을 평가하는 도구가 아닌 재미용 게임입니다. 친구와 점수 공유 가능.",
  path: "/fun/asset-allocator",
  keywords: ["투자게임", "주식게임", "미니게임", "재테크게임", "자산관리", "순발력게임"],
 });

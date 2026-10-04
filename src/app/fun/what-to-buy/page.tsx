@@ -54,7 +54,7 @@ export default function WhatToBuyPage() {
  플렉스(FLEX) 계산기
  </h1>
  <p className="text-faint-blue font-medium">
- 이 돈으로 무엇을 살 수 있을까요?
+ 미리 정한 예시 가격으로 이 돈을 환산해보세요. 실제 판매가격과 구매 조건은 다를 수 있습니다.
  </p>
  </div>
 

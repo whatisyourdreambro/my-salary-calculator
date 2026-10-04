@@ -981,8 +981,8 @@ const INVESTMENT: CalculatorDef[] = [
  compute: ({ goal, monthly, rate }) => {
  const months = monthsToGoal(goal, monthly, monthlyRate(rate));
  return {
- primary: { label: "도달 시간", value: months / 12, suffix: "년" },
- secondary: [{ label: "총 월수", value: Math.round(months), suffix: "개월" }],
+ primary: { label: "연속 기간 추정", value: months / 12, suffix: "년" },
+ secondary: [{ label: "달성 납입 개월수 (올림)", value: Math.ceil(months), suffix: "개월" }],
  };
  },
  },
@@ -1187,12 +1187,18 @@ const INVESTMENT: CalculatorDef[] = [
  ],
  compute: ({ stockPct, bondPct, cashPct }) => {
  const total = stockPct + bondPct + cashPct;
+ if (total === 0) return {
+ primary: { label: "예상 연 수익률", value: 0, suffix: "%" },
+ secondary: [{ label: "총 비중 합계", value: 0, suffix: "%" }, { label: "주식 가정 수익률 기여분", value: 0, suffix: "%" }],
+ status: "invalid",
+ note: "비중 합계가 0입니다. 비중을 입력해 주세요.",
+ };
  const expected = (stockPct * 8 + bondPct * 4 + cashPct * 2.5) / total;
  return {
  primary: { label: "예상 연 수익률", value: expected, suffix: "%" },
  secondary: [
  { label: "총 비중 합계", value: total, suffix: "%" },
- { label: "주식 8% × 비중", value: (stockPct * 8) / 100, suffix: "%" },
+ { label: "주식 가정 수익률 기여분", value: (stockPct * 8) / total, suffix: "%" },
  ],
  note: "주식 8%·채권 4%·현금 2.5% 가정. 비중 100% 합계가 되도록 조정.",
  };

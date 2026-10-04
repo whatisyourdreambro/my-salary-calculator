@@ -70,7 +70,7 @@ export default function Calc2026Page() {
  </div>
  <h3 className="font-bold text-navy">최신 보험 요율</h3>
  <p className="text-xs text-faint-blue leading-relaxed">
- {CURRENT_RATES_YEAR}년 확정 요율(국민연금 {CURRENT_RATE_LABELS.pension}, 건강보험 {CURRENT_RATE_LABELS.health})을 반영하여 가장 정확한 실수령액을 산출합니다.
+ {CURRENT_RATES_YEAR}년 확정 요율(국민연금 {CURRENT_RATE_LABELS.pension}, 건강보험 {CURRENT_RATE_LABELS.health})을 반영하여 예상 실수령액을 산출합니다.
  </p>
  </div>
  
@@ -80,7 +80,7 @@ export default function Calc2026Page() {
  </div>
  <h3 className="font-bold text-navy">연봉 티어 시스템</h3>
  <p className="text-xs text-faint-blue leading-relaxed">
- 단순 금액 확인에서 끝내지 마세요. 내 연봉이 대한민국 상위 몇 %인지 티어 카드로 확인하고 소셜 미디어에 공유해보세요.
+ 단순 금액 확인에서 끝내지 마세요. 내 연봉의 자체 참고표 상위 비율을 티어 카드로 확인하고 소셜 미디어에 공유해보세요.
  </p>
  </div>
 

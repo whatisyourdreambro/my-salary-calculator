@@ -172,7 +172,7 @@ export default function MemeCoinPage() {
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-green-500/30 bg-green-500/10 text-green-400 text-xs font-bold mb-5 animate-pulse">
             <span className="w-1.5 h-1.5 bg-green-400 rounded-full" />
-            실시간 시장 현황: 극도의 탐욕 🔥
+            가상 시장 시나리오: 극도의 탐욕 🔥
           </div>
           <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-3">
             <span className="text-white">CRYPTO</span>{" "}

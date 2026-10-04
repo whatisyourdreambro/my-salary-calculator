@@ -15,6 +15,7 @@ const DeductionBarChart = dynamic(() => import("@/components/charts/DeductionBar
 import { AdvancedSettings } from "@/app/types";
 import SalaryTable from "@/components/SalaryTable";
 import TableInteraction from "@/components/TableInteraction";
+import { clampTablePage, normalizeTableSearch, safeTablePageCount } from "@/lib/tableQueryState";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -66,21 +67,19 @@ export default function InteractiveTable({
  // ?page 는 1 이상의 정수만 허용한다. 종전에는 ?page=abc 가 NaN 이 되어
  // slice(NaN, NaN) → 빈 표가 렌더되고 페이지네이션에 "NaN / 5" 가 노출됐다
  // (2026-09-06 전수검사 실브라우저 실측).
- const pageRaw = Number(searchParams.get("page") ?? "1");
- const page =
- Number.isFinite(pageRaw) && pageRaw >= 1 ? Math.floor(pageRaw) : 1;
- const searchTerm = searchParams.get("searchTerm") || "";
+  const searchTerm = normalizeTableSearch(searchParams.get("searchTerm"));
  const itemsPerPage = 100;
 
  const filteredData = useMemo(() =>
  searchTerm
  ? allData.filter((row) =>
- row.preTax.toString().includes(searchTerm.replace(/,/g, ""))
+ row.preTax.toString().includes(searchTerm)
  )
  : allData,
  [allData, searchTerm]);
 
- const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const totalPages = safeTablePageCount(Math.ceil(filteredData.length / itemsPerPage));
+  const page = clampTablePage(searchParams.get("page"), totalPages);
  const paginatedData = filteredData.slice(
  (page - 1) * itemsPerPage,
  page * itemsPerPage
@@ -313,9 +312,12 @@ export default function InteractiveTable({
  />
  </div>
 
- <SalaryTable
- headers={tableHeaders}
- data={paginatedData}
+  {filteredData.length === 0 && (
+  <p className="mb-4 text-sm text-muted-foreground" role="status">검색 결과가 없습니다. 검색어를 바꿔보세요.</p>
+  )}
+  <SalaryTable
+  headers={tableHeaders}
+  data={paginatedData}
  highlightRows={highlightRows}
  unit="원"
  linkColumnBaseHref={linkColumnBaseHref}

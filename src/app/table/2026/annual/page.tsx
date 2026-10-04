@@ -40,12 +40,12 @@ export const metadata: Metadata = buildPageMetadata({
 const tableHeaders = [
   { key: "preTax", label: "연봉" },
   { key: "monthlyNet", label: "2026 예상 월 실수령" },
-  { key: "changeValue", label: "변화값 (전년비)" },
+  { key: "changeValue", label: "보험 조건 비교 (2025比)" },
   { key: "totalDeduction", label: "공제총액" },
   { key: "pension", label: "국민연금" },
-  { key: "health", label: "건강보험" },
+  { key: "health", label: "건강보험·장기요양" },
   { key: "employment", label: "고용보험" },
-  { key: "incomeTax", label: "소득세" },
+  { key: "incomeTax", label: "소득세·지방세" },
 ];
 
 const FAQ_ITEMS = [
@@ -146,10 +146,8 @@ function AnnualTable() {
               {" "}{SALARY_MODEL_2026.incomeTaxMethod} {SALARY_MODEL_2026.limitation}
             </p>
             <p className="text-faint-blue leading-relaxed mb-4">
-              2026년에는 국민연금(4.5→4.75%)·건강보험(3.545→3.595%) 요율이 인상되어, 동일 연봉이라도
-              전년 대비 실수령액이 소폭 감소합니다. 위 표의{" "}
-              <strong className="text-navy">변화값(전년비)</strong> 항목에서 감소폭을
-              확인하세요.
+              변화값은 같은 급여·비과세 조건에서 2025년과 2026년의 보험 요율·국민연금 기준소득월액 상하한을 비교한 값입니다.
+              두 계산 모두 같은 2026년 근로소득 간이세액표를 사용하므로, 실제 전년도 급여명세와의 차이를 뜻하지 않습니다.
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
               {/* 수치는 generateData2026(상세 페이지와 동일 엔진·식대 20만 기준) 결과와 동기 — 2026-08-30 통일, 2026-09-25 간이세액표 엔진으로 재산출 */}

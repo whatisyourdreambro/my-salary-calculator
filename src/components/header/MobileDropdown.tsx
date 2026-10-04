@@ -2,11 +2,11 @@
 //
 // 모바일 헤더의 드롭다운 컴포넌트. description + badge 지원.
 //
-// SEO: 아코디언 패널은 항상 DOM에 렌더하고 열림/닫힘은 CSS(grid-rows 0fr↔1fr +
-// visibility/opacity)로만 제어한다. 조건부 렌더({isOpen && ...})로 되돌리면
-// SSR HTML에서 링크가 사라져 크롤러가 내비 링크를 못 보게 되므로 금지.
-// 유일한 예외 — deferPanel(2026-09-23 Worker CPU 한도 대응): edge SSR 경로에서만
-// 하이드레이션 전까지 패널 내용을 비운다(DesktopDropdown 주석 참고). 패널 요소·id 는 유지.
+// 아코디언 골격·id는 항상 렌더하고 열림/닫힘은 CSS로 제어한다.
+// Header의 데스크톱 메뉴는 정적 페이지에서 모든 목적지를 SSR한다.
+// 따라서 동일 링크가 반복되는 모바일 dialog는 처음 열기 전까지 deferPanel로 내용만 미룬다.
+// Edge SSR 경로의 초기 지연도 같은 prop을 사용한다. 메뉴를 열면 각 패널의
+// 링크가 모두 렌더되므로 카테고리 전환·키보드 탐색·현재 경로 표시는 그대로 유지된다.
 
 "use client";
 
@@ -20,7 +20,7 @@ interface MobileDropdownProps {
   pathname: string | null;
   onClose: () => void;
   locale?: "ko" | "en";
-  /** true 면 패널 내용을 렌더하지 않음(edge SSR 경로의 하이드레이션 전 단계 전용) */
+  /** 모바일 메뉴를 처음 열기 전 또는 Edge SSR 초기 상태에서는 중복 패널 내용만 렌더하지 않는다. */
   deferPanel?: boolean;
 }
 
@@ -80,7 +80,7 @@ export default function MobileDropdown({ item, pathname, onClose, locale = "ko",
         </span>
       </button>
 
-      {/* 패널 — 항상 DOM에 렌더 (SSR/크롤러 링크 노출), grid-rows 0fr↔1fr로 높이 애니메이션 */}
+      {/* 패널 골격과 id는 유지하며 메뉴가 열리면 내용도 DOM에 함께 존재한다. */}
       <div
         id={panelId}
         className={`grid transition-[grid-template-rows,opacity,visibility] duration-150 motion-reduce:transition-none ${

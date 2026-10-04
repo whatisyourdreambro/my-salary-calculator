@@ -14,10 +14,19 @@
 //    "2027 인상은 국민연금뿐" 같은 문구가 되살아나지 않고, 미확정(준용) 목록에 고용보험이 남는다.
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { describe, expect, it } from "vitest";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, it, vi } from "vitest";
+
+// 광고·공유·탭의 브라우저 효과만 분리한다. 4개 표가 상속하는 실제 공통 배너는 렌더해서 검증한다.
+vi.mock("@/components/AdPlacement", () => ({ GuideMidAd: () => null }));
+vi.mock("@/components/PageFooterAds", () => ({ default: () => null }));
+vi.mock("@/components/AutoShareSection", () => ({ default: () => null }));
+vi.mock("@/app/table/2027/TableTabsNav", () => ({ default: () => null }));
 
 import { NET_SALARY_RATES_2027 } from "@/lib/generateData2027";
 import { INSURANCE_RATES_2026 } from "@/lib/taxConstants2026";
+import Table2027Layout from "@/app/table/2027/layout";
 
 const read = (rel: string) => readFileSync(join(process.cwd(), rel), "utf8");
 // JSX 줄바꿈으로 문장이 쪼개져도 잡히도록 공백을 한 칸으로 접는다
@@ -70,11 +79,22 @@ describe("2027 건강보험료율 동결 확정 (건정심 2026-09-08)", () => {
     expect(hits).toEqual([]);
   });
 
-  it("요율표·표 4종·공통 배너 모두 '동결'을 명시한다", () => {
-    const missing = [RATES_PAGE, TABLE_LAYOUT, ...TABLE_PAGES].filter(
-      (file) => !flat(file).includes("동결")
-    );
-    expect(missing).toEqual([]);
+  it("요율표와 표 4종의 공통 배너가 동결을 명시하고 각 표의 적용 요율과 일치한다", () => {
+    expect(flat(RATES_PAGE)).toContain('totalRate: "7.19% (2027 동결)"');
+    // 파일마다 같은 단어를 요구하면 공통 layout 고지를 놓치고, 주석의 '동결'도 통과시킨다.
+    // 실제 HTML의 배너가 children 앞에 출력되는지와 각 페이지의 적용 요율을 함께 검사한다.
+    const marker = "2027 실수령액 표 본문";
+    const html = renderToStaticMarkup(createElement(Table2027Layout, null,
+      createElement("main", null, marker),
+    ));
+    const visible = html.replace(/<[^>]*>/g, "").replace(/\s+/g, " ");
+    const notice = "건강보험 3.595%(2027 동결)";
+    expect(visible).toContain(notice);
+    expect(visible).toContain(marker);
+    expect(visible.indexOf(notice)).toBeLessThan(visible.indexOf(marker));
+    for (const file of TABLE_PAGES) {
+      expect(flat(file), file).toMatch(/건강보험(?:은| 근로자)? 3\.595%/);
+    }
   });
 
   it("요율표 건강보험 카드: 확정 상태·7.19%·근로자/회사 3.595%", () => {

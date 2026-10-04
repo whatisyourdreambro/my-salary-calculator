@@ -125,7 +125,7 @@ export default function GlobalTaxPage() {
               </div>
 
               <div className="mt-6 text-center text-sm text-muted-foreground">
-                * 각국 단일 납세자 기준, 2026년 세율의 누진 구간을 적용한 간이 추정치입니다. <br />
+                * 고정 환율과 국가별 단순 세금·보험료 가정을 적용한 비교 예시입니다. <br />
                 실제 실수령액은 지역·공제항목에 따라 크게 달라질 수 있습니다.
               </div>
             </div>

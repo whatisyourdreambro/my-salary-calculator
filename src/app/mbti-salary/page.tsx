@@ -152,9 +152,9 @@ export default function MbtiSalaryPage() {
  어떤 모습일까요?
  </h1>
  <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-light-text-secondary 100">
- 몇 가지 질문에 답하고, 당신의 숨겨진 재물운과
+ 5가지 질문에 답하고, 재미로 보는 캐릭터와
  <br />
- 미래를 지배할 인생 연봉 그래프를 확인해보세요.
+ 미리 정한 가상 연봉 그래프를 확인해보세요. 실제 연봉 예측이나 공식 MBTI 검사가 아닙니다.
  </p>
  <button
  onClick={handleStart}
@@ -202,7 +202,7 @@ export default function MbtiSalaryPage() {
  <div className="text-center animate-fade-in-up">
  <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-primary mx-auto"></div>
  <h2 className="mt-8 text-2xl font-bold">
- 당신의 미래를 분석하는 중...
+ 재미용 캐릭터 결과를 준비하는 중...
  </h2>
  <p className="text-muted-blue ">
  운명의 그래프가 그려지고 있습니다.
@@ -218,7 +218,7 @@ export default function MbtiSalaryPage() {
  className="bg-gradient-to-br from-gray-100 to-gray-200 900 800 p-8 rounded-2xl shadow-2xl border border-canvas"
  >
  <p className="text-center font-semibold text-primary 300">
- 당신의 인생 연봉 그래프는...
+ 캐릭터의 가상 연봉 그래프는...
  </p>
  <h2 className="text-4xl font-bold text-center my-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-[#3D7FF5] 300">
  {result.title} <span className="text-3xl">{result.icon}</span>
@@ -322,8 +322,8 @@ export default function MbtiSalaryPage() {
  </button>
  </div>
  <ResultSharePanel resultKey={JSON.stringify([answers, result])}
- title={`내 인생 연봉 그래프는 '${result.title}'! 과연 당신의 재물운은? 💸`}
- description="인생 연봉 그래프 테스트 - 당신의 숨겨진 재물운과 미래 연봉을 확인하세요"
+ title={`재미용 캐릭터 '${result.title}'의 가상 연봉 그래프`}
+ description="미리 정한 가상 그래프이며 실제 연봉 예측이나 공식 MBTI 검사 결과가 아닙니다."
  getShareImage={captureResultImage}
  className="justify-center mt-4"
  />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "@/components/AppLink";
 import { motion, AnimatePresence } from "framer-motion";
 import { RefreshCw, Target, TrendingUp } from "lucide-react";
@@ -62,14 +62,17 @@ const MBTI_RESULTS: Record<string, { title: string; desc: string; strategy: stri
 
 export default function FinancialMBTIPage() {
  const [step, setStep] = useState(0);
+ const activeStepRef = useRef(0);
  const [answers, setAnswers] = useState<Record<string, string>>({});
  const [result, setResult] = useState<string | null>(null);
 
  const handleAnswer = (axis: string, value: string) => {
+  if (step !== activeStepRef.current || step >= questions.length) return;
+  activeStepRef.current = step + 1;
  const newAnswers = { ...answers, [axis]: value };
  setAnswers(newAnswers);
  if (step < questions.length - 1) {
- setStep(prev => prev + 1);
+ setStep(step + 1);
  } else {
  const mbti = 
  (newAnswers.EI || 'E') + 
@@ -81,6 +84,7 @@ export default function FinancialMBTIPage() {
  };
 
  const reset = () => {
+  activeStepRef.current = 0;
  setStep(0);
  setAnswers({});
  setResult(null);
@@ -96,7 +100,7 @@ export default function FinancialMBTIPage() {
  투자 성향 분석 (MBTI)
  </h1>
  <p className="text-faint-blue font-medium">
- 귀하의 투자 성향을 체계적으로 분석합니다.
+ 4가지 질문으로 재미있게 살펴보는 투자 취향 캐릭터 테스트입니다. 공식 MBTI 검사나 금융상품 적합성 평가가 아닙니다.
  </p>
  </div>
 
@@ -153,7 +157,7 @@ export default function FinancialMBTIPage() {
  <h2 className="text-3xl font-black mb-4 text-primary">{resultData?.title}</h2>
  <p className="text-muted-blue text-lg mb-8 font-medium">{resultData?.desc}</p>
  <div className="bg-canvas rounded-xl p-6 text-left border border-canvas ">
- <p className="text-xs font-bold text-faint-blue mb-2 uppercase tracking-widest">Recommended Strategy</p>
+ <p className="text-xs font-bold text-faint-blue mb-2 uppercase tracking-widest">캐릭터의 관심 분야 예시 (투자 권유 아님)</p>
  <p className="font-bold text-navy ">{resultData?.strategy}</p>
  </div>
  </div>

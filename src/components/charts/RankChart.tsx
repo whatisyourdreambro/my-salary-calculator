@@ -35,7 +35,7 @@ export default function RankChart({
         <Tooltip
           contentStyle={{ backgroundColor: '#18181b', borderColor: '#3f3f46', borderRadius: '1rem', color: '#fff' }}
           itemStyle={{ color: '#e879f9' }}
-          formatter={(value: number) => [`${value.toFixed(1)}%`, '인구 비율']}
+          formatter={(value: number) => [`${value.toFixed(1)}%`, '가상 곡선값']}
           labelFormatter={(label) => `${(label / 10000).toLocaleString('ko-KR')}만원`}
         />
         <Area

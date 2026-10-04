@@ -18,7 +18,7 @@ const SUGGESTED_LINKS = [
   { href: "/salary-db", label: "회사별 연봉", icon: Building2, description: "기업 평균 연봉 비교" },
   { href: "/calc/january-bonus", label: "13월의 월급", icon: Gift, description: "연말정산 환급 미리보기" },
   { href: "/calc/year-end-bonus", label: "성과급 세금", icon: Receipt, description: "직급별 보너스 실수령액" },
-  { href: "/tools/finance/severance", label: "퇴직금 계산", icon: Briefcase, description: "환산급여 정확 계산" },
+  { href: "/tools/finance/severance", label: "퇴직금 계산", icon: Briefcase, description: "환산급여 방식 예상 세액" },
   { href: "/fire-calculator", label: "FIRE 계산기", icon: Search, description: "조기은퇴 자산 시뮬" },
 ];
 

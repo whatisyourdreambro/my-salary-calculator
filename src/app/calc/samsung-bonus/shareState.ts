@@ -1,7 +1,7 @@
 // 삼성 성과급 계산기 공유 상태 URL 해시 — 순수 인코딩/디코딩 (2026-09-21 S2-0, CALC-06 흡수).
 // 규격(10배·100배 계획): #d=사업부&s=연봉(원)&p=영업이익(조)&y=적용연도&o1=OPI1%&ac=추가 세액공제%&ins=4대보험(1/0)
 // `?v=` 같은 쿼리 파라미터 신설 금지(캐시·색인 분기 방지) — 해시만 사용한다.
-// 모든 값이 기본값이면 빈 문자열(해시 없음), 하나라도 다르면 7키 전부 기록(공유 링크 자기완결).
+// 모든 값이 기본값이면 빈 문자열(해시 없음), 하나라도 다르면 기본 7키와 사업부 인원·가중치를 기록.
 //
 // 2026-09-25 A18: 소득세가 '산출세액 차이 × (1 − 세액공제 30%)' 가정에서 연말정산 구조의 실제
 // 엔진 차이로 바뀌며 슬라이더 의미가 '추가 세액공제 가정(기본 0%)'이 됐다. 옛 링크의 cr(세액공제율,
@@ -23,6 +23,9 @@ export type SamsungShareState = {
   ac: number;
   /** 4대보험 추가 부과 적용 */
   ins: boolean;
+  /** 사업부별 인원·가중치. 없는 옛 링크는 계산기의 기존 기본값을 사용한다. */
+  counts?: Record<string, number>;
+  ratios?: Record<string, number>;
 };
 
 export const SHARE_HASH_KEYS = ["d", "s", "p", "y", "o1", "ac", "ins"] as const;
@@ -45,7 +48,7 @@ export function parseShareHash(
   opts: { divisionIds: readonly string[]; maxOpi1: number; maxCredit?: number }
 ): Partial<SamsungShareState> | null {
   const raw = (hash ?? "").replace(/^#/, "");
-  if (!raw.includes("=")) return null;
+  if (!raw.includes("=") || raw.length > 4096) return null;
   let params: URLSearchParams;
   try {
     params = new URLSearchParams(raw);
@@ -73,12 +76,30 @@ export function parseShareHash(
   const ins = params.get("ins");
   if (ins === "1") out.ins = true;
   else if (ins === "0") out.ins = false;
+  for (const [field, prefix] of [["counts", "n"], ["ratios", "r"]] as const) {
+    const entries: [string, number][] = [];
+    for (const id of opts.divisionIds) {
+      const value = params.get(`${prefix}_${id}`);
+      // UI와 같이 음수·빈 값·비수치를 버린다. 인원은 정수, 가중치는 소수를 허용한다.
+      // 지수 표기는 매우 크거나 작은 유효 숫자를 buildShareHash가 직렬화할 때 필요하다.
+      if (!value || value.length > 320 || !/^(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(value)) continue;
+      const number = Number(value);
+      if (!Number.isFinite(number) || number < 0 || (field === "counts" && !Number.isInteger(number))) continue;
+      entries.push([id, number]);
+    }
+    if (entries.length) out[field] = Object.fromEntries(entries);
+  }
   return Object.keys(out).length ? out : null;
 }
 
 /** 상태 → 해시. 기본값과 전부 같으면 "" (URL 깨끗하게 유지). */
 export function buildShareHash(state: SamsungShareState, defaults: SamsungShareState): string {
-  const same = SHARE_HASH_KEYS.every((k) => state[k] === defaults[k]);
+  const same = SHARE_HASH_KEYS.every((k) => state[k] === defaults[k]) &&
+    (["counts", "ratios"] as const).every((field) =>
+      Object.keys(defaults[field] ?? {}).every((id) =>
+        (state[field]?.[id] ?? defaults[field]?.[id]) === defaults[field]?.[id]
+      )
+    );
   if (same) return "";
   const parts = [
     `d=${encodeURIComponent(state.d)}`,
@@ -89,5 +110,13 @@ export function buildShareHash(state: SamsungShareState, defaults: SamsungShareS
     `ac=${state.ac}`,
     `ins=${state.ins ? 1 : 0}`,
   ];
+  for (const [field, prefix] of [["counts", "n"], ["ratios", "r"]] as const) {
+    for (const [id, defaultValue] of Object.entries(defaults[field] ?? {})) {
+      const value = state[field]?.[id] ?? defaultValue;
+      if (Number.isFinite(value) && value >= 0 && (field !== "counts" || Number.isInteger(value))) {
+        parts.push(`${prefix}_${encodeURIComponent(id)}=${encodeURIComponent(String(value))}`);
+      }
+    }
+  }
   return `#${parts.join("&")}`;
 }

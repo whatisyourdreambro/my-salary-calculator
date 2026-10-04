@@ -126,7 +126,7 @@ export default function EscapePlanPage() {
             FREEDOM <span className="text-electric">DASHBOARD</span>
           </h1>
           <p className="text-lg text-faint-blue max-w-2xl mx-auto font-medium">
-            회사 탈출까지 남은 시간을 계산하고, 당신만의 자유 계획을 세워보세요.
+            월 희망 생활비의 12배를 4%로 나눈 목표액과 연 단위 저축·수익률 가정으로 기간을 계산합니다. 세금·수수료·물가·수익률 변동은 반영하지 않으며, 은퇴나 퇴사 가능 여부를 보장하지 않습니다.
           </p>
         </div>
       </section>
@@ -210,7 +210,7 @@ export default function EscapePlanPage() {
                     {yearsToTarget === 0 ? (
                       <div className="flex items-center gap-3 text-white">
                         <Rocket className="w-8 h-8 animate-bounce" />
-                        <span className="text-3xl font-bold">지금 당장 사표 가능! 🎉</span>
+                        <span className="text-3xl font-bold">계산상 목표액 달성 🎉</span>
                       </div>
                     ) : isFinite(yearsToTarget) ? (
                       <div className="flex items-baseline gap-3">

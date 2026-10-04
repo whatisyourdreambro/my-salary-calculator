@@ -16,7 +16,8 @@ const fmt = (n: number) => n.toLocaleString("ko-KR");
 
 export default function JobOfficialStats({ jobName, dbOverallManwon, stats }: Props) {
   const { medianAnnualManwon: median, lowerQuartileManwon: low, upperQuartileManwon: high } = stats;
-  const hasRange = low !== undefined && high !== undefined && high > low;
+  const isStartingCompensation = stats.statisticKind === "starting-compensation";
+  const hasRange = !isStartingCompensation && low !== undefined && high !== undefined && high > low;
   // 범위 바에서 중위값 마커 위치(%)
   const medianPct = hasRange
     ? Math.min(97, Math.max(3, Math.round(((median - low!) / (high! - low!)) * 100)))
@@ -28,7 +29,7 @@ export default function JobOfficialStats({ jobName, dbOverallManwon, stats }: Pr
       <div className="flex items-center gap-2 mb-1">
         <Landmark className="w-5 h-5 text-emerald-600 dark:text-emerald-400" aria-hidden />
         <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-          정부 공식 통계로 보는 {jobName} 연봉
+          {isStartingCompensation ? "정부 발표로 보는" : "정부 공식 통계로 보는"} {jobName} 연봉
         </h2>
       </div>
       <p className="text-xs text-gray-500 dark:text-gray-400 mb-5">
@@ -38,16 +39,16 @@ export default function JobOfficialStats({ jobName, dbOverallManwon, stats }: Pr
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
         <div className="rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 p-4 sm:order-2 text-center">
-          <div className="text-xs text-emerald-700 dark:text-emerald-300 font-medium">중위 연봉 (상위 50%)</div>
+          <div className="text-xs text-emerald-700 dark:text-emerald-300 font-medium">{isStartingCompensation ? "초임(1호봉) 연 보수" : "중위 연봉 (상위 50%)"}</div>
           <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-300 mt-1">{fmt(median)}만원</div>
         </div>
-        {low !== undefined && (
+        {!isStartingCompensation && low !== undefined && (
           <div className="rounded-xl bg-gray-50 dark:bg-gray-700/40 border border-gray-100 dark:border-gray-700 p-4 sm:order-1 text-center">
             <div className="text-xs text-gray-500 dark:text-gray-400">하위 25%</div>
             <div className="text-xl font-bold text-gray-700 dark:text-gray-200 mt-1">{fmt(low)}만원</div>
           </div>
         )}
-        {high !== undefined && (
+        {!isStartingCompensation && high !== undefined && (
           <div className="rounded-xl bg-gray-50 dark:bg-gray-700/40 border border-gray-100 dark:border-gray-700 p-4 sm:order-3 text-center">
             <div className="text-xs text-gray-500 dark:text-gray-400">상위 25%</div>
             <div className="text-xl font-bold text-gray-700 dark:text-gray-200 mt-1">{fmt(high)}만원</div>
@@ -73,9 +74,9 @@ export default function JobOfficialStats({ jobName, dbOverallManwon, stats }: Pr
       )}
 
       <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-        정부 조사 기준 중위 연봉은 본 페이지의 DB 평균({fmt(dbOverallManwon)}만원)
-        {gapPct === 0 ? "과 같은 수준" : gapPct > 0 ? `보다 약 ${gapPct}% 높은 수준` : `보다 약 ${Math.abs(gapPct)}% 낮은 수준`}
-        입니다. 조사 표본·시점·수당 포함 범위가 달라 차이가 날 수 있으니 두 수치를 함께 참고하세요.
+        {isStartingCompensation
+          ? `이 자료는 초임(1호봉) 연 보수이며 전체 경력자의 중위 연봉이 아닙니다. 본 페이지의 DB 평균(${fmt(dbOverallManwon)}만원)과는 대상과 수당 포함 범위가 다르므로 직접적인 높고 낮음 비교로 해석하지 마세요.`
+          : `정부 조사 기준 중위 연봉은 본 페이지의 DB 평균(${fmt(dbOverallManwon)}만원)${gapPct === 0 ? "과 같은 수준" : gapPct > 0 ? `보다 약 ${gapPct}% 높은 수준` : `보다 약 ${Math.abs(gapPct)}% 낮은 수준`}입니다. 조사 표본·시점·수당 포함 범위가 달라 차이가 날 수 있으니 두 수치를 함께 참고하세요.`}
         {stats.avgAnnualManwon ? ` 별도 조사의 평균 연봉은 ${fmt(stats.avgAnnualManwon)}만원입니다.` : ""}
       </p>
 

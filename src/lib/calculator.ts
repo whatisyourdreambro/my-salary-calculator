@@ -91,10 +91,10 @@ export function calculateNetSalaryWithRates(
  );
 
  // 기준소득월액 상·하한 클램프 (2026.7~: 월 659만 / 41만 — taxConstants2026 정본)
- const pensionBase = Math.min(
- Math.max(taxableMonthlyIncome, rates.pensionMonthlyFloorBase),
- rates.pensionMonthlyCapBase
- );
+ // 과세 보수가 없으면 하한을 적용하지 않는다 (TaxLogic과 동일한 모델 범위).
+ const pensionBase = taxableMonthlyIncome > 0
+ ? Math.min(Math.max(taxableMonthlyIncome, rates.pensionMonthlyFloorBase), rates.pensionMonthlyCapBase)
+ : 0;
  const pension = pensionBase * rates.pension;
  const health = taxableMonthlyIncome * rates.health;
  const longTermCare = health * rates.ltcRatio;

@@ -81,7 +81,7 @@ function generateRssFeed() {
  const baseUrl = "https://www.moneysalary.com";
  const siteTitle = "머니샐러리 금융 가이드";
  const feedDescription =
- "2026년 최신 세법 기준 연봉·세금·재테크 가이드. 직장인의 돈 공부, 머니샐러리에서 시작하세요.";
+ "연봉·세금·재테크 가이드. 적용 연도와 조건은 각 글에서 확인하세요. 직장인의 돈 공부, 머니샐러리에서 시작하세요.";
  const lastBuildDate = new Date().toUTCString();
 
  // 가이드도 실제 수정일(없으면 발행일)로 재노출. 원문 발행일과 guid는 보존한다.

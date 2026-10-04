@@ -1,0 +1,37 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import Module from 'node:module';
+import ts from 'typescript';
+import { allCompanies } from '@/data/companies';
+import { normalizeIndustry } from '@/lib/salary-data/industryTaxonomy';
+import { getBenefitsValue } from '@/lib/companyContentBuilder';
+import { getComparePairs } from '@/lib/salary-data/companyComparePairs';
+import type { JobLevel } from '@/types/company';
+type CompilableModule = Module & { _compile(source: string, filename: string): void };
+const NodeModule = Module as typeof Module & { _nodeModulePaths(directory: string): string[] };
+const f=path.resolve('.artifacts/companyContentBuilder.before.ts');
+const oldModule=new NodeModule(f) as CompilableModule;oldModule.filename=f;oldModule.paths=NodeModule._nodeModulePaths(path.dirname(f));
+oldModule._compile(ts.transpileModule(fs.readFileSync(f,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText,f);
+const before=oldModule.exports as Pick<typeof import('@/lib/companyContentBuilder'), 'getBenefitsValue'>;
+const domestic=allCompanies.filter(c=>!c.isGlobal),globals=allCompanies.filter(c=>c.isGlobal);
+const globalProof=globals.map(c=>{
+ const old=before.getBenefitsValue(c),now=getBenefitsValue(c);
+ const values=domestic.filter(p=>normalizeIndustry(p.industry)===normalizeIndustry(c.industry)).map(p=>getBenefitsValue(p)?.totalAnnualValue??0).filter(v=>v>0);
+ const expected=now==null?null:(values.length>=3?Math.round(values.reduce((s,v)=>s+v,0)/values.length):null);
+ return {id:c.id,name:c.name.ko,before:old?.industryAvg,after:now?.industryAvg,expected,oldPass:(old?.industryAvg??null)===expected,newPass:(now?.industryAvg??null)===expected,ownBenefitsUnchanged:old?.totalAnnualValue===now?.totalAnnualValue,domesticPeerCount:values.length};
+});
+const domesticChanges=domestic.filter(c=>JSON.stringify(before.getBenefitsValue(c))!==JSON.stringify(getBenefitsValue(c))).map(c=>c.id);
+const byId=new Map(allCompanies.map(c=>[c.id,c]));const levels: JobLevel[]=['entry','junior','senior','lead','executive'];
+const negativePairs=getComparePairs().flatMap(p=>{
+ const a=byId.get(p.aId),b=byId.get(p.bId);
+ if(!a||!b)throw new Error(`Unknown company pair: ${p.slug}`);
+ const totals=levels.map(l=>[a.salary[l].base+(a.salary[l].incentive.avgAmount??0),b.salary[l].base+(b.salary[l].incentive.avgAmount??0)]);
+ const avg=totals.reduce((s,[av,bv])=>s+(av-bv)/bv*100,0)/totals.length;
+ if(avg>=0||Math.abs(Math.round(avg))<3)return [];
+ return [{path:`/salary-db/compare/${p.slug}`,names:[a.name.ko,b.name.ko],totals,averageAAgainstB:avg,displayPct:Math.abs(Math.round(avg)),trueAverageBAgainstA:totals.reduce((s,[av,bv])=>s+(bv-av)/av*100,0)/totals.length,beforeClaim:`${b.name.ko} 평균 약 ${Math.abs(Math.round(avg))}% 높은 보상 수준`,afterClaim:`${a.name.ko} ${b.name.ko} 대비 평균 약 ${Math.abs(Math.round(avg))}% 낮은 보상 수준`}];
+});
+const proof={at:new Date().toISOString(),globalProof,oldGlobalFailures:globalProof.filter(r=>!r.oldPass).length,newGlobalFailures:globalProof.filter(r=>!r.newPass).length,domesticCompanies:domestic.length,domesticChanges,negativeOutputPairs:negativePairs.length,negativePairs,scope:'Code arithmetic correctness, not verification of estimated benefits/salary facts. Preserves all record numbers.'};
+console.log(JSON.stringify({globalProof,domesticChanges}));
+if(proof.oldGlobalFailures!==7||proof.newGlobalFailures!==0||domesticChanges.length)throw new Error('Unexpected membership regression');
+fs.writeFileSync('C:/dev/moneysalary/my-salary-calculator/docs/revenue-audit-2026-10-03/company-patch-proof.json',JSON.stringify(proof,null,2)+'\n');
+console.log(JSON.stringify({...proof,negativePairs:negativePairs.filter(r=>/samsung-display-vs-sk-hynix|hyperconnect-vs-naver/.test(r.path))},null,2));

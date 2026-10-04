@@ -30,7 +30,9 @@ export default function Header() {
  // 무료 플랜 CPU 10ms 를 넘겼다. 그 경로에서만 패널 내용을 하이드레이션 뒤 렌더한다 —
  // 상단 바·드롭다운 트리거·dialog 골격은 SSR 그대로라 화면·접근성 트리는 동일하고,
  // 서버와 클라이언트 첫 렌더가 모두 "패널 비움"이라 하이드레이션 불일치도 없다.
- // 프리렌더 페이지(~2,000)는 종전대로 전체 패널을 SSR 한다(내부 링크 크롤 경로 불변).
+ // 프리렌더 페이지는 데스크톱 패널 전체를 SSR 해 모든 내비 링크의 크롤 경로를 유지한다.
+ // 같은 링크를 반복하는 모바일 dialog의 패널 내용은 메뉴를 열 때 렌더한다.
+ // 닫힌 메뉴의 큰 HTML·DOM을 첫 화면에 만들지 않으며 서버/클라이언트 초기 상태는 동일하다.
  const [isHydrated, setIsHydrated] = useState(false);
  useEffect(() => { setIsHydrated(true); }, []);
  const deferPanels = isEdgeRenderedPath(pathname) && !isHydrated;
@@ -41,6 +43,7 @@ export default function Header() {
  const mobileMenuAriaLabel = isEn ? "Open menu" : "메뉴 열기";
  const dashboardHref = isEn ? "/en/dashboard" : "/dashboard";
  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+ const [hasOpenedMobileMenu, setHasOpenedMobileMenu] = useState(false);
  const [isScrolled, setIsScrolled] = useState(false);
  const mobileDialog = useRef<HTMLDialogElement>(null);
  useModalDialog(isMobileMenuOpen, mobileDialog);
@@ -161,7 +164,7 @@ export default function Header() {
  <div className="xl:hidden">
  <button
  type="button"
- onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+ onClick={() => { setHasOpenedMobileMenu(true); setIsMobileMenuOpen(!isMobileMenuOpen); }}
  className={`ms-interactive hover:!translate-y-0 hover:!shadow-none flex min-w-11 min-h-11 items-center justify-center cursor-pointer p-2 rounded-xl border-none text-foreground transition-colors hover:bg-secondary ${
  isMobileMenuOpen ? "bg-secondary" : "bg-transparent"
  }`}
@@ -177,11 +180,25 @@ export default function Header() {
  </nav>
  </header>
 
- {/* Keep navigation links in server HTML; native dialog manages modal keyboard behavior. */}
+ {/* Desktop panels preserve every navigation destination in server HTML.
+     Keep the mobile dialog and controls mounted; render its duplicate panel content on open. */}
  <dialog
  ref={mobileDialog}
  id="mobile-nav-menu"
  lang={isEn ? "en" : "ko"}
+ onClick={(event) => {
+ // A current-language link keeps the pathname, so the route-change effect cannot close it.
+ // Preserve the anchor's default navigation and all modified/new-window clicks.
+ if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey ||
+ !(event.target instanceof Element)) return;
+ const anchor = event.target.closest("a[href]");
+ if (!(anchor instanceof HTMLAnchorElement) || !event.currentTarget.contains(anchor) ||
+ anchor.hasAttribute("download") || (anchor.target && anchor.target.toLowerCase() !== "_self")) return;
+ const destination = new URL(anchor.href, window.location.href);
+ if (destination.origin === window.location.origin && destination.pathname === pathname) {
+ setIsMobileMenuOpen(false);
+ }
+ }}
  onCancel={(event) => { event.preventDefault(); setIsMobileMenuOpen(false); }}
  aria-label={isEn ? "Mobile menu" : "모바일 메뉴"}
  className="fixed inset-0 m-0 h-dvh w-screen max-h-none max-w-none overflow-y-auto overscroll-contain border-0 bg-card text-foreground backdrop:bg-black/40"
@@ -243,7 +260,7 @@ export default function Header() {
  pathname={pathname}
  onClose={() => setIsMobileMenuOpen(false)}
  locale={isEn ? "en" : "ko"}
- deferPanel={deferPanels}
+ deferPanel={deferPanels || !hasOpenedMobileMenu}
  />
  )
  )}

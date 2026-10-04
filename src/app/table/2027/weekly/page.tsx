@@ -1,5 +1,5 @@
 // src/app/table/2027/weekly/page.tsx — 2027년판 주급 실수령액 표 (2026-08-30 신설, 성장 제안 ④)
-// 엔진: generateData2027 (연금 5.0% 확정·건보 동결 확정 + 장기요양·고용보험 2026 준용 — layout 고지 배너 참조)
+// 엔진: generateData2027 (연금 5.0%·건강보험 3.595% 적용, 장기요양·고용보험 2026값 준용; 확정 상태의 출처는 taxConstants2027 참조)
 
 import { Suspense } from "react";
 import { generateWeeklyPayTableData2027, MIN_WAGE_2027 } from "@/lib/generateData2027";
@@ -47,7 +47,7 @@ const FAQ_ITEMS = [
   {
     question: "주급을 월급으로 어떻게 환산하나요?",
     answer:
-      "주급 × 52주 ÷ 12개월로 환산합니다. 예를 들어 주급 100만원이면 연 5,200만원, 월 약 433만원(세전)입니다. 본 표는 이 환산 월급에서 2027년 국민연금 5.0%(확정 인상)·건강보험 3.595%(동결 확정)와 장기요양·고용보험·소득세(2026 기준 준용)를 공제한 참고치입니다.",
+      "주급 × 52주 ÷ 12개월로 환산합니다. 예를 들어 주급 100만원이면 연 5,200만원, 월 약 433만원(세전)입니다. 본 표는 이 환산 월급에서 2027년 국민연금 5.0%·건강보험 3.595%(이 표 적용 요율)와 장기요양·고용보험·소득세(2026 기준 준용)를 공제한 참고치입니다.",
   },
   {
     question: "2027년 최저임금 기준 주급은 얼마인가요?",
@@ -57,7 +57,7 @@ const FAQ_ITEMS = [
   {
     question: "주급제도 4대보험과 세금을 공제하나요?",
     answer:
-      "근로 형태와 시간에 따라 다릅니다. 월 60시간 이상 근무하는 근로자는 4대보험 가입 대상이며, 본 표는 근로소득 기준 공제를 적용한 참고치입니다. 3.3% 사업소득 원천징수로 처리되는 경우는 실제 수령액이 다릅니다.",
+      "고용 형태와 근로시간·기간 등 보험별 가입 요건에 따라 다릅니다. 본 표는 일반 근로소득자의 공제 모형으로, 개별 가입 제외 조건은 따로 확인해야 합니다. 사업소득으로 처리된 소득은 소득 구분과 원천징수 방식이 달라 이 표와 직접 비교할 수 없습니다.",
   },
 ];
 
@@ -65,7 +65,7 @@ const structuredData = [
   datasetLd({
     name: "2027년 주급 실수령액 표",
     description:
-      "2027년 국민연금 5.0% 인상을 반영한 주급 구간별 월 환산 실수령액 데이터 표 (건강보험 2027 동결 확정 반영, 장기요양·고용보험은 2026 준용).",
+      "2027년 국민연금 5.0% 인상을 반영한 주급 구간별 월 환산 실수령액 데이터 표 (건강보험 3.595% 적용, 장기요양·고용보험은 2026 준용).",
     url: "/table/2027/weekly",
     dateModified: "2026-09-25",
     keywords: ["2027 주급", "실수령액", "주급 환산", "주급 테이블", "2027년"],
@@ -142,13 +142,13 @@ function WeeklyTable2027() {
                   <ul className="space-y-2 text-muted-foreground">
                     <li>- 최저시급 {fmtWon(MIN_WAGE_2027)}원 (+3.7%)</li>
                     {/* 건보 동결은 기존 연금 항목에 합쳐 항목 수 유지 — 아래 표·광고를 밀지 않게 (2026-09-25) */}
-                    <li>- 국민연금 5.0%(인상)·건강보험 3.595%(동결)</li>
+                    <li>- 국민연금 5.0%(법정 인상 일정 적용)</li>
                   </ul>
                 </div>
                 <div>
-                  <h3 className="font-bold text-xl mb-3 text-center">미확정 (2026 준용)</h3>
+                  <h3 className="font-bold text-xl mb-3 text-center">이 표의 준용·적용 요율</h3>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li>- 장기요양·고용보험(인상안 심의) 요율</li>
+                    <li>- 건강보험 3.595% 적용, 장기요양·고용보험 2026값 준용</li>
                     <li>- 소득세 — 현행 근로소득 간이세액표 준용</li>
                   </ul>
                 </div>
@@ -164,7 +164,7 @@ function WeeklyTable2027() {
               <div className="bg-card p-6 rounded-xl shadow-lg border border-border">
                 <h3 className="font-bold text-xl mb-3">Q. 주휴수당은 주급에 포함해야 하나요?</h3>
                 <p className="text-muted-foreground">
-                  1주 15시간 이상 근무하고 개근하면 주휴수당(1일분)이 발생합니다. 받은 주급에 주휴가
+                  4주 평균 1주 소정근로시간 15시간 이상이고 소정근로일을 개근하는 등 요건을 충족하면 주휴수당이 발생합니다. 받은 주급에 주휴가
                   이미 포함돼 있는지 근로계약서를 확인하고, 시급 기준으로 따져보려면 시급 표를
                   이용하세요.
                 </p>
@@ -175,8 +175,8 @@ function WeeklyTable2027() {
               <div className="bg-card p-6 rounded-xl shadow-lg border border-border">
                 <h3 className="font-bold text-xl mb-3">Q. 연금 인상으로 얼마나 더 떼이나요?</h3>
                 <p className="text-muted-foreground">
-                  월 환산 소득의 0.25%p입니다. 월 300만원이면 매달 7,500원, 연 9만원을 더 냅니다. 내
-                  소득 기준 정확한 금액은 국민연금 인상 계산기에서 확인하세요.
+                  국민연금 기준소득월액의 0.25%p입니다. 기준소득월액 300만원이면 월 7,500원, 연 9만원이 늘어나는 예시입니다. 비과세액과 상·하한 적용에 따라 달라지므로 내
+                  소득 조건의 비교는 국민연금 인상 계산기에서 확인하세요.
                 </p>
                 <Link href="/calc/pension-hike-2027" className="text-primary font-semibold mt-4 inline-block">
                   국민연금 인상 계산기 →

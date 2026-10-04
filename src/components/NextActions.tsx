@@ -80,7 +80,7 @@ export function buildActions(
  {
  icon: Receipt,
  title: "연말정산 환급금 계산",
- description: "13월의 월급 미리 받기",
+ description: "연말정산 예상 환급액 확인",
  href: "/year-end-tax",
  },
  {
@@ -160,7 +160,7 @@ export function buildActions(
  {
  icon: Receipt,
  title: "연말정산 환급금 계산",
- description: "13월의 월급 미리 받기",
+ description: "연말정산 예상 환급액 확인",
  href: "/year-end-tax",
  },
  ]

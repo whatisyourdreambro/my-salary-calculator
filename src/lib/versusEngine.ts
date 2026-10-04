@@ -67,7 +67,7 @@ export class CompanyComparator {
  } else if (totalCompA < totalCompB && hourlyA > hourlyB) {
  verdict = `${companyB.name.ko}가 연봉은 높지만, 근무강도가 셉니다. 실속은 ${companyA.name.ko}가 챙길 수 있습니다.`;
  } else {
- verdict = `${companyB.name.ko}가 모든 면에서 우세합니다.`;
+ verdict = "총보상·실질 시급 결과를 각 항목에서 비교하세요. 워라밸·성장·복지 점수는 별도 참고 지표입니다.";
  }
 
  return {

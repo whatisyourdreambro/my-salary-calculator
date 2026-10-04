@@ -128,7 +128,7 @@ export default function YearEndBonusTaxPage() {
                 <strong className="text-navy dark:text-canvas-50">12월 IRP 일시납</strong> — 보너스 일부를 IRP에 즉시 납입하면 세액공제 + 환급 극대화
               </li>
               <li>
-                <strong className="text-navy dark:text-canvas-50">한계세율 구간 시뮬레이션</strong> — 88,000,000원 직전이면 IRP 납입으로 24% 구간 유지
+                <strong className="text-navy dark:text-canvas-50">연금계좌 세액공제 확인</strong> — IRP·연금저축은 요건을 충족한 납입액에 세액공제를 적용하며 과세표준 구간을 직접 낮추지 않습니다.
               </li>
               <li>
                 <strong className="text-navy dark:text-canvas-50">기부금 12월 결제</strong> — 보너스 받은 후 즉시 기부하면 해당 연도 공제 가능

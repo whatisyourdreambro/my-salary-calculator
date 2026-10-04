@@ -243,7 +243,7 @@ const REAL_ESTATE: CalculatorDef[] = [
  return {
  primary: { label: "환산 전세금", value: Math.round(deposit + additionalJeonse), suffix: "원" },
  secondary: [{ label: "월세 → 전세 추가분", value: Math.round(additionalJeonse), suffix: "원" }],
- note: "정부 고시 전월세 전환율 5% 기준 (지역·시기별 변동).",
+ note: "입력한 전월세 전환율로 환산한 산술값입니다. 기본값 5%는 계산 예시이며 계약 조건과 전환 방향별 적용 기준을 확인하세요.",
  };
  },
  },
@@ -532,21 +532,21 @@ const BUSINESS: CalculatorDef[] = [
  {
  slug: "corporate-tax-quick",
  title: "법인세 간편 계산",
- description: "과세표준 4단계 누진",
+ description: "2026.1.1. 이후 개시 사업연도 일반 영리법인 4단계 누진",
  category: "business",
  categoryLabel: "사업자",
  keywords: ["법인세", "법인세 계산"],
  fields: [{ name: "base", label: "과세표준", defaultValue: 100000000, suffix: "원" }],
  compute: ({ base }) => {
  let tax = 0;
- if (base <= 200000000) tax = base * 0.09;
- else if (base <= 20000000000) tax = 18000000 + (base - 200000000) * 0.19;
+ if (base <= 200000000) tax = base * 0.10;
+ else if (base <= 20000000000) tax = 20000000 + (base - 200000000) * 0.20;
  else if (base <= 300000000000)
- tax = 18000000 + 19800000000 * 0.19 + (base - 20000000000) * 0.21;
- else tax = base * 0.24 - 9420000000;
+ tax = 20000000 + 19800000000 * 0.20 + (base - 20000000000) * 0.22;
+ else tax = base * 0.25 - 9420000000;
  return {
  primary: { label: "법인세", value: Math.round(tax), suffix: "원" },
- secondary: [{ label: "지방소득세 (10%)", value: Math.round(tax * 0.1), suffix: "원" }],
+ secondary: [{ label: "지방소득세 추정 (법인세 × 10%)", value: Math.round(tax * 0.1), suffix: "원" }],
  };
  },
  },
@@ -637,7 +637,7 @@ const LIFE: CalculatorDef[] = [
  {
  slug: "currency-converter",
  title: "환율 환산",
- description: "원화 ↔ 외화 (USD/JPY/EUR/CNY)",
+ description: "원화 → USD (입력한 1USD당원화환율 적용)",
  category: "currency",
  categoryLabel: "환율",
  keywords: ["환율 계산", "달러 환산"],
@@ -812,7 +812,7 @@ const LIFE: CalculatorDef[] = [
  {
  slug: "unit-converter-length",
  title: "길이 단위 변환 (m·km·mi)",
- description: "기본 m → km/mi/yd/ft 환산",
+ description: "기본 m → km/mi/yd 환산",
  category: "life",
  categoryLabel: "생활",
  keywords: ["단위 변환", "길이 변환"],
@@ -972,8 +972,8 @@ const FAMILY: CalculatorDef[] = [
  },
  {
  slug: "education-cost-cumulative",
- title: "교육비 18년 누적",
- description: "유치원~대학 18년 교육비 누적",
+ title: "교육비 19년 누적",
+ description: "유치원~대학 19년 교육비 누적",
  category: "family",
  categoryLabel: "결혼육아",
  keywords: ["교육비", "자녀 교육비"],
@@ -1010,7 +1010,7 @@ const FAMILY: CalculatorDef[] = [
  {
  slug: "alimony-quick",
  title: "양육비 산정",
- description: "양육비 산정기준표 평균값 참고",
+ description: "월 소득 ×나이별 가정 비율의 예시 (법원 기준표 미적용)",
  category: "family",
  categoryLabel: "결혼육아",
  keywords: ["양육비", "이혼 양육비"],
@@ -1023,7 +1023,7 @@ const FAMILY: CalculatorDef[] = [
  const child = income * factor;
  return {
  primary: { label: "예상 월 양육비", value: Math.round(child), suffix: "원" },
- note: "가정법원 양육비 산정기준표 단순 추정. 정확한 금액은 변호사·조정 통해 결정.",
+ note: "법원 양육비 산정기준표를 적용한 결과가 아닙니다. 입력 월 소득에 계산기의 가정 비율만 곱한 예시이며 실제 양육비는 별도로 확인해야 합니다.",
  };
  },
  },

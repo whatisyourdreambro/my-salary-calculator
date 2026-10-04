@@ -89,7 +89,7 @@ function buildHtml(): string {
   render();
 })();`,
     ctaHref: "/tools/finance/bonus",
-    ctaLabel: "회사별 성과급·상세 공제 계산하기 →",
+    ctaLabel: "성과급 상세 공제 추정하기 →",
   });
 }
 

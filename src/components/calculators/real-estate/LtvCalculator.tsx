@@ -76,7 +76,7 @@ export default function LtvCalculator() {
  </p>
  <div className="mt-4 text-xs text-faint-blue text-left bg-white/20 p-3 rounded-lg">
  <p className="font-bold mb-1 flex items-center gap-1"><Info className="w-3 h-3" /> 참고</p>
- <p>지역 및 주택 가격에 따라 LTV 한도가 다를 수 있습니다 (예: 투기과열지구 40~50%).</p>
+ <p>입력 금액의 비율이며 지역 규정·자격·대출 상한·DSR을 자동 판정하지 않습니다. 실제 승인 조건은 금융기관에 확인하세요.</p>
  </div>
  </motion.div>
  )}

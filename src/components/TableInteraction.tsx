@@ -1,7 +1,8 @@
 // src/components/TableInteraction.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { clampTablePage, formatTableSearch, normalizeTableSearch, safeTablePageCount } from "@/lib/tableQueryState";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 
@@ -19,40 +20,37 @@ export default function TableInteraction({
  const router = useRouter();
  const searchParams = useSearchParams();
 
- // InteractiveTable 과 같은 정규화 — ?page=abc 에서 NaN 이 되어
- // '이전/다음' 링크가 ?page=NaN 루프에 빠지고 'NaN / 5' 가 표시됐다.
- const currentPageRaw = Number(searchParams.get("page") ?? "1");
- const currentPage =
- Number.isFinite(currentPageRaw) && currentPageRaw >= 1
- ? Math.floor(currentPageRaw)
- : 1;
- const currentSearch = searchParams.get("searchTerm") || "";
+  const pageCount = safeTablePageCount(totalPages);
+  const currentPage = clampTablePage(searchParams.get("page"), pageCount);
+  const currentSearch = normalizeTableSearch(searchParams.get("searchTerm"));
+  const currentQuery = searchParams.toString();
 
- const [searchTerm, setSearchTerm] = useState(
- currentSearch ? parseInt(currentSearch, 10).toLocaleString('ko-KR') : ""
- );
+  const [searchTerm, setSearchTerm] = useState(() => formatTableSearch(currentSearch));
+  useEffect(() => {
+    // Page navigation and browser history must discard an unsubmitted draft,
+    // even when the submitted search itself has not changed.
+    setSearchTerm(formatTableSearch(currentSearch));
+  }, [currentSearch, currentQuery]);
 
  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
  const { value } = e.target;
  const numericValue = value.replace(/[^0-9]/g, "");
  setSearchTerm(
- numericValue ? parseInt(numericValue, 10).toLocaleString('ko-KR') : ""
+  formatTableSearch(numericValue)
  );
  };
 
  const handleSearchSubmit = (e: React.FormEvent) => {
  e.preventDefault();
- const numericSearch = searchTerm.replace(/,/g, "");
+  const numericSearch = normalizeTableSearch(searchTerm);
  router.push(`${basePath}?page=1&searchTerm=${numericSearch}`);
  };
 
  const handlePageChange = (newPage: number) => {
- const numericSearch = (searchParams.get("searchTerm") || "").replace(
- /,/g,
- ""
- );
+  const numericSearch = currentSearch;
+  const page = clampTablePage(String(newPage), pageCount);
  router.push(
- `${basePath}?page=${newPage}${
+ `${basePath}?page=${page}${
  numericSearch ? `&searchTerm=${numericSearch}` : ""
  }`
  );
@@ -62,7 +60,7 @@ export default function TableInteraction({
  <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
  <form onSubmit={handleSearchSubmit} className="relative w-full sm:max-w-xs">
  <label htmlFor="search" className="sr-only">
- Search
+ 금액으로 표 검색
  </label>
  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
  <Search className="h-5 w-5 text-muted-foreground" />
@@ -70,11 +68,19 @@ export default function TableInteraction({
  <input
  id="search"
  type="text"
+ inputMode="numeric"
+ enterKeyHint="search"
  value={searchTerm}
  onChange={handleSearchChange}
  placeholder={searchPlaceholder}
- className="w-full pl-10 pr-4 py-3 bg-secondary/50 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition text-base"
+ className="w-full pl-10 pr-20 py-3 bg-secondary/50 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition text-base"
  />
+ <button
+ type="submit"
+ className="absolute inset-y-1.5 right-1.5 rounded-md bg-primary px-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+ >
+ 검색
+ </button>
  </form>
 
  <div className="flex justify-center items-center gap-2">
@@ -86,11 +92,11 @@ export default function TableInteraction({
  이전
  </button>
  <span className="text-sm font-semibold text-muted-foreground">
- {currentPage} / {totalPages}
+ {currentPage} / {pageCount}
  </span>
  <button
- onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
- disabled={currentPage === totalPages}
+ onClick={() => handlePageChange(Math.min(pageCount, currentPage + 1))}
+ disabled={currentPage >= pageCount}
  className="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
  >
  다음
