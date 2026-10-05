@@ -422,7 +422,7 @@ export default function MonthlyPage({ params }: Props) {
         <div className="mt-10">
           <ListedSalaryBandTable
             annualWon={annual}
-            title={`월급 ${Math.round(monthly / 10_000).toLocaleString("ko-KR")}만원 수준의 공시기업`}
+            title={`월급 ${Math.round(monthly / 10_000).toLocaleString("ko-KR")}만원 수준의 상장사`}
           />
         </div>
 

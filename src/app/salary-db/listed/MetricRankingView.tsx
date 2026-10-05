@@ -104,12 +104,12 @@ export default function MetricRankingView({ cfg }: { cfg: MetricConfig }) {
   const crumbs = [
     { name: "홈", path: "/" },
     { name: "회사 연봉 DB", path: "/salary-db" },
-    { name: "공시기업 공시 연봉", path: "/salary-db/listed" },
+    { name: "상장사 공시 연봉", path: "/salary-db/listed" },
     { name: cfg.h1, path: cfg.path },
   ];
   const listItems = rankingItemListItems(cfg.rows.slice(0, 50));
   const poolTotal = cfg.poolTotal ?? LISTED_ALL_TOTAL;
-  const poolNote = cfg.poolNote ?? `공시기업 전체 모수 ${LISTED_ALL_TOTAL.toLocaleString("ko-KR")}곳.`;
+  const poolNote = cfg.poolNote ?? `상장사 전체 모수 ${LISTED_ALL_TOTAL.toLocaleString("ko-KR")}곳.`;
 
   return (
     <main className="min-h-screen bg-transparent pb-10">
@@ -121,11 +121,11 @@ export default function MetricRankingView({ cfg }: { cfg: MetricConfig }) {
           datasetLd({
             name: cfg.datasetName,
             // META-11 — Google Dataset description 50자 이상: 모수·상위 행 수·열 구성까지 명시
-            description: `DART 사업보고서 ${DART_RANKING_YEAR} 사업연도 공시 기준 ${cfg.datasetName} — 공시기업 ${poolTotal.toLocaleString("ko-KR")}곳 중 상위 ${cfg.rows.length}곳의 ${cfg.valueHeader}·평균연봉·업종 순위 데이터`,
+            description: `DART 사업보고서 ${DART_RANKING_YEAR} 사업연도 공시 기준 ${cfg.datasetName} — 상장사 ${poolTotal.toLocaleString("ko-KR")}곳 중 상위 ${cfg.rows.length}곳의 ${cfg.valueHeader}·평균연봉·업종 순위 데이터`,
             url: cfg.path,
             // 페이지 수정일(순위 기준 변경) — 보이는 '데이터 기준일'은 DART_RANKING_DATE 그대로
             dateModified: DART_RANKING_PAGE_MODIFIED,
-            keywords: ["공시기업 연봉", "DART 공시", "연봉 순위"],
+            keywords: ["상장사 연봉", "DART 공시", "연봉 순위"],
           }),
           faqLd(cfg.faqItems),
         ]}
@@ -203,7 +203,7 @@ export default function MetricRankingView({ cfg }: { cfg: MetricConfig }) {
             금융감독원 전자공시시스템(DART) {DART_RANKING_YEAR} 사업연도 사업보고서 「직원 등의
             현황」 기준(등기임원 제외). {poolNote}{" "}
             {cfg.methodologyExtra} 평균연봉은 <strong className="text-navy">신입 초봉이 아니며</strong>,
-            성과급 지급 시점에 따라 연도별 변동이 있을 수 있습니다. 종목코드가 기록된 공시기업 기준이며, 현재 상장 여부를 보증하지 않습니다. 데이터 기준일: {DART_RANKING_DATE}.
+            성과급 지급 시점에 따라 연도별 변동이 있을 수 있습니다. 상장사는 종목코드가 기록된 기업 기준이며, 현재 상장 여부를 보증하지 않습니다. 데이터 기준일: {DART_RANKING_DATE}.
           </p>
           {/* 인용 복사 — R2 B4 (운영자 승인 2026-08-31): 인용→백링크 상시 생산 */}
           {cfg.citation && (
@@ -211,7 +211,7 @@ export default function MetricRankingView({ cfg }: { cfg: MetricConfig }) {
               quote={cfg.citation.quote}
               path={cfg.path}
               quoteId={cfg.citation.quoteId}
-              sourceLabel="공시기업 공시 연봉 DB"
+              sourceLabel="상장사 공시 연봉 DB"
               className="mt-4"
             />
           )}

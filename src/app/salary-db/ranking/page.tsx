@@ -301,7 +301,7 @@ export default function CompanyRankingPage() {
             <span className="font-bold text-navy">
               업종별 공시 연봉 순위
               <span className="block text-xs font-medium text-faint-blue">
-                공시기업 업종 28종 공시 평균연봉 순위
+                상장사 업종 28종 공시 평균연봉 순위
               </span>
             </span>
             <ArrowRight className="w-5 h-5 text-electric" />

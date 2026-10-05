@@ -99,8 +99,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const r = getIndustryRanking(params.industryId);
   if (!r) return { title: "페이지를 찾을 수 없습니다", robots: { index: false, follow: false } };
   return buildPageMetadata({
-    title: `${r.industryKo} 공시기업 연봉 순위 — 공시 평균연봉 ${r.companyCount}곳 (${DART_RANKING_YEAR})`,
-    description: `${r.industryKo} 공시기업 ${r.companyCount}곳의 DART 사업보고서 공시 평균연봉 순위입니다. 업종 가중 평균 ${fmtManwon(
+    title: `${r.industryKo} 상장사 연봉 순위 — 공시 평균연봉 ${r.companyCount}곳 (${DART_RANKING_YEAR})`,
+    description: `${r.industryKo} 상장사 ${r.companyCount}곳의 DART 사업보고서 공시 평균연봉 순위입니다. 업종 가중 평균 ${fmtManwon(
       r.weightedAvgManwon
     )}·중위 ${fmtManwon(r.medianManwon)} — 추정이 아닌 공시 원값 전수 순위표.`,
     path: `/salary-db/listed/industry/${r.industryId}`,
@@ -108,7 +108,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       `${r.industryKo} 연봉 순위`,
       `${r.industryKo} 평균연봉`,
       `${r.industryKo} 연봉`,
-      "공시기업 연봉 순위",
+      "상장사 연봉 순위",
     ],
   });
 }
@@ -125,21 +125,21 @@ export default function IndustryRankingPage({ params }: Props) {
   const crumbs = [
     { name: "홈", path: "/" },
     { name: "회사 연봉 DB", path: "/salary-db" },
-    { name: "공시기업 공시 연봉", path: "/salary-db/listed" },
+    { name: "상장사 공시 연봉", path: "/salary-db/listed" },
     { name: `${r.industryKo} 순위`, path },
   ];
 
   const faqItems = [
     {
-      question: `${r.industryKo} 공시기업 평균연봉은 얼마인가요?`,
-      answer: `${DART_RANKING_YEAR} 사업연도 공시 기준 ${r.industryKo} 공시기업 ${r.companyCount}곳의 직원 수 가중 평균연봉은 ${fmtManwon(
+      question: `${r.industryKo} 상장사 평균연봉은 얼마인가요?`,
+      answer: `${DART_RANKING_YEAR} 사업연도 공시 기준 ${r.industryKo} 상장사 ${r.companyCount}곳의 직원 수 가중 평균연봉은 ${fmtManwon(
         r.weightedAvgManwon
       )}, 중위값은 ${fmtManwon(r.medianManwon)}입니다 (직원 합계 ${r.totalEmployees.toLocaleString(
         "ko-KR"
       )}명).`,
     },
     {
-      question: `${r.industryKo}에서 평균연봉이 가장 높은 공시기업는 어디인가요?`,
+      question: `${r.industryKo}에서 평균연봉이 가장 높은 상장사는 어디인가요?`,
       answer: `${top1.nameKo}로, ${DART_RANKING_YEAR} 공시 평균연봉 ${fmtManwon(
         top1.avgSalaryManwon
       )}(직원 ${top1.employeeCount.toLocaleString("ko-KR")}명)입니다.`,
@@ -159,16 +159,16 @@ export default function IndustryRankingPage({ params }: Props) {
           breadcrumbLd(crumbs),
           // 자체 페이지 있는 행만 (RT-09 — 랭킹 페이지 자기참조 ListItem 금지). 0건이면 블록 생략
           ...(listItems.length
-            ? [itemListLd({ name: `${r.industryKo} 공시기업 공시 평균연봉 순위`, items: listItems })]
+            ? [itemListLd({ name: `${r.industryKo} 상장사 공시 평균연봉 순위`, items: listItems })]
             : []),
           datasetLd({
-            name: `${r.industryKo} 공시기업 공시 평균연봉 순위 (${DART_RANKING_YEAR})`,
+            name: `${r.industryKo} 상장사 공시 평균연봉 순위 (${DART_RANKING_YEAR})`,
             // META-11 — Google Dataset description 50자 이상: 사업연도·가중 평균까지 업종 고유 값으로
-            description: `DART 사업보고서 ${DART_RANKING_YEAR} 사업연도 기준 ${r.industryKo} 공시기업 ${r.companyCount}곳의 평균연봉·직원 수·근속연수 순위 데이터 (직원 수 가중 평균 ${fmtManwon(r.weightedAvgManwon)})`,
+            description: `DART 사업보고서 ${DART_RANKING_YEAR} 사업연도 기준 ${r.industryKo} 상장사 ${r.companyCount}곳의 평균연봉·직원 수·근속연수 순위 데이터 (직원 수 가중 평균 ${fmtManwon(r.weightedAvgManwon)})`,
             url: path,
             // 페이지 수정일(순위 기준 변경) — 보이는 '데이터 기준일'은 DART_RANKING_DATE 그대로
             dateModified: DART_RANKING_PAGE_MODIFIED,
-            keywords: [`${r.industryKo} 연봉 순위`, "공시기업 평균연봉", "DART 공시"],
+            keywords: [`${r.industryKo} 연봉 순위`, "상장사 평균연봉", "DART 공시"],
           }),
           faqLd(faqItems),
         ]}
@@ -187,11 +187,11 @@ export default function IndustryRankingPage({ params }: Props) {
             DART 사업보고서 공시 — 추정 0
           </p>
           <h1 className="text-2xl sm:text-4xl font-black text-navy leading-tight mb-3">
-            {r.industryKo} 공시기업 연봉 순위{" "}
+            {r.industryKo} 상장사 연봉 순위{" "}
             <span className="text-primary">{r.companyCount}곳</span>
           </h1>
           <p className="speakable-summary text-sm sm:text-[15px] leading-7 text-muted-blue max-w-3xl">
-            {DART_RANKING_YEAR} 사업연도 사업보고서 공시 기준 {r.industryKo} 공시기업{" "}
+            {DART_RANKING_YEAR} 사업연도 사업보고서 공시 기준 {r.industryKo} 상장사{" "}
             {r.companyCount}곳의 평균연봉 순위입니다. 업종 가중 평균은{" "}
             <strong className="text-navy">{fmtManwon(r.weightedAvgManwon)}</strong>, 중위값은{" "}
             <strong className="text-navy">{fmtManwon(r.medianManwon)}</strong>이며, 1위는{" "}
@@ -212,7 +212,7 @@ export default function IndustryRankingPage({ params }: Props) {
             <p className="font-black text-navy text-lg leading-tight">{fmtManwon(r.medianManwon)}</p>
           </div>
           <div className="rounded-2xl border border-canvas-200 bg-white p-4">
-            <p className="text-xs text-faint-blue mb-1">공시기업 수</p>
+            <p className="text-xs text-faint-blue mb-1">상장사 수</p>
             <p className="font-black text-navy text-lg leading-tight">{r.companyCount}곳</p>
           </div>
           <div className="rounded-2xl border border-canvas-200 bg-white p-4">
@@ -296,7 +296,7 @@ export default function IndustryRankingPage({ params }: Props) {
               전체 평균연봉 TOP 100 리포트 →
             </Link>
             <Link href="/salary-db/listed" className="font-bold text-electric hover:underline">
-              공시기업 공시 연봉 전체 보기 →
+              상장사 공시 연봉 전체 보기 →
             </Link>
           </div>
         </section>
@@ -306,17 +306,17 @@ export default function IndustryRankingPage({ params }: Props) {
           <h2 id="method-heading" className="text-sm font-black text-navy mb-2">데이터 출처·산정 기준</h2>
           <p className="text-xs leading-6 text-muted-blue">
             금융감독원 전자공시시스템(DART) {DART_RANKING_YEAR} 사업연도 사업보고서 「직원 등의
-            현황」 기준 — 연간 급여총액 ÷ 직원 수(등기임원 제외). 공시기업 순위 모수는{" "}
+            현황」 기준 — 연간 급여총액 ÷ 직원 수(등기임원 제외). 상장사 순위 모수는{" "}
             {LISTED_TOTAL.toLocaleString("ko-KR")}곳이며, 업종 분류는 표준산업분류(KSIC) 기반
             자체 매핑입니다. <strong className="text-navy">신입 초봉이 아니며</strong>, 성과급
-            지급 시점에 따라 연도별 변동이 있을 수 있습니다. 종목코드가 기록된 공시기업 기준이며, 현재 상장 여부를 보증하지 않습니다. 데이터 기준일: {DART_RANKING_DATE}.
+            지급 시점에 따라 연도별 변동이 있을 수 있습니다. 상장사는 종목코드가 기록된 기업 기준이며, 현재 상장 여부를 보증하지 않습니다. 데이터 기준일: {DART_RANKING_DATE}.
           </p>
           {/* 인용 복사 — R2 B4 (운영자 승인 2026-08-31): 데이터 변수 기반 빌드타임 생성 */}
           <CitationCopyButton
-            quote={`${DART_RANKING_YEAR} 사업연도 DART 공시 기준 ${r.industryKo} 공시기업 ${r.companyCount}곳의 평균연봉은 직원 수 가중 평균 ${fmtManwon(r.weightedAvgManwon)}, 중위 ${fmtManwon(r.medianManwon)}이며, 1위는 ${top1.nameKo}(${fmtManwon(top1.avgSalaryManwon)})다.`}
+            quote={`${DART_RANKING_YEAR} 사업연도 DART 공시 기준 ${r.industryKo} 상장사 ${r.companyCount}곳의 평균연봉은 직원 수 가중 평균 ${fmtManwon(r.weightedAvgManwon)}, 중위 ${fmtManwon(r.medianManwon)}이며, 1위는 ${top1.nameKo}(${fmtManwon(top1.avgSalaryManwon)})다.`}
             path={path}
             quoteId={`industry-${r.industryId}`}
-            sourceLabel="공시기업 공시 연봉 DB"
+            sourceLabel="상장사 공시 연봉 DB"
             className="mt-4"
           />
         </section>
