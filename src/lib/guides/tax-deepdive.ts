@@ -440,7 +440,7 @@ export const taxDeepdiveGuides = [
  {
  slug: "individual-vs-corporate-tax",
  title: "개인사업자 vs 법인 전환 시점: 매출 얼마부터 법인이 유리할까?",
- description: "개인·법인의 세금은 대표 급여·배당·공제에 따라 달라집니다. 2026년 일반 영리법인 세율과 비교 조건을 정리합니다.",
+ description: "개인사업자 종합소득세(누진 6~45%) vs 법인세(10~25%). 매출 기준 전환 시점 단정 불가. 4대보험·대표급여 비교.",
  category: "세금",
  tags: ["개인사업자", "법인 전환", "법인세", "사업자"],
  level: "고급" as const,

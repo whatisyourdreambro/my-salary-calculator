@@ -178,7 +178,7 @@ const rawGuides = [
  slug: "year-end-tax-2026",
  // W3-A 메타만 개명 (본문·H2·발행일 불변). 옛 제목은 '2025 연말정산'으로 귀속연도가 어긋났다.
  title: "2026년 귀속 연말정산(2027년 1월) 공제 총정리 — 한도표·달라진 점",
- description: "2026년 귀속 소득공제·세액공제 한도와 적용 조건, 실제 환급액을 확인할 자료를 정리했습니다.",
+ description: "바뀐 세법 반영! 2026년 귀속 소득공제, 세액공제 꿀팁과 한도로 환급액 늘리는 법.",
  category: "세금",
  tags: ["연말정산", "환급", "절세"],
  level: "초급",
@@ -221,12 +221,12 @@ const rawGuides = [
  { slug: "car-tax-annual-payment", title: "자동차세 연납 신청: 1월에 5% 공제 🚗", description: "1월에 미리 내면 세금이 줄어든다? 위택스 신청 방법과 카드 무이자 할부 팁.", category: "세금", tags: ["자동차세", "연납", "절세"], level: "초급", publishedDate: "2025-01-05", views: 52000 },
  { slug: "real-estate-tax-comprehensive", title: "종합부동산세: 1주택자 공제 한도 상향 🏘️", description: "부자세? 이제는 중산층도 알아야 할 종부세 계산 구조와 절세 전략.", category: "세금", tags: ["종부세", "부동산", "세금"], level: "고급", publishedDate: "2025-11-25", views: 38000 },
  { slug: "financial-income-tax", title: "금융소득 종합과세: 이자만 2천만원? 💰", description: "예금 이자와 배당금 합계 2천만원 초과 시 세금 폭탄 피하기.", category: "세금", tags: ["금융소득", "이자", "배당"], level: "고급", publishedDate: "2025-05-10", views: 29000 },
- { slug: "donation-tax-credit", title: "기부금 세액공제: 기부하고 세금 환급 ❤️", description: "기부금 공제율·한도 정리. 환급 전 남은 세액을 확인하세요.", category: "세금", tags: ["기부금", "세액공제", "환급"], level: "초급", publishedDate: "2025-12-10", views: 41000 },
+ { slug: "donation-tax-credit", title: "기부금 세액공제: 기부하고 세금 환급 ❤️", description: "정치자금, 종교단체, 고향사랑기부제... 공제·환급 꿀팁.", category: "세금", tags: ["기부금", "세액공제", "환급"], level: "초급", publishedDate: "2025-12-10", views: 41000 },
 
  // --- 투자 (Investment) : 10 items ---
  {
  slug: "isa-account-guide",
- title: "만능통장 ISA: 납입 한도와 만기 활용 로드맵 💎",
+ title: "만능통장 ISA: 3년 만기 활용 1억 로드맵 💎",
  description: "비과세 혜택 끝판왕 ISA 계좌 활용법. 중개형 vs 신탁형 비교부터 추천 포트폴리오까지.",
  category: "투자",
  tags: ["ISA", "비과세", "목돈마련"],

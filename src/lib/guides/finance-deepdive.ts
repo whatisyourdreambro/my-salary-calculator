@@ -345,7 +345,7 @@ export const financeGuides = [
 
  {
  slug: "etf-portfolio-2026",
- title: "ETF 적립식 포트폴리오: 월 50만·10년 투자 시뮬레이션",
+ title: "ETF 적립식 포트폴리오: 월 70만으로 10년 1억 만들기",
  description: "S&P500·KOSPI·채권·금 ETF 4종 분산. 월 30~100만 적립 시뮬과 리밸런싱 주기, 위험 수준별 포트폴리오 추천.",
  category: "투자",
  tags: ["ETF 투자", "적립식", "S&P500", "분산 투자", "포트폴리오"],
