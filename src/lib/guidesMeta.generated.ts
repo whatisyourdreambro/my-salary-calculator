@@ -177,7 +177,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "year-end-tax-2026",
   "title": "2026년 귀속 연말정산(2027년 1월) 공제 총정리 — 한도표·달라진 점",
-  "description": "바뀐 세법 반영! 2026년 귀속 소득공제, 세액공제 꿀팁과 한도로 환급액 늘리는 법.",
+  "description": "2026년 귀속 소득공제·세액공제 한도와 적용 조건, 실제 환급액을 확인할 자료를 정리했습니다.",
   "category": "세금",
   "tags": [
    "연말정산",
@@ -323,7 +323,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "donation-tax-credit",
   "title": "기부금 세액공제: 기부하고 세금 환급 ❤️",
-  "description": "정치자금, 종교단체, 고향사랑기부제... 공제·환급 꿀팁.",
+  "description": "기부금 공제율·한도 정리. 환급 전 남은 세액을 확인하세요.",
   "category": "세금",
   "tags": [
    "기부금",
@@ -931,7 +931,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "individual-vs-corporate-tax",
   "title": "개인사업자 vs 법인 전환 시점: 매출 얼마부터 법인이 유리할까?",
-  "description": "개인사업자 종합소득세(누진 6~45%) vs 법인세(10~25%). 매출 기준 전환 시점 단정 불가. 4대보험·대표급여 비교.",
+  "description": "개인·법인의 세금은 대표 급여·배당·공제에 따라 달라집니다. 2026년 일반 영리법인 세율과 비교 조건을 정리합니다.",
   "category": "세금",
   "tags": [
    "개인사업자",
@@ -1368,7 +1368,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "retirement-planning-30s",
   "title": "30대부터 시작하는 노후 준비: 60세 자산 10억 만들기",
-  "description": "30대부터 매달 50만 적립 + ETF 운용 시 60세 6억 시뮬. 국민연금·퇴직연금·개인연금 3층 보장 활용법.",
+  "description": "30세부터 월 50만원을 연 7%로 적립하는 가정과, 적립액별 60세 자산·3층 연금을 비교합니다.",
   "category": "기초",
   "tags": [
    "노후 준비",
@@ -2582,8 +2582,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "youth-leap-account-2026",
-  "title": "청년도약계좌 기존 가입자 — 정부기여금 144만원·만기 4,984만원",
-  "description": "2025-12-31 신규 가입 종료(청년미래적금 참고). 월 70만원 × 5년 = 원금 4,200만원 + 정부기여금 144만원 + 이자 비과세 640만원 = 만기 4,984만원.",
+  "title": "청년도약계좌 기존 가입자 — 정부기여금·만기 4,984만원",
+  "description": "신규 가입 종료 후 기존 가입자의 만기 금액을 계산합니다. 원금·기여금·이자와 비과세로 줄어드는 세금을 구분하세요.",
   "category": "투자",
   "tags": [
    "청년도약계좌",
@@ -2736,7 +2736,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "credit-score-850-strategy-2026",
   "title": "신용점수 6개월 850 만드는 5가지 — 대출 금리 2~4%p 절감",
-  "description": "카드 사용액 한도 30% 이하·자동이체 6건·카뱅/토스 신용관리·마통 자제·카드론 즉시 정리. 750점 → 900점 시 이자 절감액은 금융사·상품별 상이.",
+  "description": "신용점수 관리 방법과 대출 심사 조건을 확인하세요. 금리·절감액은 금융기관·상품·개인 조건에 따라 달라집니다.",
   "category": "기초",
   "tags": [
    "신용점수",
@@ -2889,7 +2889,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "one-home-capital-gains-12eok-2026",
   "title": "1세대 1주택 양도세 12억 비과세 — 15억 매도 시 세금 1,666만원",
-  "description": "1세대 1주택 + 보유 2년 + 거주 2년(조정) + 12억 이하 = 양도세 0원. 15억 매도 시 초과 비율 과세, 장기보유공제 36% 적용 시 약 1,666만원. 10년+10년 시 80% 공제.",
+  "description": "15억 매도·8억 취득 예시의 보유·거주 공제와 세액 계산",
   "category": "부동산",
   "tags": [
    "양도세",
@@ -3172,7 +3172,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "newlywed-loan-limit-2x-2026",
   "title": "신혼부부 대출 한도 부부 합산 — 단독 대비 2배 가능",
-  "description": "부부 합산 DSR 40% + LTV 70%. 부부 연 1.2억 시 8.38억 대출 예시. 규제·심사 별도. 공동 채무자 리스크 점검 필수.",
+  "description": "부부 연소득 1.2억·30년·4%의 단순 DSR 예시는 약 8.38억. 실제 규제·심사는 별도입니다.",
   "category": "부동산",
   "tags": [
    "신혼부부",
@@ -3228,7 +3228,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "parcel-vs-occupancy-right-tax-2026",
   "title": "분양권 vs 입주권 양도세 — 단기 양도세 70%·60% 점검",
-  "description": "분양권 양도세 1년 미만 70%·그 외 60%, 승계 입주권은 원조합원 기간 미합산. 8억 입주권 매도 세금 계산법.",
+  "description": "분양권의 1년 기준 70%·60% 세율과 승계취득 입주권의 보유기간·공제 차이를 확인합니다.",
   "category": "부동산",
   "tags": [
    "분양권",
@@ -3579,7 +3579,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "child-fund-gift-strategy-2026",
   "title": "자녀 명의 펀드 — 18세 6,760만원 만들기",
-  "description": "자녀 0세에 2,000만원 비과세 증여 → 연 7% 운용 가정 → 18세 6,760만원. 부모 종합소득과 분리, 세대 간 자산 이전.",
+  "description": "2,000만원을 연 7%로 18년 운용하면 세금·수수료 전 약 6,760만원. 가정 수익률은 보장되지 않습니다.",
   "category": "투자",
   "tags": [
    "자녀",
@@ -3743,7 +3743,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "business-trip-expense-tax-2026",
   "title": "출장비 비과세 — 국내 2만원·해외 5만원 오해",
-  "description": "실비 영수증 출장비 비과세. 일비 국내 2만원·해외 5만원 한도 오해. 정액 일비는 근로소득 과세.",
+  "description": "출장비의 실비변상 성격과 지급 규정·증빙으로 비과세 여부를 확인합니다.",
   "category": "연봉",
   "tags": [
    "출장비",
@@ -3944,7 +3944,7 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "personal-vs-corporation-tax-2026",
-  "title": "개인사업자 vs 법인 — 순이익별 법인 전환 유불리",
+  "title": "개인사업자 vs 법인 — 순이익별 전환 유불리",
   "description": "개인 6~45% vs 법인 10~25% + 배당 과세. 매출·순이익 외 대표 보수까지 법인 전환 검토.",
   "category": "세금",
   "tags": [
@@ -4163,7 +4163,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "gift-vs-transfer-asset-2026",
   "title": "증여 vs 양도 — 자산별 최적 이전 방법",
-  "description": "10억 주택 단순 증여 2.25억 vs 부담부 1.1억. 현금은 증여, 부동산은 부담부증여, 주식은 저평가 시기 증여.",
+  "description": "10억 자산 이전의 전제와 세금을 비교합니다. 성인 자녀 단순 증여 예시는 2.25억(신고공제 전).",
   "category": "부동산",
   "tags": [
    "증여",
@@ -4272,7 +4272,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "health-insurance-continue-after-retire-2026",
   "title": "퇴직 후 임의계속가입 — 직장 보험료로 36개월 유지",
-  "description": "퇴직 후 첫 지역보험료 납기 2개월 내 신청. 직장가입자 시절 보험료 기준 본인 부담. 지역가입자와 비교.",
+  "description": "최초 지역보험료 납부기한에서 2개월이 지나기 전 신청. 보험료와 가입 조건을 비교합니다.",
   "category": "기초",
   "tags": [
    "임의계속가입",
@@ -4792,7 +4792,7 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "retention-bonus-3year-split-2026",
-  "title": "리텐션 보너스 1억 3년 분할 vs 일시 — 총세금 비교",
+  "title": "리텐션 보너스 1억 — 3년 분할 vs 일시 총세금",
   "description": "M&A·구조조정 후 잔존 보너스. 1억 일시 vs 3년 분할 세금은 귀속연도별 상이. 분할 지급 협상 시 조건 확인.",
   "category": "연봉",
   "tags": [

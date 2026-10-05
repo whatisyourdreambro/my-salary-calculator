@@ -77,7 +77,7 @@ export const lifecycleGuides = [
  {
  slug: "retirement-planning-30s",
  title: "30대부터 시작하는 노후 준비: 60세 자산 10억 만들기",
- description: "30대부터 매달 50만 적립 + ETF 운용 시 60세 6억 시뮬. 국민연금·퇴직연금·개인연금 3층 보장 활용법.",
+ description: "30세부터 월 50만원을 연 7%로 적립하는 가정과, 적립액별 60세 자산·3층 연금을 비교합니다.",
  category: "기초",
  tags: ["노후 준비", "은퇴 자산", "국민연금", "3층 보장"],
  level: "중급" as const,

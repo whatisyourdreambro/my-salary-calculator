@@ -1246,7 +1246,7 @@ export const hotBonusTaxComplete: Guide[] = [
   { slug: "foreign-bonus-structure-2026", title: "외국계 보너스 — 구글·아마존·메타·MS 한국지사 RSU 구조", description: "구글 Alphabet RSU + 사인온, 아마존 분할 사인온 + 4년 비균등 RSU, 메타·MS 분기 성과 + RSU. 외국 모회사 직접 지급 시 본인 종소세 신고 의무.", category: "주식", tags: ["외국계", "구글", "아마존", "메타", "RSU", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: foreignBonus, lang: "ko" },
   { slug: "sign-on-bonus-tax-2026", title: "사인온 보너스 5,000만 — 실수령과 분할 지급 세금", description: "입사 시 일회성 보너스. 연봉 합산 과세라 한계세율만으로 부담률 단정 불가. 5,000만 일시 vs 2년 분할 비교.", category: "연봉", tags: ["사인온", "Signing Bonus", "입사", "절세", "2026"], level: "중급", publishedDate: "2026-05-23",
     modifiedDate: "2026-10-03", views: 0, content: signOnBonus, lang: "ko" },
-  { slug: "retention-bonus-3year-split-2026", title: "리텐션 보너스 1억 3년 분할 vs 일시 — 총세금 비교", description: "M&A·구조조정 후 잔존 보너스. 1억 일시 vs 3년 분할 세금은 귀속연도별 상이. 분할 지급 협상 시 조건 확인.", category: "연봉", tags: ["리텐션", "잔존보너스", "M&A", "구조조정", "2026"], level: "고급", publishedDate: "2026-05-23",
+  { slug: "retention-bonus-3year-split-2026", title: "리텐션 보너스 1억 — 3년 분할 vs 일시 총세금", description: "M&A·구조조정 후 잔존 보너스. 1억 일시 vs 3년 분할 세금은 귀속연도별 상이. 분할 지급 협상 시 조건 확인.", category: "연봉", tags: ["리텐션", "잔존보너스", "M&A", "구조조정", "2026"], level: "고급", publishedDate: "2026-05-23",
     modifiedDate: "2026-10-03", views: 0, content: retentionBonus, lang: "ko" },
   { slug: "executive-bonus-corporate-limit-2026", title: "비상장 임원 성과급 한도 — 초과 시 회사·임원 모두 손해", description: "정관·주총 한도 명시. 한도 5억 + 실 지급 8억 시 초과 3억 법인세 7,200만 추가 + 임원 근로소득세 그대로. 한도 내 운용 필수.", category: "연봉", tags: ["임원", "비상장", "성과급한도", "법인세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: executiveBonusLimit, lang: "ko" },
   // 영역 B — 성과급 소득세 10편
