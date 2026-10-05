@@ -5,21 +5,23 @@
 import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
+import { retryChunkImport } from "@/lib/chunkReload";
 import {
  TrendingUp, PiggyBank, FileText, GitCompare,
  BarChart3, Calculator, Briefcase, Globe,
  ChevronLeft, ChevronRight,
 } from "lucide-react";
 
-const SalaryCalculator = dynamic(() => import("@/components/SalaryCalculator"));
-const SeveranceCalculator = dynamic(() => import("@/components/SeveranceCalculator"));
-const PayStubGenerator = dynamic(() => import("@/components/PayStubGenerator"));
-const FutureSalaryCalculator = dynamic(() => import("@/components/FutureSalaryCalculator"));
-const SalaryComparator = dynamic(() => import("@/components/SalaryComparator"));
-const SalaryRank = dynamic(() => import("@/components/SalaryRank"));
-const FreelancerCalculator = dynamic(() => import("@/components/FreelancerCalculator"));
-const ExchangeRateImpactCalculator = dynamic(() => import("@/components/ExchangeRateDisplay"));
-const YearEndTaxCalculator = dynamic(() => import("@/components/YearEndTaxCalculator"));
+// 탭 청크 로드 실패는 1초 뒤 1회 재시도(승인 #10 A14) — 그래도 실패하면 홈 HomeClient 의 섬 경계가 이 탭 묶음 자리만 대체.
+const SalaryCalculator = dynamic(() => retryChunkImport(() => import("@/components/SalaryCalculator")));
+const SeveranceCalculator = dynamic(() => retryChunkImport(() => import("@/components/SeveranceCalculator")));
+const PayStubGenerator = dynamic(() => retryChunkImport(() => import("@/components/PayStubGenerator")));
+const FutureSalaryCalculator = dynamic(() => retryChunkImport(() => import("@/components/FutureSalaryCalculator")));
+const SalaryComparator = dynamic(() => retryChunkImport(() => import("@/components/SalaryComparator")));
+const SalaryRank = dynamic(() => retryChunkImport(() => import("@/components/SalaryRank")));
+const FreelancerCalculator = dynamic(() => retryChunkImport(() => import("@/components/FreelancerCalculator")));
+const ExchangeRateImpactCalculator = dynamic(() => retryChunkImport(() => import("@/components/ExchangeRateDisplay")));
+const YearEndTaxCalculator = dynamic(() => retryChunkImport(() => import("@/components/YearEndTaxCalculator")));
 
 const TABS = {
  SALARY: "salary",

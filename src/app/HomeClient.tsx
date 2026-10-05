@@ -7,15 +7,36 @@ import Link from "@/components/AppLink";
 import HeroBadge from "@/components/HeroBadge";
 import DeferredHomeCalculator from "@/components/home/DeferredHomeCalculator";
 import HomeWorkClockSection from "@/components/home/HomeWorkClockSection";
+import IslandBoundary, { IslandFallback } from "@/components/IslandBoundary";
 import { HomeTopAd, GuideMidAd, Display2Ad, MultiplexAd } from "@/components/AdPlacement";
+import { retryChunkImport } from "@/lib/chunkReload";
 
 // Primary inputs load immediately; only the two lower calculators use DeferredSection.
-const CalculatorTabs = dynamic(() => import("@/components/CalculatorTabs"), {
+// 청크 로드 실패는 1초 뒤 1회 재시도(A14) — 그래도 실패하면 아래 CalculatorTabs 경계가 이 자리에서만 대체.
+const DynamicCalculatorTabs = dynamic(() => retryChunkImport(() => import("@/components/CalculatorTabs")), {
   ssr: false,
   loading: () => <div className="flex min-h-[560px] w-full items-center justify-center" role="status">
     <span className="text-sm text-muted-foreground">계산기를 준비하고 있습니다.</span>
   </div>,
 });
+
+/**
+ * 승인 #10 A14(2026-09-25, 감사 CLIENT-01): 계산기 탭 섬(9개 동적 탭 + 결과 직하 ResultAd)의 청크 실패가
+ * error.tsx 로 올라가 홈 본문·광고 전체를 지우지 않게 이 섬만 오류 경계로 감싼다.
+ *  - 정상일 때는 children 그대로 — DOM·클래스·광고 위치 불변(자동광고 CSS 경로 불변).
+ *  - 실패하면 로딩 자리와 같은 min-h 560 자리에 안내 + 사용자 새로고침 버튼(자동 새로고침 없음 — 광고 재요청 방지).
+ *  - 본문 JSX 의 <CalculatorTabs /> 줄과 그 아래 Display2Ad 는 그대로 둔다(광고는 경계 밖).
+ */
+function CalculatorTabs() {
+  return (
+    <IslandBoundary
+      name="home-calculator-tabs"
+      fallback={<IslandFallback className="flex min-h-[560px] w-full items-center justify-center text-center text-sm text-muted-foreground" message="계산기를 불러오지 못했습니다." reloadLabel="새로고침" />}
+    >
+      <DynamicCalculatorTabs />
+    </IslandBoundary>
+  );
+}
 const CoupangBanner = dynamic(() => import("@/components/CoupangBanner"), { ssr: false });
 const SeasonalBanner = dynamic(() => import("@/components/SeasonalBanner"), { ssr: false });
 
