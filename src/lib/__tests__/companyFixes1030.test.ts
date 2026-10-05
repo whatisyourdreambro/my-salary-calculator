@@ -72,6 +72,17 @@ const toText = (html: string) =>
     .replace(/&#x27;|&#39;/g, "'")
     .replace(/&amp;/g, "&");
 
+describe("복지 value 0 — 숫자 0 이 글자로 찍히던 && 단락 평가 (R09 code31-04·code33-08·code34-04·code35-02)", () => {
+  it("value 0 복지를 가진 회사가 실제로 있고(sk-hynix 등), 렌더 조건은 불리언 비교다", () => {
+    const withZero = companies.filter((c) => c.benefits.some((b) => b.value === 0)).map((c) => c.id);
+    expect(withZero).toContain("sk-hynix");
+    expect(withZero.length).toBeGreaterThanOrEqual(20);
+    const src = readFileSync("src/app/salary-db/[id]/CompanyDetailClient.tsx", "utf8");
+    expect(src).toContain("{benefit.value != null && benefit.value > 0 && (");
+    expect(src).not.toMatch(/\{benefit\.value && /);
+  });
+});
+
 describe("핵심 요약 첫 문장 조사 (CompanyInsights — '대기업로'·'쿠팡(Coupang)는' 412쪽)", () => {
   it("분류 문구는 조사가 맞고, 단어 폭이 종전 이하다", () => {
     for (const [tier, old] of Object.entries(OLD_TIER_WORD)) {
