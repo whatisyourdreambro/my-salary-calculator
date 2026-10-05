@@ -77,6 +77,9 @@ const pre = preGateSnapshot as {
   cardSha256: Record<string, string>;
   salaryFaqSha256: Record<string, string>;
 };
+/** 고정본 뒤 공시 카드 note 를 고친 회사(같은 폭 숫자 교체) — 적용 전 카드 바이트 대조에서만 뺀다.
+ *  korea-investment: '증권업 평균연봉 전체 1위 수준' -> '전체 4위 수준'(DART 2025 증권업 24곳 중 4위, 2026-10). */
+const CARD_NOTE_CHANGED_AFTER_FIXTURE: readonly string[] = ["korea-investment"];
 const SUFFIX_RE = / 공시 평균연봉 (.+)\((\d{4}) 사업연도\)\.$/;
 const INJECTED_SOURCE_SAMPLE = "금융감독원 전자공시(DART) 사업보고서(2025 사업연도) '직원 등의 현황'";
 
@@ -303,7 +306,7 @@ describe("적용 전 빌드 — bd68d860(병합 전 main) 출력과 바이트 �
   it("A4' 게이트 — 공시 카드 HTML 이 bd68d860 렌더와 같고, 출처 줄은 '출처: ' + 종전 출처 문구(주입 꼬리 포함)", () => {
     at(BEFORE);
     let injected = 0;
-    for (const c of historicalCompanies) {
+    for (const c of historicalCompanies.filter((x) => !CARD_NOTE_CHANGED_AFTER_FIXTURE.includes(x.id))) {
       const d = c.disclosed;
       if (!d) continue;
       // 데이터 출처 문구 자체가 병합 전과 같다 — 꼬리는 표시 단계(게이트 뒤)에서만 뺀다
