@@ -154,7 +154,7 @@ export default function MbtiSalaryPage() {
  <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-light-text-secondary 100">
  5가지 질문에 답하고, 재미로 보는 캐릭터와
  <br />
- 미리 정한 가상 연봉 그래프를 확인해보세요. 실제 연봉 예측이나 공식 MBTI 검사가 아닙니다.
+ 가상의 인생 연봉 그래프를 확인해보세요.
  </p>
  <button
  onClick={handleStart}

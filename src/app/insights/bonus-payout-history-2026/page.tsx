@@ -174,7 +174,7 @@ export default function BonusPayoutHistoryReport() {
           breadcrumbLd([
             { name: "홈", path: "/" },
             { name: "데이터 리포트", path: "/insights" },
-            { name: "2026 성과급 지급률 기록", path: PATH },
+            { name: "2026 성과급 지급률 총정리", path: PATH },
           ]),
           datasetLd({
             name: report.title,
@@ -210,12 +210,12 @@ export default function BonusPayoutHistoryReport() {
         <div className="max-w-3xl mx-auto px-4">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-electric/20 text-electric font-bold text-sm mb-6">
             <BarChart3 className="w-4 h-4" />
-            <span>머니샐러리 데이터 리포트 — 성과급 지급률 기록</span>
+            <span>머니샐러리 데이터 리포트 — 성과급 지급률 전수</span>
           </div>
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4 leading-[1.18]">
-            2026 대기업 성과급 지급률 기록
+            2026 대기업 성과급 지급률 총정리
             <span className="block text-xl sm:text-2xl mt-2 text-electric">
-              {companyCount}개사 · 지급률 기록 {payoutCount}건 — 기준별 분리 집계
+              {companyCount}개사 · 지급률 {payoutCount}건 — 기준별 분리 집계
             </span>
           </h1>
           <PublishedMeta

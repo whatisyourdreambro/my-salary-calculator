@@ -4,7 +4,7 @@ import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "노비 탈출 계산기 - 나는 언제 은퇴할 수 있을까?",
- description: "현재 자산·월 저축액·희망 생활비·가정 수익률로 자체 목표액까지의 기간을 계산하는 참고용 시뮬레이터. 4% 가정과 연 단위 적립 모델을 사용하며 실제 은퇴·퇴사 가능 여부를 보장하지 않습니다.",
+ description: "현재 자산·월 저축액·희망 생활비를 입력하면 경제적 자유(FIRE) 목표액 달성까지 남은 햇수를 계산하는 노비 탈출 시뮬레이터. 4% 가정·연 단위 적립 모델이며 실제 은퇴·퇴사 가능 여부를 보장하지 않습니다.",
  path: "/fun/escape-plan",
  keywords: ["은퇴계산기", "파이어족", "경제적자유", "노비탈출", "저축계산기", "복리계산기"],
 });

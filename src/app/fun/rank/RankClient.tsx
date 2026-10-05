@@ -82,11 +82,11 @@ export default function RankClient() {
  <span>연봉 분포 시뮬레이터 (간단 버전)</span>
  </div>
  <h1 className="text-4xl sm:text-6xl font-black tracking-tight mb-5 text-navy ">
- 자체 참고 구간에서 <br className="sm:hidden" />
+ 내 연봉은 상위 <br className="sm:hidden" />
  <span className="text-primary">몇 %일까요?</span>
  </h1>
  <p className="text-lg text-faint-blue max-w-2xl mx-auto font-medium">
- 고정된 자체 참고 구간으로 입력 연봉을 분류합니다. 공식 전국 순위나 실제 인구 비율은 아닙니다.
+ 자체 참고 구간 모델로 당신의 대략적인 위치를 시뮬레이션해드립니다.
  </p>
  </motion.div>
  </div>

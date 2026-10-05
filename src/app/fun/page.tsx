@@ -114,7 +114,7 @@ export default function FunLabPage() {
  </h2>
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 auto-rows-fr">
  <FunCard icon={Dna} title="부자 DNA 테스트" description="4가지 질문으로 투자 취향 캐릭터를 골라보세요. 재미로 보는 참고용 테스트입니다." href="/fun/rich-dna-test" color="text-primary" featured={true} badge="POPULAR" />
- <FunCard icon={Brain} title="논리 퀴즈" description="재미로 푸는 논리 퀴즈 15문항. 공식 IQ 검사가 아닌 참고용 점수입니다." href="/fun/iq-test" color="text-primary" badge="NEW" />
+ <FunCard icon={Brain} title="IQ 테스트" description="재미로 푸는 논리 퀴즈 15문항. 공식 IQ 검사가 아닌 참고용 점수입니다." href="/fun/iq-test" color="text-primary" badge="NEW" />
  <FunCard icon={Target} title="소비 성향 테스트" description="4가지 질문으로 재미있게 살펴보는 나의 소비 취향." href="/fun/spending-test" color="text-primary" />
  <FunCard icon={Wallet} title="금융 MBTI (F-MBTI)" description="나의 금융 성격 유형은? 16가지 유형으로 분석." href="/fun/financial-mbti" color="text-primary" />
  <FunCard icon={TrendingUp} title="MBTI 연봉 분석" description="5가지 질문으로 고르는 16가지 가상 연봉 그래프. 실제 연봉 예측은 아닙니다." href="/mbti-salary" color="text-primary" />
