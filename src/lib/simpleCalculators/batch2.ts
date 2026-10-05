@@ -517,7 +517,10 @@ const BUSINESS: CalculatorDef[] = [
  { name: "simpleRate", label: "간이세율 (업종)", defaultValue: 3, suffix: "%" },
  ],
  compute: ({ revenue, purchase, simpleRate }) => {
- const simpleVat = revenue * (simpleRate / 100);
+ // 간이과세자는 해당 과세기간 공급대가 합계가 4,800만원 미만이면 납부의무 면제(부가가치세법 제69조 제1항).
+ // 종전에는 매출 4,000만원에도 간이 부가세 120만원을 표시했다 (2026-10-05 감사 code56-03). 기본값(6,000만원)은 그대로.
+ const simpleExempt = revenue < 48_000_000;
+ const simpleVat = simpleExempt ? 0 : revenue * (simpleRate / 100);
  const generalVat = revenue * 0.1 - purchase * 0.1;
  return {
  primary: { label: "간이 부가세", value: Math.round(simpleVat), suffix: "원" },
@@ -525,7 +528,9 @@ const BUSINESS: CalculatorDef[] = [
  { label: "일반 부가세", value: Math.round(generalVat), suffix: "원" },
  { label: "간이 절감액", value: Math.round(generalVat - simpleVat), suffix: "원" },
  ],
- note: "연 매출 1억 400만원 미만 간이과세 가능(2024-07 상향, 부동산임대·과세유흥업은 4,800만원). 매입 비중 작으면 간이가 유리.",
+ note: simpleExempt
+ ? "연 공급대가 4,800만원 미만 간이과세자는 부가세 납부의무 면제(부가가치세법 69조). 일반과세자는 면제 없음."
+ : "연 매출 1억 400만원 미만 간이과세 가능(2024-07 상향, 부동산임대·과세유흥업은 4,800만원). 매입 비중 작으면 간이가 유리.",
  };
  },
  },
