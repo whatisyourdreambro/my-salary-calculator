@@ -103,3 +103,27 @@ describe("회사 데이터 사실 정정 — 광고 위 같은 폭 이하 (R09 c
     expect(over).toEqual(["meritz-fire"]);
   });
 });
+
+describe("삼성전자 DART 주입 헤드라인 — 사업보고서 원문 합계 행 1인평균 158백만원 (2026-10-05 원문 확인)", () => {
+  it("dartInjection·dartDisclosed 공시 기준값이 원문 합계 1억5,800만원이고, 회사 카드(수기 15,800)와 위젯이 같은 값이다", async () => {
+    const { dartInjection } = await import("@/data/dart/dartInjection");
+    const { dartDisclosed } = await import("@/data/dart/dartDisclosed");
+    const inj = dartInjection["samsung-electronics"];
+    expect(inj).toEqual({ a: 15800, y: "2025", e: 128881, r: "20260310002820", t: 13.7 });
+    const d = dartDisclosed.find((x) => x.corpCode === "00126380")!;
+    expect(d.reportedAvgManwonRaw).toBe(15800);
+    // 급여총액÷인원 산정치(랭킹 기준)는 그대로 — 19,799,762백만원 ÷ 128,881명
+    expect(d.avgSalaryManwonRaw).toBe(15363);
+    expect(company("samsung-electronics").disclosed?.avgSalaryManwon).toBe(inj.a);
+    const { GET } = await import("@/app/widget/company/route");
+    const html = await (await GET(new Request("https://www.moneysalary.com/widget/company?id=samsung-electronics"))).text();
+    expect(html).toContain("1억 5,800만원");
+    expect(html).not.toContain("1억 5,700만원");
+  });
+
+  it("ETL 은 같은 접수번호일 때만 원문 합계 행 값을 쓴다(다음 해 보고서는 자동 해제)", () => {
+    const etl = readFileSync("scripts/dart-etl.mjs", "utf8");
+    expect(etl).toContain('"00126380": { rceptNo: "20260310002820", manwon: 15800 }');
+    expect(etl).toContain("filingTotal && filingTotal.rceptNo === list[0].rcept_no");
+  });
+});
