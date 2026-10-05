@@ -356,14 +356,19 @@ export const krCompanies_Batch9: CompanyProfile[] = [
   // --- INSURANCE ---
   {
     id: "db-insurance",
+    // DART 2025 사업보고서(rcpNo 20260331003904) 직원 등의 현황 원문 값 — 2026-10-06 OpenDART 재확인(A5, 운영자 10/5 승인).
+    // 남 2,033명(1인평균 1억4,226만원·근속 13년6월)·여 2,683명(7,450만원·12년4월), 연간급여총액 489,059,308,000원
+    // ÷ 4,716명 = 1억370만원. 근속 12.8년은 남녀 인원 가중 평균(dart-etl 과 같은 산식). 종전 수기 1억3,700만원
+    // (뉴스투데이 인용)은 원문 어느 행에도 없는 값이고, note 의 전년 1억1,800만원도 2024 원문(8,982만원)과 달랐다.
+    // 카드 모양(배지·이력 표 없음)과 meta description 은 DISCLOSED_CORRECTION_HOLD_IDS 로 종전대로 둔다.
     disclosed: {
-      avgSalaryManwon: 13700,
+      avgSalaryManwon: 10370,
       fiscalYear: "2025",
       avgTenureYears: 12.8,
       source:
-        "뉴스투데이 2026-05-09 — 금융감독원 전자공시(DART) 2025년 사업보고서 기준 평균연봉 1억3,700만원, 근속 12년10개월",
-      sourceUrl: "https://www.news2day.co.kr/article/20260506500138",
-      note: "전년 1억1,800만원 대비 16% 급등(CEO스코어데일리 2026-04-03 보도 교차 부합).",
+        "금융감독원 전자공시(DART) 2025 사업보고서 직원 현황 — 4,716명 급여총액÷인원, 근속은 남녀 가중 평균",
+      sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260331003904",
+      note: "전년 8,982만원 대비 15.5% 상승(2024 사업보고서 급여총액÷인원).",
     },
     name: { ko: "DB손해보험", en: "DB Insurance" },
     industry: "Insurance",

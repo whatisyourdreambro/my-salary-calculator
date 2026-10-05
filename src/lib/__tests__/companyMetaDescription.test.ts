@@ -80,6 +80,13 @@ const pre = preGateSnapshot as {
 /** 고정본 뒤 공시 카드 note 를 고친 회사(같은 폭 숫자 교체) — 적용 전 카드 바이트 대조에서만 뺀다.
  *  korea-investment: '증권업 평균연봉 전체 1위 수준' -> '전체 4위 수준'(DART 2025 증권업 24곳 중 4위, 2026-10). */
 const CARD_NOTE_CHANGED_AFTER_FIXTURE: readonly string[] = ["korea-investment"];
+/** 고정본 뒤 수기 공시 카드의 헤드라인·출처·note 를 원문 값으로 바로잡은 회사 — 적용 전 카드 바이트 대조에서만 뺀다
+ *  (적용 후 '출처 줄 글자 수 ≤ 종전' 검사는 그대로 받는다). 고친 값은 companyFixes1030.test.ts 가 고정한다.
+ *  db-insurance: 보도 인용 1억3,700만원 -> DART 2025 사업보고서 원문 1억370만원(A5, 2026-10). */
+const DISCLOSED_VALUE_CORRECTED_AFTER_FIXTURE: readonly string[] = ["db-insurance"];
+/** 고정본 뒤 연봉 FAQ(평균·신입 초봉 두 문항) 문장이 바뀐 회사 — bd68d860 고정본 연봉 FAQ 바이트 대조(적용 전)에서만 뺀다.
+ *  적용 후 검사는 현재 데이터로 게이트 전후를 비교하므로 그대로 받는다. */
+const SALARY_FAQ_CHANGED_AFTER_FIXTURE: readonly string[] = [...DISCLOSED_VALUE_CORRECTED_AFTER_FIXTURE];
 const SUFFIX_RE = / 공시 평균연봉 (.+)\((\d{4}) 사업연도\)\.$/;
 const INJECTED_SOURCE_SAMPLE = "금융감독원 전자공시(DART) 사업보고서(2025 사업연도) '직원 등의 현황'";
 
@@ -306,7 +313,7 @@ describe("적용 전 빌드 — bd68d860(병합 전 main) 출력과 바이트 �
   it("A4' 게이트 — 공시 카드 HTML 이 bd68d860 렌더와 같고, 출처 줄은 '출처: ' + 종전 출처 문구(주입 꼬리 포함)", () => {
     at(BEFORE);
     let injected = 0;
-    for (const c of historicalCompanies.filter((x) => !CARD_NOTE_CHANGED_AFTER_FIXTURE.includes(x.id))) {
+    for (const c of historicalCompanies.filter((x) => ![...CARD_NOTE_CHANGED_AFTER_FIXTURE, ...DISCLOSED_VALUE_CORRECTED_AFTER_FIXTURE].includes(x.id))) {
       const d = c.disclosed;
       if (!d) continue;
       // 데이터 출처 문구 자체가 병합 전과 같다 — 꼬리는 표시 단계(게이트 뒤)에서만 뺀다
@@ -332,7 +339,7 @@ describe("적용 전 빌드 — bd68d860(병합 전 main) 출력과 바이트 �
 
   it("A4' 게이트 — 회사 연봉 FAQ(화면 FAQ·FAQPage JSON-LD 입력)가 전 회사 bd68d860 출력과 같다", () => {
     at(BEFORE);
-    for (const c of historicalCompanies) {
+    for (const c of historicalCompanies.filter((x) => !SALARY_FAQ_CHANGED_AFTER_FIXTURE.includes(x.id))) {
       const faq = buildCompanySalaryFaq(c);
       expect(sha256(JSON.stringify(faq)), c.id).toBe(pre.salaryFaqSha256[c.id]);
       if (c.disclosed) {

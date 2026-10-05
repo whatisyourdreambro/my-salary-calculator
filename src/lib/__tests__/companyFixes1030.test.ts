@@ -132,3 +132,111 @@ describe("한국투자증권 공시 카드 note — 증권업 전체 1위 수준
     expect(sec.findIndex((d) => d.corpNameKo === "한국투자증권") + 1).toBe(4);
   });
 });
+
+describe("DB손해보험 공시 카드 — 원문에 없는 1억3,700만원 -> DART 2025 사업보고서 원문 1억370만원 (R09 code36-02, A5)", () => {
+  /** 종전(운영 중) 카드 문구 — 바꾼 문구가 글자 종류마다 이보다 많지 않아야 한다(GuideMidAd 위) */
+  const OLD = {
+    headline: "1억 3,700만원",
+    source:
+      "뉴스투데이 2026-05-09 — 금융감독원 전자공시(DART) 2025년 사업보고서 기준 평균연봉 1억3,700만원, 근속 12년10개월",
+    note: "전년 1억1,800만원 대비 16% 급등(CEO스코어데일리 2026-04-03 보도 교차 부합).",
+  };
+  /** [한글, 숫자, 라틴 문자, 그 밖(공백·기호)] 글자 수 */
+  const classes = (text: string) => {
+    const chars = [...text];
+    const hangul = chars.filter((ch) => /[가-힣]/.test(ch)).length;
+    const digits = chars.filter((ch) => /[0-9]/.test(ch)).length;
+    const latin = chars.filter((ch) => /[A-Za-z]/.test(ch)).length;
+    return [hangul, digits, latin, chars.length - hangul - digits - latin];
+  };
+  const notMoreByClass = (after: string, before: string) =>
+    classes(after).every((n, i) => n <= classes(before)[i]);
+
+  it("헤드라인·근속·출처·note 가 DART 원문(rcpNo 20260331003904)과 사이트 DART 수집값에 맞고, 종전 보도 수치는 남지 않는다", async () => {
+    const c = company("db-insurance");
+    const d = c.disclosed!;
+    const { dartDisclosed } = await import("@/data/dart/dartDisclosed");
+    const { dartCompanyStatsById } = await import("@/lib/salary-data/dartReport");
+    const dart = dartDisclosed.find((x) => x.corpCode === "00159102")!;
+    expect(dart.corpNameKo).toBe("DB손해보험");
+    expect(dart.rceptNo).toBe("20260331003904");
+    // 급여총액 489,059,308,000원 ÷ 4,716명 = 10,370.2만원 (남 2,033·여 2,683)
+    expect(d.avgSalaryManwon).toBe(10370);
+    expect(d.avgSalaryManwon).toBe(dart.avgSalaryManwonRaw);
+    expect(Math.round(489_059_308_000 / 4_716 / 10_000)).toBe(10370);
+    expect(d.fiscalYear).toBe("2025");
+    // 근속 = 남 13년6월(2,033명)·여 12년4월(2,683명) 인원 가중 평균 12.84년
+    expect(d.avgTenureYears).toBe(Math.round(((2033 * 13.5 + 2683 * (12 + 4 / 12)) / 4716) * 10) / 10);
+    expect(d.sourceUrl).toBe(`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${dart.rceptNo}`);
+    expect(d.basis).toBeUndefined(); // 수기 블록 그대로(DART 자동 주입 아님) — 카드 제목·라벨 규칙 불변
+    expect(d.source).toContain(`${dart.employeeCount.toLocaleString("ko-KR")}명 급여총액÷인원`);
+    const prev = dart.history!.find((h) => h.fiscalYear === "2024")!;
+    expect(d.note).toBe(
+      `전년 ${prev.avgSalaryManwonRaw.toLocaleString("ko-KR")}만원 대비 ${dartCompanyStatsById.get("db-insurance")!.yoyPct}% 상승(2024 사업보고서 급여총액÷인원).`
+    );
+    expect(JSON.stringify(c)).not.toMatch(/13,?700|1억1,800|news2day|CEO스코어/);
+  });
+
+  it("광고 위 카드: 헤드라인 숫자 폭이 줄고, 출처·note 는 글자 종류마다 종전 이하, 서브셋 밖 글자 없음", () => {
+    const d = company("db-insurance").disclosed!;
+    expect(classes("1억 370만원").every((n, i) => n <= classes(OLD.headline)[i])).toBe(true);
+    expect(notMoreByClass(d.source, OLD.source)).toBe(true);
+    expect(notMoreByClass(d.note!, OLD.note)).toBe(true);
+    expect(outsideFont(`${d.source}${d.note}`)).toEqual([]);
+  });
+
+  it("카드 모양은 운영과 같다 — 배지·이력 표 없음(page.tsx 보류 목록), 괴리 병기 문장은 값이 맞아 사라짐, 라벨은 같은 폭 '원문:'", async () => {
+    const { DISCLOSED_CORRECTION_HOLD_IDS } = await import("@/lib/companyMetaDisclosed");
+    const { dartCompanyStatsById } = await import("@/lib/salary-data/dartReport");
+    const { industryRankingByCompanyId } = await import("@/lib/salary-data/dartRanking");
+    const { default: CompanyDisclosedSalary } = await import("@/components/CompanyDisclosedSalary");
+    expect(DISCLOSED_CORRECTION_HOLD_IDS.has("db-insurance")).toBe(true);
+    const page = readFileSync("src/app/salary-db/[id]/page.tsx", "utf8");
+    expect(page).toContain("if (DISCLOSED_CORRECTION_HOLD_IDS.has(company.id)) return null;");
+    const c = company("db-insurance");
+    const stats = dartCompanyStatsById.get("db-insurance")!;
+    // 보류가 없으면 값이 맞아 배지·이력 게이트(괴리 10% 이하)를 새로 통과한다 — 보류가 막는 것이 이것
+    expect(Math.abs(stats.dartSalaryManwon - c.disclosed!.avgSalaryManwon)).toBeLessThanOrEqual(1);
+    const html = renderToStaticMarkup(
+      createElement(CompanyDisclosedSalary, {
+        company: c,
+        dartRank: null,
+        dartSalaryManwon: stats.dartSalaryManwon,
+        dartStats: null,
+        industryLink: industryRankingByCompanyId.get("db-insurance") ?? null,
+      })
+    );
+    const text = toText(html);
+    expect(text).toContain("1억 370만원");
+    expect(text).toContain("추정이 아닌 공식 수치");
+    expect(text).toContain("평균 근속 12.8년");
+    expect(text).toContain("은 10,370만원입니다.");
+    expect(text).not.toContain("산정치 10,370만원"); // 종전 괴리 병기 '(DART 급여총액÷인원 산정치 10,370만원)' — 값이 같아 사라짐(짧아짐)
+    expect(html).not.toContain("<table");
+    expect(text).not.toContain("전년 대비 +");
+    expect(html).toContain("원문: <a href=");
+  });
+
+  it("제목·meta description·페이지 수정일은 그대로 — 출처가 DART 원문이 돼도 L10' 후미 대상이 되지 않는다(메타 동결)", async () => {
+    const { companyPageTitleAndDescription } = await import("@/lib/companyPageMetadata");
+    const { companyMetaDisclosedFigure } = await import("@/lib/companyMetaDisclosed");
+    const { companyPageModified } = await import("@/lib/pageModified");
+    const c = company("db-insurance");
+    expect(companyMetaDisclosedFigure(c)).toBeNull();
+    // id 없이 보면 대상 조건(공시 원문·2025·신입~시니어 범위)을 채운다 — 보류 목록이 막는다
+    expect(companyMetaDisclosedFigure({ salary: c.salary, disclosed: c.disclosed })).not.toBeNull();
+    const { title, description } = companyPageTitleAndDescription(c);
+    expect(title).toBe("DB손해보험 연봉 2026 — 신입 6,400만원~시니어 1억 1,200만원 직급별 연봉표 | 머니샐러리");
+    expect(description).not.toContain("공시 평균연봉");
+    const before = companyPageModified(c, new Date("2026-09-30T14:59:59.999Z")).getTime();
+    expect(companyPageModified(c, new Date("2026-10-30T03:00:00Z")).getTime()).toBe(before);
+  });
+
+  it("연봉 FAQ 첫 답(FAQPage JSON-LD)이 1억 370만원과 DART 원문 출처를 인용한다", async () => {
+    const { buildCompanySalaryFaq } = await import("@/lib/companySalaryBasis");
+    const faq = buildCompanySalaryFaq(company("db-insurance"));
+    expect(faq[0].answer).toContain("2025 사업연도 1억 370만원입니다.");
+    expect(faq[0].answer).toContain("공시 인용 출처: 금융감독원 전자공시(DART) 2025 사업보고서 직원 현황");
+    expect(JSON.stringify(faq)).not.toContain("1억 3,700만원");
+  });
+});

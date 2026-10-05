@@ -37,7 +37,7 @@ const COMPANY_META_DISCLOSED_MODIFIED_MS = new Date(COMPANY_META_DISCLOSED_DATE)
  * salary·disclosed 가 없는 부분 객체(테스트 등)는 대상이 아니다.
  */
 export function companyPageModified(
-  company: { lastUpdated?: string } & Partial<Pick<CompanyProfile, "salary" | "disclosed">>,
+  company: { lastUpdated?: string } & Partial<Pick<CompanyProfile, "id" | "salary" | "disclosed">>,
   now: Date = new Date()
 ): Date {
   const parsed = company.lastUpdated ? new Date(company.lastUpdated) : null;
