@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import NumberInput from "@/components/NumberInput";
+import { compareSeveranceVsPension } from "@/lib/severanceVsPension";
 
 function fmt(n: number) {
   return Math.round(n).toLocaleString("ko-KR");
@@ -27,50 +28,8 @@ function parseInput(s: string): number {
   return Number(s.replace(/[^0-9]/g, "")) || 0;
 }
 
-// 퇴직소득세 간이 추정 (근속 N년 시 평균 세율)
-function estimateRetirementTax(severance: number, years: number): number {
-  // 근속연수공제
-  let yearsDeduction: number;
-  if (years <= 5) yearsDeduction = years * 1_000_000;
-  else if (years <= 10) yearsDeduction = 5_000_000 + (years - 5) * 2_000_000;
-  else if (years <= 20) yearsDeduction = 15_000_000 + (years - 10) * 2_500_000;
-  else yearsDeduction = 40_000_000 + (years - 20) * 3_000_000;
-
-  // 환산급여
-  const adjustedIncome = Math.max(0, severance - yearsDeduction);
-  const annualEquivalent = (adjustedIncome * 12) / Math.max(years, 1);
-
-  // 환산급여공제
-  let conversionDeduction: number;
-  if (annualEquivalent <= 8_000_000) conversionDeduction = annualEquivalent;
-  else if (annualEquivalent <= 70_000_000)
-    conversionDeduction = 8_000_000 + (annualEquivalent - 8_000_000) * 0.6;
-  else if (annualEquivalent <= 100_000_000)
-    conversionDeduction = 45_200_000 + (annualEquivalent - 70_000_000) * 0.55;
-  else if (annualEquivalent <= 300_000_000)
-    conversionDeduction = 61_700_000 + (annualEquivalent - 100_000_000) * 0.45;
-  else conversionDeduction = 151_700_000 + (annualEquivalent - 300_000_000) * 0.35;
-
-  const taxBase = Math.max(0, annualEquivalent - conversionDeduction);
-
-  // 누진세율
-  let tax: number;
-  if (taxBase <= 14_000_000) tax = taxBase * 0.06;
-  else if (taxBase <= 50_000_000) tax = 840_000 + (taxBase - 14_000_000) * 0.15;
-  else if (taxBase <= 88_000_000) tax = 6_240_000 + (taxBase - 50_000_000) * 0.24;
-  else if (taxBase <= 150_000_000) tax = 15_360_000 + (taxBase - 88_000_000) * 0.35;
-  else tax = 37_060_000 + (taxBase - 150_000_000) * 0.38;
-
-  // 최종 퇴직소득세 = 산출세액 × 근속연수 / 12
-  const incomeTax = (tax * years) / 12;
-  const localTax = incomeTax * 0.1;
-  return Math.round(incomeTax + localTax);
-}
-
-// 연금 수령 세금 (저율 분리과세 평균 4.4%)
-function pensionTax(severance: number): number {
-  return Math.round(severance * 0.044);
-}
+// 계산은 src/lib/severanceVsPension.ts — 퇴직소득세는 정본 calculateSeveranceTax, IRP 연금 수령 세금은
+// 이연퇴직소득세의 70%(소득세법 제129조 제1항 제5호의3, 수령 1~10년차). 2026-10-05 감사 code6-02·code6-08 정정.
 
 export default function SeveranceClient() {
   const [salaryFmt, setSalaryFmt] = useState("60,000,000");
@@ -83,42 +42,10 @@ export default function SeveranceClient() {
   const growth = Number(growthRate) / 100 || 0;
   const dcRet = Number(dcReturn) / 100 || 0;
 
-  const result = useMemo(() => {
-    const monthlyPay = salary / 12;
-    // DB형 퇴직금 = 마지막 월급 × 근속 (미래 가치)
-    const finalMonthlyPay = monthlyPay * Math.pow(1 + growth, years);
-    const dbAmount = finalMonthlyPay * years;
-
-    // DC형 = 매년 연봉의 1/12를 적립, 운용 수익 적용
-    let dcAmount = 0;
-    for (let y = 0; y < years; y++) {
-      const yearSalary = salary * Math.pow(1 + growth, y);
-      const yearContribution = yearSalary / 12;
-      // 남은 기간 운용
-      dcAmount += yearContribution * Math.pow(1 + dcRet, years - y);
-    }
-
-    // 일시 수령 세금
-    const dbTax = estimateRetirementTax(dbAmount, years);
-    const dcTax = estimateRetirementTax(dcAmount, years);
-
-    // 연금 수령 시 (3.3~5.5% 평균 4.4%)
-    const dbAsAnnuityTax = pensionTax(dbAmount);
-    const dcAsAnnuityTax = pensionTax(dcAmount);
-
-    return {
-      dbAmount,
-      dcAmount,
-      dbNet: dbAmount - dbTax,
-      dcNet: dcAmount - dcTax,
-      dbTax,
-      dcTax,
-      dbAnnuityNet: dbAmount - dbAsAnnuityTax,
-      dcAnnuityNet: dcAmount - dcAsAnnuityTax,
-      dbAnnuityTax: dbAsAnnuityTax,
-      dcAnnuityTax: dcAsAnnuityTax,
-    };
-  }, [salary, years, growth, dcRet]);
+  const result = useMemo(
+    () => compareSeveranceVsPension({ salary, years, growth, dcReturn: dcRet }),
+    [salary, years, growth, dcRet]
+  );
 
   return (
     <div className="space-y-5 mb-10">
@@ -177,7 +104,7 @@ export default function SeveranceClient() {
         />
         <ResultCard
           label="③ DB IRP 연금 수령"
-          subLabel="연 1,500만원 이하 저율 분리과세 (3.3~5.5%)"
+          subLabel="퇴직소득세 30% 감면 (1~10년차 수령)"
           gross={result.dbAmount}
           tax={result.dbAnnuityTax}
           net={result.dbAnnuityNet}
@@ -201,10 +128,10 @@ export default function SeveranceClient() {
           IRP 연금 수령 절세 효과
         </p>
         <p className="text-2xl font-black text-emerald-900 dark:text-emerald-200 mb-1">
-          최대 +{toEok(Math.max(result.dbAnnuityNet - result.dbNet, result.dcAnnuityNet - result.dcNet))}
+          최대 +{toEok(Math.round(result.maxAnnuitySaving))}
         </p>
         <p className="text-xs text-emerald-800 dark:text-emerald-300">
-          IRP 이전 후 만 55세 이후 10년 이상 분할 수령 시 일시 수령 대비 위 금액만큼 더 받습니다.
+          IRP 이전 후 만 55세 이후 10년 이상 분할 수령 시 일시 수령 대비 위 금액 이상 절세합니다.
         </p>
       </div>
 

@@ -31,7 +31,7 @@ const FAQ_ITEMS = [
   {
     question: "퇴직금을 IRP로 받으면 세금이 얼마나 줄어드나요?",
     answer:
-      "IRP로 이전하면 퇴직소득세 과세가 이연됩니다. 일시 수령 시 즉시 분리과세(보통 6.6~22% 수준)되지만, IRP에 두고 연금으로 수령하면 연 1,500만원까지 3.3~5.5% 분리과세 또는 종합과세 선택이 가능해 절세 효과가 큽니다. 퇴직금 수령 시 자동으로 IRP 계좌가 만들어지며, 이전하지 않으면 즉시 과세됩니다.",
+      "IRP로 이전하면 퇴직소득세 과세가 이연됩니다. 일시금으로 찾으면 그때 퇴직소득세를 내지만, IRP에 두었다가 만 55세 이후 연금으로 받으면 퇴직소득세의 70%(연금 수령 11~20년차는 60%, 21년차부터는 50%)만 원천징수돼 세금이 30~50% 줄어듭니다(소득세법 제129조). 이 연금은 분리과세로 끝나 연 1,500만원 연금소득 기준에도 들어가지 않습니다. 3.3~5.5% 연금소득세율은 세액공제받은 납입금과 운용수익을 연금으로 받을 때 적용되는 세율입니다.",
   },
   {
     question: "근속 1년 미만이면 퇴직금을 못 받나요?",
@@ -139,7 +139,7 @@ export default function SeveranceVsPensionPage() {
                     <td className="px-4 py-3">퇴직소득세 6~28%</td>
                     <td className="px-4 py-3">퇴직소득세 6~28%</td>
                     <td className="px-4 py-3">퇴직소득세 6~28%</td>
-                    <td className="px-4 py-3 text-emerald-500">3.3~5.5%</td>
+                    <td className="px-4 py-3 text-emerald-500">30% 감면</td>
                   </tr>
                 </tbody>
               </table>
@@ -175,7 +175,7 @@ export default function SeveranceVsPensionPage() {
             </p>
             <ul className="space-y-2 text-muted-blue dark:text-canvas-300">
               <li>
-                <strong>연 1,500만원 이하</strong> 수령 시 연금소득세 3.3~5.5% (저율 분리과세)
+                <strong>연금 수령 1~10년차는</strong> 퇴직소득세의 70%만 과세 (이후 60~50%)
               </li>
               <li>
                 <strong>일시 수령 대비 약 30~50% 절세</strong> 가능
