@@ -156,8 +156,11 @@ function PayoutTable({
   );
 }
 
+// 검색 제목은 seoTitle(검색어 복원, code51-01) — 화면 H1·/insights 카드는 10/4 문구 그대로
+const SEO_TITLE = report.seoTitle ?? report.title;
+
 export const metadata: Metadata = buildPageMetadata({
-  title: report.title,
+  title: SEO_TITLE,
   description: report.description,
   path: PATH,
   keywords: report.keywords,
@@ -177,7 +180,7 @@ export default function BonusPayoutHistoryReport() {
             { name: "2026 성과급 지급률 총정리", path: PATH },
           ]),
           datasetLd({
-            name: report.title,
+            name: SEO_TITLE,
             description: report.description,
             url: PATH,
             datePublished: report.publishedDate,
@@ -193,7 +196,7 @@ export default function BonusPayoutHistoryReport() {
             citation: DART_CITATION,
           }),
           articleLd({
-            title: report.title,
+            title: SEO_TITLE,
             description: report.description,
             slug: SLUG,
             publishedDate: report.publishedDate,
@@ -213,7 +216,7 @@ export default function BonusPayoutHistoryReport() {
             <span>머니샐러리 데이터 리포트 — 성과급 지급률 전수</span>
           </div>
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4 leading-[1.18]">
-            2026 대기업 성과급 지급률 총정리
+            2026 대기업 성과급 지급률 기록
             <span className="block text-xl sm:text-2xl mt-2 text-electric">
               {companyCount}개사 · 지급률 {payoutCount}건 — 기준별 분리 집계
             </span>

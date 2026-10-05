@@ -110,7 +110,7 @@ export default function TipsPage() {
  직장인 꿀팁 완전정복
  </h1>
  <p className="text-faint-blue text-lg font-medium max-w-2xl mx-auto">
- 연봉 협상 전략부터 절세, 재테크, 내집마련까지 — 직장인이 반드시 알아야 할 핵심 정보를 5개 카테고리로 정리했습니다.
+ 연봉 협상부터 절세, 재테크, 내집마련까지 직장인이 확인할 재정 점검 항목을 정리했습니다.
  </p>
  </div>
 
