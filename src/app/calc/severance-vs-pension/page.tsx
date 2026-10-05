@@ -139,7 +139,9 @@ export default function SeveranceVsPensionPage() {
                     <td className="px-4 py-3">퇴직소득세 6~28%</td>
                     <td className="px-4 py-3">퇴직소득세 6~28%</td>
                     <td className="px-4 py-3">퇴직소득세 6~28%</td>
-                    <td className="px-4 py-3 text-emerald-500">30% 감면</td>
+                    {/* 연금 수령 세금 = 퇴직소득세의 70%(1~10년차)·60%·50% → 30~50% 감소. 이 칸이 IRP 열의 최소 폭을 정하므로
+                        종전 3.3~5.5% 처럼 줄바꿈 없는 숫자·기호만으로 같은 폭을 유지한다 ('30% 감면' 은 줄바꿈돼 표 머리줄이 +20px, 2026-10-06 실측) */}
+                    <td className="px-4 py-3 text-emerald-500">-30~50%</td>
                   </tr>
                 </tbody>
               </table>
@@ -175,7 +177,7 @@ export default function SeveranceVsPensionPage() {
             </p>
             <ul className="space-y-2 text-muted-blue dark:text-canvas-300">
               <li>
-                <strong>연금 수령 1~10년차는</strong> 퇴직소득세의 70%만 과세 (이후 60~50%)
+                <strong>연금 수령 1~10년차는</strong> 퇴직소득세 70%만 과세 (이후 60~50%)
               </li>
               <li>
                 <strong>일시 수령 대비 약 30~50% 절세</strong> 가능
