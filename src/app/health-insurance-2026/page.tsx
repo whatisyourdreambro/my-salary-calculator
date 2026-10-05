@@ -18,9 +18,9 @@ import { InArticleAd, HomeTopAd, GuideMidAd, CalcResultAd } from "@/components/A
 import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
- title: "2026 건강보험료 연말정산 — 4월 정산·10월 분납 기준",
+ title: "2026 건강보험료 연말정산 — 4월 정산·10월 분납·환급 가이드",
  description:
- "근로자 건강보험료 정기 정산은 4월분에 반영됩니다. 2026년 10월부터 바뀐 분납 기준과 시행 전 재산정분 예외, 실제 급여 공제액·환급 내역을 확인하는 방법을 안내합니다.",
+ "직장인 건보료 연말정산은 4월분 보험료에 반영됩니다. 2025년 귀속 정산(공단 발표): 1,035만명 평균 21만9천원 추가 납부·355만명 평균 11만5천원 환급. 2026년 10월부터 바뀐 분할납부 기준과 시행 전 재산정분 예외, 급여 공제액·환급 확인법까지 정리.",
  path: "/health-insurance-2026",
  ogType: "article",
  publishedTime: "2026-04-01",
@@ -100,7 +100,7 @@ export default function HealthInsurance2026Page() {
  faqLd(FAQ_ITEMS),
  articleLd({
  title: "2026 건강보험료 연말정산 가이드",
- description: "근로자 4월 정산과 2026년 10월 분납 기준·경과조치, 급여 공제액 확인 안내",
+ description: "4월 건보료 정산금·환급·분할납부(2026년 10월 기준 변경·경과조치)와 급여 공제액 확인",
  slug: "health-insurance-2026",
  url: "/health-insurance-2026",
  publishedDate: "2026-04-01",
@@ -124,9 +124,9 @@ export default function HealthInsurance2026Page() {
  </h1>
  <PublishedMeta publishedDate="2026-04-01" updatedDate="2026-10-04" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
- 근로자의 건강보험료 정기 정산은 전년도 보수를 기준으로 4월분에 반영됩니다.
- 2026년 10월부터 바뀐 분납 기준과 종전 재산정분의 예외,
- 실제 월급명세서에서 공제액을 확인하는 방법을 정리했습니다.
+ 직장인 건강보험료는 매년 4월분 보험료에 작년 실제 보수 기준으로
+ 정산됩니다. 정산금 부담 줄이는 분할납부(2026년 10월 기준 변경)와 환급 시점,
+ 월급명세서 공제액 확인법까지 정리했습니다.
  </p>
  <p className="mt-6 inline-block text-xs text-canvas-700 px-4 py-2 bg-canvas-100 rounded-xl border border-canvas-200">
  📚 공식 출처:{" "}
