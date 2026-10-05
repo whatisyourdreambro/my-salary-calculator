@@ -922,6 +922,7 @@ export default function MultiYearBonusSimulator({
             perYearClEnabled={perYearClEnabled}
             onUpdate={(patch) => updateRow(r.id, patch)}
             onRemove={() => removeRow(r.id)}
+            takenYears={rows.filter((o) => o.id !== r.id).map((o) => o.year)}
           />
         ))}
       </div>
@@ -1115,7 +1116,10 @@ function YearProfitRowCard({
   perYearClEnabled,
   onUpdate,
   onRemove,
+  takenYears = [],
 }: {
+  /** 다른 행이 이미 쓰는 연도 — 같은 해 두 행이 누적 합계를 이중 합산하지 않게 막는다 */
+  takenYears?: number[];
   row: YearProfitRow & {
     profit: number;
     threshold: number;
@@ -1154,8 +1158,11 @@ function YearProfitRowCard({
     const clamped = Number.isFinite(n) && n > 0
       ? Math.min(2035, Math.max(2026, Math.round(n)))
       : row.year;
-    setYearDraft(String(clamped));
-    if (clamped !== row.year) onUpdate({ year: clamped });
+    // 다른 행이 쓰는 연도면 원래 연도로 되돌린다 — 행 추가·일괄 펼치기와 같은 중복 방지 규칙
+    // (2026-10-05 감사 code5-03: 종전에는 연도 칸에 기존 연도를 직접 치면 같은 해 두 행이 누적에 이중 합산됐다)
+    const next = takenYears.includes(clamped) ? row.year : clamped;
+    setYearDraft(String(next));
+    if (next !== row.year) onUpdate({ year: next });
   }
   return (
     <div
@@ -2000,9 +2007,12 @@ function AgeCompareView({
   const labels = ["상위 1%", "상위 5%", "상위 10%", "상위 25%", "중위(50%)", "상위 75%"];
   // 내 위치(상위 %) 계산 — 임계값 사이를 선형 보간
   const tiers = [1, 5, 10, 25, 50, 75];
+  // 참고표 맨 아래 기준값(상위 75%)보다 낮으면 '하위 25%' 로 표시한다. 종전에는 기준값과 같거나 낮으면 근거 없는
+  // '상위 90%' 를 고정 표시했다(2026-10-05 감사 code5-04 — 같은 값이면 75, 그 아래는 표가 말해 주는 것이 하위 25% 뿐).
   let myTopPct = 99;
+  const belowTable = myComp < pct[pct.length - 1];
   if (myComp >= pct[0]) myTopPct = 1;
-  else if (myComp <= pct[pct.length - 1]) myTopPct = 90;
+  else if (belowTable) myTopPct = 75;
   else {
     for (let i = 0; i < pct.length - 1; i++) {
       if (myComp <= pct[i] && myComp >= pct[i + 1]) {
@@ -2056,7 +2066,7 @@ function AgeCompareView({
             추정 위치
           </p>
           <p className="text-xl font-black" style={{ color: "hsl(var(--link))" }}>
-            상위 {myTopPct}%
+            {belowTable ? "하위 25%" : `상위 ${myTopPct}%`}
           </p>
         </div>
       </div>
