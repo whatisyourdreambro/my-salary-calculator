@@ -16,7 +16,7 @@ import CoupangBanner from "@/components/CoupangBanner";
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 퇴직연금 완벽 가이드 — DB·DC·IRP 차이와 선택법",
  description:
- "DB·DC·IRP의 운용 책임과 세제 혜택을 비교합니다. IRP 세액공제는 납입 한도·산출세액에 따라 달라지며, 퇴직금 이전 후 연금수령 시 과세 방식도 함께 확인하세요.",
+ "확정급여형(DB)·확정기여형(DC)·개인형퇴직연금(IRP) 차이와 운용 책임, 세제 혜택. IRP 900만원 납입 시 세액공제 최대 148.5만원, 퇴직금 IRP 이전 후 연금 수령 시 퇴직소득세 30~50% 감면 — 본인에게 맞는 퇴직연금 선택법 5단계.",
  path: "/retirement-pension-2026",
  ogType: "article",
  publishedTime: "2026-02-01",

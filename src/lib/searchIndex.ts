@@ -143,7 +143,7 @@ const toolPages: SearchEntry[] = [
  { title: "공기업·공공기관 연봉 계산기", href: "/public-institutions", category: "계산기", description: "공기업·준정부기관·지방공기업의 ALIO·클린아이 공시 확인과 개인 실수령액 계산", priority: 1 },
  { title: "연봉 인상률 TOP 100 (상장사)", href: "/salary-db/listed/top-raise", category: "도구", description: "공시 기준 전년比 인상률 순위" },
  // 2026-09-02 전면 최적화 (운영자 지시) — /tools 트리(리프 29종)·허브·전역 진입로가 헤더 검색 0건이던 갭 해소 (제목은 각 페이지 메타 기준)
- { title: `성과급 계산기 ${bonusCalcCountKo} 허브`, href: "/calc/bonus-calculators", category: "도구", description: "회사별 입력 시나리오·시즌 캘린더", priority: 1 },
+ { title: `성과급 계산기 ${bonusCalcCountKo} 허브`, href: "/calc/bonus-calculators", category: "도구", description: "회사별 지급률·시즌 캘린더", priority: 1 },
  { title: "금융 계산기 모음", href: "/tools/finance", category: "도구", description: "세금·투자·대출 계산기 허브", priority: 2 },
  { title: "부동산 계산기 모음", href: "/tools/real-estate", category: "도구", description: "취득세·증여세·DSR·LTV·전세", priority: 2 },
  { title: "생활 계산기 모음", href: "/tools/life", category: "도구", description: "N빵·유류비·구독료·나이·D-Day", priority: 2 },

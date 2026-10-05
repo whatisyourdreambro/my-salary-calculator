@@ -18,7 +18,7 @@ export const dynamic = "force-static";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "지역별 평균 연봉 2026 — 서울·경기·부산·판교 연봉 비교",
-  description: `서울, 경기, 부산, 판교, 여의도 등 전국 ${REGION_COUNT}개 지역 평균 연봉을 한눈에 비교하세요. 자체 자료의 경력별 참고 연봉과 2026년 계산 모형의 실수령액 정보를 제공합니다.`,
+  description: `서울, 경기, 부산, 판교, 여의도 등 전국 ${REGION_COUNT}개 지역 평균 연봉을 한눈에 비교하세요. 신입부터 시니어까지 경력별 참고 연봉(자체 자료)과 2026년 실수령액 정보를 제공합니다.`,
   path: "/region",
   keywords: [
     "지역별 평균 연봉",
@@ -71,7 +71,7 @@ export default function RegionIndexPage() {
           </h1>
           <p className="text-lg sm:text-xl text-muted-blue dark:text-canvas-300 mb-6 max-w-2xl mx-auto font-medium">
             서울·판교·여의도부터 지방 광역시까지
-            <br className="sm:hidden" /> 자체 자료의 {REGION_COUNT}개 지역 참고 연봉을 비교하세요.
+            <br className="sm:hidden" /> {REGION_COUNT}개 지역 연봉을 한눈에 비교하세요.
           </p>
 
           {/* 요약 통계 */}
