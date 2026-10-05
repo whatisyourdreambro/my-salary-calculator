@@ -132,7 +132,13 @@ export default function FutureSalaryCalculator() {
  }
  targetEvent.yearIndex = newYearIndex;
  } else if (field === "type") {
- targetEvent.type = value as "promotion" | "job_change";
+ const nextType = value as "promotion" | "job_change";
+ // 유형이 바뀌면 값의 단위도 바뀐다(승진 % ↔ 이직 원). 종전에는 승진 10(%)이 이직 10원으로 남아 그해 연봉이
+ // 10원이 되고 이후 해가 전부 무너졌다(2026-10-05 감사 code24-04) — 승진은 10%, 이직은 현재 연봉으로 초기화.
+ if (nextType !== targetEvent.type) {
+ targetEvent.value = nextType === "promotion" ? 10 : Number(currentSalary.replace(/,/g, "")) || 0;
+ }
+ targetEvent.type = nextType;
  } else if (field === "value") {
  targetEvent.value = Number(value);
  }
@@ -260,8 +266,8 @@ export default function FutureSalaryCalculator() {
  <Tooltip formatter={(value: number, name: string) => [`${formatNumber(value)} 원`, name]} />
  <Legend />
  <Line type="monotone" dataKey="salary" name="나의 예상 연봉" stroke="hsl(var(--primary))" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 8 }} />
- <Line type="monotone" dataKey="marketAverage" name="시장 평균" stroke="hsl(var(--accent-foreground))" strokeWidth={2} strokeDasharray="5 5" dot={false} />
- <Line type="monotone" dataKey="marketTop10" name="시장 상위 10%" stroke="hsl(var(--primary))" strokeOpacity={0.5} strokeWidth={2} strokeDasharray="5 5" dot={false} />
+ <Line type="monotone" dataKey="marketAverage" name="참고 분포 평균" stroke="hsl(var(--accent-foreground))" strokeWidth={2} strokeDasharray="5 5" dot={false} />
+ <Line type="monotone" dataKey="marketTop10" name="참고 분포 상위 10%" stroke="hsl(var(--primary))" strokeOpacity={0.5} strokeWidth={2} strokeDasharray="5 5" dot={false} />
  </LineChart>
  </ResponsiveContainer>
  <div className="max-h-[25vh] overflow-y-auto mt-6">
