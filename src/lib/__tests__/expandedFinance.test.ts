@@ -203,3 +203,24 @@ describe("확장 금융 계산기 51종", () => {
     expect(cash.secondary?.find((entry) => entry.label === "월말 잔액")?.value).toBe(1100000);
   });
 });
+
+// 2026-10-05 감사 code58-04·code58-05
+describe("비상금 충당 기간 내림·외벌이 부족액 라벨", () => {
+  it("emergency-fund-target 충당 기간은 버틸 수 있는 온전한 개월(내림) — runway 와 같은 기준", async () => {
+    const { allCalculators } = await import("@/lib/simpleCalculators");
+    const calc = allCalculators.find((c) => c.slug === "emergency-fund-target")!;
+    const inputs = Object.fromEntries(calc.fields.map((f) => [f.name, f.defaultValue])) as Record<string, number>;
+    // 현금 2.5개월치 → 종전 반올림 3개월, 이제 2개월
+    const r = calc.compute({ ...inputs, living: 1_600_000, debt: 400_000, cash: 5_000_000 });
+    expect(r.secondary?.find((x) => x.label === "현재 현금의 충당 기간")?.value).toBe(2);
+    expect(calc.caveats?.join(" ")).toContain("정수 개월로 내림해");
+  });
+  it("single-income-transition-budget 부족액은 '전환 후' 기준 라벨", async () => {
+    const { allCalculators } = await import("@/lib/simpleCalculators");
+    const calc = allCalculators.find((c) => c.slug === "single-income-transition-budget")!;
+    const inputs = Object.fromEntries(calc.fields.map((f) => [f.name, f.defaultValue])) as Record<string, number>;
+    const r = calc.compute(inputs);
+    expect(r.secondary?.map((x) => x.label)).toContain("전환 후 월 부족액");
+    expect(r.secondary?.find((x) => x.label === "전환 후 월 부족액")?.value).toBe(700_000);
+  });
+});
