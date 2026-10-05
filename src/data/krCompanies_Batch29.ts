@@ -217,12 +217,12 @@ export const krCompanies_Batch29: CompanyProfile[] = [
       lead: { base: 90000000, incentive: { target: 21, max: 56, avgAmount: 21000000 } },
       executive: { base: 142000000, incentive: { target: 30, max: 80, avgAmount: 48000000 } },
     },
-    workLife: { weeklyHours: { contract: 40, real: 43 }, vacation: { days: 16, usageRate: 75 }, remoteWork: { policy: "office", description: "경북 영주 사업장 중심 근무" } },
+    workLife: { weeklyHours: { contract: 40, real: 43 }, vacation: { days: 16, usageRate: 75 }, remoteWork: { policy: "office", description: "경기 안성 사업장 중심 근무" } },
     benefits: [
       { category: "financial", title: "고수익성 성과급", description: "높은 영업이익률 기반 성과급", value: 8000000 },
       { category: "family", title: "사택·기숙사", description: "지방 근무자 주거 지원" },
     ],
-    culture: { score: 7.2, keywords: ["부품", "수익성", "안정"], pros: ["반도체 소모성 부품 안정 수요와 수익성", "사택 등 주거 지원"], cons: ["경북 영주 소재로 정주 여건 제약", "제조 현장 근무"] },
+    culture: { score: 7.2, keywords: ["부품", "수익성", "안정"], pros: ["반도체 소모성 부품 안정 수요와 수익성", "사택 등 주거 지원"], cons: ["경기 안성 소재로 정주 여건 제약", "제조 현장 근무"] },
     lastUpdated: "2026-05-18",
   },
 

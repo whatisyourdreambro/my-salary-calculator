@@ -472,7 +472,7 @@ export const krCompanies_Batch28: CompanyProfile[] = [
     industry: "Food & Beverage",
     tier: "foreign",
     logo: "☕",
-    description: "이마트(신세계) 51% 지분 보유 스타벅스 한국법인. 전국 1,900개 매장, 국내 커피 1위 브랜드.",
+    description: "이마트(신세계) 지분 보유 스타벅스 한국법인. 전국 1,900개 매장, 국내 커피 1위 브랜드.",
     salary: {
       entry: { base: 38000000, incentive: { target: 10, max: 20, avgAmount: 4500000 } },
       junior: { base: 48000000, incentive: { target: 10, max: 20, avgAmount: 6000000 } },

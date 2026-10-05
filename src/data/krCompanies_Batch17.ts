@@ -133,11 +133,11 @@ export const krCompanies_Batch17: CompanyProfile[] = [
     logo: "⚙️",
     description: "현대차그룹의 변속기·시트 전문 부품사. 전동화 변속기 및 차량 시트 시스템 글로벌 공급.",
     salary: {
-      entry: { base: 52000000, incentive: { target: 300, max: 500, avgAmount: 18000000 } },
-      junior: { base: 64000000, incentive: { target: 300, max: 500, avgAmount: 22000000 } },
-      senior: { base: 85000000, incentive: { target: 300, max: 500, avgAmount: 33000000 } },
-      lead: { base: 111000000, incentive: { target: 300, max: 500, avgAmount: 45000000 } },
-      executive: { base: 200000000, incentive: { target: 300, max: 600, avgAmount: 75000000 } },
+      entry: { base: 52000000, incentive: { target: 25, max: 42, avgAmount: 18000000 } },
+      junior: { base: 64000000, incentive: { target: 25, max: 42, avgAmount: 22000000 } },
+      senior: { base: 85000000, incentive: { target: 25, max: 42, avgAmount: 33000000 } },
+      lead: { base: 111000000, incentive: { target: 25, max: 42, avgAmount: 45000000 } },
+      executive: { base: 200000000, incentive: { target: 25, max: 50, avgAmount: 75000000 } },
     },
     workLife: {
       weeklyHours: { contract: 40, real: 47 },
@@ -164,11 +164,11 @@ export const krCompanies_Batch17: CompanyProfile[] = [
     logo: "🔧",
     description: "현대차그룹의 공작기계·자동차 모듈 전문 기업. 방산 장비 및 스마트팩토리 솔루션도 공급.",
     salary: {
-      entry: { base: 52000000, incentive: { target: 300, max: 500, avgAmount: 17000000 } },
-      junior: { base: 63000000, incentive: { target: 300, max: 500, avgAmount: 21000000 } },
-      senior: { base: 83000000, incentive: { target: 300, max: 500, avgAmount: 31000000 } },
-      lead: { base: 108000000, incentive: { target: 300, max: 500, avgAmount: 43000000 } },
-      executive: { base: 195000000, incentive: { target: 300, max: 600, avgAmount: 72000000 } },
+      entry: { base: 52000000, incentive: { target: 25, max: 42, avgAmount: 17000000 } },
+      junior: { base: 63000000, incentive: { target: 25, max: 42, avgAmount: 21000000 } },
+      senior: { base: 83000000, incentive: { target: 25, max: 42, avgAmount: 31000000 } },
+      lead: { base: 108000000, incentive: { target: 25, max: 42, avgAmount: 43000000 } },
+      executive: { base: 195000000, incentive: { target: 25, max: 50, avgAmount: 72000000 } },
     },
     workLife: {
       weeklyHours: { contract: 40, real: 47 },

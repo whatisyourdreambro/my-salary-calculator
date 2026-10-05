@@ -64,3 +64,42 @@ describe("JYP 소개문 — aespa(SM 소속)를 JYP 아티스트처럼 잇던 �
     expect(company("sm-entertainment").description).toContain("aespa");
   });
 });
+
+describe("회사 데이터 사실 정정 — 광고 위 같은 폭 이하 (R09 code34-06·code34-07·code32-03)", () => {
+  it("티씨케이 사업장은 경기 안성(DART 기업개황 주소 경기도 안성시 미양면) — 경북 영주 아님", () => {
+    const c = company("tckorea");
+    expect(c.workLife.remoteWork.description).toBe("경기 안성 사업장 중심 근무");
+    expect(c.culture.cons).toContain("경기 안성 소재로 정주 여건 제약");
+    expect(JSON.stringify(c)).not.toContain("영주");
+    expect(notWiderPerWord(c.workLife.remoteWork.description!, "경북 영주 사업장 중심 근무")).toBe(true);
+    // 회사 페이지 근무 형태 줄·문화 단점 목록, 비교 페이지 단점 줄(모두 광고 위) — 한글 음절끼리 같은 수로 바꿨다
+    expect(notWiderPerWord("경기 안성 소재로 정주 여건 제약", "경북 영주 소재로 정주 여건 제약")).toBe(true);
+    expect(outsideFont("경기 안성")).toEqual([]);
+  });
+
+  it("스타벅스코리아 — 틀린 지분율 51% 삭제(이마트 67.5%, 2021 추가 인수), 단어만 빠져 더 짧다", () => {
+    const d = company("starbucks-korea").description;
+    expect(d).toBe("이마트(신세계) 지분 보유 스타벅스 한국법인. 전국 1,900개 매장, 국내 커피 1위 브랜드.");
+    expect(d).not.toContain("51%");
+    // 종전 문구에서 51% 한 단어만 뺐다 — 남은 단어와 순서는 그대로
+    const old = "이마트(신세계) 51% 지분 보유 스타벅스 한국법인. 전국 1,900개 매장, 국내 커피 1위 브랜드.";
+    expect(old.split(" ").filter((w) => w !== "51%")).toEqual(d.split(" "));
+  });
+
+  it("현대트랜시스·현대위아 인센티브 target/max 는 연 기본급 대비 %(종전 월 기본급 대비 300·500% 오기) — 평균 성과급 비율과 맞는다", () => {
+    for (const id of ["hyundai-transys", "hyundai-wia"]) {
+      const s = company(id).salary;
+      for (const lv of ["entry", "junior", "senior", "lead"] as const) {
+        expect(s[lv].incentive.target, `${id} ${lv}`).toBe(25);
+        expect(s[lv].incentive.max, `${id} ${lv}`).toBe(42);
+      }
+      expect(s.executive.incentive.max, id).toBe(50);
+      const ratio = ((s.entry.incentive.avgAmount ?? 0) / s.entry.base) * 100;
+      expect(ratio, id).toBeGreaterThan(s.entry.incentive.target);
+      expect(ratio, id).toBeLessThan(s.entry.incentive.max);
+    }
+    // 전 회사 incentive 는 연 기본급 대비 % — 100 을 넘는 것은 메리츠화재(최대 300%)뿐(별건)
+    const over = companies.filter((c) => c.salary.entry.incentive.max > 100).map((c) => c.id);
+    expect(over).toEqual(["meritz-fire"]);
+  });
+});
