@@ -461,7 +461,7 @@ export default function HomeLoanPage() {
             이자 약 3.01억원
           </li>
           <li>
-            • <strong>총 이자 차이 약 5,893만원</strong> · 전 기간 금리 동일, 수수료·중도상환 없음
+            • <strong>총 이자 차이 약 5,851만원</strong> · 전 기간 금리 동일, 수수료·중도상환 없음
           </li>
         </ul>
         <p className="text-muted-blue leading-relaxed">
