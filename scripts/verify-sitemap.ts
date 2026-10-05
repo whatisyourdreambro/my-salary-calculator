@@ -16,6 +16,7 @@ import { STATIC_LAST_MODIFIED_ISO } from "@/config/siteDates";
 import { webApplicationLd } from "@/lib/structuredData";
 import { koGuides, enGuides } from "@/lib/guidesContent";
 import { getGuideModifiedDate } from "@/lib/guideDates";
+import { getGuideContentDate } from "@/lib/guideContentRevisions";
 import { getComparePairs } from "@/lib/salary-data/companyComparePairs";
 import { listedCohort } from "@/lib/salary-data/dartLite";
 
@@ -286,7 +287,8 @@ async function main() {
   let guideDateMismatch = 0;
   for (const [prefix, guides] of [["/guides", koGuides], ["/en/guides", enGuides]] as const) {
     for (const guide of guides) {
-      const expected = getGuideModifiedDate(guide);
+      // 한국어 가이드는 본문 정정일(guideContentRevisions)까지 max — sitemap.ts guideUrls 와 같은 규칙
+      const expected = prefix === "/guides" ? getGuideContentDate(guide) : getGuideModifiedDate(guide);
       const dates = [guide.publishedDate, expected];
       const validDates = dates.every((date) => /^\d{4}-\d{2}-\d{2}$/.test(date) &&
         Number.isFinite(Date.parse(date)) && new Date(date).toISOString().slice(0, 10) === date);

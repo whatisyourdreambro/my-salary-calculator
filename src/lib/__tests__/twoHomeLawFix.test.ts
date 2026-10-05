@@ -1,9 +1,14 @@
 // 일시적 2주택 처분 기한 개정(소득세법 시행령 제155조 제1항·부칙 제2조, 대통령령 제36737호 2026-10-01 시행) 반영 가드.
 // - 정정은 가이드 4편의 마지막 광고(guides/layout.tsx PageFooterAds) 아래 보강에만 있다 — 본문(광고 위)에는 넣지 않는다.
 // - 보강에는 기한(2년/3년)·조건(두 주택 모두 조정대상지역)·적용 시점(8/4 취득·10/1 양도)·경과 규정(8/3 이전 취득·계약금)·출처가 있어야 한다.
+// - 사이트맵 lastmod·Article dateModified 는 히어로 칩이 없는 별도 필드(guideContentRevisions)로만 올린다.
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
+import { TWO_HOME_LAW_FIX_PUSH } from "@/config/twoHomeLawFixPush";
+import { GUIDE_CONTENT_REVISED_TWO_HOME_LAW } from "@/lib/guideContentRevisions.twoHomeLaw";
+import { getGuideContentDate } from "@/lib/guideContentRevisions";
+import { getGuideModifiedDate } from "@/lib/guideDates";
 import { koGuides } from "@/lib/guidesContent";
 import { guideSupplements } from "@/lib/guides/supplements";
 import { guideSupplementsTwoHomeLaw } from "@/lib/guides/supplements-two-home-law";
@@ -69,5 +74,22 @@ describe("일시적 2주택 처분 기한 개정 — 광고 아래 보강", () =
     const supp = layout.indexOf("<GuideSupplement");
     expect(ads).toBeGreaterThan(0);
     expect(supp).toBeGreaterThan(ads);
+  });
+});
+
+describe("일시적 2주택 처분 기한 개정 — 날짜", () => {
+  it("푸시일 상수는 실재 날짜이고 법 시행일(2026-10-01) 이후다", () => {
+    expect(TWO_HOME_LAW_FIX_PUSH).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(new Date(`${TWO_HOME_LAW_FIX_PUSH}T00:00:00Z`).toISOString().slice(0, 10)).toBe(TWO_HOME_LAW_FIX_PUSH);
+    expect(TWO_HOME_LAW_FIX_PUSH >= "2026-10-01").toBe(true);
+  });
+
+  it("날짜 표는 보강 4편과 같은 슬러그이고, 4편의 본문 정정일은 max(modifiedDate, 푸시일) 이다", () => {
+    expect(Object.keys(GUIDE_CONTENT_REVISED_TWO_HOME_LAW).sort()).toEqual([...SLUGS]);
+    for (const slug of SLUGS) {
+      const guide = koGuides.find((g) => g.slug === slug)!;
+      const base = getGuideModifiedDate(guide);
+      expect(getGuideContentDate(guide), slug).toBe(base > TWO_HOME_LAW_FIX_PUSH ? base : TWO_HOME_LAW_FIX_PUSH);
+    }
   });
 });
