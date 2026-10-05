@@ -54,3 +54,24 @@ describe("문구", () => {
     expect(page).not.toContain("8,500만원 이하(맞벌이 1억)");
   });
 });
+
+describe("결과 카드 폭 — 결과 광고 위 (기본값 상태)", () => {
+  // 한글 1em, 숫자·기호 약 0.55em, 공백 0.25em
+  const em = (s: string) => [...s].reduce((w, c) => w + (/[가-힣]/.test(c) ? 1 : c === " " ? 0.25 : 0.55), 0);
+  it("대상 아님·소득 초과 문구는 종전 금액·금리 문구보다 좁다", () => {
+    expect(em("대상 아님")).toBeLessThan(em("240,000,000원"));
+    expect(em("5천만 초과")).toBeLessThan(em("금리 연 2.4%"));
+    expect(em("—")).toBeLessThan(em("1,000,000원"));
+    const client = readFileSync(resolve(process.cwd(), "src/app/calc/jeonse-loan/Client.tsx"), "utf8");
+    expect(client).toContain("천만` : `${fmt(r.incomeLimit / 10_000)}만`} 초과`");
+  });
+});
+
+describe("금리 줄 — 정책상품은 '최저 연 x%' (종전 '금리 연 x%' 와 같은 글자 구성)", () => {
+  it("범위 하한임을 같은 폭으로 표시", () => {
+    const client = readFileSync(resolve(process.cwd(), "src/app/calc/jeonse-loan/Client.tsx"), "utf8");
+    expect(client).toContain('`${r.rateIsFloor ? "최저" : "금리"} 연 ${r.rate.toFixed(1)}%`');
+    const shape = (s: string) => s.split(" ").map((w) => [...w].filter((c) => /[가-힣]/.test(c)).length + "|" + w.replace(/[가-힣]/g, "").length);
+    expect(shape("최저 연 1.9%")).toEqual(shape("금리 연 2.4%"));
+  });
+});

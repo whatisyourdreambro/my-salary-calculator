@@ -76,8 +76,9 @@ export default function JeonseLoanClient() {
               <p className="text-xs mb-3"
                 style={{ color: isBest ? "rgba(255,255,255,0.85)" : "hsl(var(--muted-foreground))" }}>
                 {r.eligible
-                  ? `금리 연 ${r.rate.toFixed(1)}%${r.rateIsFloor ? "~" : ""}`
-                  : `합산 소득 ${fmt(r.incomeLimit / 10_000)}만원 초과`}
+                  ? `${r.rateIsFloor ? "최저" : "금리"} 연 ${r.rate.toFixed(1)}%`
+                  : // 결과 광고 위 — 기본값에서 이 줄('5천만 초과')이 종전 '금리 연 2.4%' 보다 좁게
+                    `${r.incomeLimit % 10_000_000 === 0 ? `${r.incomeLimit / 10_000_000}천만` : `${fmt(r.incomeLimit / 10_000)}만`} 초과`}
               </p>
               <div className="flex justify-between text-xs"
                 style={{ color: isBest ? "rgba(255,255,255,0.8)" : "hsl(var(--muted-foreground))", borderTop: isBest ? "1px solid rgba(255,255,255,0.2)" : "1px solid hsl(var(--border))", paddingTop: "8px" }}>
