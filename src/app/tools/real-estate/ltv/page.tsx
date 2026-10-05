@@ -16,7 +16,7 @@ export const metadata: Metadata = buildToolMetadata({
   name: "LTV 계산기",
   tagline: "담보인정비율 자동 계산 (주택 가격 대비 대출 비율)",
   description:
-    "LTV(담보인정비율) 계산기. 주택 가격과 대출액으로 본인 LTV % 자동 산출. 규제지역 50%/비규제 70%/생애최초(비수도권 80%·수도권 70%) 기준 한도와 DSR과의 차이는 상세 가이드로 비교(승인 여부는 자동 판정하지 않음).",
+    "LTV(담보인정비율) 계산기. 주택 가격과 대출액으로 본인 LTV % 자동 산출. 규제지역 40%/비규제 70%/생애최초(비수도권 80%·수도권 70%) 기준 한도와 DSR과의 차이는 상세 가이드로 비교(승인 여부는 자동 판정하지 않음).",
   path: "/tools/real-estate/ltv",
   keywords: [
     "LTV 계산기",
