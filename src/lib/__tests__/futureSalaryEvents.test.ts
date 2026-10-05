@@ -6,7 +6,7 @@ import { calculateFutureSalary } from "@/lib/futureCalculator";
 
 describe("이벤트 유형 변경 시 값 초기화", () => {
   it("이직 이벤트 값이 10(원)으로 남으면 그해 연봉이 10원이 된다 — 그래서 유형 변경 때 값을 바꾼다", () => {
-    const broken = calculateFutureSalary(50_000_000, 3, 5, [{ yearIndex: 1, type: "job_change", value: 10 }]);
+    const broken = calculateFutureSalary(50_000_000, 3, 5, [{ yearIndex: 1, type: "job_change", value: 10 }], null);
     expect(broken[1].salary).toBe(10);
     const src = readFileSync(resolve(process.cwd(), "src/components/FutureSalaryCalculator.tsx"), "utf8");
     expect(src).toContain('targetEvent.value = nextType === "promotion" ? 10 : Number(currentSalary.replace(/,/g, "")) || 0;');
