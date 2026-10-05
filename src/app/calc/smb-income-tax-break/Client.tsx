@@ -5,8 +5,8 @@ import { CalcResultAd } from "@/components/AdPlacement";
 import {
   computeSmbTaxBreak,
   youthAdjustedAge,
+  youthAgeVerdict,
   YOUTH_MAX_AGE,
-  YOUTH_MIN_AGE,
   type SmbBreakType,
 } from "@/lib/smbTaxBreak";
 import NumberInput from "@/components/NumberInput";
@@ -36,7 +36,9 @@ export default function SmbTaxBreakClient() {
   );
 
   const adjAge = youthAdjustedAge(parseInput(age), parseInput(militaryMonths));
-  const youthOk = adjAge >= YOUTH_MIN_AGE && adjAge <= YOUTH_MAX_AGE;
+  // 환산 34~35세 구간은 생일에 따라 충족 가능 — 일률 '미충족' 이 아니다 (2026-10-05 감사 code7-02)
+  const youthVerdict = youthAgeVerdict(parseInput(age), parseInput(militaryMonths));
+  const youthOk = youthVerdict === "eligible";
 
   const rows = [
     {
@@ -173,10 +175,12 @@ export default function SmbTaxBreakClient() {
                 </div>
               </div>
             </div>
-            <p className={`mt-3 text-sm font-bold ${youthOk ? "text-electric" : "text-red-500"}`}>
+            <p className={`mt-3 text-sm font-bold ${youthOk ? "text-electric" : youthVerdict === "birthday" ? "text-amber-600 dark:text-amber-400" : "text-red-500"}`}>
               {parseInput(age) > 0
                 ? youthOk
                   ? `병역 차감 후 환산 ${adjAge % 1 === 0 ? adjAge : adjAge.toFixed(1)}세 — 청년 연령 요건 충족`
+                  : youthVerdict === "birthday"
+                  ? `병역 차감 후 환산 ${adjAge.toFixed(1)}세 — 생일에 따라 충족 가능 (근로계약일 현재 만 나이를 생년월일로 확인)`
                   : `병역 차감 후 환산 ${adjAge % 1 === 0 ? adjAge : adjAge.toFixed(1)}세 — 만 ${YOUTH_MAX_AGE}세 초과로 청년 요건 미충족 (60세 이상·장애인·경력단절여성 해당 여부 확인)`
                 : "만 나이를 입력하면 연령 요건을 판정합니다"}
             </p>

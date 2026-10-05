@@ -65,6 +65,24 @@ export function youthAdjustedAge(ageYears: number, militaryMonths: number): numb
   return ageYears - deductYears;
 }
 
+/**
+ * 청년 연령 판정 — 입력 만 나이(정수)와 병역 개월 수로.
+ * 실제 만 나이는 N 이상 N+1 미만이라, 환산 연령(N − 병역 개월/12)이 34 초과 35 미만이면 생일에 따라
+ * 근로계약일 기준 '만 34세 이하' 일 수도 아닐 수도 있다. 종전에는 이 구간을 일률 '미충족' 으로 표시했다
+ * (2026-10-05 감사 code7-02 — 예: 만 36세·병역 21개월은 생일에 따라 충족 가능). '충족' 판정은 바뀌지 않는다.
+ * @returns eligible 충족 / birthday 생일에 따라 충족 가능 / ineligible 미충족
+ */
+export function youthAgeVerdict(
+  ageYears: number,
+  militaryMonths: number
+): "eligible" | "birthday" | "ineligible" {
+  const adj = youthAdjustedAge(ageYears, militaryMonths);
+  if (adj < YOUTH_MIN_AGE) return "ineligible";
+  if (adj <= YOUTH_MAX_AGE) return "eligible";
+  if (adj < YOUTH_MAX_AGE + 1) return "birthday";
+  return "ineligible";
+}
+
 export interface SmbTaxBreakInput {
   /** 연봉 — 총급여 기준 (비과세 급여 제외, 원) */
   annualSalary: number;
