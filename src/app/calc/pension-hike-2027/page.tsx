@@ -5,7 +5,7 @@
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
-import { buildToolMetadata } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
 import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -41,9 +41,13 @@ const FAQ_ITEMS = [
   },
 ];
 
-export const metadata: Metadata = buildToolMetadata({
-  name: "국민연금 인상 계산기",
-  tagline: "2027년 요율 10% — 월급에서 얼마나 더 빠지나",
+// 제목: 공용 buildToolMetadata 는 '{이름} 2026 — {태그라인}' 고정이라 '국민연금 인상 계산기 2026 — 2027년 요율 10%' 처럼
+// 연도가 충돌했다(2026-10-05 감사 code4-01). 이 쪽만 buildPageMetadata 로 제목을 직접 준다 — 설명·주소·키워드·OG 이미지
+// (type=tool&name=국민연금 인상 계산기)는 종전과 같다. 문서상 승인 경로: docs/drafts/health-premium-hike-2027-shell.md 의 P-6 메모.
+const TOOL_NAME = "국민연금 인상 계산기";
+export const metadata: Metadata = buildPageMetadata({
+  title: `${TOOL_NAME} 2027 — 요율 10%, 월급에서 얼마나 더 빠지나`,
+  ogImage: `/api/og?type=tool&name=${encodeURIComponent(TOOL_NAME)}`,
   description:
     "2027년 국민연금 보험료율 총 10.0%(근로자 5.0%). 같은 기준소득월액에서 2026·2027 요율의 월 차이와 12개월 환산액을 비교합니다. 2027년 7월 기준 변경과 전체 실수령액은 반영하지 않습니다.",
   path: "/calc/pension-hike-2027",
