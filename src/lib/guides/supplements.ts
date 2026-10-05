@@ -26,6 +26,8 @@ import {
   TEACHER_PAY_ROWS_2026,
 } from "@/lib/civilServantPay";
 import { AGREEMENT_2026, H1_2026_PROFIT_TRIL, PS_HISTORY } from "@/app/calc/sk-hynix-bonus/psData";
+import { FIXED_BU_RATIO, FIXED_RERATE, FIXED_SA_RATIO, getThreshold } from "@/app/calc/samsung-bonus/model";
+import { SAMSUNG_OPI2_TRANCHES, SAMSUNG_WAGE_2026 } from "@/lib/bonusHome/compEngines";
 
 /** 원 단위 천 단위 구분 — en-US 그룹핑은 ko-KR 과 동일하고 ICU 유무에 좌우되지 않는다 */
 const won = (n: number): string => n.toLocaleString("en-US");
@@ -110,6 +112,76 @@ const nurseSalarySupplement = `
 <p><em>출처: 위 두 섹션과 같습니다(고용24 재직자 조사 2023 · 보건복지부 보건의료인력 실태조사 2020년 기준 · 인사혁신처 2026년 봉급표 · 의료법 시행규칙 별표 5 · 머니샐러리 직업 DB와 본문 실수령 표). 간호사 직업 정보와 병원별 데이터는 <a href="/job/nurse">간호사 연봉 상세 페이지</a>에 정리돼 있습니다.</em></p>
 `;
 
+// ── samsung-wage-negotiation-2026 (반도체 심층 가이드, 2026-05-12 작성) — 2026-09-27 기준 확인 사항 (R8-D) ──
+// 본문(semiconductor-deepdive.ts)은 타결 전 시점의 글이다('5월 12일 본격 교섭 시작', '협상 결과를 기다리는 동안 챙길 4가지',
+// '잠정합의가 6~8월에 이뤄지면'). 제목·설명(guidesMeta)과 본문은 그대로 두고(광고 사이 본문 + guidesMeta 불변 조건),
+// 확정 결과는 여기(레이아웃 푸터 광고 아래)에 날짜·출처와 함께 둔다.
+// ★ 본문 첫머리의 '5월 12일 본격 교섭 돌입'은 작성 당시에도 사실이 아니었다 — 교섭은 2025-12-11 상견례로 시작됐고
+//   5/11~12 는 중앙노동위원회 사후조정 일정이었다. 머리말에서 그렇게 분명히 밝히고, 협상 경과는 실제 일지로 적는다(R8-D 리뷰 반영).
+// 출처(모두 보도 기준, 2026-09-28 확인):
+//   - 협상 일지: 파이낸셜뉴스 2026-05-27 [일지](fnnews.com/news/202605271052313943) — 2025-12-11 상견례, 12-16 1차 본교섭,
+//     2026-02-19 공동교섭단 결렬 선언, 03-03 중노위 2차 조정회의 '조정 중지', 5/11~13 중노위 주관 1차 사후조정 최종 결렬,
+//     5/18~20 중노위 주관 2차 사후조정 최종 결렬, 5/20 김영훈 고용노동부 장관 중재 추가 교섭 잠정 합의, 5/22~27 찬반투표, 5/27 가결
+//   - 1차 사후조정 결렬 시각: 서울신문 2026-05-13(seoul.co.kr …/20260513500010) — 12일 오전 10시경 시작한 회의가 13일 오전 2시 55분쯤
+//     노조 측 결렬 선언으로 끝남(첫날 11일은 kbc 2026-05-11 '사후조정 첫날 결론없이 종료')
+//   - 5/20 잠정합의 기본 4.1%·성과 평균 2.1%: 뉴시스 NISX20260520_0003638405·파이낸셜뉴스 2026-05-20 속보
+//   - 5/22~27 조합원 찬반투표 투표율 95.5%·찬성 73.7% 가결: 헤럴드경제 2026-05-27(biz.heraldcorp.com/article/10756978)
+//   - DS부문 특별경영성과급: 아시아경제 2026-05-21(잠정 합의서 — 사업성과 10.5% 재원·상한 없음·부문 40%/사업부 60%·세후 전액 자사주,
+//     3분의 1 즉시 매각 가능·나머지 3분의 1씩 1년·2년 매각 제한·10년 적용·OPI 유지),
+//     파이낸셜뉴스 2026-09-27(지급 조건 DS부문 연간 영업이익 2026~2028년 200조원·2029~2035년 100조원, 2035년까지 10년)
+// 2026-09-30 후속(R8-D 리뷰 minor 3·4, dedupe 13 — 모두 보도 기준):
+//   - 소급: 오피니언뉴스 2026-05-20(opinionnews.co.kr idxno=138762) '임금인상 및 샐러리캡 상향은 2026년 3월 급여부터 소급 적용' —
+//     본문(semiconductor-deepdive.ts)의 '소급 적용은 1월 1일자'·'7월 급여에 5~7개월치 차액'은 작성 당시의 가정.
+//   - 재원 표현: 파이낸셜뉴스 2026-09-27(fnnews.com/news/202609270938413557) 'DS부문 사업성과인 영업이익의 10.5%' — 노사가 합의해
+//     정한 사업성과 기준이라 '영업이익의 10.5%'로 줄여 쓰지 않는다(SEO 보강 specialBonusPoolSupplement 와 같은 표현 계열).
+//   - 세부안: 같은 기사 — 초기업노조가 9월 마지막 주 DS 특별경영성과급 산정·지급 세부안을 조합원에게 안내한다고 공지(예정).
+//     배포 당일 세부안 공개 보도가 있으면 그 사실(보도 기준·날짜)로 바꾸고 H2 날짜를 확인일로 바꾼다.
+//   - 인상률 비교의 주어: 합계 6.2%는 당시 추정(5.0~6.5%) 안이지만 기본인상률 4.1%는 추정보다 낮다.
+// 수치는 계산기 정본에서 끼워 넣는다 — SAMSUNG_WAGE_2026(bonusHome/compEngines: 4.1·2.1·6.2·2026-05-27),
+// FIXED_RERATE·FIXED_BU_RATIO·FIXED_SA_RATIO·getThreshold(samsung-bonus/model), SAMSUNG_OPI2_TRANCHES(compEngines).
+// 투표율·찬성률(95.5%·73.7%)만 위 보도값 리터럴(삼성 성과급 계산기 FAQ·autumn-2026-season 가이드와 같은 값).
+// 정본 값이 이 문구의 전제와 달라지면(가결일·3분의 1씩 3회·임계값) 모듈 로드 시 실패시켜 문구를 고치게 한다.
+const SAMSUNG_RATIFIED = /^(\d{4})-(\d{2})-(\d{2})$/.exec(SAMSUNG_WAGE_2026.ratifiedDate);
+if (!SAMSUNG_RATIFIED) throw new Error("[guideSupplements] SAMSUNG_WAGE_2026.ratifiedDate 형식이 YYYY-MM-DD 가 아니다");
+const SAMSUNG_RATIFIED_KO = `${Number(SAMSUNG_RATIFIED[1])}년 ${Number(SAMSUNG_RATIFIED[2])}월 ${Number(SAMSUNG_RATIFIED[3])}일`;
+if (
+  SAMSUNG_OPI2_TRANCHES.length !== 3 ||
+  SAMSUNG_OPI2_TRANCHES.some((t, i) => t.afterYears !== i || Math.abs(t.share - 1 / 3) > 1e-9)
+) {
+  throw new Error("[guideSupplements] SAMSUNG_OPI2_TRANCHES 가 '즉시·1년·2년 3분의 1씩'이 아니다 — samsung-wage-negotiation-2026 보강 문구를 고칠 것");
+}
+const SAMSUNG_THRESHOLD_EARLY = getThreshold(2026);
+const SAMSUNG_THRESHOLD_LATE = getThreshold(2029);
+if (getThreshold(2028) !== SAMSUNG_THRESHOLD_EARLY || getThreshold(2035) !== SAMSUNG_THRESHOLD_LATE || getThreshold(2036) !== 0) {
+  throw new Error("[guideSupplements] samsung-bonus getThreshold 구간이 2026~2028·2029~2035 가 아니다 — 보강 문구를 고칠 것");
+}
+/** 부문 : 사업부 = FIXED_BU_RATIO : FIXED_SA_RATIO(4 : 6) → 40%·60%. 정수 %가 아니면 문구가 어색해지므로 로드 시 실패 */
+const SAMSUNG_POOL_DIV_PCT = (FIXED_BU_RATIO * 100) / (FIXED_BU_RATIO + FIXED_SA_RATIO);
+const SAMSUNG_POOL_BU_PCT = (FIXED_SA_RATIO * 100) / (FIXED_BU_RATIO + FIXED_SA_RATIO);
+if (!Number.isInteger(SAMSUNG_POOL_DIV_PCT) || !Number.isInteger(SAMSUNG_POOL_BU_PCT)) {
+  throw new Error("[guideSupplements] samsung-bonus 부문:사업부 비율이 정수 %로 나뉘지 않는다");
+}
+
+const samsungWageNegotiation2026Supplement = `
+<h2>2026년 9월 27일 기준 확인 사항</h2>
+<p>이 글은 2026년 5월 12일에 쓴 분석입니다. 본문 첫머리의 '5월 12일 본격 교섭 시작'은 사실과 다릅니다 — 2026년 임금교섭은 2025년 12월 11일 상견례로 시작됐고, 5월 11~12일은 중앙노동위원회 사후조정 일정이었습니다. 본문 일정 상자의 '6~8주, 5~10차 본교섭'·'합의 시점은 6~8월'도 실제 경과와 맞지 않으니 아래 협상 경과를 기준으로 보세요. 본문의 인상률 전망과 '결과를 기다리는 동안' 항목은 작성 당시의 내용이며, 그 뒤 확정된 결과를 날짜와 출처를 붙여 아래에 정리합니다.</p>
+<ul>
+<li><strong>협상 경과</strong> — 2025년 12월 11일 상견례(12월 16일 1차 본교섭) → 2026년 2월 19일 교섭 결렬 → 3월 3일 중앙노동위원회 조정 중지 → 5월 11~12일 1차 사후조정(13일 새벽 결렬) → 5월 18~20일 2차 사후조정(결렬) → 5월 20일 고용노동부 장관 중재 교섭에서 잠정합의 → 5월 22~27일 조합원 찬반투표(투표율 95.5%, 찬성 73.7%) → ${SAMSUNG_RATIFIED_KO} 가결(파이낸셜뉴스·서울신문·헤럴드경제 보도 기준). 상견례부터 가결까지 5개월 넘게 걸린 교섭입니다.</li>
+<li><strong>임금 인상률</strong> — 기본인상률 ${SAMSUNG_WAGE_2026.basePct}% + 성과인상률 평균 ${SAMSUNG_WAGE_2026.meritAvgPct}%, 합계 평균 ${SAMSUNG_WAGE_2026.totalPct}%입니다. 합계 ${SAMSUNG_WAGE_2026.totalPct}%는 본문의 당시 추정(5.0~6.5%) 범위 안이지만 기본인상률만 보면 ${SAMSUNG_WAGE_2026.basePct}%로 추정보다 낮고, 직급별 시뮬레이션 표에서는 6% 열이 가장 가깝습니다.</li>
+<li><strong>소급 적용</strong> — 인상분은 2026년 3월 급여부터 소급 적용됩니다(보도 기준). 본문의 1월 1일자 소급과 7월 급여에 5~7개월치 차액 계산은 작성 당시의 가정입니다.</li>
+<li><strong>DS부문 특별경영성과급 신설</strong> — 노사가 합의해 정한 DS부문 사업성과의 ${FIXED_RERATE}%를 재원으로 하고 지급률 상한은 두지 않습니다. 재원은 부문 ${SAMSUNG_POOL_DIV_PCT}%·사업부 ${SAMSUNG_POOL_BU_PCT}%로 나누고, 세후 금액 전액을 자사주로 지급합니다. 받은 주식의 3분의 1은 즉시 팔 수 있고 나머지 3분의 1씩은 1년·2년 동안 매각이 제한됩니다. 2035년까지 10년간 운영되며, 지급 조건은 DS부문 연간 영업이익 ${SAMSUNG_THRESHOLD_EARLY}조원(2026~2028년)·${SAMSUNG_THRESHOLD_LATE}조원(2029~2035년)입니다(아시아경제·파이낸셜뉴스 보도 기준).</li>
+<li><strong>기존 OPI 유지</strong> — 초과이익성과금(OPI)은 그대로 두고 그 위에 특별경영성과급이 더해집니다. 지급 조건이 DS부문 연간 영업이익 기준이라 2026년분은 연간 실적이 나온 뒤 지급 여부가 정해지며, 산정·지급 세부안은 9월 마지막 주 조합원 안내 예정이라고 보도됐습니다(파이낸셜뉴스 2026-09-27) — 회사 안내를 기준으로 확인하세요.</li>
+</ul>
+<p>사업부별 세후 금액은 <a href="/calc/samsung-bonus">삼성전자 성과급 계산기</a>에서 영업이익과 사업부를 넣어 볼 수 있습니다. 계산기 결과는 입력한 영업이익을 가정한 시나리오이며 전망이 아닙니다. 협상 쟁점 배경과 타결 결과 요약은 <a href="/samsung-negotiation-2026">삼성전자 2026 임금협상 통합 페이지</a>에도 정리돼 있습니다(그 페이지의 쟁점 카드·직급별 인상폭 표는 협상 전 시나리오입니다).</p>
+
+<h2>협상 결과 관련 자주 묻는 질문</h2>
+<ul>
+<li><strong>Q. 삼성전자 2026년 임금 인상률은 최종 몇 %인가요?</strong> — 기본인상률 ${SAMSUNG_WAGE_2026.basePct}%와 성과인상률 평균 ${SAMSUNG_WAGE_2026.meritAvgPct}%를 더한 평균 ${SAMSUNG_WAGE_2026.totalPct}%입니다. ${SAMSUNG_RATIFIED_KO} 조합원 찬반투표 가결로 확정됐습니다(보도 기준). 성과인상률은 평균값이라 개인별 인상률은 이와 다를 수 있습니다.</li>
+<li><strong>Q. 특별경영성과급은 기존 OPI와 어떻게 다른가요?</strong> — OPI(초과이익성과금)는 그대로 유지되고, 특별경영성과급은 DS부문에 새로 생긴 제도입니다. 노사가 합의해 정한 DS부문 사업성과의 ${FIXED_RERATE}%를 상한 없이 재원으로 삼아 부문 ${SAMSUNG_POOL_DIV_PCT}%·사업부 ${SAMSUNG_POOL_BU_PCT}%로 나누고, 세후 금액 전액을 자사주로 받습니다(보도 기준).</li>
+<li><strong>Q. 특별경영성과급 자사주는 바로 팔 수 있나요?</strong> — 받은 주식의 3분의 1은 즉시 팔 수 있고, 나머지 3분의 1씩은 각각 1년·2년 동안 매각이 제한됩니다(보도 기준). 잠금이 풀리는 시점의 주가에 따라 실제 현금화 금액은 달라집니다.</li>
+</ul>
+`;
+
 // ── sk-hynix-wage-2026 (반도체 심층 가이드, 2026-05-13 작성) — 2026-09-27 기준 확인 사항 ──
 // 본문(semiconductor-deepdive.ts)은 광고 사이 표·문단이라 폭 맞춤 정정만 했다(2025년 행 psData 값, 2026년 전망 행 취소선·'(정정)',
 // '합의선 추정'→'당시의 추정'). 확정된 값과 날짜는 여기(레이아웃 푸터 광고 아래)에 둔다.
@@ -142,6 +214,7 @@ const skHynixWage2026Supplement = `
  * 새 항목을 넣을 때도 같은 규칙: 레이아웃 푸터 광고(PageFooterAds) 아래에서만 렌더, 본문 정본 무접촉, 수치는 검증 로그에 기록.
  */
 export const guideSupplements: Record<string, string> = {
+  "samsung-wage-negotiation-2026": samsungWageNegotiation2026Supplement,
   "nurse-salary": nurseSalarySupplement,
   "sk-hynix-wage-2026": skHynixWage2026Supplement,
 };
