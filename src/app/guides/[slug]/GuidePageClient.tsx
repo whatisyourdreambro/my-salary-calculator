@@ -40,9 +40,6 @@ export type RelatedGuideCard = Pick<Guide, "slug" | "title" | "description" | "c
 interface GuidePageClientProps {
  guide: Guide;
  relatedGuides: RelatedGuideCard[];
- /** 히어로 '수정' 날짜 표시 여부 — page.tsx 가 showGuideHeroModified(src/lib/guideHeroDates.ts)로 정한다.
-  * 생략하면 수정일이 발행일과 다를 때 표시(종전 동작). 광고 아래 '마지막 내용 수정' 줄은 이 값과 무관하다. */
- showHeroModified?: boolean;
 }
 
 // 본문 HTML을 <h2 시작 위치에서만 분할 — 태그 중간이 잘리지 않도록 보장.
@@ -91,7 +88,7 @@ const PROSE_CLASS = `prose prose-lg max-w-none
  prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-secondary/30 prose-blockquote:px-6 prose-blockquote:py-4 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-blockquote:text-foreground
  prose-ul:list-disc prose-ul:pl-6 prose-li:marker:text-link prose-table:text-sm`;
 
-export default function GuidePageClient({ guide, relatedGuides, showHeroModified }: GuidePageClientProps) {
+export default function GuidePageClient({ guide, relatedGuides }: GuidePageClientProps) {
  // 읽기 진행 바 — framer-motion(useScroll/useSpring, 청크 40KB br)을 passive scroll + rAF 로 대체 (2026-09-11 번들 감사).
  // 가이드 341쪽이 3px 바 하나 때문에 framer 청크를 첫 로드에 실었다. CSS transition 이 스프링 감쇠를 대신한다.
  const progressRef = useRef<HTMLDivElement | null>(null);
@@ -192,7 +189,7 @@ export default function GuidePageClient({ guide, relatedGuides, showHeroModified
  <div className="flex flex-wrap items-center justify-center gap-2">
  <Calendar className="w-4 h-4" />
  <span>발행 <time dateTime={guide.publishedDate}>{formatGuideDate(guide.publishedDate)}</time></span>
- {(showHeroModified ?? getGuideModifiedDate(guide) !== guide.publishedDate) && (
+ {getGuideModifiedDate(guide) !== guide.publishedDate && (
  <span>수정 <time dateTime={getGuideModifiedDate(guide)}>{formatGuideDate(getGuideModifiedDate(guide))}</time></span>
  )}
  </div>

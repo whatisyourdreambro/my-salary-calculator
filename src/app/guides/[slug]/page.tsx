@@ -15,7 +15,6 @@ import { buildGuideMetadata } from "@/lib/seo";
 import { Metadata } from "next";
 import { rankRelatedGuides } from "@/lib/guideDiscovery";
 import { getGuideModifiedDate } from "@/lib/guideDates";
-import { showGuideHeroModified } from "@/lib/guideHeroDates";
 
 export const dynamic = 'force-static';
 
@@ -110,7 +109,7 @@ export default function GuidePage({ params }: Props) {
  }),
  ]}
  />
- <GuidePageClient guide={guide} relatedGuides={relatedGuides} showHeroModified={showGuideHeroModified(guide)} />
+ <GuidePageClient guide={guide} relatedGuides={relatedGuides} />
 
  <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
  {/* 한↔영 상호 SSR 링크 — /en 트리 크롤 경로·링크 신호 확보 (hreflang과 동일 게이트) */}
