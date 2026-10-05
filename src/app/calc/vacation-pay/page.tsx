@@ -14,7 +14,7 @@ const FAQ_ITEMS = [
   {
     question: "연차수당은 어떻게 계산되나요?",
     answer:
-      "근로기준법상 연차수당 = 통상임금(또는 평균임금) × 미사용 연차 일수입니다. 통상임금은 1일 8시간 기준 월급을 209시간(법정 월 근로시간)으로 나눈 시급에 8을 곱한 1일 통상임금입니다. 일반적으로 연봉을 240(12개월×20일)으로 나누어 1일 통상임금을 추정합니다.",
+      "근로기준법상 연차수당 = 통상임금(또는 평균임금) × 미사용 연차 일수입니다. 통상임금은 1일 8시간 기준 월급을 209시간(법정 월 근로시간)으로 나눈 시급에 8을 곱한 1일 통상임금입니다. 연봉 전액이 통상임금이라면 1일 통상임금은 연봉 ÷ 12 ÷ 209 × 8(연봉 ÷ 313.5)입니다. 연봉 ÷ 240 으로 나누면 약 30% 크게 나오니 주의하세요.",
   },
   {
     question: "연차수당에도 세금이 붙나요?",
@@ -34,7 +34,7 @@ const FAQ_ITEMS = [
   {
     question: "연차수당과 퇴직금에 영향이 있나요?",
     answer:
-      "연차수당은 퇴직 직전 3개월 평균임금 산정에 포함되므로, 연차수당이 클수록 퇴직금도 늘어납니다. 다만 퇴직 직전 3개월 외 시점에 받은 연차수당은 평균임금에 포함되지 않습니다.",
+      "일부 반영됩니다. 퇴직 전년도에 발생한 연차를 쓰지 않아 받은 연차수당은 그 금액의 3/12이 퇴직금 평균임금 산정에 들어가므로, 연차수당이 클수록 퇴직금도 늘어납니다. 반면 퇴직하면서 비로소 지급 사유가 생긴 마지막 해 미사용 연차수당은 평균임금에 포함되지 않습니다(고용노동부 행정해석).",
   },
 ];
 
@@ -77,7 +77,7 @@ export default function VacationPayPage() {
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-8 mb-4">통상임금 계산 방법</h2>
             <p className="text-muted-blue dark:text-canvas-300 leading-relaxed">
               <strong>1일 통상임금</strong> = 월 통상임금 ÷ 209시간 × 8시간. 월 통상임금에는 기본급 + 정기 수당이 포함됩니다.
-              간편 추정: 연봉 ÷ 240 (12개월 × 20일). 정기상여까지 반영한 정확한 값은{" "}
+              간편 추정: 연봉 ÷ 12 ÷ 209 × 8. 정기상여까지 반영한 정확한 값은{" "}
               <Link href="/calc/ordinary-wage" className="text-electric font-bold hover:underline">
                 통상임금 계산기
               </Link>
@@ -123,7 +123,7 @@ export default function VacationPayPage() {
           <div className="rounded-2xl p-5 mb-8 flex gap-3 bg-electric-5 border border-electric-20">
             <Info size={18} className="text-electric flex-shrink-0 mt-1" />
             <p className="text-xs text-muted-blue dark:text-canvas-300 leading-relaxed">
-              본 계산기는 통상임금 ≈ 연봉/240 가정 추정치입니다. 정기·비정기 수당, 상여금 포함 여부에 따라 실제 통상임금이 달라질 수 있습니다.
+              본 계산기는 통상시급 ≈ 월급/209 가정 추정치입니다. 정기·비정기 수당, 상여금 포함 여부에 따라 실제 통상임금이 달라질 수 있습니다.
             </p>
           </div>
 

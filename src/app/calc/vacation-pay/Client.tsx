@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import NumberInput from "@/components/NumberInput";
+import { calcVacationPay } from "@/lib/vacationPay";
 
 function fmt(n: number) { return Math.round(n).toLocaleString("ko-KR"); }
 function formatInput(raw: string): string {
@@ -18,18 +19,9 @@ export default function VacationPayClient() {
   const salary = parseInput(salaryFmt);
   const numDays = Math.max(0, Number(days) || 0);
 
-  const result = useMemo(() => {
-    // 통상임금 = 연봉 / 240 (월 209시간 기준 1일 8시간)
-    const dailyWage = salary / 240;
-    const grossPay = dailyWage * numDays;
-    // 세금 추정: 평균 한계세율 약 22~28% 가정
-    const estTaxRate = salary > 88_000_000 ? 0.28 : salary > 50_000_000 ? 0.22 : salary > 14_000_000 ? 0.16 : 0.07;
-    const tax = grossPay * estTaxRate;
-    const insurance = grossPay * 0.085; // 4대보험 합산 약 8.5%
-    const totalDeduction = tax + insurance;
-    const net = grossPay - totalDeduction;
-    return { dailyWage, grossPay, tax, insurance, totalDeduction, net };
-  }, [salary, numDays]);
+  // 1일 통상임금 = 연봉 ÷ 12 ÷ 209 × 8 (정본 computeOrdinaryWage), 세금·4대보험 = 정본 calcBonusNet.
+  // 종전 연봉 ÷ 240·고정 세율은 실수령을 16~30% 과대 표시했다 (2026-10-05 감사 code7-01) — src/lib/vacationPay.ts
+  const result = useMemo(() => calcVacationPay(salary, numDays), [salary, numDays]);
 
   return (
     <div className="space-y-5 mb-10">
