@@ -16,6 +16,7 @@ import {
  industryLabelKo,
 } from "@/lib/companyContentBuilder";
 import { josa } from "@/lib/josa";
+import { insightsTierPhrase, insightsTopicParticle } from "@/lib/companyTierPhrase";
 
 interface CompanyInsightsProps {
  company: CompanyProfile;
@@ -38,7 +39,8 @@ export default function CompanyInsights({ company }: CompanyInsightsProps) {
  </h2>
  <div className="space-y-3 text-sm sm:text-base text-muted-blue leading-relaxed">
  <p>
- <strong className="text-navy">{koName}</strong>({enName})는 {industryLabelKo(company.industry)} 업종의 {company.tier === "conglomerate" ? "대기업" : company.tier === "unicorn" ? "유니콘" : company.tier === "startup" ? "스타트업" : company.tier === "public" ? "공기업/공공기관" : "외국계"}로,{" "}
+ {/* 조사 자동(은/는은 괄호 앞 한글 이름 기준) + 분류 문구는 단어마다 종전 폭 이하 — src/lib/companyTierPhrase.ts */}
+ <strong className="text-navy">{koName}</strong>({enName}){insightsTopicParticle(koName)} {industryLabelKo(company.industry)} 업종의 {insightsTierPhrase(company.tier)},{" "}
  신입 영끌 연봉 <strong className="text-electric">{formatSalaryKorean(entryTotal)}</strong> 수준을 형성합니다.
  </p>
  <p>

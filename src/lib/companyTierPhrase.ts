@@ -1,0 +1,37 @@
+// src/lib/companyTierPhrase.ts
+//
+// 회사 페이지 핵심 요약(CompanyInsights) 첫 문장 '{회사}({영문})는 {업종} 업종의 {분류}로,' 조사 정정
+// (2026-10-05, 10/30 회사 묶음).
+//
+// 종전 문구는 조사를 고정으로 붙여 두 군데가 틀렸다.
+//  - '({영문})는' — 받침 있는 회사명 219쪽에서 '쿠팡(Coupang)는'. 조사는 괄호 앞 한글 이름에 맞춘다(은/는 1음절끼리, 폭 같음).
+//  - '{분류}로' — 받침 있는 분류(대기업·유니콘·스타트업·공기업/공공기관) 412쪽에서 '대기업로'·'유니콘로'.
+// 이 요약은 페이지 끝 광고(HomeTopAd) 위라 띄어쓰기로 나뉜 단어마다 종전보다 넓어지지 않게 고른다
+// (본문은 keep-all 줄바꿈 — 단어마다 폭이 같거나 좁으면 줄 수가 늘지 않는다).
+//   대기업로(4)            -> 대형사로(4)      받침 없는 같은 뜻의 말로 바꿔 '로'를 살린다
+//   유니콘로(4)            -> 유니콘,(3)       '으로'를 붙이면 5음절이라 조사 없이 쉼표로 잇는다
+//   스타트업로(5)          -> 스타트업,(4)     위와 같음
+//   공기업/공공기관로(7+/) -> 공공기관으로(6)  공기업은 공공기관에 포함된다
+//   외국계로(4)            -> 그대로
+// 클라이언트 번들에 실려도 되는 작은 순수 모듈 — 데이터 import 금지.
+import type { CompanyProfile } from "@/types/company";
+import { josaParticle } from "@/lib/josa";
+
+const INSIGHTS_TIER_PHRASE: Record<CompanyProfile["tier"], string> = {
+  conglomerate: "대형사로",
+  unicorn: "유니콘",
+  startup: "스타트업",
+  public: "공공기관으로",
+  foreign: "외국계로",
+};
+
+/** '{업종} 업종의 ' 뒤에 오는 분류 문구(조사 포함, 쉼표 제외). 모르는 tier 는 종전처럼 원문 + '로'. */
+export function insightsTierPhrase(tier: CompanyProfile["tier"] | string): string {
+  return INSIGHTS_TIER_PHRASE[tier as CompanyProfile["tier"]] ?? `${tier}로`;
+}
+
+/** '{회사}({영문})' 뒤 은/는 — 괄호 앞 한글 이름 기준. 판정 불가(병기 형식)면 종전 '는' 그대로(폭 유지). */
+export function insightsTopicParticle(koName: string): string {
+  const particle = josaParticle(koName, "은/는");
+  return particle.length === 1 ? particle : "는";
+}
