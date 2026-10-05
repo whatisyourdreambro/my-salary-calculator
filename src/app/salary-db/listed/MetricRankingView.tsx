@@ -203,7 +203,7 @@ export default function MetricRankingView({ cfg }: { cfg: MetricConfig }) {
             금융감독원 전자공시시스템(DART) {DART_RANKING_YEAR} 사업연도 사업보고서 「직원 등의
             현황」 기준(등기임원 제외). {poolNote}{" "}
             {cfg.methodologyExtra} 평균연봉은 <strong className="text-navy">신입 초봉이 아니며</strong>,
-            성과급 지급 시점에 따라 연도별 변동이 있을 수 있습니다. 상장사는 종목코드가 기록된 기업 기준이며, 현재 상장 여부를 보증하지 않습니다. 데이터 기준일: {DART_RANKING_DATE}.
+            성과급 지급 시점에 따라 연도별 변동이 있을 수 있습니다. 종목코드가 기록된 상장사 기준이며, 현재 상장 여부를 보증하지 않습니다. 데이터 기준일: {DART_RANKING_DATE}.
           </p>
           {/* 인용 복사 — R2 B4 (운영자 승인 2026-08-31): 인용→백링크 상시 생산 */}
           {cfg.citation && (

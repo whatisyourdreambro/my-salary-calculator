@@ -81,7 +81,7 @@ export default function ListedIndexPage() {
             <Link href="/insights/listed-avg-salary-top100-2026" className="font-bold text-electric hover:underline">
               TOP 100 리포트
             </Link>
-            에서 볼 수 있습니다. 데이터 기준일: {DART_LITE_DATE}.
+            에서 볼 수 있습니다. 종목코드가 기록된 상장사 기준이며, 현재 상장 여부를 보증하지 않습니다. 데이터 기준일: {DART_LITE_DATE}.
           </p>
         </section>
 

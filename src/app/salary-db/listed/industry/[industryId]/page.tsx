@@ -309,7 +309,7 @@ export default function IndustryRankingPage({ params }: Props) {
             현황」 기준 — 연간 급여총액 ÷ 직원 수(등기임원 제외). 상장사 순위 모수는{" "}
             {LISTED_TOTAL.toLocaleString("ko-KR")}곳이며, 업종 분류는 표준산업분류(KSIC) 기반
             자체 매핑입니다. <strong className="text-navy">신입 초봉이 아니며</strong>, 성과급
-            지급 시점에 따라 연도별 변동이 있을 수 있습니다. 상장사는 종목코드가 기록된 기업 기준이며, 현재 상장 여부를 보증하지 않습니다. 데이터 기준일: {DART_RANKING_DATE}.
+            지급 시점에 따라 연도별 변동이 있을 수 있습니다. 종목코드가 기록된 상장사 기준이며, 현재 상장 여부를 보증하지 않습니다. 데이터 기준일: {DART_RANKING_DATE}.
           </p>
           {/* 인용 복사 — R2 B4 (운영자 승인 2026-08-31): 데이터 변수 기반 빌드타임 생성 */}
           <CitationCopyButton

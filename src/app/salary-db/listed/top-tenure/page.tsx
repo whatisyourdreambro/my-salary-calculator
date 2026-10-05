@@ -38,7 +38,7 @@ export default function TopTenurePage() {
             근속연수를 공시한 상장사 {tenureEligibleCount.toLocaleString("ko-KR")}곳 기준이며,
             1위는 <strong className="text-navy">{top1.nameKo}</strong>(
             {fmtYears(top1.avgTenureYears)}, 평균연봉 {fmtManwon(top1.avgSalaryManwon)})입니다.
-            근속만으로 고용 안정성·복지 만족도를 단정할 수 없습니다.
+            평균 근속연수만으로 고용 안정성·복지 만족도를 판단할 수는 없습니다.
           </>
         ),
         valueHeader: "평균 근속",
