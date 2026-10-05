@@ -118,7 +118,7 @@ function checkAge(input: DependentInput): RequirementCheck {
     return {
       ...base,
       ok: true,
-      detail: "장애인은 나이 요건을 적용하지 않습니다 (소득세법 50조 3항).",
+      detail: "장애인은 나이 요건을 적용하지 않습니다 (소득세법 50조 1항).",
     };
   }
   if (input.relation === "ascendant") {
@@ -205,7 +205,7 @@ function checkLivelihood(input: DependentInput): RequirementCheck {
         ...base,
         ok: true,
         detail:
-          "직계존속은 주거 형편상 별거해도 실제 부양하고 있으면 생계를 같이 하는 것으로 봅니다 (소득세법 53조 2항).",
+          "직계존속은 주거 형편상 별거해도 실제 부양하고 있으면 생계를 같이 하는 것으로 봅니다 (소득세법 53조 3항).",
       };
     }
     return {
@@ -228,7 +228,7 @@ function checkLivelihood(input: DependentInput): RequirementCheck {
       ...base,
       ok: true,
       detail:
-        "취학·질병 요양·근무·사업 형편에 따른 일시 퇴거는 생계를 같이 하는 것으로 봅니다 (소득세법 53조 1항).",
+        "취학·질병 요양·근무·사업 형편에 따른 일시 퇴거는 생계를 같이 하는 것으로 봅니다 (소득세법 53조 2항).",
     };
   }
   return {
