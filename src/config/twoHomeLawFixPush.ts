@@ -13,4 +13,4 @@
 // 10/15 날짜 정정 묶음(deployDates2026Oct.ts)이 들어온 뒤 그 파일로 옮겨도 된다.
 
 /** 일시적 2주택 처분 기한(조정대상지역 2년) 개정 반영 — 가이드 4편 광고 아래 보강 */
-export const TWO_HOME_LAW_FIX_PUSH = "2026-10-11";
+export const TWO_HOME_LAW_FIX_PUSH = "2026-10-06";
