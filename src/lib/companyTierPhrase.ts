@@ -17,17 +17,28 @@
 import type { CompanyProfile } from "@/types/company";
 import { josaParticle } from "@/lib/josa";
 
-const INSIGHTS_TIER_PHRASE: Record<CompanyProfile["tier"], string> = {
-  conglomerate: "대형사로",
-  unicorn: "유니콘",
-  startup: "스타트업",
-  public: "공공기관으로",
-  foreign: "외국계로",
+/**
+ * [분류 낱말, 조사] — 화면은 종전과 같은 텍스트 노드 구조(분류 낱말 노드 + '조사,' 노드)로 낸다.
+ * 사이트 본문은 letter-spacing 이 있어 텍스트 노드(글자 묶음)마다 폭이 1/64px 단위로 반올림된다 — 같은 글자 폭이라도
+ * 노드를 더 잘게 나누면 문장 폭이 0.03px 늘 수 있고, 그 폭에 꼭 맞던 문장은 한 줄 늘어난다
+ * (조기 실측 ① 재측정: 우리카드 632px 요약 문장 550.00 -> 550.03px, 한 줄 증가로 HomeTopAd +23px).
+ */
+const INSIGHTS_TIER_PARTS: Record<CompanyProfile["tier"], readonly [string, string]> = {
+  conglomerate: ["대형사", "로"],
+  unicorn: ["유니콘", ""],
+  startup: ["스타트업", ""],
+  public: ["공공기관", "으로"],
+  foreign: ["외국계", "로"],
 };
 
-/** '{업종} 업종의 ' 뒤에 오는 분류 문구(조사 포함, 쉼표 제외). 모르는 tier 는 종전처럼 원문 + '로'. */
+/** '{업종} 업종의 ' 뒤 분류 문구를 [낱말, 조사]로. 모르는 tier 는 종전처럼 원문 + '로'. */
+export function insightsTierParts(tier: CompanyProfile["tier"] | string): readonly [string, string] {
+  return INSIGHTS_TIER_PARTS[tier as CompanyProfile["tier"]] ?? [String(tier), "로"];
+}
+
+/** '{업종} 업종의 ' 뒤에 오는 분류 문구(조사 포함, 쉼표 제외). */
 export function insightsTierPhrase(tier: CompanyProfile["tier"] | string): string {
-  return INSIGHTS_TIER_PHRASE[tier as CompanyProfile["tier"]] ?? `${tier}로`;
+  return insightsTierParts(tier).join("");
 }
 
 /** '{회사}({영문})' 뒤 은/는 — 괄호 앞 한글 이름 기준. 판정 불가(병기 형식)면 종전 '는' 그대로(폭 유지). */

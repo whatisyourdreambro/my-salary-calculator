@@ -117,6 +117,15 @@ describe("핵심 요약 첫 문장 조사 (CompanyInsights — '대기업로'·'
       expect(text).not.toMatch(/대기업로|유니콘로|스타트업로|공공기관로/);
     }
   });
+
+  it("텍스트 노드 구조는 종전과 같다 — ')는 ' 한 노드, 분류 낱말 + '로,' 두 노드 (노드가 잘게 나뉘면 632px 우리카드처럼 0.03px 늘어 한 줄 증가)", async () => {
+    const { renderToString } = await import("react-dom/server");
+    const html = (id: string) => renderToString(createElement(CompanyInsights, { company: company(id) }));
+    // 종전: ({영문})는 <!-- -->{업종}<!-- --> 업종의 <!-- -->대기업<!-- -->로,<!-- --> <!-- -->신입 영끌 연봉
+    expect(html("woori-card")).toContain("(<!-- -->Woori Card<!-- -->)는 <!-- -->카드·캐피탈<!-- --> 업종의 <!-- -->대형사<!-- -->로,<!-- --> <!-- -->신입 영끌 연봉 ");
+    expect(html("tesla")).toContain(" 업종의 <!-- -->외국계<!-- -->로,<!-- --> <!-- -->신입 영끌 연봉 ");
+    expect(html("coupang")).toContain(")은 <!-- -->유통·이커머스<!-- --> 업종의 <!-- -->유니콘<!-- -->,<!-- --> <!-- -->신입 영끌 연봉 ");
+  });
 });
 
 describe("한국투자증권 공시 카드 note — 증권업 전체 1위 수준 오기 (R09 code36-07)", () => {
