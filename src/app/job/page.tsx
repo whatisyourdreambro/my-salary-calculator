@@ -16,7 +16,7 @@ export const dynamic = "force-static";
 export const metadata: Metadata = buildPageMetadata({
   title: `직업별 연봉 완전 가이드 2026 — ${jobCountGae} 핵심 직종 평균 연봉·실수령액`,
   description:
-    `간호사·의사·공무원·교사·개발자·변호사 등 ${jobCountGae} 핵심 직업의 자체 참고 연봉과 신입~경력별 실수령액을 비교하세요. 자료의 기준과 2026년 계산 조건을 확인할 수 있습니다.`,
+    `간호사·의사·공무원·교사·개발자·변호사 등 ${jobCountGae} 핵심 직업의 평균 연봉(자체 참고값)과 신입~경력별 실수령액을 한눈에 확인하세요. 직종별 연봉 비교 및 2026년 실수령액 계산기 제공.`,
   path: "/job",
   keywords: [
     "직업별 연봉",
@@ -80,8 +80,8 @@ export default function JobIndexPage() {
               직업별 연봉 완전 가이드 2026
             </h1>
             <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
-              {jobCountGae} 핵심 직종의 자체 참고 연봉과 실수령액을 비교하세요.
-              자료의 기준과 개인 조건을 확인한 뒤 2026년 계산 모형을 이용하세요.
+              {jobCountGae} 핵심 직종의 신입~경력별 평균 연봉과 실수령액을 한눈에 비교하세요.
+              연봉은 자체 참고값입니다.
             </p>
             <div className="mt-4 flex flex-wrap justify-center gap-2 text-sm">
               {CATEGORY_ORDER.map((cat) => (

@@ -1244,9 +1244,9 @@ export const hotBonusTaxComplete: Guide[] = [
   { slug: "lg-hyundai-posco-bonus-2026", title: "LG·현대차·기아·포스코 성과급 비교 2026", description: "현대차·기아 400%+1,270만원, LG엔솔 최대 75%·LG디스플레이 150%(2025년 실적분), 포스코 구분법과 세후 환산.", metaDescription: "현대차·기아 2026 임단협 성과급(400%+정액 1,270만원+주식), LG에너지솔루션 최대 75%·LG디스플레이 150%, LG전자와 포스코의 지급 구조를 비교하고 연봉 8,000만원 기준 세후를 계산했습니다.", category: "연봉", tags: ["현대차", "기아", "LG에너지솔루션", "포스코", "성과급", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-26", views: 0, content: lgPoscoBonus, lang: "ko" },
   { slug: "it-rsu-vs-cash-bonus-2026", title: "RSU·현금 성과급 세금 2026 — 네이버·카카오·쿠팡", description: "RSU도 받는 날 시가로 근로소득 과세돼 세금은 현금 성과급과 같습니다. 차이는 이후 주가와, 국내·해외 상장에 따라 갈리는 매도 세금입니다.", metaDescription: "RSU는 주식을 받는 날의 시가로 근로소득세가 정해져 같은 금액 현금 성과급과 세금이 같습니다. 네이버·카카오(국내 상장)와 쿠팡(미국 상장) RSU의 매도 세금과 주가 하락 때 손익을 비교했습니다.", category: "주식", tags: ["RSU", "네이버", "카카오", "쿠팡", "성과급", "2026"], level: "고급", publishedDate: "2026-05-23", modifiedDate: "2026-09-26", views: 0, content: itRsuVsCash, lang: "ko" },
   { slug: "foreign-bonus-structure-2026", title: "외국계 보너스 — 구글·아마존·메타·MS 한국지사 RSU 구조", description: "구글 Alphabet RSU + 사인온, 아마존 분할 사인온 + 4년 비균등 RSU, 메타·MS 분기 성과 + RSU. 외국 모회사 직접 지급 시 본인 종소세 신고 의무.", category: "주식", tags: ["외국계", "구글", "아마존", "메타", "RSU", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: foreignBonus, lang: "ko" },
-  { slug: "sign-on-bonus-tax-2026", title: "사인온 보너스 5,000만원 — 세금과 분할 지급 조건 확인", description: "사인온 보너스는 연간 급여와 합산해 세금을 계산합니다. 분할 지급의 귀속연도·총보상·반환 조건을 함께 비교하세요.", category: "연봉", tags: ["사인온", "Signing Bonus", "입사", "절세", "2026"], level: "중급", publishedDate: "2026-05-23",
+  { slug: "sign-on-bonus-tax-2026", title: "사인온 보너스 5,000만 — 실수령과 분할 지급 세금", description: "입사 시 일회성 보너스. 연봉 합산 과세라 한계세율만으로 부담률 단정 불가. 5,000만 일시 vs 2년 분할 비교.", category: "연봉", tags: ["사인온", "Signing Bonus", "입사", "절세", "2026"], level: "중급", publishedDate: "2026-05-23",
     modifiedDate: "2026-10-03", views: 0, content: signOnBonus, lang: "ko" },
-  { slug: "retention-bonus-3year-split-2026", title: "리텐션 보너스 1억 — 분할 조건과 3년 총세금 비교", description: "리텐션 보너스의 세금은 귀속연도·연봉·공제에 따라 달라집니다. 3년의 총보상과 지급·반환 조건을 함께 비교하세요.", category: "연봉", tags: ["리텐션", "잔존보너스", "M&A", "구조조정", "2026"], level: "고급", publishedDate: "2026-05-23",
+  { slug: "retention-bonus-3year-split-2026", title: "리텐션 보너스 1억 — 3년 분할 vs 일시 총세금", description: "M&A·구조조정 후 잔존 보너스. 1억 일시 vs 3년 분할 세금은 귀속연도별 상이. 분할 지급 협상 시 조건 확인.", category: "연봉", tags: ["리텐션", "잔존보너스", "M&A", "구조조정", "2026"], level: "고급", publishedDate: "2026-05-23",
     modifiedDate: "2026-10-03", views: 0, content: retentionBonus, lang: "ko" },
   { slug: "executive-bonus-corporate-limit-2026", title: "비상장 임원 성과급 한도 — 초과 시 회사·임원 모두 손해", description: "정관·주총 한도 명시. 한도 5억 + 실 지급 8억 시 초과 3억 법인세 7,200만 추가 + 임원 근로소득세 그대로. 한도 내 운용 필수.", category: "연봉", tags: ["임원", "비상장", "성과급한도", "법인세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: executiveBonusLimit, lang: "ko" },
   // 영역 B — 성과급 소득세 10편
@@ -1292,7 +1292,7 @@ export const hotBonusTaxComplete: Guide[] = [
     content: bracket8Step,
     lang: "ko",
   },
-  { slug: "bonus-split-payout-1000-saving-2026", title: "성과급 1억 분할 지급 — 귀속연도와 2년 총세금 비교", description: "분할 지급의 세금은 귀속연도·급여·공제에 따라 달라집니다. 금액 확정일과 두 해의 세금·현금흐름을 함께 확인하세요.", category: "세금", tags: ["성과급", "분할지급", "귀속연도", "지급조건", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-10-03", views: 0, content: splitPayoutLower, lang: "ko" },
+  { slug: "bonus-split-payout-1000-saving-2026", title: "성과급 1억 분할 지급 — 1년 vs 2년 세금 비교", description: "일시 지급 한계세율 vs 2년 분할 세금 비교. 절감액은 귀속연도별 상이. 인사·임원과 분할 협상 시 잔류 조건 확인.", category: "세금", tags: ["성과급", "분할지급", "귀속연도", "지급조건", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-10-03", views: 0, content: splitPayoutLower, lang: "ko" },
   // 영역 C — 성과급 4대보험·건강보험 10편
   {
     slug: "bonus-health-4-percent-2026",

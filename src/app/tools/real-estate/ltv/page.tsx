@@ -14,9 +14,9 @@ import { ArrowRight, Info, AlertTriangle, Scale } from "lucide-react";
 
 export const metadata: Metadata = buildToolMetadata({
   name: "LTV 계산기",
-  tagline: "주택 가격과 대출 금액의 비율 계산",
+  tagline: "담보인정비율 자동 계산 (주택 가격 대비 대출 비율)",
   description:
-    "주택 가격과 대출 금액으로 LTV 비율을 계산합니다. 지역 규정·자격·대출 상한·DSR과 승인 가능 여부는 자동 판정하지 않는 단순 비율 계산기입니다.",
+    "LTV(담보인정비율) 계산기. 주택 가격과 대출액으로 본인 LTV % 자동 산출. 규제지역 40%/비규제 70%/생애최초(비수도권 80%·수도권 70%) 기준 한도와 DSR과의 차이는 상세 가이드로 비교(승인 여부는 자동 판정하지 않음).",
   path: "/tools/real-estate/ltv",
   keywords: [
     "LTV 계산기",
@@ -101,7 +101,7 @@ export default function LtvPage() {
           softwareApplicationLd({
             name: "LTV 계산기",
             description:
-              "입력한 대출 금액을 주택 가격으로 나눈 LTV 비율 계산. 승인 한도 자동 판정은 제외합니다.",
+              "LTV(담보인정비율)를 주택 가격과 대출액으로 자동 계산. 승인 한도 자동 판정은 제외합니다.",
             url: "/tools/real-estate/ltv",
           }),
           autoBreadcrumbLd("/tools/real-estate/ltv", {
@@ -127,8 +127,8 @@ export default function LtvPage() {
             LTV 계산기
           </h1>
           <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-xl mx-auto">
-            주택 가격 대비 입력한 대출 금액의 비율을 확인합니다.
-            대출 가능 금액이나 승인 여부는 계산하지 않습니다.
+            담보인정비율 — 주택 가격 대비 대출액 비율로 본인 LTV %를
+            확인.
           </p>
         </header>
 

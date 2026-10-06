@@ -264,7 +264,7 @@ export default function CompanyDisclosedSalary({
               className="inline-flex items-center gap-1.5 rounded-full bg-electric/10 px-3 py-1.5 text-xs font-bold text-electric hover:bg-electric/20 transition-colors"
             >
               <Trophy size={13} className="flex-shrink-0" aria-hidden="true" />
-              {dartRank.rankYear} 공시 평균연봉 — 공시기업{" "}
+              {dartRank.rankYear} 공시 평균연봉 — 상장사{" "}
               {dartRank.companyCount.toLocaleString("ko-KR")}곳 중{" "}
               <strong>{dartRank.rank}위</strong> · DART 산정{" "}
               {dartRank.salaryManwon.toLocaleString("ko-KR")}만원 기준 · TOP 100 리포트 보기 →
@@ -279,7 +279,7 @@ export default function CompanyDisclosedSalary({
               href={`/salary-db/listed/industry/${industryLink.industryId}`}
               className="inline-flex items-center rounded-full border border-canvas-200 dark:border-canvas-700 px-3 py-1.5 text-xs font-bold text-navy dark:text-canvas-100 hover:border-electric hover:text-electric transition-colors"
             >
-              {industryLink.industryKo} 공시기업 연봉 순위 →
+              {industryLink.industryKo} 상장사 연봉 순위 →
             </Link>
             <Link
               href="/salary-db/listed/top-raise"

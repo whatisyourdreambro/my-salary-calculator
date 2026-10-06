@@ -226,7 +226,7 @@ const rawGuides = [
  // --- 투자 (Investment) : 10 items ---
  {
  slug: "isa-account-guide",
- title: "만능통장 ISA: 납입 한도와 만기 활용 로드맵 💎",
+ title: "만능통장 ISA: 3년 만기 활용 1억 로드맵 💎",
  description: "비과세 혜택 끝판왕 ISA 계좌 활용법. 중개형 vs 신탁형 비교부터 추천 포트폴리오까지.",
  category: "투자",
  tags: ["ISA", "비과세", "목돈마련"],
@@ -417,6 +417,26 @@ const guideMetaDescriptions: Record<string, string> = {
  "year-end-tax-2026": "2026년 귀속 연말정산(2027년 1~2월) 공제 총정리. 연금계좌 900만원·월세 1,000만원·카드 300만원(자녀 수별 상향) 등 항목별 한도와 환급 우선순위, 경정청구 5년까지 정리했습니다.",
 };
 
+// 검색어 복원 검색 전용 설명 — code51-01 (2026-10-06).
+// 10/4 배포가 아래 글들의 TL;DR(description)을 바꾸면서 검색 결과 설명에서 빠진 검색어를 검색 전용 설명으로만 되살린다.
+// 9/27 문구(10/4 숫자 정정 반영)를 그대로 쓰고, 80자에 못 미치면 10/4 TL;DR 의 전제·조건 문구를 덧붙여 80~120자로 맞췄다.
+// ★화면 TL;DR·카드·RSS 는 10/4 description 그대로 — 9/27 문구를 화면에 되살리면 1,123폭 스윕에서
+//   본문 광고(GuideMidAd 등)·관련 글 카드 아래 광고가 내려가는 폭이 생겼다(운영 대비 광고 위치 변경 0 원칙).
+// META-07 과 같이 guides/[slug] generateMetadata 에서만 쓰인다. guideSpec.test.ts (6) 이 이 맵의 편수를 고정한다.
+const guideKeywordMetaDescriptions: Record<string, string> = {
+ "child-fund-gift-strategy-2026": "자녀 0세에 2,000만원 비과세 증여 → 연 7% 운용 가정 → 18세 6,760만원. 부모 종합소득과 분리, 세대 간 자산 이전. 세금·수수료 전 금액이며 수익률은 보장되지 않습니다.",
+ "credit-score-850-strategy-2026": "카드 사용액 한도 30% 이하·자동이체 6건·카뱅/토스 신용관리·마통 자제·카드론 즉시 정리. 750점 → 900점 시 이자 절감액은 금융사·상품별 상이.",
+ "business-trip-expense-tax-2026": "실비 영수증 출장비 비과세. 일비 국내 2만원·해외 5만원 한도 오해. 정액 일비는 근로소득 과세. 출장비의 실비변상 성격과 지급 규정·증빙으로 비과세 여부를 확인합니다.",
+ "health-insurance-continue-after-retire-2026": "퇴직 후 임의계속가입은 최초 지역보험료 납부기한에서 2개월이 지나기 전 신청. 직장가입자 시절 보험료 기준 본인 부담. 지역가입자 보험료와 가입 조건 비교.",
+ "gift-vs-transfer-asset-2026": "10억 주택 단순 증여 2.25억(성인 자녀·신고공제 전) vs 부담부증여 1.1억. 현금은 증여, 부동산은 부담부증여, 주식은 저평가 시기 증여.",
+ "one-home-capital-gains-12eok-2026": "1세대 1주택 + 보유 2년 + 거주 2년(조정) + 12억 이하 = 양도세 0원. 15억 매도 시 초과 비율 과세, 장기보유공제 36% 적용 시 약 1,666만원. 10년+10년 시 80% 공제.",
+ "youth-leap-account-2026": "2025-12-31 신규 가입 종료(청년미래적금 참고). 월 70만원 × 5년 = 원금 4,200만원 + 정부기여금 144만원 + 이자 비과세 640만원 = 만기 4,984만원.",
+ "parcel-vs-occupancy-right-tax-2026": "분양권 양도세 1년 미만 70%·그 외 60%, 승계 입주권은 원조합원 기간 미합산. 8억 입주권 매도 세금 계산법. 승계취득 입주권의 보유기간·공제 차이를 확인합니다.",
+ "individual-vs-corporate-tax": "개인사업자 종합소득세(누진 6~45%) vs 법인세(10~25%). 매출 기준 전환 시점 단정 불가. 4대보험·대표급여 비교. 세금은 대표 급여·배당·공제에 따라 달라집니다.",
+ "newlywed-loan-limit-2x-2026": "부부 합산 DSR 40% + LTV 70%. 부부 연 1.2억 시 8.38억 대출 예시(30년·4% 가정). 규제·심사 별도. 공동 채무자 리스크 점검 필수.",
+ "retirement-planning-30s": "30대부터 매달 50만 적립 + ETF 운용 시 60세 6억 시뮬(연 7% 가정). 국민연금·퇴직연금·개인연금 3층 보장 활용법과 적립액별 60세 자산 비교.",
+};
+
 // Generate the final guides array with content
 // — guide.content가 명시되어 있으면 그걸 우선 사용 (unique 콘텐츠)
 // — 없으면 legacyRewriteContent(2026-08-15 재작성 본문) 사용
@@ -442,8 +462,8 @@ export const guides: Guide[] = (allRawGuides as RawGuide[]).map(guide => {
  content,
  ...(rewritten ? { publishedDate: "2026-08-15" } : {}),
  // 한국어 글만 — 같은 슬러그의 영문판(/en/guides)에 한국어 메타가 섞이지 않게
- ...((guide.lang ?? 'ko') === 'ko' && guideMetaDescriptions[guide.slug]
- ? { metaDescription: guideMetaDescriptions[guide.slug] }
+ ...((guide.lang ?? 'ko') === 'ko' && (guideMetaDescriptions[guide.slug] ?? guideKeywordMetaDescriptions[guide.slug])
+ ? { metaDescription: guideMetaDescriptions[guide.slug] ?? guideKeywordMetaDescriptions[guide.slug] }
  : {}),
  };
 });

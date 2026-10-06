@@ -42,7 +42,7 @@ const FEATURED_CALCS: Array<{ href: string; title: string; description: string; 
  {
    href: "/calc/bonus-calculators",
    title: `성과급 계산기 ${bonusCalcCountKo} 모음`,
-   description: "삼성전자·SK하이닉스·현대차 등 회사별 지급 기준과 가정값을 구분 — 시즌 캘린더·FAQ까지",
+   description: "삼성전자·SK하이닉스·현대차 등 회사별 지급률 기준 반영 — 시즌 캘린더·FAQ까지",
    season: "연중 · 1~2월 피크",
  },
  // 사이트 #1 유입·수익 페이지 — 계산기 인덱스에서 그동안 0회 노출이던 것을 최상단 배치
@@ -80,7 +80,7 @@ const FEATURED_CALCS: Array<{ href: string; title: string; description: string; 
  {
    href: "/calc/annual-leave-days",
    title: "연차 개수 계산기",
-   description: "입사일·기준일로 연차 발생 가정 비교 — 출근 등 개인 적용 조건은 별도 확인",
+   description: "입사일만 넣으면 연도별 연차 발생 내역 — 입사일 vs 회계연도 방식 비교",
    season: "연중 · 연초 확인",
  },
  {
@@ -99,19 +99,19 @@ const FEATURED_CALCS: Array<{ href: string; title: string; description: string; 
  {
    href: "/donation-tax-credit-2026",
    title: "기부금 세액공제 계산기",
-   description: "15%·30% 공제율과 유형별 한도·이월 계산 — 실제 환급에 필요한 세액 조건도 확인",
+   description: "15%·30% 공제율, 정치자금·고향사랑 세액공제, 유형별 한도·이월까지 자동 계산",
    season: "12~2월 연말정산",
  },
  {
    href: "/calc/dependent-check",
    title: "부양가족 인적공제 판정기",
-   description: "관계·나이·소득 입력으로 기본공제 150만원·추가공제 조건 확인 — 실제 신청 요건은 별도 확인",
+   description: "관계·나이·소득 몇 문항으로 기본공제 150만원 가능/불가 + 추가공제 간이 판정",
    season: "1~2월 연말정산 피크",
  },
  {
    href: "/health-insurance-dependent",
    title: "건강보험 피부양자 자격 판정기",
-   description: "소득·재산 입력에 따른 피부양자 간이 조건 확인 — 11월 재산정과 실제 등록은 공단에서 확인",
+   description: "소득·재산 문항으로 피부양자 유지/탈락 간이 판정 — 11월 재산정 대비",
    season: "11월 연례 재산정",
  },
  {
@@ -141,7 +141,7 @@ const FEATURED_CALCS: Array<{ href: string; title: string; description: string; 
  {
    href: "/rent-tax-credit-2026",
    title: "월세 세액공제 계산기",
-   description: "총급여별 15~17%·연 1,000만원 한도 — 최대 170만원 공제액, 실제 환급은 개인 세액에 따라 다름",
+   description: "총급여별 15~17% 자동 판정, 연 1,000만원 한도 — 최대 170만원 공제",
    season: "12~2월 연말정산",
  },
  {
@@ -177,7 +177,7 @@ const FEATURED_CALCS: Array<{ href: string; title: string; description: string; 
  {
    href: "/national-pension-estimate-2026",
    title: "2026 국민연금 예상수령액",
-   description: "가입기간·평균소득으로 노령연금 추정 — 만 65세 수령 가정과 개인 수령 조건을 구분",
+   description: "가입기간·평균소득으로 만 65세부터 월 노령연금 추정",
    season: "노후 준비",
  },
  {

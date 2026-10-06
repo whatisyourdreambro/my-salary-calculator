@@ -36,10 +36,10 @@ export default function ListedSalaryBandTable({
         className="text-lg font-black text-navy mb-1 inline-flex items-center gap-2"
       >
         <ShieldCheck size={17} className="text-electric" aria-hidden="true" />
-        {title ?? `연봉 ${fmtManwon(Math.round(annualWon / 10000))} 수준의 공시기업`}
+        {title ?? `연봉 ${fmtManwon(Math.round(annualWon / 10000))} 수준의 상장사`}
       </h2>
       <p className="text-xs text-muted-blue mb-4">
-        DART 사업보고서 공시 평균연봉이 이 연봉대(±5~8%)인 공시기업 — 추정이 아닌 공식
+        DART 사업보고서 공시 평균연봉이 이 연봉대(±5~8%)인 상장사 — 추정이 아닌 공식
         수치입니다.
       </p>
       <div className="overflow-x-auto rounded-2xl border border-canvas-200 bg-white">
@@ -79,7 +79,7 @@ export default function ListedSalaryBandTable({
       <p className="mt-2 text-xs text-muted-blue">
         전 직급 평균(신입 초봉 아님) · 전체 목록은{" "}
         <Link href="/salary-db/listed" className="font-bold text-electric hover:underline">
-          공시기업 공시 연봉
+          상장사 공시 연봉
         </Link>
         에서 확인하세요.
       </p>

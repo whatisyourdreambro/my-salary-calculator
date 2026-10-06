@@ -145,7 +145,7 @@ export default function HealthInsuranceDependentClient() {
     <section className="my-6">
       <div className="rounded-3xl border border-canvas-200 dark:border-canvas-700 bg-white dark:bg-canvas-900 p-5 sm:p-6">
         <h2 className="text-lg font-black text-navy dark:text-canvas-50 mb-4">
-          피부양자 간이조건 확인
+          피부양자 자격 간이 판정
         </h2>
 
         {/* ① 관계 */}

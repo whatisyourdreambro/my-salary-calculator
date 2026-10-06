@@ -19,10 +19,10 @@ import { GuideMidAd } from "@/components/AdPlacement";
 export const dynamic = "force-static";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: `공시기업 공시 평균연봉 ${listedCohort.length}곳 — DART 사업보고서 전수`,
-  description: `금융감독원 전자공시(DART) 사업보고서 기준 공시기업 ${listedCohort.length}곳의 공시 평균연봉을 업종별로 정리했습니다. 급여총액÷직원 수 산정치 — 추정 0, 월 실수령 환산 제공.`,
+  title: `상장사 공시 평균연봉 ${listedCohort.length}곳 — DART 사업보고서 전수`,
+  description: `금융감독원 전자공시(DART) 사업보고서 기준 상장사 ${listedCohort.length}곳의 공시 평균연봉을 업종별로 정리했습니다. 급여총액÷직원 수 산정치 — 추정 0, 월 실수령 환산 제공.`,
   path: "/salary-db/listed",
-  keywords: ["공시기업 평균연봉", "공시 연봉", "사업보고서 연봉", "DART 연봉"],
+  keywords: ["상장사 평균연봉", "공시 연봉", "사업보고서 연봉", "DART 연봉"],
 });
 
 export default function ListedIndexPage() {
@@ -37,7 +37,7 @@ export default function ListedIndexPage() {
   const crumbs = [
     { name: "홈", path: "/" },
     { name: "회사 연봉 DB", path: "/salary-db" },
-    { name: "공시기업 공시 연봉", path: "/salary-db/listed" },
+    { name: "상장사 공시 연봉", path: "/salary-db/listed" },
   ];
 
   return (
@@ -46,7 +46,7 @@ export default function ListedIndexPage() {
         data={[
           breadcrumbLd(crumbs),
           itemListLd({
-            name: "공시기업 공시 평균연봉",
+            name: "상장사 공시 평균연봉",
             items: listedCohort.slice(0, 50).map((c, i) => ({
               position: i + 1,
               name: `${c.nameKo} 평균연봉`,
@@ -57,7 +57,7 @@ export default function ListedIndexPage() {
       />
 
       <div className="page-width pt-24 pb-3">
-        <Breadcrumbs path="/salary-db/listed" leafName="공시기업 공시 연봉" />
+        <Breadcrumbs path="/salary-db/listed" leafName="상장사 공시 연봉" />
       </div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -67,12 +67,12 @@ export default function ListedIndexPage() {
             DART 사업보고서 공시 — 추정 0
           </p>
           <h1 className="text-2xl sm:text-4xl font-black text-navy leading-tight mb-3">
-            공시기업 공시 평균연봉 <span className="text-primary">{listedCohort.length}곳</span>
+            상장사 공시 평균연봉 <span className="text-primary">{listedCohort.length}곳</span>
           </h1>
           <p className="text-sm sm:text-[15px] leading-7 text-muted-blue max-w-3xl">
             금융감독원 전자공시(DART) 사업보고서의 「직원 등의 현황」에서 집계한 공식
             평균연봉입니다(급여총액 ÷ 직원 수, 등기임원 제외 — 신입 초봉 아님). 직원 500명
-            이상 주요 공시기업를 업종별로 정리했으며, 각 페이지에서 월 실수령 환산과 업종 내
+            이상 주요 상장사를 업종별로 정리했으며, 각 페이지에서 월 실수령 환산과 업종 내
             순위를 확인할 수 있습니다. 상세 직급별 연봉 프로필은{" "}
             <Link href="/salary-db" className="font-bold text-electric hover:underline">
               회사 연봉 DB
@@ -81,7 +81,7 @@ export default function ListedIndexPage() {
             <Link href="/insights/listed-avg-salary-top100-2026" className="font-bold text-electric hover:underline">
               TOP 100 리포트
             </Link>
-            에서 볼 수 있습니다. 종목코드가 기록된 공시기업 기준이며, 현재 상장 여부를 보증하지 않습니다. 데이터 기준일: {DART_LITE_DATE}.
+            에서 볼 수 있습니다. 종목코드가 기록된 상장사 기준이며, 현재 상장 여부를 보증하지 않습니다. 데이터 기준일: {DART_LITE_DATE}.
           </p>
         </section>
 
@@ -89,7 +89,7 @@ export default function ListedIndexPage() {
         <section className="mb-10 rounded-2xl border border-canvas-200 bg-white p-5 sm:p-6" aria-labelledby="ranking-nav-heading">
           <h2 id="ranking-nav-heading" className="text-lg font-black text-navy mb-1 inline-flex items-center gap-2">
             <TrendingUp size={18} className="text-electric" aria-hidden="true" />
-            공시기업 연봉 순위 모아보기
+            상장사 연봉 순위 모아보기
           </h2>
           <p className="text-xs text-muted-blue mb-4">
             업종별 공시 평균연봉 전수 순위와 인상률·근속·규모 TOP 100.
@@ -122,7 +122,7 @@ export default function ListedIndexPage() {
         <GuideMidAd />
 
         {groups.map(([industryKo, list]) => (
-          <section key={industryKo} className="mb-8" aria-label={`${industryKo} 공시기업`}>
+          <section key={industryKo} className="mb-8" aria-label={`${industryKo} 상장사`}>
             <h2 className="text-lg font-black text-navy mb-3">
               {industryKo} <span className="text-sm font-bold text-faint-blue">({list.length}곳)</span>
             </h2>

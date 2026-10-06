@@ -9,7 +9,7 @@ import ReportDataLinks from "./ReportDataLinks";
 export const metadata: Metadata = buildPageMetadata({
   title: "머니샐러리 데이터 리포트 — 연봉·성과급 데이터 분석",
   description:
-    "국내 400여 개사 연봉 DB와 공시·정부 통계를 집계한 머니샐러리의 데이터 리포트. 업종별 초봉 순위, 성과급 지급률 기록 등 자료별 조건을 확인하고 출처 표기 시 인용할 수 있습니다.",
+    "국내 400여 개사 연봉 DB와 공시·정부 통계를 집계한 머니샐러리의 데이터 리포트. 업종별 초봉 순위, 성과급 지급률 총정리 등 자료별 조건을 확인하고 출처 표기 시 자유롭게 인용할 수 있습니다.",
   path: "/insights",
   keywords: [
     "연봉 데이터",

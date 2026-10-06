@@ -338,7 +338,7 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "isa-account-guide",
-  "title": "만능통장 ISA: 납입 한도와 만기 활용 로드맵 💎",
+  "title": "만능통장 ISA: 3년 만기 활용 1억 로드맵 💎",
   "description": "비과세 혜택 끝판왕 ISA 계좌 활용법. 중개형 vs 신탁형 비교부터 추천 포트폴리오까지.",
   "category": "투자",
   "tags": [
@@ -1140,7 +1140,7 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "etf-portfolio-2026",
-  "title": "ETF 적립식 포트폴리오: 월 50만·10년 투자 시뮬레이션",
+  "title": "ETF 적립식 포트폴리오: 월 70만으로 10년 1억 만들기",
   "description": "S&P500·KOSPI·채권·금 ETF 4종 분산. 월 30~100만 적립 시뮬과 리밸런싱 주기, 위험 수준별 포트폴리오 추천.",
   "category": "투자",
   "tags": [
@@ -1367,7 +1367,7 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "retirement-planning-30s",
-  "title": "30대부터 시작하는 노후 준비: 적립액별 60세 자산 비교",
+  "title": "30대부터 시작하는 노후 준비: 60세 자산 10억 만들기",
   "description": "30세부터 월 50만원을 연 7%로 적립하는 가정과, 적립액별 60세 자산·3층 연금을 비교합니다.",
   "category": "기초",
   "tags": [
@@ -2582,7 +2582,7 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "youth-leap-account-2026",
-  "title": "청년도약계좌 기존 가입자 — 만기 금액과 비과세 효과 구분",
+  "title": "청년도약계좌 기존 가입자 — 정부기여금·만기 4,984만원",
   "description": "신규 가입 종료 후 기존 가입자의 만기 금액을 계산합니다. 원금·기여금·이자와 비과세로 줄어드는 세금을 구분하세요.",
   "category": "투자",
   "tags": [
@@ -2888,7 +2888,7 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "one-home-capital-gains-12eok-2026",
-  "title": "1세대 1주택 양도세 12억 비과세 — 15억 매도 시 예시 세금 약 1,666만원",
+  "title": "1세대 1주택 양도세 12억 비과세 — 15억 매도 시 세금 1,666만원",
   "description": "15억 매도·8억 취득 예시의 보유·거주 공제와 세액 계산",
   "category": "부동산",
   "tags": [
@@ -3060,8 +3060,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "youth-subscription-60points-2026",
-  "title": "청약 가점 점검 5가지 — 가입기간·무주택·부양가족",
-  "description": "청약 가점은 가입기간·무주택·부양가족 요건으로 계산합니다. 납입횟수와 기간을 구분하세요.",
+  "title": "청약 가점 60점+ 만들기 전 5가지 점검",
+  "description": "청약통장 만 17점·무주택 10점·부양가족 25점 = 52점. 청년주택드림 + 특별공급 활용.",
   "category": "부동산",
   "tags": [
    "청약",
@@ -3578,7 +3578,7 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "child-fund-gift-strategy-2026",
-  "title": "자녀 명의 펀드 — 18년 연 7% 가정 시 약 6,760만원",
+  "title": "자녀 명의 펀드 — 18세 6,760만원 만들기",
   "description": "2,000만원을 연 7%로 18년 운용하면 세금·수수료 전 약 6,760만원. 가정 수익률은 보장되지 않습니다.",
   "category": "투자",
   "tags": [
@@ -3742,7 +3742,7 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "business-trip-expense-tax-2026",
-  "title": "출장비 비과세 — 실비 변상 여부와 정액 일비 확인",
+  "title": "출장비 비과세 — 국내 2만원·해외 5만원 오해",
   "description": "출장비의 실비변상 성격과 지급 규정·증빙으로 비과세 여부를 확인합니다.",
   "category": "연봉",
   "tags": [
@@ -3944,8 +3944,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "personal-vs-corporation-tax-2026",
-  "title": "개인사업자 vs 법인 — 세금과 보수 구조 비교",
-  "description": "개인·법인의 세금과 보수 구조 비교. 2026년 일반 영리법인 세율은 10~25%, 배당 과세는 별도입니다.",
+  "title": "개인사업자 vs 법인 — 순이익별 전환 유불리",
+  "description": "개인 6~45% vs 법인 10~25% + 배당 과세. 매출·순이익 외 대표 보수까지 법인 전환 검토.",
   "category": "세금",
   "tags": [
    "개인사업자",
@@ -4773,8 +4773,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "sign-on-bonus-tax-2026",
-  "title": "사인온 보너스 5,000만원 — 세금과 분할 지급 조건 확인",
-  "description": "사인온 보너스는 연간 급여와 합산해 세금을 계산합니다. 분할 지급의 귀속연도·총보상·반환 조건을 함께 비교하세요.",
+  "title": "사인온 보너스 5,000만 — 실수령과 분할 지급 세금",
+  "description": "입사 시 일회성 보너스. 연봉 합산 과세라 한계세율만으로 부담률 단정 불가. 5,000만 일시 vs 2년 분할 비교.",
   "category": "연봉",
   "tags": [
    "사인온",
@@ -4792,8 +4792,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "retention-bonus-3year-split-2026",
-  "title": "리텐션 보너스 1억 — 분할 조건과 3년 총세금 비교",
-  "description": "리텐션 보너스의 세금은 귀속연도·연봉·공제에 따라 달라집니다. 3년의 총보상과 지급·반환 조건을 함께 비교하세요.",
+  "title": "리텐션 보너스 1억 — 3년 분할 vs 일시 총세금",
+  "description": "M&A·구조조정 후 잔존 보너스. 1억 일시 vs 3년 분할 세금은 귀속연도별 상이. 분할 지급 협상 시 조건 확인.",
   "category": "연봉",
   "tags": [
    "리텐션",
@@ -4886,8 +4886,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "bonus-split-payout-1000-saving-2026",
-  "title": "성과급 1억 분할 지급 — 귀속연도와 2년 총세금 비교",
-  "description": "분할 지급의 세금은 귀속연도·급여·공제에 따라 달라집니다. 금액 확정일과 두 해의 세금·현금흐름을 함께 확인하세요.",
+  "title": "성과급 1억 분할 지급 — 1년 vs 2년 세금 비교",
+  "description": "일시 지급 한계세율 vs 2년 분할 세금 비교. 절감액은 귀속연도별 상이. 인사·임원과 분할 협상 시 잔류 조건 확인.",
   "category": "세금",
   "tags": [
    "성과급",

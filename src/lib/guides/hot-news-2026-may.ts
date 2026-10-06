@@ -1479,7 +1479,7 @@ export const hotNewsMay2026: Guide[] = [
   },
   {
     slug: "youth-leap-account-2026",
-    title: "청년도약계좌 기존 가입자 — 만기 금액과 비과세 효과 구분",
+    title: "청년도약계좌 기존 가입자 — 정부기여금·만기 4,984만원",
     description:
       "신규 가입 종료 후 기존 가입자의 만기 금액을 계산합니다. 원금·기여금·이자와 비과세로 줄어드는 세금을 구분하세요.",
     category: "투자",
@@ -1704,7 +1704,7 @@ export const hotNewsMay2026: Guide[] = [
   },
   {
     slug: "one-home-capital-gains-12eok-2026",
-    title: "1세대 1주택 양도세 12억 비과세 — 15억 매도 시 예시 세금 약 1,666만원",
+    title: "1세대 1주택 양도세 12억 비과세 — 15억 매도 시 세금 1,666만원",
     description:
       "15억 매도·8억 취득 예시의 보유·거주 공제와 세액 계산",
     category: "부동산",

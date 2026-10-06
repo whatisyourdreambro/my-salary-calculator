@@ -183,7 +183,7 @@ export default function IQTestClient() {
  <Brain size={32} />
  </div>
  <h1 className="text-4xl font-black tracking-tight text-navy mb-4">
- 직장인 <span className="text-primary">논리 퀴즈</span>
+ 직장인 <span className="text-primary">IQ 테스트</span>
  </h1>
  <p className="text-lg text-faint-blue font-medium">
  재미로 푸는 참고용 퀴즈입니다.<br />

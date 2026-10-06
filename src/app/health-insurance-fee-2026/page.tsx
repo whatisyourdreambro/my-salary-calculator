@@ -14,9 +14,9 @@ import ShareButtons from "@/components/ShareButtons";
 import HealthInsuranceFeeClient from "./HealthInsuranceFeeClient";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "2026 건강보험료 계산기 — 직장 보수·지역 재산분",
+  title: "2026 건강보험료 계산기 — 직장가입자·지역가입자(재산분) 계산",
   description:
-    "직장가입자의 월 보수액 기준 건강보험·장기요양보험료와 지역가입자의 재산분 부담을 계산합니다. 지역 소득분과 임의계속가입은 별도 확인하세요.",
+    "월급 400만원이면 본인 건보료 약 16만원, 600만원이면 약 24만원. 2026 직장가입자 보험료율 3.595% + 장기요양 0.472% 자동 계산. 지역가입자는 재산분 계산(소득분·임의계속가입은 별도 확인).",
   path: "/health-insurance-fee-2026",
   keywords: [
     "건강보험료 계산기",
@@ -72,13 +72,13 @@ export default function HealthInsuranceFee2026Page() {
           autoBreadcrumbLd("/health-insurance-fee-2026", { leafName: "2026 건강보험료 계산기" }),
           softwareApplicationLd({
             name: "2026 건강보험료 계산기",
-            description: "직장 보수액 보험료와 지역 재산분 보험료 계산",
+            description: "직장가입자 건강보험료 + 장기요양보험료, 지역가입자 재산분 보험료 자동 산출",
             url: "/health-insurance-fee-2026",
           }),
           faqLd(FAQS.map((f) => ({ question: f.q, answer: f.a }))),
           howToLd({
             name: "2026 건강보험료 계산법",
-            description: "직장 보수액 또는 지역 재산 점수로 해당 보험료 산출",
+            description: "월 보수액(직장가입자) 또는 재산 점수(지역가입자)로 건보료 1분 산출",
             totalTime: "PT1M",
             steps: HOWTO_STEPS,
           }),

@@ -14,9 +14,9 @@ import { ArrowRight, Info, AlertTriangle, PiggyBank } from "lucide-react";
 
 export const metadata: Metadata = buildToolMetadata({
   name: "IRP·연금저축 세액공제 계산기",
-  tagline: "납입액·총급여별 세액공제 예상액",
+  tagline: "연 900만 한도 세액공제·환급 예상액",
   description:
-    "총급여와 IRP·연금저축 납입액으로 세액공제 예상액을 계산합니다. 운용 수익, 미래 자산, 인출 세금 및 최종 환급액은 계산하지 않습니다.",
+    "IRP(개인형 퇴직연금)와 연금저축 세액공제액을 2026년 기준 자동 계산. 연봉별 공제율(16.5% vs 13.2%) 자동 적용. 운용 수익·미래 자산·인출 세금·최종 환급액은 계산하지 않습니다.",
   path: "/tools/finance/irp",
   keywords: [
     "IRP 계산기",
@@ -106,7 +106,7 @@ export default function IRPPage() {
           softwareApplicationLd({
             name: "IRP·연금저축 세액공제 계산기",
             description:
-              "총급여와 IRP·연금저축 납입액으로 세액공제 예상액을 계산.",
+              "IRP·연금저축 납입액으로 연봉별 공제율을 적용한 세액공제 예상액을 즉시 계산.",
             url: "/tools/finance/irp",
           }),
           autoBreadcrumbLd("/tools/finance/irp", {
@@ -133,8 +133,8 @@ export default function IRPPage() {
               IRP·연금저축 계산기
             </h1>
             <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-xl mx-auto">
-              총급여와 납입액으로 세액공제 예상액을 확인하세요.
-              운용 수익과 최종 환급액은 별도 확인이 필요합니다.
+              연봉별 환급률 자동 적용 + 세액공제 예상액. 운용 수익·최종 환급액은
+              별도.
             </p>
           </header>
 

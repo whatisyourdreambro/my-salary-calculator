@@ -59,7 +59,7 @@ export const navConfig: NavItem[] = [
   type: "dropdown",
   description: `삼성·SK하이닉스 등 회사별 성과급 계산기 ${bonusCalcCountKo}`,
   items: [
-   { name: `성과급 계산기 전체 보기 (${bonusCalcCountKo})`, href: "/calc/bonus-calculators", description: "회사별 입력 시나리오·시즌 캘린더 허브", badge: "MUST" },
+   { name: `성과급 계산기 전체 보기 (${bonusCalcCountKo})`, href: "/calc/bonus-calculators", description: "회사별 지급률·시즌 캘린더 허브", badge: "MUST" },
    { name: "삼성전자 성과급 시뮬레이터", href: "/calc/samsung-bonus", description: "OPI + TAI 사업부별 분배 + 다년도 RSU", badge: "HOT" },
    { name: "SK하이닉스 PS·PI 계산기", href: "/calc/sk-hynix-bonus", description: "PS(영업이익 10%) + PI(반기 150%)", badge: "HOT" },
    // 현대차·기아 2026 임협 타결 반영 (운영자 승인 2026-09-03) — 매년 8~9월 타결 시 갱신
