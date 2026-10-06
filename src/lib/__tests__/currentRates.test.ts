@@ -202,8 +202,9 @@ describe("연도 고정 표면 — 포인터와 무관하게 2026 요율", () =>
       const pinned = src.includes("INSURANCE_RATES_2026") || src.includes("deriveAnnualSocialInsurance2026");
       expect({ file, pinned }).toEqual({ file, pinned: true });
     }
-    // 본문 검산 예시(연봉 3,000만 · 2026년 귀속 연금보험료공제 142만 5,000원)와 같은 요율
-    expect(computeSmbTaxBreak({ annualSalary: 30_000_000, dependents: 1, breakType: "youth" }).taxBase).toBe(17_325_000);
+    // 본문 검산 예시(연봉 3,000만 · 2026년 귀속 연금 142만 5,000원 + 건강·장기요양·고용 149만 215원)와 같은 요율
+    // (2026-10-06 code7-03 전에는 §52 보험료 공제가 빠져 17,325,000원)
+    expect(computeSmbTaxBreak({ annualSalary: 30_000_000, dependents: 1, breakType: "youth" }).taxBase).toBe(15_834_785);
   });
 
   it("맞벌이 UI는 2026 요율 고정 헬퍼에 계산을 위임한다", () => {
