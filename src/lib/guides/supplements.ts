@@ -145,3 +145,11 @@ export const guideSupplements: Record<string, string> = {
   "nurse-salary": nurseSalarySupplement,
   "sk-hynix-wage-2026": skHynixWage2026Supplement,
 };
+
+// ── 일시적 2주택 처분 기한 개정(소득세법 시행령 대통령령 제36737호, 2026-10-01 시행) 보강 — 본문은 supplements-two-home-law.ts.
+//    다른 배치가 고치는 맵·import 줄과 겹치지 않도록 파일 끝에서 합친다(ESM import 는 끌어올려진다). 같은 슬러그가 두 번 등록되면 로드 시 바로 실패한다.
+import { guideSupplementsTwoHomeLaw } from "./supplements-two-home-law";
+for (const [slug, html] of Object.entries(guideSupplementsTwoHomeLaw)) {
+  if (slug in guideSupplements) throw new Error(`[guideSupplements] 보강 슬러그 중복: ${slug}`);
+  guideSupplements[slug] = html;
+}

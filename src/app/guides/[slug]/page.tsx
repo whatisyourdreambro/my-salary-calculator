@@ -14,7 +14,7 @@ import { extractGuideFaqs } from "@/lib/guideFaq";
 import { buildGuideMetadata } from "@/lib/seo";
 import { Metadata } from "next";
 import { rankRelatedGuides } from "@/lib/guideDiscovery";
-import { getGuideModifiedDate } from "@/lib/guideDates";
+import { getGuideContentDate } from "@/lib/guideContentRevisions";
 
 export const dynamic = 'force-static';
 
@@ -85,7 +85,7 @@ export default function GuidePage({ params }: Props) {
  description: guide.description,
  slug: guide.slug,
  publishedDate: guide.publishedDate,
- modifiedDate: getGuideModifiedDate(guide),
+ modifiedDate: getGuideContentDate(guide),
  });
 
  const breadcrumbSchema = autoBreadcrumbLd(`/guides/${guide.slug}`, {

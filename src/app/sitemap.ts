@@ -11,6 +11,7 @@ import { reportsRegistry } from '@/data/reportsRegistry';
 import { STATIC_LAST_MODIFIED } from '@/config/siteDates';
 import { companyPageModified } from '@/lib/pageModified';
 import { getGuideModifiedDate } from '@/lib/guideDates';
+import { getGuideContentDate } from '@/lib/guideContentRevisions';
 import { EN_INDEXABLE_STATIC_PATHS } from '@/lib/englishRoutes';
 import { englishPolicyCounterpart } from '@/lib/englishSite';
 
@@ -432,7 +433,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const hasEn = enSlugSet.has(guide.slug);
  return {
  url: koUrl,
- lastModified: new Date(getGuideModifiedDate(guide)),
+ // 본문 정정일(guideContentRevisions, 히어로 칩 없는 별도 필드 — GA-32·GA-33·GB-30 승인 대안)과 modifiedDate 중 늦은 날
+ lastModified: new Date(getGuideContentDate(guide)),
  changeFrequency: 'monthly' as ChangeFrequency,
  priority: 0.7,
  ...(hasEn
