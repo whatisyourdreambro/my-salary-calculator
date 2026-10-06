@@ -78,7 +78,7 @@ const pre = preGateSnapshot as {
   salaryFaqSha256: Record<string, string>;
 };
 /** 고정본 뒤 공시 카드 note 를 고친 회사(같은 폭 숫자 교체) — 적용 전 카드 바이트 대조에서만 뺀다.
- *  korea-investment: '증권업 평균연봉 전체 1위 수준' -> '전체 4위 수준'(DART 2025 증권업 24곳 중 4위, 2026-10). */
+ *  korea-investment: '증권업 평균연봉 전체 1위 수준' -> '4위 수준'(DART 2025 증권업 24곳 중 4위, 2026-10). */
 const CARD_NOTE_CHANGED_AFTER_FIXTURE: readonly string[] = ["korea-investment"];
 /** 고정본 뒤 수기 공시 카드의 헤드라인·출처·note 를 원문 값으로 바로잡은 회사 — 적용 전 카드 바이트 대조에서만 뺀다
  *  (적용 후 '출처 줄 글자 수 ≤ 종전' 검사는 그대로 받는다). 고친 값은 companyFixes1030.test.ts 가 고정한다.

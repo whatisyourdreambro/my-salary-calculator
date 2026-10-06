@@ -122,9 +122,10 @@ describe("핵심 요약 첫 문장 조사 (CompanyInsights — '대기업로'·'
 describe("한국투자증권 공시 카드 note — 증권업 전체 1위 수준 오기 (R09 code36-07)", () => {
   it("DART 2025 증권업(KSIC 6612) 24곳 중 4위 — 숫자만 바꿔 광고 위 카드 폭 같음", async () => {
     const note = company("korea-investment").disclosed?.note ?? "";
-    expect(note.endsWith("증권업 평균연봉 전체 4위 수준.")).toBe(true);
+    // '전체' 를 뺐다(조기 실측 ①: '4' 가 '1' 보다 넓어 684-685px 에서 한 줄 늘었다) — '4위' 는 빠진 '전체' 자리보다 좁다
+    expect(note.endsWith("증권업 평균연봉 4위 수준.")).toBe(true);
     expect(note).not.toContain("1위");
-    expect(notWiderPerWord(note, note.replace("전체 4위 수준.", "전체 1위 수준."))).toBe(true);
+    expect(note).not.toContain("전체 4위");
     const { dartDisclosed } = await import("@/data/dart/dartDisclosed");
     const sec = dartDisclosed
       .filter((d) => d.fiscalYear === "2025" && (d.ksicCode ?? "").startsWith("6612"))

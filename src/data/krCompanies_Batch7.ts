@@ -144,7 +144,7 @@ export const krCompanies_Batch7: CompanyProfile[] = [
       source:
         "DART 2025 사업보고서 — 직원 평균 급여 직접 집계 (TOP100 리포트와 동일 소스)",
       sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260515000880",
-      note: "리더스인덱스 보도 집계(1억8,174만원, 매경이코노미 2026-03-25)와의 차이는 집계 범위 차이. 증권업 평균연봉 전체 4위 수준.",
+      note: "리더스인덱스 보도 집계(1억8,174만원, 매경이코노미 2026-03-25)와의 차이는 집계 범위 차이. 증권업 평균연봉 4위 수준.",
     },
     name: { ko: "한국투자증권", en: "Korea Investment & Securities" },
     industry: "Securities",
