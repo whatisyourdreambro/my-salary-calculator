@@ -19,6 +19,7 @@
     "verify:companies": "tsx scripts/verify-company-data.ts",
     "verify:bonus": "node scripts/verify-bonus-data.mjs",
     "verify:autoads": "node scripts/verify-autoads-paths.mjs",
+    "verify:payload": "node scripts/payload-budget.mjs --next .next",
     "qa:crawl": "tsx scripts/qa-crawl.ts",
     "qa:quality": "node scripts/qa-page-quality.mjs",
     "qa:share": "node scripts/qa-share-coverage.mjs",

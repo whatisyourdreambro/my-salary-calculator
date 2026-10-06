@@ -83,7 +83,10 @@ const CHECKS = [
     "Q&A 한글 슬러그",
   ],
   // edge 워커 생존 감시 (전부 404면 스텁 워커 사고)
-  ["/api/salary-table?type=annual", 200, null, "edge API (워커 생존 신호)"],
+  // 2026-09-28 감사 S31: /api/ 는 엣지 캐시 규칙 밖이라 프로브마다 워커가 표를 만든다(새 isolate 면 전 행 세액 계산).
+  // 종전 type=annual(2,401행, 로컬 V8 5~7ms)은 CF CPU 10ms 한도(1102)와 여유가 작아, 워커는 살아 있는데 프로브만
+  // 503 이 나는 오탐 여지가 있었다 → 가장 가벼운 주급표(57행, 로컬 0.1ms 미만)로 바꿈. 워커 생존 신호라는 목적은 같다.
+  ["/api/salary-table?type=weekly", 200, null, "edge API (워커 생존 신호)"],
   [
     "/api/og?type=salary&amount=50000000&net=3300000",
     200,

@@ -10,6 +10,7 @@ import {
   FAMILIES,
   FEED_PATHS,
   NA_MARK,
+  OG_PREFIX,
   OVERLAP_WINDOW_MS,
   QUOTAS,
   UA,
@@ -18,9 +19,13 @@ import {
   applyLimit,
   carriedFromPrev,
   classifyPath,
+  coloFromRay,
+  extractOgImages,
   feedVerdicts,
   main,
+  parseArgs,
   parseSitemap,
+  pickOgImage,
   prevFetchTimes,
   sampleUrls,
 } from "../crawl-cache-sampler.mjs";
@@ -105,20 +110,30 @@ const OCT_20 = Date.parse("2026-10-20T01:00:00Z");
  * 주입 fetch — 엣지 캐시 흉내: 처음 보는 URL 은 MISS(단 warm 집합은 처음부터 HIT), 두 번째부터 HIT.
  * overrides: 경로 → (n번째 요청) => { status, body, type, throw }
  */
-function makeStub({ warm = new Set(), overrides = {}, rssTables404 = true } = {}) {
+function makeStub({ warm = new Set(), overrides = {}, rssTables404 = true, colo = null, ogMeta = null, ogResponse = null } = {}) {
   const seen = new Map();
   const calls = [];
   const fetchStub = async (url, init) => {
     const u = new URL(url);
     const p = u.pathname;
     calls.push({ url, ua: init?.headers?.["user-agent"], redirect: init?.redirect });
-    const nth = (seen.get(p) ?? 0) + 1;
-    seen.set(p, nth);
+    const key = p === "/api/og" ? p + u.search : p; // OG 는 쿼리가 곧 다른 이미지(엣지 캐시 키)
+    const nth = (seen.get(key) ?? 0) + 1;
+    seen.set(key, nth);
     const o = overrides[p]?.(nth);
     if (o?.throw) throw new TypeError("fetch failed");
     const hit = nth > 1 || warm.has(p);
     const headers = { "cf-cache-status": hit ? "HIT" : "MISS" };
     if (hit) headers.age = String(warm.has(p) && nth === 1 ? 1200 : 30);
+    // colo: 콜로 3글자 또는 (경로, n번째) => 콜로|null — cf-ray 헤더를 CF 형식('<16 hex>-<콜로>')으로 붙인다
+    const code = typeof colo === "function" ? colo(p, nth) : colo;
+    if (code) headers["cf-ray"] = `a42e346b7cb52599-${code}`;
+    if (p === "/api/og") {
+      const r = ogResponse?.(u, nth) ?? {};
+      if (r.throw) throw new TypeError("fetch failed");
+      const h = { ...headers, "content-type": r.type ?? "image/png", ...(r.headers ?? {}) };
+      return new Response(r.body ?? new Uint8Array([137, 80, 78, 71]), { status: r.status ?? 200, headers: h });
+    }
     if (o) {
       headers["content-type"] = o.type ?? "text/html; charset=utf-8";
       return new Response(o.body ?? "<html><body>err</body></html>", { status: o.status, headers });
@@ -128,7 +143,8 @@ function makeStub({ warm = new Set(), overrides = {}, rssTables404 = true } = {}
     if (p === "/sitemap.xml") return new Response(XML, { status: 200, headers: { ...headers, "content-type": "application/xml" } });
     if (p.endsWith(".xml"))
       return new Response("<rss><channel></channel></rss>", { status: 200, headers: { ...headers, "content-type": "application/rss+xml" } });
-    return new Response(`<!DOCTYPE html><html><body>${p}</body></html>`, {
+    const head = ogMeta ? `<head>${ogMeta(p)}</head>` : "";
+    return new Response(`<!DOCTYPE html><html>${head}<body>${p}</body></html>`, {
       status: 200,
       headers: { ...headers, "content-type": "text/html; charset=utf-8" },
     });
@@ -164,6 +180,17 @@ async function runMain(argv, { stub = makeStub(), clock = SEPT_28, extra = {} } 
 }
 
 const lastLine = (s) => s.trimEnd().split(/\r?\n/).pop();
+
+/**
+ * 집계 줄 끝의 콜로 세그먼트(2026-09-30 CF-05)를 떼어 종전 형식 줄을 돌려준다 — 종전 단언이 이 접두부에 그대로 성립해야
+ * 한다(9/28 D0·9/29 D+1 줄과의 하위호환). 콜로 세그먼트가 맨 끝에 없으면 실패.
+ */
+function legacyLine(stdout) {
+  const line = lastLine(stdout);
+  const m = / · colo (?:[A-Z]{3}|\?) \d+(?: · (?:[A-Z]{3}|\?) \d+)*$/.exec(line);
+  assert.ok(m, `콜로 세그먼트가 맨 끝에 있어야 함: ${line}`);
+  return line.slice(0, m.index);
+}
 
 /** 집계 줄에 URL·경로가 없어야 한다(날짜 9/28 과 분수 0/180 같은 숫자/숫자, 겹침 표지 n/a 는 허용). */
 function assertNoUrl(line, samplePaths = []) {
@@ -363,8 +390,9 @@ test("aggregation separates pass 1 (real warmth) from later passes (self-warmed)
   assert.deepEqual(row("calc").body, { ok: 30, of: 30 });
   assert.equal(row("feeds").urls, 5);
 
-  const line = lastLine(r.stdout);
-  assert.equal(line, json.line);
+  const line = legacyLine(r.stdout);
+  assert.equal(lastLine(r.stdout), json.line);
+  assert.equal(json.line, `${line} · colo ? 60`, "cf-ray 없는 응답은 콜로 '?' — 끝 세그먼트는 pass 1 표본 60건");
   assert.match(line, /^crawl-sampler 9\/28 D0: pass1 HIT company 45% · lite 0% · calc 0% · guides 0% · pay-table 0% · salary 60% · /);
   assert.match(line, / · pass2\+ HIT 100% · 5xx 0\/180 · 403 0 · net 0 · non200 0 · /);
   assert.match(line, /feeds 4\/5 ok \(rss-tables not yet live\)$/);
@@ -391,7 +419,7 @@ test("5xx and network errors → exit 1, counted per family; aggregate line stil
   });
   const r = await runMain(["--sitemap-file", FIXTURE, "--seed", seed, "--passes", "2", "--interval", "0"], { stub });
   assert.equal(r.code, 1);
-  const line = lastLine(r.stdout);
+  const line = legacyLine(r.stdout);
   assert.match(line, / · 5xx 1\/120 · 403 2 · net 1 · non200 0 · feeds 3\/5 ok \(rss-tables not yet live\) FAIL rss 502$/);
   assertNoUrl(line, sample.map((s) => s.path));
   assert.match(r.stdout, /### 이상 요청 6건/);
@@ -414,7 +442,7 @@ test("rss-tables 404 counts as a feed failure from 10/16; live sitemap doubles a
   assert.equal(r.stub.calls.length, 1 + (12 + 5) * 2 - 1);
   assert.equal(r.events[0].kind, "fetch", "첫 요청 = 사이트맵");
   assert.equal(r.events[1].kind, "sleep", "사이트맵 다음 요청 전에도 300ms");
-  const line = lastLine(r.stdout);
+  const line = legacyLine(r.stdout);
   assert.match(line, /^crawl-sampler 10\/20: /);
   assert.match(line, / · 5xx 0\/24 · /);
   assert.match(line, /feeds 4\/5 ok FAIL rss-tables 404$/);
@@ -537,7 +565,7 @@ test("same-day second run with another seed: pay-table n/a (overlaps earlier run
     { stub, clock: SEPT_28 + HOUR }
   );
   assert.equal(r2.code, 0, r2.stderr);
-  const line = lastLine(r2.stdout);
+  const line = legacyLine(r2.stdout);
   assert.match(line, /^crawl-sampler 9\/28 post-C01: pass1 HIT /);
   assert.ok(line.includes(`pass1 HIT ${coSeg}`), line);
   assert.ok(line.includes("pay-table n/a (overlaps earlier run)"), line);
@@ -570,7 +598,7 @@ test("same-day second run with another seed: pay-table n/a (overlaps earlier run
     clock: SEPT_28 + HOUR,
   });
   assert.equal(r3.code, 0, r3.stderr);
-  const line3 = lastLine(r3.stdout);
+  const line3 = legacyLine(r3.stdout);
   assert.ok(line3.includes(`pass1 HIT ${coSeg}`), line3);
   assert.ok(line3.includes("pay-table n/a (overlaps earlier run)"), line3);
   assert.ok(line3.endsWith(` · overlap-check reseed (carried ${carriedTotal})`), line3);
@@ -583,7 +611,7 @@ test("same-day second run with another seed: pay-table n/a (overlaps earlier run
     { stub: makeStub({ warm }), clock: SEPT_28 + OVERLAP_WINDOW_MS }
   );
   assert.equal(r4.code, 0, r4.stderr);
-  const line4 = lastLine(r4.stdout);
+  const line4 = legacyLine(r4.stdout);
   assert.ok(line4.includes(`pass1 HIT company 30% · `), line4);
   assert.ok(line4.includes(" · pay-table 0% · "), line4);
   assert.equal(/n\/a|\(carried \d+\) ·/.test(line4), false, line4);
@@ -663,4 +691,216 @@ test("--prev: refused inside the repo (exit 2), unreadable / dry-run / foreign J
   assert.equal(legacy.lastAt.get("/teacher-pay-2026"), Date.parse("2026-09-28T01:21:00Z"));
   assert.equal(legacy.lastAt.get("/rss.xml"), Date.parse("2026-09-28T01:05:00Z"));
   assert.match(prevFetchTimes({ tool: "crawl-cache-sampler", records: [{ path: "/a" }] }).error, /요청 시각/);
+});
+
+// ── 2026-09-30 WP-01 CF-05: 콜로 분리 집계 · --og 옵트인 ─────────────────────────
+
+test("CF-05 colo: cf-ray suffix after the last '-' (3 letters, upper-cased); no header → '?'", () => {
+  assert.equal(coloFromRay("a42e346b7cb52599-SJC"), "SJC");
+  assert.equal(coloFromRay("8c1f2a3b4c5d6e7f-mad"), "MAD");
+  assert.equal(coloFromRay(" 8c1f2a3b4c5d6e7f-ICN \n"), "ICN");
+  assert.equal(coloFromRay("x-y-ATL"), "ATL");
+  for (const bad of [null, undefined, "", "a42e346b7cb52599", "a42e346b7cb52599-", "a42e346b7cb52599-12", "a42e346b7cb52599-S"])
+    assert.equal(coloFromRay(bad), "?", String(bad));
+});
+
+test("CF-05 colo: recorded per request in --out, family×colo pass-1 table, legacy line prefix unchanged and colo segment last", async () => {
+  const seed = "2026-09-28";
+  const { sample } = sampleUrls(parseSitemap(XML), seed);
+  const companies = sample.filter((s) => s.family === "company").map((s) => s.path);
+  const warm = new Set(companies.slice(0, 9));
+  const sjc = new Set(companies.slice(0, 10)); // 데워진 9곳은 모두 SJC 쪽
+  const argv = (out) => ["--sitemap-file", FIXTURE, "--seed", seed, "--passes", "1", "--interval", "0", "--label", "D+7", "--out", out];
+  const outColo = path.join(TMP, "colo", "with.json");
+  const withColo = await runMain(argv(outColo), { stub: makeStub({ warm, colo: (p) => (sjc.has(p) ? "SJC" : "MAD") }) });
+  const outNone = path.join(TMP, "colo", "none.json");
+  const noHeader = await runMain(argv(outNone), { stub: makeStub({ warm }) });
+  assert.equal(withColo.code, 0, withColo.stderr);
+  assert.equal(noHeader.code, 0, noHeader.stderr);
+
+  // 하위호환: 기존 세그먼트는 콜로 유무와 무관하게 한 글자도 같다 — 콜로는 맨 끝에만
+  assert.equal(legacyLine(withColo.stdout), legacyLine(noHeader.stdout));
+  assert.equal(lastLine(withColo.stdout), `${legacyLine(noHeader.stdout)} · colo MAD 50 · SJC 10`);
+  assert.equal(lastLine(noHeader.stdout), `${legacyLine(noHeader.stdout)} · colo ? 60`);
+  assert.match(lastLine(withColo.stdout), /^crawl-sampler 9\/28 D\+7: pass1 HIT company 45% · /);
+  assertNoUrl(lastLine(withColo.stdout), sample.map((s) => s.path));
+
+  // 원자료: 모든 기록에 colo(피드 포함), 헤더 없으면 '?'
+  const json = JSON.parse(readFileSync(outColo, "utf8"));
+  assert.ok(json.records.every((r) => typeof r.colo === "string"));
+  assert.equal(json.records.filter((r) => r.colo === "SJC").length, 10);
+  assert.equal(json.records.find((r) => r.path === "/robots.txt").colo, "MAD");
+  assert.ok(JSON.parse(readFileSync(outNone, "utf8")).records.every((r) => r.colo === "?"));
+  assert.equal(json.og, null, "--og 없이는 og 기록 없음");
+  const company = json.rows.find((r) => r.family === "company");
+  assert.deepEqual(company.p1ByColo, { SJC: { n: 10, hit: 9 }, MAD: { n: 10, hit: 0 } });
+  assert.deepEqual(company.p1Colo, { SJC: 10, MAD: 10 });
+  assert.deepEqual(company.p1, { n: 20, hit: 9 }, "계열 pass-1 HIT 자체는 콜로와 무관");
+
+  // 보고서: 계열×콜로 표(많은 콜로 먼저)
+  assert.match(withColo.stdout, /### pass1 HIT — 계열 × 콜로\(cf-ray\)\n\n\| 계열 \| MAD \| SJC \|/);
+  assert.ok(withColo.stdout.includes("| company | 0% (0/10) | 90% (9/10) |"), withColo.stdout);
+  assert.ok(withColo.stdout.includes("| lite | 0% (0/10) | - |"));
+  assert.ok(withColo.stdout.includes("콜로 분포(pass 1 표본 요청): MAD 50 · SJC 10"));
+  assert.ok(noHeader.stdout.includes("| 계열 | ? |"));
+});
+
+test("CF-05 aggregateLine unit: old prefix byte-identical, colo appended last; records without colo count as '?'", () => {
+  const feedsRecs = [
+    { pass: 1, family: "feeds", path: "/rss.xml", status: 200, marker: false, cache: "MISS", error: null, ms: 5, colo: "MAD" },
+    { pass: 1, family: "feeds", path: "/robots.txt", status: 200, marker: true, cache: "HIT", age: 3, error: null, ms: 5, colo: "MAD" },
+  ];
+  const OLD =
+    "crawl-sampler 9/28: pass1 HIT company - · lite - · calc - · guides - · pay-table - · salary - · 5xx 0/0 · 403 0 · net 0 · non200 0 · feeds 1/2 ok FAIL rss marker";
+  // 표본이 없으면(피드만) 콜로 세그먼트도 없다 — 종전 줄 그대로
+  assert.equal(aggregateLine(aggregate(feedsRecs), feedVerdicts(feedsRecs, "2026-09-28"), { runDate: "2026-09-28" }), OLD);
+  const calc = (p, cache, colo) => ({ pass: 1, family: "calc", path: p, status: 200, marker: true, cache, error: null, ms: 5, age: null, ...(colo ? { colo } : {}) });
+  const recs = [...feedsRecs, calc("/calc/a", "HIT", "SJC"), calc("/calc/b", "HIT", "SJC"), calc("/calc/c", "MISS", "MAD")];
+  const line = aggregateLine(aggregate(recs), feedVerdicts(recs, "2026-09-28"), { runDate: "2026-09-28" });
+  assert.equal(line, OLD.replace("calc -", "calc 67%").replace("5xx 0/0", "5xx 0/3") + " · colo SJC 2 · MAD 1");
+  // 이 필드를 넣기 전 원자료(colo 없음)는 '?'
+  const legacyRecs = [calc("/calc/a", "HIT"), calc("/calc/b", "MISS")];
+  assert.ok(aggregateLine(aggregate(legacyRecs), [], { runDate: "2026-09-28" }).endsWith(" · non200 0 · colo ? 2"));
+  // 겹침 점검이 있어도 콜로는 그 뒤(맨 끝)
+  const withOverlap = aggregateLine(aggregate(recs), [], { runDate: "2026-09-28", overlap: { source: "prev", carried: 0 } });
+  assert.ok(withOverlap.endsWith(" · overlap-check prev (carried 0) · colo SJC 2 · MAD 1"), withOverlap);
+  assertNoUrl(line);
+});
+
+test("CF-05 og:image extraction: only property og:image, entities decoded; same-origin /api/og filter", () => {
+  assert.equal(OG_PREFIX, "https://www.moneysalary.com/api/og");
+  const html = [
+    "<head>",
+    '<meta property="og:image:width" content="1200"/>',
+    '<meta content="https://www.moneysalary.com/og/static.png" property="og:image"/>',
+    '<meta property="og:image" content="https://moneysalary.com/api/og?type=a"/>',
+    "<meta property='og:image' content='http://www.moneysalary.com/api/og?type=b'/>",
+    '<meta property="og:image" content="https://www.moneysalary.com.evil.test/api/og?x=1"/>',
+    '<meta property="og:image" content="https://www.moneysalary.com/api/ogre?x=1"/>',
+    '<meta property="og:image" content="https://www.moneysalary.com/api/og?type=company&amp;name=%EC%82%BC%EC%84%B1"/>',
+    '<meta property="og:image" content="https://www.moneysalary.com/api/og?type=second"/>',
+    '<meta name="twitter:image" content="https://www.moneysalary.com/api/og?type=tw"/>',
+    "</head>",
+  ].join("\n");
+  const all = extractOgImages(html);
+  assert.equal(all.length, 7, "og:image:width·twitter:image 제외");
+  assert.equal(all[0], "https://www.moneysalary.com/og/static.png", "content 가 property 보다 앞서도 읽는다");
+  assert.ok(all.includes("https://www.moneysalary.com/api/og?type=company&name=%EC%82%BC%EC%84%B1"), "&amp; 해독");
+  // 동일 출처(https + www) · 경로 정확히 /api/og 인 첫 URL
+  assert.equal(pickOgImage(html), "https://www.moneysalary.com/api/og?type=company&name=%EC%82%BC%EC%84%B1");
+  for (const other of [
+    '<meta property="og:image" content="https://www.moneysalary.com/og/x.png">',
+    '<meta property="og:image" content="https://moneysalary.com/api/og?type=a">',
+    '<meta property="og:image" content="/api/og?type=relative">',
+    '<meta property="og:image" content="https://example.com/api/og?type=x">',
+    "<html><body>no meta</body></html>",
+    "",
+  ])
+    assert.equal(pickOgImage(other), null, other);
+});
+
+/** --og 실행용: 모든 HTML 이 자기 경로를 담은 /api/og og:image 를 갖는다. */
+const ogMetaFor = (p) => `<meta property="og:image" content="${BASE}/api/og?path=${encodeURIComponent(p)}&amp;v=1"/>`;
+const ogSourceOf = (url) => new URL(url).searchParams.get("path");
+
+test("CF-05 --og is opt-in: default runs never request /api/og and add no og segment", async () => {
+  assert.equal(parseArgs([]).opts.og, false);
+  assert.equal(parseArgs(["--og"]).opts.og, true);
+  const out = path.join(TMP, "og", "off.json");
+  const r = await runMain(["--sitemap-file", FIXTURE, "--seed", "2026-09-28", "--passes", "2", "--interval", "0", "--out", out], {
+    stub: makeStub({ ogMeta: ogMetaFor, colo: "SJC" }),
+  });
+  assert.equal(r.code, 0, r.stderr);
+  assert.equal(r.stub.calls.filter((c) => new URL(c.url).pathname === "/api/og").length, 0);
+  assert.equal(r.stub.calls.length, 65 * 2);
+  assert.equal(JSON.parse(readFileSync(out, "utf8")).og, null);
+  assert.equal(legacyLine(r.stdout).includes(" · og "), false);
+  assert.equal(r.stdout.includes("### OG 이미지"), false);
+});
+
+test("CF-05 --og: one /api/og per family from pass-1 first samples, once, after pass 1; kept out of pass-1 HIT; OG 5xx → exit 1", async () => {
+  const seed = "2026-09-28";
+  const { sample } = sampleUrls(parseSitemap(XML), seed);
+  const firstOf = Object.fromEntries(FAMILIES.map((f) => [f, sample.find((s) => s.family === f && s.rank === 0).path]));
+  const ogResponse = (u) => {
+    const src = ogSourceOf(u.href);
+    if (src === firstOf.lite) return { headers: { "x-og-cache": "HIT" } };
+    if (src === firstOf.guides) return { headers: { "x-og-cache": "MISS", "x-og-error": "font-load" } };
+    return { headers: { "x-og-cache": "MISS" } };
+  };
+  const argv = (out, og) => ["--sitemap-file", FIXTURE, "--seed", seed, "--passes", "2", "--interval", "5", "--out", out, ...(og ? ["--og"] : [])];
+  const offOut = path.join(TMP, "og", "base.json");
+  const off = await runMain(argv(offOut, false), { stub: makeStub({ ogMeta: ogMetaFor, colo: "SJC", ogResponse }) });
+  const onOut = path.join(TMP, "og", "on.json");
+  const on = await runMain(argv(onOut, true), { stub: makeStub({ ogMeta: ogMetaFor, colo: "SJC", ogResponse }) });
+  assert.equal(on.code, 0, on.stderr);
+
+  // 요청: 계열당 1개(6개), 모두 첫 표본(rank 0)의 og:image, 같은 UA·redirect manual
+  const ogCalls = on.stub.calls.filter((c) => new URL(c.url).pathname === "/api/og");
+  assert.equal(ogCalls.length, 6);
+  assert.deepEqual(
+    ogCalls.map((c) => ogSourceOf(c.url)),
+    FAMILIES.map((f) => firstOf[f])
+  );
+  for (const c of ogCalls) {
+    assert.equal(c.ua, UA);
+    assert.equal(c.redirect, "manual");
+    assert.ok(c.url.startsWith(OG_PREFIX));
+  }
+  assert.equal(on.stub.calls.length, 65 * 2 + 6, "OG 는 pass 1 에서 한 번만");
+
+  // 순서: pass 1 마지막 대상(rss-tables) 뒤, pass 사이 대기(5초) 앞 — 요청 간 300ms 이상
+  const ev = on.events;
+  const firstRssTables = ev.findIndex((e) => e.kind === "fetch" && e.url.endsWith("/rss-tables.xml"));
+  const interval = ev.findIndex((e) => e.kind === "sleep" && e.ms === 5000);
+  const ogIdx = ev.map((e, i) => (e.kind === "fetch" && new URL(e.url).pathname === "/api/og" ? i : -1)).filter((i) => i >= 0);
+  assert.ok(ogIdx.every((i) => i > firstRssTables && i < interval), JSON.stringify({ firstRssTables, interval, ogIdx }));
+  for (const i of ogIdx) assert.ok(ev[i - 1].kind === "sleep" && ev[i - 1].ms >= 300);
+
+  // pass-1 HIT 집계·표는 --og 와 무관(og 기록은 records 에 섞이지 않는다)
+  const jOn = JSON.parse(readFileSync(onOut, "utf8"));
+  const jOff = JSON.parse(readFileSync(offOut, "utf8"));
+  assert.deepEqual(jOn.rows, jOff.rows);
+  assert.equal(jOn.records.length, jOff.records.length);
+  assert.equal(jOn.records.some((r) => r.path.startsWith("/api/og")), false);
+  assert.equal(jOn.og.records.length, 6);
+  const liteOg = jOn.og.records.find((r) => r.family === "lite");
+  assert.equal(liteOg.source, firstOf.lite);
+  assert.equal(liteOg.status, 200);
+  assert.equal(liteOg.ogCache, "HIT");
+  assert.equal(liteOg.ogError, null);
+  assert.equal(liteOg.colo, "SJC");
+  assert.equal(liteOg.marker, true);
+  assert.ok(Number.isFinite(liteOg.ttfb));
+  assert.equal(jOn.og.records.find((r) => r.family === "guides").ogError, "font-load");
+
+  // 집계 줄: 종전 접두부 + og 세그먼트 + 콜로(맨 끝)
+  const lineOn = lastLine(on.stdout);
+  assert.equal(
+    lineOn,
+    `${legacyLine(off.stdout)} · og 200 6/6 (cf MISS 6, x-og-cache MISS 5 HIT 1, x-og-error 1, 5xx 0, net 0, ttfb med 7ms) · colo SJC 60`
+  );
+  assertNoUrl(lineOn, sample.map((s) => s.path));
+  assert.match(on.stdout, /### OG 이미지\(--og/);
+  assert.equal((on.stdout.match(/^\| (company|lite|calc|guides|pay-table|salary) \| \/[^|]+ \| \/api\/og\?/gm) ?? []).length, 6);
+
+  // OG 5xx 는 종료 코드 1(HTML 은 전부 정상이어도)
+  const bad = await runMain(argv(path.join(TMP, "og", "bad.json"), true), {
+    stub: makeStub({
+      ogMeta: ogMetaFor,
+      ogResponse: (u) => (ogSourceOf(u.href) === firstOf.calc ? { status: 503, type: "text/plain", body: "err" } : null),
+    }),
+  });
+  assert.equal(bad.code, 1);
+  assert.match(lastLine(bad.stdout), / · og 200 5\/6 \(cf MISS 6, x-og-cache -, x-og-error 0, 5xx 1, net 0, ttfb med 7ms\) · colo \? 60$/);
+
+  // 첫 표본 og:image 가 /api/og 가 아니면 그 계열은 건너뛴다(다음 표본으로 넘어가지 않음)
+  const skip = await runMain(argv(path.join(TMP, "og", "skip.json"), true), {
+    stub: makeStub({
+      ogMeta: (p) => (p === firstOf.company ? `<meta property="og:image" content="${BASE}/og/static.png"/>` : ogMetaFor(p)),
+    }),
+  });
+  assert.equal(skip.code, 0, skip.stderr);
+  assert.equal(skip.stub.calls.filter((c) => new URL(c.url).pathname === "/api/og").length, 5);
+  assert.ok(skip.stdout.includes(`- company: ${firstOf.company} → 건너뜀(no-api-og-image)`), skip.stdout);
 });

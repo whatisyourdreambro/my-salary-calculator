@@ -148,6 +148,7 @@ AdSense 페이지·광고단위 28일 CSV 2장 → GA4 트래픽 획득 CSV → 
 ## 남은 확인 항목 (5분 이내, 아무 세션에나)
 - ☐ EEA 동의 메시지(CMP) 게시 — AdSense → 개인 정보 보호 및 메시지 → 유럽 규정 메시지 → 만들기 → 기본 스타일 → 게시. **앵커 판정(10/5) 후**에 한다(겹침 회피). 코드측 CSP는 2026-08-23 배포 완료. ★2026-09-25: 앵커 판정은 취소됐지만 광고 설정 변경을 겹치지 않도록 **P0 14완료일 조회(10/9)·10/10 판정 조회 뒤**에 한다.
 - ☐ Cloudflare Pages → Settings → Environment variables에 `NEXT_PUBLIC_ADSENSE_SLOT_GUIDE_MID`가 **등록돼 있으면** 1848295488인지 확인(없으면 할 일 없음).
+- ☐ **Cloudflare Pages 빌드 설정 한 줄 기록**(2026-09-28 감사 S31, 3분): Cloudflare → Workers & Pages → 이 사이트 프로젝트 → Settings → 빌드 구성(Build)의 **Build command**·**Build output directory**, 같은 Settings → Environment variables(변수 및 시크릿)의 `NODE_VERSION`(없으면 "없음")을 **보이는 그대로** 이 줄 아래에 적는다(명령·버전 문자열만 — 토큰·시크릿 값은 적지 말 것). 리포에는 대시보드 값의 정본 기록이 없다: 로컬 재현 절차(`scripts/check-worker-size.mjs:9` — `vercel build` → `npx @cloudflare/next-on-pages@1.13.16 --skip-build`)와 CI 의 Node 20 은 추정 근거일 뿐이다. 이 값을 확인하기 전에는 `.nvmrc`·`package.json` `engines` 를 추가하지 않는다.
 - ☐ developers.kakao.com → 내 애플리케이션 → 플랫폼 → Web에 `https://www.moneysalary.com` 등록 확인.
 - ☐ GA4와 AdSense가 **같은 구글 계정**인지 한 줄 답변 → 같으면 GA4 관리 → 제품 링크 → AdSense 링크 연결(페이지별 광고 수익을 GA4에서 보게 됨).
 - ☐ **트리거형(날짜 없음) — SK하이닉스 재협상 타결 보도 당일(약 10분)**: 코드 배포 후 Cloudflare → Caching → Configuration → **Purge Everything**(또는 `/calc/sk-hynix-bonus`·`/calc/bonus-calculators`·`/sitemap.xml`·`/rss.xml` 커스텀 퍼지) → Search Console URL 검사 2건(`/calc/sk-hynix-bonus`·`/calc/bonus-calculators`) 색인 생성 요청 + Sitemaps 다시 제출 → D+1 '실제 URL 테스트'로 타결 문구 렌더 확인. 세부는 `docs/drafts/sk-ps-sync-kit-2027.md` §3 런북 표(코드 5점 동기화는 Claude).

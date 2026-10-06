@@ -45,16 +45,9 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
-      - run: node --test scripts/__tests__/qa-page-quality.test.mjs
-      - run: node --test scripts/__tests__/qa-share-coverage.test.mjs
-      - run: node --test scripts/__tests__/cloudflare-routes.test.mjs
-      - run: node --test scripts/__tests__/adsense-report.test.mjs
-      - run: node --test scripts/__tests__/edge-bundle-scripts.test.mjs
-      - run: node --test scripts/__tests__/cf-purge-after-deploy.test.mjs
-      - run: node --test scripts/__tests__/verify-autoads-paths.test.mjs
-      - run: node --test scripts/__tests__/trend-radar.test.mjs
-      - run: node --test scripts/__tests__/fact-sentinel.test.mjs
-      - run: node --test scripts/__tests__/trend-publish.test.mjs
+      # 스크립트 테스트 전량 (2026-09-28 감사 S31) — 종전에는 10개를 손으로 나열해 indexnow-diff·indexnow-naver·
+      # crawl-cache-sampler·pay-official-parse 4개가 CI 에서 한 번도 돌지 않았다. 새 *.test.mjs 는 자동 편승.
+      - run: node --test scripts/__tests__/*.test.mjs
       - run: npm run qa:share
       - run: python3 scripts/verify-contact-storage.py
       - run: python3 scripts/verify-fixed-feedback-storage.py
