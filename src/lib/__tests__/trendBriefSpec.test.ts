@@ -128,12 +128,12 @@ const evalTemplate = (body: string) =>
   new Function("impactRows", "impactCell", "constText", `return \`${body}\`;`)(impactRows, impactCell, constText) as string;
 
 describe("(1) 등록된 브리프 (비어 있으면 공허하게 통과)", () => {
-  // main(adb120cc) 가이드 상태 기준 — R4 보류 뒤 한국어 가이드 294편(통합 브랜치 8e37ceb8 은 334편)
-  it("집계는 guidesContent 의 마지막 spread 이고, 비어 있는 동안 한국어 가이드는 294편", () => {
+  // main 가이드 상태 기준 — 10/9 삼성 DS 특별성과급 소식 1편 추가로 한국어 가이드 295편(종전 294편, 통합 브랜치 8e37ceb8 은 334편)
+  it("집계는 guidesContent 의 마지막 spread 이고, 비어 있는 동안 한국어 가이드는 295편", () => {
     const src = read("src/lib/guidesContent.ts").replace(/\r\n/g, "\n");
     expect(src).toContain('import { trendBriefGuides } from "@/lib/guides/trend-briefs";');
     expect(/\.\.\.trendBriefGuides,\n\];/.test(src)).toBe(true);
-    if (trendBriefGuides.length === 0) expect(koGuides.length).toBe(294);
+    if (trendBriefGuides.length === 0) expect(koGuides.length).toBe(295);
   });
 
   it("각 브리프가 사양을 지킨다", () => {

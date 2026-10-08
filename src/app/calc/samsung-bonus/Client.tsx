@@ -282,7 +282,7 @@ export default function SamsungBonusClient() {
             })}
           </div>
           <p className="text-[11px] text-faint-blue mt-2 leading-relaxed">
-            회의록 임계값: <strong className="text-navy dark:text-canvas-50">{getThresholdPeriod(year)}</strong>{" "}
+            보도 지급조건: <strong className="text-navy dark:text-canvas-50">{getThresholdPeriod(year)}</strong>{" "}
             — 영업이익이 이 기준에 미달하면 성과급 풀 미활성.
           </p>
         </div>
@@ -294,7 +294,7 @@ export default function SamsungBonusClient() {
               htmlFor="profit-input"
               className="text-xs font-bold uppercase tracking-widest text-faint-blue"
             >
-              회사 연간 영업이익
+              DS부문 연간 영업이익
             </label>
             <span
               className="text-3xl font-black tabular-nums"
@@ -323,7 +323,7 @@ export default function SamsungBonusClient() {
                 border: "1.5px solid hsl(var(--input))",
               }}
               placeholder="350"
-              aria-label="회사 연간 영업이익 (조원)"
+              aria-label="DS부문 연간 영업이익 (조원)"
             />
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-electric">
               조원
@@ -392,7 +392,7 @@ export default function SamsungBonusClient() {
                     aria-hidden
                   />
                   <div className="text-[11px] text-rose-700 dark:text-rose-300 leading-relaxed">
-                    <strong>{year}년 임계값 {threshold}조 미달</strong> — 회의록상
+                    <strong>{year}년 임계값 {threshold}조 미달</strong> — 보도상
                     이 연도는 영업이익 {threshold}조 이상일 때만 성과급 풀이
                     활성화됩니다. 현재 영업이익으로는 사업부별 1인당 성과급이
                     0원으로 산정됩니다.
@@ -433,7 +433,7 @@ export default function SamsungBonusClient() {
           <FixedPolicyCard
             label="성과급 재원 비율"
             value="10.5%"
-            note="영업이익의 10.5% — 공개 노사 합의 보도 기반 고정"
+            note="DS부문 영업이익의 10.5% — 노사 합의 보도 기반"
             color="#7C83FF"
           />
           <FixedPolicyCard
@@ -550,17 +550,17 @@ export default function SamsungBonusClient() {
             }}
           >
             <p className="font-black text-amber-700 dark:text-amber-400 mb-1">
-              디폴트 가중치 — 보도값 매칭 보정
+              디폴트 가중치 — 사이트 추정 보정
             </p>
             <ul className="text-muted-blue dark:text-canvas-400 space-y-0.5 list-disc pl-4">
               <li>
                 메모리 <strong>1.0</strong> · 공통 <strong>0.55</strong> ·
                 파운드리·LSI <strong>0.05</strong> → 350조 입력 시 약
-                858/579/269% (보도값 791/553/252%에 근접)
+                858/579/269% (사이트 추정값)
               </li>
               <li>
-                회의록 원본은 <strong>1.0 / 0.7 / 0.0</strong> — 위 값으로 직접
-                입력 가능 (단 보도값과 16% 차이 발생)
+                보도된 합의는 <strong>1.0 / 0.7 / 0.0</strong> — 위 값으로 직접
+                입력 가능 (기본값은 사이트 추정)
               </li>
               <li>
                 <strong>2026년</strong>: 적자 사업부(파운드리·LSI) 가중치 0
@@ -710,8 +710,8 @@ export default function SamsungBonusClient() {
           본인 CL 직급(CL1 고졸·전문대졸 / CL2 대졸 사원·대리 / CL3 과장·차장 /
           CL4 부장·수석)과 연도별 영업이익 시나리오를 설정하면 여러 해 누적
           세전·세후 성과급을 계산합니다. CL4는 평가 등급에 따라 가고과 1.4배 ·
-          나고과 1.2배 · 일반 1.0배가 적용됩니다(보도 기준 분포: 가고과 약
-          10~15%, 나고과 약 20~30%).
+          나고과 1.2배 · 일반 1.0배가 적용됩니다(등급 분포는 공개되지 않아
+          직접 입력합니다).
         </p>
       </div>
       <DeferredSection id="multi-year-bonus" label="다년도 누적 성과급 시뮬레이터" minHeight={560}>

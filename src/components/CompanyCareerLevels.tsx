@@ -176,11 +176,12 @@ export default function CompanyCareerLevels({ company }: Props) {
       </div>
 
       <aside className="mt-8 space-y-4">
-        {/* 삼성전자 전용 — 2026 임금협약 합의서 박스 (2026-05-27 조합원 투표 가결로 타결, 타사 노출 금지) */}
+        {/* 삼성전자 전용 — 2026 임금협약 타결 보도 박스 (2026-05-27 조합원 투표 가결로 타결, 타사 노출 금지).
+            공개 출처만(2026-10-08): 아주경제 2026-05-21 https://www.ajunews.com/view/20260521081655279 — 광고 위라 문구는 1,123폭 실측 같은 높이 이하 */}
         {isSamsung && (
         <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-5 text-sm leading-relaxed">
           <p className="font-black text-foreground mb-3">
-            2026년 임금협약 타결 합의서 — 핵심 변경사항
+            2026년 임금협약 타결 보도 — 핵심 변경사항
           </p>
           <div className="grid sm:grid-cols-2 gap-3">
             <div>
@@ -224,8 +225,7 @@ export default function CompanyCareerLevels({ company }: Props) {
           {isSamsung ? (
             <ul className="space-y-1 list-disc list-inside">
               <li>
-                <strong>셀러리캡 수치</strong>는 2026년 임금협약 합의서
-                원문 명시값(추정 아님).
+                <strong>셀러리캡 수치</strong>는 아주경제 2026-05-21 보도 기준.
               </li>
               <li>
                 <strong>base(계약 연봉)</strong>는 회사와 체결한 연 단위 기본
@@ -238,7 +238,7 @@ export default function CompanyCareerLevels({ company }: Props) {
               </li>
               <li>
                 실제 연봉은 사업부·직무·고과·성과·연차별 호봉에 따라 ±15% 차이
-                가능. 보도값(머니투데이·아주경제·블라인드·잡코리아 등)으로 보강.
+                가능. 보도값(머니투데이·아주경제·잡코리아 등)으로 보강.
               </li>
             </ul>
           ) : isHynix ? (

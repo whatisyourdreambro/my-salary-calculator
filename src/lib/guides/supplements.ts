@@ -20,6 +20,7 @@
 //   jobsData 를 고치면 본문(legacy-rewrite-2.ts)과 이 파일을 함께 갱신할 것.
 
 import { MINIMUM_WAGE_2026 } from "@/config/minimumWage";
+import { guideSupplementsSamsungDs202610 } from "./supplements-samsung-ds-2026-10";
 import {
   GENERAL_PAY_ROWS_2026,
   POSITION_ALLOWANCE_2026,
@@ -144,6 +145,8 @@ const skHynixWage2026Supplement = `
 export const guideSupplements: Record<string, string> = {
   "nurse-salary": nurseSalarySupplement,
   "sk-hynix-wage-2026": skHynixWage2026Supplement,
+  // 삼성전자 가이드 4편 — DS 특별성과급 세부안(2026-10-07 보도)·3분기 잠정실적 (supplements-samsung-ds-2026-10.ts)
+  ...guideSupplementsSamsungDs202610,
 };
 
 // ── 일시적 2주택 처분 기한 개정(소득세법 시행령 대통령령 제36737호, 2026-10-01 시행) 보강 — 본문은 supplements-two-home-law.ts.

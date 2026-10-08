@@ -187,7 +187,7 @@ describe("추정치 정직성 문구 (COMP-05·06·07·09·10·12)", () => {
     expect(other).toBeDefined();
   });
 
-  it("COMP-07: '(2026)'은 삼성전자·SK하이닉스 CL 표에만, 삼성 박스는 타결 합의서", () => {
+  it("COMP-07: '(2026)'은 삼성전자·SK하이닉스 CL 표에만, 삼성 박스는 타결 보도(공개 출처, 2026-10-08)", () => {
     for (const c of companies) {
       if (!c.careerLevels?.length) continue;
       const text = toText(pages.get(c.id)!);
@@ -201,7 +201,9 @@ describe("추정치 정직성 문구 (COMP-05·06·07·09·10·12)", () => {
     }
     const samsung = toText(pages.get("samsung-electronics")!);
     expect(samsung).not.toContain("잠정합의서");
-    expect(samsung).toContain("2026년 임금협약 타결 합의서 — 핵심 변경사항");
+    expect(samsung).toContain("2026년 임금협약 타결 보도 — 핵심 변경사항");
+    // 공개 출처만(운영자 2026-10-08): 합의서 원문을 가진 듯한 표현·커뮤니티 출처를 쓰지 않는다
+    expect(samsung).not.toMatch(/합의서 원문|합의서 명시|상향\(합의서\)|블라인드/);
   });
 
   it("COMP-05: SK하이닉스 공시 노트는 DART 추이표와 충돌하는 전년 값(1억1,700만원)을 쓰지 않는다", () => {

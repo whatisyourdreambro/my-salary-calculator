@@ -29,6 +29,8 @@ export const RELEASE_HOLDBACK_SLUGS: ReadonlySet<string> = new Set([
   "civil-servant-performance-bonus-2026",
   "lotto-prize-tax",
   "seollal-bonus-tax-2027",
+  // 10/9 삼성 소식 (src/lib/guides/semiconductor-bonus-news-2026-10.ts) — 운영자 답 5(2026-10-08), 광고 하향 0 조건
+  "samsung-ds-special-bonus-details-oct-2026",
 ]);
 
 export function isReleaseHeldBack(slug: string): boolean {

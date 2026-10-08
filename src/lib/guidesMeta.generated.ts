@@ -2002,7 +2002,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-12",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5042
+  "contentChars": 5034
  },
  {
   "slug": "sk-hynix-wage-2026",
@@ -2021,7 +2021,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-13",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5070
+  "contentChars": 5062
  },
  {
   "slug": "samsung-hynix-2026-deepdive",
@@ -2040,7 +2040,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-13",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5359
+  "contentChars": 5351
  },
  {
   "slug": "semiconductor-performance-bonus-tax",
@@ -2061,7 +2061,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 6049
+  "contentChars": 6041
  },
  {
   "slug": "hbm-supercycle-worker-2026",
@@ -2080,7 +2080,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-14",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5079
+  "contentChars": 5071
  },
  {
   "slug": "semiconductor-entry-salary-2026",
@@ -2100,7 +2100,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-12",
   "views": 0,
   "lang": "ko",
-  "contentChars": 4990
+  "contentChars": 4982
  },
  {
   "slug": "chip-rsu-stock-tax-2026",
@@ -2120,7 +2120,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-13",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5938
+  "contentChars": 5930
  },
  {
   "slug": "year-end-tax-refund-secrets-2026",
@@ -4690,7 +4690,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
-  "contentChars": 7200
+  "contentChars": 7195
  },
  {
   "slug": "sk-hynix-ps-history-2026-prospect",
@@ -5475,6 +5475,26 @@ export const guideCards: GuideCardMeta[] = [
   "contentChars": 5576
  },
  {
+  "slug": "samsung-ds-special-bonus-details-oct-2026",
+  "title": "삼성전자 DS 특별성과급 세부안 총정리 — 10월 7일 보도 기준 지급 시기·세금·자사주",
+  "description": "10월 7일 언론 보도 기준 삼성전자 DS부문 특별경영성과급 세부안. 2027년 3월 말~4월 초 자사주 지급, 49.5% 원천징수 뒤 연말정산, 3분의 1 즉시 매도, 사업부별 지급률 2월 공지. 3분기 잠정 영업이익 107.4조원과 노조 가정 추정까지 정리.",
+  "category": "연봉",
+  "tags": [
+   "삼성전자",
+   "특별경영성과급",
+   "성과급",
+   "자사주",
+   "DS부문",
+   "원천징수",
+   "2026"
+  ],
+  "level": "중급",
+  "publishedDate": "2026-10-09",
+  "views": 0,
+  "lang": "ko",
+  "contentChars": 7361
+ },
+ {
   "slug": "sk-hynix-bonus-renegotiation-sept-2026",
   "title": "SK하이닉스 성과급 재협상 9월 현황 — 25표 부결 이후 쟁점 총정리 → 9/16 가결",
   "description": "8월 25일 총투표에서 25표 차(반대 50.08%)로 부결된 SK하이닉스 잠정합의안(PS 현금 40%+자사주 60%). 9월 2일 첫 소통행사 발언, 통합노조 3,445명 변수, 재협상 시나리오 3가지와 직원·투자자 캘린더를 정리. 시나리오는 보도 기반, 확정 아님. → 9/16 가결.",
@@ -5573,6 +5593,6 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 12959
+  "contentChars": 12943
  }
 ];

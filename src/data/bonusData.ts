@@ -71,7 +71,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         division: "메모리",
         percentOfBase: 100,
         note: "2026년 상반기 TAI — 발표 2026-07-06 · 지급 2026-07-08",
-        source: "2026-07-06 사내 공지 · 뉴스핌·파이낸셜뉴스·헤럴드경제·ZDNet 교차 확인",
+        source: "2026-07-06 언론 보도 · 뉴스핌·파이낸셜뉴스·헤럴드경제·ZDNet 교차 확인",
       },
       {
         year: 2026,
@@ -79,7 +79,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         division: "반도체연구소·SAIT·DS공통",
         percentOfBase: 100,
         note: "2026년 상반기 TAI",
-        source: "2026-07-06 사내 공지 · 복수 언론 교차 확인",
+        source: "2026-07-06 언론 보도 · 복수 언론 교차 확인",
       },
       {
         year: 2026,
@@ -95,7 +95,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         division: "시스템LSI",
         percentOfBase: 75,
         note: "2026년 상반기 TAI",
-        source: "2026-07-06 사내 공지 · 복수 언론 교차 확인",
+        source: "2026-07-06 언론 보도 · 복수 언론 교차 확인",
       },
       {
         year: 2026,
@@ -103,7 +103,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         division: "파운드리",
         percentOfBase: 75,
         note: "2026년 상반기 TAI",
-        source: "2026-07-06 사내 공지 · 복수 언론 교차 확인",
+        source: "2026-07-06 언론 보도 · 복수 언론 교차 확인",
       },
       {
         year: 2026,
@@ -111,7 +111,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         division: "MX (스마트폰)",
         percentOfBase: 50,
         note: "2026년 상반기 TAI",
-        source: "2026-07-06 사내 공지 · 복수 언론 교차 확인",
+        source: "2026-07-06 언론 보도 · 복수 언론 교차 확인",
       },
       {
         year: 2026,
@@ -119,7 +119,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         division: "VD (영상디스플레이)",
         percentOfBase: 50,
         note: "2026년 상반기 TAI",
-        source: "2026-07-06 사내 공지 · 복수 언론 교차 확인",
+        source: "2026-07-06 언론 보도 · 복수 언론 교차 확인",
       },
       {
         year: 2026,
@@ -127,7 +127,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         division: "네트워크",
         percentOfBase: 50,
         note: "2026년 상반기 TAI",
-        source: "2026-07-06 사내 공지 · 복수 언론 교차 확인",
+        source: "2026-07-06 언론 보도 · 복수 언론 교차 확인",
       },
       {
         year: 2026,
@@ -135,7 +135,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         division: "SR·경영지원·기타",
         percentOfBase: 50,
         note: "2026년 상반기 TAI — 보도 원문 표기 'SR·경영지원·기타'",
-        source: "2026-07-06 사내 공지 · 복수 언론 교차 확인",
+        source: "2026-07-06 언론 보도 · 복수 언론 교차 확인",
       },
       {
         year: 2026,
@@ -143,7 +143,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         division: "의료기기·한국총괄",
         percentOfBase: 75,
         note: "2026년 상반기 TAI",
-        source: "2026-07-06 사내 공지 · 복수 언론 교차 확인",
+        source: "2026-07-06 언론 보도 · 복수 언론 교차 확인",
       },
       {
         year: 2026,
@@ -151,7 +151,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         division: "생활가전 (DA)",
         percentOfBase: 25,
         note: "2026년 상반기 TAI",
-        source: "2026-07-06 사내 공지 · 복수 언론 교차 확인",
+        source: "2026-07-06 언론 보도 · 복수 언론 교차 확인",
       },
     ],
   },
@@ -168,7 +168,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         division: "MX",
         percentOfSalary: 50,
         note: "2025년 실적분 실지급 (OPI 통상 1월 지급) — 제도 상한 50% 도달",
-        source: "Client.tsx 주석 전사 — 2025년 실적분 실지급 보도 기반",
+        source: "2026-01-16 언론 보도(서울신문·머니투데이)",
       },
       {
         year: 2026,
@@ -176,7 +176,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         division: "DS",
         percentOfSalary: 47,
         note: "2025년 실적분 실지급",
-        source: "Client.tsx 주석 전사 — 2025년 실적분 실지급 보도 기반",
+        source: "2026-01-16 언론 보도(서울신문·머니투데이)",
       },
       {
         year: 2026,
@@ -184,7 +184,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         division: "VD",
         percentOfSalary: 12,
         note: "2025년 실적분 실지급",
-        source: "Client.tsx 주석 전사 — 2025년 실적분 실지급 보도 기반",
+        source: "2026-01-16 언론 보도(서울신문·머니투데이)",
       },
     ],
   },

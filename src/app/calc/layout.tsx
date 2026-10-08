@@ -2,6 +2,7 @@ import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import AutoShareSection from "@/components/AutoShareSection";
 import FloatingShareBar from "@/components/FloatingShareBar";
+import CalcNewsNote from "@/components/CalcNewsNote";
 
 export default function CalcLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -19,6 +20,9 @@ export default function CalcLayout({ children }: { children: React.ReactNode }) 
       {/* 공유 fallback은 광고 블록 아래 — 광고 밀림 방지 (2026-08-16 수익 대응) */}
       <AutoShareSection contentType="calc_result" maxWidth="4xl" className="pb-10" />
       <FloatingShareBar />
+      {/* 계산기별 보도 요약(2026-10-09 삼성 DS 특별성과급 세부안) — 반드시 맨 끝(모든 광고 아래 + 기존 형제의 자동광고 CSS 경로 불변).
+          맵에 없는 경로는 null (CalcNewsNote.tsx) */}
+      <CalcNewsNote />
     </>
   );
 }

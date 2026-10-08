@@ -9,14 +9,14 @@ import { OPI1_DEFAULT_RATE } from "./opiData";
 // ────────────────────────────────────────────────────────────
 // 고정 정책 변수 (공개 노사 합의 보도 기반)
 // ────────────────────────────────────────────────────────────
-export const FIXED_RERATE = 10.5; // 영업이익의 10.5% — OPI2(특별경영성과금) 재원
+export const FIXED_RERATE = 10.5; // DS부문 영업이익의 10.5% — OPI2(특별경영성과금) 재원 (한국경제 2026-05-21·EBN 2026-10-07 보도)
 export const FIXED_BU_RATIO = 4; // 부문 : 사업부 = 4 : 6
 export const FIXED_SA_RATIO = 6;
 /** OPI1(기본 성과인센티브) 계산기 기본값 — 정본은 opiData.ts (연봉 대비 %, 상한 50) */
 export const FIXED_OPI1_RATE = OPI1_DEFAULT_RATE;
 export const REFERENCE_SALARY = 80_000_000; // 본인 연봉 비례 기준 (평균 8천만원)
 
-// 회의록 임계값:
+// 보도된 지급 조건(DS부문 연간 영업이익, 한국경제 2026-05-21 보도):
 // • 2026~2028: 영업이익 200조 이상 → 성과급 풀 활성화
 // • 2029~2035 (향후 7년): 영업이익 100조 이상 → 성과급 풀 활성화
 export function getThreshold(year: number): number {
@@ -118,9 +118,9 @@ export type Division = {
   defaultRatio: number;
 };
 
-// 보도값 매칭 보정 — 영업이익 350조 기준 메모리 791%·공통 553%·파운드리 252%
-// 보도 결과에 가장 근접한 가중치 역산. 회의록 원본은 1.0/0.7/0.0이지만 보도값과
-// 정합 불가(공통 16% 과대평가)하므로 보도값 매칭 우선. 사용자가 회의록 원본 값으로
+// 기본 가중치 1.0 / 0.55 / 0.05 는 사이트가 정한 추정 보정값이다(2026-10-08 공개 출처 점검: 근거로 쓰던 791/553/252%는
+// 공개 기사에서 확인되지 않아 '보도값'이라 부르지 않는다). 보도된 합의는 공통 = 메모리 지급률의 70%,
+// 2026년 적자 사업부 몫 없음(2027년분부터 공통 지급률의 60% 보장) — 한국경제 2026-05-21. 사용자가 1.0/0.7/0 으로
 // UI에서 직접 조정 가능.
 export const DIVISIONS: Division[] = [
   {
@@ -139,7 +139,7 @@ export const DIVISIONS: Division[] = [
     color: "#F59E0B",
     bgTint: "#F59E0B0D",
     defaultCount: 29000,
-    defaultRatio: 0.55, // 보도값 553% 매칭 (회의록 원본 0.7)
+    defaultRatio: 0.55, // 사이트 추정 보정값 (보도된 합의 0.7)
   },
   {
     id: "foundry",
@@ -148,7 +148,7 @@ export const DIVISIONS: Division[] = [
     color: "#EF4444",
     bgTint: "#EF44440D",
     defaultCount: 20900,
-    defaultRatio: 0.05, // 보도값 252% 매칭 + 2026 적자 사업부 (회의록 원본 0.0)
+    defaultRatio: 0.05, // 사이트 추정 보정값 + 2026 적자 사업부 (보도된 합의 0)
   },
 ];
 

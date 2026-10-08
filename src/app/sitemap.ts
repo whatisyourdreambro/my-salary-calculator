@@ -66,9 +66,10 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/table/2027/hourly': { lastModified: new Date('2026-09-25') },
  // 성과급 samsung·sk-hynix·hyundai·year-end·kia 2026-09-25: A18 세후 엔진 교체(연간 결정세액
  // 차이·세액공제 30% 기본 가정 제거). 나머지 A18 계산기는 sitemap() 의 BONUS_ENGINE_ROUTES 루프.
- '/calc/samsung-bonus': { lastModified: new Date('2026-09-25'), priority: 0.95 },
+ // 2026-10-09: 삼성 DS 특별성과급 세부안(10/7 보도) — 지급 시기·재원(DS부문)·원천징수 문구, 공개 출처 표현 정리.
+ '/calc/samsung-bonus': { lastModified: new Date('2026-10-09'), priority: 0.95 },
  '/calc/sk-hynix-bonus': { lastModified: new Date('2026-09-25'), priority: 0.9 }, // 2026-09-16 임단협 가결 반영
- '/calc/bonus-calculators': { lastModified: new Date('2026-09-20'), priority: 0.9 },
+ '/calc/bonus-calculators': { lastModified: new Date('2026-10-09'), priority: 0.9 }, // 2026-10-09 최근 소식 10/7 삼성 DS 세부안
  // 2026-09-27 신설 — 시세 스냅숏이 매월(16일 이후) 갱신되므로 monthly. lastModified 는 스냅숏을 바꾼 배포에만 올린다.
  '/calc/bonus-home-plan': { lastModified: new Date('2026-09-27'), changeFrequency: 'monthly' },
  // priority 0.85 는 sitemap() 내 성과급 클러스터 루프와 같은 값 — override 가 있으면

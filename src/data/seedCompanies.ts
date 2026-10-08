@@ -52,8 +52,8 @@ export const seedCompanies: CompanyProfile[] = [
  },
  },
  // ─────────────────────────────────────────────────────────────
- // 삼성전자 CL(Career Level) 세부 직급 — 2026년 임금협약 합의서 원문 기준(2026-05-27 조합원 투표 가결로 타결).
- // ⚠️ 셀러리캡 수치는 합의서 명시값(추정 아님):
+ // 삼성전자 CL(Career Level) 세부 직급 — 2026년 임금협약 타결 보도 기준(아주경제 2026-05-21 https://www.ajunews.com/view/20260521081655279, 2026-05-27 조합원 투표 가결로 타결).
+ // ⚠️ 셀러리캡 수치는 위 타결 보도의 수치(공개 출처만 — 2026-10-08 운영자 지시):
  //   - CL4: 개발 1.22억 / 비개발 1.20억 → 개발/비개발 통합 1.30억
  //   - CL3: 1.03억 → 1.10억
  //   - CL2: 0.76억 → 0.80억
@@ -86,7 +86,7 @@ export const seedCompanies: CompanyProfile[] = [
  },
  {
  group: "CL2 (대졸 신입 사원·대리)",
- promotionNote: "대졸 신입 입사 시작점. 정규 진급은 9년차 CL3. 2026년 셀캡 0.76억 → 0.80억 상향(합의서)",
+ promotionNote: "대졸 신입 입사 시작점. 정규 진급은 9년차 CL3. 2026년 셀캡 0.76억 → 0.80억 상향(보도)",
  salaryCapManwon: 8000,
  steps: [
  {
@@ -118,7 +118,7 @@ export const seedCompanies: CompanyProfile[] = [
  },
  {
  group: "CL3 (과장·차장·책임)",
- promotionNote: "CL2 → CL3 진급은 평균 9년차. 2026년 셀캡 1.03억 → 1.10억 상향(합의서)",
+ promotionNote: "CL2 → CL3 진급은 평균 9년차. 2026년 셀캡 1.03억 → 1.10억 상향(보도)",
  salaryCapManwon: 11000,
  steps: [
  {
@@ -150,7 +150,7 @@ export const seedCompanies: CompanyProfile[] = [
  },
  {
  group: "CL4 (부장·수석)",
- promotionNote: "정규 진급은 19년차. 2026년 셀캡 (개발 1.22억/비개발 1.20억) → 개발/비개발 통합 1.30억 상향(합의서)",
+ promotionNote: "정규 진급은 19년차. 2026년 셀캡 (개발 1.22억/비개발 1.20억) → 개발/비개발 통합 1.30억 상향(보도)",
  salaryCapManwon: 13000,
  steps: [
  {
@@ -227,7 +227,7 @@ export const seedCompanies: CompanyProfile[] = [
  { category: "financial", title: "OPI (성과인센티브)", description: "연 1회, 사업부 영업이익 연동. 연봉의 최대 50% — 단, 사업부 적자 시 0% 지급(셀러리캡 상한 도달 시 가장 큰 변동성).", value: 12000000 },
  { category: "financial", title: "TAI (목표달성장려금)", description: "연 2회(상/하반기), 월 기본급의 최대 100%. OPI보다 변동성 낮음.", value: 6000000 },
  { category: "financial", title: "성과인상률 (2026 신규)", description: "기준 Base-up 4.1% 외 성과인상률 평균 2.1%를 CL/고과 차등 적용 — 합산 약 6.2%", value: 2000000 },
- { category: "financial", title: "사내 주택대부 (2026 신규)", description: "무주택 조합원 주거안정 지원 — 임금협약 합의서 명시(2026-05-27 가결로 타결), 세부 금액·대상은 별도 인사규정", value: 5000000 },
+ { category: "financial", title: "사내 주택대부 (2026 신규)", description: "무주택 조합원 주거안정 지원 — 임금협약 타결 보도(아주경제 2026-05-21), 세부 금액·대상은 별도 인사규정", value: 5000000 },
  { category: "financial", title: "우리사주조합", description: "급여의 일정 비율을 자사주로 매입, 1년 보호예수 후 매도 가능", value: 3000000 },
  { category: "family", title: "자녀출산경조금 (2026 상향)", description: "첫째 30→100만 / 둘째 50→200만 / 셋째이상 100→500만으로 대폭 상향", value: 1000000 },
  { category: "family", title: "자녀 학자금", description: "유치원~대학원 학자금 지원, 2자녀 출산 시 추가 지원", value: 18000000 },

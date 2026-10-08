@@ -2,7 +2,8 @@
 //
 // 반도체 산업 시즌 가이드 (2026년 5월 12일 삼성전자 임금협상 본격 시작 기준).
 // 삼성전자/SK하이닉스/반도체 직장인 키워드를 광범위하게 흡수하는 7개 가이드.
-// 면책: 모든 수치는 공개된 보도·잡플래닛·블라인드·전자공시(DART) 기반 추정치이며 회사 공식 입장이 아님.
+// 면책: 모든 수치는 공개된 보도·잡플래닛·전자공시(DART) 기반 추정치이며 회사 공식 입장이 아님.
+// (2026-10-08 공개 출처 점검: 커뮤니티 게시판은 출처로 쓰지 않는다 — 면책문 목록에서 블라인드 후기를 뺐다.)
 
 import { PS_HISTORY } from "@/app/calc/sk-hynix-bonus/psData";
 
@@ -10,7 +11,7 @@ const DISCLAIMER_HTML = `
 <div class="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-5 my-8 text-sm">
  <p class="font-bold text-amber-900 dark:text-amber-200 mb-2">⚠️ 본 가이드 이용 안내</p>
  <p class="text-amber-800 dark:text-amber-300 leading-relaxed">
-  본 글의 수치(연봉, 인상률, 성과급, 협상 결과 등)는 공개된 보도자료·잡플래닛·블라인드 후기·DART 공시 등 공개 정보 기반의 추정치입니다.
+  본 글의 수치(연봉, 인상률, 성과급, 협상 결과 등)는 공개된 보도자료·잡플래닛·DART 공시 등 공개 정보 기반의 추정치입니다.
   회사 공식 입장이 아니며, 협상 결과는 노사 합의에 따라 실시간으로 변동될 수 있습니다.
   자세한 사항은 본인 회사 인사팀 또는 노조 공식 발표를 확인하시기 바랍니다.
  </p>

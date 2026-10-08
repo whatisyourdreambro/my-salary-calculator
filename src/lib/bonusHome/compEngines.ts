@@ -1,7 +1,7 @@
 // src/lib/bonusHome/compEngines.ts
 //
 // 성과급 내 집 마련 계산기 — 연도별 보상 엔진(순수 함수). 회사 제도 숫자는 새로 적지 않고 기존 계산기 모듈을 그대로 쓴다:
-//   삼성전자  samsung-bonus/model.ts(영업이익 10.5%·부문:사업부 4:6·임계값 200조/100조·사업부 인원·가중치·세후 엔진)
+//   삼성전자  samsung-bonus/model.ts(DS부문 영업이익 10.5%·부문:사업부 4:6·임계값 200조/100조·사업부 인원·가중치·세후 엔진)
 //             opiData.ts(2025년분 OPI 실지급률, 노조 공지 기반 보도) · taiData.ts(2026 상반기 TAI, 2026-07-06 발표 보도)
 //   SK하이닉스 sk-hynix-bonus/psData.ts(AGREEMENT_2026: PS 재원 10%·지급 50/30/10/10·임금 6.3% — 2026-09-16 가결 보도,
 //             EMPLOYEES 34,549명(2025 사업보고서)·REFERENCE_SALARY 1억·BASIC_RATIO 20·PS_HISTORY 2025 2,964%)
@@ -9,7 +9,8 @@
 // 여기서 새로 정한 값은 '가정'이라고 적힌 기본값뿐이다(월기본급 비율·주가 변동·직접 입력 인상률 0% 등).
 //
 // 연도 축: 실적 연도 FY(2026~2030)의 성과급을 FY+1 년(2027~2031)에 받는다.
-//   삼성 OPI1(초과이익성과금)·OPI2(특별경영성과급) = FY+1 년 1월. TAI = 그해 7월·12월(상·하반기).
+//   삼성 OPI1(초과이익성과금) = FY+1 년 1월 말, OPI2(특별경영성과급) = FY+1 년 3월 말~4월 초(3월 정기 주총 뒤, 2026-10-07 보도).
+//   둘 다 FY+1 년 소득이라 연 단위 계산은 같다. TAI = 그해 7월·12월(상·하반기).
 //   SK PS = FY+1 년 2월 현금 50% · 4월 주식 30%(즉시 매도 가능) · FY+2 년 주식 10% · FY+3 년 주식 10%.
 //      PI = 반기마다 기본급(연봉 ÷ 20) × PI% — FY 하반기분은 FY+1 년 1월, 상반기분은 그해 7월.
 //   세금은 받는 해의 연봉에 더해 계산한다(연말정산 구조의 결정세액 차이 + 4대보험 — 2026 요율·세율 기준).
@@ -189,7 +190,7 @@ const growth = (inputs: CompInputs, years: number): number =>
 
 /** 삼성 OPI2(특별경영성과급) 1인 세전 — 풀 분배 모델(model.computeDivisionPool) × 본인 연봉 ÷ 기준 연봉 8천만 */
 export function samsungOpi2(op: number, fy: number, division: DivisionId, salaryFy: number): number {
-  if (fy < 2026) return 0; // 2027년 1월 첫 지급(2026년 실적분)부터
+  if (fy < 2026) return 0; // 2027년 3월 말~4월 초 첫 지급(2026년 실적분, 2026-10-07 보도)부터
   const triggered = fin(op) >= getThreshold(fy);
   const pool = computeDivisionPool(fin(op), defaultDivisionCounts(), defaultDivisionRatios(), triggered);
   const row = pool.perDivision.find((d) => d.id === division);

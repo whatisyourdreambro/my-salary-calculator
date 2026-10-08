@@ -271,12 +271,19 @@ export const BONUS_CALENDAR_2026: Array<{
   },
 ];
 
-/** 최근 성과급 뉴스 타임라인 — 보도 사실만, 갱신 시 여기만 수정 */
+/** 최근 성과급 뉴스 타임라인 — 보도 사실만, 갱신 시 여기만 수정
+ *  ★목록이 CalcResultAd 위라 항목 수·높이를 늘리지 않는다: 새 항목을 넣을 때는 가장 오래된 항목을 빼고, 1,123폭 실측으로 같은 높이 이하만.
+ *  2026-10-09: 10/7 삼성 DS 특별성과급 세부안 보도(한국경제·EBN 2026-10-07) 추가, 2026-02-05 SK하이닉스 PS 항목 제외. */
 export const BONUS_NEWS_2026: Array<{
   date: string;
   text: string;
   href: string;
 }> = [
+  {
+    date: "2026-10-07",
+    text: "삼성 DS 특별경영성과급 세부안 보도 — 2027년 3~4월 자사주 지급",
+    href: "/guides/samsung-ds-special-bonus-details-oct-2026",
+  },
   {
     date: "2026-09-16",
     text: "SK하이닉스 임단협 수정안 총투표 가결(찬성 57.08%) — PS 당해 현금 50%+자사주 30%, 1·2년 후 주식 10%씩 이연, 임금 6.3% 인상 유지",
@@ -316,10 +323,5 @@ export const BONUS_NEWS_2026: Array<{
     date: "2026-05-27",
     text: "삼성전자 임금협상 조합원 투표 가결 — DS부문 특별경영성과급(자사주) 신설",
     href: "/calc/samsung-bonus",
-  },
-  {
-    date: "2026-02-05",
-    text: "SK하이닉스 2025년 PS 기본급 2,964% 지급 — 상한 폐지 후 첫 적용",
-    href: "/calc/sk-hynix-bonus",
   },
 ];
