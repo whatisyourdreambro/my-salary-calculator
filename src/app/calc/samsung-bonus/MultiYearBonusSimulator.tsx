@@ -647,7 +647,7 @@ export default function MultiYearBonusSimulator({
             </div>
             <p className="text-[10px] text-faint-blue mt-3 leading-relaxed">
               💡 사업부 풀에서 가/나고과 인력이 가중치 더 받음 → 같은 사업부 일반
-              인력은 적게 받음. 보도 기준: 가고과 약 10~15% / 나고과 약 20~30% 분포.
+              인력은 적게 받음. 등급별 분포는 공개되지 않아 직접 입력합니다.
             </p>
           </div>
         )}

@@ -11,6 +11,7 @@
 import { koGuides } from "@/lib/guidesContent";
 import type { Guide } from "@/lib/guidesData";
 import { rankRelatedGuides } from "@/lib/guideDiscovery";
+import { withoutHeldBackGuides } from "@/lib/guideReleaseHoldback";
 
 export interface RelatedGuideItem {
   slug: string;
@@ -55,7 +56,8 @@ export function getRelatedGuides({
     .filter((g): g is Guide => Boolean(g));
 
   const explicitSlugSet = new Set(explicit.map((g) => g.slug));
-  const fallback = rankRelatedGuides(koGuides, { currentSlug, category, tags })
+  // 자동 추천 후보에서는 공개 보류 중인 새 가이드를 뺀다 — 기존 페이지 광고 위 높이 불변 (guideReleaseHoldback.ts)
+  const fallback = rankRelatedGuides(withoutHeldBackGuides(koGuides, currentSlug), { currentSlug, category, tags })
     .filter((g) => !explicitSlugSet.has(g.slug));
 
   return [...explicit, ...fallback].slice(0, limit).map(toItem);

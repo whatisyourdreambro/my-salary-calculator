@@ -15,6 +15,7 @@ import { buildGuideMetadata } from "@/lib/seo";
 import { Metadata } from "next";
 import { rankRelatedGuides } from "@/lib/guideDiscovery";
 import { getGuideContentDate } from "@/lib/guideContentRevisions";
+import { withoutHeldBackGuides } from "@/lib/guideReleaseHoldback";
 
 export const dynamic = 'force-static';
 
@@ -76,7 +77,8 @@ export default function GuidePage({ params }: Props) {
 
  // 카드에 쓰는 4개 필드만 넘긴다 — 전체 Guide 를 넘기면 관련 글 3편의 본문 HTML 이
  // RSC payload 에 통째로 실린다(PERF-08: 쪽당 중앙값 13KB·최대 74KB).
- const relatedGuides = rankRelatedGuides(koGuides, {
+ // 공개 보류 중인 새 가이드는 기존 가이드의 관련 글 3편에 넣지 않는다 — 광고 위 높이 불변 (guideReleaseHoldback.ts)
+ const relatedGuides = rankRelatedGuides(withoutHeldBackGuides(koGuides, guide.slug), {
  currentSlug: guide.slug, category: guide.category, tags: guide.tags,
  }).slice(0, 3).map(({ slug, title, description, category }) => ({ slug, title, description, category }));
 

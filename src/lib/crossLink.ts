@@ -18,6 +18,8 @@ export const CALC_TO_GUIDES: Record<string, string[]> = {
     "samsung-special-bonus-q3-preview-2027",
     "samsung-vs-sk-hynix-stock-bonus-2026",
     "samsung-opi-forecast-2027",
+    // 2026-10-09 삼성 DS 특별성과급 세부안 소식(정적 라우트 — 이 매핑은 새 글의 관련 계산기 카드로만 쓰인다)
+    "samsung-ds-special-bonus-details-oct-2026",
   ],
   "sk-hynix-bonus": [
     "sk-hynix-bonus-renegotiation-sept-2026",

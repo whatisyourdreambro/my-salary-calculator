@@ -32,6 +32,7 @@ import { companySalaryDeepdive2026 } from "@/lib/guides/company-salary-deepdive-
 import { jobSalaryDeepdive2026 } from "@/lib/guides/job-salary-deepdive-2026";
 import { financeRpm2026Guides } from "@/lib/guides/finance-rpm-2026";
 import { semiconductorBonusNews202609Guides } from "@/lib/guides/semiconductor-bonus-news-2026-09";
+import { semiconductorBonusNews202610Guides } from "@/lib/guides/semiconductor-bonus-news-2026-10";
 import { legacyRewrite1 } from "@/lib/guides/legacy-rewrite-1";
 import { legacyRewrite2 } from "@/lib/guides/legacy-rewrite-2";
 import { legacyRewrite3 } from "@/lib/guides/legacy-rewrite-3";
@@ -360,6 +361,9 @@ const allRawGuides = [
  ...companySalaryDeepdive2026,
  ...jobSalaryDeepdive2026,
  ...financeRpm2026Guides,
+ // 17차 (2026-10-09) — 삼성전자 DS 특별성과급 세부안 소식 1편(10/7 언론 보도·10/8 3분기 잠정실적, 공개 출처만).
+ // 기존 쪽 자동 목록에는 guideReleaseHoldback.ts 로 넣지 않는다(광고 위 높이 불변).
+ ...semiconductorBonusNews202610Guides,
  // 16차 (2026-09-03) — 삼성전자·SK하이닉스 성과급 뉴스 5편.
  // SK하이닉스 8/25 총투표 부결 이후 재협상 국면(9/2 소통행사까지)과
  // 삼성전자 8/21 이사회 임직원 보상용 자사주 15조 매입 의결이 축.

@@ -26,6 +26,8 @@ const MODULES: Record<string, string[]> = {
   "src/components/BonusNextLinks.tsx": ["bonus-next-links"],
   // 2026-09-12 S2-2: 회사 표 '연 실수령' 셀 → /salary 리포트 hop (행당 1, 높이 0)
   "src/components/CompanySalaryTable.tsx": ["company-salary-net"],
+  // 2026-10-09 삼성 DS 특별성과급 세부안 보도 요약 — calc/layout 맨 끝(모든 광고 아래), 새 글 링크 1개
+  "src/components/CalcNewsNote.tsx": ["calc-news-note"],
   "src/app/job/[slug]/page.tsx": [
     "job-related-calc",
     "job-companies",
@@ -69,6 +71,7 @@ const P1_FOLLOW_UP_FILES: Record<string, string[]> = {
   "/calc/samsung-bonus": [
     "src/app/calc/samsung-bonus/page.tsx",
     "src/app/calc/samsung-bonus/shared.tsx", // ResultNextLinks — onClick 직접 계측
+    "src/components/CalcNewsNote.tsx", // 2026-10-09 calc/layout 맨 끝 보도 요약(data-msy-module)
     "src/components/RelatedCalculators.tsx",
   ],
   "/calc/bonus-calculators": [

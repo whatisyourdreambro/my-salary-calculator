@@ -153,7 +153,7 @@ const ssOpiNetRow = (salary: number) => {
 };
 
 const samsungOpiTai = `
-<p class="lead">삼성전자 성과급은 연 1회 받는 <strong>OPI(초과이익성과급)</strong>와 상·하반기에 한 번씩 받는 <strong>TAI(목표달성장려금)</strong> 두 가지입니다. OPI는 연봉 대비 %(상한 ${OPI1_MAX_RATE}%), TAI는 월 기본급 대비 %로 계산합니다. 2025년 실적분 OPI는 ${OPI_ACTUAL_2025.payDateLabel}에 MX ${SS_MX.rate}%·DS부문 공통 ${SS_DS.rate}%·VD·생활가전 등 ${SS_VD.rate}%로 지급됐고, 2026년 상반기 TAI는 ${TAI_PAY_DATE}에 ${SS_TAI_TOP.division} ${SS_TAI_TOP.rate}%부터 ${SS_TAI_LOW.division} ${SS_TAI_LOW.rate}%까지 지급됐습니다. 노조 공지를 인용한 복수 보도 기준이며, 기준일은 2026년 9월 26일입니다.</p>
+<p class="lead">삼성전자 성과급은 연 1회 받는 <strong>OPI(초과이익성과급)</strong>와 상·하반기에 한 번씩 받는 <strong>TAI(목표달성장려금)</strong> 두 가지입니다. OPI는 연봉 대비 %(상한 ${OPI1_MAX_RATE}%), TAI는 월 기본급 대비 %로 계산합니다. 2025년 실적분 OPI는 ${OPI_ACTUAL_2025.payDateLabel}에 MX ${SS_MX.rate}%·DS부문 공통 ${SS_DS.rate}%·VD·생활가전 등 ${SS_VD.rate}%로 지급됐고, 2026년 상반기 TAI는 ${TAI_PAY_DATE}에 ${SS_TAI_TOP.division} ${SS_TAI_TOP.rate}%부터 ${SS_TAI_LOW.division} ${SS_TAI_LOW.rate}%까지 지급됐습니다. 복수 언론 보도(1·7월) 기준이며, 기준일은 2026년 9월 26일입니다.</p>
 
 <h2>OPI와 TAI는 무엇이 다른가요</h2>
 <p>둘 다 성과급이지만 계산 기준과 결정 방식이 다릅니다. 지급 시기와 최근 지급률은 사이트 계산기와 같은 데이터(노조 공지 기반 보도)이고, 결정 방식과 퇴직금 반영 여부는 2026년 1월 29일 대법원 판결문(2021다248299)에 적힌 내용입니다. 판결문의 결정 방식은 원고들이 퇴직한 2016~2018년 무렵의 제도를 설명한 것이라, 이후 세부 기준이 바뀌었을 수 있습니다.</p>
@@ -180,7 +180,7 @@ ${OPI_2025_DESC.map((r) => `<tr><td>${r.division}</td><td>${r.rate}%</td><td>${m
 <p>같은 회사 안에서도 최고(MX ${SS_MX.rate}%)와 최저(${SS_LOW.division} ${SS_LOW.rate}%)의 차이가 연봉의 ${SS_MX.rate - SS_LOW.rate}%p입니다. 2026년 실적분 OPI는 2027년 1월 말 전후에 발표되며, 이 글은 발표 전 수치를 추정하지 않습니다. 삼성전자 직원 평균 급여(2025년 사업보고서 1억 5,800만원)와 직급별 연봉은 <a href="/salary-db/samsung-electronics">삼성전자 연봉 정보</a>에서 볼 수 있습니다.</p>
 
 <h2>2026년 상반기 TAI 사업부별 지급률</h2>
-<p>${TAI_ANNOUNCED_DATE} 사내 공지, ${TAI_PAY_DATE} 지급분입니다. TAI는 월 기본급 대비라서 월 기본급 400만원이면 100%는 400만원, 50%는 200만원입니다.</p>
+<p>${TAI_ANNOUNCED_DATE} 언론 보도, ${TAI_PAY_DATE} 지급분입니다. TAI는 월 기본급 대비라서 월 기본급 400만원이면 100%는 400만원, 50%는 200만원입니다.</p>
 <div class="overflow-x-auto"><table class="w-full text-sm">
 <thead><tr><th>사업부</th><th>부문</th><th>월 기본급 대비</th></tr></thead>
 <tbody>
@@ -218,14 +218,14 @@ ${[60_000_000, 80_000_000, 100_000_000].map(ssOpiNetRow).join("\n")}
 
 <h2>자주 묻는 질문</h2>
 <ul>
-<li><strong>Q. OPI는 연봉의 몇 %까지 받을 수 있나요?</strong> — 제도상 상한은 연봉의 ${OPI1_MAX_RATE}%입니다. 2025년 실적분은 MX가 상한인 ${SS_MX.rate}%, DS부문 공통이 ${SS_DS.rate}%였고 가장 낮은 ${SS_LOW.division}은 ${SS_LOW.rate}%였습니다(노조 공지 기반 보도).</li>
+<li><strong>Q. OPI는 연봉의 몇 %까지 받을 수 있나요?</strong> — 제도상 상한은 연봉의 ${OPI1_MAX_RATE}%입니다. 2025년 실적분은 MX가 상한인 ${SS_MX.rate}%, DS부문 공통이 ${SS_DS.rate}%였고 가장 낮은 ${SS_LOW.division}은 ${SS_LOW.rate}%였습니다(복수 언론 보도 기준).</li>
 <li><strong>Q. 2026년 하반기 TAI는 언제 발표되나요?</strong> — 통상 12월 말에 발표·지급됩니다. 2026년 9월 26일 현재 하반기 지급률은 나오지 않았으므로, 발표 전 숫자는 전망으로만 보세요.</li>
 <li><strong>Q. OPI와 TAI를 같은 해에 나눠 받으면 세금이 줄어드나요?</strong> — 아닙니다. 그해 총급여가 같으면 연간 결정세액도 같습니다. 달라지는 것은 지급 달 원천징수액과 연말정산 환급·추가 납부의 크기입니다.</li>
 <li><strong>Q. 성과급도 퇴직금 계산에 들어가나요?</strong> — 2026년 1월 대법원 판결 기준으로 TAI는 평균임금에 들어가고 OPI는 들어가지 않습니다. 평균임금에 넣는 상여금은 퇴직 전 12개월 동안 받은 금액의 3/12입니다(고용노동부 퇴직금 계산 예시).</li>
-<li><strong>Q. DS부문 특별경영성과급은 언제 처음 받나요?</strong> — 2026년 실적이 첫 대상입니다. 2026년 DS부문 영업이익이 200조원 이상이어야 지급되고, 조건을 채우면 2027년 초에 처음 받습니다(보도 기준). 조건에 못 미친 해에는 지급되지 않으며, 세후 금액을 전부 자사주로 받는 구조라 현금으로 받는 OPI와 받는 방식도 다릅니다.</li>
+<li><strong>Q. DS부문 특별경영성과급은 언제 처음 받나요?</strong> — 2026년 실적이 첫 대상입니다. 2026년 DS부문 영업이익이 200조원 이상이어야 지급되고, 조건을 채우면 2027년 3월 말~4월 초 처음 받습니다(10/7 보도). 미달하면 지급되지 않으며, 세후 금액을 전부 자사주로 받는 구조라 현금으로 받는 OPI와 받는 방식도 다릅니다.</li>
 </ul>
 
-<p class="text-sm">기준일: 2026-09-26. OPI·TAI 지급률과 임금협상 내용은 노조 공지를 인용한 복수 보도로, <a href="/calc/samsung-bonus">삼성전자 성과급 계산기</a>와 같은 데이터입니다. 특별경영성과급의 지급 조건은 보도(지디넷코리아·아시아경제 2026-05-21) 기준입니다. 자사주 지급은 회사 공시, 판결은 <a href="https://www.law.go.kr/판례/(2021다248299)">대법원 2021다248299 판결(국가법령정보센터)</a>, 과세 구조는 <a href="https://www.law.go.kr/법령/소득세법/제20조">소득세법 제20조</a>와 <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=2227&cntntsId=7667">국세청 종합소득세 세율</a>, 건강보험료 정산은 <a href="https://www.law.go.kr/법령/국민건강보험법시행령/제39조">국민건강보험법 시행령 제39조</a>, 상여금의 평균임금 산입은 <a href="https://www.moel.go.kr/retirementpayCal.do">고용노동부 퇴직금 계산</a>을 따랐습니다. 다른 회사 성과급은 <a href="/calc/bonus-calculators">회사별 성과급 계산기 모음</a>에서 볼 수 있습니다.</p>
+<p class="text-sm">기준일: 2026-09-26. OPI·TAI 지급률과 임금협상 내용은 복수 언론 보도 기준으로, <a href="/calc/samsung-bonus">삼성전자 성과급 계산기</a>와 같은 데이터입니다. 특별경영성과급의 지급 조건은 보도(지디넷코리아·아시아경제 2026-05-21) 기준입니다. 자사주 지급은 회사 공시, 판결은 <a href="https://www.law.go.kr/판례/(2021다248299)">대법원 2021다248299 판결(국가법령정보센터)</a>, 과세 구조는 <a href="https://www.law.go.kr/법령/소득세법/제20조">소득세법 제20조</a>와 <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=2227&cntntsId=7667">국세청 종합소득세 세율</a>, 건강보험료 정산은 <a href="https://www.law.go.kr/법령/국민건강보험법시행령/제39조">국민건강보험법 시행령 제39조</a>, 상여금의 평균임금 산입은 <a href="https://www.moel.go.kr/retirementpayCal.do">고용노동부 퇴직금 계산</a>을 따랐습니다. 다른 회사 성과급은 <a href="/calc/bonus-calculators">회사별 성과급 계산기 모음</a>에서 볼 수 있습니다.</p>
 `;
 
 // 2차 키퍼(2026-09-26 G2B) — PS·PI 이력은 계산기 데이터(psData) 값 그대로(영업이익은 DART 사업보고서와 대조, 2022년 PS 820%는
