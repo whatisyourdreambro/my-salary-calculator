@@ -16,8 +16,13 @@ import { GuideMidAd } from "@/components/AdPlacement";
 import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbLd, itemListLd } from "@/lib/structuredData";
 import { GUIDE_CATEGORY_HUBS } from "@/lib/guideCategories";
-import { koGuideCards } from "@/lib/guidesData";
+import { koGuideCards as allKoGuideCards } from "@/lib/guidesData";
+import { withoutHeldBackGuides } from "@/lib/guideReleaseHoldback";
 import { BookOpen, ArrowRight, Calculator } from "lucide-react";
+
+// 공개 보류 중인 새 가이드는 허브에 넣지 않는다 — 최신 5편은 GuideMidAd 위, 전체 목록은 레이아웃 푸터 광고 위라
+// 한 편만 늘어도 광고가 밀린다. 편수·JSON-LD·제목도 같은 목록으로 센다 (guideReleaseHoldback.ts)
+const koGuideCards = withoutHeldBackGuides(allKoGuideCards);
 
 export const dynamic = "force-static";
 export const dynamicParams = false;

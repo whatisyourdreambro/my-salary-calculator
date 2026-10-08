@@ -1,9 +1,14 @@
-import { koGuideCards, categories } from "@/lib/guidesData";
+import { koGuideCards as allKoGuideCards, categories } from "@/lib/guidesData";
+import { withoutHeldBackGuides } from "@/lib/guideReleaseHoldback";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, itemListLd } from "@/lib/structuredData";
 import { MultiplexAd } from "@/components/AdPlacement";
 import GuidesListClient from "./GuidesListClient";
 import { compareGuideDates } from "@/lib/guideDiscovery";
+
+// 공개 보류 중인 새 가이드는 목록에 넣지 않는다 — 최신순 첫 6장이 GuideMidAd 위라 새 가이드(가장 최신)가
+// 들어오면 카드 높이가 바뀌어 광고가 움직인다. JSON-LD 도 화면과 같은 목록으로 만든다 (guideReleaseHoldback.ts)
+const koGuideCards = withoutHeldBackGuides(allKoGuideCards);
 
 // 목록 페이지는 서버 컴포넌트로 유지 — 본문(content) 없는 카드 메타만 클라이언트에
 // props 로 전달해 First Load JS 에서 가이드 본문(~888KB)을 제거한다.

@@ -4,10 +4,11 @@
 // 가이드를 첫 슬롯에 우선 노출하여 메인 → 가이드 유입을 강화.
 
 import Link from "@/components/AppLink";
+import { withoutHeldBackGuides } from "@/lib/guideReleaseHoldback";
 import { ArrowRight, BookOpen, TrendingUp } from "lucide-react";
 // 카드 메타만 사용 — 본문 포함 guidesContent 를 import 하면 홈 청크에
 // 가이드 본문 전체가 실린다 (2026-08-26 Phase 4 물리 분리)
-import { koGuideCards } from "@/lib/guidesData";
+import { koGuideCards as allKoGuideCards } from "@/lib/guidesData";
 import { compareGuideDates } from "@/lib/guideDiscovery";
 import { TREND_BRIEF_TAG } from "@/lib/trendBriefs/types";
 
@@ -18,6 +19,10 @@ const PRIORITY_SLUGS_BY_SEASON: Record<string, string[]> = {
  // 성과급 지급 시즌 (6~8월 TAI·12~2월 OPI/PS)
  bonus: ["samsung-opi-tai-complete-2026", "sk-hynix-ps-history-2026-prospect"],
 };
+
+// 공개 보류 중인 새 가이드는 편집 추천(GuideMidAd·MultiplexAd 위)에 넣지 않는다 — 광고 위 높이 불변
+// (guideReleaseHoldback.ts). 최신순 후보가 모두 이 목록에서 나온다.
+const koGuideCards = withoutHeldBackGuides(allKoGuideCards);
 
 function getSeasonSlugs(): string[] {
  const month = new Date().getMonth() + 1;
