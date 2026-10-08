@@ -281,7 +281,7 @@ export const BONUS_NEWS_2026: Array<{
 }> = [
   {
     date: "2026-10-07",
-    text: "삼성 DS 특별경영성과급 세부안 보도 — 2027년 3~4월 자사주 지급",
+    text: "삼성 DS 특별성과급 세부안 — 2027년 3월 말~4월 초 자사주 지급",
     href: "/guides/samsung-ds-special-bonus-details-oct-2026",
   },
   {

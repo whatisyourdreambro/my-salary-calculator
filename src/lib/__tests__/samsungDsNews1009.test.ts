@@ -48,6 +48,15 @@ describe("① 새 소식 글", () => {
     ]) expect(guide!.content).toContain(url);
   });
 
+  it("지급 시기는 주총 승인 전제, 1.6억원은 부문 공통분(40%)·2026년분부터(60% 보장만 2027년분부터) — 원래 세션 대조 A1·B2", () => {
+    expect(guide!.content).toContain("3월 정기 주주총회에서 지급 안건이 승인되면");
+    expect(CALC_NEWS_NOTES["/calc/samsung-bonus"].points[0]).toContain("3월 정기 주총에서 지급 안건이 승인되면");
+    expect(guide!.content).toContain("사업부 몫(60%) 없이 부문 공통분(40%)만");
+    for (const p of ["src/app/calc/samsung-bonus/page.tsx", "src/lib/guides/semiconductor-bonus-news-2026-09.ts"]) {
+      expect(code(p), p).not.toContain("1억 6,000만원(2027년분부터)");
+    }
+  });
+
   it("노조 추산은 '가정 추정'으로 밝히고, 보도마다 다른 제외 기준은 단정하지 않는다", () => {
     expect(guide!.content).toContain("노조 가정 추정");
     expect(guide!.content).not.toMatch(/1개월 (이하|미만)|10월 1일 이후 입사/);
@@ -58,14 +67,15 @@ describe("① 새 소식 글", () => {
   });
 });
 
-describe("② 가이드 4편 광고 아래 보강", () => {
+describe("② 가이드 5편 광고 아래 보강(4편 + 삼성·SK 주식 성과급 비교 글의 지급 시기)", () => {
   const SLUGS = [
+    "samsung-vs-sk-hynix-stock-bonus-2026",
     "samsung-special-bonus-q3-preview-2027",
     "samsung-bonus-treasury-stock-15-trillion-2026",
     "samsung-opi-tai-complete-2026",
     "samsung-opi-forecast-2027",
   ];
-  it("4편 모두 보강 맵에 있고 새 글로 링크한다(본문 정본은 그대로)", () => {
+  it("5편 모두 보강 맵에 있고 새 글로 링크한다(본문 정본은 그대로)", () => {
     expect(Object.keys(guideSupplementsSamsungDs202610).sort()).toEqual([...SLUGS].sort());
     for (const s of SLUGS) {
       expect(koGuides.some((g) => g.slug === s), s).toBe(true);

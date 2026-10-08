@@ -294,7 +294,7 @@ export default function SamsungBonusClient() {
               htmlFor="profit-input"
               className="text-xs font-bold uppercase tracking-widest text-faint-blue"
             >
-              DS부문 연간 영업이익
+              DS부문 영업이익
             </label>
             <span
               className="text-3xl font-black tabular-nums"
@@ -323,7 +323,7 @@ export default function SamsungBonusClient() {
                 border: "1.5px solid hsl(var(--input))",
               }}
               placeholder="350"
-              aria-label="DS부문 연간 영업이익 (조원)"
+              aria-label="DS부문 영업이익 (조원)"
             />
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-electric">
               조원
