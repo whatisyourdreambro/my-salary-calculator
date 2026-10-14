@@ -18,8 +18,15 @@ const compiled = ts.transpileModule(readFileSync(sourcePath, "utf8"), {
     target: ts.ScriptTarget.ES2020,
   },
 }).outputText;
+const guardPath = resolve(dirname(sourcePath), "../lib/liveAds.ts");
+const compiledGuard = ts.transpileModule(readFileSync(guardPath, "utf8"), {
+  compilerOptions: {
+    module: ts.ModuleKind.CommonJS,
+    target: ts.ScriptTarget.ES2020,
+  },
+}).outputText;
 
-function createRuntime() {
+function createRuntime({ nodeEnv = "production", protocol = "https:", hostname = "www.moneysalary.com", webdriver = false } = {}) {
   let currentFiber;
   const fibers = [];
   const intersections = [];
@@ -110,14 +117,16 @@ function createRuntime() {
   }
 
   const jsx = (type, props) => ({ type, props });
+  const liveAds = {};
   const context = {
     exports: {},
     // A synthetic public slot ID only; never read the operator's env files.
-    process: { env: { NEXT_PUBLIC_ADSENSE_SLOT_HOME_TOP: "1234567890" } },
+    process: { env: { NODE_ENV: nodeEnv, NEXT_PUBLIC_ADSENSE_SLOT_HOME_TOP: "1234567890" } },
     require(name) {
       if (name === "react") return react;
       if (name === "react/jsx-runtime") return { jsx, jsxs: jsx };
       if (name === "next/navigation") return { usePathname: () => currentFiber.pathname };
+      if (name === "@/lib/liveAds") return liveAds;
       if (name === "@/lib/vitalsAttribution") return { viewportBucket: () => "m" };
       if (name === "@/lib/analytics") return {
         trackAdRequestAttempt: (...params) => events.push({ name: "attempt", params }),
@@ -128,6 +137,8 @@ function createRuntime() {
       throw new Error(`Unexpected dependency: ${name}`);
     },
     window: {
+      location: { protocol, hostname },
+      navigator: { webdriver },
       adsbygoogle: { push(value) { adPushes.push(value); return adPushes.length; } },
       addEventListener() {},
       removeEventListener() {},
@@ -138,6 +149,11 @@ function createRuntime() {
     IntersectionObserver: FakeIntersectionObserver,
     MutationObserver: FakeMutationObserver,
   };
+  vm.runInNewContext(compiledGuard, {
+    exports: liveAds,
+    process: context.process,
+    window: context.window,
+  }, { filename: guardPath });
   vm.runInNewContext(compiled, context, { filename: sourcePath });
   // Use the real exported wrapper to get the private AdSlot function without
   // adding exports or changing the production source for testability.
@@ -281,4 +297,43 @@ test("a surviving layout slot can request once again after a fresh pathname inte
   assert.notEqual(fiber.container.ins, previousIns);
   assert.equal(runtime.adPushes.length, 2);
   assert.deepEqual(runtime.events.map(({ name }) => name), ["attempt", "attempt"]);
+});
+
+for (const [name, environment] of [
+  ["localhost", { hostname: "localhost" }],
+  ["loopback", { hostname: "127.0.0.1" }],
+  ["Cloudflare preview", { hostname: "a1b2c3d4.my-salary-calculator.pages.dev" }],
+  ["development build", { nodeEnv: "development" }],
+  ["HTTP production host", { protocol: "http:" }],
+  ["WebDriver", { webdriver: true }],
+  ["lookalike host", { hostname: "www.moneysalary.com.example.com" }],
+]) {
+  test(`${name} preserves the ad container without mounting or requesting a live ad`, () => {
+    const runtime = createRuntime(environment);
+    const fiber = runtime.mount("/a");
+    assert.ok(fiber.container, "non-advertising layout remains available to QA");
+    assert.equal(fiber.tree.props.className, "ad-container ad-slot-home-top");
+    assert.equal(fiber.tree.props.style.minHeight, "140px", "the existing reserved height is preserved");
+    assert.equal(fiber.container.ins, null);
+    assert.equal(runtime.intersections.length, 0);
+    assert.equal(runtime.adPushes.length, 0);
+    assert.equal(runtime.events.length, 0);
+
+    runtime.navigate(fiber, "/b");
+    assert.ok(fiber.container);
+    assert.equal(fiber.container.ins, null);
+    assert.equal(runtime.intersections.length, 0);
+    assert.equal(runtime.adPushes.length, 0);
+    assert.equal(runtime.events.length, 0);
+  });
+}
+
+test("the HTTPS production apex host still requests one visible manual ad", () => {
+  const runtime = createRuntime({ hostname: "moneysalary.com" });
+  const fiber = runtime.mount("/a");
+  runtime.intersections[0].deliverQueuedIntersection();
+  runtime.flushUpdates();
+  assert.ok(fiber.container.ins);
+  assert.equal(runtime.adPushes.length, 1);
+  assert.deepEqual(runtime.events.map(({ name }) => name), ["attempt"]);
 });

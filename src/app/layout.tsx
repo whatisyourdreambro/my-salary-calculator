@@ -19,6 +19,7 @@ import CopyAttribution from "@/components/CopyAttribution";
 import CalcFunnelTracker from "@/components/CalcFunnelTracker";
 import NavTypeTracker from "@/components/NavTypeTracker";
 import AutoAdsSeenTracker from "@/components/AutoAdsSeenTracker";
+import AdSenseScript from "@/components/AdSenseScript";
 import SkipToContent from "@/components/SkipToContent";
 import { organizationLd, webSiteLd } from "@/lib/structuredData";
 import { RSS_FEED_ALTERNATES } from "@/lib/seo";
@@ -206,13 +207,8 @@ export default function RootLayout({
           `}
         </Script>
 
-        {/* Google AdSense Auto Ads — 모든 페이지 자동 광고 적용 */}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2873403048341290"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        {/* Live ads are limited to the production domains, excluding automated QA. */}
+        <AdSenseScript />
 
         {/* Kakao 공유 SDK — NEXT_PUBLIC_KAKAO_JS_KEY 있을 때만 로드 (없으면 null) */}
         <KakaoScript />

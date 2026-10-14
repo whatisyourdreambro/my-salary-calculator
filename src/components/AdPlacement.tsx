@@ -9,6 +9,7 @@ import {
   trackAdUnitClick,
 } from "@/lib/analytics";
 import { viewportBucket } from "@/lib/vitalsAttribution";
+import { canRequestLiveAds } from "@/lib/liveAds";
 
 const CLIENT_ID = "ca-pub-2873403048341290";
 // 라벨("광고 (Sponsored)") 높이 — 컨테이너 예약 높이에 포함해 <ins> 지연 마운트 때 아래 콘텐츠가 ~20px 밀리지 않게 한다 (2026-09-11).
@@ -97,7 +98,7 @@ function AdSlot({
 
   // Lazy load: viewport 진입 시에만 광고 마운트 → CLS↓ viewability↑
   useEffect(() => {
-    if (!slot || !containerRef.current || !allowed) return;
+    if (!slot || !containerRef.current || !allowed || !canRequestLiveAds()) return;
     if (typeof IntersectionObserver === "undefined") {
       setVisible(true);
       return;
@@ -146,7 +147,7 @@ function AdSlot({
   }, [visible, slot, slotKind, pathname]);
 
   useEffect(() => {
-    if (!visible || pushed.current || !slot || !allowed) return;
+    if (!visible || pushed.current || !slot || !allowed || !canRequestLiveAds()) return;
     const ins = containerRef.current?.querySelector("ins.adsbygoogle[data-ad-slot]");
     if (!ins || ins.getAttribute("data-ad-slot") !== slot) return;
     pushed.current = true;
