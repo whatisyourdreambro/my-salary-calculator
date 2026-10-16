@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node scripts/qa-server.mjs dev",
     "prebuild": "tsx scripts/gen-guides-meta.ts && tsx scripts/gen-site-metrics.ts && tsx scripts/gen-salary-amounts.ts && tsx scripts/gen-season-key.ts && node scripts/ad-audit.mjs",
     "build": "next build",
     "start": "next start",
@@ -20,11 +20,25 @@
     "verify:bonus": "node scripts/verify-bonus-data.mjs",
     "verify:autoads": "node scripts/verify-autoads-paths.mjs",
     "verify:payload": "node scripts/payload-budget.mjs --next .next",
-    "qa:crawl": "tsx scripts/qa-crawl.ts",
+    "qa:dev": "node scripts/qa-server.mjs dev",
+    "qa:build": "node scripts/qa-server.mjs build",
+    "qa:start": "node scripts/qa-server.mjs start",
+    "qa:run": "node scripts/qa-run.mjs",
+    "qa:lighthouse": "node scripts/qa-lighthouse.mjs",
+    "qa:safety": "node scripts/verify-qa-safety.mjs && node --test scripts/__tests__/qa-safety.test.mjs scripts/__tests__/qa-entrypoints.test.mjs scripts/__tests__/qa-production-http.test.mjs scripts/__tests__/qa-production-http-ts.test.mjs && vitest run src/lib/__tests__/liveAds.test.ts src/lib/__tests__/liveServices.test.ts src/lib/__tests__/captureElement.test.ts",
+    "qa:crawl": "node scripts/qa-run.mjs scripts/qa-crawl.ts",
     "qa:quality": "node scripts/qa-page-quality.mjs",
     "qa:share": "node scripts/qa-share-coverage.mjs",
-    "qa:english": "tsx scripts/qa-english.ts",
-    "ad-depth": "node scripts/ad-depth-audit.mjs"
+    "qa:english": "node scripts/qa-run.mjs scripts/qa-english.ts",
+    "ad-depth": "node scripts/qa-run.mjs scripts/ad-depth-audit.mjs",
+    "cf:build": "node scripts/build-production-worker.mjs",
+    "cf:verify": "node scripts/verify-production-worker.mjs",
+    "qa:cf:build": "node scripts/qa-cloudflare.mjs build",
+    "qa:cf:start": "node scripts/qa-cloudflare.mjs start",
+    "qa:cf:check": "node scripts/qa-cloudflare.mjs check",
+    "qa:cf:http": "node scripts/qa-cloudflare-http.mjs",
+    "verify:framework-security": "node scripts/verify-framework-security.mjs",
+    "postinstall": "node scripts/patch-next-og-selector.cjs && node scripts/verify-vendored-dependencies.mjs"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.8",
@@ -36,32 +50,49 @@
     "framer-motion": "^12.23.24",
     "html2canvas": "^1.4.1",
     "lucide-react": "^0.544.0",
-    "next": "^14.2.35",
+    "next": "15.5.28",
     "next-themes": "^0.4.6",
-    "react": "^18",
+    "react": "19.3.1",
     "react-countup": "^6.5.3",
-    "react-dom": "^18",
+    "react-dom": "19.3.1",
+    "react-is": "19.3.1",
     "recharts": "^3.2.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@next/bundle-analyzer": "^15.5.3",
+    "@next/bundle-analyzer": "15.5.28",
+    "@opennextjs/cloudflare": "1.20.12",
     "@tailwindcss/typography": "^0.5.19",
     "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
     "autoprefixer": "^10.4.21",
-    "eslint": "^8",
-    "eslint-config-next": "^14.2.35",
+    "eslint": "9.39.5",
+    "eslint-config-next": "15.5.28",
     "playwright-core": "^1.63.0",
-    "postcss": "^8.5.6",
+    "postcss": "8.5.30",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.23.12",
     "typescript": "^5",
-    "vite-tsconfig-paths": "^6.1.1",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.11",
+    "wrangler": "4.151.1",
+    "braces": "file:vendor/braces-3.0.3-moneysalary.1.tgz"
+  },
+  "engines": {
+    "node": ">=22.0.0 <23"
+  },
+  "overrides": {
+    "next": {
+      "postcss": "8.5.30"
+    },
+    "postcss-selector-parser": "7.1.6",
+    "braces": "$braces",
+    "glob": "13.0.6",
+    "cloudflare": {
+      "formdata-node": "6.0.3"
+    }
   }
 }

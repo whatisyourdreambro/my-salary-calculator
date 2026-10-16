@@ -57,9 +57,13 @@ async function getJson(url: string): Promise<unknown> {
   console.log(`[fetch ${calls}] ${redact(url)}`);
   let res: Response;
   try {
-    res = await fetch(url, { headers: { "User-Agent": "moneysalary-snapshot/1.0 (+https://www.moneysalary.com)" } });
+    res = await fetch(url, {
+      headers: { "User-Agent": "moneysalary-snapshot/1.0 (+https://www.moneysalary.com)" },
+      signal: AbortSignal.timeout(15000),
+      redirect: "error",
+    });
   } catch (e) {
-    throw new NetworkError(`요청 실패: ${redact(url)} — ${String(e).slice(0, 120)}`);
+    throw new NetworkError(`요청 실패: ${redact(url)} — ${redact(String(e)).slice(0, 120)}`);
   }
   if (!res.ok) throw new NetworkError(`HTTP ${res.status}: ${redact(url)}`);
   try {

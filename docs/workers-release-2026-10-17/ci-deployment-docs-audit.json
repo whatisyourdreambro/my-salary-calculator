@@ -1,0 +1,284 @@
+{
+  "date": "2026-10-17",
+  "recordedAt": "2026-10-16T17:03:52.873Z",
+  "scope": "Release-worktree local CI/deployment documentation review. Later parent authorization expanded this from JSON-only reporting to six documentation corrections. No runtime/config/workflow/package edits by this reviewer.",
+  "releaseStatus": {
+    "productionConfiguration": "Prepared locally for moneysalary with production routes and existing D1 binding",
+    "authentication": "Pending at review time, as reported by release coordinator",
+    "uploads": 0,
+    "routeActivations": 0,
+    "deployments": 0,
+    "source": "Local declarations and parent progress; remote account state was not queried by this reviewer"
+  },
+  "coverage": {
+    "fullContentReviewed": [
+      {
+        "file": "AGENTS.md",
+        "sha256": "ac97f40b87e5a78580a50f146e6c72467f8e89ec1c2c5209217265c00c07e44e"
+      },
+      {
+        "file": "README.md",
+        "sha256": "fe7a6cc236a6ac54f64241285075ecfc7b8a2c48e9fcfcb616f397b3a530fcb0"
+      },
+      {
+        "file": "package.json",
+        "sha256": "e29a4c45a624300d81c296a90ed08c23050cf58ce62d46949912c37fe37ee5ba"
+      },
+      {
+        "file": ".github/workflows/ci.yml",
+        "sha256": "b9a2062bf807b23be17c373c49be8895cffb2a9de65d6f930ab839fa2a15c66c"
+      },
+      {
+        "file": ".github/workflows/lighthouse.yml",
+        "sha256": "65b0e26eaef8a802d18ef1f24776e0e25b4b9a4de6fd9c6e80dcb5562bd6f47c"
+      },
+      {
+        "file": ".github/workflows/cf-purge.yml",
+        "sha256": "0631af7e256128e4bc7ef301992e99600ffa549b1c47e3438d10a22b82cf1a11"
+      },
+      {
+        "file": "wrangler.jsonc",
+        "sha256": "53e669256a7ee04f9199cefaa1d9cd095690f0618538313955eda47ed21ed785"
+      },
+      {
+        "file": "wrangler.qa.jsonc",
+        "sha256": "20c4823a9b3551a9db91996e8724b3904c47e672b0c4943c7aec58df7f1046e4"
+      },
+      {
+        "file": "scripts/cf-purge-after-deploy.mjs",
+        "sha256": "d826c447184d8b24914c80af9a75a5419b9a266cdcd4e4026dbe92573f2481d4"
+      },
+      {
+        "file": "scripts/lib/cf-worker-release.mjs",
+        "sha256": "100222c5e5bc587b5d204a3934681f92b9974574dfd73d7d6678c3a700ae4275"
+      },
+      {
+        "file": "scripts/qa-cloudflare.mjs",
+        "sha256": "409cf30fd3fc6ebbaebf77b04cf6ca8fa615f182c434478013775be3bfb3364a"
+      },
+      {
+        "file": "scripts/qa-server.mjs",
+        "sha256": "f510126c283f5949c98349127c46d069cd0fac9b3e282dbd1764046b7fb089a3"
+      },
+      {
+        "file": "docs/adsense-test-traffic.md",
+        "sha256": "3c3af51536d1cc6ef555bef5e9b4754dadf6d1d873674096d15fc1963825f275"
+      }
+    ],
+    "selectedSectionsReviewed": [
+      {
+        "file": "docs/contact-operations.md",
+        "sections": "Runtime and deployment transition/rollback sections; referenced acceptance limitations",
+        "sha256": "854761bb8e64c57f6ecb3a4ae38effe7cb4654c1c36a948709e8ab657885b054"
+      },
+      {
+        "file": "docs/feedback-operations.md",
+        "sections": "Deployment/binding introduction and matched operations references",
+        "sha256": "0f6205f0f507186e6c98c153e9d4a87cbcceb4f8897cd45e6136429de0d1db02"
+      },
+      {
+        "file": "docs/operator-console-pack.md",
+        "sections": "Top migration notice; rebuild rule; lines 145-169 before edit; deployment-pattern matches",
+        "sha256": "4bb2c64a56b6c19de43a55356770da8d70ffb5a938c3c0d4cde0bddd0776ee75"
+      },
+      {
+        "file": "docs/trend-publishing-runbook.md",
+        "sections": "Opening prerequisites; publishing/build references; Purge and rollback sections; deployment troubleshooting row",
+        "sha256": "0e42cd50f8ecfbf3d97cc374483ca191c015ed1d39f6aa2fad9658a9ab6f5bcb"
+      },
+      {
+        "file": "scripts/indexnow-ping.mjs",
+        "sections": "Header contract, capture/submit functions 154-223, main 225-237, CLI 310-338",
+        "sha256": "a323edae209e047a5f3bff33b2503cb197a8a4c1a64627f682421f459b0cf87f"
+      },
+      {
+        "file": "scripts/health-check.mjs",
+        "sections": "Non-rendering fetchPage entry 147-160 and invocation references",
+        "sha256": "2f5837af93bc3787f984120b8bed529b28267acc54b17b817893e50a40a3c883"
+      },
+      {
+        "file": "docs/workers-release-2026-10-17/workers-deployment-readiness.json",
+        "sections": "Conclusion, findings and remainingReleaseChecks fields",
+        "sha256": "955aa5ef3f7ab90c0002af26cf3b6433d07249dd552c2e5e7da72ada87e8f348"
+      },
+      {
+        "file": "docs/workers-release-2026-10-17/merged-runtime-review.json",
+        "sections": "Status, findings and limitations fields",
+        "sha256": "df1ac5bc4513e963ace1f8c0fa251632e6257b0ad18c49cc291ef3e325468ceb"
+      }
+    ],
+    "discovery": "rg filename/content searches across .github, README and docs deployment/Cloudflare references. Historical revenue/growth documents were classified as historical and not exhaustively line-reviewed.",
+    "excluded": [
+      "No secrets/env files, credential stores, private database rows or remote account settings inspected",
+      "No full re-review of all unit-test bodies or new worker-entry implementation; peer/runtime reviewers own those paths",
+      "No publisher HTTP/browser, Cloudflare control-plane request or GitHub remote mutation"
+    ]
+  },
+  "workflowContracts": [
+    {
+      "workflow": ".github/workflows/ci.yml",
+      "trigger": "push main / pull_request",
+      "job": "verify",
+      "build": "npm run qa:cf:build",
+      "packaging": "npm run qa:cf:check (Wrangler --dry-run only)",
+      "localChecks": "qa:cf:start --port 3000 binds loopback; BASE_URL=http://127.0.0.1:3000; QA crawler/English/Worker HTTP checks use the prepared ad-free output",
+      "deploys": false,
+      "notes": "Preserves tests, security verifier, QA network safety, script tests, tax/site/company/sitemap/bonus/ad gates, lint and bundle/HTML/quality checks. Green verify is not publication."
+    },
+    {
+      "workflow": ".github/workflows/ci.yml",
+      "trigger": "schedule / workflow_dispatch",
+      "job": "health",
+      "build": null,
+      "behavior": "Production document HTTP checks via fetchProductionQaDocument; no browser/returned JavaScript execution. One retry after five minutes.",
+      "deploys": false,
+      "notes": "This is the explicit non-local health exception; manual ci dispatch does not run verify. It was not executed during this review."
+    },
+    {
+      "workflow": ".github/workflows/lighthouse.yml",
+      "trigger": "push main / pull_request / workflow_dispatch",
+      "build": "npm run qa:build",
+      "measurement": "npm run qa:lighthouse after qa:safety, using local ad-free Next output",
+      "deploys": false,
+      "notes": "Laboratory Next measurements, not proof of deployed Worker CPU/performance or live advertising."
+    },
+    {
+      "workflow": ".github/workflows/cf-purge.yml",
+      "trigger": "push main / workflow_dispatch",
+      "behavior": "Select Pages(default) or Workers, verify target deployment, then external zone-cache purge",
+      "deploys": false,
+      "notes": "This workflow is intentionally a post-deployment mutation, not local QA and not a publishing job. No run was dispatched here."
+    }
+  ],
+  "workersPurge": {
+    "selection": "inputs.target || vars.CF_DEPLOY_TARGET || pages; worker_name input || vars.CF_WORKER_NAME",
+    "automaticIdentity": "CF_RELEASE_TAG defaults to GitHub SHA, which must exactly match the upload annotation workers/tag",
+    "manualIdentity": "workflow_dispatch Workers runs require full expected_version_id; release_tag must match that version",
+    "checks": [
+      "Named Worker deployments[0] has percentage strategy and one version at exactly 100%",
+      "Version metadata ID matches candidate and workers/tag equals exact release tag",
+      "Read deployments again after version lookup to reject changed activation",
+      "After settle, pin exact version and original deployment ID; reverify before every purge retry",
+      "Incomplete Workers configuration fails closed; missing Pages credentials can still yield a successful skip"
+    ],
+    "limits": [
+      "Control-plane identity is not proof that production hostname routes point to that Worker",
+      "Does not validate app health, D1 data reception, cache key behavior or artifact/source equivalence beyond the release tag contract",
+      "No API can lock deployment against a change immediately after the final read",
+      "Pages rollback mode recognizes a successful matching commit; it does not restore routing or prove that commit is currently selected"
+    ],
+    "remoteSettingsVerified": false
+  },
+  "findings": [
+    {
+      "id": "DOC-CONFIG",
+      "status": "corrected",
+      "detail": "Contact/feedback docs claimed a draft Worker with no routes/D1; updated to prepared production declarations, separate QA config and unverified remote installation."
+    },
+    {
+      "id": "DOC-POSTDEPLOY",
+      "status": "corrected",
+      "detail": "Pages-only Purge/IndexNow explanations replaced with current Workers target/tag/version verification, capture-before-cutover and submit-after-activation/route/purge contract."
+    },
+    {
+      "id": "DOC-AUTO-PUBLISH",
+      "status": "corrected-prerequisites-still-pending",
+      "detail": "Main push and old Pages/brief publisher instructions could imply automatic Workers publication. Docs now require disabling Pages auto-deploy and source publishers before merge/push; resolving queued Pages builds; preserving rollback; verifying a functioning Workers publication path before publishers resume."
+    },
+    {
+      "id": "DOC-QA",
+      "status": "corrected",
+      "detail": "adsense-test-traffic.md previously allowed local or preview inspection; updated to AGENTS loopback-only browser rule and guarded wrappers."
+    },
+    {
+      "id": "DOC-README",
+      "status": "corrected",
+      "detail": "Boilerplate Vercel deployment and localhost:3000 instructions replaced with current loopback ports, QA/production distinction, prepared-not-deployed state and runbook links."
+    },
+    {
+      "id": "DOC-MISSING-INVENTORY",
+      "status": "corrected",
+      "detail": "Missing deployment-transition.json links in current operational docs replaced by current audit; older draft inventories are identified as historical rather than current receipts."
+    },
+    {
+      "id": "CI-PUBLISH-GAP",
+      "status": "release-prerequisite",
+      "detail": "No Workers publishing job exists among the three workflows. Existing external Pages Git integration and queued deployments cannot be inferred from local files. Disable/verify those before migration push; configure an authorized manual or automatic Workers publishing path."
+    },
+    {
+      "id": "CI-OLD-COMMENTS",
+      "status": "informational-unmodified",
+      "detail": "ci.yml Pages-independent-build comment and cf-purge header comments about all missing credentials skipping are historical. Actual Workers code fails on missing settings and checks activation. These comments were not changed because this review was limited to docs."
+    }
+  ],
+  "rollbackRequirements": [
+    "Retain known-good Pages deployment/commit, project, DNS/custom domains, and pre-cutover Worker route mapping",
+    "First-cutover rollback restores/removes only changed Worker routes after confirming retained Pages origin; do not delete Pages or drop/recreate D1",
+    "After actual Pages routing restoration, dispatch target=pages with intended release_sha and verify purge rather than treating successful skip as completion",
+    "Later Worker rollback uses a known-good immutable version at 100%, exact tag/version verification and Workers-mode purge",
+    "Retain IndexNow manifest+receipt; do not re-submit an ambiguous attempt or reuse it for another release"
+  ],
+  "remainingReleaseActions": [
+    "Authenticate and verify intended account permissions without exposing credentials",
+    "Disable existing Pages production auto-deploy and resolve queued builds before main merge/push",
+    "Confirm source publishers disabled and establish working Workers publication contract before resuming them",
+    "Verify repository Workers purge variables/secret scopes and exact SHA/tag or manual-version contract",
+    "Build fresh ordinary-visitor artifact from approved source, preserve current guarded worker-entry wrapper, populate cache/assets and pass artifact integrity/budget checks",
+    "Verify Worker plan/CPU budget, existing D1 binding/schema/secret and public hostname routing independently",
+    "Activate intended immutable version, verify route/application state, purge, then submit captured IndexNow delta once",
+    "Update release status in docs only after actual activation evidence exists"
+  ],
+  "verification": {
+    "docDiffCheck": "git diff --check on the six edited docs passed",
+    "testsRun": false,
+    "reason": "Documentation-only changes; existing runtime tests/build belong to release coordinator. No extra heavy suites or network checks were run."
+  },
+  "isolation": {
+    "publisherHttpRequests": 0,
+    "browserRequests": 0,
+    "adRequests": 0,
+    "cloudflareApiCalls": 0,
+    "githubRemoteMutations": 0,
+    "deployments": 0,
+    "secretValuesRead": 0
+  },
+  "documentationChanges": [
+    {
+      "file": "docs/contact-operations.md",
+      "beforeSha256": "b3ab0786e87f594568e6d33cbf023c68f0c2131de48250fecb2505fe430e4dba",
+      "backup": ".artifacts/workers-release-2026-10-17/ci-docs-before/docs/contact-operations.md",
+      "afterSha256": "854761bb8e64c57f6ecb3a4ae38effe7cb4654c1c36a948709e8ab657885b054"
+    },
+    {
+      "file": "docs/feedback-operations.md",
+      "beforeSha256": "406f697dbf5f9075440c949dd9e377326167471e07ef415e6c4e452a9410b799",
+      "backup": ".artifacts/workers-release-2026-10-17/ci-docs-before/docs/feedback-operations.md",
+      "afterSha256": "0f6205f0f507186e6c98c153e9d4a87cbcceb4f8897cd45e6136429de0d1db02"
+    },
+    {
+      "file": "docs/operator-console-pack.md",
+      "beforeSha256": "d06e09adcd82a26595d132ddab4459dd51f83771e62954a19b35902565be39dc",
+      "backup": ".artifacts/workers-release-2026-10-17/ci-docs-before/docs/operator-console-pack.md",
+      "afterSha256": "4bb2c64a56b6c19de43a55356770da8d70ffb5a938c3c0d4cde0bddd0776ee75"
+    },
+    {
+      "file": "docs/trend-publishing-runbook.md",
+      "beforeSha256": "8a637c6559fbb557b11d8c261dadb0411026dc41ef9d0b631a6a16f8f2957eb8",
+      "backup": ".artifacts/workers-release-2026-10-17/ci-docs-before/docs/trend-publishing-runbook.md",
+      "afterSha256": "0e42cd50f8ecfbf3d97cc374483ca191c015ed1d39f6aa2fad9658a9ab6f5bcb"
+    },
+    {
+      "file": "README.md",
+      "beforeSha256": "f8200c52944500a92b5706b4d11aa12ec39f492bd6fc764446875038673052e1",
+      "backup": ".artifacts/workers-release-2026-10-17/ci-docs-before/README.md",
+      "afterSha256": "fe7a6cc236a6ac54f64241285075ecfc7b8a2c48e9fcfcb616f397b3a530fcb0"
+    },
+    {
+      "file": "docs/adsense-test-traffic.md",
+      "beforeSha256": "096d6929860d1a6827c852afedabb7886da23190ec5553a51ecbdf2b815998a8",
+      "backup": ".artifacts/workers-release-2026-10-17/ci-docs-before/docs/adsense-test-traffic.md",
+      "afterSha256": "3c3af51536d1cc6ef555bef5e9b4754dadf6d1d873674096d15fc1963825f275"
+    }
+  ],
+  "backupManifest": ".artifacts/workers-release-2026-10-17/ci-docs-before/manifest.json"
+}

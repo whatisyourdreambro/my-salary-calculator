@@ -48,7 +48,7 @@ export default function PayStubGenerator() {
  const element = payStubRef.current;
  if (!element) return;
 
- const { default: html2canvas } = await import("html2canvas");
+ const { default: html2canvas } = await import("@/lib/captureElement");
  html2canvas(element, {
  backgroundColor: null,
  scale: 2,

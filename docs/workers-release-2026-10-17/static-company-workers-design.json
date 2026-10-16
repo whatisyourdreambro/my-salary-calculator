@@ -1,0 +1,108 @@
+{
+  "date": "2026-10-17",
+  "mode": "Read-only design review. No implementation, configuration change, deployment, publisher request or browser execution.",
+  "recommendation": "Do not transplant the legacy Pages shortcut or enable global cache interception merely to fit Free CPU. Establish plan/CPU needs first. A narrow build-verified company HTML shortcut is feasible but does not make dynamic routes, RSC, quota or memory limits disappear. Keep the current validated route semantics until a separate implementation and parity gate are approved.",
+  "alternatives": [
+    {
+      "option": "Existing OpenNext path, appropriate Workers plan",
+      "benefit": "Preserves adapter-owned middleware, Next routing, response semantics and RSC handling with the smallest release delta.",
+      "cost": "Every HTML request may still enter Worker/NextServer; actual CPU and request volume must be assessed. Paid does not increase 128MB memory."
+    },
+    {
+      "option": "OpenNext enableCacheInterception",
+      "benefit": "Installed adapter resolves route ownership and can serve cached HTML/RSC/route bodies after routing middleware, avoiding NextServer import.",
+      "risk": "Global rather than company-only; it parses full JSON cache entries and hashes response bodies. Current default merges next.config headers after middleware headers, and later applies those headers to cache results. /guides?q= private/no-store and English/general404 no-store require specific parity proof before any enablement. No CPU guarantee.",
+      "evidence": [
+        "node_modules/@opennextjs/aws/dist/core/routingHandler.js:102",
+        "node_modules/@opennextjs/aws/dist/core/routingHandler.js:183",
+        "node_modules/@opennextjs/aws/dist/core/routing/cacheInterceptor.js:27",
+        "src/middleware.ts:58"
+      ]
+    },
+    {
+      "option": "Narrow custom company HTML shortcut",
+      "benefit": "Can stream the exact build-produced HTML from a private asset path without runtime Next page loading, JSON parsing or per-request HTML hashing.",
+      "risk": "Must duplicate a carefully pinned subset of policy before bypassing middleware, or integrate after adapter middleware through version-sensitive internals. Strict cookie/RSC exclusions reduce hit coverage; Samsung calculator/OG/share/API traffic remains unaffected. This is optimization, not evidence of Free-plan compatibility."
+    }
+  ],
+  "legacyNotReusableAsIs": [
+    "static-company-entrypoint imports next-on-pages/fetch-handler and a .vercel contract, while Workers uses .open-next/worker.js and ASSETS.",
+    "The generator expects .vercel/output/config.json and public <path>.html/<path>.rsc. OpenNext stores serialized .cache entries under cdn-cgi/_next_cache/<buildId>.",
+    "Next15.5.28 uses scoped cache keys route-cache/APP_PAGE/<ownerSHA256>/$/<pathname>; constructing old <pathname>.cache paths is incorrect. Derive ownership from the exact emitted build manifest/cache meta and validate it.",
+    "Legacy expected asset headers and Vary omit current Next-Router-Segment-Prefetch and Next-Url. Build/runtime response header parity must be re-established, including CSP.",
+    "Existing reviewed-source hashes intentionally fail on the current changed middleware/config. Do not update the hashes merely to bypass review."
+  ],
+  "proposedNarrowContract": {
+    "buildGate": [
+      "Only prerender routes whose owner is exactly /salary-db/[id]/page, initialRevalidateSeconds false, status200, complete HTML+RSC, and no PPR/fallback/redirect/custom response variation. Exclude every ambiguous entry.",
+      "Emit exact HTML bytes from the matching final build into a reserved /cdn-cgi/msy-static-company/<buildId>/<opaque-id>.html asset. Do not put app HTML at its public route path because assets-first routing would bypass middleware for all requests, including RSC.",
+      "Generate an allowlist mapping pathname to private asset, build-ID, HTML hash/size and approved response headers. Validate source/lock/config/middleware hashes and build identity together; no hand-written list of known company slugs.",
+      "Keep the ordinary OpenNext incremental cache and main handler for every noneligible request. Populate and release both private fast assets and adapter cache atomically with the same version.",
+      "Build-time QA/production markers must match their artifact; exact HTML byte reuse preserves normal visitor client ad guards and does not execute/load ads during inspection."
+    ],
+    "requestGate": [
+      "Exact canonical https origin and host; GET or HEAD only; exact allowlisted pathname without encoded/slash-normalized aliases; initially no query or only a reviewed set of tracking parameters.",
+      "Fail to normal handler for cookie, authorization, range, conditionals, request cache bypass directives, RSC, next-action, prefetch/purpose, all Next/middleware/prerender transport headers, content-type or unknown variant headers.",
+      "Preserve allowlist-before-denylist UA policy, canonical redirect and bot403 semantics through shared/pinned code. Unknown or changed policy must disable the optimization.",
+      "Use env.ASSETS only for the fixed build-owned path; never fetch a user URL or construct a live same-zone request. No POST/read-body behavior belongs in the HTML shortcut.",
+      "Accept only expected200 HTML asset response without set-cookie; stream unchanged bytes; HEAD has null body. Strip internal transport headers and attach validated Next/security/cache/Vary headers. Unexpected asset response/error falls back after cancellation."
+    ],
+    "parityGate": [
+      "Offline mocked ASSETS tests for every gate, cold/invalid cache, byte-exact HTML, HEAD semantics, immutable version mapping and fallback behavior.",
+      "Ad-free isolated Worker baseline/candidate HTTP comparisons for all allowlisted company routes: status, meaningful headers, bytes, embedded build/chunk references; no JavaScript execution.",
+      "Negative matrix: RSC1, segment prefetch, next-action, POST/OPTIONS, cookies/auth, each conditional/range, encoded paths, unknown queries, non-www, allowed/denied/missing UA, redirects, nonexistent company, query-private guides, English404, widgets and both private APIs.",
+      "Measure isolated code CPU as engineering evidence and actual authorized Worker CPU separately; wall time does not equal CPU. Test dynamic routes as well before claiming Free compatibility."
+    ]
+  },
+  "newAdapterBodyBoundary": {
+    "conclusion": "A pre-handler full-body buffer is newly present relative to the available historical Pages artifact. Exact current production-byte comparison remains unavailable.",
+    "newSource": "node_modules/@opennextjs/aws/dist/overrides/converters/edge.js:19-23: non-GET/HEAD uses Buffer.from(await event.arrayBuffer()) before app handler.",
+    "previousEvidence": [
+      {
+        "file": "C:\\dev\\moneysalary\\my-salary-calculator\\.vercel\\output\\static\\_worker.js\\index.js",
+        "sha256": "e52d14ea5a1743f2e26f771480f456f02740371b750689252e18ab0b7303f061",
+        "bytes": 2579439,
+        "modified": "2026-09-26T00:53:04.042Z"
+      },
+      {
+        "file": "C:\\dev\\moneysalary\\my-salary-calculator\\.vercel\\output\\static\\_worker.js\\__next-on-pages-dist__\\functions\\api\\contact.func.js",
+        "sha256": "a20e0829bb5a4d971754daa8675ab0a1ee94a5e1aee8f992348106d2a6bb8861",
+        "bytes": 44459,
+        "modified": "2026-09-26T00:53:01.947Z"
+      },
+      {
+        "file": "C:\\dev\\moneysalary\\my-salary-calculator\\.vercel\\output\\static\\_worker.js\\__next-on-pages-dist__\\functions\\api\\feedback.func.js",
+        "sha256": "98164d7cc4934532a2140558ea513ac65703a8151dd625dbee8e4a29b00ff7de",
+        "bytes": 44846,
+        "modified": "2026-09-26T00:53:01.949Z"
+      }
+    ],
+    "previousTrace": [
+      {
+        "file": "index.js",
+        "offset": 2564451,
+        "observation": "D(e) creates new Request(e,{headers}) without consuming its body."
+      },
+      {
+        "file": "index.js",
+        "offset": 2565914,
+        "observation": "k() constructs new Request(l,a) and invokes the route default with the stream-bearing Request."
+      },
+      {
+        "file": "__next-on-pages-dist__/functions/api/contact.func.js",
+        "offset": 13753,
+        "observation": "Next edge wrapper passes body:r.body into the handler; contact getReader at offset7387 stops above4096bytes."
+      },
+      {
+        "file": "__next-on-pages-dist__/functions/api/feedback.func.js",
+        "offset": 8393,
+        "observation": "Feedback getReader stops above1024bytes."
+      }
+    ],
+    "distinction": "Historical artifact mtime is2026-09-26. It is concrete former generated-code evidence, not a checksum assertion about the 2026-10-15 live Pages deployment. Imported helper arrayBuffer occurrences inspected were outgoing fetch/cache or test-proxy paths, not an unconditional inbound request buffer.",
+    "impact": "App storage and JSON validation remain bounded, but large/chunked bodies can allocate memory before those guards. 128MB Worker memory is unchanged by upgrading the plan.",
+    "proposedMitigation": "Before activation, bound both private POST bodies before the OpenNext converter, with exact route policy and bounded byte reading even when Content-Length is missing or false. On overflow cancel and return existing private/no-store error contract. If implemented in a custom entry, preserve request metadata/Cloudflare context for accepted requests; verify null body, UTF8 byte count, malformed length, encodings, slow/error streams and proxy-normalized aliases. Do not assume a header-only limit is sufficient.",
+    "implementationStatus": "Subsequently implemented by explicit parent request; see worker-body-boundary.json. Company HTML fastpath remains unimplemented."
+  },
+  "boundary": "This report uses only local source and historical artifact reads. No new web or control-plane request was made during this design review."
+}

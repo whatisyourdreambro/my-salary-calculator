@@ -113,14 +113,23 @@ const calculateFireDate = (inputs: FireInputs, lifeEvents: LifeEvent[]) => {
 
  const inflationRate = 0.02; // 2%
  const annualReturnRate =
- (parseFloat(customReturn) || strategyReturns[investmentStrategy]) / 100;
+ (customReturn.trim() === "" ? strategyReturns[investmentStrategy] : Number(customReturn)) / 100;
  const annualSalaryGrowth = parseFloat(salaryGrowthRate) / 100;
  const safeWithdrawalRate = parseFloat(withdrawalRate) / 100;
+ const age = Number(currentAge);
+ const moneyInputs = [currentSavings, monthlySavings, monthlySpending, retirementIncome];
+ if (!currentAge.trim() || !Number.isInteger(age) || age < 0 || age > 120
+   || !Number.isFinite(annualReturnRate) || annualReturnRate <= -1
+   || !Number.isFinite(annualSalaryGrowth) || annualSalaryGrowth < -1
+   || !Number.isFinite(safeWithdrawalRate) || safeWithdrawalRate <= 0 || safeWithdrawalRate > 1
+   || moneyInputs.some(value => !value.trim() || !Number.isFinite(parseNumber(value)) || parseNumber(value) < 0)
+   || lifeEvents.some(event => !Number.isInteger(event.year) || event.year < 1 || event.year > 100
+     || !event.amount.trim() || !Number.isFinite(parseNumber(event.amount)) || parseNumber(event.amount) < 0)) return null;
 
  // Target Amount = (Annual Spending - Annual Pension) / Withdrawal Rate
  const annualSpending = parseNumber(monthlySpending) * 12;
  const annualPension = parseNumber(retirementIncome) * 12;
- const targetAmount = (annualSpending - annualPension) / safeWithdrawalRate;
+ const targetAmount = Math.max(0, annualSpending - annualPension) / safeWithdrawalRate;
 
  // Coast FIRE Target: Amount needed NOW to grow to Target Amount by age 65 without further contributions
  // 목표액은 65세 시점 기준이어야 한다 — 메인 루프가 매년 currentTargetAmount 를
@@ -132,7 +141,8 @@ const calculateFireDate = (inputs: FireInputs, lifeEvents: LifeEvent[]) => {
  const coastFireTarget = targetAmountAt65 / Math.pow(1 + annualReturnRate, yearsTo65);
 
  // Barista FIRE Target: Target Amount if you cover 50% of expenses with part-time work
- const baristaTargetAmount = (annualSpending * 0.5 - annualPension) / safeWithdrawalRate;
+ const baristaTargetAmount = Math.max(0, annualSpending * 0.5 - annualPension) / safeWithdrawalRate;
+ if (![targetAmount, coastFireTarget, baristaTargetAmount].every(Number.isFinite)) return null;
 
  if (parseNumber(currentSavings) >= targetAmount) {
  return {
@@ -150,7 +160,6 @@ const calculateFireDate = (inputs: FireInputs, lifeEvents: LifeEvent[]) => {
  let currentMonthlySavings = parseNumber(monthlySavings);
  let totalContributions = parseNumber(currentSavings);
  let years = 0;
- const age = parseInt(currentAge, 10);
 
  let currentTargetAmount = targetAmount;
 
@@ -176,7 +185,8 @@ const calculateFireDate = (inputs: FireInputs, lifeEvents: LifeEvent[]) => {
  currentTargetAmount *= 1 + inflationRate; // Target grows with inflation
  }
 
- const finalYears = years >= 100 ? Infinity : years;
+ if (![futureValue, currentTargetAmount, totalContributions, coastFireTarget, baristaTargetAmount].every(Number.isFinite)) return null;
+ const finalYears = futureValue < currentTargetAmount ? Infinity : years;
  return {
  yearsToFire: finalYears,
  finalAge: finalYears === Infinity ? Infinity : age + finalYears,
@@ -271,6 +281,7 @@ export default function FireCalculatorPage() {
  setInputs((prev) => ({ ...prev, [field]: value as FireInputs[typeof field] }));
  };
 
+ const result = useMemo(() => calculateFireDate(inputs, lifeEvents), [inputs, lifeEvents]);
  const {
  yearsToFire,
  finalAge,
@@ -279,10 +290,7 @@ export default function FireCalculatorPage() {
  totalReturns,
  coastFireTarget,
  baristaTargetAmount,
- } = useMemo(
- () => calculateFireDate(inputs, lifeEvents),
- [inputs, lifeEvents]
- );
+ } = result ?? { yearsToFire: Infinity, finalAge: 0, finalTargetAmount: 0, totalContributions: 0, totalReturns: 0, coastFireTarget: 0, baristaTargetAmount: 0 };
 
  useEffect(() => {
  if (step === 'result' && yearsToFire !== Infinity) {
@@ -311,7 +319,7 @@ export default function FireCalculatorPage() {
 
  const captureResultCanvas = async () => {
    if (!shareRef.current) return null;
-   const { default: html2canvas } = await import("html2canvas");
+   const { default: html2canvas } = await import("@/lib/captureElement");
    return html2canvas(shareRef.current, {
      scale: 2, useCORS: true, logging: false, windowWidth: 1024,
      onclone: (_document, element) => {
@@ -764,7 +772,14 @@ export default function FireCalculatorPage() {
  </motion.div>
  )}
 
- {step === "result" && (
+ {step === "result" && !result && (
+ <div className="w-full space-y-6 text-center" role="alert">
+ <p className="text-lg font-bold text-navy">입력값을 확인해 주세요.</p>
+ <p className="text-muted-blue">나이는 0~120세 정수, 금액은 0원 이상, 인출률은 0% 초과 100% 이하로 입력해 주세요. 빈 항목이나 너무 큰 값은 계산할 수 없습니다.</p>
+ <button type="button" onClick={() => setStep("essentials")} className="rounded-xl bg-primary px-6 py-3 font-bold text-white">입력 수정하기</button>
+ </div>
+ )}
+ {step === "result" && result && (
  <motion.div
  initial={{ opacity: 0, scale: 0.95 }}
  animate={{ opacity: 1, scale: 1 }}

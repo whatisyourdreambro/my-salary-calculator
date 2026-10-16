@@ -55,7 +55,7 @@ export default function SalaryTierCard({ annualSalary }: SalaryTierCardProps) {
  setIsDownloading(true);
 
  try {
- const { default: html2canvas } = await import("html2canvas");
+ const { default: html2canvas } = await import("@/lib/captureElement");
  const canvas = await html2canvas(cardRef.current, {
  scale: 2, // High quality
  backgroundColor: null,
@@ -76,7 +76,7 @@ export default function SalaryTierCard({ annualSalary }: SalaryTierCardProps) {
 
  const captureCardImage = async (): Promise<Blob | null> => {
  if (!cardRef.current) return null;
- const { default: html2canvas } = await import("html2canvas");
+ const { default: html2canvas } = await import("@/lib/captureElement");
  const canvas = await html2canvas(cardRef.current, {
  scale: 2,
  backgroundColor: null,

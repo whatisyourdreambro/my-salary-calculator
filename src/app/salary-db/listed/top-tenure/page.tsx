@@ -34,8 +34,8 @@ export default function TopTenurePage() {
         h1: `평균 근속연수 TOP ${topTenureRows.length}`,
         heroLead: (
           <>
-            직원들이 가장 오래 다니는 상장사 순위입니다. {DART_RANKING_YEAR} 사업보고서에 평균
-            근속연수를 공시한 상장사 {tenureEligibleCount.toLocaleString("ko-KR")}곳 기준이며,
+            직원들이 가장 오래 다니는 공시기업 순위입니다. {DART_RANKING_YEAR} 사업보고서에 평균
+            근속연수를 공시한 공시기업 {tenureEligibleCount.toLocaleString("ko-KR")}곳 기준이며,
             1위는 <strong className="text-navy">{top1.nameKo}</strong>(
             {fmtYears(top1.avgTenureYears)}, 평균연봉 {fmtManwon(top1.avgSalaryManwon)})입니다.
             평균 근속연수만으로 고용 안정성·복지 만족도를 판단할 수는 없습니다.
@@ -45,12 +45,12 @@ export default function TopTenurePage() {
         renderValue: (row) => fmtYears(row.avgTenureYears),
         // R2 B4 (2026-08-31) — 데이터 변수 기반 인용문 (하드코딩 금지)
         citation: {
-          quote: `${DART_RANKING_YEAR} 사업연도 DART 공시 기준 직원 평균 근속연수가 가장 긴 상장사는 ${top1.nameKo}(${fmtYears(top1.avgTenureYears)}, 공시 평균연봉 ${fmtManwon(top1.avgSalaryManwon)})다. 근속연수를 공시한 상장사 ${tenureEligibleCount.toLocaleString("ko-KR")}곳 기준.`,
+          quote: `${DART_RANKING_YEAR} 사업연도 DART 공시 기준 직원 평균 근속연수가 가장 긴 공시기업은 ${top1.nameKo}(${fmtYears(top1.avgTenureYears)}, 공시 평균연봉 ${fmtManwon(top1.avgSalaryManwon)})다. 근속연수를 공시한 공시기업 ${tenureEligibleCount.toLocaleString("ko-KR")}곳 기준.`,
           quoteId: "top-tenure-no1",
         },
         faqItems: [
           {
-            question: "평균 근속연수가 가장 긴 상장사는 어디인가요?",
+            question: "평균 근속연수가 가장 긴 공시기업은 어디인가요?",
             answer: `${DART_RANKING_YEAR} 공시 기준 ${top1.nameKo}로, 평균 근속 ${fmtYears(top1.avgTenureYears)}입니다 (평균연봉 ${fmtManwon(top1.avgSalaryManwon)}).`,
           },
           {
@@ -63,7 +63,7 @@ export default function TopTenurePage() {
           },
         ],
         methodologyExtra: `근속연수를 공시한 ${tenureEligibleCount.toLocaleString("ko-KR")}곳 기준입니다.`,
-        datasetName: `상장사 평균 근속연수 TOP ${topTenureRows.length} (${DART_RANKING_YEAR})`,
+        datasetName: `공시기업 평균 근속연수 TOP ${topTenureRows.length} (${DART_RANKING_YEAR})`,
         rows: topTenureRows,
       }}
     />

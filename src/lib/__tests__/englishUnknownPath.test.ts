@@ -4,17 +4,13 @@
 import { readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { NextRequest } from "next/server";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { EN_GUIDE_SLUGS } from "@/lib/enGuideSlugs";
 import { ENGLISH_TOOLS } from "@/lib/englishTools";
 import { ENGLISH_STATIC_PATHS, ENGLISH_UNAVAILABLE_PATH, isUnknownEnglishPath } from "@/lib/englishRouteGuard";
 
-// Cloudflare ASSETS 바인딩은 next-on-pages 의 process.env 프록시로만 존재 — 테스트에서 모듈을 대체
-const assetsMock = vi.hoisted(() => ({ fetcher: undefined as undefined | { fetch: (input: URL | string | Request) => Promise<Response> } }));
-vi.mock("@/lib/server/cloudflareAssets", () => ({ cloudflareAssets: () => assetsMock.fetcher }));
 import { middleware } from "../../middleware";
 
-const ENGLISH_404_HTML = "<!doctype html><html lang=\"en\"><head><meta name=\"robots\" content=\"noindex\"></head><body>This English page could not be found</body></html>";
 const request = (path: string) => new NextRequest(`https://www.moneysalary.com${path}`, { headers: { "user-agent": "Mozilla/5.0" } });
 
 function staticEnglishRoutesFromFs(): string[] {
@@ -64,51 +60,38 @@ describe("isUnknownEnglishPath", () => {
 });
 
 describe("middleware English 404 delivery", () => {
-  it("rewrites to the prerendered English 404 when no Cloudflare ASSETS binding exists (next dev/start)", async () => {
-    assetsMock.fetcher = undefined;
-    const response = await middleware(request("/en/nope-xyz"));
-    expect(response.headers.get("x-middleware-rewrite")).toBe(`https://www.moneysalary.com${ENGLISH_UNAVAILABLE_PATH}`);
-    expect(response.headers.get("x-robots-tag")).toBe("noindex, nofollow");
-    expect(response.headers.get("cache-control")).toBe("private, no-store");
-  });
-
-  it("serves the prerendered English 404 asset with a real 404 status on Cloudflare", async () => {
-    const requested: string[] = [];
-    assetsMock.fetcher = {
-      fetch: async (input) => {
-        const url = input instanceof Request ? input.url : String(input);
-        requested.push(new URL(url).pathname);
-        return new Response(ENGLISH_404_HTML, { status: 200, headers: { "content-type": "text/html; charset=utf-8" } });
-      },
-    };
-    const response = await middleware(request("/en/fun/anything"));
+  it.each(["/en/nope-xyz", "/en/guides/missing", "/en/tools/missing", "/en/fun/anything"])("rewrites %s through Next with a real 404 and private/noindex headers", async path => {
+    const response = middleware(request(path));
     expect(response.status).toBe(404);
-    expect(response.headers.get("content-type")).toContain("text/html");
+    expect(response.headers.get("x-middleware-rewrite")).toBe(`https://www.moneysalary.com${ENGLISH_UNAVAILABLE_PATH}`);
     expect(response.headers.get("x-robots-tag")).toBe("noindex, nofollow");
     expect(response.headers.get("cache-control")).toBe("private, no-store");
-    expect(response.headers.get("x-middleware-rewrite")).toBeNull();
-    expect(await response.text()).toContain("This English page could not be found");
-    expect(requested[0]).toBe(`${ENGLISH_UNAVAILABLE_PATH}.html`);
-    assetsMock.fetcher = undefined;
+    expect(await response.text()).toBe("");
   });
 
-  it("falls back to the rewrite when the asset binding cannot supply the page", async () => {
-    assetsMock.fetcher = { fetch: async () => new Response("nope", { status: 404 }) };
-    const response = await middleware(request("/en/nope"));
+  it("leaves RSC rendering to Next instead of substituting Pages-only HTML assets", async () => {
+    const req = new NextRequest("https://www.moneysalary.com/en/nope?_rsc=test", {
+      headers: { "user-agent": "Mozilla/5.0", RSC: "1" },
+    });
+    const response = middleware(req);
+    expect(response.status).toBe(404);
     expect(response.headers.get("x-middleware-rewrite")).toBe(`https://www.moneysalary.com${ENGLISH_UNAVAILABLE_PATH}`);
-    assetsMock.fetcher = { fetch: async () => { throw new Error("binding down"); } };
-    const errored = await middleware(request("/en/nope"));
-    expect(errored.headers.get("x-middleware-rewrite")).toBe(`https://www.moneysalary.com${ENGLISH_UNAVAILABLE_PATH}`);
-    assetsMock.fetcher = undefined;
+    expect(response.headers.get("content-type")).toBeNull();
+    expect(await response.text()).toBe("");
   });
 
-  it("does not touch known English pages or Korean pages", async () => {
-    assetsMock.fetcher = { fetch: async () => { throw new Error("must not be called"); } };
+  it("also marks the directly addressed recovery route private and noindex", () => {
+    const response = middleware(request(ENGLISH_UNAVAILABLE_PATH));
+    expect(response.headers.get("x-middleware-rewrite")).toBeNull();
+    expect(response.headers.get("x-robots-tag")).toBe("noindex, nofollow");
+    expect(response.headers.get("cache-control")).toBe("private, no-store");
+  });
+
+  it("does not touch known English pages or Korean pages", () => {
     for (const path of ["/en", "/en/tools", `/en/tools/${ENGLISH_TOOLS[0].slug}`, "/calc/samsung-bonus"]) {
-      const response = await middleware(request(path));
+      const response = middleware(request(path));
       expect(response.headers.get("x-middleware-rewrite")).toBeNull();
       expect(response.status).toBe(200);
     }
-    assetsMock.fetcher = undefined;
   });
 });

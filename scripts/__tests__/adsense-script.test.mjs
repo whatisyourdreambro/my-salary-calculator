@@ -21,7 +21,8 @@ const compile = (filename) => ts.transpileModule(readFileSync(filename, "utf8"),
 const compiled = compile(sourcePath);
 const compiledGuard = compile(guardPath);
 
-function createRuntime({ server = false, nodeEnv = "production", protocol = "https:", hostname = "www.moneysalary.com", webdriver = false } = {}) {
+function createRuntime({ server = false, nodeEnv = "production", protocol = "https:", hostname = "www.moneysalary.com", webdriver = false,
+  topLevel = true, search = "", userAgent = "Mozilla/5.0", testMode = false, adsDisabled = "", storedOptOut = false } = {}) {
   const hooks = [];
   const ScriptToken = Symbol("next/script");
   const scriptElements = [];
@@ -57,9 +58,21 @@ function createRuntime({ server = false, nodeEnv = "production", protocol = "htt
     if (type === ScriptToken) scriptElements.push(element);
     return element;
   };
+  // A complete, inert top-level browser facade is necessary: unknown frame or
+  // storage state deliberately denies ads. No DOM, network API or real Script
+  // implementation is provided to either VM.
+  const storage = new Map(storedOptOut ? [["msy:disable-live-services", "1"]] : []);
+  const browser = {
+    location: { protocol, hostname, search }, navigator: { webdriver, userAgent },
+    frameElement: topLevel ? null : {}, __MSY_TEST_MODE__: testMode,
+    sessionStorage: { getItem: key => storage.get(key) ?? null, setItem: (key, value) => storage.set(key, String(value)) },
+  };
+  browser.top = topLevel ? browser : {};
+  browser.parent = topLevel ? browser : {};
   const environment = {
-    process: { env: { NODE_ENV: nodeEnv } },
-    ...(!server && { window: { location: { protocol, hostname }, navigator: { webdriver } } }),
+    process: { env: { NODE_ENV: nodeEnv, NEXT_PUBLIC_ADS_DISABLED: adsDisabled } },
+    URLSearchParams,
+    ...(!server && { window: browser }),
   };
   const liveAds = {};
   vm.runInNewContext(compiledGuard, { ...environment, exports: liveAds }, { filename: guardPath });
@@ -130,6 +143,12 @@ for (const [name, environment] of [
   ["test build", { nodeEnv: "test" }],
   ["HTTP production host", { protocol: "http:" }],
   ["WebDriver", { webdriver: true }],
+  ["embedded frame", { topLevel: false }],
+  ["QA user agent", { userAgent: "MoneySalary-QA/1.0" }],
+  ["explicit test marker", { testMode: true }],
+  ["test build switch", { adsDisabled: "1" }],
+  ["query opt-out", { search: "?ads=off&ads=on" }],
+  ["persisted session opt-out", { storedOptOut: true }],
   ["lookalike host", { hostname: "www.moneysalary.com.example.com" }],
 ]) {
   test(`${name} never creates the AdSense Script before or after the client effect`, () => {

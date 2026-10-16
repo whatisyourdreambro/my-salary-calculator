@@ -1,4 +1,6 @@
 /** Server-only storage primitives, shared with future fixed-reason feedback. */
+import { cloudflareBindings } from "./cloudflareBindings";
+
 export interface FeedbackStatement {
   bind(...values: (string | number | null)[]): FeedbackStatement;
 }
@@ -22,13 +24,13 @@ export interface FeedbackBindings {
 }
 
 /**
- * next-on-pages exposes request-scoped Cloudflare bindings through process.env.
+ * OpenNext exposes request-scoped Cloudflare bindings through getCloudflareContext.
  * Read dynamically inside the request; do not snapshot at module/build time.
  * A missing binding in plain next dev/start deliberately leaves the API closed.
  */
 export function getFeedbackBindings(): FeedbackBindings {
   try {
-    const environment = process.env as unknown as Record<string, unknown>;
+    const environment = cloudflareBindings();
     return {
       FEEDBACK_DB: environment["FEEDBACK_DB"] as FeedbackDatabase | undefined,
       FEEDBACK_RATE_LIMIT_SECRET: environment["FEEDBACK_RATE_LIMIT_SECRET"] as string | undefined,
@@ -93,10 +95,13 @@ export function normalizeFeedbackPath(value: unknown): string | null {
   if (typeof value !== "string" || value.length < 1 || value.length > 200) return null;
   let decoded: string;
   try { decoded = decodeURIComponent(value); } catch { return null; }
+  // Reject nested encodings instead of storing a second spelling that bypasses
+  // the amount/share redaction below. Ordinary percent-encoded Korean paths work.
+  if (/%[\da-f]{2}/i.test(decoded)) return null;
   if (!decoded.startsWith("/") || decoded.startsWith("//") || /[\\?#<>\s\u0000-\u001f\u007f]/.test(decoded)) return null;
   if (decoded.split("/").some(part => part === "." || part === "..")) return null;
   const path = new URL(decoded, "https://www.moneysalary.com").pathname;
   return path
     .replace(/^\/share(?:\/.*)?$/, "/share/[redacted]")
-    .replace(/^\/salary\/(?:\d+(?:-manwon)?)(?=\/|$)/, "/salary/[amount]");
+    .replace(/^\/(salary|monthly)\/\d+(?:-manwon|(?:-5)?-eok)?(?=\/|$)/, "/$1/[amount]");
 }

@@ -213,11 +213,11 @@ describe("연도 고정 표면 — 포인터와 무관하게 2026 요율", () =>
 describe.runIf(CURRENT_RATES_YEAR === 2026)("오늘 렌더 문구 불변 — 대표 3쪽 + 위젯", () => {
   it("/monthly/3000000 — 제목·설명·FAQ 요율 문장", async () => {
     const params = { amount: "3000000" };
-    const html = renderToStaticMarkup(createElement(MonthlyPage as unknown as (p: { params: { amount: string } }) => ReactNode, { params }));
+    const html = renderToStaticMarkup(await MonthlyPage({ params: Promise.resolve(params) }));
     expect(html).toContain(
       "세전 월급 300만원 기준 2026년 실수령액은 약 267만원입니다. 국민연금 4.75%, 건강보험 3.595%(+장기요양), 고용보험 0.9%와 근로소득세·지방소득세를 공제한 값입니다 (비과세 식대 20만원, 본인 1인 공제 기준)."
     );
-    const meta = await monthlyMetadata({ params });
+    const meta = await monthlyMetadata({ params: Promise.resolve(params) });
     expect(titleOf(meta.title)).toBe("월급 300만원 실수령액 — 세후 월 267만원 (2026 기준) | 머니샐러리");
     expect(meta.description).toBe(
       "세전 월급 300만원의 2026년 실수령액은 약 267만원. 4대보험·소득세 공제 내역, 상여금 포함 연봉 환산표, 시급·주급 환산까지 월급 기준으로 정리했습니다."
@@ -226,14 +226,14 @@ describe.runIf(CURRENT_RATES_YEAR === 2026)("오늘 렌더 문구 불변 — 대
 
   it("/salary/50000000 — 제목·HowTo 4대보험 단계·FAQ", async () => {
     const params = { amount: "50000000" };
-    const html = renderToStaticMarkup(createElement(SalaryPage as unknown as (p: { params: { amount: string } }) => ReactNode, { params }));
+    const html = renderToStaticMarkup(await SalaryPage({ params: Promise.resolve(params) }));
     expect(html).toContain(
       "비과세를 뺀 월 보수에 국민연금 4.75%(기준소득월액 상·하한 적용), 건강보험 3.595%, 고용보험 0.9%를 적용합니다. 장기요양보험은 건강보험료의 13.14%로 계산합니다."
     );
     expect(html).toContain("연봉 5,000만원의 2026년 예상 월 실수령액은 약 357만원입니다.");
     expect(html).toContain("연봉 5,000만원의 2026년 예상 월 수령액 계산 과정.");
     expect(html).toContain("2026 REPORT");
-    const meta = await salaryMetadata({ params });
+    const meta = await salaryMetadata({ params: Promise.resolve(params) });
     expect(titleOf(meta.title)).toBe("연봉 5,000만원 실수령액 월 357만원 (2026 세후 월급) | 머니샐러리");
   });
 

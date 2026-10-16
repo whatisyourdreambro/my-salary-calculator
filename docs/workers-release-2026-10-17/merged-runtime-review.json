@@ -1,0 +1,588 @@
+{
+  "status": "source review complete; parent running integrated full tests/typecheck",
+  "scope": {
+    "changedRuntimeAndDataFiles": 100,
+    "allDiffsReviewed": true,
+    "typescriptParseFailures": [],
+    "fullFileManualAuditClaim": false
+  },
+  "findings": [
+    {
+      "severity": "low",
+      "issue": "Mechanical terminology replacement left invalid Korean particles and a duplicate word.",
+      "fixed": true,
+      "occurrences": 9,
+      "files": [
+        {
+          "path": "src/app/salary-db/listed/industry/[industryId]/page.tsx",
+          "corrections": 1,
+          "beforeSha256": "233dc7f7750ac3bf464aa193f7384f2ca9d98498874b7a62e4632e174df3bdc7",
+          "afterSha256": "31cfcbba9e3b2f12794e5b87979941aee2426a33f6221c511bbdb3699e6429d2"
+        },
+        {
+          "path": "src/app/salary-db/listed/top-tenure/page.tsx",
+          "corrections": 2,
+          "beforeSha256": "59f80f05d4db81a9bd05d5201cc27b4da3d3a42b4e7d7927abe44de42377c920",
+          "afterSha256": "f05fbfafb48abf19e4518ae6e1161994ff3ff5e28175b932b9589cf86b1ec865"
+        },
+        {
+          "path": "src/app/salary-db/listed/top-employees/page.tsx",
+          "corrections": 2,
+          "beforeSha256": "71f8e398dbe420afd3a660345f244a6b4f6f503aaef92e3f69a8db296d1c42c9",
+          "afterSha256": "65389228eca0aae1a26e92520f9ca4ef1502f88b0f8d181251b4f759eb8096fb"
+        },
+        {
+          "path": "src/app/salary-db/listed/top-raise/page.tsx",
+          "corrections": 2,
+          "beforeSha256": "877fec1c95c080e06a5e358da6f3537091fa1b4fdeaf04d15ecb48cab6a83701",
+          "afterSha256": "ae6507db82d68f187d9622269b9d08f4b289321a2198a10ff74cf27fe0c27b4a"
+        },
+        {
+          "path": "src/app/salary-db/listed/page.tsx",
+          "corrections": 1,
+          "beforeSha256": "4e35959f476af4262d6680665b58b2237a6da855ca3e4591d53f5124e1a62670",
+          "afterSha256": "ae35a21ba8980142d8a2e6590b26430c738b3bf827a98c06282fef7a7d4c9b3b"
+        },
+        {
+          "path": "src/app/salary-db/listed/[stockCode]/page.tsx",
+          "corrections": 1,
+          "beforeSha256": "0d0f55cccaca26fb09553d0e431b3e98125a3d1fa52214889ad601405b901a3f",
+          "afterSha256": "bed972d6f41c6c284bc6302da51ef0533bd566e5fe582c8115583d8b6329b6de"
+        }
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "area": "Production/QA ad separation",
+      "result": "LiveServices gates GA/AdSense insertion before script src; AdSlot and affiliate image emission are gated; analytics send/readiness/nav tracker entry gated; no direct raw html2canvas import outside capture helper."
+    },
+    {
+      "area": "Next15 routes",
+      "result": "19 dynamic page routes retain Promise params and await before rendering/metadata. No runtime=edge export or next/headers cookie/header synchronous access found in application source."
+    },
+    {
+      "area": "Workers bindings/cache",
+      "result": "Request-scoped getCloudflareContext; API/company widget request-dependent handlers force-dynamic; seven static widgets and two RSS handlers retain explicit static generation. English unavailable rewrite keeps 404/noindex/private-no-store."
+    },
+    {
+      "area": "Current production content preservation",
+      "result": "99 of 101 conflict hunks retain deployed facts/copy; two async test-call hunks retain migration. Production Samsung October7 withholding text, successor savings dates, monthly non-taxable deductions, dated Fed content and removed unsupported 2027 freeze assertions retained."
+    },
+    {
+      "area": "Generated metadata",
+      "result": "Offline generator found no difference for 308 guide cards after resolution."
+    }
+  ],
+  "limitations": [
+    "No live publisher browser, ad requests, remote deployment or Cloudflare configuration changed by this reviewer.",
+    "Static source review is not a proof of all browser behavior. Parent owns final integrated test/build/HTTP verification and production routing checks.",
+    "OFF controls must be active before first navigation; they cannot revoke requests from an SDK already loaded in a prior eligible document."
+  ],
+  "verification": {
+    "diffCheck": "passed",
+    "runtimeTests": "parent full test suite in progress; no duplicate test run by reviewer"
+  },
+  "inventory": [
+    {
+      "path": "src/app/api/contact/route.ts",
+      "sha256": "44c6b423851953df706783f12a2f7b83bed0e35e7c23ef23815c18fa3eb438d5",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/api/feedback/route.ts",
+      "sha256": "4e9c0202d561439863aa4a44ee9541e66895b9094fbaade9592199bf8e5e78df",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/api/og/route.tsx",
+      "sha256": "b9a6f75e9f07e5ede6f74095741d60c9ccffdd5986c4d2d7d45c44f0b1ec1c12",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/api/salary-table/route.ts",
+      "sha256": "80622a2b04a2b319f2452b7e1d7e3482e43d48659613f5ea027aa2b7c32ab2c9",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/calc/CalcIndexClient.tsx",
+      "sha256": "ec32758f2b080322ffa78386863a57a72e8cb7e6813dd3f93d9b0a6db145817b",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/calc/[slug]/page.tsx",
+      "sha256": "b349615dbc5b5c0eaf139ccb9d159508cff3fa2b0a98f5b7611005f890994146",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/calc/page.tsx",
+      "sha256": "5c2a8d1f615b9b5dcd9c8baa9fd8776009c98b8e05182fc8b6152606dc4019f9",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/company/compare/[slug]/page.tsx",
+      "sha256": "82290d2efd966cf7a80f72088fdf8e8f559d9292678ca293b5ec700bad33e436",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/en/guides/[slug]/page.tsx",
+      "sha256": "910f946ac0604ee1284a34dae92c6727ab230a78832cad7a5fafc2c2b6f8c598",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/en/not-found.tsx",
+      "sha256": "ff8b85286d2d40b79895d1cb92b1a50face87adbd170f9f6aa27aec9a5bf2ef4",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/en/tools/[slug]/page.tsx",
+      "sha256": "27163af61d7700190b81d31080ec72b2c66b02d8ddba250b152c86e552bf6ee3",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/error.tsx",
+      "sha256": "c7ef005296ea1c5c34ca75f2cbbff3cc10457b77d08d1deb98649588988e6f82",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/fire-calculator/page.tsx",
+      "sha256": "58ffb802a637f602618686648d14d1a0d0934ae4eb5ffbb26f909e9cd05f799c",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/fun/asset-allocator/page.tsx",
+      "sha256": "d17dcd48071623a287c546262d328e3e9ca0e10f4970984ebe32845984442d29",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/fun/escape-plan/page.tsx",
+      "sha256": "7cbb94f3db0fcdda2c270f140778f9296894582116bb50fac54a97e93f4d36af",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/fun/flappy/page.tsx",
+      "sha256": "7b968e343438a17e51308af5bc8243e98ce99b7a49caf30e9246f487116fb28e",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/fun/meme-coin/page.tsx",
+      "sha256": "b0e0ed2512c149a29b4be8caa354cbb98d746193fb95a3106518a99a959b76e1",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/fun/reincarnation/page.tsx",
+      "sha256": "dc0d7a4d322a1bf902314d36da3762ef4b592bfdc03c5258cf5d24d1b552088d",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/fun/spending-test/page.tsx",
+      "sha256": "4ef6fc5462c17dde841ebb3c3b4a4db337e459062aa85308342747d9ab82526f",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/fun/tetris/page.tsx",
+      "sha256": "396be83b71197150c78d8288aec3a2aeb3d530e5b536d6cb114eb008ff98e60d",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/global-error.tsx",
+      "sha256": "5f0e757185a6d67679e8b547aea97d384cb3e3868721551e866b7cd076587f54",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/glossary/[slug]/page.tsx",
+      "sha256": "e8933c10a291fea678121bb8288c28018ee9c6d821a12f74d3dfa9f39b525e1b",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/guides/[slug]/page.tsx",
+      "sha256": "3cfc1eedafc2160823371bcf3cef42b9a3ea37ebdf8717409c575a8de8f3ae10",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/guides/category/[slug]/page.tsx",
+      "sha256": "98f23ff0936177c6689d1922c24b88317c06a647edb4cab24fd5c4002aa7ffd1",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/health-insurance-dependent/page.tsx",
+      "sha256": "4b960c059360292da55263636f1eaa8aba8932ffdaf114baf87eb9da82f902a5",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/hub/[id]/page.tsx",
+      "sha256": "7f5840b37004f242721240a51ee8ca905e49a149eb599f8667269b5ef36b99fc",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/industry/[slug]/page.tsx",
+      "sha256": "827d96c84f3411a2a09c6d8c648bf884c1d079dc78787a790035c72d32b62a85",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/job/[slug]/page.tsx",
+      "sha256": "c6e495cd967ec1fa5af9634742b162a02650368eb9abac279e8708a1d33cb7e7",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/layout.tsx",
+      "sha256": "695284de1703e4a409b2c8e460bf4324967457192c7173f7ca17a0f8f0e229b3",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/mbti-salary/page.tsx",
+      "sha256": "1bb80ad55fbe53cf528518d5befb124e61ca9a68f653c19a0e66965035b569d8",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/monthly/[amount]/page.tsx",
+      "sha256": "9cdf2190ebf9b70723fd3cd50bfb02e14232c142f95405c795c073082dbacf8b",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/qna/[slug]/page.tsx",
+      "sha256": "e012561c205f650f3f5dd350412cd86e154c02b6fb492bae9d3152e693480b57",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/region/[slug]/page.tsx",
+      "sha256": "dca953b1baaa728f0d3b92462e44fdad3a46e08edfaa5d3881b7055739faa828",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/region/page.tsx",
+      "sha256": "49d394610120dd9b1672bf77a75dd2e38846b6386b2806e846765216b4c72b61",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/report/page.tsx",
+      "sha256": "29d67353272032fb58e8046a319f98c9327d5b7ece0bbe41d2467b0300b4b3e6",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/rss-companies.xml/route.ts",
+      "sha256": "cfe6813b101714d6a85b9a8026356e0e45521c4adf0767e1c4c73b25af97d7d8",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/rss.xml/route.ts",
+      "sha256": "dd7ba006a6c3e13394dffe3a20e6ce6ffd5d796f907e2312c1805214183c43c2",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/salary-db/SalaryDbClient.tsx",
+      "sha256": "9f2be82590aa43ca2ef6cfa8bb4ed983e84b6007501206ee309bd98d6c7fcf5a",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/salary-db/[id]/SamsungCompanySummary.tsx",
+      "sha256": "491ddd53f97f8e4eac081c608006d63c7121b116ab1a8ea28d7248ed1c9b6530",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/salary-db/[id]/page.tsx",
+      "sha256": "d12e5eb2ece1a72be80decbc5dea333a7ffe81f7ffb1215da728e3eda797acd4",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/salary-db/compare/[slug]/page.tsx",
+      "sha256": "9e2c93ad5f521594aea94913aa1e72498de1d9c14aa441c08f104f55c0f73349",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/salary-db/listed/MetricRankingView.tsx",
+      "sha256": "7d3fb7dba09a8a6151302dced83dc7873bfa5ceac7aa595feb4fd18625926e93",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/salary-db/listed/[stockCode]/page.tsx",
+      "sha256": "bed972d6f41c6c284bc6302da51ef0533bd566e5fe582c8115583d8b6329b6de",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/salary-db/listed/industry/[industryId]/page.tsx",
+      "sha256": "31cfcbba9e3b2f12794e5b87979941aee2426a33f6221c511bbdb3699e6429d2",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/salary-db/listed/page.tsx",
+      "sha256": "ae35a21ba8980142d8a2e6590b26430c738b3bf827a98c06282fef7a7d4c9b3b",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/salary-db/listed/top-employees/page.tsx",
+      "sha256": "65389228eca0aae1a26e92520f9ca4ef1502f88b0f8d181251b4f759eb8096fb",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/salary-db/listed/top-raise/page.tsx",
+      "sha256": "ae6507db82d68f187d9622269b9d08f4b289321a2198a10ff74cf27fe0c27b4a",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/salary-db/listed/top-tenure/page.tsx",
+      "sha256": "f05fbfafb48abf19e4518ae6e1161994ff3ff5e28175b932b9589cf86b1ec865",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/salary-db/ranking/page.tsx",
+      "sha256": "eb7ad499e7439a6fc293439236959ad698ce4366b8231513c29679320e4176b7",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/salary/[amount]/page.tsx",
+      "sha256": "9feb62461b299b91e9c17f136c0c0b0fad8a24b7f6935d6b82548e73773fd049",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/share/[data]/page.tsx",
+      "sha256": "22288ea276239379f52ee0802ab3ee97834c19b5c34a683dd82aa97a03da5032",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/tools/finance/installment/page.tsx",
+      "sha256": "cf4df45ca3c66b13dacd41066d52177bd337c5d0061a31656c100028c2b2a07f",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/weekly-holiday-allowance-2026/page.tsx",
+      "sha256": "3f50f42c4e5cfb7ad69fcdd88842d7e71601dd2416e4161bbafae00fb4ca44b9",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/widget/bonus/route.ts",
+      "sha256": "76a01f70489c4d9216261adb7c4abbef3738febaa45b7e22289170681bc83855",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/widget/company/route.ts",
+      "sha256": "cb23402bcfa9d801bef39e56feb4d7cbafdcd6394e459cf99c8a26e59a89f8c8",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/widget/dsr/route.ts",
+      "sha256": "f55e1ea382c679965eee26c413f7c5e65bdca18244519e64656fea3a7db859ea",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/widget/military-pay/route.ts",
+      "sha256": "b491ed70ac04d00b2e05dbc17b7fd018177c1c4bcda94f01d2c8fc32fbe259d7",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/widget/minimum-wage/route.ts",
+      "sha256": "98d1ffbaca0d2ccc42479cebd54088720898486923a285bedec40dc15f9cc929",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/widget/salary/route.ts",
+      "sha256": "4506a2d95c76f4523d6d67ae9eedf834ecc86a53498e17d5865e9a88457b8f72",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/widget/severance/route.ts",
+      "sha256": "9dc43af3e3fc4beb06ecd76025e7cc1a38790b6c2fafe5403885f1bb37d36907",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/app/widget/year-end-tax/route.ts",
+      "sha256": "40fcadd7aaeaa613a51790498d64c75229e559c9fe1800d629c618a753405dff",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/components/AdPlacement.tsx",
+      "sha256": "a775d2c9b960c0f9c34991a0269d090e19bfe2b1db239d488a4c61308e92fbdc",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/components/CompanyDisclosedSalary.tsx",
+      "sha256": "c23df538c7884463f9e84e295b640b7bb9145ea787c206ef1220c4b1e6837c89",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/components/ExchangeRateDisplay.tsx",
+      "sha256": "396bab0cf81a296f0d67f05c03ac4f0df4b6718e3b2ee7a606563e609d4d529f",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/components/FutureSalaryCalculator.tsx",
+      "sha256": "2d5ffd13f07bac3aef924a4e695b48ae1e2ab76418f7e8839af270c9cbc5466d",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/components/ListedSalaryBandTable.tsx",
+      "sha256": "ddbba15d8ef338469d27e20e0b1527dfe433d0afffe4729cad36b772b46a4e9f",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/components/LiveServices.tsx",
+      "sha256": "4546cc08f0874710728e1a2b75df993fe9ca95b50dea4063ae3e71f448ecb38d",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/components/NavTypeTracker.tsx",
+      "sha256": "2ac222b33eaf161e74ba79f130c96ce101d774772e6eb6bedc473b5d7ae8cdbd",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/components/NotFoundAdPause.tsx",
+      "sha256": "a770c1b432e15d9b3637a5c208af50b524d9f98614756b8b5a34df5d79d9434a",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/components/NumberInput.tsx",
+      "sha256": "de8c62cecd4de992c529db3f604241b74a2bd3d9e1f488f21e916ef253760f3c",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/components/PayStubGenerator.tsx",
+      "sha256": "26b69441a03e10bf4887135d55de61d4ce752a111a7b46e81abb8739bd098fa8",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/components/RandomDrawGame.tsx",
+      "sha256": "a39781db60b06aabf47d2e0afc40c84252a59b91d95828b1ed083aac29ceae3f",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/components/SalaryComparator.tsx",
+      "sha256": "932dcb194e27598731e57f99e6e6d5991e8f6da3831110a816bf2695f0dc8232",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/components/SalaryTierCard.tsx",
+      "sha256": "bdeb494274b159fd06572c67336a376a717a17a548102d18f07398abda32c486",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/components/ShareButtons.tsx",
+      "sha256": "2e5629803c798dcdc862fe0d59b85277803f3673975e05053a8c09f878f8d2a5",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/components/SimpleCalculatorView.tsx",
+      "sha256": "e42df3b0462e65edfca8e932a854532f0164bd076e0fe3b9ea35bb247a4c7df7",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/components/WeekendDutyGame.tsx",
+      "sha256": "1406ee17044fd822aa2743fbb602cef45ad14615250d4126206c822c158119c2",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/components/affiliate/CoupangBannerCore.tsx",
+      "sha256": "3102088fd5e6c7b85dec457467b746e4d85551bf8393eb7141e4e2472724e1af",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/components/calculators/SalaryRankCalculator.tsx",
+      "sha256": "dc94dd14ffa0ee1995dc9989dd1b522e512e991a64431e45c69c9119399f60e6",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/components/calculators/math/MathCalculators.tsx",
+      "sha256": "7bcf6283132a39f541d4f185dfdb2524408f1fdb2d3c0991a68520936a595345",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/data/krCompanies_Batch12.ts",
+      "sha256": "732284d2f07b399e2b385990ace33e3d43a225c91bf4208a0ec7b57e71c911ec",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/data/krCompanies_Batch25.ts",
+      "sha256": "1c19cfa096aa9dd88b208dda612ff98fc1458b7f9997259e64161f865ee235e0",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/data/reportsRegistry.ts",
+      "sha256": "d6f349f02a3ebe89c468d0f58db7b0a3bfd29dc3917b86f06f19125165db5ebe",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/data/salaryRankData.ts",
+      "sha256": "1a6987693a9e24b3ace0738165335c031a971d0cb9319c6129dbfb8983aa4342",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/hooks/useModalDialog.ts",
+      "sha256": "dd1877bdf6e9ed51afbaa7566114541d612bab5b7a5b20d9d49865a757899a5c",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/lib/analytics.ts",
+      "sha256": "8347f5d88191fe6ce7df09194f4704e68484d70830ff5fcc2b24fe855344a70b",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/lib/annualLeave.ts",
+      "sha256": "18d956e86eb8a65b3d0a4ed6794a0eaeeeb13c8378e3d55bf4936c290dba3903",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/lib/captureElement.ts",
+      "sha256": "b3414cb7bc81e509ab3bfcc7902c46f56b994b50453136ef8e37a8eeb5f1e308",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/lib/exchangeMath.ts",
+      "sha256": "2863831691bc8593a1726959724bb46b4014a3b96da06c627ca2e25cdbeaa89c",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/lib/futureCalculator.ts",
+      "sha256": "6949308984ef3f46c7bc6bc79bff303d0cb0f7c3ef027e979a4ca92ce3337a57",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/lib/gtagReady.ts",
+      "sha256": "784c01261338605b47506d000c7eff303fe91df3bc1be2d27030d3eeb85df0d0",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/lib/guideCategories.ts",
+      "sha256": "0add9ff004bcc32414a65c247d4d1b94fa2c319fe8c66e79e0f8eda95775098b",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/lib/liveAds.ts",
+      "sha256": "a72808c29f4d5b410a2fc8982c598683a43bca219018c8d081d2001b016dddc8",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/lib/liveServices.ts",
+      "sha256": "88ec3d5a295d0c4ed4980b0e02ec4def7fb1f16e1f450e5857625b043ee3505a",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/lib/randomIntegers.ts",
+      "sha256": "69fa104c9776fe382cafb587f6a4a780b74434db788a43a08e69339eb9645954",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/lib/searchIndex.ts",
+      "sha256": "26f14e40232fd508abbc4fad125d5de4f3ac0ad21901778c56acafd46eff2a8a",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/lib/server/cloudflareAssets.ts",
+      "sha256": "4157e5eebd55d401ab1d6c17ad7e74a1e1f8ba2f205ae1462bc9c3ac8b3b82c1",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/lib/server/cloudflareBindings.ts",
+      "sha256": "eba2d2e51fa637815f4c1be98dac00bf4f0663bfe7008831beb2ddd9ce6162ca",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/lib/server/feedbackStorage.ts",
+      "sha256": "4ea5c5f230ebb7e1a2c45fae56d82c1eed4b12b1168df17a7d3b43f08ead2376",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    },
+    {
+      "path": "src/middleware.ts",
+      "sha256": "429ed015a206313e97c3b256a9a73b550fc3990e780704bc266d751f50231fbc",
+      "review": "changed diff reviewed; full file parsed; targeted context reads for guards/async routes/bindings"
+    }
+  ]
+}

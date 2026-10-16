@@ -15,6 +15,11 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("next/navigation", () => ({ usePathname: () => "/calc/sk-hynix-bonus" }));
 
 const read = (p: string) => readFileSync(resolve(process.cwd(), p), "utf8");
+const loadCalculator: Record<string, () => Promise<{ default: ComponentType }>> = {
+  "sk-hynix-bonus": () => import("@/app/calc/sk-hynix-bonus/Client"),
+  "hyundai-rotem-bonus": () => import("@/app/calc/hyundai-rotem-bonus/Client"),
+  "hanwha-aerospace-bonus": () => import("@/app/calc/hanwha-aerospace-bonus/Client"),
+};
 
 const CALCS = [
   { file: "src/app/calc/sk-hynix-bonus/Client.tsx", calcType: "sk-hynix-bonus", inputAreas: 5, heading: "내 성과급 계산 결과" },
@@ -48,8 +53,8 @@ describe("bonus calculators use the shared v2 calculation measurement", () => {
   }
 
   it("the three newly wired calculators still server-render their result card", async () => {
-    for (const { file, heading } of CALCS.slice(0, 3)) {
-      const mod = (await import(`@/${file.replace(/^src\//, "").replace(/\.tsx$/, "")}`)) as { default: ComponentType };
+    for (const { calcType, heading } of CALCS.slice(0, 3)) {
+      const mod = await loadCalculator[calcType]();
       const html = renderToStaticMarkup(createElement(mod.default));
       expect(html).toContain(heading);
       expect(html).toContain("세후 실수령");

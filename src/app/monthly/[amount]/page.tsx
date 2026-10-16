@@ -81,9 +81,10 @@ const fmtManwon = (won: number) =>
  *  월급 금액과 화면 본문 표·크로스링크에는 쓰지 않는다(광고 위 높이 실측 사유는 각 블록 주석). */
 const fmtAnnualKo = (won: number) => formatManwonKorean(Math.round(won / 10_000));
 
-type Props = { params: { amount: string } };
+type Props = { params: Promise<{ amount: string }> };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params: pendingParams }: Props): Promise<Metadata> {
+  const params = await pendingParams;
   const monthly = parseMonthlyParam(params.amount);
   if (monthly === null) {
     return { title: "페이지를 찾을 수 없습니다", robots: { index: false, follow: false } };
@@ -106,7 +107,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-export default function MonthlyPage({ params }: Props) {
+export default async function MonthlyPage({ params: pendingParams }: Props) {
+  const params = await pendingParams;
   const monthly = parseMonthlyParam(params.amount);
   if (monthly === null) notFound();
 
@@ -422,7 +424,7 @@ export default function MonthlyPage({ params }: Props) {
         <div className="mt-10">
           <ListedSalaryBandTable
             annualWon={annual}
-            title={`월급 ${Math.round(monthly / 10_000).toLocaleString("ko-KR")}만원 수준의 상장사`}
+            title={`월급 ${Math.round(monthly / 10_000).toLocaleString("ko-KR")}만원 수준의 공시기업`}
           />
         </div>
 

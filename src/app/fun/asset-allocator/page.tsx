@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Trophy, Play, RotateCcw, Monitor, Smartphone } from "lucide-react";
 import ResultSharePanel from "@/components/ResultSharePanel";
 import { InArticleAd } from "@/components/AdPlacement";
@@ -45,7 +45,7 @@ export default function AssetAllocatorGame() {
  const [highScore, setHighScore] = useState(0);
 
  // Game Loop Refs
- const requestRef = useRef<number>();
+ const requestRef = useRef<number | undefined>(undefined);
  const basketPos = useRef({ x: 0, y: 0 }); // y is fixed at bottom
  const items = useRef<GameItem[]>([]);
  const lastSpawn = useRef(0);
@@ -79,6 +79,7 @@ export default function AssetAllocatorGame() {
 
  // --- Game Loop ---
  const startGame = () => {
+ if (requestRef.current !== undefined) cancelAnimationFrame(requestRef.current);
  setGameState("playing");
  gameStateRef.current = "playing";
  setScore(0);
@@ -94,10 +95,11 @@ export default function AssetAllocatorGame() {
  requestRef.current = requestAnimationFrame(gameLoop);
  };
 
- const gameOver = () => {
+ const gameOver = useCallback(() => {
+ if (gameStateRef.current !== "playing") return;
  setGameState("gameover");
  gameStateRef.current = "gameover";
- if (requestRef.current) cancelAnimationFrame(requestRef.current);
+ if (requestRef.current !== undefined) cancelAnimationFrame(requestRef.current);
  if (scoreRef.current > highScore) {
  setHighScore(scoreRef.current);
  try {
@@ -115,13 +117,13 @@ export default function AssetAllocatorGame() {
  origin: { y: 0.6 },
  colors: ['#EDF1F5', '#CBA577', '#ffffff']
  });
- });
- };
+ }).catch(() => { /* Celebration is optional; the completed game remains usable. */ });
+ }, [highScore]);
 
  useEffect(() => {
  try {
- const saved = localStorage.getItem("asset_allocator_highscore");
- if (saved) setHighScore(parseInt(saved, 10));
+ const saved = Number(localStorage.getItem("asset_allocator_highscore"));
+ if (Number.isSafeInteger(saved) && saved > 0) setHighScore(saved);
  } catch {
  // 프라이버시 모드 등 localStorage 접근 불가 — 최고점 저장만 생략
  }
@@ -131,16 +133,20 @@ export default function AssetAllocatorGame() {
  useEffect(() => {
  if (gameState !== "playing") return;
  const timer = setInterval(() => {
- setTimeLeft((prev) => {
- if (prev <= 1) {
- gameOver();
- return 0;
- }
- return prev - 1;
- });
+ setTimeLeft((prev) => Math.max(0, prev - 1));
  }, 1000);
  return () => clearInterval(timer);
  }, [gameState]);
+
+ // State updaters must remain pure: React may call them twice in Strict Mode.
+ useEffect(() => {
+ if (gameState === "playing" && timeLeft === 0) gameOver();
+ }, [gameState, timeLeft, gameOver]);
+
+ useEffect(() => () => {
+ gameStateRef.current = "gameover";
+ if (requestRef.current !== undefined) cancelAnimationFrame(requestRef.current);
+ }, []);
 
  const gameLoop = (time: number) => {
  if (!canvasRef.current) return;
@@ -239,7 +245,8 @@ export default function AssetAllocatorGame() {
  if (canvasRef.current) {
  canvasRef.current.width = window.innerWidth > 600 ? 600 : window.innerWidth - 32;
  canvasRef.current.height = window.innerHeight * 0.7;
- // Reset basket pos if needed
+ basketPos.current.x = Math.max(0, Math.min(basketPos.current.x, canvasRef.current.width - BASKET_WIDTH));
+ basketPos.current.y = canvasRef.current.height - BASKET_HEIGHT - 20;
  }
  };
  window.addEventListener("resize", handleResize);

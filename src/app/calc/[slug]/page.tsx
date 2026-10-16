@@ -37,10 +37,11 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({
- params,
+ params: pendingParams,
 }: {
- params: { slug: string };
+ params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+ const params = await pendingParams;
  const calc = getCalculatorBySlug(params.slug);
  if (!calc) return { title: "Not Found" };
 
@@ -63,7 +64,8 @@ export async function generateMetadata({
  });
 }
 
-export default function CalcPage({ params }: { params: { slug: string } }) {
+export default async function CalcPage({ params: pendingParams }: { params: Promise<{ slug: string }> }) {
+ const params = await pendingParams;
  const calc = getCalculatorBySlug(params.slug);
  // GSC 404 출혈 차단(7차): 옛 계산기 슬러그 → /calc 메인 308
  if (!calc) permanentRedirect("/calc");

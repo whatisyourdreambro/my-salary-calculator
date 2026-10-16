@@ -505,7 +505,7 @@ function fakeFetch(map) {
   return { fn, seen };
 }
 
-test("verify-prod: 자산 추출 · 낡은 청크(404)·GET 상한 · 폴링 · Purge 뒤 재확인", async () => {
+test("verify-prod: 자산 추출 · 낡은 청크(404)·HEAD 상한 · 폴링 · Purge 뒤 재확인", async () => {
   const O = "https://www.moneysalary.com";
   const html = (n) => Array.from({ length: n }, (_, i) => `<script src="/_next/static/chunks/c${i}.js"></script>`).join("") + '<link href="/_next/static/css/a.css">';
   assert.equal(extractAssets(html(3)).length, 4);
@@ -513,7 +513,7 @@ test("verify-prod: 자산 추출 · 낡은 청크(404)·GET 상한 · 폴링 · 
   const ok = fakeFetch((u) => (u.startsWith(`${O}/_next`) ? [200, ""] : [200, html(30)]));
   const r = await staleChunkCheck({ fetchFn: ok.fn, origin: O, pages, maxGets: 40 });
   assert.equal(r.missing.length, 0);
-  assert.equal(r.gets, 40, "자산 GET 은 40건 상한");
+  assert.equal(r.gets, 40, "자산 HEAD 는 40건 상한");
   const bad = fakeFetch((u) => (u.endsWith("c2.js") ? [404, ""] : u.startsWith(`${O}/_next`) ? [200, ""] : [200, html(3)]));
   const b = await staleChunkCheck({ fetchFn: bad.fn, origin: O, pages: ["/"], maxGets: 40 });
   assert.deepEqual(b.missing, ["/_next/static/chunks/c2.js"]);

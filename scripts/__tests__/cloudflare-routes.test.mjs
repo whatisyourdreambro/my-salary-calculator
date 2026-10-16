@@ -79,7 +79,10 @@ test("build-generated crawler files bypass the Worker only while they stay stati
     assert.ok(root.exclude.includes(path), `${path} should bypass Worker`);
     assert.equal(existsSync(publicFile(path)), false, `public${path} would shadow the ${source} route`);
     const code = readFileSync(repoFile(source), "utf8");
-    assert.doesNotMatch(code, /export\s+const\s+(runtime|dynamic|revalidate)\b/, `${source} must stay a build-time prerender`);
+    assert.doesNotMatch(code, /export\s+const\s+(runtime|revalidate)\b/, `${source} must stay a build-time prerender`);
+    if (source.endsWith('/route.ts')) {
+      assert.match(code, /export\s+const\s+dynamic\s*=\s*["']force-static["']/, `${source}: Next 15 GET handlers must opt in to prerendering`);
+    }
     assert.doesNotMatch(code, /from\s+["']next\/headers["']/, `${source} must not read request headers/cookies`);
     assert.equal(middlewareRuns(path), false, `${path} must already be excluded by the middleware matcher`);
     assert.ok(headerRules.get(path)?.some((header) => header.startsWith("Cache-Control: public, max-age=3600")),

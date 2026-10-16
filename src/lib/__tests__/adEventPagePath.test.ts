@@ -96,3 +96,7 @@ describe("public amount report pages keep their real path for ad/affiliate event
     }
   });
 });
+
+// These tests exercise payload/lifecycle behavior with a synthetic eligible visitor.
+// The real fail-closed runtime decision is covered separately in liveAds.test.ts.
+vi.mock("../liveAds", () => ({ canRequestLiveAds: () => true }));

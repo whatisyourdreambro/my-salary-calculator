@@ -1,0 +1,1177 @@
+{
+  "status": "54 files / 101 conflict hunks resolved; source parsing and metadata regeneration passed; runtime tests pending dependency installation",
+  "sourceHead": "fed61a0543fa14501e706b362d1973f57d97eb97",
+  "mergeHead": "126f5d3fdb45028e594b07b23e7a794f7f3b072f",
+  "method": "Read every conflict hunk; replace individual markers only. No checkout --ours/--theirs and no whole-file reset.",
+  "files": [
+    {
+      "path": "src/app/calc/page.tsx",
+      "beforeSha256": "67bf989e0bed9cc02df4bcea27217151253e4162c52dc5ec8a21d224d37a9d59",
+      "afterSha256": "5c2a8d1f615b9b5dcd9c8baa9fd8776009c98b8e05182fc8b6152606dc4019f9",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 45,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 1,
+          "originalLine": 106,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 2,
+          "originalLine": 116,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 3,
+          "originalLine": 126,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 4,
+          "originalLine": 160,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/page.tsx",
+      "beforeSha256": "42afdb0ac252c86fe9cb978c0d6d419dc04ac4ab718ac34e7b02a0e776bee796",
+      "afterSha256": "100d49e592eef21ca7a625698603a5129c8b793577ee4ac4a3832eafbd13c60c",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 109,
+          "choice": "ours",
+          "reason": "Preserve latest production Samsung DS October 7 reported withholding explanation; local old base omits it."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/fun/escape-plan/layout.tsx",
+      "beforeSha256": "77ec76ffd676afd2b19be215e72715438963545a3e0c2c177be49f1669627429",
+      "afterSha256": "734b1f019afffe87d72ead091cc14a04809241b6797afeace1ab6c940407c034",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 7,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/fun/iq-test/IQTestClient.tsx",
+      "beforeSha256": "52ccb25594e7f4bcd9e54def3d376e8be51ce5d1ceb4d7014a82f1231ee2c1fa",
+      "afterSha256": "773174a3f3dace2b57c35171180476744d0e94310709c6f48365958bfdde0b3d",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 186,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/fun/iq-test/page.tsx",
+      "beforeSha256": "e925259a3c5bf4d762c44b6c7b1e2720ac425c2b9a62ed7a6f8f715218eba4d1",
+      "afterSha256": "a0751dfc65a1510d86e72b977a18c8b0965ac18a4468e82d4274f2d97b69906d",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 7,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 1,
+          "originalLine": 21,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/fun/page.tsx",
+      "beforeSha256": "5b9707bea45baea51b4cb3d57560de674872eb8fc70d2fca8b4c81075f9c1ae7",
+      "afterSha256": "2a50c393a19a7b0a83e62a92d6e5b326785f7593b182460ac593441ffd0bda9a",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 117,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/fun/rank/RankClient.tsx",
+      "beforeSha256": "f0a230c9a16948d8fe37d471b5b33c0a4db45f9e8dbfce44c4b83c44abe08388",
+      "afterSha256": "6b4e94396ed1baa1d8fb7e15a56849296e6440678b741b66302aa567422df093",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 85,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/fun/rank/page.tsx",
+      "beforeSha256": "3ad066c5256ae86b0920ed9136f557b896f52ab827772c61dba6d1f006c3e085",
+      "afterSha256": "2f482ebccebe0447e9554886d68b85060a5dff20ad44bbad6876823755b98c8b",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 7,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/fun/salary-rank/page.tsx",
+      "beforeSha256": "56a27083cdcbcae264112a1c9af5ede30b456dd5658880d02caa5c25dce31694",
+      "afterSha256": "a5b0445f6f321064355befbefd2c0c26c17d72daf171667611572ae71299f1a5",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 8,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 1,
+          "originalLine": 25,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/health-insurance-dependent/Client.tsx",
+      "beforeSha256": "ea415795ae8bd3d4199f596f397025a0b4069d4900b57636809db394054e905a",
+      "afterSha256": "7f3d0cc85cff6df2e908be7081f11e1b93fcd21cc0fc97e199e6fae331ac583d",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 148,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/health-insurance-dependent/page.tsx",
+      "beforeSha256": "41e29d31bb8adaee41584e540c0b44c3b67fcac7295ec70c18c28867979ec073",
+      "afterSha256": "4b960c059360292da55263636f1eaa8aba8932ffdaf114baf87eb9da82f902a5",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 22,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 1,
+          "originalLine": 96,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 2,
+          "originalLine": 169,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/health-insurance-fee-2026/page.tsx",
+      "beforeSha256": "1ecec7f1588d9647330c913b94bed1f485aaa2cd1192c91b51ab0e9a62afa447",
+      "afterSha256": "7b2ecbd88cb1c2bb5f52ee2653bd74a0c0be1318b6f2d3e2c030a58a5d11f2ce",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 17,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 1,
+          "originalLine": 81,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 2,
+          "originalLine": 91,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/income-tax-2026/page.tsx",
+      "beforeSha256": "d068e1d6050caa86a952dc4320355937216ecf9cd68a8e610e540d9702473735",
+      "afterSha256": "cf60e6034662f6d6962db6a148a58d7ef885f740889a4ab6c7ea71c13d2be729",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 119,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/industry/page.tsx",
+      "beforeSha256": "c68b45066d26d9b1f89bd3e68998edfb838a4939642f0d2b8104db9365165141",
+      "afterSha256": "bcae700d0437f486d7f342b303cc38b15a626c50eb75da44a6cbd7cda520f6e3",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 18,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 1,
+          "originalLine": 66,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/insights/bonus-payout-history-2026/page.tsx",
+      "beforeSha256": "27460c5831453c215ff91f51a86a0d6903468db0715c7ed2bd0f9b2fbd5766c9",
+      "afterSha256": "39c336f48be1ac48b84581d3d4bf4888edf03ec76c3ba4d43d3d0918ced01d48",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 180,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 1,
+          "originalLine": 220,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 2,
+          "originalLine": 229,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/insights/layout.tsx",
+      "beforeSha256": "d8035093fc07dc11dc0ebf40add57a7fa08387e11e2c3aca516b61ef57bbae5b",
+      "afterSha256": "0fa70aec85e1dea92115da179809d6d78b35ba0190a0712946c234fc0aa4c911",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 12,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/job/page.tsx",
+      "beforeSha256": "63a1f67028af96091a28291519301590e6dc9fd5eec90892d482ba2375da2c69",
+      "afterSha256": "f3c17e7a21633db1205851eb6080c90689142adbc64e25f0ae039826ce193568",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 19,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 1,
+          "originalLine": 87,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/mbti-salary/page.tsx",
+      "beforeSha256": "c224e6ffd3026a1a3eff57fd74d201cca98d5e28c1e52a529a3a50d06c95ba7f",
+      "afterSha256": "1bb80ad55fbe53cf528518d5befb124e61ca9a68f653c19a0e66965035b569d8",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 157,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/monthly/[amount]/page.tsx",
+      "beforeSha256": "db0c1e96ad1dc0580d43898bbae6e08752bbfe8296c65f6e35a8905ce917aad5",
+      "afterSha256": "9cdf2190ebf9b70723fd3cd50bfb02e14232c142f95405c795c073082dbacf8b",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 163,
+          "choice": "ours",
+          "reason": "Preserve production non-taxable meal deduction explanation and pension-base arithmetic; async params outside conflict remains merged."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/region/page.tsx",
+      "beforeSha256": "a0a7b6a31aa07163e063ff4f79c7ef5262f5bd2e1d89d7dc714dc8bc31b53ee8",
+      "afterSha256": "49d394610120dd9b1672bf77a75dd2e38846b6386b2806e846765216b4c72b61",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 21,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/retirement-pension-2026/page.tsx",
+      "beforeSha256": "92da10153263ef35b0669940fcca04c20be6933194ab5769850fdef53718d588",
+      "afterSha256": "ab474ff2bac4ce70cc7cad797bcf30b17aee2b5664d0dcf13a8119dca233f63e",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 19,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/salary-db/listed/MetricRankingView.tsx",
+      "beforeSha256": "bef582e9e7175f29dfb6fef17f31102e5584d9e9c9d5ca81191a5bda2dc30611",
+      "afterSha256": "7d3fb7dba09a8a6151302dced83dc7873bfa5ceac7aa595feb4fd18625926e93",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 206,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/salary-db/listed/[stockCode]/page.tsx",
+      "beforeSha256": "ee8f66113a44593d22cda2fe5989f71d2ad3f8e78897a149368764e3ace41b0a",
+      "afterSha256": "0d0f55cccaca26fb09553d0e431b3e98125a3d1fa52214889ad601405b901a3f",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 425,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/salary-db/listed/industry/[industryId]/page.tsx",
+      "beforeSha256": "90a30184d1e33ab43bb19b193fa9fee3cabdd7f94fa141225412a6706b337cbe",
+      "afterSha256": "233dc7f7750ac3bf464aa193f7384f2ca9d98498874b7a62e4632e174df3bdc7",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 314,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/salary-db/listed/page.tsx",
+      "beforeSha256": "1f92e3e888189210a85ecec313f4f1e07479d95ffdbb72d5decc5200e80eb5fc",
+      "afterSha256": "4e35959f476af4262d6680665b58b2237a6da855ca3e4591d53f5124e1a62670",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 84,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/salary-db/listed/top-tenure/page.tsx",
+      "beforeSha256": "f61baa712cea36b0342ab93d4c0e042e16340909481e2d8021a03bd05c8eccdf",
+      "afterSha256": "59f80f05d4db81a9bd05d5201cc27b4da3d3a42b4e7d7927abe44de42377c920",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 24,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/savings-interest-2026/page.tsx",
+      "beforeSha256": "e394a022cea766b96e58ba4defecbc4d7e884fbcf8cb0116eb95c5dd8adc5cdb",
+      "afterSha256": "d0f8fe7557a5451df9c8f5690923794e6aa579592bf3cbb4397e9caf85d7530f",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 73,
+          "choice": "ours",
+          "reason": "Preserve production youth savings product enrollment dates, successor product, and credit-union taxation qualifications."
+        },
+        {
+          "index": 1,
+          "originalLine": 205,
+          "choice": "ours",
+          "reason": "Preserve production youth savings product enrollment dates, successor product, and credit-union taxation qualifications."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/table/2027/annual/page.tsx",
+      "beforeSha256": "94e30b1476c4a458a374e28f0ebbc3b351ac8f7a212bd7678926b7bed8fa3d8b",
+      "afterSha256": "93d8df6b7f4c2061420e2c5ef8183defbea6fe72804f1a7e7e3c67b409b1aa15",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 52,
+          "choice": "ours",
+          "reason": "Preserve deployed caveat that rates are applied assumptions; do not restore unsupported 2027 freeze assertion."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/table/2027/hourly/page.tsx",
+      "beforeSha256": "ee02a8c4572204cad3296de492c607a635fdf797b83ec410295da262183727cc",
+      "afterSha256": "e4a8b5a0e7f5d621ddf66232480e0e2fe5a3c5dc75f64ed6d4ad265dcf29912f",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 56,
+          "choice": "ours",
+          "reason": "Preserve deployed caveat that rates are applied assumptions; do not restore unsupported 2027 freeze assertion."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/table/2027/monthly/page.tsx",
+      "beforeSha256": "31142309b34aa1a2cb23f1f8277703b3b2a682fa4ed1773b94654ca0162094ed",
+      "afterSha256": "f29a032d340ba9423aaaccfa4fb097b76c690b01b735e4f625edb4319d8dc5c2",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 59,
+          "choice": "ours",
+          "reason": "Preserve deployed caveat that rates are applied assumptions; do not restore unsupported 2027 freeze assertion."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/table/2027/weekly/page.tsx",
+      "beforeSha256": "2081a78bde9a2b3861cfb41a0161660932add103788f4e511ceecd1626521b9b",
+      "afterSha256": "1ca4ffd8c917a5e5a00de587a0bc84247dc6c643780d21bab5c9d597915e6bfd",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 50,
+          "choice": "ours",
+          "reason": "Preserve deployed caveat that rates are applied assumptions; do not restore unsupported 2027 freeze assertion."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/tips/page.tsx",
+      "beforeSha256": "d77d33836a9acc96ee134c20b94a6c2f935b8461a2e969980c1dd5e69f8ae3c1",
+      "afterSha256": "a0eb0fadb41a015adbf82b7369929b5fc6493be8319e9a0ac4c6560f39de1530",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 15,
+          "choice": "ours",
+          "reason": "Preserve production mortgage rate and business-income filing corrections; prefer deployed copy over older-base rewrite."
+        },
+        {
+          "index": 1,
+          "originalLine": 68,
+          "choice": "ours",
+          "reason": "Preserve production mortgage rate and business-income filing corrections; prefer deployed copy over older-base rewrite."
+        },
+        {
+          "index": 2,
+          "originalLine": 82,
+          "choice": "ours",
+          "reason": "Preserve production mortgage rate and business-income filing corrections; prefer deployed copy over older-base rewrite."
+        },
+        {
+          "index": 3,
+          "originalLine": 125,
+          "choice": "ours",
+          "reason": "Preserve production mortgage rate and business-income filing corrections; prefer deployed copy over older-base rewrite."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/tools/finance/bonus/page.tsx",
+      "beforeSha256": "0b2d63b117fb4884ec0ee8490d76b6b36fb73ff1a1510f7164fec7bd70b84aae",
+      "afterSha256": "42846b44f15bbd32ede054a41187219bc46b42bd62427859ea150f3dc5c17548",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 595,
+          "choice": "ours",
+          "reason": "Preserve corrected marginal-tax explanation, total-deduction terminology and withholding/IRP qualification copy."
+        },
+        {
+          "index": 1,
+          "originalLine": 934,
+          "choice": "ours",
+          "reason": "Preserve corrected marginal-tax explanation, total-deduction terminology and withholding/IRP qualification copy."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/tools/finance/installment/layout.tsx",
+      "beforeSha256": "479203204b8adf7333a5b30085f2117e01d9198b06286c348ba5eed2b1b3315f",
+      "afterSha256": "f87abb6499d326dc0f311550b71b0f14fa2a233597744fba95a5ec5aa4c2463a",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 10,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/tools/finance/irp/page.tsx",
+      "beforeSha256": "6f6c8a3d3d414f93d65c87dc61ad9484fad9eb8831c4fb1d5747f2faec9654ef",
+      "afterSha256": "6bcef6a44cd85f3527dbd5e0f0054d8711e95a39bbb7cf61cc240205660f92a1",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 17,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 1,
+          "originalLine": 115,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 2,
+          "originalLine": 146,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/tools/real-estate/acquisition-tax/layout.tsx",
+      "beforeSha256": "c0a9e545230754ca7c535f9229040c74ca4b86435c146a2437a7205467b0e68d",
+      "afterSha256": "3ba317704bee6d2a3b25dd23c3edfe3017757689111b3b149549cb62df7d0163",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 10,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/app/tools/real-estate/ltv/page.tsx",
+      "beforeSha256": "d90e34ec24388e30da969aeaf2d04ac472a61a38ac9e21b490c5a6519022d84b",
+      "afterSha256": "166e282f8a8e07a0ef9717f55d825f596d355f23e464d16dba318d7545dd28eb",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 17,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 1,
+          "originalLine": 110,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 2,
+          "originalLine": 140,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/components/BonusClusterLinks.tsx",
+      "beforeSha256": "634dc93a7608ea3f8980c9f2e3d065163a2c50ae0ca220aef709d765ba71ba78",
+      "afterSha256": "4e38f2fb304b8abd1866415e3fd91b1232e720f364aeee5a07c6b05d9b86a987",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 25,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/components/NextActions.tsx",
+      "beforeSha256": "d0267ce02a64483db580fc3299879fd149b203aa5d1fe34a336ea57fb24f40d2",
+      "afterSha256": "5d50e339d093e0c514acc67ac76a61b6b07b0f54c24b84cc81393323c4bbc920",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 83,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 1,
+          "originalLine": 167,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/components/header/navConfig.ts",
+      "beforeSha256": "7e1e1177dae269c152d9ed7d39cb07979a90e9bca5da10412ef051de9c34de9f",
+      "afterSha256": "9ef4c55947bd2439b41055f60e8734e3d922d7044850caf1b109b891b1d679bb",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 62,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/data/reportsRegistry.ts",
+      "beforeSha256": "c83e6034ca3d7a26c78be07ed9739c2c106275a965f714d8b8a317f10740180c",
+      "afterSha256": "d6f349f02a3ebe89c468d0f58db7b0a3bfd29dc3917b86f06f19125165db5ebe",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 61,
+          "choice": "ours",
+          "reason": "Preserve explicit production seoTitle distinction and its code51-01 comment; local old base removes it."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/lib/__tests__/jobOfficialStats.test.ts",
+      "beforeSha256": "100549f29fe53927291092324f978921346c6e246c33991a78cefe08bef6df0c",
+      "afterSha256": "2e01bcffec2b9b9952e790a61a169878226805515f57634a50caebbe0eb23cc9",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 34,
+          "choice": "theirs",
+          "reason": "Keep local Next15 async server-page call with Promise params while retaining all assertions/non-conflict content."
+        },
+        {
+          "index": 1,
+          "originalLine": 46,
+          "choice": "theirs",
+          "reason": "Keep local Next15 async server-page call with Promise params while retaining all assertions/non-conflict content."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/lib/guideCategories.ts",
+      "beforeSha256": "61325a62d09ed29d53a3ee28a2c27f55a07a5c103acd3d0247a18f3a4ece1f30",
+      "afterSha256": "0add9ff004bcc32414a65c247d4d1b94fa2c319fe8c66e79e0f8eda95775098b",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 76,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/lib/guides/finance-deepdive.ts",
+      "beforeSha256": "b3015ec31eb84745a0dba44afbb7d079e421d55d18897eec06222e398cb0d44b",
+      "afterSha256": "6a1c2dd0c90a0fafb33fa3db81deeaeba98bb2c55340eef7abdbd5c2ec65619c",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 348,
+          "choice": "ours",
+          "reason": "Preserve production monthly-700k contribution title over older monthly-500k rewrite."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/lib/guides/hot-bonus-tax-complete.ts",
+      "beforeSha256": "70ccf39b08c975c2d57d90d89214450ef488346460bcff3808599f713aaff068",
+      "afterSha256": "628d79b20c86e4c152ce86997a751890681b2a0309a7e4ebec3c835fcc12b567",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 1247,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 1,
+          "originalLine": 1301,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/lib/guides/hot-news-2026-deep-dive.ts",
+      "beforeSha256": "6b9549464f2d298e9035ee94f90ad910686d5d6046055c548dfe8aed42b0072a",
+      "afterSha256": "4ac867c62dce2e7fa20fc21c8f1cf4632ad55db9e346b99576dda5391b5a25c5",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 774,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/lib/guides/hot-news-2026-extended.ts",
+      "beforeSha256": "66076d77ad1cbd0155e72c6ae18921b8c53d94e3e88f3c81549e9fe6add05894",
+      "afterSha256": "0c97f7415575471df7b1601ae09acb85291b7219ef59f9a0613f6f905dd9310b",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 1367,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 1,
+          "originalLine": 1405,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 2,
+          "originalLine": 1419,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/lib/guides/hot-news-2026-may.ts",
+      "beforeSha256": "fdc05a29921d79766a7c02f505ccf34cc97763b0803524716deba54ef153be0b",
+      "afterSha256": "e1f0dca09b6cd1e09ae81e7fa63b0d9bc65cd8538248ace24203e3670f19b53e",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 1482,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        },
+        {
+          "index": 1,
+          "originalLine": 1711,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/lib/guides/legacy-rewrite-5.ts",
+      "beforeSha256": "c4f5462453e11f95f19d162117783cbbdf7497f0318394e84b6d11d2f272919a",
+      "afterSha256": "b1bacd256853e98a26464f7b85f05975732c777b945c8ffb7c4af9bacc0cc1ca",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 241,
+          "choice": "ours",
+          "reason": "Preserve production dated September FOMC paragraph with official-source URL; reject older August narrative."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/lib/guides/lifecycle-deepdive.ts",
+      "beforeSha256": "435f64d3a3b1dea64a7873d5a33a6632142b6c5a983300243868c8f7a01406bc",
+      "afterSha256": "6b2eceb8afab60fd1330853662423a3fa5af2fd67276596a84d6b843613d992b",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 79,
+          "choice": "ours",
+          "reason": "Preserve production title and revised 610m example over older 600m copy; no financial rules changed."
+        },
+        {
+          "index": 1,
+          "originalLine": 92,
+          "choice": "ours",
+          "reason": "Preserve production title and revised 610m example over older 600m copy; no financial rules changed."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/lib/guidesContent.ts",
+      "beforeSha256": "84e7716ee9bf4c81744527dac00960e5e6ee79009192e81a715936adf36e8dc9",
+      "afterSha256": "916b8e0046687ccde2517ba9a72813c166cc72287c8192de78a924cf9aeebf1b",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 230,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/lib/guidesMeta.generated.ts",
+      "beforeSha256": "6d5b7fb283a2a5d416ae2dde250de45f1ea241f004dfb28f465456570cd005c1",
+      "afterSha256": "72f6ae0050082d74077192827a399095568362b34dcc5f6dc9bd3a3d4faba925",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 341,
+          "choice": "ours",
+          "reason": "Preserve production metadata conflict chunks provisionally; regenerate contentChars/metadata from final merged guide sources separately."
+        },
+        {
+          "index": 1,
+          "originalLine": 407,
+          "choice": "ours",
+          "reason": "Preserve production metadata conflict chunks provisionally; regenerate contentChars/metadata from final merged guide sources separately."
+        },
+        {
+          "index": 2,
+          "originalLine": 1151,
+          "choice": "ours",
+          "reason": "Preserve production metadata conflict chunks provisionally; regenerate contentChars/metadata from final merged guide sources separately."
+        },
+        {
+          "index": 3,
+          "originalLine": 1382,
+          "choice": "ours",
+          "reason": "Preserve production metadata conflict chunks provisionally; regenerate contentChars/metadata from final merged guide sources separately."
+        },
+        {
+          "index": 4,
+          "originalLine": 1400,
+          "choice": "ours",
+          "reason": "Preserve production metadata conflict chunks provisionally; regenerate contentChars/metadata from final merged guide sources separately."
+        },
+        {
+          "index": 5,
+          "originalLine": 1510,
+          "choice": "ours",
+          "reason": "Preserve production metadata conflict chunks provisionally; regenerate contentChars/metadata from final merged guide sources separately."
+        },
+        {
+          "index": 6,
+          "originalLine": 2088,
+          "choice": "ours",
+          "reason": "Preserve production metadata conflict chunks provisionally; regenerate contentChars/metadata from final merged guide sources separately."
+        },
+        {
+          "index": 7,
+          "originalLine": 2151,
+          "choice": "ours",
+          "reason": "Preserve production metadata conflict chunks provisionally; regenerate contentChars/metadata from final merged guide sources separately."
+        },
+        {
+          "index": 8,
+          "originalLine": 2617,
+          "choice": "ours",
+          "reason": "Preserve production metadata conflict chunks provisionally; regenerate contentChars/metadata from final merged guide sources separately."
+        },
+        {
+          "index": 9,
+          "originalLine": 2927,
+          "choice": "ours",
+          "reason": "Preserve production metadata conflict chunks provisionally; regenerate contentChars/metadata from final merged guide sources separately."
+        },
+        {
+          "index": 10,
+          "originalLine": 3103,
+          "choice": "ours",
+          "reason": "Preserve production metadata conflict chunks provisionally; regenerate contentChars/metadata from final merged guide sources separately."
+        },
+        {
+          "index": 11,
+          "originalLine": 3626,
+          "choice": "ours",
+          "reason": "Preserve production metadata conflict chunks provisionally; regenerate contentChars/metadata from final merged guide sources separately."
+        },
+        {
+          "index": 12,
+          "originalLine": 3794,
+          "choice": "ours",
+          "reason": "Preserve production metadata conflict chunks provisionally; regenerate contentChars/metadata from final merged guide sources separately."
+        },
+        {
+          "index": 13,
+          "originalLine": 4000,
+          "choice": "ours",
+          "reason": "Preserve production metadata conflict chunks provisionally; regenerate contentChars/metadata from final merged guide sources separately."
+        },
+        {
+          "index": 14,
+          "originalLine": 4834,
+          "choice": "ours",
+          "reason": "Preserve production metadata conflict chunks provisionally; regenerate contentChars/metadata from final merged guide sources separately."
+        },
+        {
+          "index": 15,
+          "originalLine": 4858,
+          "choice": "ours",
+          "reason": "Preserve production metadata conflict chunks provisionally; regenerate contentChars/metadata from final merged guide sources separately."
+        },
+        {
+          "index": 16,
+          "originalLine": 4957,
+          "choice": "ours",
+          "reason": "Preserve production metadata conflict chunks provisionally; regenerate contentChars/metadata from final merged guide sources separately."
+        },
+        {
+          "index": 17,
+          "originalLine": 5669,
+          "choice": "ours",
+          "reason": "Preserve production metadata conflict chunks provisionally; regenerate contentChars/metadata from final merged guide sources separately."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/lib/hubs.ts",
+      "beforeSha256": "5f4de33205e918f50f10727b8fe61b37ac329999b8072183a4e1c4be0bfb9539",
+      "afterSha256": "bec15b188eae2d20f2021233bdc0ba84fe30b29f1f4568dae9a5718819bd73f1",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 317,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    },
+    {
+      "path": "src/lib/searchIndex.ts",
+      "beforeSha256": "71eca83e4fddb36e4ff65b8abcd087ede61ecea8ad6ee9bec4d758372789e972",
+      "afterSha256": "26f14e40232fd508abbc4fad125d5de4f3ac0ad21901778c56acafd46eff2a8a",
+      "hunks": [
+        {
+          "index": 0,
+          "originalLine": 146,
+          "choice": "ours",
+          "reason": "Preserve latest deployed content/SEO wording over older-base editorial rewrite; all non-conflicting security/Next15 changes remain."
+        }
+      ],
+      "nonConflictContent": "left byte-for-byte as automatic merge produced"
+    }
+  ],
+  "counts": {
+    "files": 54,
+    "hunks": 101,
+    "localAsyncHunks": 2
+  },
+  "verification": {
+    "typescriptParseFiles": 54,
+    "parseFailures": [],
+    "guidesMetadata": {
+      "cards": 308,
+      "result": "unchanged after regeneration from final sources"
+    },
+    "next15Routes": [
+      {
+        "path": "src/app/calc/[slug]/page.tsx",
+        "promiseParams": true,
+        "awaitsParams": true,
+        "noEdgeRuntime": true
+      },
+      {
+        "path": "src/app/company/compare/[slug]/page.tsx",
+        "promiseParams": true,
+        "awaitsParams": true,
+        "noEdgeRuntime": true
+      },
+      {
+        "path": "src/app/en/guides/[slug]/page.tsx",
+        "promiseParams": true,
+        "awaitsParams": true,
+        "noEdgeRuntime": true
+      },
+      {
+        "path": "src/app/en/tools/[slug]/page.tsx",
+        "promiseParams": true,
+        "awaitsParams": true,
+        "noEdgeRuntime": true
+      },
+      {
+        "path": "src/app/glossary/[slug]/page.tsx",
+        "promiseParams": true,
+        "awaitsParams": true,
+        "noEdgeRuntime": true
+      },
+      {
+        "path": "src/app/guides/category/[slug]/page.tsx",
+        "promiseParams": true,
+        "awaitsParams": true,
+        "noEdgeRuntime": true
+      },
+      {
+        "path": "src/app/guides/[slug]/page.tsx",
+        "promiseParams": true,
+        "awaitsParams": true,
+        "noEdgeRuntime": true
+      },
+      {
+        "path": "src/app/hub/[id]/page.tsx",
+        "promiseParams": true,
+        "awaitsParams": true,
+        "noEdgeRuntime": true
+      },
+      {
+        "path": "src/app/industry/[slug]/page.tsx",
+        "promiseParams": true,
+        "awaitsParams": true,
+        "noEdgeRuntime": true
+      },
+      {
+        "path": "src/app/job/[slug]/page.tsx",
+        "promiseParams": true,
+        "awaitsParams": true,
+        "noEdgeRuntime": true
+      },
+      {
+        "path": "src/app/monthly/[amount]/page.tsx",
+        "promiseParams": true,
+        "awaitsParams": true,
+        "noEdgeRuntime": true
+      },
+      {
+        "path": "src/app/qna/[slug]/page.tsx",
+        "promiseParams": true,
+        "awaitsParams": true,
+        "noEdgeRuntime": true
+      },
+      {
+        "path": "src/app/region/[slug]/page.tsx",
+        "promiseParams": true,
+        "awaitsParams": true,
+        "noEdgeRuntime": true
+      },
+      {
+        "path": "src/app/salary/[amount]/page.tsx",
+        "promiseParams": true,
+        "awaitsParams": true,
+        "noEdgeRuntime": true
+      },
+      {
+        "path": "src/app/salary-db/compare/[slug]/page.tsx",
+        "promiseParams": true,
+        "awaitsParams": true,
+        "noEdgeRuntime": true
+      },
+      {
+        "path": "src/app/salary-db/listed/industry/[industryId]/page.tsx",
+        "promiseParams": true,
+        "awaitsParams": true,
+        "noEdgeRuntime": true
+      },
+      {
+        "path": "src/app/salary-db/listed/[stockCode]/page.tsx",
+        "promiseParams": true,
+        "awaitsParams": true,
+        "noEdgeRuntime": true
+      },
+      {
+        "path": "src/app/salary-db/[id]/page.tsx",
+        "promiseParams": true,
+        "awaitsParams": true,
+        "noEdgeRuntime": true
+      },
+      {
+        "path": "src/app/share/[data]/page.tsx",
+        "promiseParams": true,
+        "awaitsParams": true,
+        "noEdgeRuntime": true
+      }
+    ],
+    "gitDiffCheck": "passed",
+    "runtimeTests": "pending: worktree node_modules not installed"
+  }
+}

@@ -136,7 +136,7 @@ export default function MemeCoinPage() {
 
   const captureResultImage = async (): Promise<Blob | null> => {
     if (!shareRef.current) return null;
-    const { default: html2canvas } = await import("html2canvas");
+    const { default: html2canvas } = await import("@/lib/captureElement");
     const canvas = await html2canvas(shareRef.current, { scale: 2, useCORS: true, backgroundColor: "#0D1117" });
     return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
   };
@@ -144,7 +144,7 @@ export default function MemeCoinPage() {
   const handleSaveImage = async () => {
     if (!shareRef.current) return;
     try {
-      const { default: html2canvas } = await import("html2canvas");
+      const { default: html2canvas } = await import("@/lib/captureElement");
       const canvas = await html2canvas(shareRef.current, { scale: 2, useCORS: true, backgroundColor: "#0D1117" });
       const a = document.createElement("a");
       a.download = "meme-coin-result.png";

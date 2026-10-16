@@ -62,7 +62,7 @@ const Report = () => {
 
  const handleDownload = async () => {
  if (reportRef.current) {
- const { default: html2canvas } = await import("html2canvas");
+ const { default: html2canvas } = await import("@/lib/captureElement");
  html2canvas(reportRef.current, {
  backgroundColor: null,
  scale: 2,

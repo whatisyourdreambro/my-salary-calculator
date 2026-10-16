@@ -31,15 +31,15 @@ describe("공식 연봉 자료의 통계 종류", () => {
     expect(html).not.toMatch(/약 \d+% (높은|낮은) 수준/);
   });
 
-  it("9급 페이지의 초임 보수를 Occupation의 median으로 방출하지 않는다", () => {
-    const html = renderToStaticMarkup(createElement(JobPage, { params: { slug: "civil-servant-9" } }));
+  it("9급 페이지의 초임 보수를 Occupation의 median으로 방출하지 않는다", async () => {
+    const html = renderToStaticMarkup(await JobPage({ params: Promise.resolve({ slug: "civil-servant-9" }) }));
     expect(html).toContain("3,428만원");
     expect(schemas(html).some((schema) => schema["@type"] === "Occupation")).toBe(false);
     expect(schemas(html).some((schema) => schema["@type"] === "FAQPage")).toBe(true);
   });
 
-  it("실제 중위 조사 자료의 카드와 Occupation 중위 금액은 유지한다", () => {
-    const html = renderToStaticMarkup(createElement(JobPage, { params: { slug: "nurse" } }));
+  it("실제 중위 조사 자료의 카드와 Occupation 중위 금액은 유지한다", async () => {
+    const html = renderToStaticMarkup(await JobPage({ params: Promise.resolve({ slug: "nurse" }) }));
     expect(html).toContain("중위 연봉 (상위 50%)");
     const occupation = schemas(html).find((schema) => schema["@type"] === "Occupation");
     expect(occupation).toBeDefined();

@@ -37,7 +37,9 @@ export const TIER_CONFIG = [
 ];
 
 export function calculateSalaryRank(ageGroup: string, salary: number) {
-  const percentiles = SALARY_PERCENTILES[ageGroup] ?? SALARY_PERCENTILES["30s"];
+  const percentiles = Object.hasOwn(SALARY_PERCENTILES, ageGroup)
+    ? SALARY_PERCENTILES[ageGroup]
+    : SALARY_PERCENTILES["30s"];
   const salaryMan = salary / 10000;
 
   for (let i = 0; i < percentiles.length; i++) {

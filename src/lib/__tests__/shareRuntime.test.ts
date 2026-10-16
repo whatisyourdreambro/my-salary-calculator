@@ -81,3 +81,7 @@ describe("outcome analytics carries fixed diagnostics only", () => {
     expect(JSON.stringify(gtag.mock.calls)).not.toMatch(/name@example|987654321/);
   });
 });
+
+// These tests exercise payload/lifecycle behavior with a synthetic eligible visitor.
+// The real fail-closed runtime decision is covered separately in liveAds.test.ts.
+vi.mock("../liveAds", () => ({ canRequestLiveAds: () => true }));

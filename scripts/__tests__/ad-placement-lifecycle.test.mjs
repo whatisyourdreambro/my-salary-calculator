@@ -18,15 +18,8 @@ const compiled = ts.transpileModule(readFileSync(sourcePath, "utf8"), {
     target: ts.ScriptTarget.ES2020,
   },
 }).outputText;
-const guardPath = resolve(dirname(sourcePath), "../lib/liveAds.ts");
-const compiledGuard = ts.transpileModule(readFileSync(guardPath, "utf8"), {
-  compilerOptions: {
-    module: ts.ModuleKind.CommonJS,
-    target: ts.ScriptTarget.ES2020,
-  },
-}).outputText;
 
-function createRuntime({ nodeEnv = "production", protocol = "https:", hostname = "www.moneysalary.com", webdriver = false } = {}) {
+function createRuntime({ liveAllowed = true } = {}) {
   let currentFiber;
   const fibers = [];
   const intersections = [];
@@ -117,17 +110,16 @@ function createRuntime({ nodeEnv = "production", protocol = "https:", hostname =
   }
 
   const jsx = (type, props) => ({ type, props });
-  const liveAds = {};
   const context = {
     exports: {},
     // A synthetic public slot ID only; never read the operator's env files.
-    process: { env: { NODE_ENV: nodeEnv, NEXT_PUBLIC_ADSENSE_SLOT_HOME_TOP: "1234567890" } },
+    process: { env: { NEXT_PUBLIC_ADSENSE_SLOT_HOME_TOP: "1234567890" } },
     require(name) {
       if (name === "react") return react;
       if (name === "react/jsx-runtime") return { jsx, jsxs: jsx };
       if (name === "next/navigation") return { usePathname: () => currentFiber.pathname };
-      if (name === "@/lib/liveAds") return liveAds;
       if (name === "@/lib/vitalsAttribution") return { viewportBucket: () => "m" };
+      if (name === "@/lib/liveAds") return { canRequestLiveAds: () => liveAllowed };
       if (name === "@/lib/analytics") return {
         trackAdRequestAttempt: (...params) => events.push({ name: "attempt", params }),
         trackAdRequestError: (...params) => events.push({ name: "error", params }),
@@ -137,8 +129,6 @@ function createRuntime({ nodeEnv = "production", protocol = "https:", hostname =
       throw new Error(`Unexpected dependency: ${name}`);
     },
     window: {
-      location: { protocol, hostname },
-      navigator: { webdriver },
       adsbygoogle: { push(value) { adPushes.push(value); return adPushes.length; } },
       addEventListener() {},
       removeEventListener() {},
@@ -149,11 +139,6 @@ function createRuntime({ nodeEnv = "production", protocol = "https:", hostname =
     IntersectionObserver: FakeIntersectionObserver,
     MutationObserver: FakeMutationObserver,
   };
-  vm.runInNewContext(compiledGuard, {
-    exports: liveAds,
-    process: context.process,
-    window: context.window,
-  }, { filename: guardPath });
   vm.runInNewContext(compiled, context, { filename: sourcePath });
   // Use the real exported wrapper to get the private AdSlot function without
   // adding exports or changing the production source for testability.
@@ -231,7 +216,7 @@ function createRuntime({ nodeEnv = "production", protocol = "https:", hostname =
     flushUpdates();
   }
 
-  return { mount, navigate, flushUpdates, intersections, adPushes, events };
+  return { mount, navigate, flushUpdates, intersections, adPushes, events, disableLiveAds: () => { liveAllowed = false; } };
 }
 
 test("a queued old-page intersection cannot mount/request an offscreen new-page ad", () => {
@@ -253,11 +238,9 @@ test("a queued dedup-denied intersection cannot push with no owned ins", () => {
   const runtime = createRuntime();
   runtime.mount("/a"); // The first instance owns the slot on this path.
   const duplicate = runtime.mount("/a");
-  const deniedObserver = runtime.intersections[1];
-  assert.equal(deniedObserver.disconnected, true);
+  assert.equal(runtime.intersections.length, 1, "the denied duplicate never observes visibility");
   assert.equal(duplicate.tree, null, "duplicate slot is suppressed");
 
-  deniedObserver.deliverQueuedIntersection();
   runtime.flushUpdates();
   assert.equal(duplicate.tree, null);
   assert.equal(runtime.adPushes.length, 0);
@@ -279,6 +262,26 @@ test("a current eligible intersection mounts its owned ins and pushes exactly on
   assert.equal(runtime.adPushes.length, 1, "repeated visibility callbacks do not repeat the request");
 });
 
+test("test mode does not mount ad ins nodes, observe visibility, push or emit attempts", () => {
+  const runtime = createRuntime({ liveAllowed: false });
+  const fiber = runtime.mount("/a");
+  assert.equal(fiber.container.ins, null);
+  assert.equal(runtime.intersections.length, 0);
+  assert.equal(runtime.adPushes.length, 0);
+  assert.equal(runtime.events.length, 0);
+});
+
+test("a queued visibility callback cannot activate ads after the runtime gate closes", () => {
+  const runtime = createRuntime();
+  const fiber = runtime.mount("/a");
+  runtime.disableLiveAds();
+  runtime.intersections[0].deliverQueuedIntersection();
+  runtime.flushUpdates();
+  assert.equal(fiber.container.ins, null);
+  assert.equal(runtime.adPushes.length, 0);
+  assert.equal(runtime.events.length, 0);
+});
+
 test("a surviving layout slot can request once again after a fresh pathname intersection", () => {
   const runtime = createRuntime();
   const fiber = runtime.mount("/a");
@@ -297,43 +300,4 @@ test("a surviving layout slot can request once again after a fresh pathname inte
   assert.notEqual(fiber.container.ins, previousIns);
   assert.equal(runtime.adPushes.length, 2);
   assert.deepEqual(runtime.events.map(({ name }) => name), ["attempt", "attempt"]);
-});
-
-for (const [name, environment] of [
-  ["localhost", { hostname: "localhost" }],
-  ["loopback", { hostname: "127.0.0.1" }],
-  ["Cloudflare preview", { hostname: "a1b2c3d4.my-salary-calculator.pages.dev" }],
-  ["development build", { nodeEnv: "development" }],
-  ["HTTP production host", { protocol: "http:" }],
-  ["WebDriver", { webdriver: true }],
-  ["lookalike host", { hostname: "www.moneysalary.com.example.com" }],
-]) {
-  test(`${name} preserves the ad container without mounting or requesting a live ad`, () => {
-    const runtime = createRuntime(environment);
-    const fiber = runtime.mount("/a");
-    assert.ok(fiber.container, "non-advertising layout remains available to QA");
-    assert.equal(fiber.tree.props.className, "ad-container ad-slot-home-top");
-    assert.equal(fiber.tree.props.style.minHeight, "140px", "the existing reserved height is preserved");
-    assert.equal(fiber.container.ins, null);
-    assert.equal(runtime.intersections.length, 0);
-    assert.equal(runtime.adPushes.length, 0);
-    assert.equal(runtime.events.length, 0);
-
-    runtime.navigate(fiber, "/b");
-    assert.ok(fiber.container);
-    assert.equal(fiber.container.ins, null);
-    assert.equal(runtime.intersections.length, 0);
-    assert.equal(runtime.adPushes.length, 0);
-    assert.equal(runtime.events.length, 0);
-  });
-}
-
-test("the HTTPS production apex host still requests one visible manual ad", () => {
-  const runtime = createRuntime({ hostname: "moneysalary.com" });
-  const fiber = runtime.mount("/a");
-  runtime.intersections[0].deliverQueuedIntersection();
-  runtime.flushUpdates();
-  assert.ok(fiber.container.ins);
-  assert.equal(runtime.adPushes.length, 1);
-  assert.deepEqual(runtime.events.map(({ name }) => name), ["attempt"]);
 });

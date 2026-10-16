@@ -16,14 +16,15 @@ import ShareSection from "@/components/ShareSection";
 export const dynamic = "force-static";
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
   return industriesData.map((ind) => ({ slug: ind.id }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params: pendingParams }: Props): Promise<Metadata> {
+  const params = await pendingParams;
   const industry = getIndustryById(params.slug);
   if (!industry) return { title: "산업 정보를 찾을 수 없습니다" };
 
@@ -60,7 +61,8 @@ const TREND_INFO = {
   declining: { label: "↓ 하락세", color: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300" },
 };
 
-export default function IndustryPage({ params }: Props) {
+export default async function IndustryPage({ params: pendingParams }: Props) {
+  const params = await pendingParams;
   const industry = getIndustryById(params.slug);
   // GSC 404 출혈 차단(7차): 옛 산업 슬러그 → /industry 메인 308
   if (!industry) permanentRedirect("/industry");

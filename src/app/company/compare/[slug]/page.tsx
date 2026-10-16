@@ -18,12 +18,13 @@ export function generateStaticParams(): { slug: string }[] {
 }
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
-export function generateMetadata({ params }: PageProps): Metadata {
+export async function generateMetadata({ params: pendingParams }: PageProps): Promise<Metadata> {
+  const params = await pendingParams;
   const [idA, idB] = params.slug.split("-vs-");
   const nameA = companies.find((c) => c.id === idA)?.name;
   const nameB = companies.find((c) => c.id === idB)?.name;
@@ -55,7 +56,8 @@ export function generateMetadata({ params }: PageProps): Metadata {
   });
 }
 
-export default function ComparisonResultPage({ params }: PageProps) {
+export default async function ComparisonResultPage({ params: pendingParams }: PageProps) {
+  const params = await pendingParams;
   return (
     <>
       <ComparisonResultContent slug={params.slug} />

@@ -3,8 +3,11 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import qaSafety from './lib/qa-safety.cjs';
+const { assertLocalQaTarget, assertQaEnvironment, launchQaBrowser } = qaSafety;
 const { chromium } = createRequire(import.meta.url)('playwright-core');
-const base = process.env.BASE_URL || 'http://127.0.0.1:3100';
+const base = assertLocalQaTarget(process.env.BASE_URL || 'http://127.0.0.1:3100');
+assertQaEnvironment();
 const output = path.resolve('.artifacts/experience-qa');
 const routes = process.env.QA_ROUTES?.split(',') || ['/calc', '/calc/refinance-break-even', '/calc/advertising-profit-roas', '/', '/en', '/home-loan', '/year-end-tax', '/calc/samsung-bonus', '/calc/jeonse-loan', '/calc/year-end-bonus-tax', '/savings-interest-2026', '/tools/finance/compound', '/money-check'];
 const report = [];
@@ -55,7 +58,7 @@ function auditPage() {
 }
 
 await fs.mkdir(output, { recursive: true });
-const browser = await chromium.launch({ headless: true, ...(process.platform === 'win32' ? { channel: 'chrome' } : {}) });
+const browser = await launchQaBrowser(chromium, base, { headless: true, ...(process.platform === 'win32' ? { channel: 'chrome' } : {}) });
 try {
   for (const theme of ['light', 'dark']) {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 }, colorScheme: theme, serviceWorkers: 'block' });

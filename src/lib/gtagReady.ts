@@ -6,10 +6,11 @@
 // 삽입된다. 페이지 트래커의 마운트 effect 가 먼저 돌면 window.gtag 가 아직 없어 trackEvent 의
 // window.gtag?.() 가 조용히 버려졌다(실측: 하드 로드 dataLayer 에 salary_lookup 없음, 클라 전환에서만 기록).
 //
-// ★ 전역 trackEvent·ga4-init 전략은 10/10 판정(ad_filled/ad_unfilled 기준선) 전이라 바꾸지 않는다.
-//   이 헬퍼는 호출한 트래커만 gtag 가 생길 때까지 짧게 기다린다.
+// 이 헬퍼는 허용된 실제 방문 환경에서만 gtag 가 생길 때까지 짧게 기다린다.
 //   - 첫 확인은 setTimeout(0): 같은 effect flush 에서 삽입되는 ga4-init 뒤로 밀린다.
 //   - 없으면 250ms 간격 최대 40회(약 10초) 재확인 후 포기한다(블로커 등 — 원래도 전송 불가).
+
+import { canRequestLiveAds } from "./liveAds";
 
 type GtagWindow = { gtag?: unknown };
 
@@ -18,10 +19,12 @@ export function runWhenGtagReady(
   send: () => void,
   { intervalMs = 250, maxRetries = 40 }: { intervalMs?: number; maxRetries?: number } = {},
 ): () => void {
+  if (!canRequestLiveAds()) return () => {};
   let timer: ReturnType<typeof setTimeout> | undefined;
   let retries = 0;
   const attempt = () => {
     timer = undefined;
+    if (!canRequestLiveAds()) return;
     const w = typeof window === "undefined" ? undefined : (window as unknown as GtagWindow);
     if (w && typeof w.gtag === "function") {
       send();

@@ -116,7 +116,7 @@ function makeStub({ warm = new Set(), overrides = {}, rssTables404 = true, colo 
   const fetchStub = async (url, init) => {
     const u = new URL(url);
     const p = u.pathname;
-    calls.push({ url, ua: init?.headers?.["user-agent"], redirect: init?.redirect });
+    calls.push({ url, ua: new Headers(init?.headers).get("user-agent"), redirect: init?.redirect });
     const key = p === "/api/og" ? p + u.search : p; // OG 는 쿼리가 곧 다른 이미지(엣지 캐시 키)
     const nth = (seen.get(key) ?? 0) + 1;
     seen.set(key, nth);

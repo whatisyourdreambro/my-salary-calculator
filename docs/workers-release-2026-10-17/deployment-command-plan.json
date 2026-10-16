@@ -1,0 +1,576 @@
+{
+  "schema": "moneysalary-workers-deployment-command-plan-v1",
+  "recordedAt": "2026-10-16T17:17:36.723Z",
+  "status": "NOT EXECUTED",
+  "scope": "Read-only preparation. This reviewer ran no uploads, deployments, Git pushes, publisher HTTP, UI, builds, database mutations or secret operations.",
+  "cwd": "C:/Users/ruby1/.codex/worktrees/workers-production-release/my-salary-calculator",
+  "sourceState": {
+    "branch": "codex/workers-production-release",
+    "head": "fed61a0543fa14501e706b362d1973f57d97eb97",
+    "localOriginMain": "7ae902995b3dc6dbf839beb9832af3e9255114ff",
+    "remote": "https://github.com/whatisyourdreambro/my-salary-calculator.git",
+    "dirty": true,
+    "caveat": "HEAD alone does not identify the dirty release. The coordinator must freeze source and artifact hashes and supply one unique release tag. No git fetch or remote Git inspection was performed by this reviewer."
+  },
+  "localConfiguration": {
+    "workerName": "moneysalary",
+    "accountId": "b01a4e306f09d28f1a0f1d57bda8410d",
+    "routes": [
+      {
+        "pattern": "www.moneysalary.com/*",
+        "zone_name": "moneysalary.com"
+      },
+      {
+        "pattern": "moneysalary.com/*",
+        "zone_name": "moneysalary.com"
+      }
+    ],
+    "workersDev": false,
+    "previewUrls": false,
+    "entry": "cloudflare/worker-entry.mjs",
+    "generatedEntry": ".open-next/worker.js",
+    "generatedHandler": ".open-next/server-functions/default/handler.mjs",
+    "compiledAdapterConfig": ".open-next/.build/open-next.config.edge.mjs",
+    "nextBuildId": ".next/BUILD_ID",
+    "assetBuildId": ".open-next/assets/BUILD_ID",
+    "assets": {
+      "directory": ".open-next/assets",
+      "binding": "ASSETS",
+      "run_worker_first": false,
+      "html_handling": "none",
+      "not_found_handling": "none"
+    },
+    "incrementalCache": "static-assets-incremental-cache; enableCacheInterception=false",
+    "cachePopulation": ".open-next/cache is copied to .open-next/assets/cdn-cgi/_next_cache by OpenNext populateCache/upload. The build alone is insufficient.",
+    "d1": {
+      "binding": "FEEDBACK_DB",
+      "databaseName": "moneysalary-private-contact",
+      "databaseId": "bb7628f9-16ea-408d-803f-3414f06e2557",
+      "migrationsDirectory": "migrations"
+    },
+    "requiredRuntimeSecret": "FEEDBACK_RATE_LIMIT_SECRET",
+    "optionalOrigin": "FEEDBACK_ALLOWED_ORIGIN; omission retains the application canonical HTTPS default. Do not invent a preview origin.",
+    "legacy": "public/.assetsignore excludes /_routes.json from Workers assets; legacy Pages routing metadata and project stay available for rollback.",
+    "versions": {
+      "next": "15.5.28",
+      "openNext": "1.20.12",
+      "wrangler": "4.151.1"
+    },
+    "remoteState": "These are local declarations, not evidence of remote existence, selected plan, applied schema, secrets, routes or authentication."
+  },
+  "publishing": {
+    "ci": ".github/workflows/ci.yml verifies isolated ad-free output; it does not publish Workers. Manual CI dispatch runs the production HTTP health job, not the verify job.",
+    "purge": ".github/workflows/cf-purge.yml waits for a release and purges; it is not a publisher. Default remains pages until CF_DEPLOY_TARGET=workers is deliberately configured.",
+    "sourcePublisher": "scripts/trend-publish/publish-approved.mjs pushes HEAD:main then verifies production. It has no Worker upload/activation step. Keep it and related source-publishing automations paused until a functioning Workers publishing path is installed.",
+    "beforeMainPush": "Disable Pages Git production auto-deploy and check queued builds so the retained rollback deployment cannot be replaced by the changed adapter. Keep Pages project, custom domains, DNS and known-good deployment. No main push is necessary for the first controlled manual release.",
+    "futureAutomation": "A separate authorized Workers publisher must build ordinary-visitor output, capture old sitemap before activation, upload with exact GitHub SHA tag, activate a pinned UUID at 100%, reconcile triggers, verify routing, purge, and submit the preserved delta. A green CI result or Git push does not accomplish that."
+  },
+  "unresolvedBlockers": [
+    "Wrangler authentication expired; no valid OAuth session exists according to the coordinator. Authentication must complete before remote inventory/upload. Verify account and exact Worker existence before choosing the bootstrap branch.",
+    "Wrangler OAuth and CF_API_TOKEN are different tool inputs. Our activation/purge/IndexNow helpers explicitly require CF_API_TOKEN plus CF_ACCOUNT_ID; do not read or copy OAuth credentials from private files into artifacts.",
+    "Production build verification, cache mirroring and final production dry-run passed. The latest QA build/check, HTTP, body, crawl and English/404 checks also passed as reported by the coordinator. Freeze final source/artifact identities before upload; actual upload startup_time_ms remains unverified.",
+    "Confirm account's current Workers plan and CPU allowance. Static-cache lookup, Next middleware/rendering and dynamic OG processing are not proven to fit Free 10ms.",
+    "Verify existing D1 identity, schema and secret binding privately. Pages bindings/secrets do not automatically transfer to Workers.",
+    "Record current Pages deployment/commit, both DNS/proxy states, custom-domain mapping, zone route IDs and existing Worker routes before any routing mutation.",
+    "Create a reviewed no-routes bootstrap/rollback configuration only if the Worker is genuinely new. Never run the bootstrap command against an existing unrelated Worker.",
+    "Freeze the dirty release and select an exact unique release tag. Pin the final UUID after any secret-version update; tags alone are not a unique version identity."
+  ],
+  "permissions": {
+    "wrangler": "Authenticated account access to Workers scripts/versions/deployments and route updates; zone read/route edit for both exact host routes; D1 access only for the selected database operations.",
+    "postRelease": "CF_API_TOKEN with Worker deployments/versions read and zone cache purge, plus CF_ACCOUNT_ID and CF_ZONE_ID. Do not store token values in this plan.",
+    "secretHandling": "Use masked interactive input or a short-lived owner-only secrets file outside the repository/staging/artifact directories. Do not pass secret values in argv, logs, screenshots, JSON evidence or NEXT_PUBLIC_*."
+  },
+  "commandsNotation": "All commands below are proposals, NOT EXECUTED. argv arrays are exact arguments, not shell strings. Replace ${...} only with validated coordinator inputs. Use the installed Node CLI paths; do not use npx @latest or update dependencies during release.",
+  "steps": [
+    {
+      "id": "freeze-and-preflight",
+      "status": "NOT EXECUTED",
+      "network": "none",
+      "commands": [
+        [
+          "node",
+          "scripts/verify-production-worker.mjs"
+        ],
+        [
+          "node",
+          "node_modules/@opennextjs/cloudflare/dist/cli/index.js",
+          "populateCache",
+          "local",
+          "--config",
+          "wrangler.jsonc"
+        ],
+        [
+          "node",
+          "node_modules/wrangler/bin/wrangler.js",
+          "versions",
+          "upload",
+          "--config",
+          "wrangler.jsonc",
+          "--dry-run",
+          "--outdir",
+          ".artifacts/workers-release-2026-10-17/production-dry-run"
+        ],
+        [
+          "node",
+          "scripts/check-worker-size.mjs",
+          ".artifacts/workers-release-2026-10-17/production-dry-run"
+        ]
+      ],
+      "conditions": "Coordinator build already completed; no QA environment switches, QA marker or QA directories. Disable CLI telemetry. With the present static-assets cache implementation, populateCache only copies the prerender cache locally; stop and re-review if cache type/bindings change. Verify fresh .artifacts/production-worker-verification.json and its matched BUILD_ID/chunks. Record all final artifact hashes and cache/assets count after population.",
+      "limitations": "Dry-run bundles without upload and cannot establish remote CPU, startup acceptance or installed bindings. Final generated paths must exist; do not use .open-next-qa output."
+    },
+    {
+      "id": "remote-read-only-inventory",
+      "status": "NOT EXECUTED",
+      "network": "Cloudflare control-plane only",
+      "commands": [
+        [
+          "node",
+          "node_modules/wrangler/bin/wrangler.js",
+          "whoami"
+        ],
+        [
+          "node",
+          "node_modules/wrangler/bin/wrangler.js",
+          "versions",
+          "list",
+          "--name",
+          "moneysalary",
+          "--config",
+          "wrangler.jsonc"
+        ],
+        [
+          "node",
+          "node_modules/wrangler/bin/wrangler.js",
+          "deployments",
+          "list",
+          "--name",
+          "moneysalary",
+          "--config",
+          "wrangler.jsonc"
+        ]
+      ],
+      "extraReadOnly": "Use authenticated admin API GETs for current Worker settings/subdomain/routes, zone DNS and retained Pages deployment. Output only names, IDs, statuses and binding names, never secret/plaintext binding values or private D1 rows. A missing/new Worker requires the bootstrap branch, not repeated blind upload retries."
+    },
+    {
+      "id": "d1-schema-preflight",
+      "status": "NOT EXECUTED",
+      "network": "Selected D1 control-plane",
+      "command": [
+        "node",
+        "node_modules/wrangler/bin/wrangler.js",
+        "d1",
+        "execute",
+        "FEEDBACK_DB",
+        "--remote",
+        "--config",
+        "wrangler.jsonc",
+        "--command",
+        "SELECT name, sql FROM sqlite_master WHERE type IN ('table','index') AND name IN ('contact_inquiries','feedback_rate_limits','helpfulness_feedback','contact_inquiries_queue','contact_inquiries_expiry','feedback_rate_limits_expiry','helpfulness_feedback_queue','helpfulness_feedback_expiry','helpfulness_feedback_target_time') ORDER BY name;"
+      ],
+      "condition": "Compare schema only against 0001_private_contact.sql and 0002_fixed_feedback.sql in a private operator session. This SELECT does not retrieve inquiry contents. Existing correct tables must be retained; IF NOT EXISTS is not a schema equivalence test.",
+      "conditionalMutation": "Only if a verified missing migration is required and separately authorized, apply that exact reviewed SQL/migration to the selected existing database after non-production verification. Do not drop/recreate data or blindly apply pending migrations."
+    },
+    {
+      "id": "first-worker-bootstrap-only-if-absent",
+      "status": "NOT EXECUTED",
+      "network": "REMOTE MUTATION; no publisher traffic",
+      "reason": "The official deployment-management documentation says the first Worker creation requires deploy; versions upload cannot create the initial project.",
+      "proposedFilesNotCreated": {
+        "directory": ".artifacts/workers-release-2026-10-17/bootstrap",
+        "wrangler.jsonc": {
+          "name": "moneysalary",
+          "account_id": "b01a4e306f09d28f1a0f1d57bda8410d",
+          "main": "bootstrap.mjs",
+          "compatibility_date": "2026-10-12",
+          "workers_dev": false,
+          "preview_urls": false,
+          "routes": []
+        },
+        "bootstrap.mjs": "export default { fetch() { return new Response('Not activated', { status: 503, headers: { 'Cache-Control': 'private, no-store', 'X-Robots-Tag': 'noindex, nofollow' } }); } };"
+      },
+      "command": [
+        "node",
+        "node_modules/wrangler/bin/wrangler.js",
+        "deploy",
+        "--config",
+        ".artifacts/workers-release-2026-10-17/bootstrap/wrangler.jsonc",
+        "--tag",
+        "${BOOTSTRAP_TAG}",
+        "--message",
+        "moneysalary-no-routes-bootstrap"
+      ],
+      "conditions": "Require verified absence of this Worker and a reviewed config with zero routes, no custom domains, no workers.dev/preview URL, no assets and no bindings. Bootstrap is an active placeholder version but has no public trigger; it is not the website release. If framework auto-detection redirects to OpenNext, stop; the coordinator must explicitly disable that redirection for this isolated bootstrap command rather than execute the production config.",
+      "after": "Read remote routes/subdomain state to confirm the public domain still reaches retained Pages and no public preview was enabled. Do not browse either publisher or version URL."
+    },
+    {
+      "id": "capture-before-domain-cutover",
+      "status": "NOT EXECUTED",
+      "network": "One non-rendering canonical sitemap GET; no JavaScript",
+      "requiredEnvNames": [
+        "CF_ACCOUNT_ID",
+        "CF_WORKER_NAME",
+        "CF_RELEASE_TAG",
+        "CF_DEPLOY_TARGET=workers",
+        "INDEXNOW_DEFER=1"
+      ],
+      "command": [
+        "node",
+        "scripts/indexnow-ping.mjs",
+        "--capture",
+        ".artifacts/workers-release-2026-10-17/indexnow-cutover.json"
+      ],
+      "conditions": "Final production .next build exists and source/build are frozen. No existing manifest overwrite, no QA switches. Captures old live and new built sitemap plus BUILD_ID and checksum. Does not submit."
+    },
+    {
+      "id": "upload-final-version-inactive",
+      "status": "NOT EXECUTED",
+      "network": "REMOTE MUTATION; assets and inactive version upload",
+      "command": [
+        "node",
+        "node_modules/@opennextjs/cloudflare/dist/cli/index.js",
+        "upload",
+        "--config",
+        "wrangler.jsonc",
+        "--tag",
+        "${CF_RELEASE_TAG}",
+        "--message",
+        "moneysalary-workers-cutover",
+        "--secrets-file",
+        "${PRIVATE_SECRETS_FILE}"
+      ],
+      "conditions": "Worker exists, final preflight passed, and no concurrent uploads/settings changes. Private file contains only FEEDBACK_RATE_LIMIT_SECRET (at least 32 characters) and is outside repo/stage/artifacts with owner-only access. OpenNext runWrangler currently uses shell:true: its passthrough path and release tag must contain no whitespace or shell metacharacters. Do not place a secret value in argv.",
+      "saferArgvAlternative": [
+        [
+          "node",
+          "node_modules/@opennextjs/cloudflare/dist/cli/index.js",
+          "populateCache",
+          "local",
+          "--config",
+          "wrangler.jsonc"
+        ],
+        [
+          "node",
+          "node_modules/wrangler/bin/wrangler.js",
+          "versions",
+          "upload",
+          "--config",
+          "wrangler.jsonc",
+          "--tag",
+          "${CF_RELEASE_TAG}",
+          "--message",
+          "moneysalary-workers-cutover",
+          "--secrets-file",
+          "${PRIVATE_SECRETS_FILE}"
+        ]
+      ],
+      "alternativeConditions": "The direct Wrangler argv path avoids the adapter shell for a secret-file path with spaces, but only after the current static-assets cache population and final artifact verification. It must use the exact same root config/entry/assets and must not skip cache population.",
+      "semantics": "Installed OpenNext upload first populates cache then calls Wrangler versions upload. Wrangler writes annotations['workers/tag'] from --tag, uploads ASSETS and D1 binding metadata, and keeps existing secrets. Upload does not reconcile routes or activate the version.",
+      "after": "Capture returned full version UUID and startup_time_ms. Read metadata privately to verify exact tag, expected bindings/secret name, compatibility settings, assets and disabled preview state. Ensure the current active deployment is unchanged."
+    },
+    {
+      "id": "alternative-masked-secret-setup",
+      "status": "NOT EXECUTED",
+      "network": "REMOTE MUTATION; new inactive version",
+      "when": "Alternative to --secrets-file only; do not run both without reason. Upload the application inactive first, then use masked interactive input.",
+      "command": [
+        "node",
+        "node_modules/wrangler/bin/wrangler.js",
+        "versions",
+        "secret",
+        "put",
+        "FEEDBACK_RATE_LIMIT_SECRET",
+        "--config",
+        "wrangler.jsonc",
+        "--name",
+        "moneysalary",
+        "--tag",
+        "${CF_RELEASE_TAG}",
+        "--message",
+        "moneysalary-runtime-secret"
+      ],
+      "caveat": "This command patches the LATEST uploaded version, not a supplied base UUID. Freeze other uploads and verify latest UUID is the intended application immediately before use. It returns a NEW version UUID. Use that new UUID as CF_EXPECTED_VERSION_ID and verify code/bindings/tag again. Never use plain secret put here because it deploys immediately."
+    },
+    {
+      "id": "activate-pinned-version",
+      "status": "NOT EXECUTED",
+      "network": "REMOTE MUTATION; activate one Worker version",
+      "command": [
+        "node",
+        "node_modules/wrangler/bin/wrangler.js",
+        "versions",
+        "deploy",
+        "${CF_EXPECTED_VERSION_ID}@100%",
+        "--config",
+        "wrangler.jsonc",
+        "--name",
+        "moneysalary",
+        "--message",
+        "moneysalary-workers-cutover",
+        "--yes"
+      ],
+      "conditions": "Use full returned UUID, not a tag alias. Initial migration still has no canonical Worker routes, so Pages remains the publisher until the separate route step. All code, secrets, D1 schema and plan conditions must be satisfied first."
+    },
+    {
+      "id": "verify-active-version",
+      "status": "NOT EXECUTED",
+      "network": "Cloudflare read-only",
+      "command": [
+        "node",
+        "--input-type=module",
+        "-e",
+        "import {workerReleaseConfig,readWorkerActivation} from './scripts/lib/cf-worker-release.mjs'; const result=await readWorkerActivation(workerReleaseConfig()); console.log(JSON.stringify(result)); if(result.state!=='success')process.exit(1);"
+      ],
+      "requiredEnvNames": [
+        "CF_API_TOKEN",
+        "CF_ACCOUNT_ID",
+        "CF_WORKER_NAME",
+        "CF_RELEASE_TAG",
+        "CF_EXPECTED_VERSION_ID"
+      ],
+      "contract": "First active deployment must have strategy percentage and exactly one version at 100%; full UUID must match. Version annotation workers/tag must equal CF_RELEASE_TAG. Deployment is re-read after metadata and its identity must be unchanged. This is not a DNS/routing or application health check."
+    },
+    {
+      "id": "attach-canonical-routes",
+      "status": "NOT EXECUTED",
+      "network": "REMOTE MUTATION; live cutover",
+      "command": [
+        "node",
+        "node_modules/wrangler/bin/wrangler.js",
+        "triggers",
+        "deploy",
+        "--config",
+        "wrangler.jsonc",
+        "--name",
+        "moneysalary"
+      ],
+      "conditions": "Pre-recorded route/DNS/Pages state and rollback plan exist; both hostname DNS records remain proxied to the existing Pages origin. Config must contain exactly the two reviewed /* routes and workers_dev/preview_urls=false. No custom_domain:true or DNS replacement. Stop if preexisting conflicting routes would be overwritten.",
+      "semantics": "Triggers are separate non-versioned settings. versions upload/deploy do not apply these route changes. Re-read remote routes to confirm both patterns point to moneysalary and no unrelated route changed.",
+      "after": "Only non-rendering guarded canonical GET/HEAD checks, manual redirects and MoneySalary-QA/1.0 are allowed. Check canonical redirect, new BUILD_ID/chunks, representative HTML/RSC/header/cache contracts, sitemap and fail-closed API headers. No publisher browser, ad/analytics endpoint, preview request, or synthetic real ad load. This reviewer does not perform these requests."
+    },
+    {
+      "id": "purge-verified-release",
+      "status": "NOT EXECUTED",
+      "network": "REMOTE MUTATION; zone cache purge",
+      "requiredEnvNames": [
+        "CF_DEPLOY_TARGET=workers",
+        "CF_API_TOKEN",
+        "CF_ACCOUNT_ID",
+        "CF_ZONE_ID",
+        "CF_WORKER_NAME",
+        "CF_RELEASE_TAG",
+        "CF_EXPECTED_VERSION_ID"
+      ],
+      "command": [
+        "node",
+        "scripts/cf-purge-after-deploy.mjs"
+      ],
+      "conditions": "Canonical route verification is independently complete. Helper waits for exact release and rechecks deployment before purge; it cannot establish hostname routing or lock a concurrent future change."
+    },
+    {
+      "id": "submit-captured-delta-once",
+      "status": "NOT EXECUTED",
+      "network": "Canonical sitemap GET plus IndexNow endpoint POSTs",
+      "command": [
+        "node",
+        "scripts/indexnow-ping.mjs",
+        "--submit",
+        ".artifacts/workers-release-2026-10-17/indexnow-cutover.json"
+      ],
+      "conditions": "Same build, manifest and exact final tag/UUID; production routing and purge complete. The tool verifies activation, canonical new sitemap, activation again, and writes an exclusive .submission.json claim before submission.",
+      "caveat": "Preserve both manifest and receipt. A claimed/ambiguous/needs-review receipt requires operator review; deleting it defeats at-most-once attempts. This does not guarantee third-party indexing or atomicity with unrelated concurrent operators."
+    }
+  ],
+  "rollback": {
+    "status": "NOT EXECUTED",
+    "firstCutover": "Restore the recorded Worker route state only. For a verified new Worker with no prior routes, remove only the two newly created route IDs; keep Pages custom-domain/DNS mapping and its known-good deployment, D1 data and Worker versions. Never delete the Pages project or database.",
+    "routeApiTemplates": [
+      {
+        "method": "DELETE",
+        "url": "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/workers/routes/${CREATED_WWW_ROUTE_ID}",
+        "condition": "ID, pattern and script must match the captured newly created www route."
+      },
+      {
+        "method": "DELETE",
+        "url": "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/workers/routes/${CREATED_APEX_ROUTE_ID}",
+        "condition": "ID, pattern and script must match the captured newly created apex route."
+      }
+    ],
+    "alternative": "A reviewed minimal rollback config containing the same Worker/account, routes:[], workers_dev:false, preview_urls:false can be used with wrangler triggers deploy only when the recorded original route set was empty. It must not remove unrelated routes.",
+    "afterRouteRestore": "Verify retained Pages is actually selected and reachable through the canonical domains with guarded non-rendering HTTP. Then run cf-purge-after-deploy.mjs in CF_DEPLOY_TARGET=pages with CF_PAGES_PROJECT=my-salary-calculator and the exact retained CF_PAGES_COMMIT_SHA. Pages helper only finds a successful matching deployment; it does not restore or prove selected routing.",
+    "laterWorkerRollback": [
+      "node",
+      "node_modules/wrangler/bin/wrangler.js",
+      "versions",
+      "deploy",
+      "${KNOWN_GOOD_WORKER_UUID}@100%",
+      "--config",
+      "wrangler.jsonc",
+      "--name",
+      "moneysalary",
+      "--message",
+      "moneysalary-rollback",
+      "--yes"
+    ],
+    "laterConditions": "Verify the known-good version's own tag/bindings/secret compatibility, then Workers-mode purge with that tag and UUID. Database state is not rolled back by selecting a Worker version. Do not reuse the forward-release IndexNow manifest for a different rollback."
+  },
+  "sizeAndCpu": {
+    "officialVerifiedOn": "2026-10-17",
+    "historicalComparisonOnly": {
+      "freeGzipBytes": 3145728,
+      "paidGzipBytes": 10485760
+    },
+    "currentOfficial": {
+      "workerUncompressedBytes": 67108864,
+      "compressedLimit": null,
+      "freeCpuMs": 10,
+      "paidDefaultCpuMs": 30000,
+      "paidMaximumCpuMs": 300000,
+      "memoryBytes": 134217728,
+      "startupMs": 1000,
+      "freeStaticAssets": 20000,
+      "paidStaticAssets": 100000,
+      "maxAssetBytes": 26214400
+    },
+    "source": "https://developers.cloudflare.com/workers/platform/limits/#worker-size",
+    "conclusion": "The 2026-10-12 official limits page explicitly states no compressed size limit, so the old 3MiB/10MiB thresholds cannot justify requiring Paid today. Check raw Total Upload against 64MiB; keep gzip only as historical/informational comparison. Free10ms CPU and startup1s remain independent constraints.",
+    "dryRun": {
+      "qa": {
+        "status": "PASSED",
+        "currentRevisionValidation": "Latest full QA rebuild after the incoming-body transport cancellation fix and all listed final checks passed, as reported by the coordinator.",
+        "exitCode": 0,
+        "staticAssets": 4016,
+        "previousArtifactWranglerReported": {
+          "scope": "Historical measurements from the preceding QA artifact only; current artifact bytes are recorded in offlineRuntimeInventory.",
+          "totalUploadKiB": 53172.55,
+          "gzipKiB": 9997.83
+        },
+        "offlineRuntimeInventory": {
+          "source": "Latest QA size verification, reported by release coordinator on 2026-10-17",
+          "runtimeFiles": 4,
+          "rawBytes": 54448292,
+          "gzipLevel9Bytes": 10102380,
+          "officialRawLimitBytes": 67108864,
+          "rawHeadroomBytes": 12660572,
+          "withinOfficialRawLimit": true,
+          "internalWarningBytes": 50331648,
+          "internalWarningExceeded": true
+        },
+        "finalValidation": {
+          "source": "Release coordinator; no commands were rerun by this reporting task",
+          "build": { "exitCode": 0, "status": "PASSED" },
+          "check": { "exitCode": 0, "status": "PASSED" },
+          "http": { "exitCode": 0, "status": "PASSED", "checks": 28 },
+          "body": { "exitCode": 0, "status": "PASSED", "checks": 6 },
+          "crawl": { "exitCode": 0, "status": "PASSED", "routes": 267 },
+          "english": { "exitCode": 0, "status": "PASSED", "routes": 39, "missingRoutesReturning404": 3 }
+        },
+        "interpretation": "Current QA package is below the official 64MiB raw limit by 12660572 bytes and above the repository's conservative 48MiB warning. Its 4016 assets are below Free20000/Paid100000 file-count limits. Previous-artifact Wrangler gzip and the current per-file gzip-9 sum describe different artifacts and methods; do not combine them. No compressed-size eligibility claim is needed under the current official limit.",
+        "limitation": "This is isolated ad-free QA output and must never be deployed. It does not establish the ordinary-visitor production bundle size, remote startup acceptance or per-request CPU suitability. Measurements were supplied by the coordinator; this reviewer did not run a build or dry-run."
+      },
+      "production": {
+        "status": "PASSED",
+        "exitCode": 0,
+        "source": "production-worker-check-final.log and production-worker-size-final.log, reported by release coordinator",
+        "staticAssets": 4016,
+        "wranglerReported": {
+          "totalUploadKiB": 52269.30,
+          "gzipKiB": 9972.13
+        },
+        "offlineRuntimeInventory": {
+          "runtimeFiles": 4,
+          "rawBytes": 53523765,
+          "gzipLevel9Bytes": 10083709,
+          "officialRawLimitBytes": 67108864,
+          "rawHeadroomBytes": 13585099,
+          "withinOfficialRawLimit": true,
+          "internalWarningBytes": 50331648,
+          "internalWarningExceeded": true
+        },
+        "productionVerifier": {
+          "status": "PASSED",
+          "cacheEntries": 2510,
+          "cacheBytes": 1260255781,
+          "cacheMirroredToAssets": true
+        },
+        "interpretation": "The ordinary-visitor bundle is below the current official 64MiB raw limit, with 13585099 bytes of headroom, and above the internal 48MiB warning. Static assets are below both plan file-count limits. Cache bytes are asset storage, not executable Worker bundle bytes; do not add them to the runtime size. Wrangler gzip and the separate per-file gzip-9 sum are different informational measurements.",
+        "limitation": "Local static eligibility, cache mirroring and dry-run packaging only. No remote startup acceptance, per-request CPU compliance, installed bindings, deployed routes or delivered ads are established. This reviewer did not run the production build/dry-run."
+      },
+      "nativeBodyRegression": {
+        "status": "PASSED",
+        "workerdChecks": 8,
+        "includedInFinalNodeTests": 412,
+        "finalNodeFailed": 0,
+        "lintErrors": 0,
+        "source": "Coordinator final validation; standalone test evidence in .artifacts/workers-release-2026-10-17/worker-body-workerd-test.log",
+        "scope": "Actual helper plus synthetic Worker, external outbound denied, no Wrangler dev body-drain middleware, no application or advertising code. Runtime code was not changed by this reporting task."
+      },
+      "remoteStatus": "OAuth authentication expired; no valid OAuth session. Remote changes: 0. Actual uploads: 0. Deployments: 0. Startup CLI/profiling was not executed and no profiling harness was created. Actual versions upload startup_time_ms remains unverified."
+    },
+    "startupVerification": {
+      "status": "UNVERIFIED",
+      "localProfiler": "NOT EXECUTED",
+      "profilingHarnessCreated": false,
+      "reviewedWranglerVersion": "4.151.1",
+      "reviewScope": "Read-only installed CLI/source and official documentation review; no QA or production artifact was executed for startup profiling.",
+      "finding": "check startup requires a serialized multipart upload, not worker-entry.js alone. Its local Miniflare profiler measures module initialization, but the default implementation does not guarantee all outbound traffic is blocked. No new harness or CLI execution is authorized by this reporting task.",
+      "remainingGate": "After authentication and the authorized inactive production versions upload, capture and verify the returned startup_time_ms and upload acceptance before activation. This control-plane result has not been obtained.",
+      "limitation": "The observed 7.6-second local start-to-first-GET wall time is not startup CPU evidence. Even a local CPU profile would not certify the Cloudflare 1000ms startup limit or Free per-request 10ms allowance.",
+      "references": [
+        "https://developers.cloudflare.com/workers/wrangler/commands/workers/#startup",
+        "https://developers.cloudflare.com/workers/platform/limits/#worker-startup-time"
+      ]
+    },
+    "cpuEvidence": "The Next server, middleware/cache JSON work and dynamic OG rendering execute in the Worker. Current code/local wall-time observations do not prove live CPU fits Free10ms. A successful upload also does not prove per-request CPU suitability. Do not silently change caching/security semantics to meet Free."
+  },
+  "references": [
+    {
+      "url": "https://opennext.js.org/cloudflare/cli",
+      "supports": "upload performs cache population and calls versions upload without activation"
+    },
+    {
+      "url": "https://developers.cloudflare.com/workers/versions-and-deployments/deployment-management/",
+      "supports": "first upload/deploy and separate triggers; canonical page temporarily unavailable in web reader"
+    },
+    {
+      "url": "https://0285ca83.previews.developers.cloudflare.com/workers/versions-and-deployments/deployment-management/",
+      "supports": "Official Cloudflare documentation preview served the first-upload restriction and separate triggers guidance"
+    },
+    {
+      "url": "https://developers.cloudflare.com/workers/configuration/secrets/",
+      "supports": "plain secret put immediately deploys; versions secret put is inactive; --secrets-file supports atomic code/secret version"
+    },
+    {
+      "url": "https://developers.cloudflare.com/workers/platform/limits/",
+      "supports": "current 64MiB raw/no compressed limit; CPU/memory/startup/assets limits"
+    },
+    {
+      "url": "https://developers.cloudflare.com/workers/wrangler/commands/workers/",
+      "supports": "triggers deploy command"
+    },
+    {
+      "file": "node_modules/@opennextjs/cloudflare/dist/cli/commands/upload.js",
+      "supports": "cache then versions upload"
+    },
+    {
+      "file": "node_modules/@opennextjs/cloudflare/dist/cli/commands/utils/run-wrangler.js",
+      "supports": "installed adapter shell passthrough and dotenv handling"
+    },
+    {
+      "file": "node_modules/wrangler/wrangler-dist/cli.js",
+      "supports": "workers/tag annotation, --secrets-file inheritance, version deploy UUID percentages, latest-version secret patch"
+    },
+    {
+      "file": "scripts/lib/cf-worker-release.mjs",
+      "supports": "exact tag/version and deployment re-read contract"
+    },
+    {
+      "file": "scripts/indexnow-ping.mjs",
+      "supports": "capture/build identity/activation/canonical sitemap/exclusive receipt"
+    },
+    {
+      "file": "scripts/cf-purge-after-deploy.mjs",
+      "supports": "Workers activation gate and retained Pages mode"
+    }
+  ]
+}

@@ -69,7 +69,7 @@ export const RATE_YEAR_SURFACES: RateYearSurface[] = [
   },
   {
     id: `상장사 lite /salary-db/listed/${listed.stockCode} FAQ·산출 기준`,
-    load: async () => render((await import("@/app/salary-db/listed/[stockCode]/page")).default, { params: { stockCode: listed.stockCode } }),
+    load: async () => strip(renderToStaticMarkup(await (await import("@/app/salary-db/listed/[stockCode]/page")).default({ params: Promise.resolve({ stockCode: listed.stockCode }) }))),
     expected: (y) => {
       const net = Math.round(calculateSalary2026(listed.avgSalaryManwon * 10000, 200000, 1, 0).netPay / 10000);
       return [

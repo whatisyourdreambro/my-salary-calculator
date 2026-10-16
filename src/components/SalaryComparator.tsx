@@ -60,7 +60,7 @@ export default function SalaryComparator() {
     setCapturing(true);
     setShareMessage("");
     try {
-      const { default: html2canvas } = await import("html2canvas");
+      const { default: html2canvas } = await import("@/lib/captureElement");
       if (currentComparison.current !== snapshot) return;
       const canvas = await html2canvas(element, { scale: 2,
         backgroundColor: document.documentElement.classList.contains("dark") ? "#1a202c" : "#ffffff",

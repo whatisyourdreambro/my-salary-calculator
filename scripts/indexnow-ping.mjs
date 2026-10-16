@@ -29,21 +29,31 @@
 // 운영 확인: CF Pages 빌드 로그의 "[indexnow]" 라인 — "diff: 신규 N · 변경 N · 삭제 N" 과
 // 제출/건너뜀 사유가 찍힌다. 로그에 없으면 대시보드가 npm run build를 우회하는 구성 —
 // build 스크립트를 "next build && node scripts/indexnow-ping.mjs ..." 로 변경(플랜 B).
+// Workers: set CF_DEPLOY_TARGET=workers (or INDEXNOW_DEFER=1) during build. Before
+// cutover: --capture <manifest.json>, after activation: --submit <same manifest>.
+// Required: CF_ACCOUNT_ID / CF_WORKER_NAME / CF_RELEASE_TAG; submit also needs
+// CF_API_TOKEN and CF_EXPECTED_VERSION_ID. INDEXNOW_BUILD_DIR defaults to .next.
+// Explicit cutover modes fail with exit 1; ordinary Pages postbuild remains nonfatal.
+// Preserve the manifest AND its .submission.json receipt; never delete/replay them
+// to retry an ambiguous network result. QA artifacts can never submit, even FORCE.
 
-import { readFileSync, readdirSync, existsSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync, writeFileSync, mkdirSync } from "node:fs";
+import { createHash } from "node:crypto";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import assert from "node:assert/strict";
 import { HOST, readSitemap, planSubmission, formatCounts } from "./indexnow-diff.mjs";
 import { submitIndexNow } from "./indexnow-submit.mjs";
+import qaHttp from "./lib/qa-production-http.cjs";
+import { workerReleaseConfig, readWorkerActivation } from "./lib/cf-worker-release.mjs";
 
 const URL_CAP = 10000; // IndexNow 1회 POST 상한
 const UA =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
+  `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 ${qaHttp.QA_USER_AGENT}`;
 
-function findKey() {
+function findKey(cwd = process.cwd()) {
   try {
-    const f = readdirSync(path.join(process.cwd(), "public")).find((n) =>
+    const f = readdirSync(path.join(cwd, "public")).find((n) =>
       /^[0-9a-f]{32}\.txt$/.test(n)
     );
     return f ? f.slice(0, -4) : null;
@@ -55,8 +65,8 @@ function findKey() {
 // 이번 빌드: next build 산출물의 프리렌더 사이트맵 — postbuild 시점에 항상 최신.
 // 주의: .next/server/app 에는 sitemap.xml(디렉터리, route.js)과
 // sitemap.xml.body(실제 XML)가 공존 — 항목별 try로 디렉터리는 건너뛴다.
-function buildSitemap() {
-  const dir = path.join(process.cwd(), ".next", "server", "app");
+export function buildSitemap(buildDir = path.join(process.cwd(), ".next")) {
+  const dir = path.join(buildDir, "server", "app");
   if (!existsSync(dir)) return { ok: false, reason: ".next/server/app 없음" };
   let entries;
   try {
@@ -77,11 +87,11 @@ function buildSitemap() {
 }
 
 // 직전 배포: 운영 사이트맵(브라우저 UA — 기본 UA 는 CF 에서 403).
-async function productionSitemap() {
+export async function productionSitemap(fetchFn = globalThis.fetch) {
   try {
-    const res = await fetch(`https://${HOST}/sitemap.xml`, {
+    const res = await qaHttp.fetchProductionQaDocument(`https://${HOST}/sitemap.xml`, {
+      fetchFn,
       headers: { "user-agent": UA },
-      signal: AbortSignal.timeout(15000),
     });
     return readSitemap({ status: res.status, body: await res.text() });
   } catch (e) {
@@ -89,10 +99,138 @@ async function productionSitemap() {
   }
 }
 
-async function main() {
+export function assertIndexNowProduction(env = process.env, cwd = process.cwd(), buildDir = path.join(cwd, '.next')) {
+  const qaPath = /(^|[\\/])(?:\.open-next-qa|\.next-qa)(?:[\\/]|$)/i;
+  if (env.MSY_QA_MODE === '1' || env.MSY_QA_WORKER_STAGE === '1'
+      || env.NEXT_PUBLIC_ADS_DISABLED === '1' || qaPath.test(path.resolve(cwd))
+      || qaPath.test(path.resolve(buildDir))) {
+    throw new Error('IndexNow is disabled for QA builds, including INDEXNOW_FORCE.');
+  }
+}
+
+const digest = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
+const snapshot = (sitemap) => [...sitemap.entries].sort(([a], [b]) => a.localeCompare(b));
+const releaseIdentity = ({ accountId, workerName, releaseTag }) => ({ accountId, workerName, releaseTag });
+
+// Capture before routing changes; no key or token is written to this manifest.
+export function createCutoverManifest({ build, previous, release, buildDir, buildId, capturedAt = new Date().toISOString() }) {
+  if (!build?.ok || !previous?.ok) throw new Error('Both build and pre-cutover production sitemaps must be valid; no full-list fallback.');
+  if (!buildId || typeof buildId !== 'string') throw new Error('Production BUILD_ID is required.');
+  const plan = planSubmission(build, previous, { cap: URL_CAP });
+  if (plan.counts.added + plan.counts.changed + plan.counts.removed > URL_CAP) {
+    throw new Error('Delta exceeds the single-submission cap; explicit batching is required.');
+  }
+  for (const url of plan.urls) qaHttp.assertProductionQaTarget(url);
+  const payload = {
+    schema: 'moneysalary-indexnow-cutover-v1', host: HOST, capturedAt,
+    release: releaseIdentity(release), buildDir: path.resolve(buildDir), buildId,
+    previous: snapshot(previous), build: snapshot(build), plan,
+  };
+  return { ...payload, sha256: digest(payload) };
+}
+
+export function validateCutoverManifest(manifest, config) {
+  if (!manifest || manifest.schema !== 'moneysalary-indexnow-cutover-v1' || manifest.host !== HOST) throw new Error('Invalid cutover manifest schema/host.');
+  const { sha256, ...payload } = manifest;
+  if (sha256 !== digest(payload)) throw new Error('Cutover manifest checksum mismatch.');
+  if (JSON.stringify(manifest.release) !== JSON.stringify(releaseIdentity(config))) throw new Error('Cutover manifest release/account/Worker mismatch.');
+  const decode = (entries) => {
+    if (!Array.isArray(entries) || entries.length === 0) throw new Error('Invalid sitemap snapshot.');
+    for (const pair of entries) {
+      if (!Array.isArray(pair) || pair.length !== 2 || typeof pair[0] !== 'string'
+          || (pair[1] !== null && typeof pair[1] !== 'string')) throw new Error('Invalid sitemap entry.');
+      qaHttp.assertProductionQaTarget(pair[0]);
+    }
+    const parsed = new Map(entries);
+    if (parsed.size !== entries.length) throw new Error('Duplicate sitemap entries.');
+    return { ok: true, entries: parsed };
+  };
+  const recomputed = planSubmission(decode(manifest.build), decode(manifest.previous), { cap: URL_CAP });
+  if (JSON.stringify(recomputed) !== JSON.stringify(manifest.plan)) throw new Error('Cutover delta does not match captured snapshots.');
+  if (recomputed.counts.added + recomputed.counts.changed + recomputed.counts.removed > URL_CAP) throw new Error('Cutover delta exceeds cap.');
+  return manifest;
+}
+
+export async function captureCutover(manifestFile, { env = process.env, cwd = process.cwd(), fetchFn = globalThis.fetch } = {}) {
+  const buildDir = path.resolve(cwd, env.INDEXNOW_BUILD_DIR || '.next');
+  assertIndexNowProduction(env, cwd, buildDir);
+  const config = workerReleaseConfig(env, { requireToken: false });
+  if (existsSync(manifestFile)) throw new Error('Cutover manifest already exists; do not overwrite the pre-cutover snapshot.');
+  const build = buildSitemap(buildDir);
+  if (!build.ok) throw new Error(`Build sitemap unavailable: ${build.reason}`);
+  const buildId = readFileSync(path.join(buildDir, 'BUILD_ID'), 'utf8').trim();
+  mkdirSync(path.dirname(path.resolve(manifestFile)), { recursive: true });
+  const previous = await productionSitemap(fetchFn);
+  const manifest = createCutoverManifest({ build, previous, release: config, buildDir, buildId });
+  writeFileSync(manifestFile, JSON.stringify(manifest, null, 2) + '\n', { flag: 'wx' });
+  console.log(`[indexnow] captured pre-cutover delta: ${formatCounts(manifest.plan.counts)}; no submission`);
+  return manifest;
+}
+
+// A durable claim is written BEFORE either endpoint is contacted. Re-running the
+// SAME manifest never re-sends, even after a crash/timeout. This favors at-most-once
+// attempts; ambiguous outcomes require operator review, not an automatic retry.
+// Keep manifest + receipt together; copying/removing receipts defeats this contract.
+export async function submitCutover(manifestFile, { env = process.env, cwd = process.cwd(), fetchFn = globalThis.fetch } = {}) {
+  assertIndexNowProduction(env, cwd);
+  const config = workerReleaseConfig(env);
+  if (!config.expectedVersionId) throw new Error('CF_EXPECTED_VERSION_ID is required for cutover submission.');
+  const manifest = validateCutoverManifest(JSON.parse(readFileSync(manifestFile, 'utf8')), config);
+  assertIndexNowProduction(env, cwd, manifest.buildDir);
+  const receiptFile = `${manifestFile}.submission.json`;
+  if (existsSync(receiptFile)) {
+    const receipt = JSON.parse(readFileSync(receiptFile, 'utf8'));
+    if (receipt.manifestSha256 !== manifest.sha256) throw new Error('Existing receipt belongs to a different manifest.');
+    if (receipt.state !== 'completed') throw new Error('Submission already claimed or failed; outcome may be ambiguous. Review receipt; never automatically re-send.');
+    console.log('[indexnow] already completed; no repeat submission');
+    return { duplicate: true, receipt };
+  }
+  const currentBuild = buildSitemap(manifest.buildDir);
+  if (!currentBuild.ok || digest(snapshot(currentBuild)) !== digest(manifest.build)
+      || readFileSync(path.join(manifest.buildDir, 'BUILD_ID'), 'utf8').trim() !== manifest.buildId) {
+    throw new Error('Build changed since pre-cutover capture; no submission.');
+  }
+  const key = findKey(cwd);
+  if (manifest.plan.submit && !key) throw new Error('No IndexNow key file in public/.');
+  const activated = await readWorkerActivation(config, { fetchFn });
+  if (activated.state !== 'success') throw new Error(`Worker release not verified: ${activated.reason}`);
+  // A Worker can be active before its public domain is switched. Purge first,
+  // then confirm the canonical document exposes the captured new sitemap. This
+  // HTTP read executes no browser JavaScript or advertisements.
+  const published = await productionSitemap(fetchFn);
+  if (!published.ok || digest(snapshot(published)) !== digest(manifest.build)) {
+    throw new Error('Canonical sitemap does not match the captured new build; complete cutover/purge before submission.');
+  }
+  const finalActivation = await readWorkerActivation(config, { fetchFn });
+  if (finalActivation.state !== 'success' || finalActivation.deploymentId !== activated.deploymentId) {
+    throw new Error('Worker activation changed during canonical sitemap verification; no submission.');
+  }
+  const receipt = {
+    schema: 'moneysalary-indexnow-submission-v1', manifestSha256: manifest.sha256,
+    release: manifest.release, versionId: activated.versionId, deploymentId: activated.deploymentId,
+    claimedAt: new Date().toISOString(), state: 'claimed', urlCount: manifest.plan.urls.length,
+  };
+  writeFileSync(receiptFile, JSON.stringify(receipt, null, 2) + '\n', { flag: 'wx' });
+  const results = manifest.plan.submit ? await submitIndexNow({
+    host: HOST, key, keyLocation: `https://${HOST}/${key}.txt`, urlList: manifest.plan.urls,
+  }, { userAgent: UA, fetchImpl: fetchFn }) : [];
+  receipt.results = results.map(({ name, status, ok }) => ({ name, status, ok }));
+  receipt.state = results.every((result) => result.ok) ? 'completed' : 'needs-review';
+  receipt.finishedAt = new Date().toISOString();
+  writeFileSync(receiptFile, JSON.stringify(receipt, null, 2) + '\n');
+  if (receipt.state !== 'completed') throw new Error('IndexNow endpoint failed or timed out; receipt saved, automatic repeat is disabled.');
+  return { duplicate: false, receipt };
+}
+
+export async function main(env = process.env) {
+  assertIndexNowProduction(env);
+  if (env.CF_DEPLOY_TARGET === 'workers' || env.INDEXNOW_DEFER === '1') {
+    console.log('[indexnow] deferred: capture before cutover and submit only after verified Worker activation');
+    return;
+  }
   const isProdBuild =
-    process.env.CF_PAGES === "1" && process.env.CF_PAGES_BRANCH === "main";
-  if (!isProdBuild && process.env.INDEXNOW_FORCE !== "1") {
+    env.CF_PAGES === "1" && env.CF_PAGES_BRANCH === "main";
+  if (!isProdBuild && env.INDEXNOW_FORCE !== "1") {
     console.log("[indexnow] skip (not CF production build)");
     return;
   }
@@ -169,7 +307,19 @@ function selftest() {
   console.log(`[indexnow] selftest ok — ${formatCounts(plan.counts)}`);
 }
 
-if (process.argv.includes("--selftest")) {
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
+const args = process.argv.slice(2);
+if (args[0] === '--capture' || args[0] === '--submit') {
+  if (args.length !== 2 || !args[1] || args[1].startsWith('--')) {
+    console.error('[indexnow] Usage: --capture <manifest.json> OR --submit <manifest.json>');
+    process.exit(1);
+  }
+  const action = args[0] === '--capture' ? captureCutover : submitCutover;
+  action(path.resolve(args[1])).then(() => process.exit(0), (error) => {
+    console.error(`[indexnow] cutover stopped: ${error.message}`);
+    process.exit(1);
+  });
+} else if (args.length === 1 && args[0] === "--selftest") {
   try {
     selftest();
     process.exit(0);
@@ -177,8 +327,12 @@ if (process.argv.includes("--selftest")) {
     console.error(`[indexnow] selftest FAIL: ${e?.message ?? e}`);
     process.exit(1);
   }
-} else {
+} else if (args.length === 0) {
   main()
     .catch((e) => console.log(`[indexnow] error (non-fatal): ${e?.message ?? e}`))
     .finally(() => process.exit(0));
+} else {
+  console.error('[indexnow] Unknown arguments; no requests performed.');
+  process.exit(1);
+}
 }

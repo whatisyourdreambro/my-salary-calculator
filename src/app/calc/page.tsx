@@ -80,7 +80,7 @@ const FEATURED_CALCS: Array<{ href: string; title: string; description: string; 
  {
    href: "/calc/annual-leave-days",
    title: "연차 개수 계산기",
-   description: "입사일만 넣으면 연도별 연차 발생 내역 — 입사일 vs 회계연도 방식 비교",
+   description: "입사일·기준일로 연차 발생 가정 비교 — 출근 등 개인 적용 조건은 별도 확인",
    season: "연중 · 연초 확인",
  },
  {
@@ -177,7 +177,7 @@ const FEATURED_CALCS: Array<{ href: string; title: string; description: string; 
  {
    href: "/national-pension-estimate-2026",
    title: "2026 국민연금 예상수령액",
-   description: "가입기간·평균소득으로 만 65세부터 월 노령연금 추정",
+   description: "가입기간·평균소득으로 노령연금 추정 — 만 65세 수령 가정과 개인 수령 조건을 구분",
    season: "노후 준비",
  },
  {

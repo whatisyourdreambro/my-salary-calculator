@@ -17,7 +17,8 @@ import {
 import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
 import { WIDGET_CSP, WIDGET_REFERRER_SCRIPT, WIDGET_NUMBER_INPUT_SCRIPT } from "../shared";
 
-export const runtime = "edge";
+export const dynamic = "force-static";
+
 
 // 총급여 그리드: 1,200만 ~ 2억, 100만원 스텝 (결정세액은 구간 선형보간)
 const GRID_MIN = 12_000_000;
@@ -174,6 +175,12 @@ ${WIDGET_NUMBER_INPUT_SCRIPT}
     }
     var tax = taxOf(manwon * 10000);
     var prepaidMan = parseFloat(prepaidEl.value.replace(/,/g, ""));
+    if (prepaidMan < 0) {
+      lab.textContent = "기납부세액은 0 이상 입력";
+      out.className = "value";
+      out.textContent = "—";
+      return;
+    }
     if (!isFinite(prepaidMan)) {
       lab.textContent = "올해 결정세액(추정)";
       out.className = "value";

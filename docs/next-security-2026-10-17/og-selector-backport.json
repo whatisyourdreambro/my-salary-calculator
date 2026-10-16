@@ -1,0 +1,164 @@
+{
+  "date": "2026-10-17",
+  "scope": "Verified backport to Next 15.5.28 compiled @vercel/og 0.7.2 Node and edge selector-parser code. Scripts-only implementation; parent owns actual package installation and Worker deployment.",
+  "advisories": [
+    {
+      "id": "GHSA-rj75-hqrm-r3gf",
+      "url": "https://github.com/advisories/GHSA-rj75-hqrm-r3gf",
+      "fix": "https://github.com/postcss/postcss-selector-parser/commit/62b1917",
+      "implementation": "Three Set membership passes: unique positions, Sass interpolation filtering, class/id membership."
+    },
+    {
+      "id": "CVE-2026-9358",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-9358",
+      "upstream": [
+        "https://github.com/postcss/postcss-selector-parser/pull/316",
+        "https://github.com/postcss/postcss-selector-parser/releases/tag/7.1.3",
+        "https://github.com/postcss/postcss-selector-parser/releases/tag/6.1.4"
+      ],
+      "implementation": "Upstream 6.1.4 parse/stringify/clone/walk depth guards, Processor option propagation, and non-node serialization compatibility."
+    }
+  ],
+  "patch": {
+    "files": [
+      {
+        "name": "index.edge.js",
+        "originalSha256": "74375b4883401fdfb41d5ada04ac8dcc973a488eefc5d57e6fcc2f6caf0299f4",
+        "patchedSha256": "6532a770a5e534688bdb08e304e58e2adae8a54e60b9327c22569af0f14bdeb7"
+      },
+      {
+        "name": "index.node.js",
+        "originalSha256": "676082ee1861fdae2b5ec3443f9108ecc083da5b6f21548ad7b468103b14fbf5",
+        "patchedSha256": "10ff8c25f49568ace8a94ddc3756f1b7737198032adac71fc0daace6d9ab32ac"
+      }
+    ],
+    "replacements": 17,
+    "versionMetadataUnchanged": true,
+    "failClosed": "Exact version plus original/output SHA-256; validate both runtime sources before writing either; unknown source or drift rejects; check-only requires patched hash.",
+    "originals": "Backed up outside package at .artifacts/vendor-patches/next-15.5.28-og-selector before mutation.",
+    "idempotent": true,
+    "license": "MIT text retained in repository and inserted legal comment in both bundles; existing MPL notice retained.",
+    "installedInCanonicalWorkspace": false
+  },
+  "limits": {
+    "defaultParsingAndSerializationPseudoDepth": 256,
+    "cloneAndWalkDepth": 256,
+    "option": "Nonnegative safe integer maxNestingDepth is trusted developer configuration and may raise parse/serialize limits, as upstream. Never pass a user value. Invalid values revert to 256.",
+    "outsideScope": "This is a targeted advisory backport, not a complete upgrade of all OG/Satori dependencies."
+  },
+  "verification": {
+    "command": "node --test scripts/__tests__/next-og-selector-patch.test.mjs",
+    "passed": 19,
+    "failed": 0,
+    "tap": ".artifacts/next-security-2026-10-17/og-selector-backport-tests.tap",
+    "ordinarySelectorCasesPerRuntime": 1307,
+    "runtimes": 2,
+    "checks": [
+      "Exact original/output hashes, both-file prevalidation, drift/version rejection, idempotence, partial-known completion, originals/metadata preservation",
+      "AST own-property data, output and errors match original for ordinary corpus",
+      "Actual indexOf scan-work instrumentation verifies removed quadratic passes for flat classes/ids/Sass interpolation",
+      "Parse/serialize boundary 256 passes; 257 and 2000 reject with ordinary Error",
+      "Programmatically constructed 2000-level trees reject stringify/clone/walk and preserve walk early-stop",
+      "Trusted and malformed depth options, sync/async post-transform serialization options",
+      "Clone/walk/array coercion compatibility and exact byte preservation after parser/processor boundary",
+      "MIT legal text retained"
+    ],
+    "eslint": {
+      "command": "npx --no-install eslint scripts/patch-next-og-selector.cjs scripts/__tests__/next-og-selector-patch.test.mjs",
+      "exitCode": 0
+    }
+  },
+  "satori": {
+    "advisory": "https://github.com/vercel/satori/security/advisories/GHSA-wx4j-mvgx-mqwp",
+    "affectedEmbeddedVersion": "0.15.2",
+    "patchedUpstreamVersion": "0.33.5",
+    "vendoredSvgCodePatched": false,
+    "currentRouteReachability": "Current GET normalizes bounded title/name text and finite numbers. All user data reaches ordinary text children. BrandSignature SVG elements/attributes and styles are fixed application values; there is no user SVG/element/attribute/style/tw/className input.",
+    "evidence": [
+      "src/app/api/og/route.tsx:122",
+      "src/lib/ogImageCache.ts:33",
+      "src/lib/__tests__/ogRouteInputIsolation.test.ts",
+      "docs/next-security-2026-10-17/og-input-boundary.json"
+    ],
+    "boundaryTests": 26,
+    "limitation": "Boundary coverage is not a library-wide Satori fix. Preserve isolation tests; reassess any added SVG/style/image input. Standalone OG replacement deferred pending Worker WASM/font compatibility validation."
+  },
+  "compatibility": {
+    "imageResponseApiChanges": false,
+    "wasmImportChanges": false,
+    "fontAssetChanges": false,
+    "actualWorkerValidation": "Not performed by this subtask; root owns ad-free OpenNext build, packaging and loopback image-response verification."
+  },
+  "isolation": {
+    "productionRequests": 0,
+    "browserRequests": 0,
+    "advertisingRequests": 0,
+    "deployments": 0,
+    "regressionNetworkRequests": 0,
+    "researchNetwork": "Read-only official upstream GitHub source/advisory and npm package metadata/archive downloads only."
+  },
+  "upstreamSourceEvidence": [
+    {
+      "url": "https://raw.githubusercontent.com/postcss/postcss-selector-parser/6.1.4/src/util/maxNestingDepth.js",
+      "file": ".artifacts/next-security-2026-10-17/og-remediation-prototype/upstream-6.1.4-util-maxNestingDepth.js",
+      "sha256": "4655ae78776e3bd7a90db153528c4951b1bac8b2dae1077dca16ea3855d32b14"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/postcss/postcss-selector-parser/6.1.4/src/selectors/container.js",
+      "file": ".artifacts/next-security-2026-10-17/og-remediation-prototype/upstream-6.1.4-selectors-container.js",
+      "sha256": "0a7464f867eee322cdcf2410bcc52fa3e6dd36621d8bd3fe2a21874023f2d86e"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/postcss/postcss-selector-parser/6.1.4/src/selectors/node.js",
+      "file": ".artifacts/next-security-2026-10-17/og-remediation-prototype/upstream-6.1.4-selectors-node.js",
+      "sha256": "3938d4fed89e223a7afbd2840bef909a591a707b710ad69a3602ee5faeff3d85"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/postcss/postcss-selector-parser/6.1.4/src/selectors/root.js",
+      "file": ".artifacts/next-security-2026-10-17/og-remediation-prototype/upstream-6.1.4-selectors-root.js",
+      "sha256": "c85e76472646267309690febb4543887fec7195ab9d835bed6d7592214e9c172"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/postcss/postcss-selector-parser/6.1.4/src/selectors/pseudo.js",
+      "file": ".artifacts/next-security-2026-10-17/og-remediation-prototype/upstream-6.1.4-selectors-pseudo.js",
+      "sha256": "9e41a3a71184ba8db0a8ee45adafaab51469f6b55da2e28455c3452002995b2a"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/postcss/postcss-selector-parser/6.1.4/src/parser.js",
+      "file": ".artifacts/next-security-2026-10-17/og-remediation-prototype/upstream-6.1.4-parser.js",
+      "sha256": "7fb1fff4e35b25cf929099e2f68a443d8613417a4000ef6f8fda05ecfc938228"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/postcss/postcss-selector-parser/6.1.4/src/processor.js",
+      "file": ".artifacts/next-security-2026-10-17/og-remediation-prototype/upstream-6.1.4-processor.js",
+      "sha256": "96a746ccd679965ae6f396aaf519c0a3a269852958dbc4009f6f5a42dba19fe1"
+    }
+  ],
+  "files": [
+    {
+      "path": "scripts/patch-next-og-selector.cjs",
+      "sha256": "e56aa102b1a36b67f1bd6a46f1c6fdb02abae95f1f2bfb69b9efbc79bf042ab6"
+    },
+    {
+      "path": "scripts/vendor-patches/next-og-selector.json",
+      "sha256": "5f277ec688999e366421bed6ddc76f24d5f3f5aebdebbb8d115485c5793a3433"
+    },
+    {
+      "path": "scripts/vendor-patches/README.md",
+      "sha256": "7cd2195afcee7afc6362c14099bc395c05ce59ad3d89eea98380415109ac89e0"
+    },
+    {
+      "path": "scripts/vendor-patches/LICENSE.postcss-selector-parser",
+      "sha256": "2998094b38f7ace25f141fb36f334d8338f65a1812978d618b1161f4d77ae10e"
+    },
+    {
+      "path": "scripts/__tests__/next-og-selector-patch.test.mjs",
+      "sha256": "9be4380458535188f461d450817ec9dffd993e6576cfce8bee1e411b3ee06fba"
+    }
+  ],
+  "independentReview": {
+    "agent": "ad_code_audit",
+    "scope": "Read patch script and all 17 before/after replacements; no confirmed implementation defect found. No independent execution or complete upstream line-by-line comparison performed.",
+    "limitation": "Not a sandbox for arbitrary custom AST objects/getters or attacker-controlled configuration."
+  }
+}

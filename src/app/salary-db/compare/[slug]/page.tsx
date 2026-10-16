@@ -36,7 +36,7 @@ export const dynamic = "force-static";
 export const dynamicParams = false;
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
@@ -280,7 +280,8 @@ function deepVerdictText(
   return null;
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params: pendingParams }: Props): Promise<Metadata> {
+  const params = await pendingParams;
   const pair = getComparePairBySlug(params.slug);
   if (!pair) return { title: "회사 비교를 찾을 수 없습니다" };
   const a = companyRepository.getById(pair.aId);
@@ -318,7 +319,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-export default function ComparePage({ params }: Props) {
+export default async function ComparePage({ params: pendingParams }: Props) {
+  const params = await pendingParams;
   const pair = getComparePairBySlug(params.slug);
   // GSC 404 출혈 차단(7차): 화이트리스트 외 비교 슬러그 → /salary-db 메인 308
   if (!pair) permanentRedirect("/salary-db");

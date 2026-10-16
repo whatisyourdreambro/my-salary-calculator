@@ -1,9 +1,10 @@
-// 트렌드 브리프 — edge 런타임 격리 게이트 (2026-09-26 R5 publisher)
+// 트렌드 브리프 — Workers 요청 경로 의존성 격리 게이트 (2026-09-26 R5 publisher)
 //
-// CF Workers 무료 플랜 CPU 10ms(1102 사건) — 브리프 본문·엔진 표가 edge 함수 번들에 실리면 안 된다.
-// `export const runtime = 'edge'` 파일마다 정적 import 그래프(@/ · 상대 경로 · export from · 동적 import 문자열)를 따라가
+// OpenNext는 Node 런타임을 Workers용으로 번들한다. 제거된 `runtime = 'edge'` 선언 대신
+// 기존 15개 요청 경로와 미들웨어, 새 API·위젯 라우트를 명시적으로 검사한다.
+// 각 정적 import 그래프(@/ · 상대 경로 · export from · 동적 import 문자열)를 따라가
 // src/lib/guides/trend-briefs*.ts 와 src/lib/trendBriefs/* 에 닿지 않는지 확인한다.
-// (빌드 산출물 쪽 검사는 scripts/verify-edge-bundle.mjs — 이 테스트는 빌드 없이 소스 그래프로 먼저 막는다.)
+// 이는 요청 경로의 의존성 게이트이며, 최종 OpenNext 공유 번들 전체 크기는 별도 빌드 검사 대상이다.
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -56,24 +57,50 @@ function importGraph(entry: string): Set<string> {
   return seen;
 }
 
-const EDGE_RE = /export\s+const\s+runtime\s*=\s*["']edge["']/;
-const edgeFiles = [...walk(SRC)].filter((f) => EDGE_RE.test(readFileSync(f, "utf8")));
+const REQUIRED_REQUEST_ENTRIES = [
+  "src/middleware.ts",
+  "src/app/api/contact/route.ts",
+  "src/app/api/feedback/route.ts",
+  "src/app/api/og/route.tsx",
+  "src/app/api/salary-table/route.ts",
+  "src/app/widget/bonus/route.ts",
+  "src/app/widget/company/route.ts",
+  "src/app/widget/dsr/route.ts",
+  "src/app/widget/military-pay/route.ts",
+  "src/app/widget/minimum-wage/route.ts",
+  "src/app/widget/salary/route.ts",
+  "src/app/widget/severance/route.ts",
+  "src/app/widget/year-end-tax/route.ts",
+  "src/app/glossary/[slug]/page.tsx",
+  "src/app/qna/[slug]/page.tsx",
+  "src/app/share/[data]/page.tsx",
+] as const;
+const discoveredRoutes = [...walk(SRC)].filter((f) =>
+  /^src\/app\/(?:api|widget)\/.*\/route\.tsx?$/.test(rel(f)),
+);
+const requestFiles = [...new Set([
+  ...REQUIRED_REQUEST_ENTRIES.map((file) => join(ROOT, file)),
+  ...discoveredRoutes,
+])];
 const isTrend = (p: string) => /src\/lib\/guides\/trend-briefs[^/]*\.ts$/.test(rel(p)) || rel(p).startsWith("src/lib/trendBriefs/");
 
-describe("트렌드 브리프 — edge 번들 격리", () => {
-  it("edge 런타임 파일을 찾는다 (공허하지 않음)", () => {
-    expect(edgeFiles.length).toBeGreaterThanOrEqual(10);
+describe("트렌드 브리프 — Workers 요청 경로 격리", () => {
+  it("기존 요청 경로와 새 API·위젯 라우트를 빠짐없이 검사한다", () => {
+    expect(REQUIRED_REQUEST_ENTRIES).toHaveLength(16);
+    expect(requestFiles.filter((file) => !existsSync(file)).map(rel)).toEqual([]);
+    expect(requestFiles.map(rel)).toEqual(expect.arrayContaining([...REQUIRED_REQUEST_ENTRIES]));
+    expect(discoveredRoutes.length).toBeGreaterThanOrEqual(12);
     // 그래프가 실제로 따라가는지 — og 라우트는 여러 모듈을 import 한다
-    const og = edgeFiles.find((f) => rel(f) === "src/app/api/og/route.tsx");
+    const og = requestFiles.find((f) => rel(f) === "src/app/api/og/route.tsx");
     expect(og).toBeDefined();
     expect(importGraph(og!).size).toBeGreaterThan(1);
   });
 
-  it("어떤 edge 파일도 trend-briefs*·src/lib/trendBriefs/* 에 닿지 않는다", () => {
-    const leaks = edgeFiles.flatMap((f) =>
+  it("요청 경로가 trend-briefs*·src/lib/trendBriefs/* 에 닿지 않는다", () => {
+    const leaks = requestFiles.flatMap((f) =>
       [...importGraph(f)].filter(isTrend).map((t) => `${rel(f)} → ${rel(t)}`)
     );
-    expect(leaks, "edge 함수가 브리프 본문·엔진을 끌어온다 — 1102(CPU 한도) 위험").toEqual([]);
+    expect(leaks, "요청 경로가 불필요한 브리프 본문·엔진을 끌어온다").toEqual([]);
   });
 
   it("검사기가 공허하지 않다 — guidesContent 는 trend-briefs 를 끌어온다", () => {

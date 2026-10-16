@@ -9,6 +9,7 @@ import { PAGE_SCOPED_MEASUREMENT_EVENTS, sanitizeAnalyticsParams, sanitizeAnalyt
 import { getNavType } from "./navType";
 import { shareAnalyticsPath, type ShareMode } from "./sharePolicy";
 import type { ShareOutcome, ShareErrorKind } from "./shareTransport";
+import { canRequestLiveAds } from "./liveAds";
 
 declare global {
   interface Window {
@@ -21,7 +22,7 @@ export function trackEvent(
   name: string,
   params: Record<string, unknown> = {}
 ): void {
-  if (typeof window === "undefined") return;
+  if (!canRequestLiveAds()) return;
   try {
     // 광고·제휴 계측은 공개 금액 페이지(/monthly/N·/salary/N 정적 격자)의 실제 경로를 유지해
     // page_view·ad_impression 과 같은 Page path 행에 붙는다. 그 외 이벤트는 금액 경로 비식별 유지.

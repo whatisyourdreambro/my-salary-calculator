@@ -51,6 +51,7 @@ export async function submitIndexNow(payload, opts = {}) {
     try {
       const res = await fetchImpl(url, {
         method: "POST",
+        redirect: "error",
         headers,
         body,
         signal: AbortSignal.timeout(TIMEOUT_MS),

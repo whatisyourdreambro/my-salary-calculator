@@ -225,7 +225,7 @@ export default function WeeklyHolidayAllowance2026Page() {
               3년이므로 그 안에 청구
             </li>
           </ol>
-          <p><a href="/guides/wage-delayed-claim-2026" className="underline">임금체불 진정 준비·시효와 지원 제도 확인</a></p>
+          <p><Link href="/guides/wage-delayed-claim-2026" className="underline">임금체불 진정 준비·시효와 지원 제도 확인</Link></p>
         </section>
 
         <InArticleAd />

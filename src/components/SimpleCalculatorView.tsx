@@ -201,7 +201,7 @@ function SimpleCalculatorInstance({ slug, calc, batch, initialResult, shareToken
  const snapshot = captureSnapshot.current;
  if (!element || !snapshot) return null;
  try {
- const { default: html2canvas } = await import("html2canvas");
+ const { default: html2canvas } = await import("@/lib/captureElement");
  if (captureSnapshot.current !== snapshot || resultCardRef.current !== element) return null;
  const canvas = await html2canvas(element, {
  backgroundColor: "#0145F2",

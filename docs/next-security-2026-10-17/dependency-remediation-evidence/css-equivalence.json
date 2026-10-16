@@ -1,0 +1,107 @@
+{
+  "generatedAt": "2026-10-16T16:49:07.029Z",
+  "offline": true,
+  "versions": {
+    "baseline": {
+      "postcss": "8.5.30",
+      "tailwindcss": "3.4.19",
+      "autoprefixer": "10.4.21",
+      "postcss-selector-parser": "6.0.10"
+    },
+    "candidate": {
+      "postcss": "8.5.30",
+      "tailwindcss": "3.4.19",
+      "autoprefixer": "10.4.21",
+      "postcss-selector-parser": "7.1.6"
+    }
+  },
+  "dependencyChanges": [
+    {
+      "path": "node_modules/braces",
+      "baseline": "3.0.3",
+      "candidate": "3.0.3-moneysalary.1"
+    },
+    {
+      "path": "node_modules/postcss-nested/node_modules/postcss-selector-parser",
+      "baseline": "6.1.4",
+      "candidate": null
+    },
+    {
+      "path": "node_modules/postcss-selector-parser",
+      "baseline": "6.0.10",
+      "candidate": "7.1.6"
+    },
+    {
+      "path": "node_modules/tailwindcss/node_modules/postcss-selector-parser",
+      "baseline": "6.1.4",
+      "candidate": null
+    }
+  ],
+  "comparisons": [
+    {
+      "name": "src/app/globals.css",
+      "equal": true,
+      "baseline": {
+        "file": "C:\\dev\\moneysalary\\my-salary-calculator\\.artifacts\\dependency-remediation-2026-10-17\\baseline\\src__app__globals.css",
+        "bytes": 267135,
+        "sha256": "314e770e1dc876d576c0406178be16560c551c931ce53ab4e3d4218e1dc34cbc",
+        "warnings": []
+      },
+      "candidate": {
+        "file": "C:\\dev\\moneysalary\\my-salary-calculator\\.artifacts\\dependency-remediation-2026-10-17\\candidate-final\\src__app__globals.css",
+        "bytes": 267135,
+        "sha256": "314e770e1dc876d576c0406178be16560c551c931ce53ab4e3d4218e1dc34cbc",
+        "warnings": []
+      }
+    },
+    {
+      "name": "src/components/home/home-work-clock.module.css",
+      "equal": true,
+      "baseline": {
+        "file": "C:\\dev\\moneysalary\\my-salary-calculator\\.artifacts\\dependency-remediation-2026-10-17\\baseline\\src__components__home__home-work-clock.module.css",
+        "bytes": 2342,
+        "sha256": "b2edf7744b4dca6ec706a1061849e707640584e969d743cef3018ec695465d5c",
+        "warnings": []
+      },
+      "candidate": {
+        "file": "C:\\dev\\moneysalary\\my-salary-calculator\\.artifacts\\dependency-remediation-2026-10-17\\candidate-final\\src__components__home__home-work-clock.module.css",
+        "bytes": 2342,
+        "sha256": "b2edf7744b4dca6ec706a1061849e707640584e969d743cef3018ec695465d5c",
+        "warnings": []
+      }
+    },
+    {
+      "name": "src/app/work-clock/work-clock.module.css",
+      "equal": true,
+      "baseline": {
+        "file": "C:\\dev\\moneysalary\\my-salary-calculator\\.artifacts\\dependency-remediation-2026-10-17\\baseline\\src__app__work-clock__work-clock.module.css",
+        "bytes": 21293,
+        "sha256": "2fc03b5b7850868b6b4a52202179f6a28285fe97e4be8d8cafee1a16ff5d2e6e",
+        "warnings": []
+      },
+      "candidate": {
+        "file": "C:\\dev\\moneysalary\\my-salary-calculator\\.artifacts\\dependency-remediation-2026-10-17\\candidate-final\\src__app__work-clock__work-clock.module.css",
+        "bytes": 21293,
+        "sha256": "2fc03b5b7850868b6b4a52202179f6a28285fe97e4be8d8cafee1a16ff5d2e6e",
+        "warnings": []
+      }
+    },
+    {
+      "name": "variant-regression.css",
+      "equal": true,
+      "baseline": {
+        "file": "C:\\dev\\moneysalary\\my-salary-calculator\\.artifacts\\dependency-remediation-2026-10-17\\baseline\\variant-regression.css",
+        "bytes": 42343,
+        "sha256": "be6eea61dc3cbcb78a20db16d542aed70302b8487825b5b2da36b64fc3d767f1",
+        "warnings": []
+      },
+      "candidate": {
+        "file": "C:\\dev\\moneysalary\\my-salary-calculator\\.artifacts\\dependency-remediation-2026-10-17\\candidate-final\\variant-regression.css",
+        "bytes": 42343,
+        "sha256": "be6eea61dc3cbcb78a20db16d542aed70302b8487825b5b2da36b64fc3d767f1",
+        "warnings": []
+      }
+    }
+  ],
+  "pass": true
+}

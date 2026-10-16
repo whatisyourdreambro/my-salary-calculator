@@ -59,7 +59,12 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(function Numb
 
   const attachRef = useCallback((element: HTMLInputElement | null) => {
     inputRef.current = element;
-    if (typeof forwardedRef === "function") forwardedRef(element);
+    if (typeof forwardedRef === "function") {
+      const cleanup: unknown = forwardedRef(element);
+      // React 19 may detach callback refs by calling their returned cleanup.
+      // Preserve that contract while also releasing this component's own ref.
+      if (typeof cleanup === "function") return () => { inputRef.current = null; cleanup(); };
+    }
     else if (forwardedRef) forwardedRef.current = element;
   }, [forwardedRef]);
 

@@ -13,7 +13,8 @@ import { calcBonusNet } from "@/lib/bonusTaxCalc";
 import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import { WIDGET_HEADERS, widgetShell } from "../shared";
 
-export const runtime = "edge";
+export const dynamic = "force-static";
+
 
 // 연소득(연봉+성과급 합산) 축 그리드: 0 ~ 4억, 200만원 스텝.
 // 기준점 0 — 하한을 1,200만으로 두면 그 미만 연소득에서 공제가 0 으로 눌려

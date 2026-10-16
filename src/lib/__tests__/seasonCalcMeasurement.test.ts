@@ -15,6 +15,12 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("next/navigation", () => ({ usePathname: () => "/year-end-tax" }));
 
 const read = (p: string) => readFileSync(resolve(process.cwd(), p), "utf8");
+const loadCalculator: Record<string, () => Promise<{ default: ComponentType }>> = {
+  "credit-card-deduction-2026": () => import("@/app/credit-card-deduction-2026/Client"),
+  "medical-tax-credit-2026": () => import("@/app/medical-tax-credit-2026/Client"),
+  "rent-tax-credit-2026": () => import("@/app/rent-tax-credit-2026/Client"),
+  "donation-tax-credit-2026": () => import("@/app/donation-tax-credit-2026/Client"),
+};
 
 const CALCS = [
   { file: "src/components/YearEndTaxCalculator.tsx", calcType: "year_end_tax", spreads: 1, contentProps: 3, resultRefs: 1 },
@@ -80,7 +86,7 @@ describe("연말정산 시즌 계산기 계측 배선", () => {
       "donation-tax-credit-2026": "예상 기부금 세액공제액 (2026년 귀속)",
     };
     for (const [route, heading] of Object.entries(headings)) {
-      const mod = (await import(`@/app/${route}/Client`)) as { default: ComponentType };
+      const mod = await loadCalculator[route]();
       const html = renderToStaticMarkup(createElement(mod.default));
       expect(html).toContain(heading);
       expect(html).not.toContain("inputProps");

@@ -67,7 +67,7 @@ export default function RandomDrawGame() {
  // --- Game State ---
  const canvasRef = useRef<HTMLCanvasElement>(null);
  const [winners, setWinners] = useState<Ball[]>([]);
- const requestRef = useRef<number>();
+ const requestRef = useRef<number | undefined>(undefined);
  const ballsRef = useRef<Ball[]>([]);
  const pegsRef = useRef<Peg[]>([]);
  const particlesRef = useRef<Particle[]>([]);

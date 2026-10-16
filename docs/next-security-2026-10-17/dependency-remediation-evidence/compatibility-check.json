@@ -1,0 +1,868 @@
+{
+  "generatedAt": "2026-10-16T16:52:48.917Z",
+  "node": "v22.19.0",
+  "offline": true,
+  "pass": true,
+  "rows": [
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "**/*",
+      "options": {},
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "**/*",
+      "options": {},
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "**/*",
+      "options": {
+        "dot": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "**/*",
+      "options": {
+        "dot": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "**/*",
+      "options": {
+        "nodir": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "**/*",
+      "options": {
+        "nodir": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "**/*",
+      "options": {
+        "ignore": [
+          "sub/**"
+        ]
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "**/*",
+      "options": {
+        "ignore": [
+          "sub/**"
+        ]
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "**/*",
+      "options": {
+        "absolute": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "**/*",
+      "options": {
+        "absolute": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "**/*.{js,ts}",
+      "options": {},
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "**/*.{js,ts}",
+      "options": {},
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "**/*.{js,ts}",
+      "options": {
+        "dot": true
+      },
+      "sameOrder": false,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "**/*.{js,ts}",
+      "options": {
+        "dot": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "**/*.{js,ts}",
+      "options": {
+        "nodir": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "**/*.{js,ts}",
+      "options": {
+        "nodir": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "**/*.{js,ts}",
+      "options": {
+        "ignore": [
+          "sub/**"
+        ]
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "**/*.{js,ts}",
+      "options": {
+        "ignore": [
+          "sub/**"
+        ]
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "**/*.{js,ts}",
+      "options": {
+        "absolute": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "**/*.{js,ts}",
+      "options": {
+        "absolute": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "*.js",
+      "options": {},
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "*.js",
+      "options": {},
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "*.js",
+      "options": {
+        "dot": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "*.js",
+      "options": {
+        "dot": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "*.js",
+      "options": {
+        "nodir": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "*.js",
+      "options": {
+        "nodir": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "*.js",
+      "options": {
+        "ignore": [
+          "sub/**"
+        ]
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "*.js",
+      "options": {
+        "ignore": [
+          "sub/**"
+        ]
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "*.js",
+      "options": {
+        "absolute": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "*.js",
+      "options": {
+        "absolute": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "sub/*",
+      "options": {},
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "sub/*",
+      "options": {},
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "sub/*",
+      "options": {
+        "dot": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "sub/*",
+      "options": {
+        "dot": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "sub/*",
+      "options": {
+        "nodir": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "sub/*",
+      "options": {
+        "nodir": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "sub/*",
+      "options": {
+        "ignore": [
+          "sub/**"
+        ]
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "sub/*",
+      "options": {
+        "ignore": [
+          "sub/**"
+        ]
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "sub/*",
+      "options": {
+        "absolute": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "sub/*",
+      "options": {
+        "absolute": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "**/+(one|three).js",
+      "options": {},
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "**/+(one|three).js",
+      "options": {},
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "**/+(one|three).js",
+      "options": {
+        "dot": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "**/+(one|three).js",
+      "options": {
+        "dot": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "**/+(one|three).js",
+      "options": {
+        "nodir": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "**/+(one|three).js",
+      "options": {
+        "nodir": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "**/+(one|three).js",
+      "options": {
+        "ignore": [
+          "sub/**"
+        ]
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "**/+(one|three).js",
+      "options": {
+        "ignore": [
+          "sub/**"
+        ]
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "**/+(one|three).js",
+      "options": {
+        "absolute": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "**/+(one|three).js",
+      "options": {
+        "absolute": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": [
+        "**/*.js",
+        "**/*.ts"
+      ],
+      "options": {},
+      "sameOrder": false,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": [
+        "**/*.js",
+        "**/*.ts"
+      ],
+      "options": {},
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": [
+        "**/*.js",
+        "**/*.ts"
+      ],
+      "options": {
+        "dot": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": [
+        "**/*.js",
+        "**/*.ts"
+      ],
+      "options": {
+        "dot": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": [
+        "**/*.js",
+        "**/*.ts"
+      ],
+      "options": {
+        "nodir": true
+      },
+      "sameOrder": false,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": [
+        "**/*.js",
+        "**/*.ts"
+      ],
+      "options": {
+        "nodir": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": [
+        "**/*.js",
+        "**/*.ts"
+      ],
+      "options": {
+        "ignore": [
+          "sub/**"
+        ]
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": [
+        "**/*.js",
+        "**/*.ts"
+      ],
+      "options": {
+        "ignore": [
+          "sub/**"
+        ]
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": [
+        "**/*.js",
+        "**/*.ts"
+      ],
+      "options": {
+        "absolute": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": [
+        "**/*.js",
+        "**/*.ts"
+      ],
+      "options": {
+        "absolute": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "absent*",
+      "options": {},
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "absent*",
+      "options": {},
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "absent*",
+      "options": {
+        "dot": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "absent*",
+      "options": {
+        "dot": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "absent*",
+      "options": {
+        "nodir": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "absent*",
+      "options": {
+        "nodir": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "absent*",
+      "options": {
+        "ignore": [
+          "sub/**"
+        ]
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "absent*",
+      "options": {
+        "ignore": [
+          "sub/**"
+        ]
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "absent*",
+      "options": {
+        "absolute": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "absent*",
+      "options": {
+        "absolute": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "C:/dev/moneysalary/my-salary-calculator/.artifacts/dependency-remediation-2026-10-17/compatibility-files/**/*.js",
+      "options": {},
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "C:/dev/moneysalary/my-salary-calculator/.artifacts/dependency-remediation-2026-10-17/compatibility-files/**/*.js",
+      "options": {},
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "C:/dev/moneysalary/my-salary-calculator/.artifacts/dependency-remediation-2026-10-17/compatibility-files/**/*.js",
+      "options": {
+        "dot": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "C:/dev/moneysalary/my-salary-calculator/.artifacts/dependency-remediation-2026-10-17/compatibility-files/**/*.js",
+      "options": {
+        "dot": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "C:/dev/moneysalary/my-salary-calculator/.artifacts/dependency-remediation-2026-10-17/compatibility-files/**/*.js",
+      "options": {
+        "nodir": true
+      },
+      "sameOrder": false,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "C:/dev/moneysalary/my-salary-calculator/.artifacts/dependency-remediation-2026-10-17/compatibility-files/**/*.js",
+      "options": {
+        "nodir": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "C:/dev/moneysalary/my-salary-calculator/.artifacts/dependency-remediation-2026-10-17/compatibility-files/**/*.js",
+      "options": {
+        "ignore": [
+          "sub/**"
+        ]
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "C:/dev/moneysalary/my-salary-calculator/.artifacts/dependency-remediation-2026-10-17/compatibility-files/**/*.js",
+      "options": {
+        "ignore": [
+          "sub/**"
+        ]
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "glob",
+      "pattern": "C:/dev/moneysalary/my-salary-calculator/.artifacts/dependency-remediation-2026-10-17/compatibility-files/**/*.js",
+      "options": {
+        "absolute": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "glob",
+      "api": "globSync",
+      "pattern": "C:/dev/moneysalary/my-salary-calculator/.artifacts/dependency-remediation-2026-10-17/compatibility-files/**/*.js",
+      "options": {
+        "absolute": true
+      },
+      "sameOrder": true,
+      "pass": true
+    },
+    {
+      "kind": "node-minify actual core globSync + concatenation",
+      "input": "C:/dev/moneysalary/my-salary-calculator/.artifacts/dependency-remediation-2026-10-17/compatibility-files/**/*.js",
+      "pass": true
+    },
+    {
+      "kind": "node-minify actual core globSync + concatenation",
+      "input": [
+        "C:/dev/moneysalary/my-salary-calculator/.artifacts/dependency-remediation-2026-10-17/compatibility-files/*.js",
+        "C:/dev/moneysalary/my-salary-calculator/.artifacts/dependency-remediation-2026-10-17/compatibility-files/sub/*.ts"
+      ],
+      "pass": true
+    },
+    {
+      "kind": "Cloudflare 4.5 SDK multipart byte equivalence",
+      "scenario": "json-upload",
+      "pass": true
+    },
+    {
+      "kind": "Cloudflare 4.5 SDK multipart byte equivalence",
+      "scenario": "nested-upload",
+      "pass": true
+    }
+  ],
+  "versions": {
+    "baselineGlob": "10.5.0",
+    "candidateGlob": "13.0.6",
+    "baselineFormdata": "4.4.1",
+    "candidateFormdata": "6.0.3"
+  },
+  "scope": "Actual Cloudflare SDK multipart encoder/File/Blob/fileFromPath and node-minify string/array glob consumer. Glob match sets compared and any order difference recorded separately. Node-minify concatenated output compared byte-for-byte. No network or upload executed. Sucrase CLI not executed; its awaited glob API is directly covered. Formdata 6 Blob constructor name is _Blob; SDK uses structural interfaces successfully."
+}

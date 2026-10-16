@@ -31,7 +31,10 @@ export function calculateFutureSalary(
  events: SalaryEvent[],
  marketData: SalaryStat | null
 ): FutureSalaryResult[] {
- if (currentSalary <= 0 || years <= 0) {
+ if (![currentSalary, years, baseRate].every(Number.isFinite) || currentSalary <= 0 ||
+     !Number.isInteger(years) || years < 1 || years > 100 || baseRate < -100 ||
+     events.some((event) => !Number.isInteger(event.yearIndex) || event.yearIndex < 0 || event.yearIndex >= years ||
+       !Number.isFinite(event.value) || (event.type === "promotion" ? event.value < -100 : event.value < 0))) {
  return [];
  }
 
@@ -58,6 +61,7 @@ export function calculateFutureSalary(
  // 2. 시장 연봉 예측 (매년 기본 상승률만큼 동일하게 상승한다고 가정)
  const newMarketAverage = previousMarketAverage * (1 + baseRate / 100);
  const newMarketTop10 = previousMarketTop10 * (1 + baseRate / 100);
+ if (![newSalary, newMarketAverage, newMarketTop10].every(Number.isFinite)) return [];
 
  results.push({
  year: currentYear + i + 1,
@@ -75,13 +79,14 @@ export function calculateFutureSalary(
  return results;
 }
 
-// 목표 연봉 달성 경로 계산 함수 (변경 없음)
+// 목표 연봉 달성 경로 — 위 순방향 시뮬레이션과 같은 연도·이벤트 규칙으로 역산
 export function calculatePathToGoal(
  currentSalary: number,
  targetSalary: number,
  years: number
 ): CareerPath[] {
- if (currentSalary <= 0 || targetSalary <= currentSalary || years <= 0) {
+ if (![currentSalary, targetSalary, years].every(Number.isFinite) || currentSalary <= 0 ||
+     targetSalary <= currentSalary || !Number.isInteger(years) || years < 1 || years > 100) {
  return [];
  }
 
@@ -99,11 +104,11 @@ export function calculatePathToGoal(
  const promotionRate =
  ((salaryBeforePromotion + promotionJump) / salaryBeforePromotion - 1) * 100;
 
- const finalSalary = salaryBeforePromotion * (1 + promotionRate / 100);
- const remainingYears = years - promotionYear;
- if (remainingYears > 0) {
+ const roundedPromotionRate = Math.round(promotionRate);
+ // The displayed base rate applies to every simulated year, not only the
+ // years after promotion. Solve against the same rounded event we return.
  const requiredAvgRateStable =
- (Math.pow(targetSalary / finalSalary, 1 / remainingYears) - 1) * 100;
+ (Math.pow(targetSalary / (currentSalary * (1 + roundedPromotionRate / 100)), 1 / years) - 1) * 100;
 
  if (requiredAvgRateStable > 0) {
  paths.push({
@@ -113,12 +118,11 @@ export function calculatePathToGoal(
  {
  yearIndex: promotionYear,
  type: "promotion",
- value: Math.round(promotionRate),
+ value: roundedPromotionRate,
  },
  ],
  avgIncreaseRate: parseFloat(requiredAvgRateStable.toFixed(2)),
  });
- }
  }
 
  // --- 시나리오 2: 퀀텀 점프형 (이직 1회) ---
@@ -127,7 +131,9 @@ export function calculatePathToGoal(
  const jobChangeSalary =
  currentSalary + (targetSalary - currentSalary) * 0.6;
  const finalSalaryAfterChange = jobChangeSalary;
- const remainingYearsForChange = years - jobChangeYear;
+ // yearIndex is zero-based and the change replaces that year's salary;
+ // only subsequent years receive the annual increase on the new salary.
+ const remainingYearsForChange = years - jobChangeYear - 1;
  if (remainingYearsForChange > 0) {
  const requiredAvgRateLeap =
  (Math.pow(

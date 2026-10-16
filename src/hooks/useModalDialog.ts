@@ -23,7 +23,7 @@ export function closeDialog(dialog: HTMLDialogElement) {
 }
 
 /** Native modal semantics provide focus containment, background inertness and focus return. */
-export function useModalDialog(open: boolean, ref: RefObject<HTMLDialogElement>) {
+export function useModalDialog(open: boolean, ref: RefObject<HTMLDialogElement | null>) {
   useEffect(() => {
     const dialog = ref.current;
     if (!dialog || !open) return;

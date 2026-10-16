@@ -1,0 +1,379 @@
+{
+  "date": "2026-10-17",
+  "problem": "OpenNext edge converter buffers non-GET/HEAD bodies before API limits. Wrapper bounds bytes before converter.",
+  "authorization": "Parent requested wrapper after historical comparison and approved all other body-bearing methods at64KiB. Static-company optimization remains deferred.",
+  "files": [
+    {
+      "file": "cloudflare/worker-entry.mjs",
+      "preexisting": false,
+      "sha256": "ea4e0d8446c4667878a3fd316d52c14bf5b49e1c454402a0646d1e16aa8e5712",
+      "modifiedAtUtc": "2026-10-16T17:02:40.9860757Z"
+    },
+    {
+      "file": "cloudflare/request-body-limit.mjs",
+      "preexisting": false,
+      "sha256": "64d3e7152d33d6fc1e7dccbaf9d125d502d1d406bbf45a850b5ff36dc080e557",
+      "modifiedAtUtc": "2026-10-16T17:24:28.5363058Z"
+    },
+    {
+      "file": "scripts/__tests__/worker-body-limit.test.mjs",
+      "preexisting": false,
+      "sha256": "7fea9821f93acb0186c244a7cedd3dc3869c56ac24663f916408c450214407c5",
+      "modifiedAtUtc": "2026-10-16T17:24:28.5373079Z"
+    },
+    {
+      "file": "scripts/qa-cloudflare-body.mjs",
+      "preexisting": false,
+      "sha256": "6b3e0acd08dec87b0e4741826eb2cc0049eb1ed68a9e000f7e47aeb5f9bc4e66",
+      "modifiedAtUtc": "2026-10-16T17:16:34.2911268Z"
+    },
+    {
+      "file": "scripts/__tests__/qa-cloudflare-body.test.mjs",
+      "preexisting": false,
+      "sha256": "e34ee446da7ac81ce2a14879d9c5c15402e7e30b3c3c4f757b944ea181cf7570",
+      "modifiedAtUtc": "2026-10-16T17:07:01.6828691Z"
+    }
+  ],
+  "policy": {
+    "GET_HEAD": "Original Request unchanged",
+    "contactBytes": 4096,
+    "feedbackBytes": 1024,
+    "otherMethodsBytes": 65536,
+    "aliases": "Trailing slashes, percent-encoded separators/characters/backslashes and nested encoding receive the conservative API-specific limit where recognized; unknown aliases still have64KiB global limit.",
+    "contentLength": "Invalid syntax400; declared over-limit413 before read; actual bytes always counted; successful rebuilt Request gets actual byte length.",
+    "overflow": "Return 413 private/no-store/noindex/nosniff without explicit incoming body/reader cancellation; release acquired reader lock. Declared and chunked oversized cases passed both native Workerd and final rebuilt full-app local tests. No remote-production guarantee is inferred.",
+    "streamFailure": "Return intended 400 INVALID_REQUEST without logging content or explicitly canceling incoming transport; release the reader lock. Runtime owns subsequent cleanup.",
+    "accepted": "Reconstruct bounded Request preserving URL/method/headers/signal and explicit cf metadata. No character decoding or dispatch path rewrite.",
+    "scope": "All non-GET/HEAD bodies, including any Server Action request, receive these limits. New uploads or larger-body features require explicit policy review; this record does not assert that no Server Actions exist.",
+    "allocation": "One Uint8Array(limit) receive buffer; empty chunks do not accumulate array entries. Accepted bytes are copied into the buffer; an over-limit chunk is rejected before copying and no further chunk is requested. Runtime-provided chunk allocation and subsequent transport draining are outside this retained-buffer bound."
+  },
+  "preservation": {
+    "default": "Own property descriptors and prototype preserved; only fetch delegated after body gate; scheduled/other methods remain available.",
+    "exports": "export * from generated .open-next/worker.js preserves adapter named exports.",
+    "rootOwnedChanges": "Parent updated production/QA Wrangler main and QA runner copy/hash/main validation. This agent did not edit those files."
+  },
+  "validation": {
+    "command": "node --test scripts/__tests__/qa-cloudflare-body.test.mjs scripts/__tests__/worker-body-limit.test.mjs",
+    "passed": 18,
+    "failed": 0,
+    "networkRequests": 0,
+    "browserRuns": 0,
+    "fixtures": "Offline Node Request/ReadableStream tests plus synthetic generated Worker in a temporary directory; parent reports 18 targeted tests passed and lint 0 after removing explicit cancellation. These do not establish actual Workerd rejection delivery.",
+    "cases": [
+      "GET/HEAD pass-through",
+      "canonical/trailing/encoded API limits",
+      "exact and over-limit bytes",
+      "all nonGET/HEAD paths/methods",
+      "missing/lying Content-Length and bounded reads without explicit incoming cancellation",
+      "invalid/oversized declared lengths rejected before reads",
+      "UTF8 byte accounting and binary preservation",
+      "stream failure/invalid chunks",
+      "Request identity headers/signal/cf forwarding",
+      "default method/descriptor/context preservation",
+      "named export preservation",
+      "production+QA config and staging integrity contracts",
+      "many empty chunks and a reused producer buffer"
+    ],
+    "evidenceSource": "Parent reported latest targeted run; prior 17-test evidence remains in historicalSnapshots."
+  },
+  "remaining": [
+    "Fresh human authentication is required; no valid OAuth session, account mutation or deployment exists.",
+    "Verify remote bindings/secrets/schema, canonical routes, Workers plan/CPU and actual upload startup_time_ms before activation.",
+    "Use ordinary-ad production artifacts only; never deploy the isolated QA output."
+  ],
+  "independentReview": {
+    "reviewer": "ad_code_audit",
+    "scope": "Historical static review of the original wrapper/entry/offline tests. It is not an independent revalidation of subsequent fixed-buffer/no-cancel revisions.",
+    "confirmedDefects": 0,
+    "notes": "Original review reported no confirmed defects in its then-current scope. Later independent review found empty-chunk storage growth, and real local Workerd body checks exposed 500/transport failure. Current source hashes are above; original hashes and frozen-review assertion remain historical only.",
+    "runtimeSourceFrozen": false
+  },
+  "localSmoke": {
+    "command": "node scripts/qa-cloudflare-body.mjs [--port1024..65535]",
+    "defaultPort": 3319,
+    "performed": true,
+    "networkBoundary": "Literal127.0.0.1/family4, fixed three paths, Node http.request with agentfalse and no redirect following. No user-supplied URL, path, header or body. Only synthetic payloads.",
+    "prerequisites": "Owned .open-next-qa stage; no root .env/.dev.vars files; whitelist-only local config without D1/services/routes/vars; QA marker/config/wrapper hashes and current wrapper copies; verifyQaServer200 ads-disabled before any POST.",
+    "cases": 6,
+    "expected": [
+      "contact4097bytes413",
+      "feedback1025bytes413",
+      "unknown65537bytes413",
+      "feedbackchunked/noContentLength1025bytes413",
+      "smallcontact403or503",
+      "smallfeedback403or503"
+    ],
+    "safeFailure": "Unexpected status (including redirect or success), unsafe stage, changed guard, missing header, timeout, large response or non-private result aborts validation.",
+    "status": "passed-final-rebuilt-full-app",
+    "completedAllSix": true,
+    "finalLog": "qa-worker-body-final.log",
+    "base": "http://127.0.0.1:3319",
+    "finalResults": [
+      {
+        "name": "contact-overflow",
+        "status": 413,
+        "bytes": 4097,
+        "chunked": false,
+        "error": "PAYLOAD_TOO_LARGE"
+      },
+      {
+        "name": "feedback-overflow",
+        "status": 413,
+        "bytes": 1025,
+        "chunked": false,
+        "error": "PAYLOAD_TOO_LARGE"
+      },
+      {
+        "name": "unknown-overflow",
+        "status": 413,
+        "bytes": 65537,
+        "chunked": false,
+        "error": "PAYLOAD_TOO_LARGE"
+      },
+      {
+        "name": "feedback-chunked-overflow",
+        "status": 413,
+        "bytes": 1025,
+        "chunked": true,
+        "error": "PAYLOAD_TOO_LARGE"
+      },
+      {
+        "name": "contact-small-fails-closed",
+        "status": 403,
+        "bytes": 2,
+        "chunked": false,
+        "error": "INVALID_ORIGIN"
+      },
+      {
+        "name": "feedback-small-fails-closed",
+        "status": 403,
+        "bytes": 2,
+        "chunked": false,
+        "error": "INVALID_ORIGIN"
+      }
+    ]
+  },
+  "status": "local-validation-passed-deployment-blocked-authentication",
+  "updatedAtUtc": "2026-10-16T17:41:41.4934688Z",
+  "historicalSnapshots": [
+    {
+      "description": "Original saved review before fixed-buffer/no-cancel runtime revisions; retained as historical evidence, not current validation.",
+      "originalFileModifiedAtUtc": "2026-10-16T17:09:28.6038999Z",
+      "originalFileSha256": "289e3a7479c6d0872721b61369c192ab2715a597fbd33fb1b57b01e1f434c071",
+      "record": {
+        "date": "2026-10-17",
+        "problem": "OpenNext edge converter buffers non-GET/HEAD bodies before API limits. Wrapper bounds bytes before converter.",
+        "authorization": "Parent requested wrapper after historical comparison and approved all other body-bearing methods at64KiB. Static-company optimization remains deferred.",
+        "files": [
+          {
+            "file": "cloudflare/worker-entry.mjs",
+            "preexisting": false,
+            "sha256": "ea4e0d8446c4667878a3fd316d52c14bf5b49e1c454402a0646d1e16aa8e5712"
+          },
+          {
+            "file": "cloudflare/request-body-limit.mjs",
+            "preexisting": false,
+            "sha256": "fa9f0c3ad58fc46e688d8534de696ba3cd404b1195cf61e8e3f595a3c856818b"
+          },
+          {
+            "file": "scripts/__tests__/worker-body-limit.test.mjs",
+            "preexisting": false,
+            "sha256": "c40750f5a6c883ef0a0c6e49a826fa36d92a554b3426f7b34e16e70d59997e29"
+          },
+          {
+            "file": "scripts/qa-cloudflare-body.mjs",
+            "preexisting": false,
+            "sha256": "838bb269fdc6bd3e6ae0ef18b9132c7bc5e1393796f183baadfcb6f4b818aaab"
+          },
+          {
+            "file": "scripts/__tests__/qa-cloudflare-body.test.mjs",
+            "preexisting": false,
+            "sha256": "e34ee446da7ac81ce2a14879d9c5c15402e7e30b3c3c4f757b944ea181cf7570"
+          }
+        ],
+        "policy": {
+          "GET_HEAD": "Original Request unchanged",
+          "contactBytes": 4096,
+          "feedbackBytes": 1024,
+          "otherMethodsBytes": 65536,
+          "aliases": "Trailing slashes, percent-encoded separators/characters/backslashes and nested encoding receive the conservative API-specific limit where recognized; unknown aliases still have64KiB global limit.",
+          "contentLength": "Invalid syntax400; declared over-limit413 before read; actual bytes always counted; successful rebuilt Request gets actual byte length.",
+          "overflow": "Cancel input without awaiting producer settlement, return413 private/no-store/noindex/nosniff.",
+          "streamFailure": "Cancel and return400 INVALID_REQUEST without logging content.",
+          "accepted": "Reconstruct bounded Request preserving URL/method/headers/signal and explicit cf metadata. No character decoding or dispatch path rewrite.",
+          "scope": "No upload endpoint or Server Action currently exists; adding either requires explicit body policy review."
+        },
+        "preservation": {
+          "default": "Own property descriptors and prototype preserved; only fetch delegated after body gate; scheduled/other methods remain available.",
+          "exports": "export * from generated .open-next/worker.js preserves adapter named exports.",
+          "rootOwnedChanges": "Parent updated production/QA Wrangler main and QA runner copy/hash/main validation. This agent did not edit those files."
+        },
+        "validation": {
+          "command": "node --test scripts/__tests__/qa-cloudflare-body.test.mjs scripts/__tests__/worker-body-limit.test.mjs",
+          "passed": 17,
+          "failed": 0,
+          "networkRequests": 0,
+          "browserRuns": 0,
+          "fixtures": "Native Node Request/ReadableStream tests plus synthetic generated Worker in a temporary directory. cf metadata propagation tested with a Request-compatible mock, not claimed as a deployed Workerd observation.",
+          "cases": [
+            "GET/HEAD pass-through",
+            "canonical/trailing/encoded API limits",
+            "exact and over-limit bytes",
+            "all nonGET/HEAD paths/methods",
+            "missing/lying Content-Length and cancellation",
+            "invalid/oversized declared lengths rejected before reads",
+            "UTF8 byte accounting and binary preservation",
+            "stream failure/invalid chunks",
+            "Request identity headers/signal/cf forwarding",
+            "default method/descriptor/context preservation",
+            "named export preservation",
+            "production+QA config and staging integrity contracts"
+          ]
+        },
+        "remaining": [
+          "Parent final isolated QA rebuild/dry-run and non-rendering local HTTP rejection checks against actual Workerd. No publisher browser test.",
+          "Remote deployment/secret/routing/CPU plan remain parent-owned.",
+          "Wrangler/OpenNext helper filenames are bundled through the wrapper; generated .open-next output must exist before dry-run/upload."
+        ],
+        "independentReview": {
+          "reviewer": "ad_code_audit",
+          "scope": "Static complete read of wrapper, entry and associated offline tests; no execution or network requests.",
+          "confirmedDefects": 0,
+          "notes": "The installed generated Worker uses a plain fetch data descriptor, matching the wrapper. Arbitrary getter-based fetch objects are outside this generated contract. Cloudflare cf propagation remains covered by a Node Request-compatible mock rather than an actual Workerd observation.",
+          "runtimeSourceFrozen": true
+        },
+        "localSmoke": {
+          "command": "node scripts/qa-cloudflare-body.mjs [--port1024..65535]",
+          "defaultPort": 3319,
+          "performed": false,
+          "networkBoundary": "Literal127.0.0.1/family4, fixed three paths, Node http.request with agentfalse and no redirect following. No user-supplied URL, path, header or body. Only synthetic payloads.",
+          "prerequisites": "Owned .open-next-qa stage; no root .env/.dev.vars files; whitelist-only local config without D1/services/routes/vars; QA marker/config/wrapper hashes and current wrapper copies; verifyQaServer200 ads-disabled before any POST.",
+          "cases": 6,
+          "expected": [
+            "contact4097bytes413",
+            "feedback1025bytes413",
+            "unknown65537bytes413",
+            "feedbackchunked/noContentLength1025bytes413",
+            "smallcontact403or503",
+            "smallfeedback403or503"
+          ],
+          "safeFailure": "Unexpected status (including redirect or success), unsafe stage, changed guard, missing header, timeout, large response or non-private result aborts validation."
+        }
+      }
+    }
+  ],
+  "runtimeFollowup": {
+    "suspectedCause": "Explicit incoming transport cancellation may close the Workerd upstream connection before its 413 response is delivered.",
+    "currentFix": "Remove explicit incoming cancellation, keep bounded buffering and reader releaseLock; response completion leaves cleanup to the runtime.",
+    "wranglerDevCaveat": "Installed Wrangler development middleware drains an unused body only when bodyUsed is false; therefore successful Node fixtures or a partial dev test cannot establish uniform production 413 behavior.",
+    "currentQaState": "Final QA build 9aYUI0p8z_rHghH2BhTPz, dry-run, size gate, HTTP (28), body (6), crawl (267) and English (39 plus 3 expected 404/noindex) all passed. Server stopped; parent confirmed no listener on 127.0.0.1:3319.",
+    "independentRuntimeProbe": "Completed 8 tests with actual helper in native Miniflare/Workerd and synthetic downstream, external deny and no dev drain. Included in latest 413-test script suite.",
+    "validatedAfterFix": true,
+    "productionGuarantee": "Local integration passes are complete. Remote deployment, route activation, authentic bindings, plan/CPU/startup constraints remain unverified because authentication is not complete.",
+    "validationScope": "Actual bounded helper in native Workerd and all six body cases in final rebuilt OpenNext QA Worker; the broader 28 HTTP checks including 8 OG renders also passed. No remote publisher/production HTTP or browser execution."
+  },
+  "nativeWorkerdValidation": {
+    "status": "passed",
+    "log": ".artifacts/workers-release-2026-10-17/worker-body-workerd-test.log",
+    "testsPassed": 8,
+    "testsFailed": 0,
+    "runtime": "Miniflare 5.20261012.1-beta / real Workerd",
+    "helperSha256": "64d3e7152d33d6fc1e7dccbaf9d125d502d1d406bbf45a850b5ff36dc080e557",
+    "cases": [
+      "Declared contact4097/feedback1025/unknown65537 bytes return413",
+      "Chunked feedback and unknown overflow return413",
+      "Following each rejection, a small request succeeds200",
+      "Exact64KiB body remains intact and succeeds200",
+      "Synthetic outbound service denies fetch without DNS/remote dispatch"
+    ],
+    "realExternalNetworkRequests": 0,
+    "fullOpenNextApp": false,
+    "wranglerDevelopmentDrain": false,
+    "remoteBindings": false
+  },
+  "finalQaBuild": {
+    "status": "passed",
+    "log": "qa-worker-build-final.log",
+    "buildId": "9aYUI0p8z_rHghH2BhTPz",
+    "generatedAtUtc": "2026-10-16T17:37:14.69Z",
+    "adsDisabled": true,
+    "cachePopulatedLocally": true,
+    "stagedHelperMatchesSource": true,
+    "fullAppRuntimeRetest": "passed",
+    "bodyCasesPassed": 6,
+    "httpChecksPassed": 28
+  },
+  "historicalRuntimeAttempts": [
+    {
+      "stage": "pre-fix-explicit-incoming-cancellation",
+      "record": {
+        "command": "node scripts/qa-cloudflare-body.mjs [--port1024..65535]",
+        "defaultPort": 3319,
+        "performed": true,
+        "networkBoundary": "Literal127.0.0.1/family4, fixed three paths, Node http.request with agentfalse and no redirect following. No user-supplied URL, path, header or body. Only synthetic payloads.",
+        "prerequisites": "Owned .open-next-qa stage; no root .env/.dev.vars files; whitelist-only local config without D1/services/routes/vars; QA marker/config/wrapper hashes and current wrapper copies; verifyQaServer200 ads-disabled before any POST.",
+        "cases": 6,
+        "expected": [
+          "contact4097bytes413",
+          "feedback1025bytes413",
+          "unknown65537bytes413",
+          "feedbackchunked/noContentLength1025bytes413",
+          "smallcontact403or503",
+          "smallfeedback403or503"
+        ],
+        "safeFailure": "Unexpected status (including redirect or success), unsafe stage, changed guard, missing header, timeout, large response or non-private result aborts validation.",
+        "status": "attempted-failed-full-suite-not-passed",
+        "completedAllSix": false,
+        "observedFailures": [
+          {
+            "case": "unknown-overflow",
+            "bytes": 65537,
+            "expected": 413,
+            "actual": 500,
+            "log": "qa-worker-body-final.log"
+          },
+          {
+            "case": "feedback-overflow",
+            "bytes": 1025,
+            "expected": 413,
+            "actual": 500,
+            "log": "qa-worker-body-reproduce.log",
+            "detail": "Parent also observed network connection lost."
+          }
+        ]
+      },
+      "logSnapshots": [
+        {
+          "path": "qa-worker-body-final.log",
+          "bytes": 674,
+          "modifiedAtUtc": "2026-10-16T17:23:16.8176601Z",
+          "sha256": "ccea8d53fa7564b5dd63c6ca500a63b05dc2f44dfd8e05ef0b00ba9ac064d5a6",
+          "note": null
+        },
+        {
+          "path": "qa-worker-body-reproduce.log",
+          "bytes": 675,
+          "modifiedAtUtc": "2026-10-16T17:23:56.6536867Z",
+          "sha256": "103b6ea056b7f316c517213a397af9b68a5b0e80458a52d6c647ac637d5199fa",
+          "note": null
+        }
+      ],
+      "note": "The reused final log now contains the successful no-cancel run; these recorded observations and hashes preserve the original failures."
+    },
+    {
+      "stage": "current-build-before-server-ready",
+      "log": "qa-worker-body-startup.log",
+      "outcome": "Five-second verifyQaServer timeout before body cases",
+      "firstGetWallClockMs": 7687,
+      "cpuMeasurement": false,
+      "laterOutcome": "Ready confirmed; one retry passed all six cases",
+      "distinctFromPriorCancellation500": true
+    }
+  ],
+  "serverCleanup": {
+    "base": "http://127.0.0.1:3319",
+    "stopped": true,
+    "listenerRemaining": false,
+    "evidence": "Parent confirmed Ctrl+C cleanup and no listener"
+  }
+}

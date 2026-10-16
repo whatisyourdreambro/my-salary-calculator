@@ -20,7 +20,7 @@ import { withoutHeldBackGuides } from "@/lib/guideReleaseHoldback";
 export const dynamic = 'force-static';
 
 interface Props {
- params: { slug: string };
+ params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
@@ -29,7 +29,8 @@ export async function generateStaticParams() {
  }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params: pendingParams }: Props): Promise<Metadata> {
+ const params = await pendingParams;
  const guide = koGuides.find((g) => g.slug === params.slug);
  if (!guide) return {};
 
@@ -67,7 +68,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  };
 }
 
-export default function GuidePage({ params }: Props) {
+export default async function GuidePage({ params: pendingParams }: Props) {
+ const params = await pendingParams;
  const guide = koGuides.find((g) => g.slug === params.slug);
 
  if (!guide) {

@@ -25,11 +25,11 @@ const SITE = "https://www.moneysalary.com";
 const token = encodeSalarySharePayload({ v: 1, taxYear: 2026, incomeType: "regular", annualSalary: 50_000_000, nonTaxableAmount: 200_000, dependents: 1, children: 0 })!;
 
 type OgImage = { url: string; width: number; height: number; alt?: string };
-const ogOf = (meta: ReturnType<typeof generateMetadata>) => meta.openGraph as unknown as { type: string; locale: string; siteName: string; url: string; title: string; images: OgImage[] };
+const ogOf = (meta: Awaited<ReturnType<typeof generateMetadata>>) => meta.openGraph as unknown as { type: string; locale: string; siteName: string; url: string; title: string; images: OgImage[] };
 
 describe("/share/[data] generateMetadata", () => {
-  it("유효 토큰: og type·locale·siteName·자기 url·image alt 를 채우고 noindex 유지", () => {
-    const meta = generateMetadata({ params: { data: token } });
+  it("유효 토큰: og type·locale·siteName·자기 url·image alt 를 채우고 noindex 유지", async () => {
+    const meta = await generateMetadata({ params: Promise.resolve({ data: token }) });
     const og = ogOf(meta);
     expect(og.type).toBe("website");
     expect(og.locale).toBe("ko_KR");
@@ -41,9 +41,9 @@ describe("/share/[data] generateMetadata", () => {
     expect(meta.robots).toEqual({ index: false, follow: false });
   });
 
-  it("og:image 는 1만원 단위 + v 버전, twitter 이미지와 같은 주소", () => {
+  it("og:image 는 1만원 단위 + v 버전, twitter 이미지와 같은 주소", async () => {
     const decoded = decodeSharedSalary(token)!;
-    const meta = generateMetadata({ params: { data: token } });
+    const meta = await generateMetadata({ params: Promise.resolve({ data: token }) });
     const url = ogOf(meta).images[0].url;
     expect(url).toBe(`/api/og?type=salary&amount=50000000&net=${Math.round(decoded.monthlyNet / 10000) * 10000}&v=${OG_URL_VERSION}`);
     expect((meta.twitter as { images: string[] }).images).toEqual([url]);
@@ -51,8 +51,8 @@ describe("/share/[data] generateMetadata", () => {
     expect(meta.title).toContain(`${Math.round(decoded.monthlyNet / 10000).toLocaleString("ko-KR")}만원`);
   });
 
-  it("잘못된 토큰: 브랜드는 템플릿이 한 번만 — 제목에 '머니샐러리' 없음", () => {
-    const meta = generateMetadata({ params: { data: "not-a-token!!" } });
+  it("잘못된 토큰: 브랜드는 템플릿이 한 번만 — 제목에 '머니샐러리' 없음", async () => {
+    const meta = await generateMetadata({ params: Promise.resolve({ data: "not-a-token!!" }) });
     expect(meta.title).toBe("공유된 연봉 결과");
     expect(meta.robots).toEqual({ index: false, follow: false });
     expect(meta.openGraph).toBeUndefined();

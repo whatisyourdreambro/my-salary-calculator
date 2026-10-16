@@ -1,5 +1,7 @@
 # 운영자 세션표 — 코드 0줄로 수익 올리는 콘솔 작업 (2026-09-05 개정)
 
+> **2026-10-17 릴리스 준비 상태:** 운영 Workers 설정은 준비됐지만 인증은 대기 중이며 실제 업로드·도메인 전환·배포는 아직 0회다. 기존 Pages 자동배포를 중지하고 대기 중인 빌드까지 확인하기 전에는 이 이행을 `main`에 merge/push하지 않는다. 기존 소스 발행 자동화도 중지 상태를 확인하고, 정상 동작하는 Workers 게시 경로가 마련된 뒤에만 재개한다. CI와 `cf-purge`는 Worker를 배포하지 않는다. 아래 9월 Pages 전용 절차는 과거 기록이며, 현재 [운영 전환 절차](contact-operations.md#pages-to-workers-deployment-transition-2026-10-17)와 이 문서의 Workers Purge 절이 우선한다. 운영/preview 게시자 브라우저 점검은 [AGENTS.md](../AGENTS.md)에 따라 금지하며, 이 문서 수정은 콘솔 설정을 바꾸거나 배포 완료를 뜻하지 않는다.
+
 정본 계획: `docs/revenue-10x-plan-2026-09.md` §4·§5 + `docs/revenue-100x-plan-2026-09.md` §6(승인 A~J)·§7(세션 추가분, 2026-09-05). 이 문서는 그 세션표의 실행판이다.
 원칙: **한 세션 = 최대 3항목·25분**, 격주 고정 요일. 각 항목은 클릭 경로 ≤5줄 + 완료 증빙 1장.
 메뉴 이름이 다르면 첫 화면 캡처만 보내면 경로를 보정한다. 무응답 = 보류(자동 승인 없음).
@@ -44,7 +46,7 @@
 
 **상시 규칙**
 - **바뀌지 않은 URL 은 다시 요청하지 않는다**(네이버 수집 요청·GSC 색인 요청 모두). 요청은 그 배포에서 실제로 바뀐 URL 만 — 목록은 CF 빌드 로그 `[indexnow]` 가 보낸 URL 과 같아야 한다.
-- **재빌드 규칙(CRAWL-01 이후 — CRAWL-01 은 9/26 현재 상정 중, 적용되는 날부터)**: A35 자동 Purge 가 2번 성공한 뒤 HTML 엣지 캐시를 1시간 → 24시간으로 늘리면, 예약 재빌드(10/1·11/25·12/1·12/16)는 CF Pages 'Retry deployment' 대신 **빈 커밋 main 푸시**로 해야 `cf-purge.yml` 이 돈다. Retry 로 재빌드했다면 **수동 Purge Everything** 을 바로 한다. 안 하면 24시간 동안 옛 HTML 이 나간다.
+- **재빌드 규칙(9월 Pages 운영 기록, Workers 전환 뒤 사용 금지)**: 당시 빈 커밋 main 푸시가 Pages 재빌드와 `cf-purge`를 시작했다. 현재 이행에서는 빈 커밋이나 Pages Retry로 Workers가 배포되지 않는다. 먼저 검증된 Workers 게시 경로에서 새 운영 빌드와 활성 버전을 만든 뒤 해당 릴리스의 Purge를 확인한다. 과거 24시간 캐시 변경안은 현재 설정이 확인되기 전까지 적용 완료로 간주하지 않는다.
 
 | 날짜 | 할 일 | 계획 ID | 조건·주의 |
 |---|---|---|---|
@@ -148,18 +150,22 @@ AdSense 페이지·광고단위 28일 CSV 2장 → GA4 트래픽 획득 CSV → 
 ## 남은 확인 항목 (5분 이내, 아무 세션에나)
 - ☐ EEA 동의 메시지(CMP) 게시 — AdSense → 개인 정보 보호 및 메시지 → 유럽 규정 메시지 → 만들기 → 기본 스타일 → 게시. **앵커 판정(10/5) 후**에 한다(겹침 회피). 코드측 CSP는 2026-08-23 배포 완료. ★2026-09-25: 앵커 판정은 취소됐지만 광고 설정 변경을 겹치지 않도록 **P0 14완료일 조회(10/9)·10/10 판정 조회 뒤**에 한다.
 - ☐ Cloudflare Pages → Settings → Environment variables에 `NEXT_PUBLIC_ADSENSE_SLOT_GUIDE_MID`가 **등록돼 있으면** 1848295488인지 확인(없으면 할 일 없음).
-- ☐ **Cloudflare Pages 빌드 설정 한 줄 기록**(2026-09-28 감사 S31, 3분): Cloudflare → Workers & Pages → 이 사이트 프로젝트 → Settings → 빌드 구성(Build)의 **Build command**·**Build output directory**, 같은 Settings → Environment variables(변수 및 시크릿)의 `NODE_VERSION`(없으면 "없음")을 **보이는 그대로** 이 줄 아래에 적는다(명령·버전 문자열만 — 토큰·시크릿 값은 적지 말 것). 리포에는 대시보드 값의 정본 기록이 없다: 로컬 재현 절차(`scripts/check-worker-size.mjs:9` — `vercel build` → `npx @cloudflare/next-on-pages@1.13.16 --skip-build`)와 CI 의 Node 20 은 추정 근거일 뿐이다. 이 값을 확인하기 전에는 `.nvmrc`·`package.json` `engines` 를 추가하지 않는다.
+- ☐ **Pages 롤백 기준선과 Workers 게시 설정 기록**: 기존 Pages의 알려진 정상 배포·커밋·빌드 명령·출력 경로·Node 설정 및 자동배포 중지 여부를 기록한다. 계정의 현재 값은 로컬 소스로 추정하지 않는다. 새 CI 검증은 Node 22와 OpenNext QA 빌드를 사용하며, `vercel build`/`next-on-pages`는 현재 Workers 배포 절차가 아니다. Workers 게시 경로·릴리스 tag/version ID 계약·후속 Purge 설정도 따로 확인한다. 토큰·시크릿 값은 기록하지 않는다.
 - ☐ developers.kakao.com → 내 애플리케이션 → 플랫폼 → Web에 `https://www.moneysalary.com` 등록 확인.
 - ☐ GA4와 AdSense가 **같은 구글 계정**인지 한 줄 답변 → 같으면 GA4 관리 → 제품 링크 → AdSense 링크 연결(페이지별 광고 수익을 GA4에서 보게 됨).
 - ☐ **트리거형(날짜 없음) — SK하이닉스 재협상 타결 보도 당일(약 10분)**: 코드 배포 후 Cloudflare → Caching → Configuration → **Purge Everything**(또는 `/calc/sk-hynix-bonus`·`/calc/bonus-calculators`·`/sitemap.xml`·`/rss.xml` 커스텀 퍼지) → Search Console URL 검사 2건(`/calc/sk-hynix-bonus`·`/calc/bonus-calculators`) 색인 생성 요청 + Sitemaps 다시 제출 → D+1 '실제 URL 테스트'로 타결 문구 렌더 확인. 세부는 `docs/drafts/sk-ps-sync-kit-2027.md` §3 런북 표(코드 5점 동기화는 Claude).
 
-## 배포 후 캐시 자동 Purge 설정 (1회, 약 5분 — 승인 A35, 2026-09-25)
-배포(main push)마다 GitHub Actions `cf-purge` 가 이 커밋의 Cloudflare Pages 배포 성공을 기다렸다가(최대 25분) **Purge Everything** 을 대신 누른다. 아래 설정 전에는 아무것도 하지 않고 건너뛰므로(실패 표시 없음) **설정을 마칠 때까지는 지금처럼 배포마다 수동 Purge**.
-1. ☐ **API 토큰 만들기**: dash.cloudflare.com → 오른쪽 위 프로필 → **My Profile → API Tokens → Create Token → Custom token(Get started)** → 이름 `github-cf-purge` → 권한 2줄만: **Account · Cloudflare Pages · Read** / **Zone · Cache Purge · Purge** → Account Resources = 내 계정, Zone Resources = **Specific zone · moneysalary.com** → Continue to summary → Create Token → 한 번만 보이는 토큰 값을 복사(채팅·문서에 붙여넣지 말 것).
-2. ☐ **ID 2개 복사**: Cloudflare → moneysalary.com → **Overview** 화면 오른쪽 아래 **API** 칸의 **Zone ID** 와 **Account ID**.
-3. ☐ **GitHub 시크릿 3개 등록**: GitHub 저장소 → **Settings → Secrets and variables → Actions → New repository secret** 을 3번 — `CF_API_TOKEN`(1의 토큰), `CF_ACCOUNT_ID`, `CF_ZONE_ID`(2의 값). 이름은 대소문자까지 정확히.
-4. ☐ **첫 확인**: 다음 main push 뒤 GitHub → **Actions → cf-purge** 실행 → 초록 체크 + "Purge Everything 완료" 문구 확인(배포 시간만큼 10~25분 걸림). "시크릿 … 건너뜀" 문구가 보이면 3의 이름 오타.
-5. ☐ **빨간 X 알림 메일이 오면**: 배포 실패·25분 초과·토큰 권한 오류 중 하나 — 메일 속 문구대로 확인하고, 그 배포는 Caching → Configuration → **Purge Everything** 을 손으로 한 번(또는 Actions 에서 Re-run). 토큰은 캐시 비우기·Pages 읽기만 가능해 유출돼도 사이트 내용은 못 바꾸지만(캐시를 반복해 비울 수는 있음), 의심되면 API Tokens 에서 Roll(재발급) 후 3 의 `CF_API_TOKEN` 만 교체.
+## 배포 후 캐시 자동 Purge 설정 (Workers 전환)
+
+`cf-purge`는 게시가 끝난 대상의 활성 상태를 확인하고 캐시를 비우는 후속 작업이다. Worker 업로드·활성화·도메인 전환은 별도 게시 경로가 수행한다. 기본 대상은 여전히 Pages이므로 저장소 변수 설정 없이 초록 체크만 보고 Workers 전환 완료로 판단하지 않는다.
+
+1. ☐ 먼저 기존 Pages 자동배포와 소스 발행 자동화를 중지한 상태를 확인한다. Pages 정상 배포·도메인·DNS·기존 D1은 롤백용으로 보존한다. 이 이행의 main merge/push는 그 확인 뒤에만 한다.
+2. ☐ 저장소 Actions 변수 `CF_DEPLOY_TARGET=workers`, `CF_WORKER_NAME=moneysalary`를 설정한다. 시크릿 `CF_API_TOKEN`, `CF_ACCOUNT_ID`, `CF_ZONE_ID`를 정확한 이름으로 등록한다. 토큰은 해당 Worker deployment/version 읽기와 해당 zone 캐시 제거에 필요한 범위로 제한한다. 값은 채팅·문서·로그에 복사하지 않는다.
+3. ☐ 게시 경로가 승인된 소스를 빌드하고 정확한 `workers/tag`를 붙여 활성화하는지 확인한다. push 실행은 GitHub SHA를 tag로 기대한다. dirty-tree 수동 릴리스는 Actions `workflow_dispatch`에 `target=workers`, 정확한 `release_tag`, 전체 `expected_version_id`를 지정한다. 수동 Workers 실행에서 버전 ID가 없으면 실패한다.
+4. ☐ 작업은 한 버전이 100% 활성화됐는지와 tag를 확인하고, 대기 뒤 및 각 Purge 재시도 직전에 같은 deployment/version인지 재확인한다. 별도로 도메인이 그 Worker에 연결되는지와 앱 동작을 확인한다. 이 작업은 도메인 전환·앱 건강·D1 수신을 증명하지 않는다. Workers 모드의 설정 누락은 성공 건너뜀이 아니라 실패다.
+5. ☐ 성공 로그에서 release tag와 version ID 및 `zone cache purged`를 확인한다. 실패하면 정확한 활성 릴리스·설정·권한을 먼저 확인한다. 알 수 없는 상태에서 Purge나 게시를 반복하지 않는다.
+
+Pages 롤백 시에는 먼저 보존된 Pages 배포로 도메인 경로를 복구한 뒤 `target=pages`, 해당 `release_sha`로 Purge를 실행한다. Pages 모드는 성공한 커밋을 찾을 뿐 도메인을 되돌리지 않는다. Pages 자격정보 누락은 이전처럼 notice/성공 건너뜀이 가능하다. 자세한 [롤백 및 IndexNow 순서](contact-operations.md#pages-to-workers-deployment-transition-2026-10-17)를 따른다. 이 설정 절차는 아직 수행 완료로 기록되지 않았다.
 
 ## 분석 스크립트 (Claude 용 — CSV 도착 시 실행, 원본은 리포 밖)
 ```

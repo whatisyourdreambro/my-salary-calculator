@@ -83,10 +83,11 @@ function parseSalaryParam(param: string): number | null {
 }
 
 type Props = {
- params: { amount: string };
+ params: Promise<{ amount: string }>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params: pendingParams }: Props): Promise<Metadata> {
+ const params = await pendingParams;
  const amount = parseSalaryParam(params.amount);
  if (amount === null) {
   return { title: "페이지를 찾을 수 없습니다", robots: { index: false, follow: false } };
@@ -154,7 +155,8 @@ function buildSalaryFaq(amount: number, monthlyNet: number, totalDeduction: numb
  ];
 }
 
-export default function SalaryAmountPage({ params }: Props) {
+export default async function SalaryAmountPage({ params: pendingParams }: Props) {
+ const params = await pendingParams;
  const amount = parseSalaryParam(params.amount);
  if (amount === null) {
   notFound();

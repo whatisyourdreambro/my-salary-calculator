@@ -1,0 +1,4 @@
+# Integrity verification compares these reviewed sources with the packed bytes.
+# Keep fresh Windows checkouts identical to the package even with autocrlf=true.
+/vendor/braces/** text eol=lf
+/vendor/*.tgz binary

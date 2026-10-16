@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useMemo, useState, type ReactElement } from "react";
 import Link from "@/components/AppLink";
 import { Search, ArrowRight, X, Sparkles } from "lucide-react";
 import { CalcResultAd, Display2Ad, GuideMidAd, HomeTopAd, InArticleAd } from "@/components/AdPlacement";
@@ -8,7 +8,7 @@ import { CalcResultAd, Display2Ad, GuideMidAd, HomeTopAd, InArticleAd } from "@/
 // 그룹 사이 광고 — 종전에는 3번째 그룹 뒤 GuideMidAd 하나뿐이라 모바일 첫 광고가 12,541px(14.9화면) 아래였고
 // 문서 66,000px 에 광고 1개였다. 서로 다른 슬롯 5개를 그룹 경계에 분산한다(2026-09-11 운영자 승인).
 // HomeTop·InArticle 은 calc/layout 하단 사본이 dedup 으로 죽어 유닛 수 순증은 Display2·CalcResult 2개뿐.
-const GROUP_ADS: Record<number, JSX.Element> = {
+const GROUP_ADS: Record<number, ReactElement> = {
   2: <GuideMidAd />,
   5: <InArticleAd />,
   8: <Display2Ad />,

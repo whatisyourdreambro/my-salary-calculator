@@ -12,7 +12,9 @@
 //       달라 MISS), 엣지 = 평문 URL. FAIL 문구가 "빌드 미갱신"(원본부터 틀림 → 재생성·재배포)과
 //       "퍼지 누락"(원본은 맞고 엣지만 구버전 → CF 퍼지)을 가른다. 두 쪽의 cf-cache-status·Age 를 찍는다.
 
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { resolve } from "node:path";
+import qaHttp from "./lib/qa-production-http.cjs";
 import {
   isJanManualWindow,
   isSeasonKeyExpired,
@@ -22,7 +24,7 @@ import {
 } from "./season-key.mjs";
 
 const UA =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 MoneySalary-QA/1.0";
 const BASE = "https://www.moneysalary.com";
 
 // ── 시즌 키 기대값 — 오늘(KST) 자동 키, 단 src/lib/seasonKey.ts 의 SEASON_KEY_OVERRIDE 가 우선 ──
@@ -142,12 +144,12 @@ const results = [];
 let failed = 0;
 
 /** 한 번 가져오기 — 본문·캐시 헤더까지. 예외는 { error } 로 돌려준다(throw 안 함). */
-async function fetchPage(path) {
+export async function fetchPage(path, fetchFn = globalThis.fetch) {
   try {
-    const res = await fetch(BASE + path, {
+    const res = await qaHttp.fetchProductionQaDocument(BASE + path, {
+      fetchFn,
       headers: { "user-agent": UA },
-      redirect: "manual",
-      signal: AbortSignal.timeout(20000),
+      timeoutMs: 20000,
     });
     return {
       status: res.status,
@@ -240,6 +242,7 @@ async function checkOriginEdge({ path, expect, marker, desc, diagnose, fixBuild 
 }
 
 // 동시성 5로 실행
+async function main() {
 const queue = [
   ...CHECKS.map((c) => () => check(c)),
   ...ORIGIN_EDGE_CHECKS.map((c) => () => checkOriginEdge(c)),
@@ -278,3 +281,8 @@ if (isSeasonKeyExpired(EXPECTED_SEASON_KEY, NOW)) {
 }
 console.log(`\n결과: ${TOTAL - failed}/${TOTAL} 통과${failed ? ` — 실패 ${failed}건!` : ""}`);
 process.exit(failed ? 1 : 0);
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+  await main();
+}

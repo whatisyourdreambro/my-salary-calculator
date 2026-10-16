@@ -1,20 +1,22 @@
 // Check the actual statically rendered calculator directory and every linked registry page.
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
-const base = process.env.BASE_URL || 'http://127.0.0.1:3100';
-const headers = { 'User-Agent': 'Mozilla/5.0 Moneysalary local calculator QA' };
+import qaSafety from './lib/qa-safety.cjs';
+const { assertLocalQaTarget, QA_USER_AGENT, fetchQaDocument } = qaSafety;
+const base = assertLocalQaTarget(process.env.BASE_URL || 'http://127.0.0.1:3100');
+const headers = { 'User-Agent': `Mozilla/5.0 Moneysalary local calculator QA ${QA_USER_AGENT}` };
 const ld = html => [...html.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)].flatMap(match => JSON.parse(match[1]));
-const directory = await (await fetch(base + '/calc', { headers })).text();
+const directory = await (await fetchQaDocument(base + '/calc', base, { headers })).text();
 const collection = ld(directory).find(item => item['@type'] === 'CollectionPage');
 assert(collection);
 const routes = collection.mainEntity.itemListElement.map(item => new URL(item.url).pathname);
 assert.equal(routes.length, 202);
 assert.equal(new Set(routes).size, routes.length);
 const results = [];
-const sitemap = await (await fetch(base + '/sitemap.xml', { headers })).text();
+const sitemap = await (await fetchQaDocument(base + '/sitemap.xml', base, { headers })).text();
 for (let i = 0; i < routes.length; i += 4) {
   await Promise.all(routes.slice(i, i + 4).map(async route => {
-    const response = await fetch(base + route, { headers, redirect: 'manual', signal: AbortSignal.timeout(30000) });
+    const response = await fetchQaDocument(base + route, base, { headers, signal: AbortSignal.timeout(30000) });
     assert.equal(response.status, 200, route);
     const html = await response.text();
     assert(html.includes(`rel="canonical" href="https://www.moneysalary.com${route}"`), `${route} canonical`);

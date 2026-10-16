@@ -2,10 +2,8 @@ import { NextResponse, type NextRequest } from "next/server";
 import { isGuideSearchVariant } from "@/lib/guideDiscovery";
 import { ENGLISH_UNAVAILABLE_PATH, isUnknownEnglishPath } from "@/lib/englishRouteGuard";
 import { resolveSalaryRedirect } from "@/lib/salaryRedirect";
-import { cloudflareAssets, type AssetFetcher } from "@/lib/server/cloudflareAssets";
 
-// Edge runtime — Cloudflare Pages 호환 (Web API만 사용)
-// Node.js 전용 API 절대 금지: fs, crypto.randomBytes 등
+// OpenNext bundles this middleware into Workers; keep request handling on Web APIs.
 
 // 차단할 봇 (SEO 분석 봇 + 무단 스크래퍼)
 // ⚠️ ClaudeBot·PerplexityBot·cohere-ai는 AI 검색 유입 통로 → 허용 (robots.ts 정책과 통일)
@@ -24,37 +22,15 @@ const ENGLISH_404_HEADERS = {
   "Cache-Control": "private, no-store",
 } as const;
 
-// next dev/start 용: /en/page-unavailable 은 [...missing] 이 빌드 시 프리렌더한 영어 404 이며
-// Node 서버는 .meta 의 404 상태를 존중한다. A rewrite preserves the requested URL.
+// Next/OpenNext preserve the notFound() response from the prerendered English route.
+// Keep the request URL and RSC negotiation; do not fetch Pages-only *.html assets.
 function rewriteToEnglishUnavailable(req: NextRequest): NextResponse {
-  const missing = NextResponse.rewrite(new URL(ENGLISH_UNAVAILABLE_PATH, req.url));
+  const missing = NextResponse.rewrite(new URL(ENGLISH_UNAVAILABLE_PATH, req.url), { status: 404 });
   for (const [key, value] of Object.entries(ENGLISH_404_HEADERS)) missing.headers.set(key, value);
   return missing;
 }
 
-// Cloudflare Pages 용: next-on-pages 는 프리렌더 페이지의 initialStatus(404)를 버리고 200 으로
-// 서빙한다(정적 라우트의 프리렌더 308 이 200 으로 나오던 실측과 같은 층, 2026-09-23 리뷰 확인).
-// 그래서 프리렌더된 영어 404 HTML 을 ASSETS 바인딩에서 직접 읽어 상태 404 로 응답한다.
-// 자산을 못 읽으면 rewrite 로 폴백(상태는 어댑터가 주는 대로, noindex 헤더는 유지).
-async function serveEnglishNotFound(assets: AssetFetcher, req: NextRequest): Promise<NextResponse> {
-  try {
-    for (const path of [`${ENGLISH_UNAVAILABLE_PATH}.html`, ENGLISH_UNAVAILABLE_PATH]) {
-      const asset = await assets.fetch(new URL(path, req.url));
-      const type = asset.headers.get("content-type") || "";
-      if (asset.status === 200 && type.includes("text/html")) {
-        return new NextResponse(asset.body, {
-          status: 404,
-          headers: { "Content-Type": type, ...ENGLISH_404_HEADERS },
-        });
-      }
-    }
-  } catch {
-    // 바인딩 장애 — 아래 rewrite 폴백
-  }
-  return rewriteToEnglishUnavailable(req);
-}
-
-function nextResponse(req: NextRequest): NextResponse | Promise<NextResponse> {
+function nextResponse(req: NextRequest): NextResponse {
   // /salary/* 격자 밖 금액·구형 {N}-manwon·{N}-eok 는 404 대신 가장 가까운 정적 페이지로 308
   // (GSC 404 312건의 예시가 전부 이 형태, 2026-09-11). 집합은 코드젠 상수(~5KB) — 무거운 import 금지.
   const salaryTarget = resolveSalaryRedirect(req.nextUrl.pathname);
@@ -67,10 +43,15 @@ function nextResponse(req: NextRequest): NextResponse | Promise<NextResponse> {
     // 2026-09-23: edge 캐치올(/en/[...missing])을 정적으로 바꾸면서 guides/tools 상세만이 아니라
     // 알 수 없는 /en/* 전부를 영어 404 로 보낸다 — 전역 한국어 404 로 떨어지면 영어 헤더와
     // 하이드레이션 불일치가 나고 qa:english 게이트(404·영어 문구·noindex)도 깨진다.
-    const assets = cloudflareAssets();
-    return assets ? serveEnglishNotFound(assets, req) : rewriteToEnglishUnavailable(req);
+    return rewriteToEnglishUnavailable(req);
   }
   const response = NextResponse.next();
+  // Direct requests to the generated recovery route must retain the same privacy
+  // and indexing policy; its page supplies notFound() and the actual 404 status.
+  if (req.nextUrl.pathname.replace(/\/$/, "") === ENGLISH_UNAVAILABLE_PATH) {
+    for (const [key, value] of Object.entries(ENGLISH_404_HEADERS)) response.headers.set(key, value);
+    return response;
+  }
   // q 검색은 허브와 같은 정적 HTML/canonical을 쓰는 탐색 화면이다.
   // 서버 searchParams로 정적 생성을 깨지 않고 응답에서만 색인을 제외한다.
   // 빈 q·정규 허브·카테고리 허브·개별 가이드는 해당하지 않는다.
@@ -81,7 +62,7 @@ function nextResponse(req: NextRequest): NextResponse | Promise<NextResponse> {
   return response;
 }
 
-export function middleware(req: NextRequest): NextResponse | Promise<NextResponse> {
+export function middleware(req: NextRequest): NextResponse {
   // 0) non-www → www 301 redirect (canonical host 통합)
   // 두 호스트 모두 200 응답하면 Google이 중복 콘텐츠로 인식 → 권한 분산.
   // canonical 메타로도 처리되지만 301이 가장 강력한 신호.

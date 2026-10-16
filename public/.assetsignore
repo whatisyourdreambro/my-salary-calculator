@@ -1,0 +1,2 @@
+# Pages routing metadata is retained in source for rollback, not served as a Workers asset.
+/_routes.json

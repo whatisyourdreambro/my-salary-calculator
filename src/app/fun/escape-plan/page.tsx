@@ -92,7 +92,7 @@ export default function EscapePlanPage() {
 
   const captureResultImage = async (): Promise<Blob | null> => {
     if (!shareRef.current) return null;
-    const { default: html2canvas } = await import("html2canvas");
+    const { default: html2canvas } = await import("@/lib/captureElement");
     const canvas = await html2canvas(shareRef.current, { scale: 2, useCORS: true });
     return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
   };
@@ -100,7 +100,7 @@ export default function EscapePlanPage() {
   const handleSaveImage = async () => {
     if (!shareRef.current) return;
     try {
-      const { default: html2canvas } = await import("html2canvas");
+      const { default: html2canvas } = await import("@/lib/captureElement");
       const canvas = await html2canvas(shareRef.current, { scale: 2, useCORS: true });
       const a = document.createElement("a");
       a.download = "my-fire-plan.png";

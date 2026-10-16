@@ -71,7 +71,7 @@ export default function RegionIndexPage() {
           </h1>
           <p className="text-lg sm:text-xl text-muted-blue dark:text-canvas-300 mb-6 max-w-2xl mx-auto font-medium">
             서울·판교·여의도부터 지방 광역시까지
-            <br className="sm:hidden" /> {REGION_COUNT}개 지역 연봉을 한눈에 비교하세요.
+            <br className="sm:hidden" /> 자체 자료의 {REGION_COUNT}개 지역 참고 연봉을 비교하세요.
           </p>
 
           {/* 요약 통계 */}

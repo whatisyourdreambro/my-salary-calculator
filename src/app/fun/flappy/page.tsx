@@ -17,7 +17,7 @@ export default function FlappyGamePage() {
  const [highScore, setHighScore] = useState(0);
 
  const canvasRef = useRef<HTMLCanvasElement>(null);
- const requestRef = useRef<number>();
+ const requestRef = useRef<number | undefined>(undefined);
  const gameStateRef = useRef<"start" | "playing" | "gameover">("start"); // Ref for loop access
  const birdRef = useRef({ x: 50, y: 300, velocity: 0, size: 30 });
  const obstaclesRef = useRef<{ x: number; topHeight: number; passed: boolean }[]>([]);

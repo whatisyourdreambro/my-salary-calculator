@@ -1,5 +1,7 @@
 # 트렌드 브리프(공식 발표 해설) 발행 런북
 
+> **2026-10-17 Workers 전환 우선 조건:** 운영 설정 준비와 실제 배포 완료는 다르다. 인증은 대기 중이며 이 준비 단계에서 실제 배포는 아직 없다. 기존 Pages 자동배포와 소스 발행 자동화를 중지했는지 확인하기 전에는 이 이행을 main에 merge/push하지 않는다. `publish-approved`와 철회·재발행의 원격 반영도 정상 동작하는 Workers 게시 경로 및 활성 릴리스 확인/Purge/IndexNow 연결이 마련될 때까지 실행하지 않는다. 현재 저장소 CI는 QA 검증만 수행하고 Worker를 게시하지 않는다. 아래 기존 Pages 기반 설명은 [현재 전환 절차](contact-operations.md#pages-to-workers-deployment-transition-2026-10-17)보다 우선하지 않는다.
+
 2026-09-26 R5 publisher 신설. 코드: `scripts/trend-publish/*` · `src/lib/trendBriefs/*` · 등록 `src/lib/guides/trend-briefs.ts`.
 **이 런북의 모든 자동화는 운영자 승인 없이 사이트에 아무것도 올리지 않는다.** 원격 반영(git 푸시)은 `publish-approved.mjs` 한 곳뿐이고, 그 명령은 운영자가 채팅에서 브리프마다 `발행 <slug>` 라고 승인한 세션만 실행한다.
 
@@ -118,8 +120,8 @@ publish-approved 사전 조건: HALT 없음 · PUBLISH_ENABLED · REVIEWED_UNTIL
 
 ## 7. 배포 후 캐시 Purge — A35 자동 vs 수동
 
-- `.github/workflows/cf-purge.yml`(A35)은 main 반영 뒤 CF Pages 배포를 기다려 Purge Everything 을 한다 — **저장소 시크릿 CF_API_TOKEN·CF_ACCOUNT_ID·CF_ZONE_ID 가 모두 있을 때만**(설정: docs/operator-console-pack.md).
-- 운영자가 시크릿 설정과 첫 자동 Purge 성공(Actions 로그)을 확인했으면 `TREND_HOME/CF_PURGE_OK` 를 만든다. 없으면 발행 때 `--manual-purge-ack` 가 필요하고, 배포 뒤 CF 대시보드 > 캐싱 > 구성 > **Purge Everything** 을 직접 누른다.
+- `.github/workflows/cf-purge.yml`은 배포기가 아니다. Workers 전환 뒤에는 `CF_DEPLOY_TARGET=workers`, `CF_WORKER_NAME=moneysalary`, 필요한 읽기/캐시 제거 자격정보와 정확한 릴리스 tag 계약이 있어야 한다. 한 버전이 100% 활성화됐는지 반복 확인한 뒤에만 Purge한다. 수동 실행은 `release_tag`와 `expected_version_id`를 지정한다. Pages 기본값은 롤백용으로 남아 있으므로 저장소 변수를 설정하지 않은 초록 체크를 Workers 완료로 읽지 않는다(설정: docs/operator-console-pack.md).
+- 과거 Pages 성공으로 만든 `TREND_HOME/CF_PURGE_OK`는 Workers 경로 검증을 대신하지 않는다. 전환 때 운영자가 새 게시·도메인 경로 및 Workers 모드 Purge 성공을 확인한 뒤에만 재사용 여부를 결정한다. `--manual-purge-ack`도 미구성 Workers 게시 경로를 우회하는 승인이 아니다. IndexNow는 운영 빌드 뒤/전환 전에 delta manifest를 capture하고 활성화·Purge 뒤 같은 manifest를 submit한다; 기존 postbuild 자동 제출을 기대하지 않는다.
 - verify-prod 는 `/` · `/calc/samsung-bonus` · `/guides/nurse-salary` 의 `/_next/static` 자산을 최대 40건 받아 404 가 있으면 **'Purge 필요'** 로 보고한다(CF_PURGE_OK 가 있으면 15분 뒤 한 번 더 확인).
 
 ## 8. 되돌리기
@@ -211,7 +213,7 @@ NAVER_CLIENT_SECRET=<Client Secret>
 | `skip — RAM·잠금 부족` | heavy.mjs 가 30분 안에 여유 메모리(minFreeMB)·잠금을 얻지 못함(다른 빌드·vitest 실행 중). 그날은 건너뛴다 — 다음 날 자동 재시도. 자주 나오면 예약 시각을 옮긴다. |
 | `다른 daily 실행 중(daily.lock)` | 앞선 실행이 아직 도는 중이거나 비정상 종료. 6시간 지난 잠금은 자동 해제. 급하면 `TREND_HOME/daily.lock` 폴더를 지운다. |
 | `워크트리 변경 발견 → HALT` | 누군가 `trend-wt` 에서 파일을 고쳤다. 내용을 확인하고 `git -C C:/dev/moneysalary/trend-wt reset --hard origin/main && git clean -fd` 뒤 HALT 삭제. |
-| 발행 뒤 45분 동안 새 글이 안 보임 | CF Pages 빌드는 보통 10~25분. CF 대시보드 > Workers 및 Pages > 배포 로그 확인. 빌드 실패면 '철회' 없이 원인부터. |
+| 발행 뒤 새 글이 안 보임 | main push만으로 Workers가 배포되지 않는다. 우선 지정된 Workers 게시 경로가 실행됐는지, 정확한 tag/version이 100% 활성화됐는지, 도메인 경로와 Purge가 맞는지 확인한다. CI 초록 체크나 과거 Pages 성공을 대체 증거로 쓰지 않는다. 실패 원인을 확인하기 전 자동 철회·재발행하지 않는다. |
 | verify-prod 'Purge 필요' | §7 수동 Purge. |
 | gate `similarity-*` 실패 | 기존 글·허브·1차 출처·헤드라인과 너무 비슷 — 그날은 SKIP 이 정답(다시 쓰게 하지 않는다). |
 | gate `canonical-release` 실패 | 최저임금 고시·요율 결정·봉급표·기준금리 결정은 새 글이 아니라 기존 허브 갱신 대상 — 별도 작업으로. |

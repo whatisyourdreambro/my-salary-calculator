@@ -18,7 +18,8 @@ import { calculateNetSalary } from "@/lib/calculator";
 import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import { WIDGET_CSP, WIDGET_REFERRER_SCRIPT, WIDGET_NUMBER_INPUT_SCRIPT } from "../shared";
 
-export const runtime = "edge";
+export const dynamic = "force-static";
+
 
 // 연봉 그리드: 1,200만 ~ 2억, 100만원 스텝 (월 실수령은 구간 선형보간)
 const GRID_MIN = 12_000_000;

@@ -132,7 +132,7 @@ export default function SpendingTestPage() {
 
   const captureResultImage = async (): Promise<Blob | null> => {
     if (!resultRef.current) return null;
-    const { default: html2canvas } = await import("html2canvas");
+    const { default: html2canvas } = await import("@/lib/captureElement");
     const canvas = await html2canvas(resultRef.current, { backgroundColor: "#0D1117", scale: 2 });
     return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
   };
@@ -140,7 +140,7 @@ export default function SpendingTestPage() {
   const handleSaveImage = async () => {
     if (!resultRef.current) return;
     showToast("📸 이미지 저장 중...");
-    const { default: html2canvas } = await import("html2canvas");
+    const { default: html2canvas } = await import("@/lib/captureElement");
     const canvas = await html2canvas(resultRef.current, { backgroundColor: "#0D1117", scale: 2 });
     const link = document.createElement("a");
     link.download = `소비성향_${result?.title ?? "결과"}.png`;

@@ -11,7 +11,9 @@ import { dartInjection, DART_INJECTION_DATE } from "@/data/dart/dartInjection";
 import { dartNameMap } from "@/data/dart/dartNameMap";
 import { WIDGET_HEADERS, widgetShell } from "../shared";
 
-export const runtime = "edge";
+// Company id is request-specific; never put one company's card into the route cache.
+export const dynamic = "force-dynamic";
+
 
 const ID_RE = /^[a-z0-9-]{1,64}$/;
 

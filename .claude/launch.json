@@ -6,7 +6,10 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": [
         "run",
-        "dev"
+        "qa:dev",
+        "--",
+        "--port",
+        "3000"
       ],
       "port": 3000
     },
@@ -15,27 +18,22 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": [
         "run",
-        "start"
+        "qa:start",
+        "--",
+        "--port",
+        "3000"
       ],
       "port": 3000
     },
     {
       "name": "cf-worker",
-      "runtimeExecutable": "npx",
+      "runtimeExecutable": "npm",
       "runtimeArgs": [
-        "--yes",
-        "-p",
-        "wrangler@3.114.0",
-        "wrangler",
-        "pages",
-        "dev",
-        ".vercel/output/static",
+        "run",
+        "qa:cf:start",
+        "--",
         "--port",
-        "8788",
-        "--compatibility-date=2025-09-01",
-        "--compatibility-flag=nodejs_compat",
-        "--ip",
-        "127.0.0.1"
+        "8788"
       ],
       "port": 8788
     }

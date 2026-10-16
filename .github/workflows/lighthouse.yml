@@ -22,17 +22,20 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install
         run: npm ci
 
       - name: Build
-        run: npm run build
+        run: npm run qa:build
+
+      - name: Verify QA network safety
+        run: npm run qa:safety
 
       - name: Run Lighthouse CI
-        run: npx --yes --package=@lhci/cli@0.15.1 lhci autorun --config=lighthouserc.cjs
+        run: npm run qa:lighthouse
 
       - name: Save mobile lab reports
         if: always()

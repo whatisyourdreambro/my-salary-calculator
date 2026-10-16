@@ -25,6 +25,9 @@ import { companyCountPlus } from "@/config/site";
 import { companyPageModified } from "@/lib/pageModified";
 import { companyPageTitleAndDescription } from "@/lib/companyPageMetadata";
 
+// Next 15 no longer caches GET handlers by default; keep this build-time feed static.
+export const dynamic = "force-static";
+
 const escapeXml = (unsafe: string) =>
   unsafe.replace(/[<>&'"]/g, (c) => {
     switch (c) {

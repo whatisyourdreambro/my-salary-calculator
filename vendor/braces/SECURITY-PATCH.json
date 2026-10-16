@@ -1,0 +1,24 @@
+{
+  "upstream": "braces@3.0.3",
+  "derivative": "Local MoneySalary patched derivative: braces@3.0.3-moneysalary.1",
+  "license": "MIT; original LICENSE and authorship retained",
+  "advisory": "GHSA-vfj7-8cjw-p6xm",
+  "purpose": "Apply actual recursion bounds, not a version-only advisory suppression.",
+  "changes": [
+    "Parse admits at most 100 combined brace/paren nesting levels. Escaped, quoted and bracket-class literals do not count.",
+    "compile/expand/stringify reject caller-created AST traversal deeper than 100 container levels.",
+    "expand parent-queue traversals reject chains/cycles longer than 100 links.",
+    "maxLength is read once; NaN cannot disable the original 10,000-character hard cap."
+  ],
+  "compatibility": "Original grammar/output is preserved within bounds; excessive nesting now throws an intentional SyntaxError/RangeError. No configurable depth bypass.",
+  "limits": [
+    "Does not bound total expansion cardinality or arbitrary AST width.",
+    "Does not sandbox hostile getters or executable objects.",
+    "Local fork requires explicit maintenance until a reviewed upstream replacement exists."
+  ],
+  "validation": {
+    "securityCases": 24,
+    "differentialChecks": 3276,
+    "cssByteEquivalence": "Three current application CSS files and one variant fixture"
+  }
+}

@@ -1,12 +1,12 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { EN_ALL_PAGE_PATHS } from "../src/lib/englishRoutes";
 import { isShareExcludedPath } from "../src/lib/sharePolicy";
+import qaSafety from "./lib/qa-safety.cjs";
+const { assertLocalQaTarget, QA_USER_AGENT, fetchQaDocument } = qaSafety;
 
-const base = process.env.BASE_URL ?? "http://localhost:3000";
-const parsed = new URL(base);
-if (!["localhost", "127.0.0.1", "www.moneysalary.com"].includes(parsed.hostname) && !/^[a-f0-9]{8}\.my-salary-calculator\.pages\.dev$/.test(parsed.hostname)) throw new Error("Use a local or known Moneysalary deployment origin.");
+const base = assertLocalQaTarget(process.env.BASE_URL ?? "http://127.0.0.1:3100");
 const origin = "https://www.moneysalary.com";
-const ua = "Mozilla/5.0 (Moneysalary English release QA)";
+const ua = `Mozilla/5.0 (Moneysalary English release QA) ${QA_USER_AGENT}`;
 type Record = { path: string; status: number; title?: string; canonical?: string; headings?: number; issues: string[] };
 const records: Record[] = [];
 const attr = (tag: string, name: string) => tag.match(new RegExp(`(?:^|\\s)${name}="([^"]*)"`))?.[1];
@@ -14,7 +14,7 @@ const attr = (tag: string, name: string) => tag.match(new RegExp(`(?:^|\\s)${nam
 async function inspect(path: string) {
   const record: Record = { path, status: 0, issues: [] };
   try {
-    const response = await fetch(base + path, { headers: { "User-Agent": ua }, signal: AbortSignal.timeout(30_000), redirect: "manual" });
+    const response = await fetchQaDocument(base + path, base, { headers: { "User-Agent": ua }, signal: AbortSignal.timeout(30_000) });
     record.status = response.status;
     const html = await response.text();
     if (response.status !== 200) record.issues.push(`expected 200, received ${response.status}`);
@@ -42,7 +42,7 @@ async function main() {
 for (let i = 0; i < EN_ALL_PAGE_PATHS.length; i += 4) await Promise.all(EN_ALL_PAGE_PATHS.slice(i, i + 4).map(inspect));
 const missing = [];
 for (const path of ["/en/definitely-not-a-page", "/en/tools/definitely-not-a-tool", "/en/guides/definitely-not-a-guide"]) {
-  const response = await fetch(base + path, { headers: { "User-Agent": ua }, signal: AbortSignal.timeout(30_000), redirect: "manual" });
+  const response = await fetchQaDocument(base + path, base, { headers: { "User-Agent": ua }, signal: AbortSignal.timeout(30_000) });
   const html = await response.text();
   // Next can stream the not-found boundary as an RSC payload. The browser QA
   // checks its final DOM marker; server QA checks HTTP, noindex and English copy.

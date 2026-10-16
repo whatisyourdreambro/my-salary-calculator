@@ -1,3 +1,5 @@
+// MSY_RETIRED_BROWSER_QA: Historical October 3 audit; use the maintained guarded runners.
+throw new Error("Archived browser audit disabled. Use npm run qa:cf:build and guarded qa:crawl / qa:english runners.");
 import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from 'playwright-core';

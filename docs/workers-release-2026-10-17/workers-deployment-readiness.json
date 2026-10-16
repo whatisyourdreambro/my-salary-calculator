@@ -1,0 +1,369 @@
+{
+  "date": "2026-10-17",
+  "scope": "Independent integrated-worktree Workers deployment readiness review; no publisher requests, browser runs, remote API changes, or configuration edits.",
+  "conclusion": "No confirmed routing, binding or private-response cache defect found in the initial source review. A subsequent adapter review found pre-handler POST buffering; the new Worker entry bounds it (worker-body-boundary.json), pending parent final Workerd rebuild/HTTP validation. Actual activation still requires artifact, binding and plan/CPU verification.",
+  "coverage": {
+    "fullRead": 29,
+    "partialRead": 14,
+    "files": [
+      {
+        "file": "AGENTS.md",
+        "level": "full",
+        "sha256": "ac97f40b87e5a78580a50f146e6c72467f8e89ec1c2c5209217265c00c07e44e"
+      },
+      {
+        "file": "open-next.config.ts",
+        "level": "full",
+        "sha256": "e71582d231961cfe82e749ed28b76e5e0432f008c4205e775068442f47c72b2d"
+      },
+      {
+        "file": "wrangler.jsonc",
+        "level": "full",
+        "sha256": "3ca237fca2fbb6de3b052989a4b80bd2260177b46ee3faf7c6c13477ca3fd8a4"
+      },
+      {
+        "file": "wrangler.qa.jsonc",
+        "level": "full",
+        "sha256": "41245024650a5648f8d966cf7fe58cbaa64a1fe51e89a01ddb152f43e559e0a7"
+      },
+      {
+        "file": "public/_headers",
+        "level": "full",
+        "sha256": "94977fe6490595e213525d58806a4efdf1507774b36e6e445544df38046edf73"
+      },
+      {
+        "file": "public/_routes.json",
+        "level": "full",
+        "sha256": "5016b732be4ec92e08cfbc7a8d9680b332f09e3a7e95d9951d02009f88b7ea0e"
+      },
+      {
+        "file": "public/sw.js",
+        "level": "full",
+        "sha256": "cff901b87db96edc3cd7d4c88e365f73f50ea9cede81dee925d2a38af4a097eb"
+      },
+      {
+        "file": "cloudflare/static-company-entrypoint.mjs",
+        "level": "full",
+        "sha256": "1d57fcad6114bd7aacfcaf827f6dbaa42fe76dc045e8e15402501f21d7ce611e"
+      },
+      {
+        "file": "cloudflare/static-company-fastpath.mjs",
+        "level": "full",
+        "sha256": "e96fbb1aebaa3799ea56220915caf39b48b28b10b4075a2d1db222a53bfee448"
+      },
+      {
+        "file": "src/middleware.ts",
+        "level": "full",
+        "sha256": "429ed015a206313e97c3b256a9a73b550fc3990e780704bc266d751f50231fbc"
+      },
+      {
+        "file": "src/lib/server/cloudflareBindings.ts",
+        "level": "full",
+        "sha256": "eba2d2e51fa637815f4c1be98dac00bf4f0663bfe7008831beb2ddd9ce6162ca"
+      },
+      {
+        "file": "src/lib/server/cloudflareAssets.ts",
+        "level": "full",
+        "sha256": "4157e5eebd55d401ab1d6c17ad7e74a1e1f8ba2f205ae1462bc9c3ac8b3b82c1"
+      },
+      {
+        "file": "src/lib/server/feedbackStorage.ts",
+        "level": "full",
+        "sha256": "4ea5c5f230ebb7e1a2c45fae56d82c1eed4b12b1168df17a7d3b43f08ead2376"
+      },
+      {
+        "file": "src/lib/server/contactHandler.ts",
+        "level": "full",
+        "sha256": "c4992839e219b8a9bed642f50dd3770e68accd35a49268fc7362f204cbe917ed"
+      },
+      {
+        "file": "src/lib/server/fixedFeedbackHandler.ts",
+        "level": "full",
+        "sha256": "fa5810e16b9477d4a031c2b7c1674746059511bbffe2824035154365628acc4f"
+      },
+      {
+        "file": "src/app/api/contact/route.ts",
+        "level": "full",
+        "sha256": "44c6b423851953df706783f12a2f7b83bed0e35e7c23ef23815c18fa3eb438d5"
+      },
+      {
+        "file": "src/app/api/feedback/route.ts",
+        "level": "full",
+        "sha256": "4e9c0202d561439863aa4a44ee9541e66895b9094fbaade9592199bf8e5e78df"
+      },
+      {
+        "file": "src/app/api/salary-table/route.ts",
+        "level": "full",
+        "sha256": "80622a2b04a2b319f2452b7e1d7e3482e43d48659613f5ea027aa2b7c32ab2c9"
+      },
+      {
+        "file": "src/lib/__tests__/monthlyFaqFacts.test.ts",
+        "level": "full",
+        "sha256": "9b1f8af4e725107e3f8dd13e7225bc608db4028f9766e988436c9860d9180d7f"
+      },
+      {
+        "file": "src/lib/__tests__/seasonCalcMeasurement.test.ts",
+        "level": "full",
+        "sha256": "b8a7f06d14028d1f802d0170d1b0243ccf05a8a3b91117dfd8798ffc564bb82e"
+      },
+      {
+        "file": "src/lib/__tests__/bonusCalcMeasurement.test.ts",
+        "level": "full",
+        "sha256": "cf790befdd86167382c015500a4e226c5fbd1fa901ab2bac2603b45f922407eb"
+      },
+      {
+        "file": "scripts/qa-cloudflare-http.mjs",
+        "level": "full",
+        "sha256": "998b9fd7a5e5ee6b2f146fa1c15ba6c1d9243847e958252217a7fbab8e4cdbaa"
+      },
+      {
+        "file": "scripts/__tests__/cloudflare-routes.test.mjs",
+        "level": "full",
+        "sha256": "59b220a4f600d14e817a04b8b464fbd2088970e5c71aa59f7f0beb25809b5921"
+      },
+      {
+        "file": "node_modules/@opennextjs/cloudflare/dist/api/overrides/incremental-cache/static-assets-incremental-cache.js",
+        "level": "full",
+        "sha256": "97824d26c96cdbd4e582977174b359ce87b74e260b0751f2a44adfa4d9721d3d"
+      },
+      {
+        "file": "node_modules/@opennextjs/cloudflare/dist/cli/templates/worker.js",
+        "level": "full",
+        "sha256": "d05223bf4d44c84108a102ab62aa3bc9c5568f0c3ac2064c37be5cc65c64bc45"
+      },
+      {
+        "file": "node_modules/@opennextjs/cloudflare/dist/cli/build/open-next/compile-env-files.js",
+        "level": "full",
+        "sha256": "7e36e1ff03b65185f6e5f2e802dee2e98bfbb1053c3a1a823e8d501fc414990c"
+      },
+      {
+        "file": "node_modules/@opennextjs/cloudflare/dist/cli/utils/extract-project-env-vars.js",
+        "level": "full",
+        "sha256": "7b7d316e812f7064fd0f8778bf95a3b2ebd6033f4c2cae939ce9d5be664558b5"
+      },
+      {
+        "file": "node_modules/@opennextjs/cloudflare/dist/cli/commands/upload.js",
+        "level": "full",
+        "sha256": "644afb32059b980a041c781a79afa8aca4557f5df30ed1050276738d9189a8d5"
+      },
+      {
+        "file": "node_modules/@opennextjs/aws/dist/build/createAssets.js",
+        "level": "full",
+        "sha256": "782b60c7ae2d1d67624b40ee5712482ceb638db2bd368d427a87e24c3474dd17"
+      },
+      {
+        "file": "next.config.mjs",
+        "level": "partial",
+        "sha256": "54dfbdf23e3dddaba30ddbef626e480c073b4f6111902a6470392c1e6e3ca41a"
+      },
+      {
+        "file": "package.json",
+        "level": "partial",
+        "sha256": "e29a4c45a624300d81c296a90ed08c23050cf58ce62d46949912c37fe37ee5ba"
+      },
+      {
+        "file": "src/app/api/og/route.tsx",
+        "level": "partial",
+        "sha256": "b9a6f75e9f07e5ede6f74095741d60c9ccffdd5986c4d2d7d45c44f0b1ec1c12"
+      },
+      {
+        "file": "src/lib/ogImageCache.ts",
+        "level": "partial",
+        "sha256": "9a9f31a165a11a1f62064e92db282e73f19d52a7a2308c12f6df369428bc7109"
+      },
+      {
+        "file": "src/app/widget/shared.ts",
+        "level": "partial",
+        "sha256": "166d073f27d309576754d0e8dce117408f1f065bbd722671220445d07783eb35"
+      },
+      {
+        "file": "src/app/widget/company/route.ts",
+        "level": "partial",
+        "sha256": "cb23402bcfa9d801bef39e56feb4d7cbafdcd6394e459cf99c8a26e59a89f8c8"
+      },
+      {
+        "file": "src/app/share/[data]/page.tsx",
+        "level": "partial",
+        "sha256": "22288ea276239379f52ee0802ab3ee97834c19b5c34a683dd82aa97a03da5032"
+      },
+      {
+        "file": "scripts/qa-cloudflare.mjs",
+        "level": "partial",
+        "sha256": "a9306aa1a21fac0901b0712dc466aa6620443bd0d6a6f6ad380746b9d347552e"
+      },
+      {
+        "file": "src/lib/__tests__/contactHandler.test.ts",
+        "level": "partial",
+        "sha256": "88966cd62bc49c7214dc58491ac51c7c964dec8b4190e7f1f639085c39aefd14"
+      },
+      {
+        "file": "src/lib/__tests__/fixedFeedbackHandler.test.ts",
+        "level": "partial",
+        "sha256": "2d351f45ea358b81db63a8b03e8d179e8f8e4ba40fc8c2a7a45f2be6397d4e55"
+      },
+      {
+        "file": "node_modules/@opennextjs/cloudflare/dist/cli/templates/init.js",
+        "level": "partial",
+        "sha256": "590fb544a2fcc731a3d5982d882f63893bae4d5ad3ddfb3db80f5d865b78a776"
+      },
+      {
+        "file": "node_modules/@opennextjs/cloudflare/dist/cli/build/build.js",
+        "level": "partial",
+        "sha256": "8122ea213b15375ac7ba25290965d059989ef16f33bdeba117d77aeb2260b2bd"
+      },
+      {
+        "file": "node_modules/@opennextjs/cloudflare/dist/cli/commands/populate-cache.js",
+        "level": "partial",
+        "sha256": "d31f16e3e323e82039eeece2c63cc4a678b085a3bed2b3e086a8b4d58ac4560b"
+      },
+      {
+        "file": "node_modules/wrangler/wrangler-dist/cli.js",
+        "level": "partial",
+        "sha256": "a1b3cf7023a53d0d7f7ca4a183f2f904573cdb00737cd1a034890207431f1d8e"
+      }
+    ],
+    "method": "Manual source inspection plus targeted pattern inventory. Current integrated production bundle was not yet produced at review; prior isolated QA artifact counts are not reused as release evidence."
+  },
+  "findings": [
+    {
+      "id": "W-CPU",
+      "severity": "deployment-condition",
+      "status": "requires-operator-verification",
+      "detail": "Free allows 10ms CPU/request and 100000 Worker requests/day. Cached prerender HTML/RSC still enters middleware and NextServer because cache interception is false. Old static-company fastpath is not connected. Dynamic OG ImageResponse, query-specific salary-table generation, share pages and company widgets add work. Code and wall-time measurements cannot establish deployed CPU compliance.",
+      "evidence": [
+        "open-next.config.ts:7",
+        "node_modules/@opennextjs/cloudflare/dist/cli/templates/worker.js:34",
+        "src/app/api/og/route.tsx:459",
+        "src/app/api/salary-table/route.ts:27"
+      ],
+      "action": "Confirm actual Workers plan and CPU evidence before broad route activation; do not treat a successful build or paid-zone plan as proof of the Workers plan."
+    },
+    {
+      "id": "W-CACHE-POPULATE",
+      "severity": "deployment-condition",
+      "status": "documented",
+      "detail": "Adapter build creates .open-next/cache separately. populateCache copies it into assets/cdn-cgi/_next_cache. Adapter upload/deploy performs this step; direct Wrangler upload needs a separate completed population step.",
+      "evidence": [
+        "node_modules/@opennextjs/cloudflare/dist/cli/build/build.js:83",
+        "node_modules/@opennextjs/cloudflare/dist/cli/commands/populate-cache.js:532",
+        "node_modules/@opennextjs/cloudflare/dist/cli/commands/upload.js:22"
+      ],
+      "action": "Require final production cache count/build-id match before upload; never use the QA tree."
+    },
+    {
+      "id": "W-HTML-CACHE",
+      "severity": "deployment-condition",
+      "status": "requires-operator-verification",
+      "detail": "Existing zone Cache Rules and s-maxage alone do not prove a Worker-generated HTML response avoids Worker execution. No app HTML full-response cache.put wrapper was found; the selected incremental cache stores build-time data. The OG endpoint has its own bounded parameter-normalized Cache API. Worker Cache, if used, is separate operational configuration requiring RSC/query/cookie/private-path review.",
+      "evidence": [
+        "src/lib/ogImageCache.ts:67",
+        "node_modules/@opennextjs/cloudflare/dist/api/overrides/incremental-cache/static-assets-incremental-cache.js:21"
+      ],
+      "action": "Keep /api/contact and /api/feedback uncached. Verify real cache rules do not merge HTML/RSC or query-specific responses. No new full-response cache was added."
+    },
+    {
+      "id": "W-PAGES-CONTROL",
+      "severity": "informational",
+      "status": "optional-cleanup-proposed",
+      "detail": "public/_routes.json is a Pages control file with no Workers routing authority. OpenNext copies public recursively; Wrangler ignores _headers/_redirects/.assetsignore by default, but not _routes.json. Without .assetsignore this benign 746-byte routing JSON can become an ordinary public asset. No public/_redirects file exists.",
+      "evidence": [
+        "public/_routes.json",
+        "node_modules/@opennextjs/aws/dist/build/createAssets.js:44",
+        "node_modules/wrangler/wrangler-dist/cli.js:167445"
+      ],
+      "action": "Optionally retain the Pages original but add /_routes.json to public/.assetsignore. No config was changed by this reviewer."
+    }
+  ],
+  "verifiedSourceContracts": [
+    {
+      "area": "Assets and HTML routing",
+      "result": "run_worker_first false permits exact public/immutable assets to bypass Worker. html_handling none and not_found_handling none avoid static HTML canonicalization or SPA fallback. Application HTML is stored in reserved cdn-cgi cache containers rather than public route files, so intended HTML/RSC/API requests use middleware and NextServer. Final output collision check remains required."
+    },
+    {
+      "area": "Headers and redirects",
+      "result": "_headers applies to static assets only. Worker security headers remain in next.config and private/widget route handlers. English 404 and guide-search variants retain private/no-store and robots decisions in middleware. Middleware canonical-host and salary redirects, plus Next config redirects, remain active. _redirects is absent, so there is no legacy platform redirect conflict."
+    },
+    {
+      "area": "Pages company fastpath",
+      "result": "Legacy entry imports removed next-on-pages and .vercel manifest, but package cf:build and wrangler main use OpenNext. The legacy source is retained for historical/rollback context and is not an active Worker entry. Its previous optimized response path is not migrated."
+    },
+    {
+      "area": "Static incremental cache",
+      "result": "Read-only, build-ID namespaced, no ISR or composable-cache support. No application revalidation export/use was found in the targeted source scan. Private POST routes are force-dynamic and are not build cache inputs. A new deployed build replaces the prerender snapshot; data edits require build/release."
+    },
+    {
+      "area": "Private API and untrusted environment",
+      "result": "Cloudflare bindings are read from request-scoped getCloudflareContext; no process.env DB fallback. Missing/malformed D1 or inadequate secret fails closed. Exact HTTPS configured origin plus request URL and Origin must match; request data cannot set this binding. Input bodies are bounded; SQL is parameterized and batched; private/no-store/noindex responses do not expose storage details. The existing FEEDBACK_DB and FEEDBACK_RATE_LIMIT_SECRET must be attached to the Worker independently of Pages."
+    },
+    {
+      "area": "Environment packaging",
+      "result": "OpenNext compiles project .env files into server-only cloudflare/next-env.mjs. Do not include unrelated local secrets in release checkout. No secret file was read. QA wrapper omits .env files and removes production binding/config values. Public ad identifiers must come from the approved production build inputs; NEXT_PUBLIC_ADS_DISABLED and QA flags must be absent for ordinary visitor release."
+    },
+    {
+      "area": "Widgets and service worker",
+      "result": "Seven invariant widgets force-static; company widget remains force-dynamic for id. Handler CSP permits framing but external scripts/connections remain denied. Service worker caches only same-origin immutable chunks plus manifest/favicon and does not cache HTML/API/RSC; it does not block normal external ads."
+    },
+    {
+      "area": "Rollback",
+      "result": "Retaining Pages custom domains and proxied DNS can preserve a rollback destination after removing or disabling the two new Worker routes. The reviewed Worker does not automatically proxy exceptions/404s back to Pages. Preserve prior routes/version and inspect cache/chunk compatibility during cutover and rollback; database binding reuse is not a destructive schema migration."
+    }
+  ],
+  "remainingReleaseChecks": [
+    "Final production asset inventory: cache populated; build IDs match; each asset <=25MiB; file count within plan; application paths do not collide with public assets; private API does not appear in cache.",
+    "Final isolated QA local HTTP: CSP/security headers, HTML versus RSC Vary/content type, English/private 404, query-specific API, widget CSP, robots/sitemap/RSS and redirects. Parent owns running the established harness.",
+    "Actual Worker plan, 10ms CPU risk/metrics, request quota; no live publisher browser tests.",
+    "Existing D1 schema and secret binding presence, exact allowed origin, trusted Cloudflare IP path; synthetic private acceptance must not log values.",
+    "Actual proxied route ownership, exact intended Worker deployment/version/tag, retained Pages domain/DNS and rollback procedure.",
+    "Zone cache/redirect/script-injection integration behavior remains remotely unverified by this reviewer; do not infer compatibility solely from local source."
+  ],
+  "testFix": {
+    "files": [
+      "src/lib/__tests__/monthlyFaqFacts.test.ts",
+      "src/lib/__tests__/seasonCalcMeasurement.test.ts",
+      "src/lib/__tests__/bonusCalcMeasurement.test.ts"
+    ],
+    "purpose": "Await the actual async MonthlyPage with Promise params before SSR; preserve all four original FAQ assertions. Replace two ambiguous dynamic import strings with explicit loader maps.",
+    "result": "3 test files, 21 tests passed; no warnings; no runtime/config changes.",
+    "backup": ".artifacts/workers-release-2026-10-17/monthly-faq-test-before",
+    "command": "node node_modules/vitest/vitest.mjs run src/lib/__tests__/monthlyFaqFacts.test.ts src/lib/__tests__/seasonCalcMeasurement.test.ts src/lib/__tests__/bonusCalcMeasurement.test.ts --maxWorkers=2"
+  },
+  "sources": [
+    {
+      "url": "https://developers.cloudflare.com/workers/platform/limits/",
+      "supports": "Workers Free CPU/request/day, asset-size and asset-count limits; retrieved 2026-10-17."
+    },
+    {
+      "url": "https://developers.cloudflare.com/workers/static-assets/routing/worker-script/",
+      "supports": "Asset-first behavior unless run_worker_first is configured."
+    },
+    {
+      "url": "https://developers.cloudflare.com/workers/static-assets/routing/advanced/html-handling/",
+      "supports": "html_handling none preserves exact file matching."
+    },
+    {
+      "url": "https://developers.cloudflare.com/workers/static-assets/headers/",
+      "supports": "_headers is for asset responses, not Worker-produced responses."
+    },
+    {
+      "url": "https://developers.cloudflare.com/workers/static-assets/redirects/",
+      "supports": "_redirects and Worker response distinction."
+    },
+    {
+      "url": "https://opennext.js.org/cloudflare/caching",
+      "supports": "Read-only static-assets cache for SSG; interception bypasses NextServer; no revalidation support."
+    },
+    {
+      "url": "https://developers.cloudflare.com/workers/reference/how-the-cache-works/",
+      "supports": "Zone cache versus generated Worker responses; Cache API and Worker Cache distinctions."
+    },
+    {
+      "url": "https://developers.cloudflare.com/workers/configuration/routing/routes/",
+      "supports": "Routes operate in front of proxied hostnames/origins."
+    }
+  ],
+  "followup": {
+    "bodyBoundary": "docs/workers-release-2026-10-17/worker-body-boundary.json",
+    "fastpathDesign": "docs/workers-release-2026-10-17/static-company-workers-design.json",
+    "note": "Historical comparison supports a new pre-handler allocation boundary relative to the preserved9/26 Pages build. No performance fastpath was implemented."
+  }
+}

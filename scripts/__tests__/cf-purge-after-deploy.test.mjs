@@ -148,6 +148,35 @@ test("main: 배포 실패면 Purge 없이 1", async () => {
   assert.ok(logs.some((l) => l.startsWith("::error::")));
 });
 
+test("main: 응답이 멈춘 요청도 중단되어 전체 대기 제한이 끝나고 Purge 하지 않음", async () => {
+  const realTimeout = AbortSignal.timeout;
+  let timer;
+  try {
+    AbortSignal.timeout = (ms) => {
+      assert.equal(ms, 15000);
+      const controller = new AbortController();
+      timer = setTimeout(() => controller.abort(new Error("simulated request timeout")), 5);
+      return controller.signal;
+    };
+    globalThis.fetch = (url, init) => {
+      calls.push({ url: String(url), init });
+      assert.equal(init.redirect, "error");
+      assert.ok(init.signal instanceof AbortSignal);
+      return new Promise((_, reject) => {
+        init.signal.addEventListener("abort", () => reject(init.signal.reason), { once: true });
+      });
+    };
+    assert.equal(await main({ ...ENV, CF_PURGE_TIMEOUT_MINUTES: "0.000001" }), 1);
+    assert.equal(calls.length, 1);
+    assert.ok(calls.every((c) => !c.url.includes("/purge_cache")));
+    assert.ok(logs.some((l) => l.includes("simulated request timeout")));
+    assert.ok(logs.every((l) => !l.includes(ENV.CF_API_TOKEN)));
+  } finally {
+    clearTimeout(timer);
+    AbortSignal.timeout = realTimeout;
+  }
+});
+
 test("main: CF 가 건너뛴 배포면 Purge 없이 0", async () => {
   stubFetch([json(200, { success: true, result: [dep(SHA, "queued", "idle", { is_skipped: true })] })]);
   assert.equal(await main(ENV), 0);
@@ -175,4 +204,49 @@ test("main: Purge 권한 거부면 1", async () => {
   );
   assert.equal(await main(ENV), 1);
   assert.equal(calls.filter((c) => c.url.includes("/purge_cache")).length, 1);
+});
+
+const VERSION = '11111111-2222-3333-4444-555555555555';
+const WORKER_ENV = {
+  ...ENV, CF_DEPLOY_TARGET: 'workers', CF_ACCOUNT_ID: 'a'.repeat(32), CF_ZONE_ID: 'b'.repeat(32),
+  CF_WORKER_NAME: 'test-worker', CF_RELEASE_TAG: 'release-test', CF_EXPECTED_VERSION_ID: VERSION,
+};
+const workerDeployment = (id = 'd1') => ({ id, strategy: 'percentage', versions: [{ version_id: VERSION, percentage: 100 }] });
+const stubWorker = ({ tag = 'release-test', changeAfter = Infinity, status = 200 } = {}) => {
+  let lists = 0;
+  globalThis.fetch = async (url, init = {}) => {
+    calls.push({ url, init });
+    if (url.includes('/purge_cache')) return json(status, { success: status === 200 });
+    if (url.endsWith('/deployments')) return json(200, { success: true, result: { deployments: [workerDeployment(++lists > changeAfter ? 'd2' : 'd1')] } });
+    return json(200, { success: true, result: { id: VERSION, annotations: { 'workers/tag': tag } } });
+  };
+};
+
+test('Workers main verifies release both before and after settle, then purges once', async () => {
+  stubWorker();
+  assert.equal(await main(WORKER_ENV), 0);
+  assert.equal(calls.filter((call) => call.url.includes('/purge_cache')).length, 1);
+  assert.equal(calls.filter((call) => call.url.endsWith('/deployments')).length, 4);
+  assert.equal(calls.filter((call) => call.url.includes('/versions/')).length, 2);
+  assert.ok(calls.every((call) => !call.url.includes('/pages/')));
+  assert.ok(logs.every((line) => !line.includes(ENV.CF_API_TOKEN)));
+});
+
+test('Workers wrong release, deployment changed after settle, missing config and unknown mode never purge', async () => {
+  for (const options of [{ tag: 'wrong' }, { changeAfter: 2 }]) {
+    calls = [];
+    stubWorker(options);
+    assert.equal(await main({ ...WORKER_ENV, CF_PURGE_TIMEOUT_MINUTES: '0' }), 1);
+    assert.equal(calls.filter((call) => call.url.includes('/purge_cache')).length, 0);
+  }
+  calls = [];
+  assert.equal(await main({ ...WORKER_ENV, CF_WORKER_NAME: '' }), 1);
+  assert.equal(await main({ ...WORKER_ENV, CF_DEPLOY_TARGET: 'worker-typo' }), 1);
+  assert.equal(calls.length, 0);
+});
+
+test('Workers purge permission failure stops without repeated POST', async () => {
+  stubWorker({ status: 403 });
+  assert.equal(await main(WORKER_ENV), 1);
+  assert.equal(calls.filter((call) => call.url.includes('/purge_cache')).length, 1);
 });

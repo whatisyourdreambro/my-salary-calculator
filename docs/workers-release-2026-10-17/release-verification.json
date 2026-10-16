@@ -1,0 +1,771 @@
+{
+  "schema": "moneysalary-release-verification-v1",
+  "status": "local-validation-passed-deployment-blocked-authentication",
+  "dateKST": "2026-10-17",
+  "scope": {
+    "method": "Reviewed local log summaries, targeted log entries, QA build marker, and core-file hashes; not a comprehensive line-by-line code audit.",
+    "checkoutHead": "fed61a0543fa14501e706b362d1973f57d97eb97",
+    "productionBaselineRef": "origin/main",
+    "productionBaselineCommit": "7ae902995b3dc6dbf839beb9832af3e9255114ff",
+    "note": "Dirty integrated release worktree. A file hash records the present input, not proof that every earlier test consumed that exact hash."
+  },
+  "deployment": {
+    "status": "not-deployed-authentication-expired-user-action-required",
+    "releaseDeploymentsPerformed": 0,
+    "source": "Parent release owner status; no remote state query in this integration review.",
+    "deployedWorkerVersion": null,
+    "routeActivation": "unverified",
+    "workersPlanAndCpu": "unverified",
+    "requires": [
+      "Fresh authenticated human authorization; no currently valid OAuth session",
+      "Disable existing Pages auto-deployment and settle queued builds before main push",
+      "Establish actual Workers publication path using verified ordinary-ad production artifacts",
+      "Verify remote bindings/secrets/schema, Workers plan/CPU constraints, exact version/tag and canonical routes",
+      "Preserve Pages route/DNS and previous-version rollback",
+      "Verify actual uploaded-version startup_time_ms and resource constraints before activation"
+    ],
+    "authentication": {
+      "status": "user-action-required",
+      "lastAttempt": "Expired around 2026-10-17 02:31 KST without human approval",
+      "validPendingOAuth": false,
+      "authenticatedCredentialsConfirmed": false,
+      "automaticRetries": false,
+      "accountMutations": 0,
+      "deployments": 0,
+      "evidence": "Parent release owner report"
+    }
+  },
+  "isolation": {
+    "thisReview": {
+      "networkRequests": 0,
+      "publisherRequests": 0,
+      "browserSessions": 0,
+      "adRequests": 0,
+      "runtimeExecutions": 0
+    },
+    "verifiedScope": "Unit/source fixtures, production artifact/cache inspection and dry-run, isolated native Workerd body probe, and completed real non-rendering full-app loopback Workerd HTTP/body/crawl/English checks against final ad-free QA build 9aYUI0p8z_rHghH2BhTPz. No browser/client JavaScript or live advertising verification.",
+    "notVerified": [
+      "Live UI rendering",
+      "Live ad requests, ad fill or revenue",
+      "Published Worker route behavior",
+      "Actual Workers Paid/Free entitlement or production CPU time"
+    ]
+  },
+  "checks": [
+    {
+      "id": "vitest",
+      "status": "passed",
+      "log": "vitest-final.log",
+      "filesPassed": 246,
+      "testsPassed": 3821,
+      "testsSkipped": 1,
+      "testsTotal": 3822
+    },
+    {
+      "id": "node-script-tests",
+      "status": "passed",
+      "log": "script-tests-final.log",
+      "testsPassed": 413,
+      "testsFailed": 0,
+      "latestHardeningIncluded": [
+        "Inherited skip-build and npm hook guards",
+        "Actual production SWC advertising policy and mutation tests",
+        "Exact static-cache source/mirror validation",
+        "Fixed-buffer no-cancel helper and 8 native Workerd tests",
+        "Ordinary QA overrides inherited Cloudflare staging flag and preserves production .next output"
+      ],
+      "subsequentChanges": "Latest full run passed 413 tests (406 top-level) after QA staging-flag fix. The only later change is .gitattributes; its checkout bytes were directly verified in 11 exported files. No application/bundle change and no full-suite rerun claimed.",
+      "topLevelTests": 406
+    },
+    {
+      "id": "source-lint",
+      "status": "passed-with-warnings",
+      "log": "lint.log",
+      "errors": 0,
+      "warnings": 14
+    },
+    {
+      "id": "release-scripts-lint",
+      "status": "passed",
+      "log": "release-scripts-lint.log",
+      "evidence": "Latest empty log; successful exit 0 reported by parent after final script changes."
+    },
+    {
+      "id": "qa-safety",
+      "status": "passed",
+      "log": "qa-safety-final.log",
+      "executableFilesScanned": 1394,
+      "retiredBrowserScripts": 2,
+      "guardedBrowserScripts": 3,
+      "guardedProductionHttpScripts": 5,
+      "violations": 0,
+      "nodeTestsPassed": 20,
+      "vitestTestsPassed": 26
+    },
+    {
+      "id": "framework-security",
+      "status": "passed",
+      "log": "framework-security-final.log",
+      "dependencyAdvisoriesReported": [],
+      "localBackportsVerified": true,
+      "note": "Selected advisory/integrity gate: installed braces fork and exact Next OG parser backports. Does not claim all transitive libraries are vulnerability-free; current OG untrusted-input boundary has separate fixture tests."
+    },
+    {
+      "id": "static-page-quality",
+      "status": "passed-with-informational-findings",
+      "log": "quality-final.log",
+      "htmlChecked": 2492,
+      "dynamicUrlsInventoriedOnly": 117,
+      "structuralIssuePages": 0,
+      "unresolvedLinks": 0,
+      "followedRedirectOrDisallowedNoindexLinks": 0,
+      "weakContentLinkPages": 235,
+      "artifactScope": "Recorded on preceding QA Next output; page/application source unchanged by subsequent body-wrapper and ordinary QA-runner fixes. Final rebuilt full-app HTTP checks passed; this static check was not rerun on the new build ID."
+    },
+    {
+      "id": "payload-budget",
+      "status": "passed-with-report-warnings",
+      "log": "payload-final.log",
+      "samplePages": 9,
+      "enforcedViolations": 0,
+      "duplicatedPropsWarnings": 3,
+      "buildId": "aFS74Tw8hMhdfU0vAlx81",
+      "artifactScope": "Recorded on preceding QA Next output; page/application source unchanged by subsequent body-wrapper and ordinary QA-runner fixes. Final rebuilt full-app HTTP checks passed; this static check was not rerun on the new build ID."
+    },
+    {
+      "id": "bundle-source-maps",
+      "status": "passed",
+      "log": "edge-final.log",
+      "sourceMapsChecked": 5,
+      "forbiddenModules": 0,
+      "artifactScope": "Recorded on preceding QA Next output; page/application source unchanged by subsequent body-wrapper and ordinary QA-runner fixes. Final rebuilt full-app HTTP checks passed; this static check was not rerun on the new build ID."
+    },
+    {
+      "id": "advertising-static-diff",
+      "status": "passed-with-informational-candidates",
+      "log": "ad-diff-verification.log",
+      "errors": 0,
+      "warnings": 0,
+      "totalClickAdjacencyCandidates": 46,
+      "newClickAdjacencyCandidates": 0,
+      "newFixedHeaderCandidates": 0,
+      "newUiAboveAdCandidates": 2,
+      "note": "Source proximity heuristic only; no browser overlap or accidental-click behavior measured."
+    },
+    {
+      "id": "qa-worker-build",
+      "status": "passed",
+      "log": "qa-worker-build-final.log",
+      "staticPagesGenerated": 2511,
+      "cachePopulation": "completed locally after no-cancel fix",
+      "adsDisabled": true,
+      "buildId": "9aYUI0p8z_rHghH2BhTPz",
+      "artifactDirectory": ".open-next-qa",
+      "neverDeploy": true,
+      "previousBuildId": "aFS74Tw8hMhdfU0vAlx81",
+      "generatedAtUtc": "2026-10-16T17:37:14.69Z",
+      "markerOutputSha256": "7bab5b318142d107387ae8fb8ba871139d400128313c82229173db77b61adfb5",
+      "currentHelperSha256": "64d3e7152d33d6fc1e7dccbaf9d125d502d1d406bbf45a850b5ff36dc080e557",
+      "helperMatchesSource": true
+    },
+    {
+      "id": "qa-worker-dry-run",
+      "status": "passed",
+      "log": "qa-worker-check-final.log",
+      "evidence": "Current rebuilt QA Wrangler dry-run completed exit 0; 4016 assets, ASSETS-only local binding, 53172.16 KiB upload estimate and 9992.64 KiB gzip estimate. No upload/deployment.",
+      "buildId": "9aYUI0p8z_rHghH2BhTPz"
+    },
+    {
+      "id": "production-worker-build-and-static-verification",
+      "status": "passed",
+      "log": "production-worker-build.log",
+      "evidence": "Actual production Next build and adapter build completed exit 0. Final cf:verify passed on 33 fingerprinted artifacts plus all 2510 cache source/mirror files; generated Worker/client JavaScript was not executed for verification.",
+      "ordinaryVisitorAdvertising": "Real production chunk AST/CSP/chunk eligibility passed; 8 production layout chunks accepted and 8 QA chunks rejected in targeted checks. No live ad requests/fill verification.",
+      "receipt": ".artifacts/production-worker-verification.json",
+      "buildId": "REm1Pp5ClhgnfWFDCHqHU",
+      "checkedArtifactFiles": 33,
+      "staticCache": {
+        "source": ".open-next/cache",
+        "destination": ".open-next/assets/cdn-cgi/_next_cache",
+        "files": 2510,
+        "bytes": 1260255781,
+        "sha256": "41dd6dd8d0e22a250a2a402e40f128e0d52f89b62f5c59902650267fb5e72f79"
+      }
+    },
+    {
+      "id": "final-local-workerd-http-and-body",
+      "status": "passed",
+      "evidence": "Current rebuilt OpenNext QA Worker: 28 HTTP checks including 8 OG PNG renders and all 6 body cases passed. Four oversized cases returned 413 PAYLOAD_TOO_LARGE; two small private POSTs failed closed with 403 INVALID_ORIGIN.",
+      "base": "http://127.0.0.1:3319",
+      "httpPassed": 28,
+      "bodyPassed": 6,
+      "logs": [
+        "qa-worker-http-final.log",
+        "qa-worker-body-final.log"
+      ]
+    },
+    {
+      "id": "worker-size",
+      "status": "passed-with-internal-budget-warning",
+      "log": "worker-size-final.log",
+      "runtimeFiles": 4,
+      "uncompressedBytes": 54448292,
+      "gzipLevel9Bytes": 10102380,
+      "hardLimitBytes": 67108864,
+      "internalWarningBudgetBytes": 50331648,
+      "note": "Current rebuilt QA bundle: 4 runtime files; below 64 MiB uncompressed hard limit, above internal 48 MiB warning budget. Production size is reported separately."
+    },
+    {
+      "id": "local-workerd-http-before-body-fix",
+      "status": "passed-on-prior-build",
+      "log": "qa-worker-http-final.log",
+      "receipt": ".artifacts/next-security-2026-10-17/worker-http.json",
+      "base": "http://127.0.0.1:3319",
+      "requests": 28,
+      "ogPngRenders": 8,
+      "browserNavigation": false,
+      "note": "Actual local Workerd response validation, including PNG signature/IHDR 1200x630/cache headers; not a source-only mock, live browser test, or production CPU measurement."
+    },
+    {
+      "id": "native-workerd-body-probe",
+      "status": "passed",
+      "log": ".artifacts/workers-release-2026-10-17/worker-body-workerd-test.log",
+      "testsPassed": 8,
+      "helperSha256": "64d3e7152d33d6fc1e7dccbaf9d125d502d1d406bbf45a850b5ff36dc080e557",
+      "runtime": "Miniflare 5.20261012.1-beta / real Workerd",
+      "cases": "Declared 4097/1025/65537-byte overflows return 413; feedback/unknown chunked overflow returns 413; subsequent small requests return 200; exact 64KiB returns 200.",
+      "boundary": "Actual helper with synthetic downstream handler, no Wrangler dev body drain, no remote bindings, outbound fetch denied by synthetic service; real external traffic 0."
+    },
+    {
+      "id": "production-static-cache-population",
+      "status": "passed",
+      "log": "production-cache-final.log",
+      "receipt": ".artifacts/production-worker-verification.json",
+      "files": 2510,
+      "bytes": 1260255781,
+      "aggregateSha256": "41dd6dd8d0e22a250a2a402e40f128e0d52f89b62f5c59902650267fb5e72f79",
+      "note": "Local population and exact source/mirror matching; no remote cache or deployment operation."
+    },
+    {
+      "id": "production-worker-dry-run",
+      "status": "passed",
+      "log": "production-worker-check-final.log",
+      "assets": 4016,
+      "uploadEstimateKiB": 52269.3,
+      "gzipEstimateKiB": 9972.13,
+      "declaredBindings": [
+        "FEEDBACK_DB",
+        "ASSETS"
+      ],
+      "note": "Wrangler --dry-run exit 0; no upload/deployment. Listed binding configuration is not proof of remote secret/schema access."
+    },
+    {
+      "id": "production-worker-size",
+      "status": "passed-with-internal-budget-warning",
+      "log": "production-worker-size-final.log",
+      "runtimeFiles": 4,
+      "uncompressedBytes": 53523765,
+      "gzipLevel9Bytes": 10083709,
+      "hardLimitBytes": 67108864,
+      "internalWarningBudgetBytes": 50331648
+    },
+    {
+      "id": "final-local-http-crawl",
+      "status": "passed",
+      "log": "qa-worker-crawl-final.log",
+      "base": "http://127.0.0.1:3319",
+      "pagesPassed": 267,
+      "pagesFailed": 0,
+      "browser": false
+    },
+    {
+      "id": "final-local-english-http",
+      "status": "passed",
+      "log": "qa-worker-english-final.log",
+      "base": "http://127.0.0.1:3319",
+      "pagesPassed": 39,
+      "pagesFailed": 0,
+      "expectedMissingRoutes": 3,
+      "missingRoutesReturnedEnglish404AndNoindex": true,
+      "browser": false
+    },
+    {
+      "id": "vendor-windows-checkout-integrity",
+      "status": "passed",
+      "log": "vendor-checkout-final.log",
+      "coreAutocrlf": true,
+      "byteIdenticalFiles": 11,
+      "method": "Actual git checkout-index export with core.autocrlf=true; compared exported vendor bytes against originals.",
+      "changedFile": ".gitattributes",
+      "purpose": "Force LF for reviewed vendor/braces sources and binary handling for vendor tarballs; preserve source/archive integrity across Windows checkouts.",
+      "applicationOrBundleChanged": false
+    },
+    {
+      "id": "git-whitespace",
+      "status": "passed-for-owned-code-preserved-vendor-exception",
+      "evidence": "git diff --cached --check passes outside vendor. The upstream vendor/braces/lib/stringify.js has one extra blank line at EOF; its exact reviewed bytes are deliberately preserved and verified against the pinned tarball, source hashes, installed package and fresh Windows checkout."
+    }
+  ],
+  "warnings": [
+    {
+      "id": "eslint-support",
+      "detail": "ESLint 9.39.5 is deprecated/unsupported. Current released Next/react/import/a11y peer ecosystem blocks a fully supported ESLint 10 migration preserving rules; no force or peer-warning suppression used.",
+      "evidence": "qa-worker-build-final.log"
+    },
+    {
+      "id": "source-lint",
+      "detail": "14 existing warnings: 12 unnecessary useMemo scenarioId dependencies and 2 unused eslint-disable directives.",
+      "evidence": "lint.log"
+    },
+    {
+      "id": "windows-adapter",
+      "detail": "OpenNext warns Windows is not fully supported; successful local builds do not remove this platform limitation.",
+      "evidence": "qa-worker-build-final.log"
+    },
+    {
+      "id": "third-party-duplicate-case",
+      "detail": "Bundler reports a duplicated case in a bundled dependency; warning remains visible.",
+      "evidence": "qa-worker-build-final.log"
+    },
+    {
+      "id": "test-renderer-warnings",
+      "detail": "Vitest emits React 19 element.ref and list-key warnings; suite still passes.",
+      "evidence": "vitest-final.log"
+    },
+    {
+      "id": "cpu-and-deployed-state",
+      "detail": "Local fixtures, bundle size and Workerd wall time do not prove production CPU quota compliance or that Workers Paid is enabled; remote deployment state is unknown."
+    },
+    {
+      "id": "worker-size-budget",
+      "detail": "Current QA bundle 54,448,292 B and production bundle 53,523,765 B both pass the 67,108,864 B hard gate and exceed the 50,331,648 B internal warning budget; distinct artifacts and compression estimates are not interchangeable.",
+      "evidence": "worker-size-final.log"
+    },
+    {
+      "id": "body-limit-runtime-failure",
+      "detail": "Historical pre-fix Workerd body 500/connection failures were resolved in final local validation: native Workerd probe (8 tests) and rebuilt full-app body suite (6 cases) pass. Original failures remain recorded; production traffic was not tested.",
+      "evidence": "qa-worker-body-final.log; qa-worker-body-reproduce.log",
+      "status": "resolved-in-local-validation-history-retained"
+    }
+  ],
+  "pendingUpdates": [],
+  "evidenceFiles": [
+    {
+      "path": "vitest-final.log",
+      "bytes": 9626,
+      "modifiedAtUtc": "2026-10-16T17:02:09.5486771Z",
+      "sha256": "189cbc0f39bff6d71401d29c13d7c5b4695009e54e824a75dd475d9bf0847ef2"
+    },
+    {
+      "path": "lint.log",
+      "bytes": 3995,
+      "modifiedAtUtc": "2026-10-16T17:02:26.4118922Z",
+      "sha256": "ff4c729afecf1ad0473254480098100b2fbe1898239913bd3d5b78ef3607d5e2"
+    },
+    {
+      "path": "framework-security-final.log",
+      "bytes": 1056,
+      "modifiedAtUtc": "2026-10-16T17:17:12.149987Z",
+      "sha256": "842c731e0cf5cf68b81db2253d36294a50393f626001612286dbff202a3bd48b"
+    },
+    {
+      "path": "quality-final.log",
+      "bytes": 2307,
+      "modifiedAtUtc": "2026-10-16T17:15:00.9789366Z",
+      "sha256": "391208509cd5c72320065a483ad97e4389d0e5e1c91d4254083200901215bc89"
+    },
+    {
+      "path": "payload-final.log",
+      "bytes": 2309,
+      "modifiedAtUtc": "2026-10-16T17:14:07.2996314Z",
+      "sha256": "f06376ef7e5a02500d2e20181a7a874da9f6a4428728a9490585e8c3bdc16c75"
+    },
+    {
+      "path": "edge-final.log",
+      "bytes": 96,
+      "modifiedAtUtc": "2026-10-16T17:15:34.7689577Z",
+      "sha256": "212e3d4eef46d0de1ab7422248b2dee9c3e908273b4f8b092f6848d62033c6ce"
+    },
+    {
+      "path": "ad-diff-verification.log",
+      "bytes": 1115,
+      "modifiedAtUtc": "2026-10-16T17:09:42.2039168Z",
+      "sha256": "89a3ac39f3bc8f117c682230916558999eef65c4c8760867fcc4e5398a2d2e4d"
+    },
+    {
+      "path": "qa-worker-body-reproduce.log",
+      "bytes": 675,
+      "modifiedAtUtc": "2026-10-16T17:23:56.6536867Z",
+      "sha256": "103b6ea056b7f316c517213a397af9b68a5b0e80458a52d6c647ac637d5199fa",
+      "note": null
+    },
+    {
+      "path": "release-scripts-lint.log",
+      "bytes": 0,
+      "modifiedAtUtc": "2026-10-16T17:30:14.5978832Z",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "note": null
+    },
+    {
+      "path": "production-worker-build.log",
+      "bytes": 30883,
+      "modifiedAtUtc": "2026-10-16T17:26:54.4218539Z",
+      "sha256": "d4be48501659b6c7473065f90df03534d9c77fa321650434a1db7897cea85e69",
+      "note": null
+    },
+    {
+      "path": "production-cache-final.log",
+      "bytes": 719,
+      "modifiedAtUtc": "2026-10-16T17:27:16.9124458Z",
+      "sha256": "478369776e0e976cc824b28b8614b522910a4830a6f3f24393c3f9f4b2870437",
+      "note": null
+    },
+    {
+      "path": "production-worker-check-final.log",
+      "bytes": 1145,
+      "modifiedAtUtc": "2026-10-16T17:30:40.3472476Z",
+      "sha256": "b0952273d1f17964bbfb477504704894f4566e4004400e70371952e40fe8f691",
+      "note": null
+    },
+    {
+      "path": "production-worker-size-final.log",
+      "bytes": 1016,
+      "modifiedAtUtc": "2026-10-16T17:30:49.7604661Z",
+      "sha256": "1523174ec60ca5e7488620be3699c54221611ea1e1b27a2e3c77f94fadd85f67",
+      "note": null
+    },
+    {
+      "path": ".artifacts/production-worker-verification.json",
+      "bytes": 6395,
+      "modifiedAtUtc": "2026-10-16T17:28:44.3652087Z",
+      "sha256": "0008cb47dc16d4c99a46415d47bf057de6ab5e1846aaaa2fbda0b8dd42a5af8e",
+      "note": null
+    },
+    {
+      "path": ".artifacts/workers-release-2026-10-17/worker-body-workerd-test.log",
+      "bytes": 2452,
+      "modifiedAtUtc": "2026-10-16T17:27:19.9435353Z",
+      "sha256": "5a4f2713c3f9e0a7ef0c6896e76d442b7ca04f33533f6875cf069bbd4bc452be",
+      "note": null
+    },
+    {
+      "path": "script-tests-final.log",
+      "bytes": 96024,
+      "modifiedAtUtc": "2026-10-16T17:36:58.2186119Z",
+      "sha256": "6c33d08043c294dc58a578cba8ede91914f36216480b5c2ba5ea1ced9697f847",
+      "note": null
+    },
+    {
+      "path": "qa-safety-final.log",
+      "bytes": 5587,
+      "modifiedAtUtc": "2026-10-16T17:36:58.3521217Z",
+      "sha256": "c4e30fef10d0b253748da62f44ad0c25dae27608c5a7ef16bb3c7a3c73d71b0f",
+      "note": null
+    },
+    {
+      "path": "qa-worker-build-final.log",
+      "bytes": 31399,
+      "modifiedAtUtc": "2026-10-16T17:37:14.6612384Z",
+      "sha256": "0e311439fafc42ee3fb9c3b02d367d1f727fedea003888f2f9170d41b8c3b6fb",
+      "note": null
+    },
+    {
+      "path": ".open-next-qa/moneysalary-qa-build.json",
+      "bytes": 405,
+      "modifiedAtUtc": "2026-10-16T17:37:31.0428901Z",
+      "sha256": "81535229b368aff780d0aff03e86ece52c0a35342f8d67bb5333769194db923b",
+      "note": null
+    },
+    {
+      "path": "qa-worker-check-final.log",
+      "bytes": 1105,
+      "modifiedAtUtc": "2026-10-16T17:38:20.2574332Z",
+      "sha256": "d41ec34e458435c6b04c38249ae90e580b5e53f19d7b0c57761ef30b73f7160b",
+      "note": null
+    },
+    {
+      "path": "worker-size-final.log",
+      "bytes": 991,
+      "modifiedAtUtc": "2026-10-16T17:38:34.3203851Z",
+      "sha256": "83d4ff2cc459b8af960a55b65f5e04728eff52d3de2d1294a52aa5ea57b668f9",
+      "note": null
+    },
+    {
+      "path": "qa-worker-body-final.log",
+      "bytes": 1032,
+      "modifiedAtUtc": "2026-10-16T17:39:06.7950637Z",
+      "sha256": "304f2b08e21aa889c751342b4cd52b7044a7da747444245a1bdd59734865cc09",
+      "note": null
+    },
+    {
+      "path": "qa-worker-body-startup.log",
+      "bytes": 757,
+      "modifiedAtUtc": "2026-10-16T17:38:57.3206853Z",
+      "sha256": "aa1c5ad77651c3703becab2e7b7daf692651fcbe88a155cd2e7d96d633e797a7",
+      "note": null
+    },
+    {
+      "path": "qa-worker-http-final.log",
+      "bytes": 1411,
+      "modifiedAtUtc": "2026-10-16T17:39:15.8649897Z",
+      "sha256": "07021bb756b2c70b92a2729ce74ace5a647cc8d48fb8976f0160fee71df75c76",
+      "note": null
+    },
+    {
+      "path": "qa-worker-crawl-final.log",
+      "bytes": 375,
+      "modifiedAtUtc": "2026-10-16T17:39:31.3601936Z",
+      "sha256": "ffe90b51c3aa7c7164fa2e26d88c253337a436319e88f48282dae757131a6ddf",
+      "note": null
+    },
+    {
+      "path": "qa-worker-english-final.log",
+      "bytes": 547,
+      "modifiedAtUtc": "2026-10-16T17:39:26.2041439Z",
+      "sha256": "f10d7315ea24b52d9ba5418cc34f996cd6c585c8f2876ba2595ee571a40b0e24",
+      "note": null
+    },
+    {
+      "path": "qa-worker-server-final.log",
+      "bytes": 23054,
+      "modifiedAtUtc": "2026-10-16T17:39:31.3546828Z",
+      "sha256": "d809fe82bcfaa1ba14556f183dda593c6893c6e6e7a1b5541d601c5aba940a74",
+      "note": null
+    },
+    {
+      "path": ".artifacts/next-security-2026-10-17/worker-http.json",
+      "bytes": 7987,
+      "modifiedAtUtc": "2026-10-16T17:39:15.8659853Z",
+      "sha256": "9cca7c66d900d06d92bb294eebeeab4e1819e192cb5ab17078d74f45acab7d8d",
+      "note": null
+    },
+    {
+      "path": "vendor-checkout-final.log",
+      "bytes": 59,
+      "modifiedAtUtc": "2026-10-16T17:40:50.2849807Z",
+      "sha256": "a91cead3653cb3eb22fb207b38fd351d5f592339296cedbb9b58f4305570ec10",
+      "note": null
+    }
+  ],
+  "coreFileHashes": [
+    {
+      "path": "cloudflare/worker-entry.mjs",
+      "modifiedAtUtc": "2026-10-16T17:02:40.9860757Z",
+      "sha256": "ea4e0d8446c4667878a3fd316d52c14bf5b49e1c454402a0646d1e16aa8e5712"
+    },
+    {
+      "path": "cloudflare/request-body-limit.mjs",
+      "modifiedAtUtc": "2026-10-16T17:24:28.5363058Z",
+      "sha256": "64d3e7152d33d6fc1e7dccbaf9d125d502d1d406bbf45a850b5ff36dc080e557"
+    },
+    {
+      "path": "package.json",
+      "modifiedAtUtc": "2026-10-16T17:04:00.6136447Z",
+      "sha256": "da01a4a13c869422d3ae829135c530535d9362b2e047ee1a847b8f963e04e9e9"
+    },
+    {
+      "path": "package-lock.json",
+      "modifiedAtUtc": "2026-10-16T16:53:12.2087513Z",
+      "sha256": "fd49c62597c237785f5a4e34814b59c52fbbcb8667fbc1ebf4afeb278ef0dfeb"
+    },
+    {
+      "path": "next.config.mjs",
+      "modifiedAtUtc": "2026-10-16T16:45:29.9295902Z",
+      "sha256": "54dfbdf23e3dddaba30ddbef626e480c073b4f6111902a6470392c1e6e3ca41a"
+    },
+    {
+      "path": "open-next.config.ts",
+      "modifiedAtUtc": "2026-10-16T16:45:29.930592Z",
+      "sha256": "e71582d231961cfe82e749ed28b76e5e0432f008c4205e775068442f47c72b2d"
+    },
+    {
+      "path": "wrangler.jsonc",
+      "modifiedAtUtc": "2026-10-16T17:01:47.9681476Z",
+      "sha256": "53e669256a7ee04f9199cefaa1d9cd095690f0618538313955eda47ed21ed785"
+    },
+    {
+      "path": "wrangler.qa.jsonc",
+      "modifiedAtUtc": "2026-10-16T17:01:47.9701472Z",
+      "sha256": "20c4823a9b3551a9db91996e8724b3904c47e672b0c4943c7aec58df7f1046e4"
+    },
+    {
+      "path": "scripts/build-production-worker.mjs",
+      "modifiedAtUtc": "2026-10-16T17:26:46.173906Z",
+      "sha256": "6e046a62a9266c9826e51768b6d21d7705bee1c283b0407419a1e805eae86d30"
+    },
+    {
+      "path": "scripts/verify-production-worker.mjs",
+      "modifiedAtUtc": "2026-10-16T17:28:21.282923Z",
+      "sha256": "460d522fed40b197242cb722ed3af87b6a7921bdf8d80e1bcc0a472fffee2875"
+    },
+    {
+      "path": "scripts/qa-cloudflare.mjs",
+      "modifiedAtUtc": "2026-10-16T17:01:47.9721521Z",
+      "sha256": "409cf30fd3fc6ebbaebf77b04cf6ca8fa615f182c434478013775be3bfb3364a"
+    },
+    {
+      "path": "scripts/qa-cloudflare-body.mjs",
+      "modifiedAtUtc": "2026-10-16T17:16:34.2911268Z",
+      "sha256": "6b3e0acd08dec87b0e4741826eb2cc0049eb1ed68a9e000f7e47aeb5f9bc4e66"
+    },
+    {
+      "path": "scripts/qa-cloudflare-http.mjs",
+      "modifiedAtUtc": "2026-10-16T17:20:39.2779677Z",
+      "sha256": "c1b0d51750aeb1e4fe81dc23bc86788828bb1e62f2bcde7704f94ed7f9c67db6"
+    },
+    {
+      "path": "scripts/verify-framework-security.mjs",
+      "modifiedAtUtc": "2026-10-16T16:52:37.4326634Z",
+      "sha256": "f2b19162b116a96f553cbe7d378631d6e04e7db10ef989b70bce194d059889a0"
+    },
+    {
+      "path": "scripts/verify-vendored-dependencies.mjs",
+      "modifiedAtUtc": "2026-10-16T16:50:06.5695304Z",
+      "sha256": "38fcadb27f0520323d6aa6ceb11a0dd1db8c3263070d840d8271f37a3d3c3c4a"
+    },
+    {
+      "path": "scripts/patch-next-og-selector.cjs",
+      "modifiedAtUtc": "2026-10-16T16:50:48.8620602Z",
+      "sha256": "e56aa102b1a36b67f1bd6a46f1c6fdb02abae95f1f2bfb69b9efbc79bf042ab6"
+    },
+    {
+      "path": "scripts/verify-edge-bundle.mjs",
+      "modifiedAtUtc": "2026-10-16T16:45:30.019332Z",
+      "sha256": "e10fe3e07c21b254ab678523f384985b08fd39a44b7e18a9ff23306e7d6abc64"
+    },
+    {
+      "path": "scripts/check-worker-size.mjs",
+      "modifiedAtUtc": "2026-10-16T16:45:29.9737625Z",
+      "sha256": "13c11326cf769271b8d9081a09dee5904fc1b4f06f812ce42729f1ae8f4c0fab"
+    },
+    {
+      "path": "scripts/lib/qa-safety.cjs",
+      "modifiedAtUtc": "2026-10-16T16:45:29.986332Z",
+      "sha256": "a33bdfdf5d4a0a3f6c5983b6d350e33e3a7618b05c897d59149c5fb1e58cfc82"
+    },
+    {
+      "path": "scripts/qa-server.mjs",
+      "modifiedAtUtc": "2026-10-16T17:36:31.3733388Z",
+      "sha256": "6d78830b70bf4d720a5b041da1e03921ba1444e295ad67f7a903f1dda9504163"
+    },
+    {
+      "path": "scripts/__tests__/qa-entrypoints.test.mjs",
+      "modifiedAtUtc": "2026-10-16T17:36:31.3743415Z",
+      "sha256": "288b5b10eb6e7ff1b3e14584e0e5154da3520081083b391efb2258a6725c5ae9"
+    },
+    {
+      "path": ".gitattributes",
+      "modifiedAtUtc": "2026-10-16T17:40:49.2312407Z",
+      "sha256": "4f3096eb17b348de2f61bd7a4d93e76120201c4c9b91dfdc8e1e2bd2571c36a1"
+    }
+  ],
+  "capturedAtUtc": "2026-10-16T17:42:06.1005291Z",
+  "priorQaBuildEvidence": {
+    "buildId": "aFS74Tw8hMhdfU0vAlx81",
+    "applicability": "Before removal of explicit incoming body cancellation; no longer the final current QA artifact",
+    "logSnapshots": [
+      {
+        "path": "qa-worker-build-final.log",
+        "bytes": 31399,
+        "modifiedAtUtc": "2026-10-16T17:18:07.9600158Z",
+        "sha256": "6adf0a11a4542f22652195ab3aa12d27af2823ecdebb895536d379855147de47"
+      },
+      {
+        "path": "qa-worker-check-final.log",
+        "bytes": 1275,
+        "modifiedAtUtc": "2026-10-16T17:20:50.9782029Z",
+        "sha256": "41a30f03d3285a85eb74c010c7ba3c8103ca566ee59928b5d39f3b008fcdc97a"
+      },
+      {
+        "path": "worker-size-final.log",
+        "bytes": 991,
+        "modifiedAtUtc": "2026-10-16T17:21:21.6664078Z",
+        "sha256": "1f836b64082767c168aaaad14939badcf5078b3e008522140e3daa8f7616a12c"
+      }
+    ]
+  },
+  "bodyFailureFollowup": {
+    "failureLogs": [
+      "qa-worker-body-final.log",
+      "qa-worker-body-reproduce.log"
+    ],
+    "candidateFix": "Parent removed explicit incoming request-body cancellation, which was closing the local Workerd transport before the intended 413 response.",
+    "offlineTargetedTests": {
+      "passed": 18,
+      "lintErrors": 0,
+      "evidence": "Parent report; does not replace Workerd integration retest"
+    },
+    "currentState": "Final full-app local body tests passed; server stopped cleanly and parent confirmed no listener remains on port 3319.",
+    "resolvedInRealWorkerd": true,
+    "resolutionScope": "No-cancel helper passed isolated native Workerd tests and all six rebuilt full-app Workerd body cases. Does not assert deployed/production transport behavior.",
+    "finalFullAppBodyPassed": 6,
+    "finalFullAppHttpPassed": 28
+  },
+  "ordinaryQaStageFlagFix": {
+    "files": [
+      "scripts/qa-server.mjs",
+      "scripts/__tests__/qa-entrypoints.test.mjs"
+    ],
+    "behavior": "Ordinary QA forces MSY_QA_WORKER_STAGE=0 so inherited Cloudflare staging mode cannot select production .next instead of .next-qa.",
+    "regression": "Fake Next entry verifies inherited stage=1 is overridden and production output remains intact.",
+    "validation": "Included in 413 script tests and 20 QA-safety Node tests.",
+    "artifactImpact": "Runner-only change; parent confirms no effect on production output or completed isolated Cloudflare build."
+  },
+  "priorRuntimeEvidence": {
+    "description": "Earlier full-app body 500 failures and pre-fix HTTP passes; reused final log paths have since been overwritten by successful current runs. Original observed failures remain in bodyFailureFollowup.failureLogs and worker-body-boundary historical runtime attempts.",
+    "logSnapshots": [
+      {
+        "path": "qa-worker-http-final.log",
+        "bytes": 1411,
+        "modifiedAtUtc": "2026-10-16T17:23:23.3170386Z",
+        "sha256": "07021bb756b2c70b92a2729ce74ace5a647cc8d48fb8976f0160fee71df75c76",
+        "note": null
+      },
+      {
+        "path": "qa-worker-body-final.log",
+        "bytes": 674,
+        "modifiedAtUtc": "2026-10-16T17:23:16.8176601Z",
+        "sha256": "ccea8d53fa7564b5dd63c6ca500a63b05dc2f44dfd8e05ef0b00ba9ac064d5a6",
+        "note": null
+      },
+      {
+        "path": "qa-worker-body-reproduce.log",
+        "bytes": 675,
+        "modifiedAtUtc": "2026-10-16T17:23:56.6536867Z",
+        "sha256": "103b6ea056b7f316c517213a397af9b68a5b0e80458a52d6c647ac637d5199fa",
+        "note": null
+      },
+      {
+        "path": ".artifacts/next-security-2026-10-17/worker-http.json",
+        "bytes": 7987,
+        "modifiedAtUtc": "2026-10-16T17:23:23.3180392Z",
+        "sha256": "d7f827927643ccdecd28a429d5ce0fa1bc21b8697867ef54c278efc6f27fdd12",
+        "note": null
+      }
+    ]
+  },
+  "startupAttempt": {
+    "log": "qa-worker-body-startup.log",
+    "kind": "readiness-probe-timeout-before-body-cases",
+    "probeTimeoutMs": 5000,
+    "firstServerGetWallClockMs": 7687,
+    "serverLog": "qa-worker-server-final.log",
+    "retry": "After Ready was confirmed, one retry passed all 6 body cases",
+    "distinctFrom": "Earlier explicit-cancellation-related 500 failures",
+    "cpuMeasurement": false
+  },
+  "localServerCleanup": {
+    "status": "stopped",
+    "base": "http://127.0.0.1:3319",
+    "method": "Ctrl+C",
+    "listenerRemaining": false,
+    "evidence": "Parent confirmed orderly process cleanup and no port3319 listener"
+  },
+  "remoteRuntimeVerification": {
+    "status": "blocked-authentication",
+    "startupTimeMs": null,
+    "actualVersionUpload": "not performed",
+    "paidCpuMetrics": "not measured",
+    "note": "An unisolated startup CLI probe was not run. Actual version-upload startup_time_ms and deployed CPU/plan evidence remain operational checks, separate from successful local validation."
+  }
+}

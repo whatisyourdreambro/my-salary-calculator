@@ -1,0 +1,169 @@
+{
+  "generatedAt": "2026-10-16T16:48:54.719Z",
+  "offline": true,
+  "candidatePackage": {
+    "name": "braces",
+    "description": "Audited local derivative of braces 3.0.3 with fixed AST/parse depth bounds",
+    "version": "3.0.3-moneysalary.1",
+    "homepage": "https://github.com/micromatch/braces",
+    "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
+    "contributors": [
+      "Brian Woodward (https://twitter.com/doowb)",
+      "Elan Shanker (https://github.com/es128)",
+      "Eugene Sharygin (https://github.com/eush77)",
+      "hemanth.hm (http://h3manth.com)",
+      "Jon Schlinkert (http://twitter.com/jonschlinkert)"
+    ],
+    "bugs": {
+      "url": "https://github.com/micromatch/braces/issues"
+    },
+    "license": "MIT",
+    "files": [
+      "index.js",
+      "lib",
+      "SECURITY-PATCH.json"
+    ],
+    "main": "index.js",
+    "engines": {
+      "node": ">=8"
+    },
+    "dependencies": {
+      "fill-range": "^7.1.1"
+    },
+    "keywords": [
+      "alpha",
+      "alphabetical",
+      "bash",
+      "brace",
+      "braces",
+      "expand",
+      "expansion",
+      "filepath",
+      "fill",
+      "fs",
+      "glob",
+      "globbing",
+      "letter",
+      "match",
+      "matches",
+      "matching",
+      "number",
+      "numerical",
+      "path",
+      "range",
+      "ranges",
+      "sh"
+    ],
+    "private": true,
+    "moneysalarySecurityPatch": {
+      "upstreamName": "braces",
+      "upstreamVersion": "3.0.3",
+      "upstreamIntegrity": "sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==",
+      "advisory": "GHSA-vfj7-8cjw-p6xm",
+      "maxDepth": 100
+    }
+  },
+  "resolvedPath": "C:\\dev\\moneysalary\\my-salary-calculator\\.artifacts\\dependency-remediation-2026-10-17\\candidate-final\\node_modules\\braces\\index.js",
+  "boundaryAndSecurityChecks": [
+    {
+      "name": "parse: depth 100 accepted; 101 rejected",
+      "pass": true
+    },
+    {
+      "name": "parse: 3500-deep input rejected before recursion",
+      "pass": true
+    },
+    {
+      "name": "parse: combined brace/paren depth bounded",
+      "pass": true
+    },
+    {
+      "name": "compile: depth 100 accepted; 101 rejected",
+      "pass": true
+    },
+    {
+      "name": "compile: 3500-deep input rejected before recursion",
+      "pass": true
+    },
+    {
+      "name": "compile: combined brace/paren depth bounded",
+      "pass": true
+    },
+    {
+      "name": "expand: depth 100 accepted; 101 rejected",
+      "pass": true
+    },
+    {
+      "name": "expand: 3500-deep input rejected before recursion",
+      "pass": true
+    },
+    {
+      "name": "expand: combined brace/paren depth bounded",
+      "pass": true
+    },
+    {
+      "name": "stringify: depth 100 accepted; 101 rejected",
+      "pass": true
+    },
+    {
+      "name": "stringify: 3500-deep input rejected before recursion",
+      "pass": true
+    },
+    {
+      "name": "stringify: combined brace/paren depth bounded",
+      "pass": true
+    },
+    {
+      "name": "unclosed input cannot evade admission guard at end-of-string",
+      "pass": true
+    },
+    {
+      "name": "escaped/quoted/character-class literal braces preserve upstream output",
+      "pass": true
+    },
+    {
+      "name": "compile: caller-created deep AST rejected",
+      "pass": true
+    },
+    {
+      "name": "compile: cyclic child AST rejected",
+      "pass": true
+    },
+    {
+      "name": "expand: caller-created deep AST rejected",
+      "pass": true
+    },
+    {
+      "name": "expand: cyclic child AST rejected",
+      "pass": true
+    },
+    {
+      "name": "stringify: caller-created deep AST rejected",
+      "pass": true
+    },
+    {
+      "name": "stringify: cyclic child AST rejected",
+      "pass": true
+    },
+    {
+      "name": "expand: caller-controlled parent cycle is bounded",
+      "pass": true
+    },
+    {
+      "name": "maxDepth options cannot disable the fixed guard",
+      "pass": true
+    },
+    {
+      "name": "NaN maxLength cannot disable the upstream character cap",
+      "pass": true
+    },
+    {
+      "name": "maxLength getter is evaluated only once",
+      "pass": true
+    }
+  ],
+  "differentialPatterns": 273,
+  "differentialChecks": 3276,
+  "limitation": "Fixed nesting/parent traversal bounds address this advisory. Expansion cardinality, arbitrary AST width and hostile getters are not a complete sandbox guarantee.",
+  "pass": true
+}

@@ -8,6 +8,7 @@ import {
  type CoupangCategory,
 } from "@/lib/coupangContextMap";
 import { trackCoupangClick } from "@/lib/analytics";
+import { canRequestLiveAds } from "@/lib/liveAds";
 
 /**
  * 쿠팡 파트너스 배너 — 9가지 사이즈 자동 분배 시스템 (AffiliateSlot 의 폴백 코어)
@@ -136,6 +137,10 @@ export default function CoupangBannerCore({
  category,
 }: CoupangBannerProps) {
  const pathname = usePathname();
+ const [liveEnabled, setLiveEnabled] = useState(false);
+ useEffect(() => {
+ setLiveEnabled(canRequestLiveAds());
+ }, [pathname]);
  const [resolvedSize, setResolvedSize] = useState<CoupangBannerSize>(
  responsive ? responsive.desktop : size
  );
@@ -219,7 +224,7 @@ export default function CoupangBannerCore({
  if (pathname?.startsWith("/en")) return null;
 
  // 페이지당 1회 dedup — 두 번째 이후 인스턴스는 렌더하지 않음
- if (!allowed) return null;
+ if (!allowed || !liveEnabled) return null;
 
  const banner = BANNERS[resolvedSize];
  // subId: 카테고리 접두사 + path → 쿠팡 대시보드에서 카테고리/페이지 단위 분리 측정.
@@ -230,6 +235,7 @@ export default function CoupangBannerCore({
 
  return (
  <div
+ data-html2canvas-ignore="true"
  className={`coupang-banner-wrapper ${className}`}
  data-coupang-banner-size={resolvedSize}
  data-coupang-category={resolvedCategory}

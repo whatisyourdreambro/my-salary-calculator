@@ -1,0 +1,4662 @@
+{
+  "files": 1164,
+  "aggregateSha256": "6a78820a5d4570bc4e2624912d812192199aafc3da2295be5fe1de86f31b0a60",
+  "entries": [
+    {
+      "path": "src/app/about/page.tsx",
+      "sha256": "e8d5541a8d6c6cbe2446c8a778f418ef815ee3fab0f8ace1fe95114fb87da088"
+    },
+    {
+      "path": "src/app/api/contact/route.ts",
+      "sha256": "44c6b423851953df706783f12a2f7b83bed0e35e7c23ef23815c18fa3eb438d5"
+    },
+    {
+      "path": "src/app/api/feedback/route.ts",
+      "sha256": "4e9c0202d561439863aa4a44ee9541e66895b9094fbaade9592199bf8e5e78df"
+    },
+    {
+      "path": "src/app/api/og/route.tsx",
+      "sha256": "b9a6f75e9f07e5ede6f74095741d60c9ccffdd5986c4d2d7d45c44f0b1ec1c12"
+    },
+    {
+      "path": "src/app/api/salary-table/route.ts",
+      "sha256": "80622a2b04a2b319f2452b7e1d7e3482e43d48659613f5ea027aa2b7c32ab2c9"
+    },
+    {
+      "path": "src/app/asyncRouteParams.test.ts",
+      "sha256": "65fe496f4060dcdee107180e845d8dacc3d61bb914746abf7e87d3e9f01234a9"
+    },
+    {
+      "path": "src/app/auto-tax-2026/AutoTaxClient.tsx",
+      "sha256": "c8a742ff0c597a7516e22b7b795ec8d03763767e22aabb147de4c93a65fe0db5"
+    },
+    {
+      "path": "src/app/auto-tax-2026/page.tsx",
+      "sha256": "3e87621c63ead2702b0d574418496fd35477b5652bbe091b69adc2812f342c88"
+    },
+    {
+      "path": "src/app/basic-pension-2026/Client.tsx",
+      "sha256": "a62281d680f2009ab9f5d19917c72e9633f66f2221ec6c5aa7c0b4fa4bb7fe32"
+    },
+    {
+      "path": "src/app/basic-pension-2026/page.tsx",
+      "sha256": "c465cc7e921ecd2c4f4560ac53b4ac01985b41ef3be6b4bdeb498d625ff0c123"
+    },
+    {
+      "path": "src/app/calc/[slug]/page.tsx",
+      "sha256": "b349615dbc5b5c0eaf139ccb9d159508cff3fa2b0a98f5b7611005f890994146"
+    },
+    {
+      "path": "src/app/calc/2026-year/page.tsx",
+      "sha256": "5215f6a5d637d57adabba6915736098c1c431d9973ce811280da6ebeb4a94f42"
+    },
+    {
+      "path": "src/app/calc/annual-leave-days/Client.tsx",
+      "sha256": "27eaa0798fba22d6e813e55b8a97f1f48a2ca82e0c8adbe2f6a0d81c79815925"
+    },
+    {
+      "path": "src/app/calc/annual-leave-days/page.tsx",
+      "sha256": "e7f92858ceb65afb1ed48783efbdd8728444e9faab3f654cff4acca75dec53c1"
+    },
+    {
+      "path": "src/app/calc/bonus-calculators/page.tsx",
+      "sha256": "2e2b1a46c4260f89e405b269cb469deaa90e77237eedb168b69c32cb201f89a4"
+    },
+    {
+      "path": "src/app/calc/bonus-home-plan/Client.tsx",
+      "sha256": "cc99965bc2f00287b297b2d24417e565d388e94ac727cc01491d3020f86c583c"
+    },
+    {
+      "path": "src/app/calc/bonus-home-plan/page.tsx",
+      "sha256": "e38f67e777070be3e6c07fed1256efbc9ac39fdb3d45ce4c42f7095d23f7b35c"
+    },
+    {
+      "path": "src/app/calc/CalcIndexClient.tsx",
+      "sha256": "ec32758f2b080322ffa78386863a57a72e8cb7e6813dd3f93d9b0a6db145817b"
+    },
+    {
+      "path": "src/app/calc/celltrion-bonus/Client.tsx",
+      "sha256": "d0f0994e1a26cc141d323f4dee12a4d9bd2fe150b9ace824f264f680efe40393"
+    },
+    {
+      "path": "src/app/calc/celltrion-bonus/page.tsx",
+      "sha256": "d0263678a195ea4f5f475df19b5e60134898ff792643c0d05888b3ea837467b2"
+    },
+    {
+      "path": "src/app/calc/child-deduction/Client.tsx",
+      "sha256": "a2f0caf8f7a65b1ce55d1d0388e7d3b6c6ec64175bdecac5bb8d0781987e3a2b"
+    },
+    {
+      "path": "src/app/calc/child-deduction/page.tsx",
+      "sha256": "fec0c085a8c2d8583824fe5211794d78d2a8155f820d15c41b0a020ac001df5c"
+    },
+    {
+      "path": "src/app/calc/civil-servant-net-pay/Client.tsx",
+      "sha256": "d8432e99159d5ae352bd77cdd98625afd9c62b519b0997e781e40e59ce3bef93"
+    },
+    {
+      "path": "src/app/calc/civil-servant-net-pay/page.tsx",
+      "sha256": "f3766b3b528dbab95bddc37a1e8f059f0ec882edf0219514f55c4e4811caad83"
+    },
+    {
+      "path": "src/app/calc/dependent-check/Client.tsx",
+      "sha256": "9aee3a756469afad5d10324b62bc5e739341cfae8dcd8c232e01eccca40ba6f1"
+    },
+    {
+      "path": "src/app/calc/dependent-check/page.tsx",
+      "sha256": "8a0435e9b4cb220ba935e13c282cfed4acc79808dfe263e370f7933f2f88fab2"
+    },
+    {
+      "path": "src/app/calc/doosan-enerbility-bonus/Client.tsx",
+      "sha256": "c155bc9596fc6e7c950da756c92fc29419483a73bce141a9d763b5293245e252"
+    },
+    {
+      "path": "src/app/calc/doosan-enerbility-bonus/page.tsx",
+      "sha256": "6d2812b16c11fcafe8241575ea48d2bd37db9ce2d365ce2cf88ea7681088a3d0"
+    },
+    {
+      "path": "src/app/calc/dual-income-year-end/Client.tsx",
+      "sha256": "6c91e0e8320992aa79c7a14bc5398beded178342e557140c2bd8596af54a00c8"
+    },
+    {
+      "path": "src/app/calc/dual-income-year-end/page.tsx",
+      "sha256": "a18ca210674d0f52907d1d5d6ff72f6d8d33a278745d1dbf7d01ad72945113d0"
+    },
+    {
+      "path": "src/app/calc/gs-caltex-bonus/Client.tsx",
+      "sha256": "7dfbab6eef054347ad463f042d69e043130189d7664155539e083ab982e72b3f"
+    },
+    {
+      "path": "src/app/calc/gs-caltex-bonus/page.tsx",
+      "sha256": "820284e572e71a474a2a366cbef370a5e71b3a28adaef3f487b57c26d7a99fe3"
+    },
+    {
+      "path": "src/app/calc/hanwha-aerospace-bonus/Client.tsx",
+      "sha256": "32064de1dfdc619161fe45cc74265e3f602ba48539cfea42ccc266cee6bc475e"
+    },
+    {
+      "path": "src/app/calc/hanwha-aerospace-bonus/page.tsx",
+      "sha256": "e5b5af9fd3e8685b44b3360893eddff055e96c2d4009fd47a4e3e5136aacf754"
+    },
+    {
+      "path": "src/app/calc/hd-hyundai-bonus/Client.tsx",
+      "sha256": "4d21ed906754dc134c63ed77854420df91ab940748904da6cfd3d800d29824c7"
+    },
+    {
+      "path": "src/app/calc/hd-hyundai-bonus/data.test.ts",
+      "sha256": "5642ff213da7289b1cb67aa6f8f6cdff9e61eba90330357fce39db1162131cc9"
+    },
+    {
+      "path": "src/app/calc/hd-hyundai-bonus/data.ts",
+      "sha256": "50a61a97e41998aeaaddfc97d50928f38adc53c8014a9321b9b627d5af03126d"
+    },
+    {
+      "path": "src/app/calc/hd-hyundai-bonus/page.tsx",
+      "sha256": "4bc5e6fe341263a3bcda37132dad93cb2c167183fd34c471e5f5ada65bd82deb"
+    },
+    {
+      "path": "src/app/calc/holiday-bonus/Client.tsx",
+      "sha256": "112b39c3095308afb101fedf161a5044590d96094171682b714825693eb75189"
+    },
+    {
+      "path": "src/app/calc/holiday-bonus/page.tsx",
+      "sha256": "75f1d2735ce199b3f4206dcb9a9d42de5ae4a6dbc01600d21ecf62f94460c4b5"
+    },
+    {
+      "path": "src/app/calc/housing-subscription/Client.tsx",
+      "sha256": "2bacea0b42ea4af7b410beb613972276d9d1996b6b780199c2cccacd89496caa"
+    },
+    {
+      "path": "src/app/calc/housing-subscription/page.tsx",
+      "sha256": "f1dbcfcbe6715102febf51ade735ffc8a4a14c34573e15b8dc28b79f8256cfbe"
+    },
+    {
+      "path": "src/app/calc/hyundai-bonus/Client.tsx",
+      "sha256": "e272f2bd53a195629d71411ee271a4794399490f2c023268d8232ef813db2d27"
+    },
+    {
+      "path": "src/app/calc/hyundai-bonus/page.tsx",
+      "sha256": "bf834e6a5e72fff60beea626b99b2853f8df41bddb830f9b80abf3e15f8ea7db"
+    },
+    {
+      "path": "src/app/calc/hyundai-mobis-bonus/Client.tsx",
+      "sha256": "936df96ce95da4974bbd90e3fced4cf16f13079aa8c3b35a3db84bd1ca4cf61f"
+    },
+    {
+      "path": "src/app/calc/hyundai-mobis-bonus/page.tsx",
+      "sha256": "c5181cf681cef018c325c0f83dcb192a72e3695b4bcb86270cfc02869fc8af0e"
+    },
+    {
+      "path": "src/app/calc/hyundai-rotem-bonus/Client.tsx",
+      "sha256": "f04b4367a5b970a21531e05a156c4fc4fa837a10c3c13b1c55b8dab57c302bfa"
+    },
+    {
+      "path": "src/app/calc/hyundai-rotem-bonus/page.tsx",
+      "sha256": "af5a6734dbb1e3938e986561396a24f50b473adfc3db4c1e4c19a5f5c6d819f5"
+    },
+    {
+      "path": "src/app/calc/incentive-tax/Client.tsx",
+      "sha256": "4e8232024fc0403a2d2171661671327ca9f2f28cc909a118de42ecf04556ddb4"
+    },
+    {
+      "path": "src/app/calc/incentive-tax/page.tsx",
+      "sha256": "9ce6b9b97a8c7a2a343cb3b3ed06d24dca15fa937a465480e13b5dcb94c0fb35"
+    },
+    {
+      "path": "src/app/calc/january-bonus/Client.tsx",
+      "sha256": "e043a1b1ac04c22738efd304143da2962522a14f8f82cd1ada59e1cb3d0cf672"
+    },
+    {
+      "path": "src/app/calc/january-bonus/page.tsx",
+      "sha256": "ea4ea03b891150f72ef54d85c80de47d9733ec6491e4f1d4e5254dc95b54d767"
+    },
+    {
+      "path": "src/app/calc/jeonse-loan/Client.tsx",
+      "sha256": "d25c51cfe916a5f0140daf8f94d6f08a164cad2db2587f13538be27b9c90ac3e"
+    },
+    {
+      "path": "src/app/calc/jeonse-loan/page.tsx",
+      "sha256": "8e1249986f7bdb542b5c4dc52e796f49d7da003abf3653aa5befd19f0777db0d"
+    },
+    {
+      "path": "src/app/calc/kakao-bonus/Client.tsx",
+      "sha256": "1c168ff3b9dafe5c7d1452be67c3e604f87f98d6b6e765e5a741b70a6a8d09e0"
+    },
+    {
+      "path": "src/app/calc/kakao-bonus/data.test.ts",
+      "sha256": "d2a9ea8f7c38fca9d35293a18f57bfa25359951bde358e9302b9380431a5b7e6"
+    },
+    {
+      "path": "src/app/calc/kakao-bonus/data.ts",
+      "sha256": "045a9f517ef72bf4fddf1afe696f7f340808b03e14efe309a420a09ccf2261eb"
+    },
+    {
+      "path": "src/app/calc/kakao-bonus/page.tsx",
+      "sha256": "1eaa40c2722fed3f09e3ea9ffe96a7f4ce586817823efa97e6ac2a8e2583877b"
+    },
+    {
+      "path": "src/app/calc/kepco-bonus/Client.tsx",
+      "sha256": "371d7307c5f3dc50ca52ce7abc3a28fefbf36b82e3db6b2aa380a477577268ba"
+    },
+    {
+      "path": "src/app/calc/kepco-bonus/page.tsx",
+      "sha256": "0159ddad5286eacd46de09b14a0e67db286b9c6a3c6900870d85f82eca37765e"
+    },
+    {
+      "path": "src/app/calc/kia-bonus/Client.tsx",
+      "sha256": "8b57b752067aff132f839c290f1ba974771f0bc4c4399d868d4097388412b7be"
+    },
+    {
+      "path": "src/app/calc/kia-bonus/page.tsx",
+      "sha256": "11c280894f3df26258f99c8acdc7b28b3e8ef0912f6a889932011a88a8754176"
+    },
+    {
+      "path": "src/app/calc/layout.tsx",
+      "sha256": "2ab603f55370099ffe530ae528b9805b3ac4ca12c066344f724f35681300840b"
+    },
+    {
+      "path": "src/app/calc/lg-chem-bonus/Client.tsx",
+      "sha256": "8242da0ba263ea5e19b157fc163164267c747e0819b89f47018d10d64bf72797"
+    },
+    {
+      "path": "src/app/calc/lg-chem-bonus/data.test.ts",
+      "sha256": "235e2927973aaee3b83e4cebf4a32d02239251b90ccd177b4145d7b71f210c43"
+    },
+    {
+      "path": "src/app/calc/lg-chem-bonus/data.ts",
+      "sha256": "9dbef2ed25a925649583457e4d1a13ea07c2a643cc25337a898990ed53a7ab7d"
+    },
+    {
+      "path": "src/app/calc/lg-chem-bonus/page.tsx",
+      "sha256": "fba51f277524f89fccc6293494ce8002a7fe6eff6e7b3b809e39ee7a8914a24d"
+    },
+    {
+      "path": "src/app/calc/lg-display-bonus/Client.tsx",
+      "sha256": "9f3b8142c74705f3520ed29a554535517c8c8271affe24fbf4256b652684ee9b"
+    },
+    {
+      "path": "src/app/calc/lg-display-bonus/page.tsx",
+      "sha256": "40e8a0c1d7f1579785dfd7cc64f9d20e49fa270f072d2a65c8c55ed887aab9bc"
+    },
+    {
+      "path": "src/app/calc/lg-energy-bonus/Client.tsx",
+      "sha256": "38c84d0f70a20fe4c6550fabd45332a778323509ce7353a654f1d7a60785393c"
+    },
+    {
+      "path": "src/app/calc/lg-energy-bonus/data.test.ts",
+      "sha256": "bc87731fe2d05b47d90011642fba37a4bf3bc17d063e50f87b312f140011b7f4"
+    },
+    {
+      "path": "src/app/calc/lg-energy-bonus/data.ts",
+      "sha256": "6906a490640471636825dc5cc3b1ed2b3d94afedbc324d1a2ee1a775b5c35e10"
+    },
+    {
+      "path": "src/app/calc/lg-energy-bonus/page.tsx",
+      "sha256": "2244543a82da3940d419a990bf16a048de2943457aaeb4aeceafa7b964c7878b"
+    },
+    {
+      "path": "src/app/calc/naver-bonus/Client.tsx",
+      "sha256": "b5436de61151b9ed662abe1029845291303e36e16d949e20476fa5ad236775a1"
+    },
+    {
+      "path": "src/app/calc/naver-bonus/data.test.ts",
+      "sha256": "0d43ff5ea32e7763e3b5b090ec491d1b698f8ec2d852322f968b1f893af99190"
+    },
+    {
+      "path": "src/app/calc/naver-bonus/data.ts",
+      "sha256": "526bbe4faf85c859aa75329f64928a93af94dca8176bb02c83f368c31ca0cc19"
+    },
+    {
+      "path": "src/app/calc/naver-bonus/page.tsx",
+      "sha256": "1da19d675572736594fa4400896c48576b413e12b0409e3b8c7fc7447ed9d44e"
+    },
+    {
+      "path": "src/app/calc/offer-compare/Client.tsx",
+      "sha256": "8af77b8947bba2f0dc2f04dc7bb9cd651e12dd16549af3235e3ec43173bfde58"
+    },
+    {
+      "path": "src/app/calc/offer-compare/page.tsx",
+      "sha256": "c49d19c47bf6994e0d09e4f2cd0179c9970597e044d1fc8970f79bc2f59101ed"
+    },
+    {
+      "path": "src/app/calc/ordinary-wage/Client.tsx",
+      "sha256": "562c3fac9a588e51c7454926d64f87729a42c008f5e1400a82d65c6b5ab0d71a"
+    },
+    {
+      "path": "src/app/calc/ordinary-wage/page.tsx",
+      "sha256": "5803e672b4ad131e982025fdef53edc22f51d823f6c75d1650296ce08859ea2b"
+    },
+    {
+      "path": "src/app/calc/page.tsx",
+      "sha256": "5c2a8d1f615b9b5dcd9c8baa9fd8776009c98b8e05182fc8b6152606dc4019f9"
+    },
+    {
+      "path": "src/app/calc/pension-hike-2027/Client.tsx",
+      "sha256": "f9716dc681899fbfbd5d88c682bf3fd5fd1493d45940418a22997670a615f391"
+    },
+    {
+      "path": "src/app/calc/pension-hike-2027/page.tsx",
+      "sha256": "58482ea072bd3e47c055b80b6706097c702fdeb45d9fac0bc066dc94b51052eb"
+    },
+    {
+      "path": "src/app/calc/posco-bonus/Client.tsx",
+      "sha256": "89c48755789ef1859135145665ac4acc7434a3fcc0f24ae66beb630bda1f12ef"
+    },
+    {
+      "path": "src/app/calc/posco-bonus/data.test.ts",
+      "sha256": "03a8cd314a3d2d34debdf566b4e84d7e0764884cb6cc8b4cf4bcd42200d63ed8"
+    },
+    {
+      "path": "src/app/calc/posco-bonus/data.ts",
+      "sha256": "009750a37dd14dfb06ce05c5dc211b40f8eedd4b7c876ad71482221d764910b1"
+    },
+    {
+      "path": "src/app/calc/posco-bonus/page.tsx",
+      "sha256": "3a880afdbb7401f9ef469a3ec597b34490f745cdffcfe0cf6b8706339e2d192f"
+    },
+    {
+      "path": "src/app/calc/s-oil-bonus/Client.tsx",
+      "sha256": "9cf4a450f51a3b1e7fdd3cc67f5f2958bd82c46c2ffd7a07b11e496e8d2b4135"
+    },
+    {
+      "path": "src/app/calc/s-oil-bonus/page.tsx",
+      "sha256": "a362f5e8ef66895a5cd7ad4261df5a8b71a0df30c80ae1b340d26487938c2c35"
+    },
+    {
+      "path": "src/app/calc/samsung-biologics-bonus/Client.tsx",
+      "sha256": "1ad666fa1a132acaa2b9f7479961476352ed4745ef940c222922bddc3ceb48b1"
+    },
+    {
+      "path": "src/app/calc/samsung-biologics-bonus/page.tsx",
+      "sha256": "638bae24ded1d06301ffcd62c4f8d2e64c3b85f0f779d5d5b6e117b08cba3c52"
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/annualOp.ts",
+      "sha256": "c2ddb916eedf03119a29d326d44da1eb2939553564531e61e59208cab01e4f5b"
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/Client.tsx",
+      "sha256": "4d27a9dd5b75b41b629f4c9e32866faee6c5afa1af497fc9553dda8e7980b87c"
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/data.test.ts",
+      "sha256": "0ef952ae1b1440753913ad80379e8ad5354822061116fba7dcc2a6a5d0ebc631"
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/model.test.ts",
+      "sha256": "21f104c4e4aad4d6b1fa87083cdba7b9ded7fabd36f16b1de93929b43a3940a9"
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/model.ts",
+      "sha256": "0917d50915a494ae87bfe6f5d1b310659ca2d8ce86972437489333204a80ac9b"
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/MultiYearBonusSimulator.tsx",
+      "sha256": "01e98c6aa6668d45d43ae6d375e94294db5c9c625caf3200101a06180999dac3"
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/MultiYearRSUSimulator.tsx",
+      "sha256": "360750f40321b16b62c6189da1e005a10a3218a7acc04315e18991cb394fb9c1"
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/observeSamsungModuleView.test.ts",
+      "sha256": "476b3459104f7d337063d8b38b6018ccfd7aa9fdd6cc85fa8649f1a39a43eb91"
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/observeSamsungModuleView.ts",
+      "sha256": "b4c7425e5d8a48b695ad67deaf4d0c65cb656dae1e9b4dc65b157b9d0dc08692"
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/opiData.ts",
+      "sha256": "cb0885b5dd622965e344dfc3cbc2f7ca561d97e6579ba90a8ffaf28e02c8d454"
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/page.tsx",
+      "sha256": "100d49e592eef21ca7a625698603a5129c8b793577ee4ac4a3832eafbd13c60c"
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/shared.tsx",
+      "sha256": "ea88f246e115f60784f021d834344d97fab41b7fd7eab614636b6f62f1cefffe"
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/shareState.test.ts",
+      "sha256": "fcf0639d7dc643c983cfbe15d20bda345d67c321ea97e767bec881325a16e3f3"
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/shareState.ts",
+      "sha256": "20db1ceae798df02a41c285e82b9e7ea023e7e37990cbe97370f7cf4d87b09de"
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/TaiCalculator.tsx",
+      "sha256": "ae7269e55c8b686a23c5eb08db2de85950fded9b784fcece532039dad7e8279f"
+    },
+    {
+      "path": "src/app/calc/samsung-bonus/taiData.ts",
+      "sha256": "597e1995f7f76f54d175ca2bc68cc3225f7a26014a4e7280dc0f47cba52470d4"
+    },
+    {
+      "path": "src/app/calc/samsung-display-bonus/Client.tsx",
+      "sha256": "12e0fce9e41dc374f29ba7cfb16d2486618fb03e4e4fcf25a7cb1b44b158cf23"
+    },
+    {
+      "path": "src/app/calc/samsung-display-bonus/page.tsx",
+      "sha256": "3ffd2e3145245cb20fb92b092bd83128261332605353d9e2667e416fb112a1b6"
+    },
+    {
+      "path": "src/app/calc/samsung-sdi-bonus/Client.tsx",
+      "sha256": "6fd4559531e41c9919632818b401917d0be5f02c21d63879d696d28b93672268"
+    },
+    {
+      "path": "src/app/calc/samsung-sdi-bonus/data.test.ts",
+      "sha256": "05231438bc6a9c032c35ba8ddef6c39bda415943918e553ebbb14a1d83570675"
+    },
+    {
+      "path": "src/app/calc/samsung-sdi-bonus/data.ts",
+      "sha256": "2ff01bb54c22d36acd1ffce4118ca81519fbc93c9fd68a5b69aea818d20bb9dd"
+    },
+    {
+      "path": "src/app/calc/samsung-sdi-bonus/page.tsx",
+      "sha256": "9d09122dbe713e7124d038f70d413273de8b8b5177a3552ce1435712667b31d5"
+    },
+    {
+      "path": "src/app/calc/severance-vs-pension/Client.tsx",
+      "sha256": "9d12dcd01bd1d81226deedf5b9d54e265b9245cdc296874a91b32688e3168bfa"
+    },
+    {
+      "path": "src/app/calc/severance-vs-pension/page.tsx",
+      "sha256": "17f6c51f586358b645b22ac1dbed5e622d5b280c5b6470b966f7d1604b56ae60"
+    },
+    {
+      "path": "src/app/calc/sk-hynix-bonus/Client.tsx",
+      "sha256": "b1ee481a9776936b83f050e80e29f41c0787d35f52f11c53784c850b39e817db"
+    },
+    {
+      "path": "src/app/calc/sk-hynix-bonus/page.tsx",
+      "sha256": "79969a8ea33e4994aad9950bc534afe04494acd0eddcb16eeed3612aa755e903"
+    },
+    {
+      "path": "src/app/calc/sk-hynix-bonus/psData.ts",
+      "sha256": "7d27d478282f32f45c51405525ca48a02b42ee1d6223c03be9af55f1a35f20b1"
+    },
+    {
+      "path": "src/app/calc/sk-hynix-bonus/StockScenarioSection.tsx",
+      "sha256": "c0756cd3ba5b4ef84c2614ff07fab04a359b51bd5c410b47d5c8cd860736d00c"
+    },
+    {
+      "path": "src/app/calc/sk-hynix-bonus/StockScenarioSimulator.tsx",
+      "sha256": "3af57ef02bd33ed5eab6e69db02d60ca32178c22e086ffa1756b86fc4894f18c"
+    },
+    {
+      "path": "src/app/calc/sk-innovation-bonus/Client.tsx",
+      "sha256": "13f7bcc232cfbde15eb382b59faa2f9ccde50d134de39eb942bb1a5146dd76f9"
+    },
+    {
+      "path": "src/app/calc/sk-innovation-bonus/page.tsx",
+      "sha256": "55d9d59a1a7e8eb972f5826452381a2292b4c733aae3d2a28d7cb6b8ffd91ac6"
+    },
+    {
+      "path": "src/app/calc/smb-income-tax-break/Client.tsx",
+      "sha256": "bed8a2364b290920e61490a4dd216e33cc76a2b5536a837e7c35c09a76fec718"
+    },
+    {
+      "path": "src/app/calc/smb-income-tax-break/page.tsx",
+      "sha256": "31fa8a0f0c9ea937bc27969629d7a7657de22ac432deac98ec24c11e78c04e4d"
+    },
+    {
+      "path": "src/app/calc/vacation-pay/Client.tsx",
+      "sha256": "b7d00fba9244b61c5191cc0802213575c3503bd962310b2b9357cd00875f5f13"
+    },
+    {
+      "path": "src/app/calc/vacation-pay/page.tsx",
+      "sha256": "59a1c14e7540e42870150057994154764fb4a4ddef4c6590e5274777c46cae55"
+    },
+    {
+      "path": "src/app/calc/voluntary-retirement/Client.tsx",
+      "sha256": "36a00f4450d8bb896f04dacc8cae582f19c919092294cd85fe68e627dcbd3b92"
+    },
+    {
+      "path": "src/app/calc/voluntary-retirement/page.tsx",
+      "sha256": "bf6a3735e50e628463cb033a1052ec17ba8342fd58ab6aa8ab0959adb6738298"
+    },
+    {
+      "path": "src/app/calc/year-end-bonus-tax/Client.tsx",
+      "sha256": "033f14856abbc6643c8817dfaa1c3749f3b376eaac3edc69b05546b6e2da259a"
+    },
+    {
+      "path": "src/app/calc/year-end-bonus-tax/page.tsx",
+      "sha256": "a301e59b6a8536024df6b5a1fdf08e8558f135bf90231b13f940a9f11a44aeab"
+    },
+    {
+      "path": "src/app/calc/year-end-bonus/Client.tsx",
+      "sha256": "8e2412a4580c93cbab85cc52fa8ce1aaa2964f166c909f75148317d6c6968742"
+    },
+    {
+      "path": "src/app/calc/year-end-bonus/page.tsx",
+      "sha256": "ffed5cd1594fe9c6e67312ed1ce909a784364d4ae5ed4db77d17707b04074ec3"
+    },
+    {
+      "path": "src/app/calculationBoundaries.test.ts",
+      "sha256": "489316ec65da41b25236a50b656d17ca89fae67d5ed44fc5c3a4883cccac166f"
+    },
+    {
+      "path": "src/app/car-loan/layout.tsx",
+      "sha256": "32e12f463e10bc11836b4682995e3c6989f81b22e50785a903c26343b06a4ae1"
+    },
+    {
+      "path": "src/app/car-loan/page.tsx",
+      "sha256": "29b7bbea283e22fabe778026f278bb5b50a64e51534346704415cc4a0ccdf5a3"
+    },
+    {
+      "path": "src/app/career-stages-2026/page.tsx",
+      "sha256": "95b79974404104ea333cf5d4cb1e68f178f57cf483f6b7847e149c8454b5cdb1"
+    },
+    {
+      "path": "src/app/chuseok-bonus-2026/Client.tsx",
+      "sha256": "494f747a49b91681873f299a9f2a735b57048708698a345a5fd837e3ee41e7d6"
+    },
+    {
+      "path": "src/app/chuseok-bonus-2026/page.tsx",
+      "sha256": "c9a41309dbb0021f72f1429b700eaa4406d0fa0831c54a6deebc13ee92f0483b"
+    },
+    {
+      "path": "src/app/civil-servant-pay-2026/page.tsx",
+      "sha256": "0c92824f23990555974076a0e3d7b9d80708aeb3503950ad1523c40c741c5d2e"
+    },
+    {
+      "path": "src/app/civil-servant-pay-2027/CivilPayForecastSelector.tsx",
+      "sha256": "0f4c00978b1b54feaff2c1155dae5ef63091633520c0e69d5bf8ab85b4eaa8ae"
+    },
+    {
+      "path": "src/app/civil-servant-pay-2027/page.tsx",
+      "sha256": "05a4bc6b224da094af8bcd0a2097701e3ebd7b9ef4a6bc95283a7c0f69805338"
+    },
+    {
+      "path": "src/app/company/compare/[slug]/page.tsx",
+      "sha256": "82290d2efd966cf7a80f72088fdf8e8f559d9292678ca293b5ec700bad33e436"
+    },
+    {
+      "path": "src/app/company/compare/CompareSelectionClient.tsx",
+      "sha256": "f86bde4fc598b1d5cf26d6ca37a36177e8d46546bbdad602fe2328389d1dd44b"
+    },
+    {
+      "path": "src/app/company/compare/layout.tsx",
+      "sha256": "9d8d5b8958f68addbe36268cc9fbd0c194e48de8880c4116cd7af45b9be1e1ae"
+    },
+    {
+      "path": "src/app/company/compare/page.tsx",
+      "sha256": "e2ac69c57ca8417b9c14f9a209d9b09545938c6df41fd7d1d75c0abd8fe34f91"
+    },
+    {
+      "path": "src/app/company/layout.tsx",
+      "sha256": "3fca82abc494983801e4965fe01dfc4e1d9b7872c6d18df0efdba393d0abeb91"
+    },
+    {
+      "path": "src/app/company/simulator/layout.tsx",
+      "sha256": "08d2924f91b2add1d7c8ef378fcd92c7f3a9b96a4a7e91ca93b6778e0b642636"
+    },
+    {
+      "path": "src/app/company/simulator/page.tsx",
+      "sha256": "b14d35b49c0104fe90f117a791bb8456c2ae139b564ab51f61d499761becbbbe"
+    },
+    {
+      "path": "src/app/contact/ContactForm.tsx",
+      "sha256": "ed5918040d5e5021f16ea6c454d97638fb267459319e4514b7a8a4248dd63b5b"
+    },
+    {
+      "path": "src/app/contact/page.tsx",
+      "sha256": "47b1d6f54ccccf85295a56c5c67673cd48936ad57792d761328f93c28af43b82"
+    },
+    {
+      "path": "src/app/credit-card-deduction-2026/Client.tsx",
+      "sha256": "dcdd2a8657abe18f950b4828e4534c93251ed54ed0102a2dad72eff3c9fab2dc"
+    },
+    {
+      "path": "src/app/credit-card-deduction-2026/page.tsx",
+      "sha256": "cefe0f17efc23e24eef4c46c3bad8bfec53534a75d398ad17152cc87aa52d011"
+    },
+    {
+      "path": "src/app/dashboard/layout.tsx",
+      "sha256": "7d8b902d47742882e301188b6a63fc271ea061e7b071dae96ed0ea801983e6dd"
+    },
+    {
+      "path": "src/app/dashboard/page.tsx",
+      "sha256": "0f98ad0188f819c2bd63666a57ef64a879f2a36dc80f944e71cd58dd1b8c3659"
+    },
+    {
+      "path": "src/app/donation-tax-credit-2026/Client.tsx",
+      "sha256": "e63a4bc414a8622004b69c1aee63a7225f3a5ee3dc39e6327f9d1c845adb3250"
+    },
+    {
+      "path": "src/app/donation-tax-credit-2026/page.tsx",
+      "sha256": "bd420c6ce9787fed7d7f549a965d71168e9bc5723635b5e30b833f19c29022b4"
+    },
+    {
+      "path": "src/app/earned-income-credit/EarnedIncomeCreditContent.tsx",
+      "sha256": "c667f286dbe69d27c1aaf2f85625460de7906ec56ede2186ad210c1bb43ac19b"
+    },
+    {
+      "path": "src/app/earned-income-credit/faq.ts",
+      "sha256": "dbf4cbb5d349390575b142ba863c9f5857300a9a5515d1b3fa5854b315077f48"
+    },
+    {
+      "path": "src/app/earned-income-credit/page.tsx",
+      "sha256": "a5dc66b17b73465cfa8670e6f921e059d410a95b8c24f8f2b20192e5409455f1"
+    },
+    {
+      "path": "src/app/embed/EmbedCompanyPicker.tsx",
+      "sha256": "7688b9458e441df8994ced242fab6cdcf5cdb6044a1aee09840b4191df990f84"
+    },
+    {
+      "path": "src/app/embed/EmbedSnippetClient.tsx",
+      "sha256": "afcd1032977990e67e71f2ecec8b0ccfe3fd247a5c39217f1c54d90b837a9610"
+    },
+    {
+      "path": "src/app/embed/page.tsx",
+      "sha256": "856f30ce55a6151090e62460c05dd683d3375c96f14d4fdb55adb8acf2f9d9a2"
+    },
+    {
+      "path": "src/app/embed/widgets.ts",
+      "sha256": "77a970155be9e76ea51f948c59d73f93ae705a148061f8ef2cd556502245f2b6"
+    },
+    {
+      "path": "src/app/en/[...missing]/page.tsx",
+      "sha256": "cbff3701aeb35ee144cd57c7cdb18159a65e6f825fcc03a8699bbec951cd8762"
+    },
+    {
+      "path": "src/app/en/about/page.tsx",
+      "sha256": "f3013f0c2ac4d97d6f52708a4e0e28d3dc15a2a143830b01ad2afe31d0125c84"
+    },
+    {
+      "path": "src/app/en/bonus/page.tsx",
+      "sha256": "2815323109fcc3fd2e80d021b29d03a2a0f2af9e9bb8729ddbbb6b5ca0a84690"
+    },
+    {
+      "path": "src/app/en/calculators/page.tsx",
+      "sha256": "ad59595888a8a0b68001c4d5139f17e22fe80e8f8bad0778c268c4ff18f3c6ed"
+    },
+    {
+      "path": "src/app/en/contact/page.tsx",
+      "sha256": "b5a99f617e5a6dab6a0d29618aaa17f2130ea17a6820d6862d0df5faf44f3e50"
+    },
+    {
+      "path": "src/app/en/dashboard/EnglishDashboardClient.tsx",
+      "sha256": "4a7c24497d833b9394499fed0c76ae0e89d2697fb678e68e2df4930ec7604ecb"
+    },
+    {
+      "path": "src/app/en/dashboard/page.tsx",
+      "sha256": "6b57235fec9e64f9b90ce71585caab019ced543b1832ed5b9950461dbf62d205"
+    },
+    {
+      "path": "src/app/en/EnglishSalaryCalculator.tsx",
+      "sha256": "87ac9e0249a4f5b87aa9529d99e8753c08182ee246949fdf0004ca22ad987344"
+    },
+    {
+      "path": "src/app/en/EnLandingClient.tsx",
+      "sha256": "fdd15f47e0b6684b03f790a10614f01d29bb1762b7de139447694991d37905c7"
+    },
+    {
+      "path": "src/app/en/flat-tax/layout.tsx",
+      "sha256": "1357900fa5b49021525292678e9646aa93d10d76eecf79aeb5b9e5a549bf21e3"
+    },
+    {
+      "path": "src/app/en/flat-tax/page.tsx",
+      "sha256": "c0db3013643bbcf47b3f444f9bc9f5f9e593b4e38b0df34f4e6c15dc3558db76"
+    },
+    {
+      "path": "src/app/en/fun/page.tsx",
+      "sha256": "e5ee3ecc9a9809c7c573b4c71b7347ec2d550b276029e9feb25b9d7d537a9842"
+    },
+    {
+      "path": "src/app/en/guides/[slug]/EnglishGuideClient.tsx",
+      "sha256": "22363add24cabaff5fd48d88c8f60445b897ee3497e4f91e18a171962d02edb8"
+    },
+    {
+      "path": "src/app/en/guides/[slug]/page.tsx",
+      "sha256": "910f946ac0604ee1284a34dae92c6727ab230a78832cad7a5fafc2c2b6f8c598"
+    },
+    {
+      "path": "src/app/en/guides/EnglishGuidesClient.tsx",
+      "sha256": "2010ea9b2243a34fb35237c06b3c00e2e4fcdd0350fb09983d480f299d3b64a3"
+    },
+    {
+      "path": "src/app/en/guides/page.tsx",
+      "sha256": "6296c838d39556b15d3da47d5563a662cd55c462d03c741f8b989adb6c0d4046"
+    },
+    {
+      "path": "src/app/en/help/page.tsx",
+      "sha256": "1fdabf3df4244a5d5d3809992f34818ef377f55ef3d4109688a1c97c7f827cd1"
+    },
+    {
+      "path": "src/app/en/layout.tsx",
+      "sha256": "75ecaca90cf199aa39c3107153c1614d5e8ad7191aa1f7984b1f969d53df89b6"
+    },
+    {
+      "path": "src/app/en/LocaleSync.tsx",
+      "sha256": "8cb0b24a272d8e3423647fe5870a2b4dd45db60b93bf9464dd2559f1c5a74847"
+    },
+    {
+      "path": "src/app/en/not-found.tsx",
+      "sha256": "ff8b85286d2d40b79895d1cb92b1a50face87adbd170f9f6aa27aec9a5bf2ef4"
+    },
+    {
+      "path": "src/app/en/page.tsx",
+      "sha256": "3b68470ae421a5e92fde8892765cf17c818b36a97b1e19cc7f5dc68e2ac7dd4c"
+    },
+    {
+      "path": "src/app/en/privacy/page.tsx",
+      "sha256": "7a2caded20052a392434e5bf8d4e5f3898e388725003b05fe6946f4ae644c2f1"
+    },
+    {
+      "path": "src/app/en/salary-converter/layout.tsx",
+      "sha256": "7f8e8d3f7c581f09355d8e42463c3a70e956e359d84cf4bba7a56e98a6b71a18"
+    },
+    {
+      "path": "src/app/en/salary-converter/page.tsx",
+      "sha256": "773023a3e7cb1a51be19580d3bc415b98ad87647f3bc0486deef7d482bd198bd"
+    },
+    {
+      "path": "src/app/en/salary-db/page.tsx",
+      "sha256": "f73fb9d61eccdd7f86da32cbf533e35a7a206ea8cf59d1f9272e5923743d2da5"
+    },
+    {
+      "path": "src/app/en/season/page.tsx",
+      "sha256": "ac3dc1258a9f87ec688e4e104a0e943f8bad5471fdeea1ff69fce5fe5bf9d19e"
+    },
+    {
+      "path": "src/app/en/terms/page.tsx",
+      "sha256": "c7f402d05ae9abf46a0e09aa2453abf22f5f8016909251c5cc4ecb4fbbebbbce"
+    },
+    {
+      "path": "src/app/en/tools/[slug]/page.tsx",
+      "sha256": "27163af61d7700190b81d31080ec72b2c66b02d8ddba250b152c86e552bf6ee3"
+    },
+    {
+      "path": "src/app/en/tools/page.tsx",
+      "sha256": "b5db6b83cd23db6dcaeb5a81b0cbebbf357bd6919a152bf58cdc4120cce8dcbc"
+    },
+    {
+      "path": "src/app/error.tsx",
+      "sha256": "c7ef005296ea1c5c34ca75f2cbbff3cc10457b77d08d1deb98649588988e6f82"
+    },
+    {
+      "path": "src/app/fire-calculator/layout.tsx",
+      "sha256": "0d05c80d22638315b7364abb3a89b49052cde448fd25aebfdacddb91efdddd1e"
+    },
+    {
+      "path": "src/app/fire-calculator/page.tsx",
+      "sha256": "58ffb802a637f602618686648d14d1a0d0934ae4eb5ffbb26f909e9cd05f799c"
+    },
+    {
+      "path": "src/app/firefighter-pay-2026/page.tsx",
+      "sha256": "2f432e7a71bf022766ea35a1de7d961478612736f8b470bf7ea477e67999b5ed"
+    },
+    {
+      "path": "src/app/fonts/siteFonts.generated.ts",
+      "sha256": "1a7d066209cdb461a4fbfeae4999221c1a975094d858a946710a48790dfdd697"
+    },
+    {
+      "path": "src/app/fortune-2026/layout.tsx",
+      "sha256": "5f5410422f3d2702cfa98f020f60d810e56fca34952c7fcbf96d7c8e072494f5"
+    },
+    {
+      "path": "src/app/fortune-2026/page.tsx",
+      "sha256": "46b73140269de5dae803bd88cc1fca5a2f5b5f74b5d3c4ddebb68b7339d4767e"
+    },
+    {
+      "path": "src/app/fun/asset-allocator/layout.tsx",
+      "sha256": "683d3d80161af0b1ff9986b8ec06dcb2018e621ae04a3573f518f4c4241e6df9"
+    },
+    {
+      "path": "src/app/fun/asset-allocator/page.tsx",
+      "sha256": "d17dcd48071623a287c546262d328e3e9ca0e10f4970984ebe32845984442d29"
+    },
+    {
+      "path": "src/app/fun/escape-plan/layout.tsx",
+      "sha256": "734b1f019afffe87d72ead091cc14a04809241b6797afeace1ab6c940407c034"
+    },
+    {
+      "path": "src/app/fun/escape-plan/page.tsx",
+      "sha256": "7cbb94f3db0fcdda2c270f140778f9296894582116bb50fac54a97e93f4d36af"
+    },
+    {
+      "path": "src/app/fun/financial-mbti/layout.tsx",
+      "sha256": "222fb57c26df90602f0eed75ac53ed1233201345c7d0ab3b24df5879c2f13174"
+    },
+    {
+      "path": "src/app/fun/financial-mbti/page.tsx",
+      "sha256": "cd8e2936367a52d64ecc10c154039f7b52fca998a1916d73f69c70db20ed8c2c"
+    },
+    {
+      "path": "src/app/fun/flappy/layout.tsx",
+      "sha256": "5bca4c8bfd8b901475bed7c90b84dd0f25d7c497f6f37bb1df055edba897dd53"
+    },
+    {
+      "path": "src/app/fun/flappy/page.tsx",
+      "sha256": "7b968e343438a17e51308af5bc8243e98ce99b7a49caf30e9246f487116fb28e"
+    },
+    {
+      "path": "src/app/fun/fortune/layout.tsx",
+      "sha256": "ebd129c081c9cee86e77c981aeaccc53fe8524aab7f4b8c7a273bd3393a463d3"
+    },
+    {
+      "path": "src/app/fun/fortune/page.tsx",
+      "sha256": "51a63944349bd9477a8675c540815d931d4ead04c89c3ef97df4b20265cbbaf1"
+    },
+    {
+      "path": "src/app/fun/gameLifecycle.test.ts",
+      "sha256": "f6b2417d0b1601ef02331086e2f2be249533625ed18a619f23ca1a781f822f0e"
+    },
+    {
+      "path": "src/app/fun/iq-test/IQTestClient.tsx",
+      "sha256": "773174a3f3dace2b57c35171180476744d0e94310709c6f48365958bfdde0b3d"
+    },
+    {
+      "path": "src/app/fun/iq-test/layout.tsx",
+      "sha256": "e5dbac5d205208179736df0145e9030370b9d94772223c126fd43ffd3e425379"
+    },
+    {
+      "path": "src/app/fun/iq-test/page.tsx",
+      "sha256": "a0751dfc65a1510d86e72b977a18c8b0965ac18a4468e82d4274f2d97b69906d"
+    },
+    {
+      "path": "src/app/fun/layout.tsx",
+      "sha256": "a3b3b5eda965797f4c28c91d4de1e31b795c20168bcf2288da5b576585dad824"
+    },
+    {
+      "path": "src/app/fun/lunch-roulette/layout.tsx",
+      "sha256": "39b9010cdd3ae292c1f3b45061f349e940503898cc47603d7a0fbe02c4ff0d2b"
+    },
+    {
+      "path": "src/app/fun/lunch-roulette/page.tsx",
+      "sha256": "7824a64965a3906d64d13ab4e034cddd81efc046f6fa0cb74946af27e2184c16"
+    },
+    {
+      "path": "src/app/fun/meme-coin/layout.tsx",
+      "sha256": "9cef69a3748b20d0dcb3e392b0af0f95517683f93d87a5739eff86ebe943fb8a"
+    },
+    {
+      "path": "src/app/fun/meme-coin/page.tsx",
+      "sha256": "b0e0ed2512c149a29b4be8caa354cbb98d746193fb95a3106518a99a959b76e1"
+    },
+    {
+      "path": "src/app/fun/page.tsx",
+      "sha256": "2a50c393a19a7b0a83e62a92d6e5b326785f7593b182460ac593441ffd0bda9a"
+    },
+    {
+      "path": "src/app/fun/random-draw/page.tsx",
+      "sha256": "ddf216827c72d197ad45b77aa7664461d8dd79eb2db3f03b451d7ffea935832e"
+    },
+    {
+      "path": "src/app/fun/rank/layout.tsx",
+      "sha256": "9a0820893d094c313a21c7bc4a37a63a4c9e3872d73016e01767ff0c80dfcf6b"
+    },
+    {
+      "path": "src/app/fun/rank/page.tsx",
+      "sha256": "2f482ebccebe0447e9554886d68b85060a5dff20ad44bbad6876823755b98c8b"
+    },
+    {
+      "path": "src/app/fun/rank/RankClient.tsx",
+      "sha256": "6b4e94396ed1baa1d8fb7e15a56849296e6440678b741b66302aa567422df093"
+    },
+    {
+      "path": "src/app/fun/reincarnation/layout.tsx",
+      "sha256": "90d4f0da9156d9bded81d6b2cbeb5c93aab373b3c5635f72203efb4337de084d"
+    },
+    {
+      "path": "src/app/fun/reincarnation/page.tsx",
+      "sha256": "dc0d7a4d322a1bf902314d36da3762ef4b592bfdc03c5258cf5d24d1b552088d"
+    },
+    {
+      "path": "src/app/fun/rich-dna-test/layout.tsx",
+      "sha256": "e5dbac5d205208179736df0145e9030370b9d94772223c126fd43ffd3e425379"
+    },
+    {
+      "path": "src/app/fun/rich-dna-test/page.tsx",
+      "sha256": "7677c5d78dbf2c828f5c42f60f009ade9105a26e724b5c7a5a2db4ab46d3c6e7"
+    },
+    {
+      "path": "src/app/fun/rich-dna-test/RichDNAClient.tsx",
+      "sha256": "c8f4aae050aa50028025eb9e5689af402d2506879e517cd68dbf52ae9404cbac"
+    },
+    {
+      "path": "src/app/fun/salary-battle/layout.tsx",
+      "sha256": "9b266d7de0d1a488b41ff419238f386a7ca9a0bf0c3261a35fc4ba0840f60770"
+    },
+    {
+      "path": "src/app/fun/salary-battle/page.tsx",
+      "sha256": "8e89a304a2fb3e2ffd2825767353d1696c8ee0222b0026fde7b276e340a26567"
+    },
+    {
+      "path": "src/app/fun/salary-battle/SalaryBattleClient.tsx",
+      "sha256": "536cbd133962b6c394d53ab19425cb70bbf16d8a7bc2b3b17c1a7ca04704085a"
+    },
+    {
+      "path": "src/app/fun/salary-rank/page.tsx",
+      "sha256": "a5b0445f6f321064355befbefd2c0c26c17d72daf171667611572ae71299f1a5"
+    },
+    {
+      "path": "src/app/fun/salary-slip/layout.tsx",
+      "sha256": "64bd98b69d88c8380e85c72025e692837043e163675373e09dbd330e2a905f22"
+    },
+    {
+      "path": "src/app/fun/salary-slip/page.tsx",
+      "sha256": "eceb3e17c2bb4c4d2a5c7d4d9eb1f2da8a2da49a6117a74e2208d2336b0c0d77"
+    },
+    {
+      "path": "src/app/fun/spending-test/layout.tsx",
+      "sha256": "974a67157757facf87d8d331b52fcb65f6c5282987013683201049204571d150"
+    },
+    {
+      "path": "src/app/fun/spending-test/page.tsx",
+      "sha256": "4ef6fc5462c17dde841ebb3c3b4a4db337e459062aa85308342747d9ab82526f"
+    },
+    {
+      "path": "src/app/fun/tetris/layout.tsx",
+      "sha256": "0ade072bc0531d698f6c4b6768de65235efeea26c16ae800114558b02d8b3789"
+    },
+    {
+      "path": "src/app/fun/tetris/page.tsx",
+      "sha256": "396be83b71197150c78d8288aec3a2aeb3d530e5b536d6cb114eb008ff98e60d"
+    },
+    {
+      "path": "src/app/fun/weekend-duty/page.tsx",
+      "sha256": "8c80412d5686722d499d1be8ed6793866a063dde9f811a1d7856b5a281d6f8bd"
+    },
+    {
+      "path": "src/app/fun/what-to-buy/layout.tsx",
+      "sha256": "5df56bf7b29315b00c7394d646c9ebb5bb77ee8a668720db1978205257eb1704"
+    },
+    {
+      "path": "src/app/fun/what-to-buy/page.tsx",
+      "sha256": "b1d8ca3aa2d2981f001462f73578899ae0a0b802567d3c3cd37442aecf85c982"
+    },
+    {
+      "path": "src/app/fun/worldcup/page.tsx",
+      "sha256": "a7232200392f877b5cc05023c79a0017b2b77c941b85607390afe4ad2b63a23a"
+    },
+    {
+      "path": "src/app/global-error.tsx",
+      "sha256": "5f0e757185a6d67679e8b547aea97d384cb3e3868721551e866b7cd076587f54"
+    },
+    {
+      "path": "src/app/global/layout.tsx",
+      "sha256": "9deea5c04c5403d3408646639ac6e0af4fb376d7f15add16c33ab266fad87f00"
+    },
+    {
+      "path": "src/app/global/page.tsx",
+      "sha256": "cea30b966b29f91fc1301bf29dba2645c13dc904dceaa5698575720c05adc062"
+    },
+    {
+      "path": "src/app/globals.css",
+      "sha256": "cf8adb8a4be6a94ac558581a0346c0968d570e9bdf2f1ef40a1c4c695e4991da"
+    },
+    {
+      "path": "src/app/glossary/[slug]/page.tsx",
+      "sha256": "e8933c10a291fea678121bb8288c28018ee9c6d821a12f74d3dfa9f39b525e1b"
+    },
+    {
+      "path": "src/app/glossary/GlossaryCard.tsx",
+      "sha256": "e1e360e7015086b37c1f0df3f925fa9be83ceb6af4d772f745bd9d157118d21f"
+    },
+    {
+      "path": "src/app/glossary/GlossaryExplorer.tsx",
+      "sha256": "d0467153894959dc46364c37f58be19d1d73d3c117294104d52911fba31e1453"
+    },
+    {
+      "path": "src/app/glossary/layout.tsx",
+      "sha256": "14aec25612eba59927bdf485f30832d34e341aa8a6b2f22338d37c5176034191"
+    },
+    {
+      "path": "src/app/glossary/page.tsx",
+      "sha256": "4d37ffecff58010cd4f441883c00325be5421d46e37e8bbe8dc1b792859d1ccf"
+    },
+    {
+      "path": "src/app/glossary/ShareTermButton.tsx",
+      "sha256": "12413757828af139d5f0cbd95691e6601479f71b9f92274122891042d4a76b25"
+    },
+    {
+      "path": "src/app/guides/[slug]/GuidePageClient.tsx",
+      "sha256": "4d8f18bd8c8a9f5fae16e85d1f1886dd56c7183cb307b44a2b78881d56022d5f"
+    },
+    {
+      "path": "src/app/guides/[slug]/page.tsx",
+      "sha256": "3cfc1eedafc2160823371bcf3cef42b9a3ea37ebdf8717409c575a8de8f3ae10"
+    },
+    {
+      "path": "src/app/guides/category/[slug]/page.tsx",
+      "sha256": "98f23ff0936177c6689d1922c24b88317c06a647edb4cab24fd5c4002aa7ffd1"
+    },
+    {
+      "path": "src/app/guides/GuidesListClient.tsx",
+      "sha256": "e8f20362ba97da7824c449e1086101532e4b3725bbe242428098df9d0fda1fc6"
+    },
+    {
+      "path": "src/app/guides/layout.tsx",
+      "sha256": "f6536998395d72a6b81c3a5a5a2a6a720a6c74134598ec8300360e0fa1926010"
+    },
+    {
+      "path": "src/app/guides/page.tsx",
+      "sha256": "4744b73ecc20bfdd35c43af240f0da813e3a4ad86158d943e6bf2bf1408a8a1d"
+    },
+    {
+      "path": "src/app/health-checkup-2026/page.tsx",
+      "sha256": "f1052914d218032a2cad43b8ef13995c7d2104ce4a0a080bb24be4e4af4b60df"
+    },
+    {
+      "path": "src/app/health-insurance-2026/page.tsx",
+      "sha256": "cecfc8447629995bfc4e42132dce96cf10ae1e4cf25b7a077d0713e29a2698ee"
+    },
+    {
+      "path": "src/app/health-insurance-dependent/Client.tsx",
+      "sha256": "7f3d0cc85cff6df2e908be7081f11e1b93fcd21cc0fc97e199e6fae331ac583d"
+    },
+    {
+      "path": "src/app/health-insurance-dependent/page.tsx",
+      "sha256": "4b960c059360292da55263636f1eaa8aba8932ffdaf114baf87eb9da82f902a5"
+    },
+    {
+      "path": "src/app/health-insurance-fee-2026/HealthInsuranceFeeClient.tsx",
+      "sha256": "74dbdd4ee937cf147cc92afac809b9ab8c1786229c8181db3614fbadaf030ea2"
+    },
+    {
+      "path": "src/app/health-insurance-fee-2026/page.tsx",
+      "sha256": "7b2ecbd88cb1c2bb5f52ee2653bd74a0c0be1318b6f2d3e2c030a58a5d11f2ce"
+    },
+    {
+      "path": "src/app/home-loan/page.tsx",
+      "sha256": "62442695d51f6aab902dd0fb9d607e4d321d4e233ee1a87781be626108db35d3"
+    },
+    {
+      "path": "src/app/HomeClient.tsx",
+      "sha256": "ae01b73456000c41b10bf38cc06132f59a356379b36d69929281bbedbead1cd0"
+    },
+    {
+      "path": "src/app/hub/[id]/page.tsx",
+      "sha256": "7f5840b37004f242721240a51ee8ca905e49a149eb599f8667269b5ef36b99fc"
+    },
+    {
+      "path": "src/app/hub/page.tsx",
+      "sha256": "0b15de453dd47b6596a5005a91b881b994f3c2c63bea07da357155bd02ecb88b"
+    },
+    {
+      "path": "src/app/income-tax-2026/IncomeTaxClient.tsx",
+      "sha256": "2703b3eeed60409eeb9921c45627997028c3c09346c10fb380650660ed089869"
+    },
+    {
+      "path": "src/app/income-tax-2026/page.tsx",
+      "sha256": "cf60e6034662f6d6962db6a148a58d7ef885f740889a4ab6c7ea71c13d2be729"
+    },
+    {
+      "path": "src/app/industry/[slug]/page.tsx",
+      "sha256": "827d96c84f3411a2a09c6d8c648bf884c1d079dc78787a790035c72d32b62a85"
+    },
+    {
+      "path": "src/app/industry/page.tsx",
+      "sha256": "bcae700d0437f486d7f342b303cc38b15a626c50eb75da44a6cbd7cda520f6e3"
+    },
+    {
+      "path": "src/app/insights/__tests__/reportDatasets.test.ts",
+      "sha256": "67d85151aee696b66a365003dd32abfbabd32607e17c6b59c832a8768ff5c79f"
+    },
+    {
+      "path": "src/app/insights/_lib/reportDatasetMeta.ts",
+      "sha256": "b241408e432b062629b1fe67aa5bf7dbe575bd300edff66277d121a5ff97e781"
+    },
+    {
+      "path": "src/app/insights/_lib/reportDatasets.ts",
+      "sha256": "adc63788ed97f3e281ae67b9598f24c3c70f8c57be1f18a52e208bce2a3fdac6"
+    },
+    {
+      "path": "src/app/insights/bonus-payout-history-2026/data.csv/route.ts",
+      "sha256": "531649a4878b65de1dcb798a74ffa0d172398bb3dea309ae73ca46741a4211e4"
+    },
+    {
+      "path": "src/app/insights/bonus-payout-history-2026/data.json/route.ts",
+      "sha256": "e4eb5f54d5e0c0cb05532b094c9a33c0aa25e1eb173b4cb6109a52ab7ffb224d"
+    },
+    {
+      "path": "src/app/insights/bonus-payout-history-2026/page.tsx",
+      "sha256": "39c336f48be1ac48b84581d3d4bf4888edf03ec76c3ba4d43d3d0918ced01d48"
+    },
+    {
+      "path": "src/app/insights/entry-salary-by-industry-2026/ChartSection.tsx",
+      "sha256": "44ac6aa827d3d7d3eb1bb139382600d3db80f272e5a7c7d6ef1e81c8842f1cc2"
+    },
+    {
+      "path": "src/app/insights/entry-salary-by-industry-2026/data.csv/route.ts",
+      "sha256": "67a9f64051cac83bac53d7cfac8f46e25fc5e0fa708d9ce89cc5d1b9652324a0"
+    },
+    {
+      "path": "src/app/insights/entry-salary-by-industry-2026/data.json/route.ts",
+      "sha256": "2e9e66cd83e23cfa882f0277a22e272069540f189ead916444d3a1043438e747"
+    },
+    {
+      "path": "src/app/insights/entry-salary-by-industry-2026/page.tsx",
+      "sha256": "1686bb9ffa3137234be44b35cc8a680edbcc1839f3c9be0b99fe15404da9cdb8"
+    },
+    {
+      "path": "src/app/insights/layout.tsx",
+      "sha256": "0fa70aec85e1dea92115da179809d6d78b35ba0190a0712946c234fc0aa4c911"
+    },
+    {
+      "path": "src/app/insights/listed-avg-salary-top100-2026/data.csv/route.ts",
+      "sha256": "53cc443f867f688a4e4d13eabe7c01a014450f16e804d721de7c575669252d34"
+    },
+    {
+      "path": "src/app/insights/listed-avg-salary-top100-2026/data.json/route.ts",
+      "sha256": "b2747d99a32becebee58090987dc5af2f8254e7078adffba6b096adfad7f8c9f"
+    },
+    {
+      "path": "src/app/insights/listed-avg-salary-top100-2026/page.tsx",
+      "sha256": "eaaf094f5e42540b59ac92b098404626197eef31c8d69a375d9f455a2e1d4d5e"
+    },
+    {
+      "path": "src/app/insights/page.tsx",
+      "sha256": "e8bf0b4f9c40a1c4655eff2b79f1ffc517c62b35fb1fbd4bafe371ac52b550db"
+    },
+    {
+      "path": "src/app/insights/ReportDataLinks.tsx",
+      "sha256": "f7ad23d1826f72ad044ec24649fc6ecb9b657be39ed2fa7f7949692f59958a65"
+    },
+    {
+      "path": "src/app/job/[slug]/page.tsx",
+      "sha256": "c6e495cd967ec1fa5af9634742b162a02650368eb9abac279e8708a1d33cb7e7"
+    },
+    {
+      "path": "src/app/job/page.tsx",
+      "sha256": "f3c17e7a21633db1205851eb6080c90689142adbc64e25f0ae039826ce193568"
+    },
+    {
+      "path": "src/app/layout.tsx",
+      "sha256": "695284de1703e4a409b2c8e460bf4324967457192c7173f7ca17a0f8f0e229b3"
+    },
+    {
+      "path": "src/app/lotto/layout.tsx",
+      "sha256": "86fd1e47c91852aed0ab7b01bad4e78e72ed95198ad365f701233d240425dd09"
+    },
+    {
+      "path": "src/app/lotto/page.tsx",
+      "sha256": "07daa7f269218eac1eaf5589786e7dbcf6bbfc3de9e30c8a216feabbe0986da8"
+    },
+    {
+      "path": "src/app/mbti-salary/layout.tsx",
+      "sha256": "7891451140b2e89cdfbb0d19be00e5be5afab5a1f405e63504dfb6ebab78d7ea"
+    },
+    {
+      "path": "src/app/mbti-salary/page.tsx",
+      "sha256": "1bb80ad55fbe53cf528518d5befb124e61ca9a68f653c19a0e66965035b569d8"
+    },
+    {
+      "path": "src/app/medical-tax-credit-2026/Client.tsx",
+      "sha256": "70e1eeb222f7f5c10661061fb17da2ae6f675c17453f21c76404a40e94f71e28"
+    },
+    {
+      "path": "src/app/medical-tax-credit-2026/page.tsx",
+      "sha256": "7d4b62e28e5fd365c407db69261a3bd24e31900d721a584266f53b98905644ea"
+    },
+    {
+      "path": "src/app/military-pay-2026/page.tsx",
+      "sha256": "9431da5e0a6bad68224de1cf1ff51e8f8a91e9110cd5076543e412c91f0ff090"
+    },
+    {
+      "path": "src/app/military-pay-2026/SavingsCalc.tsx",
+      "sha256": "1bde608c760a44094d452d8c983de669911a89c2e03ac6a00595119de8d3a5ca"
+    },
+    {
+      "path": "src/app/minimum-wage-2026/page.tsx",
+      "sha256": "78beadd0d8df83ca7172744c63d7043858b0a3c30b2527a6aa1090a8cd46201b"
+    },
+    {
+      "path": "src/app/minimum-wage-2027/page.tsx",
+      "sha256": "7aaed97b2bce13084eec9624d15df5d2461eb36e168cad8fbd1aaf9b2f186429"
+    },
+    {
+      "path": "src/app/money-check/MoneyCheckClient.tsx",
+      "sha256": "99451018a03c94c1edc58679a11f5cad22f9c15561483f02a6f37fa11387faf9"
+    },
+    {
+      "path": "src/app/money-check/page.tsx",
+      "sha256": "4251607fc79585ddfdcedad6f13afd4f778d3999f62c40731836c27a11174ac9"
+    },
+    {
+      "path": "src/app/monthly/[amount]/page.tsx",
+      "sha256": "9cdf2190ebf9b70723fd3cd50bfb02e14232c142f95405c795c073082dbacf8b"
+    },
+    {
+      "path": "src/app/national-pension-estimate-2026/NationalPensionClient.tsx",
+      "sha256": "3e4a9b8370d9a54057a95f288efa84f2cdd56e4c35b68ece32706f25f03b72d0"
+    },
+    {
+      "path": "src/app/national-pension-estimate-2026/page.tsx",
+      "sha256": "52b48bb60c1eec31c2976816231243a0c383132aa15d03a7b2fcfb8bb9d9365d"
+    },
+    {
+      "path": "src/app/new-employee-2026/page.tsx",
+      "sha256": "b2f402d59d395e39e09aa70a443666f4cc0b7284df7ed5d6cf55657b99d86d71"
+    },
+    {
+      "path": "src/app/new-employee-salary-2026/page.tsx",
+      "sha256": "b92f30796dfc886f1940f7d452895ebba741d846735159d76f1c61df9f842ee5"
+    },
+    {
+      "path": "src/app/not-found.tsx",
+      "sha256": "0e57fa1d85403dda566a5c491df0146b46b0970d95a2bdc82c8c700ab47fd40e"
+    },
+    {
+      "path": "src/app/page.tsx",
+      "sha256": "3ca3792231a4830c8534f7a88392f4294c9426642e15da8a427d35b4fdc9059a"
+    },
+    {
+      "path": "src/app/parental-leave/faq.ts",
+      "sha256": "6d3fbbab3312e460a0dc850ef5b9b2fc9b0ba5e52ce5b004e4d6fc06ee0a15bd"
+    },
+    {
+      "path": "src/app/parental-leave/page.tsx",
+      "sha256": "16a13c5a065904a8a95d6a4340095b2616aa7468190c172547df1ddf93e28c0c"
+    },
+    {
+      "path": "src/app/parental-leave/ParentalLeaveContent.tsx",
+      "sha256": "dbc8d6b1765a222fb44ac062b88d810d3beed1c8dc770b7a0713209d4c60e04b"
+    },
+    {
+      "path": "src/app/police-pay-2026/page.tsx",
+      "sha256": "202cfa9f786d69c509bf1b053d7eadbd52258b2d4acf27d10f3919cb34986ad1"
+    },
+    {
+      "path": "src/app/privacy/page.tsx",
+      "sha256": "35ef40243b4c44b429cabfdba521336628b8fac6f32a8d0ac54f4c54f39210af"
+    },
+    {
+      "path": "src/app/pro/career-planner/layout.tsx",
+      "sha256": "a05549201780614d1f68658bd4892288739ab2e03057e1c7a47c0b4acb46d93b"
+    },
+    {
+      "path": "src/app/pro/career-planner/page.tsx",
+      "sha256": "4612d82f61ad90937449be65ca21f73dbc0ee1c5dd472b7b21247fdc2c849881"
+    },
+    {
+      "path": "src/app/property-holding-tax-2026/page.tsx",
+      "sha256": "6b31f22ffc6ad7e1c744305978afdb9893c2255f227b94f2f4ccfce31fead66e"
+    },
+    {
+      "path": "src/app/property-holding-tax-2026/PropertyHoldingTaxClient.tsx",
+      "sha256": "2e9ec3bc310a2f2494b9b2bc4b8e9786557620e18cccfada07dad8193c420198"
+    },
+    {
+      "path": "src/app/providers.tsx",
+      "sha256": "dbe8a4721cf66ec04f1e8eee21644eb9161a2cb594499101698652833cdbf3b4"
+    },
+    {
+      "path": "src/app/public-institutions/page.tsx",
+      "sha256": "6b26519b5033248cb0b751c12a8f8e1009e890a047993246531a6d39bc1d81d6"
+    },
+    {
+      "path": "src/app/public-institutions/PublicInstitutionSalaryClient.tsx",
+      "sha256": "0f22e4d3820e7f782c596a1dc94491532c7ce7d7f868e13f856fd1e7df5a1676"
+    },
+    {
+      "path": "src/app/qna/[slug]/page.tsx",
+      "sha256": "e012561c205f650f3f5dd350412cd86e154c02b6fb492bae9d3152e693480b57"
+    },
+    {
+      "path": "src/app/qna/layout.tsx",
+      "sha256": "1af5dacbefeaca8dd17e7150d9af53f9d1d652b4a992e633343145e1aeb3d1e5"
+    },
+    {
+      "path": "src/app/qna/page.tsx",
+      "sha256": "da034de391b5fb722fdfd7b4a9a4d823f475964a9f4ad3bdbb7175360406d860"
+    },
+    {
+      "path": "src/app/qna/QnaPageClient.tsx",
+      "sha256": "a152683c5f4478861fca39f415098af4e1cb33555834a31e7c5f3d981359cfb0"
+    },
+    {
+      "path": "src/app/region/[slug]/page.tsx",
+      "sha256": "dca953b1baaa728f0d3b92462e44fdad3a46e08edfaa5d3881b7055739faa828"
+    },
+    {
+      "path": "src/app/region/page.tsx",
+      "sha256": "49d394610120dd9b1672bf77a75dd2e38846b6386b2806e846765216b4c72b61"
+    },
+    {
+      "path": "src/app/rent-tax-credit-2026/Client.tsx",
+      "sha256": "a681b5b1df20885803de440b3237ae5ff36f1af1633c561d98b82005742d8fd5"
+    },
+    {
+      "path": "src/app/rent-tax-credit-2026/page.tsx",
+      "sha256": "f102554db8e8963e043e55484388eed52be4477aad989d445707a8bcfa6544ff"
+    },
+    {
+      "path": "src/app/report/layout.tsx",
+      "sha256": "cb2d8491344db1336b968d25aa18c0e36a923d43da2ca0dbf0b9893563506076"
+    },
+    {
+      "path": "src/app/report/page.tsx",
+      "sha256": "29d67353272032fb58e8046a319f98c9327d5b7ece0bbe41d2467b0300b4b3e6"
+    },
+    {
+      "path": "src/app/retirement-pension-2026/page.tsx",
+      "sha256": "ab474ff2bac4ce70cc7cad797bcf30b17aee2b5664d0dcf13a8119dca233f63e"
+    },
+    {
+      "path": "src/app/robots.ts",
+      "sha256": "509fc01ea743eb4609b8d6f0426f6438fde1d92166b541f6bf3b1c317a57318a"
+    },
+    {
+      "path": "src/app/rss-companies.xml/route.ts",
+      "sha256": "cfe6813b101714d6a85b9a8026356e0e45521c4adf0767e1c4c73b25af97d7d8"
+    },
+    {
+      "path": "src/app/rss.xml/route.ts",
+      "sha256": "dd7ba006a6c3e13394dffe3a20e6ce6ffd5d796f907e2312c1805214183c43c2"
+    },
+    {
+      "path": "src/app/salary-db/[id]/CompanyDetailClient.tsx",
+      "sha256": "9b850ca2aa3da2ff34e1d23c944494fa9324f5b0344f3507d0e90ddaf1db296a"
+    },
+    {
+      "path": "src/app/salary-db/[id]/page.tsx",
+      "sha256": "d12e5eb2ece1a72be80decbc5dea333a7ffe81f7ffb1215da728e3eda797acd4"
+    },
+    {
+      "path": "src/app/salary-db/[id]/SalaryRoadmapChart.tsx",
+      "sha256": "709693d1f35eb992881324c00b4ffaac8c2bd88de9c505d8283a7622affbb5a8"
+    },
+    {
+      "path": "src/app/salary-db/[id]/SamsungCompanySummary.test.ts",
+      "sha256": "a7a13ad040ce07412ca5278a4df204c7a9345182b74b31766bd3d4dd13be0618"
+    },
+    {
+      "path": "src/app/salary-db/[id]/SamsungCompanySummary.tsx",
+      "sha256": "491ddd53f97f8e4eac081c608006d63c7121b116ab1a8ea28d7248ed1c9b6530"
+    },
+    {
+      "path": "src/app/salary-db/[id]/SamsungCompanySummaryLinks.tsx",
+      "sha256": "30afc4959b319a1f2c3a7e5df38bd9fa72e4346f3fef15d7b7dc4bb5357a8aad"
+    },
+    {
+      "path": "src/app/salary-db/compare/[slug]/page.tsx",
+      "sha256": "9e2c93ad5f521594aea94913aa1e72498de1d9c14aa441c08f104f55c0f73349"
+    },
+    {
+      "path": "src/app/salary-db/layout.tsx",
+      "sha256": "ace8fdf28fdc2642bc88bf28780d003c13bc8188d663b011ef6ca223441d8548"
+    },
+    {
+      "path": "src/app/salary-db/listed/[stockCode]/page.tsx",
+      "sha256": "bed972d6f41c6c284bc6302da51ef0533bd566e5fe582c8115583d8b6329b6de"
+    },
+    {
+      "path": "src/app/salary-db/listed/industry/[industryId]/page.tsx",
+      "sha256": "31cfcbba9e3b2f12794e5b87979941aee2426a33f6221c511bbdb3699e6429d2"
+    },
+    {
+      "path": "src/app/salary-db/listed/MetricRankingView.tsx",
+      "sha256": "7d3fb7dba09a8a6151302dced83dc7873bfa5ceac7aa595feb4fd18625926e93"
+    },
+    {
+      "path": "src/app/salary-db/listed/page.tsx",
+      "sha256": "ae35a21ba8980142d8a2e6590b26430c738b3bf827a98c06282fef7a7d4c9b3b"
+    },
+    {
+      "path": "src/app/salary-db/listed/top-employees/page.tsx",
+      "sha256": "65389228eca0aae1a26e92520f9ca4ef1502f88b0f8d181251b4f759eb8096fb"
+    },
+    {
+      "path": "src/app/salary-db/listed/top-raise/page.tsx",
+      "sha256": "ae6507db82d68f187d9622269b9d08f4b289321a2198a10ff74cf27fe0c27b4a"
+    },
+    {
+      "path": "src/app/salary-db/listed/top-tenure/page.tsx",
+      "sha256": "f05fbfafb48abf19e4518ae6e1161994ff3ff5e28175b932b9589cf86b1ec865"
+    },
+    {
+      "path": "src/app/salary-db/page.tsx",
+      "sha256": "74cad65b081baebcb6837723765615070c2f54b48c243fe22adff2e900ebee9a"
+    },
+    {
+      "path": "src/app/salary-db/ranking/page.tsx",
+      "sha256": "eb7ad499e7439a6fc293439236959ad698ce4366b8231513c29679320e4176b7"
+    },
+    {
+      "path": "src/app/salary-db/SalaryDbClient.tsx",
+      "sha256": "9f2be82590aa43ca2ef6cfa8bb4ed983e84b6007501206ee309bd98d6c7fcf5a"
+    },
+    {
+      "path": "src/app/salary-raise-2026/Client.tsx",
+      "sha256": "f327402a54b6c8e2865665795e4a1d94eb78775416e7447ba840eac4a305f426"
+    },
+    {
+      "path": "src/app/salary-raise-2026/page.tsx",
+      "sha256": "8d46f2f328837f02a0825e06ceba2585ea3c6eaa28b6b7e22e7daaa22272a378"
+    },
+    {
+      "path": "src/app/salary/[amount]/page.tsx",
+      "sha256": "9feb62461b299b91e9c17f136c0c0b0fad8a24b7f6935d6b82548e73773fd049"
+    },
+    {
+      "path": "src/app/samsung-negotiation-2026/page.tsx",
+      "sha256": "087a8f5bbe0ba29c055bf647f442eaf299f37c082e7108bfd335db1c1dd8b310"
+    },
+    {
+      "path": "src/app/savings-interest-2026/page.tsx",
+      "sha256": "d0f8fe7557a5451df9c8f5690923794e6aa579592bf3cbb4397e9caf85d7530f"
+    },
+    {
+      "path": "src/app/savings-interest-2026/SavingsInterestClient.tsx",
+      "sha256": "a25df39314465f281eeb003bb5bfff8fd088df9d3f72033c9b0e5050c46adcc6"
+    },
+    {
+      "path": "src/app/share/[data]/page.tsx",
+      "sha256": "22288ea276239379f52ee0802ab3ee97834c19b5c34a683dd82aa97a03da5032"
+    },
+    {
+      "path": "src/app/sitemap.ts",
+      "sha256": "79b776126a9220111ff3837670c1cdded46dc4c43b8f1588664eb40830549de7"
+    },
+    {
+      "path": "src/app/social-insurance-rates-2026/page.tsx",
+      "sha256": "c49dbbdefd9708fc13225562ff9fc3a5754b82dc5edc62f9572bbf03644071db"
+    },
+    {
+      "path": "src/app/social-insurance-rates-2027/page.tsx",
+      "sha256": "5af8c57f99c1c2752168cbef86c7928f2f283ce86a7497e4b9cbff58884e5f62"
+    },
+    {
+      "path": "src/app/table/2026/annual/page.tsx",
+      "sha256": "dceaa580215dd39d52338ad3b3fb3a2909727c91fa8139eadfb9fceca39219b1"
+    },
+    {
+      "path": "src/app/table/2026/hourly/HourlyTableInteractive.tsx",
+      "sha256": "80e802d5b784acd5ff32c5901779288eb6964552acb5eaf859120f116a6388bd"
+    },
+    {
+      "path": "src/app/table/2026/hourly/page.tsx",
+      "sha256": "14e5d2ec97955d8492849466d2e1f1a586d0e19f5fce10de198206a9284a362a"
+    },
+    {
+      "path": "src/app/table/2026/layout.tsx",
+      "sha256": "5e51552d19a8b02ee9b019c2c1f0d711509a2b01f05c38cc15e9a9b1ce689c9c"
+    },
+    {
+      "path": "src/app/table/2026/monthly/page.tsx",
+      "sha256": "c7c8b0e4504b9e3f0b1c2b2c863d365138f5bb022a1411b3bc2c8e9a9b53100d"
+    },
+    {
+      "path": "src/app/table/2026/SeasonalLinks.tsx",
+      "sha256": "0a559e0313469bea59f52ec24d248e96183a1c021a8b4188553b038f863a9b5d"
+    },
+    {
+      "path": "src/app/table/2026/TableTabsNav.tsx",
+      "sha256": "8461ad3dc7e68d74aa1900f37c67f5d58b69aa0126938c1a587859f6ce8ed0cd"
+    },
+    {
+      "path": "src/app/table/2026/weekly/page.tsx",
+      "sha256": "857e5a914d50b67c3bbfec78e5550df13d8a8a29d6eaa8d895bc4132ea0ab8f8"
+    },
+    {
+      "path": "src/app/table/2026/weekly/WeeklyTableInteractive.tsx",
+      "sha256": "c96ced29efa47298a2df44361df96bafc0fabd075cb331bd2437dc96cb85d105"
+    },
+    {
+      "path": "src/app/table/2027/annual/page.tsx",
+      "sha256": "93d8df6b7f4c2061420e2c5ef8183defbea6fe72804f1a7e7e3c67b409b1aa15"
+    },
+    {
+      "path": "src/app/table/2027/hourly/HourlyTableInteractive.tsx",
+      "sha256": "0a8d7c6674c5434e10ac650300d6eb37bf0739d8e90372978caed0f63f34023c"
+    },
+    {
+      "path": "src/app/table/2027/hourly/page.tsx",
+      "sha256": "e4a8b5a0e7f5d621ddf66232480e0e2fe5a3c5dc75f64ed6d4ad265dcf29912f"
+    },
+    {
+      "path": "src/app/table/2027/layout.tsx",
+      "sha256": "6328184834f00db30b508b102ef1198b1f1b257a1427829870b0385d6982e5be"
+    },
+    {
+      "path": "src/app/table/2027/monthly/page.tsx",
+      "sha256": "f29a032d340ba9423aaaccfa4fb097b76c690b01b735e4f625edb4319d8dc5c2"
+    },
+    {
+      "path": "src/app/table/2027/TableTabsNav.tsx",
+      "sha256": "41a568bc0dcb79d646407e8ee4238da5acc3b6e39852038566e60acdf5d349ff"
+    },
+    {
+      "path": "src/app/table/2027/weekly/page.tsx",
+      "sha256": "1ca4ffd8c917a5e5a00de587a0bc84247dc6c643780d21bab5c9d597915e6bfd"
+    },
+    {
+      "path": "src/app/table/2027/weekly/WeeklyTableInteractive.tsx",
+      "sha256": "328704d75560fdd2da00a4efb1caa82e3f3bec4736f9a36f8d07104a0638de8b"
+    },
+    {
+      "path": "src/app/tax-changes-2026/page.tsx",
+      "sha256": "d9d6b2b5de4e93fce188cf34233bfb07a480b3c1f723b8e59955c9e93897ac78"
+    },
+    {
+      "path": "src/app/tax-rates-2026/page.tsx",
+      "sha256": "20b157fa6fb2d77d3e792fa481fad838e44337a29baa4dd4df529836a1435137"
+    },
+    {
+      "path": "src/app/tax-reform-2026/page.tsx",
+      "sha256": "65c8f56063b4816086078765ad358a319efd1edf624b6b15f3f3ae4093458e33"
+    },
+    {
+      "path": "src/app/teacher-pay-2026/page.tsx",
+      "sha256": "bd65c57e765bea953916b6801704eb7c5570a29bb59beb48d7a2b4b152be5125"
+    },
+    {
+      "path": "src/app/template.tsx",
+      "sha256": "2b44e74704cf5ce98af34b0323e3983b0069db941b967aff8dba37407b831f5e"
+    },
+    {
+      "path": "src/app/terms/page.tsx",
+      "sha256": "12c63a21a5b4a51611379b041322684c7456c6f66deaf05cf14b102e5815d711"
+    },
+    {
+      "path": "src/app/tips/page.tsx",
+      "sha256": "a0eb0fadb41a015adbf82b7369929b5fc6493be8319e9a0ac4c6560f39de1530"
+    },
+    {
+      "path": "src/app/tools/date/age/page.tsx",
+      "sha256": "0181b8c3f5a4cf0e0cf93445938df9866563d1d58faefdabc59d6a2ac5c95f1d"
+    },
+    {
+      "path": "src/app/tools/date/d-day/page.tsx",
+      "sha256": "07a8407fe0b9c797f3d0fef84c8d98251d1c8cb2b496231b4d6b4e511c58b2cf"
+    },
+    {
+      "path": "src/app/tools/date/work-days/page.tsx",
+      "sha256": "08499595af9a9acd86cf052a8c57ea1837ae1c350b9265cde8bab0c8d9e66836"
+    },
+    {
+      "path": "src/app/tools/deposit/page.tsx",
+      "sha256": "49f595258d4bd7fe45ea6b9d08872565983895053442b41e5e2db4e76f26d79f"
+    },
+    {
+      "path": "src/app/tools/finance/bonus/layout.tsx",
+      "sha256": "303750eeffb2eaec08e60a02ac3805e5d34a4543481ef8b62b7433c07c11d270"
+    },
+    {
+      "path": "src/app/tools/finance/bonus/page.tsx",
+      "sha256": "42846b44f15bbd32ede054a41187219bc46b42bd62427859ea150f3dc5c17548"
+    },
+    {
+      "path": "src/app/tools/finance/cagr/page.tsx",
+      "sha256": "9e92fbd80d343b6e75751e1ed74b6159b3353dca0544604854b8598383c15af9"
+    },
+    {
+      "path": "src/app/tools/finance/compound/layout.tsx",
+      "sha256": "a42f72fa2fb98ebdebec71f250bb7818aee8a9febf9a70fab2b8563f9d199581"
+    },
+    {
+      "path": "src/app/tools/finance/compound/page.tsx",
+      "sha256": "8dcdabfefda5be5a0f36b48063c7551ce931765e0886ea0d99f37cf08181e9e3"
+    },
+    {
+      "path": "src/app/tools/finance/dividend-tax/layout.tsx",
+      "sha256": "114bf6f883e97fab48c9c8dce64508186419fb35762fbf837a782b6978f550a3"
+    },
+    {
+      "path": "src/app/tools/finance/dividend-tax/page.tsx",
+      "sha256": "4464a3e5c3474d496b781c514710fbccdae2eadabcf945245d269be7d95c69f2"
+    },
+    {
+      "path": "src/app/tools/finance/freelance-tax/layout.tsx",
+      "sha256": "b4a8281b45d8cd83158db0876c49090ae67d87733831f49c4a1e5cb4e4ece0b8"
+    },
+    {
+      "path": "src/app/tools/finance/freelance-tax/page.tsx",
+      "sha256": "c1630c421830d2ee484a1916ca4705148b3d2cd019c5deb950a8809b26d0ee46"
+    },
+    {
+      "path": "src/app/tools/finance/installment/layout.tsx",
+      "sha256": "f87abb6499d326dc0f311550b71b0f14fa2a233597744fba95a5ec5aa4c2463a"
+    },
+    {
+      "path": "src/app/tools/finance/installment/page.tsx",
+      "sha256": "cf4df45ca3c66b13dacd41066d52177bd337c5d0061a31656c100028c2b2a07f"
+    },
+    {
+      "path": "src/app/tools/finance/irp/IRPCalculatorClient.tsx",
+      "sha256": "e146c1bc0c4c1b09455db665c56d8e84692abf3d250b18b6246c6a1d85aefcce"
+    },
+    {
+      "path": "src/app/tools/finance/irp/page.tsx",
+      "sha256": "6bcef6a44cd85f3527dbd5e0f0054d8711e95a39bbb7cf61cc240205660f92a1"
+    },
+    {
+      "path": "src/app/tools/finance/page.tsx",
+      "sha256": "7d2fdbf3942bc64c975dbbe6a41165b7c0587386c4858b8f37399ebfc0489382"
+    },
+    {
+      "path": "src/app/tools/finance/severance/layout.tsx",
+      "sha256": "e49c1800a3004b35793395bb5202bb67c00b1fc3582762ffd00096c8d56b20e4"
+    },
+    {
+      "path": "src/app/tools/finance/severance/page.tsx",
+      "sha256": "09ccef3277433848689e753fcc84156c99b2cac510668673acfa5aa98e9ef295"
+    },
+    {
+      "path": "src/app/tools/finance/stock-tax/layout.tsx",
+      "sha256": "744ce7d701cc17c625466b410795c1aecd65860412a4b9a676775238d6f985e3"
+    },
+    {
+      "path": "src/app/tools/finance/stock-tax/page.tsx",
+      "sha256": "1cbea0d345c2ffec6c14fdc922ef3abae65026723665f11d01460f8bb623ad51"
+    },
+    {
+      "path": "src/app/tools/finance/vat/page.tsx",
+      "sha256": "4d1651c7002a32d4456aa5b57815eeb9b2dba25f2f0fa9adeaebe3778e352d47"
+    },
+    {
+      "path": "src/app/tools/health/bmi/page.tsx",
+      "sha256": "a25f85432757e9bb83b99bfe5075e7234ed0d8471bdc48a227c995f36af5c525"
+    },
+    {
+      "path": "src/app/tools/layout.tsx",
+      "sha256": "588a5313528124406c5dbe017fd1df27aeadc3fd89277ee8bf53929304c9c977"
+    },
+    {
+      "path": "src/app/tools/life/dutch-pay/page.tsx",
+      "sha256": "e36fdbfaedf2591245b50fa37b9b8935fce612f154ed07a8dc6d4b2a234e47e1"
+    },
+    {
+      "path": "src/app/tools/life/fuel-cost/page.tsx",
+      "sha256": "8e597e8e318d96d195c1b3947b390387f460ae6087155a94ed5af906788ace58"
+    },
+    {
+      "path": "src/app/tools/life/page.tsx",
+      "sha256": "6e0fd73991c6449d7f7f5cdf6242200a0955b7c9876fcabcc46427017a8641b6"
+    },
+    {
+      "path": "src/app/tools/life/subscription/page.tsx",
+      "sha256": "7b78a973edc461b3f9419077cf4b3131053cda087d7c1ebc8aca21df65b1edd9"
+    },
+    {
+      "path": "src/app/tools/life/subscription/SubscriptionCalcClient.tsx",
+      "sha256": "7a0784d53592612298a4ca4258a59ebeebe74cd4024b51b7f351433be5f2d2f1"
+    },
+    {
+      "path": "src/app/tools/life/unit-converter/page.tsx",
+      "sha256": "1a0b968982ffd47195059d01ed0b9d33e5c9b1526a3dbe8c3dbd67330ea6cade"
+    },
+    {
+      "path": "src/app/tools/loan/page.tsx",
+      "sha256": "06a6fb9f83dbc4b6bba9dec33d25072d8a97a90c85e010a95609f467d8639e0d"
+    },
+    {
+      "path": "src/app/tools/math/number-gen/page.tsx",
+      "sha256": "cb20e83b0f17f5c8ec7259ad41091d71209b8016406d8c2afc9ca2e3655f5402"
+    },
+    {
+      "path": "src/app/tools/math/page.tsx",
+      "sha256": "e2af93d67cc984f121f3ca4c7e189ae51f6619b9fe41ab529d791cdcb1f41d52"
+    },
+    {
+      "path": "src/app/tools/math/percent/page.tsx",
+      "sha256": "6ec9cb1bacb68a6eb99cbbbd25fe8a4541db55fe7d32f029cba7f6a2bea58fbc"
+    },
+    {
+      "path": "src/app/tools/page.tsx",
+      "sha256": "b86ce05d1a6e07d2befd18e7d514adae5d4d7f0a2254aa5491a464f276c40ed4"
+    },
+    {
+      "path": "src/app/tools/real-estate/acquisition-tax/layout.tsx",
+      "sha256": "3ba317704bee6d2a3b25dd23c3edfe3017757689111b3b149549cb62df7d0163"
+    },
+    {
+      "path": "src/app/tools/real-estate/acquisition-tax/page.tsx",
+      "sha256": "a76a005be1f6dc77e2cc16bc75e2e9ff7740b88bdeb064ccc2d2db1eb4a77ec6"
+    },
+    {
+      "path": "src/app/tools/real-estate/dsr/page.tsx",
+      "sha256": "fc774e81a2a5b971b62377ca60f7d1891177a1e3dd73ed19a3ce5cccb56530e7"
+    },
+    {
+      "path": "src/app/tools/real-estate/gift-tax/layout.tsx",
+      "sha256": "9daedec3e73794f2f1d8580032bc2e0eb709a82c648f2b4def719739e54f1056"
+    },
+    {
+      "path": "src/app/tools/real-estate/gift-tax/page.tsx",
+      "sha256": "9b4d07dd1692920cd71ba3bebb6f333d827c6e33dbc111a6c6c1358e1ea4a415"
+    },
+    {
+      "path": "src/app/tools/real-estate/ltv/page.tsx",
+      "sha256": "166e282f8a8e07a0ef9717f55d825f596d355f23e464d16dba318d7545dd28eb"
+    },
+    {
+      "path": "src/app/tools/real-estate/page.tsx",
+      "sha256": "0827076c9addb3106b42d10590220607c3cd0d3f1421b3b01dc486e5d0e6703f"
+    },
+    {
+      "path": "src/app/types.ts",
+      "sha256": "ef626572505381a621207d9b7cad6d65386bcf724ddb08db516aa0b4d8509855"
+    },
+    {
+      "path": "src/app/unemployment-benefit/faq.ts",
+      "sha256": "1df61594b029114c5de684caf5f6420bcb9ebf00ee347ba1091f58b627b0ec86"
+    },
+    {
+      "path": "src/app/unemployment-benefit/page.tsx",
+      "sha256": "6cb0072848ce9f3478b537314f0711cdb79d5c0287be5bb05725c6766e448d4f"
+    },
+    {
+      "path": "src/app/unemployment-benefit/UnemploymentBenefitContent.tsx",
+      "sha256": "857a7d60466cec51dd72c0a71e0c5fe918e4b5a5a35926ca0a6932a62795b6b3"
+    },
+    {
+      "path": "src/app/weekly-holiday-allowance-2026/page.tsx",
+      "sha256": "3f50f42c4e5cfb7ad69fcdd88842d7e71601dd2416e4161bbafae00fb4ca44b9"
+    },
+    {
+      "path": "src/app/weekly-holiday-allowance-2026/WeeklyHolidayAllowanceClient.tsx",
+      "sha256": "d63976beb01b83322ad25bcdf92d5c8d743fcbd2d22cc1f3a3c8031a265f00d8"
+    },
+    {
+      "path": "src/app/widget/__tests__/inputValidation.test.ts",
+      "sha256": "c130a8256793410ae033d7129733774859fe2c1995adc530aaf997e714197c1d"
+    },
+    {
+      "path": "src/app/widget/__tests__/workerCompatibility.test.ts",
+      "sha256": "871f036f2e92aa43a3a0acc30713e2d5add12a9543751af1e9634de13592d4e2"
+    },
+    {
+      "path": "src/app/widget/bonus/route.ts",
+      "sha256": "76a01f70489c4d9216261adb7c4abbef3738febaa45b7e22289170681bc83855"
+    },
+    {
+      "path": "src/app/widget/company/route.ts",
+      "sha256": "cb23402bcfa9d801bef39e56feb4d7cbafdcd6394e459cf99c8a26e59a89f8c8"
+    },
+    {
+      "path": "src/app/widget/dsr/route.ts",
+      "sha256": "f55e1ea382c679965eee26c413f7c5e65bdca18244519e64656fea3a7db859ea"
+    },
+    {
+      "path": "src/app/widget/military-pay/route.ts",
+      "sha256": "b491ed70ac04d00b2e05dbc17b7fd018177c1c4bcda94f01d2c8fc32fbe259d7"
+    },
+    {
+      "path": "src/app/widget/minimum-wage/route.ts",
+      "sha256": "98d1ffbaca0d2ccc42479cebd54088720898486923a285bedec40dc15f9cc929"
+    },
+    {
+      "path": "src/app/widget/salary/route.ts",
+      "sha256": "4506a2d95c76f4523d6d67ae9eedf834ecc86a53498e17d5865e9a88457b8f72"
+    },
+    {
+      "path": "src/app/widget/severance/route.ts",
+      "sha256": "9dc43af3e3fc4beb06ecd76025e7cc1a38790b6c2fafe5403885f1bb37d36907"
+    },
+    {
+      "path": "src/app/widget/shared.ts",
+      "sha256": "166d073f27d309576754d0e8dce117408f1f065bbd722671220445d07783eb35"
+    },
+    {
+      "path": "src/app/widget/year-end-tax/route.ts",
+      "sha256": "40fcadd7aaeaa613a51790498d64c75229e559c9fe1800d629c618a753405dff"
+    },
+    {
+      "path": "src/app/work-clock/HolidayPayEstimate.tsx",
+      "sha256": "f232caf95a171724836510931e49bdeef88fd58f8f48178ebbbb48993b5b9435"
+    },
+    {
+      "path": "src/app/work-clock/page.tsx",
+      "sha256": "6bd742b3b976adc5d9d6d1efe99f4d866f76dbedd4037fcb040346fc3a3fd64f"
+    },
+    {
+      "path": "src/app/work-clock/work-clock.module.css",
+      "sha256": "595d64ec0d36e18bba7072bd54d9a433d4c729411f3f68fb0b90e752402849f3"
+    },
+    {
+      "path": "src/app/work-clock/WorkCalendar.tsx",
+      "sha256": "6639b2cba3f9c2917fe36a80115c2525b049c8ba67020b7f391a6063c25e6f69"
+    },
+    {
+      "path": "src/app/work-clock/WorkClockClient.tsx",
+      "sha256": "87f995b76719eb2ca51616df8b5d75541e9e54356c68ba41309febe25909859c"
+    },
+    {
+      "path": "src/app/work-clock/workClockExtras.ts",
+      "sha256": "4949698b683d414fbc48a2d961d2908a5c23555fa0af2c8981b2c995710c77f5"
+    },
+    {
+      "path": "src/app/year-end-tax-2026/page.tsx",
+      "sha256": "fb7735f66dc79fa33059968efb17a8e9c4a31cfac9fb87fd66be780f87893620"
+    },
+    {
+      "path": "src/app/year-end-tax-2027/page.tsx",
+      "sha256": "7f281ad6640206514d8a729669a10a5e1c8997b4c6def0dec6ab3c073b8ed6d4"
+    },
+    {
+      "path": "src/app/year-end-tax-checklist/page.tsx",
+      "sha256": "04d7d2e02f0a635584f11d690bfc9ac7ea5b44d9cdc6c6d047001a40cc260ed7"
+    },
+    {
+      "path": "src/app/year-end-tax-mid-resign/page.tsx",
+      "sha256": "ac4a31c737ba8f5ebe9c0a156f7fedf273079474830df8b70bef74f34558e3bd"
+    },
+    {
+      "path": "src/app/year-end-tax-preview/page.tsx",
+      "sha256": "ca06e5afa2d286afd167d63149485b2393241fa1c154c02e22bb7023e05dfe88"
+    },
+    {
+      "path": "src/app/year-end-tax-settlement-2026/page.tsx",
+      "sha256": "f09567be4633970245192d7eac631ffb58495a87cfe427c4a547b75d3a607bf4"
+    },
+    {
+      "path": "src/app/year-end-tax/page.tsx",
+      "sha256": "d8d1a0cff8899f2c93fa882161108d7aa6a6d74903081cc8b74e00b745703bca"
+    },
+    {
+      "path": "src/components/AdPlacement.tsx",
+      "sha256": "a775d2c9b960c0f9c34991a0269d090e19bfe2b1db239d488a4c61308e92fbdc"
+    },
+    {
+      "path": "src/components/AdSenseScript.tsx",
+      "sha256": "4303cf05719bb0ba9be570965ef856c4921d33dc3ad5de80ba16090201e6bce7"
+    },
+    {
+      "path": "src/components/affiliate/AffiliateSlot.tsx",
+      "sha256": "d4db53b93e71d191f2a4d8aaab53cbee55483fd9b5b26acaea2f2a72b4dd06ac"
+    },
+    {
+      "path": "src/components/affiliate/CoupangBannerCore.tsx",
+      "sha256": "3102088fd5e6c7b85dec457467b746e4d85551bf8393eb7141e4e2472724e1af"
+    },
+    {
+      "path": "src/components/AnimatedNumber.tsx",
+      "sha256": "aceba78499deddb995a67473d5252b0b9cff9cf47553820fba98d3c32a6b359e"
+    },
+    {
+      "path": "src/components/AppLink.tsx",
+      "sha256": "a2955d135325be28334c730718baeddf9c395e5b6f64709f893f186e186c37a8"
+    },
+    {
+      "path": "src/components/AutoAdsSeenTracker.tsx",
+      "sha256": "abf70acf990262456cd674a52c90659a51c720fea689a5909395e2f4d0a1dba9"
+    },
+    {
+      "path": "src/components/AutoBreadcrumb.tsx",
+      "sha256": "ac8b75233d1d6e3cbea5f8fb67534d0022b5c3a4340c32d29cd0e3b88c0028f0"
+    },
+    {
+      "path": "src/components/AutoShareSection.tsx",
+      "sha256": "ca45055fb18e3d3013273520bea2c3fdecfe690a140deb6ec857efa6e71d3b90"
+    },
+    {
+      "path": "src/components/BonusClusterLinks.tsx",
+      "sha256": "4e38f2fb304b8abd1866415e3fd91b1232e720f364aeee5a07c6b05d9b86a987"
+    },
+    {
+      "path": "src/components/BonusNextLinks.tsx",
+      "sha256": "95f3c3cb6c3e6ad33e65bd42afeb3357c0211fca39ad8bab44cdbb9b7d49679f"
+    },
+    {
+      "path": "src/components/BottomSheet.tsx",
+      "sha256": "20f496d1fa43111b873cf227bd3ce0807ed30e7982843ef14ce63c16b94d76a6"
+    },
+    {
+      "path": "src/components/BoxingGame.tsx",
+      "sha256": "5b1ae3ab30aa7350d0cb2ab759052d2cec5cd4fe4f6bd78678b148a003615ed7"
+    },
+    {
+      "path": "src/components/Breadcrumbs.tsx",
+      "sha256": "84cea670f7e00f1bd9b5a3b020ae5a010a2075085cbf87c1d86ddca5ba6e9b23"
+    },
+    {
+      "path": "src/components/CalcFunnelTracker.tsx",
+      "sha256": "cfe50fc39745cb4bf0e742c6ea1386f836dadb1c6e93cd9660ad6be686243d28"
+    },
+    {
+      "path": "src/components/CalcNewsNote.tsx",
+      "sha256": "e5aca0d3baf6dd84c9b63d99f3e5432adab9bfefef68d14af6d70727cbaf30cf"
+    },
+    {
+      "path": "src/components/calculators/date/DateCalculators.tsx",
+      "sha256": "6ccb722390f70e9a15ef1dcec02cc49505300ef7e24ebd557241bc11396036e2"
+    },
+    {
+      "path": "src/components/calculators/DepositCalculator.tsx",
+      "sha256": "ac07e7f064360e749adce8c8c9624544ef55573db953b951a11a31da2fd0bfb2"
+    },
+    {
+      "path": "src/components/calculators/finance/CagrCalculator.tsx",
+      "sha256": "77135d5bab434b3890087485e43a6db0cf58cdd0fb2fc5e8e42e4bb877673f54"
+    },
+    {
+      "path": "src/components/calculators/finance/VatCalculator.tsx",
+      "sha256": "b70bb26c0c49b30e874926aea23b7cf06b398aa4e16ddd93a60e2d186d8d1ba8"
+    },
+    {
+      "path": "src/components/calculators/health/BmiCalculator.tsx",
+      "sha256": "a25b987c1cf1b672166da3836f7e70adf866044a71c406b6f43a02dcf973816a"
+    },
+    {
+      "path": "src/components/calculators/life/LifeCalculators.tsx",
+      "sha256": "a514cc7dc6f156d2377fffcefdf16cce42da47bfccf936af92569fcb5ce9d54c"
+    },
+    {
+      "path": "src/components/calculators/LoanCalculator.tsx",
+      "sha256": "41fa2153ab419531e780b0f1508920a7df9a30743c36a4610e71e858b16995b5"
+    },
+    {
+      "path": "src/components/calculators/math/MathCalculators.tsx",
+      "sha256": "7bcf6283132a39f541d4f185dfdb2524408f1fdb2d3c0991a68520936a595345"
+    },
+    {
+      "path": "src/components/calculators/MathCalculators.tsx",
+      "sha256": "273f409d0e9800cdb846d6b09fbb329283d4e06811f510e62b7be85c2ebe92a1"
+    },
+    {
+      "path": "src/components/calculators/real-estate/DsrCalculator.tsx",
+      "sha256": "97c1783d25725bb086c15f38f4ec834c7b4808c8eea41b0fcda3adc4b6e1018b"
+    },
+    {
+      "path": "src/components/calculators/real-estate/LtvCalculator.tsx",
+      "sha256": "6c92b9fcfe269e8fd3cb306ebabe1a52f487c7fa26c7ba3ea5ae27984178c3b2"
+    },
+    {
+      "path": "src/components/calculators/SalaryRankCalculator.tsx",
+      "sha256": "dc94dd14ffa0ee1995dc9989dd1b522e512e991a64431e45c69c9119399f60e6"
+    },
+    {
+      "path": "src/components/CalculatorTabs.tsx",
+      "sha256": "56b8dc706d3043ef962d72ff506891916ae07b102a303967c668591d899a7066"
+    },
+    {
+      "path": "src/components/CareerVisuals.tsx",
+      "sha256": "8a8d1d179d187373f81361567c2d22c96b09ac4c89810f81490b5a87be153761"
+    },
+    {
+      "path": "src/components/charts/DeductionBarChart.tsx",
+      "sha256": "d5cc403863333a69df7a3852a7b123d9bbf383f5283b58b4d5219bfd1a5f6222"
+    },
+    {
+      "path": "src/components/charts/GlobalChart.tsx",
+      "sha256": "e71e526e06fb7a0b9a017cae358d180ffe8acaed27d37506afd15980dcb83590"
+    },
+    {
+      "path": "src/components/charts/InsightEntrySalaryChart.tsx",
+      "sha256": "069cb239705c1a1995b7e2959591fdd94b1c4f092f20c031ac40697f84a1a22b"
+    },
+    {
+      "path": "src/components/charts/LoanChart.tsx",
+      "sha256": "bdb077292bc6832fc8bcff5c4c336c0a17060b9cb2a6e928dc153371a5651eb7"
+    },
+    {
+      "path": "src/components/charts/MbtiSalaryChart.tsx",
+      "sha256": "ee95be798ec9bbe61f9b2b60e0841ae46b89a3c48d8f7faf0e508425f6523bb0"
+    },
+    {
+      "path": "src/components/charts/MemeCoinChart.tsx",
+      "sha256": "60ba7bee56bcd791a681b7870e23069b076c4fc2a1547be2f3abbc4a37e4f279"
+    },
+    {
+      "path": "src/components/charts/RankChart.tsx",
+      "sha256": "7c38853f0172fb3064d9f3bd427a05bd477c095a021d42ad10d08e10f68fdfd0"
+    },
+    {
+      "path": "src/components/charts/ReportCharts.tsx",
+      "sha256": "62956502240575ab43f5466f9b48e0d4ca97961775680187b3fb0020fafccf1c"
+    },
+    {
+      "path": "src/components/charts/SalaryBattleRadar.tsx",
+      "sha256": "2825e24c25b3ba3c377f7f06ec7060f036ee2f1ff334d14718823a60006ae559"
+    },
+    {
+      "path": "src/components/charts/SalaryConverterChart.tsx",
+      "sha256": "0a04ea552370ceb24223b91709cb4e82ad263f19c7c7b6349af817a04076cd94"
+    },
+    {
+      "path": "src/components/charts/SimulatorChart.tsx",
+      "sha256": "22f5634ce34611a20cf62c5d1d3dfc6cd81761de77a77a3dc369d0cbab0893f2"
+    },
+    {
+      "path": "src/components/CitationCopyButton.tsx",
+      "sha256": "db3439acd9d3f1ab013086a709882790497b0752f8863ce4da7c4192861ac8f7"
+    },
+    {
+      "path": "src/components/CompanyBonusCalculatorLink.tsx",
+      "sha256": "0e95d338bc9f60261be333447cbb826417e534b24c70eeefec3cef97d32736d0"
+    },
+    {
+      "path": "src/components/CompanyCareerLevels.tsx",
+      "sha256": "91f6f1e5b6bfb45d7b02a5a080efa1947cca202fc066b10dbaa8c5e3ea6e0a75"
+    },
+    {
+      "path": "src/components/CompanyConnections.tsx",
+      "sha256": "0aa117d85ef0163a1aef428344ff9e205659e2705253d360dfe48a4c73d26b9e"
+    },
+    {
+      "path": "src/components/CompanyDisclosedSalary.tsx",
+      "sha256": "c23df538c7884463f9e84e295b640b7bb9145ea787c206ef1220c4b1e6837c89"
+    },
+    {
+      "path": "src/components/CompanyFaq.tsx",
+      "sha256": "2a794f0afceae0d864aa91663ebb495ec521cca065c25f6da6741c4d2af3fd08"
+    },
+    {
+      "path": "src/components/CompanyIndustryRank.tsx",
+      "sha256": "869207ffbaf92686ae792d416a0ad901dc4768444e079ce388945c52e5efc4d2"
+    },
+    {
+      "path": "src/components/CompanyInsights.tsx",
+      "sha256": "2b295cb42e0e0310fa6066ec8033f46e61c558db098cd51403a06667a55e5981"
+    },
+    {
+      "path": "src/components/CompanyNarrative.tsx",
+      "sha256": "9adec591c0097ee1b4da5dc2766c543a31a9d66f4f68a548c29c87b725ecc60b"
+    },
+    {
+      "path": "src/components/CompanyRelatedJobs.tsx",
+      "sha256": "063fe392535da60fa84a9e453994cc4e4af42db66f8fb979ca44e4522cf2c10f"
+    },
+    {
+      "path": "src/components/CompanySalaryGroupNotice.tsx",
+      "sha256": "4ec8b93112cd7d2b6435956db71dd87618f2c29a74732f392af31dfa6e4099de"
+    },
+    {
+      "path": "src/components/CompanySalaryTable.tsx",
+      "sha256": "1b0702be0590b28d7767ca315b338d6859ca8024442750f646466fbf2a1f26af"
+    },
+    {
+      "path": "src/components/CompanyUniqueStats.tsx",
+      "sha256": "43d42e582414b20c5e11eb949b3121dbb3d441079e1a93f7aac1d7a35e711727"
+    },
+    {
+      "path": "src/components/CompareViewTracker.tsx",
+      "sha256": "d96a80d279eedafe41e902e230ca224fadf8b912cb3f474d2bc75964006ae780"
+    },
+    {
+      "path": "src/components/ComparisonResultContent.tsx",
+      "sha256": "047592561823e91e4cda1ac703a1f9231283c12299a6c5d4c3c9f4f5f221796d"
+    },
+    {
+      "path": "src/components/CopyAttribution.tsx",
+      "sha256": "2fe9f3aae4d17c304ce66d5e78729d662de26d826b50fdb9408dc969d9d912f1"
+    },
+    {
+      "path": "src/components/CoupangBanner.tsx",
+      "sha256": "40d566ca1e292a0e861d866f965447e149c60466a7bbaefa36114428a9f22de0"
+    },
+    {
+      "path": "src/components/CurrencyInput.tsx",
+      "sha256": "32bd08d443f727e2da00214cbbb70b10327b0e86415f939968e744891c956476"
+    },
+    {
+      "path": "src/components/CustomBarLabel.tsx",
+      "sha256": "eceb01886208115a4d61a885739e3d34a4391907d41837e5fbdf15f72f2bb7a2"
+    },
+    {
+      "path": "src/components/DashboardFavoritesSection.tsx",
+      "sha256": "e8181daf511c28a89f59d64c57a98cfb8aec40fb0b147fc75edbe91782da5a9a"
+    },
+    {
+      "path": "src/components/DeferredSection.tsx",
+      "sha256": "b03978934cbfe53825867772fa1ed67949326529b70fda8ef84a853127e28b86"
+    },
+    {
+      "path": "src/components/DepositCalculator.tsx",
+      "sha256": "f645a12e538047d7f17173188d8aeff0c1db091e84ce372b2f22adc12f5e9fc9"
+    },
+    {
+      "path": "src/components/DetailedAnalysis.tsx",
+      "sha256": "a1f52e1483727b7f31130c8608d8225ca71312fa9f479c8bd673e46688fb0f19"
+    },
+    {
+      "path": "src/components/english/EnglishHubPage.tsx",
+      "sha256": "c908023e2de8dbb70432897b9491b9083cca6ee71685ff9c1ddbabfacce40876"
+    },
+    {
+      "path": "src/components/english/EnglishPageExtras.tsx",
+      "sha256": "788164d15e9c29603e477d2d60006e28a3204b644232afe6599b38bdcf324802"
+    },
+    {
+      "path": "src/components/english/EnglishPageShell.tsx",
+      "sha256": "c19f28ccf2d87d779f5abd4e7080f5e9f0f7f53883092fe3804bbc00d10d12f2"
+    },
+    {
+      "path": "src/components/english/EnglishResultNextTasks.tsx",
+      "sha256": "f710c168cf20cd36e5ccc1f3b21574c9923383e5c2dbc6c328858f4b855441e4"
+    },
+    {
+      "path": "src/components/english/EnglishTaskLinks.tsx",
+      "sha256": "ee09bfb9415837ca8c4c57916b727d30cc847b0d0f4aab6eda1ce46ebf2456fe"
+    },
+    {
+      "path": "src/components/english/EnglishToolCalculator.tsx",
+      "sha256": "374f75e4d68aa1fa239140e89f42d94a9ee111190b96bba2c9b9463ccb2b7951"
+    },
+    {
+      "path": "src/components/ExchangeRateDisplay.tsx",
+      "sha256": "396bab0cf81a296f0d67f05c03ac4f0df4b6718e3b2ee7a606563e609d4d529f"
+    },
+    {
+      "path": "src/components/FavoritesButton.tsx",
+      "sha256": "691591a79f3086e8ff2ec0edc7067ddfcc836b55dfa94f02890a74f613628968"
+    },
+    {
+      "path": "src/components/FeaturedGuides.tsx",
+      "sha256": "a1ce43030a4ebfa17c62c6c8dab16aaef235a88c08f00279471959d41a968e02"
+    },
+    {
+      "path": "src/components/FinancialKnowledgeArchive.tsx",
+      "sha256": "2895facabd0a9af6db0804a7f319580458552314112575951106bccfed236b77"
+    },
+    {
+      "path": "src/components/FloatingShareBar.tsx",
+      "sha256": "12e959beeb674dd57d627af32c385af832a6f5fec664430d4732b42aa3bd91bc"
+    },
+    {
+      "path": "src/components/Footer.tsx",
+      "sha256": "4613c86dba6886c73450ea30e72b73d55cc09ef00d85f1da520c434b08c5218b"
+    },
+    {
+      "path": "src/components/FreelancerCalculator.tsx",
+      "sha256": "8f5f97b52b86ce4d2290e45b4c9ddbfe4b2333b00749427fc6db22f98cd650eb"
+    },
+    {
+      "path": "src/components/FutureSalaryCalculator.tsx",
+      "sha256": "2d5ffd13f07bac3aef924a4e695b48ae1e2ab76418f7e8839af270c9cbc5466d"
+    },
+    {
+      "path": "src/components/GuideCategories.tsx",
+      "sha256": "3c75fce38be548deb80c20d58c38d9a07ed522431fd09e04bf2d3a0e52e19b8b"
+    },
+    {
+      "path": "src/components/GuideRelatedCalcs.tsx",
+      "sha256": "c5f16563adaebfd6877ebb6c85d988bbf5204704a6a6dfd515a4c452ee9cf7d0"
+    },
+    {
+      "path": "src/components/guides/GuideListingCard.tsx",
+      "sha256": "9ae917174cab6d38d00816f85836eab1b43c2d05344ac9ef41dcbd029c1d9646"
+    },
+    {
+      "path": "src/components/guides/TableOfContents.tsx",
+      "sha256": "bfea75309662f23f7b7a5addb6d02431f560699efa6b4b8090621af46f29eab0"
+    },
+    {
+      "path": "src/components/GuideSupplement.tsx",
+      "sha256": "40cd1dd9ceff48ab9faa82b0b0b01b3affadc795c1d995497cda32415c810a69"
+    },
+    {
+      "path": "src/components/Header.tsx",
+      "sha256": "bed38b43d4649d4c64a8e196e0c9ad7a6b180fd43db174152e91660b0fbd2927"
+    },
+    {
+      "path": "src/components/header/DesktopDropdown.tsx",
+      "sha256": "f400d8ae29a9e70020b71681185a9c8f3ed29bdc226a83b1a256e6111106adac"
+    },
+    {
+      "path": "src/components/header/FavoritesBadge.tsx",
+      "sha256": "d9628b2a3cdc841beb78b214fed2508e49d633e8bae64c7b91459249e1ea0989"
+    },
+    {
+      "path": "src/components/header/HeaderSearch.tsx",
+      "sha256": "3228a9d2be64e13aa4d05d871e637339d5f54888cd65d5233837433fd649ef27"
+    },
+    {
+      "path": "src/components/header/LocaleSwitcher.tsx",
+      "sha256": "692e21e70f2b76a3f287d9447a5b6db13083cee2d69b8213a307338b9782b1c6"
+    },
+    {
+      "path": "src/components/header/MobileDropdown.tsx",
+      "sha256": "a1f82482a125a9220ab3e7d77389528a03e56f015a6c6c39676960612ce6214d"
+    },
+    {
+      "path": "src/components/header/navConfig.ts",
+      "sha256": "9ef4c55947bd2439b41055f60e8734e3d922d7044850caf1b109b891b1d679bb"
+    },
+    {
+      "path": "src/components/header/navConfigEn.ts",
+      "sha256": "d7ea97d3e0d79860b94f13c62f1203858ec9193fe7dd2dfcee213a770de95f09"
+    },
+    {
+      "path": "src/components/header/ThemeToggle.tsx",
+      "sha256": "ff459c3d2f6fa7285c7e0ebadc8acfd6dcf5b02038e8d09bd7a355bd9b4271a7"
+    },
+    {
+      "path": "src/components/HeroBadge.tsx",
+      "sha256": "3a2d0c27235bba68442fdc8e6f3d3f309078c6b60b94b3b94dce333311f7ff0c"
+    },
+    {
+      "path": "src/components/home/DeferredHomeCalculator.tsx",
+      "sha256": "f75e2bbae3b35c1d1e2f61f99f0fa0905d542c85cabe53837e6dbb8d6505932f"
+    },
+    {
+      "path": "src/components/home/home-work-clock.module.css",
+      "sha256": "b2edf7744b4dca6ec706a1061849e707640584e969d743cef3018ec695465d5c"
+    },
+    {
+      "path": "src/components/home/HomeSeoSection.tsx",
+      "sha256": "738b519118fcc858dbd426652c09dcbdff3bedf07a58101b618f15cf3292baca"
+    },
+    {
+      "path": "src/components/home/HomeToolsSection.tsx",
+      "sha256": "d87fd223ab51bde4929e0ee6ecc598303192deb64101ea958cc5552b49a95df1"
+    },
+    {
+      "path": "src/components/home/HomeWorkClockSection.tsx",
+      "sha256": "0b26e6ea5642a895a89d45f0a1076a9489814e877c95701216a37032db6d31b0"
+    },
+    {
+      "path": "src/components/home/ToolCard.tsx",
+      "sha256": "0d72595e6e82f288b0a2d94ca5a67b272929b1590d427215d7283de9677acd52"
+    },
+    {
+      "path": "src/components/home/TrafficEnginesNav.tsx",
+      "sha256": "2e5bac8f85987c9a4e9b474dfd538abf16c3a9a6ad1c889cbfad861a18a01765"
+    },
+    {
+      "path": "src/components/HomeLoanSimulator.tsx",
+      "sha256": "f7e8384b87d320051279380acb83da51d46e5ec15b7670ebe1810fb3ecb891ea"
+    },
+    {
+      "path": "src/components/IdealTypeWorldCup.tsx",
+      "sha256": "15baa2a7a0816fc9f34ead03625c108cb1c6c752e4d0c6e0c22fe8fd2d149a66"
+    },
+    {
+      "path": "src/components/InstallPwaBanner.tsx",
+      "sha256": "8df68125c928d97b1488c32c7214f8daf68372160ebeeeb6f05b934c30e34192"
+    },
+    {
+      "path": "src/components/InteractiveTable.tsx",
+      "sha256": "a947e129051dcd31c05045e696dd108d7b846faef1c2149f68bda61dc983d28f"
+    },
+    {
+      "path": "src/components/InternalLinkTracker.tsx",
+      "sha256": "95ff5c756ccf126eeb038da456e0cb42b11d330d205dbc53a46f3e6df62a29d1"
+    },
+    {
+      "path": "src/components/IslandBoundary.tsx",
+      "sha256": "1fe911a2d9fb953c8ea7a4058302a2a27bf90270a79f1be0d6640ab89b08387f"
+    },
+    {
+      "path": "src/components/JobOfficialStats.tsx",
+      "sha256": "3b16e1303df9114a174ca170892121ae3d408311f96fdfa85a1c9b6327817fce"
+    },
+    {
+      "path": "src/components/JsonLd.tsx",
+      "sha256": "ecd026fcb3004ec5ecee1c9f30afe2022a9cb02fc29a0e4404eb7ef8a56ca7ab"
+    },
+    {
+      "path": "src/components/KakaoScript.tsx",
+      "sha256": "337b40a8a22ecbab74e88e3b0a8c3483ce337236a832e1a6d8ad898f9ca4d51d"
+    },
+    {
+      "path": "src/components/ListedSalaryBandTable.tsx",
+      "sha256": "ddbba15d8ef338469d27e20e0b1527dfe433d0afffe4729cad36b772b46a4e9f"
+    },
+    {
+      "path": "src/components/LiveServices.tsx",
+      "sha256": "4546cc08f0874710728e1a2b75df993fe9ca95b50dea4063ae3e71f448ecb38d"
+    },
+    {
+      "path": "src/components/LoadingInterstitial.tsx",
+      "sha256": "5534202bc2d90dc3bb3110f4a275deaa9e757c0bfaef4976efb92c5d2a8ff3dc"
+    },
+    {
+      "path": "src/components/LoanCalculator.tsx",
+      "sha256": "9fa0317f212dc80e0b10797eb4d9d9fa7a4e7bbb0ebef8a053e8d9ee26ac2b5d"
+    },
+    {
+      "path": "src/components/Logo.tsx",
+      "sha256": "a03a55c33ef8e891c96d14d40f0fa1fd68ec19b4d9690b8100e7f6736ccb090b"
+    },
+    {
+      "path": "src/components/MyDashboard.tsx",
+      "sha256": "e7c9a688784f4ce0c1c22a4698f382891c42b2c232363e93ecc528d198c0c26d"
+    },
+    {
+      "path": "src/components/NavTypeTracker.tsx",
+      "sha256": "2ac222b33eaf161e74ba79f130c96ce101d774772e6eb6bedc473b5d7ae8cdbd"
+    },
+    {
+      "path": "src/components/NextActions.tsx",
+      "sha256": "5d50e339d093e0c514acc67ac76a61b6b07b0f54c24b84cc81393323c4bbc920"
+    },
+    {
+      "path": "src/components/NotFoundAdPause.tsx",
+      "sha256": "a770c1b432e15d9b3637a5c208af50b524d9f98614756b8b5a34df5d79d9434a"
+    },
+    {
+      "path": "src/components/NumberInput.tsx",
+      "sha256": "de8c62cecd4de992c529db3f604241b74a2bd3d9e1f488f21e916ef253760f3c"
+    },
+    {
+      "path": "src/components/NumberStepper.tsx",
+      "sha256": "c654440553d063c9aae75d4df1a7c65175088fa838f6aed660119a87b5f8d81b"
+    },
+    {
+      "path": "src/components/PageFooterAds.tsx",
+      "sha256": "660d122b0628bacd09fbce5eeae9531591cf64430dead1c09609d2f1a4524966"
+    },
+    {
+      "path": "src/components/PayStubGenerator.tsx",
+      "sha256": "26b69441a03e10bf4887135d55de61d4ce752a111a7b46e81abb8739bd098fa8"
+    },
+    {
+      "path": "src/components/PoliceFireRankTable.tsx",
+      "sha256": "57073c5238cb14182ebe71fd6fccf569f8a4386255d24288d4670c46cb0ce3d8"
+    },
+    {
+      "path": "src/components/PrivateFeedback.tsx",
+      "sha256": "4ef4ece5e42fb137c9e6dcc99cf16d72003109bf0a76a2a6e9fbec4ae1efb460"
+    },
+    {
+      "path": "src/components/PublishedMeta.tsx",
+      "sha256": "b2ef5f2c54a1a3de9f73a613ccd07e41d244ba98b5769b4660964684f63e7ee8"
+    },
+    {
+      "path": "src/components/RandomDrawGame.tsx",
+      "sha256": "a39781db60b06aabf47d2e0afc40c84252a59b91d95828b1ed083aac29ceae3f"
+    },
+    {
+      "path": "src/components/RegisterServiceWorker.tsx",
+      "sha256": "524b5afe620ab2012aab08b7ac52a25c4774a04636eb1bc289c7bd76276e2b08"
+    },
+    {
+      "path": "src/components/RelatedCalculators.tsx",
+      "sha256": "935712739b48a773602bd06bf8fad81be58167aed5e85ec0a10141c7002de159"
+    },
+    {
+      "path": "src/components/RelatedCompanies.tsx",
+      "sha256": "9542452810518bebb627d8d083d68a1eef449bdf38272b9483713747df362c9c"
+    },
+    {
+      "path": "src/components/RelatedGuides.tsx",
+      "sha256": "6c325ede0f6f725f9cb4527adc169f448e5e3c05efae7c701b7a4ed90c9908ea"
+    },
+    {
+      "path": "src/components/ResultSharePanel.tsx",
+      "sha256": "5f2714b871d18e78d815fcab3288029da0fbc652fbe578ea9746777e1f8d3081"
+    },
+    {
+      "path": "src/components/SalaryCalculator.tsx",
+      "sha256": "ed905f1e0968f4b06e3937fd417281e4e03e2ba250321e8a4a06957240fbba33"
+    },
+    {
+      "path": "src/components/SalaryComparator.tsx",
+      "sha256": "932dcb194e27598731e57f99e6e6d5991e8f6da3831110a816bf2695f0dc8232"
+    },
+    {
+      "path": "src/components/SalaryLookupTracker.tsx",
+      "sha256": "3fb04746617ea114e92655a9da05ea5868d8401f7e810f6531d0fda27a7c3c5d"
+    },
+    {
+      "path": "src/components/SalaryRank.tsx",
+      "sha256": "535f843f66ac816631a00077a2428a0466a3d17344739dca8a3e3fb9b3a26610"
+    },
+    {
+      "path": "src/components/SalaryResultCard.tsx",
+      "sha256": "42e9b2867a8658cc4bf160351fe1f5166e82d8e8ff9787e7c8e14fe39a4adcad"
+    },
+    {
+      "path": "src/components/SalaryTable.tsx",
+      "sha256": "c6f7fa335638ac947a069fff0ffdee1bdf224cbd47ef0ea70eaf1f29dd9292a1"
+    },
+    {
+      "path": "src/components/SalaryTierCard.tsx",
+      "sha256": "bdeb494274b159fd06572c67336a376a717a17a548102d18f07398abda32c486"
+    },
+    {
+      "path": "src/components/SeasonalBanner.tsx",
+      "sha256": "2af9e171a9a74cd5862e87b443948fb62bbfe3774bbee7b66d59d4311f20ee79"
+    },
+    {
+      "path": "src/components/SeveranceCalculator.tsx",
+      "sha256": "8d571f9bfd2bc1b8e9961870248ea6cbe92b51fb1acc9765550d0209150486a8"
+    },
+    {
+      "path": "src/components/ShareableResult.tsx",
+      "sha256": "85f57899c236d68d0a7d63d269127fd9ed06e02bdf56192b8a38ddde8252cb83"
+    },
+    {
+      "path": "src/components/ShareButtons.tsx",
+      "sha256": "2e5629803c798dcdc862fe0d59b85277803f3673975e05053a8c09f878f8d2a5"
+    },
+    {
+      "path": "src/components/ShareSection.tsx",
+      "sha256": "c26981ed03d9c3bd4d70a43be4f797f7df32d7dc62fe2362a21d3cbbaa9b98c0"
+    },
+    {
+      "path": "src/components/SiblingHubsNav.tsx",
+      "sha256": "bcbff8d77812ded06e7d69ea8a9ba84babc5961a024c44ef28f4187105e42613"
+    },
+    {
+      "path": "src/components/SimpleCalculatorView.tsx",
+      "sha256": "e42df3b0462e65edfca8e932a854532f0164bd076e0fe3b9ea35bb247a4c7df7"
+    },
+    {
+      "path": "src/components/SkipToContent.tsx",
+      "sha256": "6b52a411988bf41865d303089996626c0b977493200a86950f917008b45199a6"
+    },
+    {
+      "path": "src/components/SocialProof.tsx",
+      "sha256": "2cbc1bf84896a6ff7f6bbae5e80be0793343f4c2d449cf978a4ba080adda875a"
+    },
+    {
+      "path": "src/components/TableHero.tsx",
+      "sha256": "5f7efaf62d33964f1d0d9413c719f44453c340d26f9eac31dc72d71be1ccdea9"
+    },
+    {
+      "path": "src/components/TableInteraction.tsx",
+      "sha256": "c409ba4c13b2e9e3b53c54d89d4d595ed1499cfde2d2191eae5fcc9a11de2112"
+    },
+    {
+      "path": "src/components/tool/ToolContentSection.tsx",
+      "sha256": "1300affb15bf03d8aa4691250b5c24b26e0382159776e1f08a87ef9356078a38"
+    },
+    {
+      "path": "src/components/tool/ToolDisclaimer.tsx",
+      "sha256": "bef3991f0052eb4032d2a321807547e3e33f0b3b2d8b87409b70a618d2564ec3"
+    },
+    {
+      "path": "src/components/tool/ToolFaqSection.tsx",
+      "sha256": "6e3e01c770b47f355d446437fa369cfdd3143f0f343ba0cd96639a26239f3b26"
+    },
+    {
+      "path": "src/components/tool/ToolHubPage.tsx",
+      "sha256": "6bcef8c0a4c206720305d815f603237a1116491a3c6c0975881861d59a01604f"
+    },
+    {
+      "path": "src/components/tool/ToolPageContent.tsx",
+      "sha256": "46dfd1b4c65108e75b8e2d5b9aaab1f56aa5381e890af2d437b8208f8ef3187d"
+    },
+    {
+      "path": "src/components/ui/label.tsx",
+      "sha256": "1b84a9e78f2229a984b857660cbc132bf5c783e52eadf0937dfa47d6b5190c1d"
+    },
+    {
+      "path": "src/components/ui/MoneyInput.tsx",
+      "sha256": "af509f5a02ee8e9f49ba57ef9a57df86908aeaf6d2f776cd84ad1522b1e926b4"
+    },
+    {
+      "path": "src/components/ui/SegmentedControl.tsx",
+      "sha256": "1a5a72caf2446f44c6647bfc40f0356ab8d1123193196ef43c870d7f64828bf0"
+    },
+    {
+      "path": "src/components/ui/slider.tsx",
+      "sha256": "8ba51996a19363faded126473c4ec241465ed2b6296dd96f8248fdd891a99bf9"
+    },
+    {
+      "path": "src/components/ui/switch.tsx",
+      "sha256": "922803e744b4b0cc674c16191003efcdef0e3bcbb060e279a7b729fe63ac4e03"
+    },
+    {
+      "path": "src/components/UpdatedBadge.tsx",
+      "sha256": "e8e6cc2bd6b411605011e4a62379c5a44aace3a1054c69840c739534afe077cd"
+    },
+    {
+      "path": "src/components/WealthChart.tsx",
+      "sha256": "bc37f1ad7db0efc7f1be091776a9e91a74a8ef0d16b089619e6639c1ba5ed8f7"
+    },
+    {
+      "path": "src/components/WealthChartLazy.tsx",
+      "sha256": "84208c384afeb9b2ebe5e365f8a657d957236a4fd09570ad39c2f389d171cc6e"
+    },
+    {
+      "path": "src/components/WebVitals.tsx",
+      "sha256": "6311f71a6ac0fb64b3d15fe0294ffb19abb539cd840e81bf327b09087c9a723d"
+    },
+    {
+      "path": "src/components/WeekendDutyGame.tsx",
+      "sha256": "1406ee17044fd822aa2743fbb602cef45ad14615250d4126206c822c158119c2"
+    },
+    {
+      "path": "src/components/YearEndTaxCalculator.tsx",
+      "sha256": "be175c4fd1659abfcecdb929ec75021cb9599f438602751929a9cbaea22547f0"
+    },
+    {
+      "path": "src/components/YearEndTaxCluster.tsx",
+      "sha256": "3bbef8f2e9e718e1ad89e4986f78a4504b864f526ae6d6c8dcac9c8688f1191b"
+    },
+    {
+      "path": "src/config/currentRates.ts",
+      "sha256": "17f4a52e0cc7ce2782f2180154de34257e0e404c2d1a4560d86fac991286f320"
+    },
+    {
+      "path": "src/config/minimumWage.ts",
+      "sha256": "9ff4009b171cd14e9d3290a23f4e39030b113b562b0069b615e3612158599d93"
+    },
+    {
+      "path": "src/config/popularCompanies.ts",
+      "sha256": "68b7ade5b4acdb1b363566bbe121e4f656f965c500c91f81ed7724631b96c997"
+    },
+    {
+      "path": "src/config/seasonKey.generated.ts",
+      "sha256": "c214bcb57871ba47a8bfd8901f3211851190c021ce13ddb76305e11bc64edf40"
+    },
+    {
+      "path": "src/config/seasonLinks.ts",
+      "sha256": "b763e41e60223fa8d08491007823bf55eb41386328c05652bbd7fb5ccd1ba471"
+    },
+    {
+      "path": "src/config/site-metrics.generated.ts",
+      "sha256": "0964cfb402196097af0dea5a84db5fafbcd80c9d810ccd2256eb91ff3ed33d26"
+    },
+    {
+      "path": "src/config/site.ts",
+      "sha256": "7180cfd78681f00cbe3b7ae544c2e027e7684d0cd836f706c5a15b64f509a4f8"
+    },
+    {
+      "path": "src/config/siteDates.ts",
+      "sha256": "30d2c8e0ccf2c8d315e280d9a5c0038d6b8491822a64cbe1f660b14fa3a9471c"
+    },
+    {
+      "path": "src/config/twoHomeLawFixPush.ts",
+      "sha256": "a07119bda3059fd157797321a6b4806434db451d2c93493edaea480b0bb0976b"
+    },
+    {
+      "path": "src/config/unemploymentBenefit.ts",
+      "sha256": "a03f867fdae7e9262468c318bfb61874c600dd7b3effd96e414cd02c3825e1aa"
+    },
+    {
+      "path": "src/data/__tests__/companyDisclosedRetention.test.ts",
+      "sha256": "ff5728f601212d34693c399bd8a8c8c84ecb673f2555eb3719ed5263499179f1"
+    },
+    {
+      "path": "src/data/__tests__/salaryRankKeys.test.ts",
+      "sha256": "921b8fe0d56319828850b3f8000521b5d8a8c3e9fe0b909169126cd30316fda1"
+    },
+    {
+      "path": "src/data/bonusAnnouncements.ts",
+      "sha256": "e33a2baef5ef419c15037461be8d4e75937c8786ac8695ea390ac47547d57eff"
+    },
+    {
+      "path": "src/data/bonusCalcHub.ts",
+      "sha256": "7d4b4654d558bc7f478745a690cee5cfeb7870bd20237d8c45d892fdad89b998"
+    },
+    {
+      "path": "src/data/bonusData.ts",
+      "sha256": "9cd0cd13e0683b43e4e04cd2dc6fefbdad189a8c8de42af593ea871c9c353a27"
+    },
+    {
+      "path": "src/data/companies/index.ts",
+      "sha256": "496a70da6049a691de7446ee1cd40692cd1de0308186e841e99d34c48aa95655"
+    },
+    {
+      "path": "src/data/companyAliases.ts",
+      "sha256": "d9eccfbfbabf27059557abd8d233ccc9f1f8614fb2dc10965ca0fcab840a0fda"
+    },
+    {
+      "path": "src/data/dart/corpCodeMap.ts",
+      "sha256": "3669287504dda3df07e35463c3dc6cc7f50bb173208e3f0e3bf95fd6c497abc1"
+    },
+    {
+      "path": "src/data/dart/dartDisclosed.ts",
+      "sha256": "f457b75e0983adbe82043276f8f85c5f55757fd3e208da52c7139800fd3f1e93"
+    },
+    {
+      "path": "src/data/dart/dartInjection.ts",
+      "sha256": "3475d7679eb05accc63385b19778f355515da626bebc4f7ab349a41a8b04683e"
+    },
+    {
+      "path": "src/data/dart/dartNameMap.ts",
+      "sha256": "8339aa166b64d9cad05c80b34f33ebdb875f95c15f53c644541ee487495b139b"
+    },
+    {
+      "path": "src/data/dart/ksicToIndustry.ts",
+      "sha256": "e071e4958696c5c6fc786fd3a771cce55397d00c5c72ba95509a0659b6ebf583"
+    },
+    {
+      "path": "src/data/globalCompanies.ts",
+      "sha256": "dfe85898063736e1c05811ba1a69d867d93862b70e010897e94a3f6d859c1048"
+    },
+    {
+      "path": "src/data/glossaryData.ts",
+      "sha256": "2f69391ae7ad587c8ac0a34ec0542b18327035e1f5542f3d451154fb16ac6c64"
+    },
+    {
+      "path": "src/data/homePriceRegions.ts",
+      "sha256": "6c4693728796cbd443d59b15dbe8aff36724a62fe9437a028b5fa53b1bfd8d9c"
+    },
+    {
+      "path": "src/data/industriesData.ts",
+      "sha256": "61d90ce62f0216395cd3d2172e8c4f9aaa084dbf818aebd2dd67f3e7ee16538a"
+    },
+    {
+      "path": "src/data/jobsData.ts",
+      "sha256": "2b7748ac5bcaeb735592e54e464d8fd3dff1e9bad9eed18e005c33ed74de0a0f"
+    },
+    {
+      "path": "src/data/krCompanies_Batch10.ts",
+      "sha256": "fc94e0dd4ef945b39a6807d2ec6064c6b330496c9a0f459d42e7d6bf9694edb4"
+    },
+    {
+      "path": "src/data/krCompanies_Batch11.ts",
+      "sha256": "5716961437e66f7baae486271fbc2d95de4dd0bda987e675e2e19e42e5940ecf"
+    },
+    {
+      "path": "src/data/krCompanies_Batch12.ts",
+      "sha256": "732284d2f07b399e2b385990ace33e3d43a225c91bf4208a0ec7b57e71c911ec"
+    },
+    {
+      "path": "src/data/krCompanies_Batch13.ts",
+      "sha256": "b861630143d3df9b0d56033ce4d75cb9ee87556a0105bf1e9967deb3a24514cf"
+    },
+    {
+      "path": "src/data/krCompanies_Batch14.ts",
+      "sha256": "fa7085de5c6f8342a8c86bf1ace7ee89ad7145c8ed2545ecc8dff8322bd245e7"
+    },
+    {
+      "path": "src/data/krCompanies_Batch15.ts",
+      "sha256": "d303321fc3fe43b4ae3a1b904d2a2b85ed4b45d6adc7bf1190b6ad8195df4f57"
+    },
+    {
+      "path": "src/data/krCompanies_Batch16.ts",
+      "sha256": "91d13ef14c6a5150abc292e60ce4de4e4e390923222775b904a9acdd090245d1"
+    },
+    {
+      "path": "src/data/krCompanies_Batch17.ts",
+      "sha256": "c91b383d0659138439b603020f626bd4286ad024601922af7cdc124a356836be"
+    },
+    {
+      "path": "src/data/krCompanies_Batch18.ts",
+      "sha256": "b66bd66029c560db50feca6fb36a15bfce53c1810750d38aa633b1689b37612c"
+    },
+    {
+      "path": "src/data/krCompanies_Batch19.ts",
+      "sha256": "6fa78cb7229740ea282714a41275230e80f354ff6b3c1525eeb38e5102a6f5b4"
+    },
+    {
+      "path": "src/data/krCompanies_Batch2.ts",
+      "sha256": "d72b206bd25d5977821868bdf191c1a465c16756a322dce6ab17a4a13c8ca475"
+    },
+    {
+      "path": "src/data/krCompanies_Batch20.ts",
+      "sha256": "2fa25b52ef5b6f477a387eb8c674fb39b73233db5043ad0dce813599533a2d94"
+    },
+    {
+      "path": "src/data/krCompanies_Batch21.ts",
+      "sha256": "333c93c7695486cd547be68d5ac3fe5d4d90f8acbc25642ea028c4c8f09bc1ad"
+    },
+    {
+      "path": "src/data/krCompanies_Batch22.ts",
+      "sha256": "75c234c7ac1b01c90a1da0951205b75745e527806eddacde2b728c399d510cb8"
+    },
+    {
+      "path": "src/data/krCompanies_Batch23.ts",
+      "sha256": "1f83b10c313850ed5be6375b206a9adc6d829e06ba939aa2ed7ca81d7a5f115d"
+    },
+    {
+      "path": "src/data/krCompanies_Batch24.ts",
+      "sha256": "1c8d7107041dd2991fd28d66a02b428c1f665429c7f3f757afb582ea1561cab2"
+    },
+    {
+      "path": "src/data/krCompanies_Batch25.ts",
+      "sha256": "1c19cfa096aa9dd88b208dda612ff98fc1458b7f9997259e64161f865ee235e0"
+    },
+    {
+      "path": "src/data/krCompanies_Batch26.ts",
+      "sha256": "e161eda1f83625665580078c60df5fceff8e89311753fb1f5fbc3a9ab40034da"
+    },
+    {
+      "path": "src/data/krCompanies_Batch27.ts",
+      "sha256": "6639ea39fb4cb670f22784a32ccf55f59d16d2f5ac2720ccfee348579a7abb88"
+    },
+    {
+      "path": "src/data/krCompanies_Batch28.ts",
+      "sha256": "e5f81a3ba871542ed9de82cdd93e70fbdb5389450f1b3542df27b8b49f869228"
+    },
+    {
+      "path": "src/data/krCompanies_Batch29.ts",
+      "sha256": "cc17f18850021327fb7106e6199d5a6ed3d74b30c16745bb4915310d959b463e"
+    },
+    {
+      "path": "src/data/krCompanies_Batch3.ts",
+      "sha256": "2b669a4fd1daeacde7fe98298bffa699e28f4a19867ee8f83d08d59f4dafc599"
+    },
+    {
+      "path": "src/data/krCompanies_Batch30.ts",
+      "sha256": "289effb5523244a9ee1c6a319cdbbf0f31ae4cf7f21948757fad830dcc6a4b15"
+    },
+    {
+      "path": "src/data/krCompanies_Batch31.ts",
+      "sha256": "a124f81cdf83f0bfe25f0b72efff9b10e6f23a1655e085a9a5c58c4d3706d6b0"
+    },
+    {
+      "path": "src/data/krCompanies_Batch32.ts",
+      "sha256": "d864e8f4fe2e80caa90b5cc92f70f1307036f8a50473c88e19fa818f75b6f964"
+    },
+    {
+      "path": "src/data/krCompanies_Batch33.ts",
+      "sha256": "d914301d84ad02fd09deb91e2495058639b6b23765d12444344580930da6f8ca"
+    },
+    {
+      "path": "src/data/krCompanies_Batch4.ts",
+      "sha256": "37ef327be2116154fc41c4cd03fedc277fbea0642ad9f48ba1cbedbbab820ae7"
+    },
+    {
+      "path": "src/data/krCompanies_Batch5.ts",
+      "sha256": "f5c16b203b7249b59ef9c7bd4e3b009c1c3555748150655fcf42325d23f48814"
+    },
+    {
+      "path": "src/data/krCompanies_Batch6.ts",
+      "sha256": "8e314936c6eafb7dffe3d87e33f60b0a3de9e7e1882575ed57f79ccd59ff0582"
+    },
+    {
+      "path": "src/data/krCompanies_Batch7.ts",
+      "sha256": "a949884fe1aa1c395af6769f4f5a1f2a319f2fb9dd3bb0a6f995ef06e5326602"
+    },
+    {
+      "path": "src/data/krCompanies_Batch8.ts",
+      "sha256": "aea19b3c57643cea376e7a16e4bbe64f8acf288afee0782adeab2412ca4a4ce9"
+    },
+    {
+      "path": "src/data/krCompanies_Batch9.ts",
+      "sha256": "0507d6a1b4d52727f5860c98f55c6affd126e4fcb6ce47b9e0b59455e38d975f"
+    },
+    {
+      "path": "src/data/netWorthData.ts",
+      "sha256": "3a1816802390943d8c61e60f0a354535a1dad59be32ed489d2e64e112cfe182c"
+    },
+    {
+      "path": "src/data/opiAnnouncement.ts",
+      "sha256": "cbbf94f3d2c83161819a3e6afb376ffe6a8b24613bb637a5e58f488f05e9bff4"
+    },
+    {
+      "path": "src/data/qnaData.ts",
+      "sha256": "af4588a41e84ad7e265268718a3797f9cb0595be1e51389e188737def78bf027"
+    },
+    {
+      "path": "src/data/regionsData.ts",
+      "sha256": "ec38fc60a5de6ad082741ac43cd852181079815af0e915583594189aad8f5099"
+    },
+    {
+      "path": "src/data/reportsRegistry.ts",
+      "sha256": "d6f349f02a3ebe89c468d0f58db7b0a3bfd29dc3917b86f06f19125165db5ebe"
+    },
+    {
+      "path": "src/data/salaryRankData.ts",
+      "sha256": "1a6987693a9e24b3ace0738165335c031a971d0cb9319c6129dbfb8983aa4342"
+    },
+    {
+      "path": "src/data/seedCompanies.ts",
+      "sha256": "27b022b639ca668445d79618209e1a319f13aeac1664c39d8001a1343c7f03a2"
+    },
+    {
+      "path": "src/data/yearEndTaxHub.ts",
+      "sha256": "d15598d0f4f6596ac871add272be21ed73145831d411401b94901dc638e4673c"
+    },
+    {
+      "path": "src/hooks/useCalculatorMeasurement.ts",
+      "sha256": "82e221a5fea56b1373b09370ff90de476a047ab677c4603886e631e60b07b4d6"
+    },
+    {
+      "path": "src/hooks/useModalDialog.ts",
+      "sha256": "dd1877bdf6e9ed51afbaa7566114541d612bab5b7a5b20d9d49865a757899a5c"
+    },
+    {
+      "path": "src/hooks/useSharePageContext.ts",
+      "sha256": "c3b94379b5db239c59a1a14f6b4efa375cdaee9e43f9afa5058c3fd5c35a8e37"
+    },
+    {
+      "path": "src/lib/__tests__/acquisitionTax.test.ts",
+      "sha256": "e049df4eff896c38e9965a295894d961790089e0c2c809e8e0937cec554fa621"
+    },
+    {
+      "path": "src/lib/__tests__/adCriticalShell.test.ts",
+      "sha256": "6a9c2f134a231e910e87e995ce11ac9a5bee634615843fccc5eb6d266e6254d0"
+    },
+    {
+      "path": "src/lib/__tests__/adEventPagePath.test.ts",
+      "sha256": "27ce2754d6ff24f359a3a8311f1c6a66fc3b3880fba7e9906e2d1bb33afcc505"
+    },
+    {
+      "path": "src/lib/__tests__/adFillEvents.test.ts",
+      "sha256": "f5ada364d225ec17995952d7d93393dd09860f408470fb1b20d644dd51122c7f"
+    },
+    {
+      "path": "src/lib/__tests__/adMeasurement.test.ts",
+      "sha256": "cec78bc4fc31cfe2818b40745e476608122f8edb275b59d521aa0965c5466a3c"
+    },
+    {
+      "path": "src/lib/__tests__/adPlacementInsWidth.test.ts",
+      "sha256": "26f4a44325a6b687351d5fa3d03f5de215b947718f2462f7a6349d6f211254ae"
+    },
+    {
+      "path": "src/lib/__tests__/affiliateClickEvent.test.ts",
+      "sha256": "df72951fe50cecfb26ed657d3f5a5d479462f7f803ea7e01042688526f62be3e"
+    },
+    {
+      "path": "src/lib/__tests__/affiliateOffers.test.ts",
+      "sha256": "3dab731beeba37fe07bdcd0c724437be5836719b18f2e5017ae87fafe31a7174"
+    },
+    {
+      "path": "src/lib/__tests__/analyticsAttribution.test.ts",
+      "sha256": "f9be1991f6cef42683c1533b5a37cd767032097f303bb58f43201da5d774b894"
+    },
+    {
+      "path": "src/lib/__tests__/analyticsPrivacy.test.ts",
+      "sha256": "bfb9eb71a53b521cdeb1e18471ef29a53369e8e6721d98abd09f3bf19e87bcf6"
+    },
+    {
+      "path": "src/lib/__tests__/annualLeaveBoundary.test.ts",
+      "sha256": "8128d178a4ba0804fa5d3c263ff15a0710a7a1ef335262055c2c777695884086"
+    },
+    {
+      "path": "src/lib/__tests__/auditFixes2026-09.test.ts",
+      "sha256": "469bba463e5588462ed2b61df718b3dadd63c4463e3f48ec9d46742615f179bf"
+    },
+    {
+      "path": "src/lib/__tests__/autoAdsSeen.test.ts",
+      "sha256": "0786c7e52cba72c60f8802f3a6ab16b97a234e5a0e36d645886c858f8877b795"
+    },
+    {
+      "path": "src/lib/__tests__/benefitFaqIntegrity.test.ts",
+      "sha256": "ea7888fbefa559cf9ae7b9f9bf05288fee92715ef3465a0a8432baec5e8eeaee"
+    },
+    {
+      "path": "src/lib/__tests__/bonusAnnouncements.test.ts",
+      "sha256": "42f4ea3b32b1d44db6a9c2f4c8373b4465cb37ccbe635a90b181c50814355f12"
+    },
+    {
+      "path": "src/lib/__tests__/bonusCalcMeasurement.test.ts",
+      "sha256": "5c00189668a961f57d429860e2d2073d8b7f18b491d75ccb714a3c4189d41f3c"
+    },
+    {
+      "path": "src/lib/__tests__/bonusDealStatusR4.test.ts",
+      "sha256": "c51ce6e493dded836a1a06b0899cbb47cb16aec53048bad8bd9e17a29415fd23"
+    },
+    {
+      "path": "src/lib/__tests__/bonusEngineDiff.test.ts",
+      "sha256": "6d885dc8ff9954629ae1f793d78383063d9f83728c330ef3b99b5fcf83bd90f8"
+    },
+    {
+      "path": "src/lib/__tests__/bonusHomeComp.test.ts",
+      "sha256": "1af7605e0c2ce2b5fb6624b1114e20f15d3a816e3e8773b7ba1e1f672c6bd463"
+    },
+    {
+      "path": "src/lib/__tests__/bonusHomeLoan.test.ts",
+      "sha256": "640e30ba93d8096663a1b9d0e5d2b80b9873c026201da42828ea3896b4e97be7"
+    },
+    {
+      "path": "src/lib/__tests__/bonusHomePlanPage.test.ts",
+      "sha256": "c6c813df31681374157b315b1ce1f76c20ddda6e6fb8a7acd6703552ea4adf0a"
+    },
+    {
+      "path": "src/lib/__tests__/bonusHomeRegistration.test.ts",
+      "sha256": "34799f12a46643a8b0e707577acc63dcb1d1bd71274a9da6a2ecf41f9aea5c87"
+    },
+    {
+      "path": "src/lib/__tests__/bonusHomeScenarios.test.ts",
+      "sha256": "49240fa42945e6c844298731457a1fb10290b1f594ddda66a19df09d42e554de"
+    },
+    {
+      "path": "src/lib/__tests__/bonusNextLinks.test.ts",
+      "sha256": "62afb8a3172692cdd760b0b061cdbd88ba991c51e107bf8945e56dc0155c5807"
+    },
+    {
+      "path": "src/lib/__tests__/breadcrumbRoutes.test.ts",
+      "sha256": "6d26d5f429af77dfc26ea4ffafeaed5447e6330353cfb27e76ab7ad11d56a3e8"
+    },
+    {
+      "path": "src/lib/__tests__/calcAccuracyB11.test.ts",
+      "sha256": "4b7aa156133f2879c9a0bfebae13bf42b9744c048cc3f078c00d53e78d465f87"
+    },
+    {
+      "path": "src/lib/__tests__/calcDescriptionFreeze.test.ts",
+      "sha256": "bf1a890256cf06961ccfd42fd3d638fb5204175a83531b352ad617f8e23951d4"
+    },
+    {
+      "path": "src/lib/__tests__/calcSeo.test.ts",
+      "sha256": "280e6be69fc95cd5cd7ac6985244f8ea302700696838094c3ba82ab3ad5acf95"
+    },
+    {
+      "path": "src/lib/__tests__/calcSources.test.ts",
+      "sha256": "7a5ef9f9c28ba360b8580bd9bfa59f623d1c1604b6963e11058d0cf83c5524aa"
+    },
+    {
+      "path": "src/lib/__tests__/calculationMeasurement.test.ts",
+      "sha256": "afa4390e160d7d5f842df6f4e4c3ea65da767ba785c219244af145956949eca8"
+    },
+    {
+      "path": "src/lib/__tests__/calculatorDirectory.test.ts",
+      "sha256": "db1ae8ed671b730360a72e6a34fd2e0ab74b276d07486ed87d2d09b66f405b6e"
+    },
+    {
+      "path": "src/lib/__tests__/calculatorZeroTaxablePay.test.ts",
+      "sha256": "1b5de6ff7240937fe19641fcf24a693a2c882ebd303744ab5fdf6d965623cdf2"
+    },
+    {
+      "path": "src/lib/__tests__/captureElement.test.ts",
+      "sha256": "61d9c0c8099ae7df5421f4025d172eca5c269a2f34702e48655f2ddc9704c55f"
+    },
+    {
+      "path": "src/lib/__tests__/chunkReload.test.ts",
+      "sha256": "8115c885f25080309e7b6c79f48ae5f78c1a2f2d20fb3f094afac54e8977ba10"
+    },
+    {
+      "path": "src/lib/__tests__/civilNetPayClient.test.ts",
+      "sha256": "a623757d8141e1d53483b4273235f1e039fd05c885fc0051155ab4827028e6a9"
+    },
+    {
+      "path": "src/lib/__tests__/civilNetPayRegistration.test.ts",
+      "sha256": "1ffe91d50ce687e2ae0d376fce1304ceb34fa0358451e88f61914a74c78153fe"
+    },
+    {
+      "path": "src/lib/__tests__/civilServantAllowances2026.test.ts",
+      "sha256": "76ea76affd50a450da99ebfcca0bdac51d2dfc3d0fa9a8689db3c19e6d10f9ab"
+    },
+    {
+      "path": "src/lib/__tests__/civilServantForecast.test.ts",
+      "sha256": "fcd0176fb19b4160242209edcb3e69bb683effe204b9e4f17ef7e7d83b9acdb3"
+    },
+    {
+      "path": "src/lib/__tests__/civilServantNetPay.test.ts",
+      "sha256": "47e98916fbf5a7f52e3062ed96f350b86c9ebf20450c2ede2be725d9f1f79aa7"
+    },
+    {
+      "path": "src/lib/__tests__/companyBonusCustomInput.test.ts",
+      "sha256": "543a7742bb9f43fa6790d31e2b693aae79d3d78edbdbac018462d417a80ade0a"
+    },
+    {
+      "path": "src/lib/__tests__/companyContentBuilder.test.ts",
+      "sha256": "826c399e55e3f4a7495efb5e338ed57325b60c58f8b1a218b1f6226e3857ab96"
+    },
+    {
+      "path": "src/lib/__tests__/companyJobs.test.ts",
+      "sha256": "0bb76183d6a8ea2b06f1ddfa6ed786fb1416aa3ac3521ee920f0b6e66389acc1"
+    },
+    {
+      "path": "src/lib/__tests__/companyMetaDescription.test.ts",
+      "sha256": "39b4d2f9daed3814586820f3750bfc8ab86422d7d995e249d6e9d783634ae290"
+    },
+    {
+      "path": "src/lib/__tests__/companyPageCopy.test.ts",
+      "sha256": "acbbf8b163b126f0d2f7c989f03dcde47e9fb4f60ff084eb19a311efa29ddb05"
+    },
+    {
+      "path": "src/lib/__tests__/companyRepositoryLastUpdated.test.ts",
+      "sha256": "1ff52bfa9065bbe374ae8c7e8a484d4ac34adf57aef68fcb66758f0f495e74c6"
+    },
+    {
+      "path": "src/lib/__tests__/companyRoadmapDefer.test.ts",
+      "sha256": "f2a02ab35fc9e04276f1af8e72210be934b8a3201ed196b8a99cc5d62cf80440"
+    },
+    {
+      "path": "src/lib/__tests__/companySalaryBasis.test.ts",
+      "sha256": "36fa96fc71ded546dbf6328a51922a2e29a48e75f9b7516a30b99cedea83c545"
+    },
+    {
+      "path": "src/lib/__tests__/companySalaryNetHop.test.ts",
+      "sha256": "50ca32caed402e6f6b7c238752441c39cf92fa765d3f41cc14dfe809f86f1334"
+    },
+    {
+      "path": "src/lib/__tests__/companyStatusR6.test.ts",
+      "sha256": "235165863310ba990c547d8990107026548787038950169eeca08aeda804fbac"
+    },
+    {
+      "path": "src/lib/__tests__/companyStatusR8.test.ts",
+      "sha256": "669cce97ffb056420703bde7bd3029cf3e1a5b513b2856588ad0bce1b11573e6"
+    },
+    {
+      "path": "src/lib/__tests__/companyTopAd.test.ts",
+      "sha256": "644310a247f17917fb1ecff63f6ce56f40da561d86526ab4be1cd6e7aa878c8d"
+    },
+    {
+      "path": "src/lib/__tests__/compareParticles.test.ts",
+      "sha256": "b47c23f581df2485e436f4180f7b9f4cb896b1be63ce53b43f840491f05674f9"
+    },
+    {
+      "path": "src/lib/__tests__/compoundDisplay.test.ts",
+      "sha256": "a9f1132456f02abe9389fd4883f2337535791acc5005d4e56f9f4ff81dcb5faf"
+    },
+    {
+      "path": "src/lib/__tests__/compoundZeroRendering.test.ts",
+      "sha256": "1a029fdd229506312029ac805ff01087702badd850cd5e8a7c74a249fc89d26a"
+    },
+    {
+      "path": "src/lib/__tests__/computeLoader.test.ts",
+      "sha256": "6635ff5167968cd65ed7bfe7430afe88cf2a6e3e09c53dfa711338775b066de9"
+    },
+    {
+      "path": "src/lib/__tests__/configRedirects.test.ts",
+      "sha256": "e662a038f942a36f7b19a0b187f41e99f35b407e8e0759f88bd1f4a8ccf5d4c9"
+    },
+    {
+      "path": "src/lib/__tests__/contactHandler.test.ts",
+      "sha256": "88966cd62bc49c7214dc58491ac51c7c964dec8b4190e7f1f639085c39aefd14"
+    },
+    {
+      "path": "src/lib/__tests__/copyAttributionPrivacy.test.ts",
+      "sha256": "7ed49b014d9bf33c5ef2703e25aa9a970b06e93ce9a4b9e59763dd30986cf21c"
+    },
+    {
+      "path": "src/lib/__tests__/currentRates.test.ts",
+      "sha256": "ed2bbc94aa4e0491b06c6e7d3fc112dbedabee6359f3f116558b08c5d74b4232"
+    },
+    {
+      "path": "src/lib/__tests__/currentRatesDryRun2027.test.ts",
+      "sha256": "5b1b491490ae079511eb6266e0d8fe663f0144403f627987bc871e69a131faaa"
+    },
+    {
+      "path": "src/lib/__tests__/currentRatesSurfaces.ts",
+      "sha256": "1902a76db97b409b91f7ca57b0a41ea48ca4a6d363f78e71dd8f27d5ccec5577"
+    },
+    {
+      "path": "src/lib/__tests__/dartCompanyLinks.test.ts",
+      "sha256": "5565ab06e116ec00b6a7af9cbfd9f85dc1c7d9777fb845c0fa45fcf96b80800f"
+    },
+    {
+      "path": "src/lib/__tests__/dartRankingFilters.test.ts",
+      "sha256": "71eee4e7998a9cce03cf72bf42a2fb0bea1a020510c6db2527a80990f66c6399"
+    },
+    {
+      "path": "src/lib/__tests__/dartReportedBasis.test.ts",
+      "sha256": "06a30871b0ffbcffaf967f20c9374f7f0af4bebb2b18595b6f29352662bdd26b"
+    },
+    {
+      "path": "src/lib/__tests__/dashboardAnalysis.test.ts",
+      "sha256": "1f1ec5fcaa4b21fe05b4cba95693e61d753cb503b3ad3ee86953ae258724f5e5"
+    },
+    {
+      "path": "src/lib/__tests__/dashboardStoredData.test.ts",
+      "sha256": "7b3bcc83741bf1c22605bc970a4649aa754c03ff328d02f2baee6959d77dfc44"
+    },
+    {
+      "path": "src/lib/__tests__/datasetLd.test.ts",
+      "sha256": "e8810bac8d624676395f62557b0c5d004a42876b6712005738bd6c71f1483e6e"
+    },
+    {
+      "path": "src/lib/__tests__/datasetMetaQuality.test.ts",
+      "sha256": "1b5f062552de26872bdf6de16e3a09af67a0acecd88fdc8e19d16d66935ffc37"
+    },
+    {
+      "path": "src/lib/__tests__/decIrpSeasonLink.test.ts",
+      "sha256": "3c0ebfd24a108be18315b9aeaa0933a93cc0bc6066f8b29033104e4282296973"
+    },
+    {
+      "path": "src/lib/__tests__/deferredSectionActivation.test.ts",
+      "sha256": "d54b0294efbee7e595dc16d730a1cbfa93a2501a0c07ffafd109eea1ce0f00f0"
+    },
+    {
+      "path": "src/lib/__tests__/destTemplate.test.ts",
+      "sha256": "759f872714bd5bbe4c89aceb77fa37eeb8824eeebb03bd4fe594a22f21191ae6"
+    },
+    {
+      "path": "src/lib/__tests__/dividendTax.test.ts",
+      "sha256": "7b0ad554fa83deec78f24b3bc4f5264570e5ce1704dc0971dea34fc33897af06"
+    },
+    {
+      "path": "src/lib/__tests__/donationCredit.test.ts",
+      "sha256": "36abe0de4ee57a5936d3930a3809b3a88fc9de9e8ddc1768b3f2ebc0d6e843e8"
+    },
+    {
+      "path": "src/lib/__tests__/edgeRenderedPaths.test.ts",
+      "sha256": "e7524d674bb315bdae3208b0039e36fec7501455284610d3877438340524061e"
+    },
+    {
+      "path": "src/lib/__tests__/englishSavedResults.test.ts",
+      "sha256": "72703a05ff3926766db97bbacc1e8d75ff83acb3bec6ae27f27c9750bd491dd0"
+    },
+    {
+      "path": "src/lib/__tests__/englishSupport.test.ts",
+      "sha256": "56f2cbd6ea13435a422240cd5609a7aa48dce8d76230c76c81f3a28749847773"
+    },
+    {
+      "path": "src/lib/__tests__/englishUnknownPath.test.ts",
+      "sha256": "a73d9871cb0adb5df89bf9ebf829f6d55958fd39872e959c7d0986438f8b72f6"
+    },
+    {
+      "path": "src/lib/__tests__/exchangeMath.test.ts",
+      "sha256": "3222fcb8c3f4d09b00e2b7eaeb79b32d7d658a3d14f02d4933794f3ebc49c9ef"
+    },
+    {
+      "path": "src/lib/__tests__/exchangeRequestLifecycle.test.ts",
+      "sha256": "2fd4561269e86073b5f0d70ef656e5120895a2963c0e179b26c9c37f996678f4"
+    },
+    {
+      "path": "src/lib/__tests__/expandedFinance.test.ts",
+      "sha256": "9719f122bcb0580134b39b736801f42f2304d19145abfff5f4753de5283b51a5"
+    },
+    {
+      "path": "src/lib/__tests__/expandedPractical.test.ts",
+      "sha256": "50daf0e2af65251a455c91a47824c8c6811b3d6a8d2c219b7165b12d2834ad4c"
+    },
+    {
+      "path": "src/lib/__tests__/factFixesB2.test.ts",
+      "sha256": "03d8387d18002460cd4b5041b70a62888558ce7eba28f8f43eff05c2d7bb74ec"
+    },
+    {
+      "path": "src/lib/__tests__/factFixesR4.test.ts",
+      "sha256": "f9ce69ea9785d942fa77586bfe88e64aad9a6a343aa0d7920af006f102f4fa0f"
+    },
+    {
+      "path": "src/lib/__tests__/factFixesR8D.test.ts",
+      "sha256": "220d8aacc2c71dc676c54c034408e25e8eac3796047caa55ab314959f6d105b2"
+    },
+    {
+      "path": "src/lib/__tests__/financialUiRendering.test.ts",
+      "sha256": "56b9bdab281fd009155923ba9ba5d1db7dfde36f3b9e8bda8932f5d84e9534b2"
+    },
+    {
+      "path": "src/lib/__tests__/fixedFeedbackHandler.test.ts",
+      "sha256": "2d351f45ea358b81db63a8b03e8d179e8f8e4ba40fc8c2a7a45f2be6397d4e55"
+    },
+    {
+      "path": "src/lib/__tests__/funPageContracts.test.ts",
+      "sha256": "580897fa7c4f864d95318dea1d71fbfe8f132007138e990b6c99986f93ce3bf0"
+    },
+    {
+      "path": "src/lib/__tests__/futureCalculatorGoal.test.ts",
+      "sha256": "7078142ae4fef6cc67ba690d26ee70cfb2eb834066270b4445944d839c0e61b1"
+    },
+    {
+      "path": "src/lib/__tests__/gtagReady.test.ts",
+      "sha256": "6484750eec0e75b25ef76ed98f30c77367bd847b499985c3efef234b6bd8c81e"
+    },
+    {
+      "path": "src/lib/__tests__/guideBonusNetTables.test.ts",
+      "sha256": "4cddb24d3a9fd424350e5555427b54b6d3048ffbed341ca2cc48768be397cf9a"
+    },
+    {
+      "path": "src/lib/__tests__/guideCompanyBonusKeepers.test.ts",
+      "sha256": "f15a2ba25df7641c273f6b2f9f58f569ce1842c02f23be676b5bcf19b14a2962"
+    },
+    {
+      "path": "src/lib/__tests__/guideDateMetadata.test.ts",
+      "sha256": "85339af2e9d0212734f5e641ea6008297a31388cab59a05c91bdf1a25f4cc3e0"
+    },
+    {
+      "path": "src/lib/__tests__/guideDates.test.ts",
+      "sha256": "4fc490cc83c88420daf4d761af3b72c62f91f3353f027426bd436526074d4054"
+    },
+    {
+      "path": "src/lib/__tests__/guideDiscovery.test.ts",
+      "sha256": "d746fa973fd842977838d623c83b8a93a183b9cc2db29c794dae3f78fab7e0d1"
+    },
+    {
+      "path": "src/lib/__tests__/guideFactCorrections.test.ts",
+      "sha256": "d560fac52859f2fc47a53daaef320e547f47115735edf46220ef3541bbb7b60c"
+    },
+    {
+      "path": "src/lib/__tests__/guideFactFixes20260929.test.ts",
+      "sha256": "44ca7e7c74cb0cd2c4ef0ddb9e20efc018eaf870f0da848eef8ba8fb51703307"
+    },
+    {
+      "path": "src/lib/__tests__/guideFactFixGuidesB.test.ts",
+      "sha256": "3896f8b0948b982573411dfffec9b294159a181de0a5f5023ac1d311958f3521"
+    },
+    {
+      "path": "src/lib/__tests__/guideG2cKeepers.test.ts",
+      "sha256": "28a8bde32d0acbced758ae2874f09840bb143ecbb78256a4f34fd17581746335"
+    },
+    {
+      "path": "src/lib/__tests__/guideIndexing.test.ts",
+      "sha256": "91ae73f09aa7239cee619200344d5846109280ae15c8234a56459e3020ebc609"
+    },
+    {
+      "path": "src/lib/__tests__/guidePageMetaPayload.test.ts",
+      "sha256": "43a76e84e6c202f4c6184936e5f3f3c1a680aa631c89a15c32ad579ebaf75bb7"
+    },
+    {
+      "path": "src/lib/__tests__/guideRedirectTargets.test.ts",
+      "sha256": "8485ab2d7cd705c2ba795667a7f651cae8c20c1eb64554e3ba85486c99c167dd"
+    },
+    {
+      "path": "src/lib/__tests__/guideReleaseHoldback.test.ts",
+      "sha256": "e38f66f2a71c721b56f2b85650c5c6ef798437c8fe8e3494db12fdadd0f80924"
+    },
+    {
+      "path": "src/lib/__tests__/guideRendering.test.ts",
+      "sha256": "83e39e0ed293438dce822c50e94cf9ec98b30660f813e5cdfc1fcb627a3c66dd"
+    },
+    {
+      "path": "src/lib/__tests__/guidesLayoutPayload.test.ts",
+      "sha256": "429813ae3a4df1480853da76a46d4d788722584c4e20385c5f848ac0176673ea"
+    },
+    {
+      "path": "src/lib/__tests__/guideSpec.test.ts",
+      "sha256": "c608e7f5c54b1aead7beebc9077ea59bb90c82c633819118ddfe1db8ca7d4a95"
+    },
+    {
+      "path": "src/lib/__tests__/healthRate2027Freeze.test.ts",
+      "sha256": "c0bc690293245cc77b80b7b5c4108d88d48c7bb8139fffc00f0f78c8c695d7f9"
+    },
+    {
+      "path": "src/lib/__tests__/holidayPay.test.ts",
+      "sha256": "d9f12c24c6770cacdfb84e7a3b156ca2e1c90911fb5fc29ab2237a83d65863f2"
+    },
+    {
+      "path": "src/lib/__tests__/homeInitialRendering.test.ts",
+      "sha256": "e7055558a6626aba3e6d51f01fa07aa69ab80202231710dad946dca0b93b9f99"
+    },
+    {
+      "path": "src/lib/__tests__/homeSeasonChips.test.ts",
+      "sha256": "cf322a81f3dd9301f1623fd9400dab7fbac15c6c89a9efc3e7ef642e9bc9ef8c"
+    },
+    {
+      "path": "src/lib/__tests__/hubHeadings.test.ts",
+      "sha256": "76a9005e2a8d3dfdf537014897240a833b84034716a3b5bd6b4b3c25b3fe75bb"
+    },
+    {
+      "path": "src/lib/__tests__/inAppBrowser.test.ts",
+      "sha256": "4add038bbe973233ae69c2bccf70cdff7a83ef94a72e5d281e74006b053fb5ef"
+    },
+    {
+      "path": "src/lib/__tests__/internalLinkModules.test.ts",
+      "sha256": "956c8cb4abfadd2b9fb307a784c54c109696ecd7e42b545fd43801c14bb38333"
+    },
+    {
+      "path": "src/lib/__tests__/islandBoundary.test.ts",
+      "sha256": "80a8d573b1bdb187545652a3e2edb7d7c88133e4da622fabb8b01b1c0177f477"
+    },
+    {
+      "path": "src/lib/__tests__/itemListNoSelf.test.ts",
+      "sha256": "00be6e7137d0f87cba00881458aec400953f514de091460ee64faec2c99c129f"
+    },
+    {
+      "path": "src/lib/__tests__/jobOfficialStats.test.ts",
+      "sha256": "2e01bcffec2b9b9952e790a61a169878226805515f57634a50caebbe0eb23cc9"
+    },
+    {
+      "path": "src/lib/__tests__/jobSeoOverrides.test.ts",
+      "sha256": "7b34e864ab94161a87e791725275c124e53b19dd06eb522b4bf30d26d2dae1e9"
+    },
+    {
+      "path": "src/lib/__tests__/josa.test.ts",
+      "sha256": "f811e0df43e2c227be1ecd9955845dedab4b2da941fea2a5e5927e771be3402e"
+    },
+    {
+      "path": "src/lib/__tests__/koreanHolidays.test.ts",
+      "sha256": "165d102fefbe53044338d8567f702ee70eca3376f598f9ed1bfbce33691c611d"
+    },
+    {
+      "path": "src/lib/__tests__/laborCalc.test.ts",
+      "sha256": "8ea372e97a63ac16224cd26f7cba4c8cdc8a1cb74c87727114705ac3b54d794b"
+    },
+    {
+      "path": "src/lib/__tests__/legacyBrowserCompat.test.ts",
+      "sha256": "12d3f658e3334a847ce86aeb5a1a5801ae8e2eeb9ab02ac8cfea8477cb6ebf6a"
+    },
+    {
+      "path": "src/lib/__tests__/liveAds.test.ts",
+      "sha256": "ff243553be2a89e9a345d31f7b9bb86e9a512708461a8565409fe61d8281663c"
+    },
+    {
+      "path": "src/lib/__tests__/liveServices.test.ts",
+      "sha256": "0b7ccfad71c716df428da0bc892b0ebcec56a9743187d8f850b7c7c5691914a3"
+    },
+    {
+      "path": "src/lib/__tests__/loanContentIntegrity.test.ts",
+      "sha256": "aeabf37c7cd2494b747e7bd8359b83fe04f19203e925b9633c69168c8c3cd0de"
+    },
+    {
+      "path": "src/lib/__tests__/manwonFormat.test.ts",
+      "sha256": "b7efd6dc3b3cef3229f9a8930153471661891acc62dd36007b1ef9555400971f"
+    },
+    {
+      "path": "src/lib/__tests__/marketSnapshot.test.ts",
+      "sha256": "d5fbbe498c6bd4de61382573319c265dd1f5bc1df211d4516b77ada1907bc480"
+    },
+    {
+      "path": "src/lib/__tests__/miscFacts2026-09-29.test.ts",
+      "sha256": "b0245f3bddce7761dee9209f1aaf23abc43a0dfeb9b2b0d947dca67248de11b2"
+    },
+    {
+      "path": "src/lib/__tests__/moneyCheck.test.ts",
+      "sha256": "d790574a7a2aa3e3762ada4267a14d77298e16deb79121440a64739fad879bbd"
+    },
+    {
+      "path": "src/lib/__tests__/monthlyFaqFacts.test.ts",
+      "sha256": "364a923dcd7979949bc73153b98db87c4272fd6b6ff0117ce58163072a6dc3a1"
+    },
+    {
+      "path": "src/lib/__tests__/monthlyStaticParams.test.ts",
+      "sha256": "37ba80a15624c67d1192e10bccf7a263c48890ecedb561a8d657266049f0aecd"
+    },
+    {
+      "path": "src/lib/__tests__/naverReferrerQueries.test.ts",
+      "sha256": "51e35a70c8fe5d10c91462070a6fdac3e661990c46b6c06a6232637c3116d28f"
+    },
+    {
+      "path": "src/lib/__tests__/naverTemplatePanel.test.ts",
+      "sha256": "99eebae0fbbf59eee42ff5e906de20e64b5ce23abfdbc1ac4fa5c814701a246f"
+    },
+    {
+      "path": "src/lib/__tests__/navType.test.ts",
+      "sha256": "ec4364511a64190ea8310104323a0c4af716122658c2672ff5cf849b462f409b"
+    },
+    {
+      "path": "src/lib/__tests__/nextAdvisoryPreconditions.test.ts",
+      "sha256": "3fcee2a3760c6bfcda5c5a7bcee79f20a9dbdd2d55b062f0edb9d86c956e5129"
+    },
+    {
+      "path": "src/lib/__tests__/nextLinkDedup.test.ts",
+      "sha256": "bc2d8a58a466d40b22542be219e6a4a39017a4ea979af7b7cf2db5f39f47bc63"
+    },
+    {
+      "path": "src/lib/__tests__/notFoundMeta.test.ts",
+      "sha256": "d56bad6c1764b10e046e42b13d32319dcde7cc06b6cf7b827ceb9d6d59e0e52f"
+    },
+    {
+      "path": "src/lib/__tests__/numberInput.test.ts",
+      "sha256": "96ae61e20fef44c3bba173ac990aa9cf68e8a47ebb62c3d94c702968e48268e9"
+    },
+    {
+      "path": "src/lib/__tests__/numberInputRefLifecycle.test.ts",
+      "sha256": "f1e9b04048c2dca5a273aac4cfcc4cd951b0b8ff19cc7df02f6b2516cf57126e"
+    },
+    {
+      "path": "src/lib/__tests__/offerComparison.test.ts",
+      "sha256": "2248e227f4d8d338b1565d2da5b46565a112e7f25ccd1b9876023531d4e75e9b"
+    },
+    {
+      "path": "src/lib/__tests__/offerComparisonHandoff.test.ts",
+      "sha256": "54cf5d92d82cb0aca67f172960839437d41a3424c7b3c7e2bc4b3543f985c69a"
+    },
+    {
+      "path": "src/lib/__tests__/ogImageCache.test.ts",
+      "sha256": "ca276fa6d7bde559a8f838df7410349f00564f7528829c42605d8c5047b01475"
+    },
+    {
+      "path": "src/lib/__tests__/ogRouteInputIsolation.test.ts",
+      "sha256": "30dae72f059fe9e2b508cd6610b5aeab9f05cfd26a80d28114642cc419a0fa58"
+    },
+    {
+      "path": "src/lib/__tests__/pageAdPause.test.ts",
+      "sha256": "05248e3fdec1ba811c4184dc687cbd33bd1bbdd05d59df1dbfc2009bde4fc532"
+    },
+    {
+      "path": "src/lib/__tests__/payTableSnippets.test.ts",
+      "sha256": "124b909c69d0dbfdfb89a38f6a1640f51f9f553ba426396650f1e245fc849957"
+    },
+    {
+      "path": "src/lib/__tests__/professionalShell.test.ts",
+      "sha256": "a1b3beef4149ce8e34e41d15dd08a04459cf47cad5beb73aa66aa66f708ad24c"
+    },
+    {
+      "path": "src/lib/__tests__/propertyTaxPeriod.test.ts",
+      "sha256": "dcca024ca5346beb2239eab98527143f35c6ee499b995368ff4cd59b4661b969"
+    },
+    {
+      "path": "src/lib/__tests__/publicInstitutionSalary.test.ts",
+      "sha256": "5f05224dbbb687e81518ea04b08481d268a153e0c8c3851dbca97a75987375e2"
+    },
+    {
+      "path": "src/lib/__tests__/pwaServiceWorker.test.ts",
+      "sha256": "1ef26f79d363c915fff8079ece65504b965491926092c85a83bc960ad0840229"
+    },
+    {
+      "path": "src/lib/__tests__/qnaCtaLinks.test.ts",
+      "sha256": "f4358a2de071938c0a1b34fc8c4023ab0eb710d044bb6d11256dff800b8222b5"
+    },
+    {
+      "path": "src/lib/__tests__/randomIntegers.test.ts",
+      "sha256": "484083cb3f9de8c008cee310f4b2079c50f992053df2d3227ec0273ded8a6cfe"
+    },
+    {
+      "path": "src/lib/__tests__/reactLibraryCompatibility.test.ts",
+      "sha256": "58e34404f4049550be2753c44555114e21c2fe563f041f06583c6cfba8a2d762"
+    },
+    {
+      "path": "src/lib/__tests__/referenceRouteNotFound.test.ts",
+      "sha256": "ab13940c457aecbcf7eae18f1dfe2194eb59f94a2868c57c5b1d3195187ee54f"
+    },
+    {
+      "path": "src/lib/__tests__/relatedCalculators.test.ts",
+      "sha256": "c1aba5bd0c72bb111d66079c1897327180546531d90be987954d9df972fdc54d"
+    },
+    {
+      "path": "src/lib/__tests__/reportStoredData.test.ts",
+      "sha256": "30290c961cc36531d9e30f10ea6254296dc17c7f834c20e3ca2e411c26a9499d"
+    },
+    {
+      "path": "src/lib/__tests__/rootIcons.test.ts",
+      "sha256": "387b48d60d5446d757c5202c82922cf518e322b6f93af88d30e8a123fb05291a"
+    },
+    {
+      "path": "src/lib/__tests__/rssCompanies.test.ts",
+      "sha256": "650cb51c7f74021f0ed667f02a0d59b94b808af5f5ec7a470fc6ebae0a665567"
+    },
+    {
+      "path": "src/lib/__tests__/rssGuidesFeed.test.ts",
+      "sha256": "35a18df26c37a3df76b7e15e54e73432188a02e100c33aa9be492424e97693ca"
+    },
+    {
+      "path": "src/lib/__tests__/rssInsights.test.ts",
+      "sha256": "d0a6a91172e3a3f19ce67571c5bab14d3f75498e3257192ff8e3a36a9e40dda7"
+    },
+    {
+      "path": "src/lib/__tests__/salaryContentIntegrity.test.ts",
+      "sha256": "1f4558d8828c9a49083e3332f664cd025d116c1d97ae36bfdbe0bf61c8c02f82"
+    },
+    {
+      "path": "src/lib/__tests__/salaryRaiseParity.test.ts",
+      "sha256": "be5c50a38833b8c52ede8f40855590a0e2b6c60a4061725fb1ead29133bf06ad"
+    },
+    {
+      "path": "src/lib/__tests__/salaryRankReference.test.ts",
+      "sha256": "bc86512b9dfe891a2ff0da622322ddc8d95ff3043b3a9cbbe64393c4165322f1"
+    },
+    {
+      "path": "src/lib/__tests__/salaryRedirect.test.ts",
+      "sha256": "808d80e289b3ba663b230e80bbea6bc1415173d73f4723229a374cc02988e84d"
+    },
+    {
+      "path": "src/lib/__tests__/salaryResultSnapshot.test.ts",
+      "sha256": "3dd328b671b8c385207be5ca29fa62b49788b2b24aec5efd7699760cf96f8b83"
+    },
+    {
+      "path": "src/lib/__tests__/salaryResultSsr.test.ts",
+      "sha256": "d527093112e6ff7552d17010ca88c5da50556640556b6dee94bfeb27d426e415"
+    },
+    {
+      "path": "src/lib/__tests__/salarySharePayload.test.ts",
+      "sha256": "8a194555e30c0a9136a2fab54c90129e74fb7c4471ae449a2c229004b04a964b"
+    },
+    {
+      "path": "src/lib/__tests__/salaryTableRoute.test.ts",
+      "sha256": "538b1145b1a4f2ecd1bee809066a05f7ac7c02d91db49e47fe4465b353a8f14f"
+    },
+    {
+      "path": "src/lib/__tests__/samsungDsNews1009.test.ts",
+      "sha256": "34489e40571beecd308487c41208e33014e31f71a14b30035a7ff7cf48a820e3"
+    },
+    {
+      "path": "src/lib/__tests__/searchIndexEn.test.ts",
+      "sha256": "6fd2936ae64f1464a80d5f4ca864de265401b7a5dfde9bb48fdc554f35041c3f"
+    },
+    {
+      "path": "src/lib/__tests__/seasonalBanner.test.ts",
+      "sha256": "f640ffb749b8da742f5b80ac273defadc6cd942b6100865e57bc86b5a8529331"
+    },
+    {
+      "path": "src/lib/__tests__/seasonAnnounce.test.ts",
+      "sha256": "476b06c7493b912c7a9ef2b2596894338b658c105eea6df26ac91754530439fd"
+    },
+    {
+      "path": "src/lib/__tests__/seasonCalcMeasurement.test.ts",
+      "sha256": "3190ddb04d05aeae2b3d481a7f5aefd85fc589ecd363cc0fa7dd25f705ac7cc8"
+    },
+    {
+      "path": "src/lib/__tests__/seasonHeaderPayBudget2027.test.ts",
+      "sha256": "29b2cacb44a0339e263049af9ee3d59df267a1fc67714dbe00451caf2570e04e"
+    },
+    {
+      "path": "src/lib/__tests__/seasonKey.test.ts",
+      "sha256": "3122bb77eb7cf1e4bd9a125d044d32837cc1e29de4488d18396fa1c2113f49d6"
+    },
+    {
+      "path": "src/lib/__tests__/seasonMenu.test.ts",
+      "sha256": "4c2722448f8f27f26f050644985f462814459b1212c608aedb3dfaa362485d2d"
+    },
+    {
+      "path": "src/lib/__tests__/seoTaxSameWidth2026Sep.test.ts",
+      "sha256": "e75029a4c292a684eaaa8b866b3d62446b9f714b28965d6cc1439a4261b01de4"
+    },
+    {
+      "path": "src/lib/__tests__/severanceMonthEnd.test.ts",
+      "sha256": "bbbdd0db4d15d1ce36885cf6243b2392a2274fa6b7d11ff20ee697eaa2dc9db3"
+    },
+    {
+      "path": "src/lib/__tests__/shareableResultSlot.test.ts",
+      "sha256": "ecfbc1c75dc25d166d5e4fe811945a3f08c912b0a34e1469761cf914d6b8d89b"
+    },
+    {
+      "path": "src/lib/__tests__/shareChannels.test.ts",
+      "sha256": "b3bb04df4be77a4ff2d90a01ff7deebc0b5ef7669dcfcd365c97e656bdf44809"
+    },
+    {
+      "path": "src/lib/__tests__/shareLandingMetadata.test.ts",
+      "sha256": "1efef96b541a912be8a15b63cc0c3d7dbc171576068a896a15be98aee90a03a7"
+    },
+    {
+      "path": "src/lib/__tests__/sharePolicy.test.ts",
+      "sha256": "9e50e629dc57bae1b3e387cac3e7deb546822e3bd9551ab4c4fd1d8d95b5fcd7"
+    },
+    {
+      "path": "src/lib/__tests__/shareRuntime.test.ts",
+      "sha256": "51d36db59677c04be0c54d71f565be80632eebc7aa77d0d53a0c69a4cff29a7f"
+    },
+    {
+      "path": "src/lib/__tests__/shareTransport.test.ts",
+      "sha256": "39dd573e64166b421b314af3659df3c6c0ffc69fc0f437a73eae999cb6338a8d"
+    },
+    {
+      "path": "src/lib/__tests__/simpleCalculatorShare.test.ts",
+      "sha256": "eeee57b554415000c1078e233b5f1f201298a1b6dd0680a57e3b6e57e8e838d2"
+    },
+    {
+      "path": "src/lib/__tests__/simpleCalculatorsZeroRate.test.ts",
+      "sha256": "a25d17f864136d89436b50851684852cba232cb66d358c61e18e208d288cb812"
+    },
+    {
+      "path": "src/lib/__tests__/siteDates.test.ts",
+      "sha256": "da3745c55aa8f50c64eb6ccdee331dfe7f47f8b5e88f3a6d693956f0273b1a3a"
+    },
+    {
+      "path": "src/lib/__tests__/sliderSemantics.test.ts",
+      "sha256": "c5408eaffff527775f4178852aed6005ae66937a588e13a67e9045a5554f71f7"
+    },
+    {
+      "path": "src/lib/__tests__/smeYouthParity.test.ts",
+      "sha256": "4614f30f9466f4c73b66add60174cfd9e47b9265cf79f43be627a561a89e6a67"
+    },
+    {
+      "path": "src/lib/__tests__/staleStatusScan.test.ts",
+      "sha256": "28dbb4f748f5c0324936fc4c7daf1cc259ea0989abd5d6873d27db4ced91e09b"
+    },
+    {
+      "path": "src/lib/__tests__/standaloneFactsR8B.test.ts",
+      "sha256": "8d07b7dd9bd09e1ed9c189c44bdaf093c546e78a1b5497a6f07d10c2938db453"
+    },
+    {
+      "path": "src/lib/__tests__/storedFinancialData.test.ts",
+      "sha256": "734af2666ce43640147c0ad26b7cdc32a87eb4a2c3b5f51c4220bfbdfa0912f1"
+    },
+    {
+      "path": "src/lib/__tests__/tableInteraction.test.ts",
+      "sha256": "2c4585d7e859480464d91eb4b454fe5daf413eb742b7ba6aaa0c23b10dc86005"
+    },
+    {
+      "path": "src/lib/__tests__/tableQueryState.test.ts",
+      "sha256": "e8f9e8cb78a420dcc1539a8ddc20dd4d09882c552fb8d3937705b59140ade7bf"
+    },
+    {
+      "path": "src/lib/__tests__/tax2026.test.ts",
+      "sha256": "d77f59f09e04bfeef0ecbeed186fa3ce77dd3bf0289c04677d27398f11d0cf2e"
+    },
+    {
+      "path": "src/lib/__tests__/taxLogicGuards.test.ts",
+      "sha256": "9d26379757a49e46b8a1c9f916ce230d0d544de81c6d08ce2b2a95f9347d222b"
+    },
+    {
+      "path": "src/lib/__tests__/taxRatesParam.test.ts",
+      "sha256": "529ae4800272288b983b590786998a2fa1430df5c0e4e20ea090a71439072369"
+    },
+    {
+      "path": "src/lib/__tests__/toolZeroInput.test.ts",
+      "sha256": "4d2f3769f5abc5f60d128f1be63188f9746a681267da2633a7a3e9935cd459d5"
+    },
+    {
+      "path": "src/lib/__tests__/trendBriefEdge.test.ts",
+      "sha256": "413b2cd63ff1a39af58a9baf6d38df4129f97d3658f352d035fad4bb0d2c4648"
+    },
+    {
+      "path": "src/lib/__tests__/trendBriefImpacts.test.ts",
+      "sha256": "c83e37da1e7ee6f92ab3cdf52b9203cdc609edfd1cf75463f62287e21c5f49c5"
+    },
+    {
+      "path": "src/lib/__tests__/trendBriefRules.test.ts",
+      "sha256": "d0ab7c41591bc3771e8e44760bb41a7b05109f9039260cc5799f8b05809eb37f"
+    },
+    {
+      "path": "src/lib/__tests__/trendBriefSpec.test.ts",
+      "sha256": "139ce3f746d3057c1c06ac7b8cb85e8699d2f127932ef44c06939b82f81e7d30"
+    },
+    {
+      "path": "src/lib/__tests__/twoHomeLawFix.test.ts",
+      "sha256": "ef0993cf55bf156237e92e2fb2977aab864dabab10587af89122ac98a45a6864"
+    },
+    {
+      "path": "src/lib/__tests__/uuidV4.test.ts",
+      "sha256": "99409fd813d2763cdaeab68b67a55b32b15b7fc7b48b058e2d8afe56480e196b"
+    },
+    {
+      "path": "src/lib/__tests__/vitalsAttribution.test.ts",
+      "sha256": "4c7fe1090e83a79662c4bae168850cc055842d97af513d7f7e5788bb68bccd96"
+    },
+    {
+      "path": "src/lib/__tests__/wageConversion.test.ts",
+      "sha256": "474cd6a4ae03ebba509c81fd4260a806249de52847dc01fba12eee0bbf271c31"
+    },
+    {
+      "path": "src/lib/__tests__/widgetCompanyNote.test.ts",
+      "sha256": "e0b6ad47df319d6a897cd3e077a85f6cf0dd3acc6c7daf4354d15e85e076cd78"
+    },
+    {
+      "path": "src/lib/__tests__/widgetDsr.test.ts",
+      "sha256": "fd25b22d52876d9b82fbe7611bb10987f30fc2ebebe065265e9b6cf7c9b3521f"
+    },
+    {
+      "path": "src/lib/__tests__/withholdingTaxTable2026.test.ts",
+      "sha256": "713996803527572da481c8b785737c1c2df3d186ab2b47a61cae31a7b94ab1b0"
+    },
+    {
+      "path": "src/lib/__tests__/workClock.test.ts",
+      "sha256": "15894b8f32b78411bd332767c852f429ab871fdd1595f4450bb86b616fb4e778"
+    },
+    {
+      "path": "src/lib/__tests__/workClockCalendar.test.ts",
+      "sha256": "c86f52f1df9339beeca3223f515c5bd4a430a646081b3b2e8cb5b892da74cf29"
+    },
+    {
+      "path": "src/lib/__tests__/workClockExtras.test.ts",
+      "sha256": "841a6ab5a6223b2ed14d75da03ea3bf57086cae46f2e185073333fb6d1d4e17c"
+    },
+    {
+      "path": "src/lib/__tests__/yearEndLimits2026.test.ts",
+      "sha256": "576d4b66c5680469db6d504f38d16c203ec44998840b733e89b4f939989e55cb"
+    },
+    {
+      "path": "src/lib/__tests__/yearEndSeasonGuard.test.ts",
+      "sha256": "440433d9f03e69754f40428fdd53db5ce21fcc1488ebe432eaf81d2c6a843aae"
+    },
+    {
+      "path": "src/lib/__tests__/yearEndTax2026Engine.test.ts",
+      "sha256": "9f56eb8c047c21201bf2b7a23e394273477a61a0ea906233da3583a3c3d11410"
+    },
+    {
+      "path": "src/lib/__tests__/yearEndTaxReport.test.ts",
+      "sha256": "d69180d3e8008b6540be7d0f29a383523cf11612b6fe79526f969e861525d1d1"
+    },
+    {
+      "path": "src/lib/acquisitionTax.ts",
+      "sha256": "b7b7c842aec3e753759f1e43c187aedb2f807b2881268b4c801ad6c16072b038"
+    },
+    {
+      "path": "src/lib/adMeasurement.ts",
+      "sha256": "d399d66ff27d75310881bb331df775651a1ee9f95a5e9877a8efdadc136ff05f"
+    },
+    {
+      "path": "src/lib/affiliateOffers.ts",
+      "sha256": "c3ad4b000e9337f972722e1e7065ef604d60b0cc471806de88f3a22c3b0873f5"
+    },
+    {
+      "path": "src/lib/analytics.ts",
+      "sha256": "8347f5d88191fe6ce7df09194f4704e68484d70830ff5fcc2b24fe855344a70b"
+    },
+    {
+      "path": "src/lib/analyticsPrivacy.ts",
+      "sha256": "ce7a92413ff262f3bee2c7835b4f76c84756c494a0b3563edf38ace52fb585f8"
+    },
+    {
+      "path": "src/lib/annualLeave.ts",
+      "sha256": "18d956e86eb8a65b3d0a4ed6794a0eaeeeb13c8378e3d55bf4936c290dba3903"
+    },
+    {
+      "path": "src/lib/autoAdsSeen.ts",
+      "sha256": "a0910053120052c640b9206dbd836e0e0794be7523570ce274db28158504977a"
+    },
+    {
+      "path": "src/lib/bonusHome/affordability.ts",
+      "sha256": "f7f0386ec76de3392f1a41c37e5ab6d79bca374c39520f9019141785a923709e"
+    },
+    {
+      "path": "src/lib/bonusHome/compEngines.ts",
+      "sha256": "9ad98107a3143a2f502e1e0ce272ce17eb7d639a35065472d23d720fdbde634c"
+    },
+    {
+      "path": "src/lib/bonusHome/loanRules.ts",
+      "sha256": "c828da2b3d8894e770719a9789cd00c0faa8f354dee7e4f673622ffb61bd3274"
+    },
+    {
+      "path": "src/lib/bonusHome/marketSnapshotRules.ts",
+      "sha256": "71c24d1b9e0a42f86a92bf302392f6681fe9f7c9244646d7a6b30849f89ac250"
+    },
+    {
+      "path": "src/lib/bonusHome/opActuals.ts",
+      "sha256": "dc9baec3752f292b68999dc0d9ade7ede78140093fff51159acbb7a0b1f040b2"
+    },
+    {
+      "path": "src/lib/bonusHome/plan.ts",
+      "sha256": "6016aa3700201d9a84c68cffe5009a9b7fb2a03bffd598fa4b9d1853feed2aba"
+    },
+    {
+      "path": "src/lib/bonusHome/scenarios.ts",
+      "sha256": "7c0eb80cc042af10c7bebb79bc337b28767ef9e195dd5058bdd2bc9a8989b177"
+    },
+    {
+      "path": "src/lib/bonusNextLinks.ts",
+      "sha256": "57a8f9af402aeb6437416e1a0ae4a08b560d14ffcc33dc6f08b3ddbb76982822"
+    },
+    {
+      "path": "src/lib/bonusTaxCalc.ts",
+      "sha256": "3179ec1a5f67f3848cd03ded49e37303b4d040f57efbd9def17b2d956a602762"
+    },
+    {
+      "path": "src/lib/bottomAdDetect.ts",
+      "sha256": "4b4cef026d28dfaed9664cbde96ebc7fd8af980fac0a8e308436fb182741a275"
+    },
+    {
+      "path": "src/lib/calculationMeasurement.ts",
+      "sha256": "662b876315d26ce8e14a620b26e7b6d2a941f0460a495155a3fb2e2851df6c7a"
+    },
+    {
+      "path": "src/lib/calculationTracking.ts",
+      "sha256": "f01b1f51d05b01f42430fd760006442a949683e01de5b61ec0937bd96787aeed"
+    },
+    {
+      "path": "src/lib/calculator.ts",
+      "sha256": "8ea4d93bb41be21f0faf7f825dcd7fcdd2e3e7c125d621e966d851002a78b92f"
+    },
+    {
+      "path": "src/lib/captureElement.ts",
+      "sha256": "b3414cb7bc81e509ab3bfcc7902c46f56b994b50453136ef8e37a8eeb5f1e308"
+    },
+    {
+      "path": "src/lib/cardDeduction2026.ts",
+      "sha256": "5d0eb6681b27598d90acbef99963a1e275262d9a7ed840abc84a2c1826988a94"
+    },
+    {
+      "path": "src/lib/careerPlanner.ts",
+      "sha256": "4e88463fa4a544297285f858b2a36aadb0b50a58973e5df73bfaa68395a0417d"
+    },
+    {
+      "path": "src/lib/carLoanCalculator.test.ts",
+      "sha256": "f93f28b6731e07c4a53d295dc59816311826c99c8d2886f9f13108ba7e69769c"
+    },
+    {
+      "path": "src/lib/carLoanCalculator.ts",
+      "sha256": "a19bda4e599d70002d1101b28634ce13ace4b6c2ccfeb0f9e3cde220b2941308"
+    },
+    {
+      "path": "src/lib/childDeduction.test.ts",
+      "sha256": "6f242255c705098894b9f076c1438096dbc71040a8e36e1254b0add08971df8f"
+    },
+    {
+      "path": "src/lib/childDeduction.ts",
+      "sha256": "b0bb5c26d9cb79782e4b68dbbbe797f9081a328a0750fa28503dd9b55351e380"
+    },
+    {
+      "path": "src/lib/chunkReload.ts",
+      "sha256": "19985a9e0aa968c5fc7fc0498279eaa4fb7acb5f0b776a5f3a51c5c155f654c0"
+    },
+    {
+      "path": "src/lib/citationPolicy.ts",
+      "sha256": "7dfe68ec0ca0ea1f860071b2bb4665ff4c640c25521a16600448e1139e63492b"
+    },
+    {
+      "path": "src/lib/civilServantAllowances2026.ts",
+      "sha256": "1d4ba201ad2f3ce1d249ecf6977df3fed728a8b35f13f1912833997f019c3f42"
+    },
+    {
+      "path": "src/lib/civilServantForecast.ts",
+      "sha256": "edaccf5a3226ccdfcd17cf5ce3cd794ebb1d2b9c0856174656cb7bf12e374bc2"
+    },
+    {
+      "path": "src/lib/civilServantNetPay.ts",
+      "sha256": "a9bf0a3e37c8f4f7837f6b368dfd7f15f92082304321ff44263a5b03d9409139"
+    },
+    {
+      "path": "src/lib/civilServantPay.ts",
+      "sha256": "d5244fd3946f0bd79e27ba46ceb45adf98fe892669f901d430becc315280337c"
+    },
+    {
+      "path": "src/lib/companyContentBuilder.ts",
+      "sha256": "5001902f9eb9769e3c4e2d67e714d0c391c206a6eaaa6d89ce9abb3b4f118fd4"
+    },
+    {
+      "path": "src/lib/companyData.ts",
+      "sha256": "88c2786e88dafe78ed44b2ebe5a0adae3b1f4186f1adfb7c4ccdde5fb859122c"
+    },
+    {
+      "path": "src/lib/companyFaqItems.ts",
+      "sha256": "66a07bfce1f07bebde850f4db2a006fe7e7cbb733e3e16d850d4177c1ad60a8d"
+    },
+    {
+      "path": "src/lib/companyJobsMap.ts",
+      "sha256": "95af0ea4314e4ee8fc7f0d1ddfac496ce36b3a5c51628e30c147004062b0053f"
+    },
+    {
+      "path": "src/lib/companyJobsResolve.ts",
+      "sha256": "a9fb7484b58c7050657c0bf0b7496e00ca58f70b51870a86457544833e37a6ea"
+    },
+    {
+      "path": "src/lib/companyMetaDisclosed.ts",
+      "sha256": "1da4361e6c38be68878b9351b8dace5a65e328ab5274069ac014b001f946392c"
+    },
+    {
+      "path": "src/lib/companyMetaGate.ts",
+      "sha256": "b50c84e83f9221ae5516e1ea7b566518ce5e491c08d754e370f42b7770aefefb"
+    },
+    {
+      "path": "src/lib/companyPageMetadata.ts",
+      "sha256": "7b07602c4b882454add2c16a51a51e82757294c761e2d9cb8704fba86aab216b"
+    },
+    {
+      "path": "src/lib/companySalaryBasis.ts",
+      "sha256": "4ba7fa23f261413024f4b053d1539feab16d4d1e6b33547e3590598abf9ad4a4"
+    },
+    {
+      "path": "src/lib/compoundDisplay.ts",
+      "sha256": "a0af46f37c6dedf27beb159d8cc98defa32b9b8c6c9333a3e2362a706a11fe35"
+    },
+    {
+      "path": "src/lib/contactContract.ts",
+      "sha256": "9ac967f4b0ad30e4bbee74f8237f941a245854445f2ea6ed6e7ed22c71487fb6"
+    },
+    {
+      "path": "src/lib/coupangContextMap.ts",
+      "sha256": "1ddab6f5797719db9b38a119aef6898a81b3d793c4bdaa0ad76f42e1695f325c"
+    },
+    {
+      "path": "src/lib/crossLink.ts",
+      "sha256": "c61160773b1d8cf18d4bbf60a8f9fd2f4ed0b38330f7a77004839bffeb6c0bca"
+    },
+    {
+      "path": "src/lib/dashboardAnalysis.ts",
+      "sha256": "d82ca2cbc3a815941a3abec490cd09a11ddd9ae4cbdad9d221d9ce80ba4cb514"
+    },
+    {
+      "path": "src/lib/deferredSectionActivation.ts",
+      "sha256": "4c73caf7260a10f649d9fa6b846ee595b3d7cca21f9cbeeaa68f01e5e40bff33"
+    },
+    {
+      "path": "src/lib/dependentEligibility.ts",
+      "sha256": "40ff3f54d7f5c56215820896713b188f00f1057fbfcceb50397ff400c19a5f31"
+    },
+    {
+      "path": "src/lib/dividendTax.ts",
+      "sha256": "81518ac1024e35f8c02d20c766d694876c4dac39a3d5cf7f7a6dc1bc1399b330"
+    },
+    {
+      "path": "src/lib/donationCredit.ts",
+      "sha256": "173aef65c4b15559b779202887cb25ec46a63e6314a7ae2c324b045af84bfdcb"
+    },
+    {
+      "path": "src/lib/edgeRenderedPaths.ts",
+      "sha256": "8db0d27b8de32e72f7274b97f7f7a3d2318720a5421c611c130d538125f610c6"
+    },
+    {
+      "path": "src/lib/englishCalculators.test.ts",
+      "sha256": "fd6ef861eac751645600357812597c87e6460a451fc057a965dee5f18c84545c"
+    },
+    {
+      "path": "src/lib/englishCalculators.ts",
+      "sha256": "c1375540b1eeda2bcd382de2575dcb3490f14e11f99435e14a065ae11662adb5"
+    },
+    {
+      "path": "src/lib/englishGuideContent.ts",
+      "sha256": "b3473ca5af863454f7c733b71e033644aeef9d44ce89c8a5f86587308bfbd2fd"
+    },
+    {
+      "path": "src/lib/englishHubs.ts",
+      "sha256": "fcb471e37b089a1f1a4c2ee32b6a8e5c2ca7d666bc87ed68bf2906f9392060c7"
+    },
+    {
+      "path": "src/lib/englishNavigation.test.ts",
+      "sha256": "e1a3f761e466d2c6e0541d82d73d45246f7c772115677a07000e06a7f35d9f1e"
+    },
+    {
+      "path": "src/lib/englishNavigation.ts",
+      "sha256": "5191abfd73c7f262294d67f07290cc018c94ee2eb1d805cc294a48360dd47eb1"
+    },
+    {
+      "path": "src/lib/englishResultTasks.test.ts",
+      "sha256": "3ebcb5fd227e1657522aa2cf03d2a64e6c572cbb18d4f65a1251c2aec3fe3685"
+    },
+    {
+      "path": "src/lib/englishResultTasks.ts",
+      "sha256": "d9f055021a6e5354669451299405390f2969503ac705df5ffe78982e73acee77"
+    },
+    {
+      "path": "src/lib/englishRouteGuard.test.ts",
+      "sha256": "b69a90fffaf5842f61b2816da43fca3853c9e5a3fd127735dd9a60beffae88d1"
+    },
+    {
+      "path": "src/lib/englishRouteGuard.ts",
+      "sha256": "d37570730d69cf4f61204ff2c870301169cc566315e14f7b6bf74e6ec954ce44"
+    },
+    {
+      "path": "src/lib/englishRoutes.ts",
+      "sha256": "83526c84c40fbd0e51729adc488437e7ff64e6bf1ee18c1f3d44bb4b5bed4ffd"
+    },
+    {
+      "path": "src/lib/englishSavedResults.ts",
+      "sha256": "30ed993814560253c5cd93c0f38029a19ba50ab69d79153c1030e423f1a3393b"
+    },
+    {
+      "path": "src/lib/englishSeo.ts",
+      "sha256": "d8337d1af60502e60b73b590c7a3e9d562f9d66462e30cf83dcde75d4c1dbc48"
+    },
+    {
+      "path": "src/lib/englishSite.test.ts",
+      "sha256": "8a826bbc6978f45a13f6d6e5e78489e66145df9fb70fe2836f5e317561815621"
+    },
+    {
+      "path": "src/lib/englishSite.ts",
+      "sha256": "abe63c27bf9991296f3c4dd560fe2eb467d343eb1c28989bf2ec87b69e87c8c1"
+    },
+    {
+      "path": "src/lib/englishTakeHome.test.ts",
+      "sha256": "08752ae2b70119785e3be6030303937db78e48cb9f02d24464190c2d5f7c7518"
+    },
+    {
+      "path": "src/lib/englishTakeHome.ts",
+      "sha256": "3d1e27d47e8a1bff4152a766d91c7d0a38dac55a3a77f80c838817913f6d502c"
+    },
+    {
+      "path": "src/lib/englishToolModels.test.ts",
+      "sha256": "ff364bf1b8b5e2033c9c567cc316bad1c5b758d013dd38289abfc79a95b7a4bc"
+    },
+    {
+      "path": "src/lib/englishToolModels.ts",
+      "sha256": "57615881f9af66b6af25cfde51d14d9a486fd2c6d0c2634b2217c49bff7dc579"
+    },
+    {
+      "path": "src/lib/englishTools.ts",
+      "sha256": "2d5f5227ae17898da0f614da35205b3fe34feb673c850d92d87e8c6f5679bcc6"
+    },
+    {
+      "path": "src/lib/enGuideSlugs.ts",
+      "sha256": "8112683ac758e1e7b6abedba9ef7072f8ab772a500e5ef84f2f48e4f32b9d9b2"
+    },
+    {
+      "path": "src/lib/exchangeMath.ts",
+      "sha256": "2863831691bc8593a1726959724bb46b4014a3b96da06c627ca2e25cdbeaa89c"
+    },
+    {
+      "path": "src/lib/fireLifeEvents.test.ts",
+      "sha256": "3daabb9e72dbeb55eba68fc7af2a420742f2dd38a1dda3940028d798f13bdadf"
+    },
+    {
+      "path": "src/lib/fixedFeedbackContract.ts",
+      "sha256": "80c401e36ff127ffce1021c6e6cfe0a0f769e50052d8518962f58891b2730bda"
+    },
+    {
+      "path": "src/lib/freelancerCalculator.ts",
+      "sha256": "943ec6f3838c1baa76313b44ae0f67bbffb20431eca849721a4dabfbe4953869"
+    },
+    {
+      "path": "src/lib/futureCalculator.ts",
+      "sha256": "6949308984ef3f46c7bc6bc79bff303d0cb0f7c3ef027e979a4ca92ce3337a57"
+    },
+    {
+      "path": "src/lib/generateData.ts",
+      "sha256": "f20809666b52bbfebc335651f12b0ceba62faa089f0c3adc42e03c8f6aa4ceb1"
+    },
+    {
+      "path": "src/lib/generateData2026.ts",
+      "sha256": "fde2ea94432b6bda996e11d164afff57be59c4c9f26f02b24dab71d5353cfacf"
+    },
+    {
+      "path": "src/lib/generateData2027.ts",
+      "sha256": "4ff23b4c6342113f7e75478d8634fa1cc701c1c01df0236efec301c3123113c8"
+    },
+    {
+      "path": "src/lib/global/taxEngine.ts",
+      "sha256": "3920dc7d5b24432cd4c647d3d78cea0cb429d04c96474403bb9abe36edf4c55f"
+    },
+    {
+      "path": "src/lib/gtagReady.ts",
+      "sha256": "784c01261338605b47506d000c7eff303fe91df3bc1be2d27030d3eeb85df0d0"
+    },
+    {
+      "path": "src/lib/guideCategories.ts",
+      "sha256": "0add9ff004bcc32414a65c247d4d1b94fa2c319fe8c66e79e0f8eda95775098b"
+    },
+    {
+      "path": "src/lib/guideContentRevisions.ts",
+      "sha256": "1979e767aa20df24016b61c1a084f6fcc58239809c0970470998ec9c3975703f"
+    },
+    {
+      "path": "src/lib/guideContentRevisions.twoHomeLaw.ts",
+      "sha256": "156e51e67f6e42a25561b05e008431c66792d289ccd4c13cc749045f5ba0ba8c"
+    },
+    {
+      "path": "src/lib/guideDates.ts",
+      "sha256": "21410f509616978bdbca5c0b6e3888025cc603f6427649a31c0043b5ee6c0eb3"
+    },
+    {
+      "path": "src/lib/guideDiscovery.ts",
+      "sha256": "8ac5000a924132586015f2c0ed89ff4bfa95c9969de9563e7ed3241abdb9f5e0"
+    },
+    {
+      "path": "src/lib/guideFaq.ts",
+      "sha256": "156bdcd569b800e1ab2a587182d143ccff268546ef402e9d9fd77ce995cd31c7"
+    },
+    {
+      "path": "src/lib/guideHeadings.test.ts",
+      "sha256": "30fac7c350e964ff474dc129de7a8daa8959810fc3c45636a229ffd218e97323"
+    },
+    {
+      "path": "src/lib/guideHeadings.ts",
+      "sha256": "dff68768d74e2460c8572cad634104acf18916e70751cd20aa2b4ddf2e8f2d07"
+    },
+    {
+      "path": "src/lib/guideReleaseHoldback.ts",
+      "sha256": "37339e1212cdce32564c3a3b12aa0921d6e7c32ba0c9643f0a10c7286ecd3c6e"
+    },
+    {
+      "path": "src/lib/guides/2026-season-deepdive.ts",
+      "sha256": "d4fb80a57b94a040c9420afca3f0b3487ebe0e88c07110bcd0e01c79615314ab"
+    },
+    {
+      "path": "src/lib/guides/autumn-2026-season.ts",
+      "sha256": "17326528685b349b63d26cda98eb9018184af5a6cd6da18cc4e593f7981b2584"
+    },
+    {
+      "path": "src/lib/guides/bonus-deepdive.ts",
+      "sha256": "aaf866e715f93eea183b9358dff96aba54e9c62e0e2401feeab03d9075e7981e"
+    },
+    {
+      "path": "src/lib/guides/bonusKeeperFigures.ts",
+      "sha256": "8c6630d697d7e6161a4f29cc012653235b34b3c3543dbe48c21487fb422bd38b"
+    },
+    {
+      "path": "src/lib/guides/bonusNetFigures2026.ts",
+      "sha256": "325fdec1f053a9247c821d5815b66d7932cf0814db1fcd8ad7fc0485cc482ea2"
+    },
+    {
+      "path": "src/lib/guides/company-realestate-deepdive.ts",
+      "sha256": "ba030d729ba7b9a924bf861e1b77938410324a1f67ae399e722d5006fa34d59b"
+    },
+    {
+      "path": "src/lib/guides/company-salary-deepdive-2026.ts",
+      "sha256": "055acb46d630e02e2e1bbf97f2f8b154d6e78a629f2c338e86abce148e6311a9"
+    },
+    {
+      "path": "src/lib/guides/finance-deepdive.ts",
+      "sha256": "6a1c2dd0c90a0fafb33fa3db81deeaeba98bb2c55340eef7abdbd5c2ec65619c"
+    },
+    {
+      "path": "src/lib/guides/finance-rpm-2026.ts",
+      "sha256": "c4504d85e7b39ab7d063f59d05ad8fd482e91a5a27f2c81a2d6e9c7b02ce8ed4"
+    },
+    {
+      "path": "src/lib/guides/hot-bonus-tax-complete.ts",
+      "sha256": "628d79b20c86e4c152ce86997a751890681b2a0309a7e4ebec3c835fcc12b567"
+    },
+    {
+      "path": "src/lib/guides/hot-keywords-deepdive-en.ts",
+      "sha256": "d5fc361f47cd1c4a86619a6b51944867583fdfd306b8e2a179b5d3c58f0830ee"
+    },
+    {
+      "path": "src/lib/guides/hot-keywords-deepdive.ts",
+      "sha256": "c7a914cad311a11abaf6cddf7acd9c9a50c6c3a17b34a3b9ba02bf4f444af58b"
+    },
+    {
+      "path": "src/lib/guides/hot-news-2026-deep-dive.ts",
+      "sha256": "4ac867c62dce2e7fa20fc21c8f1cf4632ad55db9e346b99576dda5391b5a25c5"
+    },
+    {
+      "path": "src/lib/guides/hot-news-2026-extended.ts",
+      "sha256": "0c97f7415575471df7b1601ae09acb85291b7219ef59f9a0613f6f905dd9310b"
+    },
+    {
+      "path": "src/lib/guides/hot-news-2026-may.ts",
+      "sha256": "e1f0dca09b6cd1e09ae81e7fa63b0d9bc65cd8538248ace24203e3670f19b53e"
+    },
+    {
+      "path": "src/lib/guides/insurance-investment-deepdive.ts",
+      "sha256": "05d25d60e8d53b9b179bba9629b13a8906e9eb6fa8121bc502bcb9ab08159dea"
+    },
+    {
+      "path": "src/lib/guides/job-salary-deepdive-2026.ts",
+      "sha256": "dd9fbdc2074ad2e2362e6cd8bf6dec8f18296830141d1ec06439ebcdacb731ff"
+    },
+    {
+      "path": "src/lib/guides/legacy-rewrite-1.ts",
+      "sha256": "18b2a768e6f21169725af12d9f9d6db9261f44809e532749be9b053677942143"
+    },
+    {
+      "path": "src/lib/guides/legacy-rewrite-10.ts",
+      "sha256": "386c02e6662124b2ac909897f310c215bce3494527c7fb2da32e7bb8ffdef5d2"
+    },
+    {
+      "path": "src/lib/guides/legacy-rewrite-2.ts",
+      "sha256": "9bc30d447542e160c2de61d6bfdf4978ce909061411ff121a0f1538d8ae94266"
+    },
+    {
+      "path": "src/lib/guides/legacy-rewrite-3.ts",
+      "sha256": "7abda1bfe8af8cfe95844a557bb6995b0fb410f320de09d9ffda6d28f49c5730"
+    },
+    {
+      "path": "src/lib/guides/legacy-rewrite-4.ts",
+      "sha256": "3ac6f0f6fe482cde1b71c351bbeda868c931b8c166da31942ee015c915f5652b"
+    },
+    {
+      "path": "src/lib/guides/legacy-rewrite-5.ts",
+      "sha256": "b1bacd256853e98a26464f7b85f05975732c777b945c8ffb7c4af9bacc0cc1ca"
+    },
+    {
+      "path": "src/lib/guides/legacy-rewrite-6.ts",
+      "sha256": "36ff2ee27add92ad318811c8f6f2398d9aa26faf1859fcc575f728e7cfe75b07"
+    },
+    {
+      "path": "src/lib/guides/legacy-rewrite-7.ts",
+      "sha256": "fc28f87f05771b5f1a5f8c5ef2ec914b5212290c72a6be9ef99dd6ecc3af7b1b"
+    },
+    {
+      "path": "src/lib/guides/legacy-rewrite-8.ts",
+      "sha256": "18940350054095edaf3ba4fb09ecb160449d8938638790d6609940b7aef768fb"
+    },
+    {
+      "path": "src/lib/guides/legacy-rewrite-9.ts",
+      "sha256": "7e614d9930eb6ece8cb3e2d38f6dd2c81ca112759e4dcc3263780316fba5ac01"
+    },
+    {
+      "path": "src/lib/guides/lifecycle-deepdive.ts",
+      "sha256": "6b2eceb8afab60fd1330853662423a3fa5af2fd67276596a84d6b843613d992b"
+    },
+    {
+      "path": "src/lib/guides/negotiation-deepdive.ts",
+      "sha256": "a50f7ff76f7eb977fc300c632bb50c80d37c9dd9e5aa486076257aea48053b69"
+    },
+    {
+      "path": "src/lib/guides/semiconductor-bonus-news-2026-09.ts",
+      "sha256": "97aa9ea3cca671bc3b6d7358e06baffb067ce52e101f738976f955ce4b292add"
+    },
+    {
+      "path": "src/lib/guides/semiconductor-bonus-news-2026-10.ts",
+      "sha256": "1bb5ff50f195d054bd749eef613099ab2b9c293aad7fcdbd515f53c9bc32ef49"
+    },
+    {
+      "path": "src/lib/guides/semiconductor-deepdive.ts",
+      "sha256": "8a5b9a34d056e4506829144e26db0df28951633209dbc73bcd432662fbb25968"
+    },
+    {
+      "path": "src/lib/guides/stock-deepdive-en.ts",
+      "sha256": "2f63b217605c790be9f2d1e49fb99e0c016cb18ebcab3b8d291c0dcf58c35c04"
+    },
+    {
+      "path": "src/lib/guides/stock-deepdive.ts",
+      "sha256": "d891d79bb5caf9075af44de3b7fa23375bcda134143b9ae43e4ad284e8c52465"
+    },
+    {
+      "path": "src/lib/guides/supplements-samsung-ds-2026-10.ts",
+      "sha256": "5ce6cecc3f58daa3b46372366b4f110e37d0afeb6cc5e28e01e00c0d5ac7a8f5"
+    },
+    {
+      "path": "src/lib/guides/supplements-two-home-law.ts",
+      "sha256": "47a28ee91af22f385ed49868bf89a89b7e94c5448dc31beb0c188e691a1c7971"
+    },
+    {
+      "path": "src/lib/guides/supplements.ts",
+      "sha256": "10058d847556e5e833e11f7b110f2c08b15d57c24b16c44e890d19eec2fbe06c"
+    },
+    {
+      "path": "src/lib/guides/tax-deepdive.ts",
+      "sha256": "4e20dbb9b5deb08f543d3a56b6f1322dc180f5b3f2aaa91b0ff3483f221b7200"
+    },
+    {
+      "path": "src/lib/guides/trend-briefs.ts",
+      "sha256": "f76943e833c02f4a9efcc517bbda4591aff8d7c1b85d9a90e4d0710d30ade176"
+    },
+    {
+      "path": "src/lib/guidesContent.ts",
+      "sha256": "916b8e0046687ccde2517ba9a72813c166cc72287c8192de78a924cf9aeebf1b"
+    },
+    {
+      "path": "src/lib/guidesData.ts",
+      "sha256": "d262296c89771e9a85b5da46ebac1c39b2611c27eab39b5c1cf8f48416359ac7"
+    },
+    {
+      "path": "src/lib/guidesMeta.generated.ts",
+      "sha256": "72f6ae0050082d74077192827a399095568362b34dcc5f6dc9bd3a3d4faba925"
+    },
+    {
+      "path": "src/lib/holidayPay.ts",
+      "sha256": "f569ac52a50ef94f3368c5d4f278df2399df6eb98aa21e1372bdda246864797e"
+    },
+    {
+      "path": "src/lib/homeContent.ts",
+      "sha256": "cfec86a117c20540712f0122f130e1164e63703291e1d33d90d35c84f8f63587"
+    },
+    {
+      "path": "src/lib/homeLoanRepayment.test.ts",
+      "sha256": "e8ee5663c92718ea3d594225d111bd7692c2ec7f0612b4fabc1559ce42100a69"
+    },
+    {
+      "path": "src/lib/homeLoanRepayment.ts",
+      "sha256": "7422d41feff5a477ecaa7169ae16f0929c0244650a2387ebc5395413737a53dc"
+    },
+    {
+      "path": "src/lib/hubs.ts",
+      "sha256": "bec15b188eae2d20f2021233bdc0ba84fe30b29f1f4568dae9a5718819bd73f1"
+    },
+    {
+      "path": "src/lib/inAppBrowser.ts",
+      "sha256": "547c48296a1a44520fcacb1d8aa18860502a342b4e52e54d88f7411103a8e713"
+    },
+    {
+      "path": "src/lib/jobSeoOverrides.ts",
+      "sha256": "4b0d09aefd726514f45094dc2789f7a206b7c52dcca6f3dbcbca8c1dbf073016"
+    },
+    {
+      "path": "src/lib/josa.ts",
+      "sha256": "6decf1e57cfeddcefd87956e98f79dd075c2ce9530e53d2e10c4f501bfe06d3e"
+    },
+    {
+      "path": "src/lib/koreanHolidays.ts",
+      "sha256": "a1f57fc09648681c772d4f3f49c1cfeb970314db62cd0a4976e54e30291f56df"
+    },
+    {
+      "path": "src/lib/liveAds.ts",
+      "sha256": "a72808c29f4d5b410a2fc8982c598683a43bca219018c8d081d2001b016dddc8"
+    },
+    {
+      "path": "src/lib/liveServices.ts",
+      "sha256": "88ec3d5a295d0c4ed4980b0e02ec4def7fb1f16e1f450e5857625b043ee3505a"
+    },
+    {
+      "path": "src/lib/lottoGenerator.ts",
+      "sha256": "16405e92b521b0803247deee2c943b7298ab2d6d4057bc770dc650a1425e5f95"
+    },
+    {
+      "path": "src/lib/manwonFormat.ts",
+      "sha256": "57be7e8dd6b04a5ea4ef6111c865fecbbdc47923cf7972cf7484f971e0ef99e0"
+    },
+    {
+      "path": "src/lib/mediaQueryListener.ts",
+      "sha256": "8d65d05291f3dd36413fdc2500b5b6280a3455b5fce72b41dba26d09ccc0d556"
+    },
+    {
+      "path": "src/lib/moneyCheck.ts",
+      "sha256": "e716f2768354c50b9c5dd97850138de8041a135828037afc0c4c86a448e65920"
+    },
+    {
+      "path": "src/lib/monthlyStaticParams.ts",
+      "sha256": "7a2a16da12d7fa8cb556c1c999d98385982fcb27e935daf1b78b1879d3e6c88c"
+    },
+    {
+      "path": "src/lib/naverReferrerQueries.ts",
+      "sha256": "e328d4bf3821867aa6289695f285157c25e8ce694ce9b97c0d8c58ee465a4ce3"
+    },
+    {
+      "path": "src/lib/naverTemplatePanel.ts",
+      "sha256": "2af32d0589c294f09495707f63306d3e312830cd5268efce193cc8d7cdb7f5af"
+    },
+    {
+      "path": "src/lib/navType.ts",
+      "sha256": "dac955ac834722c64dd9d46f48760dea14410ff8dbacedcd19b1f91a09c4ca3e"
+    },
+    {
+      "path": "src/lib/nextActionLinks.ts",
+      "sha256": "00946a895179a786d2976457002547a184df4ec0d5d64b0fff39baf194e39468"
+    },
+    {
+      "path": "src/lib/numberInput.ts",
+      "sha256": "9f172e579bb687c9b4cde5298a841b2eba9e645bcb8448ec5996663d102693b5"
+    },
+    {
+      "path": "src/lib/offerComparison.ts",
+      "sha256": "bc6e9907003bd058481a72ce177b894fff65a538ccf38440d4f8cae1724718c3"
+    },
+    {
+      "path": "src/lib/offerComparisonExport.ts",
+      "sha256": "1d3c72a8034f4fd1424042ab3b34b2f756295403f819a34e4bab795ac29d96a5"
+    },
+    {
+      "path": "src/lib/offerComparisonHandoff.ts",
+      "sha256": "f6942b754314e88a39682d2aa3ceb2545da70b8ae514d601e7553184bdff8a45"
+    },
+    {
+      "path": "src/lib/ogImageCache.ts",
+      "sha256": "9a9f31a165a11a1f62064e92db282e73f19d52a7a2308c12f6df369428bc7109"
+    },
+    {
+      "path": "src/lib/ogUrlVersion.ts",
+      "sha256": "87684f87b2abbafd037264a79c686239ec31301a278020ad8004bec0f93a3d04"
+    },
+    {
+      "path": "src/lib/ordinaryWage.ts",
+      "sha256": "70b5a0a81da51ea35471532dd54fffa8b2cdde17ea3c4d5168f9fed8e9891867"
+    },
+    {
+      "path": "src/lib/pageModified.ts",
+      "sha256": "1e64020960328455a0e810286d901b78e028bd7266032e4e7b1c0230bc86b209"
+    },
+    {
+      "path": "src/lib/payTablesFull2026.ts",
+      "sha256": "bb9710aab0d88eb82082755ce75ea1fe579d99779a2e064b6e22c33653b1dd18"
+    },
+    {
+      "path": "src/lib/propertyTaxPeriod.ts",
+      "sha256": "8dfed2693773eae0340cf08869336931d06ec3c1fc431a53716689eca12c16f5"
+    },
+    {
+      "path": "src/lib/publicInstitutionSalary.ts",
+      "sha256": "63b8683b80e95c69a716e04ae50da4303329a724927071b4beb32fc50106a698"
+    },
+    {
+      "path": "src/lib/randomIntegers.ts",
+      "sha256": "69fa104c9776fe382cafb587f6a4a780b74434db788a43a08e69339eb9645954"
+    },
+    {
+      "path": "src/lib/relatedCalculators.ts",
+      "sha256": "0bcdfc193399604e7babf8e5b8514f8ad16ff71e9bc8969d9b248b0cb8e2f687"
+    },
+    {
+      "path": "src/lib/relatedGuides.ts",
+      "sha256": "84c2c1c3ba420c7d8b30763a7b342bd9cdf23555276cfe8e95dacb3a89453426"
+    },
+    {
+      "path": "src/lib/reportCardAnalysis.ts",
+      "sha256": "14e8c00193425563e6c42af3b17cbd065d91659b48872917e7357785b084078a"
+    },
+    {
+      "path": "src/lib/reportStoredData.ts",
+      "sha256": "aafc9d9709b2ec6d38ff191b5c0544dcab1cbc5bdd8c9d07aaaf87d9d634ffc6"
+    },
+    {
+      "path": "src/lib/rssFullText.ts",
+      "sha256": "e83e5eb9b05caa6fe37dace3ee7b98f630244af746b9a2df8c2f42505e01d405"
+    },
+    {
+      "path": "src/lib/salary-data/companyComparePairs.ts",
+      "sha256": "0aa984814c09841bdda3ce14adccabe1bb150635845b5b26c3d081926f6a70e8"
+    },
+    {
+      "path": "src/lib/salary-data/CompanyRepository.ts",
+      "sha256": "63872bc48e5a9765c05ebb289e4f6e46ae6cffb63dc44e03e48dcb138dd5087b"
+    },
+    {
+      "path": "src/lib/salary-data/dartLite.ts",
+      "sha256": "71dee98bdc1c9cf977a25b94d19e1a21bf16c805c1aedeeeb5631ee15a7c896a"
+    },
+    {
+      "path": "src/lib/salary-data/dartRanking.ts",
+      "sha256": "b5975d3a5389d518e1cba9ca9a6a9dd6259f11b27e4ef3900aa184479308f579"
+    },
+    {
+      "path": "src/lib/salary-data/dartRankingGuards.ts",
+      "sha256": "ebebd42bba11b7bf1ea3fe6bbf168ebc6938ccbe2ff7c92f42d33b17760c1512"
+    },
+    {
+      "path": "src/lib/salary-data/dartReport.ts",
+      "sha256": "0e4aaaeed97cd9f155de1c71d8405c33f99237ee9b1e50a5c4301a68a34a5659"
+    },
+    {
+      "path": "src/lib/salary-data/entrySalaryReport.ts",
+      "sha256": "80384ca4024c44f7b9a730feb9d3393e9f42efacfb6e9075a05d8c77bba2a28f"
+    },
+    {
+      "path": "src/lib/salary-data/industryAggregates.ts",
+      "sha256": "aaec3d0a52dd835c44f808b10d2c82137f72fbc78ffd3fe2a0249419f61018bc"
+    },
+    {
+      "path": "src/lib/salary-data/industryTaxonomy.ts",
+      "sha256": "f8d6a8922ec69088241b101e887ae5c221a53258ed8b322dff2436e0bbac8604"
+    },
+    {
+      "path": "src/lib/salaryData.ts",
+      "sha256": "1aac6e49f3513949377ac3ea2969e0cfceaf1eaa405624ab6c2209f0dd788ec2"
+    },
+    {
+      "path": "src/lib/salaryMBTI.ts",
+      "sha256": "4d2a940a64e19ada8d16e4e0e5345d9de13d399faff6398bdfff8cc51bde93b8"
+    },
+    {
+      "path": "src/lib/salaryModelContent.ts",
+      "sha256": "d925b153d790d07f2a346a1f196c14f01e707a941700582875f1829a0bda88ef"
+    },
+    {
+      "path": "src/lib/salaryRedirect.ts",
+      "sha256": "e16ce53e5fa00fbfed6a973751639b901da7a63c579b5cfa0d4afc3b3c48c3fc"
+    },
+    {
+      "path": "src/lib/salaryResultSnapshot.ts",
+      "sha256": "22892589d02879a1642bc4b76eb8e544904593b9674bd7aee8fd0f1ec221851f"
+    },
+    {
+      "path": "src/lib/salarySharePayload.ts",
+      "sha256": "bb3b0250c7fcf8bcb1a6cdfa554661993fff0ea0b1d59651475eee2f46c7a62b"
+    },
+    {
+      "path": "src/lib/salaryStaticAmounts.generated.ts",
+      "sha256": "969f55c030f9c487f4216e1c0ed9e166ad310c090af59012e208dbdc81ad36d3"
+    },
+    {
+      "path": "src/lib/salaryStaticParams.ts",
+      "sha256": "9e1f4f4e3ca92ead5ec4d514a3aabab2aa0d690afd55407b13c94bdd8680aaba"
+    },
+    {
+      "path": "src/lib/searchIndex.ts",
+      "sha256": "26f14e40232fd508abbc4fad125d5de4f3ac0ad21901778c56acafd46eff2a8a"
+    },
+    {
+      "path": "src/lib/searchIndexEn.ts",
+      "sha256": "cbba78e9d5fa34c5a17d589641dab96a1f669d72c208cead05de5a6644c9d3fb"
+    },
+    {
+      "path": "src/lib/seasonalCalendar.ts",
+      "sha256": "09f86203c463fd3bed0ac8d6c2d753df2e434277c7e05928ed19569d80f80e7c"
+    },
+    {
+      "path": "src/lib/seasonAnnounce.ts",
+      "sha256": "2bcd6828172fce76723e636e23ec2b3bda2acb65726dfdd16298ad5bdf52ddef"
+    },
+    {
+      "path": "src/lib/seasonKey.ts",
+      "sha256": "74f44c35b3af063cdaac4eeb4431f77513ba573576f293211b97d3fa6f0d5928"
+    },
+    {
+      "path": "src/lib/seo.ts",
+      "sha256": "a7461b7a9bab45eb1c97c3acbd3ca80990e762cfcb7086c32c5e6a63a6370245"
+    },
+    {
+      "path": "src/lib/server/cloudflareAssets.ts",
+      "sha256": "4157e5eebd55d401ab1d6c17ad7e74a1e1f8ba2f205ae1462bc9c3ac8b3b82c1"
+    },
+    {
+      "path": "src/lib/server/cloudflareBindings.test.ts",
+      "sha256": "7be76865b0b8445ef548ceb24b6f3f3ace9f2224dd2fcd7537f37df2035f1986"
+    },
+    {
+      "path": "src/lib/server/cloudflareBindings.ts",
+      "sha256": "eba2d2e51fa637815f4c1be98dac00bf4f0663bfe7008831beb2ddd9ce6162ca"
+    },
+    {
+      "path": "src/lib/server/contactHandler.ts",
+      "sha256": "c4992839e219b8a9bed642f50dd3770e68accd35a49268fc7362f204cbe917ed"
+    },
+    {
+      "path": "src/lib/server/contactSql.ts",
+      "sha256": "3bf784448cb599be52d81ec064961cbe0d3e6dee49090305b1fc808041379534"
+    },
+    {
+      "path": "src/lib/server/feedbackStorage.test.ts",
+      "sha256": "54b9ce1bdf002346786ef088f07af6133e55339b56e2b24e98ed86f18e8ce588"
+    },
+    {
+      "path": "src/lib/server/feedbackStorage.ts",
+      "sha256": "4ea5c5f230ebb7e1a2c45fae56d82c1eed4b12b1168df17a7d3b43f08ead2376"
+    },
+    {
+      "path": "src/lib/server/fixedFeedbackHandler.ts",
+      "sha256": "fa5810e16b9477d4a031c2b7c1674746059511bbffe2824035154365628acc4f"
+    },
+    {
+      "path": "src/lib/server/fixedFeedbackSql.ts",
+      "sha256": "277a9b9123ae0d72b31a975fc60549f8671877b4dc361583885459e48784915c"
+    },
+    {
+      "path": "src/lib/severanceCalculator.ts",
+      "sha256": "074a90f28f9be2cd6579f5c8d52306cd9123df4739a8855f19a30f434488fa01"
+    },
+    {
+      "path": "src/lib/shareChannels.ts",
+      "sha256": "054c0e5dba45963889076347b3be961a96cd551cd1e5d8a381388b85c2613c5f"
+    },
+    {
+      "path": "src/lib/shareImage.ts",
+      "sha256": "9e85c850933272f649ad9e79e920c5abe7996f6b0b7b8eaeecda3e6541176001"
+    },
+    {
+      "path": "src/lib/sharePolicy.ts",
+      "sha256": "8990fd13669f16b5cc5b0730fe67f224a121f12825d39e3205ff90f2f69deaef"
+    },
+    {
+      "path": "src/lib/shareRegistry.ts",
+      "sha256": "ebfc7ea7b39f5233aa6dc0db0755c780d24230f8f343422e54082a108eafcc09"
+    },
+    {
+      "path": "src/lib/shareTransport.ts",
+      "sha256": "3db16360d1a7b339ca0674bba6bfc1218c712f08730b5a02968bb64ed65b0386"
+    },
+    {
+      "path": "src/lib/simpleCalculators/batch1.ts",
+      "sha256": "2d319cd9b0018beb362cf6a9f7b17fd36cd7dd19a6b9ba05b64366c8c3e83033"
+    },
+    {
+      "path": "src/lib/simpleCalculators/batch2.ts",
+      "sha256": "954bd6ee1f8e4572d9dbbcbc6a5cadd1e6fc38bca9742fc22bba51319fdf0013"
+    },
+    {
+      "path": "src/lib/simpleCalculators/computeLoader.ts",
+      "sha256": "2150eed112304c6a22084d842bc7416b3c1af0ee4da5db42d926edbbf40c4175"
+    },
+    {
+      "path": "src/lib/simpleCalculators/enrichments-ext-a.ts",
+      "sha256": "a3b873676c9dcbcf45faef1fcf035c8404fb1354888180b668aeaf492dffc09c"
+    },
+    {
+      "path": "src/lib/simpleCalculators/enrichments-ext-b.ts",
+      "sha256": "198b4e4a6338245ca4ad64d5c512fa8a6090a0cce95c857d2a3d9cd8fe13f87a"
+    },
+    {
+      "path": "src/lib/simpleCalculators/enrichments-ext-c.ts",
+      "sha256": "b5eb163dc958441012354e052bfe2619cf1da731896fbb23e557882fb60f92ff"
+    },
+    {
+      "path": "src/lib/simpleCalculators/enrichments.ts",
+      "sha256": "c74cab1f446a1586abf6b513ac4ba589a1aec8b38a2e9e2ed576bf685cc83047"
+    },
+    {
+      "path": "src/lib/simpleCalculators/expandedFinance.ts",
+      "sha256": "59130e1124227b332155a494ee109a96b9d254293532d159c78e3abeed9d47b5"
+    },
+    {
+      "path": "src/lib/simpleCalculators/expandedPractical.ts",
+      "sha256": "b904cc5d4d8f2e2112a140c86c2a3d0825911619a27acc8638b944fa665184e1"
+    },
+    {
+      "path": "src/lib/simpleCalculators/finance.ts",
+      "sha256": "39e088a47673ebe1b6c46242ea34e0510db29afba84c0c1eda1ab7e3b88ab09e"
+    },
+    {
+      "path": "src/lib/simpleCalculators/index.ts",
+      "sha256": "df5fee350a43ef34a1608f60d329da3860d9529fd4f3352f787cf284745d101b"
+    },
+    {
+      "path": "src/lib/simpleCalculators/seoText.ts",
+      "sha256": "03db4a78f056224bd04d6f8297f1957cf5f69c9db0cb6dd630080ae33242d515"
+    },
+    {
+      "path": "src/lib/simpleCalculators/sourcePolicy.ts",
+      "sha256": "bb56ac040c0dde70b18f5c7e812844cf807c5d032f3d3d3e8573f44578be27fc"
+    },
+    {
+      "path": "src/lib/simpleCalculators/twins.ts",
+      "sha256": "1083e274ab28efb7989fd15c7d75e4eda64fcbcc8c0d53764939925f4f379e8b"
+    },
+    {
+      "path": "src/lib/simpleCalculators/types.ts",
+      "sha256": "b26fd1869de8b7ecc259031c010e45749e2a060479e5fa0956319d17de2f945c"
+    },
+    {
+      "path": "src/lib/simpleCalculatorShare.ts",
+      "sha256": "782d03f16c77dc8a6836afe65b8e02b4c9bbc597dec5c438938d33a06155f36a"
+    },
+    {
+      "path": "src/lib/smbTaxBreak.ts",
+      "sha256": "7f44c9c004a021722ac06d28b2b6b2f6f8c3167c9d14bc4d1736c5535eeee427"
+    },
+    {
+      "path": "src/lib/staleStatusScan.ts",
+      "sha256": "282936145b158c0a4df765fbe8d2c431b72d3d458e8a88686985d60954b421c7"
+    },
+    {
+      "path": "src/lib/storedFinancialData.ts",
+      "sha256": "fff04500b9e85ed0bc68ea42e8744399dd7f8b47adf4f1eedaa23fdc7551110f"
+    },
+    {
+      "path": "src/lib/structuredData.ts",
+      "sha256": "f3fb5ba914897e2a7da27f2ff24a268c8565a0e53d93ee905063e835bc0455b7"
+    },
+    {
+      "path": "src/lib/tableQueryState.ts",
+      "sha256": "6d70ca5a78e8d0650cbab456f1c24367bbe7bcdcb82303fad776aaf156e47b78"
+    },
+    {
+      "path": "src/lib/taxConstants2026.ts",
+      "sha256": "cb367fcd716576333425d9a09d696c2075865ecef74a2656582d0fbe3a45cbc1"
+    },
+    {
+      "path": "src/lib/taxConstants2027.ts",
+      "sha256": "2910000e8d5bfbeaaf89c092ffe6d5afd887c95019a8975d5e63067524ea3ebf"
+    },
+    {
+      "path": "src/lib/TaxLogic.ts",
+      "sha256": "8718d1fe6f322102031fd281c89920deda50cb2a6ae870495e11ecca5bfba89b"
+    },
+    {
+      "path": "src/lib/toolContent.ts",
+      "sha256": "c9952f64cc1e468283e60b33b117177b355f8097e4cbce2078262f50aeaf62c2"
+    },
+    {
+      "path": "src/lib/trendBriefs/impacts.ts",
+      "sha256": "a751aae32ef00c53c881d4769845219058bc01470c186aae5a42d608d2c9301f"
+    },
+    {
+      "path": "src/lib/trendBriefs/render.ts",
+      "sha256": "616c4063fabddb17529857b5276cab784a6c02a0a52fb0c72794751a34fe5901"
+    },
+    {
+      "path": "src/lib/trendBriefs/rules.ts",
+      "sha256": "5d8870b97746253a81845f21aeb0ab41c0563330c1a1535247eea6eec6cff982"
+    },
+    {
+      "path": "src/lib/trendBriefs/text.ts",
+      "sha256": "63c42d13634ab2d5794230bc62432cc6db74aec5d3f2fd687f1e7da6d583ba12"
+    },
+    {
+      "path": "src/lib/trendBriefs/types.ts",
+      "sha256": "60125e46c9ef3a4e04cf1381037861134028f7e600b4fce2e662ac5e5d6ba522"
+    },
+    {
+      "path": "src/lib/utils.ts",
+      "sha256": "f147270dc72c9546bfa8905cb8b0ccdbde9bc34b14f3d3396acb738c278e1e29"
+    },
+    {
+      "path": "src/lib/uuidV4.ts",
+      "sha256": "c8c902dbbdff7f8e975e179852d85a346f94472f184ad9c0dff22418cf254e3a"
+    },
+    {
+      "path": "src/lib/versusEngine.ts",
+      "sha256": "64b45a8e901852fb47c4973d3696730bc1d249320f840b14f5cbfd3e45cbe660"
+    },
+    {
+      "path": "src/lib/vitalsAttribution.ts",
+      "sha256": "72b1c4aac7ebcd4b9e84d89d7387f3d7a94677269ac65555fa8f5670abd7c72e"
+    },
+    {
+      "path": "src/lib/wealthCalculator.ts",
+      "sha256": "7713eb9e08c0a15f62048d5ac622c404837f5e6aeef1c279e8d5c9505e0164cf"
+    },
+    {
+      "path": "src/lib/widgets/dsrLimit.ts",
+      "sha256": "1d4f5365e0ed546dd31236561bccbbe4332f7b0e47df9feafe0c26dc1e276d05"
+    },
+    {
+      "path": "src/lib/withholdingTaxTable2026.ts",
+      "sha256": "2f7ee60c0e7ba39dbaae95d72f06760055082818d39c0003ab036a2ea1282590"
+    },
+    {
+      "path": "src/lib/workClock.ts",
+      "sha256": "ddf9f8112e5a4150a6df750d04b783ef654042ba68e1605b457660eabe8e9489"
+    },
+    {
+      "path": "src/lib/workClockCalendar.ts",
+      "sha256": "5424420b245bb92ecbf18204246b793b39ed8e87f82eac9afa5e7ac0aa433c5f"
+    },
+    {
+      "path": "src/lib/yearEndLimits2026.ts",
+      "sha256": "4b60b13dc5166218e2532575ae55038e5d0e3ee394cd206486f7ab04733cadbb"
+    },
+    {
+      "path": "src/lib/yearEndSeason.ts",
+      "sha256": "ff54612ed28044d52849d585bd4555c187dff71c32f41da8f9a05cd5568a10c9"
+    },
+    {
+      "path": "src/lib/yearEndTaxCalculator.ts",
+      "sha256": "38ba3bc4e12061186b766a793d8a4eb6b111e93f8ca7ae542acdd66f77532f80"
+    },
+    {
+      "path": "src/middleware.ts",
+      "sha256": "429ed015a206313e97c3b256a9a73b550fc3990e780704bc266d751f50231fbc"
+    },
+    {
+      "path": "src/types/company.ts",
+      "sha256": "a42f9225ac01dae1f469ace9d781262d9e3f15119d40b3ecfee208d1cd007aea"
+    }
+  ]
+}

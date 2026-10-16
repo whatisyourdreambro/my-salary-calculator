@@ -1,0 +1,104 @@
+{
+  "generatedAt": "2026-10-16T16:54:28.544Z",
+  "scope": "Dependency remediation and offline compatibility, no browser/production/ad request",
+  "status": "Prototype and maintained regression checks complete; parent owns full build and deployment verification",
+  "upstreamSources": [
+    "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+    "https://github.com/postcss/postcss-selector-parser/releases/tag/7.1.6",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/package-json/#overrides",
+    "https://github.com/isaacs/node-glob/blob/main/changelog.md",
+    "https://github.com/octet-stream/form-data/blob/main/CHANGELOG.md"
+  ],
+  "braces": {
+    "upstream": "3.0.3",
+    "upstreamIntegrity": "sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==",
+    "derivative": "3.0.3-moneysalary.1",
+    "tarball": "vendor/braces-3.0.3-moneysalary.1.tgz",
+    "integrity": "sha512-n+BhH9zDit5UzfhUx8Qby5ZA1016g3Z+COA4xJoz0b1Wylc7QTTbKRoC06qUdof+R75fe3e24df7wELNVHfpMQ==",
+    "actualFixes": [
+      "Fixed limit of 100 combined brace/paren levels before parser admission",
+      "Container traversal depth guards in compile/expand/stringify and parent-link bounds in expand",
+      "Read maxLength once and reject NaN cap bypass"
+    ],
+    "normalStringCompatibility": {
+      "patterns": 273,
+      "differentialChecks": 3276,
+      "pass": true
+    },
+    "maintainedTests": {
+      "security": 24,
+      "sourceArchiveInstalledIntegrity": 1,
+      "pass": true
+    },
+    "cleanCi": {
+      "fixture": "candidate-final-ci",
+      "command": "npm ci --ignore-scripts --no-audit --no-fund",
+      "exitCode": 0,
+      "packages": 84
+    },
+    "limits": [
+      "Not a complete sandbox for arbitrary caller-provided AST objects, getters or huge expansion cardinality.",
+      "Malformed AST text.value containing 5,000 nested arrays still reaches unbounded append/utils.flatten recursion; ordinary parser-produced text.value is a string. Independently reproduced by historical_evidence agent; no normal string input path found.",
+      "The locally named version records a real code change; registry audit alone is not the security evidence. Tar/source/installed hashes and explicit boundary tests are required.",
+      "Do not edit vendor source or metadata without rebuilding the tar and re-reviewing pinned verification hashes."
+    ]
+  },
+  "selectorParser": {
+    "from": [
+      "6.0.10",
+      "6.1.4"
+    ],
+    "to": "7.1.6",
+    "cssFixtures": 4,
+    "mergedSourceFiles": 1164,
+    "mergedSourceAggregateSha256": "6a78820a5d4570bc4e2624912d812192199aafc3da2295be5fe1de86f31b0a60",
+    "byteEquivalent": true,
+    "caveat": "Separate vendored parser code in Next OG is handled by the independently reviewed upstream backport; package override alone does not update it."
+  },
+  "deprecatedDependencies": {
+    "glob": {
+      "from": "10.5.0",
+      "to": "13.0.6",
+      "scope": "global override; Node22",
+      "checks": 80,
+      "actualMinifyChecks": 2,
+      "notes": [
+        "Match sets identical; 4 async order differences observed in one run. Glob does not promise order.",
+        "Actual node-minify string/array wildcard concatenated output was byte-identical.",
+        "Sucrase awaits glob to transform files independently; direct async matching tested, full CLI not exercised by this evidence."
+      ]
+    },
+    "formdataNode": {
+      "from": "4.4.1",
+      "to": "6.0.3",
+      "scope": "cloudflare4.5.0 only",
+      "checks": 2,
+      "notes": [
+        "Actual SDK multipart bytes match after normalizing random boundary; Content-Length, binary module, JSON metadata, unicode/nested fields tested.",
+        "CJS exports and file-from-path runtime worked; Node22 supplies the standard DOMException.",
+        "No Cloudflare upload/API request or HTTP was sent.",
+        "Upstream6.0.3 file-from-path export type paths contain @lib; that path is not imported in the SDK public typings used here."
+      ]
+    },
+    "eslint": {
+      "kept": "9.39.5",
+      "reason": "Parent verified eslint-config-next15.5.28 peer range excludes10 and eslint-plugin-react7.37.5 peer range excludes10. Unsupported peer overrides were not used to hide the deprecation warning.",
+      "status": "A known toolchain support warning remains; npm advisory gate and full lint still required."
+    },
+    "tsconfck": {
+      "status": "Parent removes unused vite-tsconfig-paths plugin and replaces the single alias with explicit Vitest configuration."
+    }
+  },
+  "maintainedFiles": [
+    "scripts/verify-vendored-dependencies.mjs",
+    "scripts/__tests__/braces-security.test.mjs",
+    "scripts/__tests__/dependency-compatibility.test.mjs"
+  ],
+  "maintainedResult": {
+    "command": "node --test scripts/__tests__/dependency-compatibility.test.mjs scripts/__tests__/braces-security.test.mjs",
+    "pass": 29,
+    "fail": 0
+  },
+  "evidenceDirectory": "docs/next-security-2026-10-17/dependency-remediation-evidence",
+  "reproductionNotes": "Original differential scripts reference isolated baseline/candidate directories in C:\\dev\\moneysalary\\my-salary-calculator\\.artifacts\\dependency-remediation-2026-10-17. Package versions and source manifest are recorded; maintained tests require only the normal installed project and have no baseline package installation dependency."
+}

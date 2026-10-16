@@ -17,7 +17,21 @@ const withBundleAnalyzer = nextBundleAnalyzer({
 // 2026-08-24 점검(운영자 승인): 쿠팡 배너 이미지 CDN(*.coupangcdn.com)·AdSense 무결성
 // 픽셀(*.adtrafficquality.google)을 img-src에, 구글 앵커 프레임(www.google.com)을
 // frame-src에 추가 — CSP 적용 환경에서 광고 리소스가 차단되던 누락분.
-const ContentSecurityPolicy = `
+const qaServicesDisabled = process.env.NEXT_PUBLIC_ADS_DISABLED === "1";
+const ContentSecurityPolicy = (qaServicesDisabled ? `
+  default-src 'self';
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' blob:;
+  connect-src 'self';
+  img-src 'self' data: blob:;
+  frame-src 'none';
+  frame-ancestors 'self';
+  style-src 'self' 'unsafe-inline';
+  font-src 'self' data:;
+  media-src 'none';
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self';
+` : `
   default-src 'self';
   script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://static.cloudflareinsights.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://t1.kakaocdn.net https://fundingchoicesmessages.google.com;
   frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.googletagmanager.com https://www.google.com https://ep2.adtrafficquality.google https://fundingchoicesmessages.google.com;
@@ -30,7 +44,7 @@ const ContentSecurityPolicy = `
   object-src 'none';
   base-uri 'self';
   form-action 'self' https://sharer.kakao.com;
-`
+`)
   .replace(/\s{2,}/g, " ")
   .trim();
 
@@ -42,6 +56,7 @@ const widgetCsp =
   "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; frame-ancestors *; base-uri 'none'; form-action 'none'";
 
 const securityHeaders = [
+  ...(qaServicesDisabled ? [{ key: "X-MoneySalary-QA", value: "ads-disabled" }] : []),
   {
     key: "Strict-Transport-Security",
     value: "max-age=63072000; includeSubDomains; preload",
@@ -70,12 +85,16 @@ const securityHeaders = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // QA builds never overwrite the production build directory.
+  // OpenNext requires the literal .next name; qa-cloudflare builds in a separate cwd.
+  distDir: process.env.MSY_QA_MODE === "1" && process.env.MSY_QA_WORKER_STAGE !== "1" ? ".next-qa" : ".next",
   // [필수] Cloudflare 환경에서 이미지 최적화 충돌 및 비용 폭탄 방지
   images: {
     unoptimized: true,
   },
   // 트리쉐이킹 강화 — lucide/recharts/lib들의 사용분만 번들에 포함
   experimental: {
+    serverSourceMaps: true,
     optimizePackageImports: [
       "lucide-react",
       "recharts",
@@ -1213,7 +1232,7 @@ const nextConfig = {
     return [
       {
         // 정적 자산(폰트, 이미지 등)을 클라우드플레어 엣지 서버에 영구 캐싱하여 서버 비용 절감
-        source: "/(.*).(woff2?|png|jpg|jpeg|svg|gif|ico|avif|webp)",
+        source: "/((?!api(?:/|$)).*).(woff2?|png|jpg|jpeg|svg|gif|ico|avif|webp)",
         headers: [
           {
             key: "Cache-Control",
@@ -1222,16 +1241,20 @@ const nextConfig = {
         ],
       },
       {
-        // 모든 경로에 보안 헤더 및 기본 캐시 정책 적용.
+        // Security headers apply to every route. API handlers own their cache
+        // policy, including short OG fallbacks and private contact errors.
+        source: "/:path*",
+        headers: securityHeaders,
+      },
+      {
         // [2026-08-10] s-maxage=1 → 3600: 사실상 무캐시였던 전역 정책이 매 요청을
         // Worker로 보내 무료 플랜 일 10만 요청 한도 초과의 주범이었음. 콘텐츠는
         // 배포 시에만 바뀌고(개인화는 전부 클라이언트 localStorage) Pages가 배포
         // 시 캐시를 퍼지하므로 1시간 엣지 캐시는 안전. max-age=0으로 브라우저는
         // 항상 재검증(엣지에서 즉시 응답).
         // ★ 프리렌더 HTML/route 응답에는 미적용(next-on-pages) — 308 redirect 응답에만 관측, 실측 2026-09-05. 엣지 캐시는 CF Cache Rule(L08a)로만 — 아래 s-maxage 규칙 전부 동일(삭제 금지: 308·로컬 dev 경로는 여전히 사용).
-        source: "/:path*",
+        source: "/((?!api(?:/|$)).*)",
         headers: [
-          ...securityHeaders,
           {
             key: "Cache-Control",
             value: "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
@@ -1364,8 +1387,6 @@ const nextConfig = {
         "/rss.xml",
         "/rss-companies.xml",
         "/robots.txt",
-        "/api/og",
-        "/api/salary-table",
       ].map((source) => ({
         source,
         headers: [

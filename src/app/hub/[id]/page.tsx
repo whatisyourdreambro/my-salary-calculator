@@ -27,10 +27,11 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({
-  params,
+  params: pendingParams,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
+  const params = await pendingParams;
   const hub = getHubById(params.id);
   if (!hub) return { title: "Not Found" };
 
@@ -46,7 +47,8 @@ export async function generateMetadata({
   });
 }
 
-export default function HubPage({ params }: { params: { id: string } }) {
+export default async function HubPage({ params: pendingParams }: { params: Promise<{ id: string }> }) {
+  const params = await pendingParams;
   const hub = getHubById(params.id);
   // GSC 404 출혈 차단(7차): 옛 허브 ID → /hub 메인 308
   if (!hub) permanentRedirect("/hub");

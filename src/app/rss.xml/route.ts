@@ -10,6 +10,9 @@ import { reportsRegistry } from "@/data/reportsRegistry";
 import { getGuideModifiedDate } from "@/lib/guideDates";
 import { contentEncoded, FULL_TEXT_GUIDE_COUNT } from "@/lib/rssFullText";
 
+// Next 15 no longer caches GET handlers by default; keep this build-time feed static.
+export const dynamic = "force-static";
+
 const REPORT_CATEGORY = "데이터 리포트";
 // 본문 전문(content:encoded)을 싣는 최신 가이드 수 (2026-09-26 NAVER-03b) — 네이버 요청 피드는 item 에
 // 요약이 아닌 전문을 요구한다. 전 편(334편·본문 약 1.5MB)이 아니라 최신 FULL_TEXT_GUIDE_COUNT(30)편만

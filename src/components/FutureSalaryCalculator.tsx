@@ -309,7 +309,7 @@ export default function FutureSalaryCalculator() {
  </div>
  ))}
  <div className="p-3 bg-card rounded-md border border-border">
- <p className="font-semibold">이후 기간</p>
+ <p className="font-semibold">{path.scenario === "안정 성장형" ? "전체 기간 기본 인상률" : "이직 이후 기간"}</p>
  <p className="text-sm text-muted-foreground">연 평균 <span className="font-bold text-primary">{path.avgIncreaseRate}%</span>의 연봉 상승 필요</p>
  </div>
  </div>

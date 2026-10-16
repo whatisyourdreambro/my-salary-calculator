@@ -33,6 +33,7 @@ import FinancialKnowledgeArchive from "./FinancialKnowledgeArchive";
 import CurrencyInput from "./CurrencyInput";
 import { motion, AnimatePresence } from "framer-motion";
 import NumberInput from "@/components/NumberInput";
+import { assetInComparisonCurrency } from "@/lib/exchangeMath";
 
 const formatNumber = (num: number) => {
   if (isNaN(num)) return "0";
@@ -139,6 +140,7 @@ function CurrencyTicker({ liveRates, isLive }: { liveRates: LiveRates; isLive: b
 export default function ExchangeRateImpactCalculator() {
   const searchParams = useSearchParams();
   const reportRef = useRef<HTMLDivElement>(null);
+  const pairRequestRef = useRef<AbortController | null>(null);
 
   // ── Live rate state ──────────────────────────────────────────
   const [liveRates, setLiveRates] = useState<LiveRates>(FALLBACK_KRW_RATES);
@@ -181,13 +183,16 @@ export default function ExchangeRateImpactCalculator() {
 
   // ── Fetch ALL live rates once on mount (USD base → convert to KRW base) ──
   useEffect(() => {
+    const controller = new AbortController();
     async function fetchLiveRates() {
       try {
         const res = await fetch("https://open.er-api.com/v6/latest/USD", {
+          signal: controller.signal,
           next: { revalidate: 300 }, // cache 5 min if in next.js server context
         } as RequestInit);
         if (!res.ok) throw new Error("fetch failed");
         const data = await res.json();
+        if (controller.signal.aborted) return;
         if (data.result !== "success") throw new Error("API error");
 
         const usdToKrw: number = data.rates["KRW"];
@@ -212,14 +217,14 @@ export default function ExchangeRateImpactCalculator() {
         });
         setLastUpdated(dateStr);
       } catch {
-        // stay with fallback
-        setIsLive(false);
+        // stay with fallback; an unmounted request must not update state.
+        if (!controller.signal.aborted) setIsLive(false);
       }
     }
     fetchLiveRates();
     // refresh every 5 minutes
     const interval = setInterval(fetchLiveRates, 5 * 60 * 1000);
-    return () => clearInterval(interval);
+    return () => { controller.abort(); clearInterval(interval); };
   }, []);
 
   useEffect(() => {
@@ -231,13 +236,17 @@ export default function ExchangeRateImpactCalculator() {
 
   // ── Fetch past + current rates for selected pair ─────────────
   const fetchRates = useCallback(async () => {
-    if (isManual) return;
+    pairRequestRef.current?.abort();
+    if (isManual) { setIsLoading(false); return; }
+    const controller = new AbortController();
+    pairRequestRef.current = controller;
     const from = comparisonCurrency;
     const to = assetCurrency;
 
     if (from === to) {
       setManualPastRateStr("1.0000");
       setManualCurrentRateStr("1.0000");
+      setIsLoading(false);
       return;
     }
 
@@ -246,10 +255,12 @@ export default function ExchangeRateImpactCalculator() {
     try {
       // Past rate: Frankfurter historical
       const pastRes = await fetch(
-        `https://api.frankfurter.dev/v1/${pastDate}?base=${from}&symbols=${to}`
+        `https://api.frankfurter.dev/v1/${encodeURIComponent(pastDate)}?base=${encodeURIComponent(from)}&symbols=${encodeURIComponent(to)}`,
+        { signal: controller.signal },
       );
       if (!pastRes.ok) throw new Error("과거 환율 정보를 불러오는 데 실패했습니다.");
       const pastData = await pastRes.json();
+      if (controller.signal.aborted) return;
 
       // Current rate: from our already-fetched liveRates (KRW base)
       let currentRateValue: number;
@@ -267,20 +278,25 @@ export default function ExchangeRateImpactCalculator() {
       }
 
       const pastRateValue: number = pastData.rates?.[to];
-      setManualPastRateStr(pastRateValue?.toFixed(4) || "0");
-      setManualCurrentRateStr(currentRateValue?.toFixed(4) || "0");
+      if (![pastRateValue, currentRateValue].every((rate) => Number.isFinite(rate) && rate > 0)) {
+        throw new Error("유효한 환율 정보를 받지 못했습니다.");
+      }
+      setManualPastRateStr(pastRateValue.toFixed(4));
+      setManualCurrentRateStr(currentRateValue.toFixed(4));
     } catch (e) {
+      if (controller.signal.aborted) return;
       if (e instanceof Error) setError(e.message);
       else setError("알 수 없는 오류가 발생했습니다.");
     } finally {
-      setIsLoading(false);
+      if (!controller.signal.aborted) setIsLoading(false);
     }
   }, [pastDate, assetCurrency, comparisonCurrency, isManual, liveRates]);
 
   // Re-fetch whenever liveRates or selections change
   useEffect(() => {
-    if (isLive || !isManual) fetchRates();
-  }, [fetchRates, isLive]); // eslint-disable-line
+    void fetchRates();
+    return () => pairRequestRef.current?.abort();
+  }, [fetchRates]);
 
   const { analysis, resultSymbol, purchasingPower } = useMemo(() => {
     const pRate = parseFloat(manualPastRateStr) || 0;
@@ -309,7 +325,7 @@ export default function ExchangeRateImpactCalculator() {
       Number.isInteger(val) ? val : parseFloat(val.toFixed(2));
 
     // Purchasing power in comparison currency
-    const convertedAmount = cRate > 0 ? amount * (liveRates[comparisonCurrency] ?? 0) : 0;
+    const convertedAmount = assetInComparisonCurrency(amount, cRate);
     const compCurrencyData = purchasingPowerData[comparisonCurrency];
     const bigMacs = compCurrencyData ? convertedAmount / compCurrencyData.bigMac : 0;
     const coffees = compCurrencyData ? convertedAmount / compCurrencyData.coffee : 0;
@@ -327,7 +343,7 @@ export default function ExchangeRateImpactCalculator() {
         coffees: Math.floor(coffees),
       },
     };
-  }, [assetAmount, assetCurrency, manualPastRateStr, manualCurrentRateStr, comparisonCurrency, currencies, liveRates]);
+  }, [assetAmount, assetCurrency, manualPastRateStr, manualCurrentRateStr, comparisonCurrency, currencies]);
 
   const chartData = [
     { name: "과거", value: analysis.pastValue },
@@ -350,7 +366,7 @@ export default function ExchangeRateImpactCalculator() {
   const handleShareImage = async () => {
     const element = reportRef.current;
     if (!element) return;
-    const { default: html2canvas } = await import("html2canvas");
+    const { default: html2canvas } = await import("@/lib/captureElement");
     html2canvas(element, {
       scale: 2,
       backgroundColor: "#EDF1F5",

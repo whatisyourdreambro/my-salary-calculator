@@ -47,11 +47,11 @@ import { josaParticle } from "@/lib/josa";
 import { CURRENT_RATES_AS_OF, CURRENT_RATES_YEAR } from "@/config/currentRates";
 
 const companies = companyRepository.getAll();
-const render = (id: string) =>
+const render = async (id: string) =>
   renderToStaticMarkup(
-    createElement(CompanyDetailPage as unknown as (p: { params: { id: string } }) => ReactNode, { params: { id } }),
+    await CompanyDetailPage({ params: Promise.resolve({ id }) }),
   );
-const pages = new Map(companies.map((c) => [c.id, render(c.id)]));
+const pages = new Map(await Promise.all(companies.map(async (c) => [c.id, await render(c.id)] as const)));
 
 function toText(html: string): string {
   return html

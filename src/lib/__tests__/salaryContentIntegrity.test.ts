@@ -74,9 +74,9 @@ describe("Salary explanation and result integrity", () => {
     const expected = calculateSalary2026(annual, 200_000, 1, 0).netPay;
     const currentManwon = Math.round(expected / 10_000);
     const params = { amount: String(annual) };
-    const detail = renderToStaticMarkup(createElement(SalaryPage, { params }));
+    const detail = renderToStaticMarkup(await SalaryPage({ params: Promise.resolve(params) }));
     expect(detail).toContain(`data-monthly-net="${expected}"`);
-    const description = (await generateMetadata({ params })).description;
+    const description = (await generateMetadata({ params: Promise.resolve(params) })).description;
     expect(description).toContain(`약 ${currentManwon}만원`);
     expect(description).toContain(SALARY_MODEL_2026.defaultConditions);
     if (annual < 100_000_000) expect(JSON.stringify(HOME_FAQ_ITEMS)).toContain(`약 ${currentManwon}만원`);
@@ -96,7 +96,7 @@ describe("Salary explanation and result integrity", () => {
   });
 
   it("describes deductions actually present in the detail engine and preserves canonical/social image metadata", async () => {
-    const html = renderToStaticMarkup(createElement(SalaryPage, { params: { amount: "50000000" } }));
+    const html = renderToStaticMarkup(await SalaryPage({ params: Promise.resolve({ amount: "50000000" }) }));
     const howTo = structuredData(html).find(item => item["@type"] === "HowTo")!;
     const steps = JSON.stringify(howTo.step);
     expect(html).not.toContain("DSR 40% 규제 기준");
@@ -106,7 +106,7 @@ describe("Salary explanation and result integrity", () => {
     expect(steps).toContain("근로소득세액공제");
     expect(steps).toContain("지방소득세");
     expect(steps).not.toMatch(/12개월로 나누고|연간 추정 세액/);
-    const meta = await generateMetadata({ params: { amount: "50000000" } });
+    const meta = await generateMetadata({ params: Promise.resolve({ amount: "50000000" }) });
     expect(meta.alternates?.canonical).toBe("https://www.moneysalary.com/salary/50000000");
     expect(meta.openGraph?.description).toBe(meta.description);
     expect(meta.twitter?.description).toBe(meta.description);

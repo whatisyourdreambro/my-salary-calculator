@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - name: 프로덕션 헬스체크 (실패 시 5분 후 1회 재시도 — 배포 전파 중 오탐 방지)
         run: |
           if node scripts/health-check.mjs; then exit 0; fi
@@ -32,7 +32,7 @@ jobs:
   verify:
     if: github.event_name != 'schedule' && github.event_name != 'workflow_dispatch'
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -41,9 +41,12 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm run verify:framework-security
+      - name: Verify QA network safety
+        run: npm run qa:safety
       - run: npm test
       # 스크립트 테스트 전량 (2026-09-28 감사 S31) — 종전에는 10개를 손으로 나열해 indexnow-diff·indexnow-naver·
       # crawl-cache-sampler·pay-official-parse 4개가 CI 에서 한 번도 돌지 않았다. 새 *.test.mjs 는 자동 편승.
@@ -76,16 +79,17 @@ jobs:
           echo "ad-audit --diff 기준: $BASE"
           node scripts/ad-audit.mjs --diff --base "$BASE"
       - run: npm run lint
-      - run: npm run build
-      # edge 번들 회귀 게이트 (2026-09-25 B1) — 서버에서 안 쓰는 검색 인덱스·계산기 레지스트리가
-      # edge 함수에 다시 들어가면(CF Workers CPU 10ms 한도 1102 원인) 실패한다.
-      - run: node scripts/verify-edge-bundle.mjs
+      # Adapter validation uses an isolated, ad-free build and never deploys it.
+      - run: npm run qa:cf:build
+      - run: npm run qa:cf:check
+      # Check middleware and traced Node DSR bundles for unused heavy registries.
+      - run: node scripts/verify-edge-bundle.mjs .open-next-qa/.next
       # 자동광고 배치 경로 회귀 게이트 (2026-09-25, 수익 추천 #4) — 9/10 루트 래퍼 h-full 삭제(4eda6889)로
       # AdSense 자동 인페이지 노출/PV 가 약 75% 줄어든 채 2주가 간 사건의 재발 방지. 대표 11쪽 프리렌더 HTML 의
       # CSS 경로를 scripts/autoads-paths.baseline.json 과 대조해 루트 셸이 깨지거나 한 쪽이라도 20% 넘게 사라지면 실패.
       # 의도한 개편이면 스크립트 머리말의 --update 절차(기준선 갱신 = 자동광고 학습 위치를 버리는 결정).
-      - run: node scripts/verify-autoads-paths.mjs
-      - run: npm run qa:quality
+      - run: node scripts/verify-autoads-paths.mjs --next-dir .open-next-qa/.next
+      - run: npm run qa:quality -- --next-dir .open-next-qa/.next
       - name: 전체 URL 품질 장부 업로드
         if: always()
         uses: actions/upload-artifact@v4
@@ -100,17 +104,29 @@ jobs:
           name: share-source-ledger
           path: .artifacts/share-coverage/
           if-no-files-found: ignore
-      - name: qa-crawl (로컬 프로덕션 서버 기동 후 전 페이지 정합성 크롤)
+      - name: qa-crawl (광고 비활성 로컬 Cloudflare Worker HTTP 정합성 크롤)
+        env:
+          BASE_URL: http://127.0.0.1:3000
         run: |
-          npm run start &
+          setsid npm run qa:cf:start -- --port 3000 &
           SERVER_PID=$!
+          trap 'kill -- "-$SERVER_PID" 2>/dev/null || true' EXIT
+          READY=0
           for i in $(seq 1 30); do
-            curl -sf -A "Mozilla/5.0 (ci)" http://localhost:3000/ > /dev/null && break
+            if curl -sf --max-time 5 -A "MoneySalary-QA/1.0" "$BASE_URL/" > /dev/null; then
+              READY=1
+              break
+            fi
             sleep 2
           done
+          if [ "$READY" != "1" ]; then
+            echo "::error::The ad-free local Cloudflare Worker did not become ready"
+            exit 1
+          fi
           npm run qa:crawl
           npm run qa:english
-          kill $SERVER_PID
+          node scripts/qa-cloudflare-http.mjs
+          node scripts/qa-cloudflare-body.mjs --port 3000
       - name: English page quality ledger
         if: always()
         uses: actions/upload-artifact@v4

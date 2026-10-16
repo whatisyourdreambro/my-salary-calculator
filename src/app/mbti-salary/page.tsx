@@ -89,7 +89,7 @@ export default function MbtiSalaryPage() {
 
  const captureResultImage = async (): Promise<Blob | null> => {
  if (!resultRef.current) return null;
- const { default: html2canvas } = await import("html2canvas");
+ const { default: html2canvas } = await import("@/lib/captureElement");
  const canvas = await html2canvas(resultRef.current, {
  backgroundColor: null,
  scale: 2,
@@ -100,7 +100,7 @@ export default function MbtiSalaryPage() {
 
  const handleDownload = async () => {
  if (resultRef.current) {
- const { default: html2canvas } = await import("html2canvas");
+ const { default: html2canvas } = await import("@/lib/captureElement");
  html2canvas(resultRef.current, {
  backgroundColor: null, // 투명 배경 유지
  scale: 2, // 고해상도 이미지 생성
