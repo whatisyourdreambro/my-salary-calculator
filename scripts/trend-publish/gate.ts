@@ -8,7 +8,7 @@
 // --candidate: daily prepare 가 남긴 레이더 후보(state/<날짜>-candidate.json · PROPOSE 보관본의 candidate). 새 브리프는 필수 —
 //   1차 출처 URL·게시일·발표 종류를 writer 선언이 아니라 이 기록과 대조한다. --candidate-route 가 없으면 후보의 route 를 쓴다.
 // pre  = 규칙 전부 + secret-scan + 경로 허용목록(--check-diff 가 있을 때)
-// post = pre 규칙 + 프리렌더 허브·정적 페이지 유사도 + rss.xml 크기 투영(.next 필요)
+// post = pre 규칙 + 프리렌더 허브·정적 페이지 유사도 + rss.xml 크기 투영(.next-qa 필요)
 // 출력: 한국어 표 + gate-<slug>.json (TREND_HOME/gates 또는 --out). 종료 코드 0 통과 · 1 규칙 실패 · 2 인프라 오류.
 import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
@@ -129,7 +129,7 @@ export function loadStaleRoutes(fileOrDir: string | undefined, config: { linkFre
   return [...new Set(out)];
 }
 
-/** 프리렌더 HTML(.next/server/app/<경로>.html)의 제목·본문 가시 텍스트 */
+/** 프리렌더 HTML(.next-qa/server/app/<경로>.html)의 제목·본문 가시 텍스트 */
 export function prerenderedPage(nextDir: string, route: string): { key: string; title: string; text: string } | null {
   const file = route === "/" ? join(nextDir, "server/app/index.html") : join(nextDir, "server/app", `${route.replace(/^\//, "")}.html`);
   if (!existsSync(file)) return null;
@@ -143,7 +143,7 @@ export function prerenderedPage(nextDir: string, route: string): { key: string; 
 /** rss.xml 최악 투영 — 전문 30편이 모두 이 브리프 크기일 때 */
 export function rssProjection(nextDir: string, draft: TrendBriefDraft): { bytes: number; nonFull: number; perItem: number } {
   const body = join(nextDir, "server/app/rss.xml.body");
-  if (!existsSync(body)) throw new InfraError(`빌드 피드 없음: ${body} (post 단계는 npm run build 뒤)`);
+  if (!existsSync(body)) throw new InfraError(`빌드 피드 없음: ${body} (post 단계는 npm run qa:build 뒤)`);
   const xml = readFileSync(body, "utf8");
   const total = utf8Bytes(xml);
   const enc = [...xml.matchAll(/<content:encoded>[\s\S]*?<\/content:encoded>/g)].reduce((n, m) => n + utf8Bytes(m[0]), 0);
@@ -238,7 +238,7 @@ export async function main(): Promise<number> {
   const renderedSelf = trendBriefGuides.some((g) => g.slug === draft.slug) ? 1 : 0;
   const othersWithSlug = slugs.filter((s) => s === draft.slug).length - renderedSelf;
   const existingSlugs = [...slugs.filter((s) => s !== draft.slug), ...(othersWithSlug > 0 ? [draft.slug] : [])];
-  const nextDir = resolve(repo, arg("--next") || ".next");
+  const nextDir = resolve(repo, arg("--next") || ".next-qa");
   const staticPages: RuleContext["staticPages"] = [];
   const cannibalHubs = (config.cannibalHubs as RuleContext["cannibalHubs"]) ?? [];
   const hub = CLUSTER_HUBS[draft.cluster];
@@ -282,7 +282,7 @@ export async function main(): Promise<number> {
   const results = runRules(draft, ctx);
 
   if (phase === "pre") {
-    const scan = spawnSync(process.execPath, [join(repo, "scripts/trend-publish/secret-scan.mjs"), "--repo", repo, "--base", arg("--check-diff") || "HEAD", ...(trendHome ? ["--trend-home", trendHome] : [])], {
+    const scan = spawnSync(process.execPath, [join(repo, "scripts/trend-publish/secret-scan.mjs"), "--repo", repo, "--next", nextDir, "--base", arg("--check-diff") || "HEAD", ...(trendHome ? ["--trend-home", trendHome] : [])], {
       encoding: "utf8",
     });
     results.splice(results.length, 0, { id: "secret-scan", ok: scan.status === 0, detail: (scan.stdout || scan.stderr || "").trim().split("\n").slice(-1)[0] ?? "", value: scan.status ?? -1, threshold: 0 });

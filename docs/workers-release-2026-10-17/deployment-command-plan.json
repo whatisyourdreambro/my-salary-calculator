@@ -1,8 +1,21 @@
 {
   "schema": "moneysalary-workers-deployment-command-plan-v1",
   "recordedAt": "2026-10-16T17:17:36.723Z",
-  "status": "NOT EXECUTED",
-  "scope": "Read-only preparation. This reviewer ran no uploads, deployments, Git pushes, publisher HTTP, UI, builds, database mutations or secret operations.",
+  "status": "WORKER ACTIVATED; CANONICAL CUTOVER ROLLED BACK TO PAGES",
+  "scope": "Original command templates and local evidence are preserved from preparation. Actual operations were performed by the release coordinator and are summarized in deployment-outcome.json. This documentation reviewer made no remote requests or runtime changes.",
+  "actualRelease": {
+    "report": "docs/workers-release-2026-10-17/deployment-outcome.json",
+    "releaseTag": "2e0a99484ec05cacf86f4016cea18b3974c748ea",
+    "codeVersionId": "246484a4-2478-4f07-8c58-12e64beb919f",
+    "startupTimeMs": 31,
+    "finalSecretOnlyVersionId": "7685b310-986d-4666-89fb-93b3d170df1c",
+    "deploymentId": "3278e35f-9519-457a-855a-fd44435e79f0",
+    "workerPercentage": 100,
+    "canonicalWorkerRoutes": [],
+    "publicOrigin": "Retained Pages a1fda725-66fb-4d13-a0b5-451af56a398b on commit 7ae902995b3dc6dbf839beb9832af3e9255114ff",
+    "cutover": "2026-10-16T18:10:23Z routes attached; 8 HTTP checks passed then sitemap 503; routes removed by 18:10:34Z; Pages home 200/old layout verified at 18:11:07Z",
+    "hold": "Free-plan CPU error observed; awaiting owner choice between Paid and Free architecture redesign. No payment approved. IndexNow not submitted. Rollback UI purge was confirmed/dialog closed and subsequent home MISS observed; explicit success receipt unavailable. Final home and sitemap GETs returned200."
+  },
   "cwd": "C:/Users/ruby1/.codex/worktrees/workers-production-release/my-salary-calculator",
   "sourceState": {
     "branch": "codex/workers-production-release",
@@ -10,7 +23,7 @@
     "localOriginMain": "7ae902995b3dc6dbf839beb9832af3e9255114ff",
     "remote": "https://github.com/whatisyourdreambro/my-salary-calculator.git",
     "dirty": true,
-    "caveat": "HEAD alone does not identify the dirty release. The coordinator must freeze source and artifact hashes and supply one unique release tag. No git fetch or remote Git inspection was performed by this reviewer."
+    "caveat": "Historical preparation snapshot, superseded for release identity by actualRelease.releaseTag. The coordinator subsequently froze clean commit 2e0a99484ec05cacf86f4016cea18b3974c748ea. No git fetch or remote Git inspection was performed by this reviewer."
   },
   "localConfiguration": {
     "workerName": "moneysalary",
@@ -60,31 +73,29 @@
   },
   "publishing": {
     "ci": ".github/workflows/ci.yml verifies isolated ad-free output; it does not publish Workers. Manual CI dispatch runs the production HTTP health job, not the verify job.",
-    "purge": ".github/workflows/cf-purge.yml waits for a release and purges; it is not a publisher. Default remains pages until CF_DEPLOY_TARGET=workers is deliberately configured.",
-    "sourcePublisher": "scripts/trend-publish/publish-approved.mjs pushes HEAD:main then verifies production. It has no Worker upload/activation step. Keep it and related source-publishing automations paused until a functioning Workers publishing path is installed.",
-    "beforeMainPush": "Disable Pages Git production auto-deploy and check queued builds so the retained rollback deployment cannot be replaced by the changed adapter. Keep Pages project, custom domains, DNS and known-good deployment. No main push is necessary for the first controlled manual release.",
+    "purge": "Current local .github/workflows/cf-purge.yml is workflow_dispatch-only, defaults to Workers, and requires explicit exact release_tag plus full expected_version_id with no SHA fallback. It verifies the active release before purge and never publishes a Worker; explicit target=pages retains rollback support. No source push triggers it. This follow-up local guard is not part of the uploaded application release.",
+    "sourcePublisher": "Current local scripts/trend-publish/publish-approved.mjs unconditionally returns exit2 for publish/update/retire/check-only before key-file reads or Git commands. No environment or CLI flag can enable the retained legacy Pages push path. A separately implemented and verified Workers publisher is required before re-enabling publication. This follow-up local guard is not part of the uploaded application release.",
+    "beforeMainPush": "Pages Git production and preview auto-deploy were frozen before cutover. Keep them frozen and preserve the retained Pages project, custom domains, DNS and known-good deployment while canonical Worker routes remain removed. No Git push has been performed.",
     "futureAutomation": "A separate authorized Workers publisher must build ordinary-visitor output, capture old sitemap before activation, upload with exact GitHub SHA tag, activate a pinned UUID at 100%, reconcile triggers, verify routing, purge, and submit the preserved delta. A green CI result or Git push does not accomplish that."
   },
   "unresolvedBlockers": [
-    "Wrangler authentication expired; no valid OAuth session exists according to the coordinator. Authentication must complete before remote inventory/upload. Verify account and exact Worker existence before choosing the bootstrap branch.",
-    "Wrangler OAuth and CF_API_TOKEN are different tool inputs. Our activation/purge/IndexNow helpers explicitly require CF_API_TOKEN plus CF_ACCOUNT_ID; do not read or copy OAuth credentials from private files into artifacts.",
-    "Production build verification, cache mirroring and final production dry-run passed. The latest QA build/check, HTTP, body, crawl and English/404 checks also passed as reported by the coordinator. Freeze final source/artifact identities before upload; actual upload startup_time_ms remains unverified.",
-    "Confirm account's current Workers plan and CPU allowance. Static-cache lookup, Next middleware/rendering and dynamic OG processing are not proven to fit Free 10ms.",
-    "Verify existing D1 identity, schema and secret binding privately. Pages bindings/secrets do not automatically transfer to Workers.",
-    "Record current Pages deployment/commit, both DNS/proxy states, custom-domain mapping, zone route IDs and existing Worker routes before any routing mutation.",
-    "Create a reviewed no-routes bootstrap/rollback configuration only if the Worker is genuinely new. Never run the bootstrap command against an existing unrelated Worker.",
-    "Freeze the dirty release and select an exact unique release tag. Pin the final UUID after any secret-version update; tags alone are not a unique version identity."
+    "Owner decision between Workers Paid and a Free-plan architecture redesign is pending; no payment or plan upgrade has been approved.",
+    "Actual Free-plan observation: seven invocations, one exceededCpu error, CPU P50 355.79ms/P90 718ms against 10ms allowance. Keep canonical routes removed until runtime suitability is resolved.",
+    "The limited cutover check failed at sitemap HTTP 503 after eight passing checks. Its direct correlation with the CPU error is not proven; resolve the gate before another cutover.",
+    "Rollback purge API was denied HTTP 401 despite successful OAuth authentication. Administrator UI Purge Everything was confirmed and its dialog closed; subsequent home MISS observed. No explicit success toast/API receipt/audit record was captured, so do not claim API-confirmed purge.",
+    "IndexNow captured one changed URL but was not submitted. A later successful cutover must revalidate the preserved build/manifest/version identity before any submission.",
+    "Preserve existing Pages/DNS/D1 and frozen Git auto-deploy/source publishing. No Git push has been performed, and no automatic Workers publishing pipeline is established."
   ],
   "permissions": {
     "wrangler": "Authenticated account access to Workers scripts/versions/deployments and route updates; zone read/route edit for both exact host routes; D1 access only for the selected database operations.",
     "postRelease": "CF_API_TOKEN with Worker deployments/versions read and zone cache purge, plus CF_ACCOUNT_ID and CF_ZONE_ID. Do not store token values in this plan.",
     "secretHandling": "Use masked interactive input or a short-lived owner-only secrets file outside the repository/staging/artifact directories. Do not pass secret values in argv, logs, screenshots, JSON evidence or NEXT_PUBLIC_*."
   },
-  "commandsNotation": "All commands below are proposals, NOT EXECUTED. argv arrays are exact arguments, not shell strings. Replace ${...} only with validated coordinator inputs. Use the installed Node CLI paths; do not use npx @latest or update dependencies during release.",
+  "commandsNotation": "The argv templates below are preserved from preparation, not an exact command transcript or an instruction to rerun them. Step status now records the actual phase outcome; deployment-outcome.json and its receipts record performed operations, including the secret-only alternative. Any future use requires validated coordinator inputs and the installed CLI, with canonical routes kept removed until the current hold is resolved.",
   "steps": [
     {
       "id": "freeze-and-preflight",
-      "status": "NOT EXECUTED",
+      "status": "LOCAL PREFLIGHT COMPLETED",
       "network": "none",
       "commands": [
         [
@@ -121,7 +132,7 @@
     },
     {
       "id": "remote-read-only-inventory",
-      "status": "NOT EXECUTED",
+      "status": "PERFORMED; SEE SANITIZED OUTCOME EVIDENCE",
       "network": "Cloudflare control-plane only",
       "commands": [
         [
@@ -154,7 +165,7 @@
     },
     {
       "id": "d1-schema-preflight",
-      "status": "NOT EXECUTED",
+      "status": "READ-ONLY SCHEMA CHECK PASSED; NO DATA MUTATION",
       "network": "Selected D1 control-plane",
       "command": [
         "node",
@@ -173,7 +184,7 @@
     },
     {
       "id": "first-worker-bootstrap-only-if-absent",
-      "status": "NOT EXECUTED",
+      "status": "BOOTSTRAP CREATED WITHOUT CANONICAL ROUTES",
       "network": "REMOTE MUTATION; no publisher traffic",
       "reason": "The official deployment-management documentation says the first Worker creation requires deploy; versions upload cannot create the initial project.",
       "proposedFilesNotCreated": {
@@ -205,7 +216,7 @@
     },
     {
       "id": "capture-before-domain-cutover",
-      "status": "NOT EXECUTED",
+      "status": "CAPTURED ONE CHANGED URL; NOT SUBMITTED",
       "network": "One non-rendering canonical sitemap GET; no JavaScript",
       "requiredEnvNames": [
         "CF_ACCOUNT_ID",
@@ -224,7 +235,7 @@
     },
     {
       "id": "upload-final-version-inactive",
-      "status": "NOT EXECUTED",
+      "status": "CODE VERSION UPLOADED; SECRET INSTALLED IN SEPARATE VERSION",
       "network": "REMOTE MUTATION; assets and inactive version upload",
       "command": [
         "node",
@@ -270,7 +281,7 @@
     },
     {
       "id": "alternative-masked-secret-setup",
-      "status": "NOT EXECUTED",
+      "status": "COMPLETED; SECRET-ONLY FINAL UUID PINNED",
       "network": "REMOTE MUTATION; new inactive version",
       "when": "Alternative to --secrets-file only; do not run both without reason. Upload the application inactive first, then use masked interactive input.",
       "command": [
@@ -293,7 +304,7 @@
     },
     {
       "id": "activate-pinned-version",
-      "status": "NOT EXECUTED",
+      "status": "COMPLETED AT 100%; CURRENTLY NO CANONICAL ROUTES",
       "network": "REMOTE MUTATION; activate one Worker version",
       "command": [
         "node",
@@ -313,7 +324,7 @@
     },
     {
       "id": "verify-active-version",
-      "status": "NOT EXECUTED",
+      "status": "VERIFIED EXACT TAG AND UUID",
       "network": "Cloudflare read-only",
       "command": [
         "node",
@@ -332,7 +343,7 @@
     },
     {
       "id": "attach-canonical-routes",
-      "status": "NOT EXECUTED",
+      "status": "ATTACHED THEN REMOVED AFTER FAILED HTTP GATE",
       "network": "REMOTE MUTATION; live cutover",
       "command": [
         "node",
@@ -350,7 +361,7 @@
     },
     {
       "id": "purge-verified-release",
-      "status": "NOT EXECUTED",
+      "status": "FORWARD RELEASE NOT COMPLETED; ROLLBACK UI PURGE INITIATED WITHOUT EXPLICIT SUCCESS RECEIPT",
       "network": "REMOTE MUTATION; zone cache purge",
       "requiredEnvNames": [
         "CF_DEPLOY_TARGET=workers",
@@ -369,7 +380,7 @@
     },
     {
       "id": "submit-captured-delta-once",
-      "status": "NOT EXECUTED",
+      "status": "NOT SUBMITTED; CUTOVER ROLLED BACK",
       "network": "Canonical sitemap GET plus IndexNow endpoint POSTs",
       "command": [
         "node",
@@ -382,7 +393,7 @@
     }
   ],
   "rollback": {
-    "status": "NOT EXECUTED",
+    "status": "CANONICAL ROUTES RESTORED TO EMPTY; PAGES HOME/SITEMAP VERIFIED; UI PURGE INITIATED AND MISS OBSERVED WITHOUT EXPLICIT SUCCESS RECEIPT",
     "firstCutover": "Restore the recorded Worker route state only. For a verified new Worker with no prior routes, remove only the two newly created route IDs; keep Pages custom-domain/DNS mapping and its known-good deployment, D1 data and Worker versions. Never delete the Pages project or database.",
     "routeApiTemplates": [
       {
@@ -505,23 +516,27 @@
         "source": "Coordinator final validation; standalone test evidence in .artifacts/workers-release-2026-10-17/worker-body-workerd-test.log",
         "scope": "Actual helper plus synthetic Worker, external outbound denied, no Wrangler dev body-drain middleware, no application or advertising code. Runtime code was not changed by this reporting task."
       },
-      "remoteStatus": "OAuth authentication expired; no valid OAuth session. Remote changes: 0. Actual uploads: 0. Deployments: 0. Startup CLI/profiling was not executed and no profiling harness was created. Actual versions upload startup_time_ms remains unverified."
+      "remoteStatus": "OAuth succeeded. Code upload startup31ms, secret-only final version and 100% deployment completed. Canonical routes were attached then removed after sitemap503; retained Pages home200 confirmed. Startup CLI/profiling was never executed. Actual Free-plan CPU error observed; no Paid approval/payment. See deployment-outcome.json."
     },
     "startupVerification": {
-      "status": "UNVERIFIED",
+      "status": "CODE UPLOAD ACCEPTED; 31MS STARTUP OBSERVED",
+      "startupTimeMs": 31,
+      "measuredCodeVersionId": "246484a4-2478-4f07-8c58-12e64beb919f",
+      "finalSecretOnlyVersionId": "7685b310-986d-4666-89fb-93b3d170df1c",
+      "finalVersionNote": "Script and runtime unchanged by secret-only version; 31ms is the base code-upload measurement, not a second timing measurement.",
       "localProfiler": "NOT EXECUTED",
       "profilingHarnessCreated": false,
       "reviewedWranglerVersion": "4.151.1",
       "reviewScope": "Read-only installed CLI/source and official documentation review; no QA or production artifact was executed for startup profiling.",
       "finding": "check startup requires a serialized multipart upload, not worker-entry.js alone. Its local Miniflare profiler measures module initialization, but the default implementation does not guarantee all outbound traffic is blocked. No new harness or CLI execution is authorized by this reporting task.",
-      "remainingGate": "After authentication and the authorized inactive production versions upload, capture and verify the returned startup_time_ms and upload acceptance before activation. This control-plane result has not been obtained.",
+      "remainingGate": "Startup acceptance was obtained. Per-request runtime suitability remains unresolved after a Free-plan exceededCpu error and failed sitemap HTTP gate; canonical routes remain removed.",
       "limitation": "The observed 7.6-second local start-to-first-GET wall time is not startup CPU evidence. Even a local CPU profile would not certify the Cloudflare 1000ms startup limit or Free per-request 10ms allowance.",
       "references": [
         "https://developers.cloudflare.com/workers/wrangler/commands/workers/#startup",
         "https://developers.cloudflare.com/workers/platform/limits/#worker-startup-time"
       ]
     },
-    "cpuEvidence": "The Next server, middleware/cache JSON work and dynamic OG rendering execute in the Worker. Current code/local wall-time observations do not prove live CPU fits Free10ms. A successful upload also does not prove per-request CPU suitability. Do not silently change caching/security semantics to meet Free."
+    "cpuEvidence": "Authenticated dashboard observation for the new Worker: seven invocations, one exceededCpu error, CPU P50 355.79ms/P90 718ms on Free10ms; memory/internal/unhandled errors0. Small sample, not representative traffic, and no individual sitemap-to-error correlation. Startup31ms does not establish request CPU suitability. Await owner decision on Paid or redesign; preserve caching/security semantics."
   },
   "references": [
     {

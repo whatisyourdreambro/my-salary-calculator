@@ -1,37 +1,29 @@
-# 배포 후 Cloudflare 캐시 자동 Purge (2026-09-25, 승인 A35 · 감사 CLIENT-02)
-# 배경: /salary/* 는 엣지 4시간, 규칙 B 이후 HTML 은 1시간 캐시 — 배포 뒤 Purge 를 잊으면 삭제된 청크를 가리키는
-#       옛 HTML 이 남아 하이드레이션·광고·GA 가 멈출 수 있다. 런북 "배포마다 Purge" 를 자동화한다.
-# 동작: main push → 선택된 대상의 프로덕션 배포를 확인 → 존 캐시 Purge Everything.
-# 배포 자체는 별도 pipeline. CF_DEPLOY_TARGET repository variable은 pages(기본)/workers.
-# Workers는 CF_WORKER_NAME variable 및 정확한 workers/tag=GitHub SHA 업로드 계약이 필요하다.
-# dirty-tree 수동 릴리스는 workflow_dispatch의 release_tag + expected_version_id로 고정한다.
-# Pages rollback은 target=pages, release_sha=복귀할 커밋으로 명시한다.
-# IndexNow는 이 워크플로에서 새 sitemap과 비교하지 않는다. 전환 전 capture manifest를
-# 보존하고 운영자가 활성화 후 indexnow-ping.mjs --submit으로 한 번 제출해야 한다.
-# 시크릿(저장소 Settings > Secrets and variables > Actions): CF_API_TOKEN(대상 읽기 + 존 Cache Purge),
-#       CF_ACCOUNT_ID, CF_ZONE_ID — 하나라도 없으면 notice 만 남기고 성공(0) 처리, CI 를 실패시키지 않는다.
-# 실패(빨간 X)는 배포 실패·시간 초과·토큰 권한 오류·Purge 거부뿐 — 알림 메일이 오면 대시보드에서 수동 Purge.
-# 저장소 쓰기(push·커밋·태그) 없음. 설정 절차: docs/operator-console-pack.md '배포 후 캐시 자동 Purge'.
+# Manual cache invalidation after a separately controlled deployment.
+# Workers is the default; exact tag + full activated version UUID are mandatory.
+# No source push triggers this workflow and this workflow never publishes a Worker.
+# Explicit target=pages retains the previous Pages rollback verification path.
+# Workers missing credentials fail closed; Pages missing credentials retain a notice/skip.
+# Capture IndexNow delta before activation and submit it separately after activation/Purge.
+# Setup: docs/trend-publishing-runbook.md §7 and docs/operator-console-pack.md.
 name: cf-purge
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
     inputs:
       target:
         description: Deployment target (Pages for rollback)
         required: true
         type: choice
-        options: [pages, workers]
+        options: [workers, pages]
+        default: workers
       worker_name:
         description: Worker name (defaults to repository variable)
         type: string
       release_tag:
-        description: Exact Workers version tag (defaults to selected commit SHA)
+        description: Exact activated Workers version tag (required for Workers; no fallback)
         type: string
       expected_version_id:
-        description: Full activated Worker version UUID (required for manual Workers run)
+        description: Full activated Worker version UUID (required for Workers)
         type: string
       release_sha:
         description: Pages rollback commit SHA (defaults to selected commit)
@@ -40,7 +32,7 @@ on:
 permissions:
   contents: read
 
-# 같은 커밋 재실행이 겹치지 않게만 묶는다(서로 다른 push 는 각자 자기 배포를 기다려 Purge).
+# 같은 커밋 수동 재실행이 겹치지 않게 묶는다.
 concurrency:
   group: cf-purge-${{ github.sha }}
   cancel-in-progress: false
@@ -53,12 +45,28 @@ jobs:
       CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
       CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
       CF_ZONE_ID: ${{ secrets.CF_ZONE_ID }}
-      CF_DEPLOY_TARGET: ${{ inputs.target || vars.CF_DEPLOY_TARGET || 'pages' }}
+      CF_DEPLOY_TARGET: ${{ inputs.target || 'workers' }}
       CF_WORKER_NAME: ${{ inputs.worker_name || vars.CF_WORKER_NAME }}
-      CF_RELEASE_TAG: ${{ inputs.release_tag || github.sha }}
+      CF_RELEASE_TAG: ${{ inputs.release_tag }}
       CF_EXPECTED_VERSION_ID: ${{ inputs.expected_version_id }}
       CF_PAGES_COMMIT_SHA: ${{ inputs.release_sha || github.sha }}
     steps:
+      - name: 수동 릴리스 식별자 확인
+        run: |
+          node --input-type=module <<'NODE'
+          const env = process.env;
+          if (!['workers', 'pages'].includes(env.CF_DEPLOY_TARGET)) {
+            throw new Error('Select workers or explicit pages rollback; no purge.');
+          }
+          if (env.CF_DEPLOY_TARGET === 'workers') {
+            if (!/^[a-z0-9._-]{1,128}$/i.test(env.CF_RELEASE_TAG ?? '')) {
+              throw new Error('Workers purge requires the exact release_tag; no SHA fallback.');
+            }
+            if (!/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(env.CF_EXPECTED_VERSION_ID ?? '')) {
+              throw new Error('Workers purge requires expected_version_id as a full activated version UUID.');
+            }
+          }
+          NODE
       - name: 시크릿 확인
         id: secrets
         run: |
@@ -71,10 +79,6 @@ jobs:
             echo "ok=false" >> "$GITHUB_OUTPUT"
           else
             echo "ok=true" >> "$GITHUB_OUTPUT"
-          fi
-          if [ "$CF_DEPLOY_TARGET" = "workers" ] && [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] && [ -z "$CF_EXPECTED_VERSION_ID" ]; then
-            echo "::error::Manual Workers purge requires expected_version_id."
-            exit 1
           fi
       - uses: actions/checkout@v4
         if: steps.secrets.outputs.ok == 'true'

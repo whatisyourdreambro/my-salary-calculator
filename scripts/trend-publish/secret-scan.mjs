@@ -1,11 +1,11 @@
 // scripts/trend-publish/secret-scan.mjs — 비밀값 유출 게이트 (2026-09-26 R5 publisher)
 //
-// 사용: node scripts/trend-publish/secret-scan.mjs [--repo <dir>] [--base <ref>] [--trend-home <dir>] [--no-next]
+// 사용: node scripts/trend-publish/secret-scan.mjs [--repo <dir>] [--base <ref>] [--trend-home <dir>] [--next <dir>] [--no-next]
 // 검사 대상과 패턴 (정책: guardrails security.regexScan · exactValueScan):
 //   1) git diff <base> 의 추가 줄 + 추적 안 된 새 파일 + TREND_HOME/logs — 정규식 전부
 //      · 40자리 hex · 32자리 hex(IndexNow 키 파일 public/<32hex>.txt 는 예외)
 //      · (crtfc_key|auth)=값 · 법령 API OC=값 · serviceKey=값 · X-Naver-Client-Id/Secret 헤더 값
-//   2) .next(있을 때, cache 제외)·public — 키가 붙은 URL 패턴만(빌드 해시·previewModeId 같은 hex 는 정상이라 hex 규칙은 걸지 않는다)
+//   2) .next-qa(기본, --next로 지정 가능; 있을 때, cache 제외)·public — 키가 붙은 URL 패턴만(빌드 해시·previewModeId 같은 hex 는 정상이라 hex 규칙은 걸지 않는다)
 //   3) 위 전부 — 지금 환경변수에 있는 비밀값(이름이 KEY·SECRET·TOKEN·PASSWORD·OC 로 끝남)의 원문·URL 인코딩·base64
 // 적중하면 exit 1 + TREND_HOME/HALT 작성(사유만 — 값은 절대 쓰지 않는다). 출력은 가린 값(앞 4자 + 길이)만.
 // 키는 환경변수로만 받는다 — 이 스크립트도 값을 파일·로그에 남기지 않는다.
@@ -118,7 +118,7 @@ function* walkFiles(dir, skip = () => false) {
 }
 
 /** 전체 검사 — 적중 목록 */
-export function runScan({ repo, base, trendHome, includeNext = true, env = process.env }) {
+export function runScan({ repo, base, trendHome, includeNext = true, nextDir = ".next-qa", env = process.env }) {
   const envSecrets = collectEnvSecrets(env);
   const hits = [];
   const diff = git(repo, ["diff", "--unified=0", "--no-color", "--no-ext-diff", base]);
@@ -146,7 +146,7 @@ export function runScan({ repo, base, trendHome, includeNext = true, env = proce
       hits.splice(hits.length, 0, ...scanText(text, { file: `${label}/${relative(dir, f.path).replace(/\\/g, "/")}`, keyedOnly: true, envSecrets }));
     }
   };
-  if (includeNext) scanBuilt(join(repo, ".next"), ".next");
+  if (includeNext) scanBuilt(resolve(repo, nextDir), relative(repo, resolve(repo, nextDir)).replace(/\\/g, "/"));
   scanBuilt(join(repo, "public"), "public");
   return hits;
 }
@@ -170,7 +170,7 @@ export function main(argv = process.argv, env = process.env) {
   const trendHome = arg(argv, "--trend-home") ?? env.TREND_HOME;
   let hits;
   try {
-    hits = runScan({ repo, base, trendHome, includeNext: !argv.includes("--no-next"), env });
+    hits = runScan({ repo, base, trendHome, includeNext: !argv.includes("--no-next"), nextDir: arg(argv, "--next") ?? ".next-qa", env });
   } catch (e) {
     console.error(`[secret-scan] 검사 실패: ${e.message}`);
     return 2;

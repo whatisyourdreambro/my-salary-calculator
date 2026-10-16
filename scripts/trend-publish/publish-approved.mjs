@@ -1,6 +1,7 @@
+// Workers 수동 릴리스 전용: main은 아래의 이전 Pages 게시 흐름에 도달하기 전에 모든 모드를 차단한다.
 // scripts/trend-publish/publish-approved.mjs — 운영자 승인 브리프 발행 (2026-09-26 R5 publisher)
 //
-// ★이 파일만 git push 를 한다. 운영자가 채팅에서 브리프별로 승인('발행 <slug>' · '철회 <slug>')한 세션만 실행한다.
+// ★아래 이전 Pages 구현에만 git push 코드가 남아 있으며 현재 main 가드로 실행되지 않는다. 운영자가 채팅에서 브리프별로 승인('발행 <slug>' · '철회 <slug>')한 세션만 실행한다.
 //   권한 허용목록에 올리지 않는다 — 실행 때마다 권한 확인 창이 두 번째 확인이 된다. PUBLISH_ENABLED 는 준비·긴급 정지 플래그일 뿐 승인이 아니다.
 // 사용:
 //   node scripts/trend-publish/publish-approved.mjs --slug <slug> --draft-sha256 <hex> [--manual-purge-ack] [--check-only [--today YYYY-MM-DD]]
@@ -26,6 +27,8 @@ import {
   defaultDeps,
   draftSha256,
   heavySteps,
+  qaBuildCacheDir,
+  qaHeavyInputsHash,
   kstToday,
   loadConfig,
   pendingDecisions,
@@ -35,7 +38,6 @@ import {
   resolvePaths,
   reviewedUntilState,
   safeResetWorktree,
-  sha256Text,
   updateCalendarBlocks,
   worktreeGuard,
 } from "./daily.mjs";
@@ -86,7 +88,18 @@ function arg(argv, name) {
   return i > -1 && argv[i + 1] && !argv[i + 1].startsWith("--") ? argv[i + 1] : undefined;
 }
 
+// No environment, approval flag or CLI option can enable the legacy Pages publisher.
+// A tested Workers publication implementation must replace this guard before re-enabling it.
+export function workersPublicationBlockReason() {
+  return "Workers 자동 게시 경로가 아직 구현되지 않아 발행·수정·철회(--retire)·--check-only를 모두 차단했습니다. Git 명령·키 파일 읽기·배포를 실행하지 않았습니다. 승인 초안/해시/로컬 브랜치를 수동 Workers 릴리스 담당자에게 인계하세요: docs/trend-publishing-runbook.md (Workers 수동 릴리스 인계). Pages 자동배포 비활성 확인 → 별도 정상 광고 운영 빌드/검증 → 정확한 tag/version 100% 활성화 → 수동 Purge/IndexNow 순서가 필요합니다. QA 산출물은 배포하지 마세요.";
+}
+
 export async function main(argv = process.argv, deps = defaultDeps()) {
+  const blocked = workersPublicationBlockReason();
+  if (blocked) {
+    deps.log(`[publish] ${blocked}`);
+    return 2;
+  }
   const slug = arg(argv, "--slug");
   const kind = argv.includes("--retire") ? "retire" : argv.includes("--update") ? "update" : "publish";
   const config = loadConfig(REPO_OF_SCRIPT);
@@ -178,11 +191,11 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
 
   // 3) 기준 빌드 목록(브리프 없는 origin/main) — prepare 가 같은 커밋으로 만들어 두지 않았으면 지금 만든다
   const heavy = (name, cmd) => run(process.execPath, [join(wt, "scripts/trend-publish/heavy.mjs"), cmd, "--cwd", wt, "--log", join(home, "logs", `${today}-publish-${name}.log`), "--trend-home", home]);
-  if (kind !== "retire" && !existsSync(join(home, "builds", originSha, "chunks.json"))) {
+  if (kind !== "retire" && !existsSync(join(qaBuildCacheDir(home, originSha), "chunks.json"))) {
     const sibling = wtConfig.adSequence?.siblingGuide;
     const pages = [...(wtConfig.adSequence?.gatePages ?? []), ...(sibling ? [`/guides/${sibling}`] : [])].join(",");
-    const b = join(home, "builds", originSha);
-    const base = await heavy("base", `npm run build && node scripts/trend-publish/chunk-diff.mjs manifest --next .next --out "${join(b, "chunks.json")}" && node scripts/trend-publish/ad-sequence.mjs extract --next .next --pages "${pages}" --out "${join(b, "adseq.json")}"`);
+    const b = qaBuildCacheDir(home, originSha);
+    const base = await heavy("base", `npm run prebuild && npm run qa:build && node scripts/trend-publish/chunk-diff.mjs manifest --next .next-qa --out "${join(b, "chunks.json")}" && node scripts/trend-publish/ad-sequence.mjs extract --next .next-qa --pages "${pages}" --out "${join(b, "adseq.json")}"`);
     if (base.code !== 0) {
       say(`[publish] 기준 빌드 실패 (exit ${base.code}) — 중지`);
       return base.code === 75 ? 75 : 1;
@@ -236,7 +249,7 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
   const staged = await stageAllowed();
   if (staged) return fail(staged);
   const tree = (await git(["write-tree"])).stdout.trim();
-  const reuse = kind === "publish" && archive && archive.heavyInputsHash === sha256Text(`${originSha}\n${tree}`);
+  const reuse = kind === "publish" && archive && archive.heavyInputsHash === qaHeavyInputsHash(originSha, tree);
   if (!reuse) {
     const steps = heavySteps({ slug, originSha, home, wt, config: wtConfig, sibling: wtConfig.adSequence?.siblingGuide, candidate: candidateFile, update: kind === "update" });
     for (const s of steps) {

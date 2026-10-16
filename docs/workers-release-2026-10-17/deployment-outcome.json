@@ -1,0 +1,133 @@
+{
+  "schema": "moneysalary-workers-deployment-outcome-v1",
+  "dateKST": "2026-10-17",
+  "status": "worker-cutover-rolled-back-to-retained-pages",
+  "updatedThroughUtc": "2026-10-16T18:16:05.875Z",
+  "source": "Release coordinator operations and the named saved evidence. This documentation reviewer performed no remote requests, builds, tests or runtime changes.",
+  "historicalReports": "Local test counts, artifact hashes and command templates in release-verification.json and deployment-command-plan.json remain preparation evidence, not proof that the later public cutover passed.",
+  "release": {
+    "commitAndTag": "2e0a99484ec05cacf86f4016cea18b3974c748ea",
+    "worker": "moneysalary",
+    "codeVersionId": "246484a4-2478-4f07-8c58-12e64beb919f",
+    "codeUploadStartupTimeMs": 31,
+    "finalVersionId": "7685b310-986d-4666-89fb-93b3d170df1c",
+    "finalVersionChange": "FEEDBACK_RATE_LIMIT_SECRET installed in a secret-only version; script and runtime verified unchanged. 31ms is the base code-upload timing, not a separate final-version measurement.",
+    "secretValueStoredInEvidence": false,
+    "deploymentId": "3278e35f-9519-457a-855a-fd44435e79f0",
+    "activeWorkerPercentage": 100,
+    "activationVerifiedAtUtc": "2026-10-16T18:10:12.358Z",
+    "canonicalWorkerRoutesAfterRollback": [],
+    "note": "The Worker version remains active in its deployment, but canonical routes were removed. This is not a completed public Workers migration."
+  },
+  "cutover": {
+    "routesAttachedAtUtc": "2026-10-16T18:10:23.613Z",
+    "httpCheckStartedAtUtc": "2026-10-16T18:10:23.863Z",
+    "httpCheckFinishedAtUtc": "2026-10-16T18:10:33.392Z",
+    "checksPassed": 8,
+    "checksFailed": 1,
+    "failedPath": "/sitemap.xml",
+    "expectedStatus": 200,
+    "observedStatus": 503,
+    "newBuildId": "REm1Pp5ClhgnfWFDCHqHU",
+    "passingHtmlObservedNewLayoutAndBuildId": true,
+    "browserNavigation": false,
+    "javascriptExecuted": false,
+    "subresourcesFetched": false,
+    "liveAdVerification": false,
+    "routesRemovedByUtc": "2026-10-16T18:10:34.908Z",
+    "removedRoutes": [
+      { "id": "dbaf3633d7b44d78ba234ac76cd03a2f", "pattern": "www.moneysalary.com/*" },
+      { "id": "9882567baa8f4ba8b949c9bf184f1097", "pattern": "moneysalary.com/*" }
+    ]
+  },
+  "runtimeObservation": {
+    "source": "Authenticated Cloudflare metrics dashboard for the new Worker, last24hours",
+    "observedAtUtc": "2026-10-16T18:12:38.115Z",
+    "plan": "Workers Free",
+    "perRequestCpuAllowanceMs": 10,
+    "invocations": 7,
+    "errors": 1,
+    "errorTypes": { "exceededCpu": 1, "exceededMemory": 0, "internal": 0, "unhandledException": 0 },
+    "cpuMs": { "p50": 355.79, "p90": 718 },
+    "wallMs": { "p50": 557, "p90": 979 },
+    "limitation": "Small dashboard sample, not representative traffic. The seven invocations and nine HTTP checks are different observations and must not be treated as a one-to-one mapping. The sitemap503 request was not directly correlated with the CPU error."
+  },
+  "rollback": {
+    "selectedPlatform": "retained Cloudflare Pages",
+    "project": "my-salary-calculator",
+    "deploymentId": "a1fda725-66fb-4d13-a0b5-451af56a398b",
+    "commit": "7ae902995b3dc6dbf839beb9832af3e9255114ff",
+    "dnsChanged": false,
+    "existingD1DataChanged": false,
+    "existingPagesSecretChanged": false,
+    "firstImmediateHeadStatus": 503,
+    "homeRecheck": { "atUtc": "2026-10-16T18:11:07.395Z", "status": 200, "newWorkerLayout": false },
+    "finalHttp": {
+      "recordedAtUtc": "2026-10-16T18:16:05.871Z",
+      "method": "One-pass guarded canonical GETs; no retry or JavaScript execution",
+      "home": { "status": 200, "cacheStatus": "MISS", "bytes": 467818, "newWorkerLayout": false },
+      "sitemap": { "status": 200, "cacheStatus": "DYNAMIC", "bytes": 375041, "urls": 1953 },
+      "apex": { "networkRequestMade": false, "reason": "Central guard rejected the non-www target before network; no bypass or retry." }
+    },
+    "purge": {
+      "api": { "status": 401, "code": 10000, "purged": false, "reason": "OAuth lacked Cache Purge permission" },
+      "ui": {
+        "action": "Purge Everything for moneysalary.com",
+        "confirmationClicked": true,
+        "dialogClosed": true,
+        "errorExposed": false,
+        "explicitSuccessToastCaptured": false,
+        "auditRecordVisible": false,
+        "homeCacheMissObservedAfterward": true
+      },
+      "conclusion": "UI purge initiated/confirmed and subsequent cache MISS observed. Explicit success receipt unavailable; do not report an API-confirmed purge."
+    }
+  },
+  "publicationState": {
+    "oauth": "Succeeded for the release operations; token values omitted",
+    "pagesGitProductionAutoDeploy": false,
+    "pagesGitPreviewAutoDeploy": false,
+    "gitPushPerformed": false,
+    "indexNow": { "capturedChangedUrls": 1, "addedUrls": 0, "removedUrls": 0, "submitted": false },
+    "paidPlanApproval": false,
+    "paymentPerformed": false,
+    "nextDecision": "Owner choice between Workers Paid and architecture changes suitable for Free. Keep canonical Worker routes absent and source publishing stopped until the chosen path is verified."
+  },
+  "subsequentLocalOperationsGuards": {
+    "scope": "Follow-up local operations changes after the application release; not included in the uploaded Worker application/tag and not a new deployment. Historical application test totals above/in release-verification.json are unchanged.",
+    "behavior": [
+      "cf-purge workflow is dispatch-only, defaults to Workers, requires exact tag/full version UUID, and retains explicit Pages rollback mode.",
+      "Legacy source publisher blocks every mode unconditionally before key-file reads or Git commands."
+    ],
+    "validation": {
+      "targetedTests": { "passed": 45, "failed": 0 },
+      "lintErrors": 0,
+      "qaSafetyNodeTestsPassed": 20,
+      "qaSafetyVitestTestsPassed": 26,
+      "scannedExecutableFiles": 1416,
+      "scannerViolations": 0
+    },
+    "verificationMethod": "Independent read-only comparison of current workflow/publisher guards and saved test/scanner logs; lint exit0 confirmed by release coordinator, with an empty lint log. No test, build or remote operation rerun by this documentation reviewer.",
+    "evidence": [
+      ".artifacts/workers-release-2026-10-17/manual-release-guards-tests.log",
+      ".artifacts/workers-release-2026-10-17/manual-release-guards-lint.log",
+      ".artifacts/workers-release-2026-10-17/manual-release-guards-qa-safety.log"
+    ]
+  },
+  "evidence": [
+    ".artifacts/workers-release-2026-10-17/final-version.json",
+    ".artifacts/workers-release-2026-10-17/runtime-secret-installation.json",
+    ".artifacts/workers-release-2026-10-17/activation-verified.json",
+    ".artifacts/workers-release-2026-10-17/remote-before-cutover.json",
+    ".artifacts/workers-release-2026-10-17/pages-frozen.json",
+    ".artifacts/workers-release-2026-10-17/routes-after-cutover.json",
+    ".artifacts/workers-release-2026-10-17/post-cutover-http.json",
+    ".artifacts/workers-release-2026-10-17/cutover-result.json",
+    ".artifacts/workers-release-2026-10-17/worker-runtime-metrics-observed.json",
+    ".artifacts/workers-release-2026-10-17/rollback-http-recheck.json",
+    ".artifacts/workers-release-2026-10-17/rollback-purge-api.json",
+    ".artifacts/workers-release-2026-10-17/rollback-purge-ui.json",
+    ".artifacts/workers-release-2026-10-17/rollback-final-http.json",
+    ".artifacts/workers-release-2026-10-17/indexnow-cutover.json"
+  ]
+}

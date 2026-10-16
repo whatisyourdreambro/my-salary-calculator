@@ -1,23 +1,22 @@
 // scripts/cf-purge-after-deploy.mjs
-// 프로덕션 배포 뒤 Cloudflare 존 캐시 자동 Purge (2026-09-25, 승인 A35 · 감사 CLIENT-02).
-// 배경: /salary/* 는 엣지 4시간, 규칙 B 이후 HTML 은 1시간 캐시된다. 배포 뒤 Purge 를 잊으면 삭제된 청크를
-//       가리키는 옛 HTML 이 서빙돼 하이드레이션·광고·GA 가 멈출 수 있다. 런북의 "배포마다 Purge" 를 자동화한다.
-// 동작(.github/workflows/cf-purge.yml 이 main push 마다 실행):
-//   1) CF Pages 배포 목록을 폴링해 이 커밋(GITHUB_SHA)의 production 배포가 성공할 때까지 기다린다(기본 25분).
-//   2) 성공하면 전파 여유(기본 30초) 뒤 존 캐시 Purge Everything.
-// 환경변수: CF_API_TOKEN(Pages 읽기 + 존 Cache Purge 두 권한만), CF_ACCOUNT_ID, CF_ZONE_ID, GITHUB_SHA.
-//   시크릿 3개 중 하나라도 비면 notice 만 남기고 exit 0 — CI 를 절대 실패시키지 않는다.
-//   선택: CF_PAGES_PROJECT(기본 my-salary-calculator), CF_PURGE_TIMEOUT_MINUTES(25),
-//         CF_PURGE_POLL_SECONDS(30), CF_PURGE_SETTLE_SECONDS(30).
-// 종료 코드: 0 = Purge 완료 · 시크릿 없음 · CF 가 이 커밋을 건너뜀/취소 · 뒤 커밋 배포가 대신함(그쪽 실행이 Purge)
-//            1 = 배포 실패 · 시간 초과 · 토큰 권한/프로젝트 오류 · Purge API 실패 → 운영자 수동 Purge 필요
-// 토큰은 헤더로만 쓰고 로그에 절대 찍지 않는다. push·커밋 등 저장소 쓰기는 하지 않는다.
-// 판정 함수 단위 테스트: node --test scripts/__tests__/cf-purge-after-deploy.test.mjs (네트워크 없음)
-// Workers: CF_DEPLOY_TARGET=workers, CF_WORKER_NAME, CF_RELEASE_TAG required;
-// CF_EXPECTED_VERSION_ID optionally pins the exact immutable version. Credentials
-// must permit Workers read + zone cache purge. Latest deployment must be 100% of
-// one tagged version; it is reverified after settling and before every purge retry.
-// Default pages mode remains available for the retained Pages rollback project.
+// Cloudflare cache purge after a separately controlled deployment. This script never deploys.
+// .github/workflows/cf-purge.yml is workflow_dispatch-only (no main-push trigger).
+// The WORKFLOW defaults to Workers and requires an exact release_tag plus full
+// expected_version_id UUID; it supplies CF_DEPLOY_TARGET=workers explicitly.
+// Workers mode checks one tagged version at 100%, then rechecks activation after
+// settling and before each purge retry. Credentials require Workers read + zone purge.
+// This HELPER retains its legacy pages default for explicit rollback callers.
+// In Pages mode it waits for CF_PAGES_COMMIT_SHA (or GITHUB_SHA) production success;
+// CF_PAGES_PROJECT defaults to my-salary-calculator. Missing Pages credentials skip
+// with a notice, while missing Workers credentials fail closed.
+// Common settings: CF_API_TOKEN, CF_ACCOUNT_ID, CF_ZONE_ID,
+// CF_PURGE_TIMEOUT_MINUTES (25), CF_PURGE_POLL_SECONDS (30), CF_PURGE_SETTLE_SECONDS (30).
+// Workers settings: CF_WORKER_NAME, CF_RELEASE_TAG; CF_EXPECTED_VERSION_ID is
+// optional for this helper API but mandatory in the manual workflow.
+// Exit 0 may also mean a skipped/superseded Pages deployment, not completed Workers
+// activation. Exit 1 means verification/timeout/API failure; inspect before retrying.
+// Tokens are sent only in headers and never printed. No push, commits or repository writes.
+// Offline tests: node --test scripts/__tests__/cf-purge-after-deploy.test.mjs
 
 import path from "node:path";
 import fs from "node:fs";

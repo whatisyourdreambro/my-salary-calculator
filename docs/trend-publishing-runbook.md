@@ -1,15 +1,15 @@
 # 트렌드 브리프(공식 발표 해설) 발행 런북
 
-> **2026-10-17 Workers 전환 우선 조건:** 운영 설정 준비와 실제 배포 완료는 다르다. 인증은 대기 중이며 이 준비 단계에서 실제 배포는 아직 없다. 기존 Pages 자동배포와 소스 발행 자동화를 중지했는지 확인하기 전에는 이 이행을 main에 merge/push하지 않는다. `publish-approved`와 철회·재발행의 원격 반영도 정상 동작하는 Workers 게시 경로 및 활성 릴리스 확인/Purge/IndexNow 연결이 마련될 때까지 실행하지 않는다. 현재 저장소 CI는 QA 검증만 수행하고 Worker를 게시하지 않는다. 아래 기존 Pages 기반 설명은 [현재 전환 절차](contact-operations.md#pages-to-workers-deployment-transition-2026-10-17)보다 우선하지 않는다.
+> **Workers 수동 릴리스 인계(2026-10-17):** 현재 CI는 QA만 검증하며 Worker를 게시하지 않는다. `publish-approved.mjs`는 발행·수정·철회(`--retire`)·`--check-only` 모두 키 파일 읽기나 Git 명령 전에 종료 코드 2로 차단한다. `PUBLISH_ENABLED`, `CF_PURGE_OK`, `--manual-purge-ack` 또는 운영자 승인으로 이 가드를 해제할 수 없다. 승인된 초안·해시·로컬 브랜치를 수동 Workers 릴리스 담당자에게 인계한다. 기존 Pages 자동배포 비활성 확인 → 검토한 소스 통합 → 별도의 일반 광고 운영 빌드·검증 → 정확한 tag/version 활성화 → 수동 Purge·IndexNow 순서를 따른다. `.next-qa`/`.open-next-qa`는 배포 금지다. 이 문서는 실제 배포 완료를 증명하지 않으며, 실행 시점의 활성 릴리스 기록을 확인한다. 아래 이전 Pages 발행 흐름보다 이 제한과 [전환 절차](contact-operations.md#pages-to-workers-deployment-transition-2026-10-17)가 우선한다.
 
 2026-09-26 R5 publisher 신설. 코드: `scripts/trend-publish/*` · `src/lib/trendBriefs/*` · 등록 `src/lib/guides/trend-briefs.ts`.
-**이 런북의 모든 자동화는 운영자 승인 없이 사이트에 아무것도 올리지 않는다.** 원격 반영(git 푸시)은 `publish-approved.mjs` 한 곳뿐이고, 그 명령은 운영자가 채팅에서 브리프마다 `발행 <slug>` 라고 승인한 세션만 실행한다.
+**현재 발행기는 사이트에 아무것도 올리지 않는다.** `daily`는 조건 충족 시 로컬 PROPOSE와 수동 인계 카드까지만 만든다. 아래 발행·철회 CLI와 사전 조건은 이전 Pages 구현의 참고 기록이며, 검증된 Workers 게시 경로를 구현하기 전에는 실행 가드가 먼저 종료한다. 예약 작업의 실제 활성 상태를 이 런북의 예시만으로 추정하지 않는다.
 
 ## 0. 운영자 결정 (2026-09-27) — 이 런북의 다른 절보다 우선
 
 | 항목 | 결정 | 코드·설정 |
 |---|---|---|
-| 발행 승인 | 브리프마다 운영자가 채팅에서 `발행 <slug>` 라고 승인한 뒤에만 게시. 자동 발행 없음 | `publish-approved.mjs` 만 원격 반영 — 예약 작업은 PROPOSE(로컬 브랜치 + 승인 카드)까지 |
+| 발행 승인 | 브리프마다 운영자가 채팅에서 `발행 <slug>` 라고 승인한 뒤에만 게시. 자동 발행 없음 | 발행 CLI는 차단됨 — daily는 PROPOSE(로컬 브랜치 + 수동 인계 카드)까지 |
 | 파일럿 | **2026-10-13 ~ 10-31**. 10/12 까지는 dry-run 만 | `calendar.json` `pilot`·`firstPublishNotBefore` = 10-13, `types.ts` `FIRST_PUBLISH_NOT_BEFORE` = 2026-10-13 |
 | 발행 한도 | **하루 1편 이하 · ISO 주 5편 이하**(월 16편·첫 90일 게시 30편 하드 상한도 그대로) | `config.json` `caps` perKstDay 1 · perIsoWeek 5 |
 | 동결 | **11/1 ~ 1/31 발행 없음**(보고만, FREEZE). 연말정산 시즌 예외 없음 | `calendar.json` `freezes` |
@@ -88,15 +88,15 @@ daily.mjs 는 운영자 플래그와 저장소의 운영자 파일(docs/drafts·
 
 | 문구 | 세션이 하는 일 |
 |---|---|
-| `발행 <slug>` | 카드의 해시로 `node scripts/trend-publish/publish-approved.mjs --slug <slug> --draft-sha256 <카드의 해시>` (자동 Purge 미확인이면 `--manual-purge-ack` 와 함께 배포 후 수동 Purge 약속). 권한 확인 창이 한 번 더 뜬다 — 허용목록에 넣지 않는다. |
-| `철회 <slug>` | `publish-approved.mjs --slug <slug> --retire --to <군집 허브>` — 항목 제거 + `/guides/<slug>` → 허브 308 한 건 + 원장 retired |
+| `발행 <slug>` | 카드의 초안 해시·로컬 브랜치를 수동 Workers 릴리스 담당자에게 인계한다. `publish-approved`는 현재 종료 코드 2로 차단된다. |
+| `철회 <slug>` | 철회할 항목·허브 경로·원장 변경안을 검토하여 수동 Workers 릴리스로 인계한다. `--retire`도 현재 차단되며 즉시 원격 반영하지 않는다. |
 | `점검 완료` | 운영자가 확인한 네 항목으로 `review-ack.mjs --days 7 --gsc-manual-actions none --adsense-policy none --naver-notice none --clicks ok` |
 | `트렌드 중지` | `review-ack.mjs --halt "<사유>"` → HALT. 재개는 운영자가 HALT 파일을 지운다 |
 | `결정 <slug> 유지·수정·철회 …` | `decide.mjs --slug <slug> --decision keep|update|retire --at d28 --gsc-impr N --naver-clicks N` (§6) |
 
 승인은 **'발행을 허락한다'** 는 뜻이지 내용 검수가 아니다. 본문 작성 방식 상자에는 `운영자가 발행을 승인했습니다(내용 검수 아님)` 로 적히고, 승인 없이는 `사람 검토 없이 자동 검사만 거쳤습니다` 이다('검수 완료' 표기는 게이트가 막는다). 승인은 초안 해시(날짜·fetchedAt·humanReview 제외)에 묶이고, 카드는 **1차 출처 게시일+7일과 카드 날짜+2일 중 이른 날**에 만료된다.
 
-publish-approved 사전 조건: HALT 없음 · PUBLISH_ENABLED · REVIEWED_UNTIL 유효 · 달력 · 한도 · 결정 대기 없음 · CF_PURGE_OK 또는 `--manual-purge-ack` · DEPLOY_HOLD 없음 · origin/main 최신 커밋 2시간 경과 · 카드 미만료 · 해시 일치 · 보관본에 레이더 후보 기록. 날짜는 언제나 실제 KST 오늘(`--today` 는 `--check-only` 전용). 통과하면 워크트리를 origin/main 으로 맞추고 오늘 날짜·승인 표기로 다시 렌더 → 게이트 전부 → 커밋 → 원격 main 으로 반영(git 푸시 — force 없음, 거부되면 멈춤) → verify-prod(최대 45분) → 요약. **요약의 마지막 안내대로 다른 세션은 main 을 fetch/rebase 할 것.**
+**아래는 차단된 이전 Pages 구현의 사전 조건과 흐름이다. 현재는 이 단계에 도달하지 않으며 참고 기록으로만 보존한다.** publish-approved 사전 조건: HALT 없음 · PUBLISH_ENABLED · REVIEWED_UNTIL 유효 · 달력 · 한도 · 결정 대기 없음 · CF_PURGE_OK 또는 `--manual-purge-ack` · DEPLOY_HOLD 없음 · origin/main 최신 커밋 2시간 경과 · 카드 미만료 · 해시 일치 · 보관본에 레이더 후보 기록. 날짜는 언제나 실제 KST 오늘(`--today` 는 `--check-only` 전용). 통과하면 워크트리를 origin/main 으로 맞추고 오늘 날짜·승인 표기로 다시 렌더 → 게이트 전부 → 커밋 → 원격 main 으로 반영(git 푸시 — force 없음, 거부되면 멈춤) → verify-prod(최대 45분) → 요약. **요약의 마지막 안내대로 다른 세션은 main 을 fetch/rebase 할 것.**
 
 ## 5. 주간 점검 (REVIEWED_UNTIL — 최대 14일)
 
@@ -118,11 +118,13 @@ publish-approved 사전 조건: HALT 없음 · PUBLISH_ENABLED · REVIEWED_UNTIL
 - **reviewBy**(발행 +60일): 새 공식 자료로 실질 갱신(`--update`)하거나 철회. `decide.mjs --slug <slug> --decision update|retire --at reviewBy`.
 - **파일럿 판정**: 파일럿(10/13~10/31)이 끝나면 D+28 파일럿 판정 기록 전까지 발행이 없다(동결 11/1~1/31 뒤 2월 재개도 이 기록이 있어야 한다). 마지막 파일럿 브리프의 D+28(11월 말) 결과까지 본 뒤 `decide.mjs --pilot-verdict continue`(중지는 `halt`).
 
-## 7. 배포 후 캐시 Purge — A35 자동 vs 수동
+## 7. 배포 후 캐시 Purge — 수동 릴리스에 고정
 
-- `.github/workflows/cf-purge.yml`은 배포기가 아니다. Workers 전환 뒤에는 `CF_DEPLOY_TARGET=workers`, `CF_WORKER_NAME=moneysalary`, 필요한 읽기/캐시 제거 자격정보와 정확한 릴리스 tag 계약이 있어야 한다. 한 버전이 100% 활성화됐는지 반복 확인한 뒤에만 Purge한다. 수동 실행은 `release_tag`와 `expected_version_id`를 지정한다. Pages 기본값은 롤백용으로 남아 있으므로 저장소 변수를 설정하지 않은 초록 체크를 Workers 완료로 읽지 않는다(설정: docs/operator-console-pack.md).
+- `.github/workflows/cf-purge.yml`은 **workflow_dispatch 전용**이며 main 변경으로 자동 실행되지 않는다. 기본 대상은 `workers`이고, `release_tag`와 활성 버전의 전체 `expected_version_id` UUID를 모두 입력해야 한다(커밋 SHA 추정 없음). Worker 이름은 입력 또는 저장소 변수로 지정한다. 해당 tag/version 하나가 100% 활성화됐는지 반복 확인한 뒤에만 Purge한다. Pages 롤백은 `target=pages`를 명시하고 `release_sha`로 대상 커밋을 지정한다. CI 초록 체크는 배포 완료 증거가 아니다.
 - 과거 Pages 성공으로 만든 `TREND_HOME/CF_PURGE_OK`는 Workers 경로 검증을 대신하지 않는다. 전환 때 운영자가 새 게시·도메인 경로 및 Workers 모드 Purge 성공을 확인한 뒤에만 재사용 여부를 결정한다. `--manual-purge-ack`도 미구성 Workers 게시 경로를 우회하는 승인이 아니다. IndexNow는 운영 빌드 뒤/전환 전에 delta manifest를 capture하고 활성화·Purge 뒤 같은 manifest를 submit한다; 기존 postbuild 자동 제출을 기대하지 않는다.
-- verify-prod 는 `/` · `/calc/samsung-bonus` · `/guides/nurse-salary` 의 `/_next/static` 자산을 최대 40건 받아 404 가 있으면 **'Purge 필요'** 로 보고한다(CF_PURGE_OK 가 있으면 15분 뒤 한 번 더 확인).
+- 차단된 이전 게시 흐름의 verify-prod 는 `/` · `/calc/samsung-bonus` · `/guides/nurse-salary` 의 `/_next/static` 자산을 최대 40건 받아 404 가 있으면 **'Purge 필요'** 로 보고한다(CF_PURGE_OK 가 있으면 15분 뒤 한 번 더 확인).
+
+QA 기준·초안 빌드는 `npm run prebuild`로 생성기와 광고 소스 검사를 유지한 뒤 `npm run qa:build`를 사용한다. 모든 산출물 검사는 `.next-qa`를 읽고, 비교 목록은 `TREND_HOME/builds/qa-next-v1/<originSha>`에 보관하여 이전 `.next` 기준 목록과 섞지 않는다. QA는 정적 검사이며 실광고 동작 확인이나 배포 승인에 해당하지 않는다.
 
 ## 8. 되돌리기
 
@@ -146,7 +148,7 @@ publish-approved 사전 조건: HALT 없음 · PUBLISH_ENABLED · REVIEWED_UNTIL
 
 현재 파이프라인은 키 없이 동작한다(공식 페이지 공개 HTML·RSS). 아래 키는 모두 **선택**이다 — 파일이 있으면 쓰고, 없으면 해당 기능만 `키 없음 — 건너뜀`.
 
-**자동 적용(운영자 결정 2026-09-27)**: `daily.mjs prepare`·`finish` 와 `publish-approved.mjs` 가 워크트리 관문 통과 직후 `config.json` `secretEnvFiles` 의 파일을 읽는다(`scripts/trend-publish/secret-env.mjs`). 허용 이름만, 이미 환경변수에 값이 있으면 덮지 않음(아래 `--env-file` 로 넘긴 값이 이긴다), 16KB 넘는 파일은 읽지 않음. 보고서에는 `선택 키 파일: trend.env 있음(LAW_OC·ECOS_API_KEY) · datalab.env.txt 없음(키 없이 동작)` 처럼 **파일·이름만** 적힌다. 읽은 값은 자식(레이더·감시기·게이트)에 상속되고, secret-scan 이 그 값(원문·URL 인코딩·base64)을 diff·.next·로그에서 찾는다(이름 규칙에 `CLIENT_ID` 추가).
+**자동 적용(운영자 결정 2026-09-27)**: `daily.mjs prepare`·`finish` 가 워크트리 관문 통과 직후(차단된 `publish-approved.mjs`는 키 파일을 읽지 않음) `config.json` `secretEnvFiles` 의 파일을 읽는다(`scripts/trend-publish/secret-env.mjs`). 허용 이름만, 이미 환경변수에 값이 있으면 덮지 않음(아래 `--env-file` 로 넘긴 값이 이긴다), 16KB 넘는 파일은 읽지 않음. 보고서에는 `선택 키 파일: trend.env 있음(LAW_OC·ECOS_API_KEY) · datalab.env.txt 없음(키 없이 동작)` 처럼 **파일·이름만** 적힌다. 읽은 값은 자식(레이더·감시기·게이트)에 상속되고, secret-scan 이 그 값(원문·URL 인코딩·base64)을 diff·.next-qa·로그에서 찾는다(이름 규칙에 `CLIENT_ID` 추가).
 
 | 파일 | 이름 | 쓰는 곳 |
 |---|---|---|
@@ -173,7 +175,7 @@ NAVER_CLIENT_SECRET=<Client Secret>
 ```
 
 자동 적용 대신 직접 넘기려면(선택): `node --env-file=C:\Users\ruby1\.moneysalary-secrets\trend.env scripts/trend-publish/daily.mjs prepare`
-이름이 `…KEY`·`…SECRET`·`…TOKEN`·`…PASSWORD`·`…_OC` 로 끝나는 환경변수는 secret-scan 이 diff·.next·public·로그에서 원문·URL 인코딩·base64 로 찾아 적중 시 HALT 한다. 키 값은 로그·파일·커밋 메시지에 절대 쓰지 않는다. **네이버 데이터랩**(운영자 결정 2026-09-27): 검색어 트렌드 엔드포인트 하나만, 레이더 점수 부스터(급상승 군집 후보 +10, 구글 트렌드와 합쳐 최대 10)로만 쓴다. 하루(KST) 50회 하드 상한 — 호출 전에 `TREND_HOME/state/datalab-usage.json` 에 기록(실행당 2회). 결과(군집별 배수)는 레이더 JSON·보고서에만 남고 작성기(writer) 입력·사이트 본문에는 들어가지 않는다. **네이버 검색·뉴스 API 는 쓰지 않는다**(약관: AI 입력·광고 페이지 사용 금지) — 테스트가 트렌드 스크립트에서 데이터랩 밖 네이버 API 경로를 grep 으로 막는다. 새 API 신청·API HUB 가입도 하지 않는다. 금감원 금융상품 비교 API 도 쓰지 않는다(정책상 제외).
+이름이 `…KEY`·`…SECRET`·`…TOKEN`·`…PASSWORD`·`…_OC` 로 끝나는 환경변수는 secret-scan 이 diff·.next-qa·public·로그에서 원문·URL 인코딩·base64 로 찾아 적중 시 HALT 한다. 키 값은 로그·파일·커밋 메시지에 절대 쓰지 않는다. **네이버 데이터랩**(운영자 결정 2026-09-27): 검색어 트렌드 엔드포인트 하나만, 레이더 점수 부스터(급상승 군집 후보 +10, 구글 트렌드와 합쳐 최대 10)로만 쓴다. 하루(KST) 50회 하드 상한 — 호출 전에 `TREND_HOME/state/datalab-usage.json` 에 기록(실행당 2회). 결과(군집별 배수)는 레이더 JSON·보고서에만 남고 작성기(writer) 입력·사이트 본문에는 들어가지 않는다. **네이버 검색·뉴스 API 는 쓰지 않는다**(약관: AI 입력·광고 페이지 사용 금지) — 테스트가 트렌드 스크립트에서 데이터랩 밖 네이버 API 경로를 grep 으로 막는다. 새 API 신청·API HUB 가입도 하지 않는다. 금감원 금융상품 비교 API 도 쓰지 않는다(정책상 제외).
 
 ## 12. 권한 허용목록 (운영자 승인 항목 — 이 워크플로는 설정을 바꾸지 않았다)
 

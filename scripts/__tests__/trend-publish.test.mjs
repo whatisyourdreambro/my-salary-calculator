@@ -341,7 +341,7 @@ test("daily: 운영자 파일·TREND_HOME 밖 쓰기 거부, 원격 반영 코�
   }
 });
 
-test("git push 는 publish-approved.mjs 에만 있다", () => {
+test("비활성 이전 git push 구현은 publish-approved.mjs 에만 있다", () => {
   // 정책: 이 폴더에서 'push' 라는 글자 자체를 publish-approved.mjs 에만 둔다 — 배열 추가도 splice 로 쓴다.
   const offenders = readdirSync(TP)
     .filter((f) => /\.(?:mjs|ts|md|json)$/.test(f) && f !== "publish-approved.mjs")
@@ -593,6 +593,14 @@ test("heavySteps: prebuild-status 는 독립 필수 단계 · 청크 비교는 �
   const cd = steps.find((s) => s.name === "chunk-diff").cmd;
   assert.ok(!/chunk-diff\.mjs status/.test(cd), "청크 비교 단계와 생성 파일 검사는 따로");
   assert.ok(cd.includes("--metrics src/config/site-metrics.generated.ts --metrics-base abc"));
+  assert.equal(steps.find((step) => step.name === "prebuild-gens").cmd, "npm run prebuild", "qa:build는 prebuild를 자동 실행하지 않으므로 명시적으로 유지");
+  assert.equal(steps.find((step) => step.name === "build").cmd, "npm run qa:build");
+  for (const name of ["edge-bundle", "autoads", "qa-quality", "ad-sequence", "chunk-diff", "gate-post"]) {
+    assert.ok(steps.find((step) => step.name === name).cmd.includes(".next-qa"), `${name} reads QA output`);
+  }
+  assert.ok(!steps.some((step) => /npm run build\b|--next \.next(?:\s|$)/.test(step.cmd)));
+  assert.ok(cd.includes(daily.qaBuildCacheDir("H", "abc")), "old production manifests cannot be reused");
+  assert.notEqual(daily.qaHeavyInputsHash("abc", "tree"), daily.sha256Text("abc\ntree"));
   assert.equal(config.chunkDiff.compare, "strict");
   assert.ok(!cd.includes("--report-only"));
   assert.ok(steps.find((s) => s.name === "gate-post").cmd.includes('--candidate "C:/h/state/cand.json"'));
@@ -816,4 +824,68 @@ test("decide: D+28 좀비 비율 ≥ 50% · 30일 수치 오류 2건 → HALT", 
   } finally {
     cleanup(wt, home);
   }
+});
+
+
+test("publisher: every mode refuses before any command, credential access or operator-file mutation", async () => {
+  const home = fakeHome({ PUBLISH_ENABLED: "", CF_PURGE_OK: "", REVIEWED_UNTIL: "2099-01-01" });
+  try {
+    const before = snapshotOperator(home);
+    for (const mode of [[], ["--update", "--draft", "unused.json"], ["--retire", "--to", "/guides"], ["--check-only"], ["--retire", "--check-only"]]) {
+      const messages = [];
+      const deps = {
+        allowAnyWorktree: true,
+        log: message => messages.push(message),
+        now: () => { throw new Error("must stop before legacy preparation"); },
+        secretEnv: () => { throw new Error("must not read credentials"); },
+        run: async () => { throw new Error("must not execute git, build, deployment or HTTP verification"); },
+      };
+      const code = await publishMain(["node", "publish-approved.mjs", "--slug", "approved-draft", "--draft-sha256", hex(64), "--manual-purge-ack", "--trend-home", home, ...mode], deps);
+      assert.equal(code, 2, mode.join(" "));
+      assert.match(messages.join("\n"), /Workers/);
+      assert.match(messages.join("\n"), /수동.*인계/);
+      assert.match(messages.join("\n"), /docs\/trend-publishing-runbook\.md/);
+      assert.deepEqual(snapshotOperator(home), before);
+    }
+  } finally { cleanup(home); }
+});
+
+test("daily prepare: old production baseline cannot bypass prebuild and the ad-free QA build", async () => {
+  const wt = fakeWorktree();
+  const home = fakeHome({ PUBLISH_ENABLED: "", REVIEWED_UNTIL: "2026-10-20" });
+  try {
+    const configPath = join(wt, "scripts/trend-publish/config.json");
+    const config = JSON.parse(readFileSync(configPath, "utf8"));
+    config.baseBuild = "reuse";
+    writeFileSync(configPath, JSON.stringify(config));
+    const old = join(home, "builds", "base1234");
+    mkdirSync(old, { recursive: true });
+    for (const file of ["chunks.json", "adseq.json"]) writeFileSync(join(old, file), "{}");
+    const deps = fakeRunner(home, { candidates: [CAND] });
+    const result = await daily.prepare({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13", noSync: true }, deps);
+    assert.equal(result.status, "write", result.reason);
+    assert.ok(deps.calls.some(call => call.includes("npm run prebuild && npm run qa:build")));
+    const manifests = deps.calls.find(call => call.includes("-base-manifests.log"));
+    assert.ok(manifests.includes("--next .next-qa"));
+    assert.ok(manifests.includes(daily.qaBuildCacheDir(home, "base1234")));
+    assert.ok(deps.calls.some(call => call.includes("npm run verify:autoads -- --next-dir .next-qa")));
+    assert.ok(!deps.calls.some(call => /npm run build\b/.test(call)));
+  } finally { cleanup(wt, home); }
+});
+
+test("secret-scan: default build scan finds a secret in ignored QA output instead of reading stale production output", () => {
+  const repo = tmp("scan-qa-");
+  try {
+    const git = (...args) => execFileSync("git", ["-C", repo, ...args], { stdio: "ignore" });
+    git("init", "-q"); git("config", "user.email", "t@example.com"); git("config", "user.name", "t");
+    writeFileSync(join(repo, ".gitignore"), ".next/\n.next-qa/\n");
+    git("add", ".gitignore"); git("commit", "-qm", "fixture");
+    mkdirSync(join(repo, ".next")); mkdirSync(join(repo, ".next-qa"));
+    writeFileSync(join(repo, ".next", "safe.js"), "safe");
+    const secret = `synthetic-${"z".repeat(25)}`;
+    writeFileSync(join(repo, ".next-qa", "leak.js"), `const url = "https://fixture.invalid/?${SK}${secret}"`);
+    const hits = scan.runScan({ repo, base: "HEAD", env: {} });
+    assert.ok(hits.some(hit => hit.file === ".next-qa/leak.js" && hit.rule === "service-key"));
+    assert.deepEqual(scan.runScan({ repo, base: "HEAD", nextDir: ".next", env: {} }), []);
+  } finally { cleanup(repo); }
 });

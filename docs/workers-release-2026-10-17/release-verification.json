@@ -1,38 +1,45 @@
 {
   "schema": "moneysalary-release-verification-v1",
-  "status": "local-validation-passed-deployment-blocked-authentication",
+  "status": "local-validation-passed-worker-cutover-rolled-back-to-pages",
   "dateKST": "2026-10-17",
   "scope": {
     "method": "Reviewed local log summaries, targeted log entries, QA build marker, and core-file hashes; not a comprehensive line-by-line code audit.",
     "checkoutHead": "fed61a0543fa14501e706b362d1973f57d97eb97",
     "productionBaselineRef": "origin/main",
     "productionBaselineCommit": "7ae902995b3dc6dbf839beb9832af3e9255114ff",
-    "note": "Dirty integrated release worktree. A file hash records the present input, not proof that every earlier test consumed that exact hash."
+    "note": "Historical local-validation snapshot of the then-dirty integrated worktree. Its hashes/counts remain unchanged; actual release commit 2e0a99484ec05cacf86f4016cea18b3974c748ea and the subsequent remote outcome are recorded separately below. A file hash does not prove every earlier test consumed that exact hash."
   },
   "deployment": {
-    "status": "not-deployed-authentication-expired-user-action-required",
-    "releaseDeploymentsPerformed": 0,
-    "source": "Parent release owner status; no remote state query in this integration review.",
-    "deployedWorkerVersion": null,
-    "routeActivation": "unverified",
-    "workersPlanAndCpu": "unverified",
+    "status": "worker-activated-canonical-routes-removed-pages-restored",
+    "releaseDeploymentsPerformed": 1,
+    "source": "Release coordinator and saved control-plane/HTTP evidence; this documentation reviewer made no remote requests. Count excludes the earlier no-routes bootstrap deployment.",
+    "releaseCommit": "2e0a99484ec05cacf86f4016cea18b3974c748ea",
+    "deployedWorkerVersion": "7685b310-986d-4666-89fb-93b3d170df1c",
+    "deploymentId": "3278e35f-9519-457a-855a-fd44435e79f0",
+    "workerVersionPercentage": 100,
+    "routeActivation": "Attached 2026-10-16T18:10:23Z; removed by 18:10:34Z after sitemap HTTP 503. Current canonical Worker routes: [].",
+    "workersPlanAndCpu": "Free; seven observed invocations, CPU P50 355.79ms/P90 718ms, one exceededCpu error. Individual sitemap-to-error linkage is unproven.",
+    "outcomeReport": "docs/workers-release-2026-10-17/deployment-outcome.json",
+    "publicServingDeployment": "Pages a1fda725-66fb-4d13-a0b5-451af56a398b on 7ae902995b3dc6dbf839beb9832af3e9255114ff; home HTTP 200/old layout rechecked at 2026-10-16T18:11:07.395Z",
+    "pagesGitAutoDeploy": "production and preview frozen",
+    "dnsAndExistingD1Data": "unchanged",
+    "indexNow": "captured one changed URL; not submitted",
+    "rollbackPurge": "API denied HTTP 401; administrator clicked and confirmed Purge Everything, dialog closed, then home cache MISS observed. No explicit success toast/API receipt/audit record captured.",
+    "finalRollbackHttp": "One-pass guarded GETs: home200/old layout/467818 bytes/cache MISS; sitemap200/375041 bytes/1953 URLs. Apex attempt blocked by central guard before network and not counted as a request.",
+    "gitPushPerformed": false,
     "requires": [
-      "Fresh authenticated human authorization; no currently valid OAuth session",
-      "Disable existing Pages auto-deployment and settle queued builds before main push",
-      "Establish actual Workers publication path using verified ordinary-ad production artifacts",
-      "Verify remote bindings/secrets/schema, Workers plan/CPU constraints, exact version/tag and canonical routes",
-      "Preserve Pages route/DNS and previous-version rollback",
-      "Verify actual uploaded-version startup_time_ms and resource constraints before activation"
+      "Owner decision and explicit paid-plan purchase approval, or a separately verified redesign for Free; no payment approved yet",
+      "Resolve runtime CPU suitability and the failed sitemap gate before any new canonical route activation",
+      "Retain the rollback purge evidence limitation: UI confirmation and subsequent MISS observed, but no explicit success receipt captured; do not report an API-confirmed purge",
+      "Keep retained Pages/DNS/D1 and frozen source-publishing state available while the Worker has no canonical routes",
+      "Submit IndexNow only after a later successful, verified cutover using the appropriate preserved manifest"
     ],
     "authentication": {
-      "status": "user-action-required",
-      "lastAttempt": "Expired around 2026-10-17 02:31 KST without human approval",
-      "validPendingOAuth": false,
-      "authenticatedCredentialsConfirmed": false,
-      "automaticRetries": false,
-      "accountMutations": 0,
-      "deployments": 0,
-      "evidence": "Parent release owner report"
+      "status": "oauth-succeeded-for-release",
+      "authenticatedCredentialsConfirmed": true,
+      "priorAttempt": "Earlier preparation attempt expired around 2026-10-17 02:31 KST; superseded by successful user-approved OAuth authentication",
+      "cachePurgePermission": "API attempt rejected HTTP 401; successful OAuth is not evidence of Cache Purge scope",
+      "evidence": "Release coordinator report and saved remote evidence; credentials omitted"
     }
   },
   "isolation": {
@@ -47,8 +54,8 @@
     "notVerified": [
       "Live UI rendering",
       "Live ad requests, ad fill or revenue",
-      "Published Worker route behavior",
-      "Actual Workers Paid/Free entitlement or production CPU time"
+      "Complete published Worker route coverage: limited HTTP cutover check failed at sitemap and was rolled back",
+      "Representative production CPU distribution or Workers Paid behavior; only a small Free-plan dashboard sample was observed"
     ]
   },
   "checks": [
@@ -334,7 +341,7 @@
     },
     {
       "id": "cpu-and-deployed-state",
-      "detail": "Local fixtures, bundle size and Workerd wall time do not prove production CPU quota compliance or that Workers Paid is enabled; remote deployment state is unknown."
+      "detail": "Subsequent cutover observed one exceededCpu error among seven new-Worker invocations on Free, with CPU P50/P90 355.79/718ms. Routes were removed after sitemap 503; the exact request/error correlation is unproven. Paid behavior and a representative traffic sample remain untested. See deployment-outcome.json."
     },
     {
       "id": "worker-size-budget",
@@ -762,10 +769,14 @@
     "evidence": "Parent confirmed orderly process cleanup and no port3319 listener"
   },
   "remoteRuntimeVerification": {
-    "status": "blocked-authentication",
-    "startupTimeMs": null,
-    "actualVersionUpload": "not performed",
+    "status": "upload-succeeded-cutover-failed-routes-rolled-back",
+    "startupTimeMs": 31,
+    "startupSourceVersion": "246484a4-2478-4f07-8c58-12e64beb919f",
+    "finalVersion": "7685b310-986d-4666-89fb-93b3d170df1c",
+    "finalVersionChange": "Secret-only update; script and runtime unchanged. Startup 31ms was measured on the base code upload, not separately on the secret-only version.",
+    "actualVersionUpload": "performed successfully by release coordinator",
+    "freeCpuObservation": { "invocations": 7, "exceededCpu": 1, "p50Ms": 355.79, "p90Ms": 718 },
     "paidCpuMetrics": "not measured",
-    "note": "An unisolated startup CLI probe was not run. Actual version-upload startup_time_ms and deployed CPU/plan evidence remain operational checks, separate from successful local validation."
+    "note": "Startup acceptance does not establish per-request CPU suitability. No local startup profiler was run. Public domains were restored to retained Pages after the failed sitemap check; no paid-plan approval/payment yet. Full details and evidence references are in deployment-outcome.json."
   }
 }
