@@ -149,7 +149,7 @@ export default function InsightsIndexPage() {
               <span className="font-bold text-navy">
                 직업별 연봉
                 <span className="block text-xs font-medium text-faint-blue">
-                  정부 통계 기반 직업 62종
+                  직업 62종 연봉 자료·일부 공식 통계 병기
                 </span>
               </span>
               <ArrowRight className="w-5 h-5 text-electric" />

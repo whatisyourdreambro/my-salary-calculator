@@ -25,6 +25,9 @@ import { companyCountPlus } from "@/config/site";
 import { companyPageModified } from "@/lib/pageModified";
 import { companyPageTitleAndDescription } from "@/lib/companyPageMetadata";
 
+// Next 15 no longer caches GET handlers by default; keep this build-time feed static.
+export const dynamic = "force-static";
+
 const escapeXml = (unsafe: string) =>
   unsafe.replace(/[<>&'"]/g, (c) => {
     switch (c) {
@@ -47,7 +50,7 @@ function generateFeed() {
   const baseUrl = "https://www.moneysalary.com";
   const title = "머니샐러리 회사별 연봉 DB";
   const description =
-    `삼성전자, SK하이닉스, 네이버, 카카오 등 한국 기업 ${companyCountPlus}곳의 직급별 연봉·복지·워라밸 데이터. 갱신순 피드.`;
+    `삼성전자, SK하이닉스, 네이버, 카카오 등 기업 ${companyCountPlus}곳의 공시 평균과 직급별 추정 연봉·복지·워라밸 참고 자료. 갱신순 피드.`;
 
   const companies = companyRepository
     .getAll()

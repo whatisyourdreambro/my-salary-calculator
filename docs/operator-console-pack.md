@@ -1,5 +1,7 @@
 # 운영자 세션표 — 코드 0줄로 수익 올리는 콘솔 작업 (2026-09-05 개정)
 
+> **2026-10-17 배포 전환 주의:** 아래 Pages 배포·자동 Purge·IndexNow 절차는 이전 운영 구성을 설명한다. 현재 로컬 OpenNext/Workers 이행은 아직 push·배포되지 않았으며, 기존 Pages 성공 확인은 Workers 배포 성공을 뜻하지 않는다. 특히 `cf-purge`는 Workers 전환 뒤에도 Pages를 기다리다가 시간 초과할 수 있다. 전환 의무는 [운영 문서](contact-operations.md#pages-to-workers-deployment-transition-2026-10-17)와 [설정 확인 목록](next-security-2026-10-17/deployment-transition.json)을 따른다. 아래 과거 페이지 방문·렌더 확인 지시보다 현재 [AGENTS.md](../AGENTS.md)의 운영/preview 게시자 브라우저 금지와 QA 규칙이 우선한다. 이 주의문은 실제 콘솔 설정 변경이나 배포를 수행하지 않는다.
+
 정본 계획: `docs/revenue-10x-plan-2026-09.md` §4·§5 + `docs/revenue-100x-plan-2026-09.md` §6(승인 A~J)·§7(세션 추가분, 2026-09-05). 이 문서는 그 세션표의 실행판이다.
 원칙: **한 세션 = 최대 3항목·25분**, 격주 고정 요일. 각 항목은 클릭 경로 ≤5줄 + 완료 증빙 1장.
 메뉴 이름이 다르면 첫 화면 캡처만 보내면 경로를 보정한다. 무응답 = 보류(자동 승인 없음).

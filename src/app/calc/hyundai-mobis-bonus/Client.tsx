@@ -57,7 +57,7 @@ export default function HyundaiMobisBonusClient() {
     const percentBonusWon = monthlyBasicWon * (bp / 100);
     const fixedBonusWon = fx;
     const shareValueWon = sh * stockPrice;
-    const voucherWon = scenario.voucher;
+    const voucherWon = customMode ? 0 : scenario.voucher;
 
     const totalGross = percentBonusWon + fixedBonusWon + shareValueWon + voucherWon;
     const tax = calcBonusNet(estimatedAnnualSalary, totalGross, creditRate, applyInsurance);

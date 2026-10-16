@@ -309,7 +309,7 @@ export default function SalaryBattleClient({ options }: { options: BattleCompany
  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-primary/50 to-red-500" />
  <h3 className="text-lg font-bold text-muted-blue mb-2 flex items-center justify-center gap-2">
  <Trophy className="w-5 h-5 text-primary" />
- AI 최종 판정
+ 계산 모델 참고 판정
  </h3>
  <p className="text-xl font-medium text-navy leading-relaxed">
  &quot;{result.verdict}&quot;

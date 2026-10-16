@@ -53,7 +53,7 @@ export default function HyundaiRotemBonusClient() {
 
     const percentBonusWon = monthlyBasicWon * (bp / 100);
     const fixedBonusWon = fx;
-    const voucherWon = scenario.voucher;
+    const voucherWon = customMode ? 0 : scenario.voucher;
 
     const totalGross = percentBonusWon + fixedBonusWon + voucherWon;
     const tax = calcBonusNet(estimatedAnnualSalary, totalGross, creditRate, applyInsurance);
@@ -240,7 +240,7 @@ export default function HyundaiRotemBonusClient() {
           <ResultCard
             label="온누리상품권"
             value={fmtManwon(calc.voucherWon)}
-            sub={scenario.voucher > 0 ? "2025 타결안 포함분" : "해당 시나리오 없음"}
+            sub={calc.voucherWon > 0 ? "2025 타결안 포함분" : "해당 시나리오 없음"}
           />
         </div>
 

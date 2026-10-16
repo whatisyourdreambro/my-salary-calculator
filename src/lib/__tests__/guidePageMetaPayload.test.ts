@@ -42,28 +42,28 @@ import { metadata as enLayoutMetadata } from "@/app/en/layout";
 
 describe("META-07 검색 전용 설명", () => {
   it("metaDescription 이 있으면 meta·OG description 에 쓰인다", async () => {
-    const meta = await koMetadata({ params: { slug: "meta-example" } });
+    const meta = await koMetadata({ params: Promise.resolve({ slug: "meta-example" }) });
     expect(meta.description).toBe("검색 결과 전용으로 보강한 설명입니다. 화면 TL;DR 은 짧은 설명을 그대로 씁니다.");
     expect((meta.openGraph as { description?: string }).description).toBe(meta.description);
   });
 
   it("metaDescription 이 없으면 기존 description 으로 돌아간다", async () => {
-    const meta = await koMetadata({ params: { slug: "plain-example" } });
+    const meta = await koMetadata({ params: Promise.resolve({ slug: "plain-example" }) });
     expect(meta.description).toBe("설명만 있는 글");
   });
 });
 
 describe("PERF-08 관련 글 payload", () => {
-  it("한국어 관련 글 카드에는 slug·title·description·category 만 넘긴다", () => {
-    renderToStaticMarkup(KoGuidePage({ params: { slug: "meta-example" } }));
+  it("한국어 관련 글 카드에는 slug·title·description·category 만 넘긴다", async () => {
+    renderToStaticMarkup(await KoGuidePage({ params: Promise.resolve({ slug: "meta-example" }) }));
     expect(captured.ko.length).toBeGreaterThan(0);
     for (const card of captured.ko) {
       expect(Object.keys(card as object).sort()).toEqual(["category", "description", "slug", "title"]);
     }
   });
 
-  it("영문 관련 글 카드에는 slug·title·description 만 넘긴다", () => {
-    renderToStaticMarkup(EnGuidePage({ params: { slug: "en-example" } }));
+  it("영문 관련 글 카드에는 slug·title·description 만 넘긴다", async () => {
+    renderToStaticMarkup(await EnGuidePage({ params: Promise.resolve({ slug: "en-example" }) }));
     expect(captured.en.length).toBeGreaterThan(0);
     for (const card of captured.en) {
       expect(Object.keys(card as object).sort()).toEqual(["description", "slug", "title"]);
@@ -73,7 +73,7 @@ describe("PERF-08 관련 글 payload", () => {
 
 describe("OG-17 영문 가이드 OG", () => {
   it("og:site_name 과 og:image:alt 를 선언하고 이미지 URL 은 그대로 둔다", async () => {
-    const meta = await enMetadata({ params: { slug: "en-example" } });
+    const meta = await enMetadata({ params: Promise.resolve({ slug: "en-example" }) });
     const og = meta.openGraph as { siteName?: string; images?: Array<{ url: string; alt?: string }> };
     expect(og.siteName).toBe("Moneysalary");
     expect(og.images?.[0]?.alt).toBe("English example");

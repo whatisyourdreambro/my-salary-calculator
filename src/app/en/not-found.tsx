@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import EnglishPageShell from "@/components/english/EnglishPageShell";
+
+export const metadata: Metadata = {
+  title: { absolute: "Page not found | Moneysalary" },
+  robots: { index: false, follow: false },
+};
 
 export default function EnglishNotFound() {
   return <div data-page-state="not-found"><EnglishPageShell eyebrow="404 · Page not found" title="This English page could not be found" description="The address may be incomplete or the page may no longer exist. Choose an available English tool or guide below.">

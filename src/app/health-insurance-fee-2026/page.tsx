@@ -14,9 +14,9 @@ import ShareButtons from "@/components/ShareButtons";
 import HealthInsuranceFeeClient from "./HealthInsuranceFeeClient";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "2026 건강보험료 계산기 — 직장가입자·지역가입자·임의계속 비교",
+  title: "2026 건강보험료 계산기 — 직장 보수·지역 재산분",
   description:
-    "월급 400만원이면 본인 건보료 약 16만원, 600만원이면 약 24만원. 2026 직장가입자 보험료율 3.595% + 장기요양 0.472% 자동 계산. 지역가입자·임의계속가입 비교까지.",
+    "직장가입자의 월 보수액 기준 건강보험·장기요양보험료와 지역가입자의 재산분 부담을 계산합니다. 지역 소득분과 임의계속가입은 별도 확인하세요.",
   path: "/health-insurance-fee-2026",
   keywords: [
     "건강보험료 계산기",
@@ -72,13 +72,13 @@ export default function HealthInsuranceFee2026Page() {
           autoBreadcrumbLd("/health-insurance-fee-2026", { leafName: "2026 건강보험료 계산기" }),
           softwareApplicationLd({
             name: "2026 건강보험료 계산기",
-            description: "직장가입자/지역가입자 건강보험료 + 장기요양보험료 자동 산출",
+            description: "직장 보수액 보험료와 지역 재산분 보험료 계산",
             url: "/health-insurance-fee-2026",
           }),
           faqLd(FAQS.map((f) => ({ question: f.q, answer: f.a }))),
           howToLd({
             name: "2026 건강보험료 계산법",
-            description: "월 보수액으로 직장가입자/지역가입자 건보료 1분 산출",
+            description: "직장 보수액 또는 지역 재산 점수로 해당 보험료 산출",
             totalTime: "PT1M",
             steps: HOWTO_STEPS,
           }),
@@ -98,9 +98,9 @@ export default function HealthInsuranceFee2026Page() {
             2026 건강보험료 계산기
           </h1>
           <p className="text-[15px] leading-7 text-muted-blue dark:text-canvas-300">
-            월 보수액 또는 소득·재산 점수를 입력하면 본인 부담 건강보험료 + 장기요양보험료를 즉시
-            계산합니다. 직장가입자(3.595% + 0.472%) vs 지역가입자(점수 기반) 비교, 퇴직 후
-            임의계속가입 vs 피부양자 전환 시뮬레이션 가능. 2026년 보험료율 기준입니다.
+            직장가입자는 월 보수액으로 건강보험·장기요양보험료를 계산합니다. 지역가입자는
+            재산 점수에 따른 재산분만 계산하며 소득분은 제외합니다. 임의계속가입·피부양자
+            자격은 별도 안내를 확인하세요.
           </p>
         </header>
 

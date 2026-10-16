@@ -18,12 +18,12 @@ import EnGuidePage, { generateMetadata as enMetadata } from "@/app/en/guides/[sl
 
 describe("실제 KO/EN 가이드 페이지의 날짜 전달", () => {
   it.each(["ko", "en"])("페이지 메타와 Article JSON-LD는 원발행일과 수정일을 구분한다: %s", async (lang) => {
-    const props = { params: { slug: "date-example" } };
+    const props = { params: Promise.resolve({ slug: "date-example" }) };
     const metadata = await (lang === "ko" ? koMetadata : enMetadata)(props);
     const openGraph = metadata.openGraph as { publishedTime?: string; modifiedTime?: string };
     expect(openGraph.publishedTime?.slice(0, 10)).toBe("2026-05-23");
     expect(openGraph.modifiedTime?.slice(0, 10)).toBe("2026-09-09");
-    const html = renderToStaticMarkup((lang === "ko" ? KoGuidePage : EnGuidePage)(props));
+    const html = renderToStaticMarkup(await (lang === "ko" ? KoGuidePage : EnGuidePage)(props));
     const schemas = [...html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>(.*?)<\/script>/g)]
       .flatMap((match) => JSON.parse(match[1]));
     const article = schemas.find((schema) => schema["@type"] === "Article");

@@ -52,8 +52,8 @@ export const reportsRegistry: ReportMeta[] = [
   {
     slug: "bonus-payout-history-2026",
     // 회사·건수는 bonusData 단일 소스에서 파생 — 하드코딩 금지
-    title: `2026 대기업 성과급 실지급률 총정리 — ${bonusCompanyCount}개사 ${bonusPayoutCount}건 전수`,
-    description: `삼성전자 TAI·OPI, SK하이닉스 PS, 현대차 임단협 성과급 등 국내 대기업 ${bonusCompanyCount}개사의 실제 성과급 지급률 ${bonusPayoutCount}건을 보도·공시 교차 확인으로 집계. 월 기본급 대비·연봉 대비·정액 세 기준을 분리해 왜곡 없이 비교. 출처 표기 시 자유 인용.`,
+    title: `2026 대기업 성과급 지급률 기록 — ${bonusCompanyCount}개사 ${bonusPayoutCount}건`,
+    description: `삼성전자 TAI·OPI, SK하이닉스 PS, 현대차 임단협 성과급 등 국내 대기업 ${bonusCompanyCount}개사의 성과급 지급률 기록 ${bonusPayoutCount}건을 기존 보도·공시 출처에서 집계. 지급 상태는 원문 note 기준 분류이며 실제 지급을 재검증한 값이 아닙니다. 월 기본급 대비·연봉 대비·정액 세 기준을 분리해 왜곡 없이 비교. 출처 표기 시 자유 인용.`,
     publishedDate: "2026-08-23",
     updatedDate: "2026-09-03",
     keywords: [
@@ -69,13 +69,13 @@ export const reportsRegistry: ReportMeta[] = [
   {
     slug: "listed-avg-salary-top100-2026",
     // 회사 수는 dartReport 집계 단일 소스에서 파생 — 하드코딩 금지
-    title: `${dartReportStats.rankYear} 공시 기준 평균연봉 TOP 100 — 상장사 ${dartReportStats.companyCount.toLocaleString("ko-KR")}곳 전수 분석`,
+    title: `${dartReportStats.rankYear} 공시 기준 평균연봉 TOP 100 — 공시기업 ${dartReportStats.companyCount.toLocaleString("ko-KR")}곳 전수 분석`,
     description: `머니샐러리가 금융감독원 전자공시(DART) 사업보고서 '직원 등의 현황'을 전수 수집해 집계한 ${dartReportStats.rankYear}년 평균연봉 순위. 급여총액÷인원 가중 평균, 추정치 0. 출처 표기 시 자유 인용.`,
     publishedDate: "2026-08-23",
     // 수기 갱신일 vs DART 스냅샷일 max — 본문 수정 시 LISTED_AVG_SALARY_MANUAL_UPDATED 만 올리면 됨
     updatedDate: laterIsoDate(LISTED_AVG_SALARY_MANUAL_UPDATED, dartReportStats.dataDate),
     keywords: [
-      "상장사 평균연봉",
+      "공시기업 평균연봉",
       "평균연봉 순위",
       "연봉 높은 회사",
       "대기업 평균연봉",

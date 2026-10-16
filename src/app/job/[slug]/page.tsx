@@ -31,14 +31,15 @@ const JOB_PAY_TABLE_LINKS: Record<string, { href: string; label: string }> = {
 };
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
   return jobsData.map((job) => ({ slug: job.id }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params: pendingParams }: Props): Promise<Metadata> {
+  const params = await pendingParams;
   const job = getJobById(params.slug);
   if (!job) return { title: "직업 정보를 찾을 수 없습니다" };
 
@@ -102,7 +103,8 @@ function SalaryBar({ value, max }: { value: number; max: number }) {
   );
 }
 
-export default function JobPage({ params }: Props) {
+export default async function JobPage({ params: pendingParams }: Props) {
+  const params = await pendingParams;
   const job = getJobById(params.slug);
   // GSC 404 출혈 차단(7차): 옛 직업 슬러그 → /job 메인 308
   if (!job) permanentRedirect("/job");
@@ -147,7 +149,7 @@ export default function JobPage({ params }: Props) {
 
   // Occupation 스키마 (구글 연봉 리치결과) — 정부 공식 통계(officialStats)가 있는
   // 직업만 주입. 임의 수치 금지 원칙: 공식 조사값(중위·사분위, 만원→원 환산)만 사용.
-  const occupationSchema = job.officialStats
+  const occupationSchema = job.officialStats && job.officialStats.statisticKind !== "starting-compensation"
     ? occupationLd({
         name: job.name,
         description: job.description,

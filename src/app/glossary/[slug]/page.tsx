@@ -31,7 +31,6 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 // 한글 슬러그는 프리렌더(force-static) 시 Cloudflare Pages가 비ASCII 정적 파일을
 // 서빙하지 못해 전 URL이 404였음(2026-07-06 실측 — 출시 후 한 번도 200인 적 없음).
 // 검증된 /salary/[amount] 패턴과 동일하게 edge 요청 렌더로 전환.
-export const runtime = "edge";
 
 /** 메타 설명 — "{용어}는 {요약}. {본문 첫 완결 문장}" (약 120자 이내, 말줄임 없이 문장 끝에서 끝낸다).
  *  첫 문장까지 넣으면 넘치는 용어는 요약 뒤에 카테고리 안내로 마무리한다 (META-10, 2026-09-25). */
@@ -52,10 +51,11 @@ function buildGlossaryDescription(item: GlossaryItem): string {
 }
 
 export async function generateMetadata({
- params,
+ params: pendingParams,
 }: {
- params: { slug: string };
+ params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+ const params = await pendingParams;
  const item = getGlossaryBySlug(params.slug);
  if (!item) notFound();
 
@@ -84,11 +84,12 @@ function buildDefinedTermLd(item: { title: string; summary: string; content: str
  };
 }
 
-export default function GlossaryDetailPage({
- params,
+export default async function GlossaryDetailPage({
+ params: pendingParams,
 }: {
- params: { slug: string };
+ params: Promise<{ slug: string }>;
 }) {
+ const params = await pendingParams;
  const item = getGlossaryBySlug(params.slug);
  // 허브는 이 용어를 대체하지 않는다. 실제 대응 URL이 없는 주소는 404로 응답한다.
  if (!item) notFound();

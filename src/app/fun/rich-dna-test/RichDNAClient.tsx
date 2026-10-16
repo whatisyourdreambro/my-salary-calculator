@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Castle, Rocket, Factory, Gem, ArrowRight, RefreshCw, TrendingUp } from "lucide-react";
 import Link from "@/components/AppLink";
@@ -91,15 +91,18 @@ const resultTypes = {
 
 export default function RichDNAClient() {
  const [step, setStep] = useState(0);
+ const activeStepRef = useRef(0);
  const [scores, setScores] = useState({ buffett: 0, musk: 0, rockefeller: 0, templeton: 0 });
  const [showResult, setShowResult] = useState(false);
 
  const handleAnswer = (type: keyof typeof scores) => {
+  if (step !== activeStepRef.current || step >= questions.length) return;
+  activeStepRef.current = step + 1;
  const newScores = { ...scores, [type]: scores[type] + 1 };
  setScores(newScores);
 
  if (step < questions.length - 1) {
- setStep(prev => prev + 1);
+ setStep(step + 1);
  } else {
  setShowResult(true);
  }
@@ -111,6 +114,7 @@ export default function RichDNAClient() {
  };
 
  const resetTest = () => {
+  activeStepRef.current = 0;
  setStep(0);
  setScores({ buffett: 0, musk: 0, rockefeller: 0, templeton: 0 });
  setShowResult(false);
@@ -138,7 +142,7 @@ export default function RichDNAClient() {
  부자 DNA <span className="text-primary">테스트</span>
  </h1>
  <p className="text-xl text-faint-blue max-w-2xl mx-auto font-medium">
- 당신 안에 잠든 억만장자의 본능을 꺼우세요.<br />
+ 당신 안에 잠든 억만장자의 본능을 깨우세요. 재미로 보는 투자 취향 캐릭터 테스트입니다.<br />
  세계적인 부호들과 당신의 싱크로율은?
  </p>
  </div>

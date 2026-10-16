@@ -246,13 +246,13 @@ function ContenderCard({ company, onClick, position }: { company: WorldcupCompan
 
  <div className="grid grid-cols-2 gap-4 w-full max-w-xs">
  <div className="bg-background/50 backdrop-blur-sm p-3 rounded-xl border border-border/50">
- <div className="text-xs text-muted-foreground uppercase mb-1">평균 연봉</div>
+ <div className="text-xs text-muted-foreground uppercase mb-1">신입 기본급 참고</div>
  <div className="font-bold text-lg">
  {(company.entryBase / 10000).toLocaleString('ko-KR')}만원~
  </div>
  </div>
  <div className="bg-background/50 backdrop-blur-sm p-3 rounded-xl border border-border/50">
- <div className="text-xs text-muted-foreground uppercase mb-1">워라밸</div>
+ <div className="text-xs text-muted-foreground uppercase mb-1">조직문화 참고 점수</div>
  <div className="font-bold text-lg flex items-center justify-center gap-1">
  <span className="text-primary">★</span>
  {company.cultureScore}

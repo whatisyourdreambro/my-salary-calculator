@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "nextVersion": "15.5.28",
+  "ogVersion": "0.7.2",
+  "advisory": "https://github.com/advisories/GHSA-rj75-hqrm-r3gf",
+  "upstreamCommit": "https://github.com/postcss/postcss-selector-parser/commit/62b1917",
+  "upstreamRelease": "https://github.com/postcss/postcss-selector-parser/releases/tag/7.1.6",
+  "scope": "Backport only the three linear-time membership passes; preserves version metadata and does not suppress audit findings.",
+  "files": [
+    {
+      "name": "index.edge.js",
+      "originalSha256": "74375b4883401fdfb41d5ada04ac8dcc973a488eefc5d57e6fcc2f6caf0299f4",
+      "patchedSha256": "ca7a8b7c0b99b8a7fe6eca8d890a5964a8c8d3be0097a57b7fc3d06b65ed335f"
+    },
+    {
+      "name": "index.node.js",
+      "originalSha256": "676082ee1861fdae2b5ec3443f9108ecc083da5b6f21548ad7b468103b14fbf5",
+      "patchedSha256": "21c5da9ebeec4457071ac4f9d3f0b074004cc7fa2b9c8361bee9e7aca1f8b967"
+    }
+  ],
+  "changes": [
+    {
+      "label": "Deduplicate indices with Set preserving first occurrence",
+      "before": "  function gh() {\n    var e = Array.prototype.concat.apply([], arguments);\n    return e.filter(function(t, n) {\n      return n === e.indexOf(t);\n    });\n  }",
+      "after": "  function gh() {\n    return Array.from(new Set(Array.prototype.concat.apply([], arguments)));\n  }"
+    },
+    {
+      "label": "Build interpolation and class/id membership sets once",
+      "before": "      p.length && (c2 = c2.filter(function(h2) {\n        return !~p.indexOf(h2);\n      }));\n      var d2 = (0, dh.default)(gh([0].concat(f, c2)));",
+      "after": "      var msyInterpolationIndexes = new Set(p);\n      p.length && (c2 = c2.filter(function(h2) {\n        return !msyInterpolationIndexes.has(h2);\n      }));\n      var msyClassIndexes = new Set(f), msyIdIndexes = new Set(c2);\n      var d2 = (0, dh.default)(gh([0].concat(f, c2)));"
+    },
+    {
+      "label": "Class membership in constant time",
+      "before": "        if (~f.indexOf(h2)) {",
+      "after": "        if (msyClassIndexes.has(h2)) {"
+    },
+    {
+      "label": "ID membership in constant time",
+      "before": "        } else if (~c2.indexOf(h2)) {",
+      "after": "        } else if (msyIdIndexes.has(h2)) {"
+    }
+  ]
+}

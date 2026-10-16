@@ -40,7 +40,7 @@ export default function IRPCalculatorClient() {
  </div>
  <div className="grid grid-cols-2 gap-4">
  <div>
- <label htmlFor={`${fieldId}-irp`} className="block text-xs font-bold text-faint-blue mb-2 uppercase tracking-widest">IRP 납입액 (최대 900만원)</label>
+ <label htmlFor={`${fieldId}-irp`} className="block text-xs font-bold text-faint-blue mb-2 uppercase tracking-widest">IRP 공제 대상 납입액 (900만원 한도)</label>
  <NumberInput
  id={`${fieldId}-irp`}
  type="number"
@@ -51,7 +51,7 @@ export default function IRPCalculatorClient() {
  />
  </div>
  <div>
- <label htmlFor={`${fieldId}-pension`} className="block text-xs font-bold text-faint-blue mb-2 uppercase tracking-widest">연금저축 납입액 (최대 600만원)</label>
+ <label htmlFor={`${fieldId}-pension`} className="block text-xs font-bold text-faint-blue mb-2 uppercase tracking-widest">연금저축 공제 대상 납입액 (600만원 한도)</label>
  <NumberInput
  id={`${fieldId}-pension`}
  type="number"
@@ -71,7 +71,7 @@ export default function IRPCalculatorClient() {
  animate={{ opacity: 1, y: 0 }}
  className="mt-8 p-8 bg-primary rounded-xl text-center"
  >
- <p className="text-primary-foreground/70 text-sm font-bold uppercase tracking-widest mb-2">예상 세액공제 환급액</p>
+ <p className="text-primary-foreground/70 text-sm font-bold uppercase tracking-widest mb-2">예상 세액공제액</p>
  <p className="text-5xl font-black text-navy tracking-tight">
  {result.taxCredit.toLocaleString('ko-KR')}원
  </p>

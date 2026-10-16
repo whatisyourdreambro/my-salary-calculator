@@ -547,7 +547,7 @@ const semiconductorPerformanceBonusTax = `
 <p>
  연금저축 연 600만원 + IRP 추가 300만원 = <strong>총 900만원까지 세액공제</strong> 가능.
  연소득 5,500만원 초과 시 13.2% 공제율 적용 → 연간 약 119만원 환급.
- 호황기 PS 받은 직후 PS의 10% 정도를 IRP에 부으면 즉시 세금 환급으로 회수됩니다.
+ IRP 납입액의 공제 가능 한도와 생활자금 여력을 먼저 확인하세요. 세액공제는 연말정산 등에서 반영되며, 납입액 전체가 즉시 환급되는 것은 아닙니다.
 </p>
 
 <h3 class="text-xl font-bold mt-8 mb-3">전략 2. ISA(개인종합자산관리계좌)로 매매차익 비과세</h3>
@@ -568,40 +568,15 @@ const semiconductorPerformanceBonusTax = `
  1년 의료비 중 총급여의 3% 초과분, 자녀 교육비 1인당 300만원까지 공제 가능.
 </p>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">🧮 실전 절세 시뮬레이션</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">🧮 IRP 공제와 ISA 투자소득 절세를 분리해 비교</h2>
+<p>연봉 1억 2,000만원과 성과급 6,000만원의 합계는 세전 1억 8,000만원입니다. 실제 결정세액은 근로소득공제·보험료·부양가족·세액공제 등을 반영한 뒤 계산하고, 급여 실수령액에는 보험료도 반영해야 합니다.</p>
+<ul class="space-y-2 mt-4">
+<li>· IRP 본인 납입액은 연금저축과 합친 공제 대상 한도 및 적용 공제율 안에서 세액공제를 검토합니다. 납입 즉시 환급되는 것은 아니며 남은 세액과 기납부세액을 확인해야 합니다.</li>
+<li>· ISA의 연간 납입은 근로소득세 공제 항목이 아닙니다. 계좌 안에서 발생한 과세 대상 투자소득에 손익통산·비과세·분리과세를 적용하는 제도입니다.</li>
+<li>· 따라서 IRP 900만원과 ISA 2,000만원을 납입했다는 정보만으로 소득세가 300만원 줄거나 급여 실수령액이 같은 금액만큼 늘어난다고 계산할 수 없습니다.</li>
+</ul>
 
-<p>SK하이닉스 10년차(연봉 1.2억) PS 6,000만원 수령 케이스:</p>
 
-<div class="overflow-x-auto my-6">
- <table class="w-full text-sm border border-border">
-  <thead class="bg-secondary">
-   <tr>
-    <th class="p-3 text-left">시나리오</th>
-    <th class="p-3 text-left">총소득</th>
-    <th class="p-3 text-left">대략 소득세 + 지방세</th>
-    <th class="p-3 text-left">실수령</th>
-   </tr>
-  </thead>
-  <tbody>
-   <tr class="border-t border-border">
-    <td class="p-3">절세 미적용</td>
-    <td class="p-3">1억 8,000만원</td>
-    <td class="p-3">약 3,800만원</td>
-    <td class="p-3">1억 4,200만원</td>
-   </tr>
-   <tr class="border-t border-border bg-primary/5">
-    <td class="p-3 font-bold">IRP 900만 + ISA 2,000만 활용</td>
-    <td class="p-3 font-bold">1억 8,000만원</td>
-    <td class="p-3 font-bold text-primary">약 3,500만원</td>
-    <td class="p-3 font-bold">1억 4,500만원</td>
-   </tr>
-  </tbody>
- </table>
-</div>
-
-<p class="text-xs text-muted-foreground mt-2">
- ※ 위는 단순화한 예시. 실제 환급액은 부양가족·신용카드 사용액·기부금 등에 따라 변동.
-</p>
 
 ${DISCLAIMER_HTML}
 
@@ -991,10 +966,10 @@ const chipRsuStockTax2026 = `
  호황기 사이클 정점에 해제일이 걸린다면 절호의 차익실현 기회.
 </p>
 
-<h3 class="text-xl font-bold mt-8 mb-3">원칙 4. 매도는 분산이 정답</h3>
+<h3 class="text-xl font-bold mt-8 mb-3">원칙 4. 매도 시점과 과세 유형 확인</h3>
 <p>
- 한 번에 전량 매도하면 종합소득세 누진 구간 점프 가능성.
- 3~4년에 걸쳐 분산 매도하면 같은 차익도 더 낮은 누적 세율 적용.
+ 매도 전에 이 글에서 구분한 소액주주 비과세, 대주주 양도소득세, RSU의 근로소득 발생을 각각 확인하세요.
+ 단순 주식 매도 차익을 모두 종합소득세에 더하거나, 분산 매도만으로 세금이 줄어든다고 계산하지 않습니다.
 </p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🧮 사례: PS + 우리사주 통합 절세 시뮬레이션</h2>
@@ -1086,6 +1061,7 @@ export const semiconductorDeepdiveGuides = [
   tags: ["성과급세금", "OPI", "PS", "IRP", "ISA", "절세", "반도체"],
   level: "중급" as const,
   publishedDate: "2026-05-14",
+    modifiedDate: "2026-10-03",
   views: 0,
   lang: "ko" as const,
   content: semiconductorPerformanceBonusTax,
@@ -1121,6 +1097,7 @@ export const semiconductorDeepdiveGuides = [
   category: "주식",
   tags: ["우리사주", "RSU", "자사주", "절세", "양도소득세", "반도체"],
   level: "고급" as const,
+  modifiedDate: "2026-10-03",
   publishedDate: "2026-05-13",
   views: 0,
   lang: "ko" as const,

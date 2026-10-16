@@ -16,7 +16,7 @@ import IncomeTaxClient from "./IncomeTaxClient";
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 종합소득세 계산기 — 누진세율 8단계 자동 산출 (지방소득세 포함)",
   description:
-    "연소득 5천만원이면 산출세액 약 624만원, 1억이면 약 1,956만원. 2026 종합소득세 8단계 누진세율(6~45%) + 누진공제 + 지방소득세 10% 자동 계산.",
+    "과세표준 5천만원이면 산출세액 약 624만원, 1억이면 약 1,956만원. 2026 종합소득세 8단계 누진세율(6~45%) + 누진공제 + 지방소득세 10% 자동 계산.",
   path: "/income-tax-2026",
   keywords: [
     "종합소득세 계산기",
@@ -116,8 +116,8 @@ export default function IncomeTax2026Page() {
           </h1>
           <p className="text-[15px] leading-7 text-muted-blue dark:text-canvas-300">
             과세표준을 입력하면 8단계 누진세율(6~45%)과 누진공제가 자동 적용된 산출세액 + 지방소득세
-            10%까지 계산합니다. 프리랜서·N잡러·임대소득자의 5월 종합소득세 신고 전에 환급/추가 납부
-            여부를 미리 확인하세요. 2026년 최신 세법(소득세법 시행령) 기준입니다.
+            10%까지 계산합니다. 세액공제·기납부세액은 반영하지 않으므로 환급·추가 납부액은
+            계산하지 않습니다. 신고 전 산출세액을 비교하는 간이 계산입니다.
           </p>
         </header>
 
@@ -232,7 +232,7 @@ export default function IncomeTax2026Page() {
             </Link>
             <Link href="/tools/finance/irp" className="block p-4 rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 hover:border-electric transition-colors">
               <p className="text-sm font-bold text-navy dark:text-canvas-50 mb-1">IRP·연금저축 세액공제</p>
-              <p className="text-xs text-muted-blue dark:text-canvas-300">최대 900만원 환급</p>
+              <p className="text-xs text-muted-blue dark:text-canvas-300">세액공제 대상 납입 한도 900만원</p>
             </Link>
             <Link href="/" className="block p-4 rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 hover:border-electric transition-colors">
               <p className="text-sm font-bold text-navy dark:text-canvas-50 mb-1">연봉 실수령액 계산기</p>

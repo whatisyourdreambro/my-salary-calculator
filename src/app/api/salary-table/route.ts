@@ -9,8 +9,8 @@ import {
  type SalaryData,
 } from "@/lib/generateData";
 
-// 이 코드를 추가하여 Cloudflare Pages 엣지 런타임에서 실행되도록 설정합니다.
-export const runtime = "edge";
+// Pagination and table type are request-specific; only the response CDN header is shared-cache policy.
+export const dynamic = "force-dynamic";
 
 // 표 4종 생성기 — 요청된 type 만 첫 요청 때 생성하고 isolate 수명 동안 메모한다.
 // 종전에는 모듈 스코프에서 4종(연봉 2,401행·월급 2,001행·주급·시급)을 모두 세액 계산해

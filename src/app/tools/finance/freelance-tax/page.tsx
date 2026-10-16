@@ -64,7 +64,7 @@ export default function FreelanceTaxPage() {
  <p className="text-xs text-faint-blue mt-1">영수증·증빙 있는 실제 경비만 인정됩니다</p>
  </div>
  <div>
- <label htmlFor="freelance-deductions" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">추가 소득공제 (연금저축, IRP 등)</label>
+ <label htmlFor="freelance-deductions" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">추가 소득공제액 (세액공제 제외)</label>
  <NumberInput id="freelance-deductions" type="number" inputMode="numeric" value={deductions} onChange={e => setDeductions(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>

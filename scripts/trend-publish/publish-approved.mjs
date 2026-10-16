@@ -268,7 +268,7 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
   // 6) 운영 확인
   const verify =
     kind === "retire"
-      ? { code: 0, stdout: "(철회 — /guides/<slug> 308 은 배포 뒤 브라우저로 확인)" }
+      ? { code: 0, stdout: "(철회 — 배포 뒤 비렌더링 HTTP HEAD로 /guides/<slug>의 308 상태와 Location 헤더만 확인. 리디렉션 추적 금지, MoneySalary-QA/1.0 UA 사용)" }
       : await run(process.execPath, [join(wt, "scripts/trend-publish/verify-prod.mjs"), "--slug", slug, "--marker", title, "--trend-home", home]);
   say(
     [

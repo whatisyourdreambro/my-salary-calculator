@@ -136,7 +136,7 @@ export default function MemeCoinPage() {
 
   const captureResultImage = async (): Promise<Blob | null> => {
     if (!shareRef.current) return null;
-    const { default: html2canvas } = await import("html2canvas");
+    const { default: html2canvas } = await import("@/lib/captureElement");
     const canvas = await html2canvas(shareRef.current, { scale: 2, useCORS: true, backgroundColor: "#0D1117" });
     return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
   };
@@ -144,7 +144,7 @@ export default function MemeCoinPage() {
   const handleSaveImage = async () => {
     if (!shareRef.current) return;
     try {
-      const { default: html2canvas } = await import("html2canvas");
+      const { default: html2canvas } = await import("@/lib/captureElement");
       const canvas = await html2canvas(shareRef.current, { scale: 2, useCORS: true, backgroundColor: "#0D1117" });
       const a = document.createElement("a");
       a.download = "meme-coin-result.png";
@@ -172,7 +172,7 @@ export default function MemeCoinPage() {
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-green-500/30 bg-green-500/10 text-green-400 text-xs font-bold mb-5 animate-pulse">
             <span className="w-1.5 h-1.5 bg-green-400 rounded-full" />
-            실시간 시장 현황: 극도의 탐욕 🔥
+            가상 시장 시나리오: 극도의 탐욕 🔥
           </div>
           <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-3">
             <span className="text-white">CRYPTO</span>{" "}

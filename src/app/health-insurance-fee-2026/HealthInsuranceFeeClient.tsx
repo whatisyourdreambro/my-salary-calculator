@@ -119,7 +119,7 @@ export default function HealthInsuranceFeeClient() {
 
         <div className="mt-6 p-5 rounded-2xl bg-electric-5 border border-electric-20">
           <p className="text-xs font-bold text-electric uppercase tracking-wider mb-2">
-            월 본인 부담 (건보료 + 장기요양)
+            {type === "workplace" ? "월 본인 부담 (건보료 + 장기요양)" : "재산분 월 부담 (소득분 제외)"}
           </p>
           <p className="text-3xl sm:text-4xl font-black text-electric mb-3">
             {fmt(result.totalSelf)}원
@@ -140,7 +140,7 @@ export default function HealthInsuranceFeeClient() {
               </div>
             )}
             <div className="flex justify-between text-navy dark:text-canvas-50 font-bold pt-2 border-t border-electric-20 mt-2">
-              <span>연 본인 부담</span>
+              <span>{type === "workplace" ? "연 본인 부담" : "재산분 연 부담"}</span>
               <span>{fmt(result.annual)}원</span>
             </div>
           </div>

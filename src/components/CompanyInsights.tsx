@@ -52,8 +52,6 @@ export default function CompanyInsights({ company }: CompanyInsightsProps) {
  <strong className="text-navy">원격근무:</strong>{" "}
  {company.workLife.remoteWork.policy === "remote"
  ? "전면 원격"
- : company.workLife.remoteWork.daysPerWeek
- ? `하이브리드 (주 ${company.workLife.remoteWork.daysPerWeek}일 사무실)`
  : "하이브리드"}
  </p>
  )}

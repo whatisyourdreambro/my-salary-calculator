@@ -90,7 +90,7 @@ function calcInsurance(bonus: number, annualSalary: number): {
   const pensionBase = Math.min(bonus, Math.max(0, pensionCeiling - annualSalary));
   const pension = Math.round(pensionBase * CURRENT_INSURANCE_RATES.NATIONAL_PENSION);
 
-  // 건강보험 + 장기요양 (상한 없음, 정산 방식)
+  // 건강보험 + 장기요양 — 법적 상한·정산은 이 간이 모델에 미반영
   const health    = Math.round(bonus * CURRENT_INSURANCE_RATES.HEALTH_INSURANCE);
   const longTerm  = Math.round(health * CURRENT_INSURANCE_RATES.LONG_TERM_CARE_RATIO); // 건강보험료 × 장기요양 비율
 
@@ -582,7 +582,7 @@ export default function BonusCalculatorPage() {
               </p>
               <p className="text-xs leading-relaxed" style={{ color: "#78350F" }}>
                 성과급으로 인해 소득이 상위 세율 구간에 진입했습니다.
-                IRP 추가 납입(연 900만원 한도, 세액공제 16.5%)이나
+                IRP 추가 납입(세액공제 대상 합산 한도·소득별 공제율 확인)이나
                 연금저축으로 절세 효과를 높이는 것을 검토하세요.
               </p>
             </div>
@@ -706,7 +706,7 @@ export default function BonusCalculatorPage() {
               { title: "IRP 추가 납입",     desc: "연 900만원 한도로 세액공제 최대 16.5% = 최대 148.5만원 절세" },
               { title: "연금저축 납입",      desc: "연 600만원 한도, IRP 포함 900만원까지 공제. 소득에 따라 13.2~16.5% 공제" },
               { title: "의료비·교육비 공제", desc: "연말정산 시 성과급으로 인한 세 부담을 의료비 공제로 상쇄 가능" },
-              { title: "주택청약 납입",      desc: "소득공제 연 최대 300만원 (납입액 40% 공제), 급여 7천만원 이하 적용" },
+              { title: "주택청약 납입",      desc: "연 납입액 300만원 한도에서 40% 소득공제, 급여 7천만원 이하 적용" },
             ].map((tip) => (
               <div key={tip.title} className="flex gap-3">
                 <Zap size={14} style={{ color: "#0145F2", flexShrink: 0, marginTop: "3px" }} />
@@ -897,8 +897,8 @@ function BonusComparison({
         <Sparkles size={13} style={{ color: "#0145F2", flexShrink: 0, marginTop: "2px" }} />
         <p className="text-xs leading-relaxed" style={{ color: "#3D5E78" }}>
           <strong style={{ color: "#0145F2" }}>세율 구간 주의:</strong>{" "}
-          연봉 + 성과급 합계가 <strong>{fmt(88_000_000)}원</strong>을 넘으면 한계세율이 <strong style={{ color: "#E63B5A" }}>24% → 35%</strong>로 올라갑니다.
-          IRP·연금저축으로 과세표준을 낮추면 구간 진입을 피할 수 있습니다.
+          소득공제 후 과세표준이 <strong>{fmt(88_000_000)}원</strong>을 넘으면 한계세율이 <strong style={{ color: "#E63B5A" }}>24% → 35%</strong>로 올라갑니다.
+          IRP·연금저축은 과세표준 차감이 아닌 세액공제 항목입니다.
         </p>
       </div>
     </section>
@@ -915,10 +915,10 @@ const GLOSSARY_TERMS = [
   { term: "PS (이익배분제)",               emoji: "📊", def: "회사 영업이익 일부를 직원과 나누는 제도. 회사 전체 실적이 좋아야 지급됩니다. IT 대기업·외국계에서 많이 운영합니다.", tip: "PS는 매년 지급 여부가 달라지므로 생활비 계획에 고정 수입으로 반영하면 위험합니다." },
   { term: "누진세 (Progressive Tax)",      emoji: "📈", def: "소득이 많을수록 더 높은 세율이 적용되는 구조. 성과급이 클수록 합산 과세표준이 높아져 한계세율 구간이 올라갑니다. 한국은 6%~45% 8단계.", tip: "세전 1억 vs 500만원 성과급의 실효세율은 전혀 다릅니다. 반드시 합산 기준으로 계산하세요." },
   { term: "한계세율 (Marginal Rate)",       emoji: "⚠️", def: "추가 소득 1원에 적용되는 가장 높은 세율. 성과급 전체에 적용되는 게 아니라, 성과급으로 진입한 구간의 세율입니다.", tip: "한계세율 ≠ 실효세율. 성과급 전체가 35%인 게 아닙니다. 이 계산기로 정확히 확인하세요." },
-  { term: "실효세율 (Effective Rate)",      emoji: "🔢", def: "실제로 낸 총세금 ÷ 성과급. 평균 세율이라고도 합니다. 한계세율보다 항상 낮습니다.", tip: "실효세율 20% = 성과급 1,000만원 중 200만원이 세금. 800만원 실수령." },
-  { term: "근로소득세액공제",               emoji: "🛡️", def: "근로소득자에게만 주어지는 세액공제. 산출세액의 55%(130만원 이하) 또는 30%(초과분)를 차감. 총급여 기준으로 한도 50~74만원 적용.", tip: "성과급으로 총급여가 1.2억을 초과하면 세액공제 한도가 50만원으로 줄어 부담이 더 늘어납니다." },
+  { term: "실효세율 (Effective Rate)",      emoji: "🔢", def: "성과급 대비 공제 비율입니다. 이 계산기의 결과 비율에는 소득세·지방소득세와 근로자 보험료가 포함되어 있어 소득세 한계세율과 직접 비교할 수 없습니다.", tip: "실효세율 20% = 성과급 1,000만원 중 200만원이 세금. 800만원 실수령." },
+  { term: "근로소득세액공제",               emoji: "🛡️", def: "근로소득자에게만 주어지는 세액공제. 산출세액의 55%(130만원 이하) 또는 30%(초과분)를 차감. 총급여별 한도를 적용하며 이 계산기는 20~74만원 범위를 반영합니다.", tip: "총급여가 늘면 세액공제 한도가 줄 수 있습니다. 계산 결과는 해당 총급여의 한도를 반영한 추정치입니다." },
   { term: "원천징수 vs 연말정산",           emoji: "💸", def: "회사는 성과급 지급 시 간이세액표 기준으로 미리 세금을 공제합니다. 확정 세액은 다음해 2월 연말정산에서 계산, 차액 환급·추납합니다.", tip: "연말정산 전 IRP 납입으로 공제를 늘리면 환급액을 키울 수 있습니다." },
-  { term: "IRP (개인형 퇴직연금)",          emoji: "🏦", def: "연 최대 900만원 납입, 납입액의 13.2~16.5% 세액공제. 성과급 수령 후 IRP에 추가 납입하면 절세 효과가 극대화됩니다.", tip: "성과급 1,000만원 수령 → IRP 900만원 납입 → 최대 148.5만원 환급 가능." },
+  { term: "IRP (개인형 퇴직연금)",          emoji: "🏦", def: "연금저축과 합산한 세액공제 대상 납입액은 연 900만원 한도이며, 소득에 따라 13.2~16.5% 세액공제율이 적용됩니다. 성과급 수령 후 IRP에 추가 납입하면 절세 효과가 극대화됩니다.", tip: "성과급 1,000만원 수령 → IRP 900만원 납입 → 최대 148.5만원 환급 가능." },
   { term: "4대보험 (성과급 부과)",          emoji: "🔐", def: "성과급도 근로소득이므로 국민연금·건강보험·고용보험이 부과됩니다. 단, 국민연금은 월 659만원 상한(2026.7~2027.6)이 있어 연봉이 이미 초과하면 추가 없습니다.", tip: "산재보험료는 사업주 전액 부담이므로 근로자 부담 4대보험은 3가지입니다." },
 ];
 

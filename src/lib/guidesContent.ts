@@ -178,11 +178,12 @@ const rawGuides = [
  slug: "year-end-tax-2026",
  // W3-A 메타만 개명 (본문·H2·발행일 불변). 옛 제목은 '2025 연말정산'으로 귀속연도가 어긋났다.
  title: "2026년 귀속 연말정산(2027년 1월) 공제 총정리 — 한도표·달라진 점",
- description: "바뀐 세법 완벽 반영! 남들은 모르는 소득공제, 세액공제 꿀팁으로 환급액 200만원 더 받는 법.",
+ description: "2026년 귀속 소득공제·세액공제 한도와 적용 조건, 실제 환급액을 확인할 자료를 정리했습니다.",
  category: "세금",
  tags: ["연말정산", "환급", "절세"],
  level: "초급",
  publishedDate: "2025-12-01",
+    modifiedDate: "2026-10-03",
  views: 200000,
  },
  {
@@ -202,7 +203,7 @@ const rawGuides = [
  category: "세금",
  tags: ["증여세", "상속세", "절세"],
  level: "고급",
- publishedDate: "2025-03-15",
+ publishedDate: "2025-03-15", modifiedDate: "2026-10-03",
  views: 89000,
  },
  {
@@ -220,17 +221,17 @@ const rawGuides = [
  { slug: "car-tax-annual-payment", title: "자동차세 연납 신청: 1월에 5% 공제 🚗", description: "1월에 미리 내면 세금이 줄어든다? 위택스 신청 방법과 카드 무이자 할부 팁.", category: "세금", tags: ["자동차세", "연납", "절세"], level: "초급", publishedDate: "2025-01-05", views: 52000 },
  { slug: "real-estate-tax-comprehensive", title: "종합부동산세: 1주택자 공제 한도 상향 🏘️", description: "부자세? 이제는 중산층도 알아야 할 종부세 계산 구조와 절세 전략.", category: "세금", tags: ["종부세", "부동산", "세금"], level: "고급", publishedDate: "2025-11-25", views: 38000 },
  { slug: "financial-income-tax", title: "금융소득 종합과세: 이자만 2천만원? 💰", description: "예금 이자와 배당금 합계 2천만원 초과 시 세금 폭탄 피하기.", category: "세금", tags: ["금융소득", "이자", "배당"], level: "고급", publishedDate: "2025-05-10", views: 29000 },
- { slug: "donation-tax-credit", title: "기부금 세액공제: 기부하고 세금 환급 ❤️", description: "정치자금, 종교단체, 고향사랑기부제... 100% 환급 꿀팁.", category: "세금", tags: ["기부금", "세액공제", "환급"], level: "초급", publishedDate: "2025-12-10", views: 41000 },
+ { slug: "donation-tax-credit", title: "기부금 세액공제: 기부하고 세금 환급 ❤️", description: "기부금 공제율·한도 정리. 환급 전 남은 세액을 확인하세요.", category: "세금", tags: ["기부금", "세액공제", "환급"], level: "초급", publishedDate: "2025-12-10", views: 41000 },
 
  // --- 투자 (Investment) : 10 items ---
  {
  slug: "isa-account-guide",
- title: "만능통장 ISA: 3년 만기 1억 만들기 로드맵 💎",
+ title: "만능통장 ISA: 납입 한도와 만기 활용 로드맵 💎",
  description: "비과세 혜택 끝판왕 ISA 계좌 활용법. 중개형 vs 신탁형 비교부터 추천 포트폴리오까지.",
  category: "투자",
  tags: ["ISA", "비과세", "목돈마련"],
  level: "초급",
- publishedDate: "2025-02-10",
+ publishedDate: "2025-02-10", modifiedDate: "2026-10-03",
  views: 130000,
  },
  {
@@ -244,13 +245,15 @@ const rawGuides = [
  views: 95000,
  },
  { slug: "bitcoin-halving-strategy", title: "비트코인 반감기 투자 전략: 4년의 사이클 🪙", description: "4년마다 오는 기회, 반감기 사이클 분석과 매수 적기.", category: "투자", tags: ["비트코인", "가상화폐", "반감기"], level: "고급", publishedDate: "2025-03-20", views: 110000 },
- { slug: "us-treasury-bond", title: "미국 국채 투자: 안전자산의 매력 🇺🇸", description: "금리 인하 시기, 채권으로 시세차익과 이자 두 마리 토끼 잡기.", category: "투자", tags: ["채권", "미국국채", "안전자산"], level: "중급", publishedDate: "2025-06-15", views: 67000 },
+ { slug: "us-treasury-bond", title: "미국 국채 투자: 안전자산의 매력 🇺🇸", description: "금리 인하 시기, 채권으로 시세차익과 이자 두 마리 토끼 잡기.", category: "투자", tags: ["채권", "미국국채", "안전자산"], level: "중급", publishedDate: "2025-06-15",
+    modifiedDate: "2026-10-03", views: 67000 },
  { slug: "gold-investment-methods", title: "금 투자 방법: 골드바 vs KRX 금시장 🥇", description: "전쟁과 인플레를 이기는 불변의 자산, 금 싸게 사는 법.", category: "투자", tags: ["금", "원자재", "안전자산"], level: "초급", publishedDate: "2025-08-20", views: 54000 },
  { slug: "dollar-investment", title: "달러 환테크: 환율 변동성 활용하기 💵", description: "엔저, 강달러 시대의 똑똑한 외화 투자 전략.", category: "투자", tags: ["달러", "환테크", "환율"], level: "중급", publishedDate: "2025-09-05", views: 49000 },
- { slug: "reits-investment", title: "리츠(REITs): 커피 한 잔 값으로 건물주 되기 🏢", description: "소액으로 강남 빌딩에 투자하고 매달 월세 배당 받는 법.", category: "투자", tags: ["리츠", "부동산", "배당주"], level: "중급", publishedDate: "2025-04-10", views: 62000 },
+ { slug: "reits-investment", title: "리츠(REITs): 커피 한 잔 값으로 건물주 되기 🏢", description: "소액으로 강남 빌딩에 투자하고 매달 월세 배당 받는 법.", category: "투자", tags: ["리츠", "부동산", "배당주"], level: "중급", publishedDate: "2025-04-10",
+    modifiedDate: "2026-10-03", views: 62000 },
  { slug: "ipo-strategy", title: "공모주 청약: 따상 노리는 실전 팁 📈", description: "균등배정 vs 비례배정, 마이너스 통장 써도 이득일까?", category: "투자", tags: ["공모주", "청약", "주식"], level: "초급", publishedDate: "2025-02-25", views: 88000 },
  { slug: "robo-advisor", title: "로보어드바이저: AI에게 내 돈 맡겨도 될까? 🤖", description: "핀트, 파운트 등 AI 투자 서비스 수익률 비교 분석.", category: "투자", tags: ["AI투자", "로보어드바이저", "핀테크"], level: "초급", publishedDate: "2025-07-15", views: 43000 },
- { slug: "pension-savings-fund", title: "연금저축펀드 vs IRP: 나에게 맞는 계좌는? 👴", description: "세액공제 한도와 운용 가능 상품 차이점 완벽 정리.", category: "투자", tags: ["연금저축", "IRP", "노후준비"], level: "중급", publishedDate: "2025-11-30", views: 71000 },
+ { slug: "pension-savings-fund", title: "연금저축펀드 vs IRP: 나에게 맞는 계좌는? 👴", description: "세액공제 한도와 운용 가능 상품 차이점 완벽 정리.", category: "투자", tags: ["연금저축", "IRP", "노후준비"], level: "중급", publishedDate: "2025-11-30", modifiedDate: "2026-10-03", views: 71000 },
 
  // --- 부동산 (Real Estate) : 8 items ---
  {
@@ -392,7 +395,7 @@ const guideMetaDescriptions: Record<string, string> = {
  "subscription-account-tips": "청약통장 1순위 조건과 납입 전략 — 2024년 11월 월 납입 인정액이 25만원으로 올랐고, 무주택 세대주는 연 최대 120만원 소득공제를 받습니다. 지역별 1순위 요건과 예치금을 정리했습니다.",
  "gap-investment-risk": "갭투자 구조와 위험 — 매매 6억·전세 4억8천 아파트는 1억2천으로 살 수 있지만 집값이 10% 내리면 투입금의 약 50%를 잃습니다. 깡통전세 기준과 2025~2026년 규제 환경을 정리했습니다.",
  "financial-income-tax": "금융소득 종합과세 기준은 이자·배당 합계 1인당 연 2,000만원입니다. 넘으면 초과분이 근로소득과 합산돼 6~45% 누진세율로 다시 계산되고 건강보험료도 오를 수 있습니다. 절세법을 정리했습니다.",
- "donation-tax-credit": "기부금 세액공제율 — 정치자금·고향사랑기부 10만원은 사실상 전액 환급되고, 일반기부금은 1천만원까지 15%·초과분 30%가 공제됩니다. 종교단체 10% 한도와 놓치기 쉬운 함정을 정리했습니다.",
+ "donation-tax-credit": "기부금 세액공제율 — 정치자금·고향사랑기부 10만원은 공제 가능한 세액이 남아 있으면 전액 공제됩니다. 일반기부금은 1천만원까지 15%·초과분 30%이며 종교단체 10% 한도와 실제 환급 조건을 정리했습니다.",
  "us-treasury-bond": "미국 국채 투자 전 알아야 할 금리·가격 원리 — 듀레이션 17년 안팎의 30년물은 금리 1%p 변동에 가격이 약 17% 움직입니다. 2026년 금리 국면과 세금 구조, 만기별 전략을 정리했습니다.",
  "rule-of-72": "72의 법칙은 72를 연 수익률로 나눠 원금이 2배 되는 기간을 구하는 공식입니다. 수익률 10%면 7.2년, 3%면 24년. 실제 복리와의 오차와 인플레이션·114의 법칙 응용까지 정리했습니다.",
  "split-accounts": "통장 쪼개기 방법 — 급여·소비·비상금·투자 4개 통장을 자동이체로 연결해 선저축 후지출 구조를 만듭니다. 비상금은 생활비 3~6개월분이 권장선이며, 통장별 추천 상품과 운영 원칙을 정리했습니다.",

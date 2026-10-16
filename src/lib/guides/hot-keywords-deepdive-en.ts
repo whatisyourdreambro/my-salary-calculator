@@ -100,7 +100,7 @@ const loanTypesComparison = `
 <p>DSR compares qualifying annual debt service with income under the lender's regulatory calculation. LTV relates lending to collateral value. Applicable limits, stress-rate rules, exemptions and foreign-borrower eligibility depend on the product and current regulation. Neither a household repayment-to-income ratio nor an LTV percentage alone proves approval.</p>
 <ul><li>Ask the lender which existing debts, facility limits and stress assumptions it will count.</li><li>Budget essential living costs, irregular income and emergency reserves separately.</li><li>Confirm renewal, acceleration, early-repayment and collateral risks in the agreement.</li><li>Use the lender's written estimate for the final comparison; do not substitute a generic calculator result for an offer.</li></ul>
 <h2>Resources and tools</h2>
-<ul><li><a href="https://www.fsc.go.kr/eng/index">Financial Services Commission (English)</a> — official policy announcements; consult the applicable current announcement.</li><li><a href="/en/tools/loan">Fixed monthly loan-payment calculator (English)</a> ? use one currency and your own rate and term; fees and approval are separate.</li><li><a href="/home-loan">Mortgage repayment calculator (Korean; assumptions stated on the page)</a></li><li><a href="/en/salary-converter">Convert gross salary using an explicit exchange-rate assumption</a></li></ul>
+<ul><li><a href="https://www.fsc.go.kr/eng/index">Financial Services Commission (English)</a> — official policy announcements; consult the applicable current announcement.</li><li><a href="/en/tools/loan">Fixed monthly loan-payment calculator (English)</a> — use one currency and your own rate and term; fees and approval are separate.</li><li><a href="/home-loan">Mortgage repayment calculator (Korean; assumptions stated on the page)</a></li><li><a href="/en/salary-converter">Convert gross salary using an explicit exchange-rate assumption</a></li></ul>
 `;
 
 export const hotKeywordsGuidesEn: Guide[] = [
@@ -169,7 +169,7 @@ export const hotKeywordsGuidesEn: Guide[] = [
     tags: ["Korea Loans", "Mortgage", "Personal Loan", "DSR"],
     level: "Intermediate",
     publishedDate: "2026-05-23",
-    modifiedDate: "2026-09-09",
+    modifiedDate: "2026-10-03",
     views: 0,
     content: loanTypesComparison,
     lang: "en",

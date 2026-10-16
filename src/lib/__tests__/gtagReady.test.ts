@@ -107,8 +107,13 @@ describe("tracker wiring", () => {
     }
   });
 
-  it("global trackEvent and the layout GA bootstrap stay unchanged until the 10/10 judgment", () => {
+  it("keeps the event wrapper and moves bootstrap behind the runtime gate", () => {
     expect(read("src/lib/analytics.ts")).toContain('window.gtag?.("event", name, {');
-    expect(read("src/app/layout.tsx")).toMatch(/<Script id="ga4-init" strategy="afterInteractive">/);
+    expect(read("src/app/layout.tsx")).toContain("<LiveServices />");
+    expect(read("src/app/layout.tsx")).not.toContain("googletagmanager.com");
   });
 });
+
+// These tests exercise payload/lifecycle behavior with a synthetic eligible visitor.
+// The real fail-closed runtime decision is covered separately in liveAds.test.ts.
+vi.mock("../liveAds", () => ({ canRequestLiveAds: () => true }));

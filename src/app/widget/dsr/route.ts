@@ -8,7 +8,8 @@
 import { DSR_RATIO } from "@/lib/widgets/dsrLimit";
 import { WIDGET_HEADERS, widgetShell } from "../shared";
 
-export const runtime = "edge";
+export const dynamic = "force-static";
+
 
 function buildHtml(): string {
   return widgetShell({
@@ -46,9 +47,12 @@ function buildHtml(): string {
   function render() {
     var y = parseFloat(yearly.value.replace(/,/g, "")) * 10000;
     var rp = parseFloat(rate.value.replace(/,/g, ""));
-    var n = parseInt(years.value.replace(/,/g, ""), 10);
+    var n = Number(years.value.replace(/,/g, ""));
     if (!isFinite(y) || y <= 0 || !isFinite(rp) || rp < 0 || !isFinite(n) || n < 1) {
       limitEl.textContent = "—"; monthlyEl.textContent = "—"; return;
+    }
+    if (!Number.isInteger(n)) {
+      limitEl.textContent = "만기는 정수로 입력"; monthlyEl.textContent = "—"; return;
     }
     var monthly = (y * RATIO) / 12;
     var r = rp / 100 / 12, months = n * 12;
@@ -63,7 +67,7 @@ function buildHtml(): string {
   render();
 })();`,
     ctaHref: "/home-loan",
-    ctaLabel: "LTV·월 상환액까지 정확히 계산하기 →",
+    ctaLabel: "LTV·월 상환액 조건 비교하기 →",
   });
 }
 

@@ -13,10 +13,16 @@
 //            1 = 배포 실패 · 시간 초과 · 토큰 권한/프로젝트 오류 · Purge API 실패 → 운영자 수동 Purge 필요
 // 토큰은 헤더로만 쓰고 로그에 절대 찍지 않는다. push·커밋 등 저장소 쓰기는 하지 않는다.
 // 판정 함수 단위 테스트: node --test scripts/__tests__/cf-purge-after-deploy.test.mjs (네트워크 없음)
+// Workers: CF_DEPLOY_TARGET=workers, CF_WORKER_NAME, CF_RELEASE_TAG required;
+// CF_EXPECTED_VERSION_ID optionally pins the exact immutable version. Credentials
+// must permit Workers read + zone cache purge. Latest deployment must be 100% of
+// one tagged version; it is reverified after settling and before every purge retry.
+// Default pages mode remains available for the retained Pages rollback project.
 
 import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
+import { workerReleaseConfig, readWorkerActivation } from "./lib/cf-worker-release.mjs";
 
 const API = "https://api.cloudflare.com/client/v4";
 const ZERO_SHA = /^0+$/;
@@ -98,6 +104,9 @@ async function cfFetch(url, token, init = {}) {
   try {
     const res = await fetch(url, {
       ...init,
+      // A stalled API call must not defeat the outer deployment deadline.
+      signal: init.signal ?? AbortSignal.timeout(15000),
+      redirect: "error",
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", ...(init.headers ?? {}) },
     });
     let body = null;
@@ -118,10 +127,16 @@ const num = (v, dflt) => {
 };
 
 export async function main(env = process.env) {
+  const target = env.CF_DEPLOY_TARGET || "pages";
+  if (target === "workers") return workersMain(env);
+  if (target !== "pages") {
+    console.log("::error::CF_DEPLOY_TARGET must be pages or workers; no purge performed.");
+    return 1;
+  }
   const token = (env.CF_API_TOKEN ?? "").trim();
   const accountId = (env.CF_ACCOUNT_ID ?? "").trim();
   const zoneId = (env.CF_ZONE_ID ?? "").trim();
-  const sha = (env.GITHUB_SHA ?? "").trim();
+  const sha = (env.CF_PAGES_COMMIT_SHA ?? env.GITHUB_SHA ?? "").trim();
   const project = (env.CF_PAGES_PROJECT ?? "").trim() || "my-salary-calculator";
   const missing = [
     ["CF_API_TOKEN", token],
@@ -228,6 +243,55 @@ export async function main(env = process.env) {
   }
   console.log("::error::Purge 3회 실패 — CF 대시보드 Caching > Configuration > Purge Everything 을 수동으로 실행하세요.");
   summary("- Purge 3회 실패 — 수동 Purge 필요");
+  return 1;
+}
+
+// Workers mode fails closed when configuration is incomplete. Unlike Pages,
+// an uploaded version or an old successful deployment is never sufficient.
+export async function workersMain(env = process.env) {
+  let config;
+  try {
+    config = workerReleaseConfig(env);
+    if (!/^[a-f0-9]{32}$/i.test(env.CF_ZONE_ID ?? "")) throw new Error("CF_ZONE_ID must be a Cloudflare zone ID.");
+  } catch (error) {
+    console.log(`::error::${error.message} No purge performed.`);
+    return 1;
+  }
+  const timeoutMs = num(env.CF_PURGE_TIMEOUT_MINUTES, 25) * 60_000;
+  const pollMs = num(env.CF_PURGE_POLL_SECONDS, 30) * 1000;
+  const settleMs = num(env.CF_PURGE_SETTLE_SECONDS, 30) * 1000;
+  const startedAt = Date.now();
+  console.log(`Waiting for Worker ${config.workerName}, release ${config.releaseTag}, single active version at 100%.`);
+  let activated;
+  for (;;) {
+    activated = await readWorkerActivation(config);
+    if (activated.state === "success") break;
+    if (activated.fatal || Date.now() - startedAt + pollMs >= timeoutMs) {
+      console.log(`::error::Workers activation not verified: ${activated.reason} No purge performed.`);
+      return 1;
+    }
+    await sleep(pollMs);
+  }
+  await sleep(settleMs);
+  const pinned = { ...config, expectedVersionId: activated.versionId };
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    const current = await readWorkerActivation(pinned);
+    if (current.state !== "success" || current.deploymentId !== activated.deploymentId) {
+      console.log("::error::Worker deployment changed or could not be verified before purge. No purge performed.");
+      return 1;
+    }
+    const result = await cfFetch(`${API}/zones/${encodeURIComponent(env.CF_ZONE_ID)}/purge_cache`, config.token, {
+      method: "POST", body: JSON.stringify({ purge_everything: true }),
+    });
+    if (!result.networkError && result.status === 200 && result.body?.success === true) {
+      console.log(`::notice::Worker release ${config.releaseTag} (${activated.versionId}) verified; zone cache purged.`);
+      summary(`- Workers ${config.workerName}: release ${config.releaseTag}, version ${activated.versionId}; cache purge completed.`);
+      return 0;
+    }
+    if (isFatalApiError(result.status, result.body)) break;
+    if (attempt < 3) await sleep(10_000);
+  }
+  console.log("::error::Workers release was verified, but purge failed. Review the zone cache manually.");
   return 1;
 }
 

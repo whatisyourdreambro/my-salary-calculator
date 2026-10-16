@@ -53,9 +53,9 @@ const comprehensiveFinancialIncome = `
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 종합과세 vs 분리과세</h2>
 <p>연봉 8천만원 + 금융소득 3,000만원 가정:</p>
 <ul class="space-y-2 mt-4">
-<li>· 분리과세(2천만원 이하): 308만원 (15.4%)</li>
-<li>· 종합과세(2천 초과 1천만원): 약 350만원 (35% + 다른 소득 합산)</li>
-<li>· 추가 부담 약 42만원, 한계세율 점프 가능</li>
+<li>· 금융소득 2,000만원 부분과 초과 1,000만원 부분의 세액을 서로 빼서 추가 부담으로 계산하지 않습니다.</li>
+<li>· 같은 금융소득 3,000만원과 같은 급여·공제 조건을 기준으로 전체 세액을 비교해야 합니다.</li>
+<li>· 급여·공제와 적용 과세표준을 확인하기 전에는 추가 세액이나 한계세율을 특정하지 않습니다.</li>
 </ul>
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 절세 — 분산 + ISA</h2>
 <ul class="space-y-2 mt-4">
@@ -87,16 +87,16 @@ const otherIncomeTaxStrategy = `
 `;
 
 const personalVsCorporation = `
-<p class="lead">자영업·1인 사업자가 일정 매출을 넘으면 법인 전환 고려. 개인 사업자 종합소득세 6~45% vs 법인세 9~24% + 배당소득세. 매출 5억 이상 + 순이익 1.5억 이상에서 법인 유리 시작.</p>
+<p class="lead">자영업·1인 사업자가 일정 매출을 넘으면 법인 전환 고려. 개인 사업자 종합소득세 6~45% vs 일반 영리법인 법인세10~25%(2026년 이후 개시 사업연도; 소규모법인 등 별도율 확인) + 배당소득세. 매출·순이익만으로 법인의 유리함을 확정할 수 없으며, 대표 급여·배당·공제와 운영비를 함께 비교해야 합니다.</p>
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 세율 비교</h2>
 <div class="overflow-x-auto my-6"><table class="w-full text-sm border border-border"><thead class="bg-secondary"><tr><th class="p-3">구분</th><th class="p-3">개인사업자</th><th class="p-3">법인</th></tr></thead><tbody>
-<tr class="border-t"><td class="p-3">소득세율</td><td class="p-3">6~45%</td><td class="p-3">법인세 9~24%</td></tr>
-<tr class="border-t"><td class="p-3">배당</td><td class="p-3">해당 없음</td><td class="p-3">15.4% 분리</td></tr>
+<tr class="border-t"><td class="p-3">소득세율</td><td class="p-3">6~45%</td><td class="p-3">일반 영리법인 법인세10~25%(2026년 이후 개시 사업연도; 소규모법인 등 별도율 확인)</td></tr>
+<tr class="border-t"><td class="p-3">배당</td><td class="p-3">해당 없음</td><td class="p-3">원천징수와 최종 과세는 구분; 종합과세 여부 별도 확인</td></tr>
 <tr class="border-t"><td class="p-3">대표 급여</td><td class="p-3">사업소득(필요경비)</td><td class="p-3">근로소득세</td></tr>
 <tr class="border-t"><td class="p-3">손실 처리</td><td class="p-3">15년 이월</td><td class="p-3">15년 이월</td></tr>
 </tbody></table></div>
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 법인 전환 분기점</h2>
-<p>순이익 1.5억 이상 시 법인이 유리. 법인은 운영비·관리비 부담이 있어 1억 이하는 개인이 효율적.</p>
+<p>법인은 별도의 운영비·관리비가 발생합니다. 대표에게 지급할 급여·배당과 개인 공제, 법인에 남기는 이익에 따라 결과가 달라지므로 특정 순이익만으로 전환 분기점을 단정하지 않습니다.</p>
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/tools/finance/freelance-tax" class="text-primary underline">프리랜서 세금 계산</a></li></ul></div>
 `;
 
@@ -170,7 +170,7 @@ const taxReductionDisabled = `
 `;
 
 const taxAmnestyReform = `
-<p class="lead">세무조사·가산세 면제 제도. 자진 신고 시 가산세 50% 감면, 수정신고 시 10~50% 감면. 미신고·과소신고 발견 시 빨리 신고하는 게 손해 최소화.</p>
+<p class="lead">누락·과소신고를 발견했다면 수정신고인지 기한후신고인지 먼저 구분하세요. 감면율은 신고 시기와 가산세 종류에 따라 달라지며, 자진 신고만으로 세무조사나 모든 가산세가 면제되는 것은 아닙니다. 아래 기간별 수정신고 감면과 납부지연가산세를 별도로 확인하세요.</p>
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 자진 신고·수정 신고 우대</h2>
 <ul class="space-y-2 mt-4">
 <li>· <strong>1개월 이내 수정</strong>: 가산세 90% 감면</li>
@@ -184,7 +184,7 @@ const taxAmnestyReform = `
 <li>· 일반 무신고: 20%</li>
 <li>· 부정 무신고(고의): 40%</li>
 <li>· 국제거래·역외탈세: 60%</li>
-<li>· + 납부불성실 연 9.125%</li>
+<li>· 납부지연가산세는 적용 기간의 법정 일별 이율과 지연 일수로 별도 계산</li>
 </ul>
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/income-tax-2026" class="text-primary underline">종합소득세 계산</a></li></ul></div>
 `;
@@ -305,7 +305,7 @@ const giftVsTransfer = `
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 사례 비교</h2>
 <p>시가 10억 주택을 자녀에게 이전:</p>
 <ul class="space-y-2 mt-4">
-<li>· <strong>단순 증여</strong>: 증여세 약 2.4억 (성인 자녀 5천 공제)</li>
+<li>· <strong>단순 증여</strong>: 증여세 2.25억원 (성인 자녀 5,000만원 공제 외 다른 공제·기사용액이 없다고 가정; 9.5억원 × 30% − 6,000만원, 신고세액공제 전)</li>
 <li>· <strong>부담부증여(대출 6억 포함)</strong>: 증여세 6,000만원 + 부모 양도세 약 5,000만원 = 1.1억</li>
 <li>· <strong>양도</strong>: 자녀가 시가 매수 + 양도세 → 1.5억+ 세금</li>
 </ul>
@@ -396,16 +396,16 @@ const lifeExpectancyPlanning = `
 `;
 
 const healthInsuranceContinue = `
-<p class="lead">퇴직 후 건강보험 임의계속가입 — 최대 36개월간 직장가입자 시절 보험료로 유지. 퇴직 후 2개월 이내 신청. 재산은 많은데 소득은 줄어든 은퇴자에게 절대 유리.</p>
+<p class="lead">퇴직 후 건강보험 임의계속가입 — 최대 36개월간 직장가입자 시절 보험료로 유지. 최초 지역보험료 납부기한에서 2개월이 지나기 전에 신청하며, 재산·소득·피부양자 요건에 따라 지역가입보다 유리한지 비교해야 합니다.</p>
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 비교 — 퇴직 직장인 vs 지역가입자</h2>
 <p>퇴직 직전 월 보수 600만원, 자녀 2명·자가 보유:</p>
 <ul class="space-y-2 mt-4">
 <li>· 직장가입자 본인 부담: 약 24만원/월</li>
-<li>· 임의계속가입(본인+회사 모두 본인 부담): 약 48만원/월</li>
+<li>· 임의계속가입: 최근 12개월 평균 보수월액과 고시상 경감 규칙으로 계산한 실제 예상액을 공단에 확인</li>
 <li>· 지역가입자 전환 시: 약 100~150만원/월 (재산 점수 큼)</li>
 </ul>
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 임의계속가입 신청</h2>
-<p>퇴직 후 2개월 이내 국민건강보험공단(1577-1000) 신청. 36개월 후 자동 종료 → 지역가입자 또는 피부양자.</p>
+<p>최초 지역보험료 납부기한에서 2개월이 지나기 전에 국민건강보험공단(1577-1000)에 신청합니다. 36개월 후 자동 종료 → 지역가입자 또는 피부양자.</p>
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/health-insurance-fee-2026" class="text-primary underline">건강보험료 계산기</a></li></ul></div>
 `;
 
@@ -477,7 +477,7 @@ const workContractCheck = `
 <li><strong>⑦ 비밀유지·경업금지</strong>: 별도 합의서.</li>
 </ol>
 <h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 미체결 시</h2>
-<p>근로계약서 미작성·미교부 시 사업주 500만원 이하 과태료. 임금 분쟁 시 임차인 유리.</p>
+<p>근로계약서 미작성·미교부 시 사업주 500만원 이하 과태료. 임금 분쟁에 대비해 계약 내용과 실제 근무·급여 자료를 보관하세요.</p>
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/" class="text-primary underline">연봉 실수령액 계산기</a></li></ul></div>
 `;
 
@@ -748,7 +748,7 @@ const lowIncomeSupport = `
 `;
 
 const energyVoucher = `
-<p class="lead">에너지바우처 — 저소득층 여름·겨울 냉난방비 지원. 1인 가구 약 14만원, 4인 가구 약 30만원. 6월 신청 → 11월부터 사용. 2026년 지원금 확대.</p>
+<p class="lead">에너지바우처 — 저소득층 여름·겨울 냉난방비 지원. 1인 가구 약 14만원, 4인 가구 약 30만원. 신청·사용 기간은 여름·겨울 구분에 따라 확인해야 합니다. 2026년 지원금 확대.</p>
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 자격·금액</h2>
 <ul class="space-y-2 mt-4">
 <li>· 기초생활수급자·차상위·한부모 가정</li>
@@ -769,14 +769,15 @@ export const hotNewsDeepDive: Guide[] = [
   // 세금 절세 심화 10편
   { slug: "employee-stock-ownership-2026", title: "우리사주조합 활용 — 시가 30% 할인 매수 + 1년 후 매도 절세", description: "회사 자사주를 시가 70%에 매수 + 1년 보호예수 + 상장 매도 차익 비과세. 100주 매수 시 1년 후 약 1,121만원 실수령.", category: "주식", tags: ["우리사주", "자사주", "근로소득세", "양도세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: employeeStockOwnership, lang: "ko" },
   { slug: "overseas-resident-tax-2026", title: "해외 주재원·해외 근무자 세금 — 거주자 vs 비거주자 분기점", description: "1년+ 해외 거주 + 가족 동반 시 비거주자. 한국 소득세 부담 없음. 한국 부동산 임대만 종합과세.", category: "세금", tags: ["해외주재원", "비거주자", "조세조약", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: overseasResidentTax, lang: "ko" },
-  { slug: "comprehensive-financial-income-2000-2026", title: "금융소득 2,000만원 초과 종합과세 — 부부 분산 + ISA 활용", description: "이자·배당 연 2천 초과 시 종합과세 전환. 직장인 한계세율 35%+ 점프. 부부 분산 + ISA + IRP로 절세.", category: "세금", tags: ["금융소득", "종합과세", "분리과세", "ISA", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: comprehensiveFinancialIncome, lang: "ko" },
+  { slug: "comprehensive-financial-income-2000-2026", title: "금융소득 2,000만원 초과 종합과세 — 부부 분산 + ISA 활용", description: "이자·배당 연 2천 초과 시 종합과세 전환. 직장인 한계세율 35%+ 점프. 부부 분산 + ISA + IRP로 절세.", category: "세금", tags: ["금융소득", "종합과세", "분리과세", "ISA", "2026"], level: "고급", modifiedDate: "2026-10-03", publishedDate: "2026-05-23", views: 0, content: comprehensiveFinancialIncome, lang: "ko" },
   { slug: "other-income-tax-strategy-2026", title: "기타소득 8.8% 원천 — 분리과세 vs 종합과세 선택", description: "강연료·원고료·인세 8.8% 원천. 기타소득금액 300만원 이하면 분리과세 선택 가능. 연봉 5천 + 500 기타 시 종합과세 약 11만원 유리.", category: "세금", tags: ["기타소득", "강연료", "원고료", "분리과세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: otherIncomeTaxStrategy, lang: "ko" },
-  { slug: "personal-vs-corporation-tax-2026", title: "개인사업자 vs 법인 — 순이익 1.5억 이상 법인 유리", description: "개인 6~45% vs 법인 9~24% + 배당 15.4%. 매출 5억 + 순이익 1.5억 이상부터 법인 전환 검토.", category: "세금", tags: ["개인사업자", "법인", "법인세", "전환", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: personalVsCorporation, lang: "ko" },
+  { slug: "personal-vs-corporation-tax-2026", title: "개인사업자 vs 법인 — 세금과 보수 구조 비교", description: "개인·법인의 세금과 보수 구조 비교. 2026년 일반 영리법인 세율은 10~25%, 배당 과세는 별도입니다.", category: "세금", tags: ["개인사업자", "법인", "법인세", "전환", "2026"], level: "고급", publishedDate: "2026-05-23", modifiedDate: "2026-10-03", views: 0, content: personalVsCorporation, lang: "ko" },
   { slug: "vat-refund-2026", title: "부가가치세 환급 — 초기 투자 큰 사업자 자금 흐름", description: "매입세액 > 매출세액 시 환급. 스타트업 1분기 매출 1억 vs 매입 1.5억 = 500만원 환급. 분기 신고 또는 월별 조기 환급.", category: "세금", tags: ["부가가치세", "VAT", "환급", "스타트업", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: vatRefund, lang: "ko" },
   { slug: "consumption-tax-simple-vs-general-2026", title: "간이과세자 vs 일반과세자 — 매출 1.04억 분기점 100만원 절세", description: "간이 부가세 1.5~4% vs 일반 10%. 매출 8천 음식점 시 간이가 약 100만원 유리. 단 매입세액 공제 제한.", category: "세금", tags: ["간이과세", "일반과세", "부가세", "자영업", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: consumptionTaxReturn, lang: "ko" },
   { slug: "carryover-loss-15year-2026", title: "이월결손금 15년 — 손실난 해 신고로 미래 3,000만원 절세", description: "사업 손실 15년 이월(양도차손·가상자산 제외). 2025년 손실 1억 → 2026 이익 1.5억 시 절세 약 3,000만원.", category: "세금", tags: ["이월결손금", "사업손실", "양도손실", "절세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: carryoverLoss, lang: "ko" },
   { slug: "tax-reduction-disabled-2026", title: "장애인 인적공제 200만원 + 의료비 무한도 — 매년 100~300만원 환급", description: "본인·부양가족 장애 등록 시 인적공제 200 + 의료비 한도 없음 + 보험료 100 + 교육비 무한도. 매년 100~300만원 추가 환급.", category: "세금", tags: ["장애인", "인적공제", "의료비", "보험료", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: taxReductionDisabled, lang: "ko" },
-  { slug: "tax-amnesty-self-report-2026", title: "자진 수정신고 — 1개월 이내 가산세 90% 감면", description: "1개월 90% / 3개월 75% / 6개월 50% / 1년 30% / 2년 20% 감면. 무신고 시 20%, 부정 40%, 역외 60% 가산세.", category: "세금", tags: ["수정신고", "가산세", "감면", "세무조사", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: taxAmnestyReform, lang: "ko" },
+  { slug: "tax-amnesty-self-report-2026", title: "자진 수정신고 — 1개월 이내 가산세 90% 감면", description: "1개월 90% / 3개월 75% / 6개월 50% / 1년 30% / 2년 20% 감면. 무신고 시 20%, 부정 40%, 역외 60% 가산세.", category: "세금", tags: ["수정신고", "가산세", "감면", "세무조사", "2026"], level: "중급", publishedDate: "2026-05-23",
+    modifiedDate: "2026-10-03", views: 0, content: taxAmnestyReform, lang: "ko" },
   // 건강·의료 10편
   { slug: "out-of-pocket-limit-2026", title: "본인부담상한제 — 5분위 시 327만원 환급", description: "1년 의료비 90~843만원 초과분은 다음해 8월 말 안내 후 신청 시 환급. 5분위 직장인 500만원 부담 시 327만원 환급.", category: "기초", tags: ["본인부담상한제", "의료비", "환급", "건강보험", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: outOfPocketLimit, lang: "ko" },
   { slug: "industrial-accident-benefit-2026", title: "산업재해보상 — 의료비 100% + 휴업급여 70% + 장해연금", description: "업무 중 부상 시 의료비 무제한 + 휴업급여 평균임금 70% + 후유장해 연금. 임시·알바 모두 의무 가입.", category: "기초", tags: ["산재", "산업재해", "휴업급여", "장해연금", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: industrialAccidentBenefit, lang: "ko" },
@@ -785,18 +786,19 @@ export const hotNewsDeepDive: Guide[] = [
   { slug: "dementia-insurance-2026", title: "치매보험 — 50~60대 가입 권장 + 부모 명의 12만원 환급", description: "경증 진단 500~1,000만원 + 중증 연금 200~300만원/월. 부모 명의 보험 본인 납입 시 12만원 환급.", category: "기초", tags: ["치매보험", "노후", "부모부양", "보험료공제", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: dementiaInsurance, lang: "ko" },
   // 자산관리·노후 10편
   { slug: "inheritance-tax-2026", title: "상속세 배우자 공제 — 법정상속분 한도와 20억 상속 예시", description: "1억 10%~30억 50% 누진. 일괄공제 5억 + 배우자 공제(법정상속분 한도). 20억·배우자+자녀 2명이면 산출세액 약 1.33억.", category: "부동산", tags: ["상속세", "배우자공제", "일괄공제", "절세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: inheritanceTax, lang: "ko" },
-  { slug: "gift-vs-transfer-asset-2026", title: "증여 vs 양도 — 자산별 최적 이전 방법", description: "10억 주택 단순 증여 2.4억 vs 부담부증여 1.1억. 현금은 증여, 부동산은 부담부증여, 주식은 저평가 시기 증여.", category: "부동산", tags: ["증여", "양도", "부담부증여", "자녀이전", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: giftVsTransfer, lang: "ko" },
+  { slug: "gift-vs-transfer-asset-2026", title: "증여 vs 양도 — 자산별 최적 이전 방법", description: "10억 자산 이전의 전제와 세금을 비교합니다. 성인 자녀 단순 증여 예시는 2.25억(신고공제 전).", category: "부동산", tags: ["증여", "양도", "부담부증여", "자녀이전", "2026"], level: "고급", publishedDate: "2026-05-23", modifiedDate: "2026-10-03", views: 0, content: giftVsTransfer, lang: "ko" },
   { slug: "family-trust-2026", title: "가족 신탁 — 상속분쟁 예방 + 치매 대비 자산 관리", description: "본인 사후 자산 관리 의사 반영 + 상속분쟁 예방 + 치매 시 본인 보호. 수수료 연 0.5~1%.", category: "부동산", tags: ["가족신탁", "상속", "치매", "자산관리", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: familyTrust, lang: "ko" },
   { slug: "annuity-retirement-order-2026", title: "노후 자산 인출 순서 — ISA → IRP → 국민연금 → 주택연금", description: "1) ISA·청년도약 만기 비과세 → 2) 일반 펀드 → 3) IRP·연금저축 → 4) 국민연금 → 5) 주택연금. 세금 최소화.", category: "투자", tags: ["노후", "인출순서", "은퇴", "절세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: annuityRetirement, lang: "ko" },
   { slug: "reverse-mortgage-2026", title: "주택연금 — 만 70세 6억 주택 시 평생 월 185만원", description: "만 55세+ 1주택자 공시가 12억 이하. 부부 가입 시 평생 연금 + 사망 시 주택 처분으로 정산. 만 70세 6억 시 약 185만원/월.", category: "부동산", tags: ["주택연금", "역모기지", "노후", "1주택자", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: reverseMortgage, lang: "ko" },
   { slug: "retirement-home-strategy-2026", title: "은퇴 후 주거 4가지 전략 — 다운사이징 vs 지방 vs 시니어 vs 주택연금", description: "다운사이징 차액 4~6억, 지방 이전 8~10억, 시니어 타운 월 100~300만원, 주택연금 평생 연금.", category: "부동산", tags: ["은퇴주거", "다운사이징", "시니어타운", "노후", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: retirementHomePurchase, lang: "ko" },
   { slug: "life-expectancy-asset-2026", title: "60세 은퇴 30년 자산 — 월 250만원 시 6~9억 필요", description: "남자 84·여자 88세. 60세 은퇴 시 24~28년. 월 250만원 + 인플레 3% + 국민연금 차감 시 약 6~9억 필요.", category: "투자", tags: ["은퇴자산", "안전인출률", "노후준비", "FIRE", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: lifeExpectancyPlanning, lang: "ko" },
-  { slug: "health-insurance-continue-after-retire-2026", title: "퇴직 후 임의계속가입 — 직장 보험료로 36개월 유지", description: "퇴직 후 2개월 이내 신청. 직장가입자 시절 본인+회사분 모두 본인 부담이지만 지역가입자 대비 50~70% 저렴.", category: "기초", tags: ["임의계속가입", "퇴직", "건강보험", "지역가입자", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: healthInsuranceContinue, lang: "ko" },
+  { slug: "health-insurance-continue-after-retire-2026", title: "퇴직 후 임의계속가입 — 직장 보험료로 36개월 유지", description: "최초 지역보험료 납부기한에서 2개월이 지나기 전 신청. 보험료와 가입 조건을 비교합니다.", category: "기초", tags: ["임의계속가입", "퇴직", "건강보험", "지역가입자", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-10-03", views: 0, content: healthInsuranceContinue, lang: "ko" },
   { slug: "child-lifecycle-savings-2026", title: "자녀 0~30세 저축 로드맵 — 누적 1.5~2억 자녀 자산", description: "0세 2천 증여 + 5세 펀드 + 14세 청약 + 18세 청년주택드림. 30년 누적 1.5~2억 자녀 자산 + 부모 자산 효율적 이전.", category: "투자", tags: ["자녀저축", "증여", "청약", "청년주택드림", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: childLifecycleSavings, lang: "ko" },
   { slug: "property-downsizing-1home-2026", title: "다운사이징 1주택 비과세 — 15억 → 7억 차액 8억 노후자금", description: "강남 1주택 15억 매도(비과세 12억 + 80% 공제) → 강북 7억 매수. 차액 8억 노후 자금 + 양도세 200만원.", category: "부동산", tags: ["다운사이징", "1주택비과세", "양도세", "노후", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: propertyDownsizing, lang: "ko" },
   // 법률·실용 10편
   { slug: "rental-dispute-protection-2026", title: "임대차 분쟁 5가지 — 보증금 반환·묵시적 갱신·차임 인상", description: "보증금 30일 이내 반환 의무 + 5% 인상 상한 + 묵시적 갱신. 대항력·우선변제권 확보 + 분쟁조정위원회 무료.", category: "기초", tags: ["임대차", "보증금", "임차인권리", "분쟁조정", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: rentalDispute, lang: "ko" },
-  { slug: "work-contract-check-7-2026", title: "근로계약서 필수 7항목 — 미체결 시 사업주 500만원 과태료", description: "임금구성·근무시간·휴일·4대보험·시용기간·해고절차·비밀유지. 미체결 시 사업주 500만 과태료 + 분쟁 시 직원 유리.", category: "커리어", tags: ["근로계약서", "근로기준법", "임금", "해고", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: workContractCheck, lang: "ko" },
+  { slug: "work-contract-check-7-2026", title: "근로계약서 필수 7항목 — 미체결 시 사업주 500만원 과태료", description: "임금구성·근무시간·휴일·4대보험·시용기간·해고절차·비밀유지. 미체결 시 사업주 500만 과태료 + 분쟁 시 직원 유리.", category: "커리어", tags: ["근로계약서", "근로기준법", "임금", "해고", "2026"], level: "중급", publishedDate: "2026-05-23",
+    modifiedDate: "2026-10-03", views: 0, content: workContractCheck, lang: "ko" },
   { slug: "dismissal-procedure-2026", title: "부당해고 — 3개월 이내 노동위원회 진정 + 복직 + 100% 보상", description: "정당 사유 + 30일 전 통지 필수. 부당해고 시 노동위원회 진정 → 복직 명령 + 그동안 임금 100% 보상.", category: "커리어", tags: ["해고", "부당해고", "노동위원회", "예고수당", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: dismissalProcedure, lang: "ko" },
   { slug: "wage-delayed-claim-2026", title: "임금체불 신고·대지급금·생계비 융자 — 2026 추석 지원 기한", description: "노동포털 진정 준비, 대지급금과 대출의 차이, 2026 추석 생계비 융자 금리·기한을 확인하세요. 지연이자와 조건부 손해배상, 시효도 구분합니다.", category: "커리어", tags: ["임금체불", "노동포털", "대지급금", "생계비 융자", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-09", views: 0, content: wageDelayed, lang: "ko" },
   { slug: "sexual-harassment-protection-2026", title: "직장 내 성희롱 대응 — 사업주 1천만 과태료 + 손해배상", description: "증거 확보 → 회사 신고 → 노동부 → 형사 고소. 사업주 미이행 시 1천만 과태료 + 보복 금지 의무.", category: "커리어", tags: ["성희롱", "직장내괴롭힘", "노동부", "사업주의무", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: sexualHarassmentLaw, lang: "ko" },
@@ -813,5 +815,5 @@ export const hotNewsDeepDive: Guide[] = [
   { slug: "elder-care-insurance-2026", title: "장기요양보험 — 부모 등급 받으면 월 50~200만원 서비스", description: "만 65+ 또는 노인성 질환. 등급별 시설·재가 서비스 본인부담 15~20%. 의료비 공제까지.", category: "기초", tags: ["장기요양보험", "요양시설", "재가서비스", "노인", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: elderCare, lang: "ko" },
   { slug: "veteran-benefit-2026", title: "국가유공자·보훈대상자 — 양도세 100% 감면 + 자녀 대학 무료", description: "양도세 100% 감면(5억 한도) + 취득세 50% + 의료비 본인부담 0 + 자녀 대학 등록금 + 보훈수당.", category: "기초", tags: ["국가유공자", "보훈", "양도세감면", "대학학자금", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: veteranBenefit, lang: "ko" },
   { slug: "low-income-support-4benefits-2026", title: "기초생활보장 4종 — 4인 가구 생계 195만원/월 + 의료 무료", description: "생계·의료·주거·교육 4종 급여. 4인 가구 생계 195만원, 의료 본인부담 0~5%. 주민센터 또는 복지로 신청.", category: "기초", tags: ["기초생활보장", "저소득층", "생계급여", "의료급여", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: lowIncomeSupport, lang: "ko" },
-  { slug: "energy-voucher-2026", title: "에너지바우처 — 4인 가구 30만원 + 여름/겨울 냉난방", description: "저소득층 7~9월·11~3월 사용. 1인 14만·2인 19만·3인 26만·4인+ 30만+. 전기·가스·등유·연탄 결제.", category: "기초", tags: ["에너지바우처", "냉난방비", "저소득층", "복지", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: energyVoucher, lang: "ko" },
+  { slug: "energy-voucher-2026", title: "에너지바우처 — 4인 가구 30만원 + 여름/겨울 냉난방", description: "저소득층 7~9월·11~3월 사용. 1인 14만·2인 19만·3인 26만·4인+ 30만+. 전기·가스·등유·연탄 결제.", category: "기초", tags: ["에너지바우처", "냉난방비", "저소득층", "복지", "2026"], level: "초급", modifiedDate: "2026-10-03", publishedDate: "2026-05-23", views: 0, content: energyVoucher, lang: "ko" },
 ];

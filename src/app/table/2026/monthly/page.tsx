@@ -40,9 +40,9 @@ const tableHeaders = [
  { key: "monthlyNet", label: "월 실수령액" },
  { key: "totalDeduction", label: "공제총액" },
  { key: "pension", label: "국민연금" },
- { key: "health", label: "건강보험" },
+ { key: "health", label: "건강보험·장기요양" },
  { key: "employment", label: "고용보험" },
- { key: "incomeTax", label: "소득세" },
+ { key: "incomeTax", label: "소득세·지방세" },
 ];
 
 const FAQ_ITEMS = [

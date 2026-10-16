@@ -43,6 +43,7 @@ export default function GlobalError({
 
   return (
     <main
+      data-page-state="error"
       role="alert"
       aria-live="assertive"
       className="min-h-screen flex items-center justify-center px-4 py-24 bg-canvas dark:bg-canvas-950"

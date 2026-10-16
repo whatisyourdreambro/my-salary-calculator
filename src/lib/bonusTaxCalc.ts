@@ -157,7 +157,7 @@ export function calcBonusNet(
     const pensionTarget = Math.min(bonusWon, remainingPensionRoom);
     pensionDelta = Math.round(pensionTarget * rates.NATIONAL_PENSION);
 
-    // 건강보험 + 장기요양 (건보료 × rates.LONG_TERM_CARE_RATIO) — 상한 없음
+    // 건강보험 + 장기요양 — 이 간이 모형은 법적 보험료 상한과 정산 시점을 반영하지 않음
     const healthBase = bonusWon * rates.HEALTH_INSURANCE;
     const longTermCare = healthBase * rates.LONG_TERM_CARE_RATIO;
     healthDelta = Math.round(healthBase + longTermCare);

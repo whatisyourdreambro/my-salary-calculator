@@ -7,7 +7,7 @@ import ToolPageContent from "@/components/tool/ToolPageContent";
 export const metadata: Metadata = buildPageMetadata({
  title: "복리 계산기 - 적립식 투자 자산 시뮬레이션 (2026)",
  description:
- "월 적립금, 연 수익률, 투자 기간만 입력하면 복리 효과로 늘어나는 미래 자산을 즉시 시뮬레이션합니다. 단리 vs 복리 비교, 세후 수익률까지 한눈에.",
+ "월 적립금, 연 수익률, 투자 기간만 입력하면 복리 효과로 늘어나는 미래 자산을 즉시 시뮬레이션합니다. 월복리 기준 최종 자산과 총 납입원금·세전 수익을 확인하세요.",
  path: "/tools/finance/compound",
  keywords: ["복리 계산기", "적립식 투자", "자산 시뮬레이션", "미래 자산", "단리 복리 비교"],
 });

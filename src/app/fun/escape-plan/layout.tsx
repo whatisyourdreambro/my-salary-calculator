@@ -4,7 +4,7 @@ import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "노비 탈출 계산기 - 나는 언제 은퇴할 수 있을까?",
- description: "현재 월급·저축액·생활비를 입력하면 경제적 자유(FIRE) 달성 시기를 자동 계산. 직장인 노비 탈출까지 남은 햇수와 매월 더 저축해야 할 금액을 한 번에 확인하세요 (2026 기준).",
+ description: "현재 자산·월 저축액·희망 생활비·가정 수익률로 자체 목표액까지의 기간을 계산하는 참고용 시뮬레이터. 4% 가정과 연 단위 적립 모델을 사용하며 실제 은퇴·퇴사 가능 여부를 보장하지 않습니다.",
  path: "/fun/escape-plan",
  keywords: ["은퇴계산기", "파이어족", "경제적자유", "노비탈출", "저축계산기", "복리계산기"],
 });

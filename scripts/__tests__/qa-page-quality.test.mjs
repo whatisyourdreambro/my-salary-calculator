@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { analyzeHtml, buildLedger, classifyLink, parseSitemap, runQuality } from "../qa-page-quality.mjs";
+import { analyzeHtml, buildLedger, classifyLink, parseSitemap, parseQualityArgs, runQuality } from "../qa-page-quality.mjs";
 
 const origin = "https://example.test";
 function removeFixture(root) {
@@ -129,4 +129,49 @@ test("a missing build fails instead of writing an empty success ledger", () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "page-quality-missing-"));
   try { assert.throws(() => buildLedger({ root }), /ENOENT/); }
   finally { removeFixture(root); }
+});
+
+test("--next-dir inspects the selected Cloudflare build without falling back to .next", () => {
+  const f = fixture();
+  try {
+    const target = path.join(f.root, ".open-next-qa/.next");
+    fs.cpSync(path.join(f.root, ".next"), target, { recursive: true });
+    fs.writeFileSync(path.join(target, "BUILD_ID"), "cloudflare-qa-fixture");
+    f.write(".next/routes-manifest.json", "invalid default build");
+    const options = parseQualityArgs(["--next-dir", ".open-next-qa/.next"], { root: f.root });
+    const ledger = runQuality(options);
+    assert.equal(ledger.build.id, "cloudflare-qa-fixture");
+    assert.equal(ledger.counts.issuePages, 0);
+    assert.equal(ledger.scope.networkRequests, 0);
+    assert.equal(parseQualityArgs([], { root: f.root }).buildDir, path.join(fs.realpathSync(f.root), ".next"));
+    assert.throws(() => parseQualityArgs(["--next-dir", ".missing-build"], { root: f.root }), /ENOENT/);
+    fs.writeFileSync(path.join(target, "routes-manifest.json"), "invalid selected build");
+    assert.throws(() => runQuality(options), SyntaxError);
+  } finally { f.cleanup(); }
+});
+
+test("build CLI rejects remote, absolute, escaping, empty and unrecognized arguments", () => {
+  const f = fixture();
+  try {
+    for (const argv of [
+      ["--next-dir"], ["--remote", ".next"], ["--next-dir", ".next", "--extra"],
+      ...["", " ", "--flag", "https://example.test/", "file:///tmp/build", "//server/share", "\\\\server\\share", "C:\\build", "/tmp/build", "..", "../outside", ".", "bad\0path"]
+        .map(value => ["--next-dir", value]),
+    ]) assert.throws(() => parseQualityArgs(argv, { root: f.root }), undefined, JSON.stringify(argv));
+    assert.throws(() => parseQualityArgs(["--next-dir", ".next/BUILD_ID"], { root: f.root }), /existing directory/);
+  } finally { f.cleanup(); }
+});
+
+test("build CLI refuses a directory symlink that leaves the workspace", (t) => {
+  const f = fixture();
+  const outside = fixture();
+  try {
+    const link = path.join(f.root, "external-build");
+    try { fs.symlinkSync(path.join(outside.root, ".next"), link, process.platform === "win32" ? "junction" : "dir"); }
+    catch (error) {
+      if (["EPERM", "EACCES", "ENOTSUP"].includes(error.code)) { t.skip("Directory symlinks unavailable"); return; }
+      throw error;
+    }
+    assert.throws(() => parseQualityArgs(["--next-dir", "external-build"], { root: f.root }), /inside the workspace/);
+  } finally { f.cleanup(); outside.cleanup(); }
 });

@@ -61,7 +61,7 @@ const fixedRows = sortRows(allRows.filter((r) => r.fixedAmountManwon != null), (
 const samsungTai2026 = baseRows.find(
   (r) => r.calcSlug === "samsung-bonus" && r.year === 2026 && r.scheme === "TAI" && r.division === "메모리"
 );
-const heroQuote = `머니샐러리가 국내 대기업 ${companyCount}개사의 성과급 실지급 내역 ${payoutCount}건(보도·공시 교차 확인)을 집계했다. 월 기본급 대비·연봉 대비·정액 세 가지 지급 기준을 분리해 집계한 국내 첫 성과급 실지급률 데이터베이스다.`;
+const heroQuote = `머니샐러리가 국내 대기업 ${companyCount}개사의 성과급 지급률 기록 ${payoutCount}건을 기존 보도·공시 출처에서 집계했다. 월 기본급 대비·연봉 대비·정액 세 기준을 분리했으며, 예상·잠정합의·평가별 조건은 각 행의 비고를 확인해야 한다. 실제 지급을 새로 검증한 값은 아니다.`;
 const statQuote = samsungTai2026
   ? `집계에 따르면 2026년 상반기 삼성전자 TAI(목표달성장려금)는 메모리사업부 기준 월 기본급의 ${samsungTai2026.percentOfBase}%였다. 같은 제도 안에서도 사업부별 지급률은 최대 4배까지 갈렸다.`
   : heroQuote;
@@ -70,11 +70,11 @@ const faqs = [
   {
     question: "'월 기본급 대비'와 '연봉 대비' 지급률은 어떻게 다른가요?",
     answer:
-      "예를 들어 '월 기본급의 600%'는 월 기본급 6개월치로, 연봉의 약 25~30% 수준입니다. 반면 '연봉의 50%'(삼성 OPI 상한 방식)는 같은 %숫자라도 규모가 훨씬 큽니다. 기준이 다른 %를 한 표에서 순위 매기면 왜곡이 생기므로 이 리포트는 세 기준을 분리해 집계합니다.",
+      "예를 들어 '월 기본급의 600%'는 월 기본급 6개월치입니다. 연봉 대비 비율은 월 기본급과 기준연봉의 관계에 따라 달라집니다. '연봉의 50%'(삼성 OPI 상한 방식)와는 계산 기준이 다르므로 같은 %숫자만 비교하면 왜곡이 생깁니다. 이 리포트는 세 기준을 분리해 집계합니다.",
   },
   {
     question: "이 지급률 데이터의 출처는 무엇인가요?",
-    answer: `각 회사의 성과급 발표 당시 복수 언론 보도와 공시·노사 타결 자료를 교차 확인한 값입니다(각 행에 출처 병기). 노조 요구안·시뮬레이션 가정치·제도상 상한 같은 '실지급이 아닌 숫자'는 집계에서 제외했습니다. 회사별 상세 시뮬레이션은 성과급 계산기 ${companyCount}종에서 할 수 있습니다.`,
+    answer: `기존 성과급 계산기 자료에 기록된 보도·공시·노사 자료의 수치를 모았습니다(각 행에 출처 병기). 예상 보도·잠정합의·최고 등급과 범위 내 선택값이 포함될 수 있으므로 비고를 확인하세요. 실제 지급을 새로 검증한 값은 아닙니다. 회사별 조건을 넣는 시뮬레이션은 성과급 계산기 ${companyCount}종에서 할 수 있습니다.`,
   },
   {
     question: "이 리포트를 기사나 블로그에 인용해도 되나요?",
@@ -126,7 +126,7 @@ function PayoutTable({
         <table className="w-full text-sm min-w-[640px]">
           <thead>
             <tr className="border-b border-canvas-200 text-left text-xs text-faint-blue">
-              <th className="py-2.5 px-3 font-bold">지급연도</th>
+              <th className="py-2.5 px-3 font-bold">기록 연도·비고 참조</th>
               <th className="py-2.5 px-3 font-bold">회사</th>
               <th className="py-2.5 px-3 font-bold">제도·사업부</th>
               <th className="py-2.5 px-3 font-bold">{valueHeader}</th>
@@ -174,7 +174,7 @@ export default function BonusPayoutHistoryReport() {
           breadcrumbLd([
             { name: "홈", path: "/" },
             { name: "데이터 리포트", path: "/insights" },
-            { name: "2026 성과급 실지급률 총정리", path: PATH },
+            { name: "2026 성과급 지급률 기록", path: PATH },
           ]),
           datasetLd({
             name: report.title,
@@ -210,12 +210,12 @@ export default function BonusPayoutHistoryReport() {
         <div className="max-w-3xl mx-auto px-4">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-electric/20 text-electric font-bold text-sm mb-6">
             <BarChart3 className="w-4 h-4" />
-            <span>머니샐러리 데이터 리포트 — 성과급 실지급률 전수</span>
+            <span>머니샐러리 데이터 리포트 — 성과급 지급률 기록</span>
           </div>
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4 leading-[1.18]">
-            2026 대기업 성과급 실지급률 총정리
+            2026 대기업 성과급 지급률 기록
             <span className="block text-xl sm:text-2xl mt-2 text-electric">
-              {companyCount}개사 · 실지급 {payoutCount}건 — 기준별 분리 집계
+              {companyCount}개사 · 지급률 기록 {payoutCount}건 — 기준별 분리 집계
             </span>
           </h1>
           <PublishedMeta
@@ -230,14 +230,14 @@ export default function BonusPayoutHistoryReport() {
               <p className="text-sm font-bold text-electric">성과급 계산기 연동</p>
             </div>
             <div className="rounded-2xl border border-canvas-200 bg-white p-4">
-              <p className="text-xs font-bold text-faint-blue mb-1">실지급 내역</p>
+              <p className="text-xs font-bold text-faint-blue mb-1">지급률 기록</p>
               <p className="text-lg font-black text-navy">{payoutCount}건</p>
-              <p className="text-sm font-bold text-electric">보도·공시 교차 확인</p>
+              <p className="text-sm font-bold text-electric">기존 보도·공시 출처 기록</p>
             </div>
             <div className="rounded-2xl border border-canvas-200 bg-white p-4">
-              <p className="text-xs font-bold text-faint-blue mb-1">추정치</p>
-              <p className="text-lg font-black text-navy">0건</p>
-              <p className="text-sm font-bold text-electric">요구안·가정치 제외</p>
+              <p className="text-xs font-bold text-faint-blue mb-1">지급 조건</p>
+              <p className="text-lg font-black text-navy">원문 비고 확인</p>
+              <p className="text-sm font-bold text-electric">예상·잠정·평가 조건 포함</p>
             </div>
           </div>
         </div>
@@ -260,7 +260,7 @@ export default function BonusPayoutHistoryReport() {
             500%, SK하이닉스 PS 등), <strong className="text-navy">연봉 대비 %</strong>(삼성 OPI 최대
             50% 등), <strong className="text-navy">정액</strong>(네이버 RSU 등) — 기준이 다른 숫자를
             한 표에서 순위 매기면 왜곡이 생기므로, 이 리포트는 세 기준을 분리해 집계합니다.
-            월 기본급의 600%는 대략 연봉의 25~30% 수준입니다.
+            월 기본급의 600%는 기본급 6개월치이며, 연봉 대비 비율은 기준연봉과의 관계에 따라 달라집니다.
           </p>
         </section>
 
@@ -306,13 +306,13 @@ export default function BonusPayoutHistoryReport() {
           </h2>
           <ul className="space-y-2 text-sm leading-7 text-muted-blue">
             <li>
-              · 머니샐러리 성과급 계산기 {companyCount}종의 데이터 파일에서 전사한 실지급
-              내역만 집계 — 각 행에 지급 연도·출처를 병기했습니다.
+              · 머니샐러리 성과급 계산기 {companyCount}종의 데이터 파일에 기록된 지급률을
+              집계 — 각 행의 연도·출처·비고 조건을 함께 확인하세요.
             </li>
             <li>
-              · 노조 요구안, 협상 중 수치, 시뮬레이션 가정치, 제도상 상·하한은{" "}
-              <strong className="text-navy">집계에서 제외</strong>했습니다. 잠정합의는 비고에
-              명시했습니다(SK하이닉스 2026 등).
+              · 자료에는 잠정합의·예상 보도·최고 등급이나 범위 내 선택값이{" "}
+              <strong className="text-navy">포함될 수 있습니다</strong>. 각 행의 비고를 확인하고
+              개인별 실제 지급 내역과 구분하세요.
             </li>
             <li>
               · 사업부·직군에 따라 실제 수령액은 다릅니다. 개인별 예상액은 각 회사

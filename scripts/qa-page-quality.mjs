@@ -1,6 +1,6 @@
 /**
  * Offline URL quality ledger. No network, credentials, analytics, or private reports.
- * Run after next build: node scripts/qa-page-quality.mjs
+ * Run after a local build: node scripts/qa-page-quality.mjs [--next-dir .open-next-qa/.next]
  * Tests: node --test scripts/__tests__/qa-page-quality.test.mjs
  * This checks generated structure, never content accuracy or actual search indexing.
  */
@@ -279,10 +279,28 @@ export function runQuality({ root = path.resolve(path.dirname(fileURLToPath(impo
   return ledger;
 }
 
+export function parseQualityArgs(argv, { root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..") } = {}) {
+  const usage = "Usage: node scripts/qa-page-quality.mjs [--next-dir <workspace-relative directory>] (offline only)";
+  if (argv.length !== 0 && (argv.length !== 2 || argv[0] !== "--next-dir")) throw new Error(usage);
+  const value = argv[1] ?? ".next";
+  if (!value.trim() || value.startsWith("-") || value.includes("\0") || /^[a-z][a-z\d+.-]*:/i.test(value)
+    || path.isAbsolute(value) || path.win32.isAbsolute(value)) throw new Error(usage);
+  const workspace = fs.realpathSync(root);
+  const buildDir = path.resolve(workspace, value);
+  const insideWorkspace = target => {
+    const relative = path.relative(workspace, target);
+    return relative !== "" && relative !== ".." && !relative.startsWith(".." + path.sep) && !path.isAbsolute(relative);
+  };
+  if (!insideWorkspace(buildDir)) throw new Error("The build directory must remain inside the workspace.");
+  // Resolving the actual directory also rejects missing outputs and escaping symlinks.
+  if (!insideWorkspace(fs.realpathSync(buildDir)) || !fs.statSync(buildDir).isDirectory())
+    throw new Error("The build directory must be an existing directory inside the workspace.");
+  return { root: workspace, buildDir };
+}
+
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try {
-    if (process.argv.slice(2).length) throw new Error("Usage: node scripts/qa-page-quality.mjs (reads .next; no network)");
-    const ledger = runQuality();
+    const ledger = runQuality(parseQualityArgs(process.argv.slice(2)));
     console.log(`[qa:quality] ${ledger.counts.generatedHtml} HTML checked; ${ledger.counts.declaredRuntimeEntries} runtime URLs inventoried only; ${ledger.counts.issuePages} structural issue pages; ${ledger.counts.unresolvedLinkOccurrences} unresolved link occurrences. Output: .artifacts/page-quality`);
     if (ledger.counts.issuePages || ledger.counts.unresolvedLinkOccurrences || ledger.counts.sitemapDuplicatePaths || ledger.counts.sitemapQueryEntries) process.exitCode = 1;
   } catch (error) {

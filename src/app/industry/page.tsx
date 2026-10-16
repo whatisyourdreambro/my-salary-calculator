@@ -15,7 +15,7 @@ export const dynamic = "force-static";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "산업별 평균 연봉 2026 — IT·금융·의료·제조 업계 연봉 비교",
-  description: `IT·반도체·금융·의료·자동차·건설·게임 등 ${industryCountGae} 산업별 평균 연봉을 한눈에 비교하세요. 2026년 최신 기준 신입~경력별 연봉과 실수령액 계산기 제공.`,
+  description: `IT·반도체·금융·의료·자동차·건설·게임 등 ${industryCountGae} 산업별 평균 연봉을 한눈에 비교하세요. 자체 자료의 신입~경력별 참고 연봉과 2026년 계산 모형의 실수령액을 제공합니다.`,
   path: "/industry",
   keywords: [
     "산업별 연봉",
@@ -59,7 +59,7 @@ export default function IndustryIndexPage() {
               산업별 평균 연봉 2026
             </h1>
             <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
-              IT·반도체·금융·의료·자동차 등 주요 산업별 연봉을 비교하고 내 업계 위치를 확인하세요.
+              IT·반도체·금융·의료·자동차 등 자체 자료의 산업별 참고 연봉을 비교하고 자료 범위를 확인하세요.
             </p>
           </div>
 

@@ -7,13 +7,15 @@ import { ENGLISH_TOOLS, getEnglishTool } from '@/lib/englishTools';
 import { ENGLISH_TOOL_DETAILS } from '@/lib/englishToolModels';
 
 export function generateStaticParams() { return ENGLISH_TOOLS.map(tool => ({ slug: tool.slug })); }
-export function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params: pendingParams }: { params: Promise<{ slug: string }> }) {
+  const params = await pendingParams;
   const tool = getEnglishTool(params.slug);
   if (!tool) return buildEnglishMetadata({ title: 'Calculator not found', description: 'The requested calculator is unavailable.', path: '/en/tools', index: false });
   return buildEnglishMetadata({ title: tool.title, description: tool.description, path: `/en/tools/${tool.slug}` });
 }
 
-export default function EnglishToolPage({ params }: { params: { slug: string } }) {
+export default async function EnglishToolPage({ params: pendingParams }: { params: Promise<{ slug: string }> }) {
+  const params = await pendingParams;
   const tool = getEnglishTool(params.slug);
   if (!tool) notFound();
   const details = ENGLISH_TOOL_DETAILS[tool.slug];

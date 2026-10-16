@@ -76,7 +76,7 @@ const faqs = [
   },
   {
     question: "데이터는 언제 기준이고 얼마나 자주 갱신되나요?",
-    answer: `${stats.rankYear} 사업연도 사업보고서(${Number(stats.rankYear) + 1}년 3월 제출분) 기준이며, 수집일은 ${stats.dataDate}입니다. 매년 4월 사업보고서 시즌 후 연 1회 전수 갱신합니다.`,
+    answer: `${stats.rankYear} 사업연도 사업보고서(${Number(stats.rankYear) + 1}년 3월 제출분 등을 포함하며 법인별 결산·제출 시점이 다름) 기준이며, 수집일은 ${stats.dataDate}입니다. 매년 4월 사업보고서 시즌 후 연 1회 전수 갱신합니다.`,
   },
 ];
 
@@ -175,7 +175,7 @@ export default function ListedAvgSalaryTop100Report() {
             평균연봉 TOP 100 — {stats.rankYear} 사업보고서 기준
           </h2>
           <p className="text-sm text-muted-blue mb-4 leading-relaxed">
-            급여총액÷직원 수(등기임원 제외) 기준. 회사명을 누르면 직급별 연봉·복지
+            급여총액÷연말 직원 수(등기임원 제외) 산정 기준. 회사명을 누르면 직급별 연봉·복지
             상세 페이지로 이동합니다(연봉 DB 등재사).
           </p>
           <div className="overflow-x-auto rounded-2xl border border-canvas-200 bg-white">
@@ -219,7 +219,7 @@ export default function ListedAvgSalaryTop100Report() {
                       )}
                       {!row.listed && (
                         <span className="ml-1 text-[10px] text-faint-blue font-normal">
-                          비상장
+                          종목코드 없음
                         </span>
                       )}
                     </td>
@@ -317,8 +317,8 @@ export default function ListedAvgSalaryTop100Report() {
               추정치 없음.
             </li>
             <li>
-              <strong>집계</strong>: 사업부문·성별 구분 행의 연간급여총액 합산 ÷ 인원
-              합산 (등기임원 보수 제외). 업종 평균은 직원 수 가중.
+              <strong>집계</strong>: 사업부문·성별 구분 행의 연간급여총액 합산 ÷ 연말 인원
+              합산 (등기임원 보수 제외). 업종 평균은 같은 연말 인원 가중.
             </li>
             <li>
               <strong>모수</strong>: {stats.rankYear} 사업연도 보고서 제출 법인 중 직원
@@ -362,7 +362,7 @@ export default function ListedAvgSalaryTop100Report() {
             </p>
             <p className="font-bold text-navy text-sm mb-1">대기업 연봉 순위 TOP 30</p>
             <p className="text-xs text-muted-blue mb-2">
-              신입 영끌 기준 순위 — 본 리포트의 공시 평균과 다른 각도
+              시니어 총보상 기준 순위 — 본 리포트의 공시 평균과 다른 각도
             </p>
             <span className="text-xs font-bold text-electric inline-flex items-center gap-1">
               보러 가기 <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" aria-hidden />

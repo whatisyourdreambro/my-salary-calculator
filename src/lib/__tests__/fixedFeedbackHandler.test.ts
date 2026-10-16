@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+vi.mock("@/lib/server/cloudflareBindings", () => ({ cloudflareBindings: () => ({}) }));
 import { createHmac } from "node:crypto";
 import { FIXED_FEEDBACK_CONFIG, FIXED_FEEDBACK_TARGETS } from "@/lib/fixedFeedbackContract";
 import { FIXED_FEEDBACK_RETENTION_SECONDS, handleFixedFeedbackPost } from "@/lib/server/fixedFeedbackHandler";
@@ -139,12 +140,11 @@ describe("fixed feedback request boundary", () => {
 });
 
 describe("fixed feedback persistence", () => {
-  it("has only the actual Edge POST route and fails closed without bindings", async () => {
+  it("has only the actual Workers POST route and fails closed without bindings", async () => {
     vi.stubEnv("FEEDBACK_DB", undefined);
     vi.stubEnv("FEEDBACK_RATE_LIMIT_SECRET", undefined);
     vi.stubEnv("FEEDBACK_ALLOWED_ORIGIN", undefined);
-    expect(Object.keys(route).sort()).toEqual(["POST", "dynamic", "runtime"]);
-    expect(route.runtime).toBe("edge");
+    expect(Object.keys(route).sort()).toEqual(["POST", "dynamic"]);
     expect(route.dynamic).toBe("force-dynamic");
     const result = await route.POST(request());
     expect(result.status).toBe(503);

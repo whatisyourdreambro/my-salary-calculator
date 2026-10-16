@@ -22,30 +22,41 @@ export interface LeaveGrant {
 
 /** 만 근속연수(1년 이상) 기준 연차: 15 + floor((years-1)/2), 상한 25 */
 export function statutoryLeaveDays(fullYears: number): number {
-  if (fullYears < 1) return 0;
+  if (!Number.isFinite(fullYears) || fullYears < 1) return 0;
   return Math.min(25, 15 + Math.floor((fullYears - 1) / 2));
 }
 
-function parseISO(iso: string): Date {
+function parseISO(iso: string): Date | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return null;
   const [y, m, d] = iso.split("-").map(Number);
-  return new Date(y, m - 1, d);
+  if (y < 1) return null;
+  // setFullYear avoids Date's special 1900 offset for years 01–99.
+  const date = localDate(y, m - 1, d);
+  return date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d ? date : null;
+}
+
+function localDate(year: number, month: number, day: number): Date {
+  const date = new Date(0);
+  date.setHours(0, 0, 0, 0);
+  date.setFullYear(year, month, day);
+  return date;
 }
 
 function toISO(d: Date): string {
   const p = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+  return `${String(d.getFullYear()).padStart(4, "0")}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
 
 function addMonths(d: Date, months: number): Date {
-  const r = new Date(d.getFullYear(), d.getMonth() + months, d.getDate());
+  const r = localDate(d.getFullYear(), d.getMonth() + months, d.getDate());
   // 말일 보정 (1/31 + 1개월 → 2/28)
-  if (r.getDate() !== d.getDate()) return new Date(r.getFullYear(), r.getMonth(), 0);
+  if (r.getDate() !== d.getDate()) return localDate(r.getFullYear(), r.getMonth(), 0);
   return r;
 }
 
 function addYears(d: Date, years: number): Date {
-  const r = new Date(d.getFullYear() + years, d.getMonth(), d.getDate());
-  if (r.getDate() !== d.getDate()) return new Date(r.getFullYear(), r.getMonth(), 0);
+  const r = localDate(d.getFullYear() + years, d.getMonth(), d.getDate());
+  if (r.getDate() !== d.getDate()) return localDate(r.getFullYear(), r.getMonth(), 0);
   return r;
 }
 
@@ -60,7 +71,7 @@ function daysBetween(a: Date, b: Date): number {
 export function entryBasedSchedule(entryISO: string, untilISO: string): LeaveGrant[] {
   const entry = parseISO(entryISO);
   const until = parseISO(untilISO);
-  if (until < entry) return [];
+  if (!entry || !until || until < entry) return [];
   const grants: LeaveGrant[] = [];
 
   // 1년 미만 월차 — k개월 개근 시 1일 (발생일 = 입사 + k개월, 최대 11)
@@ -99,7 +110,7 @@ export function entryBasedSchedule(entryISO: string, untilISO: string): LeaveGra
 export function fiscalYearSchedule(entryISO: string, untilISO: string): LeaveGrant[] {
   const entry = parseISO(entryISO);
   const until = parseISO(untilISO);
-  if (until < entry) return [];
+  if (!entry || !until || until < entry) return [];
   const grants: LeaveGrant[] = [];
 
   // 월차 (입사 1년까지 — 입사일 기준과 동일)
@@ -110,9 +121,9 @@ export function fiscalYearSchedule(entryISO: string, untilISO: string): LeaveGra
   }
 
   // 입사 다음 해 1/1 — 비례연차
-  const firstJan = new Date(entry.getFullYear() + 1, 0, 1);
+  const firstJan = localDate(entry.getFullYear() + 1, 0, 1);
   if (firstJan <= until) {
-    const served = daysBetween(entry, new Date(entry.getFullYear() + 1, 0, 1));
+    const served = daysBetween(entry, localDate(entry.getFullYear() + 1, 0, 1));
     const prorated = Math.round((15 * served) / 365 * 100) / 100;
     grants.push({
       grantDate: toISO(firstJan),
@@ -124,11 +135,11 @@ export function fiscalYearSchedule(entryISO: string, untilISO: string): LeaveGra
 
   // 이후 매년 1/1 — 만 근속연수 기준
   for (let y = entry.getFullYear() + 2; ; y++) {
-    const g = new Date(y, 0, 1);
+    const g = localDate(y, 0, 1);
     if (g > until) break;
     // 부여일까지의 만 근속연수
-    let fullYears = 0;
-    while (addYears(entry, fullYears + 1) <= g) fullYears++;
+    let fullYears = g.getFullYear() - entry.getFullYear();
+    if (addYears(entry, fullYears) > g) fullYears--;
     grants.push({
       grantDate: toISO(g),
       days: statutoryLeaveDays(Math.max(1, fullYears)),

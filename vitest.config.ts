@@ -9,5 +9,8 @@ export default defineConfig({
   oxc: { jsx: { runtime: "automatic" } },
   test: {
     include: ["src/**/*.test.ts"],
+    // Hundreds of SSR fixtures import the full calculator/company catalog. Keep
+    // memory and disk contention bounded on developer machines and CI runners.
+    maxWorkers: 2,
   },
 });

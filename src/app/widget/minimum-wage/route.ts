@@ -17,7 +17,8 @@ import {
 } from "@/config/minimumWage";
 import { WIDGET_HEADERS, widgetShell } from "../shared";
 
-export const runtime = "edge";
+export const dynamic = "force-static";
+
 
 // 확정 차기(기본 표시) / 현행(병기) — 갱신 슬롯: 연도 전환 시 이 두 줄만 교체
 const NEXT = MINIMUM_WAGE_2027;

@@ -8,7 +8,7 @@ import PageFooterAds from "@/components/PageFooterAds";
 import { GuideMidAd } from "@/components/AdPlacement";
 const FORTUNES = {
  "재물운": [
- "올해 재테크 타이밍: 상반기(1~6월)에 분할 매수로 씨앗을 심고, 하반기부터 결실을 거두는 형국입니다. 주식·ETF보다 안정 자산 비중을 55% 이상 유지하세요.",
+ "재미로 보는 올해의 키워드는 신중함입니다. 실제 투자 시기와 자산 비중은 운세 결과로 정하지 말고, 자신의 목표와 감당할 수 있는 위험을 함께 살펴보세요.",
  "뜻밖의 수입이 3분기에 들어올 가능성이 높습니다. 단, 한 번에 몰아치는 투자보다 적립식이 긍정적인 결과를 가져옵니다.",
  "올해는 재물이 모이는 해입니다. 이미 보유한 자산을 다각화하고, 새로운 파생 수입원을 만드는 것이 중요합니다.",
  ],
@@ -158,7 +158,7 @@ export default function FinancialFortunePage() {
 
  {/* Disclaimer */}
  <p className="text-center text-xs text-faint-blue mt-8 leading-relaxed">
- 본 운세 콘텐츠는 전통 사주 이론에 기반한 재미 목적의 참고 정보이며, 실제 투자·금융 결정에 직접 활용하지 마세요.
+ 출생 연도와 월로 미리 정한 문구를 고르는 재미용 콘텐츠입니다. 전통 사주 명식이나 실제 재물운을 산출하지 않으며, 투자·금융 결정에 활용하지 마세요.
  </p>
  </div>
  <PageFooterAds maxWidth="3xl" />

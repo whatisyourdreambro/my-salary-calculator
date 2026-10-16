@@ -62,6 +62,14 @@ afterEach(() => {
 });
 
 const companies = companyRepository.getAll();
+// Historical output fixtures must retain their historical inputs. At bd68d860,
+// korea-highway had no disclosed block (krCompanies_Batch12.ts), and enrichment
+// raised its 2026-05-15 data date to TAX_TABLE_EFFECTIVE_DATE = 2026-09-25.
+// Current disclosure retention is independently checked by companyDisclosedRetention.test.ts.
+// Do not rewrite the bd68d860 output fixture when current company data changes.
+const historicalCompanies = companies.map((company): CompanyProfile => company.id === "korea-highway"
+  ? { ...company, disclosed: undefined, lastUpdated: "2026-09-25" }
+  : company);
 const snapshot = titleSnapshot as Record<string, string>;
 const pre = preGateSnapshot as {
   descriptions: Record<string, string>;
@@ -267,17 +275,17 @@ describe("L10' 공시 평균연봉 후미 — 대상 판정과 문구", () => {
 
 describe("적용 전 빌드 — bd68d860(병합 전 main) 출력과 바이트 동일", () => {
   it("고정본이 정본 회사 전체와 같은 집합이다", () => {
-    const ids = companies.map((c) => c.id).sort();
+    const ids = historicalCompanies.map((c) => c.id).sort();
     expect(Object.keys(pre.descriptions).sort()).toEqual(ids);
     expect(Object.keys(pre.salaryFaqSha256).sort()).toEqual(ids);
-    const disclosedIds = companies.filter((c) => c.disclosed).map((c) => c.id).sort();
+    const disclosedIds = historicalCompanies.filter((c) => c.disclosed).map((c) => c.id).sort();
     expect(Object.keys(pre.disclosedSources).sort()).toEqual(disclosedIds);
     expect(Object.keys(pre.cardSha256).sort()).toEqual(disclosedIds);
   });
 
   it("description·og·twitter·RSS description 이 전 회사 bd68d860 출력과 같다", () => {
     at(BEFORE);
-    for (const c of companies) {
+    for (const c of historicalCompanies) {
       const { metadata, description } = metaOf(c);
       expect(description, c.id).toBe(pre.descriptions[c.id]);
       expect(metadata.openGraph?.description, c.id).toBe(pre.descriptions[c.id]);
@@ -295,7 +303,7 @@ describe("적용 전 빌드 — bd68d860(병합 전 main) 출력과 바이트 �
   it("A4' 게이트 — 공시 카드 HTML 이 bd68d860 렌더와 같고, 출처 줄은 '출처: ' + 종전 출처 문구(주입 꼬리 포함)", () => {
     at(BEFORE);
     let injected = 0;
-    for (const c of companies) {
+    for (const c of historicalCompanies) {
       const d = c.disclosed;
       if (!d) continue;
       // 데이터 출처 문구 자체가 병합 전과 같다 — 꼬리는 표시 단계(게이트 뒤)에서만 뺀다
@@ -321,7 +329,7 @@ describe("적용 전 빌드 — bd68d860(병합 전 main) 출력과 바이트 �
 
   it("A4' 게이트 — 회사 연봉 FAQ(화면 FAQ·FAQPage JSON-LD 입력)가 전 회사 bd68d860 출력과 같다", () => {
     at(BEFORE);
-    for (const c of companies) {
+    for (const c of historicalCompanies) {
       const faq = buildCompanySalaryFaq(c);
       expect(sha256(JSON.stringify(faq)), c.id).toBe(pre.salaryFaqSha256[c.id]);
       if (c.disclosed) {
@@ -332,7 +340,7 @@ describe("적용 전 빌드 — bd68d860(병합 전 main) 출력과 바이트 �
 
   it("페이지 수정일은 전 회사 max(데이터일, FAQ 검수일) 그대로 — 적용일로 오르지 않는다", () => {
     at(BEFORE);
-    for (const c of companies) {
+    for (const c of historicalCompanies) {
       const expected = Math.max(new Date(c.lastUpdated).getTime(), COMPANY_FAQ_REVIEW_DATE.getTime());
       expect(companyPageModified(c).getTime(), c.id).toBe(expected);
     }
@@ -350,7 +358,7 @@ describe("대상 회사 페이지 수정일 승격 — sitemap lastmod · RSS pu
       if (companyMetaDisclosedFigure(c)) {
         bumped++;
         expect(after, c.id).toBe(Math.max(before, META_DAY));
-        expect(new Date(after).toISOString().slice(0, 10), c.id).toBe("2026-10-01");
+        expect(after, c.id).toBeGreaterThanOrEqual(META_DAY);
       } else {
         expect(after, c.id).toBe(before);
       }
@@ -365,17 +373,24 @@ describe("대상 회사 페이지 수정일 승격 — sitemap lastmod · RSS pu
     );
   });
 
-  it("rss-companies.xml: 적용 후 대상 회사가 적용일 pubDate 로 맨 앞에 온다", async () => {
+  it("rss-companies.xml: 적용일과 후속 데이터 수정일을 반영해 최신순으로 정렬한다", async () => {
     at(LIVE);
     const xml = await (await rssCompaniesGET()).text();
     const items = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].map((m) => ({
       id: m[1].match(/<guid[^>]*>https:\/\/www\.moneysalary\.com\/salary-db\/([^<]+)<\/guid>/)![1],
       pubDate: m[1].match(/<pubDate>([^<]+)<\/pubDate>/)![1],
     }));
-    const eligibleIds = new Set(companies.filter((c) => companyMetaDisclosedFigure(c)).map((c) => c.id));
-    const head = items.slice(0, eligibleIds.size);
-    expect(new Set(head.map((i) => i.id))).toEqual(eligibleIds);
-    for (const i of head) expect(i.pubDate).toBe(new Date(META_DAY).toUTCString());
+    expect(new Set(items.map((item) => item.id))).toEqual(new Set(companies.map((c) => c.id)));
+    const companyById = new Map(companies.map((c) => [c.id, c]));
+    for (const item of items) {
+      expect(item.pubDate, item.id).toBe(companyPageModified(companyById.get(item.id)!, LIVE).toUTCString());
+    }
+    for (let index = 1; index < items.length; index++) {
+      const previous = items[index - 1], current = items[index];
+      const previousTime = Date.parse(previous.pubDate), currentTime = Date.parse(current.pubDate);
+      expect(previousTime).toBeGreaterThanOrEqual(currentTime);
+      if (previousTime === currentTime) expect(previous.id < current.id).toBe(true);
+    }
   });
 
   it("sitemap.ts 는 회사 객체를 통째로 companyPageModified 에 넘긴다 (대상 판정이 salary·disclosed 를 읽는다)", () => {
@@ -414,7 +429,7 @@ describe("A4' 공시 카드 출처 라벨·출처 문구 — 적용 후, 줄 길
     expect(displayedDisclosedSource(injected)).toBe(INJECTED_SOURCE_SAMPLE);
   });
 
-  it("전 공시 카드: 새 라벨 + 표시 문구, 출처 줄 글자 수가 종전('출처: ' + bd68d860 출처 문구) 이하", () => {
+  it("전 공시 카드: 새 라벨 + 표시 문구, 동일 데이터의 게이트 전 출처 줄보다 길어지지 않는다", () => {
     at(LIVE);
     let injected = 0;
     for (const c of companies) {
@@ -426,7 +441,7 @@ describe("A4' 공시 카드 출처 라벨·출처 문구 — 적용 후, 줄 길
       expect(html, c.id).toContain(`${label} <a href=`);
       expect(html, c.id).toContain(`>${escapeHtml(shown)}<svg`);
       expect(`${label} ${shown}`.length, c.id).toBeLessThanOrEqual(
-        `출처: ${pre.disclosedSources[c.id]}`.length
+        `출처: ${d.source}`.length
       );
       if (d.basis) {
         injected++;
@@ -441,31 +456,33 @@ describe("A4' 공시 카드 출처 라벨·출처 문구 — 적용 후, 줄 길
     expect(injected).toBeGreaterThan(200);
   });
 
-  it("회사 연봉 FAQ: '공시 인용 출처' 가 카드와 같은 표시 문구, 그 밖의 문장은 bd68d860 과 같다", () => {
-    at(LIVE);
+  it("회사 연봉 FAQ: 현재 데이터의 출처 표시만 바뀌고 게이트 전후 다른 문장은 같다", () => {
     for (const c of companies) {
+      at(BEFORE);
+      const before = buildCompanySalaryFaq(c);
+      at(LIVE);
       const faq = buildCompanySalaryFaq(c);
       const d = c.disclosed;
       if (!d) {
-        expect(sha256(JSON.stringify(faq)), c.id).toBe(pre.salaryFaqSha256[c.id]);
+        expect(faq, c.id).toEqual(before);
         continue;
       }
       const shown = displayedDisclosedSource(d.source, true);
       expect(faq[0].answer, c.id).toContain(`공시 인용 출처: ${shown}. `);
       if (d.basis) expect(faq[0].answer, c.id).not.toContain("OpenDART 수집");
-      // 출처 문구만 종전으로 되돌리면 병합 전 FAQ 와 바이트 동일 — 다른 문장은 바뀌지 않았다
+      // Compare both gates using the same current data, independently of historical snapshots.
       const restored = faq.map((item, i) =>
         i === 0
           ? {
               ...item,
               answer: item.answer.replace(
                 `공시 인용 출처: ${shown}. `,
-                `공시 인용 출처: ${pre.disclosedSources[c.id]}. `
+                `공시 인용 출처: ${d.source}. `
               ),
             }
           : item
       );
-      expect(sha256(JSON.stringify(restored)), c.id).toBe(pre.salaryFaqSha256[c.id]);
+      expect(restored, c.id).toEqual(before);
     }
   });
 });

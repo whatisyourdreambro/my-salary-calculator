@@ -34,10 +34,11 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({
-  params,
+  params: pendingParams,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+  const params = await pendingParams;
   const region = getRegionById(params.slug);
   if (!region) return { title: "Not Found" };
 
@@ -114,11 +115,12 @@ function OtherRegions({ currentId }: { currentId: string }) {
   );
 }
 
-export default function RegionDetailPage({
-  params,
+export default async function RegionDetailPage({
+  params: pendingParams,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
+  const params = await pendingParams;
   const region = getRegionById(params.slug);
   // GSC 404 출혈 차단(7차): 옛 지역 슬러그 → /region 메인 308
   if (!region) permanentRedirect("/region");

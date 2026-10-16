@@ -76,15 +76,16 @@ export const lifecycleGuides = [
 
  {
  slug: "retirement-planning-30s",
- title: "30대부터 시작하는 노후 준비: 60세 자산 10억 만들기",
- description: "30대부터 매달 50만 적립 + ETF 운용 시 60세 10억 시뮬. 국민연금·퇴직연금·개인연금 3층 보장 활용법.",
+ title: "30대부터 시작하는 노후 준비: 적립액별 60세 자산 비교",
+ description: "30세부터 월 50만원을 연 7%로 적립하는 가정과, 적립액별 60세 자산·3층 연금을 비교합니다.",
  category: "기초",
  tags: ["노후 준비", "은퇴 자산", "국민연금", "3층 보장"],
  level: "중급" as const,
  publishedDate: "2026-04-22",
+    modifiedDate: "2026-10-03",
  views: 0,
  content: `
-<p class="lead">"노후 자산 10억 필요"는 막연하게 들리지만, <strong>30대부터 월 50만 + ETF 운용 = 60세 10억 가능</strong>. 단, 시작 시점이 결정적입니다.</p>
+<p class="lead">은퇴 자산은 시작 시점·적립액·수익률에 따라 달라집니다. <strong>30세부터 월 50만원을 30년 동안 연 7%로 적립하는 아래 가정에서는 약 6억원</strong>입니다. 이는 세금·수수료·물가를 제외한 예시이며, ETF 수익률이나 목표 자산을 보장하지 않습니다.</p>
 
 <h2>💰 노후 필요 자산 — 솔직한 계산</h2>
 <p>은퇴 후 월 생활비 250만 × 12개월 = 연 3,000만. 자산의 3.5%로 인출하면 자산 8.6억 필요.</p>
@@ -307,6 +308,7 @@ export const lifecycleGuides = [
  tags: ["주식 초보", "ETF 추천", "분산 투자", "첫 주식"],
  level: "초급" as const,
  publishedDate: "2026-04-12",
+    modifiedDate: "2026-10-03",
  views: 0,
  content: `
 <p class="lead">"주식 처음인데 어떻게 시작?" — 개별 종목 분석 X, ETF 분산 투자가 답입니다. <strong>첫 100만 → ETF 5종 분산 → 매월 추가 적립</strong>이 가장 검증된 방법.</p>
@@ -318,7 +320,7 @@ export const lifecycleGuides = [
 
 <h3>Step 2: 100만 입금 + ETF 5종 분산</h3>
 <div class="bg-secondary/30 p-6 rounded-xl mt-6 border border-primary/10">
-<p><strong>추천 포트폴리오 (각 20만씩):</strong></p>
+<p><strong>배분 예시 (40만·20만·15만·15만·10만원):</strong></p>
 <ul>
 <li>TIGER 미국S&P500 (40%): 장기 성장의 핵심</li>
 <li>KODEX 200 (20%): 한국 대형주</li>
@@ -346,8 +348,8 @@ export const lifecycleGuides = [
 </ul>
 
 <h2>🎯 손절 vs 물타기 — 초보가 가장 헷갈리는 결정</h2>
-<h3>ETF는 손절 X, 물타기 O</h3>
-<p>ETF는 시장 전체에 분산되어 있어 폭락 후 회복 가능성 큼. <strong>가격 하락 시 추가 매수가 정답</strong>.</p>
+<h3>ETF도 투자 대상과 위험을 다시 확인</h3>
+<p>ETF는 상품별 투자 대상·집중도·레버리지·환율 위험이 다릅니다. 하락 후 회복이나 추가 매수의 이익은 보장되지 않으므로 투자기간·손실 감내 범위·필요 자금을 먼저 점검하세요.</p>
 
 <h3>개별 주식은 손절 검토</h3>
 <p>특정 회사 주식은 영원히 회복 못 할 수 있음. -20% 이상 하락 + 펀더멘털 악화 시 손절.</p>
@@ -364,7 +366,7 @@ export const lifecycleGuides = [
 <ul>
 <li><strong>한 종목 몰빵</strong>: 분산이 핵심. 5종 이상</li>
 <li><strong>레버리지·인버스</strong>: 변동성 X2~X3. 단기 매매용. 초보 X</li>
-<li><strong>코인·테마주 추천</strong>: 95%가 손실. SNS·유튜브 추천 무시</li>
+<li><strong>코인·테마주 추천</strong>: 손실 확률을 출처 없이 단정할 수 없습니다. SNS·유튜브 추천만으로 매수하지 말고 상품 구조와 위험을 확인</li>
 <li><strong>대출로 주식 매수</strong>: 손실 시 대출 이자 + 원금 손실</li>
 <li><strong>매일 가격 체크</strong>: 심리적 흔들림. 분기 1회 충분</li>
 </ul>
@@ -382,7 +384,7 @@ export const lifecycleGuides = [
  category: "연봉",
  tags: ["최저임금 2026", "최저시급", "주휴수당", "최저월급"],
  level: "초급" as const,
- publishedDate: "2026-04-08",
+ publishedDate: "2026-04-08", modifiedDate: "2026-10-03",
  views: 0,
  content: `
 <p class="lead">2026년 최저임금이 인상되었습니다. <strong>본인 시급이 최저 미달인지 자가진단</strong>하고, 미달 시 차액 청구 방법까지.</p>
@@ -409,7 +411,7 @@ export const lifecycleGuides = [
 <ul>
 <li>주 15시간 이상 일한 근로자에게 1주 1일 추가 임금 지급</li>
 <li>아르바이트도 동일하게 적용</li>
-<li>월 209시간 = 주 40시간 + 주휴 8시간 × 4.345주</li>
+<li>월 약 209시간 = (주 40시간 + 주휴 8시간) × 월평균 약 4.345주</li>
 <li>안 받으면 노동부 진정으로 환수 가능</li>
 </ul>
 
@@ -535,7 +537,7 @@ export const lifecycleGuides = [
  category: "기초",
  tags: ["채무통합", "다중 대출", "신용대출", "대출 갈아타기"],
  level: "중급" as const,
- publishedDate: "2026-04-02",
+ publishedDate: "2026-04-02", modifiedDate: "2026-10-03",
  views: 0,
  content: `
 <p class="lead">신용카드 할부 + 카드론 + 캐피탈 + 마이너스통장 — 합쳐서 매월 갚느라 허덕이는 직장인 다수. <strong>채무통합대출로 단일화하면 금리 -3~5%p, 월 부담 -30~50%</strong> 가능합니다.</p>
@@ -548,7 +550,7 @@ export const lifecycleGuides = [
 <li>카드론 800만 (18%)</li>
 <li>캐피탈 1,000만 (12%)</li>
 <li>마이너스통장 500만 (8%)</li>
-<li><strong>합계 3,800만, 월 이자 약 47만</strong></li>
+<li><strong>합계 3,800만, 월 이자 약 44.08만원 (연529만원)</strong></li>
 </ul>
 </div>
 
@@ -556,7 +558,7 @@ export const lifecycleGuides = [
 <p>위 4건을 시중은행 신용대출(7~9%)로 통합:</p>
 <ul>
 <li>3,800만 × 8% = 연 304만 = 월 약 25만 이자</li>
-<li>기존 47만 → 25만 = <strong>월 22만 절약, 연 264만</strong></li>
+<li>기존 연이자529만원 → 통합 연이자304만원 = <strong>이자만 단순 비교 시 월18.75만원, 연225만원 차이</strong> (원금 상환액·수수료·잔액 변화는 별도)</li>
 <li>+ 5년 만기 분할 상환으로 원금도 동시 상환</li>
 </ul>
 
@@ -614,6 +616,7 @@ export const lifecycleGuides = [
  category: "커리어",
  tags: ["경력 단절", "육아휴직", "이직 준비", "휴직"],
  level: "고급" as const,
+ modifiedDate: "2026-10-03",
  publishedDate: "2026-03-28",
  views: 0,
  content: `
@@ -630,7 +633,7 @@ export const lifecycleGuides = [
 <tr><td>국민연금 임의가입 (선택)</td><td>9만~</td><td>108만~</td></tr>
 <tr><td>의료비·교육비·기타</td><td>50만</td><td>600만</td></tr>
 <tr><td>비상 자금 (병원·차량 수리)</td><td>-</td><td>500만</td></tr>
-<tr><td><strong>합계</strong></td><td><strong>약 370~470만</strong></td><td><strong>약 5,000~6,000만</strong></td></tr>
+<tr><td><strong>합계</strong></td><td><strong>약 369~419만</strong></td><td><strong>약 5,000~6,000만</strong></td></tr>
 </tbody>
 </table>
 </div>

@@ -137,12 +137,20 @@ export function calculateCarLoan(
  input: CarLoanInput
 ): CarLoanResult {
  const principal = carPrice;
- if (principal <= 0 || input.interestRate <= 0 || input.loanTerm <= 0) {
+ if (principal <= 0 || input.interestRate < 0 || input.loanTerm <= 0) {
  return { monthlyPayment: 0, totalInterest: 0, totalPayment: 0 };
  }
 
  const monthlyRate = input.interestRate / 100 / 12;
  const numberOfMonths = input.loanTerm * 12;
+
+ if (input.interestRate === 0) {
+ return {
+ monthlyPayment: Math.round(principal / numberOfMonths),
+ totalInterest: 0,
+ totalPayment: Math.round(principal),
+ };
+ }
 
  const monthlyPayment =
  (principal * (monthlyRate * Math.pow(1 + monthlyRate, numberOfMonths))) /

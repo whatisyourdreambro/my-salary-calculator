@@ -3,6 +3,7 @@
 import { useId, useState } from "react";
 import { Calculator, Dices } from "lucide-react";
 import NumberInput from "@/components/NumberInput";
+import { sampleUniqueIntegers } from "@/lib/randomIntegers";
 // --- Percent Calculator ---
 export function PercentCalculator() {
  const inputId = useId();
@@ -14,7 +15,11 @@ export function PercentCalculator() {
  const calculate = () => {
  const v1 = Number(val1);
  const v2 = Number(val2);
- if (!v1 || !v2) return;
+ if (val1.trim() === "" || val2.trim() === "" || !Number.isFinite(v1) || !Number.isFinite(v2)
+   || (mode === "is" && v2 === 0)) {
+ setResult(null);
+ return;
+ }
 
  if (mode === "of") {
  // X% of Y = Y * (X/100)
@@ -111,16 +116,13 @@ export function NumberGenerator() {
  const mx = Number(max);
  const c = Number(count);
 
- if (mx - mn + 1 < c) {
- alert("범위가 너무 좁습니다.");
- return;
+ try {
+ if ([min, max, count].some((value) => value.trim() === "")) throw new RangeError("모든 항목에 정수를 입력해 주세요.");
+ setResult(sampleUniqueIntegers(mn, mx, c));
+ } catch (error) {
+ setResult([]);
+ alert(error instanceof Error ? error.message : "입력값을 확인해 주세요.");
  }
-
- const nums = new Set<number>();
- while (nums.size < c) {
- nums.add(Math.floor(Math.random() * (mx - mn + 1)) + mn);
- }
- setResult(Array.from(nums).sort((a, b) => a - b));
  };
 
  return (

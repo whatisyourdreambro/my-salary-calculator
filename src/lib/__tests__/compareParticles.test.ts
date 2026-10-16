@@ -122,11 +122,11 @@ describe("비교 페이지 413쌍 — 회사명·업종명 뒤 조사", () => {
       const a = companyRepository.getById(p.aId)!;
       const b = companyRepository.getById(p.bId)!;
       const names = [a.name.ko, b.name.ko, industryLabelKo(a.industry), industryLabelKo(b.industry)];
-      const meta = await generateMetadata({ params: { slug: p.slug } });
+      const meta = await generateMetadata({ params: Promise.resolve({ slug: p.slug }) });
       const description = String(meta.description ?? "");
       const html = renderToStaticMarkup(
-        createElement(ComparePage as unknown as (props: { params: { slug: string } }) => ReactNode, {
-          params: { slug: p.slug },
+        await ComparePage({
+          params: Promise.resolve({ slug: p.slug }),
         }),
       );
       const text = `${description}\n${toText(html)}`;
@@ -145,7 +145,7 @@ describe("비교 페이지 413쌍 — 회사명·업종명 뒤 조사", () => {
     const bad: string[] = [];
     let eokCount = 0;
     for (const p of pairs) {
-      const meta = await generateMetadata({ params: { slug: p.slug } });
+      const meta = await generateMetadata({ params: Promise.resolve({ slug: p.slug }) });
       const description = String(meta.description ?? "");
       if (/\d{2,3},\d{3}만원/.test(description)) bad.push(`${p.slug}: ${description.slice(0, 60)}`);
       if (/약 \d+억/.test(description)) eokCount++;
@@ -154,11 +154,11 @@ describe("비교 페이지 413쌍 — 회사명·업종명 뒤 조사", () => {
     expect(eokCount).toBeGreaterThan(0);
   });
 
-  it("본문 금액 뒤 조사 — '만원로' 대신 '만원으로'", () => {
+  it("본문 금액 뒤 조사 — '만원로' 대신 '만원으로'", async () => {
     const p = pairs[0];
     const html = renderToStaticMarkup(
-      createElement(ComparePage as unknown as (props: { params: { slug: string } }) => ReactNode, {
-        params: { slug: p.slug },
+      await ComparePage({
+        params: Promise.resolve({ slug: p.slug }),
       }),
     );
     expect(toText(html)).not.toMatch(/만원로|억원로/);

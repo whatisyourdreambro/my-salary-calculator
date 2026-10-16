@@ -8,6 +8,7 @@
 
 import { useEffect } from "react";
 import { trackEvent } from "@/lib/analytics";
+import { publicShareUrl } from "@/lib/sharePolicy";
 
 const MIN_LENGTH = 100;
 
@@ -23,10 +24,12 @@ export default function CopyAttribution() {
           return;
         }
         if (!e.clipboardData) return;
+        const sourceUrl = publicShareUrl(window.location.href);
+        if (!sourceUrl) return;
 
         e.clipboardData.setData(
           "text/plain",
-          `${text}\n\n출처: 머니샐러리 ${window.location.href}`
+          `${text}\n\n출처: 머니샐러리 ${sourceUrl}`
         );
         e.preventDefault();
         trackEvent("copy_with_source", {

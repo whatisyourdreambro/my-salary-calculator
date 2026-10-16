@@ -38,7 +38,7 @@ const CATEGORIES: HubCategory[] = [
   {
     title: "변환 · 건강 계산기",
     items: [
-      { title: "단위 변환기", desc: "길이·무게·온도 변환", href: "/tools/life/unit-converter", icon: RefreshCw },
+      { title: "단위 변환기", desc: "길이·무게 변환", href: "/tools/life/unit-converter", icon: RefreshCw },
       { title: "백분율 계산기", desc: "퍼센트·할인율 계산", href: "/tools/math/percent", icon: Percent },
       { title: "랜덤 번호 생성기", desc: "추첨·번호 생성", href: "/tools/math/number-gen", icon: Calculator },
       { title: "BMI 비만도 계산기", desc: "체질량지수·비만 등급", href: "/tools/health/bmi", icon: Activity },

@@ -26,13 +26,14 @@ export function generateStaticParams(): { slug: string }[] {
   return GUIDE_CATEGORY_HUBS.map((h) => ({ slug: h.slug }));
 }
 
-type Props = { params: { slug: string } };
+type Props = { params: Promise<{ slug: string }> };
 
 function getHub(slug: string) {
   return GUIDE_CATEGORY_HUBS.find((h) => h.slug === slug) ?? null;
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params: pendingParams }: Props): Promise<Metadata> {
+  const params = await pendingParams;
   const hub = getHub(params.slug);
   if (!hub) return { title: "페이지를 찾을 수 없습니다", robots: { index: false, follow: false } };
   const count = koGuideCards.filter((g) => g.category === hub.categoryId).length;
@@ -44,7 +45,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-export default function GuideCategoryHubPage({ params }: Props) {
+export default async function GuideCategoryHubPage({ params: pendingParams }: Props) {
+  const params = await pendingParams;
   const hub = getHub(params.slug);
   if (!hub) notFound();
 

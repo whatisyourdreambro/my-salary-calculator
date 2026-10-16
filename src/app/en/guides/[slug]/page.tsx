@@ -22,7 +22,7 @@ function serpTitle(title: string): string {
 }
 
 interface Props {
- params: { slug: string };
+ params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
@@ -31,7 +31,8 @@ export async function generateStaticParams() {
  }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params: pendingParams }: Props): Promise<Metadata> {
+ const params = await pendingParams;
  const guide = enGuides.find((g) => g.slug === params.slug);
  // 가이드 미존재 시 page 컴포넌트가 /en/guides 로 308 redirect 처리하지만
  // generateMetadata 는 redirect 전 호출되므로 명시적 Metadata 객체 반환 필수.
@@ -90,7 +91,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  };
 }
 
-export default function EnglishGuidePage({ params }: Props) {
+export default async function EnglishGuidePage({ params: pendingParams }: Props) {
+ const params = await pendingParams;
  const guide = enGuides.find((g) => g.slug === params.slug);
 
  if (!guide) {

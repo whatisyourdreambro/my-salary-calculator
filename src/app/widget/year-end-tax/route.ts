@@ -17,7 +17,8 @@ import {
 import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
 import { WIDGET_CSP, WIDGET_REFERRER_SCRIPT, WIDGET_NUMBER_INPUT_SCRIPT } from "../shared";
 
-export const runtime = "edge";
+export const dynamic = "force-static";
+
 
 // 총급여 그리드: 1,200만 ~ 2억, 100만원 스텝 (결정세액은 구간 선형보간)
 const GRID_MIN = 12_000_000;
@@ -144,8 +145,8 @@ function buildHtml(): string {
     <span class="label" id="resLabel">올해 결정세액(추정)</span>
     <span class="value" id="res">—</span>
   </div>
-  <p class="note">2026년 귀속 · 본인 1인 공제·4대보험만 반영한 보수적 추정 — 카드·연금저축·월세 공제를 넣으면 환급이 늘어납니다. 지방소득세(소득세의 10%)는 별도.</p>
-  <a class="cta" href="https://www.moneysalary.com/year-end-tax?utm_source=widget&amp;utm_medium=iframe" target="_blank" rel="noopener">공제 다 넣고 정확히 계산하기 →</a>
+  <p class="note">2026년 귀속 · 본인 1인 공제·4대보험만 반영한 보수적 추정 — 공제 요건과 결정세액에 따라 실제 환급액은 달라질 수 있습니다. 지방소득세(소득세의 10%)는 별도.</p>
+  <a class="cta" href="https://www.moneysalary.com/year-end-tax?utm_source=widget&amp;utm_medium=iframe" target="_blank" rel="noopener">추가 공제 넣고 예상액 비교하기 →</a>
   <p class="brand"><a href="https://www.moneysalary.com/year-end-tax?utm_source=widget&amp;utm_medium=iframe" target="_blank" rel="noopener">by 머니샐러리</a></p>
 <script>
 ${WIDGET_NUMBER_INPUT_SCRIPT}
@@ -174,6 +175,12 @@ ${WIDGET_NUMBER_INPUT_SCRIPT}
     }
     var tax = taxOf(manwon * 10000);
     var prepaidMan = parseFloat(prepaidEl.value.replace(/,/g, ""));
+    if (prepaidMan < 0) {
+      lab.textContent = "기납부세액은 0 이상 입력";
+      out.className = "value";
+      out.textContent = "—";
+      return;
+    }
     if (!isFinite(prepaidMan)) {
       lab.textContent = "올해 결정세액(추정)";
       out.className = "value";
@@ -182,7 +189,7 @@ ${WIDGET_NUMBER_INPUT_SCRIPT}
     }
     var refund = prepaidMan * 10000 - tax;
     if (refund >= 0) {
-      lab.textContent = "예상 환급액(최소)";
+      lab.textContent = "예상 환급액";
       out.className = "value";
       out.innerHTML = "+" + fmtMan(refund) + "<small>만원</small>";
     } else {

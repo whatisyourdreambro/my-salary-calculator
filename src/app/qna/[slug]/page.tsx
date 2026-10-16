@@ -26,13 +26,13 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 // 한글 슬러그는 프리렌더(force-static) 시 Cloudflare Pages가 비ASCII 정적 파일을
 // 서빙하지 못해 전 URL이 404였음(2026-07-06 실측 — 출시 후 한 번도 200인 적 없음).
 // 검증된 /salary/[amount] 패턴과 동일하게 edge 요청 렌더로 전환.
-export const runtime = "edge";
 
 export async function generateMetadata({
- params,
+ params: pendingParams,
 }: {
- params: { slug: string };
+ params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+ const params = await pendingParams;
  const item = getQnaBySlug(params.slug);
  if (!item) notFound();
 
@@ -45,11 +45,12 @@ export async function generateMetadata({
  });
 }
 
-export default function QnaDetailPage({
- params,
+export default async function QnaDetailPage({
+ params: pendingParams,
 }: {
- params: { slug: string };
+ params: Promise<{ slug: string }>;
 }) {
+ const params = await pendingParams;
  const item = getQnaBySlug(params.slug);
  // 허브는 이 질문을 대체하지 않는다. 실제 대응 URL이 없는 주소는 404로 응답한다.
  if (!item) notFound();

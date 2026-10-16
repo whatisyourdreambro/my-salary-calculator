@@ -1,7 +1,8 @@
 // src/components/TableInteraction.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { clampTablePage, formatTableSearch, normalizeTableSearch, safeTablePageCount } from "@/lib/tableQueryState";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 
@@ -19,40 +20,34 @@ export default function TableInteraction({
  const router = useRouter();
  const searchParams = useSearchParams();
 
- // InteractiveTable 과 같은 정규화 — ?page=abc 에서 NaN 이 되어
- // '이전/다음' 링크가 ?page=NaN 루프에 빠지고 'NaN / 5' 가 표시됐다.
- const currentPageRaw = Number(searchParams.get("page") ?? "1");
- const currentPage =
- Number.isFinite(currentPageRaw) && currentPageRaw >= 1
- ? Math.floor(currentPageRaw)
- : 1;
- const currentSearch = searchParams.get("searchTerm") || "";
+  const pageCount = safeTablePageCount(totalPages);
+  const currentPage = clampTablePage(searchParams.get("page"), pageCount);
+  const currentSearch = normalizeTableSearch(searchParams.get("searchTerm"));
 
- const [searchTerm, setSearchTerm] = useState(
- currentSearch ? parseInt(currentSearch, 10).toLocaleString('ko-KR') : ""
- );
+  const [searchTerm, setSearchTerm] = useState(() => formatTableSearch(currentSearch));
+  useEffect(() => {
+    setSearchTerm(formatTableSearch(currentSearch));
+  }, [currentSearch]);
 
  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
  const { value } = e.target;
  const numericValue = value.replace(/[^0-9]/g, "");
  setSearchTerm(
- numericValue ? parseInt(numericValue, 10).toLocaleString('ko-KR') : ""
+  formatTableSearch(numericValue)
  );
  };
 
  const handleSearchSubmit = (e: React.FormEvent) => {
  e.preventDefault();
- const numericSearch = searchTerm.replace(/,/g, "");
+  const numericSearch = normalizeTableSearch(searchTerm);
  router.push(`${basePath}?page=1&searchTerm=${numericSearch}`);
  };
 
  const handlePageChange = (newPage: number) => {
- const numericSearch = (searchParams.get("searchTerm") || "").replace(
- /,/g,
- ""
- );
+  const numericSearch = currentSearch;
+  const page = clampTablePage(String(newPage), pageCount);
  router.push(
- `${basePath}?page=${newPage}${
+ `${basePath}?page=${page}${
  numericSearch ? `&searchTerm=${numericSearch}` : ""
  }`
  );
@@ -86,11 +81,11 @@ export default function TableInteraction({
  이전
  </button>
  <span className="text-sm font-semibold text-muted-foreground">
- {currentPage} / {totalPages}
+ {currentPage} / {pageCount}
  </span>
  <button
- onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
- disabled={currentPage === totalPages}
+ onClick={() => handlePageChange(Math.min(pageCount, currentPage + 1))}
+ disabled={currentPage >= pageCount}
  className="px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
  >
  다음

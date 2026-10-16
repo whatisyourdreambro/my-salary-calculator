@@ -375,7 +375,12 @@ export function getBenefitsValue(
   let industryAvg: number | null = null;
   let diffPercent: number | null = null;
   if (bucket && bucket.count >= 3) {
-    const peerAvg = (bucket.sum - sum) / (bucket.count - 1);
+    // The industry pool contains domestic companies only. Global reference
+    // companies were never added, so their value must not be subtracted.
+    const inBucket = !company.isGlobal;
+    const peerSum = inBucket ? bucket.sum - sum : bucket.sum;
+    const peerCount = inBucket ? bucket.count - 1 : bucket.count;
+    const peerAvg = peerCount > 0 ? peerSum / peerCount : 0;
     if (peerAvg > 0) {
       industryAvg = Math.round(peerAvg);
       diffPercent = Math.round(((sum - peerAvg) / peerAvg) * 100);

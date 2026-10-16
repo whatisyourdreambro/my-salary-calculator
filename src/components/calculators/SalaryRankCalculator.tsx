@@ -35,7 +35,7 @@ export default function SalaryRankCalculator() {
   // 결과 카드를 캔버스로 캡처 — 다운로드/SNS 이미지 공유에서 공용 사용
   const captureCard = async (): Promise<HTMLCanvasElement | null> => {
     if (!cardRef.current) return null;
-    const { default: html2canvas } = await import("html2canvas");
+    const { default: html2canvas } = await import("@/lib/captureElement");
     return html2canvas(cardRef.current, {
       backgroundColor: "#000000",
       scale: 2,

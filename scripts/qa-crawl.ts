@@ -1,7 +1,7 @@
 // scripts/qa-crawl.ts
 //
 // 배포 전 정합성 크롤 게이트 — npm run qa:crawl (tsx).
-// 로컬 프로덕션 서버(npm run build && npm run start)를 사이트맵 기반으로 순회하며
+// 로컬 QA 서버(npm run qa:dev 또는 qa:build + qa:start)를 사이트맵 기반으로 순회하며
 // 지시서 §TASK-6 의 (a)~(e) 를 검증한다. 실패 시 qa-report.md 기록 + exit 1.
 //
 //  (a) 카운트 정합: 렌더된 회사 수·성과급 종 수가 site-metrics 파생값과 일치,
@@ -11,16 +11,18 @@
 //      전 페이지 공통 NaN/undefined원/숫자 없는 결과 휴리스틱
 //  (c) 제휴: data-affiliate-offer 존재 ⟺ matchOffers() 활성 오퍼 존재(동일 lib),
 //      오퍼 존재 시 고지문 존재, BLOCKED 페이지 오퍼 0건, offers.json 스키마,
-//      쿠팡 폴백 유지(오퍼 무매칭 대표 페이지)
+//      쿠팡 광고 이미지는 SSR에서 요청하지 않음(오퍼 무매칭 대표 페이지)
 //  (d) 금지 문자열: 내부 메모("GA 폭증" 등) 렌더 HTML 누출 0건
 //  (e) EN 페이지 title·meta·hreflang 한글 코드포인트 0건
 //
-// 사용: BASE_URL=http://localhost:3000 tsx scripts/qa-crawl.ts
+// 사용: npm run qa:crawl (기본 http://127.0.0.1:3100)
 // 주의: src/middleware.ts 가 빈/의심 UA 를 403 처리 — 브라우저 UA 필수.
 import { execSync } from "node:child_process";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { EN_ALL_PAGE_PATHS } from "../src/lib/englishRoutes";
+import qaSafety from "./lib/qa-safety.cjs";
+const { assertLocalQaTarget, QA_USER_AGENT, fetchQaDocument } = qaSafety;
 
 import { COMPANY_COUNT, BONUS_CALC_COUNT } from "../src/config/site-metrics.generated";
 import { allCompanies } from "../src/data/companies/index";
@@ -32,9 +34,9 @@ import {
   AFFILIATE_DISCLOSURE_TEXT,
 } from "../src/lib/affiliateOffers";
 
-const BASE_URL = process.env.BASE_URL ?? "http://localhost:3000";
+const BASE_URL = assertLocalQaTarget(process.env.BASE_URL ?? "http://127.0.0.1:3100");
 const UA =
-  "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36 moneysalary-qa-crawl";
+  "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36 moneysalary-qa-crawl " + QA_USER_AGENT;
 const CONCURRENCY = 6;
 const RETRIES = 2;
 const REPORT_PATH = join(__dirname, "..", "qa-report.md");
@@ -97,8 +99,9 @@ const SENTINELS = [
   "/en/guides",
 ];
 
-// 쿠팡 폴백이 SSR HTML 에 존재해야 하는 대표 페이지 (오퍼 무매칭일 때)
-const COUPANG_SSR_PAGES = [
+// 광고 이미지는 클라이언트의 운영 방문자 판정 이후에만 삽입한다.
+// SSR URL 존재를 요구하면 광고 없는 QA 원칙과 충돌한다.
+const COUPANG_GUARDED_PAGES = [
   "/home-loan",
   "/calc/samsung-bonus",
   "/credit-card-deduction-2026",
@@ -118,9 +121,9 @@ function fail(check: string, page: string, detail: string) {
 async function fetchPage(path: string): Promise<string | null> {
   for (let attempt = 0; attempt <= RETRIES; attempt++) {
     try {
-      const res = await fetch(`${BASE_URL}${path}`, {
+      const res = await fetchQaDocument(`${BASE_URL}${path}`, BASE_URL, {
         headers: { "User-Agent": UA },
-        redirect: "follow",
+        redirect: "manual",
       });
       if (res.ok) return await res.text();
       if (res.status >= 500 && attempt < RETRIES) continue;
@@ -218,14 +221,14 @@ function checkAffiliate(path: string, html: string) {
       fail("(c) 제휴", path, `오퍼 ${r.id} 노출인데 고지문("${disclosure.slice(0, 20)}…") 없음`);
     }
   }
-  // 오퍼 무매칭 대표 페이지: 쿠팡 폴백이 SSR 에 살아 있어야 함
+  // 오퍼 무매칭 대표 페이지: 서버 HTML만으로 광고 이미지가 호출되면 안 된다.
   if (
-    COUPANG_SSR_PAGES.includes(path) &&
+    COUPANG_GUARDED_PAGES.includes(path) &&
     activeMatched.length === 0 &&
     rendered.length === 0
   ) {
-    if (!html.includes("ads-partners.coupang.com")) {
-      fail("(c) 제휴", path, "쿠팡 폴백 배너가 SSR HTML 에 없음");
+    if (/<(?:img|iframe|script)\b[^>]*src=["'][^"']*ads-partners\.coupang\.com/i.test(html)) {
+      fail("(c) 제휴", path, "운영 방문자 판정 전에 쿠팡 광고 리소스가 SSR HTML 에 포함됨");
     }
   }
 }
@@ -263,7 +266,7 @@ function checkEnMeta(path: string, html: string) {
 // ── 크롤 대상 수집 ───────────────────────────────────────────
 
 async function collectPaths(): Promise<string[]> {
-  const res = await fetch(`${BASE_URL}/sitemap.xml`, { headers: { "User-Agent": UA } });
+  const res = await fetchQaDocument(`${BASE_URL}/sitemap.xml`, BASE_URL, { headers: { "User-Agent": UA } });
   if (!res.ok) throw new Error(`sitemap.xml HTTP ${res.status}`);
   const xml = await res.text();
   const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) =>
@@ -315,11 +318,11 @@ async function crawl(paths: string[]) {
 async function main() {
   // 서버 가용성
   try {
-    const probe = await fetch(`${BASE_URL}/`, { headers: { "User-Agent": UA } });
+    const probe = await fetchQaDocument(`${BASE_URL}/`, BASE_URL, { headers: { "User-Agent": UA } });
     if (!probe.ok) throw new Error(`HTTP ${probe.status}`);
   } catch (e) {
     console.error(
-      `[qa-crawl] ${BASE_URL} 응답 없음 — 먼저 npm run build && npm run start 를 실행하세요. (${(e as Error).message})`,
+      `[qa-crawl] ${BASE_URL} 응답 없음 — 먼저 npm run qa:dev 또는 npm run qa:build + npm run qa:start 를 실행하세요. (${(e as Error).message})`,
     );
     process.exit(1);
   }

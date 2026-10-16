@@ -38,7 +38,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1")), "..");
 const SRC = path.join(ROOT, "src");
@@ -49,7 +49,7 @@ const DIFF_MODE = process.argv.includes("--diff");
 // `--diff --base <배치 직전 커밋>` (2026-09-12 리뷰: HEAD 고정이라 커밋 후 실행한 --diff 는 아무 삽입도 보지 못했다).
 const BASE_IDX = process.argv.indexOf("--base");
 const DIFF_BASE = BASE_IDX > -1 && process.argv[BASE_IDX + 1] ? process.argv[BASE_IDX + 1] : "HEAD";
-if (!/^[\w./~^-]+$/.test(DIFF_BASE)) {
+if (DIFF_BASE.startsWith("-") || !/^[\w./~^-]+$/.test(DIFF_BASE)) {
   console.error("--base 값이 올바르지 않습니다:", DIFF_BASE);
   process.exit(1);
 }
@@ -420,7 +420,7 @@ let diffFailed = false;
 const gitDiff = (context) => {
   try {
     // -c core.safecrlf=false: 작업 트리 LF/CRLF 경고(stderr 소음) 억제 — 결과 영향 없음
-    return execSync(`git -c core.safecrlf=false diff -U${context} ${DIFF_BASE} -- "src/**/*.tsx"`, {
+    return execFileSync("git", ["-c", "core.safecrlf=false", "diff", `-U${context}`, DIFF_BASE, "--", "src/**/*.tsx"], {
       cwd: ROOT,
       encoding: "utf8",
       maxBuffer: 32 * 1024 * 1024,

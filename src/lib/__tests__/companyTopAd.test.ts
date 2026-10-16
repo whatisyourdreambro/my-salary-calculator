@@ -12,7 +12,7 @@ import { createElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/components/AdPlacement", async () => {
   const { createElement: h } = await import("react");
@@ -64,20 +64,28 @@ const count = (s: string, sub: string) => s.split(sub).length - 1;
 const read = (rel: string) => readFileSync(path.join(ROOT, rel), "utf8");
 
 const companies = companyRepository.getAll();
-const render = (id: string) =>
+const render = async (id: string) =>
   renderToStaticMarkup(
-    createElement(CompanyDetailPage as unknown as (p: { params: { id: string } }) => ReactNode, { params: { id } }),
+    await CompanyDetailPage({ params: Promise.resolve({ id }) }),
   );
-const renderAll = (ids: string[]) => new Map(ids.map((id) => [id, render(id)]));
+const renderAll = async (ids: string[]) => new Map(await Promise.all(ids.map(async (id) => [id, await render(id)] as const)));
 
 afterEach(() => {
   vi.unstubAllEnvs();
 });
 
 describe("회사 상세 K1 신규 유닛 — 전수 렌더(env 설정)", () => {
-  vi.stubEnv(ENV_KEY, SLOT_ID);
-  const pages = renderAll(companies.map((c) => c.id));
-  vi.unstubAllEnvs();
+  let pages: Map<string, string>;
+  beforeAll(async () => {
+    vi.stubEnv(ENV_KEY, SLOT_ID);
+    try {
+      pages = await renderAll(companies.map((c) => c.id));
+    } finally {
+      vi.unstubAllEnvs();
+    }
+    // 400개 이상 페이지의 전체 SSR 준비 작업이다. 전체 스위트의 병렬 부하를
+    // 고려한 hook 한도이며, 개별 광고 배치 검사의 제한이나 검증 범위를 줄이지 않는다.
+  }, 30_000);
 
   it("회사 페이지마다 K1 자리가 1번, 안에는 CompanyTopAd 하나뿐, 예약 클래스 고정", () => {
     expect(companies.length).toBeGreaterThanOrEqual(400);
@@ -137,10 +145,10 @@ describe("회사 상세 K1 신규 유닛 — 전수 렌더(env 설정)", () => {
 });
 
 describe("env 미설정 — 아무것도 렌더하지 않음", () => {
-  it("회사 페이지에 K1 자리(aside)도 CompanyTopAd 도 없다 — 빈 예약 공간이 남지 않음", () => {
+  it("회사 페이지에 K1 자리(aside)도 CompanyTopAd 도 없다 — 빈 예약 공간이 남지 않음", async () => {
     vi.stubEnv(ENV_KEY, "");
     const ids = ["samsung-electronics", "kt", "sk-hynix", ...companies.slice(0, 20).map((c) => c.id)];
-    for (const [id, html] of renderAll(ids)) {
+    for (const [id, html] of await renderAll(ids)) {
       expect(count(html, MARKER), id).toBe(0);
       expect(count(html, adTag("CompanyTopAd")), id).toBe(0);
       expect(count(html, adTag("HomeTopAd")), id).toBe(1);
@@ -201,7 +209,10 @@ describe("회사 상세에만 · ad-audit·보고 도구가 새 유닛을 안다
   });
 
   it(".env.production 에 발급 슬롯 ID, adsense-report UNIT_NAMES 는 env 의 모든 광고 슬롯 ID 를 안다", () => {
-    const env = read(".env.production");
+    // Assertion output must contain only public advertising slot declarations,
+    // never unrelated environment values if this test fails.
+    const env = read(".env.production").split(/\r?\n/)
+      .filter((line) => /^NEXT_PUBLIC_ADSENSE_SLOT_\w+=/.test(line)).join("\n");
     expect(env).toMatch(new RegExp(`^${ENV_KEY}=${SLOT_ID}\\r?$`, "m"));
     const report = read("scripts/adsense-report.mjs");
     const ids = [...env.matchAll(/^NEXT_PUBLIC_ADSENSE_SLOT_\w+=(\d{10})\r?$/gm)].map((m) => m[1]);

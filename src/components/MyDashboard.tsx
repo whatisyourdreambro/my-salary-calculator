@@ -107,7 +107,7 @@ export default function MyDashboard({ data, onReset }: MyDashboardProps) {
  )}
  {rank && (
  <div className="flex justify-between items-baseline p-3 bg-secondary rounded-lg">
- <span className="text-sm font-semibold text-muted-foreground">연봉 순위</span>
+  <span className="text-sm font-semibold text-muted-foreground">저장한 참고 순위</span>
  <p className="text-2xl font-bold text-foreground">상위 {rank.rank}%</p>
  </div>
  )}

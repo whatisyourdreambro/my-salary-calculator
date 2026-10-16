@@ -89,7 +89,7 @@ export default function ShareButtons({
   const guard = useRef(createShareRequestGuard());
   const inFlight = useRef(false);
   const latest = useRef("");
-  const timer = useRef<ReturnType<typeof setTimeout>>();
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const shouldRegister = register ?? variant === "row";
   const page = context ? resolvePublicShare(context, shareMode === "page" ? { url, title, description, imageUrl, locale: explicitLocale } : { locale: explicitLocale }) : null;
   const locale = page?.locale ?? explicitLocale ?? (/^\/en(?:\/|$)/.test(pathname) ? "en" : "ko");

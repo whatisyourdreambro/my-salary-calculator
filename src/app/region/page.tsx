@@ -18,7 +18,7 @@ export const dynamic = "force-static";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "지역별 평균 연봉 2026 — 서울·경기·부산·판교 연봉 비교",
-  description: `서울, 경기, 부산, 판교, 여의도 등 전국 ${REGION_COUNT}개 지역 평균 연봉을 한눈에 비교하세요. 신입부터 시니어까지 경력별 연봉과 2026년 최신 실수령액 정보를 제공합니다.`,
+  description: `서울, 경기, 부산, 판교, 여의도 등 전국 ${REGION_COUNT}개 지역 평균 연봉을 한눈에 비교하세요. 자체 자료의 경력별 참고 연봉과 2026년 계산 모형의 실수령액 정보를 제공합니다.`,
   path: "/region",
   keywords: [
     "지역별 평균 연봉",
@@ -71,7 +71,7 @@ export default function RegionIndexPage() {
           </h1>
           <p className="text-lg sm:text-xl text-muted-blue dark:text-canvas-300 mb-6 max-w-2xl mx-auto font-medium">
             서울·판교·여의도부터 지방 광역시까지
-            <br className="sm:hidden" /> {REGION_COUNT}개 지역 연봉을 한눈에 비교하세요.
+            <br className="sm:hidden" /> 자체 자료의 {REGION_COUNT}개 지역 참고 연봉을 비교하세요.
           </p>
 
           {/* 요약 통계 */}
@@ -86,7 +86,7 @@ export default function RegionIndexPage() {
             </div>
             <div>
               <span className="text-electric text-2xl font-black">3,400</span>
-              <span className="ml-1">만원 전국 평균</span>
+              <span className="ml-1">만원 비교 기준 가정</span>
             </div>
           </div>
         </div>
@@ -213,15 +213,14 @@ export default function RegionIndexPage() {
           </h2>
           <div className="prose prose-slate dark:prose-invert max-w-none text-sm leading-7 text-muted-blue dark:text-canvas-300">
             <p>
-              2026년 기준으로 여의도 금융권 평균 연봉(7,500만원)은 지방 평균(3,400만원)의 두 배를 넘습니다.
-              같은 수도권이라도 판교 IT 클러스터(6,200만원)와 인천(3,900만원) 간 격차가 상당하며,
-              단순히 수도권에 취업한다고 연봉이 높아지는 것은 아닙니다.
+              이 페이지의 자체 참고 자료에서 여의도(7,500만원)는 비교 기준 가정(3,400만원)의 두 배를 넘습니다.
+              판교(6,200만원)와 인천(3,900만원)도 자료 내 차이가 있지만,
+              지역만으로 개인 연봉이 정해지는 것은 아닙니다.
             </p>
             <p>
-              지방 광역시 중에서는 울산(4,100만원)이 현대차·현대중공업 생산직 수당 효과로
-              서울에 근접한 연봉을 보이며, 세종(4,300만원)은 공무원 밀집 특성상
-              안정적 고연봉 구조를 가집니다. 생활비를 감안한 실질 구매력은 수도권 격차보다
-              좁아질 수 있으니, 지역 이사 전에 반드시 실수령액 계산기로 비교해보세요.
+              울산(4,100만원)과 세종(4,300만원) 역시 자체 자료의 참고값입니다.
+              산업 구성·직종·경력·수당과 생활비를 함께 확인하고,
+              지역 이사 전에 실제 제안 연봉과 개인 조건으로 실수령액을 비교해보세요.
             </p>
           </div>
           <div className="mt-6 flex flex-wrap gap-3">

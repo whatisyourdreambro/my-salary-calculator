@@ -9,6 +9,7 @@ import {
   trackAdUnitClick,
 } from "@/lib/analytics";
 import { viewportBucket } from "@/lib/vitalsAttribution";
+import { canRequestLiveAds } from "@/lib/liveAds";
 
 const CLIENT_ID = "ca-pub-2873403048341290";
 // 라벨("광고 (Sponsored)") 높이 — 컨테이너 예약 높이에 포함해 <ins> 지연 마운트 때 아래 콘텐츠가 ~20px 밀리지 않게 한다 (2026-09-11).
@@ -65,6 +66,10 @@ function AdSlot({
   const pushed = useRef(false);
   const [visible, setVisible] = useState(false);
   const [allowed, setAllowed] = useState(true);
+  const [liveEnabled, setLiveEnabled] = useState(false);
+  useEffect(() => {
+    setLiveEnabled(canRequestLiveAds());
+  }, [pathname]);
   // unfilled: "collapse" = 뷰포트 아래에서 미충족 → 컨테이너째 접기(종전 동작). "keep" = 뷰포트 안(위)에서 미충족 →
   // 높이는 두고 내용만 숨겨 결과 카드·다음 링크가 위로 튀지 않게 한다(CLS·우발 클릭 방지, 2026-09-11 운영자 승인).
   const [unfilled, setUnfilled] = useState<false | "collapse" | "keep">(false);
@@ -97,14 +102,17 @@ function AdSlot({
 
   // Lazy load: viewport 진입 시에만 광고 마운트 → CLS↓ viewability↑
   useEffect(() => {
-    if (!slot || !containerRef.current || !allowed) return;
+    if (!liveEnabled || !canRequestLiveAds() || !slot || !containerRef.current || !allowed) return;
     if (typeof IntersectionObserver === "undefined") {
       setVisible(true);
       return;
     }
     const target = containerRef.current;
+    let active = true;
     const observer = new IntersectionObserver(
       (entries) => {
+        // disconnect() does not cancel entries already queued before a route/dedup cleanup.
+        if (!active || !canRequestLiveAds()) return;
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setVisible(true);
@@ -115,8 +123,11 @@ function AdSlot({
       { rootMargin: "200px 0px" }
     );
     observer.observe(target);
-    return () => observer.disconnect();
-  }, [slot, pathname, allowed]);
+    return () => {
+      active = false;
+      observer.disconnect();
+    };
+  }, [slot, pathname, allowed, liveEnabled]);
 
   // 광고 클릭 감지 — iframe 내부 클릭은 이벤트가 버블되지 않으므로
   // window blur 시점에 activeElement 가 이 슬롯의 iframe 인지로 판별 (페이지당 슬롯별 1회)
@@ -140,7 +151,9 @@ function AdSlot({
   }, [visible, slot, slotKind, pathname]);
 
   useEffect(() => {
-    if (!visible || pushed.current || !slot) return;
+    if (!liveEnabled || !canRequestLiveAds() || !visible || pushed.current || !slot || !allowed) return;
+    const ins = containerRef.current?.querySelector("ins.adsbygoogle[data-ad-slot]");
+    if (!ins || ins.getAttribute("data-ad-slot") !== slot) return;
     pushed.current = true;
     trackAdRequestAttempt(slotKind ?? "unknown");
     try {
@@ -150,7 +163,7 @@ function AdSlot({
       // AdSense push errors are non-fatal
       trackAdRequestError(slotKind ?? "unknown");
     }
-  }, [visible, slot, slotKind]);
+  }, [visible, slot, slotKind, allowed, liveEnabled]);
 
   // 미충족(unfilled) 광고 감지 → 컨테이너째 접기.
   // 이전에는 unfilled 여도 "광고 (Sponsored)" 라벨 + minHeight 공백이 남아 UX·정책 양쪽 손해.
@@ -219,6 +232,7 @@ function AdSlot({
   return (
     <div
       ref={containerRef}
+      data-html2canvas-ignore="true"
       className={composedClass}
       style={{ ...containerBaseStyle, minHeight: `${minHeight + AD_LABEL_HEIGHT}px`, ...style, ...unfilledStyle }}
     >
@@ -236,7 +250,7 @@ function AdSlot({
       >
         {pathname === "/en" || pathname.startsWith("/en/") ? "Advertisement" : "광고 (Sponsored)"}
       </span>
-      {visible && (
+      {liveEnabled && visible && (
         <ins
           className="adsbygoogle"
           style={{

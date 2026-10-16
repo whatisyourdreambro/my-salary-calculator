@@ -80,9 +80,10 @@ const fmtManwon = (won: number) =>
  *  월급 금액과 화면 본문 표·크로스링크에는 쓰지 않는다(광고 위 높이 실측 사유는 각 블록 주석). */
 const fmtAnnualKo = (won: number) => formatManwonKorean(Math.round(won / 10_000));
 
-type Props = { params: { amount: string } };
+type Props = { params: Promise<{ amount: string }> };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params: pendingParams }: Props): Promise<Metadata> {
+  const params = await pendingParams;
   const monthly = parseMonthlyParam(params.amount);
   if (monthly === null) {
     return { title: "페이지를 찾을 수 없습니다", robots: { index: false, follow: false } };
@@ -105,7 +106,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-export default function MonthlyPage({ params }: Props) {
+export default async function MonthlyPage({ params: pendingParams }: Props) {
+  const params = await pendingParams;
   const monthly = parseMonthlyParam(params.amount);
   if (monthly === null) notFound();
 
@@ -154,7 +156,7 @@ export default function MonthlyPage({ params }: Props) {
     {
       question: "4대보험은 월급 기준으로 어떻게 계산되나요?",
       answer: pensionCapped
-        ? `국민연금은 기준소득월액 상한(2026년 7월부터 월 ${fmtManwon(PENSION_BASE_2026.MAX_MONTHLY)}만원)이 있어, 월급 ${m}만원은 상한을 초과하므로 상한 기준으로만 부과됩니다. 건강보험·고용보험은 상한 없이 보수월액 비례로 부과됩니다.`
+        ? `국민연금은 기준소득월액 상한(2026년 7월부터 월 ${fmtManwon(PENSION_BASE_2026.MAX_MONTHLY)}만원)이 있어, 월급 ${m}만원은 상한을 초과하므로 상한 기준으로만 부과됩니다. 이 계산의 건강보험·고용보험은 비과세 제외 보수월액에 비례한 추정이며, 건강보험 상·하한과 정산은 반영하지 않습니다.`
         : `국민연금·건강보험·고용보험 모두 세전 보수월액(비과세 제외)에 요율을 곱해 매월 부과됩니다. 국민연금에는 기준소득월액 상한(2026년 7월부터 월 ${fmtManwon(PENSION_BASE_2026.MAX_MONTHLY)}만원)이 있으며, 월급 ${m}만원은 상한 미만이라 전액 부과 대상입니다.`,
     },
   ];
@@ -235,7 +237,7 @@ export default function MonthlyPage({ params }: Props) {
                 <tr className="border-b border-canvas-200 text-left text-faint-blue">
                   <th className="py-2 pr-4">상여 비율</th>
                   <th className="py-2 pr-4">환산 연봉</th>
-                  <th className="py-2">연봉 리포트</th>
+                  <th className="py-2">근접 구간 리포트</th>
                 </tr>
               </thead>
               <tbody>
@@ -419,7 +421,7 @@ export default function MonthlyPage({ params }: Props) {
         <div className="mt-10">
           <ListedSalaryBandTable
             annualWon={annual}
-            title={`월급 ${Math.round(monthly / 10_000).toLocaleString("ko-KR")}만원 수준의 상장사`}
+            title={`월급 ${Math.round(monthly / 10_000).toLocaleString("ko-KR")}만원 수준의 공시기업`}
           />
         </div>
 

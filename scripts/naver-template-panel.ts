@@ -14,6 +14,7 @@
 // 종료 코드: 0 성공 · 1 사용법/읽기/헤더/사이트맵 오류·파일 겹침·총계 불일치 · 2 저장소 안 경로 거부 · 3 불완전 창이라 한 줄 기록 거부.
 import { readFileSync, realpathSync } from "node:fs";
 import path from "node:path";
+import qaHttp from "./lib/qa-production-http.cjs";
 
 import { runNaverTemplatePanelCli } from "../src/lib/naverTemplatePanel";
 
@@ -30,17 +31,18 @@ function realpath(p: string): string {
   }
 }
 
-/** --sitemap 이 https 주소일 때만. Cloudflare 가 기본 UA 를 403 으로 막으므로 브라우저형 UA 를 붙인다. */
-async function fetchText(url: string): Promise<string> {
-  const res = await fetch(url, {
+/** 운영 canonical 사이트맵의 비렌더링 HTTP 조회만. 외부 URL/리디렉션은 거부한다. */
+export async function fetchText(url: string, fetchFn: typeof fetch = globalThis.fetch): Promise<string> {
+  const res = await qaHttp.fetchProductionQaDocument(url, {
+    fetchFn,
     headers: { "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) moneysalary-naver-template-panel/1" },
-    redirect: "follow",
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.text();
 }
 
-runNaverTemplatePanelCli(process.argv.slice(2), {
+if (process.argv[1] && realpath(process.argv[1]) === realpath(__filename)) {
+void runNaverTemplatePanelCli(process.argv.slice(2), {
   repoRoot: path.resolve(__dirname, ".."),
   cwd: process.cwd(),
   realpath,
@@ -57,3 +59,4 @@ runNaverTemplatePanelCli(process.argv.slice(2), {
     process.exitCode = 1;
   },
 );
+}

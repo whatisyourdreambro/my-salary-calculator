@@ -282,19 +282,16 @@ describe("nav_type — 광고 계측 이벤트 인자", () => {
 describe("nav_type — 배선(소스 고정)", () => {
   const layout = read("src/app/layout.tsx");
 
-  it("NavTypeTracker 가 루트 layout 에서 ga4-init Script 보다 앞에 마운트된다", () => {
+  it("NavTypeTracker mounts before the guarded GA bootstrap", () => {
     expect(layout).toContain('import NavTypeTracker from "@/components/NavTypeTracker";');
     const tracker = layout.indexOf("<NavTypeTracker />");
-    const ga4Init = layout.indexOf('<Script id="ga4-init" strategy="afterInteractive">');
+    const ga4Init = layout.indexOf("<LiveServices />");
     expect(tracker).toBeGreaterThan(-1);
     expect(ga4Init).toBeGreaterThan(tracker);
   });
 
-  it("ga4-init 스크립트와 광고 컴포넌트는 그대로다(측정 인자만 추가)", () => {
-    const ga4InitStart = layout.indexOf('<Script id="ga4-init" strategy="afterInteractive">');
-    const ga4InitBody = layout.slice(ga4InitStart, layout.indexOf("</Script>", ga4InitStart));
-    expect(ga4InitBody).toContain("gtag('config', 'G-EZ8GT7RPEZ', { send_page_view: true });");
-    expect(ga4InitBody).not.toMatch(/nav_type|'set'/);
+  it("keeps navigation attribution outside the guarded loader", () => {
+    expect(read("src/lib/liveServices.ts")).not.toMatch(/nav_type/);
     expect(read("src/components/AdPlacement.tsx")).not.toMatch(/nav_?type/i);
     expect(read("src/lib/analytics.ts")).toContain('window.gtag?.("event", name, {');
   });
@@ -308,3 +305,7 @@ describe("nav_type — 배선(소스 고정)", () => {
     expect(tracker).not.toMatch(/MutationObserver/);
   });
 });
+
+// These tests exercise payload/lifecycle behavior with a synthetic eligible visitor.
+// The real fail-closed runtime decision is covered separately in liveAds.test.ts.
+vi.mock("../liveAds", () => ({ canRequestLiveAds: () => true }));

@@ -17,7 +17,7 @@ import CoupangBanner from "@/components/CoupangBanner";
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 종합소득세 신고 — 5월 1~31일 마감, 프리랜서·N잡 환급금 가이드",
  description:
- "프리랜서 1년 매출 5천만원이면 환급 약 30~80만원. 2026년 5월 1~31일 종합소득세 신고 일정, 필요 서류 7가지, 환급금 계산법, 분납 신청까지 한 페이지에서.",
+ "프리랜서·N잡러의 종합소득세 신고 준비, 필요 서류 5가지, 기납부세액과 결정세액에 따른 환급·추가 납부, 분납 안내를 확인하세요.",
  path: "/year-end-tax-2026",
  ogType: "article",
  publishedTime: "2026-04-15",
@@ -46,7 +46,7 @@ const SCHEDULE = [
 const TARGETS = [
  { type: "프리랜서·N잡러", desc: "근로소득 외 사업소득(3.3%) 발생자" },
  { type: "1인 사업자", desc: "개인사업자 등록자, 부가세 신고 별도" },
- { type: "임대소득자", desc: "주택임대 2,000만원 초과 시 분리과세 가능" },
+ { type: "임대소득자", desc: "주택임대 총수입금액 2,000만원 이하 시 분리과세 선택 가능" },
  { type: "금융소득 종합과세 대상", desc: "이자·배당 합계 2,000만원 초과" },
 ];
 

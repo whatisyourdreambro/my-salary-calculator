@@ -54,12 +54,13 @@ import { mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
+import qaHttp from "./lib/qa-production-http.cjs";
 
 export const HOST = "www.moneysalary.com";
 export const BASE = `https://${HOST}`;
 /** scripts/health-check.mjs 의 UA 와 같은 값(테스트가 대조한다). */
 export const UA =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 MoneySalary-QA/1.0";
 
 export const FAMILIES = ["company", "lite", "calc", "guides", "pay-table", "salary"];
 export const QUOTAS = { company: 20, lite: 10, calc: 10, guides: 10, "pay-table": 5, salary: 5 };
@@ -274,10 +275,10 @@ export async function fetchOnce(target, pass, io) {
   const t0 = io.now();
   let text = "";
   try {
-    const res = await io.fetch(target.url, {
+    const res = await qaHttp.fetchProductionQaDocument(target.url, {
+      fetchFn: io.fetch,
       headers: { "user-agent": UA },
-      redirect: "manual",
-      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+      timeoutMs: FETCH_TIMEOUT_MS,
     });
     const buf = new Uint8Array(await res.arrayBuffer());
     rec.ms = Math.round(io.now() - t0);
@@ -609,7 +610,7 @@ export function realpathLoose(p) {
 
 export function defaultIo() {
   return {
-    fetch: (url, init) => fetch(url, init),
+    fetch: globalThis.fetch,
     sleep: (ms) => delay(ms),
     now: () => performance.now(),
     clock: () => Date.now(),

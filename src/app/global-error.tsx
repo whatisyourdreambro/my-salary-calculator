@@ -124,6 +124,7 @@ export default function GlobalError({
             >
               다시 시도
             </button>
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- Reload the document to recover when the root layout/router has failed. */}
             <a
               href="/"
               style={{

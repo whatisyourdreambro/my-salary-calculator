@@ -1,7 +1,7 @@
 // src/app/layout.tsx
 
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
+import LiveServices from "@/components/LiveServices";
 import { siteFontVariables } from "./fonts/siteFonts.generated";
 import "./globals.css";
 import { NextThemesProvider } from "@/app/providers";
@@ -142,14 +142,6 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning className={siteFontVariables}>
       <head>
-        {/* AdSense 오리진 — preconnect로 TCP+TLS 핸드셰이크 선행 (dns-prefetch는 폴백 병행) */}
-        <link
-          rel="preconnect"
-          href="https://pagead2.googlesyndication.com"
-          crossOrigin="anonymous"
-        />
-        <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <JsonLd data={[organizationLd(), webSiteLd()]} />
       </head>
       <body className="antialiased bg-canvas text-navy dark:bg-canvas-950 dark:text-canvas-50">
@@ -184,7 +176,7 @@ export default function RootLayout({
         <InternalLinkTracker />
         {/* Version 2 calculation scopes share one page-visit boundary across all routes. */}
         <CalcFunnelTracker />
-        {/* 뷰 도달 방식 nav_type(landing/soft) → GA4 page_view·광고 계측 이벤트. ★ga4-init Script 보다 앞에 둘 것(첫 page_view 순서) */}
+        {/* nav_type must be initialized before LiveServices queues the first page_view. */}
         <NavTypeTracker />
         {/* 착지 뷰 자동광고 자리·요청·채움 관측 → GA4 autoads_seen 1회(읽기 전용·무렌더, DOM 노드 0개) */}
         <AutoAdsSeenTracker />
@@ -192,27 +184,8 @@ export default function RootLayout({
         {/* 본문 100자+ 복사 시 출처 링크 자동 첨부 (펌글 → 자연 유입) */}
         <CopyAttribution />
 
-        {/* Google Analytics 4 */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-EZ8GT7RPEZ"
-          strategy="afterInteractive"
-        />
-        <Script id="ga4-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-EZ8GT7RPEZ', { send_page_view: true });
-          `}
-        </Script>
-
-        {/* Google AdSense Auto Ads — 모든 페이지 자동 광고 적용 */}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2873403048341290"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        {/* The client gate runs before any advertising/analytics loader exists. */}
+        <LiveServices />
 
         {/* Kakao 공유 SDK — NEXT_PUBLIC_KAKAO_JS_KEY 있을 때만 로드 (없으면 null) */}
         <KakaoScript />

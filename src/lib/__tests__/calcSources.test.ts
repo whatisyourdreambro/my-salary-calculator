@@ -144,7 +144,16 @@ describe("enrichment-file sources gate (content agents)", () => {
       for (const [slug, enrichment] of Object.entries(map)) {
         if (enrichment.sources === undefined) continue;
         const sources = enrichment.sources;
-        if (sources.length !== 2) violations.push(`${slug} (${file}): ${sources.length} sources, rule is exactly 2`);
+        // 2026-10-03 승인: 이 법인세 모델에 실제 확인한 국세청 자료 1개만 사용한다.
+        // 다른 enrichment는 정확히 2개 규칙을 유지하며 미검증 링크를 보충하지 않는다.
+        if (file === "enrichments-ext-b.ts" && slug === "corporate-tax-quick") {
+          expect(sources).toEqual([{
+            title: "국세청 — 법인세 세율: 2026.1.1. 이후 개시 사업연도",
+            url: "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7746&mi=2372",
+          }]);
+        } else if (sources.length !== 2) {
+          violations.push(`${slug} (${file}): ${sources.length} sources, rule is exactly 2`);
+        }
         const urls = new Set(sources.map((s) => s.url));
         if (urls.size !== sources.length) violations.push(`${slug} (${file}): duplicate url`);
         for (const source of sources) {

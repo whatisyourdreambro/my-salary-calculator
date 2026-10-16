@@ -234,6 +234,7 @@ export default function BoxingGame({
  </span>
  {" "}WIN!
  </p>
+ <p className="mb-6 text-sm text-navy">재미용 게임 승패이며 실제 보상 비교 결과와 별개입니다.</p>
  <button
  onClick={onFinish}
  className="px-10 py-4 bg-card text-foreground font-black text-xl rounded-full hover:scale-110 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.5)]"

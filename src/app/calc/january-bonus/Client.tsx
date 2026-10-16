@@ -38,9 +38,8 @@ function calcTax(taxable: number): number {
 const earnedIncomeTaxCredit = (grossTax: number, salary: number): number =>
   earnedIncomeTaxCredit2026(grossTax, salary);
 
-// 작년 원천징수세액 단순 추정 (간이세액표 근사) — 기본 인적공제만 반영한 연간 세액.
-// 간이세액표는 카드·의료비·IRP 등 추가 공제를 모르는 상태로 매월 떼므로,
-// 추가 공제가 많을수록 결정세액보다 커져 환급이 발생하는 구조를 근사합니다.
+// 원천징수세액 미입력 시 연간 세액을 추정한다. 연 급여에 근로소득공제·인적공제,
+// 8구간 세율·근로소득세액공제를 적용하며 월별 간이세액표를 조회하지 않는다.
 function estimateAnnualWithholding(salary: number, basicDeduct: number): number {
   const taxable = Math.max(0, salary - calcEmpDeduction(salary) - basicDeduct);
   const grossTax = calcTax(taxable);
@@ -132,7 +131,7 @@ export default function JanuaryBonusClient() {
     const finalLocal = finalTax * 0.1;
     const totalFinalTax = finalTax + finalLocal;
 
-    // 원천징수세액: 직접 입력값 우선, 미입력 시 간이세액표 기반 추정치
+    // 원천징수세액: 직접 입력값 우선, 미입력 시 연간 세액 추정치
     const isWithheldEstimated = withheldInput <= 0;
     const withheld = isWithheldEstimated
       ? estimateAnnualWithholding(salary, basicDeduct)
@@ -273,7 +272,7 @@ export default function JanuaryBonusClient() {
           </p>
           {result.isWithheldEstimated && (
             <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.7)" }}>
-              원천징수세액 미입력 — 간이세액표 기반 추정치 기준
+              원천징수세액 미입력 — 연간 세액 추정치 기준
             </p>
           )}
         </div>
@@ -284,7 +283,7 @@ export default function JanuaryBonusClient() {
             { label: "총급여", value: salary },
             {
               label: result.isWithheldEstimated
-                ? "원천징수세액 (간이세액표 추정치)"
+                ? "원천징수세액 (연간 세액 추정치)"
                 : "원천징수세액 (입력값)",
               value: result.withheld,
             },

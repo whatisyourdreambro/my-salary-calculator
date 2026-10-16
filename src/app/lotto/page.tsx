@@ -1,7 +1,7 @@
 // src/app/lotto/page.tsx
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import {
  generateLottoSets,
  type GenerationStrategy,
@@ -46,6 +46,23 @@ export default function LottoPage() {
  const [isLoading, setIsLoading] = useState(false);
  const [showAdvanced, setShowAdvanced] = useState(false);
  const [revealedSets, setRevealedSets] = useState<GeneratedSet[]>([]);
+ const generationEpoch = useRef(0);
+ const generationTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+ const revealTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+ const cancelPending = () => {
+ generationEpoch.current++;
+ if (generationTimer.current !== null) clearTimeout(generationTimer.current);
+ generationTimer.current = null;
+ revealTimers.current.forEach(clearTimeout);
+ revealTimers.current = [];
+ };
+
+ useEffect(() => () => {
+ generationEpoch.current++;
+ if (generationTimer.current !== null) clearTimeout(generationTimer.current);
+ revealTimers.current.forEach(clearTimeout);
+ }, []);
 
  const parseNumbers = (input: string) =>
  input
@@ -63,11 +80,15 @@ export default function LottoPage() {
  );
 
  const handleGenerate = () => {
+ cancelPending();
+ const epoch = generationEpoch.current;
  setIsLoading(true);
  setGeneratedSets([]);
  setRevealedSets([]);
 
- setTimeout(() => {
+ generationTimer.current = setTimeout(() => {
+ if (epoch !== generationEpoch.current) return;
+ generationTimer.current = null;
  try {
  const sets = generateLottoSets(
  numberOfSets,
@@ -98,17 +119,26 @@ export default function LottoPage() {
 
  useEffect(() => {
  if (generatedSets.length > 0) {
+ const epoch = generationEpoch.current;
  let delay = 0;
  generatedSets.forEach((set) => {
- setTimeout(() => {
+ const timer = setTimeout(() => {
+ if (epoch !== generationEpoch.current) return;
  setRevealedSets((prev) => [...prev, set]);
  }, delay);
+ revealTimers.current.push(timer);
  delay += 500; // 각 세트가 0.5초 간격으로 나타남
  });
+ return () => {
+ revealTimers.current.forEach(clearTimeout);
+ revealTimers.current = [];
+ };
  }
  }, [generatedSets]);
 
  const handleReset = () => {
+ cancelPending();
+ setIsLoading(false);
  setNumberOfSets(5);
  setIncludeInput("");
  setExcludeInput("");

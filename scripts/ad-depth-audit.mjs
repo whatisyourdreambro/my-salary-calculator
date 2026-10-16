@@ -14,19 +14,22 @@
 //   깊이의 유닛은 사실상 0원이다.
 //
 // 사용:
-//   npm run build && npm run start &
-//   node scripts/ad-depth-audit.mjs                    # 기본 라우트 세트
-//   ROUTES=/,/calc,/guides node scripts/ad-depth-audit.mjs
-//   BASE_URL=http://localhost:3000 THRESHOLD_SCREENS=3 node scripts/ad-depth-audit.mjs
+//   npm run qa:build && npm run qa:start
+//   npm run qa:run -- scripts/ad-depth-audit.mjs        # 기본 라우트 세트
+//   ROUTES=/,/calc,/guides npm run qa:run -- scripts/ad-depth-audit.mjs
+//   THRESHOLD_SCREENS=3 npm run qa:run -- scripts/ad-depth-audit.mjs
 //
-// 종료 코드는 항상 0 — 배치 변경은 운영자 승인 사항이라 빌드를 막지 않는다.
+// 배치 경고만 있으면 exit 0. 안전장치·실행환경·페이지 로드 실패는 exit 1.
 // (dedup 로 유닛이 죽는 사고는 ad-audit.mjs 가 ERROR 로 계속 막는다)
 //
-// 주의: playwright-core 와 크로미움이 있어야 한다. 없으면 안내 후 종료(0).
+// 주의: playwright-core 와 크로미움이 있어야 한다. 없으면 안내 후 종료(1).
 
 import { execSync } from "node:child_process";
+import qaSafety from "./lib/qa-safety.cjs";
+const { assertLocalQaTarget, assertQaEnvironment, launchQaBrowser } = qaSafety;
 
-const BASE_URL = process.env.BASE_URL ?? "http://localhost:3000";
+const BASE_URL = assertLocalQaTarget(process.env.BASE_URL ?? "http://127.0.0.1:3100");
+assertQaEnvironment();
 const THRESHOLD_SCREENS = Number(process.env.THRESHOLD_SCREENS ?? 2.5);
 const UA =
   "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36 msy-ad-depth";
@@ -67,8 +70,8 @@ let chromium;
 try {
   ({ chromium } = await import("playwright-core"));
 } catch {
-  console.log("[ad-depth] playwright-core 없음 — 건너뜀 (npm i -D playwright-core)");
-  process.exit(0);
+  console.error("[ad-depth] playwright-core 없음 — QA 실패 (npm i -D playwright-core)");
+  process.exit(1);
 }
 
 /** 이 환경에 설치된 크로미움 실행 파일 찾기 */
@@ -94,11 +97,11 @@ function findChromium() {
 
 const executablePath = findChromium();
 if (!executablePath) {
-  console.log("[ad-depth] 크로미움 실행 파일을 찾지 못함 — 건너뜀 (CHROMIUM_PATH 로 지정 가능)");
-  process.exit(0);
+  console.error("[ad-depth] 크로미움 실행 파일을 찾지 못함 — QA 실패 (CHROMIUM_PATH 로 지정 가능)");
+  process.exit(1);
 }
 
-const browser = await chromium.launch({
+const browser = await launchQaBrowser(chromium, BASE_URL, {
   executablePath,
   args: ["--no-sandbox", "--disable-dev-shm-usage"],
 });
@@ -144,6 +147,7 @@ async function measure(route, viewport, isMobile) {
   return data;
 }
 
+try {
 const rows = [];
 for (const route of ROUTES) {
   for (const [viewport, isMobile, label] of [
@@ -152,6 +156,7 @@ for (const route of ROUTES) {
   ]) {
     const d = await measure(route, viewport, isMobile);
     if (!d) {
+      process.exitCode = 1;
       rows.push({ route, label, error: true });
       continue;
     }
@@ -203,6 +208,6 @@ for (const r of rows) {
 console.log(
   `\n임계값: 첫 광고 ${THRESHOLD_SCREENS}화면 초과(⚠) / 광고 없는 최장 구간 6화면 초과(·)`
 );
-console.log(`플래그 ${flagged}건 — 배치 변경은 운영자 승인 큐 항목이므로 exit 0.\n`);
+console.log(`배치 플래그 ${flagged}건 · 로드 실패 ${rows.filter(row => row.error).length}건 · exit ${process.exitCode || 0}.\n`);
 
-await browser.close();
+} finally { await browser.close(); }

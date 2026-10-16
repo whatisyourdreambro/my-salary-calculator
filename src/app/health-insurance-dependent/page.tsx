@@ -17,9 +17,9 @@ import ShareButtons from "@/components/ShareButtons";
 import HealthInsuranceDependentClient from "./Client";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "건강보험 피부양자 자격 판정기 — 소득 2,000만원·재산 5.4억 기준 1분 확인",
+  title: "건강보험 피부양자 간이조건 확인 — 소득·재산 입력",
   description:
-    "건강보험 피부양자 유지/탈락 즉시 판정. 연 소득 2,000만원·사업소득 요건·재산세 과세표준 5.4억(초과 시 9억까지 소득 1,000만원 조건)·형제자매 예외까지 별표 1의2 전체 분기 반영. 11월 연례 재산정 전에 미리 확인하세요.",
+    "관계·소득·재산 입력으로 피부양자 간이조건을 확인합니다. 동거·부양, 배우자 소득, 주택임대·사업소득 예외는 별도 확인이 필요하며 실제 자격은 공단에서 확인하세요.",
   path: "/health-insurance-dependent",
   keywords: [
     "피부양자 자격",
@@ -89,7 +89,7 @@ const HOWTO_STEPS = [
   },
   {
     name: "재산세 과세표준 입력 후 판정 확인",
-    text: "재산세 고지서의 과세표준을 입력하면 유지/탈락 판정과 탈락 사유가 즉시 표시됩니다.",
+    text: "재산세 고지서의 과세표준을 입력하면 입력 조건의 간이 결과가 표시됩니다.",
   },
 ];
 
@@ -123,10 +123,10 @@ export default function HealthInsuranceDependentPage() {
       <JsonLd
         data={[
           autoBreadcrumbLd("/health-insurance-dependent", {
-            leafName: "건강보험 피부양자 자격 판정기",
+            leafName: "건강보험 피부양자 간이조건 확인",
           }),
           softwareApplicationLd({
-            name: "건강보험 피부양자 자격 판정기",
+            name: "건강보험 피부양자 간이조건 확인",
             description:
               "소득·재산·관계 문항 입력으로 건강보험 피부양자 유지/탈락을 별표 1의2 기준으로 즉시 판정",
             url: "/health-insurance-dependent",
@@ -145,7 +145,7 @@ export default function HealthInsuranceDependentPage() {
       <div className="page-width pt-24 pb-3">
         <Breadcrumbs
           path="/health-insurance-dependent"
-          leafName="건강보험 피부양자 자격 판정기"
+          leafName="건강보험 피부양자 간이조건 확인"
         />
       </div>
 
@@ -155,13 +155,13 @@ export default function HealthInsuranceDependentPage() {
             11월 연례 재산정 대비
           </span>
           <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-navy dark:text-canvas-50 leading-tight mb-3">
-            건강보험 피부양자 자격 판정기
+            건강보험 피부양자 간이조건 확인
           </h1>
           <p className="text-[15px] leading-7 text-muted-blue dark:text-canvas-300">
-            관계·소득·재산 문항에 답하면 건강보험 피부양자 자격의 유지/탈락을 즉시 판정합니다.
+            관계·소득·재산 문항에 답하면 입력한 피부양자 간이조건을 확인합니다.
             연 소득 2,000만원, 사업소득 요건(등록 시 0원·미등록 시 500만원), 재산세 과세표준
             5억 4,000만원(초과 시 9억원까지 소득 1,000만원 조건), 형제자매 예외(1억 8,000만원)까지
-            국민건강보험법 시행규칙 별표 1의2의 전체 분기를 반영했습니다. 공단은 매년 11월
+            동거·부양, 배우자 소득, 주택임대·사업소득 예외는 별도 확인이 필요합니다. 공단은 매년 11월
             전년도 소득으로 자격을 재산정해 12월부터 지역보험료를 부과하니, 그 전에 미리
             확인하세요.
           </p>
@@ -381,7 +381,7 @@ export default function HealthInsuranceDependentPage() {
         {/* ShareButtons (공유 유입) */}
         <div className="my-8">
           <ShareButtons
-            title="건강보험 피부양자 자격 판정기"
+            title="건강보험 피부양자 간이조건 확인"
             description="소득·재산 문항으로 피부양자 유지/탈락 1분 판정 — 11월 재산정 대비"
           />
         </div>

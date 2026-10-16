@@ -22,7 +22,7 @@ export default function BonusClusterLinks({ currentSlug }: Props) {
     {
       href: "/calc/bonus-calculators",
       title: `성과급 계산기 ${bonusCalcCountKo} 전체 보기`,
-      desc: "회사별 최신 지급률·2026 시즌 캘린더 허브",
+      desc: "회사별 입력 시나리오·2026 시즌 캘린더 허브",
       hot: true,
     },
   ];

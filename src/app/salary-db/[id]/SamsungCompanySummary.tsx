@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "@/components/AppLink";
 import type { CompanyProfile } from "@/types/company";
 import { getCompanySalaryBasis } from "@/lib/companySalaryBasis";
 import SamsungCompanySummaryLinks from "./SamsungCompanySummaryLinks";
@@ -49,7 +50,7 @@ export default function SamsungCompanySummary({ company, dartSalaryManwon }: {
       )}
       {disclosed && <p className="mt-3 text-xs leading-relaxed text-muted-foreground">출처: {disclosed.source}</p>}
       <SamsungCompanySummaryLinks>
-        <a href="/calc/samsung-bonus" className="inline-flex min-h-11 items-center rounded-xl bg-electric px-4 py-2 text-sm font-bold text-white hover:bg-electric/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric">내 연봉으로 삼성 성과급 계산</a>
+        <Link href="/calc/samsung-bonus" className="inline-flex min-h-11 items-center rounded-xl bg-electric px-4 py-2 text-sm font-bold text-white hover:bg-electric/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric">내 연봉으로 삼성 성과급 계산</Link>
         <a href="#samsung-salary-table" className={linkClass}>5단계 연봉·실수령 표</a>
         {hasCareerLevels && <a href="#samsung-career-levels" className={linkClass}>CL 직급별 표</a>}
         {disclosed && <a href="#samsung-disclosed-salary" className={linkClass}>공시·출처 자세히</a>}

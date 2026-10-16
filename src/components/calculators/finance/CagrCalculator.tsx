@@ -10,10 +10,14 @@ export default function CagrCalculator() {
  const [endValue, setEndValue] = useState<number | "">("");
  const [years, setYears] = useState<number | "">("");
 
- let cagr = 0;
- if (startValue && endValue && years) {
+ let cagr: number | null = null;
+ const validInputs = startValue !== "" && endValue !== "" && years !== ""
+   && Number.isFinite(startValue) && Number.isFinite(endValue) && Number.isFinite(years)
+   && Number(startValue) > 0 && Number(endValue) >= 0 && Number(years) > 0;
+ if (validInputs) {
  // CAGR = (End / Start)^(1/n) - 1
  cagr = (Math.pow(Number(endValue) / Number(startValue), 1 / Number(years)) - 1) * 100;
+ if (!Number.isFinite(cagr)) cagr = null;
  }
 
  return (
@@ -31,7 +35,7 @@ export default function CagrCalculator() {
  id={`${fieldId}-start`}
  type="number"
  value={startValue}
- onChange={(e) => setStartValue(Number(e.target.value))}
+ onChange={(e) => setStartValue(e.target.value === "" ? "" : Number(e.target.value))}
  className="w-full bg-canvas border border-canvas rounded-xl py-3 px-4 text-navy focus:ring-2 focus:ring-primary outline-none"
  />
  </div>
@@ -41,7 +45,7 @@ export default function CagrCalculator() {
  id={`${fieldId}-end`}
  type="number"
  value={endValue}
- onChange={(e) => setEndValue(Number(e.target.value))}
+ onChange={(e) => setEndValue(e.target.value === "" ? "" : Number(e.target.value))}
  className="w-full bg-canvas border border-canvas rounded-xl py-3 px-4 text-navy focus:ring-2 focus:ring-primary outline-none"
  />
  </div>
@@ -52,7 +56,7 @@ export default function CagrCalculator() {
  id={`${fieldId}-years`}
  type="number"
  value={years}
- onChange={(e) => setYears(Number(e.target.value))}
+ onChange={(e) => setYears(e.target.value === "" ? "" : Number(e.target.value))}
  className="w-full bg-canvas border border-canvas rounded-xl py-3 px-4 text-navy focus:ring-2 focus:ring-primary outline-none"
  />
  </div>
@@ -60,7 +64,7 @@ export default function CagrCalculator() {
  <div className="mt-6 p-6 bg-canvas rounded-xl border border-canvas text-center">
  <div className="text-muted-blue mb-2">연평균 성장률 (CAGR)</div>
  <div className="text-4xl font-black text-[rgba(255,255,255,0.8)]">
- {cagr ? cagr.toFixed(2) : "0.00"}%
+ {cagr === null ? "—" : `${cagr.toFixed(2)}%`}
  </div>
  </div>
  </div>

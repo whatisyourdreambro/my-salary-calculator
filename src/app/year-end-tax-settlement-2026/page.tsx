@@ -19,7 +19,7 @@ export const metadata: Metadata = buildPageMetadata({
  // 의도: 근로자 12월 시즌 가이드 (전략·읽는 콘텐츠). 체크리스트는 별도 페이지(/year-end-tax-checklist), 계산기는 /year-end-tax.
  title: `${YEAR_END_SEASON.attributionYear} 근로자 연말정산 + 성과급 절세 가이드 — 12월 IRP 만기 납입까지`,
  description:
- `성과급 1천만원 받으면 한계세율 35%→38%로 점프할 수 있음. 12월까지 IRP·연금저축 최대 900만원 납입 시 환급 약 119~149만원. ${YEAR_END_SEASON.attributionYear} 근로자 연말정산 + 성과급 절세 6가지 핵심 전략.`,
+ `성과급 1천만원 받으면 한계세율 35%→38%로 점프할 수 있음. 12월까지 IRP·연금저축 합산 900만원 세액공제 대상 한도와 공제율 확인. ${YEAR_END_SEASON.attributionYear} 근로자 연말정산 + 성과급 절세 6가지 핵심 전략.`,
  path: "/year-end-tax-settlement-2026",
  ogType: "article",
  publishedTime: "2026-01-15",
@@ -62,7 +62,7 @@ const FAQ_ITEMS = [
  {
  question: "IRP 만원이라도 가입하면 절세 효과가 있나요?",
  answer:
- "네. IRP는 연 300만원까지 추가 세액공제(연금저축 600만 + IRP 300만 = 900만원). 연봉 5,500만원 이하는 16.5% 공제. 100만원 납입 시 약 16.5만원 절세.",
+ "IRP는 연금저축과 합산해 연 900만원까지 세액공제 대상입니다. 연금저축에 600만원을 납입했다면 추가 대상 한도는 300만원입니다. 실제 세액공제는 공제율과 산출세액에 따라 달라집니다.",
  },
  {
  question: "2026년 귀속 연말정산에서 달라지는 점은 무엇인가요?",

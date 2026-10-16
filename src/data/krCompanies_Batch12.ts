@@ -338,6 +338,18 @@ export const krCompanies_Batch12: CompanyProfile[] = [
     tier: "public",
     logo: "🛣️",
     description: "전국 고속도로 건설·운영·관리를 담당하는 공기업. 총 연장 5,000km 이상의 고속도로 네트워크를 관리.",
+    // 중복 제거로 탈락하던 korea-expressway의 기존 공시를 정본으로 이전.
+    // 알리오 2025년 결산 공시 확정치 (2026-08-31 원문 재검증). 직급별(1~5급) 확정치는
+    // 공시·국감 어디에도 없어 careerLevels 미수록 (추정 금지 — 플랫폼 추정치 배제).
+    disclosed: {
+      avgSalaryManwon: 9069,
+      fiscalYear: "2025",
+      avgTenureYears: 16.7,
+      source:
+        "알리오(공공기관 경영정보 공개시스템) 2025년 결산 직원 평균보수 공시 (기준일 2025-12-31, 2026-04-08 제출) — 원문 표 직접 확인",
+      sourceUrl: "https://www.alio.go.kr/item/itemReportTerm.do?apbaId=C0183&reportFormRootNo=2060",
+      note: "일반정규직 1인당 평균보수(성과상여금 2,508만원 — 경영평가 성과급 868만원 포함 — 합산 총액). 무기계약직 평균 5,411만원 별도. 신입 초임은 2025년 결산 4,237만원(기본급 3,587만원+성과상여금 598만원 등)·2026년 예산 4,385만원.",
+    },
     salary: {
       entry: { base: 52000000, incentive: { target: 10, max: 22, avgAmount: 7000000 } },
       junior: { base: 63000000, incentive: { target: 10, max: 22, avgAmount: 8500000 } },
@@ -360,7 +372,7 @@ export const krCompanies_Batch12: CompanyProfile[] = [
       pros: ["통행료 면제 등 실생활에 유용한 복지", "안정적 고용과 정년 보장", "전국 도로 인프라 관리 전문성"],
       cons: ["본사 김천 이전으로 지방 근무 부담", "현장 순환 근무로 거주지 변동 가능", "보수적인 공기업 조직 문화"],
     },
-    lastUpdated: "2026-05-15",
+    lastUpdated: "2026-10-16",
   },
   {
     id: "nhis",

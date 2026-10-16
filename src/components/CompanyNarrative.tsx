@@ -111,14 +111,8 @@ export default function CompanyNarrative({ company }: Props) {
           {++sec}. {koName} 신입 vs 시니어 연봉 격차
         </h3>
         <p>
-          {describeSalaryGrowth(company)}. 평균적으로 동종업계가 신입→시니어 1.8~2.5배
-          격차를 보이는 점을 감안하면 {koName}의 격차는{" "}
-          {seniorTotal / entryTotal >= 2.3
-            ? "업계 평균보다 큰 편"
-            : seniorTotal / entryTotal >= 1.8
-            ? "업계 평균 수준"
-            : "다소 완만한 편"}
-          입니다.{" "}
+          {describeSalaryGrowth(company)}. 이는 이 페이지의 직급별 추정 보상을 비교한
+          값입니다.{" "}
           {noIncentive ? (
             <>
               보상 구조는 별도 인센티브 없이 전액 현금 연봉 중심으로 책정되는
@@ -164,9 +158,6 @@ export default function CompanyNarrative({ company }: Props) {
         <p>
           {describeWorkLife(company)}. 원격 근무 정책은{" "}
           <strong>{remotePolicy}</strong>
-          {company.workLife.remoteWork.policy === "hybrid" &&
-            company.workLife.remoteWork.daysPerWeek !== undefined &&
-            ` (주 ${company.workLife.remoteWork.daysPerWeek}일 출근)`}
           이며,{" "}
           {unlimitedVacation ? (
             <>
@@ -197,7 +188,7 @@ export default function CompanyNarrative({ company }: Props) {
             연봉 {Math.round(entryTotal / 10000).toLocaleString("ko-KR")}만원 실수령액
             페이지
           </Link>
-          에서 정확 산출이 가능합니다. 같은 연봉 기준 DSR 40% 적용 시 연 약{" "}
+          에서 입력 조건에 따른 예상액을 계산할 수 있습니다. 같은 연봉 기준 DSR 40% 적용 시 연 약{" "}
           <strong>{dsrCapacity.toLocaleString("ko-KR")}만원</strong>의 원리금 상환 여력이
           있어, 주택담보대출 한도는{" "}
           <Link
@@ -237,7 +228,7 @@ export default function CompanyNarrative({ company }: Props) {
           수준입니다. 세후 실수령액은 4대보험(국민연금·건강보험·고용보험) + 소득세·
           지방세 공제 후 신입 기준 약 {entryNetRatio}%, 리드급 기준 약 {leadNetRatio}%
           수준이며, 부양가족 수와 비과세 항목에 따라 변동 폭이 있습니다. {koName} 월급
-          실수령액의 정확한 금액은{" "}
+          실수령액의 예상 금액은{" "}
           <Link
             href={`/salary/${entryTotal}`}
             className="text-electric font-bold underline-offset-2 hover:underline"

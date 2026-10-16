@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -81,6 +81,71 @@ test('verify-edge-bundle: missing build output is not a pass', (t) => {
   assert.equal(run('verify-edge-bundle.mjs', dir).status, 1);
 });
 
+/** Next 15/OpenNext: middleware remains Edge; DSR is a traced Node route. */
+function fakeNodeNext({ chunkSources = ['./src/lib/widgets/dsrLimit.ts'], middlewareSources = ['./src/middleware.ts'] } = {}) {
+  const dir = mkdtempSync(join(tmpdir(), 'node-bundle-'));
+  const put = (file, text) => {
+    const parts = file.split('/');
+    mkdirSync(join(dir, ...parts.slice(0, -1)), { recursive: true });
+    writeFileSync(join(dir, ...parts), text);
+  };
+  put('server/src/middleware.js', '');
+  put('server/src/middleware.js.map', JSON.stringify({ version: 3, sources: middlewareSources }));
+  put('server/middleware-manifest.json', JSON.stringify({ functions: {}, middleware: { '/': { page: '/', files: ['server/edge-runtime-webpack.js', 'server/src/middleware.js'] } } }));
+  put('server/app-paths-manifest.json', JSON.stringify({ '/widget/dsr/route': 'app/widget/dsr/route.js' }));
+  put('server/app/widget/dsr/route.js', '');
+  put('server/app/widget/dsr/route.js.map', JSON.stringify({ version: 3, sources: ['./src/app/widget/dsr/route.ts'] }));
+  put('server/app/widget/dsr/route.js.nft.json', JSON.stringify({ version: 1, files: ['../../../chunks/321.js', '../../../webpack-runtime.js', '../../../../../node_modules/next/dist/server/next-server.js'] }));
+  put('server/chunks/321.js', '');
+  put('server/chunks/321.js.map', JSON.stringify({ version: 3, sources: chunkSources }));
+  return dir;
+}
+
+test('verify-edge-bundle: Next 15 middleware plus traced Node DSR passes without edge-chunks', (t) => {
+  const dir = fakeNodeNext();
+  t.after(() => rmSync(dir, { recursive: true, force: true }));
+  const result = run('verify-edge-bundle.mjs', dir);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /소스맵 3개 검사/);
+});
+
+test('verify-edge-bundle: Node DSR traced chunk containing the calculator registry fails', (t) => {
+  const dir = fakeNodeNext({ chunkSources: ['webpack://_N_E/./src/lib/simpleCalculators/batch1.ts'] });
+  t.after(() => rmSync(dir, { recursive: true, force: true }));
+  const result = run('verify-edge-bundle.mjs', dir);
+  assert.equal(result.status, 1, result.stdout + result.stderr);
+  assert.match(result.stdout, /server\/chunks\/321\.js.*node trace/);
+  assert.match(result.stdout, /simpleCalculators\/batch1\.ts/);
+});
+
+test('verify-edge-bundle: middleware source map is inspected without edge-chunks', (t) => {
+  const dir = fakeNodeNext({ middlewareSources: ['webpack://_N_E/./src/lib/searchIndexEn.ts'] });
+  t.after(() => rmSync(dir, { recursive: true, force: true }));
+  const result = run('verify-edge-bundle.mjs', dir);
+  assert.equal(result.status, 1, result.stdout + result.stderr);
+  assert.match(result.stdout, /server\/src\/middleware\.js.*searchIndexEn/s);
+});
+
+test('verify-edge-bundle: a missing Node chunk map cannot pass because other maps exist', (t) => {
+  const dir = fakeNodeNext();
+  t.after(() => rmSync(dir, { recursive: true, force: true }));
+  unlinkSync(join(dir, 'server/chunks/321.js.map'));
+  const result = run('verify-edge-bundle.mjs', dir);
+  assert.equal(result.status, 1, result.stdout + result.stderr);
+  assert.match(result.stdout, /검사 공백.*server\/chunks\/321\.js/);
+});
+
+test('verify-edge-bundle: missing Node route trace and invalid sources both fail closed', (t) => {
+  const dir = fakeNodeNext();
+  t.after(() => rmSync(dir, { recursive: true, force: true }));
+  writeFileSync(join(dir, 'server/chunks/321.js.map'), JSON.stringify({ version: 3, sources: [] }));
+  assert.equal(run('verify-edge-bundle.mjs', dir).status, 1);
+  unlinkSync(join(dir, 'server/app/widget/dsr/route.js.nft.json'));
+  const result = run('verify-edge-bundle.mjs', dir);
+  assert.equal(result.status, 1, result.stdout + result.stderr);
+  assert.match(result.stderr, /매니페스트\/trace 검사 불가/);
+});
+
 test('check-worker-size: sums gzip per file, skips nop-build-log.json, exits 0', (t) => {
   const dir = mkdtempSync(join(tmpdir(), 'worker-size-'));
   t.after(() => rmSync(dir, { recursive: true, force: true }));
@@ -90,7 +155,7 @@ test('check-worker-size: sums gzip per file, skips nop-build-log.json, exits 0',
   writeFileSync(join(dir, 'nop-build-log.json'), '{}');
   const r = run('check-worker-size.mjs', dir);
   assert.equal(r.status, 0, r.stdout + r.stderr);
-  assert.match(r.stdout, /파일 2개 \(nop-build-log\.json 제외\)/);
+  assert.match(r.stdout, /파일 2개 \(nop-build-log\.json 제외;/);
   assert.match(r.stdout, /__next-on-pages-dist__\/functions\/a\.func\.js/);
   assert.match(r.stdout, /OK {2}경고선까지 여유/);
 });

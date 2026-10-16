@@ -193,8 +193,8 @@ export default function FirefighterPay2026Page() {
               <p className="text-sm leading-7 text-muted-blue mt-4">
                 수당까지 합친 소방사 초임의 세전 보수는 일반직 9급 초임(연 3,428만원)보다 높은
                 편입니다. 세후 실수령은{" "}
-                <Link href="/salary/36000000" className="text-electric font-bold hover:underline">
-                  연봉 3,600만원 실수령액 표
+                <Link href="/calc/civil-servant-net-pay#fire" className="text-electric font-bold hover:underline">
+                  소방공무원 실수령액 계산기
                 </Link>
                 에서, 소방관 커리어별 연봉 흐름은{" "}
                 <Link href="/job/firefighter" className="text-electric font-bold hover:underline">

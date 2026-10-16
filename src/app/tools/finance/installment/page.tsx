@@ -12,14 +12,17 @@ export default function InstallmentPage() {
  const [annualRate, setAnnualRate] = useState(15.9);
 
  const r = useMemo(() => {
+ if (!Number.isFinite(principal) || principal < 0 || !Number.isFinite(annualRate) || annualRate < 0
+   || !Number.isInteger(months) || months < 1) return null;
  const r = annualRate / 100 / 12;
  if (r === 0) {
- const monthly = Math.round(principal / months);
- return { monthly, totalPayment: monthly * months, totalInterest: 0 };
+ return { monthly: principal / months, totalPayment: principal, totalInterest: 0 };
  }
- const monthly = Math.round(principal * (r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1));
- const totalPayment = monthly * months;
- return { monthly, totalPayment, totalInterest: totalPayment - principal };
+ // Keep precision until display so rounded monthly estimates do not alter the principal.
+ const monthly = -principal * r / Math.expm1(-months * Math.log1p(r));
+ const totalPayment = Math.round(monthly * months);
+ if (![monthly, totalPayment].every(Number.isFinite)) return null;
+ return { monthly, totalPayment, totalInterest: Math.max(0, totalPayment - principal) };
  }, [principal, months, annualRate]);
 
  const presets = [
@@ -54,7 +57,7 @@ export default function InstallmentPage() {
  <div className="bg-white border border-canvas rounded-2xl p-8 mb-6 shadow-sm space-y-5">
  <div>
  <label htmlFor="installment-principal" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">할부 원금 (원)</label>
- <NumberInput id="installment-principal" type="number" inputMode="numeric" value={principal} onChange={e => setPrincipal(Number(e.target.value))}
+ <NumberInput id="installment-principal" type="number" inputMode="numeric" min={0} value={principal} onChange={e => setPrincipal(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 text-xl font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  <div className="grid grid-cols-2 gap-4">
@@ -65,13 +68,13 @@ export default function InstallmentPage() {
  </div>
  <div>
  <label htmlFor="installment-rate" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">연 이자율 ({annualRate}%)</label>
- <NumberInput id="installment-rate" type="number" inputMode="numeric" step={0.1} value={annualRate} onChange={e => setAnnualRate(Number(e.target.value))}
+ <NumberInput id="installment-rate" type="number" inputMode="numeric" min={0} step={0.1} value={annualRate} onChange={e => setAnnualRate(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  </div>
  </div>
 
- <motion.div key={r.monthly} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+ {r ? <motion.div key={r.monthly} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
  className="rounded-2xl overflow-hidden border border-primary shadow-lg mb-8">
  <div className="bg-primary p-8 text-center">
  <p className="text-navy/70 text-xs font-black uppercase tracking-widest mb-2">월 납부액</p>
@@ -84,7 +87,7 @@ export default function InstallmentPage() {
  <div className="text-center"><p className="text-navy/60 text-xs mb-1">이자 비율</p><p className="text-navy font-black">{r.totalPayment > 0 ? (r.totalInterest / r.totalPayment * 100).toFixed(1) : 0}%</p></div>
  </div>
  </div>
- </motion.div>
+ </motion.div> : <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">원금과 이자율을 0 이상인 유효한 숫자로 입력해 주세요.</p>}
 
  </div>
  </main>

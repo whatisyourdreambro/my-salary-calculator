@@ -404,12 +404,12 @@ export default function EntrySalaryByIndustryReport() {
         {/* 교차 검증 — 공시·정부통계 (투명 혼합형의 "검증 가능한 1차 출처" 신호) */}
         <section className="mb-10">
           <h2 className="text-xl font-black text-navy mb-2">
-            공시·정부 통계로 교차 확인
+            공시·정부 통계 참고 자료
           </h2>
           <p className="text-[14px] leading-[1.8] text-muted-blue font-medium mb-4">
-            위 순위는 자체 DB 집계지만, 아래 수치는 금융감독원 공시(사업보고서)와
-            정부 공식 임금통계에서 그대로 가져온 검증 가능한 값입니다. 공시
-            평균연봉은 전 직급 평균이라 신입 초봉보다 높습니다.
+            위 순위는 추정치가 포함된 자체 DB 집계입니다. 아래 공시·정부 통계는
+            별도 참고 자료이며 표본·직급·산정 기준이 달라 신입 초봉의 정확성을
+            직접 검증하지 않습니다. 공시 평균은 전 직급 기준입니다.
           </p>
           {data.disclosedRows.length > 0 && (
             <div className="overflow-hidden rounded-3xl border border-canvas-200 bg-white shadow-sm mb-4">
@@ -447,7 +447,7 @@ export default function EntrySalaryByIndustryReport() {
                             rel="noopener noreferrer"
                             className="block text-[11px] text-faint-blue underline decoration-dotted truncate max-w-[340px]"
                           >
-                            출처: 사업보고서 보도 원문
+                            출처: 공시 또는 보도 원문
                           </a>
                         )}
                       </td>

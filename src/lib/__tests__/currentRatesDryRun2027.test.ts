@@ -105,24 +105,24 @@ describe("1/1 전환 리허설 — 포인터 2027", () => {
   it("/monthly/3000000 — 제목·설명·FAQ 가 2027 연도·요율·금액으로 함께 바뀐다", async () => {
     const params = { amount: "3000000" };
     const net = manwon(calculateSalary2026(36_000_000, 200_000, 1, 0, INSURANCE_RATES_2027).netPay);
-    const html = renderToStaticMarkup(createElement(MonthlyPage as unknown as (p: { params: { amount: string } }) => ReactNode, { params }));
+    const html = renderToStaticMarkup(await MonthlyPage({ params: Promise.resolve(params) }));
     expect(html).toContain(
       `세전 월급 300만원 기준 2027년 실수령액은 약 ${net}만원입니다. 국민연금 5.0%, 건강보험 3.595%(+장기요양), 고용보험`
     );
     expect(html).not.toContain("국민연금 4.75%");
-    const meta = await monthlyMetadata({ params });
+    const meta = await monthlyMetadata({ params: Promise.resolve(params) });
     expect(titleOf(meta.title)).toBe(`월급 300만원 실수령액 — 세후 월 ${net}만원 (2027 기준) | 머니샐러리`);
   });
 
   it("/salary/50000000 — 제목·HowTo·FAQ 가 2027 로 함께 바뀐다", async () => {
     const params = { amount: "50000000" };
     const net = manwon(calculateSalary2026(50_000_000, 200_000, 1, 0, INSURANCE_RATES_2027).netPay);
-    const html = renderToStaticMarkup(createElement(SalaryPage as unknown as (p: { params: { amount: string } }) => ReactNode, { params }));
+    const html = renderToStaticMarkup(await SalaryPage({ params: Promise.resolve(params) }));
     expect(html).toContain("비과세를 뺀 월 보수에 국민연금 5.0%(기준소득월액 상·하한 적용), 건강보험 3.595%");
     expect(html).toContain(`연봉 5,000만원의 2027년 예상 월 실수령액은 약 ${net}만원입니다.`);
     expect(html).toContain("2027 REPORT");
     expect(html).not.toContain("국민연금 4.75%");
-    const meta = await salaryMetadata({ params });
+    const meta = await salaryMetadata({ params: Promise.resolve(params) });
     expect(titleOf(meta.title)).toBe(`연봉 5,000만원 실수령액 월 ${net}만원 (2027 세후 월급) | 머니샐러리`);
   });
 

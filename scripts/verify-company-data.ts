@@ -101,11 +101,8 @@ for (const c of allCompanies) {
 //    dedupeCompanies 는 id 또는 name.ko 가 먼저 나온 레코드만 남긴다. 탈락 레코드에 적은
 //    공시 카드·직급표는 어떤 페이지에도 렌더되지 않는다 — 데이터는 반드시 생존 레코드
 //    (companyRepository.getById 가 반환하는 엔트리)에 적을 것.
-//    알려진 예외는 WARN(허용 목록) — 데이터 이전은 광고 위 카드 삽입이라 10/6 이후 창에서.
-const DROPPED_DATA_ALLOW = new Set<string>([
-  // 한국도로공사 ALIO FY2025 disclosed(9,069만원)가 중복 레코드에 있음 → korea-highway(Batch12)로 이전 예정
-  "korea-expressway",
-]);
+//    한국도로공사 공시는 생존 레코드로 이전 완료. 현재 허용하는 유실은 없다.
+const DROPPED_DATA_ALLOW = new Set<string>();
 {
   const survivorByName = new Map(allCompanies.map((c) => [c.name.ko.trim(), c.id]));
   const kept = new Set<CompanyProfile>(krCompanies.filter((c) => allCompanies.includes(c)));

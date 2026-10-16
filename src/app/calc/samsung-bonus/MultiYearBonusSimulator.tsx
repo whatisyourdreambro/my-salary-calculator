@@ -2110,8 +2110,8 @@ function AgeCompareView({
 
       <p className="text-[10px] text-faint-blue leading-relaxed mt-3">
         ※ 비교 기준은 연봉 + 평균 연성과급(세전) 합산입니다. 연령대 백분위는
-        통계청·고용노동부 자료 기반 <strong>추정치(참고용)</strong>이며, 실제
-        분포와 차이가 있을 수 있습니다.
+        자체 <strong>참고표</strong>를 사용하며, 공식 원자료와 기준연도는
+        확인되지 않아 실제 분포와 차이가 있을 수 있습니다.
       </p>
 
       {/* 순자산 카드 — 소득(흐름)과 단위가 다른 자산(스톡)이라 별도 분리 */}
@@ -2142,13 +2142,13 @@ function AgeCompareView({
         </div>
       )}
 
-      {/* 비교 욕구 정점 — 정밀 연봉 순위·회사별 비교로 연결 */}
+      {/* 연봉 참고표·회사별 비교로 연결 */}
       <ResultNextLinks
         className="mt-4"
         links={[
           {
             href: "/fun/salary-rank",
-            label: "전 연령·상위 0.1%까지 정밀 연봉 순위",
+            label: "연봉 참고표에서 상위 비율 비교",
           },
           {
             href: "/salary-db/ranking",

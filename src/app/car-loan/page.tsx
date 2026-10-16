@@ -201,7 +201,7 @@ export default function CarLoanPage() {
  softwareApplicationLd({
  name: "자동차 할부 계산기",
  description:
- "차량 가격, 선납금, 할부 기간, 이자율을 입력하면 월 납부액과 총 상환 금액, 총 이자를 즉시 계산합니다. 신차·중고차 할부 비교부터 캐피탈 vs 카드론까지 한 번에.",
+ "연봉·할부 기간·이자율로 목록의 차량별 월 할부금과 유지비를 비교합니다. 차량 가격 전액을 할부로 가정하며 선납금·잔금은 반영하지 않습니다.",
  url: "/car-loan",
  }),
  autoBreadcrumbLd("/car-loan", { leafName: "자동차 할부 계산기" }),
@@ -222,7 +222,7 @@ export default function CarLoanPage() {
  >
  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-primary-foreground font-medium text-sm mb-6">
  <CarIcon className="w-4 h-4" />
- <span>AI 기반 차량 추천 시스템</span>
+ <span>연봉 기반 차량 비교</span>
  </div>
  <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
  자동차 할부 계산기<span className="hidden sm:inline"> —</span><br className="sm:hidden" /> 내 연봉으로 살 수 있는 <br className="sm:hidden" />
@@ -452,10 +452,10 @@ export default function CarLoanPage() {
  <div className="pt-2 border-t border-border/50">
  <div className="flex items-center gap-1 text-xs text-muted-foreground mb-1">
  <TrendingUp className="w-3 h-3" />
- <span>기회비용 (S&P500 투자 시 수익)</span>
+ <span>기회비용 (연 8% 수익 가정)</span>
  </div>
  <p className="text-sm font-medium text-electric">
- +{Math.round(opportunityCost / 10000).toLocaleString('ko-KR')}만원 손해
+ +{Math.round(opportunityCost / 10000).toLocaleString('ko-KR')}만원 가정 수익
  </p>
  </div>
  </div>

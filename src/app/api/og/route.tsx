@@ -18,7 +18,8 @@ import { OG_CLIENT_CACHE_CONTROL, OgFontCache, serveCachedOgImage } from "@/lib/
 // type=salary 카드의 연도 표기 = 현행 요율 연도 (카드의 월 실수령액과 같은 포인터 — 2026-09-25 N3)
 import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 
-export const runtime = "edge";
+export const dynamic = "force-dynamic";
+
 
 const BRAND_BLUE = "#0145F2";
 const BRAND_BLUE_DEEP = "#0134B8";

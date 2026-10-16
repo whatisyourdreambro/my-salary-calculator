@@ -46,7 +46,7 @@ export default function AcquisitionTaxPage() {
  <div>
  <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-3">주택 보유 현황</label>
  <div className="grid grid-cols-2 gap-2">
- {[{v:true,l:"생애최초/1주택"},{v:false,l:"2주택 이상"}].map(t => (
+ {[{v:true,l:"일반세율 가정"},{v:false,l:"8% 중과 가정"}].map(t => (
  <button key={String(t.v)} onClick={() => setIsFirst(t.v)}
  className={`py-2.5 rounded-xl text-xs font-bold border transition-all ${isFirst === t.v ? "bg-primary text-white border-primary" : "border-canvas text-muted-blue hover:border-primary"}`}>
  {t.l}

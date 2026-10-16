@@ -16,7 +16,8 @@ import {
 } from "@/lib/civilServantPay";
 import { WIDGET_HEADERS, widgetShell } from "../shared";
 
-export const runtime = "edge";
+export const dynamic = "force-static";
+
 
 const won = (n: number) => n.toLocaleString("ko-KR");
 const manwon = (n: number) => Math.round(n / 10000).toLocaleString("ko-KR");

@@ -4,14 +4,16 @@
 //        [--trend-home <dir>] [--timeout-min 45] [--interval-sec 60]
 // 1) /guides/<slug> 를 60초마다(최대 45분) 받아 200 + 제목 표식이 보일 때까지 기다린다(CF Pages 빌드 10~25분).
 // 2) /rss.xml · /sitemap.xml 에 새 URL 이 있는지 확인.
-// 3) 낡은 청크 감지: /, /calc/samsung-bonus, /guides/nurse-salary HTML 이 가리키는 /_next/static 자산을 최대 40건 GET —
+// 3) 낡은 청크 감지: /, /calc/samsung-bonus, /guides/nurse-salary HTML 이 가리키는 /_next/static 자산을 최대 40건 HEAD —
 //    404 가 하나라도 있으면 'Purge 필요'. TREND_HOME/CF_PURGE_OK(자동 Purge 설정 확인됨)가 있으면 15분 뒤 한 번 더 확인.
-// UA 는 브라우저 문자열 — curl 기본 UA 는 CF 가 403 을 준다. 로그인·폼 없음, 공개 페이지 GET 만.
+// QA 식별 UA 사용. 공개 문서 GET/자산 HEAD만, 실행·로그인·폼·리디렉션 추적 없음.
 import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
+import qaHttp from "../lib/qa-production-http.cjs";
+const { assertProductionQaOrigin, assertProductionQaTarget, fetchProductionQaDocument, QA_USER_AGENT } = qaHttp;
 
-export const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
+export const UA = `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 ${QA_USER_AGENT}`;
 
 /** HTML 이 가리키는 /_next/static 자산 경로 (중복 제거, 문서 순서) */
 export function extractAssets(html) {
@@ -20,10 +22,12 @@ export function extractAssets(html) {
   return out;
 }
 
-async function get(fetchFn, url) {
+async function get(fetchFn, url, method = "GET") {
+  // Configuration errors must stop immediately, not become a 45-minute poll.
+  assertProductionQaTarget(url, method);
   try {
-    const res = await fetchFn(url, { headers: { "user-agent": UA, "cache-control": "no-cache" }, redirect: "follow" });
-    const text = await res.text();
+    const res = await fetchProductionQaDocument(url, { fetchFn, method, headers: { "user-agent": UA, "cache-control": "no-cache" } });
+    const text = method === "HEAD" ? "" : await res.text();
     return { status: res.status, text };
   } catch (e) {
     return { status: 0, text: String(e?.message ?? e) };
@@ -32,6 +36,11 @@ async function get(fetchFn, url) {
 
 /** 페이지가 200 + 표식을 보일 때까지 폴링 */
 export async function pollPage({ fetchFn, sleep, url, marker, timeoutMs, intervalMs, now = () => Date.now() }) {
+  assertProductionQaTarget(url);
+  if (!Number.isFinite(timeoutMs) || timeoutMs < 0 || timeoutMs > 120 * 60_000
+      || !Number.isFinite(intervalMs) || intervalMs < 1000) {
+    throw new Error("[verify-prod] Use a finite timeout of 0–120 minutes and polling interval of at least one second.");
+  }
   const start = now();
   let tries = 0;
   let last = { status: 0, text: "" };
@@ -44,8 +53,10 @@ export async function pollPage({ fetchFn, sleep, url, marker, timeoutMs, interva
   }
 }
 
-/** 낡은 청크 감지 — 자산 GET 최대 maxGets 건, 404 목록 */
+/** 낡은 청크 감지 — 자산 HEAD 최대 maxGets 건, 비정상 응답 목록 */
 export async function staleChunkCheck({ fetchFn, origin, pages, maxGets = 40 }) {
+  origin = assertProductionQaOrigin(origin);
+  if (!Number.isInteger(maxGets) || maxGets < 0 || maxGets > 40) throw new Error("[verify-prod] maxGets must be an integer from 0 to 40.");
   const missing = [];
   let gets = 0;
   for (const page of pages) {
@@ -57,8 +68,9 @@ export async function staleChunkCheck({ fetchFn, origin, pages, maxGets = 40 }) 
     for (const asset of extractAssets(res.text)) {
       if (gets >= maxGets) break;
       gets++;
-      const a = await get(fetchFn, `${origin}${asset}`);
+      const a = await get(fetchFn, `${origin}${asset}`, "HEAD");
       if (a.status === 404) missing.splice(missing.length, 0, asset);
+      else if (a.status !== 200) missing.splice(missing.length, 0, `${asset} (HTTP ${a.status})`);
     }
   }
   return { gets, missing };
@@ -68,7 +80,8 @@ export async function run(opts, deps = {}) {
   const fetchFn = deps.fetchFn ?? globalThis.fetch;
   const sleep = deps.sleep ?? ((ms) => new Promise((r) => setTimeout(r, ms)));
   const log = deps.log ?? console.log;
-  const origin = opts.origin ?? "https://www.moneysalary.com";
+  const origin = assertProductionQaOrigin(opts.origin);
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(opts.slug ?? "")) throw new Error("[verify-prod] A single lowercase guide slug is required.");
   const lines = [];
   const url = `${origin}/guides/${opts.slug}`;
   const page = await pollPage({ fetchFn, sleep, url, marker: opts.marker, timeoutMs: (opts.timeoutMin ?? 45) * 60_000, intervalMs: (opts.intervalSec ?? 60) * 1000, now: deps.now });

@@ -111,7 +111,7 @@ function makeStub({ warm = new Set(), overrides = {}, rssTables404 = true } = {}
   const fetchStub = async (url, init) => {
     const u = new URL(url);
     const p = u.pathname;
-    calls.push({ url, ua: init?.headers?.["user-agent"], redirect: init?.redirect });
+    calls.push({ url, ua: new Headers(init?.headers).get("user-agent"), redirect: init?.redirect });
     const nth = (seen.get(p) ?? 0) + 1;
     seen.set(p, nth);
     const o = overrides[p]?.(nth);

@@ -120,7 +120,7 @@ describe("jobSeoOverrides — 빈 맵(휴면)은 템플릿 그대로", () => {
   it("맵에 없는 직업(지금은 62개 전부)의 generateMetadata 는 종전 템플릿 출력과 deep-equal", async () => {
     let untouched = 0;
     for (const job of jobsData) {
-      const meta = await generateMetadata({ params: { slug: job.id } });
+      const meta = await generateMetadata({ params: Promise.resolve({ slug: job.id }) });
       const o = JOB_SEO_OVERRIDES[job.id];
       if (o) {
         expect(meta, job.id).toEqual(metadataWith(job, o.title, o.description));
@@ -170,7 +170,7 @@ describe("jobSeoOverrides — 픽스처 교체 주입(교수 후보)", () => {
     expect(fx.title.length).toBe(templateTitle(professor).length);
     expect(fx.description.length).toBeLessThanOrEqual(templateDescription(professor).length);
 
-    const meta = await page.generateMetadata({ params: { slug: "professor" } });
+    const meta = await page.generateMetadata({ params: Promise.resolve({ slug: "professor" }) });
     const full = `${fx.title} | ${SITE_NAME}`;
     expect(absTitle(meta)).toBe(full);
     expect(meta.openGraph?.title).toBe(absTitle(meta));
@@ -188,7 +188,7 @@ describe("jobSeoOverrides — 픽스처 교체 주입(교수 후보)", () => {
     // 다른 직업은 템플릿 그대로
     for (const id of ["doctor", "nurse", "elementary-teacher"]) {
       const job = getJobById(id)!;
-      expect(await page.generateMetadata({ params: { slug: id } }), id).toEqual(templateMetadata(job));
+      expect(await page.generateMetadata({ params: Promise.resolve({ slug: id }) }), id).toEqual(templateMetadata(job));
     }
   });
 
@@ -236,7 +236,7 @@ describe("jobSeoOverrides — 실제 맵 가드", () => {
     expect(calls).toBe(1);
     const callAt = src.indexOf("resolveJobMeta(");
     expect(callAt).toBeGreaterThan(src.indexOf("export async function generateMetadata"));
-    expect(callAt).toBeLessThan(src.indexOf("export default function JobPage"));
+    expect(callAt).toBeLessThan(src.indexOf("export default async function JobPage"));
     expect(src).not.toMatch(/JOB_SEO_OVERRIDES/);
   });
 });

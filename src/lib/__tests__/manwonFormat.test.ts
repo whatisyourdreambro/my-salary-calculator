@@ -100,7 +100,7 @@ describe("/job·/industry·/region 제목·설명", () => {
   it("/job: 다섯 자리 만원이 없고, 1억 미만 직업은 종전 문자열 그대로", async () => {
     let eok = 0;
     for (const job of jobsData) {
-      const meta = await jobMetadata({ params: { slug: job.id } });
+      const meta = await jobMetadata({ params: Promise.resolve({ slug: job.id }) });
       const title = String((meta.title as { absolute?: string })?.absolute ?? meta.title);
       const text = `${title}\n${meta.description}`;
       expect(text, job.id).not.toMatch(FIVE_DIGIT_MANWON);
@@ -116,13 +116,13 @@ describe("/job·/industry·/region 제목·설명", () => {
     }
     expect(eok).toBeGreaterThan(0);
     const doctor = jobsData.find((j) => j.salary.overall >= 10000)!;
-    const meta = await jobMetadata({ params: { slug: doctor.id } });
+    const meta = await jobMetadata({ params: Promise.resolve({ slug: doctor.id }) });
     expect(String(meta.description)).toContain(`평균 ${formatManwonKorean(doctor.salary.overall)}`);
   });
 
   it("/industry: 다섯 자리 만원이 없고, 1억 미만 업계는 종전 문자열 그대로", async () => {
     for (const ind of industriesData) {
-      const meta = await industryMetadata({ params: { slug: ind.id } });
+      const meta = await industryMetadata({ params: Promise.resolve({ slug: ind.id }) });
       const title = String((meta.title as { absolute?: string })?.absolute ?? meta.title);
       expect(`${title}\n${meta.description}`, ind.id).not.toMatch(FIVE_DIGIT_MANWON);
       const s = ind.salary;
@@ -135,7 +135,7 @@ describe("/job·/industry·/region 제목·설명", () => {
 
   it("/region: 다섯 자리 만원이 없다", async () => {
     for (const region of regionsData) {
-      const meta = await regionMetadata({ params: { slug: region.id } });
+      const meta = await regionMetadata({ params: Promise.resolve({ slug: region.id }) });
       const title = String((meta.title as { absolute?: string })?.absolute ?? meta.title);
       expect(`${title}\n${meta.description}`, region.id).not.toMatch(FIVE_DIGIT_MANWON);
     }
@@ -175,13 +175,13 @@ describe("가이드 카드 설명 (meta description·핵심 요약 원천)", () 
 });
 
 describe("/salary·/monthly FAQ (FAQPage JSON-LD 원천)", () => {
-  const renderSalary = (amount: number) =>
-    faqOf(renderToStaticMarkup(createElement(SalaryPage, { params: { amount: String(amount) } })));
+  const renderSalary = async (amount: number) =>
+    faqOf(renderToStaticMarkup(await SalaryPage({ params: Promise.resolve({ amount: String(amount) }) })));
 
-  it("1억 미만 연봉 페이지의 FAQ 질문은 종전 문자열 그대로", () => {
+  it("1억 미만 연봉 페이지의 FAQ 질문은 종전 문자열 그대로", async () => {
     for (const amount of [30_000_000, 50_000_000, 99_000_000]) {
       const label = legacy(Math.round(amount / 10000));
-      const names = renderSalary(amount).mainEntity!.map((q) => q.name);
+      const names = (await renderSalary(amount)).mainEntity!.map((q) => q.name);
       expect(names.slice(0, 3)).toEqual([
         `연봉 ${label}의 월 실수령액은 얼마인가요?`,
         `연봉 ${label}일 때 대출 상환 부담은 어떻게 비교하나요?`,
@@ -190,52 +190,52 @@ describe("/salary·/monthly FAQ (FAQPage JSON-LD 원천)", () => {
     }
   });
 
-  it("1억 이상 전 정적 연봉 페이지의 FAQ 에 다섯 자리 만원이 없고, 제목과 같은 억 표기를 쓴다", () => {
+  it("1억 이상 전 정적 연봉 페이지의 FAQ 에 다섯 자리 만원이 없고, 제목과 같은 억 표기를 쓴다", async () => {
     const big = getStaticSalaryAmounts().filter((a) => a >= 100_000_000);
     expect(big.length).toBeGreaterThan(100);
     for (const amount of big) {
-      const faq = renderSalary(amount);
+      const faq = await renderSalary(amount);
       const text = JSON.stringify(faq);
       expect(text, String(amount)).not.toMatch(FIVE_DIGIT_MANWON);
       expect(faq.mainEntity![0].name, String(amount)).toContain(`연봉 ${formatSalaryKorean(amount)}`);
     }
   });
 
-  it("1억 이상 질문은 화면 줄 수가 늘지 않도록 줄인 문형을 쓴다 (접힌 FAQ 의 summary 는 GuideMidAd 위)", () => {
-    const names = renderSalary(120_000_000).mainEntity!.map((q) => q.name);
+  it("1억 이상 질문은 화면 줄 수가 늘지 않도록 줄인 문형을 쓴다 (접힌 FAQ 의 summary 는 GuideMidAd 위)", async () => {
+    const names = (await renderSalary(120_000_000)).mainEntity!.map((q) => q.name);
     expect(names.slice(0, 3)).toEqual([
       "연봉 1억 2,000만원의 월 실수령액은?",
       "연봉 1억 2,000만원일 때 대출 상환 부담은?",
       "연봉 1억 2,000만원이면 직장인 중 어느 정도 위치인가요?",
     ]);
-    const repayment = renderSalary(250_000_000).mainEntity![1].acceptedAnswer.text;
+    const repayment = (await renderSalary(250_000_000)).mainEntity![1].acceptedAnswer.text;
     expect(repayment).toContain("가정하면 연 1억원입니다");
   });
 
-  it("G9: 출처 미확인 통계 수치(2024년 국세청 평균 4,200만원·중위 3,200만원)를 싣지 않는다", () => {
-    const text = JSON.stringify(renderSalary(50_000_000));
+  it("G9: 출처 미확인 통계 수치(2024년 국세청 평균 4,200만원·중위 3,200만원)를 싣지 않는다", async () => {
+    const text = JSON.stringify(await renderSalary(50_000_000));
     expect(text).not.toMatch(/국세청 통계|4,200만원|3,200만원/);
     expect(text).toContain("자체 참고표");
     expect(text).toContain("공식 전국 순위가 아닙니다");
   });
 
-  it("/monthly FAQ 의 상여 400% 환산 연봉은 1억 이상에서 억 표기, 미만은 종전 그대로", () => {
-    const answerOf = (monthly: number) =>
-      faqOf(renderToStaticMarkup(createElement(MonthlyPage, { params: { amount: String(monthly) } })))
+  it("/monthly FAQ 의 상여 400% 환산 연봉은 1억 이상에서 억 표기, 미만은 종전 그대로", async () => {
+    const answerOf = async (monthly: number) =>
+      faqOf(renderToStaticMarkup(await MonthlyPage({ params: Promise.resolve({ amount: String(monthly) }) })))
         .mainEntity!.find((q) => q.name.includes("연봉 ÷ 12"))!.acceptedAnswer.text;
-    expect(answerOf(3_000_000)).toContain("연봉은 약 4,800만원이 됩니다");
-    expect(answerOf(7_500_000)).toContain("연봉은 약 1억 2,000만원이 됩니다");
-    expect(answerOf(20_000_000)).toContain("연봉은 약 3억 2,000만원이 됩니다");
+    expect(await answerOf(3_000_000)).toContain("연봉은 약 4,800만원이 됩니다");
+    expect(await answerOf(7_500_000)).toContain("연봉은 약 1억 2,000만원이 됩니다");
+    expect(await answerOf(20_000_000)).toContain("연봉은 약 3억 2,000만원이 됩니다");
     for (const monthly of [6_300_000, 10_000_000, 15_000_000, 20_000_000]) {
-      const faq = faqOf(renderToStaticMarkup(createElement(MonthlyPage, { params: { amount: String(monthly) } })));
+      const faq = faqOf(renderToStaticMarkup(await MonthlyPage({ params: Promise.resolve({ amount: String(monthly) }) })));
       expect(JSON.stringify(faq), String(monthly)).not.toMatch(FIVE_DIGIT_MANWON);
     }
   });
 
-  it("/monthly 상여금 환산표 셀은 종전 '약 N,NNN만원' 그대로 — 억 표기는 Display2Ad 위 표 높이를 늘린다", () => {
+  it("/monthly 상여금 환산표 셀은 종전 '약 N,NNN만원' 그대로 — 억 표기는 Display2Ad 위 표 높이를 늘린다", async () => {
     // 월 750만원: 상여 400% → 연봉 1억 2,000만원. 폰트 실측(320~460px)에서 억 표기 셀이
     // 371~379px·450~460px 폭에서 행마다 한 줄씩 늘어 아래 Display2Ad 를 최대 120px 밀었다.
-    const html = renderToStaticMarkup(createElement(MonthlyPage, { params: { amount: "7500000" } }));
+    const html = renderToStaticMarkup(await MonthlyPage({ params: Promise.resolve({ amount: "7500000" }) }));
     const table = html.slice(html.indexOf("<table"), html.indexOf("</table>"));
     expect(table).toContain("약 12,000만원");
     expect(table).toContain("약 9,000만원");

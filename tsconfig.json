@@ -27,7 +27,9 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "next.config.mjs"
+    "next.config.mjs",
+    ".next-qa/types/**/*.ts"
   ],
-  "exclude": ["node_modules", ".claude"]
+  // The web app must not compile independent mobile apps or archived audit copies.
+  "exclude": ["node_modules", ".claude", "apps", "docs", ".artifacts", ".wrangler", ".vercel", ".open-next", ".open-next-qa"]
 }

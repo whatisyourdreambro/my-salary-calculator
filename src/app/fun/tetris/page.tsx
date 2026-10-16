@@ -48,13 +48,11 @@ export default function TetrisPage() {
  const [isPlaying, setIsPlaying] = useState(false);
  const [highScore, setHighScore] = useState(0);
 
- const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
-
  // --- Initialization ---
  useEffect(() => {
  try {
- const savedHighScore = localStorage.getItem("tetris_highscore");
- if (savedHighScore) setHighScore(parseInt(savedHighScore, 10));
+ const savedHighScore = Number(localStorage.getItem("tetris_highscore"));
+ if (Number.isSafeInteger(savedHighScore) && savedHighScore > 0) setHighScore(savedHighScore);
  } catch {
  // 프라이버시 모드 등 localStorage 접근 불가 — 최고점 저장만 생략
  }
@@ -82,7 +80,7 @@ export default function TetrisPage() {
  });
  }, []);
 
- const checkCollision = (piece: typeof activePiece, moveX = 0, moveY = 0, rotatedShape?: number[][]) => {
+ const checkCollision = useCallback((piece: typeof activePiece, moveX = 0, moveY = 0, rotatedShape?: number[][]) => {
  if (!piece) return false;
  const shape = rotatedShape || piece.shape;
 
@@ -98,12 +96,12 @@ export default function TetrisPage() {
  }
  }
  return false;
- };
+ }, [grid]);
 
  const lockPiece = useCallback(() => {
  if (!activePiece) return;
 
- const newGrid = [...grid];
+ const newGrid = grid.map(row => [...row]);
  activePiece.shape.forEach((row, r) => {
  row.forEach((cell, c) => {
  if (cell) {
@@ -172,36 +170,41 @@ export default function TetrisPage() {
  }
  }, [activePiece, gameOver, isPlaying, checkCollision]);
 
+ // Horizontal movement and rotation must not restart the gravity countdown.
+ // Read the latest move callback while keeping the level's interval stable.
+ const moveRef = useRef(move);
+ useEffect(() => {
+ moveRef.current = move;
+ }, [move]);
+
  // --- Game Loop ---
  useEffect(() => {
- if (!isPlaying || gameOver) {
- if (gameLoopRef.current) clearInterval(gameLoopRef.current);
- return;
- }
-
+ if (!isPlaying || gameOver) return;
  if (!activePiece) {
  spawnPiece();
- return;
  }
+ }, [isPlaying, gameOver, activePiece, spawnPiece]);
+
+ useEffect(() => {
+ if (!isPlaying || gameOver) return;
 
  const speed = Math.max(100, TICK_RATE_MS * Math.pow(SPEED_INCREMENT, level - 1));
- gameLoopRef.current = setInterval(() => {
- move(0, 1);
+ const timer = window.setInterval(() => {
+ moveRef.current(0, 1);
  }, speed);
 
- return () => {
- if (gameLoopRef.current) clearInterval(gameLoopRef.current);
- };
- }, [isPlaying, gameOver, activePiece, level, move, spawnPiece]);
+ return () => window.clearInterval(timer);
+ }, [isPlaying, gameOver, level]);
 
  // --- Controls ---
  useEffect(() => {
  const handleKeyDown = (e: KeyboardEvent) => {
+ if (!isPlaying || gameOver) return;
+ const target = e.target;
+ if (target instanceof HTMLElement && (target.isContentEditable || target.closest("input, textarea, select, button, a"))) return;
  if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(e.key)) {
  e.preventDefault();
  }
-
- if (!isPlaying || gameOver) return;
 
  switch (e.key) {
  case "ArrowLeft": move(-1, 0); break;

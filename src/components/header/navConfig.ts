@@ -59,7 +59,7 @@ export const navConfig: NavItem[] = [
   type: "dropdown",
   description: `삼성·SK하이닉스 등 회사별 성과급 계산기 ${bonusCalcCountKo}`,
   items: [
-   { name: `성과급 계산기 전체 보기 (${bonusCalcCountKo})`, href: "/calc/bonus-calculators", description: "회사별 최신 지급률·시즌 캘린더 허브", badge: "MUST" },
+   { name: `성과급 계산기 전체 보기 (${bonusCalcCountKo})`, href: "/calc/bonus-calculators", description: "회사별 입력 시나리오·시즌 캘린더 허브", badge: "MUST" },
    { name: "삼성전자 성과급 시뮬레이터", href: "/calc/samsung-bonus", description: "OPI + TAI 사업부별 분배 + 다년도 RSU", badge: "HOT" },
    { name: "SK하이닉스 PS·PI 계산기", href: "/calc/sk-hynix-bonus", description: "PS(영업이익 10%) + PI(반기 150%)", badge: "HOT" },
    // 현대차·기아 2026 임협 타결 반영 (운영자 승인 2026-09-03) — 매년 8~9월 타결 시 갱신
@@ -110,9 +110,9 @@ export const navConfig: NavItem[] = [
    { name: "취득세 계산기", href: "/tools/real-estate/acquisition-tax", description: "주택 매수 세금" },
    { name: "증여세 계산기", href: "/tools/real-estate/gift-tax", description: "증여 한도 시뮬" },
    { name: "프리랜서 종합소득세", href: "/tools/finance/freelance-tax", description: "5월 종소세 신고" },
-   { name: "IRP·연금저축", href: "/tools/finance/irp", description: "세액공제 환급액", badge: "HOT" },
+   { name: "IRP·연금저축", href: "/tools/finance/irp", description: "납입액별 예상 세액공제액", badge: "HOT" },
    { name: "신용카드 소득공제 계산기", href: "/credit-card-deduction-2026", description: "25% 문턱·한도 자동 계산" },
-   { name: "월세 세액공제 계산기", href: "/rent-tax-credit-2026", description: "15~17% 최대 170만 환급" },
+   { name: "월세 세액공제 계산기", href: "/rent-tax-credit-2026", description: "15~17% 예상 공제액·세액 조건 확인" },
    { name: "의료비 세액공제 계산기", href: "/medical-tax-credit-2026", description: "3% 문턱·실손 차감 반영" },
    { name: "실업급여 계산기", href: "/unemployment-benefit", description: "수령액·기간 즉시 계산", badge: "HOT" },
    { name: "근로장려금 계산기", href: "/earned-income-credit", description: "단독·홑벌이·맞벌이", badge: "HOT" },
@@ -123,9 +123,9 @@ export const navConfig: NavItem[] = [
  {
   name: "연봉DB",
   type: "dropdown",
-  description: "실제 데이터 기반 연봉 정보",
+  description: "공시와 자체 추정 연봉 정보",
   items: [
-   { name: "기업별 연봉 DB", href: "/salary-db", description: `${companyCountPlus}개 기업 평균 연봉`, badge: "MUST" },
+   { name: "기업별 연봉 DB", href: "/salary-db", description: `${companyCountPlus}개 기업 직급별 추정 연봉`, badge: "MUST" },
    { name: "공기업·공공기관 연봉 계산기", href: "/public-institutions", description: "공시 기준 확인·내 연봉으로 계산", badge: "NEW" },
    { name: "직업별 연봉", href: "/job", description: `${JOB_COUNT}개 직종 연봉 비교` },
    { name: "산업별 연봉", href: "/industry", description: `${INDUSTRY_COUNT}개 산업군 연봉 현황` },
@@ -201,10 +201,10 @@ export const navConfig: NavItem[] = [
   items: [
    { name: "Fun 전체 보기", href: "/fun", description: "20+ 게임·테스트 모음" },
    { name: "금융 MBTI 테스트", href: "/fun/financial-mbti", description: "16가지 투자 성향", badge: "HOT" },
-   { name: "부자 DNA 테스트", href: "/fun/rich-dna-test", description: "나의 부자 가능성" },
-   { name: "IQ 테스트", href: "/fun/iq-test", description: "직장인 IQ 측정" },
+   { name: "부자 DNA 테스트", href: "/fun/rich-dna-test", description: "재미용 투자 취향" },
+   { name: "IQ 테스트", href: "/fun/iq-test", description: "재미용 논리 퀴즈" },
    { name: "연봉 배틀", href: "/fun/salary-battle", description: "친구와 연봉 대결" },
-   { name: "연봉 랭킹", href: "/fun/salary-rank", description: "내 연봉 상위 %" },
+   { name: "연봉 랭킹", href: "/fun/salary-rank", description: "자체 참고표 연봉 티어" },
    { name: "MBTI 연봉 분석", href: "/mbti-salary", description: "성격 유형별 연봉" },
    { name: "탈출 계획", href: "/fun/escape-plan", description: "노비 탈출 시기" },
    { name: "자산 배분 마스터", href: "/fun/asset-allocator", description: "60초 투자 게임" },
@@ -214,7 +214,7 @@ export const navConfig: NavItem[] = [
    { name: "점심 룰렛", href: "/fun/lunch-roulette", description: "오늘 뭐 먹지?" },
    { name: "월드컵 토너먼트", href: "/fun/worldcup", description: "최고의 직장 뽑기" },
    { name: "2026 재물운 사주", href: "/fortune-2026", description: "올해 재물운" },
-   { name: "로또 번호 생성", href: "/lotto", description: "AI 추천 번호" },
+   { name: "로또 번호 생성", href: "/lotto", description: "조건별 무작위 번호" },
   ],
  },
 ];

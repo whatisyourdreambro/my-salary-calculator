@@ -18,6 +18,9 @@
 
 # next.js
 /.next/
+/.next-qa/
+/.open-next/
+/.open-next-qa/
 /out/
 
 # production

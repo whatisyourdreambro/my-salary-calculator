@@ -1,6 +1,9 @@
-# _routes.json 으로 Worker를 우회하는 정적 자산의 캐시 헤더.
+# Workers Static Assets가 Worker를 우회해 서빙하는 public/immutable 자산의 캐시 헤더.
 # (Worker 우회 경로에는 next.config.mjs headers() 가 적용되지 않으므로 여기서 지정)
 # AdSense 크롤러가 고빈도로 가져가는 ads.txt 류는 1일, 불변 이미지류는 1년 캐시.
+
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
 
 /ads.txt
   Cache-Control: public, max-age=86400
@@ -56,14 +59,10 @@
 /b112e39a5933ca97201c83a7c5d7d91e.txt
   Cache-Control: public, max-age=86400
 
-# 크롤러 메타 파일 4종(2026-09-25 B2). public/ 사본이 아니라 빌드가 src/app 의 robots.ts·sitemap.ts·
-# rss.xml·rss-companies.xml 라우트를 프리렌더해 .vercel/output/static 에 쓰는 파일이다
-# (public/ 에 두면 동적 라우트가 무효화되는 함정 — 절대 복사하지 말 것).
-# 미들웨어 matcher 가 원래 제외하던 경로라 Worker 우회로 잃는 동작(www 301·봇 403)이 없다.
-# robots.txt 는 GSC 크롤 통계에서 9/15~9/22 가져오기 실패(0.3~3.8%/일, 그 여파 크롤 96건)가 났고,
-# robots.txt 5xx 는 구글 크롤 전체 중단 사유라 Worker CPU 한도(1102)에서 떼어 낸다.
-# rss 2종은 우회 전 route 응답 헤더 값 그대로, sitemap 은 기존 max-age=0 대신 1시간.
-# Content-Type 은 Pages 가 확장자로 지정한다(배포 후 xml·text/plain 확인).
+# 이전 Pages 배포의 크롤러 메타 파일 규칙(2026-09-25 B2).
+# OpenNext에서는 이 경로들이 Worker의 prerender cache를 거쳐 응답하므로 route/Next 헤더가 적용된다.
+# public/에 robots·sitemap·RSS 사본을 만들면 앱 라우트를 가리므로 복사하지 말 것.
+# 아래 규칙은 이전 Pages 구성과의 호환 자료이며 Workers의 HTML/API 라우팅 규칙이 아니다.
 /robots.txt
   Cache-Control: public, max-age=3600
 

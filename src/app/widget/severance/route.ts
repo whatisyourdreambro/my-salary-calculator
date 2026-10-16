@@ -8,7 +8,8 @@
 import { calculateSeveranceTax } from "@/lib/severanceCalculator";
 import { WIDGET_HEADERS, widgetShell } from "../shared";
 
-export const runtime = "edge";
+export const dynamic = "force-static";
+
 
 const YEARS_MAX = 40;
 // 퇴직금 축: 0 ~ 10억, 1,000만원 스텝 (구간 선형보간)
@@ -74,8 +75,9 @@ function buildHtml(): string {
   function fmtManwon(won) { return Math.round(won / 10000).toLocaleString("ko-KR"); }
   function render() {
     var w = parseFloat(wage.value.replace(/,/g, "")) * 10000;
-    var y = parseInt(years.value.replace(/,/g, ""), 10);
+    var y = Number(years.value.replace(/,/g, ""));
     if (!isFinite(w) || w <= 0 || !isFinite(y) || y < 1) { net.textContent = "—"; detail.textContent = "—"; return; }
+    if (!Number.isInteger(y)) { net.textContent = "근속연수는 정수로 입력"; detail.textContent = "—"; return; }
     if (y > YEARS_MAX) { net.innerHTML = "<small>" + YEARS_MAX + "년 초과는 아래 버튼으로</small>"; detail.textContent = "—"; return; }
     var gross = w * y; // 30일분 평균임금 × 연수
     if (gross > PAY_MAX) { net.innerHTML = "<small>10억 초과는 아래 버튼으로</small>"; detail.textContent = "—"; return; }
@@ -88,7 +90,7 @@ function buildHtml(): string {
   render();
 })();`,
     ctaHref: "/?tab=severance",
-    ctaLabel: "입사·퇴사일 기준 정확히 계산하기 →",
+    ctaLabel: "입사·퇴사일 기준 예상액 계산하기 →",
   });
 }
 

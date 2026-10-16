@@ -55,10 +55,11 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({
- params,
+ params: pendingParams,
 }: {
- params: { id: string };
+ params: Promise<{ id: string }>;
 }): Promise<Metadata> {
+ const params = await pendingParams;
  const company = companyRepository.getById(params.id);
  if (!company) return { title: "Company Not Found" };
 
@@ -90,11 +91,12 @@ function disclosedCitation(
  return { name, url };
 }
 
-export default function CompanyDetailPage({
- params,
+export default async function CompanyDetailPage({
+ params: pendingParams,
 }: {
- params: { id: string };
+ params: Promise<{ id: string }>;
 }) {
+ const params = await pendingParams;
  const company = companyRepository.getById(params.id);
  // GSC 404 출혈 차단(7차): 옛 회사 ID 잔재 → /salary-db 메인 308
  if (!company) permanentRedirect("/salary-db");

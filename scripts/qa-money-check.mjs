@@ -1,12 +1,15 @@
-// Run against a local server: BASE_URL=http://127.0.0.1:3100 node scripts/qa-money-check.mjs
+// Start qa:dev/qa:start, then: npm run qa:run -- scripts/qa-money-check.mjs
 // External requests are blocked; this never requests or clicks a live advertisement.
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import qaSafety from './lib/qa-safety.cjs';
+const { assertLocalQaTarget, assertQaEnvironment, launchQaBrowser } = qaSafety;
 const { chromium } = createRequire(import.meta.url)('playwright-core');
 
-const base = process.env.BASE_URL || 'http://127.0.0.1:3100';
+const base = assertLocalQaTarget(process.env.BASE_URL || 'http://127.0.0.1:3100');
+assertQaEnvironment();
 const output = path.resolve('.artifacts/money-check-qa');
 const storageKey = 'moneysalary:money-check:v1';
 const errors = [];
@@ -28,7 +31,7 @@ async function open(page) {
 
 async function main() {
   await fs.mkdir(output, { recursive: true });
-  const browser = await chromium.launch({ headless: true, ...(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : process.platform === 'win32' ? { channel: 'chrome' } : {}) });
+  const browser = await launchQaBrowser(chromium, base, { headless: true, ...(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : process.platform === 'win32' ? { channel: 'chrome' } : {}) });
   try {
     const ctx = await context(browser);
     const page = await ctx.newPage();

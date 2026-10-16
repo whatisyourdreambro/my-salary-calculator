@@ -18,7 +18,8 @@ import { calculateNetSalary } from "@/lib/calculator";
 import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import { WIDGET_CSP, WIDGET_REFERRER_SCRIPT, WIDGET_NUMBER_INPUT_SCRIPT } from "../shared";
 
-export const runtime = "edge";
+export const dynamic = "force-static";
+
 
 // 연봉 그리드: 1,200만 ~ 2억, 100만원 스텝 (월 실수령은 구간 선형보간)
 const GRID_MIN = 12_000_000;
@@ -113,7 +114,7 @@ function buildHtml(): string {
     <span class="value" id="net">—</span>
   </div>
   <p class="note">${CURRENT_RATES_YEAR}년 세법 · 부양가족 1인 · 비과세 식대 월 20만원 기준 추정치입니다.</p>
-  <a class="cta" href="https://www.moneysalary.com/?utm_source=widget&amp;utm_medium=iframe" target="_blank" rel="noopener">정확한 공제 내역 계산하기 →</a>
+  <a class="cta" href="https://www.moneysalary.com/?utm_source=widget&amp;utm_medium=iframe" target="_blank" rel="noopener">조건별 예상 공제 내역 계산하기 →</a>
   <p class="brand"><a href="https://www.moneysalary.com/?utm_source=widget&amp;utm_medium=iframe" target="_blank" rel="noopener">by 머니샐러리</a></p>
 <script>
 ${WIDGET_NUMBER_INPUT_SCRIPT}

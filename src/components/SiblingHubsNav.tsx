@@ -36,7 +36,7 @@ interface Props {
 export default function SiblingHubsNav({
   currentPath,
   title = "다른 차원으로 보기",
-  subtitle = "회사 · 직업 · 산업 · 지역 — 트래픽 엔진 4종을 한 곳에서",
+  subtitle = "회사·직업·산업·지역별 연봉 정보를 함께 살펴보세요",
 }: Props) {
   const siblings = HUBS.filter((h) => h.href !== currentPath);
 

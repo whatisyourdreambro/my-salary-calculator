@@ -117,14 +117,14 @@ const EventCard = ({ event, index, updateEvent, removeEvent, simulationYears }: 
  return <CurrencyInput label="새로운 연봉" value={(event as JobChangeEvent).newSalary.toLocaleString('ko-KR')} onValueChange={(v) => updateEvent(index, 'newSalary', Number(v.replace(/,/g, '')))} quickAmounts={[]} />;
  case 'education':
  return <div className="space-y-2">
- <NumberStepper label="기간" value={(event as EducationEvent).durationYears} onValueChange={(v) => updateEvent(index, 'durationYears', v)} unit="년" />
- <CurrencyInput label="기간 중 연소득" value={(event as EducationEvent).incomeDuringEvent.toLocaleString('ko-KR')} onValueChange={(v) => updateEvent(index, 'incomeDuringEvent', Number(v.replace(/,/g, '')))} quickAmounts={[]} />
- <CurrencyInput label="연간 비용" value={(event as EducationEvent).costPerYear.toLocaleString('ko-KR')} onValueChange={(v) => updateEvent(index, 'costPerYear', Number(v.replace(/,/g, '')))} quickAmounts={[]} />
+ <p className="text-xs text-muted-foreground">현재 모형은 휴직 기간과 복귀 시점을 자동 반영하지 않습니다. 소득이 복귀하는 해에 별도의 이직 이벤트로 연봉을 다시 입력하세요.</p>
+ <CurrencyInput label="이벤트 이후 연소득" value={(event as EducationEvent).incomeDuringEvent.toLocaleString('ko-KR')} onValueChange={(v) => updateEvent(index, 'incomeDuringEvent', Number(v.replace(/,/g, '')))} quickAmounts={[]} />
+ <CurrencyInput label="이벤트 해 1회 비용" value={(event as EducationEvent).costPerYear.toLocaleString('ko-KR')} onValueChange={(v) => updateEvent(index, 'costPerYear', Number(v.replace(/,/g, '')))} quickAmounts={[]} />
  </div>;
  case 'side_project':
  return <div className="space-y-2">
- <CurrencyInput label="초기 연 수입" value={(event as SideProjectEvent).initialAnnualIncome.toLocaleString('ko-KR')} onValueChange={(v) => updateEvent(index, 'initialAnnualIncome', Number(v.replace(/,/g, '')))} quickAmounts={[]} />
- <NumberStepper label="연간 성장률" value={(event as SideProjectEvent).growthRatePercent} onValueChange={(v) => updateEvent(index, 'growthRatePercent', v)} unit="%" />
+ <CurrencyInput label="매년 동일한 부업 수입" value={(event as SideProjectEvent).initialAnnualIncome.toLocaleString('ko-KR')} onValueChange={(v) => updateEvent(index, 'initialAnnualIncome', Number(v.replace(/,/g, '')))} quickAmounts={[]} />
+ <p className="text-xs text-muted-foreground">현재 모형은 부업 수입의 연간 성장률을 반영하지 않고 매년 같은 금액을 더합니다.</p>
  </div>;
  default:
  return null;
@@ -255,6 +255,7 @@ export default function CareerPlannerPage() {
 
  <div className="bg-card p-6 rounded-xl border border-border">
  <h2 className="text-xl font-bold mb-4">커리어 이벤트</h2>
+  <p className="mb-4 text-xs text-muted-foreground">이벤트는 연도별로 하나씩 설정하세요. 같은 연도에 여러 개를 설정하면 목록의 마지막 이벤트만 계산에 반영됩니다.</p>
  <div className="space-y-4 max-h-[40rem] overflow-y-auto pr-2">
  {inputs.events.map((event, index) => (
  <EventCard key={index} event={event} index={index} updateEvent={updateEvent} removeEvent={removeEvent} simulationYears={inputs.simulationYears} />
@@ -303,8 +304,8 @@ export default function CareerPlannerPage() {
  인상 + 7년차 승진&rdquo; 두 시나리오를 각각 돌려보면, 단기 연봉은
  이직이 앞서더라도 투자 수익률과 저축 습관에 따라 10년 뒤 순자산은
  달라질 수 있다는 것을 확인할 수 있습니다. 대학원 진학이나 휴직처럼
- 소득이 줄어드는 구간도 학위/휴직 이벤트로 반영해 기회비용을 미리
- 가늠해 보세요.
+ 학위/휴직 이벤트는 이후 연소득을 바꾸고 해당 해 비용을 한 번 반영합니다.
+ 휴직 후 복귀 연봉은 복귀 해에 별도의 이직 이벤트로 입력하세요.
  </p>
  <p>
  시뮬레이션 결과는 입력한 가정에 따라 달라지는 참고용 추정치입니다. 세금·

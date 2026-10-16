@@ -7,7 +7,7 @@ import ToolPageContent from "@/components/tool/ToolPageContent";
 export const metadata: Metadata = buildPageMetadata({
  title: "취득세 계산기 - 주택·토지·교육세·농특세 (2026)",
  description:
- "주택·토지 취득가액 입력 → 취득세, 지방교육세, 농어촌특별세 자동 계산. 1주택자/다주택자/조정대상지역 세율 자동 적용, 2026년 최신 기준.",
+ "주택·토지 취득가액과 일반·8% 중과 가정으로 취득세, 지방교육세, 농어촌특별세를 계산합니다. 지역·주택 수별 적용 여부와 감면은 자동 판정하지 않는 간이 계산기입니다.",
  path: "/tools/real-estate/acquisition-tax",
  keywords: ["취득세 계산기", "주택 취득세", "토지 취득세", "지방교육세", "농어촌특별세"],
 });

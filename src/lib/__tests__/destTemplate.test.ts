@@ -147,3 +147,7 @@ describe("guide_cta_click 의 dest_tpl 전송", () => {
     expect(gtag.mock.calls[0][2]).toMatchObject({ dest_tpl: "bonus-calc", page_path: "/" });
   });
 });
+
+// These tests exercise payload/lifecycle behavior with a synthetic eligible visitor.
+// The real fail-closed runtime decision is covered separately in liveAds.test.ts.
+vi.mock("../liveAds", () => ({ canRequestLiveAds: () => true }));

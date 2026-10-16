@@ -279,7 +279,7 @@ export default function FortunePage() {
  <span className="text-4xl">🔮</span>
  </div>
  </div>
- <h2 className="text-2xl font-bold mb-4 text-navy">사주명식을 분석하고 있습니다...</h2>
+ <h2 className="text-2xl font-bold mb-4 text-navy">재미용 운세 문구를 준비하고 있습니다...</h2>
  <p className="text-faint-blue animate-pulse">
  {year}년 {month}월 {day}일의 기운을 읽는 중
  </p>
@@ -399,7 +399,7 @@ export default function FortunePage() {
 
  {/* 재미 목적 면책 문구 (fortune-2026과 동일 기준) */}
  <p className="text-center text-xs text-faint-blue leading-relaxed">
- 본 운세 콘텐츠는 전통 사주 이론에 기반한 재미 목적의 참고 정보이며, 실제 투자·금융 결정에 직접 활용하지 마세요.
+ 입력값을 일정한 규칙으로 조합해 미리 정한 문구와 점수를 고르는 재미용 콘텐츠입니다. 사주 명식 계산·음양력 날짜 변환이나 실제 미래 예측은 제공하지 않으며, 투자·금융 결정에 활용하지 마세요.
  </p>
  </div>
  </motion.div>

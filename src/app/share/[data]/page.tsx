@@ -16,10 +16,9 @@ const SITE_URL = "https://www.moneysalary.com";
 
 // [수정] Cloudflare Pages 배포를 위해 Edge 런타임 설정을 추가합니다.
 
-export const runtime = 'edge';
 
 type Props = {
- params: { data: string };
+ params: Promise<{ data: string }>;
 };
 
 // 공유 데이터를 디코딩해 실제 실수령액을 복원 (ShareableResult와 동일 로직).
@@ -29,7 +28,8 @@ const decodeShared = decodeSharedSalary;
 // 공유 링크가 카톡·SNS에서 열렸을 때 '실제 금액'이 보이는 미리보기 카드를 생성.
 // 밋밋한 기본 로고 대신 호기심을 자극하는 문구 + 동적 OG 이미지(실수령액)로
 // 단톡방 클릭률을 끌어올린다 (바이럴 유입 루프의 핵심).
-export function generateMetadata({ params }: Props): Metadata {
+export async function generateMetadata({ params: pendingParams }: Props): Promise<Metadata> {
+ const params = await pendingParams;
  const decoded = decodeShared(params.data);
 
  if (!decoded) {
@@ -74,7 +74,8 @@ export function generateMetadata({ params }: Props): Metadata {
  };
 }
 
-export default function SharePage({ params }: Props) {
+export default async function SharePage({ params: pendingParams }: Props) {
+ const params = await pendingParams;
  // 공유 링크로 들어온 신규 방문자 — 결과만 보고 이탈하지 않도록
  // 다음 액션·관련 계산기를 붙여 세션당 페이지뷰를 늘린다 (바이럴→탐색 전환).
  const decoded = decodeShared(params.data);

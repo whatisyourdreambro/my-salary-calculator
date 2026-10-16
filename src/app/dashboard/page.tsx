@@ -13,7 +13,7 @@ const MyDashboard = dynamic(() => import("@/components/MyDashboard"), {
 });
 import DashboardFavoritesSection from "@/components/DashboardFavoritesSection";
 import type { StoredFinancialData } from "@/app/types";
-import { FINANCIAL_DATA_KEY, isStoredFinancialData } from "@/lib/storedFinancialData";
+import { FINANCIAL_DATA_KEY, isStoredDashboardData } from "@/lib/storedFinancialData";
 import Link from "@/components/AppLink";
 import { useRouter } from "next/navigation";
 import {
@@ -54,6 +54,7 @@ export default function DashboardPage() {
  const [dashboardData, setDashboardData] =
  useState<StoredFinancialData | null>(null);
  const [isLoading, setIsLoading] = useState(true);
+ const [storageError, setStorageError] = useState("");
  const router = useRouter();
 
  useEffect(() => {
@@ -62,19 +63,22 @@ export default function DashboardPage() {
  if (savedData) {
  // 형태가 맞지 않는 값은 '데이터 없음'으로 본다(지우지는 않음 — 다른 계산기가 쓰는 키).
  const parsed: unknown = JSON.parse(savedData);
- if (isStoredFinancialData(parsed)) setDashboardData(parsed);
+  if (isStoredDashboardData(parsed)) setDashboardData(parsed);
+  else setStorageError("저장된 결과 형식을 확인할 수 없습니다. 기존 값은 삭제하지 않았습니다.");
  }
  } catch (error) {
  console.error("Failed to parse dashboard data from localStorage", error);
- // 저장소 자체가 막힌 경우(사파리 쿠키 전체 차단 등) removeItem 도 던진다 → 오류 화면으로 번지지 않게.
- try { localStorage.removeItem(FINANCIAL_DATA_KEY); } catch { /* storage unavailable */ }
+  setStorageError("저장된 결과를 읽지 못했습니다. 기존 값은 삭제하지 않았으며, 브라우저 저장소 설정을 확인해 주세요.");
  } finally {
  setIsLoading(false);
  }
  }, []);
 
  const handleResetDashboard = () => {
- try { localStorage.removeItem(FINANCIAL_DATA_KEY); } catch { /* storage unavailable */ }
+  try { localStorage.removeItem(FINANCIAL_DATA_KEY); } catch {
+  setStorageError("초기화하지 못했습니다. 브라우저 저장소 설정을 확인해 주세요.");
+  return;
+  }
  setDashboardData(null);
  router.push("/");
  };
@@ -96,6 +100,7 @@ export default function DashboardPage() {
  return (
  <main className="w-full min-h-screen bg-canvas pt-28 pb-20">
  <div className="page-width">
+  {storageError && <p role="alert" className="mb-6 rounded-xl border border-border bg-background p-4 text-sm">{storageError}</p>}
  {dashboardData ? (
  <div className="space-y-12">
  <MyDashboard data={dashboardData} onReset={handleResetDashboard} />

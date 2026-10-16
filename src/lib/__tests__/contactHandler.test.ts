@@ -1,4 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+const runtimeBindings = vi.hoisted(() => ({ current: {} as Record<string, unknown> }));
+vi.mock("@/lib/server/cloudflareBindings", () => ({ cloudflareBindings: () => runtimeBindings.current }));
 import { handleContactPost } from "@/lib/server/contactHandler";
 import { CONTACT_SQL } from "@/lib/server/contactSql";
 import * as contactRoute from "@/app/api/contact/route";
@@ -45,7 +47,7 @@ function storage() {
   return { db, bindings: { FEEDBACK_DB: db, FEEDBACK_RATE_LIMIT_SECRET: secret } satisfies FeedbackBindings };
 }
 
-afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); });
+afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); runtimeBindings.current = {}; });
 
 describe("private contact API validation", () => {
   it.each([
@@ -119,12 +121,11 @@ describe("private contact API validation", () => {
 });
 
 describe("private contact persistence and failure handling", () => {
-  it("the actual Edge route has no public read method and fails closed when unconfigured", async () => {
+  it("the actual Workers route has no public read method and fails closed when unconfigured", async () => {
     vi.stubEnv("FEEDBACK_DB", undefined);
     vi.stubEnv("FEEDBACK_RATE_LIMIT_SECRET", undefined);
     vi.stubEnv("FEEDBACK_ALLOWED_ORIGIN", undefined);
-    expect(Object.keys(contactRoute).sort()).toEqual(["POST", "dynamic", "runtime"]);
-    expect(contactRoute.runtime).toBe("edge");
+    expect(Object.keys(contactRoute).sort()).toEqual(["POST", "dynamic"]);
     expect(contactRoute.dynamic).toBe("force-dynamic");
     const result = await contactRoute.POST(request());
     expect(result.status).toBe(503);
@@ -247,9 +248,9 @@ describe("feedback privacy primitives", () => {
   });
 
   it("reads environment bindings at request time rather than capturing a build value", () => {
-    vi.stubEnv("FEEDBACK_RATE_LIMIT_SECRET", "first-test-value");
+    runtimeBindings.current = { FEEDBACK_RATE_LIMIT_SECRET: "first-test-value" };
     expect(getFeedbackBindings().FEEDBACK_RATE_LIMIT_SECRET).toBe("first-test-value");
-    vi.stubEnv("FEEDBACK_RATE_LIMIT_SECRET", "second-test-value");
+    runtimeBindings.current = { FEEDBACK_RATE_LIMIT_SECRET: "second-test-value" };
     expect(getFeedbackBindings().FEEDBACK_RATE_LIMIT_SECRET).toBe("second-test-value");
   });
 });
