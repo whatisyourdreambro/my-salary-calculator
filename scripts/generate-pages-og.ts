@@ -3,12 +3,13 @@
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync, copyFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
-import { gunzipSync, inflateSync, deflateSync, crc32 } from 'node:zlib';
+import { gunzipSync, gzipSync, inflateSync, deflateSync, crc32 } from 'node:zlib';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { OG_ROOT, ogImageKey, renderPagesOg, isValidPagesPng, type PagesOgEnv } from '../cloudflare/pages-og';
 import type { OgStripData } from '../cloudflare/pages-og-strips';
 import { normalizeOgParams } from '../src/lib/ogImageCache';
 import { readStaticExportHead } from './lib/static-export-head';
+import { OG_POOL_CHUNK_BYTES, OG_POOL_MODULES, OG_RAW_MODULE_BYTES } from './lib/pages-export.mjs';
 
 type FileInfo = { bytes: number; sha256: string; gzipBytes: number; gzipSha256: string };
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -74,12 +75,28 @@ export async function generatePagesOg(outDir: string) {
     const data = gunzipSync(packed, { maxOutputLength: info.bytes });
     if (data.length !== info.bytes || hash(data) !== info.sha256) throw new Error(`OG bitmap mismatch: ${name}`);
     dataFiles.set(name, data); rawBytes += data.length;
-    if (name.endsWith('.bin')) writeFileSync(join(modules, name), data);
+    if (name.endsWith('.bin')) {
+      if (data.length !== OG_RAW_MODULE_BYTES[name as keyof typeof OG_RAW_MODULE_BYTES]) throw new Error('Unreviewed OG binary size');
+      // Preserve the existing, hash-verified gzip for glyph tables. Recompressing
+      // these with Node's zlib is larger than the pinned Python-generated files.
+      if (name !== 'pool.bin') writeFileSync(join(modules, name), packed);
+    }
   }
-  if (rawBytes > 60 * 1024 * 1024) throw new Error('OG module graph leaves insufficient room for the Pages router');
+  if (rawBytes > 52 * 1024 * 1024) throw new Error('OG expanded data exceeds the reviewed startup memory budget');
   const config = JSON.parse(dataFiles.get('config.json')!.toString('utf8'));
   writeFileSync(join(modules, 'config.mjs'), `// Generated from reviewed OG strip data; no runtime JSON parse.\nexport default ${JSON.stringify(config)};\n`);
-  writeFileSync(join(modules, 'index.mjs'), `// Immutable build data is initialized during module startup, not per request.\nimport pool from './pool.bin';\nimport glyphs36 from './glyphs-36.bin';\nimport glyphs64 from './glyphs-64.bin';\nimport config from './config.mjs';\nif (pool.byteLength !== ${dataFiles.get('pool.bin')!.length} || glyphs36.byteLength !== ${dataFiles.get('glyphs-36.bin')!.length} || glyphs64.byteLength !== ${dataFiles.get('glyphs-64.bin')!.length}) throw new Error('OG Data module size mismatch');\nexport const pagesOgData = Object.freeze({pool, glyphs36, glyphs64, config});\n`);
+  const poolData = dataFiles.get('pool.bin')!;
+  let packedPoolBytes = 0;
+  for (let index = 0; index < OG_POOL_MODULES.length; index++) {
+    const chunk = poolData.subarray(index * OG_POOL_CHUNK_BYTES, (index + 1) * OG_POOL_CHUNK_BYTES);
+    const packed = gzipSync(chunk, { level: 9 });
+    if (!gunzipSync(packed, { maxOutputLength: chunk.length }).equals(chunk)) throw new Error('OG pool chunk round-trip mismatch');
+    writeFileSync(join(out, '_worker.js', OG_POOL_MODULES[index]), packed); packedPoolBytes += packed.length;
+  }
+  copyFileSync(join(REPO, 'cloudflare/pages-og-inflate.mjs'), join(modules, 'inflate.mjs'));
+  const poolImports = OG_POOL_MODULES.map((name: string, index: number) => `import pool${index} from './${name.slice(3)}';`).join('\n');
+  const poolVariables = OG_POOL_MODULES.map((_: string, index: number) => `pool${index}`).join(',');
+  writeFileSync(join(modules, 'index.mjs'), `// Bounded expansion happens once at isolate startup, never per request.\nimport { inflateOgChunks } from './inflate.mjs';\n${poolImports}\nimport small from './glyphs-36.bin';\nimport large from './glyphs-64.bin';\nimport config from './config.mjs';\nconst pool = inflateOgChunks(${poolData.length}, [${poolVariables}]);\nconst glyphs36 = inflateOgChunks(${dataFiles.get('glyphs-36.bin')!.length}, [small], 8 * 1024 * 1024);\nconst glyphs64 = inflateOgChunks(${dataFiles.get('glyphs-64.bin')!.length}, [large], 8 * 1024 * 1024);\nexport const pagesOgData = Object.freeze({pool, glyphs36, glyphs64, config});\n`);
   copyFileSync(join(REPO, 'vendor/og-font/OFL.txt'), join(root, 'OFL.txt'));
   const exactBuffer = (name: string) => { const buffer = dataFiles.get(name)!; return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength) as ArrayBuffer; };
   const strips: OgStripData = { pool: exactBuffer('pool.bin'), glyphs36: exactBuffer('glyphs-36.bin'), glyphs64: exactBuffer('glyphs-64.bin'), config };
@@ -93,7 +110,8 @@ export async function generatePagesOg(outDir: string) {
   // Deliberately generic only when an unexpected missing/corrupt asset prevents a
   // personalized render; the runtime advertises this with short TTL + X-OG-Error.
   writeFileSync(join(root, 'fallback.png'), optimizeBuildPng(await renderPagesOg(new URLSearchParams('lang=en&title=MoneySalary'), env)));
-  const report = { version: 1, root: OG_ROOT, runtimeModules: '_worker.js/og/index.mjs', bitmapAtlasRuntimeFiles: 0, rawBytes,
+  const report = { version: 2, root: OG_ROOT, runtimeModules: '_worker.js/og/index.mjs', bitmapAtlasRuntimeFiles: 0, rawBytes,
+    compressedStartupData: true, poolChunkBytes: OG_POOL_CHUNK_BYTES, poolChunks: OG_POOL_MODULES.length, packedPoolBytes,
     preRenderedImages: params.length, pngBytes, fontSha256: provenance.fontSha256 };
   writeFileSync(join(root, 'build-manifest.json'), JSON.stringify(report, null, 2) + '\n');
   return report;

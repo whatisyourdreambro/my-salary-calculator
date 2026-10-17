@@ -8,7 +8,8 @@ import path from 'node:path';
 import { artifactHash, assertEnglishNotFoundDocument, BUILD_MARKER, canonicalPathname, checkAssetLimits, checkWorkerBundle, cleanBuildEnvironment,
   compileRoutingConfig, copyableSource, copySources, EXCLUDED_SOURCE_PATHS, inventoryHash, packageExport,
   loadPublicBuildSettings, PUBLIC_BUILD_CONFIG, QA_ASSETS_IGNORE, readPublicBuildConfiguration, resetOwnedStage,
-  sha256, SOURCE_ITEMS, sourceInventory, stagePath, verifyArtifact, workerModuleInventory } from '../lib/pages-export.mjs';
+  sha256, SOURCE_ITEMS, sourceInventory, stagePath, verifyArtifact, workerModuleInventory,
+  OG_WORKER_MODULES, PAGES_WORKER_LIMIT } from '../lib/pages-export.mjs';
 import { pagesWorkerEntrySource, parseArgs, qaMiniflareOptions, validateQaConfig } from '../pages-build.mjs';
 
 const require = createRequire(import.meta.url);
@@ -17,9 +18,11 @@ const routing = { headers: [{ source: '/:path*', regex: '^/.*$', keys: ['path'],
 const write = (root, file, value = '') => { const target = path.join(root, file); mkdirSync(path.dirname(target), { recursive: true }); writeFileSync(target, value); };
 const english404Html = '<!doctype html><html lang="ko"><head><title>Page not found | Moneysalary</title><meta name="robots" content="noindex, nofollow"/></head><body><div data-page-state="not-found"><div lang="en" data-english-page="true"><h1>This English page could not be found</h1><a href="/en">English home</a><a href="/en/calculators">Calculators</a><a href="/en/guides">Guides</a></div></div></body></html>';
 function moduleFixture(directory, entry) {
-  for (const name of ['pool', 'glyphs-36', 'glyphs-64']) write(directory, `_worker.js/og/${name}.bin`, Buffer.from([1, 2, 255]));
+  for (const name of OG_WORKER_MODULES.filter(name => name.endsWith('.bin')))
+    write(directory, `_worker.js/${name}`, Buffer.from([1, 2, 255]));
+  write(directory, '_worker.js/og/inflate.mjs', 'export const synthetic = true;');
   write(directory, '_worker.js/og/config.mjs', 'export default { version: 1 };');
-  write(directory, '_worker.js/og/index.mjs', `import pool from './pool.bin';
+  write(directory, '_worker.js/og/index.mjs', `import pool from './pool-00.bin';
 import small from './glyphs-36.bin'; import large from './glyphs-64.bin'; import config from './config.mjs';
 export const pagesOgData = { pool, small, large, config };`);
   if (entry !== undefined) write(directory, '_worker.js/index.js', entry);
@@ -205,7 +208,7 @@ test('native export packages HTML/TXT without mutating originals or moving ordin
   assert.equal(readFileSync(path.join(stage, 'dist/.assetsignore'), 'utf8'), QA_ASSETS_IGNORE);
   assert.equal(manifest.publicAssets.some(file => file.startsWith('/_worker.js')), false);
   assert.equal(Object.keys(manifest.routes).some(file => file.startsWith('/_worker.js')), false);
-  assert.equal(workerModuleInventory(path.join(stage, 'dist'), { requireEntry: false }).length, 5);
+  assert.equal(workerModuleInventory(path.join(stage, 'dist'), { requireEntry: false }).length, 43);
 });
 
 test('packager fails closed without both 404 routes and on private cache headers', t => {
@@ -282,7 +285,7 @@ test('QA config/options refuse remote bindings and install mandatory outbound de
   const converted = convertV4MiniflareOptions(options);
   assert.equal(converted.workers.length, 1);
   assert.equal(converted.workers[0].dev.outboundService.handler, deny);
-  assert.equal(options.modules.filter(module => module.type === 'Data').length, 3);
+  assert.equal(options.modules.filter(module => module.type === 'Data').length, 40);
   write(stage, 'dist/.assetsignore', '');
   assert.throws(() => qaMiniflareOptions(stage, qaConfig, 3320, deny), /private Worker/);
 });
@@ -322,7 +325,7 @@ test('native Workerd imports Data modules, hides Worker assets and blocks outbou
     assert.equal(assetBody, 'static synthetic document');
     const data = await mf.dispatchFetch(`${base.origin}/data`);
     assert.deepEqual(await data.json(), { byte: 255, size: 6, version: 1 });
-    const privateModule = await mf.dispatchFetch(`${base.origin}/_worker.js/og/pool.bin`);
+    const privateModule = await mf.dispatchFetch(`${base.origin}/_worker.js/og/pool-00.bin`);
     assert.equal(privateModule.status, 404);
     await privateModule.arrayBuffer();
     const denied = await mf.dispatchFetch(`${base.origin}/probe`);
@@ -346,9 +349,9 @@ test('marker verification rejects changed assets, source and mode using complete
   assert.equal(verifyArtifact(root, 'qa').marker.buildId, 'synthetic');
   write(stage, 'dist/robots.txt', 'changed'); assert.throws(() => verifyArtifact(root, 'qa'), /stale/);
   write(stage, 'dist/robots.txt', 'User-agent: *');
-  write(stage, 'dist/_worker.js/og/pool.bin', Buffer.from([1, 2, 254]));
+  write(stage, 'dist/_worker.js/og/pool-00.bin', Buffer.from([1, 2, 254]));
   assert.throws(() => verifyArtifact(root, 'qa'), /stale/);
-  write(stage, 'dist/_worker.js/og/pool.bin', Buffer.from([1, 2, 255]));
+  write(stage, 'dist/_worker.js/og/pool-00.bin', Buffer.from([1, 2, 255]));
   write(root, 'src/fixture.txt', 'changed'); assert.throws(() => verifyArtifact(root, 'qa'), /stale/);
 });
 
@@ -403,13 +406,14 @@ test('private Worker modules have a separate byte budget and an exact allowlist'
   // Module source exceeds this synthetic asset limit, but is never an asset.
   assert.equal(checkAssetLimits(dir, { files: 1, assetBytes: 5 }).assetCount, 1);
   const summary = checkWorkerBundle(dir);
-  assert.equal(summary.workerModuleCount, 6);
+  assert.equal(summary.workerModuleCount, 44);
+  assert.equal(PAGES_WORKER_LIMIT, 25 * 1024 * 1024);
   assert.equal(summary.workerHash.length, 64);
   assert.throws(() => checkWorkerBundle(dir, { workerBytes: summary.workerBytes - 1 }), /modules exceed/);
   write(dir, '_worker.js/unreviewed.js', '// extra');
   assert.throws(() => checkWorkerBundle(dir), /unreviewed/);
   rmSync(path.join(dir, '_worker.js/unreviewed.js'));
-  rmSync(path.join(dir, '_worker.js/og/pool.bin'));
+  rmSync(path.join(dir, '_worker.js/og/pool-00.bin'));
   assert.throws(() => checkWorkerBundle(dir), /incomplete/);
 });
 

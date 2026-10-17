@@ -4,10 +4,17 @@ import { copyFileSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSy
 import path from 'node:path';
 
 export const PAGES_LIMITS = Object.freeze({ files: 20000, assetBytes: 25 * 1024 * 1024 });
-export const PAGES_WORKER_LIMIT = 64 * 1024 * 1024;
+// The existing Pages API rejected a 53 MB package with code 8000101 on
+// 2026-10-17. Its 25 MiB limit is lower than the generic Workers documentation.
+export const PAGES_WORKER_LIMIT = 25 * 1024 * 1024;
 export const QA_ASSETS_IGNORE = '/_worker.js/\n/_routes.json\n';
-export const OG_WORKER_MODULES = Object.freeze(['og/config.mjs', 'og/glyphs-36.bin', 'og/glyphs-64.bin',
-  'og/index.mjs', 'og/pool.bin']);
+export const OG_POOL_CHUNK_BYTES = 1024 * 1024;
+export const OG_RAW_MODULE_BYTES = Object.freeze({ 'pool.bin': 38907807,
+  'glyphs-36.bin': 4923628, 'glyphs-64.bin': 8059908 });
+export const OG_POOL_MODULES = Object.freeze(Array.from({ length: Math.ceil(OG_RAW_MODULE_BYTES['pool.bin'] / OG_POOL_CHUNK_BYTES) },
+  (_, index) => `og/pool-${String(index).padStart(2, '0')}.bin`));
+export const OG_WORKER_MODULES = Object.freeze(['og/config.mjs', 'og/inflate.mjs', 'og/glyphs-36.bin', 'og/glyphs-64.bin',
+  'og/index.mjs', ...OG_POOL_MODULES]);
 export const STAGE_MARKER = '.moneysalary-pages-stage.json';
 export const BUILD_MARKER = 'moneysalary-pages-build.json';
 export const EXCLUDED_SOURCE_PATHS = Object.freeze([

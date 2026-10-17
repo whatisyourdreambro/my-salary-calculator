@@ -3,11 +3,14 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve, sep } from 'node:path';
 import { inflateSync } from 'node:zlib';
+import { createHash } from 'node:crypto';
 import { build } from 'esbuild';
 import { generatePagesOg, collectExportedOgParams, main } from '../../../scripts/generate-pages-og';
 import { handlePagesOg, OG_ROOT, ogImageKey, renderPagesOg, resolveOgContent, isValidPagesPng, type PagesOgEnv } from '../../../cloudflare/pages-og';
 import type { OgStripData } from '../../../cloudflare/pages-og-strips';
 import { CURRENT_RATES_YEAR } from '@/config/currentRates';
+import { inflateOgChunks } from '../../../cloudflare/pages-og-inflate.mjs';
+import { OG_POOL_MODULES, OG_RAW_MODULE_BYTES } from '../../../scripts/lib/pages-export.mjs';
 
 let out: string;
 let runtimeStrips: OgStripData;
@@ -19,12 +22,22 @@ beforeAll(async () => {
   await generatePagesOg(out);
   const load = (name: string) => new Uint8Array(readFileSync(join(out, '_worker.js/og', name))).buffer;
   const configSource = readFileSync(join(out, '_worker.js/og/config.mjs'), 'utf8');
-  runtimeStrips = { pool: load('pool.bin'), glyphs36: load('glyphs-36.bin'), glyphs64: load('glyphs-64.bin'),
+  runtimeStrips = { pool: inflateOgChunks(OG_RAW_MODULE_BYTES['pool.bin'], OG_POOL_MODULES.map((name: string) => load(name.slice(3)))),
+    glyphs36: inflateOgChunks(OG_RAW_MODULE_BYTES['glyphs-36.bin'], [load('glyphs-36.bin')], 8 * 1024 * 1024),
+    glyphs64: inflateOgChunks(OG_RAW_MODULE_BYTES['glyphs-64.bin'], [load('glyphs-64.bin')], 8 * 1024 * 1024),
     config: JSON.parse(configSource.slice(configSource.indexOf('export default ') + 15).trim().slice(0, -1)) };
 }, 30000);
 afterAll(() => {
   expect(forbiddenFetch).not.toHaveBeenCalled(); vi.unstubAllGlobals();
   if (out && resolve(out).startsWith(resolve(tmpdir()) + sep) && out.includes('msy-pages-og-')) rmSync(out, { recursive: true, force: true });
+});
+it('generated startup archives restore the exact pinned glyph and pool bytes', () => {
+  const manifest = JSON.parse(readFileSync(resolve('vendor/og-strips/manifest.json'), 'utf8'));
+  for (const [file, data] of [['pool.bin', runtimeStrips.pool], ['glyphs-36.bin', runtimeStrips.glyphs36],
+    ['glyphs-64.bin', runtimeStrips.glyphs64]] as const) {
+    expect(data.byteLength).toBe(manifest.files[file].bytes);
+    expect(createHash('sha256').update(new Uint8Array(data)).digest('hex')).toBe(manifest.files[file].sha256);
+  }
 });
 function assets() {
   const calls: string[] = [];
