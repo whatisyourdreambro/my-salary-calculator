@@ -1,13 +1,17 @@
 import assert from 'node:assert/strict';
-import { readFileSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, realpathSync } from 'node:fs';
+import { readFileSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, realpathSync, symlinkSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { deflateRawSync } from 'node:zlib';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { parse } from 'yaml';
 import { assertReleaseContext, assertProductionPackage, assertPagesProject, assertProductionDeployment,
   configurationHash, pagesUploadArgs, publicationEnvironment, publishPages,
-  classifyUploadOutput, sanitizeUploadDiagnostics, releaseFailureDetails, pagesPurgeEnvironment } from '../lib/pages-release.mjs';
-import { createReleaseApi, assertConfiglessDirectory } from '../pages-release.mjs';
+  classifyUploadOutput, sanitizeUploadDiagnostics, releaseFailureDetails, pagesPurgeEnvironment,
+  assertLocalReleaseContext, localReleaseDirectory } from '../lib/pages-release.mjs';
+import { createReleaseApi, assertConfiglessDirectory, localWranglerOAuth, createLocalReleaseApi,
+  createGithubReleaseClient, githubVerifiedPurge, readPurgeReceiptArchive } from '../pages-release.mjs';
 
 const COMMIT = 'a'.repeat(40), OLD = 'b'.repeat(40);
 const ID = '11111111-2222-3333-4444-555555555555', OLD_ID = '99999999-2222-3333-4444-555555555555';
@@ -210,20 +214,121 @@ test('deployment history supports observed 34-page shape and refuses inconsisten
   }
 });
 
-test('CI deploy job needs full QA verification and limits credentials to publication steps',()=>{
+test('CI is verification only and never receives a new Pages upload credential',()=>{
   const workflow=parse(readFileSync(new URL('../../.github/workflows/ci.yml',import.meta.url),'utf8'));
-  const job=workflow.jobs['deploy-pages'];assert.equal(job.needs,'verify');
-  assert.equal(job.if,"github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.PAGES_AUTO_DEPLOY_ENABLED == 'true'");
-  assert.equal(job.concurrency['cancel-in-progress'],false);assert.equal(job.concurrency.group,'pages-production');
-  const commands=job.steps.map(s=>s.run).filter(Boolean);
-  assert.deepEqual(commands,['npm ci','npm run pages:build','npm run pages:verify','node scripts/pages-indexnow.mjs --capture',
-    'node scripts/pages-release.mjs --publish','node scripts/verify-pages-release-http.mjs --execute-production-http','node scripts/pages-indexnow.mjs --submit']);
-  for(const step of job.steps.filter(s=>/^(npm |node scripts\/pages-indexnow.mjs --capture)/.test(s.run||'')))assert.equal(step.env,undefined);
-  assert.equal(job.steps[0].with.ref,'${{ github.sha }}');assert.equal(job.steps[0].with['persist-credentials'],false);
-  const publish=job.steps.find(s=>s.run==='node scripts/pages-release.mjs --publish');
-  assert.equal(publish.env.CF_API_TOKEN,'${{ secrets.CF_PAGES_API_TOKEN }}');assert.equal(publish.env.CF_PURGE_API_TOKEN,'${{ secrets.CF_API_TOKEN }}');
-  for(const step of job.steps.filter(s=>['node scripts/verify-pages-release-http.mjs --execute-production-http','node scripts/pages-indexnow.mjs --submit'].includes(s.run))){
-    assert.equal(step.env.CF_API_TOKEN,'${{ secrets.CF_PAGES_API_TOKEN }}');assert.equal(step.env.CF_PURGE_API_TOKEN,undefined);
-  }
+  assert.equal(workflow.jobs['deploy-pages'],undefined);
+  assert.doesNotMatch(JSON.stringify(workflow),/CF_PAGES_API_TOKEN|pages-release\.mjs --publish/);
+  const commands=workflow.jobs.verify.steps.map(s=>s.run).filter(Boolean);
+  for(const command of ['npm test','npm run qa:safety','npm run qa:pages:build','npm run qa:pages:verify'])assert.ok(commands.includes(command));
   assert.deepEqual(workflow.permissions,{contents:'read'});
+});
+
+test('local context requires exact clean approved commit and rejects Actions, foreign origin and every QA mode',()=>{
+  const local={commit:COMMIT,head:COMMIT,status:'',origin:'https://github.com/whatisyourdreambro/my-salary-calculator.git'};
+  assert.equal(assertLocalReleaseContext({},local),COMMIT);
+  for(const change of [{head:OLD},{status:' M app'},{commit:'../outside'},{origin:'https://example.invalid/repo'}])assert.throws(()=>assertLocalReleaseContext({}, {...local,...change}));
+  for(const key of ['GITHUB_ACTIONS','MSY_QA_MODE','NEXT_PUBLIC_ADS_DISABLED','MSY_QA_PAGES_STAGE','MSY_QA_WORKER_STAGE','MSY_PAGES_LOCAL_CHILD','MSY_QA_SERVER'])
+    assert.throws(()=>assertLocalReleaseContext({[key]:key==='GITHUB_ACTIONS'?'true':'1'},local));
+});
+
+test('local receipts are commit-scoped and reject traversal and symlink ancestors without deleting old receipts',()=>{
+  const base=mkdtempSync(path.join(os.tmpdir(),'msy-local-receipts-'));
+  try{
+    const first=localReleaseDirectory(base,COMMIT);writeFileSync(path.join(first,'prior.json'),'retained');
+    const second=localReleaseDirectory(base,OLD);assert.notEqual(first,second);assert.equal(readFileSync(path.join(first,'prior.json'),'utf8'),'retained');
+    assert.throws(()=>localReleaseDirectory(base,'../outside'));
+    const separate=path.join(base,'linked-root');mkdirSync(separate);
+    symlinkSync(path.join(base,'.artifacts'),path.join(separate,'.artifacts'),'junction');
+    assert.throws(()=>localReleaseDirectory(separate,COMMIT));
+  }finally{assert.equal(path.dirname(realpathSync(base)),realpathSync(os.tmpdir()));rmSync(base,{recursive:true,force:true});}
+});
+
+test('OAuth resolver invokes only official auth token in memory and rejects supplied-token or raw failure output',()=>{
+  const oauth='offline-oauth-'.repeat(8);let calls=0;
+  const execute=(cmd,args,options)=>{
+    calls++;assert.equal(cmd,process.execPath);assert.deepEqual(args.slice(-3),['auth','token','--json']);
+    for(const key of ['CF_API_TOKEN','CLOUDFLARE_API_TOKEN','CLOUDFLARE_API_KEY','NODE_OPTIONS','GH_TOKEN'])assert.equal(options.env[key],undefined);
+    assert.equal(options.env.CI,'true');assert.equal(options.env.WRANGLER_WRITE_LOGS,'false');assert.deepEqual(options.stdio,['ignore','pipe','pipe']);
+    return JSON.stringify({type:'oauth',token:oauth});
+  };
+  assert.equal(localWranglerOAuth({HOME:'existing-oauth-home',CF_API_TOKEN:'PRIVATE',CLOUDFLARE_API_TOKEN:'PRIVATE',NODE_OPTIONS:'PRIVATE',GH_TOKEN:'PRIVATE'},execute),oauth);
+  assert.equal(calls,1);
+  assert.throws(()=>localWranglerOAuth({GITHUB_ACTIONS:'true'},execute));assert.equal(calls,1);
+  for(const output of ['PRIVATE bad json',JSON.stringify({type:'api_token',token:oauth})])
+    assert.throws(()=>localWranglerOAuth({},()=>output),error=>!error.message.includes(oauth)&&!error.message.includes('PRIVATE'));
+  assert.throws(()=>localWranglerOAuth({},()=>{throw Error('PRIVATE');}),error=>!error.message.includes('PRIVATE'));
+});
+
+test('local API keeps Cloudflare OAuth separate from GitHub credential and supports shared read contracts',async()=>{
+  const oauth='offline-oauth-'.repeat(8);const calls=[];
+  const api=createLocalReleaseApi({GH_TOKEN:'github-only'},async(url,init)=>{
+    calls.push(String(url));assert.equal(init.method,'GET');
+    const github=String(url).startsWith('https://api.github.com/');
+    assert.equal(new Headers(init.headers).get('authorization'),`Bearer ${github?'github-only':oauth}`);
+    return Response.json(github?{sha:COMMIT}:{success:true,result:project()});
+  },()=>JSON.stringify({type:'oauth',token:oauth}));
+  assert.equal(await api.readMain(),COMMIT);assert.equal((await api.readProject()).name,'my-salary-calculator');
+  assert.equal(calls.length,2);assert.doesNotMatch(JSON.stringify(calls),/offline-oauth|github-only/);
+});
+
+function receiptZip(receipt,{method=8,name='purge-receipt.json'}={}){
+  const data=Buffer.from(JSON.stringify(receipt)),body=method===8?deflateRawSync(data):data,n=Buffer.from(name);
+  let crc=0xffffffff;for(const byte of data){crc^=byte;for(let i=0;i<8;i++)crc=(crc>>>1)^(crc&1?0xedb88320:0);}crc=(crc^0xffffffff)>>>0;
+  const local=Buffer.alloc(30);local.writeUInt32LE(0x04034b50);local.writeUInt16LE(20,4);local.writeUInt16LE(method,8);
+  local.writeUInt32LE(crc,14);local.writeUInt32LE(body.length,18);local.writeUInt32LE(data.length,22);local.writeUInt16LE(n.length,26);
+  const central=Buffer.alloc(46);central.writeUInt32LE(0x02014b50);central.writeUInt16LE(20,4);central.writeUInt16LE(20,6);central.writeUInt16LE(method,10);
+  central.writeUInt32LE(crc,16);central.writeUInt32LE(body.length,20);central.writeUInt32LE(data.length,24);central.writeUInt16LE(n.length,28);
+  const end=Buffer.alloc(22);end.writeUInt32LE(0x06054b50);end.writeUInt16LE(1,8);end.writeUInt16LE(1,10);
+  end.writeUInt32LE(central.length+n.length,12);end.writeUInt32LE(local.length+n.length+body.length,16);
+  return Buffer.concat([local,n,body,central,n,end]);
+}
+
+test('receipt ZIP decoding never extracts paths and rejects corruption, extra files and expansion beyond 64 KiB',()=>{
+  for(const method of [0,8])assert.deepEqual(readPurgeReceiptArchive(receiptZip({ok:true},{method})),{ok:true});
+  assert.throws(()=>readPurgeReceiptArchive(receiptZip({ok:true},{name:'../purge-receipt.json'})));
+  assert.throws(()=>readPurgeReceiptArchive(receiptZip({huge:'x'.repeat(65536)})));
+  const bad=receiptZip({ok:true});bad[50]^=1;assert.throws(()=>readPurgeReceiptArchive(bad));
+  const two=receiptZip({ok:true});two.writeUInt16LE(2,two.length-12);assert.throws(()=>readPurgeReceiptArchive(two));
+});
+
+function purgeFixture(change={}){
+  const requestId='33333333-2222-3333-4444-555555555555',runId=1234,release={commit:COMMIT,deploymentId:ID,configurationHash:'c'.repeat(64)};
+  const receipt={schemaVersion:1,requestId,...release,purgeVerified:true,purgedAt:new Date(2000).toISOString(),runId,runAttempt:1,...change.receipt};
+  const bytes=receiptZip(receipt),states=[];let posts=0,callbacks=0,checks=0;
+  const github={get:async resource=>{
+    if(resource.endsWith('/actions/workflows/cf-purge.yml'))return{id:42,state:'active',path:'.github/workflows/cf-purge.yml'};
+    if(resource.endsWith(`/actions/runs/${runId}`))return{id:runId,workflow_id:42,event:'workflow_dispatch',head_branch:'main',head_sha:COMMIT,run_attempt:1,status:'completed',conclusion:'success',...change.run};
+    if(resource.includes('/jobs?'))return{jobs:[{name:'pages-verified-purge',status:'completed',conclusion:change.jobConclusion??'success'}]};
+    if(resource.includes('/artifacts?'))return{total_count:1,artifacts:[{id:87,name:`pages-verified-purge-${requestId}`,expired:false,size_in_bytes:bytes.length,
+      workflow_run:{id:runId,head_sha:COMMIT},digest:`sha256:${createHash('sha256').update(bytes).digest('hex')}`,...change.artifact}]};
+    throw Error('unexpected fixture resource');
+  },dispatchPurge:async input=>{posts++;assert.deepEqual(input,{...release,requestId});if(change.dispatchThrows)throw Error('PRIVATE');return{workflow_run_id:runId};},readArtifact:async()=>bytes};
+  const hooks={beforePagesPurge:async()=>{checks++;if(change.recheckFails&&checks>1)throw Error('changed canonical');},onPagesPurge:async()=>{callbacks++;}};
+  return{states,counts:()=>({posts,callbacks,checks}),run:()=>githubVerifiedPurge(release,hooks,{github,save:s=>states.push(structuredClone(s)),requestId,now:()=>2000,attempts:1})};
+}
+
+test('exact GitHub run plus matching artifact and actual purge receipt are required for callback',async()=>{
+  const f=purgeFixture();assert.equal(await f.run(),0);assert.deepEqual(f.counts(),{posts:1,callbacks:1,checks:2});assert.equal(f.states.at(-1).phase,'verified');
+  for(const change of [{run:{head_sha:OLD}},{run:{run_attempt:2}},{run:{event:'push'}},{run:{conclusion:'failure'}},
+    {jobConclusion:'skipped'},{artifact:{digest:'sha256:'+'0'.repeat(64)}},{artifact:{expired:true}},
+    {receipt:{requestId:ID}},{receipt:{deploymentId:OLD_ID}},{receipt:{commit:OLD}},{receipt:{configurationHash:'a'.repeat(64)}},
+    {receipt:{purgeVerified:false}},{receipt:{runAttempt:2}},{receipt:{purgedAt:new Date(0).toISOString()}},{recheckFails:true},{dispatchThrows:true}]){
+    const failed=purgeFixture(change);await assert.rejects(failed.run());assert.equal(failed.counts().posts,1);assert.equal(failed.counts().callbacks,0);
+    assert.doesNotMatch(JSON.stringify(failed.states),/PRIVATE/);
+  }
+});
+
+test('GitHub purge client sends only fixed dispatch inputs and never forwards auth to signed artifact storage',async()=>{
+  const calls=[];const github=createGithubReleaseClient({GH_TOKEN:'github-only',CF_API_TOKEN:'oauth-never-send'},async(url,init)=>{
+    calls.push({url:String(url),init});
+    if(String(url).endsWith('/zip'))return new Response(null,{status:302,headers:{location:'https://productionresultssa1.blob.core.windows.net/container/artifact?sig=private'}});
+    if(String(url).includes('.blob.core.windows.net/')){assert.equal(init.headers,undefined);return new Response('zip-fixture');}
+    assert.equal(new Headers(init.headers).get('authorization'),'Bearer github-only');assert.equal(init.redirect,'manual');
+    return Response.json({workflow_run_id:1234});
+  });
+  await github.dispatchPurge({commit:COMMIT,deploymentId:ID,configurationHash:'c'.repeat(64),requestId:OLD_ID});
+  assert.equal(calls[0].init.method,'POST');assert.equal(JSON.parse(calls[0].init.body).ref,'main');
+  assert.equal(JSON.parse(calls[0].init.body).inputs.operation,'pages-verified-purge');
+  await github.readArtifact(87);assert.equal(calls.length,3);assert.doesNotMatch(JSON.stringify(calls),/oauth-never-send/);
+  await assert.rejects(github.get('/repos/other/repo/actions'));assert.equal(calls.length,3);
 });

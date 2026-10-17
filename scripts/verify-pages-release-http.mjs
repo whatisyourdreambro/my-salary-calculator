@@ -2,14 +2,14 @@
 // loads document subresources, follows redirects, retries or mutates Cloudflare.
 import assert from 'node:assert/strict';
 import { createHash, randomUUID } from 'node:crypto';
-import { existsSync, readFileSync, renameSync, unlinkSync, writeFileSync } from 'node:fs';
+import { existsSync, lstatSync, readFileSync, realpathSync, renameSync, unlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { crc32, inflateSync } from 'node:zlib';
 import productionGuard from './lib/qa-production-http.cjs';
 import bodyGuard from './lib/qa-pages-deployment-http.cjs';
 import { assertEnglishNotFoundDocument, verifyArtifact } from './lib/pages-export.mjs';
-import { assertProductionDeployment, configurationHash } from './lib/pages-release.mjs';
+import { assertProductionDeployment, configurationHash, localReleaseDirectory } from './lib/pages-release.mjs';
 import { createReleaseApi } from './pages-release.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -183,9 +183,13 @@ export async function verifyPagesReleaseHttp(context, { fetchFn = globalThis.fet
   return report;
 }
 
-export async function readPagesReleaseState(pins, env = process.env, fetchFn = globalThis.fetch) {
-  assert.equal(env.CF_ACCOUNT_ID, ACCOUNT); assert.match(pins.deploymentId || '', UUID);
-  const api = createReleaseApi(env, fetchFn);
+export async function readPagesReleaseState(pins, env = process.env, fetchFn = globalThis.fetch, suppliedApi) {
+  assert.match(pins.deploymentId || '', UUID);
+  // Local callers supply the fixed-account OAuth API, so no token has to be
+  // copied into an environment variable or exposed to publisher requests.
+  let api = suppliedApi;
+  if (api === undefined) { assert.equal(env.CF_ACCOUNT_ID, ACCOUNT); api = createReleaseApi(env, fetchFn); }
+  assert.equal(typeof api?.readProject, 'function'); assert.equal(typeof api?.readDeployment, 'function');
   // These two methods perform fixed Cloudflare GETs. Other publisher methods
   // are not invoked. Raw project configuration stays in memory for hashing.
   const project = await api.readProject();
@@ -212,14 +216,46 @@ export function writeVerificationJson(filename, data) {
   } finally { if (existsSync(temporary)) unlinkSync(temporary); }
 }
 
-export async function runPagesReleaseHttp() {
-  const pins = JSON.parse(readFileSync(path.join(outputDirectory, 'production-pins.json'), 'utf8'));
-  const verified = verifyArtifact(root, 'production');
-  const state = await readPagesReleaseState(pins);
+export function resolvePagesReleaseReceiptDirectory(workspaceRoot, requested) {
+  const ownedRoot = path.resolve(workspaceRoot);
+  assert.equal(realpathSync(ownedRoot), ownedRoot, 'Receipt workspace must be the real checkout');
+  const defaultDirectory = path.join(ownedRoot, '.artifacts/pages-release');
+  const directory = requested ?? defaultDirectory;
+  assert.ok(path.isAbsolute(directory)); assert.equal(path.resolve(directory), directory);
+  let localCommit = null;
+  if (directory !== defaultDirectory) {
+    localCommit = path.basename(directory); assert.match(localCommit, SHA);
+    assert.equal(directory, path.join(ownedRoot, '.artifacts/pages-release-local', localCommit), 'Unowned receipt directory');
+    assert.equal(localReleaseDirectory(ownedRoot, localCommit), directory);
+  }
+  // Check every owned ancestor rather than trusting only the final pathname.
+  for (let current = directory; current !== ownedRoot; current = path.dirname(current)) {
+    assert.equal(lstatSync(current).isSymbolicLink(), false); assert.equal(lstatSync(current).isDirectory(), true);
+    assert.equal(realpathSync(current), current, 'Receipt paths must not traverse links');
+  }
+  return { directory, localCommit };
+}
+
+export function readPagesReleasePins(workspaceRoot, requested) {
+  const selected = resolvePagesReleaseReceiptDirectory(workspaceRoot, requested);
+  const file = path.join(selected.directory, 'production-pins.json');
+  assert.equal(lstatSync(file).isSymbolicLink(), false); assert.equal(lstatSync(file).isFile(), true);
+  assert.equal(realpathSync(file), file);
+  const pins = JSON.parse(readFileSync(file, 'utf8'));
+  if (selected.localCommit !== null) assert.equal(pins.commit, selected.localCommit, 'Local receipt commit does not match its directory');
+  return { ...selected, pins };
+}
+
+export async function runPagesReleaseHttp({ env = process.env, receiptDirectory = outputDirectory, api } = {}) {
+  const { directory, localCommit, pins } = readPagesReleasePins(root, receiptDirectory);
+  if (api !== undefined) assert.notEqual(localCommit, null, 'Injected local API requires a commit-scoped local receipt');
+  const verified = verifyArtifact(root, 'production', env);
+  const readState = () => readPagesReleaseState(pins, env, globalThis.fetch, api);
+  const state = await readState();
   const context = { pins, marker: verified.marker, ...state };
   assertPagesReleaseIdentity(context);
-  const output = path.join(outputDirectory, 'production-http.json');
-  const summary = path.join(outputDirectory, 'verification.json');
+  const output = path.join(directory, 'production-http.json');
+  const summary = path.join(directory, 'verification.json');
   assert.equal(existsSync(summary), false, 'A verification receipt exists; do not automatically replay public requests');
   writeFileSync(output, JSON.stringify({ finished: false, deploymentId: pins.deploymentId }) + '\n', { flag: 'wx' });
   const report = await verifyPagesReleaseHttp(context, {
@@ -228,7 +264,7 @@ export async function runPagesReleaseHttp() {
       writeVerificationJson(output, value);
       writeVerificationJson(summary, verificationReceipt(value, pins));
     },
-    assertStillCanonical: async () => assertPagesReleaseIdentity({ ...context, ...await readPagesReleaseState(pins) }),
+    assertStillCanonical: async () => assertPagesReleaseIdentity({ ...context, ...await readState() }),
   });
   console.log(JSON.stringify({ verified: true, deploymentId: pins.deploymentId, requests: report.attemptedRequests,
     canonicalVerifiedAfter: true, executedDocumentJavaScript: false, followedRedirects: 0 }));

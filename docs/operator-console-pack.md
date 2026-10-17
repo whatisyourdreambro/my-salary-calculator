@@ -1,6 +1,6 @@
 # 운영자 세션표 — 코드 0줄로 수익 올리는 콘솔 작업 (2026-09-05 개정)
 
-> **2026-10-17 현재 결정:** Workers 업로드와 잠시 연결한 도메인 경로는 [결과 기록](workers-release-2026-10-17/deployment-outcome.json)처럼 롤백됐다. 운영자는 기존 Pages 유지와 무료 구조 개선을 선택했다. Cloudflare Git 빌드는 중지한 채 GitHub `ci.verify`가 통과한 main push만 `deploy-pages`에서 게시한다. 저장소 변수 `PAGES_AUTO_DEPLOY_ENABLED=true`가 활성화 조건이다. 이 작업은 실제 Purge와 비렌더링 HTTP 검증을 완료한 후 IndexNow를 제출한다. 별도 `cf-purge`는 수동 Purge 전용이며 기본 대상은 Pages다. 글별 발행 승인은 유지한다. [현재 README 절차](../README.md)가 아래 과거 Workers 전환 설명보다 우선한다. 운영/preview 게시자 브라우저 점검은 [AGENTS.md](../AGENTS.md)에 따라 금지하며, 문서 수정은 실제 배포 완료를 뜻하지 않는다.
+> **2026-10-17 현재 결정:** Workers 업로드와 잠시 연결한 도메인 경로는 [결과 기록](workers-release-2026-10-17/deployment-outcome.json)처럼 롤백됐다. 기존 무료 Pages를 유지하고 GitHub `ci.yml`은 검증만 수행한다. 저장소 변수는 `PAGES_AUTO_DEPLOY_ENABLED=false`, `PAGES_LOCAL_PUBLISH_ENABLED=true`로 두며 Cloudflare Git production·preview 빌드는 계속 중지한다. 글별 승인 뒤 정확한 SHA의 검증 성공을 확인한 로컬 발행기가 운영 빌드·단일 업로드·실제 Purge·비렌더링 HTTP 16건·IndexNow를 순서대로 진행한다. 기존 Wrangler OAuth는 로컬 프로세스 메모리에서만 전달하며 새 Cloudflare 토큰을 GitHub에 저장하지 않는다. 완료까지 컴퓨터가 켜져 있어야 하며 정기 게시 작업을 새로 등록하지 않는다. [현재 README 절차](../README.md)와 아래 현재 Pages 절차가 과거 Workers 전환 설명보다 우선한다. 운영/preview 게시자 브라우저 점검은 [AGENTS.md](../AGENTS.md)에 따라 금지하며, 문서 수정은 실제 배포 완료를 뜻하지 않는다.
 
 정본 계획: `docs/revenue-10x-plan-2026-09.md` §4·§5 + `docs/revenue-100x-plan-2026-09.md` §6(승인 A~J)·§7(세션 추가분, 2026-09-05). 이 문서는 그 세션표의 실행판이다.
 원칙: **한 세션 = 최대 3항목·25분**, 격주 고정 요일. 각 항목은 클릭 경로 ≤5줄 + 완료 증빙 1장.
@@ -46,7 +46,7 @@
 
 **상시 규칙**
 - **바뀌지 않은 URL 은 다시 요청하지 않는다**(네이버 수집 요청·GSC 색인 요청 모두). 요청은 그 배포에서 실제로 바뀐 URL 만 — 목록은 CF 빌드 로그 `[indexnow]` 가 보낸 URL 과 같아야 한다.
-- **재빌드 규칙(9월 Pages 운영 기록, Workers 전환 뒤 사용 금지)**: 당시 빈 커밋 main 푸시가 Pages 재빌드와 `cf-purge`를 시작했다. 현재 이행에서는 빈 커밋이나 Pages Retry로 Workers가 배포되지 않는다. 먼저 검증된 Workers 게시 경로에서 새 운영 빌드와 활성 버전을 만든 뒤 해당 릴리스의 Purge를 확인한다. 과거 24시간 캐시 변경안은 현재 설정이 확인되기 전까지 적용 완료로 간주하지 않는다.
+- **재빌드 규칙(9월 Pages 운영 기록·현재 실행 금지)**: 당시 빈 커밋 main 푸시가 Pages 재빌드와 `cf-purge`를 시작했다. 현재는 Cloudflare Git 빌드를 동결하고 승인된 정확한 SHA로 로컬 Pages 발행 절차를 실행한다. 빈 커밋이나 Pages Retry로 이전 빌드 명령을 되살리지 않는다. 과거 24시간 캐시 변경안은 현재 설정으로 재적용하지 않는다. 10/17에 origin의 비공개 캐시 금지를 존중하도록 수정한 규칙과 검증 근거는 README에 기록돼 있다.
 
 | 날짜 | 할 일 | 계획 ID | 조건·주의 |
 |---|---|---|---|
@@ -150,12 +150,24 @@ AdSense 페이지·광고단위 28일 CSV 2장 → GA4 트래픽 획득 CSV → 
 ## 남은 확인 항목 (5분 이내, 아무 세션에나)
 - ☐ EEA 동의 메시지(CMP) 게시 — AdSense → 개인 정보 보호 및 메시지 → 유럽 규정 메시지 → 만들기 → 기본 스타일 → 게시. **앵커 판정(10/5) 후**에 한다(겹침 회피). 코드측 CSP는 2026-08-23 배포 완료. ★2026-09-25: 앵커 판정은 취소됐지만 광고 설정 변경을 겹치지 않도록 **P0 14완료일 조회(10/9)·10/10 판정 조회 뒤**에 한다.
 - ☐ Cloudflare Pages → Settings → Environment variables에 `NEXT_PUBLIC_ADSENSE_SLOT_GUIDE_MID`가 **등록돼 있으면** 1848295488인지 확인(없으면 할 일 없음).
-- ☐ **Pages 롤백 기준선과 Workers 게시 설정 기록**: 기존 Pages의 알려진 정상 배포·커밋·빌드 명령·출력 경로·Node 설정 및 자동배포 중지 여부를 기록한다. 계정의 현재 값은 로컬 소스로 추정하지 않는다. 새 CI 검증은 Node 22와 OpenNext QA 빌드를 사용하며, `vercel build`/`next-on-pages`는 현재 Workers 배포 절차가 아니다. Workers 게시 경로·릴리스 tag/version ID 계약·후속 Purge 설정도 따로 확인한다. 토큰·시크릿 값은 기록하지 않는다.
+- ☐ **Pages 로컬 발행 준비 기록**: 알려진 정상 Pages 배포·커밋과 롤백 ID, Cloudflare Git 빌드 중지, 저장소 변수 `PAGES_AUTO_DEPLOY_ENABLED=false`·`PAGES_LOCAL_PUBLISH_ENABLED=true`를 확인한다. 계정의 현재 값은 로컬 소스로 추정하지 않는다. GitHub CI는 Node 22의 광고 없는 Pages QA를 검증하며, 운영 패키지는 로컬 `pages:build`·`pages:verify`로 별도 생성한다. 기존 D1·환경 바인딩과 일반 방문자 광고를 보존하고, 로컬 Wrangler 로그인·기존 Purge 워크플로의 실행 권한을 확인한다. 새 Cloudflare 토큰을 GitHub에 등록하거나 토큰·시크릿 값을 기록하지 않는다.
 - ☐ developers.kakao.com → 내 애플리케이션 → 플랫폼 → Web에 `https://www.moneysalary.com` 등록 확인.
 - ☐ GA4와 AdSense가 **같은 구글 계정**인지 한 줄 답변 → 같으면 GA4 관리 → 제품 링크 → AdSense 링크 연결(페이지별 광고 수익을 GA4에서 보게 됨).
 - ☐ **트리거형(날짜 없음) — SK하이닉스 재협상 타결 보도 당일(약 10분)**: 코드 배포 후 Cloudflare → Caching → Configuration → **Purge Everything**(또는 `/calc/sk-hynix-bonus`·`/calc/bonus-calculators`·`/sitemap.xml`·`/rss.xml` 커스텀 퍼지) → Search Console URL 검사 2건(`/calc/sk-hynix-bonus`·`/calc/bonus-calculators`) 색인 생성 요청 + Sitemaps 다시 제출 → D+1 '실제 URL 테스트'로 타결 문구 렌더 확인. 세부는 `docs/drafts/sk-ps-sync-kit-2027.md` §3 런북 표(코드 5점 동기화는 Claude).
 
+## 현재 Pages 발행과 Purge 확인 (2026-10-17)
+
+1. 운영자가 글별 발행을 승인하면 기존 초안 해시·달력·한도 검사를 거쳐 main에 반영한다. 저장소 변수 `PAGES_AUTO_DEPLOY_ENABLED=false`, `PAGES_LOCAL_PUBLISH_ENABLED=true`를 사용한다. GitHub의 정확한 SHA `verify` 성공은 필수이며 push 자체는 게시하지 않는다.
+2. 깨끗한 최신 main 워크트리에서 `node scripts/pages-release-local.mjs --approved-commit <전체 SHA>`를 실행한다. 로컬 운영 빌드·검증과 사이트맵 보관 뒤 기존 Wrangler OAuth로 한 번 업로드한다. 컴퓨터와 프로세스가 완료까지 실행 중이어야 한다. 정기 게시 작업은 새로 등록하지 않는다.
+3. 발행기는 canonical 배포 ID·커밋·빌드 및 기존 설정을 확인하고 `cf-purge`의 `pages-verified-purge`를 `workflow_dispatch`로 호출한다. 기존 GitHub `CF_API_TOKEN`은 Pages Read·Zone Cache Purge에만 사용한다. 로컬로 복사하거나 Wrangler에 전달하지 않으며, `CF_PAGES_API_TOKEN` 등 새 Cloudflare 토큰을 GitHub에 추가하지 않는다.
+4. 실제 Purge의 요청 ID·배포 ID·커밋 영수증을 확인한 뒤 비렌더링 HTTP 16건과 전후 canonical 검사를 통과해야 한다. 비공개 응답의 캐시 금지 검사도 포함한다. 문서 JavaScript·광고·분석 요청·리디렉션 따라가기는 실행하지 않는다. 이후 사이트맵 변경분만 IndexNow에 제출한다.
+5. `.artifacts/pages-release-local/<전체 SHA>/`에 단계별 결과와 이전 배포 ID를 보관한다. 중간 실패·모호한 업로드·기존 시도 기록이 있으면 검토를 위해 중단하며 자동 재업로드나 자동 롤백을 하지 않는다. 영수증을 지워 재시도하지 않는다. 로컬 발행을 중지하려면 `PAGES_LOCAL_PUBLISH_ENABLED=false`로 두고 GitHub 자동배포와 Cloudflare Git 빌드는 계속 끈다.
+
+이전 GitHub 직접 업로드 실패와 토큰 권한 진단은 README와 기존 결과 기록에 보존한다. 아래 Workers 절차와 새 GitHub Pages Edit 토큰 등록안은 현재 발행 절차가 아니다.
+
 ## 배포 후 캐시 자동 Purge 설정 (Workers 전환)
+
+**아래는 폐기된 Workers 전환 계획의 역사 기록이다. 현재 설정 절차로 실행하지 말고 위 Pages 절차를 따른다.** 특히 새 토큰 등록·Workers 대상 전환을 하지 않는다. 아래의 과거 성공 건너뛰기 설명도 현재 승인 발행기의 필수 Purge 영수증 검증에는 적용되지 않는다.
 
 `cf-purge`는 게시가 끝난 대상의 활성 상태를 확인하고 캐시를 비우는 후속 작업이다. Worker 업로드·활성화·도메인 전환은 별도 게시 경로가 수행한다. 기본 대상은 여전히 Pages이므로 저장소 변수 설정 없이 초록 체크만 보고 Workers 전환 완료로 판단하지 않는다.
 

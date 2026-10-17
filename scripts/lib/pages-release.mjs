@@ -1,11 +1,14 @@
 // Pages-only release policy. Importing this module performs no I/O.
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
+import { existsSync, lstatSync, mkdirSync, realpathSync } from 'node:fs';
 import path from 'node:path';
 
 export const PAGES_PROJECT = 'my-salary-calculator';
 export const RELEASE_REPOSITORY = 'whatisyourdreambro/my-salary-calculator';
 export const PAGES_RELEASE_POLICY_VERSION = 1;
+export const PAGES_LOCAL_RELEASE_POLICY_VERSION = 1;
+export const PAGES_ACCOUNT = 'b01a4e306f09d28f1a0f1d57bda8410d';
 const SHA = /^[a-f0-9]{40}$/;
 const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
 const HASH = /^[a-f0-9]{64}$/;
@@ -76,6 +79,31 @@ export function assertReleaseContext(env, { commit, status }) {
   return commit;
 }
 
+export function assertLocalReleaseContext(env, { commit, head, status, origin }) {
+  assert.notEqual(env.GITHUB_ACTIONS, 'true', 'Approved local publication cannot run in GitHub Actions');
+  assert.match(commit || '', SHA); assert.equal(head, commit); assert.equal(status, '', 'Publication requires a clean, exact checkout');
+  assert.ok([`https://github.com/${RELEASE_REPOSITORY}`, `https://github.com/${RELEASE_REPOSITORY}.git`,
+    `git@github.com:${RELEASE_REPOSITORY}.git`].includes(origin), 'Unexpected publication repository');
+  for (const key of ['MSY_QA_MODE', 'NEXT_PUBLIC_ADS_DISABLED', 'MSY_QA_PAGES_STAGE', 'MSY_QA_WORKER_STAGE', 'MSY_PAGES_LOCAL_CHILD', 'MSY_QA_SERVER'])
+    assert.notEqual(env[key], '1', `Publication refuses QA setting ${key}`);
+  return commit;
+}
+
+/** Per-commit receipts are retained; never remove an earlier publication attempt. */
+export function localReleaseDirectory(workspace, commit) {
+  assert.match(commit || '', SHA);
+  let directory = realpathSync(workspace);
+  assert.equal(lstatSync(directory).isDirectory(), true);
+  for (const name of ['.artifacts', 'pages-release-local', commit]) {
+    directory = path.join(directory, name);
+    if (!existsSync(directory)) mkdirSync(directory, { mode: 0o700 });
+    assert.equal(lstatSync(directory).isSymbolicLink(), false, 'Release receipts cannot follow a link');
+    assert.equal(lstatSync(directory).isDirectory(), true);
+    assert.equal(realpathSync(directory), directory, 'Release receipt path escaped its workspace');
+  }
+  return directory;
+}
+
 export function assertProductionPackage(marker) {
   assert.equal(marker?.mode, 'production'); assert.equal(marker.adsDisabled, false);
   assert.match(marker.buildId || '', /^[A-Za-z0-9_-]{1,128}$/);
@@ -90,7 +118,7 @@ export function assertProductionPackage(marker) {
 export function assertPagesProject(project, marker) {
   assert.equal(project?.name, PAGES_PROJECT); assert.equal(project.production_branch, 'main');
   assert.equal(project.source?.type, 'github');
-  assert.equal(project.source.config?.deployments_enabled, false, 'Keep Cloudflare Git builds disabled; GitHub is the sole publisher');
+  assert.equal(project.source.config?.deployments_enabled, false, 'Keep Cloudflare Git builds disabled; the approved publisher owns deployment');
   assert.equal(project.source.config?.production_deployments_enabled, false);
   assert.equal(project.source.config?.preview_deployment_setting, 'none');
   for (const mode of ['preview', 'production']) {
@@ -204,7 +232,8 @@ export async function publishPages({ commit, marker }, { readMain, readProject, 
     await assertCanonical();
     let purged = false;
     phase('purging');
-    const code = await purge({ beforePagesPurge: assertCanonical, onPagesPurge: () => { purged = true; } });
+    const code = await purge({ beforePagesPurge: assertCanonical, onPagesPurge: () => { purged = true; },
+      release: { commit, deploymentId: deployed.id, configurationHash: fingerprint } });
     assert.equal(code, 0, 'Pages cache purge failed'); assert.equal(purged, true, 'Purge was skipped, not completed');
     await assertCanonical();
     const pins = { policyVersion: PAGES_RELEASE_POLICY_VERSION, deploymentId: deployed.id, commit, branch: 'main', buildId: marker.buildId,

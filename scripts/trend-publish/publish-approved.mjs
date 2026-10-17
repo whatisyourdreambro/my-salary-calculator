@@ -1,4 +1,4 @@
-// 글별 승인과 현재 Pages 자동배포 준비 상태를 확인한 뒤에만 원격 반영한다.
+// 글별 승인과 현재 Pages 로컬 발행 준비 상태를 확인한 뒤에만 원격 반영한다.
 // scripts/trend-publish/publish-approved.mjs — 운영자 승인 브리프 발행 (2026-09-26 R5 publisher)
 //
 // 운영자가 채팅에서 브리프별로 승인('발행 <slug>' · '철회 <slug>')한 세션만 실행한다.
@@ -15,7 +15,7 @@
 //   (--retire 는 되돌리기라 HALT·달력·한도·결정 대기·REVIEWED_UNTIL·PUBLISH_ENABLED 를 보지 않는다 — DEPLOY_HOLD·2시간·Purge 확인만.
 //    --update 는 새 URL 이 아니라 한도·결정 대기·동결·첫 발행일을 보지 않는다 — 판정일·배포 배치·로컬 차단은 본다)
 // 흐름: 워크트리를 origin/main 으로 → render(오늘 날짜·operator-approved) → 생성 파일 재생성 → 게이트 전부 →
-//   커밋 → git push origin HEAD:main (force 없음, 거부되면 멈춤) → verify-prod → 한국어 요약.
+//   커밋 → push main → 정확한 CI verify → 로컬 OAuth Pages 발행·운영 확인·IndexNow → 글별 확인.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -32,6 +32,7 @@ import {
   heavySteps,
   qaBuildCacheDir,
   qaHeavyInputsHash,
+  qaHeavyBuildEnvironment,
   kstToday,
   loadConfig,
   pendingDecisions,
@@ -131,52 +132,53 @@ function sourceContent(record) {
 }
 
 export async function pagesPublicationReadiness(get) {
-  const enabled = await get(`${API_ROOT}/actions/variables/PAGES_AUTO_DEPLOY_ENABLED`);
-  requireRelease(enabled.name === "PAGES_AUTO_DEPLOY_ENABLED" && enabled.value === "true", "PAGES_AUTO_DEPLOY_ENABLED=true 확인 필요");
+  const enabled = await get(`${API_ROOT}/actions/variables/PAGES_LOCAL_PUBLISH_ENABLED`);
+  requireRelease(enabled.name === "PAGES_LOCAL_PUBLISH_ENABLED" && enabled.value === "true", "PAGES_LOCAL_PUBLISH_ENABLED=true 확인 필요");
   const main = await get(`${API_ROOT}/commits/main`);
   requireRelease(SHA.test(main.sha || ""), "원격 main SHA 확인 실패");
   const workflow = await get(`${API_ROOT}/actions/workflows/ci.yml`);
-  requireRelease(workflow.state === "active" && workflow.path === ".github/workflows/ci.yml" && Number.isSafeInteger(workflow.id), "Pages 배포 CI가 활성 상태가 아님");
+  requireRelease(workflow.state === "active" && workflow.path === ".github/workflows/ci.yml" && Number.isSafeInteger(workflow.id), "Pages 검증 CI가 활성 상태가 아님");
   const source = parseYaml(sourceContent(await get(`${API_ROOT}/contents/.github/workflows/ci.yml?ref=${main.sha}`)));
-  const job = source?.jobs?.["deploy-pages"];
-  requireRelease(source?.on?.push?.branches?.includes("main") && job, "main Pages 배포 job 없음");
-  requireRelease([job.needs].flat().includes("verify"), "Pages 배포 QA 의존성 없음");
-  const condition = String(job.if || "");
-  requireRelease(!condition.includes("||") && !job["continue-on-error"], "Pages 배포 조건 우회 또는 오류 무시 설정");
-  for (const expression of [/vars\.PAGES_AUTO_DEPLOY_ENABLED\s*==\s*'true'/, /github\.event_name\s*==\s*'push'/, /github\.ref\s*==\s*'refs\/heads\/main'/]) {
-    requireRelease(expression.test(condition), "Pages 배포 event/main/enabled 조건 누락");
-  }
+  const job = source?.jobs?.verify;
+  requireRelease(Array.isArray(source?.on?.push?.branches) && source.on.push.branches.includes("main") && job && !source?.jobs?.["deploy-pages"], "main 검증 전용 CI가 아님");
+  requireRelease(!job["continue-on-error"] && String(job.if || "").trim() === "github.event_name != 'schedule' && github.event_name != 'workflow_dispatch'", "Pages 검증 조건 우회 또는 변경");
   const steps = job.steps || [];
   let previousStep = -1;
-  for (const command of ["scripts/pages-release.mjs --publish", "scripts/verify-pages-release-http.mjs --execute-production-http", "scripts/pages-indexnow.mjs --submit"]) {
-    const index = steps.findIndex(step => String(step.run || "").trim() === `node ${command}`);
-    requireRelease(index > previousStep && !steps[index]?.if && !steps[index]?.["continue-on-error"], "Pages 배포·정확한 운영 확인·IndexNow 단계 누락 또는 우회");
+  for (const command of ["npm run qa:safety", "npm test", "node --test scripts/__tests__/*.test.mjs", "npm run qa:pages:build", "npm run qa:pages:verify"]) {
+    const index = steps.findIndex(step => String(step.run || "").trim() === command);
+    requireRelease(index > previousStep && !steps[index]?.if && !steps[index]?.["continue-on-error"], "Pages 필수 검증 단계 누락 또는 우회");
     previousStep = index;
   }
   const policy = sourceContent(await get(`${API_ROOT}/contents/scripts/lib/pages-release.mjs?ref=${main.sha}`));
-  requireRelease(/export\s+const\s+PAGES_RELEASE_POLICY_VERSION\s*=\s*1\s*;/.test(policy), "현재 Pages 릴리스 정책 버전 없음");
+  requireRelease(/export\s+const\s+PAGES_LOCAL_RELEASE_POLICY_VERSION\s*=\s*1\s*;/.test(policy), "현재 로컬 Pages 릴리스 정책 버전 없음");
+  const runner = sourceContent(await get(`${API_ROOT}/contents/scripts/pages-release-local.mjs?ref=${main.sha}`));
+  requireRelease(/export\s+const\s+PAGES_LOCAL_ORCHESTRATOR_VERSION\s*=\s*1\s*;/.test(runner), "현재 로컬 Pages 실행기 버전 없음");
   return { mainSha: main.sha, workflowId: workflow.id };
 }
 
-export async function waitForPagesDeployment(get, { sha, workflowId, attempts = 45, intervalMs = 60_000, sleep = ms => new Promise(resolveSleep => setTimeout(resolveSleep, ms)) }) {
-  requireRelease(SHA.test(sha) && Number.isSafeInteger(workflowId), "배포 대기 식별자 오류");
+export async function waitForPagesVerification(get, { sha, workflowId, attempts = 60, intervalMs = 60_000, sleep = ms => new Promise(resolveSleep => setTimeout(resolveSleep, ms)) }) {
+  requireRelease(SHA.test(sha) && Number.isSafeInteger(workflowId), "검증 대기 식별자 오류");
   requireRelease(Number.isInteger(attempts) && attempts >= 1 && attempts <= 60 && Number.isFinite(intervalMs) && intervalMs >= 1000 && intervalMs <= 60_000, "배포 대기 범위 오류");
   for (let index = 0; index < attempts; index++) {
+    requireRelease((await get(`${API_ROOT}/commits/main`)).sha === sha, "검증 중 main이 바뀜; 게시 중단");
     const record = await get(`${API_ROOT}/actions/workflows/${workflowId}/runs?event=push&branch=main&head_sha=${sha}&per_page=100`);
     const matches = (record.workflow_runs || []).filter(run => run.head_sha === sha && run.head_branch === "main" && run.event === "push" && run.workflow_id === workflowId);
     const run = matches.sort((a, b) => b.id - a.id)[0];
-    if (run?.status === "completed") {
-      requireRelease(run.conclusion === "success", "정확한 커밋의 CI가 실패·취소됨; 게시 완료 아님");
+    if (run) {
       const jobs = await get(`${API_ROOT}/actions/runs/${run.id}/jobs?filter=latest&per_page=100`);
-      const deploy = (jobs.jobs || []).filter(job => job.name === "deploy-pages");
-      requireRelease(deploy.length === 1 && deploy[0].status === "completed" && deploy[0].conclusion === "success", "Pages 배포 job이 성공하지 않음(건너뜀 포함)");
-      const main = await get(`${API_ROOT}/commits/main`);
-      requireRelease(main.sha === sha, "배포 중 main이 바뀜; 정확한 운영 결과 재확인 필요");
-      return { runId: run.id, jobId: deploy[0].id, sha };
+      const verify = (jobs.jobs || []).filter(job => job.name === "verify");
+      requireRelease(verify.length <= 1, "중복 verify job; 검증 대기 중단");
+      if (verify[0]?.status === "completed") {
+        requireRelease(verify[0].conclusion === "success", "CI verify job이 성공하지 않음(건너뜀 포함)");
+        requireRelease(Number.isSafeInteger(run.id) && Number.isSafeInteger(verify[0].id), "CI 검증 식별자 오류");
+        requireRelease((await get(`${API_ROOT}/commits/main`)).sha === sha, "검증 중 main이 바뀜; 게시 중단");
+        return { runId: run.id, jobId: verify[0].id, sha };
+      }
+      requireRelease(run.status !== "completed", "CI 완료됐지만 verify 성공을 확인하지 못함");
     }
     if (index + 1 < attempts) await sleep(intervalMs);
   }
-  throw new Error("정확한 커밋의 Pages 배포 완료를 제한 시간 안에 확인하지 못함");
+  throw new Error("정확한 커밋의 CI verify 성공을 제한 시간 안에 확인하지 못함");
 }
 
 export async function main(argv = process.argv, deps = defaultDeps()) {
@@ -223,7 +225,7 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
   const githubGet = deps.githubGet ?? githubReadClient();
   let readiness;
   try { readiness = await pagesPublicationReadiness(githubGet); }
-  catch (error) { say(`[publish] Pages 자동배포 준비 미확인: ${error.message} — 변경하지 않음`); return 2; }
+  catch (error) { say(`[publish] Pages 로컬 발행 준비 미확인: ${error.message} — 변경하지 않음`); return 2; }
   if (!checkOnly) {
     if ((await git(["fetch", "origin", "--prune"])).code !== 0) {
       say("[publish] git fetch 실패 — 변경하지 않음"); return 2;
@@ -296,7 +298,8 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
   if (deps.secretEnv) deps.secretEnv(config.secretEnvFiles);
 
   // 3) 기준 빌드 목록(브리프 없는 origin/main) — prepare 가 같은 커밋으로 만들어 두지 않았으면 지금 만든다
-  const heavy = (name, cmd) => run(process.execPath, [join(wt, "scripts/trend-publish/heavy.mjs"), cmd, "--cwd", wt, "--log", join(home, "logs", `${today}-publish-${name}.log`), "--trend-home", home]);
+  const heavy = (name, cmd) => deps.run(process.execPath, [join(wt, "scripts/trend-publish/heavy.mjs"), cmd, "--cwd", wt, "--log", join(home, "logs", `${today}-publish-${name}.log`), "--trend-home", home],
+    { cwd: wt, env: qaHeavyBuildEnvironment(name, wt) });
   if (kind !== "retire" && !existsSync(join(qaBuildCacheDir(home, originSha), "chunks.json"))) {
     const sibling = wtConfig.adSequence?.siblingGuide;
     const pages = [...(wtConfig.adSequence?.gatePages ?? []), ...(sibling ? [`/guides/${sibling}`] : [])].join(",");
@@ -391,18 +394,18 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
   const pushed = (await git(["rev-parse", "HEAD"])).stdout.trim();
 
   // 6) 정확한 커밋의 GHA 배포·운영 계약·IndexNow 성공 뒤에만 추가 비렌더링 확인.
-  let deployed;
-  try {
-    deployed = await waitForPagesDeployment(githubGet, { sha: pushed, workflowId: readiness.workflowId,
-      attempts: Math.min(60, Math.max(1, wtConfig.publish?.verifyTimeoutMin ?? 45)), sleep: deps.sleep });
-  } catch (error) { say(`[publish] 소스 ${pushed.slice(0, 8)} 반영됨; 게시 완료는 미확인: ${error.message}`); return 3; }
+  const localRelease = await run(process.execPath, [join(wt, "scripts/pages-release-local.mjs"), "--approved-commit", pushed]);
+  if (localRelease.code !== 0) {
+    say(`[publish] 소스 ${pushed.slice(0, 8)} 반영됨; 로컬 Pages 발행 또는 검증 미완료. 커밋별 영수증을 확인하고 자동 재시도하지 말 것.`);
+    return 3;
+  }
   const verify =
     kind === "retire"
       ? await run(process.execPath, [join(wt, "scripts/trend-publish/verify-prod.mjs"), "--slug", slug, "--retire", "--to", arg(argv, "--to") ?? ""])
       : await run(process.execPath, [join(wt, "scripts/trend-publish/verify-prod.mjs"), "--slug", slug, "--marker", title, "--trend-home", home]);
   say(
     [
-      `[publish] ${kind === "retire" ? "철회" : kind === "update" ? "수정 발행" : "발행"} ${verify.code === 0 ? "완료" : "배포 후 확인 실패"} — ${slug} (${pushed.slice(0, 8)}), CI ${deployed.runId}`,
+      `[publish] ${kind === "retire" ? "철회" : kind === "update" ? "수정 발행" : "발행"} ${verify.code === 0 ? "완료" : "배포 후 확인 실패"} — ${slug} (${pushed.slice(0, 8)}), 로컬 Pages 릴리스 확인됨`,
       verify.stdout.trim(),
       verify.code === 0 ? "운영 확인: 정상" : "운영 확인: 위 ✖ 항목을 처리할 것(Purge 필요면 CF 대시보드에서 Purge Everything)",
       "다른 세션·워크트리: main 이 바뀌었다 — git fetch origin 후 rebase(또는 main 새로 받기) 하고 작업할 것.",

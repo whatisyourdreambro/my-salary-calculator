@@ -3,14 +3,26 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { createPagesIndexNowManifest, validatePagesIndexNowManifest, assertPagesNotificationVerification,
-  submitPagesNotificationOnce, readCanonicalSitemap } from '../pages-indexnow.mjs';
+  submitPagesNotificationOnce, readCanonicalSitemap, assertLocalIndexNowContext } from '../pages-indexnow.mjs';
 import { assertIndexNowProduction } from '../indexnow-ping.mjs';
 const commit = 'a'.repeat(40), marker = { mode: 'production', adsDisabled: false, buildId: 'fixture', outputHash: 'b'.repeat(64), sourceHash: 'c'.repeat(64) };
 const url = 'https://www.moneysalary.com/guides/fixture';
 const previous = { ok: true, entries: new Map([[url, '2026-10-16']]) };
 const build = { ok: true, entries: new Map([[url, '2026-10-17']]) };
 const make = (overrides = {}) => createPagesIndexNowManifest({ commit, marker, previous, build, ...overrides });
+test('local notification cannot use dirty or mismatched source, QA flags, CI impersonation or another receipt directory', () => {
+  const root = fileURLToPath(new URL('../..', import.meta.url));
+  const options = { commit, receiptDirectory: path.join(root, '.artifacts/pages-release-local', commit), env: {} };
+  const local = { head: commit, status: '', origin: 'https://github.com/whatisyourdreambro/my-salary-calculator.git' };
+  assert.doesNotThrow(() => assertLocalIndexNowContext('capture', options, local));
+  for (const change of [{ head: 'b'.repeat(40) }, { status: ' M source' }, { origin: 'https://example.invalid/repo' }])
+    assert.throws(() => assertLocalIndexNowContext('submit', options, { ...local, ...change }));
+  for (const env of [{ GITHUB_ACTIONS: 'true' }, { MSY_QA_MODE: '1' }])
+    assert.throws(() => assertLocalIndexNowContext('capture', { ...options, env }, local));
+  assert.throws(() => assertLocalIndexNowContext('submit', { ...options, receiptDirectory: root }, local));
+});
 test('Pages delta captures only changed URLs and rejects QA/tampered identity', () => {
   const manifest = make(); assert.deepEqual(manifest.plan.urls, [url]);
   assert.deepEqual(validatePagesIndexNowManifest(manifest, { commit, marker }), manifest);

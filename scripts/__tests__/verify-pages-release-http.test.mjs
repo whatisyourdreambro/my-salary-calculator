@@ -1,13 +1,14 @@
 // Every network response in this suite is synthetic. No remote/app/browser execution.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, readFileSync, readdirSync, realpathSync, rmSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { crc32, deflateSync } from 'node:zlib';
 import { configurationHash } from '../lib/pages-release.mjs';
 import { assertPagesPrivateCache, assertPagesReleaseIdentity, assertReleasePng, pagesReleaseCases,
-  readPagesReleaseState, verificationReceipt, verifyPagesReleaseHttp, writeVerificationJson } from '../verify-pages-release-http.mjs';
+  readPagesReleasePins, readPagesReleaseState, resolvePagesReleaseReceiptDirectory,
+  verificationReceipt, verifyPagesReleaseHttp, writeVerificationJson } from '../verify-pages-release-http.mjs';
 
 function context() {
   const pins = { deploymentId: '11111111-2222-3333-4444-555555555555', rollbackDeploymentId: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
@@ -182,4 +183,63 @@ test('atomic gate summary contains exact pins and no response body or secret fie
     assert.equal(realpathSync(directory), path.resolve(directory));
     rmSync(directory, { recursive: true, force: true });
   }
+});
+
+function withReceiptWorkspace(callback) {
+  const directory = mkdtempSync(path.join(os.tmpdir(), 'msy-release-path-test-'));
+  try { return callback(directory); }
+  finally {
+    assert.equal(path.dirname(realpathSync(directory)), realpathSync(os.tmpdir()));
+    assert.ok(path.basename(directory).startsWith('msy-release-path-test-'));
+    rmSync(directory, { recursive: true, force: true });
+  }
+}
+
+test('receipt selection preserves the CI directory and permits only the exact local full-SHA directory', () => {
+  withReceiptWorkspace(workspace => {
+    const ci = path.join(workspace, '.artifacts/pages-release'); mkdirSync(ci, { recursive: true });
+    assert.deepEqual(resolvePagesReleaseReceiptDirectory(workspace), { directory: ci, localCommit: null });
+    const commit = context().pins.commit, local = path.join(workspace, '.artifacts/pages-release-local', commit);
+    assert.deepEqual(resolvePagesReleaseReceiptDirectory(workspace, local), { directory: local, localCommit: commit });
+    for (const directory of [path.join(workspace, 'outside', commit), path.join(workspace, '.artifacts/pages-release-local/short'),
+      path.join(workspace, '.artifacts/pages-release-local'), path.join(workspace, '.artifacts/pages-release', commit), './relative'])
+      assert.throws(() => resolvePagesReleaseReceiptDirectory(workspace, directory));
+    assert.deepEqual(readdirSync(path.join(workspace, '.artifacts/pages-release-local')), [commit]);
+  });
+});
+
+test('local receipt commit mismatches and linked receipt files or directory ancestors fail before API reads', () => {
+  withReceiptWorkspace(workspace => {
+    const { pins } = context();
+    const selected = resolvePagesReleaseReceiptDirectory(workspace, path.join(workspace, '.artifacts/pages-release-local', pins.commit));
+    const file = path.join(selected.directory, 'production-pins.json');
+    writeFileSync(file, JSON.stringify(pins));
+    assert.deepEqual(readPagesReleasePins(workspace, selected.directory).pins, pins);
+    writeFileSync(file, JSON.stringify({ ...pins, commit: 'b'.repeat(40) }));
+    assert.throws(() => readPagesReleasePins(workspace, selected.directory));
+    rmSync(file);
+    const alternate = path.join(workspace, 'alternate.json'); writeFileSync(alternate, JSON.stringify(pins));
+    symlinkSync(alternate, file, 'file');
+    assert.throws(() => readPagesReleasePins(workspace, selected.directory));
+    const ci = path.join(workspace, '.artifacts/pages-release');
+    symlinkSync(selected.directory, ci, 'junction');
+    assert.throws(() => resolvePagesReleaseReceiptDirectory(workspace, ci));
+  });
+});
+
+test('injected local control API is read-only and does not require or copy an OAuth token into env', async () => {
+  const state = context(), calls = [], env = Object.freeze({});
+  const api = { readProject: async () => { calls.push('project'); return state.project; },
+    readDeployment: async id => { calls.push(id); return state.deployment; },
+    upload: () => assert.fail('Never mutate from HTTP verification') };
+  const forbiddenFetch = () => assert.fail('No fallback authentication or network');
+  for (let pass = 0; pass < 2; pass++) {
+    const result = await readPagesReleaseState(state.pins, env, forbiddenFetch, api);
+    assertPagesReleaseIdentity({ ...state, ...result });
+  }
+  assert.deepEqual(calls, ['project', state.pins.deploymentId, 'project', state.pins.deploymentId]);
+  assert.deepEqual(env, {});
+  await assert.rejects(readPagesReleaseState({ ...state.pins, deploymentId: '../escape' }, env, forbiddenFetch, api));
+  await assert.rejects(readPagesReleaseState(state.pins, env, forbiddenFetch, {}));
+  assert.equal(calls.length, 4);
 });

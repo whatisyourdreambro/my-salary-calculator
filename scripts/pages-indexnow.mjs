@@ -2,13 +2,15 @@
 // only after exact deployment, purge and non-rendering acceptance. No browser.
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { HOST, readSitemap, planSubmission } from './indexnow-diff.mjs';
 import { submitIndexNow } from './indexnow-submit.mjs';
 import { assertIndexNowProduction } from './indexnow-ping.mjs';
 import { verifyArtifact } from './lib/pages-export.mjs';
+import { assertLocalReleaseContext, assertPagesProject, assertProductionDeployment, configurationHash, localReleaseDirectory } from './lib/pages-release.mjs';
 import guard from './lib/qa-production-http.cjs';
 import bodyGuard from './lib/qa-pages-deployment-http.cjs';
 
@@ -98,33 +100,34 @@ export async function submitPagesNotificationOnce({ manifest, deploymentId, rece
   return receipt;
 }
 
-export async function main(args = process.argv.slice(2), env = process.env) {
-  assert.ok(args.length === 1 && ['--capture', '--submit'].includes(args[0]));
+function readReceipt(file) {
+  assert.equal(lstatSync(file).isSymbolicLink(), false); assert.equal(lstatSync(file).isFile(), true);
+  assert.equal(realpathSync(file), file); return JSON.parse(readFileSync(file));
+}
+
+async function runPagesIndexNow(mode, { commit, receiptDirectory: dir, api, env }) {
+  assert.ok(['capture', 'submit'].includes(mode)); assert.match(commit, COMMIT);
   assertIndexNowProduction(env, ROOT, path.join(ROOT, '.pages-build'));
-  assert.equal(env.GITHUB_ACTIONS, 'true'); assert.equal(env.GITHUB_REF, 'refs/heads/main');
-  assert.match(env.GITHUB_SHA || '', COMMIT);
-  const verified = verifyArtifact(ROOT, 'production'), { marker } = verified;
+  const verified = verifyArtifact(ROOT, 'production', env), { marker } = verified;
   const build = readSitemap({ body: readFileSync(path.join(verified.stage, 'dist/sitemap.xml'), 'utf8') });
   assert.equal(build.ok, true);
-  const dir = path.join(ROOT, '.artifacts/pages-release'); mkdirSync(dir, { recursive: true });
   const file = path.join(dir, 'indexnow.json');
-  if (args[0] === '--capture') {
+  if (mode === 'capture') {
     assert.equal(existsSync(file), false, 'Do not overwrite pre-publication evidence');
     const previous = await readCanonicalSitemap();
-    const manifest = createPagesIndexNowManifest({ commit: env.GITHUB_SHA, marker, previous, build });
+    const manifest = createPagesIndexNowManifest({ commit, marker, previous, build });
     write(file, manifest, true); console.log(JSON.stringify({ captured: true, notificationsSent: 0, counts: manifest.plan.counts }));
-    return;
+    return manifest;
   }
-  const manifest = validatePagesIndexNowManifest(JSON.parse(readFileSync(file)), { commit: env.GITHUB_SHA, marker });
+  const manifest = validatePagesIndexNowManifest(readReceipt(file), { commit, marker });
   assert.deepEqual(sorted(build.entries), manifest.build);
-  const pins = JSON.parse(readFileSync(path.join(dir, 'production-pins.json')));
-  const verification = JSON.parse(readFileSync(path.join(dir, 'verification.json')));
+  const pins = readReceipt(path.join(dir, 'production-pins.json'));
+  const verification = readReceipt(path.join(dir, 'verification.json'));
   assertPagesNotificationVerification(verification, pins, manifest);
-  const { createReleaseApi } = await import('./pages-release.mjs');
-  const { assertProductionDeployment } = await import('./lib/pages-release.mjs');
-  const api = createReleaseApi(env);
+  if (!api) { const { createReleaseApi } = await import('./pages-release.mjs'); api = createReleaseApi(env); }
   const check = async () => {
-    const project = await api.readProject();
+    const project = assertPagesProject(await api.readProject(), marker);
+    assert.equal(configurationHash(project), pins.configurationHash);
     assert.equal(project.canonical_deployment.id, pins.deploymentId);
     assertProductionDeployment(await api.readDeployment(pins.deploymentId), pins.commit, pins.deploymentId);
   };
@@ -135,6 +138,32 @@ export async function main(args = process.argv.slice(2), env = process.env) {
   assert.equal(readFileSync(path.join(ROOT, 'public', keys[0]), 'utf8').trim(), key);
   const receipt = await submitPagesNotificationOnce({ manifest, deploymentId: pins.deploymentId, receiptFile: file + '.submission.json', key });
   console.log(JSON.stringify({ state: receipt.state, notifications: receipt.urlCount, results: receipt.results }));
+  return receipt;
+}
+
+export function assertLocalIndexNowContext(mode, { commit, receiptDirectory, env }, local) {
+  assert.ok(['capture', 'submit'].includes(mode));
+  assertLocalReleaseContext(env, { commit, ...local });
+  assert.equal(receiptDirectory, path.join(ROOT, '.artifacts/pages-release-local', commit));
+}
+
+export async function runLocalPagesIndexNow(mode, { commit, receiptDirectory, api, env = process.env }) {
+  const git = args => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+  assertLocalIndexNowContext(mode, { commit, receiptDirectory, env }, {
+    head: git(['rev-parse', 'HEAD']), status: git(['status', '--porcelain=v1', '-z', '--untracked-files=all']),
+    origin: git(['remote', 'get-url', 'origin']),
+  });
+  assert.equal(localReleaseDirectory(ROOT, commit), receiptDirectory);
+  if (mode === 'submit') assert.equal(typeof api?.readProject, 'function');
+  return runPagesIndexNow(mode, { commit, receiptDirectory, api, env });
+}
+
+export async function main(args = process.argv.slice(2), env = process.env) {
+  assert.ok(args.length === 1 && ['--capture', '--submit'].includes(args[0]));
+  assert.equal(env.GITHUB_ACTIONS, 'true'); assert.equal(env.GITHUB_REF, 'refs/heads/main');
+  assert.match(env.GITHUB_SHA || '', COMMIT);
+  const dir = path.join(ROOT, '.artifacts/pages-release'); mkdirSync(dir, { recursive: true });
+  return runPagesIndexNow(args[0].slice(2), { commit: env.GITHUB_SHA, receiptDirectory: dir, env });
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

@@ -38,6 +38,7 @@ import {
 import { dirname, join, resolve, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { describeSecretEnv, loadSecretEnvFiles } from "./secret-env.mjs";
+import { cleanBuildEnvironment } from "../lib/pages-export.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 export const REPO_OF_SCRIPT = resolve(HERE, "..", "..");
@@ -514,9 +515,15 @@ export function heavySteps({ slug, originSha, home, wt, config, sibling, candida
   ].map(([name, cmd]) => ({ name, cmd, wt }));
 }
 
+export function qaHeavyBuildEnvironment(name, wt, input = process.env) {
+  return ["base", "base-build", "prebuild-gens", "build", "pages-verify"].includes(name)
+    ? cleanBuildEnvironment(input, "qa", join(wt, ".pages-qa")) : undefined;
+}
+
 async function runHeavy(deps, { home, wt, date, name, cmd }) {
   const log = join(home, "logs", `${date}-${name}.log`);
-  return deps.run(process.execPath, [join(wt, "scripts/trend-publish/heavy.mjs"), cmd, "--cwd", wt, "--log", log, "--trend-home", home], { cwd: wt });
+  return deps.run(process.execPath, [join(wt, "scripts/trend-publish/heavy.mjs"), cmd, "--cwd", wt, "--log", log, "--trend-home", home],
+    { cwd: wt, env: qaHeavyBuildEnvironment(name, wt) });
 }
 
 async function git(deps, wt, args) {

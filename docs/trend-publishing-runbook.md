@@ -1,15 +1,15 @@
 # 트렌드 브리프(공식 발표 해설) 발행 런북
 
-> **정적 Pages 자동 게시 재개(2026-10-17):** 게시 경로는 GitHub `ci.yml`의 `verify` → `deploy-pages`다. main push와 저장소 변수 `PAGES_AUTO_DEPLOY_ENABLED=true`가 모두 필요하다. Cloudflare의 구형 Git 자동빌드는 계속 끈다. 발행기는 원격 main의 Pages 정책·워크플로·활성 스위치를 확인하고, 승인된 글만 비강제 push한 뒤 정확한 SHA의 배포 작업 성공을 기다린다. 운영 빌드 → 기존 사이트맵 차분 보관 → Pages 단일 업로드 → 실제 Purge 성공 → 광고 없는 운영 HTTP 확인 → IndexNow 순서다. `.pages-qa`/`.next-qa`/`.open-next-qa`는 배포 금지다. 모호한 배포·통지 결과는 자동 재시도하지 않는다. [현재 README 절차](../README.md)와 실제 Actions 배포 영수증이 이전 Pages/Workers 설명보다 우선한다.
+> **무료 Pages·로컬 승인 발행(2026-10-17):** GitHub `ci.yml`은 검증만 수행하며 `deploy-pages`는 없다. 저장소 변수는 `PAGES_AUTO_DEPLOY_ENABLED=false`, `PAGES_LOCAL_PUBLISH_ENABLED=true`로 두고 Cloudflare의 구형 Git production·preview 자동빌드는 계속 끈다. 글별 승인 → 정확한 main SHA의 `verify` 성공 → 로컬 운영 빌드·검증 → 기존 사이트맵 차분 보관 → 로컬 Wrangler OAuth로 Pages 단일 업로드 → 기존 캐시 Purge 워크플로 성공 → 비렌더링 HTTP 16건 → IndexNow 순서다. 새 Cloudflare 토큰을 GitHub에 저장하지 않는다. `.pages-qa`/`.next-qa`/`.open-next-qa`는 배포 금지다. 모호한 배포·통지 결과는 자동 재시도하지 않는다. [현재 README 절차](../README.md)와 `.artifacts/pages-release-local/<전체 SHA>/`의 완료 영수증이 이전 Pages/Workers 설명보다 우선한다.
 
 2026-09-26 R5 publisher 신설. 코드: `scripts/trend-publish/*` · `src/lib/trendBriefs/*` · 등록 `src/lib/guides/trend-briefs.ts`.
-**글별 운영자 승인과 기존 발행 한도는 유지한다.** `daily`는 로컬 PROPOSE까지만 만들며, `publish-approved`가 승인 초안·해시·준비 상태를 확인한 뒤 main에 반영한다. 로컬 검증은 `qa:pages:build`/`qa:pages:verify`와 `.pages-qa/.next`를 사용하고, 운영용 빌드와 실제 배포는 GitHub에서 수행한다. 예약 작업의 실제 등록·활성 상태를 이 런북이나 예약 폴더의 예시만으로 추정하지 않는다. 등록되지 않은 예약을 임의로 만들거나 과거 네이버 예약 글을 중복 등록하지 않는다.
+**글별 운영자 승인과 기존 발행 한도는 유지한다.** `daily`는 로컬 PROPOSE까지만 만들며, `publish-approved`가 승인 초안·해시·준비 상태를 확인한 뒤 main에 반영하고 로컬 승인 발행기를 호출한다. QA는 `qa:pages:build`/`qa:pages:verify`와 `.pages-qa/.next`를 사용한다. 운영용 빌드와 업로드·검증·후속 처리는 로컬 프로세스가 진행하므로 완료될 때까지 컴퓨터가 켜져 있어야 한다. 이번 변경으로 정기 게시 작업을 새로 등록하지 않는다. 예약 작업의 실제 등록·활성 상태를 이 런북이나 예약 폴더의 예시만으로 추정하지 않는다. 등록되지 않은 예약을 임의로 만들거나 과거 네이버 예약 글을 중복 등록하지 않는다.
 
 ## 0. 운영자 결정 (2026-09-27) — 이 런북의 다른 절보다 우선
 
 | 항목 | 결정 | 코드·설정 |
 |---|---|---|
-| 발행 승인 | 브리프마다 운영자가 채팅에서 `발행 <slug>` 라고 승인한 뒤에만 게시. 무승인 자동 발행 없음 | daily는 PROPOSE까지, 승인 CLI의 main push 후 검증된 Pages 배포가 자동 실행됨 |
+| 발행 승인 | 브리프마다 운영자가 채팅에서 `발행 <slug>` 라고 승인한 뒤에만 게시. 무승인 자동 발행 없음 | daily는 PROPOSE까지, 승인 CLI의 main push 후 정확한 SHA의 검증 성공을 확인하고 로컬 승인 발행 절차 실행 |
 | 파일럿 | **2026-10-13 ~ 10-31**. 10/12 까지는 dry-run 만 | `calendar.json` `pilot`·`firstPublishNotBefore` = 10-13, `types.ts` `FIRST_PUBLISH_NOT_BEFORE` = 2026-10-13 |
 | 발행 한도 | **하루 1편 이하 · ISO 주 5편 이하**(월 16편·첫 90일 게시 30편 하드 상한도 그대로) | `config.json` `caps` perKstDay 1 · perIsoWeek 5 |
 | 동결 | **11/1 ~ 1/31 발행 없음**(보고만, FREEZE). 연말정산 시즌 예외 없음 | `calendar.json` `freezes` |
@@ -88,15 +88,15 @@ daily.mjs 는 운영자 플래그와 저장소의 운영자 파일(docs/drafts·
 
 | 문구 | 세션이 하는 일 |
 |---|---|
-| `발행 <slug>` | 카드의 초안 해시·로컬 브랜치를 수동 Workers 릴리스 담당자에게 인계한다. `publish-approved`는 현재 종료 코드 2로 차단된다. |
-| `철회 <slug>` | 철회할 항목·허브 경로·원장 변경안을 검토하여 수동 Workers 릴리스로 인계한다. `--retire`도 현재 차단되며 즉시 원격 반영하지 않는다. |
+| `발행 <slug>` | `publish-approved`가 카드의 초안 해시·승인·기존 게이트를 확인하여 비강제 push한 뒤, 정확한 SHA로 로컬 승인 발행 절차(§7)를 실행한다. |
+| `철회 <slug>` | 승인된 항목의 철회·허브 308·원장 변경안을 `--retire`로 반영하고, 같은 로컬 승인 발행 절차의 검증·Purge·HTTP 확인을 거친다. |
 | `점검 완료` | 운영자가 확인한 네 항목으로 `review-ack.mjs --days 7 --gsc-manual-actions none --adsense-policy none --naver-notice none --clicks ok` |
 | `트렌드 중지` | `review-ack.mjs --halt "<사유>"` → HALT. 재개는 운영자가 HALT 파일을 지운다 |
 | `결정 <slug> 유지·수정·철회 …` | `decide.mjs --slug <slug> --decision keep|update|retire --at d28 --gsc-impr N --naver-clicks N` (§6) |
 
 승인은 **'발행을 허락한다'** 는 뜻이지 내용 검수가 아니다. 본문 작성 방식 상자에는 `운영자가 발행을 승인했습니다(내용 검수 아님)` 로 적히고, 승인 없이는 `사람 검토 없이 자동 검사만 거쳤습니다` 이다('검수 완료' 표기는 게이트가 막는다). 승인은 초안 해시(날짜·fetchedAt·humanReview 제외)에 묶이고, 카드는 **1차 출처 게시일+7일과 카드 날짜+2일 중 이른 날**에 만료된다.
 
-**아래는 차단된 이전 Pages 구현의 사전 조건과 흐름이다. 현재는 이 단계에 도달하지 않으며 참고 기록으로만 보존한다.** publish-approved 사전 조건: HALT 없음 · PUBLISH_ENABLED · REVIEWED_UNTIL 유효 · 달력 · 한도 · 결정 대기 없음 · CF_PURGE_OK 또는 `--manual-purge-ack` · DEPLOY_HOLD 없음 · origin/main 최신 커밋 2시간 경과 · 카드 미만료 · 해시 일치 · 보관본에 레이더 후보 기록. 날짜는 언제나 실제 KST 오늘(`--today` 는 `--check-only` 전용). 통과하면 워크트리를 origin/main 으로 맞추고 오늘 날짜·승인 표기로 다시 렌더 → 게이트 전부 → 커밋 → 원격 main 으로 반영(git 푸시 — force 없음, 거부되면 멈춤) → verify-prod(최대 45분) → 요약. **요약의 마지막 안내대로 다른 세션은 main 을 fetch/rebase 할 것.**
+**현재 publish-approved 사전 조건:** HALT 없음 · PUBLISH_ENABLED · REVIEWED_UNTIL 유효 · 달력 · 한도 · 결정 대기 없음 · CF_PURGE_OK 또는 `--manual-purge-ack` · DEPLOY_HOLD 없음 · origin/main 최신 커밋 2시간 경과 · 카드 미만료 · 해시 일치 · 보관본에 레이더 후보 기록. 저장소의 로컬 발행 스위치·검증 워크플로 준비 상태도 통과해야 한다. 날짜는 언제나 실제 KST 오늘(`--today` 는 `--check-only` 전용). 통과하면 워크트리를 origin/main 으로 맞추고 오늘 날짜·승인 표기로 다시 렌더 → 게이트 전부 → 커밋 → 원격 main 으로 반영(git 푸시 — force 없음, 거부되면 멈춤) → 정확한 SHA의 GitHub 검증과 로컬 승인 발행(§7) → 추가 verify-prod(최대 45분) → 요약. `CF_PURGE_OK`나 `--manual-purge-ack`는 준비 확인일 뿐 실제 Purge 성공 검증을 생략하지 않는다. **요약의 마지막 안내대로 다른 세션은 main 을 fetch/rebase 할 것.**
 
 ## 5. 주간 점검 (REVIEWED_UNTIL — 최대 14일)
 
@@ -118,10 +118,23 @@ daily.mjs 는 운영자 플래그와 저장소의 운영자 파일(docs/drafts·
 - **reviewBy**(발행 +60일): 새 공식 자료로 실질 갱신(`--update`)하거나 철회. `decide.mjs --slug <slug> --decision update|retire --at reviewBy`.
 - **파일럿 판정**: 파일럿(10/13~10/31)이 끝나면 D+28 파일럿 판정 기록 전까지 발행이 없다(동결 11/1~1/31 뒤 2월 재개도 이 기록이 있어야 한다). 마지막 파일럿 브리프의 D+28(11월 말) 결과까지 본 뒤 `decide.mjs --pilot-verdict continue`(중지는 `halt`).
 
-## 7. Pages 배포 후 캐시 Purge와 발행 확인
+## 7. 로컬 Pages 발행·캐시 Purge·발행 확인
 
-- main push의 `ci.verify` 성공 뒤 `deploy-pages`가 동일 커밋의 운영 패키지를 한 번 게시한다. 실제 canonical 배포와 설정을 재확인하고 Purge 성공 → 비렌더링 HTTP 검증 → IndexNow 순서로 진행한다. 발행기는 정확한 커밋의 `deploy-pages` 성공까지 기다린다. `verify`만 통과하거나 배포 job이 생략된 상태는 발행 완료가 아니다.
-- `.github/workflows/cf-purge.yml`은 **workflow_dispatch 전용**인 별도 수동 복구 도구이며 기본 대상은 `pages`다. Pages 대상에는 전체 `release_sha`를 지정한다. 보존된 Workers 모드는 `target=workers`, `release_tag`, 전체 `expected_version_id`를 명시해야 한다. 수동 Purge 자체는 배포하지 않는다.
+글별 승인을 받은 전체 SHA에 대해 발행기가 다음 명령을 호출한다. 직접 실행할 때도 같은 승인과 깨끗한 최신 main 워크트리가 필요하다.
+
+```sh
+node scripts/pages-release-local.mjs --approved-commit <전체-SHA>
+```
+
+1. 저장소 변수 `PAGES_AUTO_DEPLOY_ENABLED=false`, `PAGES_LOCAL_PUBLISH_ENABLED=true` 및 정확한 main SHA의 `ci.verify` 성공을 확인한다. GitHub CI 자체는 게시하지 않는다.
+2. 일반 방문자 광고 설정을 보존한 `.pages-build` 운영 패키지를 로컬에서 빌드·검증하고, 업로드 전 사이트맵을 보관한다. QA 산출물을 복사해 배포하지 않는다.
+3. 기존 로컬 Wrangler OAuth 로그인으로 한 번 업로드하고 정확한 canonical 배포 ID·커밋·빌드 및 설정 보존을 확인한다. OAuth 값은 메모리에서만 전달하며 출력·별도 파일 저장·GitHub 전송을 하지 않는다. `CF_PAGES_API_TOKEN` 등 새 Cloudflare 토큰을 GitHub에 저장하지 않는다.
+4. 기존 `.github/workflows/cf-purge.yml`의 **workflow_dispatch** `pages-verified-purge`를 정확한 배포 ID·전체 `release_sha`로 호출한다. 기존 GitHub `CF_API_TOKEN`은 이 작업 안에서 Pages Read·Zone Cache Purge에만 쓰며 로컬 발행기로 가져오지 않는다. 작업 성공과 해당 요청의 영수증을 확인한다. Purge 자체는 게시하지 않는다.
+5. 재시도 없는 비렌더링 HTTP 16건에서 실제 빌드·경로·비공개 응답의 캐시 금지 등을 확인하고, canonical을 전후 대조한 뒤 사이트맵 차분만 IndexNow에 제출한다. 문서 JavaScript·하위 광고/분석 요청·리디렉션 따라가기는 모두 금지한다.
+
+각 단계의 증거는 `.artifacts/pages-release-local/<전체 SHA>/`에 저장한다. 전체 절차가 완료되어야 발행 완료이며 `verify` 성공·업로드 성공만으로 완료 처리하지 않는다. 컴퓨터와 프로세스는 끝날 때까지 켜져 있어야 하고 로컬 Wrangler 로그인 및 GitHub 워크플로 실행 권한이 필요하다. 이전 시도, 변경된 main/설정, 실패한 Purge, 모호한 업로드·통지는 중단 후 운영자가 확인한다. 영수증 삭제·자동 재업로드·자동 롤백으로 우회하지 않는다. 새 정기 게시 작업은 등록하지 않는다.
+
+- 수동 복구용 `cf-purge`의 일반 `purge`는 기본 대상 `pages`와 전체 `release_sha`를 사용한다. 보존된 Workers 모드는 현재 게시 경로가 아니며, 사용하려면 별도 명시적 결정이 필요하다.
 - `TREND_HOME/CF_PURGE_OK`와 `--manual-purge-ack`는 기존 운영 준비 확인일 뿐, 현재 Pages 준비 검사·배포 확인을 우회하지 못한다. 이전 환경의 플래그를 새로 만들거나 등록되지 않은 예약을 활성 상태라고 간주하지 않는다.
 - 발행기의 추가 `verify-prod`는 대표 문서와 고정된 내부 정적 자산을 비렌더링 HTTP로 검사한다. 철회는 실제 308과 Location을 확인한다. 광고·분석 경로, 외부 리디렉션, 문서 JavaScript 실행은 금지한다.
 
@@ -149,7 +162,7 @@ QA 기준·초안 빌드는 `npm run qa:pages:build`와 `npm run qa:pages:verify
 
 현재 파이프라인은 키 없이 동작한다(공식 페이지 공개 HTML·RSS). 아래 키는 모두 **선택**이다 — 파일이 있으면 쓰고, 없으면 해당 기능만 `키 없음 — 건너뜀`.
 
-**자동 적용(운영자 결정 2026-09-27)**: `daily.mjs prepare`·`finish` 가 워크트리 관문 통과 직후(차단된 `publish-approved.mjs`는 키 파일을 읽지 않음) `config.json` `secretEnvFiles` 의 파일을 읽는다(`scripts/trend-publish/secret-env.mjs`). 허용 이름만, 이미 환경변수에 값이 있으면 덮지 않음(아래 `--env-file` 로 넘긴 값이 이긴다), 16KB 넘는 파일은 읽지 않음. 보고서에는 `선택 키 파일: trend.env 있음(LAW_OC·ECOS_API_KEY) · datalab.env.txt 없음(키 없이 동작)` 처럼 **파일·이름만** 적힌다. 읽은 값은 자식(레이더·감시기·게이트)에 상속되고, secret-scan 이 그 값(원문·URL 인코딩·base64)을 diff·.next-qa·로그에서 찾는다(이름 규칙에 `CLIENT_ID` 추가).
+**자동 적용(운영자 결정 2026-09-27)**: `daily.mjs prepare`·`finish` 가 워크트리 관문 통과 직후 `config.json` `secretEnvFiles` 의 파일을 읽는다(`scripts/trend-publish/secret-env.mjs`). `publish-approved.mjs`도 준비 검사와 사전 조건을 통과한 실제 실행에서 읽으며 `--check-only`는 먼저 종료한다. 허용 이름만, 이미 환경변수에 값이 있으면 덮지 않음(아래 `--env-file` 로 넘긴 값이 이긴다), 16KB 넘는 파일은 읽지 않음. 보고서에는 `선택 키 파일: trend.env 있음(LAW_OC·ECOS_API_KEY) · datalab.env.txt 없음(키 없이 동작)` 처럼 **파일·이름만** 적힌다. 읽은 값은 자식(레이더·감시기·게이트)에 상속되고, secret-scan 이 그 값(원문·URL 인코딩·base64)을 diff·.next-qa·로그에서 찾는다(이름 규칙에 `CLIENT_ID` 추가). 이 선택 키 파일은 Cloudflare 자격증명 저장소가 아니며 OAuth나 Cloudflare 토큰을 넣지 않는다.
 
 | 파일 | 이름 | 쓰는 곳 |
 |---|---|---|

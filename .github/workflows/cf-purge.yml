@@ -6,6 +6,7 @@
 # Capture IndexNow delta before activation and submit it separately after activation/Purge.
 # Setup: docs/trend-publishing-runbook.md §7 and docs/operator-console-pack.md.
 name: cf-purge
+run-name: Cloudflare ${{ inputs.operation || 'purge' }} ${{ inputs.request_id || inputs.release_sha || github.sha }}
 
 on:
   workflow_dispatch:
@@ -14,7 +15,7 @@ on:
         description: Purge after release, or read cache configuration without changes
         required: true
         type: choice
-        options: [purge, audit-only, pages-upload-readiness]
+        options: [purge, audit-only, pages-verified-purge]
         default: purge
       target:
         description: Deployment target (current publication target is Pages)
@@ -34,6 +35,15 @@ on:
       release_sha:
         description: Pages publication commit SHA (defaults to selected commit)
         type: string
+      expected_deployment_id:
+        description: Exact canonical Pages deployment UUID for verified purge
+        type: string
+      expected_configuration_hash:
+        description: Exact Pages configuration SHA-256 for verified purge
+        type: string
+      request_id:
+        description: Unique approved local publisher request UUID
+        type: string
 
 permissions:
   contents: read
@@ -44,37 +54,39 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  pages-upload-readiness:
-    if: inputs.operation == 'pages-upload-readiness'
+  pages-verified-purge:
+    if: inputs.operation == 'pages-verified-purge'
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
-      - name: Check Pages upload credential endpoint without uploading assets or deploying
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: 22
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts
+      - name: Purge only the pinned canonical Pages deployment
         env:
-          CF_API_TOKEN: ${{ secrets.CF_PAGES_API_TOKEN }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
-        run: |
-          node --input-type=module <<'NODE'
-          import assert from 'node:assert/strict';
-          const account = process.env.CF_ACCOUNT_ID, token = process.env.CF_API_TOKEN;
-          assert.match(account || '', /^[a-f0-9]{32}$/);
-          assert.ok(token && !/\s/.test(token));
-          const result = { mode: 'pages-upload-readiness', assetUploads: 0, deployments: 0, publisherRequests: 0 };
-          try {
-            // Wrangler uses this same GET before uploading. The returned JWT is
-            // never printed, persisted or used; this does not create a deployment.
-            const response = await fetch('https://api.cloudflare.com/client/v4/accounts/' + account + '/pages/projects/my-salary-calculator/upload-token', {
-              method: 'GET', redirect: 'error', signal: AbortSignal.timeout(20000),
-              headers: { Authorization: 'Bearer ' + token, 'User-Agent': 'MoneySalary-Pages-readiness/1.0' },
-            });
-            const data = await response.json();
-            result.httpStatus = response.status;
-            result.authorized = response.ok && data.success === true && typeof data.result?.jwt === 'string';
-            result.apiCodes = (data.errors || []).map(item => item.code).filter(code => Number.isSafeInteger(code)).slice(0, 8);
-          } catch { result.authorized = false; result.transportOrFormatFailure = true; }
-          console.log('PAGES_UPLOAD_READINESS ' + JSON.stringify(result));
-          if (!result.authorized) process.exitCode = 1;
-          NODE
+          CF_ZONE_ID: ${{ secrets.CF_ZONE_ID }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CF_PAGES_COMMIT_SHA: ${{ inputs.release_sha }}
+          CF_EXPECTED_DEPLOYMENT_ID: ${{ inputs.expected_deployment_id }}
+          CF_EXPECTED_CONFIGURATION_HASH: ${{ inputs.expected_configuration_hash }}
+          CF_PURGE_REQUEST_ID: ${{ inputs.request_id }}
+        run: node scripts/pages-verified-purge.mjs
+      - name: Verified purge receipt
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: pages-verified-purge-${{ inputs.request_id }}
+          path: .artifacts/pages-purge/purge-receipt.json
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
 
   purge:
     if: inputs.operation == 'purge' || inputs.operation == ''
