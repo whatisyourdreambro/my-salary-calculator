@@ -4,7 +4,7 @@ import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
-import { parseLocalReleaseArgs, localPackagingEnvironment, runLocalPackagingChild,
+import { parseLocalReleaseArgs, resolveInstalledNpmCli, localPackagingEnvironment, runLocalPackagingChild,
   orchestrateApprovedLocalRelease } from '../pages-release-local.mjs';
 
 const COMMIT = 'a'.repeat(40), OTHER = 'b'.repeat(40);
@@ -131,6 +131,24 @@ test('ambiguous or mismatched notification is not reported as a completed releas
   for (const submitOverride of [{ state: 'needs-review' }, { commit: OTHER }, { deploymentId: 'wrong' }]) {
     const f = fixture({ submitOverride }); await assert.rejects(f.run()); assert.equal(f.saved.at(-1).finished, false);
   }
+});
+
+test('npm resolution supports only the Windows sibling and Unix prefix/lib installation layouts', () => {
+  for (const fixture of [
+    { paths: path.win32, node: 'C:\\Tools\\nodejs\\node.exe', expected: 'C:\\Tools\\nodejs\\node_modules\\npm\\bin\\npm-cli.js', probes: 1 },
+    { paths: path.posix, node: '/opt/node/bin/node', expected: '/opt/node/lib/node_modules/npm/bin/npm-cli.js', probes: 2 },
+  ]) {
+    const seen = [];
+    assert.equal(resolveInstalledNpmCli(fixture.node, { paths: fixture.paths,
+      isFile: file => { seen.push(file); return file === fixture.expected; } }), fixture.expected);
+    assert.equal(seen.length, fixture.probes);
+    assert.equal(seen.at(-1), fixture.expected);
+  }
+  const seen = [];
+  assert.throws(() => resolveInstalledNpmCli('/opt/node/bin/node', { paths: path.posix,
+    isFile: file => { seen.push(file); return false; } }), /Installed Node npm CLI/);
+  assert.deepEqual(seen, ['/opt/node/bin/node_modules/npm/bin/npm-cli.js', '/opt/node/lib/node_modules/npm/bin/npm-cli.js']);
+  assert.throws(() => resolveInstalledNpmCli('node', { paths: path.posix, isFile: () => true }), /absolute installation path/);
 });
 
 test('production packaging environment keeps approved public settings while removing credentials and inherited executables', () => {

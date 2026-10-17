@@ -22,14 +22,25 @@ export function parseLocalReleaseArgs(args) {
   return args[1];
 }
 
+export function resolveInstalledNpmCli(nodeExecutable = process.execPath, { paths = path,
+  isFile = file => { try { return lstatSync(file).isFile(); } catch { return false; } } } = {}) {
+  assert.ok(paths.isAbsolute(nodeExecutable), 'Node executable must have an absolute installation path');
+  const bin = paths.dirname(nodeExecutable);
+  // Windows installs npm alongside node.exe; the official Unix archive installs
+  // node in prefix/bin and npm in prefix/lib. Never consult PATH/npm_execpath.
+  const candidates = [paths.join(bin, 'node_modules/npm/bin/npm-cli.js'),
+    paths.resolve(bin, '..', 'lib/node_modules/npm/bin/npm-cli.js')];
+  const npm = candidates.find(isFile);
+  assert.ok(npm, 'Installed Node npm CLI is required for local packaging');
+  return npm;
+}
+
 export function localPackagingEnvironment(workspace, env) {
   const { input } = readPublicBuildConfiguration(workspace, 'production', env);
   const result = cleanBuildEnvironment(input, 'production', path.join(workspace, '.pages-build'));
   // Use the installed Node distribution's npm CLI, never an inherited executable
   // override. npm is needed by pages-build's isolated installation/prebuild steps.
-  const npm = path.join(path.dirname(process.execPath), 'node_modules/npm/bin/npm-cli.js');
-  assert.ok(existsSync(npm), 'Installed Node npm CLI is required for local packaging');
-  result.npm_execpath = npm;
+  result.npm_execpath = resolveInstalledNpmCli();
   assert.equal(result.GITHUB_ACTIONS, undefined);
   return result;
 }
