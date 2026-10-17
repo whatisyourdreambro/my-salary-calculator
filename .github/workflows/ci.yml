@@ -18,10 +18,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: 22
+          package-manager-cache: false
       - name: 프로덕션 헬스체크 (실패 시 5분 후 1회 재시도 — 배포 전파 중 오탐 방지)
         run: |
           if node scripts/health-check.mjs; then exit 0; fi
@@ -34,12 +35,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           # 광고 위 UI 게이트(ad-audit --diff)가 push 이전 커밋·PR base 커밋과 비교하려면 전체 이력이 필요.
           # 기본값 1(얕은 clone)이면 git diff 가 실패하고, 스크립트는 CI 에서 그 경우 exit 2 로 멈춘다.
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: 22
           cache: npm
@@ -90,14 +91,14 @@ jobs:
       - run: npm run qa:quality -- --next-dir .pages-qa/.next
       - name: 전체 URL 품질 장부 업로드
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: page-quality-ledger
           path: .artifacts/page-quality/
           if-no-files-found: ignore
       - name: 공유 경로 소스 장부 업로드
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: share-source-ledger
           path: .artifacts/share-coverage/
@@ -127,14 +128,14 @@ jobs:
           npm run qa:run -- scripts/qa-pages-navigation.mjs
       - name: English page quality ledger
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: english-page-quality
           path: .artifacts/english-page-quality/
           if-no-files-found: ignore
       - name: qa-report 업로드
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: qa-report
           path: qa-report.md

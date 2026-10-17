@@ -10,6 +10,12 @@ name: cf-purge
 on:
   workflow_dispatch:
     inputs:
+      operation:
+        description: Purge after release, or read cache configuration without changes
+        required: true
+        type: choice
+        options: [purge, audit-only]
+        default: purge
       target:
         description: Deployment target (current publication target is Pages)
         required: true
@@ -39,6 +45,7 @@ concurrency:
 
 jobs:
   purge:
+    if: inputs.operation == 'purge' || inputs.operation == ''
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -80,15 +87,78 @@ jobs:
           else
             echo "ok=true" >> "$GITHUB_OUTPUT"
           fi
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         if: steps.secrets.outputs.ok == 'true'
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7.1.0
         if: steps.secrets.outputs.ok == 'true'
         with:
           node-version: 22
+          package-manager-cache: false
       - name: 활성 릴리스 확인 후 Purge Everything
         if: steps.secrets.outputs.ok == 'true'
         env:
           CF_PAGES_PROJECT: my-salary-calculator
           CF_PURGE_TIMEOUT_MINUTES: "25"
         run: node scripts/cf-purge-after-deploy.mjs
+
+  cache-audit:
+    if: inputs.operation == 'audit-only'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      CF_ZONE_ID: ${{ secrets.CF_ZONE_ID }}
+    steps:
+      - name: Read cache configuration (no purge, deploy, or publisher requests)
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          const zone = process.env.CF_ZONE_ID, token = process.env.CF_API_TOKEN;
+          assert.match(zone || '', /^[a-f0-9]{32}$/);
+          assert.ok(token && !/\s/.test(token));
+          const get = async resource => {
+            let response;
+            try { response = await fetch('https://api.cloudflare.com/client/v4/zones/' + zone + resource, {
+              method: 'GET', redirect: 'error', signal: AbortSignal.timeout(20000),
+              headers: { Authorization: 'Bearer ' + token, 'User-Agent': 'MoneySalary-cache-audit/1.0' },
+            }); } catch { return { ok: false, status: 0, transportFailed: true }; }
+            let data;
+            try { data = await response.json(); }
+            catch { return { ok: false, status: response.status, invalidJson: true }; }
+            if (!response.ok || data.success !== true) return { ok: false, status: response.status, codes: (data.errors || []).map(x => x.code) };
+            return { ok: true, result: data.result };
+          };
+          const identity = await get('');
+          assert.equal(identity.ok, true, 'Cannot verify zone; no further requests.');
+          assert.equal(identity.result.name, 'moneysalary.com');
+          const publicLiterals = new Set(['', '/', '/*', '/api/', '/api/*', '/share/', '/share/*', '/_next/', '/_next/*',
+            '/_msy/', '/_msy/*', '/en/', '/en/*', 'moneysalary.com', 'www.moneysalary.com', 'GET', 'HEAD', 'POST']);
+          const expression = value => String(value || '').length > 8000 ? '<redacted:oversize>'
+            : String(value || '').replace(/"((?:\\.|[^"\\])*)"/g, (_, literal) => JSON.stringify(publicLiterals.has(literal) ? literal : '<redacted>'));
+          const target = value => /^(?:\*|https?:\/\/)?(?:\*\.|www\.)?moneysalary\.com(?:\/\*)?$/.test(value || '') ? value : '<redacted>';
+          const cacheHeader = value => ({ operation: ['set', 'remove', 'append'].includes(value.operation) ? value.operation : '<redacted>',
+            ...(typeof value.value === 'string' && value.value.length <= 256 && value.value.split(',').every(part =>
+              /^(?:public|private|no-store|no-cache|immutable|must-revalidate|proxy-revalidate|(?:s-maxage|max-age|stale-while-revalidate|stale-if-error)=\d+)$/i.test(part.trim()))
+              ? { value: value.value } : { value: '<redacted>' }) });
+          const allowedParameters = new Set(['cache', 'edge_ttl', 'browser_ttl', 'origin_cache_control', 'respect_strong_etags']);
+          const allowedActions = new Set(['cache_level', 'edge_cache_ttl', 'browser_cache_ttl', 'cache_by_device_type', 'origin_cache_control']);
+          const report = { checkedAt: new Date().toISOString(), mode: 'audit-only', mutations: 0, publisherRequests: 0, records: [] };
+          for (const resource of ['/rulesets/phases/http_request_cache_settings/entrypoint', '/pagerules?status=active', '/rulesets/phases/http_response_headers_transform/entrypoint']) {
+            const response = await get(resource);
+            if (!response.ok) { report.records.push({ resource, ...response }); continue; }
+            const rules = Array.isArray(response.result) ? response.result : response.result.rules || [];
+            report.records.push({ resource, ok: true, rules: rules.map(rule => ({
+              id: rule.id, enabled: rule.enabled ?? rule.status === 'active', action: rule.action,
+              expression: expression(rule.expression),
+              targets: rule.targets?.map(item => ({ target: item.target, operator: item.constraint?.operator,
+                value: target(item.constraint?.value) })),
+              parameters: Object.fromEntries(Object.entries(rule.action_parameters || {}).filter(([key]) => allowedParameters.has(key))),
+              responseCacheHeaders: Object.fromEntries(Object.entries(rule.action_parameters?.headers || {})
+                .filter(([key]) => /^(?:cache-control|cdn-cache-control|cloudflare-cdn-cache-control)$/i.test(key)).map(([key, value]) => [key, cacheHeader(value)])),
+              actions: rule.actions?.filter(item => allowedActions.has(item.id)),
+            })) });
+          }
+          report.complete = report.records.every(item => item.ok || item.status === 404);
+          console.log('CACHE_AUDIT_RESULT ' + JSON.stringify(report));
+          if (!report.complete) process.exitCode = 1;
+          NODE
