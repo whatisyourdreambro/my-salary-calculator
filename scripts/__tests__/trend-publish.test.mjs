@@ -11,7 +11,7 @@ import { fileURLToPath } from "node:url";
 
 import * as scan from "../trend-publish/secret-scan.mjs";
 import * as daily from "../trend-publish/daily.mjs";
-import { checkPreconditions, main as publishMain } from "../trend-publish/publish-approved.mjs";
+import { checkPreconditions, githubReadClient, pagesPublicationReadiness, waitForPagesDeployment, main as publishMain } from "../trend-publish/publish-approved.mjs";
 import { extractAssets, pollPage, run as verifyRun, staleChunkCheck } from "../trend-publish/verify-prod.mjs";
 import { compareManifests, fileEntry, metricChanges, normalizeChunk, statusViolations } from "../trend-publish/chunk-diff.mjs";
 import { compareSequences, extractAdMarkers } from "../trend-publish/ad-sequence.mjs";
@@ -161,6 +161,149 @@ function fakeRunner(home, { dirty = false, codes = {}, candidates, linked = true
 }
 const CAND = { id: "c1", cluster: "social-insurance-rates", route: "new-brief", title: "고용보험 제도개편 방안", url: "https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=1", publishedDate: "2026-10-08", score: 50 };
 const cleanup = (...dirs) => dirs.forEach((d) => rmSync(d, { recursive: true, force: true }));
+
+const PUB_MAIN = hex(40, "a");
+const PUB_NEXT = hex(40, "b");
+const GH_ROOT = "/repos/whatisyourdreambro/my-salary-calculator";
+function readyGithub({ enabled = "true", workflowText, policyText, runStatus = "completed", runConclusion = "success", jobConclusion = "success", wrongRunSha = false } = {}) {
+  const calls = [];
+  const state = { pushed: false };
+  const content = text => ({ type: "file", encoding: "base64", content: Buffer.from(text).toString("base64") });
+  const get = async endpoint => {
+    calls.push(endpoint);
+    if (endpoint.endsWith("/actions/variables/PAGES_AUTO_DEPLOY_ENABLED")) return { name: "PAGES_AUTO_DEPLOY_ENABLED", value: enabled };
+    if (endpoint.endsWith("/commits/main")) return { sha: state.pushed ? PUB_NEXT : PUB_MAIN };
+    if (endpoint.endsWith("/actions/workflows/ci.yml")) return { id: 123, state: "active", path: ".github/workflows/ci.yml" };
+    if (endpoint.includes("/contents/.github/workflows/ci.yml?ref=")) return content(workflowText ?? readFileSync(join(ROOT, ".github/workflows/ci.yml"), "utf8"));
+    if (endpoint.includes("/contents/scripts/lib/pages-release.mjs?ref=")) return content(policyText ?? "export const PAGES_RELEASE_POLICY_VERSION = 1;");
+    if (endpoint.includes("/actions/workflows/123/runs?")) return { workflow_runs: [{ id: 456, workflow_id: 123, event: "push", head_branch: "main", head_sha: wrongRunSha ? PUB_MAIN : PUB_NEXT, status: runStatus, conclusion: runConclusion }] };
+    if (endpoint.includes("/actions/runs/456/jobs?")) return { jobs: [{ id: 789, name: "deploy-pages", status: "completed", conclusion: jobConclusion }] };
+    throw new Error(`Unexpected offline API ${endpoint}`);
+  };
+  return { get, calls, state };
+}
+
+test("publisher readiness: explicit variable, current main policy and unskippable QA/deployment/HTTP gates", async () => {
+  const good = readyGithub();
+  assert.deepEqual(await pagesPublicationReadiness(good.get), { mainSha: PUB_MAIN, workflowId: 123 });
+  for (const enabled of ["false", "TRUE", "", null]) await assert.rejects(pagesPublicationReadiness(readyGithub({ enabled }).get), /PAGES_AUTO/);
+  await assert.rejects(pagesPublicationReadiness(readyGithub({ policyText: "export const OLD_POLICY = 1;" }).get), /정책 버전/);
+  const source = readFileSync(join(ROOT, ".github/workflows/ci.yml"), "utf8");
+  for (const workflowText of [
+    source.replace("needs: verify", "needs: other"),
+    source.replace("vars.PAGES_AUTO_DEPLOY_ENABLED == 'true'", "true || vars.PAGES_AUTO_DEPLOY_ENABLED == 'true'"),
+    source.replace("node scripts/pages-release.mjs --publish", "node scripts/pages-release.mjs --publish || true"),
+    source.replace("node scripts/verify-pages-release-http.mjs --execute-production-http", "echo skipped"),
+  ]) await assert.rejects(pagesPublicationReadiness(readyGithub({ workflowText }).get));
+  assert.ok(good.calls.every(endpoint => endpoint.startsWith(`${GH_ROOT}/`)));
+});
+
+test("publisher GitHub client: GET-only, manual redirects and credentials never become arguments or a stored file", async () => {
+  const observed = [];
+  const get = githubReadClient({ env: { GH_TOKEN: "offline-fixture" }, credential: () => { throw new Error("unexpected credential command"); }, fetchFn: async (url, opts) => {
+    observed.push({ url, opts }); return new Response('{"ok":true}', { status: 200 });
+  } });
+  assert.deepEqual(await get(`${GH_ROOT}/commits/main`), { ok: true });
+  assert.equal(observed[0].opts.method, "GET"); assert.equal(observed[0].opts.redirect, "manual");
+  assert.equal(observed[0].opts.headers.authorization, "Bearer offline-fixture");
+  await assert.rejects(get("https://example.invalid/steal"));
+  assert.equal(observed.length, 1);
+});
+
+test("publisher waits for exact push/main commit and successful deploy job, not an old title or skipped job", async () => {
+  const api = readyGithub(); api.state.pushed = true;
+  assert.deepEqual(await waitForPagesDeployment(api.get, { sha: PUB_NEXT, workflowId: 123, attempts: 1 }), { runId: 456, jobId: 789, sha: PUB_NEXT });
+  for (const options of [{ wrongRunSha: true }, { runConclusion: "failure" }, { jobConclusion: "skipped" }, { jobConclusion: "failure" }, { runStatus: "in_progress" }]) {
+    const bad = readyGithub(options); bad.state.pushed = true;
+    await assert.rejects(waitForPagesDeployment(bad.get, { sha: PUB_NEXT, workflowId: 123, attempts: 1 }));
+  }
+  const superseded = readyGithub();
+  await assert.rejects(waitForPagesDeployment(superseded.get, { sha: PUB_NEXT, workflowId: 123, attempts: 1 }), /main/);
+});
+
+function publisherFixture({ enabled = "true", jobConclusion = "success", verifyCode = 0, staleHead = false } = {}) {
+  const wt = fakeWorktree();
+  const home = fakeHome({ PUBLISH_ENABLED: "", CF_PURGE_OK: "", REVIEWED_UNTIL: "2026-10-20" });
+  const draft = JSON.parse(readFileSync(join(ROOT, "src/lib/__tests__/fixtures/trendBriefDrafts.json"), "utf8")).good;
+  const sha = daily.draftSha256(draft);
+  mkdirSync(join(home, "drafts"));
+  writeFileSync(join(home, "drafts", `${draft.slug}.json`), JSON.stringify({ draft, draftSha256: sha, cardDate: "2026-10-13", primaryPublishedDate: "2026-10-08", candidate: CAND }));
+  const api = readyGithub({ enabled, jobConclusion });
+  const calls = [], messages = [];
+  let committed = false, secretReads = 0;
+  const deps = {
+    allowAnyWorktree: true, githubGet: api.get, now: () => new Date("2026-10-13T01:00:00Z"),
+    log: text => messages.push(text), secretEnv: () => { secretReads++; }, sleep: async () => { throw new Error("unexpected offline wait"); },
+    run: async (cmd, args) => {
+      const line = [cmd, ...args].join(" "); calls.push(line);
+      let stdout = "";
+      if (cmd === "git") {
+        if (args.includes("--git-dir")) stdout = "C:/repo/.git/worktrees/trend-wt";
+        else if (args.includes("--git-common-dir")) stdout = "C:/repo/.git";
+        else if (args.includes("remote")) stdout = `https://github.com/whatisyourdreambro/my-salary-calculator.git`;
+        else if (args.includes("rev-parse")) stdout = args.includes("origin/main") ? PUB_MAIN : committed || staleHead ? PUB_NEXT : PUB_MAIN;
+        else if (args.includes("log")) stdout = String(Date.parse("2026-10-12T01:00:00Z") / 1000);
+        else if (args.includes("write-tree")) stdout = hex(40, "c");
+        else if (args.includes("commit")) committed = true;
+        else if (args.includes("push")) api.state.pushed = true;
+      }
+      return { code: line.includes("verify-prod.mjs") ? verifyCode : 0, stdout, stderr: "" };
+    },
+  };
+  return { home, wt, deps, calls, messages, api, secretReads: () => secretReads,
+    args: ["node", "publisher", "--slug", draft.slug, "--draft-sha256", sha, "--trend-home", home, "--worktree", wt] };
+}
+
+test("publisher check-only: full readiness and approval checks without mutations, key-file reads, build or verification", async () => {
+  const f = publisherFixture();
+  try {
+    const flags = snapshotOperator(f.home);
+    assert.equal(await publishMain([...f.args, "--check-only"], f.deps), 0, f.messages.join("\n"));
+    assert.equal(f.secretReads(), 0); assert.deepEqual(snapshotOperator(f.home), flags);
+    assert.ok(f.calls.every(call => /--git-dir|--git-common-dir|status --porcelain|remote get-url|rev-parse HEAD|log -1/.test(call)), f.calls.join("\n"));
+    assert.ok(!existsSync(join(f.home, "tmp")));
+  } finally { cleanup(f.home, f.wt); }
+  const stale = publisherFixture({ staleHead: true });
+  try { assert.equal(await publishMain([...stale.args, "--check-only"], stale.deps), 2); assert.ok(!stale.calls.some(call => / checkout | reset | fetch /.test(call))); }
+  finally { cleanup(stale.home, stale.wt); }
+});
+
+test("publisher disabled readiness blocks all modes before sync, credentials or remote changes", async () => {
+  for (const mode of [[], ["--update", "--draft", "unused"], ["--retire", "--to", "/guides"], ["--check-only"]]) {
+    const f = publisherFixture({ enabled: "false" });
+    try {
+      assert.equal(await publishMain([...f.args, ...mode], f.deps), 2);
+      assert.equal(f.secretReads(), 0);
+      assert.ok(!f.calls.some(call => / fetch | checkout | reset | push |heavy\.mjs|verify-prod/.test(call)));
+      assert.ok(!existsSync(join(f.home, "tmp")));
+    } finally { cleanup(f.home, f.wt); }
+  }
+});
+
+test("publisher success requires exact GHA deployment before verify-prod; failed/skipped deploy never reports completion", async () => {
+  for (const jobConclusion of ["success", "skipped"]) {
+    const f = publisherFixture({ jobConclusion });
+    try {
+      assert.equal(await publishMain(f.args, f.deps), jobConclusion === "success" ? 0 : 3, f.messages.join("\n"));
+      assert.ok(f.calls.some(call => call.endsWith("push origin HEAD:main")));
+      assert.equal(f.calls.some(call => call.includes("verify-prod.mjs")), jobConclusion === "success");
+      assert.equal(f.messages.some(line => /발행 완료/.test(line)), jobConclusion === "success");
+      assert.ok(f.calls.some(call => call.includes("qa:pages:build") && call.includes("qa:pages:verify")));
+    } finally { cleanup(f.home, f.wt); }
+  }
+});
+
+test("retirement verification: one HEAD, exact same-origin 308 destination, no follow or body execution", async () => {
+  for (const [status, location, expected] of [[308, "/guides", true], [308, "https://www.moneysalary.com/guides", true], [200, "/guides", false], [308, "https://example.invalid/", false]]) {
+    const calls = [];
+    const result = await verifyRun({ slug: "old-brief", retire: true, to: "/guides" }, { log: () => {}, fetchFn: async (url, opts) => {
+      calls.push({ url, opts }); return new Response(null, { status, headers: { location } });
+    } });
+    assert.equal(result.ok, expected); assert.equal(calls.length, 1);
+    assert.equal(calls[0].opts.method, "HEAD"); assert.equal(calls[0].opts.redirect, "manual");
+    assert.match(new Headers(calls[0].opts.headers).get("user-agent"), /MoneySalary-QA\/1.0/);
+  }
+});
 
 test("daily: 모드 결정 — 10/10 전 DRYRUN · 동결 · 배포 배치+2일 · REVIEWED_UNTIL 만료/14일 초과 · D+28 대기 · 한도 · 모두 충족 시 PROPOSE", () => {
   const consts = daily.readTypesConstants(ROOT);
@@ -341,7 +484,7 @@ test("daily: 운영자 파일·TREND_HOME 밖 쓰기 거부, 원격 반영 코�
   }
 });
 
-test("비활성 이전 git push 구현은 publish-approved.mjs 에만 있다", () => {
+test("승인된 git push 구현은 publish-approved.mjs 에만 있다", () => {
   // 정책: 이 폴더에서 'push' 라는 글자 자체를 publish-approved.mjs 에만 둔다 — 배열 추가도 splice 로 쓴다.
   const offenders = readdirSync(TP)
     .filter((f) => /\.(?:mjs|ts|md|json)$/.test(f) && f !== "publish-approved.mjs")
@@ -593,10 +736,10 @@ test("heavySteps: prebuild-status 는 독립 필수 단계 · 청크 비교는 �
   const cd = steps.find((s) => s.name === "chunk-diff").cmd;
   assert.ok(!/chunk-diff\.mjs status/.test(cd), "청크 비교 단계와 생성 파일 검사는 따로");
   assert.ok(cd.includes("--metrics src/config/site-metrics.generated.ts --metrics-base abc"));
-  assert.equal(steps.find((step) => step.name === "prebuild-gens").cmd, "npm run prebuild", "qa:build는 prebuild를 자동 실행하지 않으므로 명시적으로 유지");
-  assert.equal(steps.find((step) => step.name === "build").cmd, "npm run qa:build");
-  for (const name of ["edge-bundle", "autoads", "qa-quality", "ad-sequence", "chunk-diff", "gate-post"]) {
-    assert.ok(steps.find((step) => step.name === name).cmd.includes(".next-qa"), `${name} reads QA output`);
+  assert.equal(steps.find((step) => step.name === "prebuild-gens").cmd, "npm run prebuild", "Pages stage 생성 전 원본 생성 파일도 명시적으로 갱신");
+  assert.equal(steps.find((step) => step.name === "build").cmd, "npm run qa:pages:build");
+  for (const name of ["autoads", "qa-quality", "ad-sequence", "chunk-diff", "gate-post"]) {
+    assert.ok(steps.find((step) => step.name === name).cmd.includes(".pages-qa/.next"), `${name} reads QA output`);
   }
   assert.ok(!steps.some((step) => /npm run build\b|--next \.next(?:\s|$)/.test(step.cmd)));
   assert.ok(cd.includes(daily.qaBuildCacheDir("H", "abc")), "old production manifests cannot be reused");
@@ -827,29 +970,6 @@ test("decide: D+28 좀비 비율 ≥ 50% · 30일 수치 오류 2건 → HALT", 
 });
 
 
-test("publisher: every mode refuses before any command, credential access or operator-file mutation", async () => {
-  const home = fakeHome({ PUBLISH_ENABLED: "", CF_PURGE_OK: "", REVIEWED_UNTIL: "2099-01-01" });
-  try {
-    const before = snapshotOperator(home);
-    for (const mode of [[], ["--update", "--draft", "unused.json"], ["--retire", "--to", "/guides"], ["--check-only"], ["--retire", "--check-only"]]) {
-      const messages = [];
-      const deps = {
-        allowAnyWorktree: true,
-        log: message => messages.push(message),
-        now: () => { throw new Error("must stop before legacy preparation"); },
-        secretEnv: () => { throw new Error("must not read credentials"); },
-        run: async () => { throw new Error("must not execute git, build, deployment or HTTP verification"); },
-      };
-      const code = await publishMain(["node", "publish-approved.mjs", "--slug", "approved-draft", "--draft-sha256", hex(64), "--manual-purge-ack", "--trend-home", home, ...mode], deps);
-      assert.equal(code, 2, mode.join(" "));
-      assert.match(messages.join("\n"), /Workers/);
-      assert.match(messages.join("\n"), /수동.*인계/);
-      assert.match(messages.join("\n"), /docs\/trend-publishing-runbook\.md/);
-      assert.deepEqual(snapshotOperator(home), before);
-    }
-  } finally { cleanup(home); }
-});
-
 test("daily prepare: old production baseline cannot bypass prebuild and the ad-free QA build", async () => {
   const wt = fakeWorktree();
   const home = fakeHome({ PUBLISH_ENABLED: "", REVIEWED_UNTIL: "2026-10-20" });
@@ -864,11 +984,11 @@ test("daily prepare: old production baseline cannot bypass prebuild and the ad-f
     const deps = fakeRunner(home, { candidates: [CAND] });
     const result = await daily.prepare({ allowAnyWorktree: true, trendHome: home, worktree: wt, today: "2026-10-13", noSync: true }, deps);
     assert.equal(result.status, "write", result.reason);
-    assert.ok(deps.calls.some(call => call.includes("npm run prebuild && npm run qa:build")));
+    assert.ok(deps.calls.some(call => call.includes("npm run prebuild && npm run qa:pages:build && npm run qa:pages:verify")));
     const manifests = deps.calls.find(call => call.includes("-base-manifests.log"));
-    assert.ok(manifests.includes("--next .next-qa"));
+    assert.ok(manifests.includes("--next .pages-qa/.next"));
     assert.ok(manifests.includes(daily.qaBuildCacheDir(home, "base1234")));
-    assert.ok(deps.calls.some(call => call.includes("npm run verify:autoads -- --next-dir .next-qa")));
+    assert.ok(deps.calls.some(call => call.includes("npm run verify:autoads -- --next-dir .pages-qa/.next")));
     assert.ok(!deps.calls.some(call => /npm run build\b/.test(call)));
   } finally { cleanup(wt, home); }
 });

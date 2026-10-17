@@ -1,6 +1,6 @@
 # 운영자 세션표 — 코드 0줄로 수익 올리는 콘솔 작업 (2026-09-05 개정)
 
-> **2026-10-17 현재 결정:** Workers 업로드와 잠시 연결한 도메인 경로는 [결과 기록](workers-release-2026-10-17/deployment-outcome.json)처럼 롤백됐다. 운영자는 기존 Pages 유지와 무료 구조 개선을 선택했다. 기존 Pages Git 자동배포와 소스 자동 게시 가드는 유지하며, 정적 Pages 후보를 검증하기 전에는 새 운영 릴리스를 활성화하지 않는다. CI와 `cf-purge`는 배포하지 않고 수동 Purge 기본 대상은 Pages다. [현재 README 절차](../README.md)가 아래 과거 Workers 전환 설명보다 우선한다. 운영/preview 게시자 브라우저 점검은 [AGENTS.md](../AGENTS.md)에 따라 금지하며, 문서 수정은 실제 배포 완료를 뜻하지 않는다.
+> **2026-10-17 현재 결정:** Workers 업로드와 잠시 연결한 도메인 경로는 [결과 기록](workers-release-2026-10-17/deployment-outcome.json)처럼 롤백됐다. 운영자는 기존 Pages 유지와 무료 구조 개선을 선택했다. Cloudflare Git 빌드는 중지한 채 GitHub `ci.verify`가 통과한 main push만 `deploy-pages`에서 게시한다. 저장소 변수 `PAGES_AUTO_DEPLOY_ENABLED=true`가 활성화 조건이다. 이 작업은 실제 Purge와 비렌더링 HTTP 검증을 완료한 후 IndexNow를 제출한다. 별도 `cf-purge`는 수동 Purge 전용이며 기본 대상은 Pages다. 글별 발행 승인은 유지한다. [현재 README 절차](../README.md)가 아래 과거 Workers 전환 설명보다 우선한다. 운영/preview 게시자 브라우저 점검은 [AGENTS.md](../AGENTS.md)에 따라 금지하며, 문서 수정은 실제 배포 완료를 뜻하지 않는다.
 
 정본 계획: `docs/revenue-10x-plan-2026-09.md` §4·§5 + `docs/revenue-100x-plan-2026-09.md` §6(승인 A~J)·§7(세션 추가분, 2026-09-05). 이 문서는 그 세션표의 실행판이다.
 원칙: **한 세션 = 최대 3항목·25분**, 격주 고정 요일. 각 항목은 클릭 경로 ≤5줄 + 완료 증빙 1장.

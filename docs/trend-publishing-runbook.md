@@ -1,15 +1,15 @@
 # 트렌드 브리프(공식 발표 해설) 발행 런북
 
-> **정적 Pages 수동 릴리스 인계(2026-10-17):** 운영자는 기존 Pages 유지와 무료 구조 개선을 선택했다. CI는 QA만 검증하며 배포하지 않는다. `publish-approved.mjs`는 발행·수정·철회(`--retire`)·`--check-only` 모두 키 파일 읽기나 Git 명령 전에 종료 코드 2로 차단한다. 환경변수나 승인 플래그로 이 가드를 해제할 수 없다. 승인된 초안·해시·로컬 브랜치를 수동 Pages 릴리스 담당자에게 인계한다. 기존 Git 자동배포 동결 → 검토한 소스 통합 → 별도 일반 방문자용 정적 빌드·검증 → 정확한 후보 배포 확인 → 운영 배포 → 수동 Purge·IndexNow 순서를 따른다. `.pages-qa`/`.next-qa`/`.open-next-qa`는 배포 금지다. 실제 활성 릴리스 기록을 확인하며, 아래 이전 Git 게시 흐름이나 Workers 전환 설명보다 이 제한과 [현재 README 절차](../README.md)가 우선한다.
+> **정적 Pages 자동 게시 재개(2026-10-17):** 게시 경로는 GitHub `ci.yml`의 `verify` → `deploy-pages`다. main push와 저장소 변수 `PAGES_AUTO_DEPLOY_ENABLED=true`가 모두 필요하다. Cloudflare의 구형 Git 자동빌드는 계속 끈다. 발행기는 원격 main의 Pages 정책·워크플로·활성 스위치를 확인하고, 승인된 글만 비강제 push한 뒤 정확한 SHA의 배포 작업 성공을 기다린다. 운영 빌드 → 기존 사이트맵 차분 보관 → Pages 단일 업로드 → 실제 Purge 성공 → 광고 없는 운영 HTTP 확인 → IndexNow 순서다. `.pages-qa`/`.next-qa`/`.open-next-qa`는 배포 금지다. 모호한 배포·통지 결과는 자동 재시도하지 않는다. [현재 README 절차](../README.md)와 실제 Actions 배포 영수증이 이전 Pages/Workers 설명보다 우선한다.
 
 2026-09-26 R5 publisher 신설. 코드: `scripts/trend-publish/*` · `src/lib/trendBriefs/*` · 등록 `src/lib/guides/trend-briefs.ts`.
-**현재 발행기는 사이트에 아무것도 올리지 않는다.** `daily`는 조건 충족 시 로컬 PROPOSE와 수동 인계 카드까지만 만든다. 아래 발행·철회 CLI와 사전 조건은 이전 Git 자동배포 구현의 참고 기록이며, 검증된 정적 Pages 게시 경로를 구현하기 전에는 실행 가드가 먼저 종료한다. 예약 작업의 실제 활성 상태를 이 런북의 예시만으로 추정하지 않는다.
+**글별 운영자 승인과 기존 발행 한도는 유지한다.** `daily`는 로컬 PROPOSE까지만 만들며, `publish-approved`가 승인 초안·해시·준비 상태를 확인한 뒤 main에 반영한다. 로컬 검증은 `qa:pages:build`/`qa:pages:verify`와 `.pages-qa/.next`를 사용하고, 운영용 빌드와 실제 배포는 GitHub에서 수행한다. 예약 작업의 실제 등록·활성 상태를 이 런북이나 예약 폴더의 예시만으로 추정하지 않는다. 등록되지 않은 예약을 임의로 만들거나 과거 네이버 예약 글을 중복 등록하지 않는다.
 
 ## 0. 운영자 결정 (2026-09-27) — 이 런북의 다른 절보다 우선
 
 | 항목 | 결정 | 코드·설정 |
 |---|---|---|
-| 발행 승인 | 브리프마다 운영자가 채팅에서 `발행 <slug>` 라고 승인한 뒤에만 게시. 자동 발행 없음 | 발행 CLI는 차단됨 — daily는 PROPOSE(로컬 브랜치 + 수동 인계 카드)까지 |
+| 발행 승인 | 브리프마다 운영자가 채팅에서 `발행 <slug>` 라고 승인한 뒤에만 게시. 무승인 자동 발행 없음 | daily는 PROPOSE까지, 승인 CLI의 main push 후 검증된 Pages 배포가 자동 실행됨 |
 | 파일럿 | **2026-10-13 ~ 10-31**. 10/12 까지는 dry-run 만 | `calendar.json` `pilot`·`firstPublishNotBefore` = 10-13, `types.ts` `FIRST_PUBLISH_NOT_BEFORE` = 2026-10-13 |
 | 발행 한도 | **하루 1편 이하 · ISO 주 5편 이하**(월 16편·첫 90일 게시 30편 하드 상한도 그대로) | `config.json` `caps` perKstDay 1 · perIsoWeek 5 |
 | 동결 | **11/1 ~ 1/31 발행 없음**(보고만, FREEZE). 연말정산 시즌 예외 없음 | `calendar.json` `freezes` |
@@ -30,7 +30,7 @@
   - 네이버 서치어드바이저 가이드(웹 콘텐츠 스팸사례·콘텐츠 작성 권장 사항) — 자동 생성·짜깁기 문서는 검색 노출 제한: https://searchadvisor.naver.com/guide
   - 금융·세금은 YMYL — 숫자는 공식 출처(법제처·국세청·정책브리핑·기재부·고용부·복지부·금융위·금감원·한은·국민연금·건보·인사처 등)에서만.
 - **그래서 이렇게 만든다**: 하루 1편·ISO 주 5편·월 16편·첫 90일 게시 30편 이하, 공식 출처 2건 이상(1차 출처 7일 이내), 뉴스 문장 재작성 금지, 엔진이 계산한 영향 표 필수, 게이트 하나라도 실패하면 그날은 SKIP(발행 안 함 — noindex 발행 같은 우회 없음). 글쓴이는 운영자 플랜의 **Claude 예약 작업**(유료 LLM API·로컬 LLM 없음, 비용 0).
-- **발행 매체**: 새 라우트 없이 일반 한국어 가이드(`/guides/<slug>`). 정적 생성·sitemap·rss.xml·IndexNow(postbuild 차분)·목록·허브·검색·OG·JSON-LD 가 기존 경로로 자동 적용된다. 광고 순서는 3분할 가이드와 같다(GuideMidAd 1/3 · InArticleAd 2/3) — 광고 코드·JSX 무변경. 홈 추천(FeaturedGuides) 최근 슬롯에는 들어가지 않는다(태그 `공식발표해설` 필터).
+- **발행 매체**: 새 라우트 없이 일반 한국어 가이드(`/guides/<slug>`). 정적 생성·sitemap·rss.xml·IndexNow(배포·Purge·HTTP 확인 후 차분 제출)·목록·허브·검색·OG·JSON-LD 가 기존 경로로 자동 적용된다. 광고 순서는 3분할 가이드와 같다(GuideMidAd 1/3 · InArticleAd 2/3) — 광고 코드·JSX 무변경. 홈 추천(FeaturedGuides) 최근 슬롯에는 들어가지 않는다(태그 `공식발표해설` 필터).
 - **첫 발행 가능일**: **2026-10-13**(운영자 결정 파일럿 10/13~10/31 — 10/9 광고 판정·10/10 R3 배포 배치 + 2일 뒤). 그 전에는 dry-run 만.
 
 ## 2. TREND_HOME 과 플래그 파일
@@ -50,7 +50,7 @@
 | `radar/` | 레이더 출력 `radar-<날짜>.json`(후보)·`radar-<날짜>.md`(보고서)·`headlines-<날짜>.json`(21일 헤드라인 — 게이트 전용, writer 에게 안 줌) | 레이더(scripts/trend-radar/run.mjs) |
 | `sentinel/` | 감시기 출력 `sentinel-<날짜>.json`(`staleRoutes` — 링크 금지 경로)·`.md` | 감시기(scripts/fact-sentinel/run.mjs) |
 | `snapshots/<날짜>/` | 공식 출처 스냅숏(url·sha256·fetchedAt·본문 텍스트) | source-snapshot.ts |
-| `builds/<originSha>/` | 기준 빌드 목록(chunks.json·adseq.json·autoads.txt) | daily prepare |
+| `builds/qa-pages-v2/<originSha>/` | 기준 빌드 목록(chunks.json·adseq.json·autoads.txt) | daily prepare |
 | `writer/<날짜>/writer-input.json` | writer 입력 | writer-input.ts |
 | `drafts/pending/<날짜>.json` | writer 가 쓴 초안 | 예약 작업(Claude) |
 | `drafts/<slug>.json` | PROPOSE 보관본(초안·draftSha256·originSha·트리 해시·만료일) | daily finish |
@@ -118,13 +118,14 @@ daily.mjs 는 운영자 플래그와 저장소의 운영자 파일(docs/drafts·
 - **reviewBy**(발행 +60일): 새 공식 자료로 실질 갱신(`--update`)하거나 철회. `decide.mjs --slug <slug> --decision update|retire --at reviewBy`.
 - **파일럿 판정**: 파일럿(10/13~10/31)이 끝나면 D+28 파일럿 판정 기록 전까지 발행이 없다(동결 11/1~1/31 뒤 2월 재개도 이 기록이 있어야 한다). 마지막 파일럿 브리프의 D+28(11월 말) 결과까지 본 뒤 `decide.mjs --pilot-verdict continue`(중지는 `halt`).
 
-## 7. 배포 후 캐시 Purge — 수동 릴리스에 고정
+## 7. Pages 배포 후 캐시 Purge와 발행 확인
 
-- `.github/workflows/cf-purge.yml`은 **workflow_dispatch 전용**이며 main 변경으로 자동 실행되지 않는다. 기본 대상은 `workers`이고, `release_tag`와 활성 버전의 전체 `expected_version_id` UUID를 모두 입력해야 한다(커밋 SHA 추정 없음). Worker 이름은 입력 또는 저장소 변수로 지정한다. 해당 tag/version 하나가 100% 활성화됐는지 반복 확인한 뒤에만 Purge한다. Pages 롤백은 `target=pages`를 명시하고 `release_sha`로 대상 커밋을 지정한다. CI 초록 체크는 배포 완료 증거가 아니다.
-- 과거 Pages 성공으로 만든 `TREND_HOME/CF_PURGE_OK`는 Workers 경로 검증을 대신하지 않는다. 전환 때 운영자가 새 게시·도메인 경로 및 Workers 모드 Purge 성공을 확인한 뒤에만 재사용 여부를 결정한다. `--manual-purge-ack`도 미구성 Workers 게시 경로를 우회하는 승인이 아니다. IndexNow는 운영 빌드 뒤/전환 전에 delta manifest를 capture하고 활성화·Purge 뒤 같은 manifest를 submit한다; 기존 postbuild 자동 제출을 기대하지 않는다.
-- 차단된 이전 게시 흐름의 verify-prod 는 `/` · `/calc/samsung-bonus` · `/guides/nurse-salary` 의 `/_next/static` 자산을 최대 40건 받아 404 가 있으면 **'Purge 필요'** 로 보고한다(CF_PURGE_OK 가 있으면 15분 뒤 한 번 더 확인).
+- main push의 `ci.verify` 성공 뒤 `deploy-pages`가 동일 커밋의 운영 패키지를 한 번 게시한다. 실제 canonical 배포와 설정을 재확인하고 Purge 성공 → 비렌더링 HTTP 검증 → IndexNow 순서로 진행한다. 발행기는 정확한 커밋의 `deploy-pages` 성공까지 기다린다. `verify`만 통과하거나 배포 job이 생략된 상태는 발행 완료가 아니다.
+- `.github/workflows/cf-purge.yml`은 **workflow_dispatch 전용**인 별도 수동 복구 도구이며 기본 대상은 `pages`다. Pages 대상에는 전체 `release_sha`를 지정한다. 보존된 Workers 모드는 `target=workers`, `release_tag`, 전체 `expected_version_id`를 명시해야 한다. 수동 Purge 자체는 배포하지 않는다.
+- `TREND_HOME/CF_PURGE_OK`와 `--manual-purge-ack`는 기존 운영 준비 확인일 뿐, 현재 Pages 준비 검사·배포 확인을 우회하지 못한다. 이전 환경의 플래그를 새로 만들거나 등록되지 않은 예약을 활성 상태라고 간주하지 않는다.
+- 발행기의 추가 `verify-prod`는 대표 문서와 고정된 내부 정적 자산을 비렌더링 HTTP로 검사한다. 철회는 실제 308과 Location을 확인한다. 광고·분석 경로, 외부 리디렉션, 문서 JavaScript 실행은 금지한다.
 
-QA 기준·초안 빌드는 `npm run prebuild`로 생성기와 광고 소스 검사를 유지한 뒤 `npm run qa:build`를 사용한다. 모든 산출물 검사는 `.next-qa`를 읽고, 비교 목록은 `TREND_HOME/builds/qa-next-v1/<originSha>`에 보관하여 이전 `.next` 기준 목록과 섞지 않는다. QA는 정적 검사이며 실광고 동작 확인이나 배포 승인에 해당하지 않는다.
+QA 기준·초안 빌드는 `npm run qa:pages:build`와 `npm run qa:pages:verify`를 사용한다. 모든 산출물 검사는 `.pages-qa/.next`를 읽고 비교 목록은 `TREND_HOME/builds/qa-pages-v2/<originSha>`에 보관하여 이전 빌드 기준과 섞지 않는다. UI 점검은 광고가 제거된 localhost와 네트워크 격리 runner에서만 실행한다. QA 산출물은 배포하지 않는다.
 
 ## 8. 되돌리기
 

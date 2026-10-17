@@ -183,6 +183,41 @@ test("main: CF 가 건너뛴 배포면 Purge 없이 0", async () => {
   assert.equal(calls.filter((c) => c.url.includes("/purge_cache")).length, 0);
 });
 
+test('Pages release hooks distinguish a completed purge from legacy successful skips', async () => {
+  const order = [];
+  stubFetch([json(200, { success: true, result: [dep(SHA, 'deploy', 'success')] })]);
+  const code = await main(ENV, {
+    beforePagesPurge: async () => { assert.equal(calls.filter(c => c.url.includes('/purge_cache')).length, 0); order.push('identity'); },
+    onPagesPurge: async () => { assert.equal(calls.filter(c => c.url.includes('/purge_cache')).length, 1); order.push('success'); },
+  });
+  assert.equal(code, 0); assert.deepEqual(order, ['identity', 'success']);
+  order.length = 0; calls.length = 0;
+  stubFetch([json(200, { success: true, result: [dep(SHA, 'queued', 'idle', { is_skipped: true })] })]);
+  assert.equal(await main(ENV, { beforePagesPurge: () => order.push('identity'), onPagesPurge: () => order.push('success') }), 0);
+  assert.deepEqual(order, []);
+});
+
+test('Pages canonical identity hook failure blocks the POST and success callback', async () => {
+  stubFetch([json(200, { success: true, result: [dep(SHA, 'deploy', 'success')] })]);
+  let success = false;
+  await assert.rejects(main(ENV, { beforePagesPurge: () => { throw new Error('canonical changed'); }, onPagesPurge: () => { success = true; } }));
+  assert.equal(calls.filter(c => c.url.includes('/purge_cache')).length, 0); assert.equal(success, false);
+});
+
+test('Pages retry rechecks canonical identity and failed API responses never call success', async () => {
+  const realSetTimeout = globalThis.setTimeout;
+  let checks = 0, success = false;
+  try {
+    globalThis.setTimeout = (fn, _ms, ...args) => realSetTimeout(fn, 0, ...args);
+    stubFetch([json(200, { success: true, result: [dep(SHA, 'deploy', 'success')] })], json(500, { success: false }));
+    await assert.rejects(main(ENV, {
+      beforePagesPurge: () => { if (++checks === 2) throw new Error('canonical changed before retry'); },
+      onPagesPurge: () => { success = true; },
+    }));
+    assert.equal(checks, 2); assert.equal(calls.filter(c => c.url.includes('/purge_cache')).length, 1); assert.equal(success, false);
+  } finally { globalThis.setTimeout = realSetTimeout; }
+});
+
 test("main: 토큰 권한 오류(403)는 즉시 1", async () => {
   stubFetch([json(403, { success: false, errors: [{ code: 10000, message: "Authentication error" }] })]);
   assert.equal(await main(ENV), 1);

@@ -1,8 +1,8 @@
-// Pages 수동 릴리스 전용: main은 아래의 이전 Git 자동 게시 흐름에 도달하기 전에 모든 모드를 차단한다.
+// 글별 승인과 현재 Pages 자동배포 준비 상태를 확인한 뒤에만 원격 반영한다.
 // scripts/trend-publish/publish-approved.mjs — 운영자 승인 브리프 발행 (2026-09-26 R5 publisher)
 //
-// ★아래 이전 Pages 구현에만 git push 코드가 남아 있으며 현재 main 가드로 실행되지 않는다. 운영자가 채팅에서 브리프별로 승인('발행 <slug>' · '철회 <slug>')한 세션만 실행한다.
-//   권한 허용목록에 올리지 않는다 — 실행 때마다 권한 확인 창이 두 번째 확인이 된다. PUBLISH_ENABLED 는 준비·긴급 정지 플래그일 뿐 승인이 아니다.
+// 운영자가 채팅에서 브리프별로 승인('발행 <slug>' · '철회 <slug>')한 세션만 실행한다.
+// PUBLISH_ENABLED 는 준비·긴급 정지 플래그일 뿐 승인이 아니다.
 // 사용:
 //   node scripts/trend-publish/publish-approved.mjs --slug <slug> --draft-sha256 <hex> [--manual-purge-ack] [--check-only [--today YYYY-MM-DD]]
 //   (--today 는 --check-only 와 함께일 때만 — 실제 반영 경로의 날짜는 언제나 실제 KST 오늘이다. critic fix 2026-09-26:
@@ -19,6 +19,8 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { spawnSync } from "node:child_process";
+import { parse as parseYaml } from "yaml";
 import {
   addDays,
   calendarBlocks,
@@ -88,18 +90,95 @@ function arg(argv, name) {
   return i > -1 && argv[i + 1] && !argv[i + 1].startsWith("--") ? argv[i + 1] : undefined;
 }
 
-// No environment, approval flag or CLI option can enable the legacy Pages publisher.
-// A tested static Pages publication implementation must replace this guard before re-enabling it.
-export function workersPublicationBlockReason() {
-  return "정적 Pages 자동 게시 경로가 아직 구현되지 않아 발행·수정·철회(--retire)·--check-only를 모두 차단했습니다. Git 명령·키 파일 읽기·배포를 실행하지 않았습니다. 승인 초안/해시/로컬 브랜치를 수동 Pages 릴리스 담당자에게 인계하세요: README.md 및 docs/trend-publishing-runbook.md. 기존 Pages Git 자동배포는 동결 상태를 유지하며 별도 정상 광고 운영 빌드·검증 → 정확한 Pages 후보 배포 검증 → 운영 배포 → 수동 Purge/IndexNow 순서가 필요합니다. Workers 경로 재연결이나 유료 전환은 하지 마세요. QA 산출물은 배포하지 마세요.";
+const REPOSITORY = "whatisyourdreambro/my-salary-calculator";
+const API_ROOT = `/repos/${REPOSITORY}`;
+const SHA = /^[a-f0-9]{40}$/;
+function requireRelease(ok, message) { if (!ok) throw new Error(message); }
+
+// Read-only GitHub API client. Credentials stay in process memory and never enter logs or files.
+export function githubReadClient({ env = process.env, fetchFn = globalThis.fetch, credential = spawnSync } = {}) {
+  let token;
+  return async (endpoint) => {
+    requireRelease(endpoint.startsWith(`${API_ROOT}/`) && !/[\r\n#]/.test(endpoint), "GitHub 조회 경로 거부");
+    if (!token) {
+      token = env.GH_TOKEN || env.GITHUB_TOKEN;
+      if (!token) {
+        const result = credential("git", ["credential", "fill"], {
+          input: "protocol=https\nhost=github.com\n\n", encoding: "utf8", timeout: 10_000,
+          windowsHide: true, stdio: ["pipe", "pipe", "ignore"],
+          env: { ...env, GIT_TERMINAL_PROMPT: "0", GCM_INTERACTIVE: "Never" },
+        });
+        requireRelease(result.status === 0, "GitHub 읽기 인증을 사용할 수 없음");
+        token = /^password=(.+)$/m.exec(result.stdout || "")?.[1]?.trim();
+      }
+      requireRelease(typeof token === "string" && token.length > 0 && !/[\r\n]/.test(token), "GitHub 읽기 인증 없음");
+    }
+    const response = await fetchFn(`https://api.github.com${endpoint}`, {
+      method: "GET", redirect: "manual", signal: AbortSignal.timeout(20_000),
+      headers: { authorization: `Bearer ${token}`, accept: "application/vnd.github+json", "x-github-api-version": "2022-11-28", "user-agent": "MoneySalary-publisher/1.0" },
+    });
+    requireRelease(response.status === 200, `GitHub 읽기 실패 HTTP ${response.status}`);
+    const text = await response.text();
+    requireRelease(text.length <= 2_000_000, "GitHub 응답 크기 제한 초과");
+    return JSON.parse(text);
+  };
+}
+
+function sourceContent(record) {
+  requireRelease(record?.type === "file" && record.encoding === "base64" && typeof record.content === "string" && record.content.length < 1_500_000, "GitHub 소스 형식 오류");
+  return Buffer.from(record.content, "base64").toString("utf8");
+}
+
+export async function pagesPublicationReadiness(get) {
+  const enabled = await get(`${API_ROOT}/actions/variables/PAGES_AUTO_DEPLOY_ENABLED`);
+  requireRelease(enabled.name === "PAGES_AUTO_DEPLOY_ENABLED" && enabled.value === "true", "PAGES_AUTO_DEPLOY_ENABLED=true 확인 필요");
+  const main = await get(`${API_ROOT}/commits/main`);
+  requireRelease(SHA.test(main.sha || ""), "원격 main SHA 확인 실패");
+  const workflow = await get(`${API_ROOT}/actions/workflows/ci.yml`);
+  requireRelease(workflow.state === "active" && workflow.path === ".github/workflows/ci.yml" && Number.isSafeInteger(workflow.id), "Pages 배포 CI가 활성 상태가 아님");
+  const source = parseYaml(sourceContent(await get(`${API_ROOT}/contents/.github/workflows/ci.yml?ref=${main.sha}`)));
+  const job = source?.jobs?.["deploy-pages"];
+  requireRelease(source?.on?.push?.branches?.includes("main") && job, "main Pages 배포 job 없음");
+  requireRelease([job.needs].flat().includes("verify"), "Pages 배포 QA 의존성 없음");
+  const condition = String(job.if || "");
+  requireRelease(!condition.includes("||") && !job["continue-on-error"], "Pages 배포 조건 우회 또는 오류 무시 설정");
+  for (const expression of [/vars\.PAGES_AUTO_DEPLOY_ENABLED\s*==\s*'true'/, /github\.event_name\s*==\s*'push'/, /github\.ref\s*==\s*'refs\/heads\/main'/]) {
+    requireRelease(expression.test(condition), "Pages 배포 event/main/enabled 조건 누락");
+  }
+  const steps = job.steps || [];
+  let previousStep = -1;
+  for (const command of ["scripts/pages-release.mjs --publish", "scripts/verify-pages-release-http.mjs --execute-production-http", "scripts/pages-indexnow.mjs --submit"]) {
+    const index = steps.findIndex(step => String(step.run || "").trim() === `node ${command}`);
+    requireRelease(index > previousStep && !steps[index]?.if && !steps[index]?.["continue-on-error"], "Pages 배포·정확한 운영 확인·IndexNow 단계 누락 또는 우회");
+    previousStep = index;
+  }
+  const policy = sourceContent(await get(`${API_ROOT}/contents/scripts/lib/pages-release.mjs?ref=${main.sha}`));
+  requireRelease(/export\s+const\s+PAGES_RELEASE_POLICY_VERSION\s*=\s*1\s*;/.test(policy), "현재 Pages 릴리스 정책 버전 없음");
+  return { mainSha: main.sha, workflowId: workflow.id };
+}
+
+export async function waitForPagesDeployment(get, { sha, workflowId, attempts = 45, intervalMs = 60_000, sleep = ms => new Promise(resolveSleep => setTimeout(resolveSleep, ms)) }) {
+  requireRelease(SHA.test(sha) && Number.isSafeInteger(workflowId), "배포 대기 식별자 오류");
+  requireRelease(Number.isInteger(attempts) && attempts >= 1 && attempts <= 60 && Number.isFinite(intervalMs) && intervalMs >= 1000 && intervalMs <= 60_000, "배포 대기 범위 오류");
+  for (let index = 0; index < attempts; index++) {
+    const record = await get(`${API_ROOT}/actions/workflows/${workflowId}/runs?event=push&branch=main&head_sha=${sha}&per_page=100`);
+    const matches = (record.workflow_runs || []).filter(run => run.head_sha === sha && run.head_branch === "main" && run.event === "push" && run.workflow_id === workflowId);
+    const run = matches.sort((a, b) => b.id - a.id)[0];
+    if (run?.status === "completed") {
+      requireRelease(run.conclusion === "success", "정확한 커밋의 CI가 실패·취소됨; 게시 완료 아님");
+      const jobs = await get(`${API_ROOT}/actions/runs/${run.id}/jobs?filter=latest&per_page=100`);
+      const deploy = (jobs.jobs || []).filter(job => job.name === "deploy-pages");
+      requireRelease(deploy.length === 1 && deploy[0].status === "completed" && deploy[0].conclusion === "success", "Pages 배포 job이 성공하지 않음(건너뜀 포함)");
+      const main = await get(`${API_ROOT}/commits/main`);
+      requireRelease(main.sha === sha, "배포 중 main이 바뀜; 정확한 운영 결과 재확인 필요");
+      return { runId: run.id, jobId: deploy[0].id, sha };
+    }
+    if (index + 1 < attempts) await sleep(intervalMs);
+  }
+  throw new Error("정확한 커밋의 Pages 배포 완료를 제한 시간 안에 확인하지 못함");
 }
 
 export async function main(argv = process.argv, deps = defaultDeps()) {
-  const blocked = workersPublicationBlockReason();
-  if (blocked) {
-    deps.log(`[publish] ${blocked}`);
-    return 2;
-  }
   const slug = arg(argv, "--slug");
   const kind = argv.includes("--retire") ? "retire" : argv.includes("--update") ? "update" : "publish";
   const config = loadConfig(REPO_OF_SCRIPT);
@@ -123,26 +202,41 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
     say(`[publish] ${refused}`);
     return 2;
   }
-  // 선택 키 파일(config.json secretEnvFiles) — 게이트·secret-scan 이 값을 알아야 새어 나간 흔적을 잡는다. 값은 기록하지 않는다.
-  if (deps.secretEnv) deps.secretEnv(config.secretEnvFiles);
   const run = (cmd, args, cwd = wt) => deps.run(cmd, args, { cwd });
   const git = (args) => run("git", ["-C", wt, ...args]);
   const tsx = join(wt, "node_modules/tsx/dist/cli.mjs");
-
-  // 1) 워크트리 동기화 — 깨끗해야 한다
-  if ((await git(["fetch", "origin", "--prune"])).code !== 0) {
-    say("[publish] git fetch 실패 — 네트워크 확인 후 다시");
-    return 2;
-  }
+  // --check-only 는 원격 GET과 로컬 Git 읽기만 한다. 갱신·checkout·reset·빌드·키 파일 로딩 없음.
   const st = await git(["status", "--porcelain", "--untracked-files=normal"]);
-  if (st.stdout.trim()) {
+  if (st.code !== 0 || st.stdout.trim()) {
     say(`[publish] 트렌드 워크트리가 깨끗하지 않다 — 사람이 확인:\n${st.stdout.trim()}`);
     return 1;
   }
-  await git(["checkout", "--detach", "origin/main"]);
-  await git(["reset", "--hard", "origin/main"]);
-  const originSha = (await git(["rev-parse", "HEAD"])).stdout.trim();
-  const ct = Number((await git(["log", "-1", "--format=%ct", "origin/main"])).stdout.trim());
+  const remote = await git(["remote", "get-url", "origin"]);
+  if (remote.code !== 0 || ![`https://github.com/${REPOSITORY}.git`, `https://github.com/${REPOSITORY}`, `git@github.com:${REPOSITORY}.git`].includes(remote.stdout.trim())) {
+    say("[publish] 승인된 GitHub 원격 저장소가 아님 — 변경하지 않음"); return 2;
+  }
+  const githubGet = deps.githubGet ?? githubReadClient();
+  let readiness;
+  try { readiness = await pagesPublicationReadiness(githubGet); }
+  catch (error) { say(`[publish] Pages 자동배포 준비 미확인: ${error.message} — 변경하지 않음`); return 2; }
+  if (!checkOnly) {
+    if ((await git(["fetch", "origin", "--prune"])).code !== 0) {
+      say("[publish] git fetch 실패 — 변경하지 않음"); return 2;
+    }
+    const fetched = await git(["rev-parse", "origin/main"]);
+    if (fetched.code !== 0 || fetched.stdout.trim() !== readiness.mainSha) {
+      say("[publish] 준비 검사 중 main 변경 — 다시 확인 필요"); return 2;
+    }
+    if ((await git(["checkout", "--detach", readiness.mainSha])).code !== 0) {
+      say("[publish] 검증한 main 체크아웃 실패 — 중지"); return 2;
+    }
+  }
+  const head = await git(["rev-parse", "HEAD"]);
+  const originSha = head.stdout.trim();
+  if (head.code !== 0 || originSha !== readiness.mainSha) {
+    say("[publish] 로컬 HEAD가 검증한 원격 main과 다름 — --check-only는 동기화하지 않음"); return 2;
+  }
+  const ct = Number((await git(["log", "-1", "--format=%ct", originSha])).stdout.trim());
   const originAgeHours = Number.isFinite(ct) && ct > 0 ? (deps.now().getTime() / 1000 - ct) / 3600 : 0;
 
   // 2) 사전 조건
@@ -166,7 +260,7 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
     }
   }
   const primary = (draft?.sources ?? []).find((s) => s.role === "primary") ?? {};
-  const failures = checkPreconditions({
+  const preconditions = {
     kind,
     today,
     flags,
@@ -179,7 +273,8 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
     archive,
     argSha: arg(argv, "--draft-sha256"),
     recomputedSha: draft ? draftSha256(draft) : null,
-  });
+  };
+  const failures = checkPreconditions(preconditions);
   if (failures.length) {
     say(["[publish] 사전 조건 미충족 — 아무것도 바꾸지 않았다:", ...failures.map((f) => `- ${f}`)].join("\n"));
     return 1;
@@ -188,6 +283,8 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
     say("[publish] 사전 조건 통과 (--check-only — 여기서 멈춤)");
     return 0;
   }
+  // 승인 경로에서만 선택 키를 메모리에 로딩한다. 준비 검사에서는 읽지 않는다.
+  if (deps.secretEnv) deps.secretEnv(config.secretEnvFiles);
 
   // 3) 기준 빌드 목록(브리프 없는 origin/main) — prepare 가 같은 커밋으로 만들어 두지 않았으면 지금 만든다
   const heavy = (name, cmd) => run(process.execPath, [join(wt, "scripts/trend-publish/heavy.mjs"), cmd, "--cwd", wt, "--log", join(home, "logs", `${today}-publish-${name}.log`), "--trend-home", home]);
@@ -195,7 +292,7 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
     const sibling = wtConfig.adSequence?.siblingGuide;
     const pages = [...(wtConfig.adSequence?.gatePages ?? []), ...(sibling ? [`/guides/${sibling}`] : [])].join(",");
     const b = qaBuildCacheDir(home, originSha);
-    const base = await heavy("base", `npm run prebuild && npm run qa:build && node scripts/trend-publish/chunk-diff.mjs manifest --next .next-qa --out "${join(b, "chunks.json")}" && node scripts/trend-publish/ad-sequence.mjs extract --next .next-qa --pages "${pages}" --out "${join(b, "adseq.json")}"`);
+    const base = await heavy("base", `npm run prebuild && npm run qa:pages:build && npm run qa:pages:verify && node scripts/trend-publish/chunk-diff.mjs manifest --next .pages-qa/.next --out "${join(b, "chunks.json")}" && node scripts/trend-publish/ad-sequence.mjs extract --next .pages-qa/.next --pages "${pages}" --out "${join(b, "adseq.json")}"`);
     if (base.code !== 0) {
       say(`[publish] 기준 빌드 실패 (exit ${base.code}) — 중지`);
       return base.code === 75 ? 75 : 1;
@@ -231,10 +328,10 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
   };
   const snapDir = archive?.snapDir ?? join(home, "snapshots", today);
   if (kind !== "retire") {
-    const gate = await run(process.execPath, [tsx, join(wt, "scripts/trend-publish/gate.ts"), "--draft", draftFile, "--sources", snapDir, "--headlines", join(home, "radar"), "--sentinel", join(home, "sentinel"), "--mode", "publish", "--today", today, "--phase", "pre", "--check-diff", originSha, "--repo", wt, "--trend-home", home, ...(kind === "update" ? ["--update"] : []), ...(candidateFile ? ["--candidate", candidateFile] : []), "--out", join(home, "gates", `gate-${slug}-publish-pre.json`)]);
+    const gate = await run(process.execPath, [tsx, join(wt, "scripts/trend-publish/gate.ts"), "--draft", draftFile, "--sources", snapDir, "--headlines", join(home, "radar"), "--sentinel", join(home, "sentinel"), "--mode", "publish", "--today", today, "--phase", "pre", "--next", ".pages-qa/.next", "--check-diff", originSha, "--repo", wt, "--trend-home", home, ...(kind === "update" ? ["--update"] : []), ...(candidateFile ? ["--candidate", candidateFile] : []), "--out", join(home, "gates", `gate-${slug}-publish-pre.json`)]);
     if (gate.code !== 0) return fail(`gate pre 실패 (exit ${gate.code})\n${gate.stdout.trim().slice(-2000)}`);
   } else {
-    const scan = await run(process.execPath, [join(wt, "scripts/trend-publish/secret-scan.mjs"), "--repo", wt, "--base", originSha, "--trend-home", home]);
+    const scan = await run(process.execPath, [join(wt, "scripts/trend-publish/secret-scan.mjs"), "--repo", wt, "--next", ".pages-qa/.next", "--base", originSha, "--trend-home", home]);
     if (scan.code !== 0) return fail("secret-scan 적중");
   }
   const allow = (wtConfig.pathAllowlist?.[kind === "retire" ? "retire" : "publish"] ?? []).concat(kind === "retire" ? wtConfig.pathAllowlist?.publish ?? [] : []).map((s) => new RegExp(s));
@@ -266,10 +363,16 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
   // 5) 커밋 · 원격 반영
   const title = String(draft?.title ?? slug).replace(/"/g, "");
   const msg = join(home, "tmp", `publish-commit-${slug}.txt`);
-  const head = kind === "retire" ? `fix(guides): 트렌드 브리프 철회 ${slug} — 허브로 308` : kind === "update" ? `fix(guides): 공식 발표 해설 수정 ${slug}` : `feat(guides): 공식 발표 해설 발행 ${slug}`;
-  writeFileSync(msg, [head, "", kind === "retire" ? `운영자 승인: 철회 ${slug}` : `${title}`, `운영자 승인: ${kind === "retire" ? "철회" : "발행"} ${slug} (초안 해시 ${String(arg(argv, "--draft-sha256") ?? "-").slice(0, 12)})`, "", "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>", ""].join("\n"), "utf8");
+  const subject = kind === "retire" ? `fix(guides): 트렌드 브리프 철회 ${slug} — 허브로 308` : kind === "update" ? `fix(guides): 공식 발표 해설 수정 ${slug}` : `feat(guides): 공식 발표 해설 발행 ${slug}`;
+  writeFileSync(msg, [subject, "", kind === "retire" ? `운영자 승인: 철회 ${slug}` : `${title}`, `운영자 승인: ${kind === "retire" ? "철회" : "발행"} ${slug} (초안 해시 ${String(arg(argv, "--draft-sha256") ?? "-").slice(0, 12)})`, "", "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>", ""].join("\n"), "utf8");
   const c = await git(["commit", "-F", msg]);
   if (c.code !== 0) return fail(`커밋 실패: ${c.stderr.trim()}`);
+  try {
+    const fresh = await pagesPublicationReadiness(githubGet);
+    requireRelease(fresh.mainSha === originSha && fresh.workflowId === readiness.workflowId, "검사 중 main 또는 CI 변경");
+    requireRelease(kstToday(deps.now()) === today, "검사 중 KST 날짜 변경; 승인 기간 재검사 필요");
+    requireRelease(checkPreconditions({ ...preconditions, flags: readFlags(home) }).length === 0, "검사 중 운영자 준비·중지 플래그 변경");
+  } catch (error) { say(`[publish] 원격 반영 직전 재확인 실패: ${error.message} — 로컬 커밋만 보존`); return 2; }
   const sent = await git(["push", "origin", "HEAD:main"]);
   if (sent.code !== 0) {
     say(`[publish] 원격 main 이 받아들이지 않았다(exit ${sent.code}) — 다른 커밋이 먼저 올라갔거나 권한 문제. 강제로 밀어 넣지 않는다. 다시 실행하면 최신 main 위에서 처음부터 검사한다.\n${sent.stderr.trim()}`);
@@ -278,14 +381,19 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
   }
   const pushed = (await git(["rev-parse", "HEAD"])).stdout.trim();
 
-  // 6) 운영 확인
+  // 6) 정확한 커밋의 GHA 배포·운영 계약·IndexNow 성공 뒤에만 추가 비렌더링 확인.
+  let deployed;
+  try {
+    deployed = await waitForPagesDeployment(githubGet, { sha: pushed, workflowId: readiness.workflowId,
+      attempts: Math.min(60, Math.max(1, wtConfig.publish?.verifyTimeoutMin ?? 45)), sleep: deps.sleep });
+  } catch (error) { say(`[publish] 소스 ${pushed.slice(0, 8)} 반영됨; 게시 완료는 미확인: ${error.message}`); return 3; }
   const verify =
     kind === "retire"
-      ? { code: 0, stdout: "(철회 — 배포 뒤 비렌더링 HTTP HEAD로 /guides/<slug>의 308 상태와 Location 헤더만 확인. 리디렉션 추적 금지, MoneySalary-QA/1.0 UA 사용)" }
+      ? await run(process.execPath, [join(wt, "scripts/trend-publish/verify-prod.mjs"), "--slug", slug, "--retire", "--to", arg(argv, "--to") ?? ""])
       : await run(process.execPath, [join(wt, "scripts/trend-publish/verify-prod.mjs"), "--slug", slug, "--marker", title, "--trend-home", home]);
   say(
     [
-      `[publish] ${kind === "retire" ? "철회" : kind === "update" ? "수정 발행" : "발행"} 완료 — ${slug} (${pushed.slice(0, 8)})`,
+      `[publish] ${kind === "retire" ? "철회" : kind === "update" ? "수정 발행" : "발행"} ${verify.code === 0 ? "완료" : "배포 후 확인 실패"} — ${slug} (${pushed.slice(0, 8)}), CI ${deployed.runId}`,
       verify.stdout.trim(),
       verify.code === 0 ? "운영 확인: 정상" : "운영 확인: 위 ✖ 항목을 처리할 것(Purge 필요면 CF 대시보드에서 Purge Everything)",
       "다른 세션·워크트리: main 이 바뀌었다 — git fetch origin 후 rebase(또는 main 새로 받기) 하고 작업할 것.",

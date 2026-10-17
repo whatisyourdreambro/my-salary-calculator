@@ -125,7 +125,7 @@ const num = (v, dflt) => {
   return Number.isFinite(n) && n >= 0 ? n : dflt;
 };
 
-export async function main(env = process.env) {
+export async function main(env = process.env, hooks = {}) {
   const target = env.CF_DEPLOY_TARGET || "pages";
   if (target === "workers") return workersMain(env);
   if (target !== "pages") {
@@ -222,6 +222,9 @@ export async function main(env = process.env) {
 
   const purgeUrl = `${API}/zones/${encodeURIComponent(zoneId)}/purge_cache`;
   for (let attempt = 1; attempt <= 3; attempt++) {
+    // Automatic Pages releases pin canonical identity immediately before every
+    // POST. Legacy manual callers retain their existing behavior without hooks.
+    await hooks.beforePagesPurge?.();
     const { status, body, networkError } = await cfFetch(purgeUrl, token, {
       method: "POST",
       body: JSON.stringify({ purge_everything: true }),
@@ -229,6 +232,7 @@ export async function main(env = process.env) {
     if (!networkError && status === 200 && body?.success) {
       console.log(`::notice::CF 존 캐시 Purge Everything 완료 (commit ${sha.slice(0, 12)}, purge id ${body?.result?.id ?? "?"})`);
       summary(`- CF 존 캐시 Purge Everything 완료 — commit ${sha.slice(0, 12)}`);
+      await hooks.onPagesPurge?.();
       return 0;
     }
     const why = networkError ? `네트워크 오류 ${networkError}` : `HTTP ${status} — ${errText(body)}`;

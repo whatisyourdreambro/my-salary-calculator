@@ -100,8 +100,8 @@ export async function productionSitemap(fetchFn = globalThis.fetch) {
 }
 
 export function assertIndexNowProduction(env = process.env, cwd = process.cwd(), buildDir = path.join(cwd, '.next')) {
-  const qaPath = /(^|[\\/])(?:\.open-next-qa|\.next-qa)(?:[\\/]|$)/i;
-  if (env.MSY_QA_MODE === '1' || env.MSY_QA_WORKER_STAGE === '1'
+  const qaPath = /(^|[\\/])(?:\.open-next-qa|\.next-qa|\.pages-qa)(?:[\\/]|$)/i;
+  if (env.MSY_QA_MODE === '1' || env.MSY_QA_WORKER_STAGE === '1' || env.MSY_QA_PAGES_STAGE === '1'
       || env.NEXT_PUBLIC_ADS_DISABLED === '1' || qaPath.test(path.resolve(cwd))
       || qaPath.test(path.resolve(buildDir))) {
     throw new Error('IndexNow is disabled for QA builds, including INDEXNOW_FORCE.');

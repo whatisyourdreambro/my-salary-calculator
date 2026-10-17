@@ -1,7 +1,7 @@
 // scripts/trend-publish/daily.mjs — 트렌드 브리프 일일 파이프라인 (2026-09-26 R5 publisher)
 //
 // 예약 작업으로 등록할 경우 하루 한 번 호출하는 초안 파이프라인이다(현재 활성 등록 여부는 별도 확인). 원격 저장소로 내보내는 코드는 이 파일에 없다 —
-// 정적 Pages 수동 릴리스 전용: PROPOSE까지 작성하며 publish-approved.mjs는 모든 원격 반영을 차단한다.
+// PROPOSE까지 작성하며 별도 승인 발행기가 검증된 Pages 배포 준비 상태와 글별 승인을 확인한다.
 //
 // 사용: node scripts/trend-publish/daily.mjs <init|prepare|finish|status> [--trend-home <dir>] [--worktree <dir>] [--today YYYY-MM-DD]
 //   init --yes          1회 설정: 트렌드 전용 워크트리(origin/main 분리 HEAD) + node_modules 정션 + TREND_HOME 폴더
@@ -477,8 +477,8 @@ function acquireLock(home, name, maxAgeMs) {
  * chunk-diff 는 정규화 목록(v2)으로 비교한다 — config.chunkDiff.compare 가 "report" 면 보고만.
  * candidate: 레이더 후보 파일(gate-post 대조용) · update: --update 수정 발행이면 gate-post 에도 --update.
  */
-export const qaBuildCacheDir = (home, originSha) => join(home, "builds", "qa-next-v1", originSha);
-export const qaHeavyInputsHash = (originSha, tree) => sha256Text(`qa-next-v1\n${originSha}\n${tree}`);
+export const qaBuildCacheDir = (home, originSha) => join(home, "builds", "qa-pages-v2", originSha);
+export const qaHeavyInputsHash = (originSha, tree) => sha256Text(`qa-pages-v2\n${originSha}\n${tree}`);
 
 export function heavySteps({ slug, originSha, home, wt, config, sibling, candidate, update = false }) {
   const b = qaBuildCacheDir(home, originSha);
@@ -496,21 +496,21 @@ export function heavySteps({ slug, originSha, home, wt, config, sibling, candida
     ["verify-site", "npm run verify:site"],
     ["verify-sitemap", "npm run verify:sitemap"],
     ["eslint", "npx eslint src/lib/guides/trend-briefs.ts src/lib/guides/trend-briefs-*.ts"],
-    ["build", "npm run qa:build"],
+    ["build", "npm run qa:pages:build"],
     ["prebuild-status", `node scripts/trend-publish/chunk-diff.mjs status --repo . ${allow}`],
-    ["edge-bundle", "node scripts/verify-edge-bundle.mjs .next-qa"],
-    ["autoads", "npm run verify:autoads -- --next-dir .next-qa"],
-    ["qa-quality", "npm run qa:quality -- --next-dir .next-qa"],
+    ["pages-verify", "npm run qa:pages:verify"],
+    ["autoads", "npm run verify:autoads -- --next-dir .pages-qa/.next"],
+    ["qa-quality", "npm run qa:quality -- --next-dir .pages-qa/.next"],
     ["ad-audit", "node scripts/ad-audit.mjs --diff --base origin/main"],
     [
       "ad-sequence",
-      `node scripts/trend-publish/ad-sequence.mjs extract --next .next-qa --pages "${pages}" --out "${join(b, `brief-${slug}-adseq.json`)}" && node scripts/trend-publish/ad-sequence.mjs compare --base "${join(b, "adseq.json")}" --brief "${join(b, `brief-${slug}-adseq.json`)}" --slug ${slug}${sibling ? ` --sibling ${sibling}` : ""}`,
+      `node scripts/trend-publish/ad-sequence.mjs extract --next .pages-qa/.next --pages "${pages}" --out "${join(b, `brief-${slug}-adseq.json`)}" && node scripts/trend-publish/ad-sequence.mjs compare --base "${join(b, "adseq.json")}" --brief "${join(b, `brief-${slug}-adseq.json`)}" --slug ${slug}${sibling ? ` --sibling ${sibling}` : ""}`,
     ],
     [
       "chunk-diff",
-      `node scripts/trend-publish/chunk-diff.mjs manifest --next .next-qa --out "${join(b, `brief-${slug}-chunks.json`)}" && node scripts/trend-publish/chunk-diff.mjs compare --base "${join(b, "chunks.json")}" --brief "${join(b, `brief-${slug}-chunks.json`)}" --slug ${slug} --next .next-qa ${exempt} --metrics src/config/site-metrics.generated.ts --metrics-base ${originSha} --repo . --report "${join(b, `brief-${slug}-chunk-report.json`)}"${reportOnly}`,
+      `node scripts/trend-publish/chunk-diff.mjs manifest --next .pages-qa/.next --out "${join(b, `brief-${slug}-chunks.json`)}" && node scripts/trend-publish/chunk-diff.mjs compare --base "${join(b, "chunks.json")}" --brief "${join(b, `brief-${slug}-chunks.json`)}" --slug ${slug} --next .pages-qa/.next ${exempt} --metrics src/config/site-metrics.generated.ts --metrics-base ${originSha} --repo . --report "${join(b, `brief-${slug}-chunk-report.json`)}"${reportOnly}`,
     ],
-    ["gate-post", `npx tsx scripts/trend-publish/gate.ts --draft "{DRAFT}" --sources "{SOURCES}" --mode {MODE} --today {TODAY} --phase post --next .next-qa --repo . --trend-home "${home}"${gateExtra} --out "${join(home, "gates", `gate-${slug}-post.json`)}"`],
+    ["gate-post", `npx tsx scripts/trend-publish/gate.ts --draft "{DRAFT}" --sources "{SOURCES}" --mode {MODE} --today {TODAY} --phase post --next .pages-qa/.next --repo . --trend-home "${home}"${gateExtra} --out "${join(home, "gates", `gate-${slug}-post.json`)}"`],
   ].map(([name, cmd]) => ({ name, cmd, wt }));
 }
 
@@ -615,9 +615,9 @@ export async function prepare(opts, deps = defaultDeps()) {
     // baseBuild: "always"(기본 — 날짜 의존 블록이 있어 매일 다시 빌드) · "reuse"(같은 커밋 목록이 있으면 재사용)
     const reuseBase = wtConfig.baseBuild === "reuse" && existsSync(join(b, "chunks.json")) && existsSync(join(b, "adseq.json"));
     for (const [name, cmd] of reuseBase ? [] : [
-      ["base-build", "npm run prebuild && npm run qa:build"],
-      ["base-manifests", `node scripts/trend-publish/chunk-diff.mjs manifest --next .next-qa --out "${join(b, "chunks.json")}" && node scripts/trend-publish/ad-sequence.mjs extract --next .next-qa --pages "${gatePages}" --out "${join(b, "adseq.json")}"`],
-      ["base-autoads", "npm run verify:autoads -- --next-dir .next-qa"],
+      ["base-build", "npm run prebuild && npm run qa:pages:build && npm run qa:pages:verify"],
+      ["base-manifests", `node scripts/trend-publish/chunk-diff.mjs manifest --next .pages-qa/.next --out "${join(b, "chunks.json")}" && node scripts/trend-publish/ad-sequence.mjs extract --next .pages-qa/.next --pages "${gatePages}" --out "${join(b, "adseq.json")}"`],
+      ["base-autoads", "npm run verify:autoads -- --next-dir .pages-qa/.next"],
     ]) {
       const r = await runHeavy(deps, { home, wt, date: today, name, cmd });
       if (r.code === 75) {
@@ -698,7 +698,7 @@ export async function finish(opts, deps = defaultDeps()) {
     if (flags.halt) return res({ status: "halt", reason: `HALT: ${flags.halt}` });
     const refused = await worktreeGuard(deps, { wt, allowAnyWorktree: opts.allowAnyWorktree === true });
     if (refused) return res({ status: "error", reason: refused });
-    // 선택 키 적용 — gate pre·post 의 secret-scan 이 값을 알아야 diff·.next-qa·로그에 새어 나간 흔적을 잡는다
+    // 선택 키 적용 — gate pre·post 의 secret-scan 이 값을 알아야 diff·.pages-qa/.next·로그에 새어 나간 흔적을 잡는다
     if (deps.secretEnv) deps.secretEnv(config.secretEnvFiles);
     const state = readJson(join(home, "state", `${today}.json`), null);
     if (!state) return res({ status: "error", reason: `prepare 상태 없음: state/${today}.json` });
@@ -760,7 +760,7 @@ export async function finish(opts, deps = defaultDeps()) {
     const gatePre = await deps.run(
       process.execPath,
       [tsx, join(wt, "scripts/trend-publish/gate.ts"), "--draft", opts.draft, "--sources", state.snapDir, "--headlines", join(home, "radar"), "--sentinel", join(home, "sentinel"),
-        "--mode", gateMode, "--today", today, "--phase", "pre", "--check-diff", state.originSha || "origin/main", "--repo", wt, "--trend-home", home,
+        "--mode", gateMode, "--today", today, "--phase", "pre", "--next", ".pages-qa/.next", "--check-diff", state.originSha || "origin/main", "--repo", wt, "--trend-home", home,
         "--candidate", candPath, "--candidate-route", String(candidate?.route ?? "new-brief"), "--out", join(home, "gates", `gate-${slug}-pre.json`)],
       { cwd: wt }
     );
@@ -820,7 +820,7 @@ export async function finish(opts, deps = defaultDeps()) {
     safeWrite(
       home,
       msgPath,
-      [`feat(guides): 공식 발표 해설 ${slug}`, "", `${title}`, `근거: ${String(draft.event?.ministry ?? "").replace(/"/g, "")} ${String(draft.event?.kind ?? "")} (${String(draft.event?.announcedDate ?? "")})`, "daily.mjs PROPOSE — 운영자 승인 전 로컬 브랜치(정적 Pages 수동 릴리스 인계 필요).", "", "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>", ""].join("\n")
+      [`feat(guides): 공식 발표 해설 ${slug}`, "", `${title}`, `근거: ${String(draft.event?.ministry ?? "").replace(/"/g, "")} ${String(draft.event?.kind ?? "")} (${String(draft.event?.announcedDate ?? "")})`, "daily.mjs PROPOSE — 운영자 승인 전 로컬 브랜치(글별 승인과 Pages 배포 준비 확인 필요).", "", "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>", ""].join("\n")
     );
     const c = await git(deps, wt, ["commit", "-F", msgPath]);
     if (c.code !== 0) {
@@ -852,11 +852,11 @@ export async function finish(opts, deps = defaultDeps()) {
         `- 게이트: ${gateSummary}`,
         "",
         "## 승인하려면",
-        `채팅에 **발행 ${slug}** 라고 요청하면 승인된 초안과 해시를 수동 Pages 릴리스 담당자에게 인계한다. publish-approved는 철회·수정·check-only를 포함해 현재 실행을 차단한다.`,
+        `채팅에 **발행 ${slug}** 라고 요청하면 승인된 초안 해시와 Pages 자동배포 준비 상태를 확인한 뒤 승인 발행기로 진행한다. 준비 플래그는 글별 승인을 대신하지 않는다.`,
         "",
         "```",
         `수동 인계: slug=${slug} draft-sha256=${sha} branch=${branch}`,
-        "런북: README.md 및 docs/trend-publishing-runbook.md (정적 Pages 수동 릴리스 인계). QA 산출물은 배포 금지.",
+        "런북: README.md 및 docs/trend-publishing-runbook.md (검증된 Pages 자동배포와 글별 승인). QA 산출물은 배포 금지.",
         "```",
         "",
         "승인은 '발행을 허락한다'는 뜻이다 — 내용 검수 완료가 아니다. 본문에는 '운영자가 발행을 승인했습니다(내용 검수 아님)'으로 표기된다.",

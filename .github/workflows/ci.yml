@@ -2,6 +2,9 @@
 # 기존 CI 는 lighthouse.yml(성능)뿐이라 verify:*·test 가 어디서도 강제되지 않았다.
 name: ci
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [main]
@@ -65,7 +68,7 @@ jobs:
       # 기준 커밋: push 는 github.event.before(이번 push 직전 main), PR 은 pull_request.base.sha.
       # 운영자는 main 에 직접 push 하므로 merge-base(origin/main, HEAD) 방식은 HEAD 가 되어 diff 가 빈다 — 쓰지 않는다.
       # before 가 0000…(첫 push)이거나 clone 에 없는 커밋(force push 로 사라진 이력)이면 HEAD~1 로 대체.
-      # CF Pages 는 이 CI 와 별개로 빌드하므로 사후 탐지다(실패 시 GitHub 알림 메일 → 되돌리기·승인 등재 판단).
+      # deploy-pages depends on this complete verify job; this is a prepublication gate.
       - name: 광고 위 새 UI 게이트 (ad-audit --diff)
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -107,6 +110,7 @@ jobs:
         env:
           BASE_URL: http://127.0.0.1:3000
         run: |
+          node node_modules/playwright-core/cli.js install --with-deps chromium
           setsid npm run qa:pages:start -- --port 3000 &
           SERVER_PID=$!
           trap 'kill -- "-$SERVER_PID" 2>/dev/null || true' EXIT
@@ -140,3 +144,58 @@ jobs:
           name: qa-report
           path: qa-report.md
           if-no-files-found: ignore
+
+  # policyVersion 1: the Cloudflare Git integration stays disabled. This is the
+  # only automatic publisher; enabling the repository variable is a separate step.
+  deploy-pages:
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.PAGES_AUTO_DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    concurrency:
+      group: pages-production
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: 22
+          package-manager-cache: false
+      # No Cloudflare/GitHub publication credentials are available to installation
+      # or build commands. Tracked public settings preserve ordinary visitor ads.
+      - run: npm ci
+      - run: npm run pages:build
+      - run: npm run pages:verify
+      - name: Capture the prepublication sitemap delta
+        run: node scripts/pages-indexnow.mjs --capture
+      - name: Publish the exact main Pages package and verify purge completion
+        env:
+          PAGES_AUTO_DEPLOY_ENABLED: ${{ vars.PAGES_AUTO_DEPLOY_ENABLED }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_ZONE_ID: ${{ secrets.CF_ZONE_ID }}
+        run: node scripts/pages-release.mjs --publish
+      - name: Verify canonical documents and private cache policy without executing JavaScript
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+        run: node scripts/verify-pages-release-http.mjs --execute-production-http
+      - name: Submit the verified sitemap delta once
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+        run: node scripts/pages-indexnow.mjs --submit
+      - name: Sanitized Pages release receipts
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: pages-release-${{ github.sha }}
+          path: .artifacts/pages-release/*.json
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30

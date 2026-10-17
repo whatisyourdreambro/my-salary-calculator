@@ -82,6 +82,16 @@ export async function run(opts, deps = {}) {
   const log = deps.log ?? console.log;
   const origin = assertProductionQaOrigin(opts.origin);
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(opts.slug ?? "")) throw new Error("[verify-prod] A single lowercase guide slug is required.");
+  if (opts.retire) {
+    if (!/^\/(?:[a-z0-9-]+\/?)*$/.test(opts.to ?? "") || opts.to === `/guides/${opts.slug}`) throw new Error("[verify-prod] Retirement requires a distinct local target path.");
+    const url = `${origin}/guides/${opts.slug}`;
+    const response = await fetchProductionQaDocument(url, { fetchFn, method: "HEAD", headers: { "user-agent": UA } });
+    const location = response.headers.get("location");
+    const ok = response.status === 308 && [opts.to, `${origin}${opts.to}`].includes(location);
+    const summary = `[verify-prod] ${opts.slug}: 철회 ${ok ? "308 + 승인된 Location 확인" : "응답 확인 실패"} (HEAD 1회, 리디렉션 추적 없음)`;
+    log(summary);
+    return { ok, summary, status: response.status };
+  }
   const lines = [];
   const url = `${origin}/guides/${opts.slug}`;
   const page = await pollPage({ fetchFn, sleep, url, marker: opts.marker, timeoutMs: (opts.timeoutMin ?? 45) * 60_000, intervalMs: (opts.intervalSec ?? 60) * 1000, now: deps.now });
@@ -118,7 +128,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
   const argv = process.argv;
   const slug = arg(argv, "--slug");
   const marker = arg(argv, "--marker");
-  if (!slug || !marker) {
+  if (!slug || (!marker && !argv.includes("--retire"))) {
     console.error("사용: verify-prod.mjs --slug <slug> --marker <제목> [--origin …] [--trend-home …]");
     process.exit(2);
   }
@@ -126,6 +136,8 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
   run({
     slug,
     marker,
+    retire: argv.includes("--retire"),
+    to: arg(argv, "--to"),
     origin: arg(argv, "--origin"),
     timeoutMin: Number(arg(argv, "--timeout-min") ?? 45),
     intervalSec: Number(arg(argv, "--interval-sec") ?? 60),
