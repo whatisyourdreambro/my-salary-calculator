@@ -70,7 +70,7 @@ export default function CelltrionBonusClient() {
       remainderWon,
       tax,
     };
-  }, [scenarioId, baseSalaryManwon, customMode, rateOverride, creditRate, applyInsurance, scenario]);
+  }, [baseSalaryManwon, customMode, rateOverride, creditRate, applyInsurance, scenario]);
 
   return (
     <div className="space-y-6">

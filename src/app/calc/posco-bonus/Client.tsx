@@ -32,7 +32,7 @@ export default function PoscoBonusClient() {
       bonusToSalaryRatio: estimatedAnnualSalary > 0 ? (bonusWon / estimatedAnnualSalary) * 100 : 0,
       allScenarios: SCENARIOS.map((s) => ({ label: s.label, gross: monthlyBasicWon * (s.percent / 100) })),
     };
-  }, [scenarioId, monthlyBasicManwon, customMode, customPercent, creditRate, applyInsurance, scenario]);
+  }, [monthlyBasicManwon, customMode, customPercent, creditRate, applyInsurance, scenario]);
 
   return (
     <div className="space-y-6">

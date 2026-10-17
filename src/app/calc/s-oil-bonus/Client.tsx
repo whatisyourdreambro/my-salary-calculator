@@ -69,7 +69,6 @@ export default function SOilBonusClient() {
           : 0,
     };
   }, [
-    scenarioId,
     monthlyBasicManwon,
     customMode,
     bonusPctOverride,

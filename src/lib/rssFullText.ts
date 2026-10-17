@@ -51,7 +51,6 @@ const UNQUOTED_DANGEROUS_URL = /(\s(?:href|src)\s*=\s*)(?:javascript|vbscript|da
 /** 실행되거나 문서를 삽입하는 URL 스킴 (앞 공백 우회 포함 — 제어 문자는 XML_INVALID_CHARS 가 먼저 지운다) */
 const DANGEROUS_SCHEME = /^\s*(?:javascript|vbscript|data):/i;
 // XML 1.0 Char 범위 밖(탭·LF·CR 제외 C0 제어 문자, U+FFFE·U+FFFF)
-// eslint-disable-next-line no-control-regex
 const XML_INVALID_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F￾￿]/g;
 
 /** 가이드 본문 HTML → 피드용 HTML (CDATA 감싸기 전) */

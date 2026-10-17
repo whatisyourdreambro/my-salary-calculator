@@ -66,7 +66,7 @@ export default function SamsungBiologicsBonusClient() {
       tax,
       bonusToSalaryRatio: salaryWon > 0 ? (totalGross / salaryWon) * 100 : 0,
     };
-  }, [scenarioId, salaryManwon, includeTai, taiH1Percent, taiH2Percent, customMode, customOpiPercent, creditRate, applyInsurance, scenario]);
+  }, [salaryManwon, includeTai, taiH1Percent, taiH2Percent, customMode, customOpiPercent, creditRate, applyInsurance, scenario]);
 
   return (
     <div className="space-y-6">

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "files": {
+    "glyphs-36.bin": {
+      "bytes": 4923628,
+      "sha256": "25358b154e1f0c2fda35512834c5962b1015837d829f2b6576908bffa9756f91",
+      "gzipBytes": 1164257,
+      "gzipSha256": "e27bc8259f65160c43f4128f05e6e6c24aa244a7c08512746121beaf8eda12be"
+    },
+    "glyphs-64.bin": {
+      "bytes": 8059908,
+      "sha256": "98d4c6c73866d4a378d0f1f23f6870836408e9ac96e7a9f81ce3a37a98d9de72",
+      "gzipBytes": 1756226,
+      "gzipSha256": "2afea1b2ada8bfb4f900c19698135773c6c64fd3850eaa0337669541bce92a39"
+    },
+    "pool.bin": {
+      "bytes": 38907807,
+      "sha256": "4b9c547d7374d6fb0756773532cc9edef49d5c96c8c077f05612e4bdff596fdc",
+      "gzipBytes": 20828693,
+      "gzipSha256": "7ceb56f5da6f1a3e78175fd08844bf761c7eef7ebcf0fca1bad42c0940e6ebdc"
+    },
+    "config.json": {
+      "bytes": 307584,
+      "sha256": "d884a41d377c842d7ca6723b5c96e02f0c7b9c60257342a38ac0a03725979d22",
+      "gzipBytes": 13900,
+      "gzipSha256": "7f84618bd6d1670aa490fce42e2064ca69abd4d08906a4c4cf8111345d6830f0"
+    }
+  }
+}

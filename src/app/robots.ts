@@ -1,5 +1,8 @@
 import { MetadataRoute } from 'next';
 
+// The rules depend only on repository data, including in native Pages exports.
+export const dynamic = 'force-static';
+
 // 규칙 우선순위 메모:
 // - 같은 path에 Allow/Disallow가 충돌하면 Google은 더 구체적인(긴) 경로 규칙을 따름
 // - AdsBot-Google·Mediapartners-Google 은 일반 User-agent: * 규칙을 따르지 않으므로

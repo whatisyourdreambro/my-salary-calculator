@@ -2,3 +2,8 @@
 # Keep fresh Windows checkouts identical to the package even with autocrlf=true.
 /vendor/braces/** text eol=lf
 /vendor/*.tgz binary
+# Preserve the upstream license bytes (including its intentional line ending space).
+/vendor/og-font/OFL.txt text eol=lf whitespace=-blank-at-eol
+/vendor/og-font/*.ttf binary
+/vendor/og-atlas/*.gz binary
+/vendor/og-strips/*.gz binary

@@ -72,12 +72,13 @@ export const metadata: Metadata = {
   // 우선순위 shortcut icon > icon > /favicon.ico > apple-touch-icon — 그래서 shortcut icon 을 절대 URL 로 한 개
   // 두고 icon·apple 도 절대 URL 로 바꾼다. 파일 URL 은 그대로(네이버: 파비콘 URL 을 자주 바꾸지 말 것).
   icons: {
-    shortcut: [{ url: "https://www.moneysalary.com/favicon.ico" }],
+    // Local QA must not fetch canonical icons; ordinary visitor URLs stay absolute.
+    shortcut: [{ url: process.env.MSY_QA_MODE === "1" ? "/favicon.ico" : "https://www.moneysalary.com/favicon.ico" }],
     icon: [
-      { url: "https://www.moneysalary.com/favicon.ico", sizes: "any" },
-      { url: "https://www.moneysalary.com/favicon.svg", type: "image/svg+xml" },
+      { url: process.env.MSY_QA_MODE === "1" ? "/favicon.ico" : "https://www.moneysalary.com/favicon.ico", sizes: "any" },
+      { url: process.env.MSY_QA_MODE === "1" ? "/favicon.svg" : "https://www.moneysalary.com/favicon.svg", type: "image/svg+xml" },
     ],
-    apple: [{ url: "https://www.moneysalary.com/icon-192.png", sizes: "192x192", type: "image/png" }],
+    apple: [{ url: process.env.MSY_QA_MODE === "1" ? "/icon-192.png" : "https://www.moneysalary.com/icon-192.png", sizes: "192x192", type: "image/png" }],
   },
   // src/app/manifest.json(매 요청 Worker 경유) → public/manifest.webmanifest 정적
   // 서빙 전환(2026-08-10, 요청 한도 대응). _routes.json 에서 Worker 우회 처리.

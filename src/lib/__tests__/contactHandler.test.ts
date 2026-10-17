@@ -1,11 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 const runtimeBindings = vi.hoisted(() => ({ current: {} as Record<string, unknown> }));
 vi.mock("@/lib/server/cloudflareBindings", () => ({ cloudflareBindings: () => runtimeBindings.current }));
+import { getFeedbackBindings } from "@/lib/server/feedbackBindings";
 import { handleContactPost } from "@/lib/server/contactHandler";
 import { CONTACT_SQL } from "@/lib/server/contactSql";
 import * as contactRoute from "@/app/api/contact/route";
 import {
-  CONTACT_RETENTION_SECONDS, FEEDBACK_WINDOW_SECONDS, feedbackRateKey, getFeedbackBindings, normalizeFeedbackPath,
+  CONTACT_RETENTION_SECONDS, FEEDBACK_WINDOW_SECONDS, feedbackRateKey, normalizeFeedbackPath,
   type FeedbackBindings, type FeedbackDatabase, type FeedbackResult, type FeedbackStatement,
 } from "@/lib/server/feedbackStorage";
 

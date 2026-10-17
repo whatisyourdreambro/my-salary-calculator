@@ -67,7 +67,7 @@ export default function HyundaiRotemBonusClient() {
       tax,
       bonusToSalaryRatio: estimatedAnnualSalary > 0 ? (totalGross / estimatedAnnualSalary) * 100 : 0,
     };
-  }, [scenarioId, monthlyBasicManwon, customMode, bonusPctOverride, fixedOverride, creditRate, applyInsurance, annualOverrideManwon, scenario]);
+  }, [monthlyBasicManwon, customMode, bonusPctOverride, fixedOverride, creditRate, applyInsurance, annualOverrideManwon, scenario]);
 
   // GA4 calc_start/calc_success v2 — 현대차 성과급 계산기와 같은 훅(방문당 1회, 입력값·금액 미전송).
   const inputsValid = Number.isFinite(monthlyBasicManwon) && monthlyBasicManwon > 0

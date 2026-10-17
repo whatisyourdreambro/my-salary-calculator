@@ -81,7 +81,7 @@ export default function HyundaiBonusClient() {
       tax,
       bonusToSalaryRatio: estimatedAnnualSalary > 0 ? (totalGross / estimatedAnnualSalary) * 100 : 0,
     };
-  }, [scenarioId, monthlyBasicManwon, stockPrice, customMode, bonusPctOverride, fixedOverride, sharesOverride, creditRate, applyInsurance, scenario]);
+  }, [monthlyBasicManwon, stockPrice, customMode, bonusPctOverride, fixedOverride, sharesOverride, creditRate, applyInsurance, scenario]);
 
   const inputsValid = Number.isFinite(monthlyBasicManwon) && monthlyBasicManwon > 0
     && Number.isFinite(stockPrice) && stockPrice >= 0

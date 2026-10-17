@@ -30,7 +30,8 @@ const child = spawn(process.execPath, [require.resolve('next/dist/bin/next'), mo
   cwd: root,
   stdio: 'inherit',
   // The Cloudflare staging exception must never redirect ordinary QA into .next.
-  env: { ...process.env, MSY_QA_MODE: '1', MSY_QA_WORKER_STAGE: '0', NEXT_PUBLIC_ADS_DISABLED: '1', NEXT_TELEMETRY_DISABLED: '1' },
+  env: { ...process.env, MSY_QA_MODE: '1', MSY_QA_WORKER_STAGE: '0', MSY_QA_PAGES_STAGE: '0', MSY_PAGES_STATIC_EXPORT: '0',
+    NEXT_PUBLIC_ADS_DISABLED: '1', NEXT_TELEMETRY_DISABLED: '1' },
   windowsHide: true,
 });
 child.on('error', error => { console.error(error.message); process.exitCode = 1; });

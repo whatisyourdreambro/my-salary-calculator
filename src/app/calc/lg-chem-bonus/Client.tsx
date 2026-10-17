@@ -39,7 +39,7 @@ export default function LgChemBonusClient() {
       tax,
       bonusToSalaryRatio: estimatedAnnualSalary > 0 ? (totalGross / estimatedAnnualSalary) * 100 : 0,
     };
-  }, [scenarioId, monthlyBasicManwon, includePi, customMode, customPsPercent, creditRate, applyInsurance, scenario]);
+  }, [monthlyBasicManwon, includePi, customMode, customPsPercent, creditRate, applyInsurance, scenario]);
 
   return (
     <div className="space-y-6">

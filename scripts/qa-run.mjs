@@ -15,6 +15,7 @@ const allowed = new Set([
   'scripts/qa-number-inputs.mjs',
   'scripts/qa-crawl.ts',
   'scripts/qa-english.ts',
+  'scripts/qa-pages-navigation.mjs',
 ]);
 const [requested, ...args] = process.argv.slice(2);
 if (!requested) throw new Error('Usage: npm run qa:run -- scripts/<maintained-test>');

@@ -20,6 +20,8 @@ const eslintConfig = [
       ".next-qa/**",
       ".open-next/**",
       ".open-next-qa/**",
+      ".pages-build/**",
+      ".pages-qa/**",
       "out/**",
       "build/**",
       "next-env.d.ts",

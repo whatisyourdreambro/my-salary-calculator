@@ -118,7 +118,6 @@ describe("rss.xml — 최신 가이드 N편 본문 전문", () => {
     expect((outside.match(/<item>/g) ?? []).length).toBe((outside.match(/<\/item>/g) ?? []).length);
     expect(outside).not.toMatch(/&(?!amp;|lt;|gt;|quot;|apos;|#\d+;)/);
     // XML 1.0 금지 제어 문자 없음
-    // eslint-disable-next-line no-control-regex
     expect(xml).not.toMatch(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/);
     const size = Buffer.byteLength(xml, "utf8");
     // 상한: 네이버 크기 거부 회피(50편 767KB 실측 → 30편). 가이드가 길어져 넘으면 N 을 줄인다.

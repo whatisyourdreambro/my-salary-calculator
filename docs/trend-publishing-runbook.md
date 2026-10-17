@@ -1,9 +1,9 @@
 # 트렌드 브리프(공식 발표 해설) 발행 런북
 
-> **Workers 수동 릴리스 인계(2026-10-17):** 현재 CI는 QA만 검증하며 Worker를 게시하지 않는다. `publish-approved.mjs`는 발행·수정·철회(`--retire`)·`--check-only` 모두 키 파일 읽기나 Git 명령 전에 종료 코드 2로 차단한다. `PUBLISH_ENABLED`, `CF_PURGE_OK`, `--manual-purge-ack` 또는 운영자 승인으로 이 가드를 해제할 수 없다. 승인된 초안·해시·로컬 브랜치를 수동 Workers 릴리스 담당자에게 인계한다. 기존 Pages 자동배포 비활성 확인 → 검토한 소스 통합 → 별도의 일반 광고 운영 빌드·검증 → 정확한 tag/version 활성화 → 수동 Purge·IndexNow 순서를 따른다. `.next-qa`/`.open-next-qa`는 배포 금지다. 이 문서는 실제 배포 완료를 증명하지 않으며, 실행 시점의 활성 릴리스 기록을 확인한다. 아래 이전 Pages 발행 흐름보다 이 제한과 [전환 절차](contact-operations.md#pages-to-workers-deployment-transition-2026-10-17)가 우선한다.
+> **정적 Pages 수동 릴리스 인계(2026-10-17):** 운영자는 기존 Pages 유지와 무료 구조 개선을 선택했다. CI는 QA만 검증하며 배포하지 않는다. `publish-approved.mjs`는 발행·수정·철회(`--retire`)·`--check-only` 모두 키 파일 읽기나 Git 명령 전에 종료 코드 2로 차단한다. 환경변수나 승인 플래그로 이 가드를 해제할 수 없다. 승인된 초안·해시·로컬 브랜치를 수동 Pages 릴리스 담당자에게 인계한다. 기존 Git 자동배포 동결 → 검토한 소스 통합 → 별도 일반 방문자용 정적 빌드·검증 → 정확한 후보 배포 확인 → 운영 배포 → 수동 Purge·IndexNow 순서를 따른다. `.pages-qa`/`.next-qa`/`.open-next-qa`는 배포 금지다. 실제 활성 릴리스 기록을 확인하며, 아래 이전 Git 게시 흐름이나 Workers 전환 설명보다 이 제한과 [현재 README 절차](../README.md)가 우선한다.
 
 2026-09-26 R5 publisher 신설. 코드: `scripts/trend-publish/*` · `src/lib/trendBriefs/*` · 등록 `src/lib/guides/trend-briefs.ts`.
-**현재 발행기는 사이트에 아무것도 올리지 않는다.** `daily`는 조건 충족 시 로컬 PROPOSE와 수동 인계 카드까지만 만든다. 아래 발행·철회 CLI와 사전 조건은 이전 Pages 구현의 참고 기록이며, 검증된 Workers 게시 경로를 구현하기 전에는 실행 가드가 먼저 종료한다. 예약 작업의 실제 활성 상태를 이 런북의 예시만으로 추정하지 않는다.
+**현재 발행기는 사이트에 아무것도 올리지 않는다.** `daily`는 조건 충족 시 로컬 PROPOSE와 수동 인계 카드까지만 만든다. 아래 발행·철회 CLI와 사전 조건은 이전 Git 자동배포 구현의 참고 기록이며, 검증된 정적 Pages 게시 경로를 구현하기 전에는 실행 가드가 먼저 종료한다. 예약 작업의 실제 활성 상태를 이 런북의 예시만으로 추정하지 않는다.
 
 ## 0. 운영자 결정 (2026-09-27) — 이 런북의 다른 절보다 우선
 

@@ -17,6 +17,7 @@ if (args.length) {
 }
 const env = {
   ...process.env, CI: 'true', MSY_QA_MODE: '1', MSY_QA_WORKER_STAGE: '1',
+  MSY_QA_PAGES_STAGE: '0', MSY_PAGES_STATIC_EXPORT: '0',
   NEXT_PUBLIC_ADS_DISABLED: '1', NEXT_TELEMETRY_DISABLED: '1', WRANGLER_SEND_METRICS: 'false',
   ANALYZE: 'false',
   // No .env/.dev.vars or production secrets enter the isolated installation.

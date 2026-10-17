@@ -41,7 +41,7 @@ export default function SamsungSdiBonusClient() {
       tax,
       bonusToSalaryRatio: salaryWon > 0 ? (totalGross / salaryWon) * 100 : 0,
     };
-  }, [scenarioId, salaryManwon, includeTai, customMode, customOpiPercent, creditRate, applyInsurance, scenario]);
+  }, [salaryManwon, includeTai, customMode, customOpiPercent, creditRate, applyInsurance, scenario]);
 
   return (
     <div className="space-y-6">

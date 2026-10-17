@@ -25,7 +25,7 @@
     "qa:start": "node scripts/qa-server.mjs start",
     "qa:run": "node scripts/qa-run.mjs",
     "qa:lighthouse": "node scripts/qa-lighthouse.mjs",
-    "qa:safety": "node scripts/verify-qa-safety.mjs && node --test scripts/__tests__/qa-safety.test.mjs scripts/__tests__/qa-entrypoints.test.mjs scripts/__tests__/qa-production-http.test.mjs scripts/__tests__/qa-production-http-ts.test.mjs && vitest run src/lib/__tests__/liveAds.test.ts src/lib/__tests__/liveServices.test.ts src/lib/__tests__/captureElement.test.ts",
+    "qa:safety": "node scripts/verify-qa-safety.mjs && node --test scripts/__tests__/qa-safety.test.mjs scripts/__tests__/qa-entrypoints.test.mjs scripts/__tests__/qa-production-http.test.mjs scripts/__tests__/qa-production-http-ts.test.mjs && vitest run src/lib/__tests__/liveAds.test.ts src/lib/__tests__/liveServices.test.ts src/lib/__tests__/liveServicesLifecycle.test.ts src/lib/__tests__/captureElement.test.ts",
     "qa:crawl": "node scripts/qa-run.mjs scripts/qa-crawl.ts",
     "qa:quality": "node scripts/qa-page-quality.mjs",
     "qa:share": "node scripts/qa-share-coverage.mjs",
@@ -38,7 +38,13 @@
     "qa:cf:check": "node scripts/qa-cloudflare.mjs check",
     "qa:cf:http": "node scripts/qa-cloudflare-http.mjs",
     "verify:framework-security": "node scripts/verify-framework-security.mjs",
-    "postinstall": "node scripts/patch-next-og-selector.cjs && node scripts/verify-vendored-dependencies.mjs"
+    "postinstall": "node scripts/patch-next-og-selector.cjs && node scripts/verify-vendored-dependencies.mjs",
+    "pages:build": "node scripts/pages-build.mjs build --mode production",
+    "pages:verify": "node scripts/pages-build.mjs verify --mode production",
+    "qa:pages:build": "node scripts/pages-build.mjs build --mode qa",
+    "qa:pages:verify": "node scripts/pages-build.mjs verify --mode qa",
+    "qa:pages:start": "node scripts/pages-build.mjs start --mode qa",
+    "qa:pages:http": "node scripts/qa-pages-http.mjs"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.8",

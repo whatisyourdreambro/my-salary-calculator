@@ -1,6 +1,7 @@
 // next.config.mjs
 
 import nextBundleAnalyzer from "@next/bundle-analyzer";
+import { fileURLToPath } from "node:url";
 
 const withBundleAnalyzer = nextBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
@@ -87,7 +88,7 @@ const securityHeaders = [
 const nextConfig = {
   // QA builds never overwrite the production build directory.
   // OpenNext requires the literal .next name; qa-cloudflare builds in a separate cwd.
-  distDir: process.env.MSY_QA_MODE === "1" && process.env.MSY_QA_WORKER_STAGE !== "1" ? ".next-qa" : ".next",
+  distDir: process.env.MSY_QA_MODE === "1" && process.env.MSY_QA_WORKER_STAGE !== "1" && process.env.MSY_QA_PAGES_STAGE !== "1" ? ".next-qa" : ".next",
   // [필수] Cloudflare 환경에서 이미지 최적화 충돌 및 비용 폭탄 방지
   images: {
     unoptimized: true,
@@ -1400,4 +1401,22 @@ const nextConfig = {
   },
 };
 
-export default withBundleAnalyzer(nextConfig);
+// Native export intentionally has no request server. The Pages router consumes
+// this same policy instead of silently losing Next's headers and redirects.
+export async function pagesRoutingConfig() {
+  return { headers: await nextConfig.headers(), redirects: await nextConfig.redirects() };
+}
+
+const exportedConfig = {
+  ...nextConfig,
+  // Derive the client/server render contract from the owned build mode only.
+  // This flag changes header rendering; it cannot enable ads or analytics.
+  env: { NEXT_PUBLIC_PAGES_STATIC_EXPORT: process.env.MSY_PAGES_STATIC_EXPORT === "1" ? "1" : "0" },
+};
+if (process.env.MSY_PAGES_STATIC_EXPORT === "1") {
+  exportedConfig.output = "export";
+  exportedConfig.outputFileTracingRoot = fileURLToPath(new URL(".", import.meta.url));
+  delete exportedConfig.headers;
+  delete exportedConfig.redirects;
+}
+export default withBundleAnalyzer(exportedConfig);

@@ -35,7 +35,10 @@ export default function Header() {
  // 닫힌 메뉴의 큰 HTML·DOM을 첫 화면에 만들지 않으며 서버/클라이언트 초기 상태는 동일하다.
  const [isHydrated, setIsHydrated] = useState(false);
  useEffect(() => { setIsHydrated(true); }, []);
- const deferPanels = isEdgeRenderedPath(pathname) && !isHydrated;
+ // Pages serves the /share shell and static 404 at other URLs. Their first
+ // client render must retain the same full panels as the exported document.
+ // Keep the historical request-time SSR optimization in ordinary Next builds.
+ const deferPanels = process.env.NEXT_PUBLIC_PAGES_STATIC_EXPORT !== "1" && isEdgeRenderedPath(pathname) && !isHydrated;
  // /en 트리는 영어 메뉴 — 영어판이 있는 페이지만 링크 (navConfigEn 주석 참고)
  const isEn = pathname === "/en" || pathname.startsWith("/en/");
  const activeNavConfig = isEn ? navConfigEn : navConfig;

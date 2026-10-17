@@ -4,9 +4,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
-const excludedDirs = new Set(['node_modules', '.git', '.next', '.next-qa', '.open-next', '.open-next-qa', '.wrangler', '.vercel',
+const excludedDirs = new Set(['node_modules', '.git', '.next', '.next-qa', '.open-next', '.open-next-qa', '.pages-build', '.pages-qa', '.wrangler', '.vercel',
   '.claude', '.codex', 'apps', 'coverage', '.lighthouseci', 'lhci-report', '__pycache__']);
-const managed = new Set(['scripts/ad-depth-audit.mjs', 'scripts/qa-calculator-experience.mjs', 'scripts/qa-money-check.mjs']);
+const managed = new Set(['scripts/ad-depth-audit.mjs', 'scripts/qa-calculator-experience.mjs', 'scripts/qa-money-check.mjs', 'scripts/qa-pages-navigation.mjs']);
 const infrastructure = new Set(['scripts/lib/qa-safety.cjs', 'scripts/verify-qa-safety.mjs', 'scripts/__tests__/qa-safety.test.mjs']);
 const executable = /\.(?:[cm]?js|[cm]?ts|tsx|py|ps1|sh)$/i;
 const driverImport = /(?:from\s*|require\s*\(|import\s*\()\s*['"][^'"\r\n]*(?:playwright|puppeteer|selenium|chrome-launcher|lighthouse)[^'"\r\n]*['"]|\bfrom\s+(?:playwright|selenium)\b/;
@@ -40,7 +40,7 @@ function walk(directory) {
   }
 }
 walk(root);
-for (const relative of ['scripts/qa-crawl.ts', 'scripts/qa-english.ts', 'scripts/qa-calculator-routes.mjs', 'scripts/qa-cloudflare-http.mjs']) {
+for (const relative of ['scripts/qa-crawl.ts', 'scripts/qa-english.ts', 'scripts/qa-calculator-routes.mjs', 'scripts/qa-cloudflare-http.mjs', 'scripts/qa-pages-http.mjs']) {
   const code = fs.readFileSync(path.join(root, relative), 'utf8');
   if (!code.includes('fetchQaDocument(') || /\bfetch\s*\(/.test(code)) {
     violations.push(`${relative}: HTTP QA must use the guarded document fetcher`);

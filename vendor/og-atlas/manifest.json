@@ -1,0 +1,498 @@
+{
+  "version": 1,
+  "fontSha256": "194018e6b2b293a7964f037b25c0249ce1418bc9ab3c971060a03aa57861e252",
+  "glyphCount": 23174,
+  "hangulSyllables": 11172,
+  "pages": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    15,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    44,
+    45,
+    46,
+    47,
+    48
+  ],
+  "sizes": [
+    36,
+    64
+  ],
+  "ramps": {
+    "card": 8,
+    "fun": 24,
+    "pill": 40,
+    "blue": 56,
+    "purple": 72,
+    "accent": 88
+  },
+  "files": {
+    "atlas-36-0.bin": {
+      "bytes": 171508,
+      "sha256": "4dd14a9aa4b85df7e4040cd190eee1d3e5bf5242e5e6f28a7b092d05f8d1257a",
+      "gzipBytes": 35534,
+      "gzipSha256": "3c9f7338671bf685d4bc53e362815324a1cade45872e8c447cecc0c60b75c1d8"
+    },
+    "atlas-36-1.bin": {
+      "bytes": 138924,
+      "sha256": "84ab6bf9850f74f33171770976a87fc2bf4f6d23cae980959fcca9591e308d1f",
+      "gzipBytes": 25580,
+      "gzipSha256": "39325d374846d770e68fda571df37f4f86d5a0d60bbdc47580d7081ebaae2c25"
+    },
+    "atlas-36-2.bin": {
+      "bytes": 532790,
+      "sha256": "766c96724721b39adf0497dc0bce984fd5fc7d5eac26414cde0eafa846fc410c",
+      "gzipBytes": 134783,
+      "gzipSha256": "b02120b9cfb0241645de4db40e53ea6c961c8ad201c097ccd0ed668914628578"
+    },
+    "atlas-36-3.bin": {
+      "bytes": 695892,
+      "sha256": "ac7a971bd8325510f26811115128b1b07d56970252f5582a3750e496a350c575",
+      "gzipBytes": 183406,
+      "gzipSha256": "15c4dc926c0fb9481a8f1e13afc7a3bbfa63dcdc8987f6073c94bfd473cb88c2"
+    },
+    "atlas-36-4.bin": {
+      "bytes": 243306,
+      "sha256": "23a359e5b6f5447e39c43bc36b31718b4e687e3c0167aa0d49f0a0ff7280ea71",
+      "gzipBytes": 68726,
+      "gzipSha256": "8d9a731f47f7432154d65c9161fa1f011811286d5e01e24ee67e5dd3f611d37a"
+    },
+    "atlas-36-5.bin": {
+      "bytes": 1384632,
+      "sha256": "b0b7b31e05f7aea887c3fd96e2890d85c5b9fd69da5f1240d524e251bedeb19c",
+      "gzipBytes": 436006,
+      "gzipSha256": "02968e9d0c06d38d60f05656c41e3129b62e2feb7caaea9a35b33b161146d5f2"
+    },
+    "atlas-36-6.bin": {
+      "bytes": 1527788,
+      "sha256": "01f35876dfdc0843866b858aebce33236b58420b85741c322329e477fbd25e90",
+      "gzipBytes": 501685,
+      "gzipSha256": "7e83dd2bc7daab397a68fc74422d8afb1a9b967addfa7b8085b103ed7ac7433a"
+    },
+    "atlas-36-7.bin": {
+      "bytes": 1395212,
+      "sha256": "b45b85a0b86bfaa12d4c8b1b0efef8c7053dbf1aa17ed69cbbad88f861827d36",
+      "gzipBytes": 456343,
+      "gzipSha256": "641b8a2e445b94a135f9123d2c5b0f32fd215c8b12adf67d57898015c8cf0374"
+    },
+    "atlas-36-8.bin": {
+      "bytes": 1163094,
+      "sha256": "261e02ce0dc9bcb0bf86c779b80982430c9b16c56987ef34d14896754ad70476",
+      "gzipBytes": 372172,
+      "gzipSha256": "f6afabf6b6500a01ba830e629250f05225ac93a83849059e647707ea4b504f9c"
+    },
+    "atlas-36-9.bin": {
+      "bytes": 1173414,
+      "sha256": "9f1018cb3c382cf31a491af16d9b2f6b75dc4cac69ba81b4a441e083ebc8bb4e",
+      "gzipBytes": 367567,
+      "gzipSha256": "55b4595a649f578a99a19cd349367024fbcda78a40899b87c22edf006bb29140"
+    },
+    "atlas-36-10.bin": {
+      "bytes": 662198,
+      "sha256": "8661af06724c45e935486652ae0291092984b973cda3bd40928fad7cddd0e20a",
+      "gzipBytes": 139608,
+      "gzipSha256": "7a490b7a9899c617430da11f32ff3a562edc47e9da93f79de982970f2c6512da"
+    },
+    "atlas-36-11.bin": {
+      "bytes": 2437784,
+      "sha256": "74c37f52f53d684c4cc837baa907d768f0b7c860ac02dbfb80d0b3517c61465c",
+      "gzipBytes": 487330,
+      "gzipSha256": "1c647df3a92945f838b71779b97140509977e6892391faa5e534e1e54698bb9e"
+    },
+    "atlas-36-12.bin": {
+      "bytes": 2674510,
+      "sha256": "054751c2af9e57868707c0b67b405873bbced3a5430a1fd34d71279cd68e4731",
+      "gzipBytes": 561273,
+      "gzipSha256": "abdefdbd50a6d88c818fb400124d20640927c12b96d437f684c3b1824a33e58a"
+    },
+    "atlas-36-13.bin": {
+      "bytes": 1208084,
+      "sha256": "03a7afd85411d1cad5cf97a2f52e7ef9cfd12d940db3a11dcd1e488c82bc35bf",
+      "gzipBytes": 255544,
+      "gzipSha256": "4315b894dddc26fe1543f5ad021e9b529dd0ee5eecefb18cd6237c3bff5a4251"
+    },
+    "atlas-36-15.bin": {
+      "bytes": 387938,
+      "sha256": "167adff0119047c1571aa81cbfe62360dfd5c3975c749af05296cfa5289e78f2",
+      "gzipBytes": 123380,
+      "gzipSha256": "2e7c9d6a4cf8e219500bae82c95d61137aae15650a80fb159cee664602668aa1"
+    },
+    "atlas-36-31.bin": {
+      "bytes": 220730,
+      "sha256": "47beceaab89342d350d206db1ebb1d06606b269ded3a14d8def746950f86542a",
+      "gzipBytes": 40243,
+      "gzipSha256": "689e05904701d073daf98f1e2116eeb51ad55efa6fbb9dbf6e5681fab8180f65"
+    },
+    "atlas-36-32.bin": {
+      "bytes": 35510,
+      "sha256": "649c8b63e3a9b30f88ad9927a3f7da903e9f323398d117068f2e2d8a78c8b37a",
+      "gzipBytes": 1318,
+      "gzipSha256": "be9f4b48a9178ab19790414c49b26a52ed079619af4e020510c9075f608624d3"
+    },
+    "atlas-36-33.bin": {
+      "bytes": 36780,
+      "sha256": "edb418d8441714ba0a562dfff10e7323ee6aa04a6b3a69f4549b9e42b46dfa7c",
+      "gzipBytes": 1758,
+      "gzipSha256": "2fa781e4af720ce65d7d3630c6ccbe24a3b47c397732b17eb9c4942753ce84a2"
+    },
+    "atlas-36-34.bin": {
+      "bytes": 37336,
+      "sha256": "4f9669e0840ca569898d1b6b00269fdee3184dd356fc1206fd8cdbeb416547df",
+      "gzipBytes": 2072,
+      "gzipSha256": "1774c03413e6f878f6c882a873586902072226257bfd8787cb9baa0c5b2d96f4"
+    },
+    "atlas-36-35.bin": {
+      "bytes": 36276,
+      "sha256": "0a28b21777989ff815581a0cb837e8943234594a4007731499c450a990f48725",
+      "gzipBytes": 1613,
+      "gzipSha256": "89ce2d21e3d8f3ef533b4dd37d976b066bb9e7584e8374e99d9b961a69585649"
+    },
+    "atlas-36-36.bin": {
+      "bytes": 36794,
+      "sha256": "fc1ab8c819d4c7ddd802fbe6633a6191cf8284a8d29612c7beabaf1c79ed354d",
+      "gzipBytes": 1718,
+      "gzipSha256": "9ab24f9994e4fda857303bacd52d35e9aafa96dde98594811900aab374a9c2af"
+    },
+    "atlas-36-37.bin": {
+      "bytes": 41420,
+      "sha256": "b33057c8e277b15d6002be8d69012aa749b400cf3ac0fa5bedd27cb7151e27a3",
+      "gzipBytes": 3559,
+      "gzipSha256": "6eedc20f6fe15d6575d6887b9d13197b561b9bcbacfe4e848a5803dcdfa782ff"
+    },
+    "atlas-36-38.bin": {
+      "bytes": 35954,
+      "sha256": "7431d406ee1cd291730c1e7cc4a17d9f2decde4eb2c889c1de0512a35d11013a",
+      "gzipBytes": 1318,
+      "gzipSha256": "20a609b036dae502363eb1663f958f6065cedb7bfc3c8160347f2fe5897aa47c"
+    },
+    "atlas-36-39.bin": {
+      "bytes": 41406,
+      "sha256": "5ca01b0e9ac09a41ba0b6f949c1d1effa06014c87f65a3785951aaf4461f2133",
+      "gzipBytes": 3589,
+      "gzipSha256": "0411c470e731c6706adedf096c6aa8393b0661a363e2112e464f6351d8c865eb"
+    },
+    "atlas-36-40.bin": {
+      "bytes": 36542,
+      "sha256": "dd026876f03ac18b339a2cde0a2be9ee76499572e929da2e503e38b941049e54",
+      "gzipBytes": 1661,
+      "gzipSha256": "658a725bbb678f2c75fd910bf5212818d9bcc2b0cdc242d296a5cb130cedb64d"
+    },
+    "atlas-36-41.bin": {
+      "bytes": 38090,
+      "sha256": "32e186e50d72574803b25fa853af69e5f50709fb18e7bbd7dff44409c83340e5",
+      "gzipBytes": 2346,
+      "gzipSha256": "d781bd6f2317a2daeeca7a7c6c204503d09a57ee0a8100a29f48d5e6ffac9139"
+    },
+    "atlas-36-42.bin": {
+      "bytes": 36144,
+      "sha256": "177b5ecdb324f03c5fe659f0772767be90db9b739c0940bd43b55b1f614c2467",
+      "gzipBytes": 1505,
+      "gzipSha256": "fc37eed9211e1e1b5138152bcb7111b5d13270c91246cbb11f9227584b69e990"
+    },
+    "atlas-36-44.bin": {
+      "bytes": 34438,
+      "sha256": "3bdf7afc683af71377ae070340ceb1f853005b62594b3aadde7927a83ba078d6",
+      "gzipBytes": 920,
+      "gzipSha256": "ea8909a7085cc5a0525c0ae7d9ec177cc5135fa545a41afb46608834d8abef37"
+    },
+    "atlas-36-45.bin": {
+      "bytes": 33102,
+      "sha256": "27da8d17039a04141c7e3d45f3228594b8647ba0fcb906fa121032a81e8845b2",
+      "gzipBytes": 283,
+      "gzipSha256": "62d34f013f6d56b467c1f5aac925cf01ade8acbaf992118f9dffd5bc675eb472"
+    },
+    "atlas-36-46.bin": {
+      "bytes": 33362,
+      "sha256": "cffdbda0f2df268f9e75c6cfac1b1c0ae8fd65632ac67eb3e76dcff419f095ef",
+      "gzipBytes": 404,
+      "gzipSha256": "4ed90a7be79b0eeee56d804aa521c32f4fb3e787edf5222b878b5c528e48987f"
+    },
+    "atlas-36-47.bin": {
+      "bytes": 46172,
+      "sha256": "d00e3a972b53bd40630aa8e01ca951b69b5f7c43b921c84c76f53c634cfe9780",
+      "gzipBytes": 5304,
+      "gzipSha256": "51f87b67e3426d93b6ab9f4a21a204ddcfa460723c5cef6ad4a8b584616527b7"
+    },
+    "atlas-36-48.bin": {
+      "bytes": 35300,
+      "sha256": "b81bb237344b43f554012cd90f4f9fe0cb150065d6bc1cd8095eae9d8b5b82be",
+      "gzipBytes": 1196,
+      "gzipSha256": "4bb0a1c2cb9e266e9c6510754c9da25e7d1c0c947c43fccda50234a690f5713b"
+    },
+    "atlas-64-0.bin": {
+      "bytes": 276184,
+      "sha256": "4a9279f245627224a7d3b9fd4e616a6598d7c2950090be67fe8f48a0f1ae2203",
+      "gzipBytes": 65567,
+      "gzipSha256": "f45f7f9d103deee86094c1a330bfe4965d000236a609f2989e839dbd43458d3e"
+    },
+    "atlas-64-1.bin": {
+      "bytes": 219546,
+      "sha256": "d12372ac6d705f75437c35ccd9219b12f408111ae5d9337973728c092747670a",
+      "gzipBytes": 41820,
+      "gzipSha256": "020a87f960c0350bd655181083c5aed2e7186d62cdde326ccd988488cecdecb5"
+    },
+    "atlas-64-2.bin": {
+      "bytes": 952910,
+      "sha256": "97fcdc0d4da82147d5a24977434de47f9c29acc029be620dfa59b71ec5fb118c",
+      "gzipBytes": 234019,
+      "gzipSha256": "01536652cddb97a95eb89e19c7e4f4cae59733c5e0d259ac83a974bba67cba06"
+    },
+    "atlas-64-3.bin": {
+      "bytes": 1243242,
+      "sha256": "93232f54abff543ede44e8b5dc99489f82e85a600048b976efb6f3cf42751013",
+      "gzipBytes": 327807,
+      "gzipSha256": "308501d0e80ea08ae8d5a800e1bb39b378bef6d0e345f44e9e12673a87e3e8ae"
+    },
+    "atlas-64-4.bin": {
+      "bytes": 402474,
+      "sha256": "dbf5d58fd099d453e75b7c61b02dc3d0e8a6a1427ada5ee22eaa4cd8a07c8a72",
+      "gzipBytes": 116886,
+      "gzipSha256": "19b954d33066085ebc748654ae72245a5676fe550f8762b7191dc0413a4ec49a"
+    },
+    "atlas-64-5.bin": {
+      "bytes": 2420020,
+      "sha256": "940aef08e4837e1602c34446da37136be3493be8c9be144471d36597f088dcaa",
+      "gzipBytes": 735385,
+      "gzipSha256": "c8598000ad5e5dff347cec7cc348e86a5efed23ca0c7352d9acaad2a8722cc19"
+    },
+    "atlas-64-6.bin": {
+      "bytes": 2703392,
+      "sha256": "76f39236d47243e0a3e410c519cdb08214bc98792d40cc2505db0c2b8e97124d",
+      "gzipBytes": 876039,
+      "gzipSha256": "e17d2adf475bd42f86d62ac47f9db7891bf38314dd8de5d015c042e75220a449"
+    },
+    "atlas-64-7.bin": {
+      "bytes": 2475966,
+      "sha256": "f957220017a89c31ffe6bec097373e04e689cd924f3060cfac7783d7ecd41c29",
+      "gzipBytes": 791707,
+      "gzipSha256": "e3fdfc310f90456befa798afcdfd63a68920aa9a1bf3a23bfe54d4ed288daf93"
+    },
+    "atlas-64-8.bin": {
+      "bytes": 2034810,
+      "sha256": "ba821a3811c9eef6ea463936f1592703c8dc1f14c298f9d95b92dde9e1b551b5",
+      "gzipBytes": 619186,
+      "gzipSha256": "6c309562692bc288e7b411e344b4ad6500b8469c7e291a1548c693f350e5d235"
+    },
+    "atlas-64-9.bin": {
+      "bytes": 2090886,
+      "sha256": "13bf6df83a640e480360bf2f17964a83aaf44338b2ada901d3ba17638a6c3a26",
+      "gzipBytes": 633882,
+      "gzipSha256": "0d634ca2502b057b577a0cbcd4b0999d1b2a0a9d7f8e483ede47ef95c61f94a2"
+    },
+    "atlas-64-10.bin": {
+      "bytes": 1118998,
+      "sha256": "31ab537c0cd5e12814cb144f32cd3231f85a4f05ccf5a3e5bf9854bda280fb68",
+      "gzipBytes": 226551,
+      "gzipSha256": "c48983590b135cb43d7559df628d34ff61ae3cc5eea105cfaf7dea8f49d6e367"
+    },
+    "atlas-64-11.bin": {
+      "bytes": 4214644,
+      "sha256": "c735622b27507e7b6bcf93f3b0c80135cbaca2d361687b0ab5a486fb65cc50e7",
+      "gzipBytes": 742554,
+      "gzipSha256": "429ff05b31588a9aac48d7b6518c32d30732aa9635e234fcac09d168cfabce1e"
+    },
+    "atlas-64-12.bin": {
+      "bytes": 4674626,
+      "sha256": "d778c50ddda651ba5751803df1effc81f774bb0da802f294ffaa434ee439c27d",
+      "gzipBytes": 929447,
+      "gzipSha256": "5bbd53a0696a0bd0f34514aa0a4960adb4bc23cc7574de4ae5ed6ec16cda7bd6"
+    },
+    "atlas-64-13.bin": {
+      "bytes": 2069520,
+      "sha256": "b5ac7fffa60405ca46ec4cff740f7f373fdac67d1d4bb52a49961254e9984711",
+      "gzipBytes": 403033,
+      "gzipSha256": "dea998b276003bab3b1e8e33ca75232f47d1148acfe6ff62adbef3cbadc3cd8b"
+    },
+    "atlas-64-15.bin": {
+      "bytes": 664326,
+      "sha256": "52e8fd666dad435ed445578361c577904a93a7919141fe85980800c62f603193",
+      "gzipBytes": 209731,
+      "gzipSha256": "339556204b044a2d6cc0adc7ec77a5cc13292c0c8500099eb6e61e4d691e0e10"
+    },
+    "atlas-64-31.bin": {
+      "bytes": 370106,
+      "sha256": "b10982f2fd1bd617099125cf30f85225e611562efaec59428c9629ba17f5ee79",
+      "gzipBytes": 71114,
+      "gzipSha256": "e4f0dda1a154a4062f6962a5415e4fc1a256f7f4517871064940d027ca167ed5"
+    },
+    "atlas-64-32.bin": {
+      "bytes": 37546,
+      "sha256": "55975c5fec0c51681e1b3dd37e6da892122c02cd01a628009bd45e1adf7ed53f",
+      "gzipBytes": 2042,
+      "gzipSha256": "584fb22bd8d543e2969ce0409f20a8cf007b678f30148817e41a86ffe298349d"
+    },
+    "atlas-64-33.bin": {
+      "bytes": 39802,
+      "sha256": "fb84734936300eacc783da6e702f9ff29e965fb65963369177cb3c91f376029b",
+      "gzipBytes": 2690,
+      "gzipSha256": "307d34497f45933997e3caf520e3324af0eb62bb768d9b297d83225c617ad9bb"
+    },
+    "atlas-64-34.bin": {
+      "bytes": 40846,
+      "sha256": "d2b1318ff425b3d6e3e90170d62de274d4d476cf6d3450a215176d169144b07a",
+      "gzipBytes": 3380,
+      "gzipSha256": "61d1675eef7c66fec302b72cf8fcfaa69d9bc7434dbf733eb9ab34ef2542307e"
+    },
+    "atlas-64-35.bin": {
+      "bytes": 39006,
+      "sha256": "52d41ea3669f9111f05e1fb0c9efe859da1077ae90d924d1ec2739cf13a009fa",
+      "gzipBytes": 2599,
+      "gzipSha256": "85b06000a47e2338ce938693c6aaaaeb8fa4c4362dff843a4670de34b3391784"
+    },
+    "atlas-64-36.bin": {
+      "bytes": 39986,
+      "sha256": "2ac6d899b35258c8e4ff312ee2ae76b234c9e3e75b4886f82e0fe42a00853459",
+      "gzipBytes": 2656,
+      "gzipSha256": "96f43fab840e77716c0a3681c59ec8cf9873bcdff42869b88036a4156fda2045"
+    },
+    "atlas-64-37.bin": {
+      "bytes": 48480,
+      "sha256": "1dc9d1eb6fcf32f0b773c8149cb582a7897e8d40495597bf59adf68e1e717b51",
+      "gzipBytes": 5770,
+      "gzipSha256": "b4f1c8dcdb614bae9cc2456a105316fe31fdbe577340a85d18f67cc44a1dc531"
+    },
+    "atlas-64-38.bin": {
+      "bytes": 38532,
+      "sha256": "436952d357686b3ac251e13fcd1a740b3f6f9bef7a3f941c5427fc1c190f7f87",
+      "gzipBytes": 2018,
+      "gzipSha256": "59bd79c50a9ba8d51ec49e7f03ee11fc0bcfa4bdebc3bd2f57fde1abf86e6df7"
+    },
+    "atlas-64-39.bin": {
+      "bytes": 48532,
+      "sha256": "3e56096b724efda6d63601f10ed1443b388b458e062d3bcd51c8a408c371ff83",
+      "gzipBytes": 5988,
+      "gzipSha256": "0b8803092f279150c5869fa8aa3bbe63b62f2623c9a40a8cd24d0abf861386c6"
+    },
+    "atlas-64-40.bin": {
+      "bytes": 39434,
+      "sha256": "bc4eee60d3b7585d154f86510381e6c7d9d80c6a5730151695bf94af5513714f",
+      "gzipBytes": 2525,
+      "gzipSha256": "06fad4efe5928149dbed38edef98ad1977bc352744465dcf67b92138d85182d9"
+    },
+    "atlas-64-41.bin": {
+      "bytes": 42288,
+      "sha256": "0d504c00f8723d6a08fbe325c0ba24dd5dcd133c5275d9e34d9d8d3d9f00ddc7",
+      "gzipBytes": 3725,
+      "gzipSha256": "c4e252a5f8f06284b169a12b1ed67e50299589186a785c1d6031f76ac032fbb7"
+    },
+    "atlas-64-42.bin": {
+      "bytes": 39264,
+      "sha256": "9864d04fa99fb28982d6624421d8046fbb878409d4371fd264ede37e367ecc88",
+      "gzipBytes": 2589,
+      "gzipSha256": "71150ad7e6533f0b17659ee4aba52222ceee301bfd02943a4935a2cf4a1c1049"
+    },
+    "atlas-64-44.bin": {
+      "bytes": 35766,
+      "sha256": "e3ee78b145ad6776e130f7b61a5ea41a9e2538121acc28d3a8c5bb3af0ba9427",
+      "gzipBytes": 1502,
+      "gzipSha256": "6d02942902a079d43fec8cb467c3f8b87ab936b92c5b416c707c31bec2cc116c"
+    },
+    "atlas-64-45.bin": {
+      "bytes": 33378,
+      "sha256": "de0327dd0ef3de08430456595536f82fb47b1058f0f71fc037b0d028c9ba80e3",
+      "gzipBytes": 432,
+      "gzipSha256": "c51df763189947f6ab67822851434491dce32f1560804f08de60c5a6b353d0b4"
+    },
+    "atlas-64-46.bin": {
+      "bytes": 33792,
+      "sha256": "69dae3d818b93bfe472733edef28d88e7677b55b7a5b3b436d82d40da9277284",
+      "gzipBytes": 573,
+      "gzipSha256": "e60caacb269e0d225a57988f9beb5b929b884d3970ec3137f5bc2e0f6ad37f79"
+    },
+    "atlas-64-47.bin": {
+      "bytes": 56904,
+      "sha256": "c2466a7a4ae0f51af703aca927d26e9927d4bb88612c16ed2d447ee9d0668de2",
+      "gzipBytes": 8877,
+      "gzipSha256": "1fa4c9a5e37bced8c562ceb780920b2a18ecf20d0a55c6304a971dff0e28f3c9"
+    },
+    "atlas-64-48.bin": {
+      "bytes": 37788,
+      "sha256": "746c39c86e9db1fc340b0cfddd2cf5737e41905d0c81ee22c51d2b3db961cf62",
+      "gzipBytes": 2144,
+      "gzipSha256": "620f3eaf02361c4eb6ae81e839171141984dccb5345d4eaf4c54e4c6370b88fa"
+    },
+    "palette.bin": {
+      "bytes": 768,
+      "sha256": "4b30fbe50bdf2a8b36b5845daf6fd795fa648a63d04552fb372539f9903a4615",
+      "gzipBytes": 347,
+      "gzipSha256": "650a967211fb05dd364e91facdec36edc76e9e138d2a1a47cd3b287a88200eaf"
+    },
+    "template-default.bin": {
+      "bytes": 756630,
+      "sha256": "5747874f7dedb812f92d5d8de1f1f957b085e92429d64f1f95af4e2d5319d396",
+      "gzipBytes": 5248,
+      "gzipSha256": "fded624bc8a1c8114cf3dc6e4a9a93317549359e2ac496210909a4cb97eb0f30"
+    },
+    "template-tool.bin": {
+      "bytes": 756630,
+      "sha256": "9eda633d7258dca156529507f59eedb53ab5821fd5494ea5225286499c0c3b08",
+      "gzipBytes": 5944,
+      "gzipSha256": "22a05ef6b28259d1c29421921f1ce1dae6baaea30e10f1932c274156e8c32d3d"
+    },
+    "template-guide.bin": {
+      "bytes": 756630,
+      "sha256": "22a151569b2fd0ebc34ede36e2ddbf340aa1b2f046181b943ad5638ff3ae1423",
+      "gzipBytes": 6182,
+      "gzipSha256": "79e2a5ef85ec2dc036e166d188ee1f06fcfe20ca7f49df61cada60a3d0aa1cd1"
+    },
+    "template-fun.bin": {
+      "bytes": 756630,
+      "sha256": "e7ed73ccd29a6ac1792997d88edaf329630599e4fa49ee3e8244e3b4f59a17c0",
+      "gzipBytes": 5674,
+      "gzipSha256": "fa3fbdb3127161062aaa04d7e97790ef22ad398613711f69fd7e9da933d7ff2e"
+    },
+    "template-company.bin": {
+      "bytes": 756630,
+      "sha256": "b7eec69cdebe95c707784ae47e6721f4740edf865a93562486cf8105f8830ef0",
+      "gzipBytes": 6035,
+      "gzipSha256": "f631c8d5611398586551258228f1aa8b71843a55f905d7ecfbb1aa9bb67d33d1"
+    },
+    "template-report.bin": {
+      "bytes": 756630,
+      "sha256": "01093d408fbdd731d733fde6a9c30cff27eb399509d441e5c5dd5ad0e3487b85",
+      "gzipBytes": 6303,
+      "gzipSha256": "95dec846acc7a013c0b8ea7d669dc05007463ece93ea559e67dcc7c8ce3180e7"
+    },
+    "template-en.bin": {
+      "bytes": 756630,
+      "sha256": "421303dc6f05ed55dcf9258e556dadb52b2ec5dca82960f71dd96ee7ecfbdc11",
+      "gzipBytes": 6002,
+      "gzipSha256": "f5fe2f71651847f46968f56f9e6789249d3e71b424fbb4885635d4ede22ed2d1"
+    },
+    "template-salary.bin": {
+      "bytes": 756630,
+      "sha256": "211c66b94e719be45bf80cea9892d381107263f929a05ddc50d1d0d2e55b80dd",
+      "gzipBytes": 4217,
+      "gzipSha256": "50506494afa1162d71aae77263db60ee2e8b459b395c721f9f41de186efa7ae8"
+    },
+    "template-salary-net.bin": {
+      "bytes": 756630,
+      "sha256": "54f053414b4161c19be31229cfa0c032ca39350acc6b8b15d6e294cff9a76f42",
+      "gzipBytes": 4466,
+      "gzipSha256": "0e572f23f3eec338ae0a951042e2672253389aac9fefb787985977eb9b764c9c"
+    }
+  }
+}

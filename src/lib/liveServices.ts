@@ -4,9 +4,16 @@ export const GA_MEASUREMENT_ID = "G-EZ8GT7RPEZ";
 const ADSENSE_SRC = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2873403048341290";
 const GA_SRC = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
 
+function isInvalidShareDocument(): boolean {
+  // An invalid salary-share document has no result content. This is a document
+  // decision, not a persistent QA opt-out that would disable later normal visits.
+  return /^\/share(?:\/|$)/.test(window.location.pathname) &&
+    document.querySelector('[data-pages-share-invalid="true"]') !== null;
+}
+
 /** Client effect only: no SSR script/preload can escape the runtime decision. */
 export function installLiveServices(): boolean {
-  if (!canRequestLiveAds()) return false;
+  if (!canRequestLiveAds() || isInvalidShareDocument()) return false;
 
   if (!document.getElementById("msy-ga-loader")) {
     window.dataLayer = window.dataLayer || [];
@@ -25,7 +32,7 @@ export function installLiveServices(): boolean {
 
 function appendLoader(id: string, src: string): boolean {
   // Recheck immediately before src assignment/insertion, including repeat calls.
-  if (!canRequestLiveAds()) return false;
+  if (!canRequestLiveAds() || isInvalidShareDocument()) return false;
   if (document.getElementById(id)) return true;
   const script = document.createElement("script");
   script.id = id;

@@ -1,20 +1,22 @@
 # Private contact operations
 
+> Current deployment decision (2026-10-17): retain the existing Pages project and use the static Pages package described in [README](../README.md). The previous Workers cutover was rolled back. The transition section below is historical and does not authorize reconnecting Worker routes or purchasing a paid plan. Git auto-deployment remains frozen while the replacement package is verified.
+
 This endpoint stores private inquiries; it does not send email, publish comments, or promise a reply. The optional reply address is available only to the owner in D1. There is no public read, admin, or deletion endpoint. The receipt confirms database storage, not that an operator has read the inquiry.
 
 The separate three-page fixed helpful/confusing pilot is documented in [feedback operations](feedback-operations.md). It reuses the bindings with a separate table and rate-limit scope; the contact contract and existing quota remain unchanged. Once migration 0002 is applied, include the feedback table in the daily cleanup described there.
 
 ## Runtime and configuration
 
-- Next route: `src/app/api/contact/route.ts`, Next Node runtime through OpenNext on Cloudflare Workers, POST only.
+- Contract source: `src/app/api/contact/route.ts`, POST only. The static Pages Worker calls the same pure handler through `cloudflare/pages-dynamic.ts` with request-scoped Cloudflare bindings; it does not include the Next/OpenNext runtime.
 - D1 binding: `FEEDBACK_DB`. Use separate production and preview databases.
 - Secret binding: `FEEDBACK_RATE_LIMIT_SECRET`, generated randomly, at least 32 characters (recommended 32 random bytes encoded as hex). Set it as a Cloudflare secret, never a `NEXT_PUBLIC_*` value, source file, log, screenshot, or client parameter.
 - Optional `FEEDBACK_ALLOWED_ORIGIN`: one exact HTTPS origin without a trailing slash, needed for a preview deployment. Production defaults to `https://www.moneysalary.com`. Both the request URL and Origin header must match. Do not let preview use the production DB.
-- Verify the selected database and its applied schema first. Apply `migrations/0001_private_contact.sql` only where needed, then add the binding to the appropriate Workers environment during a separately authorized deployment. Preserve existing inquiries and rate-limit rows; changing adapters does not require replacing the database. No DB/secret configuration means 503, not a simulated receipt.
+- Verify the selected database and its applied schema first. Apply `migrations/0001_private_contact.sql` only where needed, then add the binding to the appropriate Pages environment during a separately authorized deployment. Preserve existing inquiries and rate-limit rows; changing adapters does not require replacing the database. No DB/secret configuration means 503, not a simulated receipt.
 
-The OpenNext migration reads `getCloudflareContext().env` dynamically inside each request through `cloudflareBindings.ts`; it never snapshots the DB or secret at build time and does not use string-only `process.env` as a database fallback. Plain `next start` or a Workers environment without both bindings returns 503 for an otherwise valid request. Local development bindings, if configured, must be local emulations. Do not replace the DB with an in-memory production fallback. The production `wrangler.jsonc` now declares the selected existing D1 binding; it contains no secret value. `wrangler.qa.jsonc` remains separate and has no account, routes, D1 or production variables. A declared binding does not establish that it is remotely installed or usable.
+The Pages handler receives `FEEDBACK_DB`, `FEEDBACK_RATE_LIMIT_SECRET` and the optional allowed origin from the current request's environment. It never snapshots them at build time. The separately retained Next/OpenNext route still resolves its bindings dynamically through `cloudflareBindings.ts`. Missing bindings return 503 for an otherwise valid request; there is no in-memory production fallback. Pages deployments retain the existing project environment bindings. Local `qa:pages:start` intentionally has no D1 or secret bindings and denies external fetches.
 
-The old Pages adapter is no longer the target configuration. A successful local build or mocked binding test does not prove the production D1 binding exists. Before calling reception operational, a separately authorized deployment needs its verified database identity, secret binding, migrations, and a synthetic POST/private-row verification. Preserve AGENTS.md's prohibition on production/preview publisher browser QA.
+The new Pages package does not use the old next-on-pages adapter. A successful local build or mocked binding test does not prove production storage works. Verify remote database identity, secret presence and migrations; distinguish those read-only checks from an actual synthetic POST/private-row verification. Do not claim a successful database write unless performed. Preserve AGENTS.md's prohibition on production/preview publisher browser QA.
 
 Sources: [OpenNext request bindings](https://opennext.js.org/cloudflare/bindings), [OpenNext Workers setup](https://opennext.js.org/cloudflare/get-started), [local D1 development](https://developers.cloudflare.com/d1/best-practices/local-development/).
 

@@ -79,7 +79,7 @@ export default function GsCaltexBonusClient() {
       tax,
       bonusToSalaryRatio: annualWon > 0 ? (totalGross / annualWon) * 100 : 0,
     };
-  }, [scenarioId, salaryManwon, customMode, pctOverride, creditRate, applyInsurance, scenario]);
+  }, [salaryManwon, customMode, pctOverride, creditRate, applyInsurance, scenario]);
 
   return (
     <div className="space-y-6">

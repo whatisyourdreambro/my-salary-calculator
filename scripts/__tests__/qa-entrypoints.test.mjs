@@ -45,18 +45,19 @@ const fs=require('node:fs');
   const {default:config}=await import(${JSON.stringify(new URL('../../next.config.mjs', import.meta.url).href)});
   fs.mkdirSync(config.distDir,{recursive:true});
   fs.appendFileSync('observed.jsonl',JSON.stringify({mode:process.argv[2],distDir:config.distDir,
-    stage:process.env.MSY_QA_WORKER_STAGE,qa:process.env.MSY_QA_MODE,ads:process.env.NEXT_PUBLIC_ADS_DISABLED})+'\\n');
+    stage:process.env.MSY_QA_WORKER_STAGE,pagesStage:process.env.MSY_QA_PAGES_STAGE,staticExport:process.env.MSY_PAGES_STATIC_EXPORT,
+    qa:process.env.MSY_QA_MODE,ads:process.env.NEXT_PUBLIC_ADS_DISABLED})+'\\n');
 })().catch(error=>{console.error(error);process.exitCode=1});
 `);
   for (const mode of ['build', 'dev', 'start']) {
     const result = spawnSync(process.execPath, ['scripts/qa-server.mjs', mode], {
-      cwd, env: { ...process.env, MSY_QA_WORKER_STAGE: '1', MSY_QA_MODE: '0', NEXT_PUBLIC_ADS_DISABLED: '0' },
+      cwd, env: { ...process.env, MSY_QA_WORKER_STAGE: '1', MSY_QA_PAGES_STAGE: '1', MSY_PAGES_STATIC_EXPORT: '1', MSY_QA_MODE: '0', NEXT_PUBLIC_ADS_DISABLED: '0' },
       encoding: 'utf8', timeout: 20000, windowsHide: true,
     });
     assert.equal(result.status, 0, result.stderr);
   }
   const observed = readFileSync(path.join(cwd, 'observed.jsonl'), 'utf8').trim().split('\n').map(JSON.parse);
-  assert.deepEqual(observed, ['build', 'dev', 'start'].map(mode => ({ mode, distDir: '.next-qa', stage: '0', qa: '1', ads: '1' })));
+  assert.deepEqual(observed, ['build', 'dev', 'start'].map(mode => ({ mode, distDir: '.next-qa', stage: '0', pagesStage: '0', staticExport: '0', qa: '1', ads: '1' })));
   assert.equal(JSON.parse(readFileSync(path.join(cwd, '.next-qa/moneysalary-qa-build.json'), 'utf8')).adsDisabled, true);
   assert.deepEqual(readdirSync(path.join(cwd, '.next')), ['sentinel.txt']);
   assert.equal(readFileSync(path.join(cwd, '.next/sentinel.txt'), 'utf8'), 'production must remain unchanged');
@@ -75,10 +76,12 @@ test('QA runner cannot execute archived or arbitrary scripts', () => {
 });
 
 test('maintained browser entry rejects a production URL without launching a browser', () => {
-  const result = command('scripts/qa-run.mjs', ['scripts/ad-depth-audit.mjs'], {
-    BASE_URL: 'https://www.moneysalary.com',
-  });
-  assert.equal(result.status, 1);
-  assert.match(result.stderr, /live\/preview sites are forbidden/);
-  assert.doesNotMatch(result.stdout, /Chromium|browser launched/);
+  for (const script of ['scripts/ad-depth-audit.mjs', 'scripts/qa-pages-navigation.mjs']) {
+    const result = command('scripts/qa-run.mjs', [script], {
+      BASE_URL: 'https://www.moneysalary.com',
+    });
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /live\/preview sites are forbidden/);
+    assert.doesNotMatch(result.stdout, /Chromium|browser launched/);
+  }
 });

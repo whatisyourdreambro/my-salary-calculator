@@ -5,13 +5,13 @@
 // 우선순위 shortcut icon > icon > /favicon.ico > apple-touch-icon, 같은 rel 은 한 개만,
 // 파비콘 URL 은 자주 바꾸지 말 것.
 // layout.tsx 는 폰트·CSS·셸 컴포넌트를 import 해 테스트에서 직접 불러오기 무겁다 — 다른 셸 테스트처럼
-// 소스에서 icons 객체 리터럴만 떼어 평가하고, Next 14 가 쓰는 resolveIcons·IconsMetadata 로 실제 <link> 를 렌더한다.
+// 소스에서 icons 객체만 떼어 평가하고, 설치된 Next의 resolveIcons·IconsMetadata 로 실제 <link> 를 렌더한다.
 
 import { existsSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join } from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
-import { createElement, Fragment, type ReactNode } from "react";
+import { Children, createElement, Fragment, type ReactNode } from "react";
 import { describe, expect, it } from "vitest";
 import nextConfig from "../../../next.config.mjs";
 
@@ -21,8 +21,8 @@ const require = createRequire(import.meta.url);
 type IconEntry = { url: string; sizes?: string; type?: string };
 type Icons = { shortcut?: IconEntry[]; icon?: IconEntry[]; apple?: IconEntry[] };
 
-/** layout.tsx 의 `icons: { ... }` 객체 리터럴을 괄호 짝으로 떼어 평가한다(값은 문자열 리터럴뿐). */
-function readRootIcons(): Icons {
+/** Evaluate only the local icons object with an explicit synthetic build environment. */
+function readRootIcons(qaMode?: string): Icons {
   const source = readFileSync(join(process.cwd(), "src/app/layout.tsx"), "utf8");
   const start = source.indexOf("  icons: {");
   expect(start, "layout.tsx 에 icons 블록 없음").toBeGreaterThan(-1);
@@ -38,7 +38,7 @@ function readRootIcons(): Icons {
   }
   const literal = source.slice(open, end + 1);
   expect(literal).not.toMatch(/[A-Za-z_$][\w$]*\s*\(/); // 함수 호출 없이 리터럴만
-  return new Function(`return (${literal});`)() as Icons;
+  return new Function("process", `return (${literal});`)({ env: { MSY_QA_MODE: qaMode } }) as Icons;
 }
 
 const icons = readRootIcons();
@@ -82,7 +82,7 @@ describe("root metadata.icons — 네이버 파비콘 규칙", () => {
     }
   });
 
-  it("Next 14 렌더 결과: shortcut icon 이 맨 앞 · 절대 href · shortcut·apple 은 한 개씩", () => {
+  it("Next 렌더 결과: shortcut icon 이 맨 앞 · 절대 href · shortcut·apple 은 한 개씩", () => {
     const { resolveIcons } = require("next/dist/lib/metadata/resolvers/resolve-icons") as {
       resolveIcons: (icons: Icons) => unknown;
     };
@@ -90,7 +90,7 @@ describe("root metadata.icons — 네이버 파비콘 규칙", () => {
       IconsMetadata: (props: { icons: unknown }) => ReactNode;
     };
     const html = renderToStaticMarkup(
-      createElement(Fragment, null, IconsMetadata({ icons: resolveIcons(icons) }))
+      createElement(Fragment, null, Children.toArray(IconsMetadata({ icons: resolveIcons(icons) })))
     );
     const links = [...html.matchAll(/<link ([^>]*)\/?>/g)].map((m) => m[1]);
     expect(links[0]).toContain(`rel="shortcut icon" href="${ORIGIN}/favicon.ico"`);
@@ -100,5 +100,16 @@ describe("root metadata.icons — 네이버 파비콘 규칙", () => {
     const rels = links.map((l) => l.match(/rel="([^"]+)"/)?.[1]);
     expect(rels.filter((r) => r === "shortcut icon")).toHaveLength(1);
     expect(rels.filter((r) => r === "apple-touch-icon")).toHaveLength(1);
+  });
+
+  it("QA emits only same-origin icon paths through Next's real metadata renderer", () => {
+    const qaIcons = readRootIcons("1");
+    const { resolveIcons } = require("next/dist/lib/metadata/resolvers/resolve-icons") as { resolveIcons: (icons: Icons) => unknown };
+    const { IconsMetadata } = require("next/dist/lib/metadata/generate/icons") as { IconsMetadata: (props: { icons: unknown }) => ReactNode };
+    const html = renderToStaticMarkup(createElement(Fragment, null, Children.toArray(IconsMetadata({ icons: resolveIcons(qaIcons) }))));
+    expect([...html.matchAll(/href="([^"]+)"/g)].map(match => match[1]))
+      .toEqual(["/favicon.ico", "/favicon.ico", "/favicon.svg", "/icon-192.png"]);
+    expect(html).not.toContain(ORIGIN);
+    for (const nonQa of [undefined, "0", "true", "on"]) expect(readRootIcons(nonQa)).toEqual(readRootIcons());
   });
 });

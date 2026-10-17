@@ -2,7 +2,7 @@
 // 하이드레이션 뒤 렌더한다. 프리렌더 페이지의 SSR 링크(크롤 경로)는 그대로여야 한다.
 import { createElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 const location = vi.hoisted(() => ({ pathname: "/" }));
 vi.mock("next/navigation", () => ({ usePathname: () => location.pathname, useRouter: () => ({ push: vi.fn() }) }));
@@ -15,6 +15,7 @@ import { navConfig } from "@/components/header/navConfig";
 import { isEdgeRenderedPath } from "@/lib/edgeRenderedPaths";
 
 const firstDropdownHref = navConfig.find((item) => item.type === "dropdown")!.items[0].href;
+afterEach(() => vi.unstubAllEnvs());
 
 describe("isEdgeRenderedPath", () => {
   it("matches only the edge-rendered detail routes, not their static hubs", () => {
@@ -40,6 +41,7 @@ describe("Header mega-menu SSR", () => {
   });
 
   it("defers dropdown panel contents on edge-rendered pages while keeping triggers and panel ids", () => {
+    vi.stubEnv("NEXT_PUBLIC_PAGES_STATIC_EXPORT", "0");
     location.pathname = "/glossary/%EA%B5%AD%EB%AF%BC%EC%97%B0%EA%B8%88";
     const html = renderToStaticMarkup(createElement(Header));
     expect(html).not.toContain(`href="${firstDropdownHref}"`);
@@ -55,5 +57,25 @@ describe("Header mega-menu SSR", () => {
     location.pathname = "/calc/samsung-bonus";
     const fullHtml = renderToStaticMarkup(createElement(Header));
     expect(html.length).toBeLessThan(fullHtml.length / 3);
+  });
+
+  it.each([
+    ["/share", "/share/eyJhIjo1MDAwMDAwMH0"],
+    ["/404", "/glossary/qa-missing"],
+    ["/404", "/qna/qa-missing"],
+  ])("Pages first render is identical at template %s and requested URL %s", (templatePath, requestedPath) => {
+    vi.stubEnv("NEXT_PUBLIC_PAGES_STATIC_EXPORT", "1");
+    location.pathname = templatePath;
+    const template = renderToStaticMarkup(createElement(Header));
+    location.pathname = requestedPath;
+    const requested = renderToStaticMarkup(createElement(Header));
+    let firstDifference = 0;
+    while (firstDifference < Math.max(requested.length, template.length) && requested[firstDifference] === template[firstDifference]) firstDifference++;
+    // A bounded diff avoids dumping the entire large navigation tree on failure.
+    expect(requested === template, JSON.stringify({
+      expected: template.slice(Math.max(0, firstDifference - 60), firstDifference + 120),
+      received: requested.slice(Math.max(0, firstDifference - 60), firstDifference + 120),
+    })).toBe(true);
+    expect(requested).toContain(`href="${firstDropdownHref}"`);
   });
 });

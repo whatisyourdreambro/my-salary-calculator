@@ -1,7 +1,7 @@
 // scripts/trend-publish/daily.mjs — 트렌드 브리프 일일 파이프라인 (2026-09-26 R5 publisher)
 //
 // 예약 작업으로 등록할 경우 하루 한 번 호출하는 초안 파이프라인이다(현재 활성 등록 여부는 별도 확인). 원격 저장소로 내보내는 코드는 이 파일에 없다 —
-// Workers 수동 릴리스 전용: PROPOSE까지 작성하며 publish-approved.mjs는 모든 원격 반영을 차단한다.
+// 정적 Pages 수동 릴리스 전용: PROPOSE까지 작성하며 publish-approved.mjs는 모든 원격 반영을 차단한다.
 //
 // 사용: node scripts/trend-publish/daily.mjs <init|prepare|finish|status> [--trend-home <dir>] [--worktree <dir>] [--today YYYY-MM-DD]
 //   init --yes          1회 설정: 트렌드 전용 워크트리(origin/main 분리 HEAD) + node_modules 정션 + TREND_HOME 폴더
@@ -820,7 +820,7 @@ export async function finish(opts, deps = defaultDeps()) {
     safeWrite(
       home,
       msgPath,
-      [`feat(guides): 공식 발표 해설 ${slug}`, "", `${title}`, `근거: ${String(draft.event?.ministry ?? "").replace(/"/g, "")} ${String(draft.event?.kind ?? "")} (${String(draft.event?.announcedDate ?? "")})`, "daily.mjs PROPOSE — 운영자 승인 전 로컬 브랜치(Workers 수동 릴리스 인계 필요).", "", "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>", ""].join("\n")
+      [`feat(guides): 공식 발표 해설 ${slug}`, "", `${title}`, `근거: ${String(draft.event?.ministry ?? "").replace(/"/g, "")} ${String(draft.event?.kind ?? "")} (${String(draft.event?.announcedDate ?? "")})`, "daily.mjs PROPOSE — 운영자 승인 전 로컬 브랜치(정적 Pages 수동 릴리스 인계 필요).", "", "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>", ""].join("\n")
     );
     const c = await git(deps, wt, ["commit", "-F", msgPath]);
     if (c.code !== 0) {
@@ -852,11 +852,11 @@ export async function finish(opts, deps = defaultDeps()) {
         `- 게이트: ${gateSummary}`,
         "",
         "## 승인하려면",
-        `채팅에 **발행 ${slug}** 라고 요청하면 승인된 초안과 해시를 수동 Workers 릴리스 담당자에게 인계한다. publish-approved는 철회·수정·check-only를 포함해 현재 실행을 차단한다.`,
+        `채팅에 **발행 ${slug}** 라고 요청하면 승인된 초안과 해시를 수동 Pages 릴리스 담당자에게 인계한다. publish-approved는 철회·수정·check-only를 포함해 현재 실행을 차단한다.`,
         "",
         "```",
         `수동 인계: slug=${slug} draft-sha256=${sha} branch=${branch}`,
-        "런북: docs/trend-publishing-runbook.md (Workers 수동 릴리스 인계). QA 산출물은 배포 금지.",
+        "런북: README.md 및 docs/trend-publishing-runbook.md (정적 Pages 수동 릴리스 인계). QA 산출물은 배포 금지.",
         "```",
         "",
         "승인은 '발행을 허락한다'는 뜻이다 — 내용 검수 완료가 아니다. 본문에는 '운영자가 발행을 승인했습니다(내용 검수 아님)'으로 표기된다.",

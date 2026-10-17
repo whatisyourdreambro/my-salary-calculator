@@ -31,5 +31,5 @@
     ".next-qa/types/**/*.ts"
   ],
   // The web app must not compile independent mobile apps or archived audit copies.
-  "exclude": ["node_modules", ".claude", "apps", "docs", ".artifacts", ".wrangler", ".vercel", ".open-next", ".open-next-qa"]
+  "exclude": ["node_modules", ".claude", "apps", "docs", ".artifacts", ".wrangler", ".vercel", ".open-next", ".open-next-qa", ".pages-build", ".pages-qa"]
 }

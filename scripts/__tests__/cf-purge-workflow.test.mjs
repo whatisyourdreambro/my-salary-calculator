@@ -6,13 +6,13 @@ import { parse } from 'yaml';
 
 const workflow = parse(readFileSync(new URL('../../.github/workflows/cf-purge.yml', import.meta.url), 'utf8'));
 
-test('purge is dispatch-only, defaults to Workers, and never infers a release tag from the selected commit', () => {
+test('purge is dispatch-only, defaults to Pages, and never infers a legacy Workers release tag from the selected commit', () => {
   assert.deepEqual(Object.keys(workflow.on), ['workflow_dispatch']);
   const inputs = workflow.on.workflow_dispatch.inputs;
-  assert.equal(inputs.target.default, 'workers');
-  assert.deepEqual(inputs.target.options, ['workers', 'pages']);
+  assert.equal(inputs.target.default, 'pages');
+  assert.deepEqual(inputs.target.options, ['pages', 'workers']);
   const env = workflow.jobs.purge.env;
-  assert.equal(env.CF_DEPLOY_TARGET, "${{ inputs.target || 'workers' }}");
+  assert.equal(env.CF_DEPLOY_TARGET, "${{ inputs.target || 'pages' }}");
   assert.equal(env.CF_RELEASE_TAG, '${{ inputs.release_tag }}');
   assert.equal(env.CF_EXPECTED_VERSION_ID, '${{ inputs.expected_version_id }}');
   assert.equal(env.CF_PAGES_COMMIT_SHA, '${{ inputs.release_sha || github.sha }}');

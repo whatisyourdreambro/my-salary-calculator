@@ -1,4 +1,4 @@
-// Workers 수동 릴리스 전용: main은 아래의 이전 Pages 게시 흐름에 도달하기 전에 모든 모드를 차단한다.
+// Pages 수동 릴리스 전용: main은 아래의 이전 Git 자동 게시 흐름에 도달하기 전에 모든 모드를 차단한다.
 // scripts/trend-publish/publish-approved.mjs — 운영자 승인 브리프 발행 (2026-09-26 R5 publisher)
 //
 // ★아래 이전 Pages 구현에만 git push 코드가 남아 있으며 현재 main 가드로 실행되지 않는다. 운영자가 채팅에서 브리프별로 승인('발행 <slug>' · '철회 <slug>')한 세션만 실행한다.
@@ -89,9 +89,9 @@ function arg(argv, name) {
 }
 
 // No environment, approval flag or CLI option can enable the legacy Pages publisher.
-// A tested Workers publication implementation must replace this guard before re-enabling it.
+// A tested static Pages publication implementation must replace this guard before re-enabling it.
 export function workersPublicationBlockReason() {
-  return "Workers 자동 게시 경로가 아직 구현되지 않아 발행·수정·철회(--retire)·--check-only를 모두 차단했습니다. Git 명령·키 파일 읽기·배포를 실행하지 않았습니다. 승인 초안/해시/로컬 브랜치를 수동 Workers 릴리스 담당자에게 인계하세요: docs/trend-publishing-runbook.md (Workers 수동 릴리스 인계). Pages 자동배포 비활성 확인 → 별도 정상 광고 운영 빌드/검증 → 정확한 tag/version 100% 활성화 → 수동 Purge/IndexNow 순서가 필요합니다. QA 산출물은 배포하지 마세요.";
+  return "정적 Pages 자동 게시 경로가 아직 구현되지 않아 발행·수정·철회(--retire)·--check-only를 모두 차단했습니다. Git 명령·키 파일 읽기·배포를 실행하지 않았습니다. 승인 초안/해시/로컬 브랜치를 수동 Pages 릴리스 담당자에게 인계하세요: README.md 및 docs/trend-publishing-runbook.md. 기존 Pages Git 자동배포는 동결 상태를 유지하며 별도 정상 광고 운영 빌드·검증 → 정확한 Pages 후보 배포 검증 → 운영 배포 → 수동 Purge/IndexNow 순서가 필요합니다. Workers 경로 재연결이나 유료 전환은 하지 마세요. QA 산출물은 배포하지 마세요.";
 }
 
 export async function main(argv = process.argv, deps = defaultDeps()) {

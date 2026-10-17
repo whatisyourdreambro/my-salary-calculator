@@ -3,7 +3,8 @@ const context = vi.hoisted(() => ({ read: vi.fn() }));
 vi.mock("@opennextjs/cloudflare", () => ({ getCloudflareContext: context.read }));
 import { cloudflareBindings } from "./cloudflareBindings";
 import { cloudflareAssets } from "./cloudflareAssets";
-import { getFeedbackBindings, hasFeedbackStorage } from "./feedbackStorage";
+import { getFeedbackBindings } from "./feedbackBindings";
+import { hasFeedbackStorage } from "./feedbackStorage";
 
 afterEach(() => { vi.unstubAllEnvs(); context.read.mockReset(); });
 

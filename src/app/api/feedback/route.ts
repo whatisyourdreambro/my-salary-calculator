@@ -1,5 +1,5 @@
 import { handleFixedFeedbackPost } from "@/lib/server/fixedFeedbackHandler";
-import { getFeedbackBindings } from "@/lib/server/feedbackStorage";
+import { getFeedbackBindings } from "@/lib/server/feedbackBindings";
 
 export const dynamic = "force-dynamic";
 

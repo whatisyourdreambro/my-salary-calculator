@@ -231,6 +231,7 @@ async function checkUrlLedger(sitemapPaths: string[], update: boolean): Promise<
 
 // 의도적으로 sitemap에서 제외된 정적 라우트 — 사유와 함께 관리
 const INTENTIONALLY_EXCLUDED = new Set([
+  "/share", // noindex/no-follow static shell; result-token documents remain private and outside the sitemap
   "/contact", // 비공개 문의 접수 폼 — page metadata의 noindex에 따라 검색 사이트맵 제외
   "/en/contact", // English private contact counterpart
   "/en/dashboard", // English local personal results

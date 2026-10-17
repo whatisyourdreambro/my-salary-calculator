@@ -79,17 +79,15 @@ jobs:
           echo "ad-audit --diff 기준: $BASE"
           node scripts/ad-audit.mjs --diff --base "$BASE"
       - run: npm run lint
-      # Adapter validation uses an isolated, ad-free build and never deploys it.
-      - run: npm run qa:cf:build
-      - run: npm run qa:cf:check
-      # Check middleware and traced Node DSR bundles for unused heavy registries.
-      - run: node scripts/verify-edge-bundle.mjs .open-next-qa/.next
+      # Native static Pages build; isolated ad-free artifacts are never deployed.
+      - run: npm run qa:pages:build
+      - run: npm run qa:pages:verify
       # 자동광고 배치 경로 회귀 게이트 (2026-09-25, 수익 추천 #4) — 9/10 루트 래퍼 h-full 삭제(4eda6889)로
       # AdSense 자동 인페이지 노출/PV 가 약 75% 줄어든 채 2주가 간 사건의 재발 방지. 대표 11쪽 프리렌더 HTML 의
       # CSS 경로를 scripts/autoads-paths.baseline.json 과 대조해 루트 셸이 깨지거나 한 쪽이라도 20% 넘게 사라지면 실패.
       # 의도한 개편이면 스크립트 머리말의 --update 절차(기준선 갱신 = 자동광고 학습 위치를 버리는 결정).
-      - run: node scripts/verify-autoads-paths.mjs --next-dir .open-next-qa/.next
-      - run: npm run qa:quality -- --next-dir .open-next-qa/.next
+      - run: node scripts/verify-autoads-paths.mjs --next-dir .pages-qa/.next
+      - run: npm run qa:quality -- --next-dir .pages-qa/.next
       - name: 전체 URL 품질 장부 업로드
         if: always()
         uses: actions/upload-artifact@v4
@@ -104,11 +102,11 @@ jobs:
           name: share-source-ledger
           path: .artifacts/share-coverage/
           if-no-files-found: ignore
-      - name: qa-crawl (광고 비활성 로컬 Cloudflare Worker HTTP 정합성 크롤)
+      - name: 광고 비활성 로컬 Pages 정합성 및 화면 전환
         env:
           BASE_URL: http://127.0.0.1:3000
         run: |
-          setsid npm run qa:cf:start -- --port 3000 &
+          setsid npm run qa:pages:start -- --port 3000 &
           SERVER_PID=$!
           trap 'kill -- "-$SERVER_PID" 2>/dev/null || true' EXIT
           READY=0
@@ -120,13 +118,13 @@ jobs:
             sleep 2
           done
           if [ "$READY" != "1" ]; then
-            echo "::error::The ad-free local Cloudflare Worker did not become ready"
+            echo "::error::The ad-free local Pages runtime did not become ready"
             exit 1
           fi
           npm run qa:crawl
           npm run qa:english
-          node scripts/qa-cloudflare-http.mjs
-          node scripts/qa-cloudflare-body.mjs --port 3000
+          npm run qa:pages:http
+          npm run qa:run -- scripts/qa-pages-navigation.mjs
       - name: English page quality ledger
         if: always()
         uses: actions/upload-artifact@v4

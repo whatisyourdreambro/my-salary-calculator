@@ -1,0 +1,188 @@
+{
+  "version": 1,
+  "date": "2026-10-17",
+  "status": "local-validation-passed-deployment-cpu-unverified",
+  "scope": "Pages OG module, generator and bounded local fixtures only; not a comprehensive site audit",
+  "implementation": {
+    "entry": "handlePagesOg(request, env)",
+    "runtime": "Precompressed independent DEFLATE row strips, true ESM Data imports",
+    "dimensions": "1200x630 indexed 8-bit PNG",
+    "runtimeDataBytes": 51891343,
+    "runtimeDataModules": 3,
+    "configBytes": 307584,
+    "rawBitmapAtlasRuntimeFiles": 0,
+    "externalRuntimeFetches": 0,
+    "runtimeImportsExcluded": [
+      "Next",
+      "React",
+      "Satori",
+      "OpenNext",
+      "font parsers",
+      "node:zlib"
+    ],
+    "dataInjection": "env.OG_STRIPS = pagesOgData",
+    "outputModules": "_worker.js/og/{pool.bin,glyphs-36.bin,glyphs-64.bin,config.mjs,index.mjs}",
+    "publicImages": "/_msy/og/v1/images/<normalized-sha256>.png",
+    "prebuiltKnownPages": "HTML meta image URLs are read as text and rendered at build time; HTML/JS is never executed",
+    "fallback": "Asset failure only: valid generic image with 300s cache and X-OG-Error, otherwise 503 no-store",
+    "inputParity": [
+      "shared normalizeOgParams",
+      "lang=en precedence",
+      "type/title/name/path categories",
+      "salary amount/net/netPay and rounding in manwon",
+      "Samsung custom numeric name",
+      "NFC Korean and English text"
+    ],
+    "design": "Flat branded palette and bounded wrapped text; not a pixel-identical Satori typography reproduction"
+  },
+  "validation": {
+    "latestTargetedLog": ".artifacts/pages-free-2026-10-17/og-tests.log",
+    "targeted": {
+      "dynamic": 33,
+      "files": 2,
+      "passed": 70,
+      "og": 37
+    },
+    "lastTargetedRun": "2026-10-17 12:34:40 KST",
+    "afterTargetedChanges": [
+      "ArrayBuffer-backed Uint8Array return/local type annotations, no copies or behavior change",
+      "comments, fallback diagnostic wording, provenance documentation"
+    ],
+    "parentFullSuite": "Pending parent integration run",
+    "lintLog": ".artifacts/pages-free-2026-10-17/og-lint.log",
+    "lint": "Passed before final type-only annotations",
+    "png": [
+      "independent CRC verification",
+      "bounded zlib inflate and exact scanline length",
+      "numeric value changes alter only expected regions",
+      "prebuilt/cache/fallback corruption regressions",
+      "HEAD/method/input/import graph checks"
+    ],
+    "runtimePngCheck": "Container structure, dimensions, palette, chunk bounds and CRC; runtime does not inflate compressed data. Build/unit checks validate zlib and Adler integrity.",
+    "visual": "Local generated salary, default, long Korean PNGs inspected; no browser",
+    "independentReview": "ad_code_audit read strip renderer, builder, generator, manifest and tests; no confirmed Adler/DEFLATE/bounds/module-contract defect found; no deployed CPU claim"
+  },
+  "benchmark": {
+    "artifact": ".artifacts/pages-free-2026-10-17/og-final-benchmark/benchmark.json",
+    "runtime": "Synthetic local Workerd, compatibility date 2025-09-08, mocked ASSETS, outbound deny",
+    "externalRequests": 0,
+    "metric": "V8 sampling diagnostic, NOT billed CPU",
+    "coldSampledMs": 19.859,
+    "warmSampledMs": [
+      6.236,
+      5.194,
+      5.306,
+      4.938,
+      4.534,
+      4.058,
+      6.581
+    ],
+    "pngBytes": {
+      "samsung": 44646,
+      "prebuilt": 9038,
+      "salary": 52007,
+      "longKorean": 112126
+    },
+    "heapAfterSequentialRequests": {
+      "usedSize": 1455824,
+      "totalSize": 4775936,
+      "embedderHeapUsedSize": 515872,
+      "backingStorageSize": 52332449
+    },
+    "limitations": [
+      "Cold preemption/native wait can be attributed to sampled functions; separate prebuilt counterexample observed",
+      "No actual free 10ms pass or failure conclusion",
+      "Not concurrent peak memory or Cloudflare accounting",
+      "Exact deployment startup, memory and CPU acceptance remain unverified"
+    ]
+  },
+  "provenance": {
+    "source": "vendor/og-font/provenance.json",
+    "license": "OFL-1.1",
+    "fontUnmodified": true,
+    "fullHangulSyllables": 11172,
+    "offlineRebuild": [
+      "scripts/build-pages-og-atlas.py",
+      "scripts/build-pages-og-strips.py"
+    ],
+    "atlasIntermediateOnly": true,
+    "stripManifest": "vendor/og-strips/manifest.json",
+    "fontAndLicenseVerifiedByGenerator": true,
+    "compressedAndRawHashesVerifiedByGenerator": true
+  },
+  "safety": {
+    "productionHttp": 0,
+    "publisherBrowser": 0,
+    "advertisingRequests": 0,
+    "analyticsRequests": 0,
+    "deploymentsByThisAgent": 0,
+    "fullApplicationBuildsByThisAgent": 0
+  },
+  "sourceFiles": [
+    {
+      "path": "cloudflare/pages-og.ts",
+      "bytes": 9050,
+      "sha256": "fa2f7bf57c6b36827ad787576897a5a838bc75f8fae2a1a9c24ebc1c739c70b6"
+    },
+    {
+      "path": "cloudflare/pages-og-strips.ts",
+      "bytes": 7441,
+      "sha256": "18ecf641a9e6b0559da9d4179dddd0ca453de5916ebfcab2c468105748d7d440"
+    },
+    {
+      "path": "scripts/generate-pages-og.ts",
+      "bytes": 9195,
+      "sha256": "34ee69dfef5b7dd46419ff62b376150094055fed19c1701223bb789e4385be9c"
+    },
+    {
+      "path": "scripts/build-pages-og-atlas.py",
+      "bytes": 6993,
+      "sha256": "d05af46e40107169516013c9de11f9be0d26c03230cc956c81e8359962bf52ee"
+    },
+    {
+      "path": "scripts/build-pages-og-strips.py",
+      "bytes": 4961,
+      "sha256": "92e58ca7a51ae2e51ab87648d82e55961a76b333a73476d61f51add5418cc85b"
+    },
+    {
+      "path": "scripts/benchmark-pages-og.mjs",
+      "bytes": 8716,
+      "sha256": "ea295a4d8823015d92d2c51fe8d1dc5951676953267a07f51e61c3346cf5a454"
+    },
+    {
+      "path": "src/lib/__tests__/pagesOg.test.ts",
+      "bytes": 12247,
+      "sha256": "1f0ef6d10fb209fa049f49399b43c105f91033a7790a4e2339cc713af9435edb"
+    },
+    {
+      "path": "vendor/og-font/provenance.json",
+      "bytes": 767,
+      "sha256": "2110e56e251454dcf50dc7e3ad945a2b1b4646d9868e6eca9e8ad9c24343b417"
+    },
+    {
+      "path": "vendor/og-font/OFL.txt",
+      "bytes": 4388,
+      "sha256": "1c05c68c34f9708415aada51f17e1b0092d2cea709bf4a94cd38114f9e73d7d9"
+    },
+    {
+      "path": "vendor/og-font/NotoSansKR.ttf",
+      "bytes": 10414588,
+      "sha256": "194018e6b2b293a7964f037b25c0249ce1418bc9ab3c971060a03aa57861e252"
+    },
+    {
+      "path": "vendor/og-atlas/manifest.json",
+      "bytes": 19696,
+      "sha256": "a38cfd9b45b091c4b04e2dd0e2b7f4f77d84b7377589307ef08c9f41273dff0e"
+    },
+    {
+      "path": "vendor/og-strips/manifest.json",
+      "bytes": 1069,
+      "sha256": "16e4e8001ab37b7d52a3552d770114aeaa3a9574b813ceb118ecb64c13f5c5af"
+    },
+    {
+      "path": "vendor/og-strips/README.md",
+      "bytes": 2285,
+      "sha256": "64fc1e38492c1494a7829c1f5c386be0e154bf85edb6930c1cdd6f05fc130eee"
+    }
+  ]
+}

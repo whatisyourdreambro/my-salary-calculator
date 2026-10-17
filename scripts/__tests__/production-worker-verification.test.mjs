@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { assertProductionEnvironment, inspectClientAdvertising, verifyProductionWorker } from '../verify-production-worker.mjs';
+import { verifyPagesAdvertising } from '../verify-pages-advertising.mjs';
 
 // Synthetic webpack AST only. Never evaluated, imported, or sent to a browser.
 const guard = `function can(){if(typeof window==='undefined')return false;try{
@@ -53,6 +54,26 @@ test('production guard rejects all QA environments and QA build roots', () => {
   assert.throws(() => assertProductionEnvironment({}, '/project/.open-next-qa'), /QA directories/);
   assert.throws(() => assertProductionEnvironment({ NODE_ENV: 'test' }, '/production'), /NODE_ENV/);
   assert.doesNotThrow(() => assertProductionEnvironment({ NEXT_PUBLIC_ADS_DISABLED: '0', NODE_ENV: 'production' }, '/production'));
+});
+
+test('Pages publication rejects a QA package, altered served chunks and absent ordinary visitor CSP', t => {
+  const f = fixture(t);
+  const pages = { mode: 'production', headers: f.read('.next/routes-manifest.json').headers };
+  f.write('generated/pages-manifest.json', json(pages));
+  f.write('dist/_next/static/chunks/app/layout.js', chunk());
+  assert.equal(verifyPagesAdvertising(f.root).generatedJavaScriptExecuted, false);
+  f.write('dist/_next/static/chunks/app/layout.js', chunk('function can(){return false;}'));
+  assert.throws(() => verifyPagesAdvertising(f.root), /differs from Next output/);
+  f.write('.next/static/chunks/app/layout.js', chunk('function can(){return false;}'));
+  assert.throws(() => verifyPagesAdvertising(f.root), /no executable/);
+  f.write('.next/static/chunks/app/layout.js', chunk());
+  f.write('dist/_next/static/chunks/app/layout.js', chunk());
+  f.write('generated/pages-manifest.json', json({ ...pages, mode: 'qa' }));
+  assert.throws(() => verifyPagesAdvertising(f.root), /requires a production/);
+  f.write('generated/pages-manifest.json', json({ ...pages, headers: [] }));
+  assert.throws(() => verifyPagesAdvertising(f.root), /CSP is missing/);
+  f.write('generated/pages-manifest.json', json({ ...pages, headers: [...pages.headers, { headers: [{ key: 'X-MoneySalary-QA', value: 'ads-disabled' }] }] }));
+  assert.throws(() => verifyPagesAdvertising(f.root), /QA response header/);
 });
 test('AST requires a live guard connected to the loader module', () => {
   const inspect = source => inspectClientAdvertising([{ filename: 'layout.js', source }]);

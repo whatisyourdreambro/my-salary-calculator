@@ -1,4 +1,7 @@
 import { MetadataRoute } from 'next';
+
+// All entries come from the finite build inventory; no request-time rendering.
+export const dynamic = 'force-static';
 import type { CompanyProfile } from '@/types/company';
 import { koGuides, enGuides } from '@/lib/guidesContent';
 import { glossaryData, toGlossarySlug } from '@/data/glossaryData';

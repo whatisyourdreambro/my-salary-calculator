@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import EnglishNotFound, { metadata as englishNotFoundMetadata } from "../not-found";
 
 // Keep unmatched English URLs inside the English layout and recovery links.
 //
@@ -9,12 +10,16 @@ import { notFound } from "next/navigation";
 // 그 외 /en/<unknown> 직접 요청은 전역 404(dynamicParams=false). 종전에는 이 캐치올이 매 요청
 // 루트 레이아웃까지 edge 렌더해 33KB 404 응답도 1/8 이 503(1102) 이었다.
 export const dynamicParams = false;
-export const metadata: Metadata = { robots: { index: false, follow: false } };
+export const metadata: Metadata = englishNotFoundMetadata;
 
 export function generateStaticParams(): { missing: string[] }[] {
   return [{ missing: ["page-unavailable"] }];
 }
 
-export default function MissingEnglishPage(): never {
+export default function MissingEnglishPage() {
+  // Native export otherwise emits an empty Next error shell with the English
+  // recovery content only in Flight. Render this one finite document normally;
+  // the Pages manifest and router always serve it with HTTP 404 + no-store.
+  if (process.env.MSY_PAGES_STATIC_EXPORT === "1") return <EnglishNotFound />;
   notFound();
 }

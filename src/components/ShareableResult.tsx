@@ -27,7 +27,7 @@ export default function ShareableResult({ data }: ShareableResultProps) {
 
  if (!result) {
  return (
- <div className="text-center p-8 bg-card rounded-2xl shadow-lg border">
+ <div data-pages-share-invalid="true" data-page-state="error" className="text-center p-8 bg-card rounded-2xl shadow-lg border">
  <h1 className="text-2xl font-bold text-destructive">잘못된 정보입니다.</h1>
  <p className="mt-4 text-muted-foreground">
  공유된 데이터가 올바르지 않습니다. 다시 시도해주세요.

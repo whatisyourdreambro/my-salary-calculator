@@ -1,6 +1,6 @@
 # 운영자 세션표 — 코드 0줄로 수익 올리는 콘솔 작업 (2026-09-05 개정)
 
-> **2026-10-17 릴리스 준비 상태:** 운영 Workers 설정은 준비됐지만 인증은 대기 중이며 실제 업로드·도메인 전환·배포는 아직 0회다. 기존 Pages 자동배포를 중지하고 대기 중인 빌드까지 확인하기 전에는 이 이행을 `main`에 merge/push하지 않는다. 기존 소스 발행 자동화도 중지 상태를 확인하고, 정상 동작하는 Workers 게시 경로가 마련된 뒤에만 재개한다. CI와 `cf-purge`는 Worker를 배포하지 않는다. 아래 9월 Pages 전용 절차는 과거 기록이며, 현재 [운영 전환 절차](contact-operations.md#pages-to-workers-deployment-transition-2026-10-17)와 이 문서의 Workers Purge 절이 우선한다. 운영/preview 게시자 브라우저 점검은 [AGENTS.md](../AGENTS.md)에 따라 금지하며, 이 문서 수정은 콘솔 설정을 바꾸거나 배포 완료를 뜻하지 않는다.
+> **2026-10-17 현재 결정:** Workers 업로드와 잠시 연결한 도메인 경로는 [결과 기록](workers-release-2026-10-17/deployment-outcome.json)처럼 롤백됐다. 운영자는 기존 Pages 유지와 무료 구조 개선을 선택했다. 기존 Pages Git 자동배포와 소스 자동 게시 가드는 유지하며, 정적 Pages 후보를 검증하기 전에는 새 운영 릴리스를 활성화하지 않는다. CI와 `cf-purge`는 배포하지 않고 수동 Purge 기본 대상은 Pages다. [현재 README 절차](../README.md)가 아래 과거 Workers 전환 설명보다 우선한다. 운영/preview 게시자 브라우저 점검은 [AGENTS.md](../AGENTS.md)에 따라 금지하며, 문서 수정은 실제 배포 완료를 뜻하지 않는다.
 
 정본 계획: `docs/revenue-10x-plan-2026-09.md` §4·§5 + `docs/revenue-100x-plan-2026-09.md` §6(승인 A~J)·§7(세션 추가분, 2026-09-05). 이 문서는 그 세션표의 실행판이다.
 원칙: **한 세션 = 최대 3항목·25분**, 격주 고정 요일. 각 항목은 클릭 경로 ≤5줄 + 완료 증빙 1장.
