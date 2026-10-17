@@ -1,0 +1,335 @@
+{
+  "version": 1,
+  "recordedAt": "2026-10-17T06:18:09.100Z",
+  "status": "deployed-and-bounded-production-verification-passed",
+  "release": {
+    "commit": "efb9b1a30a65586602a2a1530adcdf56585081fd",
+    "branch": "main",
+    "branchMeaning": "Cloudflare Pages deployment label",
+    "gitSourceBranch": "codex/workers-production-release",
+    "mergedToGitMain": false,
+    "deploymentId": "adb8642b-e23f-45d7-8e04-66a61819f522",
+    "previewDeploymentId": "8a53ced7-f114-49ca-9b6b-a1fcd9cfff2d",
+    "buildId": "1Ry4ZfIx_wt9cs1Qo83EF",
+    "artifactHash": "831a976db16023fb17754eec2f67067cf26beab7ed88ce8ca88fc051e9c8be65",
+    "rollbackDeploymentId": "a1fda725-66fb-4d13-a0b5-451af56a398b",
+    "rollbackCommit": "7ae902995b3dc6dbf839beb9832af3e9255114ff"
+  },
+  "architecture": "Cloudflare Pages static export with bounded dynamic functions and losslessly compressed OG strip Data modules. No Next/OpenNext server runtime in the request graph.",
+  "package": {
+    "workerBytes": 25126231,
+    "workerModules": 44,
+    "observedPagesLimitBytes": 26214400,
+    "headroomBytes": 1088169,
+    "documents": 2610,
+    "assets": 8714
+  },
+  "validation": {
+    "fullApplicationBaseline": {
+      "files": 256,
+      "passed": 3966,
+      "skipped": 1,
+      "scope": "Before hybrid packaging changes; not a new exhaustive suite against the deployed artifact."
+    },
+    "currentNode": {
+      "passed": 471,
+      "failed": 0
+    },
+    "relatedVitest": {
+      "passed": 69,
+      "failed": 0
+    },
+    "qaSafety": {
+      "nodePassed": 20,
+      "vitestPassed": 39,
+      "violations": 0
+    },
+    "finalLocal": {
+      "httpContracts": 49,
+      "finiteRoutes": 2628,
+      "bodyLimits": 6,
+      "uiChecks": 11,
+      "consoleErrors": 0,
+      "pageErrors": 0,
+      "forbiddenRequests": 0,
+      "externalResponses": 0,
+      "serverStopped": true
+    },
+    "preview": {
+      "http": 31,
+      "functionTail": 27,
+      "outcomesOk": 27,
+      "exceptions": 0,
+      "tailDeleted": true
+    },
+    "production": {
+      "http": 31,
+      "functions": 27,
+      "canonicalVerifiedBefore": true,
+      "canonicalVerifiedAfter": true,
+      "startedAt": "2026-10-17T06:15:11.192Z",
+      "finishedAt": "2026-10-17T06:15:39.468Z",
+      "followedRedirects": 0,
+      "documentJavaScriptExecuted": false,
+      "subresources": 0,
+      "automaticRetries": 0,
+      "privateResponsePolicyChecked": true,
+      "privateCacheStorageVerified": false
+    }
+  },
+  "cpu": {
+    "exactPreviewTail": {
+      "records": 27,
+      "maxObservedValue": 12,
+      "unit": "unverified raw tail cpuTime",
+      "aboveThreshold10": 1,
+      "allOutcomesOk": true
+    },
+    "supportingAggregate": {
+      "requests": 27,
+      "errors": 0,
+      "unit": "milliseconds; verified conversion from API microseconds",
+      "rows": [
+        {
+          "minute": "2026-10-17T05:49:00Z",
+          "requests": 27,
+          "errors": 0,
+          "sampleInterval": 1,
+          "cpuMs": {
+            "P50": 0.883,
+            "P90": 4.762,
+            "P99": 12.345,
+            "P999": 12.345
+          }
+        }
+      ]
+    },
+    "productionSupportingAggregate": {
+      "source": "production-timeout-metrics.json",
+      "window": {
+        "start": "2026-10-17T06:05:00.000Z",
+        "end": "2026-10-17T06:07:00.000Z"
+      },
+      "requests": 40,
+      "errors": 0,
+      "unit": "milliseconds; verified conversion from API microseconds",
+      "rows": [
+        {
+          "minute": "2026-10-17T06:05:00Z",
+          "requests": 31,
+          "errors": 0,
+          "sampleInterval": 1,
+          "cpuMs": {
+            "P50": 3.125,
+            "P90": 13.168,
+            "P99": 25.924,
+            "P999": 25.924
+          }
+        },
+        {
+          "minute": "2026-10-17T06:06:00Z",
+          "requests": 9,
+          "errors": 0,
+          "sampleInterval": 1,
+          "cpuMs": {
+            "P50": 1.111,
+            "P90": 7.215,
+            "P99": 7.215,
+            "P999": 7.215
+          }
+        }
+      ],
+      "identifiesTimedOutRequest": false,
+      "limitation": "All production traffic in these minutes is included. P99 25.924 ms at 06:05 UTC and 7.215 ms at 06:06 cannot be assigned to the timed-out path, client or deployment. Zero aggregate errors does not establish timeout cause."
+    },
+    "allFutureRequestsWithin10msGuaranteed": false,
+    "limitation": "One exact preview tail event reported numeric 12 (unit unverified); supporting preview aggregate P99 is 12.345 ms. Environment/minute metrics lack deployment/version/path dimensions. Neither this sample nor successful admission proves every future request or memory peak."
+  },
+  "advertising": {
+    "ordinaryProductionPolicyRetainedByStaticProof": true,
+    "qaAdsAndAnalyticsDisabled": true,
+    "actualAdsLoadedForQa": false,
+    "adClicksPerformed": false,
+    "liveFillOrRevenueVerified": false
+  },
+  "preservedOperations": {
+    "d1BindingsAndEnvironmentMetadataPreserved": true,
+    "privateDatabaseContentsInspected": false,
+    "gitProductionAutoDeployFrozen": true,
+    "gitPreviewAutoDeployFrozen": true,
+    "paidPlanChangeRequested": false,
+    "paidPlanChangePerformed": false,
+    "automaticRollbackPerformed": false
+  },
+  "purge": {
+    "runId": 39009147246,
+    "jobId": 117327701641,
+    "status": "success",
+    "operation": "Purge Everything after saved cache-rule repair and exact deployment/commit check",
+    "completedAt": "2026-10-17T06:14:44.4967060Z",
+    "earlierPurgeRunId": 39007975546
+  },
+  "cacheLayerAudit": {
+    "status": "known-overrides-repaired-and-bounded-private-rechecks-passed",
+    "currentSummary": {
+      "status": "reviewed",
+      "checkedAt": "2026-10-17T06:16:34.117Z",
+      "privateCacheStorage": "not-observed",
+      "ruleOverride": "absent"
+    },
+    "historicalApiSummary": {
+      "source": "cache-audit-summary-before-repair.json",
+      "status": "unresolved",
+      "privateCacheStorage": "unknown",
+      "ruleOverride": "unknown"
+    },
+    "privateCacheStorageVerified": false,
+    "confirmedHistoricalFinding": {
+      "target": "synthetic valid share",
+      "cfCacheStatus": "HIT",
+      "ageSeconds": 128,
+      "responseCacheControl": "private, no-store",
+      "actualStoredResponseObserved": true
+    },
+    "repair": {
+      "source": "cloudflare-cache-rule-repair.json",
+      "checkedAt": "2026-10-17T06:14:01.696Z",
+      "htmlAndSalaryRules": "Use origin cache headers when present; bypass when absent",
+      "htmlStatusTtlOverridesRemoved": true,
+      "expressionsAndBrowserTtlBypassPreserved": true,
+      "ogWidgetRuleUnchanged": true,
+      "applicationCodeChanged": false
+    },
+    "postRepair": {
+      "source": "private-cache-after-repair.json",
+      "requests": 10,
+      "sameShareRepeats": 2,
+      "observedStoredResponses": 0,
+      "allNoStoreAndNoAge": true,
+      "finishedAt": "2026-10-17T06:16:13.111Z",
+      "limitation": "Known unsafe overrides were repaired and this repeated-request cohort passed. This is not proof that every cache tier or future response can never store private content."
+    },
+    "publicCacheConfirmation": {
+      "source": "public-cache-after-repair.json",
+      "method": "GET",
+      "requests": 4,
+      "routes": [
+        "/",
+        "/salary/50000000"
+      ],
+      "repetitionsPerRoute": 2,
+      "allCurrentBuildAndHit": true,
+      "ageSecondsRange": [
+        70,
+        74
+      ],
+      "requestCacheControlPresent": false,
+      "canonicalVerifiedAfter": true,
+      "finishedAt": "2026-10-17T06:16:27.066Z"
+    },
+    "supportingPermissionAudit": {
+      "source": "github-cache-audit-result.json",
+      "runId": 39008548575,
+      "jobId": 117325931752,
+      "complete": false,
+      "conclusion": "failure",
+      "purgeJob": "skipped",
+      "responseStatuses": [
+        403,
+        403,
+        403
+      ],
+      "mutations": 0,
+      "publisherRequests": 0,
+      "workflowCommit": "d381c2fc3bdeeef7ceda22f64faa0cdb1f28c011",
+      "scope": "Separate operational workflow change; deployed application source remains efb9b1a30."
+    },
+    "alternatePermissionAudit": {
+      "source": "zone-cache-settings-diagnostic.json",
+      "responseStatuses": [
+        403,
+        403,
+        403
+      ],
+      "mutations": 0,
+      "publisherRequests": 0,
+      "limitation": "Both API credential paths received 403; the later administrator UI supplied the saved-rule repair evidence. These failed API reads do not negate that UI evidence or prove all-tier behavior."
+    }
+  },
+  "diagnosticHistory": [
+    {
+      "event": "Initial raw-data preview upload",
+      "result": "Rejected with code 8000101 by the observed 25 MiB Pages package limit; no candidate created and canonical deployment unchanged.",
+      "remedy": "Hybrid startup gzip packing reduced complete package from 53,171,748 to 25,126,231 bytes without deleting glyphs."
+    },
+    {
+      "event": "First preview tail cohort",
+      "result": "16 HTTP / 11 tail; stopped on platform-redacted synthetic share identity.",
+      "remedy": "Narrow evidenced alias normalization; ambiguous aliases rejected. This was a verifier mismatch, not a demonstrated server failure."
+    },
+    {
+      "event": "Second preview tail cohort",
+      "result": "31 HTTP passed but only 16 of 27 expected events arrived; incomplete coverage was not accepted.",
+      "remedy": "Paced final cohort passed 31 HTTP / 27 matching tail records."
+    },
+    {
+      "event": "First canonical production HTTP",
+      "attempts": 1,
+      "source": "production-http-before-purge.json",
+      "result": "Stopped at cached old homepage with no current build marker; control-plane selection was correct. HIT Age 40394 contrasted with current-build query MISS.",
+      "remedy": "Exact-deployment guarded GitHub purge, followed by final canonical HTTP checks."
+    },
+    {
+      "event": "Post-purge CDN header normalization",
+      "attempts": 12,
+      "source": "production-http-before-header-normalization.json",
+      "result": "Verifier rejected an additional private directive accompanying no-store; this was a policy-token normalization mismatch, not a demonstrated server failure."
+    },
+    {
+      "event": "Additional private-cache classification",
+      "attempts": 13,
+      "source": "production-http-before-cache-tier-classification.json",
+      "result": "Verifier rejected MISS/EXPIRED despite private no-store and absent Age. The final gate permits BYPASS/DYNAMIC/MISS/EXPIRED and rejects HIT/STALE/UPDATING/REVALIDATED; headers do not prove no tier stores data."
+    },
+    {
+      "event": "Fourth production cohort transport timeout",
+      "attempts": 30,
+      "passed": 29,
+      "unattempted": 1,
+      "source": "production-http-transport-timeout.json",
+      "result": "The 30th company OG request received no headers before the 30-second timeout; the 31st request and final canonical recheck were not reached.",
+      "cause": "Unknown; neither server-path nor local-network cause established.",
+      "followup": "An explicit full rerun followed read-only metrics; no automatic retry and no erasure of the timeout."
+    },
+    {
+      "event": "Confirmed private share cached at the edge",
+      "attempts": 15,
+      "source": "production-http-confirmed-private-cache.json",
+      "result": "A valid synthetic share returned CF HIT with Age 128 despite private, no-store. This is a real cache finding, distinct from earlier verifier mismatches.",
+      "remedy": "Administrator UI confirmed HTML and salary rules ignoring origin cache policy. Saved origin-respecting/bypass-if-absent settings, removed HTML status TTL overrides, then purged and repeated canonical/private checks."
+    }
+  ],
+  "limitations": [
+    "ESLint 9.39.5 remains EOL/deprecated; current Next/React/accessibility peer ranges do not provide a verified supported no-rule-loss ESLint10 upgrade.",
+    "Selected tests, routes and workflows are not an exhaustive line-by-line audit or a guarantee of all inputs, future CPU, availability, or revenue.",
+    "Known private-cache overrides were repaired and bounded repeated checks passed; privateCacheStorageVerified remains false as an all-tier/all-future guarantee. API rule-read permissions remained unavailable.",
+    "Production and preview verification used bounded non-rendering HTTP. No publisher browser, real advertising or analytics execution was used for QA."
+  ],
+  "evidenceSha256": {
+    "production-http.json": "435e2ef1dc32a9e8763c4cc5b438587440d3d80e6c8afdcd47974a240b3f996e",
+    "preview-http.json": "a83ca7904a3274b82bbedb6f7c3ae9de1ccc1b627220fa99de56e1d584af6ea5",
+    "preview-tail.json": "d7cd91f6fb96521707718a055e8c703bce3025cc33a3efe98f9c8018eae3fe8d",
+    "preview-cpu-supporting-complete.json": "7b5e041dfbb74be066726f3002375856ddcb2c1d9074dda02b5a06ebd84e526c",
+    "production-http-transport-timeout.json": "d24e8f2c5a5473c2723426c7155f26eebbe024bf003ae9ab19e05d313bef559a",
+    "production-timeout-metrics.json": "2360a6e1aa2e5e8ecdc9855bb80e44e1b080f77741bb3257c8818d0979c05457",
+    "hybrid-local-gates-final.json": "7619a4297b02a8617e8f69bb110153e313b866bc6efbeac224ddf608272af812",
+    "final-static-advertising-audit.json": "862821b38c78b78e13a59d6d96789fa1f0bda6d690d7bd20ff289a67f84b8b46",
+    "production-http-confirmed-private-cache.json": "d103488f75d8e05ca87389cd0aa0b6a5844e9c20fdd2b4723b19cfaa73833394",
+    "cloudflare-cache-rule-repair.json": "c2c53b241559ae95084d579b72d862613d3224d3c3dbf751ea35a5e6908cf2a2",
+    "github-post-cache-fix-purge-result.json": "fccd22c5654507a2469f39efa5621fd291c9f61f508412c738feef5ce2061acb",
+    "private-cache-after-repair.json": "eb1fb2687f7b16b15384cd6cbf480b60be74149ad5cca464491e4518719ffd95",
+    "public-cache-after-repair.json": "aa9eb10730263665f4b3b87fafb8f895b883f9a976f950bed4c6aa326dc0e431",
+    "cache-audit-summary.json": "8282430efad3a1adf02c9bd44f47dd7cbe7323fd16b308447b879837c58db87f",
+    "cache-audit-summary-before-repair.json": "f6d3dc2b950fabea89216b57620a8a3093883aa4e86e0cc0983611dcb631e1c2"
+  }
+}

@@ -184,5 +184,10 @@
       "bytes": 2285,
       "sha256": "64fc1e38492c1494a7829c1f5c386be0e154bf85edb6930c1cdd6f05fc130eee"
     }
-  ]
+  ],
+  "snapshot": {
+    "status": "historical-local-design-snapshot",
+    "supersededBy": "deployment-outcome.json",
+    "note": "Captured before hybrid gzip Data module packaging and final deployment verification. Runtime module layout, node:zlib startup imports, byte counts and validation status in this file describe that earlier implementation, not the deployed efb9b1a30 build."
+  }
 }
