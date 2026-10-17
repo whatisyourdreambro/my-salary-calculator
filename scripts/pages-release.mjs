@@ -9,7 +9,8 @@ import { fileURLToPath } from 'node:url';
 import { verifyArtifact } from './lib/pages-export.mjs';
 import { verifyPagesAdvertising } from './verify-pages-advertising.mjs';
 import { main as purgePages } from './cf-purge-after-deploy.mjs';
-import { assertReleaseContext, pagesUploadArgs, publicationEnvironment, publishPages, PAGES_PROJECT, RELEASE_REPOSITORY } from './lib/pages-release.mjs';
+import { assertReleaseContext, pagesUploadArgs, publicationEnvironment, publishPages, PAGES_PROJECT, RELEASE_REPOSITORY,
+  classifyUploadOutput, controlPlaneFailure, pagesPurgeEnvironment } from './lib/pages-release.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 export function assertConfiglessDirectory(directory) {
@@ -26,28 +27,29 @@ export function createReleaseApi(env, fetchFn = globalThis.fetch) {
   assert.match(env.CF_ACCOUNT_ID || '', /^[a-f0-9]{32}$/);
   assert.ok(env.CF_API_TOKEN && !/\s/.test(env.CF_API_TOKEN));
   const endpoint = `/accounts/${env.CF_ACCOUNT_ID}/pages/projects/${PAGES_PROJECT}`;
-  const get = async (origin, resource, token, github = false) => {
+  const get = async (origin, resource, token, phase, github = false) => {
     let response, data;
     try {
       response = await fetchFn(origin + resource, { method: 'GET', redirect: 'error', signal: AbortSignal.timeout(20000),
         headers: { Authorization: `Bearer ${token}`, Accept: 'application/json', 'User-Agent': 'MoneySalary-Pages-release/1.0' } });
-      data = await response.json();
-    } catch { throw new Error('Release control-plane read failed'); }
-    if (!response.ok || (!github && data?.success !== true)) throw new Error(`Release control-plane HTTP ${response.status}`);
+    } catch { throw controlPlaneFailure(phase, 'transport'); }
+    try { data = await response.json(); }
+    catch { throw controlPlaneFailure(phase, 'invalid-json', response); }
+    if (!response.ok || (!github && data?.success !== true)) throw controlPlaneFailure(phase, 'api-response', response, data);
     return data;
   };
-  const cf = resource => get('https://api.cloudflare.com/client/v4', resource, env.CF_API_TOKEN);
+  const cf = (resource, phase) => get('https://api.cloudflare.com/client/v4', resource, env.CF_API_TOKEN, phase);
   return {
     readMain: async () => {
       assert.ok(env.GITHUB_TOKEN && !/\s/.test(env.GITHUB_TOKEN));
-      return (await get('https://api.github.com', `/repos/${RELEASE_REPOSITORY}/git/ref/heads/main`, env.GITHUB_TOKEN, true)).object?.sha;
+      return (await get('https://api.github.com', `/repos/${RELEASE_REPOSITORY}/git/ref/heads/main`, env.GITHUB_TOKEN, 'read-main', true)).object?.sha;
     },
-    readProject: async () => (await cf(endpoint)).result,
-    readDeployment: async id => { assert.match(id, /^[a-f0-9-]{36}$/); return (await cf(`${endpoint}/deployments/${id}`)).result; },
+    readProject: async () => (await cf(endpoint, 'read-project')).result,
+    readDeployment: async id => { assert.match(id, /^[a-f0-9-]{36}$/); return (await cf(`${endpoint}/deployments/${id}`, 'read-deployment')).result; },
     listDeployments: async () => {
       const rows = [];
       for (let page = 1; page <= 50; page++) {
-        const data = await cf(`${endpoint}/deployments?env=production&page=${page}`);
+        const data = await cf(`${endpoint}/deployments?env=production&page=${page}`, 'list-deployments');
         assert.ok(Array.isArray(data.result)); assert.equal(data.result_info?.page, page);
         assert.ok(Number.isInteger(data.result_info.total_pages) && data.result_info.total_pages >= 0 && data.result_info.total_pages <= 50);
         rows.push(...data.result); if (page >= data.result_info.total_pages) return rows;
@@ -61,7 +63,7 @@ export async function runPagesRelease(env = process.env) {
   const git = args => execFileSync('git', args, { cwd: root, encoding: 'utf8', windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
   const local = () => ({ commit: git(['rev-parse', 'HEAD']).trim(), status: git(['status', '--porcelain=v1', '-z', '--untracked-files=all']) });
   const commit = assertReleaseContext(env, local());
-  assert.match(env.CF_ZONE_ID || '', /^[a-f0-9]{32}$/);
+  const purgeEnv = pagesPurgeEnvironment(env, commit);
   assert.equal(git(['ls-files', '--error-unmatch', '.env.production']).trim(), '.env.production');
   const { stage, marker } = verifyArtifact(root, 'production', env); verifyPagesAdvertising(stage);
   const dist = path.join(stage, 'dist');
@@ -85,12 +87,24 @@ export async function runPagesRelease(env = process.env) {
       const child = spawn(process.execPath, pagesUploadArgs(cli, dist, commit), {
         cwd, env: childEnv, stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true,
       });
-      let bytes = 0, interrupted = false;
-      const count = chunk => { bytes += chunk.length; if (bytes > 4 * 1024 * 1024) { interrupted = true; child.kill(); } };
-      child.stdout.on('data', count); child.stderr.on('data', count);
-      const timer = setTimeout(() => { interrupted = true; child.kill(); }, 30 * 60 * 1000);
-      child.once('error', () => { interrupted = true; });
-      child.once('close', code => { clearTimeout(timer); resolve({ code: interrupted ? -1 : code }); });
+      let bytes = 0, termination = 'none';
+      const output = [];
+      const capture = chunk => {
+        bytes += chunk.length;
+        if (bytes <= 4 * 1024 * 1024) output.push(chunk);
+        else { termination = 'output-limit'; child.kill(); }
+      };
+      child.stdout.on('data', capture); child.stderr.on('data', capture);
+      const timer = setTimeout(() => { termination = 'timeout'; child.kill(); }, 30 * 60 * 1000);
+      child.once('error', () => { termination = 'spawn-error'; });
+      child.once('close', code => {
+        clearTimeout(timer);
+        // No raw CLI output leaves this bounded in-memory buffer. Retain only
+        // fixed classifications and numeric status/error codes, never messages.
+        const diagnostics = classifyUploadOutput(Buffer.concat(output).toString('utf8'), termination, bytes);
+        output.length = 0;
+        resolve({ code: termination === 'none' ? code : -1, diagnostics });
+      });
     });
     return await publishPages({ commit, marker }, { ...api, upload,
       verifyLocal: async () => {
@@ -98,9 +112,7 @@ export async function runPagesRelease(env = process.env) {
         const current = verifyArtifact(root, 'production', env); assert.equal(current.marker.outputHash, marker.outputHash);
         verifyPagesAdvertising(current.stage);
       },
-      purge: hooks => purgePages({ CF_DEPLOY_TARGET: 'pages', CF_API_TOKEN: env.CF_API_TOKEN,
-        CF_ACCOUNT_ID: env.CF_ACCOUNT_ID, CF_ZONE_ID: env.CF_ZONE_ID, CF_PAGES_PROJECT: PAGES_PROJECT,
-        CF_PAGES_COMMIT_SHA: commit, CF_PURGE_TIMEOUT_MINUTES: '2', CF_PURGE_SETTLE_SECONDS: '30' }, hooks),
+      purge: hooks => purgePages(purgeEnv, hooks),
       saveState: save('release-state.json'), savePins: save('production-pins.json'),
     });
   } finally {

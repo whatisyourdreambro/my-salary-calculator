@@ -9,6 +9,49 @@ export const PAGES_RELEASE_POLICY_VERSION = 1;
 const SHA = /^[a-f0-9]{40}$/;
 const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
 const HASH = /^[a-f0-9]{64}$/;
+const CONTROL_PHASES = new Set(['read-main', 'read-project', 'read-deployment', 'list-deployments']);
+const FAILURE_KINDS = new Set(['transport', 'invalid-json', 'api-response']);
+const UPLOAD_CATEGORIES = new Set(['authentication-permission', 'arguments', 'local-configuration', 'size-limit', 'startup', 'network', 'api-error']);
+const numericList = (values, max) => [...new Set((Array.isArray(values) ? values : []).filter(value => Number.isInteger(value) && value >= 0 && value <= max))].slice(0, 10);
+
+// These are the only error fields allowed into a release receipt. Never serialize
+// a thrown message, stack, URL, response body, project config or process output.
+export function releaseFailureDetails(error) {
+  const detail = error?.releaseDiagnostic;
+  if (!CONTROL_PHASES.has(detail?.phase) || !FAILURE_KINDS.has(detail?.kind)) return { kind: 'unclassified' };
+  return { phase: detail.phase, kind: detail.kind,
+    httpStatus: Number.isInteger(detail.httpStatus) && detail.httpStatus >= 100 && detail.httpStatus <= 599 ? detail.httpStatus : null,
+    apiCodes: numericList(detail.apiCodes, 99_999_999) };
+}
+export function controlPlaneFailure(phase, kind, response, data) {
+  const error = new Error('Release control-plane read failed');
+  error.releaseDiagnostic = { phase, kind, httpStatus: response?.status,
+    apiCodes: Array.isArray(data?.errors) ? data.errors.map(item => item?.code) : [] };
+  return error;
+}
+export function sanitizeUploadDiagnostics(value) {
+  return { categories: [...new Set((Array.isArray(value?.categories) ? value.categories : []).filter(item => UPLOAD_CATEGORIES.has(item)))],
+    httpStatuses: numericList(value?.httpStatuses, 599).filter(value => value >= 400), apiCodes: numericList(value?.apiCodes, 99_999_999),
+    termination: ['none', 'timeout', 'output-limit', 'spawn-error'].includes(value?.termination) ? value.termination : 'none',
+    outputBytes: Number.isSafeInteger(value?.outputBytes) && value.outputBytes >= 0 ? value.outputBytes : 0 };
+}
+/** Fixed-pattern hints, not an authoritative cause. Raw text exists only in bounded memory. */
+export function classifyUploadOutput(text, termination = 'none', outputBytes = 0) {
+  const clean = String(text).replace(/\x1b\[[0-9;]*[A-Za-z]/g, '');
+  const rules = [
+    ['authentication-permission', /Authentication error|Authorization error|Unauthorized|Forbidden|permission(?:s)? (?:denied|required)|insufficient (?:permission|scope)|Unable to authenticate|CLOUDFLARE_API_TOKEN environment variable/i],
+    ['arguments', /Unknown arguments?|Not enough non-option arguments|Invalid values:|Missing required argument/i],
+    ['local-configuration', /ENOENT|EACCES|Cannot find module|Could not resolve|Invalid (?:configuration|wrangler)|(?:wrangler|configuration) file.*(?:not found|invalid)|No such file or directory/i],
+    ['size-limit', /(?:exceeds?|larger than|too large|maximum).{0,100}(?:size|MiB|MB|bytes)|(?:size|MiB|MB).{0,100}(?:limit|exceed)/i],
+    ['startup', /Script startup exceeded|startup time limit|Script startup failed|Worker startup failed/i],
+    ['network', /fetch failed|ECONNRESET|ECONNREFUSED|ENOTFOUND|ETIMEDOUT|UND_ERR_|network error|request timed out/i],
+    ['api-error', /A request to the Cloudflare API.*failed|\[code:\s*\d+\]/i],
+  ];
+  return sanitizeUploadDiagnostics({ categories: rules.filter(([, re]) => re.test(clean)).map(([kind]) => kind),
+    apiCodes: [...clean.matchAll(/\[code:\s*(\d{1,8})\]/gi)].map(match => Number(match[1])),
+    httpStatuses: [...clean.matchAll(/\b(?:HTTP(?:\/\d(?:\.\d)?)?(?:\s+status)?|status(?:\s+code)?)\s*[:=]?\s*([45]\d{2})\b/gi)].map(match => Number(match[1])),
+    termination, outputBytes });
+}
 const canonical = value => JSON.stringify((function order(item) {
   if (Array.isArray(item)) return item.map(order);
   if (item && typeof item === 'object') return Object.fromEntries(Object.keys(item).sort().map(key => [key, order(item[key])]));
@@ -96,26 +139,44 @@ export function publicationEnvironment(input, cwd) {
     CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV: 'false', CLOUDFLARE_CF_FETCH_ENABLED: 'false' };
 }
 
+/** Separate zone-purge credential; never fall back to the Pages upload token. */
+export function pagesPurgeEnvironment(input, commit) {
+  assert.match(commit, SHA);
+  assert.match(input.CF_ACCOUNT_ID || '', /^[a-f0-9]{32}$/);
+  assert.match(input.CF_ZONE_ID || '', /^[a-f0-9]{32}$/);
+  assert.ok(typeof input.CF_PURGE_API_TOKEN === 'string' && input.CF_PURGE_API_TOKEN.length > 30 && !/\s/.test(input.CF_PURGE_API_TOKEN),
+    'A separate zone-purge credential is required before publication');
+  return { CF_DEPLOY_TARGET: 'pages', CF_API_TOKEN: input.CF_PURGE_API_TOKEN,
+    CF_ACCOUNT_ID: input.CF_ACCOUNT_ID, CF_ZONE_ID: input.CF_ZONE_ID, CF_PAGES_PROJECT: PAGES_PROJECT,
+    CF_PAGES_COMMIT_SHA: commit, CF_PURGE_TIMEOUT_MINUTES: '2', CF_PURGE_SETTLE_SECONDS: '30' };
+}
+
 /** Exact control-plane records only. Dependencies allow offline failure/race tests. */
 export async function publishPages({ commit, marker }, { readMain, readProject, listDeployments, readDeployment,
   verifyLocal, upload, purge, saveState, savePins, now = () => new Date().toISOString() }) {
   assert.match(commit, SHA); assertProductionPackage(marker);
-  assert.equal(await readMain(), commit, 'This CI run is superseded by a newer main commit');
-  const before = assertPagesProject(await readProject(), marker);
-  const fingerprint = configurationHash(before);
-  const rollbackId = before.canonical_deployment.id;
-  const rollback = await readDeployment(rollbackId);
-  assertProductionDeployment(rollback, rollback.deployment_trigger?.metadata?.commit_hash, rollbackId);
-  const baseline = await listDeployments();
-  const matches = rows => rows.filter(item => item.environment === 'production'
-    && item.deployment_trigger?.metadata?.branch === 'main' && item.deployment_trigger?.metadata?.commit_hash === commit);
-  assert.equal(matches(baseline).length, 0, 'Commit already has a deployment attempt; reconcile instead of re-uploading');
-  const state = { policyVersion: PAGES_RELEASE_POLICY_VERSION, phase: 'ready', commit, buildId: marker.buildId, artifactHash: marker.outputHash,
-    sourceHash: marker.sourceHash, rollbackDeploymentId: rollbackId, configurationHash: fingerprint,
+  const state = { policyVersion: PAGES_RELEASE_POLICY_VERSION, phase: 'checking-main', commit, buildId: marker.buildId, artifactHash: marker.outputHash,
+    sourceHash: marker.sourceHash,
     publisherRequests: 0, automaticUploadRetries: 0, configurationWrites: 0, paidPlanChanges: 0, startedAt: now() };
   saveState(state);
   let uploaded = false;
+  const phase = value => { state.phase = value; saveState(state); };
   try {
+    assert.equal(await readMain(), commit, 'This CI run is superseded by a newer main commit');
+    phase('checking-project');
+    const before = assertPagesProject(await readProject(), marker);
+    const fingerprint = configurationHash(before);
+    const rollbackId = before.canonical_deployment.id;
+    state.rollbackDeploymentId = rollbackId; state.configurationHash = fingerprint;
+    phase('checking-rollback');
+    const rollback = await readDeployment(rollbackId);
+    assertProductionDeployment(rollback, rollback.deployment_trigger?.metadata?.commit_hash, rollbackId);
+    phase('checking-history');
+    const baseline = await listDeployments();
+    const matches = rows => rows.filter(item => item.environment === 'production'
+      && item.deployment_trigger?.metadata?.branch === 'main' && item.deployment_trigger?.metadata?.commit_hash === commit);
+    assert.equal(matches(baseline).length, 0, 'Commit already has a deployment attempt; reconcile instead of re-uploading');
+    phase('checking-local');
     // Recheck immediately before the one upload. No account configuration is written.
     await verifyLocal(); assert.equal(await readMain(), commit, 'Main changed before upload');
     const last = assertPagesProject(await readProject(), marker);
@@ -124,7 +185,8 @@ export async function publishPages({ commit, marker }, { readMain, readProject, 
     state.phase = 'uploading'; saveState(state); uploaded = true;
     let result;
     try { result = await upload(); } catch { result = { code: -1 }; }
-    state.uploadExitCode = result.code; state.phase = 'reconciling'; saveState(state);
+    state.uploadExitCode = result.code; state.uploadDiagnostics = sanitizeUploadDiagnostics(result.diagnostics);
+    phase('reconciling');
     const after = assertPagesProject(await readProject(), marker);
     assert.equal(configurationHash(after), fingerprint, 'Project configuration changed during upload');
     state.canonicalDeploymentObserved = after.canonical_deployment.id;
@@ -141,6 +203,7 @@ export async function publishPages({ commit, marker }, { readMain, readProject, 
     };
     await assertCanonical();
     let purged = false;
+    phase('purging');
     const code = await purge({ beforePagesPurge: assertCanonical, onPagesPurge: () => { purged = true; } });
     assert.equal(code, 0, 'Pages cache purge failed'); assert.equal(purged, true, 'Purge was skipped, not completed');
     await assertCanonical();
@@ -150,8 +213,9 @@ export async function publishPages({ commit, marker }, { readMain, readProject, 
     savePins(pins);
     state.phase = 'purged-awaiting-http'; state.deploymentId = deployed.id; state.finishedAt = now(); saveState(state);
     return pins;
-  } catch {
+  } catch (error) {
     // Never copy raw Cloudflare bodies, config/secret values or child errors to artifacts.
+    state.failedDuring = state.phase; state.failure = releaseFailureDetails(error);
     state.phase = uploaded ? 'reconciliation-required' : 'preflight-stopped'; state.finishedAt = now(); saveState(state);
     throw new Error('Pages release stopped; inspect sanitized release state. No automatic re-upload or rollback.');
   }

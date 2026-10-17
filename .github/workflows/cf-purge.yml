@@ -51,7 +51,7 @@ jobs:
     steps:
       - name: Check Pages upload credential endpoint without uploading assets or deploying
         env:
-          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_API_TOKEN: ${{ secrets.CF_PAGES_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
         run: |
           node --input-type=module <<'NODE'

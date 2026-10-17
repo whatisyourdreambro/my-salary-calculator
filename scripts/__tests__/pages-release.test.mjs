@@ -5,7 +5,8 @@ import path from 'node:path';
 import test from 'node:test';
 import { parse } from 'yaml';
 import { assertReleaseContext, assertProductionPackage, assertPagesProject, assertProductionDeployment,
-  configurationHash, pagesUploadArgs, publicationEnvironment, publishPages } from '../lib/pages-release.mjs';
+  configurationHash, pagesUploadArgs, publicationEnvironment, publishPages,
+  classifyUploadOutput, sanitizeUploadDiagnostics, releaseFailureDetails, pagesPurgeEnvironment } from '../lib/pages-release.mjs';
 import { createReleaseApi, assertConfiglessDirectory } from '../pages-release.mjs';
 
 const COMMIT = 'a'.repeat(40), OLD = 'b'.repeat(40);
@@ -92,6 +93,17 @@ test('upload environment excludes QA/config injection, GitHub token, unrelated s
   assert.equal(result.WRANGLER_SEND_METRICS,'false');
 });
 
+test('Pages upload and zone purge credentials are separate and missing purge credential fails before publication',()=>{
+  const env={CF_ACCOUNT_ID:'a'.repeat(32),CF_ZONE_ID:'b'.repeat(32),CF_API_TOKEN:'pages-token-'.repeat(8),CF_PURGE_API_TOKEN:'purge-token-'.repeat(8)};
+  const upload=publicationEnvironment(env,path.resolve('synthetic-owned'));
+  const purge=pagesPurgeEnvironment(env,COMMIT);
+  assert.equal(upload.CLOUDFLARE_API_TOKEN,env.CF_API_TOKEN);assert.equal(upload.CF_PURGE_API_TOKEN,undefined);
+  assert.ok(!Object.values(upload).includes(env.CF_PURGE_API_TOKEN));
+  assert.equal(purge.CF_API_TOKEN,env.CF_PURGE_API_TOKEN);assert.ok(!Object.values(purge).includes(env.CF_API_TOKEN));
+  assert.equal(purge.CF_PAGES_COMMIT_SHA,COMMIT);assert.equal(purge.CF_DEPLOY_TARGET,'pages');
+  for(const token of [undefined,'','short','a token with whitespace'])assert.throws(()=>pagesPurgeEnvironment({...env,CF_PURGE_API_TOKEN:token},COMMIT));
+});
+
 test('configless cwd rejects ancestor Wrangler config before upload',()=>{
   const base=mkdtempSync(path.join(os.tmpdir(),'msy-release-test-')),child=path.join(base,'child');mkdirSync(child);
   try{assert.doesNotThrow(()=>assertConfiglessDirectory(child));writeFileSync(path.join(base,'wrangler.jsonc'),'{}');assert.throws(()=>assertConfiglessDirectory(child));}
@@ -144,6 +156,60 @@ test('control API calls are GET-only fixed origins, bounded and not publisher tr
   await assert.rejects(bad.readProject(),e=>!e.message.includes('SENSITIVE'));
 });
 
+test('CLI diagnostics retain only fixed classifications and numeric statuses/codes, never raw secrets',()=>{
+  const raw='Bearer PRIVATE_TOKEN https://private.invalid/secret\n\u001b[31mAuthentication error\u001b[0m [code: 10000] HTTP 403\n'
+    +'A request to the Cloudflare API failed. Unknown argument: secret-argument\nENOENT /private/file\n'
+    +'Worker exceeds maximum size of 25 MiB. Script startup exceeded CPU time limit. fetch failed ECONNRESET';
+  const result=classifyUploadOutput(raw,'none',Buffer.byteLength(raw));
+  assert.deepEqual(result.categories,['authentication-permission','arguments','local-configuration','size-limit','startup','network','api-error']);
+  assert.deepEqual(result.apiCodes,[10000]);assert.deepEqual(result.httpStatuses,[403]);
+  assert.equal(result.outputBytes,Buffer.byteLength(raw));
+  assert.doesNotMatch(JSON.stringify(result),/PRIVATE_TOKEN|private\.invalid|secret-argument|private\/file/);
+  assert.deepEqual(classifyUploadOutput('unrecognized PRIVATE_TOKEN').categories,[]);
+  const poisoned=sanitizeUploadDiagnostics({categories:['PRIVATE_TOKEN','network'],httpStatuses:[200,403,'secret',900],apiCodes:[10000,'private',-1,1e10],termination:'PRIVATE_TOKEN',outputBytes:-1,raw});
+  assert.deepEqual(poisoned,{categories:['network'],httpStatuses:[403],apiCodes:[10000],termination:'none',outputBytes:0});
+});
+
+test('control-plane 403, malformed JSON and transport failures retain safe phase details before upload',async()=>{
+  for(const kind of ['api','json','transport']){
+    const api=createReleaseApi({CF_ACCOUNT_ID:'a'.repeat(32),CF_API_TOKEN:'PRIVATE_TOKEN'},async()=>{
+      if(kind==='transport')throw Error('PRIVATE_TOKEN https://private.invalid');
+      if(kind==='json')return new Response('PRIVATE_TOKEN invalid JSON',{status:502});
+      return Response.json({success:false,errors:[{code:10000,message:'PRIVATE_TOKEN'},{code:'PRIVATE_TOKEN'}]},{status:403});
+    });
+    const f=fixture({readProject:api.readProject});await assert.rejects(f.run());
+    const state=f.states.at(-1);assert.equal(state.phase,'preflight-stopped');assert.equal(state.failedDuring,'checking-project');
+    assert.deepEqual(state.failure,{phase:'read-project',kind:kind==='api'?'api-response':kind==='json'?'invalid-json':'transport',
+      httpStatus:kind==='api'?403:kind==='json'?502:null,apiCodes:kind==='api'?[10000]:[]});
+    assert.equal(f.counts().uploads,0);assert.equal(f.pins.length,0);assert.doesNotMatch(JSON.stringify(f.states),/PRIVATE_TOKEN|private\.invalid/);
+  }
+  assert.deepEqual(releaseFailureDetails(Error('PRIVATE_TOKEN')),{kind:'unclassified'});
+});
+
+test('upload failure diagnostics survive reconciliation without enabling a retry or purge',async()=>{
+  const f=fixture({upload:async()=>({code:1,diagnostics:{...classifyUploadOutput('Authentication error [code: 10000] HTTP 403'),raw:'PRIVATE_TOKEN'}})});
+  await assert.rejects(f.run());const state=f.states.at(-1);
+  assert.equal(state.phase,'reconciliation-required');assert.equal(state.failedDuring,'reconciling');
+  assert.equal(state.uploadExitCode,1);assert.deepEqual(state.candidateIds,[]);
+  assert.deepEqual(state.uploadDiagnostics.apiCodes,[10000]);assert.deepEqual(state.uploadDiagnostics.httpStatuses,[403]);
+  assert.equal(f.counts().posts,0);assert.equal(f.pins.length,0);assert.doesNotMatch(JSON.stringify(f.states),/PRIVATE_TOKEN/);
+});
+
+test('deployment history supports observed 34-page shape and refuses inconsistent or excessive pagination',async()=>{
+  let calls=0;
+  const api=createReleaseApi({CF_ACCOUNT_ID:'a'.repeat(32),CF_API_TOKEN:'cf-test'},async url=>{
+    const page=Number(new URL(url).searchParams.get('page'));calls++;
+    const count=page===34?6:25;
+    return Response.json({success:true,result:Array.from({length:count},()=>deployment()),result_info:{page,per_page:25,count,total_count:831,total_pages:34}});
+  });
+  assert.equal((await api.listDeployments()).length,831);assert.equal(calls,34);
+  for(const info of [{page:1,total_pages:51},{page:2,total_pages:1}]){
+    let attempts=0;
+    const bad=createReleaseApi({CF_ACCOUNT_ID:'a'.repeat(32),CF_API_TOKEN:'cf-test'},async()=>{attempts++;return Response.json({success:true,result:[],result_info:info});});
+    await assert.rejects(bad.listDeployments());assert.equal(attempts,1);
+  }
+});
+
 test('CI deploy job needs full QA verification and limits credentials to publication steps',()=>{
   const workflow=parse(readFileSync(new URL('../../.github/workflows/ci.yml',import.meta.url),'utf8'));
   const job=workflow.jobs['deploy-pages'];assert.equal(job.needs,'verify');
@@ -154,5 +220,10 @@ test('CI deploy job needs full QA verification and limits credentials to publica
     'node scripts/pages-release.mjs --publish','node scripts/verify-pages-release-http.mjs --execute-production-http','node scripts/pages-indexnow.mjs --submit']);
   for(const step of job.steps.filter(s=>/^(npm |node scripts\/pages-indexnow.mjs --capture)/.test(s.run||'')))assert.equal(step.env,undefined);
   assert.equal(job.steps[0].with.ref,'${{ github.sha }}');assert.equal(job.steps[0].with['persist-credentials'],false);
+  const publish=job.steps.find(s=>s.run==='node scripts/pages-release.mjs --publish');
+  assert.equal(publish.env.CF_API_TOKEN,'${{ secrets.CF_PAGES_API_TOKEN }}');assert.equal(publish.env.CF_PURGE_API_TOKEN,'${{ secrets.CF_API_TOKEN }}');
+  for(const step of job.steps.filter(s=>['node scripts/verify-pages-release-http.mjs --execute-production-http','node scripts/pages-indexnow.mjs --submit'].includes(s.run))){
+    assert.equal(step.env.CF_API_TOKEN,'${{ secrets.CF_PAGES_API_TOKEN }}');assert.equal(step.env.CF_PURGE_API_TOKEN,undefined);
+  }
   assert.deepEqual(workflow.permissions,{contents:'read'});
 });
