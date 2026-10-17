@@ -2,6 +2,7 @@
 import { createHash } from 'node:crypto';
 import { copyFileSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
+import { NATIVE_RELEASE_SCHEMA, validateNativeRelease } from '../../cloudflare/pages-native-release.mjs';
 
 export const PAGES_LIMITS = Object.freeze({ files: 20000, assetBytes: 25 * 1024 * 1024 });
 // The existing Pages API rejected a 53 MB package with code 8000101 on
@@ -387,6 +388,14 @@ export function artifactHash(stage) {
   return inventoryHash(files);
 }
 
+export function createNativeReleaseAttestation({ context, mode, buildId, sourceHash, lockHash, publicConfigHash, sitemapSha256 }) {
+  if (mode !== 'production' || !context || Object.keys(context).sort().join(',') !== 'approval,branch,ci,commit')
+    throw new Error('Native release context is production-only and must contain public identity fields');
+  return validateNativeRelease({ schema: NATIVE_RELEASE_SCHEMA, schemaVersion: 1, mode, adsDisabled: false,
+    commit: context.commit, branch: context.branch, buildId, sourceHash, lockHash, publicConfigHash, sitemapSha256,
+    ci: context.ci, approval: context.approval });
+}
+
 export function verifyArtifact(root, mode, input = process.env) {
   const stage = inspectOwnedStage(root, mode);
   const marker = json(path.join(stage, BUILD_MARKER));
@@ -405,6 +414,14 @@ export function verifyArtifact(root, mode, input = process.env) {
     || marker.configHash !== sha256(readFileSync(path.join(stage, 'wrangler.pages.qa.jsonc')))
     || marker.sourceHash !== inventoryHash(sourceInventory(root))) throw new Error('Pages artifact is stale, changed or has the wrong mode');
   const worker = checkWorkerBundle(path.join(stage, 'dist'));
+  if (manifest.nativeRelease) {
+    const release = validateNativeRelease(manifest.nativeRelease);
+    if (mode !== 'production' || release.buildId !== marker.buildId || release.sourceHash !== marker.sourceHash
+      || release.lockHash !== marker.lockHash || release.publicConfigHash !== marker.publicConfig?.effectiveHash
+      || release.sitemapSha256 !== sha256(readFileSync(path.join(stage, 'dist/sitemap.xml')))
+      || JSON.stringify(release) !== JSON.stringify(json(path.join(stage, 'generated/native-release.json'))))
+      throw new Error('Native Pages release identity is stale or changed');
+  }
   if (marker.workerHash !== worker.workerHash || marker.workerBytes !== worker.workerBytes
     || marker.workerModuleCount !== worker.workerModuleCount) throw new Error('Pages Worker module marker is stale or changed');
   return { stage, marker, manifest, ...checkAssetLimits(path.join(stage, 'dist')), ...worker };

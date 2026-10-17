@@ -116,6 +116,64 @@ function assertShareDocument(html, item) {
   }
 }
 
+// Response-only shared core. Identity and acceptance receipts belong to each caller;
+// this never fabricates Cloudflare API, purge or canonical verification evidence.
+export async function runPagesResponseContracts({ buildId, sitemapHash }, {
+  fetchFn = globalThis.fetch, report, persist = () => {}, onSitemap = () => {},
+} = {}) {
+  assert.match(buildId || '', /^[A-Za-z0-9_-]{1,128}$/); assert.match(sitemapHash || '', HASH);
+  assert.equal(report.attemptedRequests, 0); assert.deepEqual(report.results, []);
+  const cases = pagesReleaseCases(), runId = report.runId;
+  for (const item of cases) {
+    assert.ok(report.attemptedRequests < 16);
+    const result = { kind: item.kind, pass: item.pass, route: item.route, targetKey: 'GET ' + item.route,
+      startedAt: new Date().toISOString(), status: null, contractPassed: false };
+    report.results.push(result); report.attemptedRequests++; persist(report);
+    let response;
+    try {
+      response = await productionGuard.fetchProductionQaDocument(new URL(item.route, ORIGIN).href, {
+        method: 'GET', timeoutMs: 30000, fetchFn, headers: { 'x-moneysalary-qa-run': runId },
+      });
+      Object.assign(result, { status: response.status, headersAt: new Date().toISOString(),
+        build: bounded(response.headers.get('x-moneysalary-build')), cache: bounded(response.headers.get('cache-control')),
+        cdnCache: bounded(response.headers.get('cdn-cache-control')), cfCacheStatus: bounded(response.headers.get('cf-cache-status')),
+        age: bounded(response.headers.get('age')), ray: bounded(response.headers.get('cf-ray')),
+        robots: bounded(response.headers.get('x-robots-tag')), type: bounded(response.headers.get('content-type')) });
+      persist(report);
+      result.checkpoint = 'status-and-production-headers';
+      assert.equal(response.status, item.status); assert.equal(response.headers.get('x-moneysalary-qa'), null);
+      if (!item.staticAsset) assert.equal(result.build, buildId);
+      assert.ok(result.type?.includes(item.type));
+      if (item.private) { result.checkpoint = 'private-cache-policy'; assertPagesPrivateCache(response.headers); }
+      result.checkpoint = 'robots-policy';
+      if (item.robots) assert.equal(result.robots, item.robots);
+      if (item.kind === 'home' || item.staticAsset) assert.doesNotMatch(result.robots || '', /\bnoindex\b/i);
+      result.checkpoint = 'bounded-response-body';
+      const bytes = Buffer.from(await bodyGuard.readPagesQaBody(response, { kind: item.png ? 'png' : 'document', maxBytes: item.png ? 2 * 1024 * 1024 : 8 * 1024 * 1024 }));
+      result.bytes = bytes.length; result.sha256 = sha(bytes);
+      if (item.png) { result.checkpoint = 'png-integrity'; assert.equal(response.headers.get('x-og-error'), null); assertReleasePng(bytes); }
+      else if (item.staticAsset) { result.checkpoint = 'sitemap-hash'; assert.equal(result.sha256, sitemapHash); }
+      else {
+        result.checkpoint = 'html-contract';
+        const html = bytes.toString('utf8');
+        assert.match(html, /<(?:html|main|div)\b/i);
+        assert.doesNotMatch(html, /Error 1102|Worker exceeded resource limits|error code: 1102/i);
+        if (item.english404) assertEnglishNotFoundDocument(html);
+        if (item.shareToken || item.invalidShare) assertShareDocument(html, item);
+      }
+      if (item.staticAsset) await onSitemap(bytes);
+      result.checkpoint = 'passed';
+      result.contractPassed = true;
+    } catch (error) {
+      if (result.status === null) result.transportErrorName = ['TimeoutError', 'AbortError', 'TypeError'].includes(error?.name) ? error.name : 'OtherTransportError';
+      result.contractFailed = true; throw new Error('Post-publication response contract failed');
+    } finally {
+      await response?.body?.cancel().catch(() => {});
+      result.finishedAt = new Date().toISOString(); persist(report);
+    }
+  }
+}
+
 export async function verifyPagesReleaseHttp(context, { fetchFn = globalThis.fetch, readSitemap, assertStillCanonical, persist = () => {} } = {}) {
   assertPagesReleaseIdentity(context);
   assert.equal(typeof readSitemap, 'function'); assert.equal(typeof assertStillCanonical, 'function');
@@ -131,48 +189,7 @@ export async function verifyPagesReleaseHttp(context, { fetchFn = globalThis.fet
   persist(report);
   let failed = false;
   try {
-    for (const item of cases) {
-      assert.ok(report.attemptedRequests < 16);
-      const result = { kind: item.kind, pass: item.pass, route: item.route, targetKey: 'GET ' + item.route,
-        startedAt: new Date().toISOString(), status: null, contractPassed: false };
-      report.results.push(result); report.attemptedRequests++; persist(report);
-      let response;
-      try {
-        response = await productionGuard.fetchProductionQaDocument(new URL(item.route, ORIGIN).href, {
-          method: 'GET', timeoutMs: 30000, fetchFn, headers: { 'x-moneysalary-qa-run': runId },
-        });
-        Object.assign(result, { status: response.status, headersAt: new Date().toISOString(),
-          build: bounded(response.headers.get('x-moneysalary-build')), cache: bounded(response.headers.get('cache-control')),
-          cdnCache: bounded(response.headers.get('cdn-cache-control')), cfCacheStatus: bounded(response.headers.get('cf-cache-status')),
-          age: bounded(response.headers.get('age')), ray: bounded(response.headers.get('cf-ray')),
-          robots: bounded(response.headers.get('x-robots-tag')), type: bounded(response.headers.get('content-type')) });
-        persist(report);
-        assert.equal(response.status, item.status); assert.equal(response.headers.get('x-moneysalary-qa'), null);
-        if (!item.staticAsset) assert.equal(result.build, pins.buildId);
-        assert.ok(result.type?.includes(item.type));
-        if (item.private) assertPagesPrivateCache(response.headers);
-        if (item.robots) assert.equal(result.robots, item.robots);
-        if (item.kind === 'home' || item.staticAsset) assert.doesNotMatch(result.robots || '', /\bnoindex\b/i);
-        const bytes = Buffer.from(await bodyGuard.readPagesQaBody(response, { kind: item.png ? 'png' : 'document', maxBytes: item.png ? 2 * 1024 * 1024 : 8 * 1024 * 1024 }));
-        result.bytes = bytes.length; result.sha256 = sha(bytes);
-        if (item.png) { assert.equal(response.headers.get('x-og-error'), null); assertReleasePng(bytes); }
-        else if (item.staticAsset) assert.equal(result.sha256, sitemapHash);
-        else {
-          const html = bytes.toString('utf8');
-          assert.match(html, /<(?:html|main|div)\b/i);
-          assert.doesNotMatch(html, /Error 1102|Worker exceeded resource limits|error code: 1102/i);
-          if (item.english404) assertEnglishNotFoundDocument(html);
-          if (item.shareToken || item.invalidShare) assertShareDocument(html, item);
-        }
-        result.contractPassed = true;
-      } catch (error) {
-        if (result.status === null) result.transportErrorName = ['TimeoutError', 'AbortError', 'TypeError'].includes(error?.name) ? error.name : 'OtherTransportError';
-        result.contractFailed = true; throw new Error('Post-publication response contract failed');
-      } finally {
-        await response?.body?.cancel().catch(() => {});
-        result.finishedAt = new Date().toISOString(); persist(report);
-      }
-    }
+    await runPagesResponseContracts({ buildId: pins.buildId, sitemapHash }, { fetchFn, report, persist });
   } catch { failed = true; }
   try { await assertStillCanonical(); report.canonicalVerifiedAfter = true; }
   catch { failed = true; report.canonicalRecheckFailed = true; }

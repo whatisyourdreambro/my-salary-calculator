@@ -1,4 +1,4 @@
-// 글별 승인과 현재 Pages 로컬 발행 준비 상태를 확인한 뒤에만 원격 반영한다.
+// 글별 승인과 현재 Pages 클라우드 발행 준비 상태를 확인한 뒤에만 원격 반영한다.
 // scripts/trend-publish/publish-approved.mjs — 운영자 승인 브리프 발행 (2026-09-26 R5 publisher)
 //
 // 운영자가 채팅에서 브리프별로 승인('발행 <slug>' · '철회 <slug>')한 세션만 실행한다.
@@ -15,7 +15,7 @@
 //   (--retire 는 되돌리기라 HALT·달력·한도·결정 대기·REVIEWED_UNTIL·PUBLISH_ENABLED 를 보지 않는다 — DEPLOY_HOLD·2시간·Purge 확인만.
 //    --update 는 새 URL 이 아니라 한도·결정 대기·동결·첫 발행일을 보지 않는다 — 판정일·배포 배치·로컬 차단은 본다)
 // 흐름: 워크트리를 origin/main 으로 → render(오늘 날짜·operator-approved) → 생성 파일 재생성 → 게이트 전부 →
-//   커밋 → push main → 정확한 CI verify → 로컬 OAuth Pages 발행·운영 확인·IndexNow → 글별 확인.
+//   커밋 → push main → 승인된 SHA의 GitHub 게시 작업 접수 → 클라우드 CI·Pages·운영 확인·IndexNow.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -67,7 +67,9 @@ export function checkPreconditions(p) {
     if (p.kind === "publish") for (const c of p.capReasons ?? []) add(`한도: ${c}`);
     if (p.kind === "publish" && (p.pending ?? []).length) add(`결정 대기 ${p.pending.length}건: ${p.pending.map((x) => `${x.slug}@${x.at}`).join(", ")}`);
   }
-  if (!p.flags.cfPurgeOk && !p.manualPurgeAck) add("CF_PURGE_OK 없음 — 자동 Purge(A35)를 확인했거나 --manual-purge-ack(배포 뒤 수동 Purge 약속)가 필요");
+  // Legacy callers still require purge readiness. Native Pages publication is gated
+  // by remote PAGES_CLOUD_PUBLISH_ENABLED and uses deployment-aware Pages caching.
+  if (!p.cloudPagesReady && !p.flags.cfPurgeOk && !p.manualPurgeAck) add("CF_PURGE_OK 없음 — 자동 Purge(A35)를 확인했거나 --manual-purge-ack(배포 뒤 수동 Purge 약속)가 필요");
   if (p.flags.deployHold) add(`DEPLOY_HOLD: ${p.flags.deployHold}`);
   if (!(p.originAgeHours >= p.minOriginAgeHours)) add(`origin/main 최신 커밋이 ${Number(p.originAgeHours ?? 0).toFixed(1)}시간 전 — ${p.minOriginAgeHours}시간 이상 지나야 한다(다른 배포와 겹침 방지)`);
   if (p.kind === "publish") {
@@ -131,9 +133,11 @@ function sourceContent(record) {
   return Buffer.from(record.content, "base64").toString("utf8");
 }
 
-export async function pagesPublicationReadiness(get) {
-  const enabled = await get(`${API_ROOT}/actions/variables/PAGES_LOCAL_PUBLISH_ENABLED`);
-  requireRelease(enabled.name === "PAGES_LOCAL_PUBLISH_ENABLED" && enabled.value === "true", "PAGES_LOCAL_PUBLISH_ENABLED=true 확인 필요");
+export async function pagesPublicationReadiness(get, { mode = "cloud" } = {}) {
+  requireRelease(["cloud", "local"].includes(mode), "알 수 없는 Pages 발행 방식");
+  const variable = mode === "cloud" ? "PAGES_CLOUD_PUBLISH_ENABLED" : "PAGES_LOCAL_PUBLISH_ENABLED";
+  const enabled = await get(`${API_ROOT}/actions/variables/${variable}`);
+  requireRelease(enabled.name === variable && enabled.value === "true", `${variable}=true 확인 필요`);
   const main = await get(`${API_ROOT}/commits/main`);
   requireRelease(SHA.test(main.sha || ""), "원격 main SHA 확인 실패");
   const workflow = await get(`${API_ROOT}/actions/workflows/ci.yml`);
@@ -149,10 +153,17 @@ export async function pagesPublicationReadiness(get) {
     requireRelease(index > previousStep && !steps[index]?.if && !steps[index]?.["continue-on-error"], "Pages 필수 검증 단계 누락 또는 우회");
     previousStep = index;
   }
-  const policy = sourceContent(await get(`${API_ROOT}/contents/scripts/lib/pages-release.mjs?ref=${main.sha}`));
-  requireRelease(/export\s+const\s+PAGES_LOCAL_RELEASE_POLICY_VERSION\s*=\s*1\s*;/.test(policy), "현재 로컬 Pages 릴리스 정책 버전 없음");
-  const runner = sourceContent(await get(`${API_ROOT}/contents/scripts/pages-release-local.mjs?ref=${main.sha}`));
-  requireRelease(/export\s+const\s+PAGES_LOCAL_ORCHESTRATOR_VERSION\s*=\s*1\s*;/.test(runner), "현재 로컬 Pages 실행기 버전 없음");
+  if (mode === "cloud") {
+    const policy = sourceContent(await get(`${API_ROOT}/contents/scripts/pages-cloud-dispatch.mjs?ref=${main.sha}`));
+    requireRelease(/export\s+const\s+PAGES_CLOUD_DISPATCH_VERSION\s*=\s*1\s*;/.test(policy), "현재 클라우드 Pages 릴리스 정책 버전 없음");
+    const publication = await get(`${API_ROOT}/actions/workflows/pages-publish.yml`);
+    requireRelease(publication.state === "active" && publication.path === ".github/workflows/pages-publish.yml", "승인 후 게시 워크플로 비활성");
+  } else {
+    const policy = sourceContent(await get(`${API_ROOT}/contents/scripts/lib/pages-release.mjs?ref=${main.sha}`));
+    requireRelease(/export\s+const\s+PAGES_LOCAL_RELEASE_POLICY_VERSION\s*=\s*1\s*;/.test(policy), "기존 로컬 Pages 정책 버전 없음");
+    const runner = sourceContent(await get(`${API_ROOT}/contents/scripts/pages-release-local.mjs?ref=${main.sha}`));
+    requireRelease(/export\s+const\s+PAGES_LOCAL_ORCHESTRATOR_VERSION\s*=\s*1\s*;/.test(runner), "기존 로컬 Pages 실행기 버전 없음");
+  }
   return { mainSha: main.sha, workflowId: workflow.id };
 }
 
@@ -225,7 +236,7 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
   const githubGet = deps.githubGet ?? githubReadClient();
   let readiness;
   try { readiness = await pagesPublicationReadiness(githubGet); }
-  catch (error) { say(`[publish] Pages 로컬 발행 준비 미확인: ${error.message} — 변경하지 않음`); return 2; }
+  catch (error) { say(`[publish] Pages 클라우드 발행 준비 미확인: ${error.message} — 변경하지 않음`); return 2; }
   if (!checkOnly) {
     if ((await git(["fetch", "origin", "--prune"])).code !== 0) {
       say("[publish] git fetch 실패 — 변경하지 않음"); return 2;
@@ -273,6 +284,7 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
   const primary = (draft?.sources ?? []).find((s) => s.role === "primary") ?? {};
   const preconditions = {
     kind,
+    cloudPagesReady: true, // pagesPublicationReadiness above verified the remote cloud switch and workflow
     today,
     flags,
     calendarBlocks: ((b) => (kind === "update" ? updateCalendarBlocks(b) : b))(calendarBlocks(today, readJson(join(wt, "scripts/trend-publish/calendar.json"), {}), readJson(join(home, "calendar.local.json"), {}), decisions.some((d) => d.decision === "pilot-verdict" && d.value === "continue"), consts.firstPublishNotBefore)),
@@ -393,28 +405,25 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
   }
   const pushed = (await git(["rev-parse", "HEAD"])).stdout.trim();
 
-  // 6) 정확한 커밋의 GHA 배포·운영 계약·IndexNow 성공 뒤에만 추가 비렌더링 확인.
-  const localRelease = await run(process.execPath, [join(wt, "scripts/pages-release-local.mjs"), "--approved-commit", pushed]);
-  if (localRelease.code !== 0) {
-    say(`[publish] 소스 ${pushed.slice(0, 8)} 반영됨; 로컬 Pages 발행 또는 검증 미완료. 커밋별 영수증을 확인하고 자동 재시도하지 말 것.`);
+  // 6) 승인된 정확한 SHA만 클라우드에 인계. 접수 이후 이 컴퓨터가 꺼져도 계속된다.
+  const handoff = await run(process.execPath, [join(wt, "scripts/pages-cloud-dispatch.mjs"), "--approved-commit", pushed,
+    "--article-slug", slug, ...(kind === "retire" ? ["--retirement-to", arg(argv, "--to") ?? ""] : ["--article-marker", title])]);
+  if (handoff.code !== 0) {
+    say(`[publish] 소스 ${pushed.slice(0, 8)} 반영됨; 클라우드 접수 미확인. dispatch 영수증과 GitHub Actions를 확인하고 자동 재시도하지 말 것.`);
     return 3;
   }
-  const verify =
-    kind === "retire"
-      ? await run(process.execPath, [join(wt, "scripts/trend-publish/verify-prod.mjs"), "--slug", slug, "--retire", "--to", arg(argv, "--to") ?? ""])
-      : await run(process.execPath, [join(wt, "scripts/trend-publish/verify-prod.mjs"), "--slug", slug, "--marker", title, "--trend-home", home]);
   say(
     [
-      `[publish] ${kind === "retire" ? "철회" : kind === "update" ? "수정 발행" : "발행"} ${verify.code === 0 ? "완료" : "배포 후 확인 실패"} — ${slug} (${pushed.slice(0, 8)}), 로컬 Pages 릴리스 확인됨`,
-      verify.stdout.trim(),
-      verify.code === 0 ? "운영 확인: 정상" : "운영 확인: 위 ✖ 항목을 처리할 것(Purge 필요면 CF 대시보드에서 Purge Everything)",
+      `[publish] ${kind === "retire" ? "철회" : kind === "update" ? "수정 발행" : "발행"} 클라우드 접수 — ${slug} (${pushed.slice(0, 8)}), 아직 발행 완료는 아님`,
+      handoff.stdout.trim(),
+      "이 컴퓨터를 꺼도 GitHub 검사 → 무료 Pages 배포 → 광고 없는 HTTP 검사 → IndexNow가 이어진다. Actions 작업 성공이 완료 기준이다.",
       "다른 세션·워크트리: main 이 바뀌었다 — git fetch origin 후 rebase(또는 main 새로 받기) 하고 작업할 것.",
       kind === "publish" ? `다음 할 일: D+28(${addDays(today, 28)}) 판정 — decide.mjs --slug ${slug} --at d28 …` : "",
     ]
       .filter(Boolean)
       .join("\n")
   );
-  return verify.code === 0 ? 0 : 3;
+  return 0;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {

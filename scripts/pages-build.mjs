@@ -7,7 +7,8 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { artifactHash, BUILD_MARKER, checkAssetLimits, checkWorkerBundle, cleanBuildEnvironment, compileRoutingConfig,
   copySources, EXCLUDED_SOURCE_PATHS, inventoryHash, packageExport, QA_ASSETS_IGNORE, resetOwnedStage, sha256,
-  readPublicBuildConfiguration, sourceInventory, stagePath, verifyArtifact, workerModuleInventory } from './lib/pages-export.mjs';
+  readPublicBuildConfiguration, sourceInventory, stagePath, verifyArtifact, workerModuleInventory,
+  createNativeReleaseAttestation } from './lib/pages-export.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const writeJson = (file, value) => writeFileSync(file, `${JSON.stringify(value, null, 2)}\n`);
@@ -112,7 +113,8 @@ function restoreDynamicSources(stage) {
   rmSync(target, { recursive: true, force: true });
 }
 
-async function build(mode) {
+async function build(mode, nativeContext) {
+  if (nativeContext && mode !== 'production') throw new Error('Native release cannot be a QA build');
   const stage = stagePath(root, mode);
   // Validate all supplied settings before replacing even an owned output directory.
   const publicConfiguration = readPublicBuildConfiguration(root, mode, process.env);
@@ -153,6 +155,14 @@ async function build(mode) {
   } finally { process.env = previousEnv; }
   const buildId = readFileSync(path.join(stage, '.next/BUILD_ID'), 'utf8').trim();
   const packaged = packageExport({ stage, mode, routingConfig: routing, buildId });
+  if (nativeContext) {
+    packaged.manifest.nativeRelease = createNativeReleaseAttestation({ context: nativeContext, mode, buildId,
+      sourceHash: copied.sourceHash, lockHash: sha256(readFileSync(path.join(stage, 'package-lock.json'))),
+      publicConfigHash: publicConfiguration.identity.effectiveHash,
+      sitemapSha256: sha256(readFileSync(path.join(stage, 'dist/sitemap.xml'))) });
+    writeJson(path.join(stage, 'generated/native-release.json'), packaged.manifest.nativeRelease);
+    writeJson(path.join(stage, 'generated/pages-manifest.json'), packaged.manifest);
+  }
   const esbuild = stageRequire('esbuild');
   writeFileSync(path.join(stage, 'generated/pages-worker-entry.mjs'), pagesWorkerEntrySource());
   const bundle = await esbuild.build({ absWorkingDir: stage, entryPoints: ['generated/pages-worker-entry.mjs'],
@@ -210,9 +220,9 @@ async function serve(stage, port) {
   await mf.dispose();
 }
 
-export async function main(args = process.argv.slice(2)) {
+export async function main(args = process.argv.slice(2), nativeContext) {
   const { command, mode, port } = parseArgs(args);
-  if (command === 'build') return build(mode);
+  if (command === 'build') return build(mode, nativeContext);
   const verified = verifyArtifact(root, mode);
   if (command === 'verify') {
     if (mode === 'production') {

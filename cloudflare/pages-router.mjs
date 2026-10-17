@@ -1,5 +1,6 @@
 // A small Pages policy layer. Documents are build artifacts, never Next server renders.
 // All asset reads use the local Pages binding; user URLs never become outbound fetches.
+import { NATIVE_RELEASE_PATH, validateNativeRelease } from './pages-native-release.mjs';
 const ALLOWED_BOTS = /(Googlebot|AdsBot-Google|Mediapartners-Google|Google-InspectionTool|Bingbot|NaverBot|Yeti|Daum|DuckDuckBot|Applebot|FacebookExternalHit|Twitterbot|LinkedInBot|Slackbot|TelegramBot|WhatsApp|KakaoTalk-scrap|ClaudeBot|PerplexityBot|GPTBot|Google-Extended|cohere-ai|anthropic-ai|Amazonbot)/i;
 const BAD_BOTS = /(SemrushBot|AhrefsBot|MJ12bot|Bytespider|DotBot|PetalBot|SeznamBot|YandexBot|BLEXBot|DataForSeoBot|SerpstatBot|MegaIndex|Barkrowler|ZoominfoBot|ImagesiftBot|MauiBot|SerendeputyBot)/i;
 const SUSPICIOUS_UA = /^(curl|python-requests|Go-http-client|libwww-perl|Java\/|node-fetch|axios|okhttp|aiohttp|HTTrack|wget|scrapy|httpx)/i;
@@ -70,6 +71,9 @@ export function createPagesHandler(manifest, { dynamic, salaryRedirect, share, o
   const headerRules = compileRules(manifest.headers);
   const redirectRules = compileRules(manifest.redirects);
   const publicAssets = new Set(manifest.publicAssets || []);
+  const nativeRelease = manifest.nativeRelease === undefined ? null : validateNativeRelease(manifest.nativeRelease);
+  if (nativeRelease && (manifest.mode !== 'production' || nativeRelease.buildId !== manifest.buildId))
+    throw new Error('Native release identity does not match this Pages build');
 
   function policyHeaders(path) {
     const headers = new Headers();
@@ -130,6 +134,14 @@ export function createPagesHandler(manifest, { dynamic, salaryRedirect, share, o
       const path = encodedPath(url.pathname);
       if (!path) return error('Bad Request', 400, '/', head);
       if (path === '/_msy' || path.startsWith('/_msy/')) return error('Not Found', 404, path, head);
+      if (path === NATIVE_RELEASE_PATH) {
+        if (!['GET', 'HEAD'].includes(request.method)) return respond(new Response(null, { status: 405,
+          headers: { Allow: 'GET, HEAD' } }), path, { privateResponse: true, noindex: true });
+        if (!nativeRelease || url.search || url.pathname !== NATIVE_RELEASE_PATH)
+          return error('Not Found', 404, path, head);
+        return respond(new Response(JSON.stringify(nativeRelease), { headers: { 'Content-Type': 'application/json; charset=utf-8' } }),
+          path, { privateResponse: true, noindex: true, head });
+      }
       if (path.length > 1 && path.endsWith('/')) {
         url.pathname = path.replace(/\/+$/, '');
         return respond(new Response(null, { status: 308, headers: { Location: url.href } }), path);

@@ -1,0 +1,79 @@
+# Run workflow is the owner's explicit approval of the full commit below.
+# This is a controlled publication flow, not a defense against the owner changing
+# repository rules or directly updating the deployment branch.
+name: Pages · 승인 후 게시
+run-name: Publish approved Pages commit ${{ inputs.approved_commit }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      approved_commit:
+        description: Full main commit SHA reviewed and approved for publication
+        required: true
+        type: string
+      article_slug:
+        description: Optional approved article slug for the final document check
+        type: string
+      article_marker:
+        description: Optional exact approved article marker
+        type: string
+      retirement_to:
+        description: Optional internal retirement destination
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-cloud-production
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: vars.PAGES_CLOUD_PUBLISH_ENABLED == 'true' && github.actor == github.repository_owner && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write
+      actions: read
+      checks: read
+    env:
+      PAGES_CLOUD_PUBLISH_ENABLED: ${{ vars.PAGES_CLOUD_PUBLISH_ENABLED }}
+      PAGES_RELEASE_COMMIT: ${{ inputs.approved_commit }}
+      PAGES_ARTICLE_SLUG: ${{ inputs.article_slug }}
+      PAGES_ARTICLE_MARKER: ${{ inputs.article_marker }}
+      PAGES_RETIREMENT_TO: ${{ inputs.retirement_to }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: 22
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts
+      - name: Capture the publication delta before changing the deployment branch
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/pages-cloud-verify.mjs --capture --commit "$PAGES_RELEASE_COMMIT"
+      - name: Verify exact approved CI and promote the existing deployment branch
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/pages-cloud-publish.mjs --promote --commit "$PAGES_RELEASE_COMMIT"
+      - name: Verify the native Pages deployment without rendering publisher documents
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/pages-cloud-verify.mjs --verify --commit "$PAGES_RELEASE_COMMIT"
+      - name: Submit the verified publication delta once
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/pages-cloud-verify.mjs --submit-indexnow --commit "$PAGES_RELEASE_COMMIT"
+      - name: Preserve sanitized publication receipts
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: pages-cloud-release-${{ github.run_id }}
+          path: .artifacts/pages-cloud-release/
+          include-hidden-files: true
+          if-no-files-found: ignore

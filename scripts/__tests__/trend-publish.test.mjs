@@ -171,12 +171,12 @@ function readyGithub({ enabled = "true", workflowText, policyText, runStatus = "
   const content = text => ({ type: "file", encoding: "base64", content: Buffer.from(text).toString("base64") });
   const get = async endpoint => {
     calls.push(endpoint);
-    if (endpoint.endsWith("/actions/variables/PAGES_LOCAL_PUBLISH_ENABLED")) return { name: "PAGES_LOCAL_PUBLISH_ENABLED", value: enabled };
+    if (endpoint.endsWith("/actions/variables/PAGES_CLOUD_PUBLISH_ENABLED")) return { name: "PAGES_CLOUD_PUBLISH_ENABLED", value: enabled };
     if (endpoint.endsWith("/commits/main")) return { sha: state.pushed ? PUB_NEXT : PUB_MAIN };
     if (endpoint.endsWith("/actions/workflows/ci.yml")) return { id: 123, state: "active", path: ".github/workflows/ci.yml" };
     if (endpoint.includes("/contents/.github/workflows/ci.yml?ref=")) return content(workflowText ?? readFileSync(join(ROOT, ".github/workflows/ci.yml"), "utf8"));
-    if (endpoint.includes("/contents/scripts/lib/pages-release.mjs?ref=")) return content(policyText ?? "export const PAGES_LOCAL_RELEASE_POLICY_VERSION = 1;");
-    if (endpoint.includes("/contents/scripts/pages-release-local.mjs?ref=")) return content("export const PAGES_LOCAL_ORCHESTRATOR_VERSION = 1;");
+    if (endpoint.includes("/contents/scripts/pages-cloud-dispatch.mjs?ref=")) return content(policyText ?? "export const PAGES_CLOUD_DISPATCH_VERSION = 1;");
+    if (endpoint.endsWith("/actions/workflows/pages-publish.yml")) return { state: "active", path: ".github/workflows/pages-publish.yml" };
     if (endpoint.includes("/actions/workflows/123/runs?")) return { workflow_runs: [{ id: 456, workflow_id: 123, event: "push", head_branch: "main", head_sha: wrongRunSha ? PUB_MAIN : PUB_NEXT, status: runStatus, conclusion: runConclusion }] };
     if (endpoint.includes("/actions/runs/456/jobs?")) return { jobs: [{ id: 789, name: "verify", status: jobStatus, conclusion: jobConclusion }] };
     throw new Error(`Unexpected offline API ${endpoint}`);
@@ -184,10 +184,10 @@ function readyGithub({ enabled = "true", workflowText, policyText, runStatus = "
   return { get, calls, state };
 }
 
-test("publisher readiness: explicit local variable, current main policy, CI-only workflow and unskippable QA gates", async () => {
+test("publisher readiness: explicit cloud variable, current main policy, CI-only workflow and unskippable QA gates", async () => {
   const good = readyGithub();
   assert.deepEqual(await pagesPublicationReadiness(good.get), { mainSha: PUB_MAIN, workflowId: 123 });
-  for (const enabled of ["false", "TRUE", "", null]) await assert.rejects(pagesPublicationReadiness(readyGithub({ enabled }).get), /PAGES_LOCAL/);
+  for (const enabled of ["false", "TRUE", "", null]) await assert.rejects(pagesPublicationReadiness(readyGithub({ enabled }).get), /PAGES_CLOUD/);
   await assert.rejects(pagesPublicationReadiness(readyGithub({ policyText: "export const OLD_POLICY = 1;" }).get), /정책 버전/);
   const source = readFileSync(join(ROOT, ".github/workflows/ci.yml"), "utf8");
   for (const workflowText of [
@@ -263,7 +263,7 @@ function publisherFixture({ enabled = "true", jobConclusion = "success", verifyC
         else if (args.includes("commit")) committed = true;
         else if (args.includes("push")) api.state.pushed = true;
       }
-      return { code: line.includes("verify-prod.mjs") ? verifyCode : line.includes("pages-release-local.mjs") && jobConclusion !== "success" ? 1 : 0, stdout, stderr: "" };
+      return { code: line.includes("verify-prod.mjs") ? verifyCode : line.includes("pages-cloud-dispatch.mjs") && jobConclusion !== "success" ? 1 : 0, stdout, stderr: "" };
     },
   };
   return { home, wt, deps, calls, messages, invocations, api, secretReads: () => secretReads,
@@ -344,24 +344,26 @@ test("publisher preserves an approved local retirement target through Pages depl
   try {
     assert.equal(await publishMain([...f.args, "--retire", "--to", "/guides"], f.deps), 0, f.messages.join("\n"));
     const rendered = f.calls.find(call => call.includes("render.ts"));
-    const verified = f.calls.find(call => call.includes("verify-prod.mjs"));
+    const dispatched = f.calls.find(call => call.includes("pages-cloud-dispatch.mjs"));
     assert.ok(rendered.includes("--to /guides --write"));
-    assert.ok(verified.endsWith("--retire --to /guides"));
-    assert.ok(f.calls.some(call => call.includes("pages-release-local.mjs --approved-commit") && call.endsWith(PUB_NEXT)));
+    assert.ok(dispatched.endsWith("--retirement-to /guides"));
+    assert.ok(dispatched.includes(`--approved-commit ${PUB_NEXT}`));
+    assert.ok(!f.calls.some(call => call.includes("verify-prod.mjs")));
   } finally { cleanup(f.home, f.wt); }
 });
 
-test("publisher delegates exact approved commit to local release before verify-prod; incomplete local release never reports completion", async () => {
+test("publisher hands approved commit to cloud after push; both queued and failed dispatch never report publication completed", async () => {
   for (const jobConclusion of ["success", "skipped"]) {
     const f = publisherFixture({ jobConclusion });
     try {
       assert.equal(await publishMain(f.args, f.deps), jobConclusion === "success" ? 0 : 3, f.messages.join("\n"));
       assert.ok(f.calls.some(call => call.endsWith("push origin HEAD:main")));
-      const localIndex = f.calls.findIndex(call => call.includes("pages-release-local.mjs"));
+      const localIndex = f.calls.findIndex(call => call.includes("pages-cloud-dispatch.mjs"));
       assert.ok(localIndex > f.calls.findIndex(call => call.endsWith("push origin HEAD:main")));
-      assert.ok(f.calls[localIndex].endsWith(`--approved-commit ${PUB_NEXT}`));
-      assert.equal(f.calls.some(call => call.includes("verify-prod.mjs")), jobConclusion === "success");
-      assert.equal(f.messages.some(line => /발행 완료/.test(line)), jobConclusion === "success");
+      assert.ok(f.calls[localIndex].includes(`--approved-commit ${PUB_NEXT} --article-slug `));
+      assert.equal(f.calls.some(call => call.includes("verify-prod.mjs")), false);
+      assert.equal(f.messages.some(line => /발행 완료 —/.test(line)), false);
+      assert.equal(f.messages.some(line => /아직 발행 완료는 아님/.test(line)), jobConclusion === "success");
       assert.ok(f.calls.some(call => call.includes("qa:pages:build") && call.includes("qa:pages:verify")));
       const builds = f.invocations.filter(item => item.args.some(value => String(value).includes("qa:pages:build")));
       assert.ok(builds.length >= 1);

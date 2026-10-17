@@ -82,7 +82,7 @@ export async function orchestrateApprovedLocalRelease(commit, deps) {
     assert.equal((await deps.githubGet(`${API_ROOT}/commits/main`)).sha, commit, 'Main changed; stop local publication');
   };
   await assertCurrent();
-  const readiness = await pagesPublicationReadiness(deps.githubGet);
+  const readiness = await pagesPublicationReadiness(deps.githubGet, { mode: 'local' });
   assert.equal(readiness.mainSha, commit);
   const ci = await waitForPagesVerification(deps.githubGet, { sha: commit, workflowId: readiness.workflowId,
     attempts: deps.attempts ?? 60, sleep: deps.sleep });
@@ -96,7 +96,7 @@ export async function orchestrateApprovedLocalRelease(commit, deps) {
     await phase('building'); await deps.build(); await assertCurrent();
     await phase('verifying-package'); await deps.verifyPackage(); await assertCurrent();
     await phase('capturing-indexnow'); await deps.capture(); await assertCurrent();
-    const fresh = await pagesPublicationReadiness(deps.githubGet);
+    const fresh = await pagesPublicationReadiness(deps.githubGet, { mode: 'local' });
     assert.equal(fresh.mainSha, commit); assert.equal(fresh.workflowId, readiness.workflowId);
     await phase('publishing');
     const pins = await deps.publish();
