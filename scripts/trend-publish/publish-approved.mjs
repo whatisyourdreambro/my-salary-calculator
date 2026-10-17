@@ -21,6 +21,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { spawnSync } from "node:child_process";
 import { parse as parseYaml } from "yaml";
+import { assertRetirementTarget } from "./verify-prod.mjs";
 import {
   addDays,
   calendarBlocks,
@@ -192,9 +193,13 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
     return 2;
   }
   const today = checkOnly && todayArg ? todayArg : realToday;
-  if (!slug || !/^[a-z0-9-]+$/.test(slug)) {
+  if (!slug || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
     say("[publish] --slug <slug> 가 필요하다");
     return 2;
+  }
+  if (kind === "retire") {
+    try { assertRetirementTarget(slug, arg(argv, "--to")); }
+    catch (error) { say(`[publish] 철회 대상 오류: ${error.message} — 변경하지 않음`); return 2; }
   }
   // 트렌드 워크트리 확인 — 설정 워크트리·연결 워크트리·메인 저장소 아님 (daily.mjs 와 같은 관문)
   const refused = await worktreeGuard(deps, { wt, allowAnyWorktree: deps.allowAnyWorktree === true });
@@ -258,6 +263,10 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
       say(`[publish] --update: 원장에 게시 중인 ${slug} 가 없다`);
       return 1;
     }
+  }
+  if (kind !== "retire" && draft?.slug !== slug) {
+    say("[publish] 승인한 --slug 와 초안 slug 가 다름 — 렌더·빌드·발행하지 않음");
+    return 2;
   }
   const primary = (draft?.sources ?? []).find((s) => s.role === "primary") ?? {};
   const preconditions = {

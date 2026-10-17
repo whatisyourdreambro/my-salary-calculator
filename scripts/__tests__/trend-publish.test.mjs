@@ -280,6 +280,61 @@ test("publisher disabled readiness blocks all modes before sync, credentials or 
   }
 });
 
+test("publisher rejects a different draft slug even with its correct approved hash, before render/build/push", async () => {
+  for (const update of [false, true]) for (const checkOnly of [false, true]) {
+    const f = publisherFixture();
+    try {
+      const slug = f.args[f.args.indexOf("--slug") + 1];
+      const archivePath = join(f.home, "drafts", `${slug}.json`);
+      const archive = JSON.parse(readFileSync(archivePath, "utf8"));
+      const draft = { ...archive.draft, slug: "different-approved-target" };
+      const sha = daily.draftSha256(draft);
+      const args = [...f.args]; args[args.indexOf("--draft-sha256") + 1] = sha;
+      if (update) {
+        const draftPath = join(f.home, "update.json");
+        writeFileSync(draftPath, JSON.stringify(draft));
+        writeFileSync(join(f.wt, "scripts/trend-publish/ledger.json"), JSON.stringify([
+          { slug, status: "live", publishedDate: "2026-10-10" },
+          { slug: draft.slug, status: "live", publishedDate: "2026-10-10" },
+        ]));
+        args.push("--update", "--draft", draftPath);
+      } else writeFileSync(archivePath, JSON.stringify({ ...archive, draft, draftSha256: sha }));
+      if (checkOnly) args.push("--check-only");
+      assert.equal(await publishMain(args, f.deps), 2, f.messages.join("\n"));
+      assert.ok(f.messages.some(message => message.includes("초안 slug 가 다름")));
+      assert.equal(f.secretReads(), 0);
+      assert.ok(!f.calls.some(call => /render\.ts|heavy\.mjs| commit | push |verify-prod/.test(call)), f.calls.join("\n"));
+      assert.ok(!existsSync(join(f.home, "tmp")));
+      assert.equal(f.api.state.pushed, false);
+    } finally { cleanup(f.home, f.wt); }
+  }
+});
+
+test("publisher rejects unsafe or looping retirement targets before Git, API, build or publishing", async () => {
+  for (const target of [undefined, "//example", "https://example.invalid", "/guides//other", "/guides/../other", "self", "self-slash"]) {
+    const f = publisherFixture();
+    try {
+      const slug = f.args[f.args.indexOf("--slug") + 1];
+      const to = target === "self" ? `/guides/${slug}` : target === "self-slash" ? `/guides/${slug}/` : target;
+      assert.equal(await publishMain([...f.args, "--retire", ...(to === undefined ? [] : ["--to", to])], f.deps), 2);
+      assert.deepEqual(f.calls, []); assert.deepEqual(f.api.calls, []);
+      assert.equal(f.secretReads(), 0); assert.ok(!existsSync(join(f.home, "tmp")));
+    } finally { cleanup(f.home, f.wt); }
+  }
+});
+
+test("publisher preserves an approved local retirement target through Pages deployment and verification", async () => {
+  const f = publisherFixture();
+  try {
+    assert.equal(await publishMain([...f.args, "--retire", "--to", "/guides"], f.deps), 0, f.messages.join("\n"));
+    const rendered = f.calls.find(call => call.includes("render.ts"));
+    const verified = f.calls.find(call => call.includes("verify-prod.mjs"));
+    assert.ok(rendered.includes("--to /guides --write"));
+    assert.ok(verified.endsWith("--retire --to /guides"));
+    assert.ok(f.api.calls.some(endpoint => endpoint.includes("/actions/runs/456/jobs?")));
+  } finally { cleanup(f.home, f.wt); }
+});
+
 test("publisher success requires exact GHA deployment before verify-prod; failed/skipped deploy never reports completion", async () => {
   for (const jobConclusion of ["success", "skipped"]) {
     const f = publisherFixture({ jobConclusion });
@@ -302,6 +357,14 @@ test("retirement verification: one HEAD, exact same-origin 308 destination, no f
     assert.equal(result.ok, expected); assert.equal(calls.length, 1);
     assert.equal(calls[0].opts.method, "HEAD"); assert.equal(calls[0].opts.redirect, "manual");
     assert.match(new Headers(calls[0].opts.headers).get("user-agent"), /MoneySalary-QA\/1.0/);
+  }
+});
+
+test("retirement verification shares the preflight target boundary and makes no request for rejected targets", async () => {
+  for (const to of [undefined, "//example", "/guides//other", "/guides/old-brief", "/guides/old-brief/"]) {
+    let calls = 0;
+    await assert.rejects(verifyRun({ slug: "old-brief", retire: true, to }, { fetchFn: async () => { calls++; throw new Error("unexpected request"); } }), /distinct local target/);
+    assert.equal(calls, 0);
   }
 });
 

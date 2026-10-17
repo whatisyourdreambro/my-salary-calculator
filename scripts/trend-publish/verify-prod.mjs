@@ -15,6 +15,12 @@ const { assertProductionQaOrigin, assertProductionQaTarget, fetchProductionQaDoc
 
 export const UA = `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 ${QA_USER_AGENT}`;
 
+export function assertRetirementTarget(slug, target) {
+  if (!/^\/(?:[a-z0-9-]+\/)*[a-z0-9-]*$/.test(target ?? "") || target.replace(/\/$/, "") === `/guides/${slug}`)
+    throw new Error("Retirement requires a distinct local target path.");
+  return target;
+}
+
 /** HTML 이 가리키는 /_next/static 자산 경로 (중복 제거, 문서 순서) */
 export function extractAssets(html) {
   const out = [];
@@ -83,7 +89,7 @@ export async function run(opts, deps = {}) {
   const origin = assertProductionQaOrigin(opts.origin);
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(opts.slug ?? "")) throw new Error("[verify-prod] A single lowercase guide slug is required.");
   if (opts.retire) {
-    if (!/^\/(?:[a-z0-9-]+\/?)*$/.test(opts.to ?? "") || opts.to === `/guides/${opts.slug}`) throw new Error("[verify-prod] Retirement requires a distinct local target path.");
+    assertRetirementTarget(opts.slug, opts.to);
     const url = `${origin}/guides/${opts.slug}`;
     const response = await fetchProductionQaDocument(url, { fetchFn, method: "HEAD", headers: { "user-agent": UA } });
     const location = response.headers.get("location");
