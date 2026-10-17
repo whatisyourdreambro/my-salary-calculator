@@ -15,17 +15,63 @@ const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const SHA = /^[a-f0-9]{40}$/;
 const PREFIX = `/repos/${CLOUD_BUILD_REPOSITORY}/`;
 const MAX_BUILD_MS = 18 * 60 * 1000;
+const PHASES = new Set(['arguments', 'node-version', 'git-head', 'git-status', 'git-origin',
+  'provider-environment', 'provider-branch', 'provider-commit', 'checkout-head', 'checkout-status',
+  'checkout-origin', 'publication-environment', 'qa-environment', 'public-configuration',
+  'installation-environment', 'installation-directory', 'installation-npmrc', 'npm-location',
+  'approval-before', 'dependency-install', 'application-build', 'artifact-verification',
+  'attestation-verification', 'approval-after', 'approval-unchanged', 'time-budget', 'unclassified']);
+// Keep original errors, assertion actual/expected values and environment content
+// out of diagnostics. Only errors created here can carry an allowed phase.
+const failurePhases = new WeakMap();
+function phaseFailure(phase) {
+  const error = new Error('Native Pages build checkpoint failed; details withheld');
+  failurePhases.set(error, PHASES.has(phase) ? phase : 'unclassified'); return error;
+}
+function checkpoint(phase, operation) {
+  try { return operation(); }
+  catch (error) { throw failurePhases.has(error) ? error : phaseFailure(phase); }
+}
+async function asyncCheckpoint(phase, operation) {
+  try { return await operation(); }
+  catch (error) { throw failurePhases.has(error) ? error : phaseFailure(phase); }
+}
+export function nativeBuildDiagnostic(error) {
+  return { schemaVersion: 1, event: 'native-build-failed', phase: failurePhases.get(error) || 'unclassified',
+    outputApproved: false, detailsWithheld: true };
+}
+
+export function matchesCloudRepositoryOrigin(origin) {
+  if (origin === `git@github.com:${CLOUD_BUILD_REPOSITORY}.git`) return true;
+  if (typeof origin !== 'string' || origin.length > 16384 || /[\u0000-\u0020\u007f?#\\]/.test(origin)) return false;
+  try {
+    const url = new URL(origin);
+    const authority = /^https:\/\/([^/]+)\//i.exec(origin)?.[1];
+    // Pages' Git clone includes provider-owned credentials in URL userinfo.
+    // Do not log, retain separately, or reuse them. Match only the exact remote
+    // destination, including rejecting explicit default ports and URL suffixes.
+    const host = authority?.slice(authority.lastIndexOf('@') + 1);
+    return url.protocol === 'https:' && url.hostname === 'github.com' && url.port === ''
+      && host?.toLowerCase() === 'github.com' && url.search === '' && url.hash === ''
+      && [`/${CLOUD_BUILD_REPOSITORY}`, `/${CLOUD_BUILD_REPOSITORY}.git`].includes(url.pathname);
+  } catch { return false; }
+}
 
 export function assertCloudBuildContext(env, local) {
-  assert.equal(env.CF_PAGES, '1'); assert.equal(env.CF_PAGES_BRANCH, CLOUD_BUILD_BRANCH);
-  assert.match(env.CF_PAGES_COMMIT_SHA || '', SHA); assert.equal(local.head, env.CF_PAGES_COMMIT_SHA);
-  assert.equal(local.status, '', 'Cloud build requires a clean exact source checkout');
-  assert.ok([`https://github.com/${CLOUD_BUILD_REPOSITORY}`, `https://github.com/${CLOUD_BUILD_REPOSITORY}.git`,
-    `git@github.com:${CLOUD_BUILD_REPOSITORY}.git`].includes(local.origin));
-  assert.notEqual(env.GITHUB_ACTIONS, 'true');
-  if (env.PAGES_ENVIRONMENT !== undefined) assert.equal(env.PAGES_ENVIRONMENT, 'production');
-  for (const key of ['MSY_QA_MODE', 'NEXT_PUBLIC_ADS_DISABLED', 'MSY_QA_PAGES_STAGE', 'MSY_QA_WORKER_STAGE', 'MSY_PAGES_LOCAL_CHILD', 'MSY_QA_SERVER'])
-    assert.notEqual(env[key], '1', 'Cloud publication refuses QA settings');
+  checkpoint('provider-environment', () => assert.equal(env.CF_PAGES, '1'));
+  checkpoint('provider-branch', () => assert.equal(env.CF_PAGES_BRANCH, CLOUD_BUILD_BRANCH));
+  checkpoint('provider-commit', () => assert.match(env.CF_PAGES_COMMIT_SHA || '', SHA));
+  checkpoint('checkout-head', () => assert.equal(local.head, env.CF_PAGES_COMMIT_SHA));
+  checkpoint('checkout-status', () => assert.equal(local.status, '', 'Cloud build requires a clean exact source checkout'));
+  checkpoint('checkout-origin', () => assert.ok(matchesCloudRepositoryOrigin(local.origin)));
+  checkpoint('publication-environment', () => {
+    assert.notEqual(env.GITHUB_ACTIONS, 'true');
+    if (env.PAGES_ENVIRONMENT !== undefined) assert.equal(env.PAGES_ENVIRONMENT, 'production');
+  });
+  checkpoint('qa-environment', () => {
+    for (const key of ['MSY_QA_MODE', 'NEXT_PUBLIC_ADS_DISABLED', 'MSY_QA_PAGES_STAGE', 'MSY_QA_WORKER_STAGE', 'MSY_PAGES_LOCAL_CHILD', 'MSY_QA_SERVER'])
+      assert.notEqual(env[key], '1', 'Cloud publication refuses QA settings');
+  });
   return env.CF_PAGES_COMMIT_SHA;
 }
 
@@ -87,58 +133,69 @@ export async function verifyCloudBuildApproval(commit, get) {
 }
 
 export function trustedNpmCli(execPath = process.execPath) {
-  const base = path.dirname(execPath);
-  const candidates = [path.join(base, 'node_modules/npm/bin/npm-cli.js'), path.join(base, '../lib/node_modules/npm/bin/npm-cli.js')];
-  const found = candidates.find(file => existsSync(file) && lstatSync(file).isFile());
-  assert.ok(found, 'Installed Node distribution npm CLI was not found'); return realpathSync(found);
+  return checkpoint('npm-location', () => {
+    const base = path.dirname(execPath);
+    const candidates = [path.join(base, 'node_modules/npm/bin/npm-cli.js'), path.join(base, '../lib/node_modules/npm/bin/npm-cli.js')];
+    const found = candidates.find(file => existsSync(file) && lstatSync(file).isFile());
+    assert.ok(found, 'Installed Node distribution npm CLI was not found'); return realpathSync(found);
+  });
 }
 
 export function installationEnvironment(root, input) {
-  const publicInput = readPublicBuildConfiguration(root, 'production', input).input;
-  const env = cleanBuildEnvironment(publicInput, 'production', path.join(root, '.pages-build'));
-  let owned = realpathSync(root);
-  for (const part of ['.artifacts', 'pages-cloud-build', 'install-home']) {
-    owned = path.join(owned, part); if (!existsSync(owned)) mkdirSync(owned);
-    assert.equal(lstatSync(owned).isSymbolicLink(), false); assert.equal(realpathSync(owned), owned);
-  }
+  const publicInput = checkpoint('public-configuration', () => readPublicBuildConfiguration(root, 'production', input).input);
+  const env = checkpoint('installation-environment', () => cleanBuildEnvironment(publicInput, 'production', path.join(root, '.pages-build')));
+  const owned = checkpoint('installation-directory', () => {
+    let directory = realpathSync(root);
+    for (const part of ['.artifacts', 'pages-cloud-build', 'install-home']) {
+      directory = path.join(directory, part); if (!existsSync(directory)) mkdirSync(directory);
+      assert.equal(lstatSync(directory).isSymbolicLink(), false); assert.equal(realpathSync(directory), directory);
+    }
+    return directory;
+  });
   env.HOME = owned; env.USERPROFILE = owned;
   env.npm_config_userconfig = path.join(owned, 'user.npmrc'); env.npm_config_globalconfig = path.join(owned, 'global.npmrc');
-  for (const file of [env.npm_config_userconfig, env.npm_config_globalconfig]) {
-    if (existsSync(file)) assert.equal(lstatSync(file).isSymbolicLink(), false);
-    writeFileSync(file, '');
-  }
+  checkpoint('installation-npmrc', () => {
+    for (const file of [env.npm_config_userconfig, env.npm_config_globalconfig]) {
+      if (existsSync(file)) assert.equal(lstatSync(file).isSymbolicLink(), false);
+      writeFileSync(file, '');
+    }
+  });
   env.npm_execpath = trustedNpmCli(); return env;
 }
 
 export async function orchestrateCloudBuild(deps) {
   const commit = assertCloudBuildContext(deps.env, await deps.readLocal());
-  const before = await verifyCloudBuildApproval(commit, deps.get);
-  await deps.install();
+  const before = await asyncCheckpoint('approval-before', () => verifyCloudBuildApproval(commit, deps.get));
+  await asyncCheckpoint('dependency-install', () => deps.install());
   assertCloudBuildContext(deps.env, await deps.readLocal());
-  await deps.build(before);
-  const verified = await deps.verify();
-  assert.deepEqual(verified.manifest.nativeRelease.ci, before.ci);
-  assert.deepEqual(verified.manifest.nativeRelease.approval, before.approval);
-  assert.equal(verified.manifest.nativeRelease.commit, commit);
+  await asyncCheckpoint('application-build', () => deps.build(before));
+  const verified = await asyncCheckpoint('artifact-verification', () => deps.verify());
+  checkpoint('attestation-verification', () => {
+    assert.deepEqual(verified.manifest.nativeRelease.ci, before.ci);
+    assert.deepEqual(verified.manifest.nativeRelease.approval, before.approval);
+    assert.equal(verified.manifest.nativeRelease.commit, commit);
+  });
   assertCloudBuildContext(deps.env, await deps.readLocal());
-  assert.deepEqual(await verifyCloudBuildApproval(commit, deps.get), before, 'Approval or verification changed during the build');
+  const after = await asyncCheckpoint('approval-after', () => verifyCloudBuildApproval(commit, deps.get));
+  checkpoint('approval-unchanged', () => assert.deepEqual(after, before, 'Approval or verification changed during the build'));
   return { completed: true, commit, buildId: verified.marker.buildId, approvalRunId: before.approval.runId };
 }
 
 export async function main(args = process.argv.slice(2), input = process.env) {
-  assert.equal(args.length, 0, 'Native Pages build takes no arguments');
-  assert.equal(process.versions.node.split('.')[0], '22', 'Native Pages builds require Node 22');
+  checkpoint('arguments', () => assert.equal(args.length, 0, 'Native Pages build takes no arguments'));
+  checkpoint('node-version', () => assert.equal(process.versions.node.split('.')[0], '22', 'Native Pages builds require Node 22'));
   // Save the provider identity before removing private environment bindings from
   // all installation/build children. The provider has a separate 20-minute cap.
   const env = { ...input };
   const git = args => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', timeout: 15000,
     windowsHide: true, stdio: ['ignore', 'pipe', 'ignore'] });
-  const readLocal = async () => ({ head: git(['rev-parse', 'HEAD']).trim(),
-    status: git(['status', '--porcelain=v1', '-z', '--untracked-files=all']), origin: git(['remote', 'get-url', 'origin']).trim() });
+  const readLocal = async () => ({ head: checkpoint('git-head', () => git(['rev-parse', 'HEAD']).trim()),
+    status: checkpoint('git-status', () => git(['status', '--porcelain=v1', '-z', '--untracked-files=all'])),
+    origin: checkpoint('git-origin', () => git(['remote', 'get-url', 'origin']).trim()) });
   assertCloudBuildContext(env, await readLocal());
   const childEnv = installationEnvironment(ROOT, env);
   const get = publicGithubBuildClient();
-  const timer = setTimeout(() => { console.error('Native Pages build exceeded its local time budget'); process.exit(1); }, MAX_BUILD_MS);
+  const timer = setTimeout(() => { console.error(JSON.stringify(nativeBuildDiagnostic(phaseFailure('time-budget')))); process.exit(1); }, MAX_BUILD_MS);
   try {
     const result = await orchestrateCloudBuild({ env, readLocal, get,
       install: () => new Promise((resolve, reject) => {
@@ -159,4 +216,4 @@ export async function main(args = process.argv.slice(2), input = process.env) {
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url))
-  main().catch(() => { console.error('Native Pages build gate failed; no output is approved for publication.'); process.exitCode = 1; });
+  main().catch(error => { console.error(JSON.stringify(nativeBuildDiagnostic(error))); process.exitCode = 1; });

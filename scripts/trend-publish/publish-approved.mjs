@@ -385,7 +385,7 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
   }
 
   // 5) 커밋 · 원격 반영
-  const title = String(draft?.title ?? slug).replace(/"/g, "");
+  const title = String(draft?.title ?? slug);
   const msg = join(home, "tmp", `publish-commit-${slug}.txt`);
   const subject = kind === "retire" ? `fix(guides): 트렌드 브리프 철회 ${slug} — 허브로 308` : kind === "update" ? `fix(guides): 공식 발표 해설 수정 ${slug}` : `feat(guides): 공식 발표 해설 발행 ${slug}`;
   writeFileSync(msg, [subject, "", kind === "retire" ? `운영자 승인: 철회 ${slug}` : `${title}`, `운영자 승인: ${kind === "retire" ? "철회" : "발행"} ${slug} (초안 해시 ${String(arg(argv, "--draft-sha256") ?? "-").slice(0, 12)})`, "", "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>", ""].join("\n"), "utf8");

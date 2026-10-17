@@ -236,10 +236,11 @@ test("publisher waits for exact push/main verify job; no deployment job is requi
   await assert.rejects(waitForPagesVerification(superseded.get, { sha: PUB_NEXT, workflowId: 123, attempts: 1 }), /main/);
 });
 
-function publisherFixture({ enabled = "true", jobConclusion = "success", verifyCode = 0, staleHead = false } = {}) {
+function publisherFixture({ enabled = "true", jobConclusion = "success", verifyCode = 0, staleHead = false, title } = {}) {
   const wt = fakeWorktree();
   const home = fakeHome({ PUBLISH_ENABLED: "", CF_PURGE_OK: "", REVIEWED_UNTIL: "2026-10-20" });
   const draft = JSON.parse(readFileSync(join(ROOT, "src/lib/__tests__/fixtures/trendBriefDrafts.json"), "utf8")).good;
+  if (title !== undefined) draft.title = title;
   const sha = daily.draftSha256(draft);
   mkdirSync(join(home, "drafts"));
   writeFileSync(join(home, "drafts", `${draft.slug}.json`), JSON.stringify({ draft, draftSha256: sha, cardDate: "2026-10-13", primaryPublishedDate: "2026-10-08", candidate: CAND }));
@@ -349,6 +350,17 @@ test("publisher preserves an approved local retirement target through Pages depl
     assert.ok(dispatched.endsWith("--retirement-to /guides"));
     assert.ok(dispatched.includes(`--approved-commit ${PUB_NEXT}`));
     assert.ok(!f.calls.some(call => call.includes("verify-prod.mjs")));
+  } finally { cleanup(f.home, f.wt); }
+});
+
+test("publisher preserves the approved quoted title as a single cloud verification argument", async () => {
+  const title = '고용보험 "확정" 안내 & 조건';
+  const f = publisherFixture({ title });
+  try {
+    assert.equal(await publishMain(f.args, f.deps), 0, f.messages.join("\n"));
+    const handoff = f.invocations.find(item => item.args.some(value => String(value).endsWith("pages-cloud-dispatch.mjs")));
+    assert.ok(handoff);
+    assert.equal(handoff.args[handoff.args.indexOf("--article-marker") + 1], title);
   } finally { cleanup(f.home, f.wt); }
 });
 

@@ -225,10 +225,10 @@ test('article inputs are one approved slug with either a bounded marker or a dis
 
 test('article acceptance checks title and sitemap; retirement checks one HEAD 308 without redirect following', async () => {
   const snapshot = { sha256: sha(sitemap), entries: [[ORIGIN + '/', null], [ORIGIN + '/guides/approved-article', null]] };
-  const article = { slug: 'approved-article', retire: false, marker: 'Title & salary' }; let requests = 0;
+  const article = { slug: 'approved-article', retire: false, marker: 'Title & "salary"' }; let requests = 0;
   const good = await verifyCloudArticle(article, attestation(), snapshot, { fetchFn: async (raw, init) => {
     assert.equal(guarded(raw, init), '/guides/approved-article'); assert.equal(init.method, 'GET'); requests++;
-    return new Response('<html><head><title>Title &amp; salary | MoneySalary</title></head></html>', { headers: { 'content-type': 'text/html', 'x-moneysalary-build': attestation().buildId } });
+    return new Response('<html><head><title>Title &amp; &quot;salary&quot; | MoneySalary</title></head></html>', { headers: { 'content-type': 'text/html', 'x-moneysalary-build': attestation().buildId } });
   } }); assert.equal(good.contractPassed, true); assert.equal(requests, 1);
   await assert.rejects(verifyCloudArticle(article, attestation(), snapshot, { fetchFn: async () => new Response('<html><script>Title & salary</script></html>', { headers: { 'content-type': 'text/html', 'x-moneysalary-build': attestation().buildId } }) }));
   const retired = { slug: 'removed', retire: true, to: '/guides' };

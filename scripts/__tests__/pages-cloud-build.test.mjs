@@ -6,7 +6,8 @@ import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { assertCloudBuildContext, publicGithubBuildClient, verifyCloudBuildApproval, orchestrateCloudBuild,
-  CLOUD_BUILD_REPOSITORY, CLOUD_BUILD_BRANCH, installationEnvironment, trustedNpmCli } from '../pages-cloud-build.mjs';
+  CLOUD_BUILD_REPOSITORY, CLOUD_BUILD_BRANCH, installationEnvironment, trustedNpmCli, nativeBuildDiagnostic,
+  matchesCloudRepositoryOrigin } from '../pages-cloud-build.mjs';
 import { createNativeReleaseAttestation } from '../lib/pages-export.mjs';
 import { NATIVE_RELEASE_PATH, validateNativeRelease } from '../../cloudflare/pages-native-release.mjs';
 import { createPagesHandler } from '../../cloudflare/pages-router.mjs';
@@ -79,6 +80,67 @@ function gateFixture(change = {}) {
   return { get, calls };
 }
 
+test('source diagnostics distinguish fixed checkpoints without leaking assertion values', () => {
+  const secret = 'synthetic-private-credential';
+  const cases = [
+    ['provider-environment', { ...env, CF_PAGES: secret }, local],
+    ['provider-branch', { ...env, CF_PAGES_BRANCH: secret }, local],
+    ['provider-commit', { ...env, CF_PAGES_COMMIT_SHA: secret }, local],
+    ['checkout-head', env, { ...local, head: secret }],
+    ['checkout-status', env, { ...local, status: `?? ${secret}` }],
+    ['checkout-origin', env, { ...local, origin: `https://${secret}@github.com/other/repo` }],
+    ['publication-environment', { ...env, PAGES_ENVIRONMENT: secret }, local],
+    ['qa-environment', { ...env, MSY_QA_MODE: '1' }, local],
+  ];
+  for (const [phase, input, checkout] of cases) assert.throws(() => assertCloudBuildContext(input, checkout), error => {
+    const diagnostic = nativeBuildDiagnostic(error);
+    assert.deepEqual(diagnostic, { schemaVersion: 1, event: 'native-build-failed', phase, outputApproved: false, detailsWithheld: true });
+    assert.equal(error.cause, undefined); assert.equal(error.actual, undefined); assert.equal(error.expected, undefined);
+    assert.equal(JSON.stringify(diagnostic).includes(secret), false); assert.equal(String(error).includes(secret), false); return true;
+  });
+  for (const value of [new Error(secret), { phase: secret, message: secret }, { phase: 'approval-before' }, null, undefined])
+    assert.equal(nativeBuildDiagnostic(value).phase, 'unclassified');
+});
+
+test('provider credentialized Git origin matches only the exact HTTPS repository without ports or suffixes', () => {
+  const repository = CLOUD_BUILD_REPOSITORY;
+  for (const origin of [`https://github.com/${repository}`, `https://github.com/${repository}.git`,
+    `https://provider:synthetic-only@github.com/${repository}`, `https://provider:synthetic-only@github.com/${repository}.git`,
+    `https://provider%40name:synthetic%3Aonly@github.com/${repository}.git`, `git@github.com:${repository}.git`]) {
+    assert.equal(matchesCloudRepositoryOrigin(origin), true);
+    assert.equal(assertCloudBuildContext(env, { ...local, origin }), COMMIT);
+  }
+  for (const origin of [`http://provider:synthetic@github.com/${repository}`, `https://provider:synthetic@github.com:443/${repository}`,
+    `https://github.com:8443/${repository}`, `https://github.com.evil.invalid/${repository}`,
+    `https://github.com@evil.invalid/${repository}`, `https://github.com.evil.invalid@evil.invalid/${repository}`,
+    `https://provider:synthetic@github.com/other/repo`, `https://provider:synthetic@github.com/${repository}/`,
+    `https://github.com/${repository}.git/extra`, `https://github.com/${repository}?`, `https://github.com/${repository}#`,
+    `https://github.com/${repository}?token=synthetic`, `https://github.com/${repository}#synthetic`,
+    `https://github.com/${repository}suffix`, `https://github.com/whatisyourdreambro%2Fmy-salary-calculator`,
+    `https://github.com/${repository}\n`, `ssh://git@github.com/${repository}.git`, 'synthetic-private-value', null]) {
+    assert.equal(matchesCloudRepositoryOrigin(origin), false);
+    assert.throws(() => assertCloudBuildContext(env, { ...local, origin }), error => {
+      assert.equal(nativeBuildDiagnostic(error).phase, 'checkout-origin');
+      assert.equal(String(error).includes('synthetic'), false); return true;
+    });
+  }
+});
+
+test('installation diagnostics identify missing config, settings, owned paths, npmrc and npm without raw errors', t => {
+  const writeConfig = directory => writeFileSync(path.join(directory, '.env.production'), ['HOME_TOP', 'CALC_RESULT', 'GUIDE_MID', 'COMPANY_TOP']
+    .map(slot => `NEXT_PUBLIC_ADSENSE_SLOT_${slot}=1234567890`).join('\n'));
+  const check = (phase, run) => assert.throws(run, error => { assert.equal(nativeBuildDiagnostic(error).phase, phase);
+    assert.equal(error.cause, undefined); assert.equal(error.path, undefined); return true; });
+  const missing = temporary(t); check('public-configuration', () => installationEnvironment(missing, {}));
+  writeFileSync(path.join(missing, '.env.production'), ''); check('installation-environment', () => installationEnvironment(missing, {}));
+  const blockedDirectory = temporary(t); writeConfig(blockedDirectory); writeFileSync(path.join(blockedDirectory, '.artifacts'), 'synthetic');
+  check('installation-directory', () => installationEnvironment(blockedDirectory, {}));
+  const blockedNpmrc = temporary(t); writeConfig(blockedNpmrc);
+  mkdirSync(path.join(blockedNpmrc, '.artifacts/pages-cloud-build/install-home/user.npmrc'), { recursive: true });
+  check('installation-npmrc', () => installationEnvironment(blockedNpmrc, {}));
+  check('npm-location', () => trustedNpmCli(path.join(missing, 'missing-node/bin/node')));
+});
+
 test('cloud identity requires genuine provider branch, full exact source and no QA/Actions context', () => {
   assert.equal(assertCloudBuildContext(env, local), COMMIT);
   for (const change of [{ CF_PAGES: undefined }, { CF_PAGES_BRANCH: 'main' }, { CF_PAGES_COMMIT_SHA: OTHER },
@@ -117,6 +179,8 @@ test('GitHub gate is bounded fixed-origin GET with no Authorization, redirects o
 });
 
 test('native orchestration rechecks source and same active approval after build; failure never reports completion', async () => {
+  const expected = { install: 'dependency-install', build: 'application-build', verify: 'artifact-verification',
+    source: 'checkout-head', approval: 'approval-unchanged' };
   for (const failure of [null, 'install', 'build', 'verify', 'source', 'approval']) {
     const calls = []; let built = false;
     const initial = gateFixture(), after = gateFixture(failure === 'approval' ? { approval: { id: 21 } } : {});
@@ -126,9 +190,24 @@ test('native orchestration rechecks source and same active approval after build;
       build: async actual => { calls.push('build'); assert.deepEqual(actual, context); if (failure === 'build') throw Error('synthetic'); built = true; },
       verify: async () => { calls.push('verify'); if (failure === 'verify') throw Error('synthetic');
         return { marker: { buildId: 'synthetic-build' }, manifest: { nativeRelease: release() } }; } };
-    if (failure) await assert.rejects(orchestrateCloudBuild(deps));
+    if (failure) await assert.rejects(orchestrateCloudBuild(deps), error => {
+      assert.equal(nativeBuildDiagnostic(error).phase, expected[failure]); return true;
+    });
     else assert.deepEqual(await orchestrateCloudBuild(deps), { completed: true, commit: COMMIT, buildId: 'synthetic-build', approvalRunId: 20 });
     assert.ok(calls.every(value => ['install', 'build', 'verify'].includes(value)));
+  }
+});
+
+test('GitHub gate transport diagnostics expose only before/after phase and no raw fetch errors', async () => {
+  for (const after of [false, true]) {
+    let built = false; const gate = gateFixture();
+    const deps = { env, readLocal: async () => local, install: async () => {}, build: async () => { built = true; },
+      verify: async () => ({ marker: { buildId: 'synthetic-build' }, manifest: { nativeRelease: release() } }),
+      get: async resource => { if (built === after) throw new Error('private diagnostic body'); return gate.get(resource); } };
+    await assert.rejects(orchestrateCloudBuild(deps), error => {
+      assert.equal(nativeBuildDiagnostic(error).phase, after ? 'approval-after' : 'approval-before');
+      assert.equal(JSON.stringify(nativeBuildDiagnostic(error)).includes('private'), false); return true;
+    });
   }
 });
 
