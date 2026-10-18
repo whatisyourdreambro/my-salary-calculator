@@ -2,6 +2,7 @@
 
 import nextBundleAnalyzer from "@next/bundle-analyzer";
 import { fileURLToPath } from "node:url";
+import { googleMeasurementImageOrigins } from "./scripts/lib/google-measurement-origins.mjs";
 
 const withBundleAnalyzer = nextBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
@@ -19,6 +20,8 @@ const withBundleAnalyzer = nextBundleAnalyzer({
 // 픽셀(*.adtrafficquality.google)을 img-src에, 구글 앵커 프레임(www.google.com)을
 // frame-src에 추가 — CSP 적용 환경에서 광고 리소스가 차단되던 누락분.
 const qaServicesDisabled = process.env.NEXT_PUBLIC_ADS_DISABLED === "1";
+// The live Google tag diagnostic reported blocked measurement connections and
+// regional Google images. Only production receives these sources; QA stays local.
 const ContentSecurityPolicy = (qaServicesDisabled ? `
   default-src 'self';
   script-src 'self' 'unsafe-eval' 'unsafe-inline' blob:;
@@ -38,9 +41,9 @@ const ContentSecurityPolicy = (qaServicesDisabled ? `
   frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.googletagmanager.com https://www.google.com https://ep2.adtrafficquality.google https://fundingchoicesmessages.google.com;
   frame-ancestors 'self';
   style-src 'self' 'unsafe-inline';
-  img-src 'self' data: blob: https://*.googleusercontent.com https://www.google-analytics.com https://www.google.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.coupang.com https://ads-partners.coupang.com https://link.coupang.com https://*.coupangcdn.com https://*.adtrafficquality.google;
+  img-src 'self' data: blob: https://*.googleusercontent.com https://www.google-analytics.com https://www.googletagmanager.com ${googleMeasurementImageOrigins.join(" ")} https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.coupang.com https://ads-partners.coupang.com https://link.coupang.com https://*.coupangcdn.com https://*.adtrafficquality.google;
   media-src 'none';
-  connect-src 'self' https://open.er-api.com https://api.frankfurter.dev https://www.google-analytics.com https://*.google-analytics.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://*.googlesyndication.com https://*.doubleclick.net https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://*.cloudflareinsights.com https://kapi.kakao.com;
+  connect-src 'self' https://open.er-api.com https://api.frankfurter.dev https://www.google-analytics.com https://*.google-analytics.com https://analytics.google.com https://www.google.com https://www.googletagmanager.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://*.googlesyndication.com https://*.doubleclick.net https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://*.cloudflareinsights.com https://kapi.kakao.com;
   font-src 'self' data:;
   object-src 'none';
   base-uri 'self';
