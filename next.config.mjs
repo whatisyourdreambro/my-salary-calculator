@@ -202,6 +202,23 @@ const nextConfig = {
         destination: "/table/2026/monthly",
         permanent: true,
       },
+      // GSC 404 표본을 2026-10-19 HEAD로 재확인. 같은 금액의 정적 페이지가 있는
+      // 이 세 경로만 정규화한다 — 임의 -2 접미사나 다른 연봉 경로에는 적용하지 않는다.
+      {
+        source: "/salary/30000000-2",
+        destination: "/salary/30000000",
+        permanent: true,
+      },
+      {
+        source: "/salary/64000000-2",
+        destination: "/salary/64000000",
+        permanent: true,
+      },
+      {
+        source: "/salary/29000000-2",
+        destination: "/salary/29000000",
+        permanent: true,
+      },
       {
         source: "/fun/mbti-salary",
         destination: "/mbti-salary",
@@ -461,6 +478,12 @@ const nextConfig = {
         // toss-viva 는 toss 로 병합(2026-08-30) — 같은 쌍이 정본 id 슬러그로 존재
         source: "/salary-db/compare/toss-viva-vs-naver-financial",
         destination: "/salary-db/compare/toss-vs-naver-financial",
+        permanent: true,
+      },
+      {
+        // 2026-10-19 확인: 동일한 토스·쿠팡페이 쌍이 정본 toss id로 존재한다.
+        source: "/salary-db/compare/toss-viva-vs-coupang-pay",
+        destination: "/salary-db/compare/toss-vs-coupang-pay",
         permanent: true,
       },
       {

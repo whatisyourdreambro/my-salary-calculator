@@ -39,13 +39,13 @@ import { withBonusAnnouncement } from "@/data/bonusAnnouncements";
 
 const SITE_URL = "https://www.moneysalary.com";
 const PAGE_PATH = "/calc/samsung-bonus";
-const PAGE_TITLE = "삼성전자 성과급 계산기 2026 — OPI·TAI";
+const PAGE_TITLE = "삼성전자 성과급 계산기 2026 — OPI·OPI2 세후, TAI";
 // SERP 표시 한도(한글 80~90자) 안에 핵심 키워드 전진 배치
 // 반기 라벨·최고 지급률은 taiData TAI_LATEST 파생 — 오늘 출력은 종전 문자열과 동일
 // 1~2월 지급률 확정 공지 꼬리 구절(승인 6) — src/data/bonusAnnouncements.ts 가 휴면이면 종전 문자열 그대로
 const PAGE_DESC = withBonusAnnouncement(
   "samsung-bonus",
-  `삼성전자 OPI(초과이익성과금)·TAI(목표달성장려금) 계산기. ${TAI_LATEST.shortLabel} TAI ${TAI_LATEST_TOP.division} ${TAI_LATEST_TOP.rate}% 반영, 사업부별 1인당·세후 실수령·RSU 매도까지 무료 시뮬레이션.`
+  `삼성전자 기존 OPI1·DS 특별경영성과급(OPI2) 합산 세후 실수령액 추정. 내 연봉·사업부별로 계산하고, ${TAI_LATEST.shortLabel} TAI ${TAI_LATEST_TOP.division} ${TAI_LATEST_TOP.rate}%와 RSU 매도도 시뮬레이션합니다. 개인 지급 확정액은 아닙니다.`
 );
 
 // ─────────────────────────────────────────────────────────────
@@ -350,7 +350,7 @@ export default function SamsungBonusCalculatorPage() {
             >
               삼성전자 성과급 계산기
               <span className="block text-2xl sm:text-3xl mt-2 text-electric">
-                2026 OPI·TAI 예상 금액
+                2026 OPI·OPI2 세후 / TAI 예상
               </span>
             </h1>
             <p className="text-base sm:text-lg font-medium text-muted-blue dark:text-canvas-300">
@@ -389,8 +389,8 @@ export default function SamsungBonusCalculatorPage() {
               id="calc-hero-summary"
               className="text-sm text-faint-blue mt-3 max-w-md mx-auto leading-relaxed"
             >
-              OPI는 연봉과 성과 가정으로, TAI는 월 기본급과 지급률로
-              계산합니다. 지난 지급 이력과 앞으로의 가정을 구분해 비교하세요.
+              기존 OPI1과 DS 특별경영성과급(OPI2)은 합산 세후 금액을,
+              TAI는 월 기본급과 지급률로 계산합니다. 지난 지급 이력과 앞으로의 가정을 구분해 비교하세요.
               세후 금액과 RSU 가치는 입력 조건에 따른 추정이며,
               회사의 개인별 지급 확정액은 아닙니다.
             </p>

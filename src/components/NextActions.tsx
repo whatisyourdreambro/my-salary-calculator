@@ -22,7 +22,7 @@ import {
  Receipt,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import type { NextActionCategory } from "@/lib/nextActionLinks";
+import type { NextActionCategory, NextActionIncomeType } from "@/lib/nextActionLinks";
 
 // 타입 정본은 @/lib/nextActionLinks (서버·테스트가 React 없이 href 를 참조) — 기존 import 경로 유지용 재수출.
 export type { NextActionCategory };
@@ -32,6 +32,8 @@ interface NextActionsProps {
  annualSalary?: number;
  /** 컨텍스트 카테고리 — 카테고리별로 다른 3 CTA 표시 */
  category?: NextActionCategory;
+ /** 홈 계산기의 소득 구분. 다른 카테고리의 추천에는 영향을 주지 않는다. */
+ incomeType?: NextActionIncomeType;
  /** 현재 경로 — 자기 자신을 가리키는 CTA 제외 (2026-09-11: 2개 계산기가 자기 링크를 냈음) */
  currentPath?: string;
  className?: string;
@@ -48,7 +50,8 @@ interface ActionItem {
 // nextActionHrefs 와 어긋나지 않는지 대조한다. href 를 바꾸면 그쪽 목록도 함께 바꿀 것.
 export function buildActions(
  category: NextActionCategory | undefined,
- annualSalary: number | undefined
+ annualSalary: number | undefined,
+ incomeType?: NextActionIncomeType
 ): ActionItem[] {
  // 카테고리별 분기
  if (category === "loan" || category === "real-estate") {
@@ -142,6 +145,17 @@ export function buildActions(
  ];
  }
 
+ if (incomeType === "freelancer") return [
+ { icon: Receipt, title: "종합소득세 예상액", description: "3.3% 원천징수와 최종 세금 구분", href: "/tools/finance/freelance-tax" },
+ { icon: Shield, title: "건강보험료 확인", description: "직장·지역 가입 조건별 보험료", href: "/health-insurance-2026" },
+ { icon: Calculator, title: "연간 수입 계획", description: "성수기·비수기 월 수입으로 비교", href: "/calc/freelancer-yearly-quick" },
+ ];
+ if (incomeType === "part_time") return [
+ { icon: Calculator, title: "주휴수당 계산", description: "시급·주간 근로시간으로 확인", href: "/weekly-holiday-allowance-2026" },
+ { icon: Receipt, title: "최저임금 비교", description: "시급·월급 기준과 적용 조건", href: "/minimum-wage-2026" },
+ { icon: PiggyBank, title: "퇴직금 확인", description: "근속 기간·임금·대상 요건 확인", href: "/tools/finance/severance" },
+ ];
+
  // 기본(salary 또는 미지정) — 연봉 보유 여부에 따른 CTA
  return annualSalary
  ? [
@@ -189,10 +203,11 @@ export function buildActions(
 export default function NextActions({
  annualSalary,
  category,
+ incomeType,
  currentPath,
  className = "",
 }: NextActionsProps) {
- const actions = buildActions(category, annualSalary).filter((a) => a.href !== currentPath);
+ const actions = buildActions(category, annualSalary, incomeType).filter((a) => a.href !== currentPath);
 
  // 제휴 오퍼 병기 (지시서 §TASK-3-4) — 카테고리 문맥에 맞는 버티컬만 매핑.
  // vertical="loan" 하드코딩 시 활성 대출 오퍼가 보험·저축 등 /calc/[slug] 전

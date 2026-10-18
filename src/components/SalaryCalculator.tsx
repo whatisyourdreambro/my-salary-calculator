@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import dynamic from "next/dynamic";
 import Link from "@/components/AppLink";
 import { usePathname, useRouter } from "next/navigation";
@@ -30,6 +30,7 @@ import { ResultAd } from "./AdPlacement";
 import RelatedCalculators from "./RelatedCalculators";
 import NextActions from "./NextActions";
 import { nextActionHrefs } from "@/lib/nextActionLinks";
+import { focusCalculationResult } from "@/lib/calculationResultFocus";
 // 무거운 recharts 컴포넌트는 동적 로드 — 초기 번들 절감
 const WealthChart = dynamic(() => import("./WealthChart"), {
  ssr: false,
@@ -46,11 +47,7 @@ const DetailedAnalysis = dynamic(() => import("./DetailedAnalysis"), {
  ),
 });
 import SalaryTierCard from "./SalaryTierCard"; // New Import
-import LoadingInterstitial from "./LoadingInterstitial";
 import BottomSheet from "./BottomSheet";
-
-// 결과 아래 NextActions(category=salary)가 내는 3 href — 그 아래 RelatedCalculators 에서 제외(빈자리는 채움, S2-3)
-const HOME_NEXT_ACTION_HREFS = nextActionHrefs("salary");
 
 const formatNumber = (num: number) => num.toLocaleString('ko-KR');
 const parseNumber = (str: string) => Number(str.replace(/,/g, ""));
@@ -119,9 +116,9 @@ export default function SalaryCalculator() {
  const [children, setChildren] = useState(0);
  const [monthlyExpenses] = useState("");
 
- // Phase 1: Interstitial State
- const [isCalculating, setIsCalculating] = useState(false);
  const [showResult, setShowResult] = useState(false);
+ const [resultRequest, setResultRequest] = useState(0);
+ const resultRegionRef = useRef<HTMLDivElement>(null);
 
  const [result, setResult] = useState<CalculationResult>({
  monthlyNet: 0,
@@ -243,10 +240,10 @@ export default function SalaryCalculator() {
  : { v: 1, taxYear: 2026, incomeType, monthlyIncome: parseNumber(salaryInput) });
  const inputsValid = isValidCalculationNumber(salaryInput, Number.MIN_VALUE) && Boolean(sharePayload) &&
  (incomeType !== "regular" || isValidCalculationNumber(nonTaxableAmount, 0));
- const currentResult = isCurrentSalaryResult({ showResult, isCalculating, inputsValid, calculatedSnapshot, inputSnapshot, result });
+ const currentResult = isCurrentSalaryResult({ showResult, isCalculating: false, inputsValid, calculatedSnapshot, inputSnapshot, result });
  const offerConditions = { annualGross: annualSalary, nonTaxableMonthly: parseNumber(nonTaxableAmount), dependents, children };
  const canHandoffOffer = canHandoffCurrentSalaryResult({ pathname, incomeType, severanceType,
- showResult, isCalculating, inputsValid, calculatedSnapshot, inputSnapshot, result, conditions: offerConditions });
+ showResult, isCalculating: false, inputsValid, calculatedSnapshot, inputSnapshot, result, conditions: offerConditions });
  const handleOfferHandoff = () => {
  if (!canHandoffOffer) return;
  setOfferHandoffError(false);
@@ -282,31 +279,17 @@ export default function SalaryCalculator() {
  const handleCalculateClick = () => {
  if (!inputsValid) { setInvalidAttempt(true); return; }
  setInvalidAttempt(false);
- setIsCalculating(true);
  setCalculatedSnapshot(inputSnapshot);
  runCalculation();
- };
-
- const handleInterstitialClose = () => {
- setIsCalculating(false);
  setShowResult(true);
-
- setTimeout(() => {
- const resultElement = document.getElementById("calculation-result");
- if (resultElement) {
- resultElement.scrollIntoView({ behavior: "smooth", block: "center" });
- import("canvas-confetti").then(({ default: confetti }) => {
- confetti({
- particleCount: 150,
- spread: 70,
- origin: { y: 0.7 },
- colors: ['#0145F2', '#EDF1F5', '#0145F280'], // Trust Blue & Gold
- zIndex: 9999,
- });
- });
- }
- }, 100);
+ setResultRequest((request) => request + 1);
  };
+ const focusedRequest = useRef(0);
+ useEffect(() => {
+ if (!currentResult || resultRequest === focusedRequest.current) return;
+ focusedRequest.current = resultRequest;
+ focusCalculationResult(resultRegionRef.current?.querySelector<HTMLElement>("[data-salary-result-summary]") ?? null);
+ }, [currentResult, resultRequest]);
 
  // ... (Handlers for Seniors/Disabled omitted for brevity but logic remains in state if needed for future extension, keeping UI cleaner for now as per design)
  // Re-adding essential handlers if specific inputs are exposed
@@ -363,8 +346,6 @@ export default function SalaryCalculator() {
 
  return (
  <div className="w-full space-y-6">
- <LoadingInterstitial isOpen={isCalculating} onClose={handleInterstitialClose} />
-
  {/* ── Row 1: 입력 + 실수령 결과 나란히 ──────────────────────── */}
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
 
@@ -466,9 +447,8 @@ export default function SalaryCalculator() {
  ) : (
  <motion.div
  id="calculation-result"
- initial={{ opacity: 0, y: 16 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ duration: 0.35 }}
+ ref={resultRegionRef}
+ initial={false}
  className="space-y-4"
  >
  {!currentResult && <p role="status" className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">아래는 이전 계산 결과입니다. 입력값을 확인하고 다시 계산해 주세요.</p>}
@@ -492,7 +472,7 @@ export default function SalaryCalculator() {
  </div>
 
  {/* 다음 액션 3 CTA — 결과 컨텍스트 인식형 */}
- <NextActions annualSalary={currentResult ? annualSalary : undefined} category="salary" />
+ <NextActions annualSalary={currentResult ? annualSalary : undefined} category="salary" incomeType={incomeType} />
 
  {canHandoffOffer && (
  <div className="rounded-2xl border border-canvas bg-white p-4">
@@ -513,7 +493,7 @@ export default function SalaryCalculator() {
  </Link>
 
  {/* 관련 계산기 cross-link — 위 NextActions(salary 3종)와 같은 대상은 빼고 채움(4개 유지, S2-3) */}
- <RelatedCalculators currentPath="/" title="이런 계산기도 함께 보세요" exclude={HOME_NEXT_ACTION_HREFS} />
+ <RelatedCalculators currentPath="/" title="이런 계산기도 함께 보세요" exclude={nextActionHrefs("salary", undefined, incomeType)} />
 
  {/* 공유/저장 */}
  <div className="bg-white border border-canvas rounded-2xl p-4 flex flex-col items-center gap-3">

@@ -14,6 +14,7 @@ const read = (p: string) => readFileSync(resolve(process.cwd(), p), "utf8");
 
 /** 모듈 파일 → 기대 data-msy-module id (≤40종 — GA4 position 측정기준 카디널리티, 아래 MAX_MODULE_IDS 주석) */
 const MODULES: Record<string, string[]> = {
+  "src/app/guides/[slug]/GuidePageClient.tsx": ["guide-primary-calculator"],
   "src/components/CompanyIndustryRank.tsx": ["industry-rank"],
   "src/components/RelatedCompanies.tsx": ["related-companies"],
   "src/components/CompanyConnections.tsx": ["company-connections"],

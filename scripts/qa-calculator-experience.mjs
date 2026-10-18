@@ -110,6 +110,91 @@ try {
         assert.equal(await margin.inputValue(), '35.5');
         assert((await page.getByRole('region', { name: '현재 조건의 계산 결과' }).innerText()).includes('420,000원'));
       }
+      if (route === '/calc/samsung-bonus') {
+        const scenarios = page.locator('[data-saved-scenarios]');
+        await scenarios.locator('summary').first().click();
+        const save = scenarios.getByRole('button', { name: '현재 조건 저장', exact: true });
+        const salary = page.getByLabel('내 연봉 입력 (원)', { exact: true });
+        await save.click();
+        assert.equal(await scenarios.locator('article').count(), 1);
+        await save.click();
+        assert.equal(await scenarios.locator('article').count(), 1, 'same inputs must not fill another slot');
+        await salary.fill('100000000');
+        await save.click();
+        assert.equal(await scenarios.locator('article').count(), 2);
+        assert((await scenarios.locator('article').first().innerText()).includes('많습니다.'));
+        await salary.fill('140000000');
+        await save.click();
+        await salary.fill('200000000');
+        await save.click();
+        assert.equal(await scenarios.locator('article').count(), 3, 'no silent overwrite at capacity');
+        await salary.fill('');
+        assert(await save.isDisabled());
+        await scenarios.getByRole('button', { name: '조건 1 불러오기', exact: true }).click();
+        assert.equal(await salary.inputValue(), '80,000,000');
+        await page.reload({ waitUntil: 'networkidle' });
+        await scenarios.locator('summary').first().click();
+        assert.equal(await scenarios.locator('article').count(), 3, 'saved cases survive a reload');
+        await scenarios.getByRole('button', { name: '조건 2 삭제', exact: true }).click();
+        assert.equal(await scenarios.locator('article').count(), 2);
+        for (const width of [320, 768, 1280]) {
+          await page.setViewportSize({ width, height: 900 });
+          assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, 'saved comparison overflow');
+        }
+        await page.setViewportSize({ width: 390, height: 844 });
+        await scenarios.screenshot({ path: path.join(output, `samsung-saved-${theme}.png`) });
+        await scenarios.getByRole('button', { name: '저장 조건 전체 삭제', exact: true }).click();
+        assert.equal(await scenarios.locator('article').count(), 0);
+        assert.equal(await page.evaluate(() => localStorage.getItem('moneysalary:samsung-bonus:scenarios:v1')), null);
+        // Simulate unavailable local storage; the calculation and prior input stay usable.
+        await page.evaluate(() => { Storage.prototype.setItem = () => { throw new DOMException('Synthetic quota', 'QuotaExceededError'); }; });
+        await save.click();
+        assert((await scenarios.getByRole('status').innerText()).includes('저장하지 못했습니다'));
+        assert.equal(await salary.inputValue(), '80,000,000');
+        await page.reload({ waitUntil: 'networkidle' });
+      }
+      if (route === '/') {
+        const nonTaxable = page.getByRole('button', { name: /^비과세 / });
+        await nonTaxable.click();
+        const sheet = page.getByRole('dialog', { name: '비과세액 설정', exact: true });
+        await sheet.waitFor({ state: 'visible' });
+        assert.equal(await page.evaluate(() => document.body.style.overflow), 'hidden');
+        // Inert local geometry fixture: no script, frame, ad request or SDK.
+        await page.evaluate(() => {
+          const fixture = document.createElement('ins');
+          fixture.id = 'qa-inert-anchor'; fixture.className = 'adsbygoogle';
+          fixture.style.cssText = 'position:fixed;bottom:0;left:0;width:100%;height:80px;pointer-events:none';
+          document.body.appendChild(fixture);
+          window.dispatchEvent(new Event('resize'));
+        });
+        await page.waitForFunction(() => parseFloat(document.querySelector('[role="dialog"][aria-modal="true"]').style.paddingBottom) >= 92);
+        await page.evaluate(() => { document.getElementById('qa-inert-anchor').remove(); window.dispatchEvent(new Event('resize')); });
+        assert(await sheet.evaluate(el => parseFloat(el.style.paddingBottom) >= 92), 'reserved space must not collapse during an open sheet');
+        await page.keyboard.press('Escape');
+        await sheet.waitFor({ state: 'hidden' });
+        assert.equal(await page.evaluate(() => document.body.style.overflow), '');
+        assert(await nonTaxable.evaluate(el => document.activeElement === el));
+        const calculate = page.getByRole('button', { name: '결과 확인하기', exact: true });
+        await calculate.click();
+        const summary = page.locator('[data-salary-result-summary]');
+        await summary.waitFor({ state: 'visible' });
+        assert(await summary.evaluate(el => document.activeElement === el));
+        await page.getByLabel('계약 연봉', { exact: true }).fill('60000000');
+        await page.getByText('아래는 이전 계산 결과입니다. 입력값을 확인하고 다시 계산해 주세요.', { exact: true }).waitFor({ state: 'visible' });
+        await calculate.click();
+        assert(await summary.evaluate(el => document.activeElement === el));
+        const expectedIncomeLinks = {
+          '프리랜서': ['/tools/finance/freelance-tax', '/health-insurance-2026', '/calc/freelancer-yearly-quick'],
+          '알바': ['/weekly-holiday-allowance-2026', '/minimum-wage-2026', '/tools/finance/severance'],
+        };
+        for (const [income, links] of Object.entries(expectedIncomeLinks)) {
+          await page.getByRole('button', { name: income, exact: true }).click();
+          await page.getByLabel('지급 총액', { exact: true }).fill('3000000');
+          await calculate.click();
+          const next = page.getByRole('heading', { name: '다음 단계로', exact: true }).locator('..');
+          assert.deepEqual(await next.locator('div.grid').first().locator(':scope > a').evaluateAll(nodes => nodes.map(el => el.getAttribute('href'))), links);
+        }
+      }
       console.log(`${theme} ${route}: ${audit.inputs.length} fields; ${audit.lowContrast.length} text contrast candidates`);
       if (route === '/calc') {
         const items = await page.locator('script[type="application/ld+json"]').evaluateAll(nodes => nodes.flatMap(node => JSON.parse(node.textContent)));

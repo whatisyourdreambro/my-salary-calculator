@@ -130,6 +130,7 @@ jobs:
           npm run qa:english
           npm run qa:pages:http
           npm run qa:run -- scripts/qa-pages-navigation.mjs
+          QA_ROUTES="/calc/samsung-bonus,/" npm run qa:run -- scripts/qa-calculator-experience.mjs
       - name: English page quality ledger
         if: always()
         uses: actions/upload-artifact@v7.0.2

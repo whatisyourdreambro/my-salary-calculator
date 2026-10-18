@@ -57,7 +57,8 @@ export default function SalaryResultCard({
  </div>
 
  <div className="flex flex-wrap items-baseline gap-1 mb-6">
- <h2 className="text-[clamp(1.75rem,6vw,2.75rem)] leading-tight font-bold text-foreground font-mono-tabular tracking-tight break-all">
+ <h2 data-salary-result-summary tabIndex={-1} aria-label={`예상 월 실수령액 ${monthlyNet.toLocaleString("ko-KR")}원`}
+ className="scroll-mt-24 text-[clamp(1.75rem,6vw,2.75rem)] leading-tight font-bold text-foreground font-mono-tabular tracking-tight break-all">
  <span>{monthlyNet.toLocaleString("ko-KR")}</span>
  </h2>
  <span className="text-xl font-semibold text-foreground">원</span>

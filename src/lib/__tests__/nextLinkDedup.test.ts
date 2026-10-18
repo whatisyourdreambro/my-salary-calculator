@@ -16,7 +16,7 @@
 //   두 블록 다 광고(GuideMid·InArticle·CoupangBanner·HomeTopAd) 위에 있고 NextActions 는 채울 예비 항목이
 //   없어 "제외 + 채움"이 불가능하다 — 줄이면 광고가 올라오므로 운영자 승인 전까지 손대지 않는다.
 
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 
@@ -258,6 +258,26 @@ describe("다음 링크 중복 제거 (S2-3) — 표본 페이지", () => {
 });
 
 describe("NextActions.tsx ↔ nextActionLinks 드리프트", () => {
+  it.each(["regular", "freelancer", "part_time"] as const)("홈 %s 소득은 세 카드와 실제 목적지를 유지하고 아래 네 카드와 중복되지 않는다", (incomeType) => {
+    const hrefs = nextActionHrefs("salary", undefined, incomeType);
+    expect(buildActions("salary", 50_000_000, incomeType).map((action) => action.href)).toEqual(hrefs);
+    expect(hrefs).toHaveLength(3);
+    expect(new Set(hrefs).size).toBe(3);
+    for (const href of hrefs) {
+      expect(existsSync(resolve(process.cwd(), `src/app${href}/page.tsx`)) ||
+        (href.startsWith("/calc/") && Boolean(getCalculatorBySlug(href.slice(6))))).toBe(true);
+    }
+    const related = getRelatedCalculators("/", 4, undefined, hrefs);
+    expect(related).toHaveLength(4);
+    expect(related.some((item) => hrefs.includes(item.path))).toBe(false);
+    if (incomeType !== "regular") expect(hrefs).not.toContain("/year-end-tax");
+  });
+
+  it("income context never overrides an explicit non-salary category", () => {
+    expect(buildActions("loan", undefined, "freelancer")).toEqual(buildActions("loan", undefined));
+    expect(nextActionHrefs("loan", undefined, "part_time")).toEqual(nextActionHrefs("loan"));
+  });
+
   const CATEGORIES: Array<NextActionCategory | undefined> = [
     "salary",
     "loan",

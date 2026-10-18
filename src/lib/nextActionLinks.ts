@@ -25,19 +25,25 @@ export type NextActionCategory =
  | "investment"
  | "real-estate";
 
-// NextActions.tsx buildActions 와 같은 순서. salary/미지정은 annualSalary 유무로 문구만 달라지고
-// href 집합은 같다(주담대·회사별 연봉·연말정산).
+export type NextActionIncomeType = "regular" | "freelancer" | "part_time";
+
+// NextActions.tsx buildActions 와 같은 순서. 홈 소득 유형을 전달하면 세 카드의
+// 목적지만 해당 소득에 맞춘다. annualSalary 유무는 문구에만 영향을 준다.
 const LOAN_HREFS = ["/home-loan", "/calc/jeonse-loan", "/property-holding-tax-2026"] as const;
 const TAX_HREFS = ["/year-end-tax", "/tools/finance/freelance-tax", "/salary-db"] as const;
 const INSURANCE_HREFS = ["/health-insurance-2026", "/calc/medical-expense-coverage", "/fire-calculator"] as const;
 const INVESTMENT_HREFS = ["/calc/compound-interest-quick", "/calc/stock-capital-gains-quick", "/fire-calculator"] as const;
 const SALARY_HREFS = ["/home-loan", "/salary-db", "/year-end-tax"] as const;
+const FREELANCER_HREFS = ["/tools/finance/freelance-tax", "/health-insurance-2026", "/calc/freelancer-yearly-quick"] as const;
+const PART_TIME_HREFS = ["/weekly-holiday-allowance-2026", "/minimum-wage-2026", "/tools/finance/severance"] as const;
 
-function hrefsOf(category: NextActionCategory | undefined): readonly string[] {
+function hrefsOf(category: NextActionCategory | undefined, incomeType?: NextActionIncomeType): readonly string[] {
  if (category === "loan" || category === "real-estate") return LOAN_HREFS;
  if (category === "tax") return TAX_HREFS;
  if (category === "insurance") return INSURANCE_HREFS;
  if (category === "investment") return INVESTMENT_HREFS;
+ if (incomeType === "freelancer") return FREELANCER_HREFS;
+ if (incomeType === "part_time") return PART_TIME_HREFS;
  return SALARY_HREFS;
 }
 
@@ -47,9 +53,10 @@ function hrefsOf(category: NextActionCategory | undefined): readonly string[] {
  */
 export function nextActionHrefs(
  category?: NextActionCategory,
- currentPath?: string
+ currentPath?: string,
+ incomeType?: NextActionIncomeType
 ): string[] {
- const hrefs = hrefsOf(category);
+ const hrefs = hrefsOf(category, incomeType);
  return currentPath ? hrefs.filter((h) => h !== currentPath) : [...hrefs];
 }
 

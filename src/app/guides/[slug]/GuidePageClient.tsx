@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import ShareButtons from "@/components/ShareButtons";
 import FavoritesButton from "@/components/FavoritesButton";
 import type { Guide } from "@/lib/guidesData";
+import type { GuideCalculatorLink } from "@/lib/guidePrimaryCalculator";
 import { hubSlugByCategoryId } from "@/lib/guideCategories";
 import { guideSearchHref } from "@/lib/guideDiscovery";
 import { formatGuideDate, getGuideModifiedDate } from "@/lib/guideDates";
@@ -40,6 +41,7 @@ export type RelatedGuideCard = Pick<Guide, "slug" | "title" | "description" | "c
 interface GuidePageClientProps {
  guide: Guide;
  relatedGuides: RelatedGuideCard[];
+ relatedCalculator: GuideCalculatorLink;
 }
 
 // 본문 HTML을 <h2 시작 위치에서만 분할 — 태그 중간이 잘리지 않도록 보장.
@@ -88,7 +90,7 @@ const PROSE_CLASS = `prose prose-lg max-w-none
  prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-secondary/30 prose-blockquote:px-6 prose-blockquote:py-4 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-blockquote:text-foreground
  prose-ul:list-disc prose-ul:pl-6 prose-li:marker:text-link prose-table:text-sm`;
 
-export default function GuidePageClient({ guide, relatedGuides }: GuidePageClientProps) {
+export default function GuidePageClient({ guide, relatedGuides, relatedCalculator }: GuidePageClientProps) {
  // 읽기 진행 바 — framer-motion(useScroll/useSpring, 청크 40KB br)을 passive scroll + rAF 로 대체 (2026-09-11 번들 감사).
  // 가이드 341쪽이 3px 바 하나 때문에 framer 청크를 첫 로드에 실었다. CSS transition 이 스프링 감쇠를 대신한다.
  const progressRef = useRef<HTMLDivElement | null>(null);
@@ -125,16 +127,6 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
 
  // Calculate reading time
  const readingTime = Math.ceil(guide.content.length / 1000);
-
- // "/salary"는 인덱스 라우트가 없어 404였음(가이드 29편 CTA) — 홈이 계산기 본체 (2026-07-06 정정)
- const relatedCalculator =
- guide.category === "연봉"
- ? { name: "연봉 계산기", href: "/" }
- : guide.category === "세금"
- ? { name: "연말정산 계산기", href: "/year-end-tax" }
- : guide.category === "커리어"
- ? { name: "커리어 플래너", href: "/pro/career-planner" }
- : { name: "금융 계산기", href: "/" };
 
  // 본문을 h2 경계로 2~3분할해 사이에 광고 배치 (h2 2개 미만이면 분할 없음)
  const articleContent = prepareGuideHeadings(guide.content, splitContentByH2(guide.content));
@@ -401,6 +393,7 @@ export default function GuidePageClient({ guide, relatedGuides }: GuidePageClien
  </p>
  <Link
  href={relatedCalculator.href}
+ data-msy-module="guide-primary-calculator"
  className="ms-button ms-button-primary w-full"
  >
  계산기 바로가기 <ArrowRight className="w-4 h-4" />

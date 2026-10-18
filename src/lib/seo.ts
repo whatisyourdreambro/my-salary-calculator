@@ -5,7 +5,7 @@
 // 모든 페이지가 동일한 SEO 베이스라인을 갖도록 한다.
 
 import type { Metadata } from "next";
-import { getGuideModifiedDate } from "./guideDates";
+import { getGuideContentDate } from "./guideContentRevisions";
 import { englishPolicyCounterpart } from "./englishSite";
 import { salaryOgImagePath } from "./ogUrlVersion";
 import { formatManwonKorean } from "./manwonFormat";
@@ -256,7 +256,7 @@ export function buildGuideMetadata(guide: {
  keywords: guide.tags,
  ogType: "article",
  publishedTime: new Date(guide.publishedDate).toISOString(),
- modifiedTime: new Date(getGuideModifiedDate(guide)).toISOString(),
+ modifiedTime: new Date(getGuideContentDate(guide)).toISOString(),
  // /api/og의 type=guide 분기는 slug가 아닌 title 파라미터를 읽음 — slug만 넘기면
  // 전 가이드 공유 카드가 기본 문구("연봉 실수령액 계산기")로 렌더되던 회귀 정정 (2026-07-06)
  ogImage: `${SITE_URL}/api/og?type=guide&title=${encodeURIComponent(guide.title)}`,

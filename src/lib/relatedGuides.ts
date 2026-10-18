@@ -31,6 +31,8 @@ interface GetRelatedGuidesOptions {
    * 명시 슬러그를 우선 채우고, 부족분은 score 기반 자동 추천으로 보충.
    */
   explicitSlugs?: string[];
+  /** 같은 페이지의 앞선 추천 영역에 이미 노출된 글. 개수 제한 전에 제외한다. */
+  excludeSlugs?: readonly string[];
 }
 
 function toItem(g: Guide): RelatedGuideItem {
@@ -49,16 +51,19 @@ export function getRelatedGuides({
   tags,
   limit = 6,
   explicitSlugs,
+  excludeSlugs = [],
 }: GetRelatedGuidesOptions): RelatedGuideItem[] {
+  const excluded = new Set(excludeSlugs);
   // 링크 대상은 /guides/*이므로 한국어 후보만 사용하고 중복 slug를 제외한다.
   const explicit = [...new Set(explicitSlugs ?? [])]
+    .filter((slug) => !excluded.has(slug))
     .map((slug) => koGuides.find((g) => g.slug === slug && g.slug !== currentSlug))
     .filter((g): g is Guide => Boolean(g));
 
   const explicitSlugSet = new Set(explicit.map((g) => g.slug));
   // 자동 추천 후보에서는 공개 보류 중인 새 가이드를 뺀다 — 기존 페이지 광고 위 높이 불변 (guideReleaseHoldback.ts)
   const fallback = rankRelatedGuides(withoutHeldBackGuides(koGuides, currentSlug), { currentSlug, category, tags })
-    .filter((g) => !explicitSlugSet.has(g.slug));
+    .filter((g) => !explicitSlugSet.has(g.slug) && !excluded.has(g.slug));
 
   return [...explicit, ...fallback].slice(0, limit).map(toItem);
 }

@@ -1,7 +1,7 @@
 // 일시적 2주택 처분 기한 개정(소득세법 시행령 제155조 제1항·부칙 제2조, 대통령령 제36737호 2026-10-01 시행) 반영 가드.
 // - 정정은 가이드 4편의 마지막 광고(guides/layout.tsx PageFooterAds) 아래 보강에만 있다 — 본문(광고 위)에는 넣지 않는다.
 // - 보강에는 기한(2년/3년)·조건(두 주택 모두 조정대상지역)·적용 시점(8/4 취득·10/1 양도)·경과 규정(8/3 이전 취득·계약금)·출처가 있어야 한다.
-// - 사이트맵 lastmod·Article dateModified 는 히어로 칩이 없는 별도 필드(guideContentRevisions)로만 올린다.
+// - 검증된 별도 정정일(guideContentRevisions)을 상세 화면·OG·사이트맵·Article에 전달하며 정본 날짜·추천 순서는 유지한다.
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 

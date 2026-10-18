@@ -74,6 +74,7 @@ describe("next.config redirects — B8 legacy URLs", () => {
   const DEAD_COMPARE: Record<string, string> = {
     "korea-zinc-vs-posco": "/salary-db/compare/posco-vs-korea-zinc",
     "toss-viva-vs-naver-financial": "/salary-db/compare/toss-vs-naver-financial",
+    "toss-viva-vs-coupang-pay": "/salary-db/compare/toss-vs-coupang-pay",
     "lx-semicon-vs-samsung-electronics": "/salary-db/lx-semicon",
     "bithumb-vs-toss": "/salary-db/bithumb",
     "korea-sfa-vs-lg-display": "/salary-db/korea-sfa",
@@ -135,6 +136,21 @@ describe("next.config redirects — B8 legacy URLs", () => {
     for (const p of ["/salary/50000000", "/salary/5000-manwon", "/monthly/3000000", "/salaryx", "/monthlyx"]) {
       expect(matchOf(list, p), p).toBeNull();
     }
+  });
+
+  it("the three observed salary -2 aliases retain the exact amount and reach generated pages", async () => {
+    const { getStaticSalaryAmounts } = await import("@/lib/salaryStaticParams");
+    const amounts = getStaticSalaryAmounts();
+    const list = await rules();
+    for (const amount of [30000000, 64000000, 29000000]) {
+      const hit = matchOf(list, `/salary/${amount}-2`);
+      expect(hit?.rule).toMatchObject({ source: `/salary/${amount}-2`, destination: `/salary/${amount}`, permanent: true });
+      expect(amounts).toContain(amount);
+      expect(matchOf(list, `/salary/${amount}`)).toBeNull();
+      expect(matchOf(list, `/salary/${amount}-3`)).toBeNull();
+      expect(matchOf(list, `/salary/${amount}-2/extra`)).toBeNull();
+    }
+    expect(matchOf(list, "/salary/31000000-2")).toBeNull();
   });
 
   it("keeps every old URL of the deleted /company and /salary-db/submit pages on a config 308 (decision 10 stage 2)", async () => {

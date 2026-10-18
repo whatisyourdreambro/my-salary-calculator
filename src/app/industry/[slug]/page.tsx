@@ -8,6 +8,7 @@ import { faqLd, autoBreadcrumbLd, itemListLd } from "@/lib/structuredData";
 import { getIndustryAggregate } from "@/lib/salary-data/industryAggregates";
 import { formatSalaryKorean } from "@/lib/companyContentBuilder";
 import { formatManwonKorean } from "@/lib/manwonFormat";
+import { getMonthlyNetEstimateManwon, SALARY_METADATA_ASSUMPTIONS } from "@/lib/salaryMetadataEstimate";
 import JsonLd from "@/components/JsonLd";
 import { CalcResultAd, InArticleAd, HomeTopAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -33,8 +34,8 @@ export async function generateMetadata({ params: pendingParams }: Props): Promis
     ? ` DB 등록 ${aggregate.count}개사 회사별 연봉 순위 제공.`
     : "";
 
-  // CTR 강화(7차): 평균 월 실수령 hook + TOP 회사 단서
-  const monthlyNetEstimate = Math.round((industry.salary.overall * 10000) / 12 / 10000 * 0.83);
+  // 연결된 연봉 상세 페이지와 같은 조건의 추정치. 업계 수치는 공식 전수 통계가 아니다.
+  const monthlyNetEstimate = getMonthlyNetEstimateManwon(industry.salary.overall);
   const topCompanyHint = aggregate?.topPayer
     ? ` 1위 ${aggregate.topPayer.name.ko}.`
     : "";
@@ -42,8 +43,8 @@ export async function generateMetadata({ params: pendingParams }: Props): Promis
   // 금액 표기: 1억 이상은 "1억 3,000만원"(formatManwonKorean), 1억 미만은 종전 문자열과
   // 바이트 단위로 같다 (2026-09-25 B14 META-06 — /job·/salary 제목과 같은 규칙).
   return buildPageMetadata({
-    title: `${industry.name} 업계 연봉 2026 — 평균 ${formatManwonKorean(industry.salary.overall)}·회사별 TOP 순위`,
-    description: `${industry.name} 업계 평균 연봉 ${formatManwonKorean(industry.salary.overall)}(월 약 ${monthlyNetEstimate}만원). 신입 ${formatManwonKorean(industry.salary.entry.avg)}~, 시니어 ${formatManwonKorean(industry.salary.senior.avg)}~.${companyNote}${topCompanyHint} 2026 실수령액 즉시 계산.`,
+    title: `${industry.name} 업계 연봉 2026 — 추정 평균 ${formatManwonKorean(industry.salary.overall)}·회사별 TOP 순위`,
+    description: `${industry.name} 업계 추정 평균 연봉 ${formatManwonKorean(industry.salary.overall)}, 월 실수령 추정 ${monthlyNetEstimate}만원(${SALARY_METADATA_ASSUMPTIONS}). 신입 ${formatManwonKorean(industry.salary.entry.avg)}~, 시니어 ${formatManwonKorean(industry.salary.senior.avg)}~.${companyNote}${topCompanyHint}`,
     path: `/industry/${params.slug}`,
     keywords: [
       ...industry.keywords,

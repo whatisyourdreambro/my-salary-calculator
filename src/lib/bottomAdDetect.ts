@@ -21,21 +21,25 @@ const BOTTOM_ZONE_PX = 160;
 const AD_FRAME_SELECTOR =
   'iframe[src*="googlesyndication"], iframe[src*="doubleclick"], iframe[id^="google_ads_iframe"]';
 
-/** 하단 고정 광고의 높이(px). 없으면 0. 속성만으로 감지된(높이 0) 앵커는 0 을 돌려주므로
+/** 보이는 화면 하단부터 고정 광고 상단까지의 여백(px). 없으면 0. 속성만으로 감지된(높이 0) 앵커는 0 을 돌려주므로
  *  "존재 여부"는 isBottomAdPresent() 로, "여백 확보"는 이 값으로 판단한다. */
-export function getBottomAdHeight(): number {
+export function getBottomAdHeight(viewportBottom?: number, viewportTop = 0): number {
   if (typeof window === "undefined" || typeof document === "undefined") return 0;
-  const vh = window.innerHeight;
+  const vh = viewportBottom ?? window.innerHeight;
   let height = 0;
+  // Reserve the gap below the anchor too, including the keyboard viewport.
+  const include = (rect: DOMRect) => {
+    if (rect.height > 0 && rect.top < vh && rect.bottom > viewportTop && vh - rect.bottom < BOTTOM_ZONE_PX) {
+      height = Math.max(height, vh - rect.top);
+    }
+  };
   const insList = document.querySelectorAll<HTMLElement>(
     "ins.adsbygoogle, ins.adsbygoogle-noablate"
   );
   for (const el of insList) {
     if (getComputedStyle(el).position !== "fixed") continue;
     const rect = el.getBoundingClientRect();
-    if (rect.height > 0 && vh - rect.bottom < BOTTOM_ZONE_PX) {
-      height = Math.max(height, rect.height);
-    }
+    include(rect);
   }
   const adFrames = document.querySelectorAll<HTMLIFrameElement>(AD_FRAME_SELECTOR);
   for (const frame of adFrames) {
@@ -43,15 +47,13 @@ export function getBottomAdHeight(): number {
     while (node && node !== document.body) {
       if (getComputedStyle(node).position === "fixed") {
         const rect = node.getBoundingClientRect();
-        if (rect.height > 0 && vh - rect.bottom < BOTTOM_ZONE_PX) {
-          height = Math.max(height, rect.height);
-        }
+        include(rect);
         break;
       }
       node = node.parentElement;
     }
   }
-  return Math.round(height);
+  return Math.ceil(height);
 }
 
 /** 화면 하단에 고정된 구글 광고(앵커 등)가 하나라도 있으면 true. */

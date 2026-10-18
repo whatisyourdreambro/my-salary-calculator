@@ -5,6 +5,7 @@ import Link from "@/components/AppLink";
 import GuidePageClient from "./GuidePageClient";
 import RelatedGuides from "@/components/RelatedGuides";
 import { getRelatedGuides } from "@/lib/relatedGuides";
+import { getGuidePrimaryCalculator } from "@/lib/guidePrimaryCalculator";
 import GuideRelatedCalcs from "@/components/GuideRelatedCalcs";
 import { guideSupplements } from "@/lib/guides/supplements";
 import { CalcResultAd, HomeTopAd } from "@/components/AdPlacement";
@@ -113,7 +114,11 @@ export default async function GuidePage({ params: pendingParams }: Props) {
  }),
  ]}
  />
- <GuidePageClient guide={guide} relatedGuides={relatedGuides} />
+ <GuidePageClient
+ guide={{ ...guide, modifiedDate: getGuideContentDate(guide) }}
+ relatedGuides={relatedGuides}
+ relatedCalculator={getGuidePrimaryCalculator(guide)}
+ />
 
  <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
  {/* 한↔영 상호 SSR 링크 — /en 트리 크롤 경로·링크 신호 확보 (hreflang과 동일 게이트) */}
@@ -136,6 +141,7 @@ export default async function GuidePage({ params: pendingParams }: Props) {
  category: guide.category,
  tags: guide.tags,
  limit: 6,
+ excludeSlugs: relatedGuides.map(({ slug }) => slug),
  })}
  title="더 깊이 알아보고 싶다면"
  />

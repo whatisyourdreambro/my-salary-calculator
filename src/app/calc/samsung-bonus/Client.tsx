@@ -46,6 +46,9 @@ import NumberInput from "@/components/NumberInput";
 import { OPI1_MAX_RATE, OPI_LATEST, OPI_LATEST_BOTTOM, opiRateSummary } from "./opiData";
 import { initialProfitTrillion } from "./annualOp";
 import { buildShareHash, parseShareHash, type SamsungShareState } from "./shareState";
+import { computePersonalBonus } from "./personalBonus";
+import SavedScenarios from "./SavedScenarios";
+import type { ScenarioInputs } from "./scenarioStorage";
 // 결과 직하 광고 2곳 (2026-09-11 운영자 승인 배치 변경): 종전 첫 광고는 클라이언트 아래 7,183px(모바일 8.5화면)였다.
 // HomeTopAd 는 calc/layout 하단 사본이 dedup 으로 죽고 이곳이 살아 유닛 수 불변, CalcResultAd 는 page.tsx 시나리오 구간에서 이동.
 import { CalcResultAd, HomeTopAd } from "@/components/AdPlacement";
@@ -166,13 +169,23 @@ export default function SamsungBonusClient() {
       ...current, ...Object.fromEntries(Object.entries(parsed.ratios!).map(([id, value]) => [id, String(value)])),
     }));
   }, []);
-  const shareHash = buildShareHash(
-    { d: selectedDivId, s: parseNumberInput(salaryFmt), p: profit, y: year, o1: opi1Rate, ac: creditRate, ins: applyInsurance,
+  const currentInputs: SamsungShareState = {
+      d: selectedDivId, s: parseNumberInput(salaryFmt), p: profit, y: year, o1: opi1Rate, ac: creditRate, ins: applyInsurance,
       counts: Object.fromEntries(DIVISION_IDS.map((id) => [id, parseNumberInput(counts[id])])),
       ratios: Object.fromEntries(DIVISION_IDS.map((id) => [id, Number(ratios[id])])),
-    },
-    SHARE_DEFAULTS
-  );
+  };
+  function restoreSavedScenario(saved: ScenarioInputs) {
+    setSelectedDivId(saved.d);
+    setSalaryFmt(saved.s.toLocaleString("ko-KR"));
+    setProfitFmt(String(saved.p));
+    setYear(saved.y);
+    setOpi1Rate(saved.o1);
+    setCreditRate(saved.ac);
+    setApplyInsurance(saved.ins);
+    setCounts(Object.fromEntries(DIVISION_IDS.map(id => [id, saved.counts[id].toLocaleString("ko-KR")])));
+    setRatios(Object.fromEntries(DIVISION_IDS.map(id => [id, String(saved.ratios[id])])));
+  }
+  const shareHash = buildShareHash(currentInputs, SHARE_DEFAULTS);
   const shareStateUrl = `${SHARE_URL}${shareHash}`;
   // 상태가 바뀔 때만 replaceState — history 항목·hashchange 이벤트가 생기지 않아 DeferredSection 의
   // 앵커 감시(#multi-year-*)와 충돌하지 않는다. 첫 커밋은 건너뛴다(복원 전 기본값으로 해시를 지우는 것 방지).
@@ -631,6 +644,8 @@ export default function SamsungBonusClient() {
         opi1Rate={opi1Rate}
         setOpi1Rate={setOpi1Rate}
         shareUrl={shareStateUrl}
+        scenarioInputs={currentInputs}
+        onRestoreScenario={restoreSavedScenario}
       />
 
       <PrivateFeedback target="samsung_bonus" />
@@ -768,6 +783,8 @@ function MySalaryCalculator({
   opi1Rate,
   setOpi1Rate,
   shareUrl,
+  scenarioInputs,
+  onRestoreScenario,
 }: {
   poolInputsValid: boolean;
   perDivision: Array<{
@@ -792,56 +809,18 @@ function MySalaryCalculator({
   setOpi1Rate: (v: number) => void;
   /** 공유 상태 URL(해시 포함) — 결과 공유 패널·모바일 공유 바(FloatingShareBar) 동기 */
   shareUrl: string;
+  scenarioInputs: SamsungShareState;
+  onRestoreScenario: (inputs: ScenarioInputs) => void;
 }) {
   const salary = parseNumberInput(salaryFmt);
   const selected =
     perDivision.find((d) => d.id === selectedDivId) ?? perDivision[0];
   const [compareAll, setCompareAll] = useState(false);
 
-  const personal = useMemo(() => {
-    // OPI2 — 특별경영성과금 (영업이익 기반 사업부 분배)
-    const ratio = salary / REFERENCE_SALARY;
-    const opi2BuManwon = selected.buPart * ratio; // 부문 균등 40% × 본인비례
-    const opi2SaManwon = selected.saPart * ratio; // 사업부 가중 60% × 본인비례
-    const opi2Manwon = opi2BuManwon + opi2SaManwon;
-    const opi2Won = opi2Manwon * 10000;
-
-    // OPI1 — 기존 OPI (연봉 대비, 상한 50% — 사용자 조정 가능)
-    const opi1Won = salary * (opi1Rate / 100);
-    const opi1Manwon = opi1Won / 10000;
-
-    // 합산 — 세금은 OPI1+OPI2 합산 기준으로 누진세 적용
-    const totalGrossWon = opi1Won + opi2Won;
-    const totalGrossManwon = opi1Manwon + opi2Manwon;
-
-    const tax = calcSamsungBonusNet(
-      salary,
-      totalGrossWon,
-      creditRate,
-      applyInsurance
-    );
-    const grossPct = salary > 0 ? (totalGrossWon / salary) * 100 : 0;
-    const netPct = salary > 0 ? (tax.net / salary) * 100 : 0;
-    return {
-      opi1Won,
-      opi1Manwon,
-      opi2Won,
-      opi2Manwon,
-      opi2BuManwon,
-      opi2SaManwon,
-      totalGrossWon,
-      totalGrossManwon,
-      netWon: tax.net,
-      netManwon: tax.net / 10000,
-      deductWon: tax.deduct,
-      effRate: tax.effRate,
-      breakdown: tax.breakdown,
-      grossPct,
-      netPct,
-      grossMultiplier: salary > 0 ? totalGrossWon / salary : 0,
-      opi2Multiplier: salary > 0 ? opi2Won / salary : 0,
-    };
-  }, [salary, selected, creditRate, applyInsurance, opi1Rate]);
+  const personal = useMemo(
+    () => computePersonalBonus(salary, selected, opi1Rate, creditRate, applyInsurance),
+    [salary, selected, creditRate, applyInsurance, opi1Rate],
+  );
 
   // 사업부 3개 동시 비교 — calcSamsungBonusNet 순수 함수 3회 호출
   const compareRows = useMemo(() => {
@@ -1474,6 +1453,13 @@ function MySalaryCalculator({
             />
           </div>
         )}
+        <SavedScenarios
+          inputs={scenarioInputs}
+          valid={poolInputsValid && isValidCalculationNumber(salaryFmt, Number.MIN_VALUE) &&
+            isValidCalculationNumber(creditRate, 0, 50) && isValidCalculationNumber(opi1Rate, 0, OPI1_MAX_RATE) &&
+            [personal.totalGrossWon, personal.netWon, personal.deductWon].every(Number.isFinite)}
+          onRestore={onRestoreScenario}
+        />
       </div>
     </section>
   );

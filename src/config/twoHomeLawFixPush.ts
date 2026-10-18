@@ -3,8 +3,8 @@
 // 일시적 2주택 처분 기한 개정 반영 푸시일(KST 달력일) — 소득세법 시행령 제155조 제1항·부칙 제2조
 // (대통령령 제36737호, 2026. 9. 30. 공포, 2026. 10. 1. 시행) 내용을 가이드 4편의 마지막 광고 아래 보강
 // (src/lib/guides/supplements-two-home-law.ts)에 넣은 푸시가 main 에 들어간 날.
-// 쓰는 곳: 그 4편의 사이트맵 lastmod·Article dateModified(src/lib/guideContentRevisions.twoHomeLaw.ts).
-// 화면 날짜(히어로 수정 칩·하단 상자)·목록 정렬·og article:modified_time 은 바꾸지 않는다.
+// 쓰는 곳: 그 4편의 상세 화면·OG·사이트맵 lastmod·Article dateModified(src/lib/guideContentRevisions.twoHomeLaw.ts).
+// 정본 modifiedDate와 목록 정렬은 바꾸지 않는다.
 //
 // 기본값 2026-10-11 = 런북(moneysalary-ops/2026-10/deploy-runbook-2026-10.md)이 이 정정을 실을 수 있는 가장 이른 날:
 //   10/9 까지는 광고 아래 새 섹션 금지(10/2 절 '광고 아래 새 섹션(10/9 뒤)'), 10/9 는 푸시 없음(P0 14일 판독),
