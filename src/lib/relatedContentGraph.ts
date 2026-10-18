@@ -14,6 +14,10 @@ export function categoryNeighbours<T>(items: readonly T[], current: T, limit: nu
   return result;
 }
 
+// IDs are tie-breakers, not display text. Code-unit order is identical across
+// Windows/Cloudflare build locales; localeCompare changed entire Q&A graphs.
+const compareId = (a: string, b: string): number => a < b ? -1 : a > b ? 1 : 0;
+
 /** Fill existing cards with relevant recommendations. Only positive relevance
  * scores are eligible. Preserve primary links and give less-connected articles
  * a turn before repeating popular ones; never create extra cards or use an
@@ -26,7 +30,7 @@ export function buildRelatedContentGraph<T>(items: readonly T[], options: {
   minimumSources?: number;
 }): Map<string, T[]> {
   const { id, limit, score, existing = () => [], minimumSources = 3 } = options;
-  const sources = [...items].sort((a, b) => id(a).localeCompare(id(b)));
+  const sources = [...items].sort((a, b) => compareId(id(a), id(b)));
   const incoming = new Map(sources.map((item) => [id(item), new Set<string>()]));
   const output = new Map(sources.map((item) => [id(item), [] as T[]]));
   const prior = new Map(sources.map((item) => [id(item), new Set(existing(item))]));
@@ -37,7 +41,7 @@ export function buildRelatedContentGraph<T>(items: readonly T[], options: {
     .filter((target) => id(target) !== id(source) && !prior.get(id(source))!.has(id(target)))
     .map((target) => ({ target, weight: score(source, target) }))
     .filter(({ weight }) => Number.isFinite(weight) && weight > 0)
-    .sort((a, b) => b.weight - a.weight || id(a.target).localeCompare(id(b.target)))]));
+    .sort((a, b) => b.weight - a.weight || compareId(id(a.target), id(b.target)))]));
   const add = (source: T, target: T) => {
     output.get(id(source))!.push(target);
     incoming.get(id(target))!.add(id(source));
@@ -45,7 +49,7 @@ export function buildRelatedContentGraph<T>(items: readonly T[], options: {
   // Topics with fewer eligible sources go first, without weakening relevance.
   const sourceCounts = new Map(sources.map((target) => [id(target), sources.filter((source) =>
     limit(source) > 0 && candidates.get(id(source))!.some((candidate) => id(candidate.target) === id(target))).length]));
-  const targets = [...sources].sort((a, b) => sourceCounts.get(id(a))! - sourceCounts.get(id(b))! || id(a).localeCompare(id(b)));
+  const targets = [...sources].sort((a, b) => sourceCounts.get(id(a))! - sourceCounts.get(id(b))! || compareId(id(a), id(b)));
   for (let round = 1; round <= minimumSources; round++) {
     for (const target of targets) {
       if (incoming.get(id(target))!.size >= round) continue;
@@ -53,7 +57,7 @@ export function buildRelatedContentGraph<T>(items: readonly T[], options: {
         !incoming.get(id(target))!.has(id(source)) &&
         candidates.get(id(source))!.some((candidate) => id(candidate.target) === id(target)));
       possible.sort((a, b) => score(b, target) - score(a, target) ||
-        output.get(id(a))!.length - output.get(id(b))!.length || id(a).localeCompare(id(b)));
+        output.get(id(a))!.length - output.get(id(b))!.length || compareId(id(a), id(b)));
       if (possible[0]) add(possible[0], target);
     }
   }
@@ -71,12 +75,12 @@ export function buildRelatedContentGraph<T>(items: readonly T[], options: {
     const possible = sources.filter((source) => !visited.has(id(source)) &&
       !incoming.get(id(target))!.has(id(source)) &&
       candidates.get(id(source))!.some((candidate) => id(candidate.target) === id(target)))
-      .sort((a, b) => score(b, target) - score(a, target) || id(a).localeCompare(id(b)));
+      .sort((a, b) => score(b, target) - score(a, target) || compareId(id(a), id(b)));
     for (const source of possible) {
       visited.add(id(source));
       const selected = output.get(id(source))!;
       if (selected.length < limit(source)) { add(source, target); return true; }
-      const replaceable = [...selected].sort((a, b) => score(source, a) - score(source, b) || id(a).localeCompare(id(b)));
+      const replaceable = [...selected].sort((a, b) => score(source, a) - score(source, b) || compareId(id(a), id(b)));
       for (const old of replaceable) {
         if (incoming.get(id(old))!.size <= minimumSources && !connect(old, visited)) continue;
         selected[selected.indexOf(old)] = target;
@@ -91,6 +95,6 @@ export function buildRelatedContentGraph<T>(items: readonly T[], options: {
     if (!connect(target, new Set())) break;
   }
   for (const source of sources) output.get(id(source))!.sort((a, b) =>
-    score(source, b) - score(source, a) || id(a).localeCompare(id(b)));
+    score(source, b) - score(source, a) || compareId(id(a), id(b)));
   return output;
 }

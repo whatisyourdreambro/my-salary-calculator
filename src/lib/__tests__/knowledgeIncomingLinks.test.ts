@@ -119,6 +119,42 @@ describe("actual detail-page SSR retains links inside content and existing ad pr
 });
 
 describe("discovery graph boundaries", () => {
+  it("does not consult locale collation for ID tie-breakers", () => {
+    const items = ["가", "z-1", "A", "0", "나", "a_1"].map((id) => ({ id }));
+    const comparator = vi.spyOn(String.prototype, "localeCompare").mockImplementation(() => {
+      throw new Error("Implicit locale collation would change deployment output");
+    });
+    let graph: Map<string, { id: string }[]>;
+    try {
+      graph = buildRelatedContentGraph(items, { id: item => item.id, limit: () => 3, score: () => 1 });
+    } finally { comparator.mockRestore(); }
+    expect([...graph.keys()]).toEqual(["0", "A", "a_1", "z-1", "가", "나"]);
+  });
+
+  it.each(["ko-KR", "en-US"])("all actual Q&A recommendations are identical under %s and reordered inputs", (locale) => {
+    const options = { id: (q: typeof qnaData[number]) => toQnaSlug(q.question),
+      limit: (q: typeof qnaData[number]) => Math.min(4, qnaData.filter(peer => peer !== q && peer.category === q.category).length),
+      score: qnaTopicScore };
+    const expected = buildRelatedContentGraph(qnaData, options);
+    const collator = new Intl.Collator(locale);
+    const comparator = vi.spyOn(String.prototype, "localeCompare").mockImplementation(function (this: string, other) {
+      return collator.compare(String(this), String(other));
+    });
+    const graphs: typeof expected[] = [];
+    let calls = 0;
+    try {
+      for (const items of [qnaData, [...qnaData].reverse(), [...qnaData.slice(17), ...qnaData.slice(0, 17)]]) {
+        graphs.push(buildRelatedContentGraph(items, options));
+      }
+      calls = comparator.mock.calls.length;
+    } finally { comparator.mockRestore(); }
+    expect(calls).toBe(0);
+    for (const graph of graphs) expect(graph).toEqual(expected);
+    const incoming = new Map(qnaData.map(q => [toQnaSlug(q.question), new Set<string>()]));
+    for (const [source, targets] of expected) for (const target of targets) incoming.get(toQnaSlug(target.question))!.add(source);
+    for (const [target, sources] of incoming) expect(sources.size, target).toBeGreaterThanOrEqual(3);
+  });
+
   it("never fills sparse topics with unrelated entries or includes itself", () => {
     const items = [{ id: "a", topic: 1 }, { id: "b", topic: 1 }, { id: "c", topic: 2 }];
     const result = buildRelatedContentGraph(items, { id: (x) => x.id, limit: () => 4,
