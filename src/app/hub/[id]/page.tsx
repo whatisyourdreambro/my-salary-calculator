@@ -1,6 +1,7 @@
 // src/app/hub/[id]/page.tsx
 // 주제별 허브(필러) 페이지 — 5개 허브를 단일 동적 라우트로 정적 생성.
 
+import TopicNextSteps from '@/components/TopicNextSteps';
 import { Metadata } from "next";
 import { permanentRedirect } from "next/navigation";
 import Link from "@/components/AppLink";
@@ -168,6 +169,7 @@ export default async function HubPage({ params: pendingParams }: { params: Promi
           <MultiplexAd />
         </div>
       </div>
+      <TopicNextSteps path={`/hub/${hub.id}`} />
     </main>
   );
 }

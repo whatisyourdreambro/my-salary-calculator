@@ -34,7 +34,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/military-pay-2026",
   ogType: "article",
   publishedTime: "2026-08-30",
-  modifiedTime: "2026-08-30",
+  modifiedTime: "2026-09-27",
   keywords: [
     "군인 월급 2026",
     "병장 월급",
@@ -92,7 +92,7 @@ export default function MilitaryPay2026Page() {
             slug: "military-pay-2026",
             url: "/military-pay-2026",
             publishedDate: "2026-08-30",
-            modifiedDate: "2026-08-30",
+            modifiedDate: "2026-09-27",
           }),
           datasetLd({
             name: "2026년 군인 봉급표 데이터 (병·초임 간부)",
@@ -117,7 +117,7 @@ export default function MilitaryPay2026Page() {
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
             2026 군인 월급 <span className="text-electric">병사·간부 봉급표</span>
           </h1>
-          <PublishedMeta publishedDate="2026-08-30" updatedDate="2026-08-30" className="mb-2" />
+          <PublishedMeta publishedDate="2026-08-30" updatedDate="2026-09-27" className="mb-2" />
           <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
             병장 월 봉급 150만원에 장병내일준비적금 매칭(월 최대 55만원, 전역 시 일괄)을 더하면
             월 205만원 구조입니다. 병사 봉급표부터 적금 만기 계산, 하사·소위 초임까지 한 페이지에

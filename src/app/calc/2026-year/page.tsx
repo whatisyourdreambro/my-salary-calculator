@@ -1,5 +1,6 @@
 // src/app/calc/2026-year/page.tsx
 
+import TopicNextSteps from '@/components/TopicNextSteps';
 import { Metadata } from "next";
 import SalaryCalculator from "@/components/SalaryCalculator";
 import { Info, ShieldCheck, Sparkles } from "lucide-react";
@@ -98,6 +99,7 @@ export default function Calc2026Page() {
  {/* 계산 전에는 본문 내 링크가 0건이던 dead-end 해소 — 광고(GuideMidAd) 아래 (2026-09-11) */}
  <RelatedCalculators currentPath="/calc/2026-year" />
  </div>
+   <TopicNextSteps path="/calc/2026-year" />
  </main>
  );
 }

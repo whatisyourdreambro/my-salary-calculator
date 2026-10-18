@@ -1,0 +1,738 @@
+{
+  "schemaVersion": 1,
+  "timeZone": "Asia/Seoul",
+  "note": "Manual editorial review, 2026-10-19. reviewedAtCommit is the baseline; exact LF-normalized source hashes also cover reviewed uncommitted changes. Not an exhaustive dependency/security audit. New source differences require an explicit reason and date decision, including when retaining the date for technical-only changes. Never regenerate as automatic approval.",
+  "routes": {
+    "/health-insurance-2026": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "3f0ae5bf8 (October 5) changed the health-insurance search lead and metadata; this release adds explanatory health/tax next steps on October 19.",
+      "dependencies": [
+        "src/components/TopicNextSteps.tsx",
+        "src/lib/topicNextSteps.ts"
+      ],
+      "files": [
+        "src/app/health-insurance-2026/page.tsx",
+        "src/components/TopicNextSteps.tsx",
+        "src/lib/topicNextSteps.ts"
+      ],
+      "sha256": "763af51a190fba184e80eae3dfa40b6629c14f9edc6a53163f58db1d46490bed"
+    },
+    "/public-institutions": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "September 25 A17 calculation/copy revision retained in history; this release adds explanatory public-pay/career next steps on October 19.",
+      "dependencies": [
+        "src/components/TopicNextSteps.tsx",
+        "src/lib/topicNextSteps.ts"
+      ],
+      "files": [
+        "src/app/public-institutions/PublicInstitutionSalaryClient.tsx",
+        "src/app/public-institutions/page.tsx",
+        "src/components/TopicNextSteps.tsx",
+        "src/lib/topicNextSteps.ts"
+      ],
+      "sha256": "504d46765e7f66c5fd22a23769b949c001b8f6694a4b7cc87413f5ef8b182ca6"
+    },
+    "/work-clock": {
+      "contentDate": "2026-09-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "Existing explicit editorial baseline 2026-09-19 retained after route-owned history review; no later substantive change was identified in the reviewed scope.",
+      "dependencies": [],
+      "files": [
+        "src/app/work-clock/HolidayPayEstimate.tsx",
+        "src/app/work-clock/WorkCalendar.tsx",
+        "src/app/work-clock/WorkClockClient.tsx",
+        "src/app/work-clock/page.tsx",
+        "src/app/work-clock/workClockExtras.ts"
+      ],
+      "sha256": "ba79471cd0683b507e5038e48fb98dc43a390f0926625fa2c5be5c95f18397b8"
+    },
+    "/calc": {
+      "contentDate": "2026-10-05",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "475512fe4 (October 5) corrected featured calculator descriptions. 126f5d3fd changes only the ReactElement type. Child calculator and news routes are not this index. Recommendation destination selection in the shared registry does not revise the index article.",
+      "dependencies": [
+        "src/lib/calculatorJourneys.ts",
+        "src/lib/simpleCalculators/index.ts"
+      ],
+      "files": [
+        "src/app/calc/CalcIndexClient.tsx",
+        "src/app/calc/layout.tsx",
+        "src/app/calc/page.tsx",
+        "src/lib/calculatorJourneys.ts",
+        "src/lib/simpleCalculators/index.ts"
+      ],
+      "sha256": "4f87b91929f431c41e8d2c20213fef2d4e8546d4c19b412664bd0bcce47628d2"
+    },
+    "/money-check": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "219e74eba (September 12) changed the H1; this release adds explanatory next-step content on October 19.",
+      "dependencies": [
+        "src/components/TopicNextSteps.tsx",
+        "src/lib/topicNextSteps.ts"
+      ],
+      "files": [
+        "src/app/money-check/MoneyCheckClient.tsx",
+        "src/app/money-check/page.tsx",
+        "src/components/TopicNextSteps.tsx",
+        "src/lib/topicNextSteps.ts"
+      ],
+      "sha256": "c7c430afeeb041f576655e5f262910ea02b8a84817f9e6d607b9fc2a0f80a3cf"
+    },
+    "/": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "579d60bb adds persisted salary comparison and decision steps in the shared calculator on October 19. Unrelated app children and global advertising infrastructure are not the home content timestamp.",
+      "dependencies": [
+        "src/components/NextActions.tsx",
+        "src/components/SalaryCalculator.tsx"
+      ],
+      "files": [
+        "src/app/HomeClient.tsx",
+        "src/app/page.tsx",
+        "src/components/NextActions.tsx",
+        "src/components/SalaryCalculator.tsx"
+      ],
+      "sha256": "e314fe6ab3dc748f9ed44d797a87b15ab8969bdbb419a1ee5918e441a67c5922"
+    },
+    "/home-loan": {
+      "contentDate": "2026-09-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "Existing explicit editorial baseline 2026-09-19 retained after route-owned history review; no later substantive change was identified in the reviewed scope.",
+      "dependencies": [],
+      "files": [
+        "src/app/home-loan/page.tsx"
+      ],
+      "sha256": "2dbc391891a19bcbf3cd9ecebf7a8e0ac58f64a634c963faca7df9b757dfe0af"
+    },
+    "/about": {
+      "contentDate": "2026-09-27",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "c3d53bdae (September 27) adds the editorial method paragraph about official announcements and AI-assisted drafting.",
+      "dependencies": [],
+      "files": [
+        "src/app/about/page.tsx"
+      ],
+      "sha256": "6d7ef9e0fa9edd65536c5fe14c605e424fa4c76d95bdc26f58f30408d938130e"
+    },
+    "/tools/loan": {
+      "contentDate": "2026-09-10",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "Existing explicit editorial baseline 2026-09-10 retained after route-owned history review; no later substantive change was identified in the reviewed scope.",
+      "dependencies": [],
+      "files": [
+        "src/app/tools/loan/page.tsx"
+      ],
+      "sha256": "b228c95d06e0fa627ecb247bec24e822166890535ffca767e8fb796af3a2289b"
+    },
+    "/tools/real-estate/dsr": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "September 10 model/search explanation alignment retained in history. This release adds contextual housing-tool explanations on October 19.",
+      "dependencies": [
+        "src/app/tools/layout.tsx",
+        "src/components/TopicNextSteps.tsx",
+        "src/lib/topicNextSteps.ts"
+      ],
+      "files": [
+        "src/app/tools/layout.tsx",
+        "src/app/tools/real-estate/dsr/page.tsx",
+        "src/components/TopicNextSteps.tsx",
+        "src/lib/topicNextSteps.ts"
+      ],
+      "sha256": "acb46089bf5b43c5c482d7da90051f70e942068c148b4f2abb3d5ffc24a9c746"
+    },
+    "/table/2026/annual": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "352451886 (October 4) corrects FAQ assumptions and table labels; this release adds explanatory table next steps on October 19. Dataset calculation date September 25 is separately preserved.",
+      "dependencies": [],
+      "files": [
+        "src/app/table/2026/annual/page.tsx"
+      ],
+      "sha256": "982e94be606eb4b7a9a1fdaa5bbb60686315e9e7e789e3d5fbf53d402d655917"
+    },
+    "/table/2026/monthly": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "352451886 (October 4) corrects FAQ assumptions and table labels; this release adds explanatory table next steps on October 19. Dataset calculation date September 25 is separately preserved.",
+      "dependencies": [],
+      "files": [
+        "src/app/table/2026/monthly/page.tsx"
+      ],
+      "sha256": "815ce915646cefa48cd76615a6b3438d60fa77627d1af40fbc6442cebae029e7"
+    },
+    "/table/2026/weekly": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "352451886 (October 4) corrects FAQ assumptions and table labels; this release adds explanatory table next steps on October 19. Dataset calculation date September 25 is separately preserved.",
+      "dependencies": [],
+      "files": [
+        "src/app/table/2026/weekly/WeeklyTableInteractive.tsx",
+        "src/app/table/2026/weekly/page.tsx"
+      ],
+      "sha256": "b77799379654206196a0a67517fb81b07d0ea7c58838318835c2ec7e739785b4"
+    },
+    "/table/2026/hourly": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "352451886 (October 4) corrects FAQ assumptions and table labels; this release adds explanatory table next steps on October 19. Dataset calculation date September 25 is separately preserved.",
+      "dependencies": [],
+      "files": [
+        "src/app/table/2026/hourly/HourlyTableInteractive.tsx",
+        "src/app/table/2026/hourly/page.tsx"
+      ],
+      "sha256": "78071c1067425a747d4d5a15156b09eea9de7da4cfccc61678aff46722891559"
+    },
+    "/table/2027/annual": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "352451886 (October 4) corrects FAQ assumptions and table labels; this release adds explanatory table next steps on October 19. Dataset calculation date September 25 is separately preserved.",
+      "dependencies": [],
+      "files": [
+        "src/app/table/2027/annual/page.tsx"
+      ],
+      "sha256": "04d152db8efacfaee918d8d6ff714c1eb11f0dcd4e8e974c48bca35ac5633971"
+    },
+    "/table/2027/monthly": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "352451886 (October 4) corrects FAQ assumptions and table labels; this release adds explanatory table next steps on October 19. Dataset calculation date September 25 is separately preserved.",
+      "dependencies": [],
+      "files": [
+        "src/app/table/2027/monthly/page.tsx"
+      ],
+      "sha256": "545da3babd1dbd4bed2f3ca0dcffe569192f44d5731a5d65542be637fceac0b6"
+    },
+    "/table/2027/weekly": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "352451886 (October 4) corrects FAQ assumptions and table labels; this release adds explanatory table next steps on October 19. Dataset calculation date September 25 is separately preserved.",
+      "dependencies": [],
+      "files": [
+        "src/app/table/2027/weekly/WeeklyTableInteractive.tsx",
+        "src/app/table/2027/weekly/page.tsx"
+      ],
+      "sha256": "92cf7579cee8154a4859613786fde77483fd1ef4790f5035afe230a2fb0ad60d"
+    },
+    "/table/2027/hourly": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "352451886 (October 4) corrects FAQ assumptions and table labels; this release adds explanatory table next steps on October 19. Dataset calculation date September 25 is separately preserved.",
+      "dependencies": [],
+      "files": [
+        "src/app/table/2027/hourly/HourlyTableInteractive.tsx",
+        "src/app/table/2027/hourly/page.tsx"
+      ],
+      "sha256": "ca0bbc92d2fb3834086de4544383d1737b185f3270e961719617d8c61418baf2"
+    },
+    "/calc/samsung-bonus": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "579d60bb (October 19) aligns OPI2/net-estimate metadata and adds saved scenarios; this release also adds explanatory next-step content. The September 25 shared engine is only a lower bound.",
+      "dependencies": [
+        "src/components/TopicNextSteps.tsx",
+        "src/lib/topicNextSteps.ts"
+      ],
+      "files": [
+        "src/app/calc/samsung-bonus/Client.tsx",
+        "src/app/calc/samsung-bonus/MultiYearBonusSimulator.tsx",
+        "src/app/calc/samsung-bonus/MultiYearRSUSimulator.tsx",
+        "src/app/calc/samsung-bonus/SavedScenarios.tsx",
+        "src/app/calc/samsung-bonus/TaiCalculator.tsx",
+        "src/app/calc/samsung-bonus/annualOp.ts",
+        "src/app/calc/samsung-bonus/model.ts",
+        "src/app/calc/samsung-bonus/observeSamsungModuleView.ts",
+        "src/app/calc/samsung-bonus/opiData.ts",
+        "src/app/calc/samsung-bonus/page.tsx",
+        "src/app/calc/samsung-bonus/personalBonus.ts",
+        "src/app/calc/samsung-bonus/scenarioStorage.ts",
+        "src/app/calc/samsung-bonus/shareState.ts",
+        "src/app/calc/samsung-bonus/shared.tsx",
+        "src/app/calc/samsung-bonus/taiData.ts",
+        "src/components/TopicNextSteps.tsx",
+        "src/lib/topicNextSteps.ts"
+      ],
+      "sha256": "442c13d630ca463ec01d14c8d083949fec19ebecd3857100969e51480bd4fce0"
+    },
+    "/calc/sk-hynix-bonus": {
+      "contentDate": "2026-10-04",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "352451886 (October 4) corrects the cash/stock and percentage-point FAQ assumptions. Later merge timestamps alone do not date new content.",
+      "dependencies": [],
+      "files": [
+        "src/app/calc/sk-hynix-bonus/Client.tsx",
+        "src/app/calc/sk-hynix-bonus/StockScenarioSection.tsx",
+        "src/app/calc/sk-hynix-bonus/StockScenarioSimulator.tsx",
+        "src/app/calc/sk-hynix-bonus/page.tsx",
+        "src/app/calc/sk-hynix-bonus/psData.ts"
+      ],
+      "sha256": "1b0d91ec39b823022869eb1954903bd746c30176fd74e8259b2f5cc0d5acabe5"
+    },
+    "/calc/bonus-calculators": {
+      "contentDate": "2026-10-09",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "Existing explicit editorial baseline 2026-10-09 retained after route-owned history review; no later substantive change was identified in the reviewed scope.",
+      "dependencies": [],
+      "files": [
+        "src/app/calc/bonus-calculators/page.tsx"
+      ],
+      "sha256": "1b12a015b345c3640cc36c8696616901dd491d8ccc5611ee3933d090519232dc"
+    },
+    "/calc/bonus-home-plan": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "3980bb5b8 (October 8) corrects the shareholder-approval premise; this release adds explanatory housing/retirement next steps on October 19.",
+      "dependencies": [
+        "src/components/TopicNextSteps.tsx",
+        "src/lib/topicNextSteps.ts"
+      ],
+      "files": [
+        "src/app/calc/bonus-home-plan/Client.tsx",
+        "src/app/calc/bonus-home-plan/page.tsx",
+        "src/components/TopicNextSteps.tsx",
+        "src/lib/topicNextSteps.ts"
+      ],
+      "sha256": "976a99ebb15bfe11e5e3ad9a601ffe52a64f4f0a5931c70e586334f02edd5c9a"
+    },
+    "/calc/hyundai-bonus": {
+      "contentDate": "2026-09-25",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "78f10ee20 (September 25) changes the bonus-tax engine. Later dormant announcement configuration leaves current text unchanged; 4c83c9b88 only removes a redundant memo dependency.",
+      "dependencies": [],
+      "files": [
+        "src/app/calc/hyundai-bonus/Client.tsx",
+        "src/app/calc/hyundai-bonus/page.tsx"
+      ],
+      "sha256": "865f5eadbe2567a3f07f2ca4fd3c7c2c694518836504c2395c33ee4ba6524ffb"
+    },
+    "/calc/year-end-bonus": {
+      "contentDate": "2026-09-25",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "Existing explicit editorial baseline 2026-09-25 retained after route-owned history review; no later substantive change was identified in the reviewed scope.",
+      "dependencies": [],
+      "files": [
+        "src/app/calc/year-end-bonus/Client.tsx",
+        "src/app/calc/year-end-bonus/page.tsx"
+      ],
+      "sha256": "d0599a8340a47e1bf46d6b4e181644dbcc245497d243720b1e756660cb8b025b"
+    },
+    "/calc/kia-bonus": {
+      "contentDate": "2026-09-25",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "September 25 bonus-tax engine and rate-label revision. 4c83c9b88 only removes a redundant memo dependency; no later substantive page revision.",
+      "dependencies": [],
+      "files": [
+        "src/app/calc/kia-bonus/Client.tsx",
+        "src/app/calc/kia-bonus/page.tsx"
+      ],
+      "sha256": "53c648bb04b9eab331a39c5e23d6ee631be17ed132607448bc4e256bd57cdbe4"
+    },
+    "/minimum-wage-2027": {
+      "contentDate": "2026-09-30",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "4285fedbb (September 30) corrects the insurance-status FAQ and the 2027 rate reference. Visible/OG/Article dates are repaired to that day, not today.",
+      "dependencies": [],
+      "files": [
+        "src/app/minimum-wage-2027/page.tsx"
+      ],
+      "sha256": "a9bdeba2a75ef00d929e81694af0eb108cfe39a133c98ed221da357dfb3c779b"
+    },
+    "/minimum-wage-2026": {
+      "contentDate": "2026-09-12",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "cdf317603 (September 12) corrects hours-to-months conversion to MONTHLY_HOURS=209.",
+      "dependencies": [],
+      "files": [
+        "src/app/minimum-wage-2026/page.tsx"
+      ],
+      "sha256": "669e914755225b75ba99f8b5fca7437d55cd1f5a5d3edc3314ac84118fbe7808"
+    },
+    "/year-end-tax": {
+      "contentDate": "2026-10-04",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "352451886 (October 4) corrects the distinction between income deductions and tax credits in the FAQ.",
+      "dependencies": [],
+      "files": [
+        "src/app/year-end-tax/page.tsx"
+      ],
+      "sha256": "9e5eeaa391e023baa4832964b3ecf2b894dca4c30cd5112f040f9c88c3fa0c3d"
+    },
+    "/year-end-tax-2027": {
+      "contentDate": "2026-09-25",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "e5f995544 (September 25) adds the December 31 IRP/pension deadline reference and contextual link.",
+      "dependencies": [],
+      "files": [
+        "src/app/year-end-tax-2027/page.tsx"
+      ],
+      "sha256": "7d1644c989f2349fc5b9e8ce106f83d04996893c53ea1cd6feb047ca95f08379"
+    },
+    "/year-end-tax-preview": {
+      "contentDate": "2026-09-30",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "09fea7d08 (September 30) corrects the expected opening window and adds the prior three official opening dates.",
+      "dependencies": [],
+      "files": [
+        "src/app/year-end-tax-preview/page.tsx"
+      ],
+      "sha256": "494617b46911dabe01c3a56f6af44af848e4daff591637de79ecec65cf2ec26c"
+    },
+    "/chuseok-bonus-2026": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "1895f456e only changes seasonal wording (before/around Chuseok), which did not warrant a new article date. This release adds explanatory bonus/tax next steps on October 19, with visible/OG/Article dates synchronized.",
+      "dependencies": [
+        "src/components/TopicNextSteps.tsx",
+        "src/lib/topicNextSteps.ts"
+      ],
+      "files": [
+        "src/app/chuseok-bonus-2026/Client.tsx",
+        "src/app/chuseok-bonus-2026/page.tsx",
+        "src/components/TopicNextSteps.tsx",
+        "src/lib/topicNextSteps.ts"
+      ],
+      "sha256": "244ca8be3fe365df0633524e0bd244f4f00e0d13f07423d595c873b7fd6e8f01"
+    },
+    "/tax-reform-2026": {
+      "contentDate": "2026-09-30",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "fa2b8ac32 (September 30) corrects withdrawn nonresident deduction and tax-burden-cap proposals. Visible/OG/Article dates are repaired to that day, not today.",
+      "dependencies": [],
+      "files": [
+        "src/app/tax-reform-2026/page.tsx"
+      ],
+      "sha256": "bb2420790490c88a170bac06a0d2d85ae4af419014f3222b720809c26e011096"
+    },
+    "/civil-servant-pay-2027": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "69ddc736a (September 27) adds a contextual civil-net-pay reference; this release adds public-institution/career next-step explanations on October 19.",
+      "dependencies": [
+        "src/components/TopicNextSteps.tsx",
+        "src/lib/topicNextSteps.ts"
+      ],
+      "files": [
+        "src/app/civil-servant-pay-2027/CivilPayForecastSelector.tsx",
+        "src/app/civil-servant-pay-2027/page.tsx",
+        "src/components/TopicNextSteps.tsx",
+        "src/lib/topicNextSteps.ts"
+      ],
+      "sha256": "a36bc192dbd740fd84be4663fe74c5601900c1e41f2c609ef9dd77b15be80923"
+    },
+    "/calc/dual-income-year-end": {
+      "contentDate": "2026-09-06",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "a99c53ba6 (September 6) corrects annual health premium calculation. 075f9bed9 (September 10) replaces the numeric input component without changing calculation/content.",
+      "dependencies": [],
+      "files": [
+        "src/app/calc/dual-income-year-end/Client.tsx",
+        "src/app/calc/dual-income-year-end/page.tsx"
+      ],
+      "sha256": "e8547aa549d42a655ad77dfdfe25567586a7c5d55b5d9e796e80fffc5a191fc8"
+    },
+    "/calc/voluntary-retirement": {
+      "contentDate": "2026-09-03",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "b22aea365 (September 3) corrects calculator title/description. 075f9bed9 replaces the numeric input component without changing the model or text.",
+      "dependencies": [],
+      "files": [
+        "src/app/calc/voluntary-retirement/Client.tsx",
+        "src/app/calc/voluntary-retirement/page.tsx"
+      ],
+      "sha256": "46134b5e9db121eb26d68b575a7bca0f02c816afed509baeb6c52caff9e8c3d3"
+    },
+    "/calc/dependent-check": {
+      "contentDate": "2026-09-05",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "0b1a29ac8 (September 5) adds the year-end-tax explanatory cluster. 075f9bed9 only replaces the numeric input component.",
+      "dependencies": [],
+      "files": [
+        "src/app/calc/dependent-check/Client.tsx",
+        "src/app/calc/dependent-check/page.tsx"
+      ],
+      "sha256": "6ad1a694c6ac96333949db7fa3a32cd9109581ef7eff4e142d2f6fd54377be9b"
+    },
+    "/calc/smb-income-tax-break": {
+      "contentDate": "2026-10-04",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "352451886 (October 4) removes an unsupported fixed overstatement amount from the explanation.",
+      "dependencies": [],
+      "files": [
+        "src/app/calc/smb-income-tax-break/Client.tsx",
+        "src/app/calc/smb-income-tax-break/page.tsx"
+      ],
+      "sha256": "9da796f44640710840ddd49f7594edfc26227ed95e3f6f67a70e0bc220d607e8"
+    },
+    "/calc/offer-compare": {
+      "contentDate": "2026-09-25",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "Existing explicit editorial baseline 2026-09-25 retained after route-owned history review; no later substantive change was identified in the reviewed scope.",
+      "dependencies": [],
+      "files": [
+        "src/app/calc/offer-compare/Client.tsx",
+        "src/app/calc/offer-compare/page.tsx"
+      ],
+      "sha256": "9262c5d649bd13591975b17bcc3b57d95d1e78e4847c950f125e53af84ed27e8"
+    },
+    "/calc/child-deduction": {
+      "contentDate": "2026-09-09",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "Existing explicit editorial baseline 2026-09-09 retained after route-owned history review; no later substantive change was identified in the reviewed scope.",
+      "dependencies": [],
+      "files": [
+        "src/app/calc/child-deduction/Client.tsx",
+        "src/app/calc/child-deduction/page.tsx"
+      ],
+      "sha256": "de7e27a4863ca3e6eba5c531b26c96990cebd22df29d12fb49acf7acfd5b7ac1"
+    },
+    "/tax-changes-2026": {
+      "contentDate": "2026-09-09",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "Existing explicit editorial baseline 2026-09-09 retained after route-owned history review; no later substantive change was identified in the reviewed scope.",
+      "dependencies": [],
+      "files": [
+        "src/app/tax-changes-2026/page.tsx"
+      ],
+      "sha256": "70b2187e10433a573802863f964d1a4e351270924adf568e5dff680d5ed304c8"
+    },
+    "/year-end-tax-checklist": {
+      "contentDate": "2026-09-30",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "932db267a (September 30) corrects designated/general donation terminology. Visible/OG dates are repaired to that day, not today.",
+      "dependencies": [],
+      "files": [
+        "src/app/year-end-tax-checklist/page.tsx"
+      ],
+      "sha256": "4db37614882174535255a2194548fb6473b4549f7ef6c15de448f04d15b57987"
+    },
+    "/weekly-holiday-allowance-2026": {
+      "contentDate": "2026-09-12",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "cdf317603 (September 12) corrects hours-to-months conversion. 126f5d3fd replaces an anchor with AppLink while preserving its destination and text.",
+      "dependencies": [],
+      "files": [
+        "src/app/weekly-holiday-allowance-2026/WeeklyHolidayAllowanceClient.tsx",
+        "src/app/weekly-holiday-allowance-2026/page.tsx"
+      ],
+      "sha256": "63eb540f8533be6134d3209b79ead735cc6812d2912d34343ead74101fc293c1"
+    },
+    "/civil-servant-pay-2026": {
+      "contentDate": "2026-10-04",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "352451886 (October 4) replaces an inappropriate private-employee reference with the civil-pension-specific calculator and explanation.",
+      "dependencies": [],
+      "files": [
+        "src/app/civil-servant-pay-2026/page.tsx"
+      ],
+      "sha256": "87b9bd163b08a0e2985bd578df44cbd7bdcd09135eb190e6f4cc62446bcf0c06"
+    },
+    "/calc/civil-servant-net-pay": {
+      "contentDate": "2026-09-27",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "Existing explicit editorial baseline 2026-09-27 retained after route-owned history review; no later substantive change was identified in the reviewed scope.",
+      "dependencies": [],
+      "files": [
+        "src/app/calc/civil-servant-net-pay/Client.tsx",
+        "src/app/calc/civil-servant-net-pay/page.tsx"
+      ],
+      "sha256": "df719bb9df0a8d9ecd111014349db80dbc6f12683f8354821d02b1448c0e8c90"
+    },
+    "/tools/finance/compound": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "352451886 (October 4) aligns metadata with the implemented gross monthly-compounding model. This release adds explanatory finance/retirement next steps on October 19.",
+      "dependencies": [
+        "src/app/tools/layout.tsx",
+        "src/components/TopicNextSteps.tsx",
+        "src/lib/topicNextSteps.ts"
+      ],
+      "files": [
+        "src/app/tools/finance/compound/layout.tsx",
+        "src/app/tools/finance/compound/page.tsx",
+        "src/app/tools/layout.tsx",
+        "src/components/TopicNextSteps.tsx",
+        "src/lib/topicNextSteps.ts"
+      ],
+      "sha256": "f0057462c63d364f0f76dbfa20e2becee28b33475f56114bc821a5dae6b75012"
+    },
+    "/tools/finance/bonus": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "352451886 (October 4) corrects the tax/credit explanation. This release adds explanatory finance/housing next steps on October 19.",
+      "dependencies": [
+        "src/app/tools/layout.tsx",
+        "src/components/TopicNextSteps.tsx",
+        "src/lib/topicNextSteps.ts"
+      ],
+      "files": [
+        "src/app/tools/finance/bonus/layout.tsx",
+        "src/app/tools/finance/bonus/page.tsx",
+        "src/app/tools/layout.tsx",
+        "src/components/TopicNextSteps.tsx",
+        "src/lib/topicNextSteps.ts"
+      ],
+      "sha256": "de501e0c11e9b6d902b60dfc7ce860559675de98a4d60b8d6b86189a3f6cf145"
+    },
+    "/donation-tax-credit-2026": {
+      "contentDate": "2026-09-25",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "September 25 donation-rate and explanatory corrections (af8b1426e/bd68d8607). fa26128f3 (September 26) only wires measurement events; it is not an editorial revision.",
+      "dependencies": [],
+      "files": [
+        "src/app/donation-tax-credit-2026/Client.tsx",
+        "src/app/donation-tax-credit-2026/page.tsx"
+      ],
+      "sha256": "0f46c8cc39be891ebb36dcd1cd9e25eeb3eaee6cb3f70aaaa6bacdcbfe2bf4f1"
+    },
+    "/health-insurance-dependent": {
+      "contentDate": "2026-10-17",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "126f5d3fd (October 17) corrects the input/result and title/lead to state partial eligibility criteria and the need for separate official confirmation.",
+      "dependencies": [],
+      "files": [
+        "src/app/health-insurance-dependent/Client.tsx",
+        "src/app/health-insurance-dependent/page.tsx"
+      ],
+      "sha256": "d3a6f4e70d8dc2478729d951ed2644f55d6e477b0ff8f2a52bc81281b8422b0a"
+    },
+    "/social-insurance-rates-2027": {
+      "contentDate": "2026-10-04",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "352451886 (October 4) corrects the pension label from an ambiguous increase to application of the employee rate.",
+      "dependencies": [],
+      "files": [
+        "src/app/social-insurance-rates-2027/page.tsx"
+      ],
+      "sha256": "354424a5e8211243a050e2fbe1897c0c1b3300ec54dad840f7e593890a2c6b0d"
+    },
+    "/military-pay-2026": {
+      "contentDate": "2026-09-27",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "69ddc736a (September 27) adds the contextual civil-net-pay reference below existing content.",
+      "dependencies": [],
+      "files": [
+        "src/app/military-pay-2026/SavingsCalc.tsx",
+        "src/app/military-pay-2026/page.tsx"
+      ],
+      "sha256": "cf2a5f4d16c770d7131ee3210b387a8bf8fb92091e70e9894015316d00cd18aa"
+    },
+    "/teacher-pay-2026": {
+      "contentDate": "2026-10-04",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "352451886 (October 4) corrects the destination and label to the teacher-specific civil-net-pay model.",
+      "dependencies": [],
+      "files": [
+        "src/app/teacher-pay-2026/page.tsx"
+      ],
+      "sha256": "95fed90798df363da29e47325d0c5cbaeec227cb1665c12ec7de6c4e31e6ad00"
+    },
+    "/police-pay-2026": {
+      "contentDate": "2026-10-04",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "352451886 (October 4) corrects the destination and label to the police-specific civil-net-pay model.",
+      "dependencies": [],
+      "files": [
+        "src/app/police-pay-2026/page.tsx"
+      ],
+      "sha256": "5ab117ba8f6ca0fd5a7d9e8cb29c384b84dddeadbf352362446797e07da6d004"
+    },
+    "/firefighter-pay-2026": {
+      "contentDate": "2026-10-04",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "352451886 (October 4) corrects the destination and label to the firefighter-specific civil-net-pay model.",
+      "dependencies": [],
+      "files": [
+        "src/app/firefighter-pay-2026/page.tsx"
+      ],
+      "sha256": "f54e4474cf7378237ba66b0b7acbb2919f37a500ef23765ef46d5f21650ab9e0"
+    },
+    "/embed": {
+      "contentDate": "2026-10-04",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "352451886 (October 4) corrects guaranteed accuracy, dwell-time and automatic legal-update claims in the embed FAQ.",
+      "dependencies": [],
+      "files": [
+        "src/app/embed/EmbedCompanyPicker.tsx",
+        "src/app/embed/EmbedSnippetClient.tsx",
+        "src/app/embed/page.tsx",
+        "src/app/embed/widgets.ts"
+      ],
+      "sha256": "52efa0cd5dc1f78449dc51aeb2c6ccc17633e5b86a7e8a0c795c4268d4232e00"
+    },
+    "/en": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "September 25 A17 calculation-method copy revision; this release adds contextual explanatory links on October 19. Later shared technical changes alone do not set the date.",
+      "dependencies": [
+        "src/lib/englishContentLinks.ts"
+      ],
+      "files": [
+        "src/app/en/EnLandingClient.tsx",
+        "src/app/en/EnglishSalaryCalculator.tsx",
+        "src/app/en/LocaleSync.tsx",
+        "src/app/en/layout.tsx",
+        "src/app/en/not-found.tsx",
+        "src/app/en/page.tsx",
+        "src/lib/englishContentLinks.ts"
+      ],
+      "sha256": "e0938fd2afaff9f6c21e7d7ef69467e6c072092f3f7fc0f3a8b68db5821dcec1"
+    },
+    "/en/flat-tax": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "September 9 original content; September 10 NumberInput substitution is technical. This release adds a contextual explanatory section on October 19.",
+      "dependencies": [
+        "src/lib/englishCalculators.ts",
+        "src/lib/englishContentLinks.ts"
+      ],
+      "files": [
+        "src/app/en/flat-tax/layout.tsx",
+        "src/app/en/flat-tax/page.tsx",
+        "src/lib/englishCalculators.ts",
+        "src/lib/englishContentLinks.ts"
+      ],
+      "sha256": "461bbff40ce592114c705abe246c5169e27d9d17e55eba96f21ef965ebc06db9"
+    },
+    "/en/salary-converter": {
+      "contentDate": "2026-09-09",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "September 9 converter content remains. September 10 NumberInput substitution changes formatting, not the gross conversion model or explanation.",
+      "dependencies": [
+        "src/lib/englishCalculators.ts"
+      ],
+      "files": [
+        "src/app/en/salary-converter/layout.tsx",
+        "src/app/en/salary-converter/page.tsx",
+        "src/lib/englishCalculators.ts"
+      ],
+      "sha256": "1fbf8ddbf06646fab1bebc67186a6643f5b0061e58df97842c8bdcabf34383da"
+    },
+    "/en/help": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "September 25 A17 withholding-table explanation revision; this release adds contextual explanatory links on October 19.",
+      "dependencies": [
+        "src/lib/englishContentLinks.ts"
+      ],
+      "files": [
+        "src/app/en/help/page.tsx",
+        "src/lib/englishContentLinks.ts"
+      ],
+      "sha256": "f2f4c7f43315f26674719e2d77bae6befd159a46fbe0e24aa949b4939987b2ea"
+    },
+    "/en/guides": {
+      "contentDate": "2026-10-19",
+      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
+      "reason": "September 9 listing baseline and September 10 shared-card refactor distinguished from article changes. This release adds explanatory sourcing/correction-policy guidance on October 19; child-article recommendation reordering alone does not date an article.",
+      "dependencies": [],
+      "files": [
+        "src/app/en/guides/EnglishGuidesClient.tsx",
+        "src/app/en/guides/page.tsx"
+      ],
+      "sha256": "8f721f79c46a7f1da82a43c662ae54f13a5a8cdfedbdf5b6d2bbd1a9c025a75a"
+    }
+  }
+}

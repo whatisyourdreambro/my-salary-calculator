@@ -38,7 +38,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/civil-servant-pay-2026",
   ogType: "article",
   publishedTime: "2026-08-15",
-  modifiedTime: "2026-09-09",
+  modifiedTime: "2026-10-04",
   keywords: [
     "공무원 봉급표 2026",
     "2026 공무원 봉급표",
@@ -118,7 +118,7 @@ export default function CivilServantPay2026Page() {
             slug: "civil-servant-pay-2026",
             url: "/civil-servant-pay-2026",
             publishedDate: "2026-08-15",
-            modifiedDate: "2026-09-09",
+            modifiedDate: "2026-10-04",
           }),
           datasetLd({
             name: "2026년 공무원 봉급표 데이터 (9급~5급 1~10호봉)",
@@ -153,7 +153,7 @@ export default function CivilServantPay2026Page() {
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
             2026 공무원 봉급표 <span className="text-electric">9급~5급 월급</span>
           </h1>
-          <PublishedMeta publishedDate="2026-08-15" updatedDate="2026-08-15" className="mb-2" />
+          <PublishedMeta publishedDate="2026-08-15" updatedDate="2026-10-04" className="mb-2" />
           <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
             전체 3.5% 인상(2017년 이후 최고), 7~9급 저연차는 추가 3.1%를 더해 최대 6.6%
             인상됐습니다. 9급 초임은 수당 포함 연 3,428만원(월평균 약 286만원)입니다.

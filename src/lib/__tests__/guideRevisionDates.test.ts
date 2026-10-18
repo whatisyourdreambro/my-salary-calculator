@@ -30,7 +30,7 @@ describe("검증된 가이드 보강일의 상세 화면·검색 메타 정합�
       const sitemap = require('./src/app/sitemap.ts').default;
       const { GUIDE_CONTENT_REVISED_TWO_HOME_LAW: revisions } = require('./src/lib/guideContentRevisions.twoHomeLaw.ts');
       const paths = new Set(Object.keys(revisions).map(slug => 'https://www.moneysalary.com/guides/' + slug));
-      console.log(JSON.stringify(sitemap().filter(item => paths.has(item.url)).map(item => ({ url: item.url, date: item.lastModified.toISOString().slice(0, 10) }))));`;
+      console.log(JSON.stringify(sitemap().filter(item => paths.has(item.url)).map(item => ({ url: item.url, date: item.lastModified }))));`;
     const rows = JSON.parse(execFileSync(process.execPath, ["--import", "tsx", "-e", source], {
       cwd: process.cwd(), encoding: "utf8", timeout: 15_000, maxBuffer: 1024 * 1024,
     })) as Array<{ url: string; date: string }>;

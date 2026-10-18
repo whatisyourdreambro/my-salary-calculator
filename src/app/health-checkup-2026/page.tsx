@@ -11,6 +11,7 @@
 //    '차상위계층 무료'는 기준이 아니다(보험료 하위 50% 선정기준액). 비용 표 셀은 옛 문구와 같은 1px 폭 구간.
 //  - 과태료: 산업안전보건법 제175조④7호(제129조 건강진단 미실시 사업주 1천만원 이하)·⑥3호(제133조 근로자 300만원 이하) — 값 불변.
 
+import TopicNextSteps from '@/components/TopicNextSteps';
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { Calendar, ArrowRight, Stethoscope, FileText, AlertCircle } from "lucide-react";
@@ -32,7 +33,7 @@ export const metadata: Metadata = buildPageMetadata({
  path: "/health-checkup-2026",
  ogType: "article",
  publishedTime: "2026-05-22",
- modifiedTime: "2026-09-27",
+ modifiedTime: "2026-10-19T00:00:00+09:00",
  keywords: [
  "건강검진 2026",
  "2026 건강검진",
@@ -142,7 +143,7 @@ export default function HealthCheckup2026Page() {
  slug: "health-checkup-2026",
  url: "/health-checkup-2026",
  publishedDate: "2026-05-22",
- modifiedDate: "2026-09-27",
+ modifiedDate: "2026-10-19T00:00:00+09:00",
  }),
  speakableLd({
  url: "/health-checkup-2026",
@@ -160,7 +161,7 @@ export default function HealthCheckup2026Page() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  건강검진 2026 <span className="text-electric">대상·비용·예약</span>
  </h1>
- <PublishedMeta publishedDate="2026-05-22" updatedDate="2026-09-27" className="mb-2" />
+ <PublishedMeta publishedDate="2026-05-22" updatedDate="2026-10-19" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  본인이 2026년 건강검진 대상자인지, 어떤 항목을 받고, 비용은 얼마인지,
  예약은 어디서 하는지 한 페이지에서 확인하세요. 직장인은 미수검 시 사업주
@@ -314,6 +315,7 @@ export default function HealthCheckup2026Page() {
  <HomeTopAd />
  </div>
  </div>
+   <TopicNextSteps path="/health-checkup-2026" />
  </main>
  );
 }

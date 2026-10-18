@@ -1,5 +1,6 @@
 // src/app/table/2026/weekly/page.tsx
 
+import SalaryTableNextSteps from '@/components/SalaryTableNextSteps';
 import { Suspense } from "react";
 import { generateWeeklyPayTableData2026 } from "@/lib/generateData";
 import { HelpCircle, TrendingUp } from "lucide-react";
@@ -216,6 +217,7 @@ function WeeklyTable2026() {
  <FavoritesButton path="/table/2026/weekly" title="2026 주급 실수령액 표" />
  </div>
  </div>
+   <SalaryTableNextSteps year={2026} unit="weekly" />
  </main>
  </>
  );

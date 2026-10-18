@@ -46,7 +46,7 @@ const LAST_ROW = TEACHER_PAY_ROWS_2026.reduce((top, row) => (row[0] > top[0] ? r
 // 이전(2026-08-30~09-24) title: "2026 교사 호봉표 — 초등·중등 교원 월급, 9호봉 249만원부터"
 const PAGE_TITLE = `2026 교사 호봉표·교원 봉급표 — ${FIRST_ROW[0]}호봉 월 ${Math.floor(FIRST_ROW[1] / 10000)}만원부터`;
 const PAGE_DESCRIPTION = `2026년 교사 호봉표(유·초·중등 교원 봉급표) 인사혁신처 공표 수치. 신규 교사 통상 ${FIRST_ROW[0]}호봉 월 ${fmt(FIRST_ROW[1])}원, ${LAST_ROW[0]}호봉 ${fmt(LAST_ROW[1])}원과 담임수당 ${TEACHER_ALLOWANCE_2026.homeroom / 10000}만원 등 수당, 실수령 계산 흐름을 정리했습니다.`;
-const MODIFIED = "2026-09-25";
+const MODIFIED = "2026-10-04";
 
 export const metadata: Metadata = buildPageMetadata({
   title: PAGE_TITLE,

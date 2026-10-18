@@ -6,6 +6,7 @@
 // ★ 갱신 체크포인트: 매월 16일 이후 시세 스냅숏(npx tsx scripts/fetch-market-snapshot.ts) · 10월 말 3분기 실적(기본 규칙 재검토) ·
 //   1~2월 삼성 OPI·SK PS 발표 · 2026-12-31 지방 스트레스 금리 유예 종료 · 규제지역 변경 · 4월 사업보고서.
 
+import TopicNextSteps from '@/components/TopicNextSteps';
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { buildToolMetadata } from "@/lib/seo";
@@ -259,6 +260,7 @@ export default function BonusHomePlanPage() {
 
           <RelatedCalculators currentPath={PATH} />
         </div>
+        <TopicNextSteps path="/calc/bonus-home-plan" />
       </main>
     </>
   );

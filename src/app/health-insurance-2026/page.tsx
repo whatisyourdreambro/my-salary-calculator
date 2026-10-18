@@ -5,6 +5,7 @@
 // 2026-10-04: 10월 1일 시행 분납 기준 및 시행 전 재산정분의 경과조치를 반영.
 // 건강보험 보수월액 변경·분납도 월급 공제에 영향을 주므로 월만으로 원인을 단정하지 않는다.
 
+import TopicNextSteps from '@/components/TopicNextSteps';
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { Calendar, AlertCircle, ArrowRight, Calculator, TrendingUp, TrendingDown } from "lucide-react";
@@ -24,7 +25,7 @@ export const metadata: Metadata = buildPageMetadata({
  path: "/health-insurance-2026",
  ogType: "article",
  publishedTime: "2026-04-01",
- modifiedTime: "2026-10-04",
+ modifiedTime: "2026-10-19T00:00:00+09:00",
  keywords: [
  "2026 건강보험료 정산",
  "건강보험료 연말정산",
@@ -104,7 +105,7 @@ export default function HealthInsurance2026Page() {
  slug: "health-insurance-2026",
  url: "/health-insurance-2026",
  publishedDate: "2026-04-01",
- modifiedDate: "2026-10-04",
+ modifiedDate: "2026-10-19T00:00:00+09:00",
  }),
  speakableLd({
  url: "/health-insurance-2026",
@@ -122,7 +123,7 @@ export default function HealthInsurance2026Page() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  2026 건강보험료 <span className="text-electric">연말정산 가이드</span>
  </h1>
- <PublishedMeta publishedDate="2026-04-01" updatedDate="2026-10-04" className="mb-2" />
+ <PublishedMeta publishedDate="2026-04-01" updatedDate="2026-10-19" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  직장인 건강보험료는 매년 4월분 보험료에 작년 실제 보수 기준으로
  정산됩니다. 정산금 부담 줄이는 분할납부(2026년 10월 기준 변경)와 환급 시점,
@@ -278,6 +279,7 @@ export default function HealthInsurance2026Page() {
 
  <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
  </div>
+   <TopicNextSteps path="/health-insurance-2026" />
  </main>
  );
 }

@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "@/components/AppLink";
+import { comparisonNeighbors } from "@/lib/salaryComparisonNeighbors";
 import { permanentRedirect } from "next/navigation";
 import { jobsData, getJobById } from "@/data/jobsData";
 import { buildPageMetadata } from "@/lib/seo";
@@ -121,9 +122,7 @@ export default async function JobPage({ params: pendingParams }: Props) {
   );
 
   // related jobs in same category
-  const relatedJobs = jobsData
-    .filter((j) => j.category === job.category && j.id !== job.id)
-    .slice(0, 6);
+  const relatedJobs = comparisonNeighbors(jobsData.filter(j => j.category === job.category), job.id, 6);
 
   // R2 W2 (2026-08-31) — 봉급표 버티컬 역링크 (봉급표→job 일방통행 해소).
   // 공무원보수규정 별표 원문 봉급표 페이지가 실재하는 직업만 매핑.

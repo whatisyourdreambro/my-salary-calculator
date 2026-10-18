@@ -5,6 +5,8 @@ import EnglishToolCalculator from '@/components/english/EnglishToolCalculator';
 import { buildEnglishMetadata } from '@/lib/englishSeo';
 import { ENGLISH_TOOLS, getEnglishTool } from '@/lib/englishTools';
 import { ENGLISH_TOOL_DETAILS } from '@/lib/englishToolModels';
+import EnglishContentLinks from '@/components/english/EnglishContentLinks';
+import { ENGLISH_TOOL_READING } from '@/lib/englishContentLinks';
 
 export function generateStaticParams() { return ENGLISH_TOOLS.map(tool => ({ slug: tool.slug })); }
 export async function generateMetadata({ params: pendingParams }: { params: Promise<{ slug: string }> }) {
@@ -34,6 +36,10 @@ export default async function EnglishToolPage({ params: pendingParams }: { param
     <section aria-labelledby="tool-faq" className="space-y-4">
       <h2 id="tool-faq" className="text-2xl font-bold">Questions about this tool</h2>
       {details.faq.map(item => <details key={item.question} className="rounded-xl border border-border bg-background p-5"><summary className="min-h-11 cursor-pointer font-semibold">{item.question}</summary><p className="mt-3 leading-7 text-muted-foreground">{item.answer}</p></details>)}
+    </section>
+    <section aria-labelledby="tool-next-question">
+      <h2 id="tool-next-question" className="text-2xl font-bold">Check the next part of your plan</h2>
+      <EnglishContentLinks items={[ENGLISH_TOOL_READING[tool.slug].context, ...ENGLISH_TOOL_READING[tool.slug].tools]} />
     </section>
     <div>
       <Link href="/en/help" className="inline-flex min-h-11 items-center font-semibold text-primary underline">Methods, sources and help</Link>

@@ -8,10 +8,11 @@
 // 2026-09-25 B7: URL 원장 게이트 추가(아래 checkUrlLedger) — 원장 갱신은 npm run ledger:update.
 import { readdirSync, statSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { execFileSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { pathToFileURL } from "node:url";
 import sitemap, { ROUTE_OVERRIDES } from "@/app/sitemap";
+import { assessContentReview, isFutureSitemapDate, koreanDay, pageRevisionFields } from "./lib/sitemap-freshness.mjs";
+import { PAGE_LINK_REVIEW_PATHS } from "@/config/pageContentRevisions";
 import { STATIC_LAST_MODIFIED_ISO } from "@/config/siteDates";
 import { webApplicationLd } from "@/lib/structuredData";
 import { koGuides, enGuides } from "@/lib/guidesContent";
@@ -22,77 +23,63 @@ import { listedCohort } from "@/lib/salary-data/dartLite";
 
 const APP_DIR = join(process.cwd(), "src", "app");
 
-// 라우트 → src/app 하위 디렉터리 세그먼트 (fsStaticRoutes 의 역방향 — 같은 규칙:
-// URL 세그먼트 = 디렉터리명. 정적 라우트만 대상이라 동적 세그먼트는 나오지 않는다).
-function routeToAppSegments(route: string): string[] {
-  return route.split("/").filter(Boolean);
-}
-
-// git 호출 — 미설치·저장소 아님·실패는 null (게이트가 조용히 건너뛰도록).
-function git(args: string[]): string | null {
-  try {
-    return execFileSync("git", args, {
-      cwd: process.cwd(),
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "ignore"],
-    }).trim();
-  } catch {
-    return null;
-  }
-}
-
-// ROUTE_OVERRIDES lastModified 신선도 게이트 (2026-09-05, 수익 10배 계획 L18 위생) —
-// sitemap.ts 의 고정 override 가 해당 라우트의 실제 갱신보다 오래됐으면 WARN.
-// 기준 시각의 정의: `git log -1 --format=%cI -- src/app<route>` (해당 라우트 디렉터리를
-// 마지막으로 건드린 커밋의 커미터 시각, ISO 8601 + 오프셋).
-// 비교는 일 단위 — override 는 날짜만 갖는 값(UTC 자정)이므로 커밋의 현지 달력일
-// (%cI 앞 10자)이 override 날짜보다 뒤일 때만 경고한다(같은 날 배포는 정합).
-// override 가 없는 라우트(STATIC_LAST_MODIFIED 폴백)는 대상이 아니다.
-// 비차단(WARN) — exit 코드는 기존 미등재 [FAIL] 규칙만 따른다.
-// 주의: 이 게이트는 라우트 디렉터리를 건드린 "모든" 커밋에 반응하므로 광고 배치·공유 수리·메타 정비 같은
-// 횡단 편집 커밋 뒤에는 WARN 이 대량으로 나온다(도입일 24/28건). 그래서 각 WARN 에 마지막 커밋의
-// 해시·제목을 같이 찍는다 — 제목이 feat(ads)/fix(share)/chore 류면 콘텐츠 갱신이 아니므로 무시하고,
-// 실제 본문·수치 갱신 커밋인데 override 가 오래됐을 때만 sitemap.ts 를 고친다.
-function checkOverrideFreshness(): number {
-  const shallow = git(["rev-parse", "--is-shallow-repository"]);
-  if (shallow === null) return 0; // git 없음 / 저장소 아님 — 조용히 건너뜀
-  if (shallow === "true") {
-    // shallow clone(actions/checkout 기본 fetch-depth=1)에서는 경계(grafted) 커밋이 모든 경로를
-    // "도입"한 것으로 잡혀 `git log -1 -- path` 가 전 경로에 HEAD 를 돌려준다 → 전량 오탐. 건너뛴다.
-    console.log(
-      "[verify-sitemap] override 신선도 게이트 건너뜀 — shallow clone 이라 경로별 마지막 커밋 판정 불가"
-    );
-    return 0;
+// Explicit editorial reviews replace recursive directory timestamps. An unrelated
+// child route or a reviewed technical change does not advance lastmod. Exact
+// source hashes make the decision auditable and require a fresh review on edits,
+// even in a shallow CI checkout. No commit-title exemption or silent git skip.
+function checkOverrideFreshness(entries: Awaited<ReturnType<typeof sitemap>>): number {
+  const ledger = JSON.parse(readFileSync(join(process.cwd(), "scripts/sitemap-content-reviews.json"), "utf8"));
+  if (ledger.schemaVersion !== 1 || ledger.timeZone !== "Asia/Seoul" || !ledger.routes) {
+    throw new Error("Invalid sitemap content-review ledger");
   }
   let warned = 0;
   for (const [route, override] of Object.entries(ROUTE_OVERRIDES)) {
     if (!override.lastModified) continue;
-    const segments = routeToAppSegments(route);
-    if (!existsSync(join(APP_DIR, ...segments))) continue;
-    const lastCommit = git([
-      "log",
-      "-1",
-      "--format=%cI%x09%h%x09%s",
-      "--",
-      ["src", "app", ...segments].join("/"),
-    ]);
-    if (!lastCommit) continue;
-    const [commitIso = "", hash = "", subject = ""] = lastCommit.split("\t");
-    const overrideDay = override.lastModified.toISOString().slice(0, 10);
-    const commitDay = commitIso.slice(0, 10);
-    if (commitDay > overrideDay) {
-      console.warn(
-        `[WARN] override 가 실제 갱신보다 오래됨: ${route} override=${overrideDay} last-commit=${commitDay} ${hash} "${subject}"`
-      );
+    const matches = entries.filter((entry) => new URL(entry.url).pathname === route);
+    const issues = assessContentReview({ root: process.cwd(), route, review: ledger.routes[route], actualLastModified: matches[0]?.lastModified });
+    if (matches.length !== 1) issues.push("actual sitemap must contain exactly one route");
+    if (issues.length) {
+      console.warn(`[WARN] 콘텐츠 수정일 검토 필요: ${route}: ${issues.join("; ")}`);
       warned++;
     }
   }
-  if (warned >= 5) {
-    console.warn(
-      `[verify-sitemap] 신선도 경고 ${warned}건 — 횡단 편집(광고·공유·메타) 커밋 포화 가능성. 제목이 콘텐츠 갱신인 것만 override 갱신 대상.`
-    );
+  for (const route of Object.keys(ledger.routes)) {
+    if (!ROUTE_OVERRIDES[route]?.lastModified) {
+      console.warn(`[WARN] 대응 override 없는 콘텐츠 검토: ${route}`);
+      warned++;
+    }
   }
   return warned;
+}
+
+function checkValidDates(entries: Awaited<ReturnType<typeof sitemap>>): number {
+  let failed = 0;
+  const now = Date.now();
+  for (const entry of entries) {
+    const time = new Date(entry.lastModified ?? NaN).getTime();
+    if (!Number.isFinite(time) || isFutureSitemapDate(entry.lastModified, now)) {
+      console.error(`[FAIL] sitemap 날짜가 없거나 유효하지 않거나 미래임: ${new URL(entry.url).pathname}`);
+      failed++;
+    }
+  }
+  return failed;
+}
+
+function checkPageRevisionDates(entries: Awaited<ReturnType<typeof sitemap>>): number {
+  let failed = 0;
+  const paths = new Set([...Object.keys(ROUTE_OVERRIDES), ...PAGE_LINK_REVIEW_PATHS]);
+  for (const route of paths) {
+    const file = join(APP_DIR, route.slice(1), 'page.tsx');
+    if (!existsSync(file)) continue; // Dynamic templates have their own date/guide contracts.
+    const entry = entries.find(item => new URL(item.url).pathname === route);
+    for (const field of pageRevisionFields(readFileSync(file, 'utf8'), file)) {
+      if (!field.value || !entry?.lastModified || koreanDay(field.value) !== koreanDay(entry.lastModified)) {
+        console.error(`[FAIL] 페이지 수정일 불일치: ${route} ${field.name}=${field.value ?? '정적 날짜 판정 불가'} sitemap=${entry?.lastModified ?? '없음'}`);
+        failed++;
+      }
+    }
+  }
+  return failed;
 }
 
 // WebApplication JSON-LD dateModified ↔ sitemap STATIC_LAST_MODIFIED 정합 게이트 (2026-09-05,
@@ -280,7 +267,9 @@ async function main() {
     }
   }
 
-  const staleOverrides = checkOverrideFreshness();
+  const staleOverrides = checkOverrideFreshness(entries);
+  const invalidDates = checkValidDates(entries);
+  const pageDateMismatch = checkPageRevisionDates(entries);
   const webAppDateMismatch = checkWebApplicationDate();
 
   // 실제 동적 URL 출력도 확인한다. 수정일만 바뀐 글이 발행일로 되돌아가거나
@@ -312,14 +301,14 @@ async function main() {
   );
 
   console.log(
-    `[verify-sitemap] 정적 라우트 ${routes.length}곳 / sitemap URL ${sitePaths.size}건 / 미등재 ${fail}곳 / 가이드 날짜·등재 불일치 ${guideDateMismatch}건 / URL 원장 FAIL ${ledgerFail}건 / override 신선도 경고 ${staleOverrides}건 / WebApplication 날짜 불일치 ${webAppDateMismatch}건`
+    `[verify-sitemap] 정적 라우트 ${routes.length}곳 / sitemap URL ${sitePaths.size}건 / 미등재 ${fail}곳 / 가이드 날짜·등재 불일치 ${guideDateMismatch}건 / URL 원장 FAIL ${ledgerFail}건 / 유효하지 않은 날짜 ${invalidDates}건 / 페이지 수정일 불일치 ${pageDateMismatch}건 / override 신선도 경고 ${staleOverrides}건 / WebApplication 날짜 불일치 ${webAppDateMismatch}건`
   );
   if (fail || guideDateMismatch) {
     console.error(
       "→ sitemap.ts 에 등재하거나, 의도적 제외라면 이 스크립트의 목록에 사유와 함께 추가하세요."
     );
   }
-  if (fail || guideDateMismatch || ledgerFail) process.exit(1);
+  if (fail || guideDateMismatch || ledgerFail || invalidDates || staleOverrides || pageDateMismatch) process.exit(1);
 }
 
 main();

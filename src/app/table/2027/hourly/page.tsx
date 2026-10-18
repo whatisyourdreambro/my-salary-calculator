@@ -1,6 +1,7 @@
 // src/app/table/2027/hourly/page.tsx — 2027년판 시급 실수령액 표 (2026-08-30 신설, 성장 제안 ④)
 // 2027 최저시급 10,700원 확정 반영 — 엔진: generateData2027
 
+import SalaryTableNextSteps from '@/components/SalaryTableNextSteps';
 import { Suspense } from "react";
 import { generateHourlyWageTableData2027, MIN_WAGE_2027, MIN_WAGE_2027_MONTHLY } from "@/lib/generateData2027";
 import { HelpCircle, TrendingUp } from "lucide-react";
@@ -219,6 +220,7 @@ function HourlyTable2027() {
             <FavoritesButton path="/table/2027/hourly" title="2027 시급 실수령액 표" />
           </div>
         </div>
+        <SalaryTableNextSteps year={2027} unit="hourly" />
       </main>
     </>
   );

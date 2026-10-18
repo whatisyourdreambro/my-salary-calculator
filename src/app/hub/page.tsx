@@ -3,6 +3,7 @@
 // (카운트는 hubs.length 파생 — 종전에는 '5개'가 하드코딩돼 허브 3개 추가 후
 //  메타와 실제 렌더 수가 어긋났다, 2026-09-06 전수검사)
 
+import TopicNextSteps from '@/components/TopicNextSteps';
 import { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { ArrowRight } from "lucide-react";
@@ -70,6 +71,7 @@ export default function HubIndexPage() {
           <HomeTopAd />
         </div>
       </div>
+      <TopicNextSteps path="/hub" />
     </main>
   );
 }

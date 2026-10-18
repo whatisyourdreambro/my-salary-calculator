@@ -3,6 +3,7 @@
 // 삼성전자 성과급 계산기.
 // title.absolute로 사이트명 한 번만 적용 (layout template과 중복 방지).
 
+import TopicNextSteps from '@/components/TopicNextSteps';
 import type { Metadata } from "next";
 import { bonusCalcCountKo } from "@/config/site";
 import { buildPageMetadata } from "@/lib/seo";
@@ -1208,6 +1209,7 @@ export default function SamsungBonusCalculatorPage() {
 
           <RelatedCalculators currentPath={PAGE_PATH} />
         </div>
+        <TopicNextSteps path="/calc/samsung-bonus" />
       </main>
     </>
   );

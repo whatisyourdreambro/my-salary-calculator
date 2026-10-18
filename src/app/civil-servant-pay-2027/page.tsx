@@ -26,6 +26,7 @@
 //   예산안 발표 보도(연합·서울경제·이투데이, 기획예산처 인용)로만 확인 → '예산안 기준·보도' 표기 유지.
 //   네이버 28일 판정: 배포일부터 같은 길이 창으로 클릭·CTR 비교.
 
+import TopicNextSteps from '@/components/TopicNextSteps';
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import {
@@ -70,7 +71,8 @@ const g9h1 = forecast2027(GENERAL_PAY_ROWS_2026[0][1]);
 // 이전(2026-09-09~09-24) title: "2027 공무원 봉급표 예상 — 예산안 3.9%·9급 1호봉·확정 일정"
 const PAGE_TITLE = `2027년 공무원 봉급표 예상 — 예산안 인상률 ${pct}%·호봉별 월급`;
 const PAGE_DESCRIPTION = `2027년 공무원 보수 인상률은 정부 예산안 ${pct}%로 국회 심의 중(확정 전)입니다. 2026년 봉급에 적용한 9급~5급 호봉별 예상 월급, 9급 1호봉 약 ${fmt(g9h1)}원(저연차 추가 인상 전)을 확인하세요.`;
-const MODIFIED = "2026-09-25";
+const MODIFIED = "2026-10-19";
+const MODIFIED_AT = `${MODIFIED}T00:00:00+09:00`;
 
 export const metadata: Metadata = buildPageMetadata({
   title: PAGE_TITLE,
@@ -78,7 +80,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/civil-servant-pay-2027",
   ogType: "article",
   publishedTime: "2026-08-16",
-  modifiedTime: MODIFIED,
+  modifiedTime: MODIFIED_AT,
   // ⚠ 연도 없는 "공무원 봉급표" 단독 키워드 금지 — 2026 페이지 잠식 방지
   keywords: [
     "2027년 공무원 봉급표",
@@ -143,7 +145,7 @@ export default function CivilServantPay2027Page() {
             slug: "civil-servant-pay-2027",
             url: "/civil-servant-pay-2027",
             publishedDate: "2026-08-16",
-            modifiedDate: MODIFIED,
+            modifiedDate: MODIFIED_AT,
           }),
           // datasetLd는 확정표 발표 후에만 추가 (전망 시뮬레이션은 데이터셋 부적합)
           speakableLd({
@@ -436,6 +438,7 @@ export default function CivilServantPay2027Page() {
           에서 호봉별로 바로 계산할 수 있습니다.
         </p>
       </div>
+      <TopicNextSteps path="/civil-servant-pay-2027" />
     </main>
   );
 }

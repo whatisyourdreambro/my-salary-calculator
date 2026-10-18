@@ -84,6 +84,7 @@ export default function FlatTaxPage() {
         )}
       </section>
       <CalcResultAd />
+      <p className="mt-8 text-sm leading-7 text-muted-foreground">For a job change or annual reconciliation, follow the <Link href="/en/season" className="text-primary underline">pay and tax checklist</Link>. The income-tax comparison does not establish a filing deadline or submit an election.</p>
       <nav aria-label="Related English tasks" className="mt-8 flex flex-wrap gap-4">
         <Link href="/en#calculator" className="inline-flex min-h-11 items-center text-primary underline">Estimate Korean take-home pay</Link>
         <Link href="/en/salary-converter" className="inline-flex min-h-11 items-center text-primary underline">Convert a gross salary</Link>

@@ -123,10 +123,10 @@ describe("/health-checkup-2026 암검진 본인부담·수검 기한·6대 암 �
     expect(src).not.toContain("본인 부담 약 8,000~15,000원");
   });
 
-  it("수정일 3곳(메타·Article·표시)이 2026-09-27 로 같다", () => {
-    expect(src).toContain('modifiedTime: "2026-09-27"');
-    expect(src).toContain('modifiedDate: "2026-09-27"');
-    expect(src).toContain('<PublishedMeta publishedDate="2026-05-22" updatedDate="2026-09-27"');
+  it("원발행일을 유지하고 새 설명을 추가한 10/19 수정일 3곳이 같다", () => {
+    expect(src).toContain('modifiedTime: "2026-10-19T00:00:00+09:00"');
+    expect(src).toContain('modifiedDate: "2026-10-19T00:00:00+09:00"');
+    expect(src).toContain('<PublishedMeta publishedDate="2026-05-22" updatedDate="2026-10-19"');
   });
 });
 
@@ -234,11 +234,14 @@ describe("/samsung-negotiation-2026 2026 임금협약 타결 결과(5/27 가결)
 describe("/chuseok-bonus-2026 연휴 이후 히어로 문구", () => {
   const src = flat(readSrc("src/app/chuseok-bonus-2026/page.tsx"));
 
-  it("'추석 전후로'(같은 음절 구조)이고 날짜·수정일은 그대로", () => {
+  it("계절 문구와 원발행일은 유지하고 새 설명을 추가한 10/19 수정일을 구분한다", () => {
     expect(src).toContain("추석 전후로 궁금한 돈 문제를");
     expect(src).not.toContain("추석 앞두고 궁금한");
     expect(syllables("추석 전후로")).toEqual(syllables("추석 앞두고"));
-    expect(src).toContain('modifiedTime: "2026-08-16"');
+    expect(src).toContain('publishedTime: "2026-08-16"');
+    expect(src).toContain('modifiedTime: "2026-10-19T00:00:00+09:00"');
+    expect(src).toContain('modifiedDate: "2026-10-19T00:00:00+09:00"');
+    expect(src).toContain('updatedDate="2026-10-19"');
     expect(src).toContain("2026 추석 9/25(금) · 연휴 9/24~26 · 대체공휴일 없음");
   });
 });

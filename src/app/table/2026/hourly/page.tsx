@@ -1,5 +1,6 @@
 // src/app/table/2026/hourly/page.tsx
 
+import SalaryTableNextSteps from '@/components/SalaryTableNextSteps';
 import { Suspense } from "react";
 import { generateHourlyWageTableData2026 } from "@/lib/generateData";
 import { MINIMUM_WAGE_2026 } from "@/config/minimumWage";
@@ -232,6 +233,7 @@ function HourlyTable2026() {
  <FavoritesButton path="/table/2026/hourly" title="2026 시급 실수령액 표" />
  </div>
  </div>
+   <SalaryTableNextSteps year={2026} unit="hourly" />
  </main>
  </>
  );

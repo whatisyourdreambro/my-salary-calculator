@@ -12,6 +12,7 @@ import { CalcResultAd, HomeTopAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import AutoBreadcrumb from "@/components/AutoBreadcrumb";
 import AutoShareSection from "@/components/AutoShareSection";
+import FunRelatedPages from "@/components/FunRelatedPages";
 
 export const metadata: Metadata = {
   // 카테고리 단위 robots 기본값 — 개별 page.tsx에서 override 가능
@@ -39,6 +40,7 @@ export default function FunLayout({ children }: { children: React.ReactNode }) {
       </div>
       {/* 공유 fallback은 광고 블록 아래 — 광고 밀림 방지 (2026-08-16 수익 대응) */}
       <AutoShareSection contentType="fun" maxWidth="3xl" className="pb-16" />
+      <FunRelatedPages />
     </>
   );
 }

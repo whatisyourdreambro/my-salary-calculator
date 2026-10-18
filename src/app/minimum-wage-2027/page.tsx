@@ -34,7 +34,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/minimum-wage-2027",
   ogType: "article",
   publishedTime: "2026-07-16",
-  modifiedTime: "2026-08-26",
+  modifiedTime: "2026-09-30",
   keywords: [
     "2027 최저임금",
     "2027 최저시급",
@@ -136,7 +136,7 @@ export default function MinimumWage2027Page() {
             slug: "minimum-wage-2027",
             url: "/minimum-wage-2027",
             publishedDate: "2026-07-16",
-            modifiedDate: "2026-08-26",
+            modifiedDate: "2026-09-30",
           }),
           speakableLd({
             url: "/minimum-wage-2027",
@@ -154,7 +154,7 @@ export default function MinimumWage2027Page() {
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
             2027 최저임금 <span className="text-electric">시급 10,700원</span>
           </h1>
-          <PublishedMeta publishedDate="2026-07-16" updatedDate="2026-08-26" className="mb-2" />
+          <PublishedMeta publishedDate="2026-07-16" updatedDate="2026-09-30" className="mb-2" />
           <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
             2026년 7월 14일 최저임금위원회 제14차 전원회의에서 2027년 적용 최저임금이
             시급 10,700원으로 의결됐습니다. 2026년 10,320원 대비 380원(3.7%) 인상,

@@ -13,6 +13,7 @@
 // 2026-09-27: 연휴(9/24~26)가 지나 히어로 문구 '추석 앞두고' → '추석 전후로'(같은 2·3음절, 광고 위 줄 수 불변).
 //   날짜·수치는 그대로라 발행·수정일(8/16)도 그대로 둔다. 시즌 링크 교체는 SeasonalLinks 루틴 담당.
 
+import TopicNextSteps from '@/components/TopicNextSteps';
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import {
@@ -46,7 +47,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/chuseok-bonus-2026",
   ogType: "article",
   publishedTime: "2026-08-16",
-  modifiedTime: "2026-08-16",
+  modifiedTime: "2026-10-19T00:00:00+09:00",
   // ⚠ "세금 계산"·"명절 상여금" 일반형 금지 — 기존 가이드·계산기 잠식 방지
   keywords: [
     "추석 상여금 평균",
@@ -117,7 +118,7 @@ export default function ChuseokBonus2026Page() {
             slug: "chuseok-bonus-2026",
             url: "/chuseok-bonus-2026",
             publishedDate: "2026-08-16",
-            modifiedDate: "2026-08-16",
+            modifiedDate: "2026-10-19T00:00:00+09:00",
           }),
           speakableLd({
             url: "/chuseok-bonus-2026",
@@ -136,7 +137,7 @@ export default function ChuseokBonus2026Page() {
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
             2026 추석 상여금 <span className="text-electric">평균·지급 의무·떡값</span>
           </h1>
-          <PublishedMeta publishedDate="2026-08-16" updatedDate="2026-08-16" className="mb-2" />
+          <PublishedMeta publishedDate="2026-08-16" updatedDate="2026-10-19" className="mb-2" />
           <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
             남들은 얼마나 받는지, 우리 회사는 안 줘도 되는 건지, 떡값과 선물엔 세금이
             붙는지 — 추석 전후로 궁금한 돈 문제를 조사 통계와 법 기준으로 정리했습니다.
@@ -350,6 +351,7 @@ export default function ChuseokBonus2026Page() {
           <MultiplexAd />
         </div>
       </div>
+      <TopicNextSteps path="/chuseok-bonus-2026" />
     </main>
   );
 }

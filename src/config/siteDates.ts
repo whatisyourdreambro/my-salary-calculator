@@ -21,6 +21,13 @@
  */
 export const STATIC_LAST_MODIFIED = new Date("2026-07-16");
 
+/** A shared engine/baseline review must never replace a later page revision. */
+export function latestContentDate(...dates: Array<Date | undefined>): Date {
+  const times = dates.filter((date): date is Date => date !== undefined).map((date) => date.getTime());
+  if (!times.length || times.some((time) => !Number.isFinite(time))) throw new Error('Invalid content date');
+  return new Date(Math.max(...times));
+}
+
 /** STATIC_LAST_MODIFIED 의 ISO 날짜(YYYY-MM-DD) — JSON-LD dateModified 용 */
 export const STATIC_LAST_MODIFIED_ISO = STATIC_LAST_MODIFIED.toISOString().slice(0, 10);
 

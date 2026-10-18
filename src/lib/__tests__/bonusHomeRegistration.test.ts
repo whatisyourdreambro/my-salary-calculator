@@ -66,7 +66,8 @@ describe("사이트맵·URL 원장", () => {
   it("정적 목록 + ROUTE_OVERRIDES(monthly) + 원장 기록", () => {
     const src = fs.readFileSync(path.join(APP_DIR, "sitemap.ts"), "utf8");
     expect(src.match(/'\/calc\/bonus-home-plan',/g)?.length).toBe(1);
-    expect(src).toMatch(/'\/calc\/bonus-home-plan': \{ lastModified: new Date\('2026-09-27'\), changeFrequency: 'monthly' \}/);
+    // October 19 adds explanatory next steps; monthly snapshot cadence remains.
+    expect(src).toMatch(/'\/calc\/bonus-home-plan': \{ lastModified: new Date\('2026-10-19T00:00:00\+09:00'\), changeFrequency: 'monthly' \}/);
     const ledger = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "scripts/url-ledger.snapshot.json"), "utf8"));
     expect(ledger.sitemap).toContain(HREF);
   });

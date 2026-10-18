@@ -9,6 +9,8 @@ import {
  type LucideIcon
 } from "lucide-react";
 
+import { categoryNeighbours } from "@/lib/relatedContentGraph";
+
 export interface GlossaryRelatedLink {
  label: string;
  href: string;
@@ -95,9 +97,7 @@ export function recoverMojibakeUtf8(s: string): string | null {
 }
 
 export function getRelatedGlossaryItems(item: GlossaryItem, limit = 5): GlossaryItem[] {
- return glossaryData
- .filter((g) => g.title !== item.title && g.category === item.category)
- .slice(0, limit);
+ return categoryNeighbours(glossaryData.filter((g) => g.category === item.category), item, limit);
 }
 
 export const glossaryData: GlossaryItem[] = [

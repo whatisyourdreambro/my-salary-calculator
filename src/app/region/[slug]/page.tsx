@@ -15,6 +15,7 @@ import { CalcResultAd, InArticleAd, HomeTopAd, GuideMidAd, MultiplexAd } from "@
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareSection from "@/components/ShareSection";
 import JsonLd from "@/components/JsonLd";
+import { comparisonNeighbors } from "@/lib/salaryComparisonNeighbors";
 
 // 지역의 topIndustries(한국어 표시명) → /industry/[id] 매칭.
 // 정확 일치 우선, 그 다음 부분 포함(예: "IT·소프트웨어" → "IT").
@@ -76,24 +77,13 @@ function resolveCompany(name: string) {
 }
 
 function OtherRegions({ currentId }: { currentId: string }) {
-  const others = regionsData.filter((r) => r.id !== currentId);
-  // 연봉 순 정렬 후 5개 샘플 (인접 연봉 범위에서 선택)
-  const sorted = [...others].sort((a, b) => b.salary.overall - a.salary.overall);
-  const picks: typeof others = [];
-  // 상위 2개 + 중간 2개 + 하위 1개
-  if (sorted.length > 0) picks.push(sorted[0]);
-  if (sorted.length > 1) picks.push(sorted[1]);
-  const mid = Math.floor(sorted.length / 2);
-  if (sorted[mid] && !picks.find((p) => p.id === sorted[mid].id)) picks.push(sorted[mid]);
-  if (sorted[mid + 1] && !picks.find((p) => p.id === sorted[mid + 1].id))
-    picks.push(sorted[mid + 1]);
-  if (sorted[sorted.length - 1] && !picks.find((p) => p.id === sorted[sorted.length - 1].id))
-    picks.push(sorted[sorted.length - 1]);
+  const sorted = [...regionsData].sort((a, b) => b.salary.overall - a.salary.overall || a.id.localeCompare(b.id));
+  const picks = comparisonNeighbors(sorted, currentId, 5);
 
   return (
     <section className="mt-10">
       <h2 className="text-xl font-black text-navy dark:text-canvas-50 mb-4">
-        다른 지역 연봉 비교
+        비슷한 연봉 구간의 지역 비교
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
         {picks.map((r) => (

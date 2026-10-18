@@ -1,3 +1,4 @@
+import TopicNextSteps from '@/components/TopicNextSteps';
 import type { Metadata } from "next";
 import { BookOpen, TrendingUp, Shield, CreditCard, Home, Briefcase, ChevronRight } from "lucide-react";
 import Link from "@/components/AppLink";
@@ -16,7 +17,7 @@ export const metadata: Metadata = buildPageMetadata({
  path: "/tips",
  ogType: "article",
  publishedTime: "2026-05-23",
- modifiedTime: "2026-05-23",
+ modifiedTime: "2026-10-19T00:00:00+09:00",
  keywords: [
  "직장인 꿀팁",
  "연봉 협상 전략",
@@ -169,6 +170,7 @@ export default function TipsPage() {
  {/* 본문 끝 관련콘텐츠형 광고 — 15선 목록·쿠팡 배너·공유 섹션 아래(광고 연속 배치 회피), 전면 최적화 (운영자 지시 2026-09-02) */}
  <MultiplexAd />
  </div>
+   <TopicNextSteps path="/tips" />
  </main>
  );
 }

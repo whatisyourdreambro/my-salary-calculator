@@ -5,6 +5,7 @@
 // — 감액 3종: 국민연금 연계(기준 524,550원) · 부부 20% · 소득역전방지(최저 10%/부부 20%)
 // 연례 갱신 체크포인트: 매년 1월 복지부 공표 시 기준연금액·선정기준액 갱신 필요.
 
+import TopicNextSteps from '@/components/TopicNextSteps';
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import {
@@ -141,7 +142,7 @@ export default function BasicPension2026Page() {
           </h1>
           <PublishedMeta
             publishedDate="2026-08-15"
-            updatedDate="2026-08-15"
+            updatedDate="2026-10-19"
             className="mb-2"
           />
           <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
@@ -399,6 +400,7 @@ export default function BasicPension2026Page() {
           <MultiplexAd />
         </div>
       </div>
+      <TopicNextSteps path="/basic-pension-2026" />
     </main>
   );
 }

@@ -1,6 +1,7 @@
 
 // src/app/table/2026/monthly/page.tsx
 
+import SalaryTableNextSteps from '@/components/SalaryTableNextSteps';
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { generateAnnualSalaryTableData2026 } from "@/lib/generateData2026";
@@ -228,6 +229,7 @@ function MonthlyTable() {
  <Link href={SALARY_CALCULATION_METHOD_HREF} className="text-link underline underline-offset-4">계산 방식과 적용 조건</Link>을 확인하세요.
  </div>
  </div>
+   <SalaryTableNextSteps year={2026} unit="monthly" />
  </main>
  );
 }

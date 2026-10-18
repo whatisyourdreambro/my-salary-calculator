@@ -8,6 +8,7 @@ import GuideListingCard from "@/components/guides/GuideListingCard";
 import { HomeTopAd, InArticleAd, GuideMidAd } from '@/components/AdPlacement';
 import { filterAndSortGuides, readGuideSearchQuery, type GuideSortOrder } from '@/lib/guideDiscovery';
 import EnglishPageShell from '@/components/english/EnglishPageShell';
+import Link from '@/components/AppLink';
 
 type SortOption = GuideSortOrder;
 
@@ -62,6 +63,7 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
 
  return (
  <EnglishPageShell eyebrow="Guides · Working in Korea" title="English pay, tax and money guides" description="Understand a payslip, read a bonus or stock-award notice and compare financial choices. These guides distinguish official facts, personal eligibility and illustrative calculations." breadcrumbs={[{ name: "Guides", href: "/en/guides" }]}>
+ <p className="text-sm leading-7 text-muted-foreground">Read <Link href="/en/about" className="text-primary underline">how we check sources and review corrections</Link> alongside each guide’s dated references and assumptions.</p>
  <div className="relative max-w-xl">
  <input
  type="text"

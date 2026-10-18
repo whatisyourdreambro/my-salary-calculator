@@ -12,6 +12,7 @@ import { koGuides } from "@/lib/guidesContent";
 import type { Guide } from "@/lib/guidesData";
 import { rankRelatedGuides } from "@/lib/guideDiscovery";
 import { withoutHeldBackGuides } from "@/lib/guideReleaseHoldback";
+import { buildRelatedContentGraph } from "@/lib/relatedContentGraph";
 
 export interface RelatedGuideItem {
   slug: string;
@@ -45,6 +46,25 @@ function toItem(g: Guide): RelatedGuideItem {
   };
 }
 
+let guidePageGraph: Map<string, Guide[]> | undefined;
+function guidePageRecommendations(currentSlug: string): Guide[] {
+  if (!guidePageGraph) {
+    const published = withoutHeldBackGuides(koGuides);
+    const meaningfulTags = (guide: Guide) => new Set(guide.tags.map((tag) => tag.toLocaleLowerCase().trim())
+      .filter((tag) => !/^\d{4}(?:년)?$/.test(tag)));
+    const tagSets = new Map(published.map((guide) => [guide.slug, meaningfulTags(guide)]));
+    guidePageGraph = buildRelatedContentGraph(published, {
+      id: (guide) => guide.slug,
+      limit: () => 6,
+      existing: (guide) => rankRelatedGuides(published, { currentSlug: guide.slug, category: guide.category, tags: guide.tags })
+        .slice(0, 3).map((item) => item.slug),
+      score: (source, target) => (source.category === target.category ? 10 : 0) +
+        [...tagSets.get(source.slug)!].filter((tag) => tagSets.get(target.slug)!.has(tag)).length * 3,
+    });
+  }
+  return guidePageGraph.get(currentSlug) ?? [];
+}
+
 export function getRelatedGuides({
   currentSlug,
   category,
@@ -62,8 +82,10 @@ export function getRelatedGuides({
 
   const explicitSlugSet = new Set(explicit.map((g) => g.slug));
   // 자동 추천 후보에서는 공개 보류 중인 새 가이드를 뺀다 — 기존 페이지 광고 위 높이 불변 (guideReleaseHoldback.ts)
-  const fallback = rankRelatedGuides(withoutHeldBackGuides(koGuides, currentSlug), { currentSlug, category, tags })
+  const fallback = [...guidePageRecommendations(currentSlug),
+    ...rankRelatedGuides(withoutHeldBackGuides(koGuides, currentSlug), { currentSlug, category, tags })]
     .filter((g) => !explicitSlugSet.has(g.slug) && !excluded.has(g.slug));
 
-  return [...explicit, ...fallback].slice(0, limit).map(toItem);
+  const unique = [...new Map([...explicit, ...fallback].map((guide) => [guide.slug, guide])).values()];
+  return unique.slice(0, limit).map(toItem);
 }

@@ -1,6 +1,7 @@
 // src/app/table/2027/weekly/page.tsx — 2027년판 주급 실수령액 표 (2026-08-30 신설, 성장 제안 ④)
 // 엔진: generateData2027 (연금 5.0%·건강보험 3.595% 적용, 장기요양·고용보험 2026값 준용; 확정 상태의 출처는 taxConstants2027 참조)
 
+import SalaryTableNextSteps from '@/components/SalaryTableNextSteps';
 import { Suspense } from "react";
 import { generateWeeklyPayTableData2027, MIN_WAGE_2027 } from "@/lib/generateData2027";
 import { HelpCircle, TrendingUp } from "lucide-react";
@@ -210,6 +211,7 @@ function WeeklyTable2027() {
             <FavoritesButton path="/table/2027/weekly" title="2027 주급 실수령액 표" />
           </div>
         </div>
+        <SalaryTableNextSteps year={2027} unit="weekly" />
       </main>
     </>
   );

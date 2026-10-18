@@ -1,6 +1,7 @@
 // src/app/year-end-tax-settlement-2026/page.tsx
 // 12월 연말정산 + 성과급 시즌 페이지
 
+import TopicNextSteps from '@/components/TopicNextSteps';
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { Calendar, Gift, ArrowRight, Calculator } from "lucide-react";
@@ -23,7 +24,7 @@ export const metadata: Metadata = buildPageMetadata({
  path: "/year-end-tax-settlement-2026",
  ogType: "article",
  publishedTime: "2026-01-15",
- modifiedTime: "2026-08-07",
+ modifiedTime: "2026-10-19T00:00:00+09:00",
  keywords: [
  "근로자 연말정산 2026",
  "2026 연말정산",
@@ -87,7 +88,7 @@ export default function YearEndTaxSettlement2026Page() {
  slug: "year-end-tax-settlement-2026",
  url: "/year-end-tax-settlement-2026",
  publishedDate: "2026-01-15",
- modifiedDate: "2026-08-07",
+ modifiedDate: "2026-10-19T00:00:00+09:00",
  }),
  speakableLd({
  url: "/year-end-tax-settlement-2026",
@@ -105,7 +106,7 @@ export default function YearEndTaxSettlement2026Page() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  13월의 월급, <span className="text-electric">제대로 받기</span>
  </h1>
- <PublishedMeta publishedDate="2026-01-15" updatedDate="2026-08-07" className="mb-2" />
+ <PublishedMeta publishedDate="2026-01-15" updatedDate="2026-10-19" className="mb-2" />
  <YearEndTaxCluster />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  12월 연말정산은 1년 절세의 골든타임입니다.
@@ -308,6 +309,7 @@ export default function YearEndTaxSettlement2026Page() {
  <MultiplexAd />
  </div>
  </div>
+   <TopicNextSteps path="/year-end-tax-settlement-2026" />
  </main>
  );
 }

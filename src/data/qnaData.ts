@@ -1,5 +1,8 @@
 ﻿import { recoverMojibakeUtf8 } from "@/data/glossaryData";
 
+import { buildRelatedContentGraph } from "@/lib/relatedContentGraph";
+import { qnaTopicScore } from "@/lib/qnaRelatedTopics";
+
 export interface QnaItem {
  category: string;
  question: string;
@@ -57,10 +60,15 @@ export function getQnaBySlug(slug: string): QnaItem | undefined {
  return undefined;
 }
 
+let relatedQnaGraph: Map<string, QnaItem[]> | undefined;
 export function getRelatedQna(item: QnaItem, limit = 4): QnaItem[] {
- return qnaData
- .filter((q) => q.question !== item.question && q.category === item.category)
- .slice(0, limit);
+ // Keep the previous card count (including zero), so a small category never
+ // creates a new block or activates a previously absent advertisement.
+ const capacity = (q: QnaItem) => Math.min(4, qnaData.filter((peer) => peer !== q && peer.category === q.category).length);
+ relatedQnaGraph ??= buildRelatedContentGraph(qnaData, {
+   id: (q) => toQnaSlug(q.question), limit: capacity, score: qnaTopicScore,
+ });
+ return (relatedQnaGraph.get(toQnaSlug(item.question)) ?? []).slice(0, Math.max(0, limit));
 }
 
 export const qnaData: QnaItem[] = [

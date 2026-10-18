@@ -22,7 +22,7 @@ export const metadata: Metadata = buildPageMetadata({
  path: "/minimum-wage-2026",
  ogType: "article",
  publishedTime: "2026-05-22",
- modifiedTime: "2026-08-26",
+ modifiedTime: "2026-09-12",
  keywords: [
  "최저임금 2026",
  "2026 최저임금",
@@ -116,7 +116,7 @@ export default function MinimumWage2026Page() {
  slug: "minimum-wage-2026",
  url: "/minimum-wage-2026",
  publishedDate: "2026-05-22",
- modifiedDate: "2026-08-26",
+ modifiedDate: "2026-09-12",
  }),
  speakableLd({
  url: "/minimum-wage-2026",
@@ -134,7 +134,7 @@ export default function MinimumWage2026Page() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  최저임금 2026 <span className="text-electric">시급·월급·연봉</span>
  </h1>
- <PublishedMeta publishedDate="2026-05-22" updatedDate="2026-08-26" className="mb-2" />
+ <PublishedMeta publishedDate="2026-05-22" updatedDate="2026-09-12" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  시급 기준은 매년 8월 5일 고용노동부장관이 고시하고, 다음 해 1월 1일부터 적용됩니다.
  주휴수당 포함 월급은 209시간((주 40시간 + 주휴 8시간) × 4.345주 ≈ 209시간) 기준으로 환산합니다.

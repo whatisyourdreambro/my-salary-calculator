@@ -11,12 +11,13 @@ import { getStaticMonthlyAmounts } from '@/lib/monthlyStaticParams';
 import { industriesData } from '@/data/industriesData';
 import { regionsData } from '@/data/regionsData';
 import { reportsRegistry } from '@/data/reportsRegistry';
-import { STATIC_LAST_MODIFIED } from '@/config/siteDates';
+import { STATIC_LAST_MODIFIED, latestContentDate } from '@/config/siteDates';
 import { companyPageModified } from '@/lib/pageModified';
 import { getGuideModifiedDate } from '@/lib/guideDates';
 import { getGuideContentDate } from '@/lib/guideContentRevisions';
 import { EN_INDEXABLE_STATIC_PATHS } from '@/lib/englishRoutes';
 import { englishPolicyCounterpart } from '@/lib/englishSite';
+import { pageContentRevision } from '@/config/pageContentRevisions';
 
 type ChangeFrequency =
  | 'always'
@@ -36,8 +37,8 @@ export type RouteOverride = {
 // 라우트별 오버라이드 — 핵심 수익/시즌 페이지를 전역 기준일·priority 와 차등화.
 // 유지보수 규칙: lastModified 는 "해당 라우트의 실질 콘텐츠를 손댄 배포"와
 // 동시에만 갱신한다 (매 배포 자동 갱신 금지 — src/config/siteDates.ts STATIC_LAST_MODIFIED 의
-// freshness 원칙과 동일). 값이 실제 갱신보다 오래되면 scripts/verify-sitemap.ts 가
-// `git log -1 --format=%cI -- src/app<route>` 기준으로 WARN 을 낸다(비차단).
+// freshness 원칙과 동일). scripts/sitemap-content-reviews.json에 검토한 내용 날짜와
+// 소스 해시를 남긴다. verify:sitemap은 실제 출력 날짜·소스 변경을 함께 검사한다.
 // export 는 그 게이트 전용 — Next 메타데이터 라우트는 default 만 사용한다.
 // 2026-08-23: SK하이닉스 임단협 잠정합의 반영 + 삼성 온페이지 개편.
 // 2026-08-26: SK하이닉스 총투표 부결 반영·최저임금 2027 확정 고시 반영 +
@@ -46,80 +47,80 @@ export type RouteOverride = {
 //             3.9% 예상표 전환(bbd8623).
 export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  // 2026-10-04: 10월 시행 건강보험 정산 분할납부 기준과 경과조치 본문을 공식 자료로 정정.
- '/health-insurance-2026': { lastModified: new Date('2026-10-04') },
+ '/health-insurance-2026': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
  // 2026-09-25 A17: 기관별 세후 월급이 간이세액표 엔진으로 바뀜
- '/public-institutions': { lastModified: new Date('2026-09-25'), priority: 0.8, changeFrequency: 'monthly' },
+ '/public-institutions': { lastModified: new Date('2026-10-19T00:00:00+09:00'), priority: 0.8, changeFrequency: 'monthly' },
  '/work-clock': { lastModified: new Date('2026-09-19'), priority: 0.8, changeFrequency: 'monthly' },
- '/calc': { lastModified: new Date('2026-09-10'), changeFrequency: 'monthly' },
- '/money-check': { lastModified: new Date('2026-09-10'), changeFrequency: 'monthly' },
- '/': { lastModified: new Date('2026-09-19') },
+ '/calc': { lastModified: new Date('2026-10-05'), changeFrequency: 'monthly' },
+ '/money-check': { lastModified: new Date('2026-10-19T00:00:00+09:00'), changeFrequency: 'monthly' },
+ '/': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
  '/home-loan': { lastModified: new Date('2026-09-19') },
- '/about': { lastModified: new Date('2026-09-25') }, // 연봉 계산 기준을 간이세액표로 갱신 (A17)
+ '/about': { lastModified: new Date('2026-09-27') }, // 연봉 계산 기준을 간이세액표로 갱신 (A17)
  '/tools/loan': { lastModified: new Date('2026-09-10') },
- '/tools/real-estate/dsr': { lastModified: new Date('2026-09-10') },
- '/table/2026/annual': { lastModified: new Date('2026-09-25') }, // A17 간이세액표 엔진 재산출
- '/table/2026/monthly': { lastModified: new Date('2026-09-25') },
+ '/tools/real-estate/dsr': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
+ '/table/2026/annual': { lastModified: new Date('2026-10-19T00:00:00+09:00') }, // A17 간이세액표 엔진 재산출
+ '/table/2026/monthly': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
  // 주급·시급 표도 같은 generateData → calculateSalary2026 엔진이라 A17 로 값이 바뀌었다
- '/table/2026/weekly': { lastModified: new Date('2026-09-25') },
- '/table/2026/hourly': { lastModified: new Date('2026-09-25') },
+ '/table/2026/weekly': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
+ '/table/2026/hourly': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
  // 2027 표 4종·요율표: 2027 건보료율 동결 확정(건정심 2026-09-08) 문구 반영 2026-09-25
- '/table/2027/annual': { lastModified: new Date('2026-09-25') },
- '/table/2027/monthly': { lastModified: new Date('2026-09-25') },
- '/table/2027/weekly': { lastModified: new Date('2026-09-25') },
- '/table/2027/hourly': { lastModified: new Date('2026-09-25') },
+ '/table/2027/annual': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
+ '/table/2027/monthly': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
+ '/table/2027/weekly': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
+ '/table/2027/hourly': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
  // 성과급 samsung·sk-hynix·hyundai·year-end·kia 2026-09-25: A18 세후 엔진 교체(연간 결정세액
  // 차이·세액공제 30% 기본 가정 제거). 나머지 A18 계산기는 sitemap() 의 BONUS_ENGINE_ROUTES 루프.
  // 2026-10-09: 삼성 DS 특별성과급 세부안(10/7 보도) — 지급 시기·재원(DS부문)·원천징수 문구, 공개 출처 표현 정리.
- '/calc/samsung-bonus': { lastModified: new Date('2026-10-09'), priority: 0.95 },
- '/calc/sk-hynix-bonus': { lastModified: new Date('2026-09-25'), priority: 0.9 }, // 2026-09-16 임단협 가결 반영
+ '/calc/samsung-bonus': { lastModified: new Date('2026-10-19T00:00:00+09:00'), priority: 0.95 },
+ '/calc/sk-hynix-bonus': { lastModified: new Date('2026-10-04'), priority: 0.9 }, // 2026-09-16 임단협 가결 반영
  '/calc/bonus-calculators': { lastModified: new Date('2026-10-09'), priority: 0.9 }, // 2026-10-09 최근 소식 10/7 삼성 DS 세부안
  // 2026-09-27 신설 — 시세 스냅숏이 매월(16일 이후) 갱신되므로 monthly. lastModified 는 스냅숏을 바꾼 배포에만 올린다.
- '/calc/bonus-home-plan': { lastModified: new Date('2026-09-27'), changeFrequency: 'monthly' },
+ '/calc/bonus-home-plan': { lastModified: new Date('2026-10-19T00:00:00+09:00'), changeFrequency: 'monthly' },
  // priority 0.85 는 sitemap() 내 성과급 클러스터 루프와 같은 값 — override 가 있으면
  // 루프가 건너뛰므로 명시 (누락 시 기본 0.8 로 강등됨).
  '/calc/hyundai-bonus': { lastModified: new Date('2026-09-25'), priority: 0.85 },
  '/calc/year-end-bonus': { lastModified: new Date('2026-09-25') },
  '/calc/kia-bonus': { lastModified: new Date('2026-09-25'), priority: 0.85 },
- '/minimum-wage-2027': { lastModified: new Date('2026-08-26') },
- '/minimum-wage-2026': { lastModified: new Date('2026-08-26') },
- '/year-end-tax': { lastModified: new Date('2026-09-25') }, // 2026 귀속 공제 한도표·한도 FAQ 5문항 추가
+ '/minimum-wage-2027': { lastModified: new Date('2026-09-30') },
+ '/minimum-wage-2026': { lastModified: new Date('2026-09-12') },
+ '/year-end-tax': { lastModified: new Date('2026-10-04') }, // 2026 귀속 공제 한도표·한도 FAQ 5문항 추가
  // 2026-08-23 시즌 패키지 (연말정산 허브·미리보기·시즌 사이드바)
- '/year-end-tax-2027': { lastModified: new Date('2026-08-23') },
- '/year-end-tax-preview': { lastModified: new Date('2026-08-23') },
+ '/year-end-tax-2027': { lastModified: new Date('2026-09-25') },
+ '/year-end-tax-preview': { lastModified: new Date('2026-09-30') },
  // 각 페이지의 Article·OG·표시된 수정일과 동기화. 광고/escape 편집일은 사용하지 않는다.
- '/chuseok-bonus-2026': { lastModified: new Date('2026-08-16') },
- '/tax-reform-2026': { lastModified: new Date('2026-08-07') },
- '/civil-servant-pay-2027': { lastModified: new Date('2026-09-25') }, // B20 리드·메타 정렬(네이버 저CTR)
+ '/chuseok-bonus-2026': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
+ '/tax-reform-2026': { lastModified: new Date('2026-09-30') },
+ '/civil-servant-pay-2027': { lastModified: new Date('2026-10-19T00:00:00+09:00') }, // B20 리드·메타 정렬(네이버 저CTR)
  // R2 신규 8라우트 (2026-08-31)
- '/calc/dual-income-year-end': { lastModified: new Date('2026-08-31') },
- '/calc/voluntary-retirement': { lastModified: new Date('2026-08-31') },
- '/calc/dependent-check': { lastModified: new Date('2026-08-31') },
- '/calc/smb-income-tax-break': { lastModified: new Date('2026-08-31') },
+ '/calc/dual-income-year-end': { lastModified: new Date('2026-09-06') },
+ '/calc/voluntary-retirement': { lastModified: new Date('2026-09-03') },
+ '/calc/dependent-check': { lastModified: new Date('2026-09-05') },
+ '/calc/smb-income-tax-break': { lastModified: new Date('2026-10-04') },
  '/calc/offer-compare': { lastModified: new Date('2026-09-25') }, // A17 — 본문 '(설명 수정 2026-09-25)'와 일치
  '/calc/child-deduction': { lastModified: new Date('2026-09-09') },
  '/tax-changes-2026': { lastModified: new Date('2026-09-09') },
- '/year-end-tax-checklist': { lastModified: new Date('2026-09-09') },
- '/weekly-holiday-allowance-2026': { lastModified: new Date('2026-09-09') },
- '/civil-servant-pay-2026': { lastModified: new Date('2026-09-09') },
+ '/year-end-tax-checklist': { lastModified: new Date('2026-09-30') },
+ '/weekly-holiday-allowance-2026': { lastModified: new Date('2026-09-12') },
+ '/civil-servant-pay-2026': { lastModified: new Date('2026-10-04') },
  // 공무원 월급 실수령액 계산기 (2026-09-27 신설 — 운영자 승인 동결 예외)
  '/calc/civil-servant-net-pay': { lastModified: new Date('2026-09-27'), priority: 0.8, changeFrequency: 'monthly' },
- '/tools/finance/compound': { lastModified: new Date('2026-09-09') },
- '/tools/finance/bonus': { lastModified: new Date('2026-09-09') },
- '/donation-tax-credit-2026': { lastModified: new Date('2026-08-31') },
- '/health-insurance-dependent': { lastModified: new Date('2026-08-31') },
- '/social-insurance-rates-2027': { lastModified: new Date('2026-09-25') },
+ '/tools/finance/compound': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
+ '/tools/finance/bonus': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
+ '/donation-tax-credit-2026': { lastModified: new Date('2026-09-25') },
+ '/health-insurance-dependent': { lastModified: new Date('2026-10-17') },
+ '/social-insurance-rates-2027': { lastModified: new Date('2026-10-04') },
  // 봉급표 버티컬 4종 (2026-08-30)
- '/military-pay-2026': { lastModified: new Date('2026-08-30') },
- '/teacher-pay-2026': { lastModified: new Date('2026-09-25') }, // B20 리드·메타 정렬(네이버 저CTR)
- '/police-pay-2026': { lastModified: new Date('2026-08-30') },
- '/firefighter-pay-2026': { lastModified: new Date('2026-09-25') }, // B20 리드·메타 정렬(네이버 저CTR)
+ '/military-pay-2026': { lastModified: new Date('2026-09-27') },
+ '/teacher-pay-2026': { lastModified: new Date('2026-10-04') }, // B20 리드·메타 정렬(네이버 저CTR)
+ '/police-pay-2026': { lastModified: new Date('2026-10-04') },
+ '/firefighter-pay-2026': { lastModified: new Date('2026-10-04') }, // B20 리드·메타 정렬(네이버 저CTR)
  // 2026-08-25 P2 백로그 (임베드 위젯 5종 확장·구조화데이터 보강·영문 메뉴)
- '/embed': { lastModified: new Date('2026-08-25') },
- '/en': { lastModified: new Date('2026-09-09') },
- '/en/flat-tax': { lastModified: new Date('2026-09-09') },
+ '/embed': { lastModified: new Date('2026-10-04') },
+ '/en': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
+ '/en/flat-tax': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
  '/en/salary-converter': { lastModified: new Date('2026-09-09') },
- '/en/help': { lastModified: new Date('2026-09-09') },
- '/en/guides': { lastModified: new Date('2026-09-09') },
+ '/en/help': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
+ '/en/guides': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
 };
 
 // 2026-09-10: 연봉 상세의 계산 방법과 회사 상세 FAQ를 실질적으로 수정한 날.
@@ -391,7 +392,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  }
  // A18 성과급 엔진 교체일 — 위 priority 는 그대로 두고 lastModified 만 얹는다(사본에만 적용).
  for (const route of BONUS_ENGINE_ROUTES) {
- routeOverrides[route] = { ...routeOverrides[route], lastModified: BONUS_ENGINE_REVIEW_DATE };
+ routeOverrides[route] = { ...routeOverrides[route], lastModified: latestContentDate(routeOverrides[route]?.lastModified, BONUS_ENGINE_REVIEW_DATE) };
  }
 
  // /en 정적 4종 hreflang — 실존 KO 짝만 명시(과잉 적용 금지: seo.ts hreflang 사고 이력).
@@ -412,7 +413,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
        : { en: `${baseUrl}${path}`, 'x-default': `${baseUrl}${path}` };
      if (koPath) EN_STATIC_ALTERNATES[koPath] = EN_STATIC_ALTERNATES[path];
    }
-   routeOverrides[path] = { ...routeOverrides[path], lastModified: new Date('2026-09-09') };
+   routeOverrides[path] = { ...routeOverrides[path], lastModified: latestContentDate(routeOverrides[path]?.lastModified, new Date('2026-09-09')) };
  }
  EN_STATIC_ALTERNATES['/'] = EN_STATIC_ALTERNATES['/en'];
  EN_STATIC_ALTERNATES['/guides'] = EN_STATIC_ALTERNATES['/en/guides'];
@@ -438,7 +439,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  return {
  url: koUrl,
  // 본문 정정일(guideContentRevisions, 히어로 칩 없는 별도 필드 — GA-32·GA-33·GB-30 승인 대안)과 modifiedDate 중 늦은 날
- lastModified: new Date(getGuideContentDate(guide)),
+ lastModified: getGuideContentDate(guide), // Editorial calendar date; do not turn it into a future UTC midnight.
  changeFrequency: 'monthly' as ChangeFrequency,
  priority: 0.7,
  ...(hasEn
@@ -475,7 +476,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const hasKo = koSlugSet.has(guide.slug);
  return {
  url: enUrl,
- lastModified: new Date(getGuideModifiedDate(guide)),
+ lastModified: getGuideModifiedDate(guide),
  changeFrequency: 'monthly' as ChangeFrequency,
  priority: 0.7,
  ...(hasKo
@@ -751,5 +752,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  priority: 0.7,
  }));
 
- return [...staticUrls, ...guideUrls, ...enGuideUrls, ...salaryUrls, ...companyUrls, ...glossaryUrls, ...qnaUrls, ...jobUrls, ...industryUrls, ...regionUrls, ...reportUrls, ...tableUrls];
+ return [...staticUrls, ...guideUrls, ...enGuideUrls, ...salaryUrls, ...companyUrls, ...glossaryUrls, ...qnaUrls, ...jobUrls, ...industryUrls, ...regionUrls, ...reportUrls, ...tableUrls].map(entry => {
+   const revised = pageContentRevision(new URL(entry.url).pathname);
+   return revised ? { ...entry, lastModified: latestContentDate(new Date(entry.lastModified!), revised) } : entry;
+ });
 }

@@ -164,7 +164,7 @@ export default async function QnaDetailPage({
  {related.length > 0 && (
  <section className="mt-10">
  <h2 className="text-xl font-black text-navy dark:text-canvas-50 mb-4">
- {item.category} 카테고리의 다른 질문
+ 함께 알아두면 좋은 질문
  </h2>
  <div className="space-y-3">
  {related.map((rel) => (

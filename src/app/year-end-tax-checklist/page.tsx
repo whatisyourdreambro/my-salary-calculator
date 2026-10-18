@@ -23,7 +23,7 @@ export const metadata: Metadata = buildPageMetadata({
  path: "/year-end-tax-checklist",
  ogType: "article",
  publishedTime: "2026-01-10",
- modifiedTime: "2026-09-09",
+ modifiedTime: "2026-09-30",
  keywords: [
  "연말정산 체크리스트",
  "2026 연말정산 달라지는 점",
@@ -175,7 +175,7 @@ export default function YearEndTaxChecklistPage() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  2026 연말정산 <span className="text-electric">체크리스트</span>
  </h1>
- <PublishedMeta publishedDate="2026-01-10" updatedDate="2026-09-09" className="mb-2" />
+ <PublishedMeta publishedDate="2026-01-10" updatedDate="2026-09-30" className="mb-2" />
  <YearEndTaxCluster />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  공제 요건과 증빙 누락을 확인하는 9개 카테고리·40+ 항목.

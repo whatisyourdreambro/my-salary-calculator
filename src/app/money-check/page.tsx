@@ -1,3 +1,4 @@
+import TopicNextSteps from '@/components/TopicNextSteps';
 import type { Metadata } from "next";
 import { ArrowDown, ArrowRight, Check, ClipboardCheck } from "lucide-react";
 import Link from "@/components/AppLink";
@@ -113,6 +114,7 @@ export default function MoneyCheckPage() {
         </section>
         <ShareSection contentType="page" shareMode="page" url={URL} title="내 돈 체크 | 머니샐러리" heading="이 체크리스트가 필요한 사람에게 알려주세요" className="mt-10" />
       </div>
+      <TopicNextSteps path="/money-check" />
     </div>
   );
 }

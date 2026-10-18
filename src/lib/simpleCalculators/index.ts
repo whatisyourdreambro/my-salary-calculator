@@ -12,6 +12,7 @@ import { enrichmentsExtB } from "./enrichments-ext-b";
 import { enrichmentsExtC } from "./enrichments-ext-c";
 import { expandedFinanceCalculators } from "./expandedFinance";
 import { expandedPracticalCalculators } from "./expandedPractical";
+import { calculatorJourneyNeighbors } from "../calculatorJourneys";
 
 const rawCalculators: CalculatorDef[] = [
  ...batch1Calculators,
@@ -80,11 +81,16 @@ export function getCalculatorBatch(slug: string): CalculatorBatch | undefined {
 export function toClientCalculator(def: CalculatorDef): ClientCalculatorDef {
  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- compute 만 떼어낸다
  const { compute, ...rest } = def;
- const relatedCards = (def.relatedSlugs ?? [])
+ const previous = (def.relatedSlugs ?? []).filter(s => s !== def.slug && getCalculatorBySlug(s));
+ // Preserve the existing card count and positions above ads. Only the relevant
+ // destinations change; unknown/test definitions retain their original links.
+ const relatedSlugs = [...new Set([...calculatorJourneyNeighbors(def.slug), ...previous])]
+ .filter(s => s !== def.slug && getCalculatorBySlug(s)).slice(0, previous.length);
+ const relatedCards = relatedSlugs
  .map((s) => getCalculatorBySlug(s))
  .filter((c): c is CalculatorDef => Boolean(c))
  .map((c) => ({ slug: c.slug, title: c.title, description: c.description }));
- return { ...rest, relatedCards, ...(PRECISION_TWINS[def.slug] ? { precisionTwin: PRECISION_TWINS[def.slug] } : {}) };
+ return { ...rest, relatedSlugs, relatedCards, ...(PRECISION_TWINS[def.slug] ? { precisionTwin: PRECISION_TWINS[def.slug] } : {}) };
 }
 
 /** 필드 기본값으로 만든 입력 객체 — 서버 초기 결과 계산과 클라이언트 초기 state 가 같은 값을 쓴다. */

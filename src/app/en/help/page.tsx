@@ -49,6 +49,7 @@ export default function EnglishHelpPage() {
             </ul>
           </div>
           <Link href="/en/flat-tax" className="mt-5 inline-flex min-h-11 items-center text-primary underline">Open the income-tax comparison</Link>
+          <p className="mt-3">Changing jobs or preparing a settlement? Use the <Link href="/en/season" className="text-primary underline">pay and tax checklist</Link> to distinguish the income year, payment date and filing step.</p>
         </section>
         <section id="currency" className="scroll-mt-28 rounded-2xl border border-border p-5 sm:p-7">
           <h2 className="text-2xl font-bold">Convert gross salary, not living standards</h2>
@@ -70,12 +71,15 @@ export default function EnglishHelpPage() {
           <p className="mt-4">Loan, savings, gross pay, offer and everyday-cost tools use the values and assumptions you enter. Their currency selector changes display and rounding; it does not fetch exchange rates, calculate foreign tax or convert existing inputs. Use one currency throughout a scenario.</p>
           <p className="mt-3">Each tool states its formula, contribution or payment timing, exclusions and worked example. Constant returns and withdrawal rates are assumptions, not forecasts. A scheduled loan payment is not lender approval. The work-time tool uses the spendable hourly pay you supply rather than deriving a country&apos;s take-home wage.</p>
           <Link href="/en/tools" className="mt-4 inline-flex min-h-11 items-center text-primary underline">Choose a money planning tool</Link>
+          <p className="mt-3">The <Link href="/en/calculators" className="text-primary underline">calculator overview</Link> separates payroll, tax and general arithmetic. The <Link href="/en/guides" className="text-primary underline">English guides</Link> explain the documents and assumptions to check before using those results.</p>
+          <p className="mt-3">The <Link href="/en/terms" className="text-primary underline">terms of use</Link> explain the limits of these reference estimates and the conditions for quoting site content.</p>
         </section>
         <section id="privacy" className="scroll-mt-28 rounded-2xl border border-border p-5 sm:p-7">
           <h2 className="text-2xl font-bold">Your inputs and support</h2>
           <p className="mt-4">These English calculators run their arithmetic in your browser. Our calculator interaction events identify the tool and interaction stage; they do not include the salary, family counts, exchange rate or tax result you enter here. Site advertising, analytics and hosting services can still process browser, page and connection information.</p>
           <p className="mt-3">If you choose to share a result elsewhere on the site, review the shared text, link or image for personal details. Do not include salary details, account numbers or identity documents in a support message.</p>
           <p className="mt-3">Saving a Korean take-home estimate is optional and stores its inputs and results in this browser. English saved estimates use a separate model and currency namespace from Korean dashboard data. Review and delete saved estimates on My dashboard; browser storage is not a cloud backup.</p>
+          <p className="mt-3">Read the <Link href="/en/privacy" className="text-primary underline">privacy policy</Link> for the data handling described here. <Link href="/en/about" className="text-primary underline">About Moneysalary</Link> explains who maintains the methods and reviews corrections.</p>
           <nav aria-label="English policies and support" className="mt-3 flex flex-wrap gap-4">
             <Link href="/en/privacy" className="inline-flex min-h-11 items-center text-primary underline">Privacy policy</Link>
             <Link href="/en/terms" className="inline-flex min-h-11 items-center text-primary underline">Terms</Link>

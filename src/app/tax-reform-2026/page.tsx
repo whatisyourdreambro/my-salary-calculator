@@ -28,7 +28,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/tax-reform-2026",
   ogType: "article",
   publishedTime: "2026-07-16",
-  modifiedTime: "2026-08-07",
+  modifiedTime: "2026-09-30",
   keywords: [
     "2026 세법개정안",
     "2026 세제개편안",
@@ -159,7 +159,7 @@ export default function TaxReform2026Page() {
             slug: "tax-reform-2026",
             url: "/tax-reform-2026",
             publishedDate: "2026-07-16",
-            modifiedDate: "2026-08-07",
+            modifiedDate: "2026-09-30",
           }),
           speakableLd({
             url: "/tax-reform-2026",
@@ -177,7 +177,7 @@ export default function TaxReform2026Page() {
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
             2026 세법개정안 <span className="text-electric">발표 내용 총정리</span>
           </h1>
-          <PublishedMeta publishedDate="2026-07-16" updatedDate="2026-08-07" className="mb-2" />
+          <PublishedMeta publishedDate="2026-07-16" updatedDate="2026-09-30" className="mb-2" />
           <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
             2026년 세법개정안(정부 공식 명칭: <strong>2026년 세제개편안</strong>)이
             8월 3일 확정 발표됐습니다. 무엇이 담겼는지, 직장인 월급 세금과

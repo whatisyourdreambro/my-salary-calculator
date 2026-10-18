@@ -5,7 +5,7 @@ import JsonLd from "@/components/JsonLd";
 import EnglishGuideClient from "./EnglishGuideClient";
 import { articleLd } from "@/lib/structuredData";
 import { Metadata } from "next";
-import { rankRelatedGuides } from "@/lib/guideDiscovery";
+import { getEnglishRelatedGuides } from "@/lib/englishRelatedGuides";
 import { getGuideModifiedDate } from "@/lib/guideDates";
 
 export const dynamic = 'force-static';
@@ -101,9 +101,8 @@ export default async function EnglishGuidePage({ params: pendingParams }: Props)
 
  // Related cards use slug/title/description only — passing whole Guide objects put three
  // other guides' full HTML into the RSC payload (PERF-08).
- const relatedGuides = rankRelatedGuides(enGuides, {
- currentSlug: guide.slug, category: guide.category, tags: guide.tags,
- }).slice(0, 3).map(({ slug, title, description }) => ({ slug, title, description }));
+ const relatedGuides = getEnglishRelatedGuides(enGuides, guide)
+ .map(({ slug, title, description }) => ({ slug, title, description }));
 
  const jsonLd = articleLd({
  title: guide.title,

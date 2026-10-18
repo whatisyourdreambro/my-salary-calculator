@@ -54,12 +54,16 @@ describe("simpleCalculators compute loader (client bundle split)", () => {
     for (const calc of allCalculators) {
       const client = toClientCalculator(calc);
       expect("compute" in client).toBe(false);
-      const { compute: _c, ...rest } = calc;
+      const { compute: _c, relatedSlugs: _related, ...rest } = calc;
       void _c;
+      void _related;
       expect(client).toMatchObject(rest);
-      // relatedSlugs 는 서버에서 카드로 풀린다 — 존재하는 slug 만, 순서 유지
-      const resolvable = (calc.relatedSlugs ?? []).filter((s) => allCalculators.some((c) => c.slug === s));
-      expect((client.relatedCards ?? []).map((r) => r.slug)).toEqual(resolvable);
+      // Editorial recommendations are selected on the server; preserve the card
+      // budget and keep serialized slugs/cards consistent with valid destinations.
+      const resolvable = (calc.relatedSlugs ?? []).filter((s) => s !== calc.slug && allCalculators.some((c) => c.slug === s));
+      expect(client.relatedCards).toHaveLength(resolvable.length);
+      expect((client.relatedCards ?? []).map((r) => r.slug)).toEqual(client.relatedSlugs);
+      expect((client.relatedCards ?? []).every(card => card.slug !== calc.slug && allCalculators.some(c => c.slug === card.slug))).toBe(true);
       expect(() => JSON.stringify(client)).not.toThrow();
     }
   });

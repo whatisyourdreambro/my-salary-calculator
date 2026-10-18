@@ -1,3 +1,4 @@
+import TopicNextSteps from '@/components/TopicNextSteps';
 import type { Metadata } from "next";
 import { ArrowDown, ArrowRight, Building2, ExternalLink, FileCheck2, Landmark } from "lucide-react";
 import Link from "@/components/AppLink";
@@ -84,6 +85,7 @@ export default function PublicInstitutionsPage() {
         </section>
         <AutoShareSection contentType="tool" maxWidth="7xl" />
       </div>
+      <TopicNextSteps path="/public-institutions" />
     </div>
   );
 }

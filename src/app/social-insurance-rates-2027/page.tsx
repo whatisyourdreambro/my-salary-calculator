@@ -45,7 +45,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/social-insurance-rates-2027",
   ogType: "article",
   publishedTime: "2026-08-31",
-  modifiedTime: "2026-09-25",
+  modifiedTime: "2026-10-04",
   keywords: [
     "2027 4대보험",
     "2027 국민연금 요율",
@@ -225,7 +225,7 @@ export default function SocialInsuranceRates2027Page() {
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
             2027 4대보험 <span className="text-electric">요율표</span>
           </h1>
-          <PublishedMeta publishedDate="2026-08-31" updatedDate="2026-09-25" className="mb-2" />
+          <PublishedMeta publishedDate="2026-08-31" updatedDate="2026-10-04" className="mb-2" />
           {/* 광고(InArticleAd) 위 문단 — 문구 길이를 기존 이하로 유지 (2026-08-16 규칙) */}
           <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
             국민연금 총 10.0% 인상·최저임금 시급{" "}

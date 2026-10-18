@@ -1,6 +1,7 @@
 // /insights — 머니샐러리 데이터 리포트 인덱스 (서버 컴포넌트).
 // 리포트는 분기 1회 개별 제작 — 목록은 reportsRegistry가 단일 소스.
 // 메타데이터는 insights/layout.tsx 가 제공.
+import TopicNextSteps from '@/components/TopicNextSteps';
 import Link from "@/components/AppLink";
 import { ArrowRight, BarChart3, Quote, Database } from "lucide-react";
 import { reportsRegistry } from "@/data/reportsRegistry";
@@ -174,6 +175,7 @@ export default function InsightsIndexPage() {
           <MultiplexAd />
         </div>
       </div>
+      <TopicNextSteps path="/insights" />
     </main>
   );
 }

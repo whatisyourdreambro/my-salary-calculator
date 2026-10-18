@@ -2,6 +2,7 @@
 // 엔진: generateData2027 (연금 5.0%·건강보험 3.595% 적용, 장기요양·고용보험 2026값 준용; 확정 상태의 출처는 taxConstants2027 참조)
 // ★갱신 슬롯: 2027-01-01 next.config /table/annual redirect 를 2027로 교체
 
+import SalaryTableNextSteps from '@/components/SalaryTableNextSteps';
 import { Metadata } from "next";
 import { generateAnnualSalaryTableData2027 } from "@/lib/generateData2027";
 import SalaryTable from "@/components/SalaryTable";
@@ -169,6 +170,7 @@ function AnnualTable2027() {
           실제 지급액은 당시 공식 기준과 급여 정산 조건에 따라 달라질 수 있습니다. 각 행의 상세 페이지는 2026년 기준입니다.
         </div>
       </div>
+      <SalaryTableNextSteps year={2027} unit="annual" />
     </main>
   );
 }
