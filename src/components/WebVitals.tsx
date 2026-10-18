@@ -77,6 +77,28 @@ function observeEntryType(
   }
 }
 
+// Next registers metric observers again when this callback identity changes.
+// Keep it stable across renders; attribution and the current path are read at report time.
+const reportWebVitals: Parameters<typeof useReportWebVitals>[0] = (metric) => {
+  const state = getAttributionState();
+  // GA4 권장 형식 — value는 정수로 (CLS는 1000배 스케일).
+  trackEvent("web_vitals", {
+    metric_name: metric.name,
+    metric_value: Math.round(
+      metric.name === "CLS" ? metric.value * 1000 : metric.value
+    ),
+    metric_rating: metric.rating, // good | needs-improvement | poor
+    metric_id: metric.id,
+    page_path:
+      typeof location !== "undefined" ? location.pathname : "",
+    // 귀속 필드는 샘플 방문의 해당 지표에만 붙는다 — 그 외 이벤트 형태는 종전과 동일.
+    ...(state.sampled && metric.name === "LCP"
+      ? { lcp_element: state.lcpElement || "unknown", lcp_load_state: state.lcpLoadState || "unknown" }
+      : {}),
+    ...(state.sampled && metric.name === "CLS" ? { cls_target: state.clsTarget || "unknown" } : {}),
+  });
+};
+
 export default function WebVitals() {
   // 귀속 관찰자는 useReportWebVitals 보다 먼저 선언해 같은 커밋의 effect 순서상 먼저 등록된다(둘 다 buffered).
   useEffect(() => {
@@ -119,25 +141,7 @@ export default function WebVitals() {
     };
   }, []);
 
-  useReportWebVitals((metric) => {
-    const state = getAttributionState();
-    // GA4 권장 형식 — value는 정수로 (CLS는 1000배 스케일).
-    trackEvent("web_vitals", {
-      metric_name: metric.name,
-      metric_value: Math.round(
-        metric.name === "CLS" ? metric.value * 1000 : metric.value
-      ),
-      metric_rating: metric.rating, // good | needs-improvement | poor
-      metric_id: metric.id,
-      page_path:
-        typeof location !== "undefined" ? location.pathname : "",
-      // 귀속 필드는 샘플 방문의 해당 지표에만 붙는다 — 그 외 이벤트 형태는 종전과 동일.
-      ...(state.sampled && metric.name === "LCP"
-        ? { lcp_element: state.lcpElement || "unknown", lcp_load_state: state.lcpLoadState || "unknown" }
-        : {}),
-      ...(state.sampled && metric.name === "CLS" ? { cls_target: state.clsTarget || "unknown" } : {}),
-    });
-  });
+  useReportWebVitals(reportWebVitals);
 
   return null;
 }
