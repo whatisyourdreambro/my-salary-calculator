@@ -63,7 +63,7 @@
         "src/lib/calculatorJourneys.ts",
         "src/lib/simpleCalculators/index.ts"
       ],
-      "sha256": "4f87b91929f431c41e8d2c20213fef2d4e8546d4c19b412664bd0bcce47628d2"
+      "sha256": "5d1c5a171f10b452539078c46a6c87b69570ccd3151580cc94bd3fb86cae0e10"
     },
     "/money-check": {
       "contentDate": "2026-10-19",
@@ -678,7 +678,7 @@
         "src/app/en/page.tsx",
         "src/lib/englishContentLinks.ts"
       ],
-      "sha256": "e0938fd2afaff9f6c21e7d7ef69467e6c072092f3f7fc0f3a8b68db5821dcec1"
+      "sha256": "8ad236f60d525a6ef78c5e91696ab7245ead3f56c9f58214ae1453c9f815a73f"
     },
     "/en/flat-tax": {
       "contentDate": "2026-10-19",
@@ -694,7 +694,7 @@
         "src/lib/englishCalculators.ts",
         "src/lib/englishContentLinks.ts"
       ],
-      "sha256": "461bbff40ce592114c705abe246c5169e27d9d17e55eba96f21ef965ebc06db9"
+      "sha256": "c58cee6977581ed13ad3be27bd879e50ed1a5f9d5b186d196a4941cdf1dc0801"
     },
     "/en/salary-converter": {
       "contentDate": "2026-09-09",
@@ -721,7 +721,7 @@
         "src/app/en/help/page.tsx",
         "src/lib/englishContentLinks.ts"
       ],
-      "sha256": "f2f4c7f43315f26674719e2d77bae6befd159a46fbe0e24aa949b4939987b2ea"
+      "sha256": "2282bc1bc3cada9ec61d204b021dbdc5d81f1b688be43acc52b0ea0150988cd0"
     },
     "/en/guides": {
       "contentDate": "2026-10-19",

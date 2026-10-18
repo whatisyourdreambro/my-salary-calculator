@@ -18,11 +18,14 @@ vi.mock('@/components/ShareButtons', () => ({ default: () => null }));
 vi.mock('@/components/ResultSharePanel', () => ({ default: () => null }));
 vi.mock('@/components/FavoritesButton', () => ({ default: () => null }));
 vi.mock('@/hooks/useCalculatorMeasurement', () => ({ useCalculatorMeasurement: () => ({ inputProps: {}, resultRef: null }) }));
+// Only the server page's existing locale link is needed from each KO counterpart.
+vi.mock('@/app/guides/[slug]/GuidePageClient', () => ({ default: () => null }));
 
 import FunLayout from '@/app/fun/layout';
 import EnglishHubPage from '@/components/english/EnglishHubPage';
 import EnglishToolPage from '@/app/en/tools/[slug]/page';
 import EnglishGuidePage from '@/app/en/guides/[slug]/page';
+import KoreanGuidePage from '@/app/guides/[slug]/page';
 import EnglishGuidesPage from '@/app/en/guides/page';
 import EnglishLandingPage from '@/app/en/page';
 import EnglishHelpPage from '@/app/en/help/page';
@@ -62,10 +65,20 @@ describe('English editorial content links in actual server markup', () => {
     for (const { slug } of enGuides) {
       location.pathname = `/en/guides/${slug}`;
       pages.set(location.pathname, render(await EnglishGuidePage({ params: Promise.resolve({ slug }) })));
+      location.pathname = `/guides/${slug}`;
+      pages.set(location.pathname, render(await KoreanGuidePage({ params: Promise.resolve({ slug }) })));
     }
     for (const [route, Page] of [['/en', EnglishLandingPage], ['/en/help', EnglishHelpPage], ['/en/about', EnglishAboutPage],
       ['/en/flat-tax', FlatTaxPage], ['/en/guides', EnglishGuidesPage]] as const) {
-      location.pathname = route; pages.set(route, render(createElement(Page)));
+      location.pathname = route;
+      // Next's native export can flush this Suspense boundary after </main> in
+      // its hidden S:0 transport container. Synchronous React SSR alone cannot
+      // establish that these links are within the exported main/article body.
+      // Model the observed export shape without running the relocation script.
+      pages.set(route, route === '/en/guides'
+        ? '<!doctype html><html><body><main><!--$?--><template id="B:0"></template><!--/$--></main><div hidden id="S:0">'
+          + renderToStaticMarkup(createElement(Page)) + '</div></body></html>'
+        : render(createElement(Page)));
     }
   });
 
@@ -96,7 +109,9 @@ describe('English editorial content links in actual server markup', () => {
   });
 
   it('links policies only from relevant source, correction, sharing and result-use explanations', () => {
-    expect(incoming(pages, '/en/about')).toEqual(expect.arrayContaining(['/en', '/en/help', '/en/guides']));
+    expect(incoming(pages, '/en/about')).toEqual(expect.arrayContaining(['/en', '/en/help', '/en/tools']));
+    expect(incoming(pages, '/en/about')).not.toContain('/en/guides');
+    expect(links(pages.get('/en/guides')!)).toEqual([]);
     expect(incoming(pages, '/en/terms')).toEqual(expect.arrayContaining(['/en', '/en/help', '/en/about']));
     expect(incoming(pages, '/en/privacy')).toEqual(expect.arrayContaining(['/en', '/en/help', '/en/about']));
     expect(pages.get('/en/guides')).toContain('how we check sources and review corrections');

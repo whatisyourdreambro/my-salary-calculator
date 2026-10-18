@@ -69,7 +69,7 @@ export const ENGLISH_HUB_SECTION_LINKS: Partial<Record<EnglishHubId, Record<stri
   money: {
     'Borrowing: compare the schedule': [tool('loan', 'Calculate a fixed-payment schedule from one quotation.'), page('/en/guides/loan-types-comparison-2026', 'Loan types and renewal risks', 'Check when a mortgage, instalment loan or credit line needs a different model.')],
     'Saving: separate contributions from returns': [tool('savings-goal', 'Start with the amount and date you need.'), tool('compound-interest', 'Change contributions and the assumed return independently.'), tool('fire', 'Relate a longer-term target to spending and a withdrawal-rate assumption.')],
-    'Use a result as a question to check': [page('/en/fun', 'Everyday money in perspective', 'Discuss work-time costs and shared spending without turning a result into a personal score.'), tool('split-bill', 'Reconcile each payer’s amount with the actual shared bill.')],
+    'Use a result as a question to check': [page('/en/fun', 'Everyday money in perspective', 'Discuss work-time costs and shared spending without turning a result into a personal score.'), tool('split-bill', 'Reconcile each payer’s amount with the actual shared bill.'), page('/en/about', 'How methods and corrections are reviewed', 'Read how the operator checks sources and reviews reported calculation errors before relying on an estimate.')],
   },
   fun: {
     'What does a purchase cost in work time?': [tool('work-time-cost', 'Use a purchase price and the spendable hourly amount you choose.')],
