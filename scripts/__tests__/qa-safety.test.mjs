@@ -63,6 +63,44 @@ test('owned proxy rejects HTTP and CONNECT without forwarding', async () => {
   } finally { await proxy.close(); }
 });
 
+test('a reset CONNECT socket closes safely and the proxy keeps denying new tunnels', async t => {
+  let server;
+  const createServer = http.createServer;
+  t.mock.method(http, 'createServer', (...args) => {
+    server = createServer(...args);
+    return server;
+  });
+  const proxy = await startQaDenyProxy();
+  let request;
+  try {
+    // Node detaches its HTTP-parser socket error handler for CONNECT. Inject the
+    // reset there deterministically; only this loopback proxy receives traffic.
+    const reset = new Promise((resolve, reject) => server.once('connect', (_request, socket) => {
+      try {
+        const error = Object.assign(new Error('Synthetic peer reset'), { code: 'ECONNRESET' });
+        assert.doesNotThrow(() => socket.emit('error', error));
+        assert.equal(socket.destroyed, true);
+        resolve();
+      } catch (error) { socket.destroy(); reject(error); }
+    }));
+    request = http.request({ host: '127.0.0.1', port: proxy.port, method: 'CONNECT', path: 'external.invalid:443' });
+    request.on('error', () => {}); // The injected server-side reset may close this test client.
+    request.on('connect', (_response, socket) => socket.destroy());
+    request.end();
+    await reset;
+    const status = await new Promise((resolve, reject) => {
+      const next = http.request({ host: '127.0.0.1', port: proxy.port, method: 'CONNECT', path: 'external.invalid:443' });
+      next.on('connect', (response, socket) => { socket.destroy(); resolve(response.statusCode); });
+      next.on('error', reject);
+      next.end();
+    });
+    assert.equal(status, 403);
+  } finally {
+    request?.destroy();
+    await proxy.close();
+  }
+});
+
 function mocks() {
   const events = [], routes = [], pageRoutes = [];
   const context = new EventEmitter();

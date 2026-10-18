@@ -95,7 +95,13 @@ async function startQaDenyProxy() {
   });
   server.on('connect', (_request, socket) => socket.end('HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n'));
   server.on('upgrade', (_request, socket) => socket.destroy());
-  server.on('connection', socket => { sockets.add(socket); socket.on('close', () => sockets.delete(socket)); });
+  server.on('connection', socket => {
+    sockets.add(socket);
+    // CONNECT removes Node's HTTP-parser error listener. A peer reset must close
+    // only that denied socket, not terminate the browser's network guard.
+    socket.on('error', () => socket.destroy());
+    socket.on('close', () => sockets.delete(socket));
+  });
   await new Promise((resolve, reject) => {
     server.once('error', reject);
     server.listen(0, '127.0.0.1', resolve);
