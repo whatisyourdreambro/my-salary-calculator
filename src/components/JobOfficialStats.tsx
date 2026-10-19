@@ -65,7 +65,7 @@ export default function JobOfficialStats({ jobName, dbOverallManwon, stats }: Pr
               aria-hidden
             />
           </div>
-          <div className="flex justify-between text-[11px] text-gray-400 dark:text-gray-500 mt-1.5">
+          <div className="flex justify-between text-[11px] text-muted-foreground mt-1.5">
             <span>하위 25% {fmt(low!)}만</span>
             <span className="font-semibold text-emerald-700 dark:text-emerald-300">중위 {fmt(median)}만</span>
             <span>상위 25% {fmt(high!)}만</span>
@@ -81,7 +81,7 @@ export default function JobOfficialStats({ jobName, dbOverallManwon, stats }: Pr
       </p>
 
       {stats.note && (
-        <p className="mt-2 text-xs text-gray-400 dark:text-gray-500 leading-relaxed">※ {stats.note}</p>
+        <p className="mt-2 text-xs text-muted-foreground leading-relaxed">※ {stats.note}</p>
       )}
 
       {stats.sourceUrl && (

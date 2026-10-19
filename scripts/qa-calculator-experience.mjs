@@ -8,7 +8,9 @@ const { assertLocalQaTarget, assertQaEnvironment, launchQaBrowser } = qaSafety;
 const { chromium } = createRequire(import.meta.url)('playwright-core');
 const base = assertLocalQaTarget(process.env.BASE_URL || 'http://127.0.0.1:3100');
 assertQaEnvironment();
-const output = path.resolve('.artifacts/experience-qa');
+const contrastOnly = process.env.QA_CONTRAST_ONLY === '1';
+if (contrastOnly) assert(process.env.QA_ROUTES, 'Contrast-only QA requires explicit QA_ROUTES');
+const output = path.resolve('.artifacts/experience-qa', contrastOnly ? 'contrast' : '.');
 const routes = process.env.QA_ROUTES?.split(',') || ['/calc', '/calc/refinance-break-even', '/calc/advertising-profit-roas', '/', '/en', '/home-loan', '/year-end-tax', '/calc/samsung-bonus', '/calc/jeonse-loan', '/calc/year-end-bonus-tax', '/savings-interest-2026', '/tools/finance/compound', '/money-check'];
 const report = [];
 const errors = [];
@@ -16,7 +18,7 @@ const expected = Number(process.env.QA_CALC_COUNT || 202);
 
 // Composite computed backgrounds up the ancestor chain. Gradients/images are
 // excluded from the automatic contrast score and covered by screenshots.
-function auditPage() {
+function auditPage({ strict = false } = {}) {
   const rgba = value => (value.match(/[\d.]+/g) || []).map(Number);
   const blend = (front, back) => {
     const alpha = front[3] ?? 1;
@@ -49,17 +51,116 @@ function auditPage() {
     calendar: element.dataset.numberFormat, ratio: contrast(element), color: getComputedStyle(element).color,
     background: getComputedStyle(element).backgroundColor, name: element.getAttribute('aria-label') || element.id,
   }));
+  if (strict) {
+    const measurements = [], unassessed = [], excluded = [];
+    // Computed RGB(A) only. Unknown color spaces must be reported, not treated
+    // as RGB numbers or silently counted as passing.
+    const parseRgb = value => {
+      const match = /^rgba?\(([^)]+)\)$/.exec(value);
+      if (!match || match[1].includes('%')) return null;
+      const parts = match[1].trim().split(/[\s,/]+/).map(Number);
+      return (parts.length === 3 || parts.length === 4) && parts.every(Number.isFinite) ? parts : null;
+    };
+    for (const element of document.querySelectorAll('main *')) {
+      if (!(element instanceof HTMLElement) || /^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/.test(element.tagName) || !visible(element)) continue;
+      const directText = [...element.childNodes].filter(node => node.nodeType === 3).map(node => node.textContent).join(' ').replace(/\s+/g, ' ').trim();
+      if (!directText) continue;
+      const style = getComputedStyle(element);
+      const fontSizePx = parseFloat(style.fontSize), fontWeight = Number(style.fontWeight);
+      const threshold = fontSizePx >= 24 || (fontSizePx >= 14 * 96 / 72 && fontWeight >= 700) ? 3 : 4.5;
+      const record = { tag: element.tagName.toLowerCase(), text: directText.slice(0, 160), class: element.className,
+        foreground: style.color, fontSizePx, fontWeight, threshold };
+      if (element.closest('.sr-only, [hidden]')) { excluded.push({ ...record, reason: 'visually-hidden' }); continue; }
+      if (element.getAttribute('aria-hidden') === 'true' && /^[✓✔]$/.test(directText)) {
+        excluded.push({ ...record, reason: 'explicitly-decorative-checkmark' }); continue;
+      }
+      const chain = [];
+      let reason = null;
+      for (let current = element; current; current = current.parentElement) {
+        const currentStyle = getComputedStyle(current);
+        chain.push(currentStyle);
+        if (Number(currentStyle.opacity) < 1) reason = 'ancestor-or-text-opacity';
+        if (currentStyle.filter !== 'none' || currentStyle.mixBlendMode !== 'normal') reason = 'filter-or-blend-mode';
+      }
+      const layers = [];
+      for (const layer of chain) {
+        if (reason) break;
+        if (layer.backgroundImage !== 'none') { reason = 'background-image-or-gradient'; break; }
+        const color = parseRgb(layer.backgroundColor);
+        if (!color) { reason = 'unsupported-background-color'; break; }
+        layers.push(color);
+        // Opaque local panels conceal ancestor backgrounds; their ancestor
+        // opacity still matters and was checked over the complete chain above.
+        if ((color[3] ?? 1) === 1) break;
+      }
+      const foreground = parseRgb(style.color);
+      if (!foreground) reason ||= 'unsupported-foreground-color';
+      if (reason) { unassessed.push({ ...record, reason }); continue; }
+      const background = layers.reverse().reduce((back, front) => blend(front, back), [255, 255, 255]);
+      const compositedForeground = blend(foreground, background);
+      const a = luminance(compositedForeground), b = luminance(background);
+      const ratio = (Math.max(a, b) + .05) / (Math.min(a, b) + .05);
+      measurements.push({ ...record, background, compositedForeground, ratio, pass: ratio >= threshold });
+    }
+    const lowContrast = measurements.filter(item => !item.pass);
+    return { background: getComputedStyle(document.body).backgroundColor, color: getComputedStyle(document.body).color,
+      overflow: document.documentElement.scrollWidth > innerWidth, inputs, lowContrast, measurements, unassessed, excluded,
+      coverage: { measured: measurements.length, passed: measurements.length - lowContrast.length,
+        failed: lowContrast.length, unassessed: unassessed.length, excluded: excluded.length } };
+  }
   const lowContrast = [...document.querySelectorAll('main :is(p,h1,h2,h3,label,summary,button,a,span,td,th)')].filter(element => visible(element) && !element.closest('[data-share-color-scope]') && [...element.childNodes].some(node => node.nodeType === 3 && node.textContent.trim())).flatMap(element => {
     const ratio = contrast(element), style = getComputedStyle(element);
     const large = parseFloat(style.fontSize) >= 24 || (parseFloat(style.fontSize) >= 18.66 && Number(style.fontWeight) >= 700);
-    return ratio && ratio + .05 < (large ? 3 : 4.5) ? [{ text: element.textContent.trim().slice(0, 70), ratio: +ratio.toFixed(2), class: element.className, color: style.color }] : [];
+    return ratio && ratio < (large ? 3 : 4.5) ? [{ text: element.textContent.trim().slice(0, 70), ratio: +ratio.toFixed(2), class: element.className, color: style.color }] : [];
   });
   return { background: getComputedStyle(document.body).backgroundColor, color: getComputedStyle(document.body).color, overflow: document.documentElement.scrollWidth > innerWidth, inputs, lowContrast };
+}
+
+async function auditContrastCases(browser) {
+  for (const width of [390, 1280]) for (const theme of ['light', 'dark']) {
+    const context = await browser.newContext({ viewport: { width, height: 900 }, colorScheme: theme, serviceWorkers: 'block' });
+    try {
+      await context.addInitScript(theme => localStorage.setItem('theme', theme), theme);
+      const page = await context.newPage();
+      page.on('pageerror', error => errors.push(error.message));
+      for (const route of routes) {
+        const response = await page.goto(base + route, { waitUntil: 'networkidle', timeout: 120000 });
+        assert.equal(response.status(), 200, route);
+        await page.locator('h1').first().waitFor();
+        await page.evaluate(() => document.fonts.ready);
+        assert.equal(await page.evaluate(() => document.documentElement.classList.contains('dark')), theme === 'dark');
+        const audit = await page.evaluate(auditPage, { strict: true });
+        const screenshots = [];
+        report.push({ route, theme, width, ...audit, screenshots });
+        const sections = route.startsWith('/table/')
+          ? [{ label: 'intro', heading: /^202[67]년 월급/ }, { label: 'faq', heading: /^자주 묻는 질문$/ }]
+          : route.startsWith('/job/')
+            ? [{ label: 'career', heading: /^경력별 평균 연봉$/ }, { label: 'official', heading: /^정부 (공식 통계|발표)로 보는/ }, { label: 'calculator', heading: /^세후 실수령액 바로 계산$/ }]
+            : [];
+        for (const { label, heading } of sections) {
+          const title = page.getByRole('heading', { level: 2, name: heading });
+          if (!await title.count()) continue;
+          const panel = title.first().locator('xpath=ancestor::section[1]');
+          const filename = `${route.replaceAll('/', '_')}-${theme}-${width}-${label}.png`;
+          // Scope screenshots to the explanation/FAQ/card, never the long table.
+          await panel.screenshot({ path: path.join(output, filename), animations: 'disabled' });
+          screenshots.push(filename);
+        }
+        console.log(`${theme} ${width}px ${route}: ${audit.coverage.measured} measured, ${audit.lowContrast.length} failed, ${audit.unassessed.length} unassessed`);
+      }
+    } finally { await context.close(); }
+  }
+  assert(report.every(item => item.coverage.measured > 0), 'Contrast coverage must not be empty');
+  assert(report.every(item => !item.overflow), 'Contrast target horizontal overflow');
+  assert.equal(report.reduce((sum, item) => sum + item.lowContrast.length, 0), 0, 'Measured text contrast below its unrounded WCAG threshold');
+  assert.deepEqual(errors, []);
 }
 
 await fs.mkdir(output, { recursive: true });
 const browser = await launchQaBrowser(chromium, base, { headless: true, ...(process.platform === 'win32' ? { channel: 'chrome' } : {}) });
 try {
+  if (contrastOnly) await auditContrastCases(browser);
+  else {
   for (const theme of ['light', 'dark']) {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 }, colorScheme: theme, serviceWorkers: 'block' });
     await context.addInitScript(theme => localStorage.setItem('theme', theme), theme);
@@ -237,8 +338,11 @@ try {
   assert(!(await page.evaluate(() => document.documentElement.classList.contains('dark'))));
   await context.close();
   assert.deepEqual(errors, []);
+  }
 } finally {
-  await fs.writeFile(path.join(output, 'summary.json'), JSON.stringify({ report, errors }, null, 2));
+  await fs.writeFile(path.join(output, 'summary.json'), JSON.stringify({ mode: contrastOnly ? 'contrast-only' : 'experience', report, errors }, null, 2));
   await browser.close();
 }
-console.log(`PASS: ${report.length} theme/page cases, directory links, grouped fields and theme persistence.`);
+console.log(contrastOnly
+  ? `PASS: ${report.length} contrast cases; measured text thresholds passed. Unassessed rendering is listed separately.`
+  : `PASS: ${report.length} theme/page cases, directory links, grouped fields and theme persistence.`);

@@ -233,7 +233,7 @@ export default async function JobPage({ params: pendingParams }: Props) {
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</span>
                     <div className="flex items-center gap-3 text-sm">
-                      <span className="text-gray-400">{data.min.toLocaleString()}~{data.max.toLocaleString()}만원</span>
+                      <span className="text-muted-foreground">{data.min.toLocaleString()}~{data.max.toLocaleString()}만원</span>
                       <Link
                         href={href}
                         className="font-bold text-blue-600 dark:text-blue-400 hover:underline"
@@ -246,7 +246,7 @@ export default async function JobPage({ params: pendingParams }: Props) {
                 </div>
               ))}
             </div>
-            <p className="mt-4 text-xs text-gray-400 dark:text-gray-500">
+            <p className="mt-4 text-xs text-muted-foreground">
               * 2026년 기준 국내 평균 데이터. 기업 규모·지역·성과급에 따라 차이가 있습니다.
             </p>
           </section>
@@ -291,7 +291,7 @@ export default async function JobPage({ params: pendingParams }: Props) {
               <ul className="space-y-2">
                 {job.requirements.map((req, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
-                    <span className="mt-0.5 text-blue-500 flex-shrink-0">✓</span>
+                    <span className="mt-0.5 text-link flex-shrink-0">✓</span>
                     <span>{req}</span>
                   </li>
                 ))}

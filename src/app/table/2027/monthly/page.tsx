@@ -125,8 +125,7 @@ function MonthlyTable2027() {
         {/* SEO 텍스트 콘텐츠 */}
         <section className="mt-12 mb-8 max-w-4xl mx-auto">
           <div
-            className="rounded-2xl p-8"
-            style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #DDE4EC" }}
+            className="rounded-2xl border-[1.5px] border-border bg-card p-8"
           >
             <h2 className="text-2xl font-black text-navy mb-4">2027년 월급, 이렇게 달라집니다</h2>
             <p className="text-faint-blue leading-relaxed mb-4">
@@ -153,8 +152,7 @@ function MonthlyTable2027() {
         {/* FAQ */}
         <section className="mb-8 max-w-4xl mx-auto">
           <div
-            className="rounded-2xl p-8"
-            style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #DDE4EC" }}
+            className="rounded-2xl border-[1.5px] border-border bg-card p-8"
           >
             <h2 className="text-2xl font-black text-navy mb-6">자주 묻는 질문</h2>
             <div className="space-y-6">

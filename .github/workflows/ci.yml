@@ -131,6 +131,14 @@ jobs:
           npm run qa:pages:http
           npm run qa:run -- scripts/qa-pages-navigation.mjs
           QA_ROUTES="/calc/samsung-bonus,/" npm run qa:run -- scripts/qa-calculator-experience.mjs
+          QA_CONTRAST_ONLY=1 QA_ROUTES="/table/2026/monthly,/table/2027/monthly,/job/safety-engineer,/job/software-engineer" npm run qa:run -- scripts/qa-calculator-experience.mjs
+      - name: 로컬 화면 및 대비 검증 근거
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: experience-qa
+          path: .artifacts/experience-qa/
+          if-no-files-found: ignore
       - name: English page quality ledger
         if: always()
         uses: actions/upload-artifact@v7.0.2

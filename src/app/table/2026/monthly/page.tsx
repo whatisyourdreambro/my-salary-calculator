@@ -150,8 +150,7 @@ function MonthlyTable() {
  {/* SEO 텍스트 콘텐츠 — 체류시간 + 검색엔진 */}
  <section className="mt-12 mb-8 max-w-4xl mx-auto">
  <div
- className="rounded-2xl p-8"
- style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #DDE4EC" }}
+ className="rounded-2xl border-[1.5px] border-border bg-card p-8"
  >
  <h2 className="text-2xl font-black text-navy mb-4">
  2026년 월급 실수령액이란?
@@ -181,8 +180,7 @@ function MonthlyTable() {
  ].map((item) => (
  <div
  key={item.label}
- className="text-center p-4 rounded-xl"
- style={{ backgroundColor: "#EDF1F5" }}
+ className="text-center p-4 rounded-xl bg-secondary"
  >
  <div className="text-xs font-bold text-faint-blue mb-1">{item.label}</div>
  <div className="text-lg font-black text-electric">세후 {item.monthly}</div>
@@ -195,8 +193,7 @@ function MonthlyTable() {
  {/* FAQ */}
  <section className="mb-8 max-w-4xl mx-auto">
  <div
- className="rounded-2xl p-8"
- style={{ backgroundColor: "#FFFFFF", border: "1.5px solid #DDE4EC" }}
+ className="rounded-2xl border-[1.5px] border-border bg-card p-8"
  >
  <h2 className="text-2xl font-black text-navy mb-6">자주 묻는 질문</h2>
  <div className="space-y-6">
