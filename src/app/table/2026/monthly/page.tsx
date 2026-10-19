@@ -114,7 +114,7 @@ function MonthlyTable() {
  }
  />
 
- <div className="page-width -mt-20 relative z-10">
+ <div className="page-width -mt-8 relative z-10">
  {/* 표 1/3·2/3 지점 광고 — layout 하단 PageFooterAds 의 InArticle·HomeTop 사본은 dedup 으로 죽고 이곳이 산다(유닛 수 불변, 2026-09-11) */}
  <SalaryTable
  headers={tableHeaders}

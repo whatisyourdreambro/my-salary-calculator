@@ -149,9 +149,23 @@ async function auditContrastCases(browser) {
         await page.locator('h1').first().waitFor();
         await page.evaluate(() => document.fonts.ready);
         assert.equal(await page.evaluate(() => document.documentElement.classList.contains('dark')), theme === 'dark');
+        const heroLayout = route.startsWith('/table/')
+          ? await page.getByRole('heading', { level: 1, name: /^202[67] 월급 실수령액/ }).evaluate(heading => {
+            const hero = heading.closest('section');
+            const description = hero?.querySelector('.ms-description');
+            const tableWrapper = hero?.nextElementSibling;
+            if (!description || !tableWrapper?.matches('.page-width') || !tableWrapper.querySelector('table')) return null;
+            const descriptionBottom = description.getBoundingClientRect().bottom;
+            const tableTop = tableWrapper.getBoundingClientRect().top;
+            return { descriptionBottom, tableTop, gap: tableTop - descriptionBottom };
+          }) : undefined;
+        if (route.startsWith('/table/')) {
+          assert(heroLayout, 'Monthly hero and salary table geometry must be inspectable');
+          assert(heroLayout.gap >= 0, `${route}: salary table overlaps the hero description by ${-heroLayout.gap}px`);
+        }
         const audit = resolveGradientEvidence(await page.evaluate(auditPage, { strict: true }));
         const screenshots = [];
-        report.push({ route, theme, width, ...audit, screenshots });
+        report.push({ route, theme, width, ...audit, ...(heroLayout ? { heroLayout } : {}), screenshots });
         const sections = route.startsWith('/table/')
           ? [{ label: 'hero', heading: /^202[67] 월급 실수령액/, level: 1 }, { label: 'intro', heading: /^202[67]년 월급/ }, { label: 'faq', heading: /^자주 묻는 질문$/ }]
           : route.startsWith('/job/')

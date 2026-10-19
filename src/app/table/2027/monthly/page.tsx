@@ -111,7 +111,7 @@ function MonthlyTable2027() {
         }
       />
 
-      <div className="page-width -mt-20 relative z-10">
+      <div className="page-width -mt-8 relative z-10">
         <SalaryTable
           headers={tableHeaders}
           data={allData}
