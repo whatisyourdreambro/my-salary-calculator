@@ -162,7 +162,7 @@
       "files": [
         "src/app/table/2026/monthly/page.tsx"
       ],
-      "sha256": "19b036fd0d20bb34c5aff732ea67ca26459b7fe55ce8342edb8051608a874c73"
+      "sha256": "b36833cf12cc82f7b52912df1a9e2b1abc4c71e49f42aa14f997b14c8dea8951"
     },
     "/table/2026/weekly": {
       "contentDate": "2026-10-19",
@@ -204,7 +204,7 @@
       "files": [
         "src/app/table/2027/monthly/page.tsx"
       ],
-      "sha256": "b99af996f57e8bfda691f6fcccda0a54418890af56cb295afee46029b0907ae2"
+      "sha256": "2a454e6ab36058fb7f7ab78abe52f5346a01c81b66f37c27b10a505ab2dd25fc"
     },
     "/table/2027/weekly": {
       "contentDate": "2026-10-19",

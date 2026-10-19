@@ -274,7 +274,7 @@ export default async function JobPage({ params: pendingParams }: Props) {
                 <Link
                   key={amt}
                   href={`/salary/${amt * 10000}`}
-                  className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors"
+                  className="px-4 py-2 bg-white/10 hover:bg-white/15 rounded-lg text-sm font-medium transition-colors"
                 >
                   연봉 {amt.toLocaleString()}만원 →
                 </Link>

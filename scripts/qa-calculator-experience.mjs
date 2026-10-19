@@ -4,6 +4,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import qaSafety from './lib/qa-safety.cjs';
+import { assessGradientContrast } from './lib/qa-contrast-gradient.mjs';
 const { assertLocalQaTarget, assertQaEnvironment, launchQaBrowser } = qaSafety;
 const { chromium } = createRequire(import.meta.url)('playwright-core');
 const base = assertLocalQaTarget(process.env.BASE_URL || 'http://127.0.0.1:3100');
@@ -13,12 +14,13 @@ if (contrastOnly) assert(process.env.QA_ROUTES, 'Contrast-only QA requires expli
 const output = path.resolve('.artifacts/experience-qa', contrastOnly ? 'contrast' : '.');
 const routes = process.env.QA_ROUTES?.split(',') || ['/calc', '/calc/refinance-break-even', '/calc/advertising-profit-roas', '/', '/en', '/home-loan', '/year-end-tax', '/calc/samsung-bonus', '/calc/jeonse-loan', '/calc/year-end-bonus-tax', '/savings-interest-2026', '/tools/finance/compound', '/money-check'];
 const report = [];
+const interactionReport = [];
 const errors = [];
 const expected = Number(process.env.QA_CALC_COUNT || 202);
 
-// Composite computed backgrounds up the ancestor chain. Gradients/images are
-// excluded from the automatic contrast score and covered by screenshots.
-function auditPage({ strict = false } = {}) {
+// Solid colors are measured in-page. Gradient paint evidence is evaluated by
+// the offline interval calculator; screenshots never replace numeric evidence.
+function auditPage({ strict = false, selector = 'main *' } = {}) {
   const rgba = value => (value.match(/[\d.]+/g) || []).map(Number);
   const blend = (front, back) => {
     const alpha = front[3] ?? 1;
@@ -61,7 +63,7 @@ function auditPage({ strict = false } = {}) {
       const parts = match[1].trim().split(/[\s,/]+/).map(Number);
       return (parts.length === 3 || parts.length === 4) && parts.every(Number.isFinite) ? parts : null;
     };
-    for (const element of document.querySelectorAll('main *')) {
+    for (const element of document.querySelectorAll(selector)) {
       if (!(element instanceof HTMLElement) || /^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/.test(element.tagName) || !visible(element)) continue;
       const directText = [...element.childNodes].filter(node => node.nodeType === 3).map(node => node.textContent).join(' ').replace(/\s+/g, ' ').trim();
       if (!directText) continue;
@@ -78,7 +80,9 @@ function auditPage({ strict = false } = {}) {
       let reason = null;
       for (let current = element; current; current = current.parentElement) {
         const currentStyle = getComputedStyle(current);
-        chain.push(currentStyle);
+        chain.push(Object.fromEntries(['backgroundColor', 'backgroundImage', 'backgroundClip', 'backgroundBlendMode',
+          'backgroundSize', 'backgroundRepeat', 'backgroundPosition', 'opacity', 'filter', 'backdropFilter', 'mixBlendMode',
+          'webkitTextFillColor', 'webkitTextStrokeWidth', 'maskImage', 'clipPath'].map(key => [key, currentStyle[key]])));
         if (Number(currentStyle.opacity) < 1) reason = 'ancestor-or-text-opacity';
         if (currentStyle.filter !== 'none' || currentStyle.mixBlendMode !== 'normal') reason = 'filter-or-blend-mode';
       }
@@ -95,7 +99,7 @@ function auditPage({ strict = false } = {}) {
       }
       const foreground = parseRgb(style.color);
       if (!foreground) reason ||= 'unsupported-foreground-color';
-      if (reason) { unassessed.push({ ...record, reason }); continue; }
+      if (reason) { unassessed.push({ ...record, reason, layers: chain }); continue; }
       const background = layers.reverse().reduce((back, front) => blend(front, back), [255, 255, 255]);
       const compositedForeground = blend(foreground, background);
       const a = luminance(compositedForeground), b = luminance(background);
@@ -116,6 +120,22 @@ function auditPage({ strict = false } = {}) {
   return { background: getComputedStyle(document.body).backgroundColor, color: getComputedStyle(document.body).color, overflow: document.documentElement.scrollWidth > innerWidth, inputs, lowContrast };
 }
 
+function resolveGradientEvidence(audit) {
+  const remaining = [];
+  for (const record of audit.unassessed) {
+    if (record.reason !== 'background-image-or-gradient') { remaining.push(record); continue; }
+    const result = assessGradientContrast(record);
+    if (result.status === 'unassessed') { remaining.push({ ...record, gradientAssessment: result }); continue; }
+    audit.measurements.push({ ...record, reason: undefined, gradientAssessment: result,
+      ratio: result.ratio, pass: result.pass, method: result.method });
+  }
+  audit.unassessed = remaining;
+  audit.lowContrast = audit.measurements.filter(item => !item.pass);
+  audit.coverage = { measured: audit.measurements.length, passed: audit.measurements.length - audit.lowContrast.length,
+    failed: audit.lowContrast.length, unassessed: remaining.length, excluded: audit.excluded.length };
+  return audit;
+}
+
 async function auditContrastCases(browser) {
   for (const width of [390, 1280]) for (const theme of ['light', 'dark']) {
     const context = await browser.newContext({ viewport: { width, height: 900 }, colorScheme: theme, serviceWorkers: 'block' });
@@ -129,16 +149,16 @@ async function auditContrastCases(browser) {
         await page.locator('h1').first().waitFor();
         await page.evaluate(() => document.fonts.ready);
         assert.equal(await page.evaluate(() => document.documentElement.classList.contains('dark')), theme === 'dark');
-        const audit = await page.evaluate(auditPage, { strict: true });
+        const audit = resolveGradientEvidence(await page.evaluate(auditPage, { strict: true }));
         const screenshots = [];
         report.push({ route, theme, width, ...audit, screenshots });
         const sections = route.startsWith('/table/')
-          ? [{ label: 'intro', heading: /^202[67]년 월급/ }, { label: 'faq', heading: /^자주 묻는 질문$/ }]
+          ? [{ label: 'hero', heading: /^202[67] 월급 실수령액/, level: 1 }, { label: 'intro', heading: /^202[67]년 월급/ }, { label: 'faq', heading: /^자주 묻는 질문$/ }]
           : route.startsWith('/job/')
             ? [{ label: 'career', heading: /^경력별 평균 연봉$/ }, { label: 'official', heading: /^정부 (공식 통계|발표)로 보는/ }, { label: 'calculator', heading: /^세후 실수령액 바로 계산$/ }]
             : [];
-        for (const { label, heading } of sections) {
-          const title = page.getByRole('heading', { level: 2, name: heading });
+        for (const { label, heading, level = 2 } of sections) {
+          const title = page.getByRole('heading', { level, name: heading });
           if (!await title.count()) continue;
           const panel = title.first().locator('xpath=ancestor::section[1]');
           const filename = `${route.replaceAll('/', '_')}-${theme}-${width}-${label}.png`;
@@ -146,13 +166,39 @@ async function auditContrastCases(browser) {
           await panel.screenshot({ path: path.join(output, filename), animations: 'disabled' });
           screenshots.push(filename);
         }
+        if (route.startsWith('/job/')) {
+          const panel = page.getByRole('heading', { level: 2, name: '세후 실수령액 바로 계산', exact: true }).locator('xpath=ancestor::section[1]');
+          const links = panel.locator('a');
+          assert.equal(await links.count(), 3, 'Expected three calculator links');
+          for (let index = 0; index < 3; index++) {
+            const link = links.nth(index);
+            for (const state of ['hover', 'focus']) {
+              await page.mouse.move(0, 0);
+              if (state === 'hover') await link.hover();
+              else {
+                await page.keyboard.press('Tab');
+                await link.focus();
+                assert(await link.evaluate(el => el.matches(':focus-visible')), 'Keyboard focus must be visible');
+              }
+              await link.evaluate(async el => { await Promise.allSettled(el.getAnimations().map(animation => animation.finished)); });
+              const selector = state === 'hover' ? 'main a:hover' : 'main a:focus';
+              const stateAudit = resolveGradientEvidence(await page.evaluate(auditPage, { strict: true, selector }));
+              assert.equal(stateAudit.coverage.measured + stateAudit.coverage.unassessed, 1, 'Interaction must inspect exactly the targeted link');
+              interactionReport.push({ route, theme, width, index, state, ...stateAudit });
+              await link.evaluate(el => el.blur());
+            }
+          }
+          await page.mouse.move(0, 0);
+        }
         console.log(`${theme} ${width}px ${route}: ${audit.coverage.measured} measured, ${audit.lowContrast.length} failed, ${audit.unassessed.length} unassessed`);
       }
     } finally { await context.close(); }
   }
   assert(report.every(item => item.coverage.measured > 0), 'Contrast coverage must not be empty');
   assert(report.every(item => !item.overflow), 'Contrast target horizontal overflow');
-  assert.equal(report.reduce((sum, item) => sum + item.lowContrast.length, 0), 0, 'Measured text contrast below its unrounded WCAG threshold');
+  const allCases = [...report, ...interactionReport];
+  assert.equal(allCases.reduce((sum, item) => sum + item.unassessed.length, 0), 0, 'Strict contrast coverage includes unassessed paint');
+  assert.equal(allCases.reduce((sum, item) => sum + item.lowContrast.length, 0), 0, 'Text contrast is below threshold or cannot be guaranteed across the full gradient');
   assert.deepEqual(errors, []);
 }
 
@@ -340,9 +386,9 @@ try {
   assert.deepEqual(errors, []);
   }
 } finally {
-  await fs.writeFile(path.join(output, 'summary.json'), JSON.stringify({ mode: contrastOnly ? 'contrast-only' : 'experience', report, errors }, null, 2));
+  await fs.writeFile(path.join(output, 'summary.json'), JSON.stringify({ mode: contrastOnly ? 'contrast-only' : 'experience', report, interactionReport, errors }, null, 2));
   await browser.close();
 }
 console.log(contrastOnly
-  ? `PASS: ${report.length} contrast cases; measured text thresholds passed. Unassessed rendering is listed separately.`
+  ? `PASS: ${report.length} contrast cases and ${interactionReport.length} hover/focus cases; all measured or conservatively bounded above threshold; no unassessed paint.`
   : `PASS: ${report.length} theme/page cases, directory links, grouped fields and theme persistence.`);

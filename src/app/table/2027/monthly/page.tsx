@@ -96,7 +96,7 @@ function MonthlyTable2027() {
         title={
           <>
             2027 월급 실수령액 <br className="sm:hidden" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/80 whitespace-nowrap">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/80 dark:from-link dark:to-link/80 whitespace-nowrap">
               미리보기
             </span>
           </>
