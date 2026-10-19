@@ -10,6 +10,7 @@ const require = createRequire(import.meta.url);
 const allowed = new Set([
   'scripts/ad-depth-audit.mjs',
   'scripts/qa-calculator-experience.mjs',
+  'scripts/qa-focus-input.mjs',
   'scripts/qa-calculator-routes.mjs',
   'scripts/qa-money-check.mjs',
   'scripts/qa-number-inputs.mjs',

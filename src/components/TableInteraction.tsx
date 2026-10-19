@@ -77,7 +77,7 @@ export default function TableInteraction({
  />
  <button
  type="submit"
- className="absolute inset-y-1.5 right-1.5 rounded-md bg-primary px-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+ className="ms-focus-inset absolute inset-y-1.5 right-1.5 rounded-md bg-primary px-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 [--focus-inset-color:#fff]"
  >
  검색
  </button>

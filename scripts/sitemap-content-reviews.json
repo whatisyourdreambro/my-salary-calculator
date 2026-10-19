@@ -230,8 +230,8 @@
     },
     "/calc/samsung-bonus": {
       "contentDate": "2026-10-19",
-      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
-      "reason": "579d60bb (October 19) aligns OPI2/net-estimate metadata and adds saved scenarios; this release also adds explanatory next-step content. The September 25 shared engine is only a lower bound.",
+      "reviewedAtCommit": "1ce3c9a73227c7efd1e1539eec464c56ff68f09a",
+      "reason": "579d60bb (October 19) aligns OPI2/net-estimate metadata and adds saved scenarios; this release also adds explanatory next-step content. The September 25 shared engine is only a lower bound. Reviewed October 20: the three ChartViewToggle button classes now use an inset keyboard focus indicator. The one-line style-only diff changes no calculations, visible copy or editorial content; retain the existing contentDate.",
       "dependencies": [
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
@@ -255,7 +255,7 @@
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
       ],
-      "sha256": "442c13d630ca463ec01d14c8d083949fec19ebecd3857100969e51480bd4fce0"
+      "sha256": "3cadb8d6aea3cf3da58f022be56d1054f32562b45844e85a252a95961f9197f1"
     },
     "/calc/sk-hynix-bonus": {
       "contentDate": "2026-10-04",

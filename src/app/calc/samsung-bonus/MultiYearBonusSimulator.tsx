@@ -1812,7 +1812,7 @@ function ChartViewToggle({
             role="tab"
             aria-selected={active}
             onClick={() => setView(o.key)}
-            className="px-2.5 py-1 rounded-md text-[11px] font-black transition-colors"
+            className="ms-focus-inset px-2.5 py-1 rounded-md text-[11px] font-black transition-colors [--focus-inset-color:currentColor]"
             style={{
               backgroundColor: active ? "hsl(var(--primary))" : "hsl(var(--card))",
               color: active ? "hsl(var(--primary-foreground))" : "hsl(var(--foreground))",

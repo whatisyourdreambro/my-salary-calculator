@@ -120,7 +120,7 @@ export default function SalaryTable({
 
  {/* Desktop Table View */}
  <div className="hidden md:block relative overflow-hidden rounded-2xl border border-border shadow-sm bg-card">
- <div className="overflow-x-auto" role="region" aria-label="실수령액 상세 표" tabIndex={0}>
+ <div className="ms-focus-inset overflow-x-auto bg-card p-1" role="region" aria-label="실수령액 상세 표" tabIndex={0}>
  <table className="min-w-full text-sm">
  <thead className="bg-secondary border-b border-border sticky top-0 z-30">
  <tr>

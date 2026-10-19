@@ -119,7 +119,7 @@ export default function RankClient() {
  const val = e.target.value.replace(/[^0-9]/g, "");
  setSalaryInput(Number(val).toLocaleString('ko-KR'));
  }}
- className="relative w-full p-6 text-4xl sm:text-5xl font-black text-center bg-white border border-canvas-300 rounded-2xl focus:border-primary outline-none transition-all text-navy placeholder:text-canvas-400"
+ className="relative w-full p-6 text-4xl sm:text-5xl font-black text-center bg-white border border-canvas-300 rounded-2xl focus:border-primary outline-none transition-all text-navy placeholder:text-muted-foreground"
  placeholder="0"
  autoFocus
  />

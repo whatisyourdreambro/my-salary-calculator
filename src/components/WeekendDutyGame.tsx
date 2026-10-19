@@ -203,35 +203,37 @@ export default function WeekendDutyGame() {
           animate={{ opacity: 1, y: 0 }}
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
         >
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-3xl hover:border-emerald-500/30 transition-colors">
+          <div className="bg-[#191d23] border border-white/10 p-8 rounded-3xl hover:border-emerald-500/30 transition-colors">
             <label htmlFor="weekend-duty-dates" className="flex items-center gap-2 text-lg font-bold text-white mb-4">
               <Calendar className="text-emerald-400" size={20} /> 대상 날짜
             </label>
             <textarea
               id="weekend-duty-dates"
+              aria-describedby="weekend-duty-dates-help"
               value={datesInput}
               onChange={e => setDatesInput(e.target.value)}
               placeholder={"11/23\n11/24\n11/30\n12/07"}
-              className="w-full h-44 bg-black/30 border border-white/10 rounded-xl p-4 text-white placeholder:text-gray-600 focus:border-emerald-500/50 outline-none resize-none font-sans tabular-nums text-sm"
+              className="w-full h-44 bg-black/30 border border-white/10 rounded-xl p-4 text-white placeholder:text-gray-400 focus:border-emerald-500/50 outline-none resize-none font-sans tabular-nums text-sm"
             />
-            <p className="text-xs text-gray-500 mt-2">쉼표(,)나 엔터로 구분</p>
+            <p id="weekend-duty-dates-help" className="text-xs text-gray-400 mt-2">쉼표(,)나 엔터로 구분</p>
           </div>
 
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-3xl hover:border-emerald-500/30 transition-colors">
+          <div className="bg-[#191d23] border border-white/10 p-8 rounded-3xl hover:border-emerald-500/30 transition-colors">
             <label htmlFor="weekend-duty-people" className="flex items-center gap-2 text-lg font-bold text-white mb-4">
               <Users className="text-sky-400" size={20} /> 대상 인원
             </label>
             <textarea
               id="weekend-duty-people"
+              aria-describedby="weekend-duty-people-help"
               value={peopleInput}
               onChange={e => setPeopleInput(e.target.value)}
               placeholder={"김철수\n이영희\n박지성\n최민준"}
-              className="w-full h-44 bg-black/30 border border-white/10 rounded-xl p-4 text-white placeholder:text-gray-600 focus:border-sky-500/50 outline-none resize-none font-sans tabular-nums text-sm"
+              className="w-full h-44 bg-black/30 border border-white/10 rounded-xl p-4 text-white placeholder:text-gray-400 focus:border-sky-500/50 outline-none resize-none font-sans tabular-nums text-sm"
             />
-            <p className="text-xs text-gray-500 mt-2">쉼표(,)나 엔터로 구분</p>
+            <p id="weekend-duty-people-help" className="text-xs text-gray-400 mt-2">쉼표(,)나 엔터로 구분</p>
           </div>
 
-          <div className="md:col-span-2 bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-3xl flex flex-col md:flex-row gap-8 items-center justify-between">
+          <div className="md:col-span-2 bg-[#191d23] border border-white/10 p-8 rounded-3xl flex flex-col md:flex-row gap-8 items-center justify-between">
             <div className="flex gap-8">
               <div className="text-center">
                 <label className="block text-sm font-bold text-gray-400 mb-3">일일 근무 인원</label>

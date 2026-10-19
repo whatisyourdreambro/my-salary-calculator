@@ -725,7 +725,7 @@ export default function FireCalculatorPage() {
  placeholder="이벤트명 (예: 결혼)"
  value={event.description}
  onChange={(e) => updateLifeEvent(index, "description", e.target.value)}
- className="flex-grow p-2 bg-transparent border-b border-canvas focus:border-primary outline-none text-foreground placeholder-stone-400 text-lg font-sans"
+ className="flex-grow p-2 bg-transparent border-b border-canvas focus:border-primary outline-none text-foreground placeholder:text-muted-foreground text-lg font-sans"
  />
 
  <select

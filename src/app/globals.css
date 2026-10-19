@@ -155,7 +155,8 @@
     color: hsl(var(--foreground));
     color-scheme: inherit;
   }
-  :where(input, textarea)::placeholder { color: hsl(var(--muted-foreground)); opacity: 1; }
+  /* Match Preflight's element specificity so the semantic color wins. */
+  input::placeholder, textarea::placeholder { color: hsl(var(--muted-foreground)); opacity: 1; }
   :where(input[type="checkbox"], input[type="radio"], input[type="range"]) { accent-color: hsl(var(--primary)); }
 
   :where(table) { border-collapse: collapse; }
@@ -406,6 +407,24 @@
   .ms-logo:hover .ms-logo-word-money { transform: translateY(-1px); }
 }
 
+/* Two opaque bands keep keyboard focus visible on light and dark surfaces.
+   This specificity also outranks legacy focus:outline-none/ring utilities.
+   Ordinary unfocused shadows and pointer interactions retain their styling. */
+:root :is(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #000;
+  /* Leave room for the mobile sharing bar when native Tab scrolls a control. */
+  scroll-margin-block: 1rem 10rem;
+}
+/* Clipped scroll regions and overlaid search buttons use their own opaque
+   surface for an inset indicator; padded tables keep it clear of cell text. */
+:root .ms-focus-inset:focus-visible {
+  outline: 2px solid var(--focus-inset-color, hsl(var(--ring)));
+  outline-offset: -3px;
+  box-shadow: none;
+}
+
 /* Accessibility exceptions intentionally outrank animated component utilities. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -427,5 +446,9 @@
   .ms-button, .btn-primary, .btn-secondary, .btn-ghost, .ms-field,
   .ms-surface, .ms-panel, .duotone-card { border-color: ButtonText; }
   .ms-button:disabled, .ms-button[aria-disabled="true"] { color: GrayText; }
-  :focus-visible { outline-color: Highlight; }
+  :root :is(a, button, input, select, textarea, summary, [tabindex]):focus-visible,
+  :root .ms-focus-inset:focus-visible {
+    outline-color: Highlight;
+    box-shadow: none;
+  }
 }
