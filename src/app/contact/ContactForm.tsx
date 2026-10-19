@@ -43,6 +43,8 @@ export default function ContactForm({ locale = "ko" }: { locale?: "ko" | "en" })
   const [replyConsent, setReplyConsent] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
+  const [errorField, setErrorField] = useState<"page" | "body" | null>(null);
+  const [validationAttempt, setValidationAttempt] = useState(0);
   const [receipt, setReceipt] = useState("");
   const lastAttempt = useRef<{ payload: string; id: string } | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
@@ -51,16 +53,24 @@ export default function ContactForm({ locale = "ko" }: { locale?: "ko" | "en" })
     if (receipt) heading.current?.focus();
   }, [receipt]);
 
+  useEffect(() => {
+    if (errorField) document.getElementById(`inquiry-${errorField}`)?.focus();
+  }, [errorField, validationAttempt]);
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (pending || receipt) return;
     setError("");
+    setErrorField(null);
+    setValidationAttempt(previous => previous + 1);
     const trimmedPath = pagePath.trim() || (en ? "/en/contact" : "/contact");
     if (!trimmedPath.startsWith("/") || trimmedPath.startsWith("//") || /[?#\\\s]/.test(trimmedPath)) {
+      setErrorField("page");
       setError(text("관련 페이지는 /calc/samsung-bonus처럼 경로만 입력해 주세요. 주소의 ? 또는 # 이후 내용은 제외해 주세요.", "Enter only a site path, such as /en/flat-tax. Remove everything after ? or #."));
       return;
     }
     if (!body.trim()) {
+      setErrorField("body");
       setError(text("문의 내용을 입력해 주세요.", "Enter your message."));
       return;
     }
@@ -113,7 +123,8 @@ export default function ContactForm({ locale = "ko" }: { locale?: "ko" | "en" })
 
   return (
     <form lang={locale} onSubmit={submit} className="mt-8 space-y-5 rounded-2xl border border-canvas-200 bg-white p-5 sm:p-7">
-      <fieldset disabled={pending} className="space-y-5 disabled:opacity-70">
+      <p role="status" aria-live="polite" className="sr-only">{pending ? text("접수 확인 중입니다.", "Confirming receipt.") : ""}</p>
+      <fieldset disabled={pending} aria-busy={pending} className="space-y-5 disabled:opacity-70">
         <div>
           <label htmlFor="inquiry-type" className="text-sm font-bold text-navy">{text("문의 종류", "Message type")}</label>
           <select id="inquiry-type" value={type} onChange={e => setType(e.target.value as InquiryType)} className={fieldClass}>
@@ -122,12 +133,12 @@ export default function ContactForm({ locale = "ko" }: { locale?: "ko" | "en" })
         </div>
         <div>
           <label htmlFor="inquiry-page" className="text-sm font-bold text-navy">{text("관련 페이지", "Related page")} <span className="font-normal text-muted-blue">{text("(선택)", "(optional)")}</span></label>
-          <input id="inquiry-page" value={pagePath} onChange={e => setPagePath(e.target.value)} maxLength={200} placeholder={text("예: /calc/samsung-bonus", "For example: /en/flat-tax")} autoComplete="off" spellCheck={false} className={fieldClass} aria-describedby="inquiry-page-help" />
+          <input id="inquiry-page" value={pagePath} onChange={e => { setPagePath(e.target.value); if (errorField === "page") { setErrorField(null); setError(""); } }} maxLength={200} placeholder={text("예: /calc/samsung-bonus", "For example: /en/flat-tax")} autoComplete="off" spellCheck={false} className={fieldClass} aria-invalid={errorField === "page"} aria-describedby={`inquiry-page-help${errorField === "page" ? " inquiry-submit-error" : ""}`} />
           <p id="inquiry-page-help" className="mt-2 text-xs leading-5 text-muted-blue">{text("주소에서 moneysalary.com 뒤의 경로만 입력하세요. 계산 입력값이 담긴 공유 주소는 보내지 마세요.", "Enter only the path after moneysalary.com. Do not send a result-sharing URL containing personal inputs.")}</p>
         </div>
         <div>
           <label htmlFor="inquiry-body" className="text-sm font-bold text-navy">{text("문의 내용", "Message")}</label>
-          <textarea id="inquiry-body" value={body} onChange={e => setBody(e.target.value)} required maxLength={500} rows={6} className={fieldClass} aria-describedby="inquiry-body-help inquiry-length" placeholder={text("어떤 페이지의 어느 설명이나 계산에서 문제가 있었는지 알려주세요.", "Tell us which page, explanation or calculation needs attention.")} />
+          <textarea id="inquiry-body" value={body} onChange={e => { setBody(e.target.value); if (errorField === "body") { setErrorField(null); setError(""); } }} required maxLength={500} rows={6} className={fieldClass} aria-invalid={errorField === "body"} aria-describedby={`inquiry-body-help inquiry-length${errorField === "body" ? " inquiry-submit-error" : ""}`} placeholder={text("어떤 페이지의 어느 설명이나 계산에서 문제가 있었는지 알려주세요.", "Tell us which page, explanation or calculation needs attention.")} />
           <div className="mt-2 flex justify-between gap-4 text-xs leading-5 text-muted-blue">
             <p id="inquiry-body-help">{text("실명·사번·정확한 개인 연봉·급여 명세서·계좌번호는 보내지 마세요. 첨부 파일과 HTML은 받지 않습니다. 정정 근거는 자료 이름·기준일 또는 공개 자료 링크로 적어주세요.", "Do not include your full name, employee ID, exact personal salary, payslip or bank account number. Attachments and HTML are not accepted. For corrections, cite a source title, date or public source link.")}</p>
             <span id="inquiry-length" className="shrink-0 tabular-nums">{body.length}/500</span>
@@ -146,7 +157,7 @@ export default function ContactForm({ locale = "ko" }: { locale?: "ko" | "en" })
         <button type="submit" disabled={pending} className="w-full rounded-xl bg-electric px-5 py-3.5 text-sm font-bold text-white transition-colors hover:bg-blue-600 disabled:cursor-wait">{pending ? text("접수 확인 중…", "Confirming receipt…") : text("운영자에게 비공개로 보내기", "Send privately to the operator")}</button>
       </fieldset>
       <p className="text-xs leading-5 text-muted-blue">{text("입력 중인 내용은 자동 저장하지 않습니다. 화면을 닫거나 새로고침하면 사라집니다.", "Drafts are not saved automatically. Closing or refreshing this screen clears your input.")}</p>
-      {error && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-800">{error}</p>}
+      {error && <p id="inquiry-submit-error" role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-800">{error}</p>}
     </form>
   );
 }

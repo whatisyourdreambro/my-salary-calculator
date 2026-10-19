@@ -269,7 +269,11 @@ export default function SalaryCalculator() {
  },
  });
 
- const invalidReason = !isValidCalculationNumber(salaryInput, Number.MIN_VALUE)
+ const salaryAmountInvalid = !isValidCalculationNumber(salaryInput, Number.MIN_VALUE) || !validateSalarySharePayload(incomeType === "regular"
+ ? { v: 1, taxYear: 2026, incomeType, annualSalary, nonTaxableAmount: 0, dependents: 1, children: 0 }
+ : { v: 1, taxYear: 2026, incomeType, monthlyIncome: parseNumber(salaryInput) });
+ const nonTaxableInvalid = incomeType === "regular" && (!isValidCalculationNumber(nonTaxableAmount, 0) || parseNumber(nonTaxableAmount) > annualSalary / 12);
+ const invalidReason = salaryAmountInvalid
  ? "소득 금액을 0보다 크게 입력해 주세요 (연 환산 1조 원 이하)."
  : incomeType === "regular" && parseNumber(nonTaxableAmount) > annualSalary / 12
  ? "월 비과세액이 세전 월급보다 클 수 없습니다. 비과세액을 줄여 주세요."
@@ -363,6 +367,8 @@ export default function SalaryCalculator() {
  label={incomeType === "regular" ? (payBasis === "annual" ? "계약 연봉" : "세전 월급") : "지급 총액"}
  value={salaryInput}
  onValueChange={setSalaryInput}
+ aria-invalid={invalidAttempt && salaryAmountInvalid}
+ aria-describedby={invalidAttempt && salaryAmountInvalid ? "salary-invalid-hint" : undefined}
  />
 
  {/* 직장인/프리랜서/알바 탭 */}
@@ -589,7 +595,8 @@ export default function SalaryCalculator() {
  {/* Bottom Sheet: 비과세 설정 */}
  <BottomSheet isOpen={activeSheet === "nonTaxable"} onClose={() => setActiveSheet(null)} title="비과세액 설정">
  <div className="p-8 space-y-6">
- <MoneyInput label="월 비과세액" value={nonTaxableAmount} onValueChange={setNonTaxableAmount} />
+ <MoneyInput label="월 비과세액" value={nonTaxableAmount} onValueChange={setNonTaxableAmount} aria-invalid={nonTaxableInvalid} aria-describedby={nonTaxableInvalid ? "salary-nontaxable-hint" : undefined} />
+ {nonTaxableInvalid && <p id="salary-nontaxable-hint" role="status" className="ms-status-error rounded-xl p-3 text-sm">월 비과세액은 0 이상이며 세전 월급 이하여야 합니다.</p>}
  <button onClick={() => setActiveSheet(null)} className="w-full py-4 bg-primary font-black rounded-2xl flex items-center justify-center">
  <span className="text-white">저장 후 닫기</span>
  </button>

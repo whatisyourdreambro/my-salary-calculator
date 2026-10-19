@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, type RefObject } from "react";
+import { useModalDialog } from "@/hooks/useModalDialog";
 import { motion, AnimatePresence } from "framer-motion";
 import { CompanyProfile } from "@/types/company";
 import { ComparisonResult } from "@/lib/versusEngine";
@@ -11,6 +12,7 @@ interface BoxingGameProps {
  companyB: CompanyProfile;
  result: ComparisonResult;
  onFinish: () => void;
+ returnFocusRef?: RefObject<HTMLElement | null>;
 }
 
 export default function BoxingGame({
@@ -18,7 +20,10 @@ export default function BoxingGame({
  companyB,
  result,
  onFinish,
+ returnFocusRef,
 }: BoxingGameProps) {
+ const dialogRef = useRef<HTMLDialogElement>(null);
+ useModalDialog(true, dialogRef, returnFocusRef);
  const [hpA, setHpA] = useState(100);
  const [hpB, setHpB] = useState(100);
  const [winner, setWinner] = useState<"A" | "B" | null>(null);
@@ -75,7 +80,15 @@ export default function BoxingGame({
  }, [winner, companyA, companyB, damageA, damageB, trueWinner]);
 
  return (
- <div className="fixed inset-0 z-50 flex items-center justify-center bg-electric/95 backdrop-blur-xl">
+ <dialog
+ ref={dialogRef}
+ aria-label="연봉 비교 게임"
+ onCancel={(event) => { event.preventDefault(); onFinish(); }}
+ className="fixed inset-0 z-50 m-0 h-dvh w-screen max-h-none max-w-none border-0 p-0 open:flex items-center justify-center overflow-y-auto bg-electric"
+ >
+ <button type="button" autoFocus onClick={onFinish} className="absolute right-4 top-4 z-[60] min-h-11 rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground">
+ 애니메이션 건너뛰고 결과 보기
+ </button>
  <motion.div
  className="w-full max-w-5xl p-4 relative overflow-hidden rounded-3xl border-4 border-primary/50 bg-white shadow-2xl"
  animate={{ x: [0, -cameraShake, cameraShake, -cameraShake, cameraShake, 0] }}
@@ -236,6 +249,7 @@ export default function BoxingGame({
  </p>
  <p className="mb-6 text-sm text-navy">재미용 게임 승패이며 실제 보상 비교 결과와 별개입니다.</p>
  <button
+ type="button"
  onClick={onFinish}
  className="px-10 py-4 bg-card text-foreground font-black text-xl rounded-full hover:scale-110 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.5)]"
  >
@@ -245,6 +259,6 @@ export default function BoxingGame({
  )}
  </AnimatePresence>
  </motion.div>
- </div>
+ </dialog>
  );
 }

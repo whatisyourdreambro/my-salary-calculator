@@ -140,4 +140,33 @@ describe("salary result user action lifecycle (offline hook/element fixture)", (
     expect(cardNodes.filter((node) => node.type === InArticleAd)).toHaveLength(1);
     expect(cardNodes.findIndex((node) => node.props["data-salary-result-summary"] !== undefined)).toBeLessThan(cardNodes.findIndex((node) => node.type === InArticleAd));
   });
+
+  it("associates invalid salary attempts with that field and clears the relationship after recovery", () => {
+    let tree = render();
+    for (const value of ["0", "1,000,000,000,001"]) {
+      tree = changeIncome(tree, value); tree = click(tree, "결과 확인하기");
+      const income = nodes(tree).find(node => node.type === MoneyInput && node.props.label === "계약 연봉")!;
+      expect(income.props["aria-invalid"]).toBe(true);
+      expect(income.props["aria-describedby"]).toBe("salary-invalid-hint");
+      expect(textOf(nodes(tree).find(node => node.props.id === "salary-invalid-hint"))).toContain("연 환산 1조 원 이하");
+      expect(fixture.measurement.valid).toBe(false);
+    }
+    tree = changeIncome(tree, "50,000,000"); tree = click(tree, "결과 확인하기");
+    const income = nodes(tree).find(node => node.type === MoneyInput && node.props.label === "계약 연봉")!;
+    expect(income.props["aria-invalid"]).toBe(false); expect(income.props["aria-describedby"]).toBeUndefined();
+    expect(fixture.measurement.valid).toBe(true);
+  });
+
+  it("links an excessive tax-free amount to its own input without marking valid salary invalid", () => {
+    let tree = render();
+    const taxFree = nodes(tree).find(node => node.type === MoneyInput && node.props.label === "월 비과세액")!;
+    (taxFree.props.onValueChange as (value: string) => void)("5,000,000"); tree = render();
+    tree = click(tree, "결과 확인하기");
+    const inputs = nodes(tree).filter(node => node.type === MoneyInput);
+    expect(inputs.find(node => node.props.label === "계약 연봉")?.props["aria-invalid"]).toBe(false);
+    expect(inputs.find(node => node.props.label === "월 비과세액")?.props["aria-invalid"]).toBe(true);
+    expect(inputs.find(node => node.props.label === "월 비과세액")?.props["aria-describedby"]).toBe("salary-nontaxable-hint");
+    expect(textOf(nodes(tree).find(node => node.props.id === "salary-nontaxable-hint"))).toContain("세전 월급 이하");
+    expect(fixture.measurement.valid).toBe(false);
+  });
 });

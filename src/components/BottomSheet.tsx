@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { motion, AnimatePresence, PanInfo, useReducedMotion } from "framer-motion";
 import { observeBottomSheetSpace, type BottomSheetSpace } from "@/lib/bottomSheetLayout";
+import { activateModalFocus } from "@/lib/modalFocus";
 
 interface BottomSheetProps {
  isOpen: boolean;
@@ -15,6 +16,7 @@ export default function BottomSheet({ isOpen, onClose, children, title }: Bottom
  const [space, setSpace] = useState<BottomSheetSpace | null>(null);
  const closeRef = useRef(onClose);
  const sheetRef = useRef<HTMLDivElement>(null);
+ const backdropRef = useRef<HTMLDivElement>(null);
  const titleId = useId();
  const reduceMotion = useReducedMotion();
  useEffect(() => { closeRef.current = onClose; }, [onClose]);
@@ -32,31 +34,8 @@ export default function BottomSheet({ isOpen, onClose, children, title }: Bottom
 
  const visible = isOpen && space !== null;
  useEffect(() => {
- if (!visible) return;
- const overflow = document.body.style.overflow;
- const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
- document.body.style.overflow = "hidden";
- sheetRef.current?.focus({ preventScroll: true });
- const onKeyDown = (event: KeyboardEvent) => {
- if (event.key === "Escape") { event.preventDefault(); closeRef.current(); return; }
- if (event.key !== "Tab") return;
- const controls = Array.from(sheetRef.current?.querySelectorAll<HTMLElement>(
- 'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex="0"]',
- ) ?? []).filter((element) => element.getClientRects().length > 0);
- const first = controls[0], last = controls.at(-1);
- if (!first) { event.preventDefault(); sheetRef.current?.focus(); return; }
- if (event.shiftKey && (document.activeElement === first || document.activeElement === sheetRef.current)) {
- event.preventDefault(); last?.focus();
- } else if (!event.shiftKey && document.activeElement === last) {
- event.preventDefault(); first.focus();
- }
- };
- document.addEventListener("keydown", onKeyDown);
- return () => {
- document.body.style.overflow = overflow;
- document.removeEventListener("keydown", onKeyDown);
- if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
- };
+ if (!visible || !sheetRef.current) return;
+ return activateModalFocus(sheetRef.current, { onEscape: () => closeRef.current(), focusRoot: true, backdrop: backdropRef.current });
  }, [visible]);
 
  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
@@ -74,6 +53,7 @@ export default function BottomSheet({ isOpen, onClose, children, title }: Bottom
  <>
  {/* Backdrop */}
  <motion.div
+  ref={backdropRef}
  initial={{ opacity: 0 }}
  animate={{ opacity: 1 }}
  exit={{ opacity: 0 }}

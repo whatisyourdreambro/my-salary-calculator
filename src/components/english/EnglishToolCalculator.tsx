@@ -56,6 +56,7 @@ function Calculator({ slug }: { slug: EnglishToolSlug }) {
       </div>
     </section>
 
+    <p role="status" aria-live="polite" aria-atomic="true" className="sr-only" data-calculation-announcement="english-tool">{result ? `${result.metrics[0].label}: ${displayMetric(result.metrics[0], currency)}` : ''}</p>
     {!result && <p role="status" className="ms-status-warning rounded-xl p-4 text-sm">No current result. Check the highlighted fields. If all inputs are within range, reduce amounts, rates or time horizons to keep the result within the supported numeric range. Earlier results cannot be shared.</p>}
     {result && <section ref={resultRef} aria-labelledby="tool-result-heading" className="ms-surface ms-panel space-y-5" data-english-tool-result>
       <div><h2 id="tool-result-heading" className="text-xl font-bold">Your current scenario</h2><p className="mt-2 text-sm text-muted-foreground">Recalculated from the inputs above. Rounded display amounts may not reconcile exactly except where a rounding split is explicitly shown.</p></div>

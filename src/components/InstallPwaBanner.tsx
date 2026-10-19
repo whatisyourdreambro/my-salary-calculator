@@ -120,7 +120,7 @@ export default function InstallPwaBanner() {
   return (
     <div
       data-pwa-install-banner
-      role="dialog"
+      role="region"
       aria-label={english ? "Add to home screen" : "홈 화면에 추가"}
       className="fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-md p-4 rounded-2xl bg-navy text-white shadow-2xl flex items-center gap-3 animate-slide-up"
       style={{ animation: "slideUp 0.3s ease-out" }}

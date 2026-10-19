@@ -83,8 +83,8 @@
     },
     "/": {
       "contentDate": "2026-10-19",
-      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
-      "reason": "579d60bb adds persisted salary comparison and decision steps in the shared calculator on October 19. Unrelated app children and global advertising infrastructure are not the home content timestamp.",
+      "reviewedAtCommit": "e3d640eab97c17a1550f91cfd84f2814ce46ee35",
+      "reason": "Reviewed October 20: SalaryCalculator changes only connect existing validation errors to the input and non-taxable settings, without changing the tax calculation, article content or advertising placement. Retain the October 19 editorial date for this accessibility correction.",
       "dependencies": [
         "src/components/NextActions.tsx",
         "src/components/SalaryCalculator.tsx"
@@ -95,7 +95,7 @@
         "src/components/NextActions.tsx",
         "src/components/SalaryCalculator.tsx"
       ],
-      "sha256": "e314fe6ab3dc748f9ed44d797a87b15ab8969bdbb419a1ee5918e441a67c5922"
+      "sha256": "d47eae2039629aa98c995e7c22141e6a1d8971c5e6bcc78dd7f71cfa6bdb8d12"
     },
     "/home-loan": {
       "contentDate": "2026-09-19",

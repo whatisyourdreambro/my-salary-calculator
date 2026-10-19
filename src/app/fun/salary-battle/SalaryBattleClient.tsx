@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { Swords, Trophy } from "lucide-react";
@@ -140,6 +141,7 @@ const StatBar = ({
 };
 
 export default function SalaryBattleClient({ options }: { options: BattleCompanyOption[] }) {
+ const fightButtonRef = useRef<HTMLButtonElement>(null);
  const [companyAId, setCompanyAId] = useState<string>(options[0]?.id ?? "");
  const [companyBId, setCompanyBId] = useState<string>(options[1]?.id ?? "");
  const [jobLevel, setJobLevel] = useState<JobLevel>("entry");
@@ -182,6 +184,7 @@ export default function SalaryBattleClient({ options }: { options: BattleCompany
  companyB={battle.companyB}
  result={battle.result}
  onFinish={handleFinishGame}
+ returnFocusRef={fightButtonRef}
  />
  )}
  </AnimatePresence>
@@ -239,6 +242,7 @@ export default function SalaryBattleClient({ options }: { options: BattleCompany
  </select>
 
  <button
+ ref={fightButtonRef}
  onClick={handleFight}
  disabled={isLoading}
  className="w-full py-3 bg-gradient-to-r from-red-600 to-primary/80 rounded-xl font-black italic text-xl shadow-lg hover:scale-105 transition-transform animate-pulse disabled:opacity-60 disabled:hover:scale-100"

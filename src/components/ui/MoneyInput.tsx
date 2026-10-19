@@ -11,6 +11,8 @@ interface MoneyInputProps {
  value: string;
  onValueChange: (value: string) => void;
  className?: string;
+ "aria-invalid"?: React.AriaAttributes["aria-invalid"];
+ "aria-describedby"?: string;
 }
 
 const formatNumber = (num: number) => num.toLocaleString('ko-KR');
@@ -21,6 +23,8 @@ export default function MoneyInput({
  value,
  onValueChange,
  className,
+ "aria-invalid": ariaInvalid,
+ "aria-describedby": ariaDescribedBy,
 }: MoneyInputProps) {
  const inputRef = useRef<HTMLInputElement>(null);
  const inputId = useId();
@@ -51,6 +55,8 @@ export default function MoneyInput({
  placeholder="0"
  inputMode="numeric"
  aria-label={label}
+ aria-invalid={ariaInvalid}
+ aria-describedby={ariaDescribedBy}
  />
 
  </div>

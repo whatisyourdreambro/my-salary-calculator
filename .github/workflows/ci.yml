@@ -133,6 +133,7 @@ jobs:
           QA_ROUTES="/calc/samsung-bonus,/" npm run qa:run -- scripts/qa-calculator-experience.mjs
           QA_CONTRAST_ONLY=1 QA_ROUTES="/table/2026/monthly,/table/2027/monthly,/job/safety-engineer,/job/software-engineer" npm run qa:run -- scripts/qa-calculator-experience.mjs
           QA_FOCUS_FORCED_COLORS=1 npm run qa:run -- scripts/qa-focus-input.mjs
+          npm run qa:run -- scripts/qa-interaction-states.mjs
       - name: 로컬 화면 및 대비 검증 근거
         if: always()
         uses: actions/upload-artifact@v7.0.2
@@ -146,6 +147,13 @@ jobs:
         with:
           name: focus-input-qa
           path: .artifacts/focus-input-qa/
+          if-no-files-found: ignore
+      - name: Calculation, error, modal and radio interaction evidence
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: interaction-states-qa
+          path: .artifacts/interaction-states-qa/
           if-no-files-found: ignore
       - name: English page quality ledger
         if: always()

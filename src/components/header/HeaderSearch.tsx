@@ -12,6 +12,7 @@ import Link from "@/components/AppLink";
 import { Search, X, ArrowRight } from "lucide-react";
 import type { SearchEntry } from "@/lib/searchIndex";
 import { useModalDialog } from "@/hooks/useModalDialog";
+import { hasOtherOpenModal } from "@/lib/modalFocus";
 import { SEASON_KEY } from "@/config/seasonKey.generated";
 
 // 검색 인덱스(가이드·회사DB·용어·QnA 데이터 포함, gzip 약 425KB)는 정적 import 시
@@ -135,16 +136,13 @@ export default function HeaderSearch() {
 
   useEffect(() => { setIsOpen(false); }, [pathname]);
 
-  // Cmd/Ctrl+K 단축키로 열기 + ESC 닫기
+  // Cmd/Ctrl+K opens search only when another modal is not active.
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        if (document.querySelector("dialog[open]") && !dialogRef.current?.open) return;
+        if (hasOtherOpenModal(dialogRef.current)) return;
         e.preventDefault();
         setIsOpen(true);
-      }
-      if (e.key === "Escape") {
-        setIsOpen(false);
       }
     };
     window.addEventListener("keydown", handleKey);
@@ -186,7 +184,7 @@ export default function HeaderSearch() {
       {/* One labelled trigger stays visible at every width; only the shortcut hint is optional. */}
       <button
         type="button"
-        onClick={() => setIsOpen(true)}
+        onClick={() => { if (!hasOtherOpenModal(dialogRef.current)) setIsOpen(true); }}
         aria-label={S.ariaOpen}
         aria-haspopup="dialog"
         aria-expanded={isOpen}

@@ -35,9 +35,11 @@ export default function LoanCalculator() {
  const [term, setTerm] = useState(10); // Years
  const [method, setMethod] = useState<RepaymentMethod>("level-payment");
  const [results, setResults] = useState<LoanResults | null>(null);
+ const [calculationFailed, setCalculationFailed] = useState(false);
  const validInputs = Number.isFinite(amount) && amount >= 0 && Number.isFinite(rate) && rate >= 0 && Number.isInteger(term) && term >= 1 && term <= 50;
 
  useEffect(() => {
+ setCalculationFailed(false);
  if (!validInputs) { setResults(null); return; }
  const monthlyRate = rate / 100 / 12;
  const totalMonths = term * 12;
@@ -113,7 +115,7 @@ export default function LoanCalculator() {
  schedule[totalMonths - 1].balance = 0;
  }
 
- if (![monthlyPayment, totalInterest, amount + totalInterest].every(Number.isFinite)) { setResults(null); return; }
+ if (![monthlyPayment, totalInterest, amount + totalInterest].every(Number.isFinite)) { setResults(null); setCalculationFailed(true); return; }
  setResults({
  monthlyPayment: Math.round(monthlyPayment),
  totalInterest: Math.round(totalInterest),
@@ -151,6 +153,8 @@ export default function LoanCalculator() {
  <div className="relative">
  <NumberInput
  id="loan-amount"
+ aria-invalid={!Number.isFinite(amount) || amount < 0}
+ aria-describedby={!validInputs || calculationFailed ? "loan-input-error" : undefined}
  type="number"
  inputMode="numeric"
  min="0"
@@ -181,6 +185,8 @@ export default function LoanCalculator() {
  <div className="relative">
  <NumberInput
  id="loan-rate"
+ aria-invalid={!Number.isFinite(rate) || rate < 0}
+ aria-describedby={!validInputs || calculationFailed ? "loan-input-error" : undefined}
  type="number"
  inputMode="decimal"
  step="0.1"
@@ -199,6 +205,8 @@ export default function LoanCalculator() {
  <div className="relative">
  <NumberInput
  id="loan-term"
+ aria-invalid={!Number.isInteger(term) || term < 1 || term > 50}
+ aria-describedby={!validInputs || calculationFailed ? "loan-input-error" : undefined}
  type="number"
  inputMode="numeric"
  min="1"
@@ -215,13 +223,15 @@ export default function LoanCalculator() {
  { value: "level-principal", label: "원금균등" },
  { value: "bullet", label: "만기일시" },
  ]} />
- {!validInputs && <p role="status" className="ms-status-error rounded-lg p-3 text-sm">금액과 금리는 0 이상, 대출 기간은 1~50년의 정수로 입력해 주세요.</p>}
+ {(!validInputs || calculationFailed) && <p id="loan-input-error" role="status" className="ms-status-error rounded-lg p-3 text-sm">{calculationFailed ? "입력한 금액·금리·기간의 조합이 계산 가능한 수치 범위를 넘었습니다. 값을 줄여 주세요." : "금액과 금리는 0 이상, 대출 기간은 1~50년의 정수로 입력해 주세요."}</p>}
  </div>
  </section>
 
  {/* Summary */}
+ <p role="status" aria-live="polite" aria-atomic="true" className="sr-only" data-calculation-announcement="loan">{validInputs && results ? `총 상환 금액: ${formatMoney(results.totalPayment)}. 총 이자: ${formatMoney(results.totalInterest)}.` : ""}</p>
  <section
  className="ms-panel flex flex-col justify-between"
+ data-calculation-result="loan"
  >
  <div>
  <h2 className="text-xl font-bold text-foreground mb-6 flex items-center gap-2">

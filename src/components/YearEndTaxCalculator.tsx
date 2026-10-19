@@ -291,8 +291,10 @@ export default function YearEndTaxCalculator() {
  <div className="lg:col-span-1 space-y-6">
  <div className="sticky top-24 bg-card p-4 sm:p-6 rounded-xl shadow-lg border border-border">
  <h2 className="text-xl sm:text-2xl font-bold text-center mb-4">💸 연말정산 예상 결과</h2>
+ <p role="status" aria-live="polite" aria-atomic="true" className="sr-only" data-calculation-announcement="year-end-tax">{Number.isFinite(result.finalRefund) ? `${result.finalRefund >= 0 ? "예상 환급액" : "예상 추가 납부액"}: ${formatNumber(Math.abs(result.finalRefund))}원. 소득세 기준이며 지방소득세는 별도입니다.` : "입력값과 허용 범위를 확인해 주세요."}</p>
  <div
  ref={measurement.resultRef}
+ data-calculation-result="year-end-tax"
  className={`p-4 rounded-lg text-center transition-colors duration-300 ${
  result.finalRefund >= 0 ? "bg-primary/10" : "bg-destructive/10"
  }`}

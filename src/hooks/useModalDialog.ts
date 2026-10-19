@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, type RefObject } from "react";
+import { activateModalFocus } from "@/lib/modalFocus";
 
 /** Open a dialog modally where supported. Browsers without showModal (Safari < 15.4) get the plain
  *  `open` attribute instead of a TypeError; if showModal throws, the attribute still shows it. */
@@ -22,31 +23,26 @@ export function closeDialog(dialog: HTMLDialogElement) {
   else dialog.removeAttribute("open");
 }
 
-/** Native modal semantics provide focus containment, background inertness and focus return. */
-export function useModalDialog(open: boolean, ref: RefObject<HTMLDialogElement | null>) {
+/** Retain native top-layer behavior, with keyboard/background isolation for the open fallback. */
+export function useModalDialog(open: boolean, ref: RefObject<HTMLDialogElement | null>, returnFocusRef?: RefObject<HTMLElement | null>) {
   useEffect(() => {
     const dialog = ref.current;
     if (!dialog || !open) return;
-    const overflow = document.body.style.overflow;
-    const opener = document.activeElement;
+    // Async openers can temporarily become disabled and lose document.activeElement.
+    const opener = returnFocusRef?.current ?? document.activeElement;
     openDialog(dialog);
-    document.body.style.overflow = "hidden";
-    // Keep boundary tabbing inside the document instead of handing focus to browser chrome.
-    const containTab = (event: KeyboardEvent) => {
-      if (event.key !== "Tab") return;
-      const stops = Array.from(dialog.querySelectorAll<HTMLElement>('a[href],button,input,select,textarea,summary,[tabindex]'))
-        .filter(element => element.tabIndex >= 0 && !element.matches(':disabled') && element.getClientRects().length > 0 && getComputedStyle(element).visibility !== "hidden");
-      const first = stops[0], last = stops[stops.length - 1];
-      if (!first) { event.preventDefault(); dialog.focus(); }
-      else if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
-    };
-    dialog.addEventListener("keydown", containTab);
+    const previousModal = dialog.getAttribute("aria-modal");
+    dialog.setAttribute("aria-modal", "true");
+    const releaseFocus = activateModalFocus(dialog, {
+      opener,
+      // The fallback has no native Escape/cancel behavior. Use the same caller contract.
+      onEscape: () => dialog.dispatchEvent(new Event("cancel", { cancelable: true })),
+    });
     return () => {
-      dialog.removeEventListener("keydown", containTab);
       closeDialog(dialog);
-      document.body.style.overflow = overflow;
-      if (opener instanceof HTMLElement && opener.isConnected && !dialog.contains(opener)) opener.focus({ preventScroll: true });
+      releaseFocus();
+      if (previousModal === null) dialog.removeAttribute("aria-modal");
+      else dialog.setAttribute("aria-modal", previousModal);
     };
-  }, [open, ref]);
+  }, [open, ref, returnFocusRef]);
 }

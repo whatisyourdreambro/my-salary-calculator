@@ -302,9 +302,10 @@ function SimpleCalculatorInstance({ slug, calc, batch, initialResult, shareToken
  </section>
 
  <section ref={setResultRef} className="mb-6 rounded-2xl bg-primary p-5 text-primary-foreground sm:p-8" aria-label="현재 조건의 계산 결과" aria-busy={computeLoading && !result}>
+ <p role="status" aria-live="polite" aria-atomic="true" className="sr-only" data-calculation-announcement="simple">{resultValid ? `${primary.label}: ${formatNumber(primary.value, primary.suffix)}` : ""}</p>
  <p className="mb-2 text-sm font-medium text-primary-foreground">{primary.label}</p>
  <p className="break-words text-[clamp(1.75rem,6vw,2.75rem)] font-bold leading-tight tracking-tight text-primary-foreground tabular-nums">
- {resultValid ? formatNumber(primary.value, primary.suffix) : result ? "입력값 확인" : "계산 준비 중…"}
+ {resultValid ? formatNumber(primary.value, primary.suffix) : result ? "입력값 확인" : computeFailed ? "계산을 불러오지 못했습니다" : "계산 준비 중…"}
  </p>
  {!resultValid && result && rawValid && result.status !== "invalid" && (
  <p role="status" className="mt-2 text-sm leading-6 text-primary-foreground/90">
@@ -358,7 +359,7 @@ function SimpleCalculatorInstance({ slug, calc, batch, initialResult, shareToken
  url={shareUrl}
  getShareImage={getShareImage}
  className="mb-6"
- /> : result === null ? <p role="status" className="mb-6 rounded-xl p-4 text-sm text-muted-foreground">계산 모듈을 불러오는 중입니다. 잠시 후 결과와 공유 링크가 표시됩니다.</p> : <p role="status" className="ms-status-warning mb-6 rounded-xl p-4 text-sm">입력값과 허용 범위를 확인하면 현재 결과를 공유할 수 있습니다.</p>}
+ /> : result === null ? <p role="status" className="mb-6 rounded-xl p-4 text-sm text-muted-foreground">{computeFailed ? "현재 입력의 계산 결과를 불러오지 못해 공유할 수 없습니다. 네트워크를 확인하고 페이지를 새로고침해 주세요." : "계산 모듈을 불러오는 중입니다. 잠시 후 결과와 공유 링크가 표시됩니다."}</p> : <p role="status" className="ms-status-warning mb-6 rounded-xl p-4 text-sm">입력값과 허용 범위를 확인하면 현재 결과를 공유할 수 있습니다.</p>}
 
  {/* 결과 직후 다음 단계 한 줄 — 광고(CalcResultAd)·공유 패널 아래. 종전에는 첫 내부 링크가 광고 3개·섹션 9개
      아래(관련 계산기)라 결과만 보고 떠나는 방문이 다음 페이지로 이어지지 않았다 (2026-09-11 NAV-01/SI-03).
