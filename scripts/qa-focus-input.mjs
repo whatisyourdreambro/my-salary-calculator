@@ -173,14 +173,22 @@ function installCollector() {
     }
     return { records, relationships, valueExclusions };
   }
-  function active() {
-    // An autofocus field starts focused. After REAL keyboard navigation leaves
-    // it, capture its genuinely unfocused style; do not blur/focus synthetically.
-    for (const [key, old] of before) {
-      const element = nodes.get(key);
-      if (old.focused && element && document.activeElement !== element)
-        before.set(key, { ...identity(element), ...snapshot(element) });
+  function captureLeftFocused(map, source) {
+    for (const [key, old] of map) {
+      const el = nodes.get(key);
+      if (!old.focused || !visible(el) || document.activeElement === el) continue;
+      const next = { ...identity(el), ...snapshot(el) };
+      map.set(key, next);
+      baselineRefreshes.push({ id: key, reason: 'real-tab-unfocused-baseline', source,
+        accepted: !next.focused && !next.pendingFiniteAnimations, focusedBefore: true, focusedAfterWait: next.focused,
+        pendingBefore: old.pendingFiniteAnimations, pendingAfter: next.pendingFiniteAnimations,
+        previousOpacity: old.layers.map(layer => layer.opacity), nextOpacity: next.layers.map(layer => layer.opacity) });
     }
+  }
+  function active() {
+    // An autofocus/new field may first be observed focused. Only REAL keyboard
+    // navigation leaving it can provide a later genuinely unfocused baseline.
+    captureLeftFocused(before, 'after-real-Tab');
     const el = document.activeElement;
     if (!(el instanceof HTMLElement) || el === document.body || el === document.documentElement) return { id: null, main: false };
     const key = id(el);
@@ -316,10 +324,40 @@ function installCollector() {
             reason: allowed ? null : band.end > 0 && hit?.contains(el) ? 'actual-backdrop-is-not-modeled-parent' : 'indicator-covered-or-hit-test-inconclusive' });
         }
       }
-      return { id: band.id, model, scale, fragmentCount: state.fragments.length, visibleStripCount: remaining.length, visibleSamples: samples.filter(x => x.visible).length,
+      return { id: band.id, sourceId: id(el), sourceRect: state.rect, sourceStyle: state.style, model, scale, fragmentCount: state.fragments.length, visibleStripCount: remaining.length, visibleSamples: samples.filter(x => x.visible).length,
         strips: remaining, samples, viewport: { width: innerWidth, height: innerHeight },
         limitation: 'Straight-edge viewport/overflow intersections and sampled hit tests; not exhaustive pixel occlusion.' };
     });
+  }
+  async function measure({ sourceId, bands, beforeStyle, afterStyle }) {
+    const started = performance.now(), initial = active();
+    const signature = value => JSON.stringify({ id: value.id, after: value.after });
+    let latest = initial, previous = signature(initial), stableFrames = 0;
+    while (performance.now() - started < 1500 && latest.id === sourceId) {
+      const frame = await new Promise(resolve => {
+        const timer = setTimeout(() => resolve(false), Math.max(1, 1500 - (performance.now() - started)));
+        requestAnimationFrame(() => { clearTimeout(timer); resolve(true); });
+      });
+      if (!frame) break;
+      latest = active();
+      const current = signature(latest);
+      stableFrames = current === previous && latest.after?.pendingFiniteAnimations === 0 ? stableFrames + 1 : 0;
+      previous = current;
+      if (stableFrames >= 2) break;
+    }
+    // Snapshot and hit tests below execute synchronously in the same browser
+    // turn. Never combine a pre-scroll rect with post-scroll indicator geometry.
+    const final = active(), geometryEvidence = geometry(bands);
+    const matchingStyles = JSON.stringify(final.before?.style || null) === JSON.stringify(beforeStyle) &&
+      JSON.stringify(final.after?.style || null) === JSON.stringify(afterStyle);
+    const stable = final.id === sourceId && stableFrames >= 2 && signature(final) === previous && matchingStyles &&
+      geometryEvidence.every(item => item.sourceId === sourceId && JSON.stringify(item.sourceRect) === JSON.stringify(final.after.rect) &&
+        JSON.stringify(item.sourceStyle) === JSON.stringify(final.after.style));
+    return { observation: final, geometry: geometryEvidence, measurementConsistency: { stable, sourceId,
+      initialRect: initial.after?.rect || null, finalRect: final.after?.rect || null,
+      stableFrames, matchingStyles, waitedMs: performance.now() - started,
+      reason: stable ? null : 'focused-paint-or-position-did-not-stabilize',
+      ...(stable ? {} : { initialObservation: initial, finalObservation: final }) } };
   }
   const observer = new MutationObserver(records => {
     if (records.some(record => record.type === 'childList' || record.attributeName === 'open' || record.attributeName === 'hidden')) observerDirty = true;
@@ -330,10 +368,7 @@ function installCollector() {
   const refresh = async () => {
     if (observerDirty) inventory();
     let changed = false;
-    for (const map of [before, potentialScroll]) for (const [key, old] of map) {
-      const el = nodes.get(key);
-      if (old.focused && visible(el) && document.activeElement !== el) map.set(key, { ...identity(el), ...snapshot(el) });
-    }
+    for (const map of [before, potentialScroll]) captureLeftFocused(map, 'before-next-real-Tab');
     const pending = [];
     for (const map of [before, potentialScroll]) for (const [key, old] of map) {
       if (map === potentialScroll && before.has(key) || !old.pendingFiniteAnimations || attemptedBaselineWaits.has(old)) continue;
@@ -369,7 +404,7 @@ function installCollector() {
     }
     return observerDirty || changed ? inventory() : null;
   };
-  window.__msyFocusAudit = { inventory, guidance, active, geometry, refresh, disconnect: () => observer.disconnect() };
+  window.__msyFocusAudit = { inventory, guidance, active, geometry, measure, refresh, disconnect: () => observer.disconnect() };
   return { inventory: inventory(), guidance: guidance() };
 }
 
@@ -377,6 +412,18 @@ function assessmentCounts(records) {
   return { total: records.length, passed: records.filter(x => x.assessment.pass).length,
     failed: records.filter(x => x.assessment.status === 'fail').length,
     unassessed: records.filter(x => !x.assessment.pass && x.assessment.status !== 'fail').length };
+}
+
+async function measureFocusedEvidence(page, active) {
+  const parsed = focusIndicatorBands(active.before?.style, active.after?.style);
+  const measured = await page.evaluate(args => window.__msyFocusAudit.measure(args), {
+    sourceId: active.id, bands: parsed.bands || [], beforeStyle: active.before?.style || null, afterStyle: active.after?.style || null,
+  });
+  const record = { ...(measured.measurementConsistency.stable ? measured.observation : active),
+    geometry: measured.geometry, measurementConsistency: { ...measured.measurementConsistency,
+      requestedRect: active.after?.rect || null,
+      ...(JSON.stringify(active.after) === JSON.stringify(measured.observation.after) ? {} : { preStabilityObservation: active }) } };
+  return { ...record, assessment: assessFocusIndicator(record) };
 }
 
 async function settleFocusedPaint(page) {
@@ -482,28 +529,45 @@ export async function main() {
         item.documentFocusableCount = initial.inventory.documentFocusableCount;
         item.excluded = initial.inventory.excluded;
         let inventory = initial.inventory, guidance = initial.guidance;
-        const visited = new Set(), screenshots = new Set(); let first = null, expanded = false, lifeEventAdded = !!item.localFixturePreparation, cycles = 0;
+        const visited = new Set(), screenshots = new Set(), pendingBefore = new Set(), focusIndex = new Map();
+        let first = null, expanded = false, lifeEventAdded = !!item.localFixturePreparation, cycles = 0;
         for (let tab = 0; tab < maxTabs; tab++) {
           const refreshed = await page.evaluate(() => window.__msyFocusAudit.refresh());
           if (refreshed) inventory = refreshed;
           await page.keyboard.press('Tab'); item.tabs++;
           assert(await settleFocusedPaint(page), 'Finite focus animation did not finish within 1500ms.');
-          const active = await page.evaluate(() => window.__msyFocusAudit.active());
+          let active = await page.evaluate(() => window.__msyFocusAudit.active());
           if (active.id && !first) first = active.id;
           else if (active.id === first && item.tabs > 1) {
             item.cycleCompleted = true; cycles++;
             // A complete real circuit also discovers native scroll Tab stops.
             // If new controls appeared behind us, allow one more bounded loop.
             inventory = await page.evaluate(() => window.__msyFocusAudit.inventory());
-            if (inventory.controls.every(control => visited.has(control.id)) || cycles >= 2) break;
+            const pendingCurrent = inventory.controls.some(control => pendingBefore.has(control.id));
+            if (inventory.controls.every(control => visited.has(control.id)) && !pendingCurrent || cycles >= 2) break;
           }
           if (!active.main) { item.traversedOutsideMain++; continue; }
-          if (visited.has(active.id)) continue;
+          const reobserve = pendingBefore.has(active.id) && cycles >= 1 && active.before?.style &&
+            !active.before.focused && !active.before.pendingFiniteAnimations && !active.unstableBeforeSnapshot;
+          if (visited.has(active.id) && !reobserve) continue;
           visited.add(active.id);
-          const parsed = focusIndicatorBands(active.before?.style, active.after?.style);
-          const geometry = await page.evaluate(bands => window.__msyFocusAudit.geometry(bands), parsed.bands || []);
-          const assessment = assessFocusIndicator({ ...active, geometry });
-          item.focus.push({ ...active, geometry, assessment });
+          const measured = await measureFocusedEvidence(page, active);
+          const record = { ...measured, keyboardObservation: { tab: item.tabs, circuit: cycles + 1 } };
+          active = measured;
+          const assessment = measured.assessment;
+          if (reobserve) {
+            const index = focusIndex.get(active.id), initial = item.focus[index];
+            record.initialAttempts = [initial];
+            record.reobservation = { reason: 'missing-unfocused-baseline-at-first-real-Tab', method: 'next-real-Tab-circuit',
+              originalTab: initial.keyboardObservation.tab, originalCircuit: initial.keyboardObservation.circuit };
+            item.focus[index] = record; pendingBefore.delete(active.id);
+          } else {
+            focusIndex.set(active.id, item.focus.length); item.focus.push(record);
+            // Only a genuinely absent initial snapshot may be measured again.
+            // Do not retry contrast failures, occlusion or unstable paint.
+            if (assessment.reason === 'missing-focus-evidence' && !record.before && !record.unstableBeforeSnapshot &&
+              record.measurementConsistency.stable) pendingBefore.add(active.id);
+          }
           const type = active.role || active.type || active.tag;
           const priority = route.startsWith('/job/') && /^연봉/.test(active.label) ? 'job-salary-cta'
             : route.includes('/monthly') && active.role === 'region' ? 'monthly-table-region'
@@ -512,7 +576,7 @@ export async function main() {
             : route === '/calc/samsung-bonus' && active.tag === 'input' && /^2028년/.test(active.label) ? 'samsung-projection-input'
             : ['slider', 'switch'].includes(active.role) ? `shared-${active.role}` : null;
           const screenshotKey = assessment.pass ? priority ? `priority-${priority}` : `representative-${type}` : `issue-${assessment.status}-${assessment.reason}-${active.class}`;
-          if (item.screenshots.length < 8 && (!assessment.pass || priority || item.screenshots.filter(x => x.purpose.startsWith('representative-')).length < 3) && !screenshots.has(screenshotKey)) {
+          if (record.measurementConsistency.stable && item.screenshots.length < 8 && (!assessment.pass || priority || item.screenshots.filter(x => x.purpose.startsWith('representative-')).length < 3) && !screenshots.has(screenshotKey)) {
             const r = active.after.rect;
             const left = Math.max(0, r.left - 16), top = Math.max(0, r.top - 32);
             const clip = { x: left, y: top, width: Math.min(width - left, Math.max(80, r.width + 32)),
@@ -520,7 +584,8 @@ export async function main() {
             if (clip.width > 0 && clip.height > 0) {
               const filename = `${route.replaceAll('/', '_')}-${theme}-${width}-${item.screenshots.length}-${active.id}.png`;
               await page.screenshot({ path: path.join(output, filename), clip, animations: 'disabled' });
-              item.screenshots.push({ filename, control: active.id, purpose: screenshotKey, clip }); screenshots.add(screenshotKey);
+              item.screenshots.push({ filename, control: active.id, purpose: screenshotKey, clip,
+                keyboardObservation: record.keyboardObservation, assessmentStatus: assessment.status }); screenshots.add(screenshotKey);
             }
           }
           if (active.canExpandDetails && !expanded) {
@@ -542,6 +607,8 @@ export async function main() {
         item.excluded = inventory.excluded;
         item.lifecycle = inventory.lifecycle;
         item.baselineRefreshes = inventory.baselineRefreshes;
+        item.completedCircuits = cycles;
+        item.reobservedMissingBefore = item.focus.filter(record => record.reobservation).map(record => record.id);
         item.retiredUnvisited = inventory.everExpectedControls.filter(control => !visited.has(control.id) && !item.expectedControls.some(current => current.id === control.id))
           .map(({ id, tag, type, role, label }) => ({ id, tag, type, role, label,
             evidence: inventory.lifecycle.filter(event => event.id === id) }));
@@ -574,13 +641,11 @@ export async function main() {
             const target = active.main && (route === '/contact' ? active.tag === 'input' && ['text', 'email'].includes(active.type || 'text')
               : active.role === 'region' && active.class.split(/\s+/).includes('ms-focus-inset'));
             if (!target) continue;
-            const parsed = focusIndicatorBands(active.before?.style, active.after?.style);
-            const geometry = await page.evaluate(bands => window.__msyFocusAudit.geometry(bands), parsed.bands || []);
-            forced.reached = true; forced.record = { ...active, geometry, assessment: assessFocusIndicator({ ...active, geometry }) };
+            forced.reached = true; forced.record = await measureFocusedEvidence(page, active);
             forced.passed = forced.record.assessment.pass;
-            const r = active.after.rect, left = Math.max(0, r.left - 12), top = Math.max(0, r.top - 20);
+            const r = forced.record.after.rect, left = Math.max(0, r.left - 12), top = Math.max(0, r.top - 20);
             const clip = { x: left, y: top, width: Math.min(width - left, Math.max(80, r.width + 24)), height: Math.min(400, 900 - top, Math.max(80, r.height + 40)) };
-            if (clip.width > 0 && clip.height > 0) {
+            if (forced.record.measurementConsistency.stable && clip.width > 0 && clip.height > 0) {
               forced.screenshot = `${route.replaceAll('/', '_')}-forced-colors-${width}.png`;
               await page.screenshot({ path: path.join(output, forced.screenshot), clip, animations: 'disabled' });
             }

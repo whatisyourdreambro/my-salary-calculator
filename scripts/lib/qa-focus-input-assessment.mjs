@@ -203,8 +203,29 @@ function renderedChange(beforeRange, afterRange) {
     bounds: { lower: conservativeLower, upper: upper + 1e-10 }, beforeRange, afterRange };
 }
 
+const sameRect = (a, b) => ['x', 'y', 'width', 'height', 'top', 'right', 'bottom', 'left'].every(key =>
+  Number.isFinite(a?.[key]) && Number.isFinite(b?.[key]) && a[key] === b[key]);
+
+function focusMeasurementIssue(record, geometry) {
+  const consistency = record?.measurementConsistency;
+  const hasSource = geometry.some(g => ['sourceId', 'sourceRect', 'sourceStyle'].some(key => key in g));
+  // Older offline fixtures have no atomic-measurement fields. New observations
+  // must not silently fall back to that contract when one field is missing.
+  if (consistency === undefined && !hasSource) return null;
+  if (!consistency || consistency.stable !== true) return 'unstable-focus-geometry';
+  if (typeof record.id !== 'string' || !record.id || consistency.sourceId !== record.id ||
+    consistency.matchingStyles !== true || !Number.isInteger(consistency.stableFrames) || consistency.stableFrames < 2 ||
+    record.after?.pendingFiniteAnimations !== 0 || !sameRect(consistency.finalRect, record.after?.rect) ||
+    geometry.some(g => g.sourceId !== record.id || !sameRect(g.sourceRect, record.after.rect) ||
+      !g.sourceStyle || JSON.stringify(g.sourceStyle) !== JSON.stringify(record.after.style)))
+    return 'focus-geometry-evidence-mismatch';
+  return null;
+}
+
 export function assessFocusIndicator(record) {
   const { before, after, focusVisible, geometry = [] } = record || {};
+  const measurementIssue = focusMeasurementIssue(record, geometry);
+  if (measurementIssue) return fail(measurementIssue);
   if (!before?.style || !after?.style || !Array.isArray(after.layers)) return fail('missing-focus-evidence');
   if (!focusVisible) return fail('keyboard-focus-visible-not-matched');
   if (before.focusVisible) return fail('baseline-already-focused');
@@ -217,6 +238,10 @@ export function assessFocusIndicator(record) {
   if (transform.status) return transform;
   const parsed = focusIndicatorBands(before.style, after.style);
   if (parsed.status) return parsed;
+  if (record.measurementConsistency && (geometry.length !== parsed.bands.length ||
+    new Set(geometry.map(g => g.id)).size !== geometry.length ||
+    parsed.bands.some(band => !geometry.some(g => g.id === band.id))))
+    return fail('focus-geometry-evidence-mismatch');
   if (!parsed.changed || !parsed.bands.length) return fail('no-supported-new-focus-indicator', { bands: parsed.bands });
   const assessments = parsed.bands.map(cssBand => {
     const band = { ...cssBand, physicalThickness: cssBand.thickness * transform.scale };

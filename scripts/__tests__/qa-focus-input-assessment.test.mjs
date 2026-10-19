@@ -273,3 +273,60 @@ test('a constant uniform scale with fixed translation permits translated ancesto
   record.after.effects[0].transform = 'matrix(1.02,0,0,1.02,7,-3)';
   assert.equal(assessFocusIndicator(record).reason, 'transformed-indicator-geometry');
 });
+
+function atomic(record) {
+  record.id = 'focus-1';
+  record.after.rect = { x: 10, y: 20, width: 100, height: 40, top: 20, right: 110, bottom: 60, left: 10 };
+  record.after.pendingFiniteAnimations = 0;
+  record.measurementConsistency = { stable: true, sourceId: record.id, stableFrames: 2,
+    matchingStyles: true, finalRect: { ...record.after.rect } };
+  for (const g of record.geometry) Object.assign(g, { sourceId: record.id, sourceRect: { ...record.after.rect },
+    sourceStyle: { ...record.after.style } });
+  return record;
+}
+
+test('atomic measurement binds painted styles and sampled geometry to the same element and rect', () => {
+  const result = assessFocusIndicator(atomic(evidence({ outlineStyle: 'solid', outlineWidth: '2px' })));
+  assert.equal(result.pass, true);
+});
+
+test('explicitly unstable observations cannot pass or become missing-baseline retry candidates', () => {
+  const record = atomic(evidence({ outlineStyle: 'solid', outlineWidth: '2px' }));
+  record.measurementConsistency.stable = false;
+  assert.equal(assessFocusIndicator(record).reason, 'unstable-focus-geometry');
+  record.before = null;
+  assert.equal(assessFocusIndicator(record).reason, 'unstable-focus-geometry');
+});
+
+test('atomic mismatched source ID, scroll position, style, frames or animation state fail closed', () => {
+  for (const mutate of [r => r.geometry[0].sourceId = 'focus-2', r => r.geometry[0].sourceRect.top++,
+    r => r.geometry[0].sourceStyle.outlineWidth = '4px', r => delete r.geometry[0].sourceStyle,
+    r => r.measurementConsistency.sourceId = 'focus-2', r => r.measurementConsistency.finalRect.y++,
+    r => r.measurementConsistency.matchingStyles = false, r => r.measurementConsistency.stableFrames = 1,
+    r => r.after.pendingFiniteAnimations = 1, r => r.geometry[0].sourceRect.x = NaN]) {
+    const record = atomic(evidence({ outlineStyle: 'solid', outlineWidth: '2px' })); mutate(record);
+    assert.equal(assessFocusIndicator(record).reason, 'focus-geometry-evidence-mismatch');
+  }
+});
+
+test('new source fields without their consistency proof cannot fall back to legacy fixtures', () => {
+  const record = atomic(evidence({ outlineStyle: 'solid', outlineWidth: '2px' }));
+  delete record.measurementConsistency;
+  assert.equal(assessFocusIndicator(record).reason, 'unstable-focus-geometry');
+  assert.equal(assessFocusIndicator(evidence({ outlineStyle: 'solid', outlineWidth: '2px' })).pass, true);
+});
+
+test('stable atomic after evidence can preserve a genuinely absent before observation', () => {
+  const record = atomic(evidence({ outlineStyle: 'solid', outlineWidth: '2px' }));
+  record.before = null; record.geometry = [];
+  assert.equal(assessFocusIndicator(record).reason, 'missing-focus-evidence');
+});
+
+test('atomic band evidence cannot omit or duplicate a source-matched band', () => {
+  const make = () => atomic(evidence({ outlineStyle: 'solid', outlineWidth: '2px', outlineOffset: '2px', outlineColor: white,
+    boxShadow: `${black} 0px 0px 0px 2px` }));
+  const missing = make(); missing.geometry.pop();
+  assert.equal(assessFocusIndicator(missing).reason, 'focus-geometry-evidence-mismatch');
+  const duplicate = make(); duplicate.geometry[1] = { ...duplicate.geometry[0] };
+  assert.equal(assessFocusIndicator(duplicate).reason, 'focus-geometry-evidence-mismatch');
+});
