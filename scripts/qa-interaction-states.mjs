@@ -13,6 +13,84 @@ const { chromium } = createRequire(import.meta.url)('playwright-core');
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const OUTPUT = path.join(ROOT, '.artifacts/interaction-states-qa');
 
+// Read-only callback, evaluated only inside the already guarded page. A DOM
+// visibility change alone does not prove that React's focus cleanup has run.
+export function observeModalTransition({ dialog, opener, phase, baselineOverflow, timeoutMs = 1500 }) {
+  if (!['snapshot', 'ready', 'closed'].includes(phase) || !Number.isFinite(timeoutMs) || timeoutMs <= 0 || timeoutMs > 1500)
+    throw new Error('Invalid bounded modal observation');
+  const started = performance.now();
+  function snapshot() {
+    const active = document.activeElement;
+    const visible = !!dialog?.isConnected && dialog.getClientRects().length > 0
+      && getComputedStyle(dialog).visibility !== 'hidden';
+    return { activeElement: active?.outerHTML.slice(0, 500) || null,
+      openerConnected: !!opener?.isConnected, exactOpenerFocused: !!opener && active === opener,
+      openerInert: !!opener?.closest('[inert]'), focusInsideDialog: !!dialog?.contains(active),
+      dialogIdentityKnown: !!dialog, dialogConnected: !!dialog?.isConnected, dialogVisible: visible,
+      openModalCount: document.querySelectorAll('dialog[open],[role="dialog"][aria-modal="true"]').length,
+      bodyOverflow: document.body.style.overflow };
+  }
+  const complete = state => phase === 'ready'
+    ? state.dialogVisible && state.focusInsideDialog && state.openerConnected && state.openerInert
+      && state.openModalCount === 1 && state.bodyOverflow === 'hidden'
+    : !state.dialogVisible && state.openModalCount === 0 && state.openerConnected
+      && state.exactOpenerFocused && !state.openerInert && state.bodyOverflow === baselineOverflow;
+  const initial = snapshot();
+  if (phase === 'snapshot') return { initial, final: initial, elapsedMs: performance.now() - started };
+  return new Promise(resolve => {
+    let frame, timer, done = false;
+    const finish = (passed, final) => {
+      if (done) return;
+      done = true; cancelAnimationFrame(frame); clearTimeout(timer);
+      resolve({ phase, timeoutMs, initial, final, passed,
+        elapsedMs: performance.now() - started, expectedBodyOverflow: baselineOverflow });
+    };
+    const inspect = () => {
+      const final = snapshot();
+      if (performance.now() - started > timeoutMs) return finish(false, final);
+      if (complete(final)) return finish(true, final);
+      frame = requestAnimationFrame(inspect);
+    };
+    // This is a failure deadline, not a fixed sleep or a repeated activation.
+    timer = setTimeout(() => finish(false, snapshot()), timeoutMs);
+    inspect();
+  });
+}
+
+// This recorder observes only scalar identity/connection facts. It never reads
+// field values or changes focus, and its closure stays in an owned JSHandle.
+export function startModalFocusTrace({ dialog, opener }) {
+  const started = performance.now(), events = [];
+  let droppedEvents = 0, result;
+  const scalar = value => typeof value === 'string' ? value.slice(0, 100) : null;
+  const snapshot = (type, target = document.activeElement) => {
+    const active = document.activeElement;
+    return { t: performance.now() - started, type,
+      targetTag: scalar(target?.tagName), targetId: scalar(target?.id),
+      targetRole: scalar(target?.getAttribute?.('role')),
+      isPinnedOpener: target === opener, inPinnedDialog: !!dialog?.contains(target),
+      dialogConnected: !!dialog?.isConnected, openerConnected: !!opener?.isConnected,
+      activeTag: scalar(active?.tagName), activeId: scalar(active?.id),
+      activeRole: scalar(active?.getAttribute?.('role')),
+      activeIsOpener: active === opener, activeInDialog: !!dialog?.contains(active) };
+  };
+  const start = snapshot('start');
+  const record = event => {
+    if (events.length < 64) events.push(snapshot(event.type, event.target));
+    else droppedEvents++;
+  };
+  document.addEventListener('focusin', record, true);
+  document.addEventListener('focusout', record, true);
+  return { stop() {
+    if (result) return result;
+    document.removeEventListener('focusin', record, true);
+    document.removeEventListener('focusout', record, true);
+    result = { limit: 64, start, events, droppedEvents, final: snapshot('final'),
+      durationMs: performance.now() - started };
+    return result;
+  } };
+}
+
 export async function main() {
   const base = assertLocalQaTarget(process.env.BASE_URL || 'http://127.0.0.1:3320');
   assertQaEnvironment();
@@ -25,6 +103,7 @@ export async function main() {
   let browser;
   let page;
   let item;
+  const pinnedOpeners = new WeakMap(), readyDialogs = new WeakMap();
   async function open(route) {
     const response = await page.goto(base + route, { waitUntil: 'networkidle' });
     assert.equal(response?.status(), 200, route);
@@ -32,6 +111,7 @@ export async function main() {
     report.documents.push({ route, width: item.width, theme: item.theme, buildId: response.headers()['x-moneysalary-build'] || null });
     assert.equal(await page.locator('#msy-ga-loader,#msy-adsense-loader,ins.adsbygoogle').count(), 0);
     assert.equal(await page.evaluate(() => document.documentElement.classList.contains('dark')), item.theme === 'dark');
+    item.bodyOverflowBeforeInteractions = await page.evaluate(() => document.body.style.overflow);
   }
   async function tabTo(target) {
     await target.waitFor({ state: 'visible' });
@@ -90,10 +170,85 @@ export async function main() {
     assert.equal(await radios.nth(current).evaluate(el => el === document.activeElement), true, 'Return to selected radio');
     item.radios.push({ name, count, keys, singleTabStop: true });
   }
+  async function pressModalOpener(opener, key = 'Enter') {
+    // Capture while the real opener is still accessible. Once the modal opens,
+    // its inert/aria-hidden background must not require a new role lookup.
+    if (!pinnedOpeners.has(opener)) pinnedOpeners.set(opener, await opener.elementHandle({ timeout: 1500 }));
+    const node = pinnedOpeners.get(opener);
+    assert(node && await node.evaluate(el => el.isConnected && el === document.activeElement),
+      'Open the modal only from the exact, actually focused opener');
+    await page.keyboard.press(key);
+  }
+  async function modalReady(dialog, opener, method) {
+    const started = Date.now(), openerNode = pinnedOpeners.get(opener);
+    const evidence = { method, phase: 'ready', timeoutMs: 1500, passed: false };
+    item.modalReadiness.push(evidence);
+    let dialogNode;
+    try {
+      evidence.initial = (await page.evaluate(observeModalTransition, { dialog: null, opener: openerNode || null,
+        phase: 'snapshot', baselineOverflow: item.bodyOverflowBeforeInteractions })).final;
+      assert(openerNode, 'Missing pre-open element identity');
+      let remaining = 1500 - (Date.now() - started);
+      assert(remaining > 0, `${method}: modal readiness deadline exceeded before lookup`);
+      dialogNode = await dialog.elementHandle({ timeout: remaining });
+      remaining = 1500 - (Date.now() - started);
+      assert(dialogNode && remaining > 0, `${method}: modal readiness deadline exceeded during lookup`);
+      const observed = await page.evaluate(observeModalTransition, { dialog: dialogNode, opener: openerNode,
+        phase: 'ready', baselineOverflow: item.bodyOverflowBeforeInteractions, timeoutMs: remaining });
+      Object.assign(evidence, { observationInitial: observed.initial, final: observed.final,
+        elapsedMs: Date.now() - started, passed: observed.passed && Date.now() - started <= 1500 });
+      if (evidence.passed) {
+        await readyDialogs.get(dialog)?.dispose();
+        readyDialogs.set(dialog, dialogNode); dialogNode = null;
+      }
+      assert.equal(evidence.passed, true, `${method}: modal focus and isolation must become ready within 1500ms`);
+    } catch (error) {
+      evidence.error = error.message;
+      if (!evidence.final) evidence.final = (await page.evaluate(observeModalTransition, { dialog: dialogNode || null,
+        opener: openerNode || null, phase: 'snapshot', baselineOverflow: item.bodyOverflowBeforeInteractions })).final;
+      evidence.elapsedMs = Date.now() - started;
+      throw error;
+    } finally { await dialogNode?.dispose(); }
+  }
+  async function closeModal(dialog, opener, key, method, legacyRecord) {
+    const dialogNode = readyDialogs.get(dialog), openerNode = pinnedOpeners.get(opener);
+    const evidence = { method, key, passed: false, initial: null, final: null };
+    item.modalClosures.push(evidence);
+    let focusTrace;
+    try {
+      evidence.beforeAction = (await page.evaluate(observeModalTransition, { dialog: dialogNode, opener: openerNode,
+        phase: 'snapshot', baselineOverflow: item.bodyOverflowBeforeInteractions })).final;
+      assert(dialogNode && openerNode, 'Closing requires a previously observed modal and pinned opener');
+      focusTrace = await page.evaluateHandle(startModalFocusTrace, { dialog: dialogNode, opener: openerNode });
+      await page.keyboard.press(key); // Exactly one real key activation; never inject focus or retry closing.
+      Object.assign(evidence, await page.evaluate(observeModalTransition, { dialog: dialogNode, opener: openerNode,
+        phase: 'closed', baselineOverflow: item.bodyOverflowBeforeInteractions }));
+      if (legacyRecord) legacyRecord.restoredFocus = {
+        restored: evidence.final.exactOpenerFocused, active: evidence.final.activeElement?.slice(0, 300),
+      };
+      assert.equal(evidence.passed, true, `${method}: closed modal must restore the exact opener and background within 1500ms`);
+    } catch (error) {
+      evidence.error = error.message;
+      if (!evidence.final) {
+        try {
+          evidence.final = (await page.evaluate(observeModalTransition, { dialog: dialogNode || null, opener: openerNode || null,
+            phase: 'snapshot', baselineOverflow: item.bodyOverflowBeforeInteractions })).final;
+        } catch (diagnosticError) { evidence.diagnosticError = diagnosticError.message; }
+      }
+      throw error;
+    } finally {
+      if (focusTrace) {
+        try { evidence.focusTrace = await focusTrace.evaluate(trace => trace.stop()); }
+        catch (error) {
+          evidence.focusTraceError = error.message;
+          if (!evidence.error) throw error;
+        } finally { await focusTrace.dispose(); }
+      }
+    }
+    return evidence;
+  }
   async function modal(dialog, opener, { nestedShortcut = true } = {}) {
-    await dialog.waitFor({ state: 'visible' });
-    await page.waitForFunction(() => !!document.activeElement?.closest('dialog[open],[role="dialog"][aria-modal="true"]'));
-    assert.equal(await dialog.evaluate(el => el.contains(document.activeElement)), true, 'Initial focus belongs to this modal');
+    await modalReady(dialog, opener, 'containment-start');
     const semantics = await dialog.evaluate(el => ({ native: el.tagName === 'DIALOG', modal: el.matches(':modal'), ariaModal: el.getAttribute('aria-modal'), label: el.getAttribute('aria-label'), labelledby: el.getAttribute('aria-labelledby') }));
     assert(semantics.modal || semantics.ariaModal === 'true');
     const controls = await dialog.locator('button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),a[href]').count();
@@ -107,12 +262,7 @@ export async function main() {
       assert.equal(await dialog.evaluate(el => el.contains(document.activeElement)), true);
     }
     item.modals.push({ ...semantics, controls, forwardAndReverseContainment: true });
-    await page.keyboard.press('Escape');
-    await dialog.waitFor({ state: 'hidden' });
-    await page.waitForFunction(() => !document.querySelector('dialog[open],[role="dialog"][aria-modal="true"]'));
-    item.modals.at(-1).restoredFocus = await opener.evaluate(el => ({ restored: el === document.activeElement, active: document.activeElement?.outerHTML.slice(0, 300) }));
-    assert.equal(item.modals.at(-1).restoredFocus.restored, true, 'Escape restores opener focus');
-    assert.equal(await opener.evaluate(el => !!el.closest('[inert]')), false, 'Background inert state restored');
+    await closeModal(dialog, opener, 'Escape', 'first-escape', item.modals.at(-1));
   }
   const scenarios = {
     async salary() {
@@ -149,17 +299,16 @@ export async function main() {
     async sheet() {
       await open('/');
       const opener = page.getByRole('button', { name: /^비과세 / });
-      await tabTo(opener); await page.keyboard.press('Enter');
+      await tabTo(opener); await pressModalOpener(opener);
       const dialog = page.getByRole('dialog', { name: '비과세액 설정' });
       await dialog.waitFor(); await page.waitForTimeout(400);
       await dialog.getByRole('textbox', { name: '월 비과세액', exact: true }).fill('999999999');
       await linkedError(dialog.getByRole('textbox', { name: '월 비과세액', exact: true }));
       await text('[role="dialog"][aria-modal="true"]', 'sheet with invalid amount');
       await modal(dialog, opener);
-      await page.keyboard.press('Enter'); await dialog.waitFor();
+      await pressModalOpener(opener); await modalReady(dialog, opener, 'sheet-reopen');
       const close = dialog.getByRole('button', { name: '닫기', exact: true });
-      await tabTo(close); await page.keyboard.press('Enter'); await dialog.waitFor({ state: 'hidden' });
-      assert.equal(await opener.evaluate(el => el === document.activeElement), true);
+      await tabTo(close); await closeModal(dialog, opener, 'Enter', 'sheet-close-button');
     },
     async simple() {
       await open('/calc/refinance-break-even');
@@ -226,7 +375,7 @@ export async function main() {
     async search() {
       await open('/tools/loan');
       const opener = page.getByRole('button', { name: '검색 열기', exact: true });
-      await tabTo(opener); await page.keyboard.press('Enter');
+      await tabTo(opener); await pressModalOpener(opener);
       const dialog = page.getByRole('dialog', { name: '사이트 검색', exact: true });
       await dialog.waitFor();
       const input = dialog.getByRole('textbox', { name: '계산기·가이드·용어 검색', exact: true });
@@ -238,9 +387,8 @@ export async function main() {
       assert((await dialog.getByRole('status').textContent()).includes('선택:'));
       await input.press('ArrowUp'); await text('dialog[open]', 'search results and active option');
       await modal(dialog, opener, { nestedShortcut: false });
-      await page.keyboard.press('Control+k'); await dialog.waitFor();
-      await page.keyboard.press('Escape'); await dialog.waitFor({ state: 'hidden' });
-      assert.equal(await opener.evaluate(el => el === document.activeElement), true, 'Shortcut opener restored');
+      await pressModalOpener(opener, 'Control+k'); await modalReady(dialog, opener, 'search-shortcut-reopen');
+      await closeModal(dialog, opener, 'Escape', 'search-shortcut-escape');
     },
     async mobileMenu() {
       await open('/tools/loan');
@@ -250,28 +398,26 @@ export async function main() {
         item.applicability = 'Mobile-only menu hidden at desktop width; desktop search tested separately';
         return;
       }
-      await tabTo(opener); await page.keyboard.press('Enter');
+      await tabTo(opener); await pressModalOpener(opener);
       const dialog = page.getByRole('dialog', { name: '모바일 메뉴', exact: true });
       await dialog.waitFor(); await text('dialog[open]', 'mobile navigation dialog');
       await modal(dialog, opener);
-      await page.keyboard.press('Enter'); await dialog.waitFor();
+      await pressModalOpener(opener); await modalReady(dialog, opener, 'mobile-menu-reopen');
       await tabTo(dialog.getByRole('button', { name: '메뉴 닫기', exact: true }));
-      await page.keyboard.press('Enter'); await dialog.waitFor({ state: 'hidden' });
-      assert.equal(await opener.evaluate(el => el === document.activeElement), true);
+      await closeModal(dialog, opener, 'Enter', 'mobile-menu-close-button');
     },
     async boxing() {
       await open('/fun/salary-battle');
       const opener = page.getByRole('button', { name: 'FIGHT!', exact: true });
-      await tabTo(opener); await page.keyboard.press('Enter');
+      await tabTo(opener); await pressModalOpener(opener);
       const dialog = page.getByRole('dialog', { name: '연봉 비교 게임', exact: true });
       await dialog.waitFor();
       await text('dialog[open] > button', 'animation skip control');
       await modal(dialog, opener);
-      await page.keyboard.press('Enter'); await dialog.waitFor();
+      await pressModalOpener(opener); await modalReady(dialog, opener, 'boxing-skip-reopen');
       const skip = dialog.getByRole('button', { name: '애니메이션 건너뛰고 결과 보기', exact: true });
-      await tabTo(skip); await page.keyboard.press('Enter'); await dialog.waitFor({ state: 'hidden' });
-      assert.equal(await opener.evaluate(el => el === document.activeElement), true);
-      await page.keyboard.press('Enter'); await dialog.waitFor();
+      await tabTo(skip); await closeModal(dialog, opener, 'Enter', 'boxing-skip-button');
+      await pressModalOpener(opener); await modalReady(dialog, opener, 'boxing-completion-reopen');
       const completion = dialog.locator('[data-game-announcement="salary-battle"]');
       assert.equal(await completion.count(), 1);
       assert.equal(await completion.getAttribute('role'), 'status');
@@ -291,12 +437,10 @@ export async function main() {
       await page.screenshot({ path: path.join(OUTPUT, `boxing-result-${item.width}-${item.theme}.png`) });
       await text('[data-game-result="salary-battle"]', 'completed game result');
       item.announcements.push({ kind: 'salary-battle', value: announced });
-      await tabTo(resultButton); await page.keyboard.press('Enter'); await dialog.waitFor({ state: 'hidden' });
-      assert.equal(await opener.evaluate(el => el === document.activeElement), true);
-      await page.keyboard.press('Enter'); await dialog.waitFor();
+      await tabTo(resultButton); await closeModal(dialog, opener, 'Enter', 'boxing-result-button');
+      await pressModalOpener(opener); await modalReady(dialog, opener, 'boxing-final-reopen');
       assert.equal((await completion.textContent()).trim(), '', 'A new game must not announce the previous winner');
-      await page.keyboard.press('Escape'); await dialog.waitFor({ state: 'hidden' });
-      assert.equal(await opener.evaluate(el => el === document.activeElement), true);
+      await closeModal(dialog, opener, 'Escape', 'boxing-replay-escape');
     },
     async contact() {
       await open('/contact');
@@ -545,7 +689,8 @@ export async function main() {
       page.on('response', response => { if (new URL(response.url()).origin !== base) report.externalResponses.push(response.url()); });
       for (const [name, scenario] of Object.entries(scenarios)) {
         if (selected && !selected.includes(name)) continue;
-        item = { name, width, theme, passed: false, keyboardTabs: 0, text: [], radios: [], modals: [], relationships: [], announcements: [] };
+        item = { name, width, theme, passed: false, keyboardTabs: 0, text: [], radios: [], modals: [], relationships: [], announcements: [],
+          modalReadiness: [], modalClosures: [] };
         report.cases.push(item);
         try {
           await scenario();

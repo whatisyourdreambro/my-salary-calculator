@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, PanInfo, useReducedMotion } from "framer-motion";
 import { observeBottomSheetSpace, type BottomSheetSpace } from "@/lib/bottomSheetLayout";
 import { activateModalFocus } from "@/lib/modalFocus";
@@ -17,9 +17,15 @@ export default function BottomSheet({ isOpen, onClose, children, title }: Bottom
  const closeRef = useRef(onClose);
  const sheetRef = useRef<HTMLDivElement>(null);
  const backdropRef = useRef<HTMLDivElement>(null);
+ const openerRef = useRef<Element | null>(null);
  const titleId = useId();
  const reduceMotion = useReducedMotion();
  useEffect(() => { closeRef.current = onClose; }, [onClose]);
+ useLayoutEffect(() => {
+ if (isOpen && !sheetRef.current?.contains(document.activeElement)) {
+ openerRef.current = document.activeElement;
+ }
+ }, [isOpen]);
 
  useEffect(() => {
  if (!isOpen) { setSpace(null); return; }
@@ -35,7 +41,8 @@ export default function BottomSheet({ isOpen, onClose, children, title }: Bottom
  const visible = isOpen && space !== null;
  useEffect(() => {
  if (!visible || !sheetRef.current) return;
- return activateModalFocus(sheetRef.current, { onEscape: () => closeRef.current(), focusRoot: true, backdrop: backdropRef.current });
+ // Passive cleanup runs after React restores focus to any retained exit DOM.
+ return activateModalFocus(sheetRef.current, { onEscape: () => closeRef.current(), opener: openerRef.current, focusRoot: true, backdrop: backdropRef.current });
  }, [visible]);
 
  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
