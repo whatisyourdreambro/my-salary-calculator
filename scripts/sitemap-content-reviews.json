@@ -83,8 +83,8 @@
     },
     "/": {
       "contentDate": "2026-10-19",
-      "reviewedAtCommit": "e3d640eab97c17a1550f91cfd84f2814ce46ee35",
-      "reason": "Reviewed October 20: SalaryCalculator changes only connect existing validation errors to the input and non-taxable settings, without changing the tax calculation, article content or advertising placement. Retain the October 19 editorial date for this accessibility correction.",
+      "reviewedAtCommit": "c8110c25ccd35c7ce4482f8a978d7380ee2f12dc",
+      "reason": "Reviewed October 20 against the previously reviewed source: SalaryCalculator now renews the existing alert DOM on an explicit repeated invalid submission. The error wording, validation rules, calculation, article content and advertising placement are unchanged. Retain the October 19 editorial date for this accessibility correction.",
       "dependencies": [
         "src/components/NextActions.tsx",
         "src/components/SalaryCalculator.tsx"
@@ -95,7 +95,7 @@
         "src/components/NextActions.tsx",
         "src/components/SalaryCalculator.tsx"
       ],
-      "sha256": "d47eae2039629aa98c995e7c22141e6a1d8971c5e6bcc78dd7f71cfa6bdb8d12"
+      "sha256": "a41311bb405bddbbbdbc2addeb5797bd86cdcb1a0afaf61e31c03977fb8c9895"
     },
     "/home-loan": {
       "contentDate": "2026-09-19",
