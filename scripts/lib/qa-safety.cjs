@@ -79,12 +79,19 @@ async function fetchQaDocument(value, baseURL, options = {}) {
 function chromiumQaLaunchOptions(baseURL, options = {}, proxyPort) {
   assertLocalQaTarget(baseURL);
   assertQaEnvironment();
+  if (options.headless !== undefined && typeof options.headless !== 'boolean') {
+    throw new Error('[qa-safety] headless must be a boolean when specified.');
+  }
+  if (options.headless === false && process.env.MSY_QA_SCREEN_READER !== '1') {
+    throw new Error('[qa-safety] A visible browser requires explicit MSY_QA_SCREEN_READER=1.');
+  }
   if (options.proxy || options.ignoreDefaultArgs || options.userDataDir || options.args?.some(arg =>
     /(?:proxy|resolver|host-rules|host-resolver|remote-debugging|user-data-dir|load-extension|disable-extensions-except|webrtc|quic|no-proxy|disable-web-security)/i.test(arg)
     || !arg.startsWith('--'))) {
     throw new Error('[qa-safety] Browser options cannot replace the network guard or open an initial URL/profile.');
   }
-  return { ...options, headless: true, args: [...(options.args || []), ...chromiumQaArgs(baseURL, proxyPort)] };
+  // Screen-reader inspection changes visibility only; all transport/context guards remain mandatory.
+  return { ...options, headless: options.headless !== false, args: [...(options.args || []), ...chromiumQaArgs(baseURL, proxyPort)] };
 }
 
 async function startQaDenyProxy() {

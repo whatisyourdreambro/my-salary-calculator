@@ -86,6 +86,9 @@ export default function BoxingGame({
  onCancel={(event) => { event.preventDefault(); onFinish(); }}
  className="fixed inset-0 z-50 m-0 h-dvh w-screen max-h-none max-w-none border-0 p-0 open:flex items-center justify-center overflow-y-auto bg-electric"
  >
+ <p role="status" aria-live="polite" aria-atomic="true" className="sr-only" data-game-announcement="salary-battle">
+ {winner ? `게임이 끝났습니다. ${winner === "A" ? companyA.name.ko : companyB.name.ko} 승리. 재미용 게임 결과이며 실제 보상 비교 결과와 별개입니다. 결과 확인하기 버튼으로 비교 결과를 볼 수 있습니다.` : ""}
+ </p>
  <button type="button" autoFocus onClick={onFinish} className="absolute right-4 top-4 z-[60] min-h-11 rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground">
  애니메이션 건너뛰고 결과 보기
  </button>
@@ -228,26 +231,27 @@ export default function BoxingGame({
  <AnimatePresence>
  {winner && (
  <motion.div
+ data-game-result="salary-battle"
  initial={{ opacity: 0, scale: 0.8 }}
  animate={{ opacity: 1, scale: 1 }}
- className="absolute inset-0 flex flex-col items-center justify-center bg-electric/90 backdrop-blur-md z-50"
+ className="absolute inset-0 flex flex-col items-center justify-center bg-card text-card-foreground z-50"
  >
  <motion.div
  animate={{ rotate: [0, -10, 10, -10, 10, 0] }}
  transition={{ duration: 0.5, delay: 0.2 }}
  >
- <Trophy className="w-32 h-32 text-primary mb-6 drop-shadow-[0_0_30px_rgba(234,179,8,0.8)]" />
+ <Trophy className="w-32 h-32 text-link mb-6 drop-shadow-[0_0_30px_rgba(234,179,8,0.8)]" />
  </motion.div>
- <h2 className="text-8xl font-black text-navy mb-4 italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-primary to-primary/80">
+ <h2 className="text-8xl font-black text-link mb-4 italic tracking-tighter">
  KO!
  </h2>
- <p className="text-3xl text-navy font-bold mb-12">
- <span className={winner === "A" ? "text-[rgba(255,255,255,0.8)]" : "text-electric"}>
+ <p className="text-3xl text-card-foreground font-bold mb-12">
+ <span className="text-link">
  {winner === "A" ? companyA.name.ko : companyB.name.ko}
  </span>
  {" "}WIN!
  </p>
- <p className="mb-6 text-sm text-navy">재미용 게임 승패이며 실제 보상 비교 결과와 별개입니다.</p>
+ <p className="mb-6 text-sm text-card-foreground">재미용 게임 승패이며 실제 보상 비교 결과와 별개입니다.</p>
  <button
  type="button"
  onClick={onFinish}

@@ -157,6 +157,59 @@ describe("salary result user action lifecycle (offline hook/element fixture)", (
     expect(fixture.measurement.valid).toBe(true);
   });
 
+  it("publishes a fresh alert for every explicit invalid submission without refocusing or calculating", () => {
+    let tree = changeIncome(render(), "0");
+    expect(nodes(tree).filter(node => node.props.id === "salary-invalid-hint")).toHaveLength(0);
+    const keys = new Set<string | null>();
+    for (let attempt = 0; attempt < 3; attempt++) {
+      tree = click(tree, "결과 확인하기");
+      const alerts = nodes(tree).filter(node => node.props.id === "salary-invalid-hint");
+      expect(alerts).toHaveLength(1);
+      const alert = alerts[0];
+      expect(alert.props.role).toBe("alert");
+      expect(textOf(alert)).toBe("소득 금액을 0보다 크게 입력해 주세요 (연 환산 1조 원 이하).");
+      // A changed React key requests replacement of this alert, not its surrounding form.
+      // Real DOM mutation is covered by guarded UI; this does not prove audible output.
+      expect(alert.key).not.toBeNull();
+      expect(keys.has(alert.key)).toBe(false);
+      keys.add(alert.key);
+      const input = nodes(tree).find(node => node.type === MoneyInput && node.props.label === "계약 연봉")!;
+      const button = nodes(tree).find(node => node.type === "button" && textOf(node) === "결과 확인하기")!;
+      expect(input.props["aria-describedby"]).toBe(alert.props.id);
+      expect(button.props["aria-describedby"]).toBe(alert.props.id);
+      expect(fixture.measurement.valid).toBe(false);
+      expect(nodes(tree).find(node => node.type === SalaryResultCard)).toBeUndefined();
+      expect(fixture.summary.focus).not.toHaveBeenCalled();
+      expect(nodes(render()).find(node => node.props.id === "salary-invalid-hint")?.key).toBe(alert.key);
+    }
+    tree = changeIncome(tree, "50,000,000");
+    expect(nodes(tree).filter(node => node.props.id === "salary-invalid-hint")).toHaveLength(0);
+    tree = click(tree, "결과 확인하기");
+    expect(fixture.measurement.valid).toBe(true);
+    expect(fixture.summary.focus).toHaveBeenCalledExactlyOnceWith({ preventScroll: true });
+    expect(nodes(tree).find(node => node.type === SalaryResultCard)?.props.monthlyNet)
+      .toBe(calculateSalary2026(50_000_000, 200_000, 1, 0).netPay);
+  });
+
+  it("refreshes a repeated non-taxable error while preserving the old result and ad identities", () => {
+    let tree = click(render(), "결과 확인하기");
+    const originalCard = nodes(tree).find(node => node.type === SalaryResultCard)!;
+    const originalAds = nodes(tree).filter(node => node.type === ResultAd).map(node => node.key);
+    const taxFree = nodes(tree).find(node => node.type === MoneyInput && node.props.label === "월 비과세액")!;
+    (taxFree.props.onValueChange as (value: string) => void)("5,000,000");
+    tree = click(render(), "결과 확인하기");
+    const first = nodes(tree).find(node => node.props.id === "salary-invalid-hint")!;
+    tree = click(tree, "결과 확인하기");
+    const repeated = nodes(tree).find(node => node.props.id === "salary-invalid-hint")!;
+    expect(textOf(repeated)).toBe("월 비과세액이 세전 월급보다 클 수 없습니다. 비과세액을 줄여 주세요.");
+    expect(repeated.key).not.toBe(first.key);
+    expect(nodes(tree).find(node => node.type === SalaryResultCard)?.props.monthlyNet).toBe(originalCard.props.monthlyNet);
+    expect(nodes(tree).find(node => node.type === SalaryResultCard)?.key).toBe(originalCard.key);
+    expect(nodes(tree).filter(node => node.type === ResultAd).map(node => node.key)).toEqual(originalAds);
+    expect(fixture.summary.focus).toHaveBeenCalledTimes(1);
+    expect(fixture.measurement.valid).toBe(false);
+  });
+
   it("links an excessive tax-free amount to its own input without marking valid salary invalid", () => {
     let tree = render();
     const taxFree = nodes(tree).find(node => node.type === MoneyInput && node.props.label === "월 비과세액")!;

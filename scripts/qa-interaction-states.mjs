@@ -121,7 +121,19 @@ export async function main() {
       await input.fill('0'); await tabTo(calculate); await page.keyboard.press('Enter');
       await page.locator('#salary-invalid-hint').waitFor(); await linkedError(input);
       await text('#salary-invalid-hint', 'invalid salary');
+      const firstError = await page.locator('#salary-invalid-hint').elementHandle();
+      const firstMessage = await firstError.textContent();
+      await page.keyboard.press('Enter'); // Submit the same invalid value without changing focus/input.
+      await page.waitForFunction(first => !first.isConnected, firstError);
+      assert.equal(await page.locator('#salary-invalid-hint[role="alert"]').count(), 1);
+      assert.equal(await page.locator('#salary-invalid-hint').textContent(), firstMessage);
+      assert.equal(await calculate.evaluate(el => el === document.activeElement), true);
+      assert.equal(await page.locator('#calculation-result').count(), 0);
+      await linkedError(input);
+      item.repeatedInvalidSubmission = { notificationRenewed: true, singleAlert: true, focusPreserved: true };
+      await firstError.dispose();
       await input.fill('50000000'); await tabTo(calculate); await page.keyboard.press('Enter');
+      assert.equal(await page.locator('#salary-invalid-hint').count(), 0);
       await page.waitForFunction(() => !!document.activeElement?.closest('#calculation-result'));
       await page.locator('#calculation-result').scrollIntoViewIfNeeded();
       await page.waitForTimeout(1100); // finite result animation, not repeated announcements
@@ -257,6 +269,32 @@ export async function main() {
       await page.keyboard.press('Enter'); await dialog.waitFor();
       const skip = dialog.getByRole('button', { name: '애니메이션 건너뛰고 결과 보기', exact: true });
       await tabTo(skip); await page.keyboard.press('Enter'); await dialog.waitFor({ state: 'hidden' });
+      assert.equal(await opener.evaluate(el => el === document.activeElement), true);
+      await page.keyboard.press('Enter'); await dialog.waitFor();
+      const completion = dialog.locator('[data-game-announcement="salary-battle"]');
+      assert.equal(await completion.count(), 1);
+      assert.equal(await completion.getAttribute('role'), 'status');
+      assert.equal(await completion.getAttribute('aria-live'), 'polite');
+      assert.equal(await completion.getAttribute('aria-atomic'), 'true');
+      assert.equal((await completion.textContent()).trim(), '');
+      const resultButton = dialog.getByRole('button', { name: '결과 확인하기', exact: true });
+      await resultButton.waitFor({ state: 'visible', timeout: 20000 });
+      const announced = (await completion.textContent()).trim();
+      assert(announced.startsWith('게임이 끝났습니다.'));
+      assert(announced.includes('재미용 게임 결과이며 실제 보상 비교 결과와 별개입니다.'));
+      assert(announced.includes('결과 확인하기'));
+      const winnerName = (await dialog.locator('[data-game-result="salary-battle"] p span').textContent()).trim();
+      assert(winnerName && announced.includes(`${winnerName} 승리.`), 'Announcement matches the displayed game winner');
+      assert.equal(await dialog.getByRole('status').count(), 1, 'Combat updates must not create competing live regions');
+      await page.waitForTimeout(600); // Wait for the finite winner-overlay transition before measuring paint.
+      await page.screenshot({ path: path.join(OUTPUT, `boxing-result-${item.width}-${item.theme}.png`) });
+      await text('[data-game-result="salary-battle"]', 'completed game result');
+      item.announcements.push({ kind: 'salary-battle', value: announced });
+      await tabTo(resultButton); await page.keyboard.press('Enter'); await dialog.waitFor({ state: 'hidden' });
+      assert.equal(await opener.evaluate(el => el === document.activeElement), true);
+      await page.keyboard.press('Enter'); await dialog.waitFor();
+      assert.equal((await completion.textContent()).trim(), '', 'A new game must not announce the previous winner');
+      await page.keyboard.press('Escape'); await dialog.waitFor({ state: 'hidden' });
       assert.equal(await opener.evaluate(el => el === document.activeElement), true);
     },
     async contact() {

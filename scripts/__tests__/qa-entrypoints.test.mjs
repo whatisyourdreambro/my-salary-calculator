@@ -76,7 +76,7 @@ test('QA runner cannot execute archived or arbitrary scripts', () => {
 });
 
 test('maintained browser entry rejects a production URL without launching a browser', () => {
-  for (const script of ['scripts/ad-depth-audit.mjs', 'scripts/qa-pages-navigation.mjs', 'scripts/qa-focus-input.mjs', 'scripts/qa-interaction-states.mjs']) {
+  for (const script of ['scripts/ad-depth-audit.mjs', 'scripts/qa-pages-navigation.mjs', 'scripts/qa-focus-input.mjs', 'scripts/qa-interaction-states.mjs', 'scripts/qa-screen-reader.mjs']) {
     const result = command('scripts/qa-run.mjs', [script], {
       BASE_URL: 'https://www.moneysalary.com',
     });

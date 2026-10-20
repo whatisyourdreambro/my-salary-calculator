@@ -133,12 +133,56 @@ function route(url, status = 200) {
 }
 
 async function qaEnvironment(fn) {
-  const names = ['NEXT_PUBLIC_ADS_DISABLED', 'MSY_QA_MODE', 'MSY_QA_PROXY_PORT', 'BASE_URL'];
+  const names = ['NEXT_PUBLIC_ADS_DISABLED', 'MSY_QA_MODE', 'MSY_QA_PROXY_PORT', 'BASE_URL', 'MSY_QA_SCREEN_READER'];
   const before = Object.fromEntries(names.map(name => [name, process.env[name]]));
   Object.assign(process.env, { NEXT_PUBLIC_ADS_DISABLED: '1', MSY_QA_MODE: '1' });
+  delete process.env.MSY_QA_SCREEN_READER;
   try { return await fn(); }
   finally { for (const name of names) { if (before[name] === undefined) delete process.env[name]; else process.env[name] = before[name]; } }
 }
+
+test('visible screen-reader launch requires an exact opt-in and never changes the headless default', async () => {
+  await qaEnvironment(async () => {
+    assert.equal(safety.chromiumQaLaunchOptions(base, {}, 12345).headless, true);
+    for (const value of [undefined, '0', 'true', 'yes']) {
+      if (value === undefined) delete process.env.MSY_QA_SCREEN_READER;
+      else process.env.MSY_QA_SCREEN_READER = value;
+      assert.throws(() => safety.chromiumQaLaunchOptions(base, { headless: false }, 12345), /MSY_QA_SCREEN_READER=1/);
+    }
+    process.env.MSY_QA_SCREEN_READER = '1';
+    assert.equal(safety.chromiumQaLaunchOptions(base, {}, 12345).headless, true);
+    assert.equal(safety.chromiumQaLaunchOptions(base, { headless: true }, 12345).headless, true);
+    const visible = safety.chromiumQaLaunchOptions(base, { headless: false }, 12345);
+    assert.equal(visible.headless, false);
+    assert.deepEqual(visible.args, chromiumQaArgs(base, 12345));
+    for (const headless of [null, 'false', 0]) {
+      assert.throws(() => safety.chromiumQaLaunchOptions(base, { headless }, 12345), /boolean/);
+    }
+    for (const overrides of [{ proxy: {} }, { userDataDir: 'profile' }, { ignoreDefaultArgs: true },
+      { args: ['--proxy-server=direct://'] }, { args: ['--remote-debugging-port=9222'] },
+      { args: ['--disable-web-security'] }, { args: ['https://external.invalid'] }]) {
+      assert.throws(() => safety.chromiumQaLaunchOptions(base, { headless: false, ...overrides }, 12345), /network guard/);
+    }
+  });
+});
+
+test('screen-reader opt-in cannot bypass QA mode, loopback or server identity before launch', async t => {
+  await qaEnvironment(async () => {
+    let fetches = 0;
+    t.mock.method(globalThis, 'fetch', async () => { fetches++; return new Response('', { status: 200 }); });
+    const m = mocks();
+    await assert.rejects(launchQaBrowser(m.chromium, base, { headless: false }), /MSY_QA_SCREEN_READER=1/);
+    process.env.MSY_QA_SCREEN_READER = '1';
+    await assert.rejects(launchQaBrowser(m.chromium, 'https://www.moneysalary.com', { headless: false }), /loopback/);
+    delete process.env.NEXT_PUBLIC_ADS_DISABLED;
+    await assert.rejects(launchQaBrowser(m.chromium, base, { headless: false }), /qa:run/);
+    assert.equal(fetches, 0);
+    process.env.NEXT_PUBLIC_ADS_DISABLED = '1';
+    await assert.rejects(launchQaBrowser(m.chromium, base, { headless: false }), /not an ads-disabled QA build/);
+    assert.equal(fetches, 1);
+    assert.deepEqual(m.events, []);
+  });
+});
 
 test('launch refuses production, unsafe flags and missing QA marker before browser creation', async t => {
   await qaEnvironment(async () => {
@@ -157,15 +201,18 @@ test('launch refuses production, unsafe flags and missing QA marker before brows
   });
 });
 
-test('context, pages, custom routes, API requests and redirects stay guarded', async t => {
+for (const headless of [true, false]) test(`context, pages, custom routes, API requests and redirects stay guarded (headless=${headless})`, async t => {
   await qaEnvironment(async () => {
+    if (!headless) process.env.MSY_QA_SCREEN_READER = '1';
     t.mock.method(globalThis, 'fetch', async (_url, options) => {
       assert.equal(options.redirect, 'manual');
       return new Response('', { status: 200, headers: { 'x-moneysalary-qa': 'ads-disabled' } });
     });
     const m = mocks();
-    const browser = await launchQaBrowser(m.chromium, base);
+    const browser = await launchQaBrowser(m.chromium, base, { headless });
     try {
+      assert.equal(m.browser.options.headless, headless);
+      assert(m.browser.options.args.some(arg => /^--proxy-server=http:\/\/127\.0\.0\.1:\d+$/.test(arg)));
       const context = await browser.newContext({ userAgent: 'Existing fixture UA' });
       assert.equal(context.options.serviceWorkers, 'block');
       assert(context.options.userAgent.endsWith(' MoneySalary-QA/1.0'));

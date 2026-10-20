@@ -235,6 +235,7 @@ export default function SalaryCalculator() {
  // '결과 확인하기'를 눌렀는데 입력이 무효인 경우 — 종전에는 아무 반응이 없었다(안내문이 결과 뒤 비교기 블록 안에만 있어
  // 유효한 입력에서만 렌더되는 도달 불가 코드였음, 2026-09-11 감사). 클릭 이후에만 버튼 아래에 사유를 표시한다.
  const [invalidAttempt, setInvalidAttempt] = useState(false);
+ const [invalidSubmission, setInvalidSubmission] = useState(0);
  const sharePayload = validateSalarySharePayload(incomeType === "regular"
  ? { v: 1, taxYear: 2026, incomeType, annualSalary, nonTaxableAmount: parseNumber(nonTaxableAmount), dependents, children }
  : { v: 1, taxYear: 2026, incomeType, monthlyIncome: parseNumber(salaryInput) });
@@ -281,7 +282,12 @@ export default function SalaryCalculator() {
  ? "자녀 수는 본인을 뺀 부양가족 수를 넘을 수 없습니다. 부양가족 수를 먼저 늘려 주세요."
  : "양수 소득(연 환산 1조 원 이하)을 입력해 주세요. 직장인은 월 비과세가 세전 월급 이하여야 하며, 공제 대상 자녀를 본인 포함 부양가족 수에도 포함해 주세요.";
  const handleCalculateClick = () => {
- if (!inputsValid) { setInvalidAttempt(true); return; }
+ if (!inputsValid) {
+ setInvalidAttempt(true);
+ // Replace only the alert on an explicit retry; the same boolean/text would leave its DOM unchanged.
+ setInvalidSubmission((submission) => submission + 1);
+ return;
+ }
  setInvalidAttempt(false);
  setCalculatedSnapshot(inputSnapshot);
  runCalculation();
@@ -436,7 +442,7 @@ export default function SalaryCalculator() {
  <span className="text-white">결과 확인하기</span>
  </button>
  {invalidAttempt && !inputsValid && (
- <p id="salary-invalid-hint" role="alert" className="mt-3 rounded-xl bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 dark:bg-red-950/40 dark:text-red-300">{invalidReason}</p>
+ <p key={invalidSubmission} id="salary-invalid-hint" role="alert" className="mt-3 rounded-xl bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 dark:bg-red-950/40 dark:text-red-300">{invalidReason}</p>
  )}
  </div>
 
