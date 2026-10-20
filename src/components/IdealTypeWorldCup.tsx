@@ -173,9 +173,9 @@ export default function IdealTypeWorldCup({ companies }: { companies: WorldcupCo
  // Match View
  <div className="w-full">
  {/* Round Indicator */}
- <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20 bg-electric/80 backdrop-blur-md px-6 py-2 rounded-full border border-white/10 text-white font-bold text-xl shadow-xl">
+ <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20 bg-card px-6 py-2 rounded-full border border-border text-card-foreground font-bold text-xl shadow-xl">
  {roundName}
- <span className="text-sm text-faint-blue ml-2 font-normal">
+ <span className="text-sm text-muted-foreground ml-2 font-normal">
  ({(currentPairIndex / 2) + 1} / {currentRound.length / 2})
  </span>
  </div>
@@ -218,7 +218,7 @@ function ContenderCard({ company, onClick, position }: { company: WorldcupCompan
  exit={{ opacity: 0, scale: 0.9 }}
  whileHover={{ scale: 1.02 }}
  whileTap={{ scale: 0.98 }}
- onClick={onClick}
+ tabIndex={-1}
  className={`
  relative h-full rounded-3xl overflow-hidden cursor-pointer group
  ${position === "left" ? "bg-gradient-to-br from-primary/20 to-blue-600/5 border-electric/20" : "bg-gradient-to-br from-red-500/10 to-red-600/5 border-canvas/20"}
@@ -266,6 +266,12 @@ function ContenderCard({ company, onClick, position }: { company: WorldcupCompan
  </span>
  </div>
  </div>
+ <button
+ type="button"
+ aria-label={`${company.nameKo} 선택`}
+ onClick={onClick}
+ className="ms-focus-card absolute inset-0 z-20 rounded-3xl bg-transparent"
+ />
  </motion.div>
  );
 }

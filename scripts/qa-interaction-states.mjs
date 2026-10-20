@@ -6,6 +6,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import qaSafety from './lib/qa-safety.cjs';
 import { collectInteractionText, assessInteractionText } from './lib/qa-interaction-evidence.mjs';
+import { isTranslationTransform, parseFlatShadows } from './lib/qa-focus-input-assessment.mjs';
 
 const { assertLocalQaTarget, assertQaEnvironment, launchQaBrowser, isAllowedQaRequest } = qaSafety;
 const { chromium } = createRequire(import.meta.url)('playwright-core');
@@ -17,7 +18,7 @@ export async function main() {
   assertQaEnvironment();
   const selected = process.env.QA_INTERACTION_CASES?.split(',').filter(Boolean);
   const report = { version: 1, base, startedAt: new Date().toISOString(), passed: false,
-    scope: 'Shared and distinct result/error renderers; four modal and three native radio families. Browser semantics and computed text contrast, not a screen-reader listening test or whole-site WCAG certification.',
+    scope: 'Shared and distinct result/error renderers; four modal and three native radio families; pointer-opened company help and pointer/keyboard Worldcup selections with sampled inset-focus geometry. Browser semantics and computed text contrast, not a screen-reader listening test or whole-site WCAG certification.',
     selectedCases: selected || null, completeMatrix: !selected, cases: [], documents: [],
     pageErrors: [], consoleErrors: [], forbiddenRequests: [], externalResponses: [], syntheticContactResponses: [] };
   await mkdir(OUTPUT, { recursive: true });
@@ -333,6 +334,170 @@ export async function main() {
       const captures = await page.evaluate(() => window.__MSY_CONTACT_FIXTURE_CALLS__);
       assert.deepEqual(captures, [429, 503, 'network-error']);
       report.syntheticContactResponses.push(...captures); item.noSubmission = true;
+    },
+    async 'company-hint'() {
+      await open('/company/simulator');
+      const trigger = page.locator('label[for="ms-simulator-field-2"] > .group > svg');
+      const tooltipSelector = 'label[for="ms-simulator-field-2"] > .group > div';
+      const tooltip = page.locator(tooltipSelector);
+      assert.equal(await trigger.count(), 1); assert.equal(await tooltip.count(), 1);
+      const checkbox = page.locator('#ms-simulator-field-2');
+      const before = {
+        youthRelief: await checkbox.isChecked(),
+        smeSalary: await page.locator('#ms-simulator-field-0').inputValue(),
+        largeSalary: await page.locator('#ms-simulator-field-1').inputValue(),
+      };
+      await page.mouse.move(0, 0);
+      await page.waitForFunction(selector => getComputedStyle(document.querySelector(selector)).opacity === '0', tooltipSelector);
+      await trigger.hover();
+      await page.waitForFunction(selector => {
+        const el = document.querySelector(selector);
+        return getComputedStyle(el).opacity === '1'
+          && el.getAnimations().every(animation => animation.playState !== 'running' && !animation.pending);
+      }, tooltipSelector);
+      const visible = await tooltip.evaluate(el => {
+        const box = el.getBoundingClientRect();
+        return { text: el.textContent.replace(/\s+/g, ' ').trim(), opacity: getComputedStyle(el).opacity,
+          inViewport: box.top >= 0 && box.left >= 0 && box.bottom <= innerHeight && box.right <= innerWidth };
+      });
+      assert(visible.text.includes('소득세 90% 감면·연 200만원 한도'));
+      assert.equal(visible.inViewport, true, 'The opened tooltip must fit in the captured viewport');
+      const after = {
+        youthRelief: await checkbox.isChecked(),
+        smeSalary: await page.locator('#ms-simulator-field-0').inputValue(),
+        largeSalary: await page.locator('#ms-simulator-field-1').inputValue(),
+      };
+      assert.deepEqual(after, before, 'Hover must not change the calculation inputs');
+      const screenshot = `company-hint-${item.width}-${item.theme}-tooltip.png`;
+      item.tooltip = { interaction: 'pointer-hover', hiddenBefore: true, visibleAfterHover: true,
+        inputsUnchanged: true, before, after, ...visible, screenshot };
+      // Preserve the actual opened state even when the subsequent contrast gate fails.
+      await page.screenshot({ path: path.join(OUTPUT, screenshot), fullPage: false });
+      await text(tooltipSelector, 'company youth tax relief hover explanation');
+    },
+    async 'worldcup-round'() {
+      await open('/fun/worldcup');
+      const roundSelector = 'main div.absolute.top-0[class~="left-1/2"]:has(> span)';
+      const round = page.locator(roundSelector);
+      await round.waitFor({ state: 'visible' }); assert.equal(await round.count(), 1);
+      const initial = (await round.textContent()).replace(/\s+/g, ' ').trim();
+      assert.match(initial, /^16강\s*\(1\s*\/\s*8\)$/);
+      const cards = page.locator('main .cursor-pointer:has(h3)');
+      assert.equal(await cards.count(), 2, 'A match must offer exactly two contenders');
+      const buttons = cards.locator('button.ms-focus-card');
+      async function names() {
+        assert.equal(await buttons.count(), 2);
+        const labels = [];
+        for (let i = 0; i < 2; i++) {
+          const company = (await cards.nth(i).locator('h3').textContent()).trim();
+          const label = await buttons.nth(i).getAttribute('aria-label');
+          assert.equal(label, `${company} 선택`);
+          assert.equal(await buttons.nth(i).getAttribute('type'), 'button');
+          labels.push(label);
+        }
+        return labels;
+      }
+      await names();
+      // Three selections stay in the first round; no winner/share path is opened.
+      await buttons.first().click();
+      await page.waitForFunction(selector => /^16강\s*\(2\s*\/\s*8\)$/.test(
+        document.querySelector(selector)?.textContent.replace(/\s+/g, ' ').trim() || ''), roundSelector);
+      await page.mouse.move(0, 0);
+      await round.scrollIntoViewIfNeeded();
+      const afterSelection = (await round.textContent()).replace(/\s+/g, ' ').trim();
+      assert.equal(await cards.count(), 2);
+      const screenshot = `worldcup-round-${item.width}-${item.theme}-indicator.png`;
+      item.roundIndicator = { interaction: 'pointer-selection', selections: 1, initial, afterSelection,
+        contenderCount: 2, screenshot, keyboardSelections: [], focusEvidence: [] };
+      await page.screenshot({ path: path.join(OUTPUT, screenshot), fullPage: false });
+      await text(roundSelector, 'worldcup active round after one selection');
+      async function focusedCard(button, key) {
+        const evidence = await button.evaluate(async el => {
+          const box = r => ({ x: r.x, y: r.y, width: r.width, height: r.height });
+          const chain = []; for (let node = el; node; node = node.parentElement) chain.push(node);
+          let previous = '', stableFrames = 0;
+          const deadline = performance.now() + 1500;
+          do {
+            await new Promise(resolve => requestAnimationFrame(resolve));
+            const current = JSON.stringify(chain.map(node => {
+              const cs = getComputedStyle(node);
+              return [box(node.getBoundingClientRect()), cs.transform, cs.opacity];
+            }));
+            const pending = chain.some(node => node.getAnimations().some(animation =>
+              (animation.playState === 'running' || animation.pending)
+              && Number.isFinite(animation.effect?.getComputedTiming().endTime)));
+            stableFrames = !pending && current === previous ? stableFrames + 1 : 0;
+            previous = current;
+          } while (stableFrames < 2 && performance.now() < deadline);
+          const cs = getComputedStyle(el), r = el.getBoundingClientRect();
+          const effects = chain.map(node => {
+            const style = getComputedStyle(node), rect = node.getBoundingClientRect();
+            return { tag: node.tagName, transform: style.transform, opacity: style.opacity,
+              filter: style.filter, backdropFilter: style.backdropFilter, clipPath: style.clipPath,
+              maskImage: style.maskImage, perspective: style.perspective, zoom: style.zoom,
+              overflowX: style.overflowX, overflowY: style.overflowY,
+              paddingBox: { left: rect.left + node.clientLeft, top: rect.top + node.clientTop,
+                right: rect.left + node.clientLeft + node.clientWidth,
+                bottom: rect.top + node.clientTop + node.clientHeight } };
+          });
+          // Midpoints avoid rounded corners. These samples prove only the stated
+          // straight-edge portions, not the entire perimeter or gradient surface.
+          const samples = ['top', 'right', 'bottom', 'left'].map(side => ({ side,
+            bands: [{ color: 'black', inset: 1 }, { color: 'white', inset: 3 }].map(band => {
+              const x = side === 'left' ? r.left + band.inset : side === 'right' ? r.right - band.inset : r.left + r.width / 2;
+              const y = side === 'top' ? r.top + band.inset : side === 'bottom' ? r.bottom - band.inset : r.top + r.height / 2;
+              const clippedBy = effects.slice(1).flatMap((effect, index) =>
+                (['hidden', 'clip', 'scroll', 'auto'].includes(effect.overflowX)
+                  && (x < effect.paddingBox.left || x >= effect.paddingBox.right)
+                || ['hidden', 'clip', 'scroll', 'auto'].includes(effect.overflowY)
+                  && (y < effect.paddingBox.top || y >= effect.paddingBox.bottom)) ? [index + 1] : []);
+              const inViewport = x >= 0 && x < innerWidth && y >= 0 && y < innerHeight;
+              const hit = inViewport ? document.elementFromPoint(x, y) : null;
+              return { ...band, x, y, inViewport, clippedBy, hitIsButton: hit === el,
+                visible: inViewport && clippedBy.length === 0 && hit === el };
+            }) }));
+          return { label: el.getAttribute('aria-label'), focused: document.activeElement === el,
+            focusVisible: el.matches(':focus-visible'), stableFrames, rect: box(r), effects, samples,
+            style: Object.fromEntries(['outlineStyle', 'outlineWidth', 'outlineOffset', 'outlineColor', 'boxShadow',
+              'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth'].map(name => [name, cs[name]])) };
+        });
+        const filename = `worldcup-round-${item.width}-${item.theme}-focus-${key.toLowerCase()}.png`;
+        evidence.screenshot = filename;
+        item.roundIndicator.focusEvidence.push(evidence);
+        await page.screenshot({ path: path.join(OUTPUT, filename), fullPage: false });
+        assert(evidence.focused && evidence.focusVisible && evidence.stableFrames >= 2);
+        assert(evidence.effects.every(effect => isTranslationTransform(effect.transform) && effect.opacity === '1'
+          && effect.filter === 'none' && effect.backdropFilter === 'none' && effect.clipPath === 'none'
+          && effect.maskImage === 'none' && effect.perspective === 'none' && effect.zoom === '1'), 'Unsupported focus geometry/effect');
+        assert.equal(evidence.style.outlineStyle, 'solid');
+        assert.equal(evidence.style.outlineColor, 'rgb(255, 255, 255)');
+        assert.equal(evidence.style.outlineWidth, '2px'); assert.equal(evidence.style.outlineOffset, '-4px');
+        for (const side of ['Top', 'Right', 'Bottom', 'Left']) assert.equal(evidence.style[`border${side}Width`], '0px');
+        const shadows = parseFlatShadows(evidence.style.boxShadow);
+        assert(!shadows.status && shadows.shadows.length === 1);
+        assert.deepEqual(shadows.shadows[0], { color: 'rgb(0, 0, 0)', inset: true, spread: 2 });
+        assert(evidence.samples.some(sample => sample.bands.every(band => band.visible)), 'Both inset bands need a co-visible straight-edge sample');
+        evidence.scope = 'Opaque white/black adjacent bands (21:1) with co-visible inset edge samples; no whole-gradient surface or whole-perimeter conformance claim';
+      }
+      // Pointer focus on the first button must become actual keyboard focus on
+      // the second button; no programmatic focus is used.
+      await page.keyboard.press('Tab'); item.keyboardTabs++;
+      await tabTo(buttons.nth(1));
+      for (const [key, index, expectedPair] of [['Enter', 1, 3], ['Space', 0, 4]]) {
+        if (key === 'Space') {
+          await page.keyboard.press('Shift+Tab'); item.keyboardTabs++;
+          assert.equal(await buttons.first().evaluate(el => el === document.activeElement), true);
+        }
+        const labels = await names();
+        await focusedCard(buttons.nth(index), key);
+        await page.keyboard.press(key);
+        await page.waitForFunction(({ selector, expectedPair }) => new RegExp(`^16강\\s*\\(${expectedPair}\\s*\\/\\s*8\\)$`).test(
+          document.querySelector(selector)?.textContent.replace(/\s+/g, ' ').trim() || ''), { selector: roundSelector, expectedPair });
+        await page.waitForTimeout(700); // Covers a second 600ms transition if one key accidentally activated twice.
+        const afterKey = (await round.textContent()).replace(/\s+/g, ' ').trim();
+        assert.match(afterKey, new RegExp(`^16강\\s*\\(${expectedPair}\\s*\\/\\s*8\\)$`));
+        item.roundIndicator.keyboardSelections.push({ key, buttonIndex: index, labels, expectedPair, afterKey, singlePairAdvance: true });
+      }
     },
     async yearEnd() {
       await open('/year-end-tax'); await announcement('year-end-tax');
