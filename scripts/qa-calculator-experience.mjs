@@ -662,12 +662,13 @@ try {
   await context.route('**/*', route => new URL(route.request().url()).origin === new URL(base).origin ? route.continue() : route.abort());
   if (participationMode === 'fixtures') await context.addInitScript(installParticipationFixtures);
   const page = await context.newPage();
-  await page.goto(base + (routes[0] || '/calc'), { waitUntil: 'domcontentloaded' });
+  // Finish guarded asset requests before reloading or closing this context.
+  await page.goto(base + (routes[0] || '/calc'), { waitUntil: 'networkidle', timeout: 120000 });
   await page.getByRole('button', { name: '라이트 모드 (다크로 전환)', exact: true }).click();
-  await page.reload({ waitUntil: 'domcontentloaded' });
+  await page.reload({ waitUntil: 'networkidle', timeout: 120000 });
   await page.waitForFunction(() => document.documentElement.classList.contains('dark'));
   await page.getByRole('button', { name: '다크 모드 (라이트로 전환)', exact: true }).click();
-  await page.reload({ waitUntil: 'domcontentloaded' });
+  await page.reload({ waitUntil: 'networkidle', timeout: 120000 });
   await page.waitForFunction(() => !document.documentElement.classList.contains('dark'));
   await context.close();
   assert.deepEqual(errors, []);
