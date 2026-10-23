@@ -125,6 +125,11 @@ describe("calculation result/error accessibility (offline hook and element fixtu
     for (const invalid of ["", "101"]) { change(tree, "accessible-fixtureamount", invalid); tree = render(simple); expect(announcement(tree, "simple")).toBe(""); expect(field(tree, "accessible-fixtureamount").props["aria-invalid"]).toBe(true); expect(nodes(tree).some(node => node.type === ResultSharePanel)).toBe(false); }
     change(tree, "accessible-fixtureamount", "100"); tree = render(simple); expect(announcement(tree, "simple")).toBe("최종 금액: 200원");
     const all = nodes(tree); expect(all.findIndex(node => node.type === CalcResultAd)).toBeLessThan(all.findIndex(node => node.type === ResultSharePanel));
+    const panel = all.find(node => node.type === ResultSharePanel)!;
+    expect(panel.props.url).toBe("https://www.moneysalary.com/calc/fixture");
+    expect(panel.props.imageUrl).toBeUndefined();
+    expect(panel.props.previewDescription).toContain("링크로 입력 조건을 복원할 수 없습니다");
+    expect(panel.props.title).toContain("200원");
   });
   it("English loan final result agrees with the displayed primary metric and clears on invalid input", () => {
     const component = () => { const element = EnglishToolCalculator({ slug: "loan" }); return (element.type as (p: unknown) => unknown)(element.props); };

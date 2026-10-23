@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { approvedResultUrl, defaultShareTitle, isSharePageReady, publicShareUrl, resolvePublicShare, resolveShareLocale, SHARE_ORIGIN, shareAnalyticsPath } from "../sharePolicy";
+import { approvedResultUrl, defaultShareTitle, isSharePageReady, publicShareImageUrl, publicShareUrl, resolvePublicShare, resolveShareLocale, SHARE_ORIGIN, shareAnalyticsPath } from "../sharePolicy";
 
 const context = { pathname: "/guides/example", canonical: `${SHARE_ORIGIN}/guides/example`, title: "Public guide", notFound: false };
 
@@ -54,10 +54,20 @@ describe("public share context and payload boundaries", () => {
     const path = "/%72eport";
     expect(isSharePageReady({ ...context, pathname: path, canonical: `${SHARE_ORIGIN}${path}` }, path)).toBe(false);
   });
-  it("only explicit result mode's helper preserves an approved legacy payload", () => {
+  it("result approval never permits input payloads in the destination URL", () => {
     const encoded = `${SHARE_ORIGIN}/calc/compound?v=encoded-inputs`;
-    expect(approvedResultUrl(encoded, context.canonical)).toBe(encoded);
+    expect(approvedResultUrl(encoded, context.canonical)).toBe(`${SHARE_ORIGIN}/calc/compound`);
     expect(publicShareUrl(encoded)).toBe(`${SHARE_ORIGIN}/calc/compound`);
     expect(approvedResultUrl("https://evil.example/value", context.canonical)).toBe(context.canonical);
+    expect(approvedResultUrl(`${SHARE_ORIGIN}/share/private-token?salary=987654321#family=4`, context.canonical)).toBe(`${SHARE_ORIGIN}/`);
+    expect(approvedResultUrl(`${SHARE_ORIGIN}/calc/samsung-bonus#s=987654321&d=memory`, context.canonical)).toBe(`${SHARE_ORIGIN}/calc/samsung-bonus`);
+    expect(approvedResultUrl(undefined, `${context.canonical}?salary=987654321#result`)).toBe(context.canonical);
+    expect(approvedResultUrl(undefined, "https://evil.example/private")).toBe(`${SHARE_ORIGIN}/`);
+  });
+  it("uses a public path/language card with the default OG title, ignoring caller image URLs and titles", () => {
+    const page = resolvePublicShare(context, { title: "Approved salary 987654321", imageUrl: `${SHARE_ORIGIN}/api/og?amount=987654321&net=123` });
+    expect(page.title).toBe("Approved salary 987654321");
+    expect(page.imageUrl).toBe(`${SHARE_ORIGIN}/api/og?path=%2Fguides%2Fexample&lang=ko`);
+    expect(publicShareImageUrl(`${SHARE_ORIGIN}/share/private?salary=987654321#private`, "en")).toBe(`${SHARE_ORIGIN}/api/og?path=%2F&lang=en`);
   });
 });

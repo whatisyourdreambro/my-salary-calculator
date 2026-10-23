@@ -2,8 +2,7 @@
 //
 // jsdom 없음 — src/lib/shareChannels.ts 의 순수 함수 withUtm 만 검증한다.
 // 배경: 카카오 인앱·링크 복사·웹공유 유입이 GA4 (direct) 23.5% 에 섞여 분해 불가였다.
-// withUtm 이 `?`/`#`/`/share/{base64}`/`?v=base64` 를 깨뜨리면 공유 링크 81% 파손
-// 사건(2026-08-30)이 재발하므로 경계 케이스를 고정한다.
+// 신규 공유에서는 개인 query/hash/token을 제거한다. 기존 링크 수신은 별도 decoder 회귀로 보존한다.
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { kakaoFeedImageSize, SHARE_CHANNELS, tryKakaoFeedShare, withUtm } from "@/lib/shareChannels";
@@ -23,9 +22,9 @@ describe("withUtm — 기본 결합", () => {
     );
   });
 
-  it("기존 쿼리가 있으면 & 로 이어 붙이고 기존 값은 보존", () => {
+  it("기존 쿼리는 개인값 여부와 무관하게 제거", () => {
     expect(withUtm(`${HOME}/?tab=severance`, "webshare")).toBe(
-      `${HOME}/?tab=severance&utm_source=webshare&utm_medium=share`
+      `${HOME}/?utm_source=webshare&utm_medium=share`
     );
   });
 
@@ -42,33 +41,33 @@ describe("withUtm — 기본 결합", () => {
   });
 });
 
-describe("withUtm — fragment 보존", () => {
-  it("# 앞에 utm 을 넣고 fragment 는 뒤로", () => {
+describe("withUtm — fragment 제거", () => {
+  it("앵커도 새 외부 URL에 전송하지 않음", () => {
     expect(withUtm(`${HOME}/guides/x#faq`, "kakao")).toBe(
-      `${HOME}/guides/x?utm_source=kakao&utm_medium=share#faq`
+      `${HOME}/guides/x?utm_source=kakao&utm_medium=share`
     );
   });
 
   it("쿼리+fragment 동시", () => {
     expect(withUtm(`${HOME}/calc/x?v=abc#result`, "copy")).toBe(
-      `${HOME}/calc/x?v=abc&utm_source=copy&utm_medium=share#result`
+      `${HOME}/calc/x?utm_source=copy&utm_medium=share`
     );
   });
 });
 
-describe("withUtm — 결과 재현 링크 무손상", () => {
-  it("/share/{base64} 경로 세그먼트(+ / = 포함)를 손대지 않는다", () => {
+describe("withUtm — 새 공유에는 결과 재현 payload 없음", () => {
+  it("기존 /share/{base64} 링크를 입력받아도 공용 홈 링크만 생성", () => {
     // btoa('{"annualSalary":50000000,"dependents":1}') 류 — 패딩 = 과 +,/ 가 섞일 수 있음
     const b64 = "eyJhbm51YWxTYWxhcnkiOjUwMDAwMDAwfQ+/==";
     const out = withUtm(`${HOME}/share/${b64}`, "kakao");
-    expect(out).toBe(`${HOME}/share/${b64}?utm_source=kakao&utm_medium=share`);
-    expect(out.split("?")[0].endsWith(`/share/${b64}`)).toBe(true);
+    expect(out).toBe(`${HOME}/?utm_source=kakao&utm_medium=share`);
+    expect(out).not.toContain(b64);
   });
 
-  it("SimpleCalculatorView 의 ?v=base64 값을 그대로 유지", () => {
+  it("SimpleCalculatorView 의 ?v=base64 값은 제거", () => {
     const v = "eyJzYWxhcnkiOjEwMH0=";
     expect(withUtm(`${HOME}/calc/opi?v=${v}`, "x")).toBe(
-      `${HOME}/calc/opi?v=${v}&utm_source=x&utm_medium=share`
+      `${HOME}/calc/opi?utm_source=x&utm_medium=share`
     );
   });
 });
@@ -82,16 +81,17 @@ describe("withUtm — 멱등·교체", () => {
     expect(twice.match(/utm_medium=/g)?.length).toBe(1);
   });
 
-  it("utm_campaign 등 다른 utm_* 은 보존", () => {
+  it("기존 캠페인도 제거하고 고정 채널만 사용", () => {
     expect(
       withUtm(`${HOME}/?utm_campaign=season&utm_source=embed&utm_medium=widget`, "kakao")
-    ).toBe(`${HOME}/?utm_campaign=season&utm_source=kakao&utm_medium=share`);
+    ).toBe(`${HOME}/?utm_source=kakao&utm_medium=share`);
   });
 
-  it("source 는 URL 인코딩", () => {
+  it("임의 source/medium에 개인값을 넣을 수 없음", () => {
     expect(withUtm(`${HOME}/`, "a b")).toBe(
-      `${HOME}/?utm_source=a%20b&utm_medium=share`
+      `${HOME}/?utm_source=copy&utm_medium=share`
     );
+    expect(withUtm(`${HOME}/`, "kakao", "salary-987654321")).toBe(`${HOME}/?utm_source=kakao&utm_medium=share`);
   });
 });
 
@@ -133,14 +133,13 @@ describe("kakaoFeedImageSize — 우리 OG 카드에만 크기 힌트", () => {
     expect(kakaoFeedImageSize("https://preview.moneysalary.pages.dev/api/og?type=salary&amount=1")).toEqual({ imageWidth: 1200, imageHeight: 630 });
   });
 
-  it("tryKakaoFeedShare content 에 imageWidth·imageHeight 가 실린다 (외부 이미지는 없음)", () => {
+  it("Kakao에는 호출자가 준 개인 OG나 외부 이미지 대신 공용 카드만 전송", () => {
     const sendDefault = vi.fn();
     vi.stubGlobal("window", { location: { host: "www.moneysalary.com" }, Kakao: { isInitialized: () => true, Share: { sendDefault } } });
     expect(tryKakaoFeedShare({ url: `${HOME}/calc/x`, title: "t", imageUrl: `${HOME}/api/og?type=tool&name=x` })).toBe(true);
-    expect(sendDefault.mock.calls[0][0].content).toMatchObject({ imageUrl: `${HOME}/api/og?type=tool&name=x`, imageWidth: 1200, imageHeight: 630 });
+    expect(sendDefault.mock.calls[0][0].content).toMatchObject({ imageUrl: `${HOME}/api/og?path=%2Fcalc%2Fx&lang=ko`, imageWidth: 1200, imageHeight: 630 });
     tryKakaoFeedShare({ url: `${HOME}/calc/x`, title: "t", imageUrl: "https://example.com/a.png" });
     const content = sendDefault.mock.calls[1][0].content;
-    expect(content).not.toHaveProperty("imageWidth");
-    expect(content).not.toHaveProperty("imageHeight");
+    expect(content).toMatchObject({ imageUrl: `${HOME}/api/og?path=%2Fcalc%2Fx&lang=ko`, imageWidth: 1200, imageHeight: 630 });
   });
 });

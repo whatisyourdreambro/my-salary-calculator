@@ -1,4 +1,4 @@
-/** Public page sharing policy. Result data must be explicitly approved by its caller. */
+/** Public URLs only. Explicit result approval permits text/local files, never URL-encoded inputs. */
 export const SHARE_ORIGIN = "https://www.moneysalary.com";
 export type ShareLocale = "ko" | "en";
 export type ShareMode = "page" | "result";
@@ -40,8 +40,6 @@ export interface SharePageContext {
   canonical: string | null;
   title: string;
   notFound: boolean;
-  /** Calculator-declared result URL ([data-share-result-url], same-site + fragment). Page-mode share never carries it. */
-  resultUrl?: string | null;
 }
 
 /** A previous route's head must not become the next route's share title. */
@@ -69,20 +67,20 @@ export function resolvePublicShare(
   const resolvedUrl = (overrides.url ? publicShareUrl(overrides.url) : null) ?? currentUrl;
   const title = (overrides.title ?? (!legacy && resolvedUrl === currentUrl ? context.title.trim() : "")) || defaultShareTitle(locale);
   const description = overrides.description ?? (locale === "en" ? "Explore salary tools and practical guides." : "연봉 계산기와 생활에 필요한 가이드를 확인하세요.");
-  const imageUrl = overrides.imageUrl ?? `${SHARE_ORIGIN}/api/og?path=${encodeURIComponent(new URL(resolvedUrl).pathname)}&title=${encodeURIComponent(title)}&lang=${locale}`;
+  // Caller titles/image URLs can contain approved result text. Never turn that text into a remote image request.
+  const imageUrl = publicShareImageUrl(resolvedUrl, locale);
   return { url: resolvedUrl, title, description, imageUrl, locale };
 }
 
-/** Result URLs may preserve legacy data only after explicit result approval. */
+/** The approval covers visible text/local images, not personal data hidden in links. */
 export function approvedResultUrl(input: string | undefined, pageUrl: string): string {
-  if (!input) return pageUrl;
-  try {
-    const url = new URL(input, SHARE_ORIGIN);
-    if (url.origin !== SHARE_ORIGIN || url.username || url.password || /[\\\u0000-\u001f\u007f]/.test(input) || isShareExcludedPath(url.pathname)) return pageUrl;
-    return url.href;
-  } catch {
-    return pageUrl;
-  }
+  return (input ? publicShareUrl(input) : null) ?? publicShareUrl(pageUrl) ?? `${SHARE_ORIGIN}/`;
+}
+
+/** Public path/language with the OG renderer's default title; no caller title or personal result data. */
+export function publicShareImageUrl(pageUrl: string, locale: ShareLocale): string {
+  const path = new URL(publicShareUrl(pageUrl) ?? `${SHARE_ORIGIN}/`).pathname;
+  return `${SHARE_ORIGIN}/api/og?path=${encodeURIComponent(path)}&lang=${locale === "en" ? "en" : "ko"}`;
 }
 
 export function shareAnalyticsPath(path: string): string {

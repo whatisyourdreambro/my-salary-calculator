@@ -15,8 +15,6 @@ function refresh() {
     canonical: document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href ?? null,
     title: document.title,
     notFound: !!document.querySelector('[data-page-state="not-found"]'),
-    // 계산기가 선언한 공유 상태 URL(해시) — FloatingShareBar 결과 모드 동기 (삼성 S2-0). 없으면 null.
-    resultUrl: document.querySelector<HTMLElement>("[data-share-result-url]")?.getAttribute("data-share-result-url") ?? null,
   };
   if (JSON.stringify(next) === JSON.stringify(snapshot)) return;
   snapshot = next;
@@ -28,7 +26,7 @@ function subscribe(listener: () => void) {
   if (listeners.size === 1) {
     // One observer shared by inline, compact, fallback and floating controls.
     observer = new MutationObserver(refresh);
-    observer.observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ["href", "data-page-state", "data-share-result-url"] });
+    observer.observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ["href", "data-page-state"] });
     window.addEventListener("popstate", refresh);
   }
   refresh();

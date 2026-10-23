@@ -12,8 +12,10 @@ assertQaEnvironment();
 const contrastOnly = process.env.QA_CONTRAST_ONLY === '1';
 if (contrastOnly) assert(process.env.QA_ROUTES, 'Contrast-only QA requires explicit QA_ROUTES');
 const receiptMode = process.env.QA_RECEIPT_MODE || '';
+const sharePrivacyMode = process.env.QA_SHARE_PRIVACY_MODE === '1';
 if (!['', 'public', 'legacy'].includes(receiptMode)) throw new Error('QA_RECEIPT_MODE must be public or legacy.');
 if (receiptMode && contrastOnly) throw new Error('Receipt and contrast audits must run separately.');
+if (sharePrivacyMode && (receiptMode || contrastOnly)) throw new Error('Share privacy must run separately from receipt and contrast audits.');
 const runLabel = process.env.QA_RUN_LABEL || '';
 if (runLabel && !/^[a-z0-9][a-z0-9-]{0,63}$/.test(runLabel)) throw new Error('QA_RUN_LABEL must be a short lowercase name without paths.');
 const output = path.resolve('.artifacts/experience-qa', runLabel || (receiptMode ? `receipt-${receiptMode}` : contrastOnly ? 'contrast' : '.'));
@@ -29,6 +31,94 @@ const participationTargets = {
   '/civil-servant-pay-2027': 'civil_pay_2027',
   '/salary-db/samsung-electronics': 'samsung_company',
 };
+
+// In-memory delivery fixtures only: no system clipboard, native share sheet,
+// SDK transport, popup or recipient. The network guard exists before the page.
+function installShareDeliveryFixtures() {
+  const calls = [];
+  window.__QA_SHARE_DELIVERIES__ = calls;
+  Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: async text => { calls.push({kind:'copy',text}); } } });
+  Object.defineProperty(navigator, 'share', { configurable: true, value: async data => { calls.push({kind:'native',url:data.url ?? null,text:data.text ?? '',fileCount:data.files?.length ?? 0}); } });
+  Object.defineProperty(navigator, 'canShare', { configurable: true, value: () => true });
+  window.open = url => { calls.push({kind:'intent',url:String(url)}); return null; };
+  window.Kakao = {isInitialized: () => true, Share:{sendDefault: payload => { calls.push({kind:'kakao',payload}); }}};
+}
+
+async function auditSharePrivacy(browser) {
+  const token = Buffer.from(JSON.stringify({v:1,taxYear:2026,incomeType:'regular',annualSalary:72345678,nonTaxableAmount:200000,dependents:2,children:1})).toString('base64url');
+  const fixtures = [
+    {name:'salary',route:'/?salary=987654321#private-inputs',destination:'/'},
+    {name:'simple',route:'/calc/refinance-break-even?v=private-inputs#private-inputs',destination:'/calc/refinance-break-even'},
+    {name:'samsung',route:'/calc/samsung-bonus#d=memory&s=72345678&p=380&y=2026&o1=50&ac=0&ins=1',destination:'/calc/samsung-bonus'},
+    {name:'legacy',route:`/share/${token}`,destination:'/'},
+  ];
+  function publicDestination(value, pathname, channel) {
+    const url = new URL(value);
+    assert.equal(url.origin, 'https://www.moneysalary.com');
+    assert.equal(url.pathname, pathname);
+    assert.equal(url.hash, '');
+    assert.deepEqual([...url.searchParams], [['utm_source',channel],['utm_medium','share']]);
+  }
+  for (const theme of ['light','dark']) {
+    const context = await browser.newContext({viewport:{width:390,height:844},colorScheme:theme,serviceWorkers:'block'});
+    await context.addInitScript(theme => localStorage.setItem('theme',theme), theme);
+    await context.addInitScript(installShareDeliveryFixtures);
+    const externalResponses = [], nonReadRequests = [];
+    context.on('response', response => { if (new URL(response.url()).origin !== base) externalResponses.push(response.url()); });
+    context.on('request', request => { if (!['GET','HEAD'].includes(request.method())) nonReadRequests.push(request.method()); });
+    const page = await context.newPage();
+    page.on('pageerror', error => errors.push(error.message));
+    try {
+      for (const fixture of fixtures) {
+        const response = await page.goto(base + fixture.route, {waitUntil:'networkidle',timeout:120000});
+        assert.equal(response?.status(),200,fixture.name);
+        assert.equal(response.headers()['x-moneysalary-qa'],'ads-disabled');
+        if (fixture.name === 'salary') {
+          await page.getByLabel('계약 연봉',{exact:true}).fill('72345678');
+          await page.getByRole('button',{name:'결과 확인하기',exact:true}).click();
+        }
+        const panel = page.locator('[data-result-share-panel]').first();
+        await panel.waitFor({state:'visible',timeout:30000});
+        await panel.locator('[data-share-mode="page"]').getByRole('button',{name:'링크 복사',exact:true}).click();
+        let calls = await page.evaluate(() => window.__QA_SHARE_DELIVERIES__);
+        assert.equal(calls.length,1);
+        publicDestination(calls[0].text,fixture.destination,'copy');
+        await panel.getByRole('button',{name:/^(현재 결과 미리보기|결과·이미지 미리보기)$/}).click();
+        await panel.getByRole('button',{name:'이 내용으로 공유',exact:true}).click({timeout:30000});
+        const result = panel.locator('[data-share-mode="result"]');
+        await result.getByRole('button',{name:'결과 문구·링크 복사',exact:true}).click();
+        calls = await page.evaluate(() => window.__QA_SHARE_DELIVERIES__);
+        assert.equal(calls.length,2);
+        assert(calls[1].text.split('\n').length > 1,'Approved result text remains explicit');
+        publicDestination(calls[1].text.split('\n').at(-1),fixture.destination,'copy');
+        await result.getByRole('button',{name:'카카오톡',exact:true}).click();
+        calls = await page.evaluate(() => window.__QA_SHARE_DELIVERIES__);
+        const kakao = calls.at(-1);
+        assert.equal(kakao.kind,'kakao');
+        publicDestination(kakao.payload.content.link.webUrl,fixture.destination,'kakao');
+        const image = new URL(kakao.payload.content.imageUrl);
+        assert.equal(image.origin,'https://www.moneysalary.com');
+        assert(!/72345678|987654321|private-inputs|type=salary|dependents|children/.test(image.href));
+        await result.getByRole('button',{name:/^(공유하기|결과 이미지 공유)$/}).click();
+        calls = await page.evaluate(() => window.__QA_SHARE_DELIVERIES__);
+        const native = calls.at(-1);
+        assert.equal(native.kind,'native');
+        publicDestination(native.url ?? native.text.split('\n').at(-1),fixture.destination,'webshare');
+        assert.equal(native.fileCount,fixture.name === 'simple' ? 1 : 0,'Prepared local image remains attached only when offered');
+        assert.equal(await page.locator('[data-share-result-url]').count(),0,'No result URL for floating-share bypass');
+        if (fixture.name === 'legacy') {
+          assert.match(await page.locator('main').first().innerText(),/72,345,678/,'Old payload still renders');
+          assert.equal(await page.locator('meta[property="og:image"]').getAttribute('content'),'https://www.moneysalary.com/og-default.png');
+        }
+        assert.equal(await page.locator('#msy-ga-loader,#msy-adsense-loader,ins.adsbygoogle').count(),0);
+        report.push({theme,name:fixture.name,publicDestination:fixture.destination,deliveryModes:['page-copy','approved-result-copy','stub-kakao','stub-native'],passed:true});
+      }
+      assert.deepEqual(externalResponses,[],'No external response reached the isolated browser');
+      assert.deepEqual(nonReadRequests,[],'No non-read request attempted');
+    } finally { await context.close(); }
+  }
+  assert.deepEqual(errors,[]);
+}
 
 // In-memory responses only. The normal transport guard still rejects every POST.
 // Exact loopback paths are intercepted before network; all other fetches retain
@@ -719,7 +809,8 @@ async function auditContrastCases(browser) {
 await fs.mkdir(output, { recursive: true });
 const browser = await launchQaBrowser(chromium, base, { headless: true, ...(process.platform === 'win32' ? { channel: 'chrome' } : {}) });
 try {
-  if (receiptMode) await auditReceiptCompatibility(browser);
+  if (sharePrivacyMode) await auditSharePrivacy(browser);
+  else if (receiptMode) await auditReceiptCompatibility(browser);
   else if (contrastOnly) await auditContrastCases(browser);
   else {
   for (const theme of ['light', 'dark']) {
@@ -934,10 +1025,12 @@ try {
   assert.deepEqual(errors, []);
   }
 } finally {
-  await fs.writeFile(path.join(output, 'summary.json'), JSON.stringify({ mode: receiptMode ? `receipt-${receiptMode}` : contrastOnly ? 'contrast-only' : 'experience', report, interactionReport, errors }, null, 2));
+  await fs.writeFile(path.join(output, 'summary.json'), JSON.stringify({ mode: sharePrivacyMode ? 'share-privacy' : receiptMode ? `receipt-${receiptMode}` : contrastOnly ? 'contrast-only' : 'experience', report, interactionReport, errors }, null, 2));
   await browser.close();
 }
-console.log(receiptMode
+console.log(sharePrivacyMode
+  ? `PASS: ${report.length} share privacy cases; public destinations, explicit result text and isolated delivery fixtures.`
+  : receiptMode
   ? `PASS: ${report.length} ${receiptMode} receipt cases; immutable actual-v1 retries, terminal consent/reset gate and no API transport.`
   : contrastOnly
   ? `PASS: ${report.length} contrast cases and ${interactionReport.length} hover/focus cases; all measured or conservatively bounded above threshold; no unassessed paint.`

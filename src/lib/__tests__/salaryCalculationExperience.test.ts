@@ -7,6 +7,7 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import MoneyInput from "@/components/ui/MoneyInput";
 import { InArticleAd, ResultAd } from "@/components/AdPlacement";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
+import ResultSharePanel from "@/components/ResultSharePanel";
 
 type Slot = { value?: unknown; dependencies?: readonly unknown[]; cleanup?: (() => void) | void };
 const fixture = vi.hoisted(() => ({
@@ -139,6 +140,15 @@ describe("salary result user action lifecycle (offline hook/element fixture)", (
     const cardNodes = nodes(cardTree);
     expect(cardNodes.filter((node) => node.type === InArticleAd)).toHaveLength(1);
     expect(cardNodes.findIndex((node) => node.props["data-salary-result-summary"] !== undefined)).toBeLessThan(cardNodes.findIndex((node) => node.type === InArticleAd));
+  });
+
+  it("new salary result sharing keeps personal values in approved text, never in destination or OG URLs", () => {
+    let tree = changeIncome(render(), "98,765,432"); tree = click(tree, "결과 확인하기");
+    const panel = nodes(tree).find(node => node.type === ResultSharePanel)!;
+    expect(panel.props.url).toBe("https://www.moneysalary.com/");
+    expect(panel.props.imageUrl).toBeUndefined();
+    expect(panel.props.previewDescription).toContain("입력 조건을 복원할 수 없습니다");
+    expect(String(panel.props.title)).toContain("9,877만원");
   });
 
   it("associates invalid salary attempts with that field and clears the relationship after recovery", () => {

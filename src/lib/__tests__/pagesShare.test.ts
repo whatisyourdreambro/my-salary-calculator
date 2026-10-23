@@ -8,7 +8,6 @@ import {
   readPagesShareBootstrap, renderShareResultHtml, renderShareIslandHtml, serializePagesShareBootstrap,
 } from "@/lib/pagesShare";
 import { decodeSharedSalary, encodeSalarySharePayload } from "@/lib/salarySharePayload";
-import { salaryOgImagePath } from "@/lib/ogUrlVersion";
 
 vi.mock("@/components/AppLink", () => ({ default: ({ children, ...props }: Record<string, unknown>) => createElement("a", props, children as string) }));
 vi.mock("@/components/AdPlacement", () => ({ CalcResultAd: () => createElement("div", { "data-test-ad": true }) }));
@@ -33,7 +32,7 @@ const links = (html: string) => [...html.matchAll(/href="([^"]*)"/g)].map(match 
 afterEach(() => vi.unstubAllGlobals());
 
 describe("Pages share document bridge", () => {
-  it.each(cases)("keeps the existing SSR numbers, labels, inputs, links and OG contract: %j", payload => {
+  it.each(cases)("keeps legacy SSR numbers, labels, inputs and content links, with private-free OG: %j", payload => {
     const token = encodeSalarySharePayload(payload)!;
     const model = getPagesShareModel(token);
     expect(model.valid).toBe(true);
@@ -43,14 +42,14 @@ describe("Pages share document bridge", () => {
     const nextHtml = renderShareResultHtml(model, { reserveAd: false });
     expect(plain(nextHtml)).toBe(plain(oldHtml));
     expect(links(nextHtml)).toEqual(links(oldHtml));
-    expect(model.canonicalUrl).toBe(`https://www.moneysalary.com/share/${token}`);
-    expect(model.imageUrl).toBe(`https://www.moneysalary.com${salaryOgImagePath(model.decoded.annualSalary, model.decoded.monthlyNet)}`);
+    expect(model.canonicalUrl).toBe("https://www.moneysalary.com/");
+    expect(model.imageUrl).toBe("https://www.moneysalary.com/og-default.png");
+    expect(model.metadataTitle).toBe("공유된 연봉 결과 | 머니샐러리");
+    expect(model.openGraphTitle).toBe("공유된 연봉 결과");
     expect(model.robots).toBe("noindex, nofollow");
     expect(model.previewDescription).toContain("공개해도 되는지 확인");
     expect(model.shareTitle).toBe(`${model.decoded.regular ? "연봉" : "연 환산 소득"} ${model.decoded.annualSalary.toLocaleString("ko-KR")}원 · 월 수령 추정 ${model.decoded.monthlyNet.toLocaleString("ko-KR")}원`);
-    if ("annualSalary" in payload) {
-      expect(model.previewDescription).toContain(`월 비과세액 ${payload.nonTaxableAmount.toLocaleString("ko-KR")}원`);
-    }
+    expect(model.previewDescription).toContain("입력 조건을 복원할 수 없습니다");
     expect(nextHtml).not.toMatch(/<script|<iframe|<img|onerror=|onclick=/i);
   });
 

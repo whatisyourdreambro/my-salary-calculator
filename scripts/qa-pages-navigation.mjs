@@ -102,9 +102,9 @@ export async function main() {
       initialValid = await shareSnapshot(plain);
       assert.match(initialValid.cardText, /50,000,000원/);
       assert.match(initialValid.cardText, /월 수령 추정액/);
-      assert.match(initialValid.title, /5,000만원/);
-      assert.equal(initialValid.ogUrl, `https://www.moneysalary.com${VALID_SHARE}`);
-      assert.match(initialValid.ogImage, /^https:\/\/www\.moneysalary\.com\/api\/og\?type=salary&/);
+      assert.equal(initialValid.title, '공유된 연봉 결과 | 머니샐러리');
+      assert.equal(initialValid.ogUrl, 'https://www.moneysalary.com/');
+      assert.equal(initialValid.ogImage, 'https://www.moneysalary.com/og-default.png');
       assert.match(initialValid.robots, /noindex/);
       assert.equal(initialValid.ogTitle, initialValid.twitterTitle);
       return { title: initialValid.title, resultInInitialDocument: true, metadataInInitialDocument: true };

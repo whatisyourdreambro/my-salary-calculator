@@ -118,8 +118,8 @@ export default function FloatingShareBar() {
       className="md:hidden fixed left-1/2 -translate-x-1/2 z-40 max-w-[calc(100vw-1rem)] share-bar-in"
       style={{ bottom: "calc(1.25rem + env(safe-area-inset-bottom))" }}>
       <div className="flex items-start gap-2 rounded-2xl border border-slate-300 bg-white p-2 shadow-xl dark:border-slate-600 dark:bg-slate-900">
-        {/* 계산기가 [data-share-result-url] 로 선언한 상태 URL(해시)이 있으면 결과 모드로 동기 — approvedResultUrl 이 같은 사이트만 허용 */}
-        <ShareButtons variant="floating" register={false} contentType={CONTENT_TYPE} {...(context.resultUrl ? { shareMode: "result" as const, url: context.resultUrl, resultKey: context.resultUrl } : {})} />
+        {/* 빠른 공유는 언제나 공용 페이지 링크. 개인 결과는 명시적인 미리보기에서만 승인한다. */}
+        <ShareButtons variant="floating" register={false} contentType={CONTENT_TYPE} />
         <button type="button" onClick={handleDismiss} aria-label={en ? "Close quick sharing" : "공유 바 닫기"} className="flex min-w-11 min-h-11 items-center justify-center rounded-full text-slate-600 focus-visible:ring-2 focus-visible:ring-electric dark:text-slate-200"><X className="w-5 h-5" /></button>
       </div>
     </div>

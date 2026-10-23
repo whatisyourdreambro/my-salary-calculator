@@ -38,7 +38,7 @@ const validPng = png();
 const generic = '<html><head><title>Fixture</title></head><body><main>Fixture</main><script src="https://ads.example.invalid/never-requested.js"></script></body></html>';
 function htmlFor(item) {
   if (item.english404) return english404;
-  if (item.shareToken) return `<html><head><title>연봉 5,000만원 · 월 수령 추정 400만원 | 머니샐러리</title></head><body><main>50,000,000</main><script id="msy-pages-share-bootstrap" type="application/json">${JSON.stringify({ v: 1, token: item.shareToken })}</script></body></html>`;
+  if (item.shareToken) return `<html><head><title>공유된 연봉 결과 | 머니샐러리</title></head><body><main>50,000,000</main><script id="msy-pages-share-bootstrap" type="application/json">${JSON.stringify({ v: 1, token: item.shareToken })}</script></body></html>`;
   if (item.invalidShare) return '<html><head><title>공유된 연봉 결과 | 머니샐러리</title></head><body><div data-pages-share-invalid="true">Invalid</div></body></html>';
   return generic;
 }

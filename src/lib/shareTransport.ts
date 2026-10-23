@@ -1,4 +1,5 @@
 import { SHARE_CHANNELS, withUtm, type ShareChannelId, type KakaoFeedPayload } from "./shareChannels";
+import { publicShareImageUrl } from "./sharePolicy";
 
 export type ShareOutcome = "native_handoff" | "sdk_requested" | "intent_requested" | "clipboard_success" | "aborted" | "error" | "manual_copy_shown";
 export type ShareErrorKind = "permission" | "unsupported" | "invalid" | "busy" | "unavailable";
@@ -47,7 +48,7 @@ export async function sendShare(channel: ShareChannelId, payload: TransportPaylo
   };
   if (channel === "copy") return copy();
   if (channel === "kakao") {
-    const invoked = transport.kakao({ ...payload, url, locale: payload.locale, buttonTitle: payload.locale === "en" ? "View" : "자세히 보기" });
+    const invoked = transport.kakao({ ...payload, url, imageUrl: publicShareImageUrl(url, payload.locale), locale: payload.locale, buttonTitle: payload.locale === "en" ? "View" : "자세히 보기" });
     return invoked ? { outcome: "sdk_requested" } : copy(payload.shareMode === "result" ? copyText : `${payload.title}\n${url}`);
   }
   if (channel === "webshare" || channel === "instagram") {
