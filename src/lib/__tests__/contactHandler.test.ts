@@ -36,7 +36,7 @@ function storage(seed?: { hash: string; version: string }) {
       return statement;
     },
     batch: vi.fn(async (statements: FeedbackStatement[]): Promise<FeedbackResult[]> => {
-      if (statements.length === 1) return [{ success: true, meta: {}, results: savedHash ? [{ payload_hash: savedHash, consent_version: savedVersion }] : [] }];
+      if (statements.length === 1) return [{ success: true, meta: {}, results: savedHash ? [{ payload_hash: savedHash, consent_version: savedVersion, expires_at: Math.floor(now / 1000) + CONTACT_RETENTION_SECONDS }] : [] }];
       const insert = statements[1] as Statement;
       const replay = savedHash !== undefined;
       if (!replay) savedVersion = insert.values[7] as string;
@@ -44,7 +44,7 @@ function storage(seed?: { hash: string; version: string }) {
       return [
         { success: true, meta: { changes: replay ? 0 : 1 }, results: [] },
         { success: true, meta: { changes: replay ? 0 : 1 }, results: [] },
-        { success: true, meta: { changes: 0 }, results: [{ payload_hash: savedHash }] },
+        { success: true, meta: { changes: 0 }, results: [{ payload_hash: savedHash, consent_version: savedVersion, expires_at: Math.floor(now / 1000) + CONTACT_RETENTION_SECONDS }] },
       ];
     }),
   };
@@ -269,7 +269,7 @@ describe("contact moderation and version-stable receipts", () => {
 
   it("confirms an unchanged receipt using its saved contract even after the policy changes", async () => {
     const body = "씨발";
-    const version = "contact-v0";
+    const version = "contact-v1";
     const hash = await feedbackPayloadHash(JSON.stringify([input.type, input.pagePath, body, null, false, version]));
     const { db, bindings } = storage({ hash, version });
     const result = await handleContactPost(request({ ...input, body }), bindings, now);

@@ -36,7 +36,9 @@ jobs:
   verify:
     if: github.event_name != 'schedule' && github.event_name != 'workflow_dispatch'
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # Keep the complete keyboard/interaction matrix: the focus audit alone can
+    # take 27 minutes, and browser dependency downloads can add several minutes.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7.0.1
         with:
@@ -132,6 +134,7 @@ jobs:
           npm run qa:pages:http
           npm run qa:run -- scripts/qa-pages-navigation.mjs
           QA_ROUTES="/calc/samsung-bonus,/,/car-loan,/salary-db/lig-nex1" npm run qa:run -- scripts/qa-calculator-experience.mjs
+          QA_RECEIPT_MODE=legacy QA_RUN_LABEL=receipt-legacy npm run qa:run -- scripts/qa-calculator-experience.mjs
           npm run qa:run -- scripts/__tests__/qa-saved-recalculation.mjs
           QA_CONTRAST_ONLY=1 QA_ROUTES="/table/2026/monthly,/table/2027/monthly,/job/safety-engineer,/job/software-engineer" npm run qa:run -- scripts/qa-calculator-experience.mjs
           QA_FOCUS_FORCED_COLORS=1 npm run qa:run -- scripts/qa-focus-input.mjs

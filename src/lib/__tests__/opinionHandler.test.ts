@@ -18,10 +18,10 @@ function storage(cleanup: unknown = seconds, saved?: string) {
     batch: vi.fn(async (items: FeedbackStatement[]): Promise<FeedbackResult[]> => {
       const statements = items as Statement[];
       if (statements[0].sql === PARTICIPATION_HEALTH_SQL) return [{ success: true, meta: {}, results: cleanup === null ? [] : [{ last_cleanup_at: cleanup }] }];
-      if (statements[0].sql === OPINION_RECEIPT_LOOKUP) return [{ success: true, meta: {}, results: hash ? [{ payload_hash: hash, contract_version: input.contractVersion }] : [] }];
+      if (statements[0].sql === OPINION_RECEIPT_LOOKUP) return [{ success: true, meta: {}, results: hash ? [{ payload_hash: hash, contract_version: input.contractVersion, expires_at: seconds + OPINION_RETENTION_SECONDS }] : [] }];
       const duplicate = hash !== undefined;
       hash ??= statements[1].values[1] as string;
-      return [0, 1, 2, 3].map(index => ({ success: true, meta: { changes: index < 3 && !duplicate ? 1 : 0 }, results: index === 3 ? [{ payload_hash: hash, contract_version: input.contractVersion }] : [] }));
+      return [0, 1, 2, 3].map(index => ({ success: true, meta: { changes: index < 3 && !duplicate ? 1 : 0 }, results: index === 3 ? [{ payload_hash: hash, contract_version: input.contractVersion, expires_at: seconds + OPINION_RETENTION_SECONDS }] : [] }));
     }),
   };
   const bindings: ParticipationBindings = { FEEDBACK_DB: db, FEEDBACK_RATE_LIMIT_SECRET: "test-only-long-secret-for-private-opinions-123", PARTICIPATION_OPINIONS_ENABLED: "1" };

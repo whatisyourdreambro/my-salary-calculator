@@ -12,11 +12,23 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 SCHEMA = "\n".join((ROOT / name).read_text(encoding="utf-8") for name in (
     "migrations/0001_private_contact.sql", "migrations/0002_fixed_feedback.sql",
     "migrations/0003_private_opinions.sql", "migrations/0004_public_reactions.sql"))
-SOURCE = (ROOT / "src/lib/server/opinionSql.ts").read_text(encoding="utf-8")
-SQL = dict(re.findall(r"(\w+):\s*`([^`]+)`", SOURCE, re.S))
+
+
+def statements(name):
+    source = (ROOT / f"src/lib/server/{name}.ts").read_text(encoding="utf-8")
+    sql = dict(re.findall(r"(\w+):\s*`([^`]+)`", source, re.S))
+    constants = dict(re.findall(r'export const (\w+)\s*=\s*"([^"\r\n]+)";', source))
+    for key, alias in re.findall(r"(\w+):\s*([A-Z][A-Z0-9_]+)\s*,", source):
+        sql[key] = constants[alias]  # Explicit exports only; no JS evaluation.
+    return sql
+
+
+SQL = statements("opinionSql")
 assert set(SQL) == {"reserveRate", "insertOpinion", "countAccepted", "receipt"}
 NOW = 1800000000
 DAY = NOW // 86400 * 86400
+OPINION_RECEIPT = ("hash", "private-opinion-v1", NOW + 90 * 86400)
+REACTION_RECEIPT = ("hash", "public-reaction-v1", NOW + 90 * 86400)
 
 
 def submit(db, receipt, bucket="opaque-hmac", daily=100, payload="hash"):
@@ -47,9 +59,12 @@ for cleanup in (None, NOW - 26 * 3600 - 1, NOW - 26 * 3600, NOW + 1):
 assert db.execute("SELECT COUNT(*) FROM feedback_rate_limits").fetchone() == (0,)
 db.execute("UPDATE participation_health SET last_cleanup_at=? WHERE id=1", (NOW - 26 * 3600 + 1,))
 db.commit()
-assert submit(db, "one") == (1, 1, 1, ("hash", "private-opinion-v1"))
-assert submit(db, "one") == (0, 0, 0, ("hash", "private-opinion-v1"))
-assert submit(db, "one", payload="conflict") == (0, 0, 0, ("hash", "private-opinion-v1"))
+assert submit(db, "one") == (1, 1, 1, OPINION_RECEIPT)
+assert submit(db, "one") == (0, 0, 0, OPINION_RECEIPT)
+assert submit(db, "one", payload="conflict") == (0, 0, 0, OPINION_RECEIPT)
+before_lookup = db.total_changes
+assert db.execute(SQL["receipt"], ("one",)).fetchone() == OPINION_RECEIPT
+assert db.total_changes == before_lookup
 assert submit(db, "two")[1] == 1
 assert submit(db, "three")[1] == 1
 assert submit(db, "four") == (0, 0, 0, None)
@@ -99,8 +114,8 @@ with tempfile.TemporaryDirectory(prefix="moneysalary-participation-test-") as di
 
 print("PASS: private opinions, replay, conflict, IP/global limits, health gate, atomic rollback, expiry, 24 concurrent writes capped at 7.")
 
-REACTIONS = dict(re.findall(r"(\w+):\s*`([^`]+)`", (ROOT / "src/lib/server/reactionSql.ts").read_text(encoding="utf-8"), re.S))
-MAINTENANCE = dict(re.findall(r"(\w+):\s*`([^`]+)`", (ROOT / "src/lib/server/participationMaintenanceSql.ts").read_text(encoding="utf-8"), re.S))
+REACTIONS = statements("reactionSql")
+MAINTENANCE = statements("participationMaintenanceSql")
 
 
 def react(db, receipt, bucket="reaction-hmac", limit=1000):
@@ -145,7 +160,10 @@ db.commit()
 for number in range(5):
     assert react(db, f"ip-{number}")[1] == 1
 assert react(db, "ip-rejected") == (0, 0, 0, None)
-assert react(db, "ip-0") == (0, 0, 0, ("hash", "public-reaction-v1"))
+assert react(db, "ip-0") == (0, 0, 0, REACTION_RECEIPT)
+before_lookup = db.total_changes
+assert db.execute(REACTIONS["receipt"], ("ip-0",)).fetchone() == REACTION_RECEIPT
+assert db.total_changes == before_lookup
 for number in range(5):
     assert react(db, f"other-{number}", bucket=f"other-{number}", limit=10)[1] == 1
 assert react(db, "daily-reject", bucket="daily-rejected-hmac", limit=10) == (0, 0, 0, None)

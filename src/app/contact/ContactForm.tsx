@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "@/components/AppLink";
 import { uuidV4 } from "@/lib/uuidV4";
 import { contentIssue } from "@/lib/contentModeration";
+import { CONTACT_CONTRACT_VERSION } from "@/lib/contactContract";
 
 const TYPES = [
   ["calculation_error", "계산 오류", "Calculation error"],
@@ -57,7 +58,8 @@ export default function ContactForm({ locale = "ko" }: { locale?: "ko" | "en" })
   const [errorField, setErrorField] = useState<"page" | "body" | null>(null);
   const [validationAttempt, setValidationAttempt] = useState(0);
   const [receipt, setReceipt] = useState("");
-  const lastAttempt = useRef<{ payload: string; id: string } | null>(null);
+  const [restartRequired, setRestartRequired] = useState(false);
+  const lastAttempt = useRef<{ payload: string; id: string; contractVersion: typeof CONTACT_CONTRACT_VERSION } | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const moderationIssue = composing ? null : contentIssue(body);
   const moderationMessage = text("욕설·위협 표현은 보낼 수 없습니다. 원문을 인용하지 말고 문제 유형과 페이지 안의 위치를 알려주세요.", "Remove abusive or threatening wording. To report it, describe the issue and its location without quoting the wording.");
@@ -72,7 +74,7 @@ export default function ContactForm({ locale = "ko" }: { locale?: "ko" | "en" })
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (pending || receipt || composingRef.current) return;
+    if (pending || receipt || composingRef.current || restartRequired) return;
     setError("");
     setErrorField(null);
     setValidationAttempt(previous => previous + 1);
@@ -94,7 +96,7 @@ export default function ContactForm({ locale = "ko" }: { locale?: "ko" | "en" })
     }
     const normalized = { type, pagePath: trimmedPath, body: body.trim(), inquiryConsent, replyEmail: replyEmail.trim(), replyConsent: !!replyEmail.trim() && replyConsent };
     const payload = JSON.stringify(normalized);
-    if (lastAttempt.current?.payload !== payload) lastAttempt.current = { payload, id: uuidV4() };
+    if (lastAttempt.current?.payload !== payload) lastAttempt.current = { payload, id: uuidV4(), contractVersion: CONTACT_CONTRACT_VERSION };
     const submissionId = lastAttempt.current!.id;
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 15000);
@@ -104,7 +106,7 @@ export default function ContactForm({ locale = "ko" }: { locale?: "ko" | "en" })
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",
-        body: JSON.stringify({ submissionId, ...normalized }),
+        body: JSON.stringify({ submissionId, contractVersion: lastAttempt.current!.contractVersion, ...normalized }),
         signal: controller.signal,
       });
       const data: unknown = await response.json();
@@ -116,10 +118,14 @@ export default function ContactForm({ locale = "ko" }: { locale?: "ko" | "en" })
       } else if (typeof data === "object" && data !== null && "error" in data && data.error === "CONTENT_NOT_ALLOWED") {
         setErrorField("body");
         setError(moderationMessage);
+      } else if (response.status === 400 && typeof data === "object" && data !== null && "error" in data && data.error === "CONTRACT_CHANGED") {
+        setRestartRequired(true); setInquiryConsent(false); setReplyConsent(false);
+        setError(text("동의 내용이 변경되어 이번 요청은 접수되지 않았습니다. 작성 내용을 별도로 보관하고 새로고침한 뒤 동의 내용을 다시 확인해 주세요.", "The consent terms changed, so this request was not accepted. Keep a copy of your draft, refresh, and review the consent terms again."));
       } else if (response.status === 400 || response.status === 413 || response.status === 415) {
         setError(text("입력 형식과 동의 항목을 확인해 주세요. 내용은 HTML 없이 500자 이내로 적고, 관련 페이지에는 사이트 내부 경로만 입력해 주세요.", "Check your input and consent. Use up to 500 characters without HTML and enter only an internal site path."));
       } else if (response.status === 409) {
-        setError(text("이 접수 번호의 내용이 이미 저장되어 다시 확인해야 합니다. 새로고침하지 말고 입력 내용을 보관해 주세요.", "This receipt ID already has different content and needs checking. Keep a copy of your message before refreshing."));
+        setRestartRequired(true); setInquiryConsent(false); setReplyConsent(false);
+        setError(text("접수 번호의 내용 또는 유효기간이 맞지 않아 완료를 확인하지 못했습니다. 작성 내용을 별도로 보관해 주세요. 새 접수는 새로고침한 뒤 동의 내용을 다시 확인하여 진행할 수 있습니다.", "The receipt content or expiry does not match, so receipt could not be confirmed. Keep a copy of your draft. To start a new submission, refresh and review consent again."));
       } else {
         setError(text("접수 완료를 확인하지 못했습니다. 입력 내용은 유지됩니다. 같은 내용으로 다시 보내면 동일한 접수 번호로 확인합니다.", "We could not confirm receipt. Your message is still here. Retrying unchanged content uses the same receipt ID."));
       }
@@ -198,7 +204,7 @@ export default function ContactForm({ locale = "ko" }: { locale?: "ko" | "en" })
           <label className="flex min-h-11 items-start gap-3"><input type="checkbox" checked={inquiryConsent} onChange={e => setInquiryConsent(e.target.checked)} required className="mt-1 h-4 w-4 shrink-0 accent-blue-600" /><span>{text("[필수] 문의 접수를 위한 위 정보의 수집·이용에 동의합니다. 동의하지 않으면 접수할 수 없습니다.", "[Required] I consent to collection and use of the information above to receive and handle my message. Submission requires this consent.")}</span></label>
           {!!replyEmail.trim() && <label className="flex min-h-11 items-start gap-3"><input type="checkbox" checked={replyConsent} onChange={e => setReplyConsent(e.target.checked)} required className="mt-1 h-4 w-4 shrink-0 accent-blue-600" /><span>{text("[선택] 회신을 위한 이메일 수집·이용에 동의합니다. 이메일을 지우면 동의 없이 접수할 수 있습니다.", "[Optional] I consent to collection and use of my email for a reply. Remove the email to submit without this consent.")}</span></label>}
         </div>
-        <button type="submit" disabled={pending || composing || Boolean(moderationIssue)} className="w-full rounded-xl bg-electric px-5 py-3.5 text-sm font-bold text-white transition-colors hover:bg-blue-600 disabled:cursor-wait">{pending ? text("접수 확인 중…", "Confirming receipt…") : text("운영자에게 비공개로 보내기", "Send privately to the operator")}</button>
+        <button type="submit" disabled={pending || composing || Boolean(moderationIssue) || restartRequired} className="w-full rounded-xl bg-electric px-5 py-3.5 text-sm font-bold text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed">{pending ? text("접수 확인 중…", "Confirming receipt…") : text("운영자에게 비공개로 보내기", "Send privately to the operator")}</button>
       </fieldset>
       <p className="text-xs leading-5 text-muted-blue">{text("입력 중인 내용은 자동 저장하지 않습니다. 화면을 닫거나 새로고침하면 사라집니다.", "Drafts are not saved automatically. Closing or refreshing this screen clears your input.")}</p>
       {error && <p id="inquiry-submit-error" role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-800">{error}</p>}

@@ -1,4 +1,4 @@
-export const REACTION_RECEIPT_LOOKUP = "SELECT payload_hash, contract_version FROM participation_reactions WHERE submission_id = ?";
+export const REACTION_RECEIPT_LOOKUP = "SELECT payload_hash, contract_version, expires_at FROM participation_reactions WHERE submission_id = ?";
 export const PARTICIPATION_SUMMARY_SQL = "SELECT contract_version, generated_at, window_days, total, helpful, confusing FROM participation_snapshots WHERE target = ?";
 
 /** All four statements are one primary D1 transaction. Do not break changes(). */
@@ -21,5 +21,5 @@ export const REACTION_SQL = {
     SELECT 'reaction', ?, 1 WHERE changes() = 1
     ON CONFLICT(module, day_start) DO UPDATE SET accepted = accepted + 1
   `,
-  receipt: `SELECT payload_hash, contract_version FROM participation_reactions WHERE submission_id = ?`,
+  receipt: REACTION_RECEIPT_LOOKUP,
 } as const;

@@ -1,24 +1,21 @@
 // uuidV4 폴백 게이트 (2026-09-25 감사 B3 · CLIENT-06):
-//  - randomUUID 가 없는 구형 브라우저에서도 서버 UUID_V4 정규식(contactHandler·fixedFeedbackHandler)을 통과해야 한다.
+//  - randomUUID 가 없는 구형 브라우저에서도 실제 서버 접수 정규화를 통과해야 한다.
 //    workClock 식 "work-<시각>-<난수>" 폴백은 서버가 INVALID_REQUEST 로 거절한다.
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { uuidV4 } from "@/lib/uuidV4";
+import { normalizeReceiptRequest, RECEIPT_V1 } from "@/lib/server/receiptContracts";
 
-/** 서버 핸들러의 실제 UUID_V4 리터럴을 읽어 온다 — 정규식이 바뀌면 이 테스트도 따라간다. */
-const serverRegex = (file: string) => {
-  const src = readFileSync(path.resolve(process.cwd(), file), "utf8");
-  const m = src.match(/const UUID_V4 = \/(.+)\/([a-z]*);/);
-  if (!m) throw new Error(`UUID_V4 literal not found in ${file}`);
-  return new RegExp(m[1], m[2]);
-};
-const SERVER_PATTERNS = [
-  serverRegex("src/lib/server/contactHandler.ts"),
-  serverRegex("src/lib/server/fixedFeedbackHandler.ts"),
+// Exercise the real shared validator, regardless of where its regex is stored.
+const serverResults = (submissionId: string) => [
+  normalizeReceiptRequest("contact", { submissionId, type: "other", pagePath: "/", body: "Synthetic message", inquiryConsent: true }),
+  normalizeReceiptRequest("feedback", { submissionId, target: "samsung_bonus", vote: "helpful", reason: null, feedbackConsent: true }),
+  normalizeReceiptRequest("opinion", { submissionId, target: "samsung_bonus", body: "Synthetic opinion", inquiryConsent: true, contractVersion: RECEIPT_V1.opinion }),
+  normalizeReceiptRequest("reaction", { submissionId, target: "samsung_bonus", vote: "helpful", reason: null, publicAggregateConsent: true, contractVersion: RECEIPT_V1.reaction }),
 ];
 const expectServerAccepts = (id: string) => {
-  for (const re of SERVER_PATTERNS) expect(id, `${id} vs ${re}`).toMatch(re);
+  for (const result of serverResults(id)) expect(result).toMatchObject({ submissionId: id });
 };
 
 afterEach(() => {
@@ -78,7 +75,7 @@ describe("uuidV4", () => {
   });
 
   it("the old workClock-style id is rejected by the server regex (why it is not reused)", () => {
-    for (const re of SERVER_PATTERNS) expect(`work-${Date.now()}-abc123`).not.toMatch(re);
+    for (const result of serverResults(`work-${Date.now()}-abc123`)) expect(result).toBe("INVALID_REQUEST");
   });
 
   it("ContactForm and PrivateFeedback use uuidV4, not a bare crypto.randomUUID()", () => {

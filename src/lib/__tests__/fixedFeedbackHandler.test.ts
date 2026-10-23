@@ -4,7 +4,7 @@ import { createHmac } from "node:crypto";
 import { FIXED_FEEDBACK_CONFIG, FIXED_FEEDBACK_TARGETS } from "@/lib/fixedFeedbackContract";
 import { FIXED_FEEDBACK_RETENTION_SECONDS, handleFixedFeedbackPost } from "@/lib/server/fixedFeedbackHandler";
 import { handleContactPost } from "@/lib/server/contactHandler";
-import { FIXED_FEEDBACK_SQL } from "@/lib/server/fixedFeedbackSql";
+import { FIXED_FEEDBACK_RECEIPT_LOOKUP, FIXED_FEEDBACK_SQL } from "@/lib/server/fixedFeedbackSql";
 import { CONTACT_RECEIPT_LOOKUP, CONTACT_SQL } from "@/lib/server/contactSql";
 import * as route from "@/app/api/feedback/route";
 import { feedbackRateKey, type FeedbackBindings, type FeedbackDatabase, type FeedbackResult, type FeedbackStatement } from "@/lib/server/feedbackStorage";
@@ -35,9 +35,11 @@ function storage() {
       return statement;
     },
     batch: vi.fn(async (raw: FeedbackStatement[]): Promise<FeedbackResult[]> => {
-      if (raw.length === 1 && (raw[0] as Statement).sql === CONTACT_RECEIPT_LOOKUP) {
-        const hash = receipts.contact.get((raw[0] as Statement).values[0] as string);
-        return [{ success: true, meta: {}, results: hash ? [{ payload_hash: hash, consent_version: "contact-v1" }] : [] }];
+      if (raw.length === 1) {
+        const contact = (raw[0] as Statement).sql === CONTACT_RECEIPT_LOOKUP;
+        expect([CONTACT_RECEIPT_LOOKUP, FIXED_FEEDBACK_RECEIPT_LOOKUP]).toContain((raw[0] as Statement).sql);
+        const hash = (contact ? receipts.contact : receipts.feedback).get((raw[0] as Statement).values[0] as string);
+        return [{ success: true, meta: {}, results: hash ? [{ payload_hash: hash, consent_version: contact ? "contact-v1" : "fixed-feedback-v1", expires_at: Math.floor(now / 1000) + FIXED_FEEDBACK_RETENTION_SECONDS }] : [] }];
       }
       const [reserve, insert] = raw as Statement[];
       const table = insert.sql === CONTACT_SQL.insertInquiry ? receipts.contact : receipts.feedback;
@@ -52,7 +54,7 @@ function storage() {
       return [
         { success: true, meta: { changes: accepted ? 1 : 0 }, results: [] },
         { success: true, meta: { changes: accepted ? 1 : 0 }, results: [] },
-        { success: true, meta: { changes: 0 }, results: hash === undefined ? [] : [{ payload_hash: hash }] },
+        { success: true, meta: { changes: 0 }, results: hash === undefined ? [] : [{ payload_hash: hash, consent_version: insert.sql === CONTACT_SQL.insertInquiry ? "contact-v1" : "fixed-feedback-v1", expires_at: Math.floor(now / 1000) + FIXED_FEEDBACK_RETENTION_SECONDS }] },
       ];
     }),
   };
@@ -137,7 +139,7 @@ describe("fixed feedback request boundary", () => {
       const { db, bindings } = storage();
       const result = await handleFixedFeedbackPost(request({ ...input, target, vote: "confusing", reason: reason.value }), bindings, now);
       expect(result.status).toBe(201);
-      const insert = vi.mocked(db.batch).mock.calls[0][0][1] as Statement;
+      const insert = vi.mocked(db.batch).mock.calls.find(([items]) => items.length === 3)![0][1] as Statement;
       expect(insert.values.slice(2, 6)).toEqual([target, FIXED_FEEDBACK_CONFIG[target].path, "confusing", reason.value]);
     }
   });
@@ -176,7 +178,7 @@ describe("fixed feedback persistence", () => {
     expect(await result.json()).toEqual({ ok: true, receiptId: id, duplicate: false });
     expect(result.headers.get("x-robots-tag")).toBe("noindex, nofollow");
     expect(result.headers.get("x-content-type-options")).toBe("nosniff");
-    const statements = vi.mocked(db.batch).mock.calls[0][0] as Statement[];
+    const statements = vi.mocked(db.batch).mock.calls.find(([items]) => items.length === 3)![0] as Statement[];
     expect(statements.map(s => s.sql)).toEqual([FIXED_FEEDBACK_SQL.reserveRate, FIXED_FEEDBACK_SQL.insertFeedback, FIXED_FEEDBACK_SQL.receipt]);
     expect(statements[1].values).toEqual([
       id, expect.stringMatching(/^[a-f0-9]{64}$/), "samsung_bonus", "/calc/samsung-bonus", "helpful", null,
