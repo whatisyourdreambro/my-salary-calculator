@@ -240,6 +240,17 @@ async function auditCarLoan(page, theme) {
   await salary.fill('60000000');
   assert.deepEqual(await names.allTextContents(), initialNames, 'restoring salary restores the same inventory and ordering');
   await payment('100,000원');
+  // Category entrance animations restart after the empty state. Wait for
+  // their paint before collecting the settled card screenshot.
+  await page.waitForFunction(() => {
+    let node = document.querySelector('main h4')?.closest('div.group');
+    if (!node) return false;
+    while (node && node.tagName !== 'MAIN') {
+      if (Number(getComputedStyle(node).opacity) < 0.999) return false;
+      node = node.parentElement;
+    }
+    return true;
+  });
 
   const faq = page.getByRole('heading', { name: '자동차 할부, 자주 묻는 질문', exact: true }).locator('..');
   assert.equal(await faq.locator('details').count(), 5);
@@ -253,7 +264,7 @@ async function auditCarLoan(page, theme) {
     await page.setViewportSize({ width, height: 900 });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, 'car-loan horizontal overflow');
     await card.scrollIntoViewIfNeeded();
-    await page.screenshot({ path: path.join(output, `car-loan-${theme}-${width}.png` ) });
+    await card.screenshot({ path: path.join(output, `car-loan-${theme}-${width}.png`) });
   }
   await page.setViewportSize({ width: 390, height: 844 });
   report.push({ route: '/car-loan', theme, carLoan: 'default, zero interest, term boundaries, maintenance inputs, recommendation changes and empty salary; keyboard FAQ; 390/1280px', exactCandidateScope: 'vehicle-card settled values; existing calculations and inventory' });
