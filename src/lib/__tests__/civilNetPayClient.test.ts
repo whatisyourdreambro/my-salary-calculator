@@ -80,6 +80,24 @@ describe("공무원 실수령액 계산기 — 광고 위 고정 높이", () => 
     expect(html).toContain("1,500,000원");
     expect(count(html, ">0원<")).toBeGreaterThanOrEqual(4);
   });
+
+  it("납부완료 확인은 광고 아래에만 제공하고 모든 공무원 프리셋은 납부 중이 기본값이다", () => {
+    for (const kind of KINDS) {
+      const html = render(kind);
+      expect(aboveAd(html)).not.toContain("civ-pension-status");
+      if (kind === "soldier") {
+        expect(html).not.toContain('id="civ-pension-status"');
+      } else {
+        expect(html).toContain('for="civ-pension-status"');
+        expect(html).toContain('aria-describedby="civ-pension-status-help"');
+        expect(html).toContain('<option value="paying" selected="">납부 중 / 미확인 (기본)</option>');
+        expect(html).toContain('<option value="completed">공단에서 납부완료 확인</option>');
+        expect(html).toContain("직종을 바꾸면 납부 중으로 돌아갑니다.");
+      }
+    }
+    const src = readFileSync(resolve(process.cwd(), CLIENT), "utf8");
+    expect(src.indexOf('id="civ-pension-status"')).toBeGreaterThan(src.indexOf("<CalcResultAd"));
+  });
 });
 
 describe("계측 배선", () => {

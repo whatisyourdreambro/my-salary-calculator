@@ -134,6 +134,7 @@ jobs:
           QA_ROUTES="/calc/samsung-bonus,/,/car-loan,/salary-db/lig-nex1" npm run qa:run -- scripts/qa-calculator-experience.mjs
           QA_RECEIPT_MODE=legacy QA_RUN_LABEL=receipt-legacy npm run qa:run -- scripts/qa-calculator-experience.mjs
           QA_SHARE_PRIVACY_MODE=1 QA_RUN_LABEL=share-privacy npm run qa:run -- scripts/qa-calculator-experience.mjs
+          QA_CIVIL_RULES_MODE=1 QA_RUN_LABEL=civil-rules npm run qa:run -- scripts/qa-calculator-experience.mjs
           npm run qa:run -- scripts/__tests__/qa-saved-recalculation.mjs
           QA_CONTRAST_ONLY=1 QA_ROUTES="/table/2026/monthly,/table/2027/monthly,/job/safety-engineer,/job/software-engineer" npm run qa:run -- scripts/qa-calculator-experience.mjs
           QA_FOCUS_FORCED_COLORS=1 npm run qa:run -- scripts/qa-focus-input.mjs

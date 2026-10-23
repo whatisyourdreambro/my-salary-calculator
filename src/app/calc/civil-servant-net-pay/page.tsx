@@ -72,7 +72,7 @@ const FAQ_ITEMS = [
   },
   {
     question: "공무원연금 기여금 9%와 상한은?",
-    answer: `기여금은 기준소득월액의 9%입니다(공무원연금법 제67조). 기준소득월액은 공무원 전체 평균액의 160%를 넘을 수 없어 2026년 5월~2027년 4월 상한은 ${won(CIVIL_PENSION_2026.cap)}(평균액 ${won(CIVIL_PENSION_2026.avgBaseIncome)} × 160%), 월 기여금 최대는 ${won(MAX_CONTRIBUTION)}입니다. 기여금 납부기간이 36년을 넘으면 더 내지 않습니다. 기준소득월액은 전년도 과세소득을 바탕으로 매년 5월 새로 정해지므로 이 계산기는 올해 보수로 추정합니다.`,
+    answer: `기여금은 기준소득월액의 9%입니다(공무원연금법 제67조). 기준소득월액은 공무원 전체 평균액의 160%를 넘을 수 없어 2026년 5월~2027년 4월 상한은 ${won(CIVIL_PENSION_2026.cap)}(평균액 ${won(CIVIL_PENSION_2026.avgBaseIncome)} × 160%), 월 기여금 최대는 ${won(MAX_CONTRIBUTION)}입니다. 납부상한은 가입 이력에 따라 33~36년으로 달라집니다. 재직 연수로 자동 판정하지 않으며 공무원연금공단에서 납부완료를 확인한 경우에만 계산기의 납부완료를 선택하세요. 기준소득월액은 전년도 과세소득을 바탕으로 매년 5월 새로 정해지므로 이 계산기는 올해 보수로 추정합니다.`,
   },
   {
     question: "정액급식비에도 세금이 붙나요?",
@@ -176,7 +176,8 @@ export default function CivilServantNetPayPage() {
             <ul className="space-y-2 text-muted-blue dark:text-canvas-300">
               <li>
                 <strong>공무원연금 기여금</strong>: 기준소득월액의 9%. 상한 {won(CIVIL_PENSION_2026.cap)}(공무원 전체 평균 {won(CIVIL_PENSION_2026.avgBaseIncome)}의
-                160%)이라 월 최대 {won(MAX_CONTRIBUTION)}이며, 납부기간 36년을 넘으면 내지 않습니다.
+                160%)이라 월 최대 {won(MAX_CONTRIBUTION)}입니다. 납부상한은 가입 이력에 따라 33~36년이며,
+                공단에서 납부완료를 확인한 경우에만 기여금을 0원으로 계산합니다. 정근수당용 재직 연수와는 별개입니다.
               </li>
               <li>
                 <strong>건강보험·장기요양보험</strong>: 보수월액에 직장가입자 요율을 곱합니다. 이 계산기는 기준소득월액 추정값을 보수월액으로 씁니다.

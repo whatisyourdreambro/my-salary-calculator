@@ -16,7 +16,7 @@
 //                    + 정액급식비 + 기타 비과세
 //   기준소득월액(추정) = (연간 세전 − 연간 비과세) ÷ 12 — 연간 세전 = 월 지급액×12 + 명절휴가비 2회 + 정근수당 2회.
 //     실제 값은 공무원연금법 시행령 제5조(전년도 과세소득 ÷ 12 × (1 + 보수인상률), 신규자는 제6조)로 매년 5월 갱신.
-//   기여금 = 기준소득월액(상한 9,520,000원) × 9% (납부 36년 초과 0) · 건강보험 = 기준소득월액 × 건보 요율 ·
+//   기여금 = 기준소득월액(상한 9,520,000원) × 9% (공단 납부완료를 명시 확인한 경우만 0) · 건강보험 = 기준소득월액 × 건보 요율 ·
 //   장기요양 = 건강보험료 × 장기요양 비율 · 소득세 = 간이세액표(과세 월급여, 공제대상가족, 8~20세 자녀) × 원천징수 비율 ·
 //   지방소득세 = 소득세 × 10%. 공제액은 원 단위 반올림 뒤 10원 미만 절사(홈 계산기 엔진 floorTo10 과 같은 규칙).
 //   공무원은 고용보험 적용 제외(고용보험법 제10조).
@@ -55,6 +55,7 @@ import { withholdingIncomeTax2026 } from "./withholdingTaxTable2026";
 
 export type CivilKind = "general" | "teacher" | "police" | "fire" | "soldier";
 export type CivilHazard = "none" | "gap" | "gapPlus";
+export type CivilPensionContributionStatus = "paying" | "completed";
 export type WithholdingPct = 80 | 100 | 120;
 
 export const CIVIL_KINDS: ReadonlyArray<{ kind: CivilKind; label: string }> = [
@@ -80,8 +81,10 @@ export interface CivilNetPayInput {
   rank: number;
   /** 호봉 (병은 무시) */
   hobong: number;
-  /** 재직(근무) 연수 — 정근수당·가산금 구간과 기여금 36년 판정에 쓴다 */
+  /** 재직(근무) 연수 — 정근수당·가산금 구간에만 쓴다. 기여금 납부기간과 다르다. */
   yearsOfService: number;
+  /** 공단에서 납부완료를 확인한 경우만 completed. 누락·알 수 없는 값은 납부중으로 처리. */
+  pensionContributionStatus?: CivilPensionContributionStatus;
   spouse: boolean;
   /** 자녀 수 (가족수당·간이세액표 공제대상가족) */
   children: number;
@@ -258,13 +261,13 @@ export function jeonggeunAddon(years: number): number {
   return base + extra;
 }
 
-/** 가족수당 — 부양가족 4명 이내(배우자 우선), 자녀는 4명을 넘어도 지급 */
+/** 가족수당 — 비자녀 부양가족 4명 이내(배우자 우선). 자녀는 이 한도에서 제외(수당규정 제10조). */
 export function familyAllowance(spouse: boolean, children: number, otherDependents: number): number {
   const kids = count(children, CIVIL_DEPENDENT_MAX);
   const others = count(otherDependents, CIVIL_DEPENDENT_MAX);
   const F = CIVIL_FAMILY_ALLOWANCE_2026;
   const nonChild = (spouse ? 1 : 0) + others;
-  const paidNonChild = Math.min(nonChild, Math.max(0, F.maxDependents - kids));
+  const paidNonChild = Math.min(nonChild, F.maxDependents);
   let total = 0;
   if (paidNonChild > 0) {
     total += spouse ? F.spouse + (paidNonChild - 1) * F.otherEach : paidNonChild * F.otherEach;
@@ -409,7 +412,8 @@ export function computeCivilNetPay(input: CivilNetPayInput, options: CivilEngine
   const baseIncome = hasOverride ? amount(override) : Math.floor((annualGross - nonTaxable * 12) / 12);
 
   const P = CIVIL_PENSION_2026;
-  const contribution = years > P.maxYears ? 0 : floor10(Math.min(baseIncome, P.cap) * P.rate);
+  // 공단 납부상한은 가입 이력에 따라 33~36년이다. 정근수당용 근속연수로 추론하지 않는다.
+  const contribution = input.pensionContributionStatus === "completed" ? 0 : floor10(Math.min(baseIncome, P.cap) * P.rate);
   const health = floor10(baseIncome * rates.HEALTH_INSURANCE);
   const longTermCare = floor10(health * rates.LONG_TERM_CARE_RATIO);
   const taxFamily = 1 + (spouse ? 1 : 0) + children + otherDependents;
@@ -493,6 +497,7 @@ export const CIVIL_DEFAULT_INPUT: CivilNetPayInput = {
   rank: 0,
   hobong: 1,
   yearsOfService: 0,
+  pensionContributionStatus: "paying",
   spouse: false,
   children: 0,
   children8to20: 0,
@@ -508,18 +513,18 @@ export const CIVIL_DEFAULT_INPUT: CivilNetPayInput = {
   annualPerformanceBonus: 0,
 };
 
-/** 직종 전환·해시 프리셋(#general·#teacher·#police·#fire·#soldier) 시 바뀌는 값 */
-export const CIVIL_KIND_PRESETS: Readonly<Record<CivilKind, Pick<CivilNetPayInput, "kind" | "rank" | "hobong" | "overtimeHours" | "homeroom" | "headTeacher" | "hazard">>> = {
-  general: { kind: "general", rank: 0, hobong: 1, overtimeHours: CIVIL_OVERTIME_2026.flatHours, homeroom: false, headTeacher: false, hazard: "none" },
+/** 직종 전환·해시 프리셋은 납부완료 확인도 초기화한다. 새 직종에서 다시 확인해야 한다. */
+export const CIVIL_KIND_PRESETS: Readonly<Record<CivilKind, Pick<CivilNetPayInput, "kind" | "rank" | "hobong" | "overtimeHours" | "homeroom" | "headTeacher" | "hazard" | "pensionContributionStatus">>> = {
+  general: { kind: "general", rank: 0, hobong: 1, overtimeHours: CIVIL_OVERTIME_2026.flatHours, homeroom: false, headTeacher: false, hazard: "none", pensionContributionStatus: "paying" },
   // 신규 교사 통상 9호봉(civilServantPay.TEACHER_START_HOBONG) + 담임
-  teacher: { kind: "teacher", rank: 0, hobong: 9, overtimeHours: 0, homeroom: true, headTeacher: false, hazard: "none" },
+  teacher: { kind: "teacher", rank: 0, hobong: 9, overtimeHours: 0, homeroom: true, headTeacher: false, hazard: "none", pensionContributionStatus: "paying" },
   // 경찰·소방 현장·외근 기준 — 위험근무수당 갑종 + 가산금 8만원
-  police: { kind: "police", rank: 0, hobong: 1, overtimeHours: 0, homeroom: false, headTeacher: false, hazard: "gapPlus" },
-  fire: { kind: "fire", rank: 0, hobong: 1, overtimeHours: 0, homeroom: false, headTeacher: false, hazard: "gapPlus" },
-  soldier: { kind: "soldier", rank: 3, hobong: 0, overtimeHours: 0, homeroom: false, headTeacher: false, hazard: "none" },
+  police: { kind: "police", rank: 0, hobong: 1, overtimeHours: 0, homeroom: false, headTeacher: false, hazard: "gapPlus", pensionContributionStatus: "paying" },
+  fire: { kind: "fire", rank: 0, hobong: 1, overtimeHours: 0, homeroom: false, headTeacher: false, hazard: "gapPlus", pensionContributionStatus: "paying" },
+  soldier: { kind: "soldier", rank: 3, hobong: 0, overtimeHours: 0, homeroom: false, headTeacher: false, hazard: "none", pensionContributionStatus: "paying" },
 };
 
-/** 재직 연수 선택지 — 값은 구간 하한(년). 정근수당 지급률·가산금 구간과 기여금 36년 경계에 맞춘다 */
+/** 재직 연수 선택지 — 정근수당 지급률·가산금용. 기존 장기근속 선택지를 유지하며 연금 납부종료와는 무관하다. */
 export const CIVIL_YEARS_OPTIONS: ReadonlyArray<{ value: number; label: string }> = [
   { value: 0, label: "2년 미만" },
   { value: 2, label: "2~5년" },

@@ -5,7 +5,7 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 import qaSafety from './lib/qa-safety.cjs';
 import { assessGradientContrast } from './lib/qa-contrast-gradient.mjs';
-const { assertLocalQaTarget, assertQaEnvironment, launchQaBrowser } = qaSafety;
+const { assertLocalQaTarget, assertQaEnvironment, isAllowedQaRequest, launchQaBrowser } = qaSafety;
 const { chromium } = createRequire(import.meta.url)('playwright-core');
 const base = assertLocalQaTarget(process.env.BASE_URL || 'http://127.0.0.1:3100');
 assertQaEnvironment();
@@ -13,12 +13,13 @@ const contrastOnly = process.env.QA_CONTRAST_ONLY === '1';
 if (contrastOnly) assert(process.env.QA_ROUTES, 'Contrast-only QA requires explicit QA_ROUTES');
 const receiptMode = process.env.QA_RECEIPT_MODE || '';
 const sharePrivacyMode = process.env.QA_SHARE_PRIVACY_MODE === '1';
+const civilRulesMode = process.env.QA_CIVIL_RULES_MODE === '1';
 if (!['', 'public', 'legacy'].includes(receiptMode)) throw new Error('QA_RECEIPT_MODE must be public or legacy.');
 if (receiptMode && contrastOnly) throw new Error('Receipt and contrast audits must run separately.');
 if (sharePrivacyMode && (receiptMode || contrastOnly)) throw new Error('Share privacy must run separately from receipt and contrast audits.');
 const runLabel = process.env.QA_RUN_LABEL || '';
 if (runLabel && !/^[a-z0-9][a-z0-9-]{0,63}$/.test(runLabel)) throw new Error('QA_RUN_LABEL must be a short lowercase name without paths.');
-const output = path.resolve('.artifacts/experience-qa', runLabel || (receiptMode ? `receipt-${receiptMode}` : contrastOnly ? 'contrast' : '.'));
+const output = path.resolve('.artifacts/experience-qa', runLabel || (civilRulesMode ? 'civil-rules' : receiptMode ? `receipt-${receiptMode}` : contrastOnly ? 'contrast' : '.'));
 const routes = process.env.QA_ROUTES?.split(',') || ['/calc', '/calc/refinance-break-even', '/calc/advertising-profit-roas', '/', '/en', '/home-loan', '/year-end-tax', '/calc/samsung-bonus', '/calc/jeonse-loan', '/calc/year-end-bonus-tax', '/savings-interest-2026', '/tools/finance/compound', '/money-check'];
 const report = [];
 const interactionReport = [];
@@ -26,6 +27,9 @@ const errors = [];
 const expected = Number(process.env.QA_CALC_COUNT || 202);
 const participationMode = process.env.QA_PARTICIPATION_MODE || '';
 if (!['', 'off', 'fixtures'].includes(participationMode)) throw new Error('QA_PARTICIPATION_MODE must be off or fixtures.');
+if (civilRulesMode && (sharePrivacyMode || receiptMode || contrastOnly || participationMode || process.env.QA_ROUTES)) {
+  throw new Error('Civil rules QA must run alone, without other modes or QA_ROUTES.');
+}
 const participationTargets = {
   '/calc/samsung-bonus': 'samsung_bonus',
   '/civil-servant-pay-2027': 'civil_pay_2027',
@@ -578,6 +582,136 @@ async function auditCivilPayHandoff(page, sourceRoute, theme) {
   report.push({ route: sourceRoute, theme, civilHandoff: 'pass', analytics: 'disabled in QA; confirmation gate tested offline' });
 }
 
+// Two fresh mobile contexts, one per theme. No response fixtures or live ad
+// markers are needed: inspect the real local controls and the fixed blocks that
+// precede CalcResultAd, which remains disabled by the normal QA build.
+async function auditCivilRules(browser) {
+  const route = '/calc/civil-servant-net-pay';
+  for (const theme of ['light', 'dark']) {
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 }, colorScheme: theme, serviceWorkers: 'block' });
+    await context.addInitScript(theme => localStorage.setItem('theme', theme), theme);
+    const forbiddenRequests = [], externalResponses = [], nonReadRequests = [];
+    context.on('request', request => {
+      const url = new URL(request.url());
+      if (!isAllowedQaRequest(url.href, base, request.method())) forbiddenRequests.push({ method: request.method(), origin: url.origin, path: url.pathname });
+      if (!['GET', 'HEAD'].includes(request.method())) nonReadRequests.push(request.method());
+    });
+    context.on('response', response => { if (new URL(response.url()).origin !== base) externalResponses.push(response.url()); });
+    const page = await context.newPage();
+    page.on('pageerror', error => errors.push(error.message));
+    page.on('console', message => {
+      if (message.type() === 'error' && /hydration|hydrating|Minified React error #(?:418|423|425)/i.test(message.text())) errors.push(message.text());
+    });
+    const geometryChecks = [];
+    try {
+      const response = await page.goto(base + route, { waitUntil: 'networkidle', timeout: 120000 });
+      assert.equal(response?.status(), 200);
+      assert.equal(response.headers()['x-moneysalary-qa'], 'ads-disabled');
+      await page.evaluate(() => document.fonts.ready);
+      assert.equal(await page.evaluate(() => document.documentElement.classList.contains('dark')), theme === 'dark');
+      const result = page.locator('[data-civ-block="result"]');
+      const pension = page.getByLabel('공무원연금 기여금 납부 상태', { exact: true });
+      const contribution = result.locator('[data-civ-result-row]').filter({ has: page.getByText('공무원연금 기여금', { exact: true }) }).locator('dd');
+      const detail = page.getByRole('heading', { name: '수당 상세 (일반 달, 월)', exact: true }).locator('..');
+      const family = detail.getByRole('row').filter({ has: page.getByRole('cell', { name: '가족수당', exact: true }) }).getByRole('cell').nth(1);
+      const measure = () => page.locator('[data-civ-block]').evaluateAll(elements => elements.map(element => {
+        const rect = element.getBoundingClientRect();
+        return { block: element.getAttribute('data-civ-block'), top: rect.top + scrollY, height: rect.height };
+      }));
+      const baseline = await measure();
+      assert.deepEqual(baseline.map(item => item.block), ['input', 'result']);
+      assert.equal(await page.locator('[data-civ-row]').count(), 4, 'No extra input row above the result ad');
+      assert.equal(await result.locator('[data-civ-result-row]').count(), 8, 'Fixed result rows remain present');
+      const assertGeometry = async state => {
+        const actual = await measure();
+        assert.equal(actual.length, baseline.length);
+        actual.forEach((item, index) => {
+          assert.equal(item.block, baseline[index].block);
+          for (const dimension of ['top', 'height']) assert(Math.abs(item[dimension] - baseline[index][dimension]) <= 1, `${theme}/${state}: ${item.block} ${dimension} changed above the disabled ad`);
+        });
+        assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `${theme}/${state}: mobile horizontal overflow`);
+        geometryChecks.push({ state, blocks: actual });
+      };
+      const expectContribution = async value => {
+        const text = `${value.toLocaleString('ko-KR')}원`;
+        await page.waitForFunction(expected => [...document.querySelectorAll('[data-civ-block="result"] [data-civ-result-row]')]
+          .find(element => element.querySelector('dt')?.textContent === '공무원연금 기여금')?.querySelector('dd')?.textContent === expected, text);
+        assert.equal(await contribution.innerText(), text);
+      };
+      assert.equal(await pension.inputValue(), 'paying', 'No automatic completed status on first visit');
+      assert(Number((await contribution.innerText()).replace(/[^0-9]/g, '')) > 0);
+      assert(await pension.evaluate(element => element.getBoundingClientRect().top + scrollY > document.querySelector('[data-civ-block="result"]').getBoundingClientRect().bottom + scrollY), 'The new control stays below the fixed result card');
+
+      // A declared base income isolates contribution status from service-year
+      // allowances and taxable-family changes; 3,000,000 × 9% = 270,000.
+      await page.locator('details').filter({ has: page.locator('#civ-base') }).locator('summary').click();
+      await page.locator('#civ-base').fill('3000000');
+      await expectContribution(270000);
+      await assertGeometry('declared-base');
+      await page.locator('#civ-spouse').focus();
+      await page.locator('#civ-spouse').press('Enter');
+      await page.locator('#civ-children').selectOption('4');
+      assert.equal(await family.innerText(), '410,000원', 'All four children remain eligible alongside a spouse');
+      await page.locator('#civ-others').selectOption('2');
+      assert.equal(await family.innerText(), '450,000원', 'Eligible parents use the non-child capacity independently');
+      await assertGeometry('spouse-four-children-two-others');
+
+      await page.locator('#civ-years').selectOption('37');
+      assert.equal(await pension.inputValue(), 'paying', 'Service years cannot complete pension contributions');
+      await expectContribution(270000);
+      await pension.selectOption('completed');
+      await expectContribution(0);
+      await assertGeometry('explicit-completed');
+      await page.locator('#civ-years').selectOption('25');
+      assert.equal(await pension.inputValue(), 'completed');
+      await expectContribution(0);
+      await pension.selectOption('paying');
+      await expectContribution(270000);
+      await page.locator('#civ-years').selectOption('37');
+      await expectContribution(270000);
+      await assertGeometry('paying-after-years-change');
+
+      for (const kind of ['teacher', 'police', 'fire']) {
+        await pension.selectOption('completed');
+        await expectContribution(0);
+        await page.locator(`#civ-kind-${kind}`).click();
+        assert.equal(await pension.inputValue(), 'paying', `${kind}: completion is not inherited from another occupation`);
+        await expectContribution(270000);
+        await assertGeometry(kind);
+      }
+      await pension.selectOption('completed');
+      await page.locator('#civ-kind-soldier').click();
+      assert.equal(await pension.count(), 0, 'Enlisted soldiers have no civil-pension status control');
+      for (const id of ['civ-hobong', 'civ-years', 'civ-spouse', 'civ-children', 'civ-children-8-20', 'civ-others']) assert(await page.locator(`#${id}`).isDisabled(), `${id}: not applicable to enlisted soldiers`);
+      await expectContribution(0);
+      assert.equal(await result.locator('[data-civ-result-row]').filter({ has: page.getByText('공제 합계', { exact: true }) }).locator('dd').innerText(), '−0원');
+      const pay = await result.locator('[data-civ-result-row]').filter({ has: page.getByText('봉급', { exact: true }) }).locator('dd').innerText();
+      assert.equal(await result.locator('div.h-12').innerText(), pay, 'Enlisted net pay equals the tax-free base pay');
+      assert.equal(await family.count(), 0, 'Civil family allowance is not applied to enlisted pay');
+      await assertGeometry('enlisted');
+      await page.locator('#civ-kind-general').click();
+      assert.equal(await pension.inputValue(), 'paying');
+      await expectContribution(270000);
+      await assertGeometry('return-general');
+      await result.scrollIntoViewIfNeeded();
+      await page.screenshot({ path: path.join(output, `civil-rules-${theme}.png`) });
+      await page.waitForLoadState('networkidle');
+      assert.equal(await page.locator('#msy-ga-loader,#msy-adsense-loader,ins.adsbygoogle').count(), 0);
+      assert.deepEqual(forbiddenRequests, [], 'No external, advertising or analytics request attempted');
+      assert.deepEqual(externalResponses, [], 'No external response reached the browser');
+      assert.deepEqual(nonReadRequests, [], 'No POST or other non-read request attempted');
+      report.push({ route, theme, viewport: { width: 390, height: 844 }, passed: true,
+        familyAllowance: { spouseAndFourChildren: 410000, plusTwoOtherDependents: 450000 },
+        contribution: { declaredBase: 3000000, paying: 270000, explicitlyCompleted: 0, serviceYears: [25, 37] },
+        occupationReset: ['teacher', 'police', 'fire', 'soldier', 'general'], geometryChecks,
+        network: { forbiddenAttempts: 0, externalResponses: 0, nonReadRequests: 0 },
+        geometryScope: 'Fixed input/result blocks above disabled CalcResultAd; no actual advertising rendered or measured' });
+    } finally { await context.close(); }
+  }
+  assert.equal(report.length, 2, 'Exactly one mobile case for each theme');
+  assert.deepEqual(errors, []);
+}
+
 async function auditPensionHike(page, theme) {
   const salary = page.getByRole('textbox', { name: '월급', exact: true });
   const result = page.getByRole('region', { name: '국민연금 보험료 계산 결과', exact: true });
@@ -809,7 +943,8 @@ async function auditContrastCases(browser) {
 await fs.mkdir(output, { recursive: true });
 const browser = await launchQaBrowser(chromium, base, { headless: true, ...(process.platform === 'win32' ? { channel: 'chrome' } : {}) });
 try {
-  if (sharePrivacyMode) await auditSharePrivacy(browser);
+  if (civilRulesMode) await auditCivilRules(browser);
+  else if (sharePrivacyMode) await auditSharePrivacy(browser);
   else if (receiptMode) await auditReceiptCompatibility(browser);
   else if (contrastOnly) await auditContrastCases(browser);
   else {
@@ -1025,10 +1160,12 @@ try {
   assert.deepEqual(errors, []);
   }
 } finally {
-  await fs.writeFile(path.join(output, 'summary.json'), JSON.stringify({ mode: sharePrivacyMode ? 'share-privacy' : receiptMode ? `receipt-${receiptMode}` : contrastOnly ? 'contrast-only' : 'experience', report, interactionReport, errors }, null, 2));
+  await fs.writeFile(path.join(output, 'summary.json'), JSON.stringify({ mode: civilRulesMode ? 'civil-rules' : sharePrivacyMode ? 'share-privacy' : receiptMode ? `receipt-${receiptMode}` : contrastOnly ? 'contrast-only' : 'experience', report, interactionReport, errors }, null, 2));
   await browser.close();
 }
-console.log(sharePrivacyMode
+console.log(civilRulesMode
+  ? `PASS: ${report.length} mobile civil-pay cases; explicit pension status, family allowance, fixed pre-ad geometry and no forbidden transport.`
+  : sharePrivacyMode
   ? `PASS: ${report.length} share privacy cases; public destinations, explicit result text and isolated delivery fixtures.`
   : receiptMode
   ? `PASS: ${report.length} ${receiptMode} receipt cases; immutable actual-v1 retries, terminal consent/reset gate and no API transport.`
