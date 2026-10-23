@@ -90,7 +90,26 @@ const shared = await read('/share/' + token);
 privateResponse(shared.response); noAdTags(shared.body());
 assert.match(shared.body(), /msy-pages-share-bootstrap/);
 assert.match(shared.body(), /50,000,000/);
-assert.match(shared.body(), /연봉 5,000만원/);
+const sharedHead = /<head\b[^>]*>([\s\S]*?)<\/head>/i.exec(shared.body())?.[1];
+assert.ok(sharedHead, 'Legacy share must have a document head');
+assert.deepEqual([...sharedHead.matchAll(/<title>([^<]*)<\/title>/g)].map(match => match[1]), ['공유된 연봉 결과 | 머니샐러리']);
+for (const [attribute, name, expected] of [
+  ['property', 'og:title', '공유된 연봉 결과'],
+  ['property', 'og:url', 'https://www.moneysalary.com/'],
+  ['property', 'og:image', 'https://www.moneysalary.com/og-default.png'],
+  ['name', 'twitter:title', '공유된 연봉 결과'],
+  ['name', 'twitter:image', 'https://www.moneysalary.com/og-default.png'],
+]) {
+  const values = [...sharedHead.matchAll(new RegExp(`<meta\\b[^>]*\\b${attribute}="${name}"[^>]*\\bcontent="([^"]*)"[^>]*>`, 'g'))].map(match => match[1]);
+  assert.deepEqual(values, [expected], `Legacy share ${name} must be public and occur once`);
+}
+// The noindex share shell intentionally clears inherited canonical metadata;
+// its public sharing destination is represented by og:url, never the old token.
+assert.doesNotMatch(sharedHead, /<link\b[^>]*\brel=["']canonical["']/i);
+for (const privateValue of [token, encodeURIComponent(token), '50000000', '50,000,000', '5,000만원', '200000', '200,000',
+  'annualSalary', 'nonTaxableAmount', 'dependents', 'children']) {
+  assert.ok(!sharedHead.includes(privateValue), 'Legacy share head must not contain private input values or keys');
+}
 assert.doesNotMatch(shared.body(), /data-pages-share-invalid="true"/);
 const invalidShare = await read('/share/not-valid'); privateResponse(invalidShare.response);
 assert.match(invalidShare.body(), /data-pages-share-invalid="true"/);
