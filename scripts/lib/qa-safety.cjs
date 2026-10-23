@@ -138,7 +138,16 @@ function safeRoute(route, baseURL) {
     } catch (error) {
       await route.abort('blockedbyclient').catch(() => {});
       throw error;
-    } finally { if (response) await response.dispose(); }
+    } finally {
+      if (response) try { await response.dispose(); } catch (error) {
+        // Context shutdown can win the race after fulfill/abort. Suppress only
+        // this known Playwright cleanup error; request failures still propagate.
+        const closedDuringDispose = error instanceof Error
+          && ['TargetClosedError', 'TargetClosedError2'].includes(error.constructor.name)
+          && error.message === 'apiResponse.dispose: Target page, context or browser has been closed';
+        if (!closedDuringDispose) throw error;
+      }
+    }
   };
   return new Proxy(route, {
     get(target, key) {
