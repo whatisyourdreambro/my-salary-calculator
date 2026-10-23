@@ -1,4 +1,4 @@
-export const OPINION_RECEIPT_LOOKUP = "SELECT payload_hash, contract_version FROM private_opinions WHERE submission_id = ?";
+export const OPINION_RECEIPT_LOOKUP = "SELECT payload_hash, contract_version, expires_at FROM private_opinions WHERE submission_id = ?";
 
 /** Keep this order in one primary D1 transaction; changes() chains the writes. */
 export const OPINION_SQL = {
@@ -20,5 +20,5 @@ export const OPINION_SQL = {
     SELECT 'opinion', ?, 1 WHERE changes() = 1
     ON CONFLICT(module, day_start) DO UPDATE SET accepted = accepted + 1
   `,
-  receipt: `SELECT payload_hash, contract_version FROM private_opinions WHERE submission_id = ?`,
+  receipt: OPINION_RECEIPT_LOOKUP,
 } as const;

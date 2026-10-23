@@ -16,6 +16,7 @@ export default function PrivateOpinion({ target }: { target: ParticipationTarget
   const [locked, setLocked] = useState(false);
   const [receipt, setReceipt] = useState("");
   const [error, setError] = useState("");
+  const [restartRequired, setRestartRequired] = useState(false);
   const attempt = useRef<OpinionRequest | null>(null);
   const flight = useRef<AbortController | null>(null);
   const mounted = useRef(false);
@@ -28,7 +29,7 @@ export default function PrivateOpinion({ target }: { target: ParticipationTarget
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (flight.current || receipt || composingRef.current || !mounted.current) return;
+    if (flight.current || receipt || composingRef.current || !mounted.current || restartRequired) return;
     if (!attempt.current) {
       const normalized = body.replace(/\r\n?/g, "\n").trim();
       if (!consent || !normalized || contentIssue(normalized, "opinion")) return;
@@ -52,6 +53,12 @@ export default function PrivateOpinion({ target }: { target: ParticipationTarget
       if (response.ok && data !== null && typeof data === "object" && "ok" in data && data.ok === true
         && "receiptId" in data && data.receiptId === request.submissionId && "duplicate" in data && typeof data.duplicate === "boolean") {
         setReceipt(request.submissionId); setBody(""); attempt.current = null;
+      } else if (response.status === 400 && data !== null && typeof data === "object" && "error" in data && data.error === "CONTRACT_CHANGED") {
+        setRestartRequired(true); setConsent(false);
+        setError("동의 내용이 변경되어 이번 요청은 접수되지 않았습니다. 작성 내용을 별도로 보관하고 새로고침한 뒤 동의 내용을 다시 확인해 주세요.");
+      } else if (response.status === 409) {
+        setRestartRequired(true); setConsent(false);
+        setError("접수 번호의 내용 또는 유효기간이 맞지 않아 완료를 확인하지 못했습니다. 작성 내용을 별도로 보관해 주세요. 새 접수는 새로고침한 뒤 다시 동의하여 진행할 수 있습니다.");
       } else if (response.status === 400 && data !== null && typeof data === "object" && "error" in data
         && ["CONTENT_NOT_ALLOWED", "PERSONAL_DATA_NOT_ALLOWED", "INVALID_REQUEST"].includes(String(data.error))) {
         // A definitive validation rejection is not an uncertain network outcome.
@@ -90,7 +97,7 @@ export default function PrivateOpinion({ target }: { target: ParticipationTarget
         <p className="text-xs leading-6 text-muted-blue">운영자가 페이지 개선을 위해 페이지 구분·의견·접수 번호·시각을 확인합니다. 접수일부터 90일 보관을 기준으로 정기 삭제하며 공개하지 않습니다. 회신이 필요한 내용은 <Link href="/contact" className="font-bold underline">비공개 문의</Link>를 이용해 주세요.</p>
         <label className="flex min-h-11 items-start gap-3 text-xs leading-6"><input type="checkbox" checked={consent} onChange={event => setConsent(event.target.checked)} required className="mt-1 h-4 w-4 shrink-0" /><span>위 정보의 비공개 수집·이용에 동의합니다. 참여하지 않아도 계산을 이용할 수 있습니다.</span></label>
       </fieldset>
-      <button type="submit" disabled={pending || composing || Boolean(issue) || !body.trim() || !consent} className="inline-flex min-h-11 items-center rounded-xl bg-electric px-5 py-3 text-sm font-bold text-white disabled:opacity-50">{pending ? "저장 확인 중…" : locked ? "같은 의견으로 다시 확인" : "비공개 의견 보내기"}</button>
+      <button type="submit" disabled={pending || composing || Boolean(issue) || !body.trim() || !consent || restartRequired} className="inline-flex min-h-11 items-center rounded-xl bg-electric px-5 py-3 text-sm font-bold text-white disabled:opacity-50">{pending ? "저장 확인 중…" : locked ? "같은 의견으로 다시 확인" : "비공개 의견 보내기"}</button>
       {error && <p role="alert" className="text-sm leading-6 text-red-800">{error}</p>}
       {error && attempt.current && <details className="text-xs"><summary className="inline-flex min-h-11 cursor-pointer items-center">확인 중인 접수 번호</summary><p className="break-all select-all font-mono">{attempt.current.submissionId}</p></details>}
     </form>}

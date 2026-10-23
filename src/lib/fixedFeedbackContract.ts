@@ -1,4 +1,5 @@
 /** Fixed private opinions only. Never include calculation values or analytics IDs. */
+export const FIXED_FEEDBACK_CONTRACT_VERSION = "fixed-feedback-v1";
 export const FIXED_FEEDBACK_TARGETS = ["samsung_bonus", "civil_pay_2027", "samsung_company"] as const;
 export type FixedFeedbackTarget = (typeof FIXED_FEEDBACK_TARGETS)[number];
 export type FixedFeedbackVote = "helpful" | "confusing";
@@ -39,6 +40,8 @@ export type FixedFeedbackReason = (typeof FIXED_FEEDBACK_CONFIG)[FixedFeedbackTa
 
 export interface FixedFeedbackRequest {
   submissionId: string;
+  /** Legacy omission is fixed-feedback-v1, not the newest consent contract. */
+  contractVersion?: typeof FIXED_FEEDBACK_CONTRACT_VERSION;
   target: FixedFeedbackTarget;
   vote: FixedFeedbackVote;
   reason: FixedFeedbackReason | null;
@@ -47,7 +50,7 @@ export interface FixedFeedbackRequest {
 
 export type FixedFeedbackErrorCode =
   | "INVALID_ORIGIN" | "UNSUPPORTED_MEDIA_TYPE" | "PAYLOAD_TOO_LARGE"
-  | "INVALID_REQUEST" | "CONSENT_REQUIRED" | "RECEIPT_CONFLICT" | "RATE_LIMITED" | "UNAVAILABLE";
+  | "INVALID_REQUEST" | "CONSENT_REQUIRED" | "CONTRACT_CHANGED" | "RECEIPT_CONFLICT" | "RATE_LIMITED" | "UNAVAILABLE";
 
 export type FixedFeedbackResponse =
   | { ok: true; receiptId: string; duplicate: boolean }

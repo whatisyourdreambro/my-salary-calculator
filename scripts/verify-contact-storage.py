@@ -13,7 +13,11 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 SCHEMA = (ROOT / "migrations/0001_private_contact.sql").read_text(encoding="utf-8")
 SOURCE = (ROOT / "src/lib/server/contactSql.ts").read_text(encoding="utf-8")
 SQL = dict(re.findall(r"(\w+):\s*`([^`]+)`", SOURCE, re.S))
+CONSTANTS = dict(re.findall(r'export const (\w+)\s*=\s*"([^"\r\n]+)";', SOURCE))
+for name, alias in re.findall(r"(\w+):\s*([A-Z][A-Z0-9_]+)\s*,", SOURCE):
+    SQL[name] = CONSTANTS[alias]  # Explicit exported SQL strings only; never eval TS.
 assert set(SQL) == {"reserveRate", "insertInquiry", "receipt"}
+RECEIPT = ("hash-a", "contact-v1", 60 + 90 * 86400)
 
 
 def batch(db, receipt, payload="hash-a", bucket="hmac-bucket", limit=5):
@@ -33,16 +37,19 @@ def batch(db, receipt, payload="hash-a", bucket="hmac-bucket", limit=5):
 
 db = sqlite3.connect(":memory:")
 db.executescript(SCHEMA)
-assert batch(db, "receipt-1") == (1, 1, ("hash-a",))
-assert batch(db, "receipt-1") == (0, 0, ("hash-a",))
-assert batch(db, "receipt-1", "different-hash") == (0, 0, ("hash-a",))
+assert batch(db, "receipt-1") == (1, 1, RECEIPT)
+assert batch(db, "receipt-1") == (0, 0, RECEIPT)
+assert batch(db, "receipt-1", "different-hash") == (0, 0, RECEIPT)
+before_lookup = db.total_changes
+assert db.execute(SQL["receipt"], ("receipt-1",)).fetchone() == RECEIPT
+assert db.total_changes == before_lookup  # Hash/version/expiry read never renews data.
 assert db.execute("SELECT attempts FROM feedback_rate_limits").fetchone() == (1,)
 assert db.execute("SELECT status, resolved_at, reply_email FROM contact_inquiries").fetchone() == ("new", None, None)
 for number in range(2, 6):
-    assert batch(db, f"receipt-{number}") == (1, 1, ("hash-a",))
+    assert batch(db, f"receipt-{number}") == (1, 1, RECEIPT)
 assert batch(db, "receipt-6") == (0, 0, None)
-assert batch(db, "receipt-1") == (0, 0, ("hash-a",))
-assert batch(db, "receipt-new-window", bucket="different-window-hmac") == (1, 1, ("hash-a",))
+assert batch(db, "receipt-1") == (0, 0, RECEIPT)
+assert batch(db, "receipt-new-window", bucket="different-window-hmac") == (1, 1, RECEIPT)
 assert db.execute("SELECT COUNT(*) FROM contact_inquiries").fetchone() == (6,)
 
 # A failed write rolls back the rate reservation, not just the question INSERT.

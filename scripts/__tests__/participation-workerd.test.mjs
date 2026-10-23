@@ -18,7 +18,8 @@ Object.assign(cleanEnv, { CI: 'true', MSY_QA_MODE: '1', NEXT_PUBLIC_ADS_DISABLED
 process.env = cleanEnv;
 const { Miniflare, convertV4MiniflareOptions } = wranglerRequire('miniflare');
 const root = fileURLToPath(new URL('../../', import.meta.url));
-const allowed = new Set(['/api/contact', '/api/participation/opinions', '/api/participation/reactions', '/api/participation/summary', '/__synthetic_maintenance', '/__synthetic_egress']);
+const allowed = new Set(['/api/contact', '/api/feedback', '/api/participation/opinions', '/api/participation/reactions', '/api/participation/summary', '/__synthetic_maintenance', '/__synthetic_egress',
+  '/__synthetic_retired_contact', '/__synthetic_retired_feedback', '/__synthetic_retired_opinion', '/__synthetic_retired_reaction']);
 const uuid = n => `21926472-c435-4fe1-87c2-${String(n).padStart(12, '0')}`;
 const opinion = { submissionId: uuid(1), contractVersion: 'private-opinion-v1', target: 'samsung_bonus', body: 'Synthetic private improvement', inquiryConsent: true };
 const reaction = { submissionId: uuid(10), contractVersion: 'public-reaction-v1', target: 'samsung_bonus', vote: 'helpful', reason: null, publicAggregateConsent: true };
@@ -30,6 +31,16 @@ test('Pages handlers and scheduled cleanup operate together on real local D1 wit
     import { handlePagesDynamic } from './cloudflare/pages-dynamic';
     import { withRequestBodyLimits } from './cloudflare/request-body-limit.mjs';
     import maintenance from './workers/participation-maintenance';
+    import { createContactHandler } from './src/lib/server/contactHandler';
+    import { createFixedFeedbackHandler } from './src/lib/server/fixedFeedbackHandler';
+    import { createOpinionHandler } from './src/lib/server/opinionHandler';
+    import { createReactionHandler } from './src/lib/server/reactionHandler';
+    const retired = {
+      '/__synthetic_retired_contact': createContactHandler(() => false),
+      '/__synthetic_retired_feedback': createFixedFeedbackHandler(() => false),
+      '/__synthetic_retired_opinion': createOpinionHandler(() => false),
+      '/__synthetic_retired_reaction': createReactionHandler(() => false),
+    };
     export default withRequestBodyLimits({ async fetch(request, env) {
       const url = new URL(request.url);
       if (url.pathname === '/__synthetic_egress') return fetch('https://no-network.invalid/denied');
@@ -38,6 +49,22 @@ test('Pages handlers and scheduled cleanup operate together on real local D1 wit
         catch { return Response.json({ ok: false }, { status: 503 }); }
       }
       const synthetic = new Request('https://participation.invalid' + url.pathname + url.search, request);
+      if (Object.hasOwn(retired, url.pathname)) {
+        const now = Number(url.searchParams.get('now'));
+        if (!Number.isSafeInteger(now) || now <= 0) return new Response('Invalid synthetic time', { status: 400 });
+        let reads = 0;
+        const readOnlyDb = {
+          prepare(sql) {
+            if (!sql.trimStart().toUpperCase().startsWith('SELECT ')) throw new Error('Synthetic replay attempted a write');
+            reads++;
+            return env.FEEDBACK_DB.prepare(sql);
+          },
+          batch(statements) { return env.FEEDBACK_DB.batch(statements); },
+        };
+        const result = await retired[url.pathname](synthetic, { ...env, FEEDBACK_DB: readOnlyDb }, now * 1000);
+        result.headers.set('x-synthetic-selects', String(reads));
+        return result;
+      }
       return await handlePagesDynamic(synthetic, env) ?? new Response('Not found', { status: 404 });
     }, scheduled: maintenance.scheduled });
   `, resolveDir: root, sourcefile: 'synthetic-participation.ts', loader: 'ts' }, bundle: true, write: false, metafile: true, platform: 'browser', format: 'esm', logLevel: 'silent' });
@@ -122,6 +149,59 @@ test('Pages handlers and scheduled cleanup operate together on real local D1 wit
   assert.equal(await scalar('SELECT COUNT(*) AS n FROM private_opinions'), 0);
   assert.ok(await scalar('SELECT last_cleanup_at FROM participation_health') > previousHealth);
   assert.equal(await scalar('SELECT COUNT(*) AS n FROM helpfulness_feedback'), 1);
+  // Freeze new-write admission for each real v1 without inventing a v2 contract.
+  // The wrapper refuses every non-SELECT statement; all reads still execute in D1.
+  async function receiptState() {
+    const statements = [
+      'SELECT submission_id,payload_hash,consent_version,created_at,expires_at FROM contact_inquiries ORDER BY submission_id',
+      'SELECT submission_id,payload_hash,consent_version,created_at,expires_at FROM helpfulness_feedback ORDER BY submission_id',
+      'SELECT submission_id,payload_hash,contract_version,policy_version,created_at,expires_at FROM private_opinions ORDER BY submission_id',
+      'SELECT submission_id,payload_hash,contract_version,created_at,expires_at FROM participation_reactions ORDER BY submission_id',
+      'SELECT bucket_key,attempts,expires_at FROM feedback_rate_limits ORDER BY bucket_key',
+      'SELECT module,day_start,accepted FROM participation_daily_usage ORDER BY module,day_start',
+    ];
+    return (await db.batch(statements.map(sql => db.prepare(sql)))).map(result => result.results);
+  }
+  const contracts = [
+    { module: 'contact', path: '/api/contact', table: 'contact_inquiries', versionField: 'consent_version', version: 'contact-v1', legacy: true,
+      input: { ...contact, submissionId: uuid(100) }, change: { body: 'Different synthetic inquiry' } },
+    { module: 'feedback', path: '/api/feedback', table: 'helpfulness_feedback', versionField: 'consent_version', version: 'fixed-feedback-v1', legacy: true,
+      input: { submissionId: uuid(101), target: 'samsung_bonus', vote: 'helpful', reason: null, feedbackConsent: true }, change: { vote: 'confusing', reason: 'input_method' } },
+    { module: 'opinion', path: '/api/participation/opinions', table: 'private_opinions', versionField: 'contract_version', version: 'private-opinion-v1',
+      input: { ...opinion, submissionId: uuid(102) }, change: { body: 'Different synthetic opinion' } },
+    { module: 'reaction', path: '/api/participation/reactions', table: 'participation_reactions', versionField: 'contract_version', version: 'public-reaction-v1',
+      input: { ...reaction, submissionId: uuid(103) }, change: { vote: 'confusing', reason: 'input_method' } },
+  ];
+  for (const [index, contract] of contracts.entries()) {
+    const ip = `192.0.2.${200 + index}`;
+    assert.equal((await dispatch(contract.path, contract.input, ip)).status, 201, `${contract.module} actual v1 admission`);
+    const explicit = { ...contract.input, contractVersion: contract.version };
+    const stored = await db.prepare(`SELECT payload_hash,${contract.versionField} AS version,created_at,expires_at FROM ${contract.table} WHERE submission_id=?`).bind(explicit.submissionId).first();
+    assert.equal(stored.version, contract.version);
+    assert.match(stored.payload_hash, /^[a-f0-9]{64}$/);
+    assert.equal(stored.expires_at - stored.created_at, 90 * 86400);
+    const before = await receiptState();
+    const currentReplay = await dispatch(contract.path, explicit, ip);
+    assert.equal(currentReplay.status, 200);
+    assert.deepEqual(await currentReplay.json(), { ok: true, receiptId: explicit.submissionId, duplicate: true });
+    assert.deepEqual(await receiptState(), before, `${contract.module} current replay preserves all metadata/counters`);
+    const retiredPath = `/__synthetic_retired_${contract.module}`;
+    async function probe(payload, time, status, error) {
+      const result = await dispatch(`${retiredPath}?now=${time}`, payload, ip);
+      assert.equal(result.status, status, `${contract.module} retired policy at ${time}`);
+      assert.equal(result.headers.get('x-synthetic-selects'), error === 'INVALID_REQUEST' ? '0' : '1');
+      assert.deepEqual(await result.json(), error ? { ok: false, error } : { ok: true, receiptId: explicit.submissionId, duplicate: true });
+      assert.deepEqual(await receiptState(), before, `${contract.module} readonly replay never renews expiry or consumes quota`);
+    }
+    await probe(explicit, stored.expires_at - 1, 200);
+    if (contract.legacy) await probe(contract.input, stored.expires_at - 1, 200);
+    await probe({ ...explicit, ...contract.change }, stored.expires_at - 1, 409, 'RECEIPT_CONFLICT');
+    await probe(explicit, stored.expires_at, 409, 'RECEIPT_CONFLICT');
+    await probe(explicit, stored.expires_at + 1, 409, 'RECEIPT_CONFLICT');
+    await probe({ ...explicit, submissionId: uuid(110 + index) }, stored.created_at, 400, 'CONTRACT_CHANGED');
+    if (contract.legacy) await probe({ ...contract.input, submissionId: uuid(120 + index) }, stored.created_at, 400, 'CONTRACT_CHANGED');
+    await probe({ ...explicit, contractVersion: 'unknown-contract' }, stored.created_at, 400, 'INVALID_REQUEST');
+  }
   assert.equal(blocked, 1, 'Only the deliberately denied egress fixture can attempt outbound traffic');
-  t.diagnostic('PASS: real Workerd/D1; Pages env injection; policy/replay; 10 public reactions; old-private exclusion; real delete/rollback; 26h gate; independent privacy contact; no outbound requests.');
+  t.diagnostic('PASS: real Workerd/D1; four actual v1 receipt contracts; legacy contact/fixed replay; retired new-write policy; expiry-1/expiry/expiry+1; SELECT-only replay; unchanged hashes/expiry/counters; Pages env injection; 10 public reactions; old-private exclusion; real delete/rollback; 26h gate; no outbound requests.');
 });

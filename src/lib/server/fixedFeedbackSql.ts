@@ -1,3 +1,4 @@
+export const FIXED_FEEDBACK_RECEIPT_LOOKUP = "SELECT payload_hash, consent_version, expires_at FROM helpfulness_feedback WHERE submission_id = ?";
 /** Keep reservation, insertion and receipt lookup in one D1 batch transaction. */
 export const FIXED_FEEDBACK_SQL = {
   reserveRate: `
@@ -16,5 +17,5 @@ export const FIXED_FEEDBACK_SQL = {
     SELECT ?, ?, ?, ?, ?, ?, ?, ?, ? WHERE changes() = 1
     ON CONFLICT(submission_id) DO NOTHING
   `,
-  receipt: `SELECT payload_hash FROM helpfulness_feedback WHERE submission_id = ?`,
+  receipt: FIXED_FEEDBACK_RECEIPT_LOOKUP,
 } as const;

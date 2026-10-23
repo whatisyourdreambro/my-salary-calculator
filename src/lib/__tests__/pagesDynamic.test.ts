@@ -152,7 +152,11 @@ describe('Pages private POST routes directly reuse validation, receipts and stor
     const batch = vi.fn(async (statements: FeedbackStatement[]) => statements.length === 1 ? [{ success: true, meta: {}, results: [] }] : [
       { success: true, meta: { changes: rateLimited ? 0 : 1 }, results: [] },
       { success: true, meta: { changes: rateLimited ? 0 : 1 }, results: [] },
-      { success: true, meta: {}, results: rateLimited ? [] : [{ payload_hash: values.get(statements[1])![1] }] },
+      { success: true, meta: {}, results: rateLimited ? [] : [{
+        payload_hash: values.get(statements[1])![1],
+        consent_version: values.get(statements[1])!.at(-3),
+        expires_at: values.get(statements[1])!.at(-1),
+      }] },
     ]);
     const env: PagesDynamicEnv = { ...assetsEnv().env, FEEDBACK_RATE_LIMIT_SECRET: 'synthetic-test-secret-at-least-32-characters', FEEDBACK_DB: {
       prepare: () => { const statement = { bind(...args: unknown[]) { values.set(statement, args); return statement; } }; return statement; }, batch,
@@ -171,7 +175,7 @@ describe('Pages private POST routes directly reuse validation, receipts and stor
     expect(response!.status).toBe(201);
     expect(await response!.json()).toEqual({ ok: true, receiptId: id, duplicate: false });
     expect(response!.headers.get('cache-control')).toBe('private, no-store');
-    expect(batch).toHaveBeenCalledTimes(path === '/api/contact' ? 2 : 1);
+    expect(batch).toHaveBeenCalledTimes(2);
     expect(batch.mock.calls.at(-1)![0]).toHaveLength(3);
     expect((await handlePagesDynamic(post(path, body), privateEnv(true).env))!.status).toBe(429);
   });
@@ -205,7 +209,7 @@ describe('Pages participation routes receive only the request environment', () =
       }
       const insert = values.get(items[1])!;
       const opinion = queries.get(items[1])!.includes('private_opinions');
-      const row = { payload_hash: insert[1], contract_version: opinion ? 'private-opinion-v1' : 'public-reaction-v1' };
+      const row = { payload_hash: insert[1], contract_version: opinion ? 'private-opinion-v1' : 'public-reaction-v1', expires_at: insert.at(-1) };
       receipts.set(`${opinion ? OPINION_RECEIPT_LOOKUP : REACTION_RECEIPT_LOOKUP}:${insert[0]}`, row);
       return items.map((_item, index) => ({ success: true, meta: { changes: index < 3 ? 1 : 0 }, results: index === 3 ? [row] : [] }));
     });

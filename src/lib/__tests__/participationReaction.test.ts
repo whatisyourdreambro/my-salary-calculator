@@ -27,13 +27,13 @@ function storage(row: Record<string, unknown> | null = snapshot, cleanup: unknow
         const sql = statements[0].sql;
         const results = sql === PARTICIPATION_HEALTH_SQL ? [{ last_cleanup_at: cleanup }]
           : sql === PARTICIPATION_SUMMARY_SQL ? row ? [row] : []
-          : sql === REACTION_RECEIPT_LOOKUP && saved ? [{ payload_hash: saved, contract_version: input.contractVersion }] : [];
+          : sql === REACTION_RECEIPT_LOOKUP && saved ? [{ payload_hash: saved, contract_version: input.contractVersion, expires_at: seconds + 90 * 86400 }] : [];
         return [{ success: true, meta: {}, results }];
       }
       if (statements.length === 4) {
         const duplicate = !!saved;
         saved ??= statements[1].values[1] as string;
-        return statements.map((_item, index) => ({ success: true, meta: { changes: index < 3 && !duplicate ? 1 : 0 }, results: index === 3 ? [{ payload_hash: saved, contract_version: input.contractVersion }] : [] }));
+        return statements.map((_item, index) => ({ success: true, meta: { changes: index < 3 && !duplicate ? 1 : 0 }, results: index === 3 ? [{ payload_hash: saved, contract_version: input.contractVersion, expires_at: seconds + 90 * 86400 }] : [] }));
       }
       return statements.map(() => ({ success: true, meta: { changes: 1 }, results: [] }));
     }),

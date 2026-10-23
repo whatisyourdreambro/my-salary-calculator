@@ -9,6 +9,7 @@ import PrivateOpinion from "@/components/PrivateOpinion";
 import ParticipationSummary from "@/components/ParticipationSummary";
 import {
   FIXED_FEEDBACK_CONFIG,
+  FIXED_FEEDBACK_CONTRACT_VERSION,
   type FixedFeedbackRequest,
   type FixedFeedbackReason,
   type FixedFeedbackTarget,
@@ -37,6 +38,7 @@ function FeedbackVisit({ target, publicMode }: { target: FixedFeedbackTarget; pu
   const [locked, setLocked] = useState(false);
   const [error, setError] = useState("");
   const [receipt, setReceipt] = useState("");
+  const [restartRequired, setRestartRequired] = useState(false);
   const attempt = useRef<FixedFeedbackRequest | ReactionRequest | null>(null);
   const inFlight = useRef<{ controller: AbortController; timeout: number } | null>(null);
   const visit = useRef<symbol | null>(null);
@@ -64,7 +66,7 @@ function FeedbackVisit({ target, publicMode }: { target: FixedFeedbackTarget; pu
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     // The ref also covers two submits before React commits the disabled state.
-    if (inFlight.current || receipt || !visit.current) return;
+    if (inFlight.current || receipt || !visit.current || restartRequired) return;
     if (!attempt.current) {
       if (!consent || !vote || (vote === "confusing" && !config.reasons.some(option => option.value === reason))) return;
       try {
@@ -74,7 +76,7 @@ function FeedbackVisit({ target, publicMode }: { target: FixedFeedbackTarget; pu
         };
         attempt.current = publicMode
           ? { ...selected, contractVersion: REACTION_CONTRACT_VERSION, publicAggregateConsent: true }
-          : { ...selected, feedbackConsent: true };
+          : { ...selected, contractVersion: FIXED_FEEDBACK_CONTRACT_VERSION, feedbackConsent: true };
       } catch {
         setError("접수 번호를 만들지 못했습니다. 브라우저 연결 환경을 확인해 주세요.");
         return;
@@ -101,8 +103,12 @@ function FeedbackVisit({ target, publicMode }: { target: FixedFeedbackTarget; pu
         setReceipt(request.submissionId);
       } else if (response.status === 429) {
         setError("짧은 시간에 접수가 많았습니다. 잠시 후 같은 의견으로 다시 확인해 주세요.");
+      } else if (response.status === 400 && typeof data === "object" && data !== null && "error" in data && data.error === "CONTRACT_CHANGED") {
+        setRestartRequired(true); setConsent(false);
+        setError("동의 내용이 변경되어 이번 요청은 접수되지 않았습니다. 새로고침한 뒤 동의 내용을 다시 확인해 주세요.");
       } else if (response.status === 409) {
-        setError("접수 번호의 내용이 일치하지 않아 저장 완료를 확인하지 못했습니다. 아래 자세한 문의에서 운영자에게 알려주세요.");
+        setRestartRequired(true); setConsent(false);
+        setError("접수 번호의 내용 또는 유효기간이 맞지 않아 완료를 확인하지 못했습니다. 정정·삭제가 필요하면 아래 자세한 문의를 이용해 주세요. 새 접수는 새로고침한 뒤 다시 동의하여 진행할 수 있습니다.");
       } else {
         setError("저장 완료를 확인하지 못했습니다. 선택을 유지하고 같은 접수 번호로 다시 확인할 수 있습니다.");
       }
@@ -157,7 +163,7 @@ function FeedbackVisit({ target, publicMode }: { target: FixedFeedbackTarget; pu
             </label>
           </fieldset>
           {locked && !pending && <p className="mt-3 text-xs leading-6 text-muted-blue">중복 접수를 막기 위해 보낸 선택을 유지합니다. 새로고침하면 이 화면의 접수 상태가 사라집니다.</p>}
-          <button type="submit" disabled={pending || !consent || !vote || (vote === "confusing" && !reason)} className="mt-3 inline-flex min-h-11 items-center justify-center rounded-xl bg-electric px-5 py-3 text-sm font-bold text-white disabled:cursor-default disabled:opacity-50">{pending ? "저장 확인 중…" : locked ? "같은 의견으로 다시 확인" : "의견 보내기"}</button>
+          <button type="submit" disabled={pending || !consent || !vote || (vote === "confusing" && !reason) || restartRequired} className="mt-3 inline-flex min-h-11 items-center justify-center rounded-xl bg-electric px-5 py-3 text-sm font-bold text-white disabled:cursor-default disabled:opacity-50">{pending ? "저장 확인 중…" : locked ? "같은 의견으로 다시 확인" : "의견 보내기"}</button>
           <p role="status" className="sr-only">{pending ? "저장 확인 중입니다." : ""}</p>
           {error && <p role="alert" className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3 text-sm leading-6 text-red-800">{error}</p>}
           {error && attempt.current && <details className="mt-2 text-xs text-muted-blue"><summary className="inline-flex min-h-11 cursor-pointer items-center">확인 중인 접수 번호 보기</summary><p className="break-all select-all font-mono">{attempt.current.submissionId}</p></details>}

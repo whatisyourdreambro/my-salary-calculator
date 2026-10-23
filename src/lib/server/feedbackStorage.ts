@@ -72,7 +72,8 @@ export function feedbackClientIp(request: Request): string | null {
 }
 
 /** Store route context, never query/hash parameters, share tokens or salary inputs. */
-export function normalizeFeedbackPath(value: unknown): string | null {
+// Frozen contact-v1 canonicalization. A later contract needs its own normalizer.
+export function normalizeFeedbackPathV1(value: unknown): string | null {
   if (typeof value !== "string" || value.length < 1 || value.length > 200) return null;
   let decoded: string;
   try { decoded = decodeURIComponent(value); } catch { return null; }
@@ -86,3 +87,5 @@ export function normalizeFeedbackPath(value: unknown): string | null {
     .replace(/^\/share(?:\/.*)?$/, "/share/[redacted]")
     .replace(/^\/(salary|monthly)\/\d+(?:-manwon|(?:-5)?-eok)?(?=\/|$)/, "/$1/[amount]");
 }
+
+export const normalizeFeedbackPath = normalizeFeedbackPathV1;

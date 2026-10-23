@@ -15,7 +15,7 @@ export interface OpinionRequest {
   inquiryConsent: true;
 }
 export type OpinionError = "INVALID_ORIGIN" | "UNSUPPORTED_MEDIA_TYPE" | "PAYLOAD_TOO_LARGE"
-  | "INVALID_REQUEST" | "CONSENT_REQUIRED" | "CONTENT_NOT_ALLOWED" | "PERSONAL_DATA_NOT_ALLOWED"
+  | "INVALID_REQUEST" | "CONSENT_REQUIRED" | "CONTRACT_CHANGED" | "CONTENT_NOT_ALLOWED" | "PERSONAL_DATA_NOT_ALLOWED"
   | "RECEIPT_CONFLICT" | "RATE_LIMITED" | "UNAVAILABLE";
 export type OpinionResponse = { ok: true; receiptId: string; duplicate: boolean } | { ok: false; error: OpinionError };
 

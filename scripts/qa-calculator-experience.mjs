@@ -11,9 +11,12 @@ const base = assertLocalQaTarget(process.env.BASE_URL || 'http://127.0.0.1:3100'
 assertQaEnvironment();
 const contrastOnly = process.env.QA_CONTRAST_ONLY === '1';
 if (contrastOnly) assert(process.env.QA_ROUTES, 'Contrast-only QA requires explicit QA_ROUTES');
+const receiptMode = process.env.QA_RECEIPT_MODE || '';
+if (!['', 'public', 'legacy'].includes(receiptMode)) throw new Error('QA_RECEIPT_MODE must be public or legacy.');
+if (receiptMode && contrastOnly) throw new Error('Receipt and contrast audits must run separately.');
 const runLabel = process.env.QA_RUN_LABEL || '';
 if (runLabel && !/^[a-z0-9][a-z0-9-]{0,63}$/.test(runLabel)) throw new Error('QA_RUN_LABEL must be a short lowercase name without paths.');
-const output = path.resolve('.artifacts/experience-qa', runLabel || (contrastOnly ? 'contrast' : '.'));
+const output = path.resolve('.artifacts/experience-qa', runLabel || (receiptMode ? `receipt-${receiptMode}` : contrastOnly ? 'contrast' : '.'));
 const routes = process.env.QA_ROUTES?.split(',') || ['/calc', '/calc/refinance-break-even', '/calc/advertising-profit-roas', '/', '/en', '/home-loan', '/year-end-tax', '/calc/samsung-bonus', '/calc/jeonse-loan', '/calc/year-end-bonus-tax', '/savings-interest-2026', '/tools/finance/compound', '/money-check'];
 const report = [];
 const interactionReport = [];
@@ -30,7 +33,7 @@ const participationTargets = {
 // In-memory responses only. The normal transport guard still rejects every POST.
 // Exact loopback paths are intercepted before network; all other fetches retain
 // the original guarded transport. Never add a remote origin or product switch.
-function installParticipationFixtures() {
+function installParticipationFixtures({ strictReceipts = false } = {}) {
   const original = window.fetch.bind(window);
   const generatedAt = Math.floor(Date.now() / 1000) - 60;
   const summaries = {
@@ -40,13 +43,14 @@ function installParticipationFixtures() {
     expired: { ok: true, visible: true, total: 10, helpful: 7, confusing: 3, windowDays: 28, generatedAt: generatedAt - 26 * 3600 },
     future: { ok: true, visible: true, total: 10, helpful: 7, confusing: 3, windowDays: 28, generatedAt: generatedAt + 3600 },
   };
-  const fixture = { calls: [], reactions: [], opinions: [], summaryMode: sessionStorage.getItem('qa:participation:summary') || 'nine' };
+  const fixture = { calls: [], reactions: [], opinions: [], contacts: [], feedback: [], summaryMode: sessionStorage.getItem('qa:participation:summary') || 'nine' };
   window.__QA_PARTICIPATION__ = fixture;
   window.fetch = async (input, options = {}) => {
     const url = new URL(input instanceof Request ? input.url : String(input), location.href);
     const method = options.method || (input instanceof Request ? input.method : 'GET');
     const isSummary = url.pathname === '/api/participation/summary' && method === 'GET';
-    const kind = url.pathname === '/api/participation/reactions' ? 'reactions' : url.pathname === '/api/participation/opinions' ? 'opinions' : null;
+    const kind = url.pathname === '/api/participation/reactions' ? 'reactions' : url.pathname === '/api/participation/opinions' ? 'opinions'
+      : strictReceipts && url.pathname === '/api/contact' ? 'contacts' : strictReceipts && url.pathname === '/api/feedback' ? 'feedback' : null;
     if (url.origin !== location.origin || (!isSummary && (!kind || method !== 'POST'))) return original(input, options);
     const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
     if (isSummary) {
@@ -54,14 +58,151 @@ function installParticipationFixtures() {
       return fixture.summaryMode === 'unavailable' ? json({ ok: false, error: 'UNAVAILABLE' }, 503) : json(summaries[fixture.summaryMode] || summaries.nine);
     }
     const body = JSON.parse(options.body);
-    fixture.calls.push({ kind, body });
-    const mode = fixture[kind].shift() || 'success';
+    fixture.calls.push({ kind, body, serialized: options.body });
+    const mode = fixture[kind].shift() || (strictReceipts ? 'unexpected' : 'success');
+    if (mode === 'unexpected') throw new Error('Unscheduled synthetic receipt request');
     if (mode === 'network') throw new TypeError('Synthetic offline response');
     if (mode === 'rate') return json({ ok: false, error: 'RATE_LIMITED' }, 429);
     if (mode === 'reject') return json({ ok: false, error: 'CONTENT_NOT_ALLOWED' }, 400);
     if (mode === 'invalid') return json({ ok: true, receiptId: '11111111-1111-4111-8111-111111111111', duplicate: false });
+    if (mode === 'contract_changed') return json({ ok: false, error: 'CONTRACT_CHANGED' }, 400);
+    // Server expiry is private; the client receives the existing generic 409 contract.
+    if (mode === 'expired') return json({ ok: false, error: 'RECEIPT_CONFLICT' }, 409);
     return json({ ok: true, receiptId: body.submissionId, duplicate: false }, 201);
   };
+}
+
+// Explicitly run against two ad-free builds: public flags enabled, or legacy flags
+// disabled. The test never changes product flags or consent text in the browser.
+async function auditReceiptCompatibility(browser) {
+  const route = '/calc/samsung-bonus';
+  const target = 'samsung_bonus';
+  const draft = '보험 계산 기준을 더 자세히 알려주세요.\n공식 자료 설명이 필요합니다.';
+  const contracts = { reactions: 'public-reaction-v1', opinions: 'private-opinion-v1', contacts: 'contact-v1', feedback: 'fixed-feedback-v1' };
+  const kinds = receiptMode === 'public' ? ['reactions', 'opinions', 'contacts'] : ['feedback', 'contacts'];
+  for (const theme of ['light', 'dark']) {
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 }, colorScheme: theme, serviceWorkers: 'block' });
+    // launchQaBrowser installs the network guard before this context or any page.
+    // Fixtures replace only exact same-origin response construction, not transport.
+    await context.addInitScript(theme => localStorage.setItem('theme', theme), theme);
+    await context.addInitScript(installParticipationFixtures, { strictReceipts: true });
+    const transportRequests = [];
+    context.on('request', request => {
+      const url = new URL(request.url());
+      if (!['GET', 'HEAD'].includes(request.method()) || url.pathname.startsWith('/api/participation/')
+        || ['/api/contact', '/api/feedback'].includes(url.pathname)) transportRequests.push({ method: request.method(), path: url.pathname });
+    });
+    const page = await context.newPage();
+    page.on('pageerror', error => errors.push(error.message));
+    page.on('console', message => {
+      if (message.type() === 'error' && /hydration|hydrating|Minified React error #(?:418|423|425)/i.test(message.text())) errors.push(message.text());
+    });
+    try {
+      for (const kind of kinds) for (const terminal of ['success', 'contract_changed', 'expired']) {
+        const pathname = kind === 'contacts' ? '/contact' : route;
+        const response = await page.goto(base + pathname, { waitUntil: 'networkidle', timeout: 120000 });
+        assert.equal(response.status(), 200, pathname);
+        await page.locator('h1').first().waitFor();
+        let form, consent, field, selection;
+        if (kind === 'contacts') {
+          field = page.locator('#inquiry-body');
+          form = field.locator('xpath=ancestor::form[1]');
+          await form.locator('#inquiry-type').selectOption('explanation');
+          await form.locator('#inquiry-page').fill(route);
+          await field.fill(draft);
+          consent = form.getByRole('checkbox', { name: /필수.*문의 접수를 위한/ });
+        } else {
+          const section = page.locator(`section[aria-labelledby="private-feedback-${target}"]`);
+          await section.waitFor();
+          const choice = section.locator(':scope > form');
+          const publicConsent = choice.getByRole('checkbox', { name: /위 정보의 수집·이용과 반응 건수/ });
+          const legacyConsent = choice.getByRole('checkbox', { name: /의견 접수를 위한 위 정보/ });
+          assert.equal(await publicConsent.count(), receiptMode === 'public' ? 1 : 0, 'built public mode matches the explicit test mode');
+          assert.equal(await legacyConsent.count(), receiptMode === 'legacy' ? 1 : 0, 'legacy is tested as built, without a runtime mode override');
+          assert.equal(await section.getByText('짧은 의견 비공개로 보내기', { exact: true }).count(), receiptMode === 'public' ? 1 : 0);
+          if (kind === 'opinions') {
+            await section.getByText('짧은 의견 비공개로 보내기', { exact: true }).click();
+            field = section.getByRole('textbox', { name: '개선 의견 · 최대 200자', exact: true });
+            form = field.locator('xpath=ancestor::form[1]');
+            await field.fill(draft);
+            consent = form.getByRole('checkbox', { name: /위 정보의 비공개 수집·이용/ });
+          } else {
+            form = choice;
+            await form.getByRole('button', { name: '헷갈려요', exact: true }).click();
+            selection = form.getByRole('radio').first();
+            await selection.check();
+            consent = receiptMode === 'public' ? publicConsent : legacyConsent;
+          }
+        }
+        await consent.check();
+        const submit = form.locator('button[type="submit"]');
+        const selectedReason = selection ? await selection.inputValue() : null;
+        const getCalls = () => page.evaluate(kind => window.__QA_PARTICIPATION__.calls.filter(call => call.kind === kind), kind);
+        const preserveDraft = async () => {
+          if (field) assert.equal(await field.inputValue(), draft, `${kind}: draft remains in component memory`);
+          if (selection) {
+            assert(await selection.isChecked(), `${kind}: selected reason survives uncertain/terminal response`);
+            assert.equal(await form.getByRole('button', { name: '헷갈려요', exact: true }).getAttribute('aria-pressed'), 'true');
+          }
+          if (kind === 'contacts') {
+            assert.equal(await form.locator('#inquiry-type').inputValue(), 'explanation');
+            assert.equal(await form.locator('#inquiry-page').inputValue(), route);
+          }
+        };
+        await page.evaluate(({ kind, terminal }) => { window.__QA_PARTICIPATION__[kind] = ['network', 'invalid', terminal]; }, { kind, terminal });
+        for (const expectedError of ['연결이 끊', kind === 'contacts' ? '접수 완료를 확인하지' : '저장 완료를 확인하지']) {
+          assert(!(await submit.isDisabled()), `${kind}: same-attempt retry remains available`);
+          await submit.click();
+          await form.getByRole('alert').filter({ hasText: expectedError }).waitFor();
+          await preserveDraft();
+          assert(await consent.isChecked(), `${kind}: uncertain result does not invent a new consent`);
+        }
+        await submit.click();
+        if (terminal === 'success') {
+          if (kind === 'contacts') await page.getByRole('heading', { name: '비공개 접수가 완료되었습니다', exact: true }).waitFor();
+          else if (kind === 'opinions') await page.getByText('의견이 비공개로 접수되었습니다. 공개 댓글이나 답변 알림은 제공하지 않습니다.', { exact: true }).waitFor();
+          else await page.getByRole('heading', { name: kind === 'reactions' ? '선택한 반응이 접수되었습니다' : '의견이 비공개로 저장되었습니다', exact: true }).waitFor();
+        } else {
+          await form.getByRole('alert').filter({ hasText: terminal === 'contract_changed' ? '동의 내용이 변경' : '내용 또는 유효기간' }).waitFor();
+          await preserveDraft();
+          assert.equal(await consent.isChecked(), false, `${kind}/${terminal}: consent must be cleared`);
+          assert(await submit.isDisabled(), `${kind}/${terminal}: old attempt must not be submitted again`);
+          const count = (await getCalls()).length;
+          // Dispatch bypasses native required/disabled UI checks, exercising the
+          // React handler's restart guard without changing any product state.
+          await form.evaluate(async element => {
+            element.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+            await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          });
+          assert.equal((await getCalls()).length, count, `${kind}/${terminal}: manual submit cannot resend or auto-upgrade`);
+          assert(await submit.isDisabled());
+          assert.equal(await consent.isChecked(), false);
+        }
+        const calls = await getCalls();
+        assert.equal(calls.length, 3, `${kind}/${terminal}: no automatic retries`);
+        assert.equal(new Set(calls.map(call => call.serialized)).size, 1, `${kind}/${terminal}: exact first request body and UUID retained`);
+        const sent = calls[0].body;
+        assert.match(sent.submissionId, /^[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i);
+        assert.equal(sent.contractVersion, contracts[kind], 'only actual released v1 is sent');
+        const fields = kind === 'contacts' ? ['submissionId', 'contractVersion', 'type', 'pagePath', 'body', 'inquiryConsent', 'replyEmail', 'replyConsent']
+          : kind === 'opinions' ? ['submissionId', 'contractVersion', 'target', 'body', 'inquiryConsent']
+            : ['submissionId', 'contractVersion', 'target', 'vote', 'reason', kind === 'reactions' ? 'publicAggregateConsent' : 'feedbackConsent'];
+        assert.deepEqual(Object.keys(sent).sort(), fields.sort());
+        if (field) assert.equal(sent.body, draft);
+        if (kind === 'contacts') { assert.equal(sent.type, 'explanation'); assert.equal(sent.pagePath, route); assert.equal(sent.inquiryConsent, true); assert.equal(sent.replyEmail, ''); assert.equal(sent.replyConsent, false); }
+        else {
+          assert.equal(sent.target, target);
+          if (kind === 'opinions') assert.equal(sent.inquiryConsent, true);
+          else { assert.equal(sent.vote, 'confusing'); assert.equal(sent.reason, selectedReason); assert.equal(sent[kind === 'reactions' ? 'publicAggregateConsent' : 'feedbackConsent'], true); }
+        }
+        assert.deepEqual(transportRequests, [], 'every frame keeps the guard; synthetic POST/summary responses never reach network transport');
+        report.push({ route: pathname, theme, kind, outcome: terminal, attempts: calls.length, contractVersion: sent.contractVersion,
+          immutableRetry: true, terminalReconsentGate: terminal !== 'success', transport: 'same-origin in-memory fixture; real POST blocked' });
+      }
+    } finally { await context.close(); }
+  }
+  assert.equal(report.length, kinds.length * 3 * 2, 'all requested modes, outcomes and themes were exercised');
+  assert.deepEqual(errors, []);
 }
 
 async function auditParticipation(page, route, theme, networkRequests) {
@@ -578,7 +719,8 @@ async function auditContrastCases(browser) {
 await fs.mkdir(output, { recursive: true });
 const browser = await launchQaBrowser(chromium, base, { headless: true, ...(process.platform === 'win32' ? { channel: 'chrome' } : {}) });
 try {
-  if (contrastOnly) await auditContrastCases(browser);
+  if (receiptMode) await auditReceiptCompatibility(browser);
+  else if (contrastOnly) await auditContrastCases(browser);
   else {
   for (const theme of ['light', 'dark']) {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 }, colorScheme: theme, serviceWorkers: 'block' });
@@ -792,9 +934,11 @@ try {
   assert.deepEqual(errors, []);
   }
 } finally {
-  await fs.writeFile(path.join(output, 'summary.json'), JSON.stringify({ mode: contrastOnly ? 'contrast-only' : 'experience', report, interactionReport, errors }, null, 2));
+  await fs.writeFile(path.join(output, 'summary.json'), JSON.stringify({ mode: receiptMode ? `receipt-${receiptMode}` : contrastOnly ? 'contrast-only' : 'experience', report, interactionReport, errors }, null, 2));
   await browser.close();
 }
-console.log(contrastOnly
+console.log(receiptMode
+  ? `PASS: ${report.length} ${receiptMode} receipt cases; immutable actual-v1 retries, terminal consent/reset gate and no API transport.`
+  : contrastOnly
   ? `PASS: ${report.length} contrast cases and ${interactionReport.length} hover/focus cases; all measured or conservatively bounded above threshold; no unassessed paint.`
   : `PASS: ${report.length} theme/page cases, directory links, grouped fields and theme persistence.`);

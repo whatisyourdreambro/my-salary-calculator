@@ -1,13 +1,14 @@
 import type { OpinionError, OpinionResponse } from "@/lib/participationContract";
+import type { ContactErrorCode, ContactResponse } from "@/lib/contactContract";
 import type { FeedbackBindings } from "./feedbackStorage";
 
-export function participationResponse(body: OpinionResponse, status: number, retryAfter?: number): Response {
+export function participationResponse(body: OpinionResponse | ContactResponse, status: number, retryAfter?: number): Response {
   return Response.json(body, { status, headers: {
     "Cache-Control": "private, no-store", "X-Robots-Tag": "noindex, nofollow", "X-Content-Type-Options": "nosniff",
     ...(retryAfter ? { "Retry-After": String(retryAfter) } : {}),
   } });
 }
-export function participationFailure(error: OpinionError, status = 400, retryAfter?: number): Response {
+export function participationFailure(error: OpinionError | ContactErrorCode, status = 400, retryAfter?: number): Response {
   return participationResponse({ ok: false, error }, status, retryAfter);
 }
 export function validateParticipationTransport(request: Request, bindings: FeedbackBindings): Response | null {

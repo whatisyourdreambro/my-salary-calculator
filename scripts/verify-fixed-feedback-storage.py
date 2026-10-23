@@ -18,13 +18,19 @@ FEEDBACK_SCHEMA = (ROOT / "migrations/0002_fixed_feedback.sql").read_text(encodi
 
 def statements(name):
     source = (ROOT / f"src/lib/server/{name}.ts").read_text(encoding="utf-8")
-    return dict(re.findall(r"(\w+):\s*`([^`]+)`", source, re.S))
+    sql = dict(re.findall(r"(\w+):\s*`([^`]+)`", source, re.S))
+    constants = dict(re.findall(r'export const (\w+)\s*=\s*"([^"\r\n]+)";', source))
+    for key, alias in re.findall(r"(\w+):\s*([A-Z][A-Z0-9_]+)\s*,", source):
+        sql[key] = constants[alias]  # Explicit exports only; fail on unknown aliases.
+    return sql
 
 
 FEEDBACK_SQL = statements("fixedFeedbackSql")
 CONTACT_SQL = statements("contactSql")
 assert set(FEEDBACK_SQL) == {"reserveRate", "insertFeedback", "receipt"}
 RETENTION = 90 * 86400
+FEEDBACK_RECEIPT = ("hash-a", "fixed-feedback-v1", 60 + RETENTION)
+CONTACT_RECEIPT = ("hash-a", "contact-v1", 60 + RETENTION)
 
 
 def bucket_key(scope, window=0):
@@ -56,25 +62,29 @@ def batch(db, receipt, payload="hash-a", scope="feedback", window=0, changes=Non
 
 db = sqlite3.connect(":memory:")
 db.executescript(CONTACT_SCHEMA)
-assert batch(db, "receipt-1", scope="contact") == (1, 1, ("hash-a",))
+assert batch(db, "receipt-1", scope="contact") == (1, 1, CONTACT_RECEIPT)
 original_schema = db.execute("SELECT name, sql FROM sqlite_master WHERE name IN ('contact_inquiries', 'feedback_rate_limits') ORDER BY name").fetchall()
 original_row = db.execute("SELECT * FROM contact_inquiries").fetchall()
 db.executescript(FEEDBACK_SCHEMA)
 db.executescript(FEEDBACK_SCHEMA)  # repeat provisioning is harmless
 assert db.execute("SELECT name, sql FROM sqlite_master WHERE name IN ('contact_inquiries', 'feedback_rate_limits') ORDER BY name").fetchall() == original_schema
 assert db.execute("SELECT * FROM contact_inquiries").fetchall() == original_row
-assert batch(db, "receipt-1") == (1, 1, ("hash-a",))  # same UUID belongs to separate API scope
-assert batch(db, "receipt-1") == (0, 0, ("hash-a",))
-assert batch(db, "receipt-1", "changed-hash") == (0, 0, ("hash-a",))
+assert batch(db, "receipt-1") == (1, 1, FEEDBACK_RECEIPT)  # same UUID belongs to separate API scope
+assert batch(db, "receipt-1") == (0, 0, FEEDBACK_RECEIPT)
+assert batch(db, "receipt-1", "changed-hash") == (0, 0, FEEDBACK_RECEIPT)
+before_lookup = db.total_changes
+assert db.execute(FEEDBACK_SQL["receipt"], ("receipt-1",)).fetchone() == FEEDBACK_RECEIPT
+assert db.execute(CONTACT_SQL["receipt"], ("receipt-1",)).fetchone() == CONTACT_RECEIPT
+assert db.total_changes == before_lookup
 assert db.execute("SELECT status, resolved_at, vote, reason_code FROM helpfulness_feedback").fetchone() == ("new", None, "helpful", None)
 for number in range(2, 6):
-    assert batch(db, f"receipt-{number}", scope="contact") == (1, 1, ("hash-a",))
-    assert batch(db, f"receipt-{number}") == (1, 1, ("hash-a",))
+    assert batch(db, f"receipt-{number}", scope="contact") == (1, 1, CONTACT_RECEIPT)
+    assert batch(db, f"receipt-{number}") == (1, 1, FEEDBACK_RECEIPT)
 assert batch(db, "receipt-6", scope="contact") == (0, 0, None)
 assert batch(db, "receipt-6") == (0, 0, None)
-assert batch(db, "receipt-1") == (0, 0, ("hash-a",))
+assert batch(db, "receipt-1") == (0, 0, FEEDBACK_RECEIPT)
 assert db.execute("SELECT attempts FROM feedback_rate_limits ORDER BY bucket_key").fetchall() == [(5,), (5,)]
-assert batch(db, "new-window", window=600) == (1, 1, ("hash-a",))
+assert batch(db, "new-window", window=600) == (1, 1, FEEDBACK_RECEIPT)
 
 # DB constraints back up API target/path/reason pairing and null handling.
 invalid = [
@@ -101,7 +111,7 @@ targets = [
 ]
 for index, (target, path, reasons) in enumerate(targets):
     for reason in reasons:
-        assert batch(db, f"valid-{target}-{reason}", window=12000 + index * 600, changes={2: target, 3: path, 4: "confusing", 5: reason}) == (1, 1, ("hash-a",))
+        assert batch(db, f"valid-{target}-{reason}", window=12000 + index * 600, changes={2: target, 3: path, 4: "confusing", 5: reason}) == (1, 1, FEEDBACK_RECEIPT)
 
 # A failed transaction must not burn a rate allowance.
 db.execute("CREATE TRIGGER simulated_feedback_failure BEFORE INSERT ON helpfulness_feedback BEGIN SELECT RAISE(ABORT, 'synthetic failure'); END")
