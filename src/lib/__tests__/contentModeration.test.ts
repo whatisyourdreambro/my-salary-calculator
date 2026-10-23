@@ -28,9 +28,21 @@ describe("bounded input moderation", () => {
     expect(contentIssue("시발점 설명 ㅅㅂ")).toBe("CONTENT_NOT_ALLOWED");
     expect(contentIssue("보험 설명 f.u.c.k")).toBe("CONTENT_NOT_ALLOWED");
   });
-  it.each(["https://example.com", "www.example.com", "example.co.kr", "a@example.com", "010-1234-5678", "900101-1234567"])("restricts common links/contact details only in opinions: %#", value => {
+  it.each([
+    "https://example.com", "www.example.com", "example.co.kr", "a@example.com", "010-1234-5678", "900101-1234567",
+    "example.dev", "example.xyz/path", "example.app", "sub.example.finance:443/path", "example.dev에서 확인",
+    "EXAMPLE.DEV", "ｅｘａｍｐｌｅ．ｄｅｖ", "example\u200b.dev", "example。dev", "example\uff61dev",
+    "테스트.한국", "пример.рф", "example.xn--p1ai", "ftp://example.invalid/path", "mailto:a@example.dev", "192.0.2.1/path",
+  ])("restricts links/contact details only in opinions: %#", value => {
     expect(contentIssue(value, "opinion")).toBe("PERSONAL_DATA_NOT_ALLOWED");
     expect(contentIssue(value, "contact")).toBeNull();
+  });
+  it.each([
+    "계산이 틀렸어요.설명이 부족합니다", "계산 결과가 3.9%입니다", "2026.10.23 기준인가요?",
+    "첨부 자료.pdf 설명을 고쳐 주세요", "계산표.xlsx와 결과가 다릅니다", "v1.2.3 기준 설명이 필요합니다",
+    "시발점과 직계비속, 보험 공제 설명이 부족합니다",
+  ])("keeps ordinary punctuation and financial feedback available in opinions: %#", value => {
+    expect(contentIssue(value, "opinion")).toBeNull();
   });
   it("fails closed on oversize and unsafe formatting, without modifying input", () => {
     expect(contentIssue("가".repeat(201), "opinion")).toBe("INVALID_TEXT");

@@ -191,14 +191,15 @@ describe('Pages participation routes receive only the request environment', () =
     return request(path, { method: 'POST', headers: { origin, 'content-type': 'application/json', 'cf-connecting-ip': '192.0.2.1' }, body: JSON.stringify(body) });
   }
   function participationEnv() {
+    const generatedAt = Math.floor(Date.now() / 1000);
     const values = new WeakMap<FeedbackStatement, (string | number | null)[]>();
     const queries = new WeakMap<FeedbackStatement, string>();
     const receipts = new Map<string, Record<string, unknown>>();
     const batch = vi.fn(async (items: FeedbackStatement[]) => {
       const sql = queries.get(items[0]);
       if (items.length === 1) {
-        const result = sql === PARTICIPATION_HEALTH_SQL ? { last_cleanup_at: Math.floor(Date.now() / 1000) }
-          : sql === PARTICIPATION_SUMMARY_SQL ? { contract_version: 'public-reaction-v1', generated_at: Math.floor(Date.now() / 1000), window_days: 28, total: 10, helpful: 8, confusing: 2 }
+        const result = sql === PARTICIPATION_HEALTH_SQL ? { last_cleanup_at: generatedAt }
+          : sql === PARTICIPATION_SUMMARY_SQL ? { contract_version: 'public-reaction-v1', generated_at: generatedAt, window_days: 28, total: 10, helpful: 8, confusing: 2 }
           : receipts.get(`${sql}:${values.get(items[0])![0]}`);
         return [{ success: true, meta: {}, results: result ? [result] : [] }];
       }
@@ -216,7 +217,7 @@ describe('Pages participation routes receive only the request environment', () =
         queries.set(statement, sql); return statement;
       }, batch },
     };
-    return { env, batch };
+    return { env, batch, generatedAt };
   }
   const opinion = { submissionId: id, contractVersion: 'private-opinion-v1', target: 'samsung_bonus', body: '설명을 고쳐 주세요', inquiryConsent: true };
   const reaction = { submissionId: id, contractVersion: 'public-reaction-v1', target: 'samsung_bonus', vote: 'helpful', reason: null, publicAggregateConsent: true };
@@ -246,9 +247,9 @@ describe('Pages participation routes receive only the request environment', () =
     expect(batch.mock.calls.every(([items]) => items.length === 1)).toBe(true);
   });
   it('returns only the current public count contract and responds to an independent summary switch', async () => {
-    const { env } = participationEnv();
+    const { env, generatedAt } = participationEnv();
     const response = await handlePagesDynamic(request('/api/participation/summary?target=samsung_bonus'), env);
-    expect(await response!.json()).toEqual({ ok: true, visible: true, total: 10, helpful: 8, confusing: 2, windowDays: 28 });
+    expect(await response!.json()).toEqual({ ok: true, visible: true, total: 10, helpful: 8, confusing: 2, windowDays: 28, generatedAt });
     expect(response!.headers.get('cache-control')).toBe('no-store');
     expect((await handlePagesDynamic(request('/api/participation/summary?target=samsung_bonus'), { ...env, PARTICIPATION_SUMMARY_ENABLED: '0' }))!.status).toBe(503);
   });

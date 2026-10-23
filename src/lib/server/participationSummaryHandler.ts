@@ -31,7 +31,7 @@ export async function handleParticipationSummaryGet(request: Request, bindings: 
       || typeof helpful !== "number" || !Number.isSafeInteger(helpful) || helpful < 0
       || typeof confusing !== "number" || !Number.isSafeInteger(confusing) || confusing < 0
       || total !== helpful + confusing) return unavailable();
-    if (seconds - generatedAt > PARTICIPATION_HEALTH_MAX_AGE_SECONDS || total < 10) return response({ ok: true, visible: false });
-    return response({ ok: true, visible: true, total, helpful, confusing, windowDays: 28 });
+    if (seconds - generatedAt >= PARTICIPATION_HEALTH_MAX_AGE_SECONDS || total < 10) return response({ ok: true, visible: false });
+    return response({ ok: true, visible: true, total, helpful, confusing, windowDays: 28, generatedAt });
   } catch { return unavailable(); }
 }

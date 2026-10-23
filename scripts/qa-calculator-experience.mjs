@@ -32,10 +32,13 @@ const participationTargets = {
 // the original guarded transport. Never add a remote origin or product switch.
 function installParticipationFixtures() {
   const original = window.fetch.bind(window);
+  const generatedAt = Math.floor(Date.now() / 1000) - 60;
   const summaries = {
-    nine: { ok: true, visible: true, total: 9, helpful: 8, confusing: 1, windowDays: 28 },
-    mismatch: { ok: true, visible: true, total: 10, helpful: 8, confusing: 1, windowDays: 28 },
-    ten: { ok: true, visible: true, total: 10, helpful: 7, confusing: 3, windowDays: 28 },
+    nine: { ok: true, visible: true, total: 9, helpful: 8, confusing: 1, windowDays: 28, generatedAt },
+    mismatch: { ok: true, visible: true, total: 10, helpful: 8, confusing: 1, windowDays: 28, generatedAt },
+    ten: { ok: true, visible: true, total: 10, helpful: 7, confusing: 3, windowDays: 28, generatedAt },
+    expired: { ok: true, visible: true, total: 10, helpful: 7, confusing: 3, windowDays: 28, generatedAt: generatedAt - 26 * 3600 },
+    future: { ok: true, visible: true, total: 10, helpful: 7, confusing: 3, windowDays: 28, generatedAt: generatedAt + 3600 },
   };
   const fixture = { calls: [], reactions: [], opinions: [], summaryMode: sessionStorage.getItem('qa:participation:summary') || 'nine' };
   window.__QA_PARTICIPATION__ = fixture;
@@ -117,6 +120,12 @@ async function auditParticipation(page, route, theme, networkRequests) {
     assert.equal(await body.getAttribute('aria-invalid'), 'true');
     assert(await opinionSend.isDisabled());
     assert.equal((await calls('opinions')).length, 0);
+    for (const text of ['example.dev 확인', '테스트.한국 확인']) {
+      await body.fill(text);
+      assert.equal(await body.getAttribute('aria-invalid'), 'true');
+      assert(await opinionSend.isDisabled());
+      assert.equal((await calls('opinions')).length, 0);
+    }
     for (const text of ['설명이 부족합니다. 개선해 주세요.', '이 문제가 시발점입니다.', '직계비속 공제 설명이 부족합니다.', '보험 계산 근거를 알려주세요.']) {
       await body.fill(text);
       assert.equal(await body.getAttribute('aria-invalid'), 'false', text);
@@ -149,13 +158,15 @@ async function auditParticipation(page, route, theme, networkRequests) {
   assert.equal(new Set(opinions.slice(full ? 1 : 0).map(call => call.body.submissionId)).size, 1);
   if (full) assert.notEqual(opinions[0].body.submissionId, opinions[1].body.submissionId, 'corrected content has a new attempt ID');
 
-  for (const summary of full ? ['nine', 'mismatch', 'unavailable', 'ten'] : ['ten']) {
+  for (const summary of full ? ['nine', 'mismatch', 'unavailable', 'expired', 'future', 'ten'] : ['ten']) {
     await page.evaluate(value => sessionStorage.setItem('qa:participation:summary', value), summary);
     await page.reload({ waitUntil: 'networkidle' });
     if (summary === 'ten') {
       await section.getByText('최근 28일 응답 10건', { exact: true }).waitFor();
       assert(await section.getByText('도움 됐어요 7건 · 헷갈려요 3건', { exact: true }).isVisible());
       assert(await section.getByText(/고유 참여자 수나 전체 이용자의 만족도를 뜻하지/).isVisible());
+      assert(await section.locator('time[datetime]').isVisible(), 'public aggregate has a machine-readable update time');
+      assert((await section.locator('time').innerText()).includes('KST'), 'update time identifies its timezone');
     } else {
       await section.getByText(/최근 28일의 공개 집계/).waitFor();
       assert.equal(await section.getByText(/최근 28일 응답 \d+건/).count(), 0, summary);
@@ -169,6 +180,83 @@ async function auditParticipation(page, route, theme, networkRequests) {
   }
   report.push({ route, theme, participation: full ? 'full consent/retry/receipt/moderation/IME/summary fixture matrix' : 'reaction/opinion receipt and threshold summary smoke', transport: 'in-memory synthetic responses; real POST remains blocked' });
   assert.equal(networkRequests.length, 0, 'participation fixtures never reach network transport');
+}
+
+async function auditCarLoan(page, theme) {
+  const names = page.locator('main h4');
+  const initialNames = await names.allTextContents();
+  assert.equal(initialNames.length, 86, 'default recommendation inventory');
+  const card = page.getByRole('heading', { level: 4, name: '쉐보레 더 넥스트 스파크', exact: true })
+    .locator('xpath=ancestor::div[contains(concat(" ", normalize-space(@class), " "), " group ")][1]');
+  const rowText = async label => card.getByText(label, { exact: true }).locator('..').locator(':scope > span').last().innerText();
+  const payment = async expected => assert.equal(await rowText('월 할부금'), expected, 'card shows the settled amount immediately');
+  await payment('229,214원');
+  assert.equal(await rowText('유지비 합계'), '+283,333원');
+  assert.equal(await rowText('월 총 지출'), '512,547원');
+  assert.equal(await rowText('월 실수령액 대비 지출'), '12.1%');
+  assert.equal(await card.getByText('주의', { exact: true }).count(), 0);
+  assert(await card.getByText('기회비용 (연 8% 수익 가정)', { exact: true }).isVisible());
+
+  const rate = page.getByLabel('이자율', { exact: true });
+  const term = page.getByLabel('할부 기간', { exact: true });
+  await rate.focus();
+  await rate.press('Home');
+  assert.equal(await rate.inputValue(), '0');
+  await payment('200,000원');
+  await term.focus();
+  await term.press('Home');
+  assert.equal(await term.inputValue(), '12');
+  await payment('1,000,000원');
+  assert.equal(await rowText('월 총 지출'), '1,283,333원');
+  assert.equal(await rowText('월 실수령액 대비 지출'), '30.2%');
+  assert(await card.getByText('주의', { exact: true }).isVisible());
+  await term.press('End');
+  assert.equal(await term.inputValue(), '120');
+  await payment('100,000원');
+  assert.equal(await rowText('월 실수령액 대비 지출'), '9.0%');
+  assert.equal(await card.getByText('주의', { exact: true }).count(), 0);
+
+  const fuel = page.getByLabel('예상 월 주유/충전비', { exact: true });
+  const insurance = page.getByLabel('연간 자동차 보험료', { exact: true });
+  await fuel.fill('300000');
+  await insurance.fill('1200000');
+  assert.equal(await fuel.inputValue(), '300,000');
+  assert.equal(await insurance.inputValue(), '1,200,000');
+  await payment('100,000원');
+  assert.equal(await rowText('유지비 합계'), '+400,000원');
+  assert.equal(await rowText('월 총 지출'), '500,000원');
+  assert.equal(await rowText('월 실수령액 대비 지출'), '11.8%');
+
+  const salary = page.getByLabel('세전 연봉', { exact: true });
+  await salary.fill('6000000');
+  assert.equal(await names.count(), 4, 'lower salary narrows eligible cars');
+  await payment('100,000원');
+  assert(await card.getByText('주의', { exact: true }).isVisible());
+  await salary.fill('0');
+  assert.equal(await names.count(), 0);
+  assert(await page.getByText('추천할 수 있는 차량이 없습니다.', { exact: false }).isVisible());
+  await salary.fill('');
+  assert.equal(await names.count(), 0, 'empty salary retains the existing empty recommendations');
+  await salary.fill('60000000');
+  assert.deepEqual(await names.allTextContents(), initialNames, 'restoring salary restores the same inventory and ordering');
+  await payment('100,000원');
+
+  const faq = page.getByRole('heading', { name: '자동차 할부, 자주 묻는 질문', exact: true }).locator('..');
+  assert.equal(await faq.locator('details').count(), 5);
+  const firstQuestion = faq.locator('summary').first();
+  await firstQuestion.focus();
+  await firstQuestion.press('Enter');
+  assert.equal(await faq.locator('details').first().getAttribute('open'), '');
+  await firstQuestion.press('Enter');
+  assert.equal(await faq.locator('details').first().getAttribute('open'), null);
+  for (const width of [390, 1280]) {
+    await page.setViewportSize({ width, height: 900 });
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, 'car-loan horizontal overflow');
+    await card.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: path.join(output, `car-loan-${theme}-${width}.png` ) });
+  }
+  await page.setViewportSize({ width: 390, height: 844 });
+  report.push({ route: '/car-loan', theme, carLoan: 'default, zero interest, term boundaries, maintenance inputs, recommendation changes and empty salary; keyboard FAQ; 390/1280px', exactCandidateScope: 'vehicle-card settled values; existing calculations and inventory' });
 }
 
 async function auditContactInput(page, theme) {
@@ -488,6 +576,9 @@ try {
     await context.route('**/*', route => new URL(route.request().url()).origin === new URL(base).origin ? route.continue() : route.abort());
     const page = await context.newPage();
     const participationNetworkRequests = [];
+    page.on('console', message => {
+      if (message.type() === 'error' && /hydration|hydrating|Minified React error #(?:418|423|425)/i.test(message.text())) errors.push(message.text());
+    });
     page.on('request', request => {
       const url = new URL(request.url());
       if (url.origin === base && url.pathname.startsWith('/api/participation/')) participationNetworkRequests.push(url.pathname);
@@ -626,6 +717,22 @@ try {
         await auditCivilPayHandoff(page, route, theme);
       }
       if (route === '/calc/pension-hike-2027') await auditPensionHike(page, theme);
+      if (route === '/car-loan') await auditCarLoan(page, theme);
+      if (route === '/salary-db/lig-nex1') {
+        const notice = page.locator('[data-msy-module="company-name-change"]');
+        assert(await notice.getByRole('heading', { name: '현재 회사명 안내', exact: true }).isVisible());
+        assert.equal((await page.locator('h1').first().innerText()).trim(), 'LIG넥스원 연봉 2026');
+        assert((await notice.innerText()).includes('엘아이지디펜스앤에어로스페이스 주식회사'));
+        assert.deepEqual(await notice.locator('time').evaluateAll(nodes => nodes.map(node => node.dateTime)), ['2026-03-31', '2026-04-14']);
+        assert.equal(await notice.getByRole('link').count(), 2);
+        for (const width of [390, 1280]) {
+          await page.setViewportSize({ width, height: 900 });
+          assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, 'company notice horizontal overflow');
+          await notice.scrollIntoViewIfNeeded();
+          await page.screenshot({ path: path.join(output, `lig-name-${theme}-${width}.png`) });
+        }
+        await page.setViewportSize({ width: 390, height: 844 });
+      }
       if (participationMode && participationTargets[route]) await auditParticipation(page, route, theme, participationNetworkRequests);
       if (route === '/contact') await auditContactInput(page, theme);
       console.log(`${theme} ${route}: ${audit.inputs.length} fields; ${audit.lowContrast.length} text contrast candidates`);

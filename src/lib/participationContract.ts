@@ -20,6 +20,8 @@ export type OpinionError = "INVALID_ORIGIN" | "UNSUPPORTED_MEDIA_TYPE" | "PAYLOA
 export type OpinionResponse = { ok: true; receiptId: string; duplicate: boolean } | { ok: false; error: OpinionError };
 
 export const REACTION_CONTRACT_VERSION = "public-reaction-v1";
+/** Counts and cleanup become stale at this boundary, not one second after it. */
+export const PARTICIPATION_MAX_AGE_SECONDS = 26 * 60 * 60;
 export interface ReactionRequest {
   submissionId: string;
   contractVersion: typeof REACTION_CONTRACT_VERSION;
@@ -29,5 +31,5 @@ export interface ReactionRequest {
   publicAggregateConsent: true;
 }
 export type ParticipationSummary = { ok: true; visible: false }
-  | { ok: true; visible: true; total: number; helpful: number; confusing: number; windowDays: 28 }
+  | { ok: true; visible: true; total: number; helpful: number; confusing: number; windowDays: 28; generatedAt: number }
   | { ok: false; error: "INVALID_REQUEST" | "UNAVAILABLE" };

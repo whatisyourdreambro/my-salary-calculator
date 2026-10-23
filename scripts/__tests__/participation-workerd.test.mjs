@@ -102,7 +102,8 @@ test('Pages handlers and scheduled cleanup operate together on real local D1 wit
   const now = Math.floor(Date.now() / 1000);
   await db.prepare("INSERT INTO helpfulness_feedback (submission_id,payload_hash,target,page_path,vote,reason_code,consent_version,created_at,expires_at) VALUES ('synthetic-old-private','hash','samsung_bonus','/calc/samsung-bonus','helpful',NULL,'fixed-feedback-v1',?,?)").bind(now, now + 90 * 86400).run();
   assert.equal((await dispatch('/__synthetic_maintenance')).status, 200);
-  assert.deepEqual(await (await dispatch('/api/participation/summary?target=samsung_bonus')).json(), { ok: true, visible: true, total: 10, helpful: 10, confusing: 0, windowDays: 28 });
+  const generatedAt = await scalar("SELECT generated_at FROM participation_snapshots WHERE target='samsung_bonus'");
+  assert.deepEqual(await (await dispatch('/api/participation/summary?target=samsung_bonus')).json(), { ok: true, visible: true, total: 10, helpful: 10, confusing: 0, windowDays: 28, generatedAt });
 
   await db.prepare('UPDATE participation_health SET last_cleanup_at=? WHERE id=1').bind(now - 26 * 3600 - 10).run();
   assert.equal((await dispatch('/api/participation/opinions', { ...opinion, submissionId: uuid(30) })).status, 503);
