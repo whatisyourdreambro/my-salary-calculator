@@ -83,8 +83,8 @@
     },
     "/": {
       "contentDate": "2026-10-19",
-      "reviewedAtCommit": "3f100889bbed837a794d1e6849dbe1b6c1efd1f0",
-      "reason": "Reviewed October 23 against deployed commit 3f100889. Added explicit saved-condition reuse and storage metadata, with no salary rate, tax calculation or home article correction. Retain the October 19 editorial date; this review covers the changed NextActions measurement and SalaryCalculator dependencies.",
+      "reviewedAtCommit": "e2961ffb8408490cc147773ae069ad0352e8cd0c",
+      "reason": "Reviewed October 23 against deployed commit 3f100889. Added explicit saved-condition reuse and storage metadata, with no salary rate, tax calculation or home article correction. Retain the October 19 editorial date; this review covers the changed NextActions measurement and SalaryCalculator dependencies. Reviewed October 23 at e2961ffb: the SalaryCalculator diff removes newly generated private result tokens and remote amount-image URLs, and explains explicit result-text approval. It does not change salary rates, calculations or the home financial article. Retain the October 19 editorial content date for this sharing/privacy workflow change; old result readers remain supported.",
       "dependencies": [
         "src/components/NextActions.tsx",
         "src/components/SalaryCalculator.tsx"
@@ -95,7 +95,7 @@
         "src/components/NextActions.tsx",
         "src/components/SalaryCalculator.tsx"
       ],
-      "sha256": "3bdb6d6ee274841d5e6075fe94eb473c4ce58980be3cab884aa60d653cafdef3"
+      "sha256": "45471b1ce801f0b5e03d6b16898a46b30f6d538b28f97797053f9dfaa4cb1ea9"
     },
     "/home-loan": {
       "contentDate": "2026-09-19",
@@ -230,8 +230,8 @@
     },
     "/calc/samsung-bonus": {
       "contentDate": "2026-10-19",
-      "reviewedAtCommit": "1ce3c9a73227c7efd1e1539eec464c56ff68f09a",
-      "reason": "579d60bb (October 19) aligns OPI2/net-estimate metadata and adds saved scenarios; this release also adds explanatory next-step content. The September 25 shared engine is only a lower bound. Reviewed October 20: the three ChartViewToggle button classes now use an inset keyboard focus indicator. The one-line style-only diff changes no calculations, visible copy or editorial content; retain the existing contentDate.",
+      "reviewedAtCommit": "e2961ffb8408490cc147773ae069ad0352e8cd0c",
+      "reason": "579d60bb (October 19) aligns OPI2/net-estimate metadata and adds saved scenarios; this release also adds explanatory next-step content. The September 25 shared engine is only a lower bound. Reviewed October 20: the three ChartViewToggle button classes now use an inset keyboard focus indicator. The one-line style-only diff changes no calculations, visible copy or editorial content; retain the existing contentDate. Reviewed October 23 at e2961ffb: the Client diff stops writing private input hashes and uses a public share destination/image while retaining incoming hash decoding. The revised sharing notice explains that approved result text can contain amounts but the destination has no private inputs. Bonus formulas, OPI data and the financial article are unchanged, so retain the October 19 editorial content date.",
       "dependencies": [
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
@@ -255,7 +255,7 @@
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
       ],
-      "sha256": "3cadb8d6aea3cf3da58f022be56d1054f32562b45844e85a252a95961f9197f1"
+      "sha256": "b915d394369ff124abe16284a8c02248fdcc5f42eb598f0532e690be62336833"
     },
     "/calc/sk-hynix-bonus": {
       "contentDate": "2026-10-04",
