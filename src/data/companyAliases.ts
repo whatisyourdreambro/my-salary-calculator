@@ -99,6 +99,8 @@ export const companyAliases: Record<string, string[]> = {
 
   // ── 사명 변경 (기존 등록 회사 — 새 사명으로도 검색됨) ──
   "lotte-data-comm": ["롯데이노베이트", "롯데정통"],
+  // 2026-03-31 상호 변경. 공식 변경일·근거는 회사 데이터의 nameChange에 보존.
+  "lig-nex1": ["LIG디펜스앤에어로스페이스", "엘아이지디펜스앤에어로스페이스 주식회사"],
 
   // ── Batch29~32 신규 회사 별칭 ──
   "db-hitek": ["동부하이텍", "디비하이텍"],

@@ -85,8 +85,8 @@ describe("explicit public reaction consent", () => {
     expect((await handleReactionPost(request(input), bindings, now)).status).toBe(409);
     expect(vi.mocked(db.batch).mock.calls.filter(([items]) => items.length === 4)).toHaveLength(1);
   });
-  it("rejects new writes when cleanup is stale", async () => {
-    const { db, bindings } = storage(snapshot, seconds - 26 * 3600 - 1);
+  it.each([26 * 3600, 26 * 3600 + 1])("rejects new writes when cleanup is %i seconds old", async age => {
+    const { db, bindings } = storage(snapshot, seconds - age);
     expect((await handleReactionPost(request(), bindings, now)).status).toBe(503);
     expect(vi.mocked(db.batch).mock.calls.every(([items]) => items.length === 1)).toBe(true);
   });
@@ -99,16 +99,23 @@ describe("explicit public reaction consent", () => {
 });
 
 describe("public summary is an explicitly consented, thresholded snapshot", () => {
-  it("returns only coherent counts, without raw records or reason breakdowns", async () => {
-    const { db, bindings } = storage({ ...snapshot, private_body: "never returned", reason: "never returned" });
+  it("returns coherent counts and aggregate generation time without private or cleanup fields", async () => {
+    const { db, bindings } = storage({ ...snapshot, private_body: "never returned", reason: "never returned", last_cleanup_at: seconds - 123 });
     const result = await handleParticipationSummaryGet(summary(), bindings, now);
-    expect(await result.json()).toEqual({ ok: true, visible: true, total: 10, helpful: 8, confusing: 2, windowDays: 28 });
+    expect(await result.json()).toEqual({ ok: true, visible: true, total: 10, helpful: 8, confusing: 2, windowDays: 28, generatedAt: seconds });
     expect(result.headers.get("cache-control")).toBe("no-store");
     expect(vi.mocked(db.batch).mock.calls.flat().flat().every(item => !String((item as Statement).sql).includes("helpfulness_feedback"))).toBe(true);
   });
-  it.each([null, { ...snapshot, total: 9, helpful: 7 }, { ...snapshot, generated_at: seconds - 26 * 3600 - 1 }])("hides low-sample, missing and stale snapshots: %#", async row => {
+  it.each([null, { ...snapshot, total: 9, helpful: 7 }, { ...snapshot, generated_at: seconds - 26 * 3600 }, { ...snapshot, generated_at: seconds - 26 * 3600 - 1 }])("hides low-sample, missing and stale snapshots without timestamps: %#", async row => {
     const { bindings } = storage(row);
     expect(await (await handleParticipationSummaryGet(summary(), bindings, now)).json()).toEqual({ ok: true, visible: false });
+  });
+  it("still exposes a coherent snapshot one second before the 26-hour boundary", async () => {
+    const generatedAt = seconds - 26 * 3600 + 1;
+    const { bindings } = storage({ ...snapshot, generated_at: generatedAt });
+    expect(await (await handleParticipationSummaryGet(summary(), bindings, now)).json()).toEqual({
+      ok: true, visible: true, total: 10, helpful: 8, confusing: 2, windowDays: 28, generatedAt,
+    });
   });
   it.each([
     { ...snapshot, generated_at: seconds + 1 }, { ...snapshot, generated_at: "123" },
@@ -123,8 +130,8 @@ describe("public summary is an explicitly consented, thresholded snapshot", () =
     expect((await handleParticipationSummaryGet(summary(query), bindings, now)).status).toBe(400);
     expect(db.batch).not.toHaveBeenCalled();
   });
-  it("hides even a fresh snapshot when cleanup failed or became stale", async () => {
-    const { bindings } = storage(snapshot, seconds - 26 * 3600 - 1);
+  it.each([26 * 3600, 26 * 3600 + 1])("hides even a fresh snapshot when cleanup is %i seconds old", async age => {
+    const { bindings } = storage(snapshot, seconds - age);
     expect((await handleParticipationSummaryGet(summary(), bindings, now)).status).toBe(503);
   });
 });

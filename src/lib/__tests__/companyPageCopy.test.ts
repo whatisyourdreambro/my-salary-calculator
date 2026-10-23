@@ -4,7 +4,7 @@
 //  - PROD-03: '삼성전자은(는)' 같은 조사 병기 자리표시 0건, 회사명 바로 뒤 조사가 받침과 일치
 //  - A22: 상위 50% 밖 회사는 전국 순위 숫자 대신 구간 라벨(중위권·중하위권)
 //  - COMP-06/09/10/12/07/05: '최신' 단정·근무시간 단정·'공개 후기'·지주회사 평균 오해·잠정합의서·공시 라벨
-// 광고·쿠팡·추적·차트 컴포넌트는 빈 요소로 대체(문구 검사 대상 아님, 광고 코드는 건드리지 않는다).
+// 광고·쿠팡·추적·차트는 스텁으로 대체. 첫 광고는 순서 검사용 빈 div만 출력하며 네트워크 요청은 없다.
 import { createElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
@@ -12,7 +12,7 @@ import { describe, expect, it, vi } from "vitest";
 const { stub } = vi.hoisted(() => ({ stub: () => null }));
 vi.mock("@/components/AdPlacement", () => ({
   HomeTopAd: stub,
-  CalcResultAd: stub,
+  CalcResultAd: () => createElement("div", { "data-testid": "calc-result-ad-marker" }),
   GuideMidAd: stub,
   SidebarAd: stub,
   InArticleAd: stub,
@@ -141,6 +141,33 @@ describe("전국 순위 표기 — 상위 50% 밖은 구간 라벨 (A22)", () =>
     const rank = getOverallRank(companyRepository.getById("samsung-electronics")!)!;
     expect(rank.topPercent).toBeGreaterThan(50);
     expect(toText(pages.get("samsung-electronics")!)).toContain(`국내 ${rank.total}개사 중 중위권`);
+  });
+});
+
+describe("LIG 상호 변경의 공식 근거와 기존 급여 자료 구분", () => {
+  it("기존 H1을 유지하면서 첫 광고 뒤에 현재 법인명·두 변경일·공식 출처를 서버 본문으로 표시한다", () => {
+    const html = pages.get("lig-nex1")!;
+    const notice = html.match(/<section\b[^>]*data-msy-module="company-name-change"[\s\S]*?<\/section>/)?.[0];
+    expect(notice).toBeDefined();
+    const firstAdPosition = html.indexOf('data-testid="calc-result-ad-marker"');
+    expect(firstAdPosition).toBeGreaterThanOrEqual(0);
+    expect(html.indexOf('data-msy-module="company-name-change"')).toBeGreaterThan(firstAdPosition);
+    expect(html).toMatch(/<h1\b[^>]*>LIG넥스원 연봉 2026<\/h1>/);
+    expect(notice).toContain("엘아이지디펜스앤에어로스페이스 주식회사");
+    expect(notice).toContain("LIG디펜스앤에어로스페이스");
+    expect(notice).toMatch(/datetime="2026-03-31"/i);
+    expect(notice).toMatch(/datetime="2026-04-14"/i);
+    expect(notice).toContain('href="https://kind.krx.co.kr/external/2026/05/15/001156/20260515002495/11013.htm"');
+    expect(notice).toContain('href="https://kind.krx.co.kr/external/2026/04/09/000841/20260409002002/68155.htm"');
+    expect(toText(notice!).replace(/\s+/g, " ")).toContain("공시 평균급여는 2025 사업연도 자료입니다. 직급별 연봉은 별도 추정치입니다.");
+  });
+
+  it("사명 안내를 LIG에만 추가하고 삼성전자 기존 서버 요약을 유지한다", () => {
+    expect([...pages].filter(([, html]) => html.includes('data-msy-module="company-name-change"')).map(([id]) => id)).toEqual(["lig-nex1"]);
+    const samsung = pages.get("samsung-electronics")!;
+    expect(samsung).toContain('aria-labelledby="samsung-company-summary-title"');
+    expect(samsung.indexOf('aria-labelledby="samsung-company-summary-title"')).toBeLessThan(samsung.indexOf('data-testid="calc-result-ad-marker"'));
+    expect(toText(samsung)).toContain("삼성전자 연봉, 기준부터 확인하세요");
   });
 });
 

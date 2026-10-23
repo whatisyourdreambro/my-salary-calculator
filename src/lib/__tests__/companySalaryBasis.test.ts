@@ -17,6 +17,28 @@ const samsung = companyRepository.getById("samsung-electronics")!;
 const rawById = new Map(allCompanies.map((company) => [company.id, company]));
 
 describe("회사 평균과 신입 연봉의 자료 기준", () => {
+  it("LIG 사명 안내는 기존 회사 ID·검색명·FY2025 공시와 추정치·급여 수정일을 바꾸지 않는다", () => {
+    const lig = companyRepository.getById("lig-nex1")!;
+    const basis = getCompanySalaryBasis(lig);
+    expect(lig.name).toEqual({ ko: "LIG넥스원", en: "LIG Nex1" });
+    expect(lig.id).toBe("lig-nex1");
+    expect(rawById.get(lig.id)!.lastUpdated).toBe("2026-05-15");
+    expect(lig.lastUpdated).toBe("2026-09-25");
+    expect(basis.disclosed?.fiscalYear).toBe("2025");
+    expect(basis.disclosed?.avgSalaryManwon).toBe(11000);
+    expect(basis.disclosed?.sourceUrl).toContain("20260323001211");
+    expect(basis.entryBaseWon).toBe(55000000);
+    expect(basis.entryIncentiveWon).toBe(12000000);
+    expect(basis.entryTotalWon).toBe(67000000);
+    expect(lig.salary.senior.base + (lig.salary.senior.incentive.avgAmount || 0)).toBe(115000000);
+  });
+
+  it("LIG의 기존 이름과 현재 상장명·법인명 검색을 같은 회사에 연결한다", () => {
+    for (const query of ["LIG넥스원", "LIG Nex1", "LIG디펜스앤에어로스페이스", "엘아이지디펜스앤에어로스페이스 주식회사"]) {
+      expect(companyRepository.search(query).map(company => company.id), query).toEqual(["lig-nex1"]);
+    }
+  });
+
   it("삼성의 공시 평균 1억 5,800만원과 신입 총연봉 추정 5,600만원을 구분한다", () => {
     const basis = getCompanySalaryBasis(samsung, { dartSalaryManwon: 20000 });
     expect(basis.entryBaseWon).toBe(48000000);

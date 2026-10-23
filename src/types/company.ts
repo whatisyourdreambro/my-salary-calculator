@@ -82,6 +82,15 @@ export interface CompanyProfile {
  };
  /** 검색 표기 변형(옛 사명·영문/한글 차이·줄임말 등). data/companyAliases.ts에서 주입됨 */
  aliases?: string[];
+ /** 공식 상호 변경 안내. 기존 검색명·URL·급여 자료의 기준연도와 별도로 표시한다. */
+ nameChange?: {
+ currentLegalName: string;
+ currentListedName: string;
+ changedAt: string;
+ listingChangedAt: string;
+ source: { label: string; url: string };
+ listingSource: { label: string; url: string };
+ };
  industry: string;
  /** 표준 업종 id. CompanyRepository가 industry 원문을 정규화해 로드 시점에 주입. */
  industryId?: string;

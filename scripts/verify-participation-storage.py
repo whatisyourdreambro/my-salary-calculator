@@ -39,13 +39,13 @@ def submit(db, receipt, bucket="opaque-hmac", daily=100, payload="hash"):
 db = sqlite3.connect(":memory:")
 db.executescript(SCHEMA)
 # No synthetic "healthy" seed means uninitialized/stale/future cleanup blocks writes.
-for cleanup in (None, NOW - 26 * 3600 - 1, NOW + 1):
+for cleanup in (None, NOW - 26 * 3600 - 1, NOW - 26 * 3600, NOW + 1):
     if cleanup is not None:
         db.execute("INSERT OR REPLACE INTO participation_health VALUES (1, ?)", (cleanup,))
         db.commit()
     assert submit(db, "closed") == (0, 0, 0, None)
 assert db.execute("SELECT COUNT(*) FROM feedback_rate_limits").fetchone() == (0,)
-db.execute("UPDATE participation_health SET last_cleanup_at=? WHERE id=1", (NOW - 26 * 3600,))
+db.execute("UPDATE participation_health SET last_cleanup_at=? WHERE id=1", (NOW - 26 * 3600 + 1,))
 db.commit()
 assert submit(db, "one") == (1, 1, 1, ("hash", "private-opinion-v1"))
 assert submit(db, "one") == (0, 0, 0, ("hash", "private-opinion-v1"))
@@ -134,6 +134,12 @@ def maintain(db):
 
 db = sqlite3.connect(":memory:")
 db.executescript(SCHEMA)
+for cleanup in (NOW - 26 * 3600, NOW - 26 * 3600 - 1, NOW + 1):
+    db.execute("INSERT OR REPLACE INTO participation_health VALUES (1, ?)", (cleanup,))
+    db.commit()
+    assert react(db, "closed-reaction") == (0, 0, 0, None)
+assert db.execute("SELECT COUNT(*) FROM feedback_rate_limits").fetchone() == (0,)
+db.execute("DELETE FROM participation_health")
 db.execute("INSERT INTO participation_health VALUES (1, ?)", (NOW - 100,))
 db.commit()
 for number in range(5):

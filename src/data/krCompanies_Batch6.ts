@@ -344,6 +344,20 @@ export const krCompanies_Batch6: CompanyProfile[] = [
   {
     id: "lig-nex1",
     name: { ko: "LIG넥스원", en: "LIG Nex1" },
+    nameChange: {
+      currentLegalName: "엘아이지디펜스앤에어로스페이스 주식회사",
+      currentListedName: "LIG디펜스앤에어로스페이스",
+      changedAt: "2026-03-31",
+      listingChangedAt: "2026-04-14",
+      source: {
+        label: "KIND 2026년 1분기 보고서",
+        url: "https://kind.krx.co.kr/external/2026/05/15/001156/20260515002495/11013.htm",
+      },
+      listingSource: {
+        label: "KIND 상호변경 상장 공시",
+        url: "https://kind.krx.co.kr/external/2026/04/09/000841/20260409002002/68155.htm",
+      },
+    },
     industry: "Defense",
     tier: "conglomerate",
     logo: "🛰️",

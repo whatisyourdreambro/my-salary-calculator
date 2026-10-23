@@ -418,7 +418,7 @@ export default function CarLoanPage() {
  <div className="flex justify-between items-center py-2 border-t border-border/50">
  <span className="text-sm text-muted-foreground">월 할부금</span>
  <span className="font-bold text-lg">
- <CountUp end={loan.monthlyPayment} separator="," />원
+ <span>{loan.monthlyPayment.toLocaleString('ko-KR')}</span>원
  </span>
  </div>
 

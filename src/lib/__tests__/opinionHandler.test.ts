@@ -4,6 +4,7 @@ import { handleOpinionPost, OPINION_RETENTION_SECONDS } from "@/lib/server/opini
 import { OPINION_RECEIPT_LOOKUP, OPINION_SQL } from "@/lib/server/opinionSql";
 import { hasFreshParticipationCleanup, PARTICIPATION_HEALTH_SQL, PARTICIPATION_HEALTH_MAX_AGE_SECONDS, type ParticipationBindings } from "@/lib/server/participationRuntime";
 import { feedbackPayloadHash, type FeedbackDatabase, type FeedbackResult, type FeedbackStatement } from "@/lib/server/feedbackStorage";
+import { contentIssue } from "@/lib/contentModeration";
 
 const now = Date.parse("2026-10-23T00:01:00Z");
 const seconds = Math.floor(now / 1000);
@@ -58,14 +59,14 @@ describe("private opinion release gate and bounded validation", () => {
     expect((await handleOpinionPost(request({ ...input, body: "가".repeat(1000) }), bindings, now)).status).toBe(413);
     expect(db.batch).not.toHaveBeenCalled();
   });
-  it.each([null, 0, seconds + 1, seconds - PARTICIPATION_HEALTH_MAX_AGE_SECONDS - 1, "123", 1.5])("fails closed for missing, invalid, future or stale cleanup: %#", async cleanup => {
+  it.each([null, 0, seconds + 1, seconds - PARTICIPATION_HEALTH_MAX_AGE_SECONDS, seconds - PARTICIPATION_HEALTH_MAX_AGE_SECONDS - 1, "123", 1.5])("fails closed for missing, invalid, future or stale cleanup: %#", async cleanup => {
     const { db, bindings } = storage(cleanup);
     expect((await handleOpinionPost(request(), bindings, now)).status).toBe(503);
     expect(vi.mocked(db.batch).mock.calls.every(([statements]) => statements.length === 1)).toBe(true);
   });
-  it("accepts the exact 26-hour cleanup boundary", async () => {
-    const { db } = storage(seconds - PARTICIPATION_HEALTH_MAX_AGE_SECONDS);
-    expect(await hasFreshParticipationCleanup(db, seconds)).toBe(true);
+  it.each([[PARTICIPATION_HEALTH_MAX_AGE_SECONDS - 1, true], [PARTICIPATION_HEALTH_MAX_AGE_SECONDS, false], [PARTICIPATION_HEALTH_MAX_AGE_SECONDS + 1, false]])("requires cleanup age %i to be strictly below 26 hours", async (age, fresh) => {
+    const { db } = storage(seconds - Number(age));
+    expect(await hasFreshParticipationCleanup(db, seconds)).toBe(fresh);
   });
 });
 
@@ -89,7 +90,7 @@ describe("private opinion moderation, receipts and storage", () => {
     expect(result.headers.get("cache-control")).toBe("private, no-store");
     const statements = vi.mocked(db.batch).mock.calls.find(([items]) => items.length === 4)![0] as Statement[];
     expect(statements.map(item => item.sql)).toEqual(Object.values(OPINION_SQL));
-    expect(statements[1].values).toEqual([id, expect.stringMatching(/^[a-f0-9]{64}$/), input.target, input.body, input.contractVersion, "ko-input-v2", seconds, seconds + OPINION_RETENTION_SECONDS]);
+    expect(statements[1].values).toEqual([id, expect.stringMatching(/^[a-f0-9]{64}$/), input.target, input.body, input.contractVersion, "ko-input-v3", seconds, seconds + OPINION_RETENTION_SECONDS]);
     expect(JSON.stringify(statements)).not.toContain("192.0.2.1");
     const again = await handleOpinionPost(request({ ...input, body: ` ${input.body} ` }), bindings, now);
     expect(again.status).toBe(200);
@@ -102,6 +103,15 @@ describe("private opinion moderation, receipts and storage", () => {
     const hash = await feedbackPayloadHash(JSON.stringify([input.target, body, true, input.contractVersion]));
     const { db, bindings } = storage(null, hash);
     expect((await handleOpinionPost(request({ ...input, body }), bindings, now)).status).toBe(200);
+    expect(db.batch).toHaveBeenCalledTimes(1);
+  });
+  it("replays an unchanged bare-domain opinion accepted under policy v2 before applying v3", async () => {
+    const body = "example.dev";
+    expect(contentIssue(body, "opinion")).toBe("PERSONAL_DATA_NOT_ALLOWED");
+    const hash = await feedbackPayloadHash(JSON.stringify([input.target, body, true, input.contractVersion]));
+    const { db, bindings } = storage(null, hash);
+    const result = await handleOpinionPost(request({ ...input, body }), bindings, now);
+    expect(await result.json()).toEqual({ ok: true, receiptId: id, duplicate: true });
     expect(db.batch).toHaveBeenCalledTimes(1);
   });
   it("returns 429 when the atomic daily or IP limit refuses a new write", async () => {

@@ -71,7 +71,11 @@ function DeferredRoadmapChart({ data }: { data: SalaryRoadmapDatum[] }) {
  );
 }
 
-export default function CompanyDetailClient({ company, summary }: { company: CompanyProfile; summary?: ReactNode }) {
+export default function CompanyDetailClient({ company, summary, nameChangeNotice }: {
+ company: CompanyProfile;
+ summary?: ReactNode;
+ nameChangeNotice?: ReactNode;
+}) {
  // Prepare Chart Data
  const salaryData = [
  { level: "신입", base: company.salary.entry.base, total: company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0) },
@@ -153,6 +157,7 @@ export default function CompanyDetailClient({ company, summary }: { company: Com
 
  {/* Quick Stats 직후 첫 광고 — 회사명 검색 의도 정점 */}
  <CalcResultAd />
+ {nameChangeNotice}
 
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
  {/* Left Column: Charts & Analysis */}
