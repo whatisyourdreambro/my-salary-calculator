@@ -34,6 +34,9 @@ export default function ParticipationSummary({ target }: { target: Participation
         const response = await fetch(`/api/participation/summary?target=${target}`, {
           credentials: "same-origin", cache: "no-store", signal: controller.signal,
         });
+        // Failed responses still own a body stream. Close it before releasing
+        // the deadline or scheduling the next refresh; never parse error data.
+        if (!response.ok) await response.body?.cancel();
         const data: unknown = response.ok ? await response.json() : null;
         if (active) setSummary(parseParticipationSummary(data));
       } catch { if (active) setSummary(null); }
