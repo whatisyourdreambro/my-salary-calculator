@@ -13,6 +13,8 @@
 # testing
 /coverage
 /.artifacts/
+/workers/.artifacts/
+/workers/.wrangler/
 /.lighthouseci/
 /lhci-report/
 
@@ -65,3 +67,6 @@ next-env.d.ts
 # DART ETL 로컬 캐시 (scripts/dart-etl.mjs) — API 원본 응답, 커밋 금지
 scripts/.dart-cache/
 qa-report.md
+
+# Local business metrics and authenticated reporting evidence; never publish.
+/docs/revenue-audit-2026-10-23/

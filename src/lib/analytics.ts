@@ -98,6 +98,11 @@ export function trackCalcSuccess(calcType: string, pagePath?: string): void {
   trackEvent("calc_success", calculationParams(calcType, pagePath));
 }
 
+/** Dashboard journey: only fixed actions, no saved amounts, dates or basis IDs. */
+export function trackSavedSalaryRecalculate(action: "request" | "apply" | "saved"): void {
+  trackEvent("saved_salary_recalculate", { action, flow_version: "1" });
+}
+
 export function trackCalcResultView(calcType: string, origin: "default" | "user", pagePath?: string): void {
   trackEvent("result_view", { ...calculationParams(calcType, pagePath), result_origin: origin });
 }
@@ -193,7 +198,7 @@ export function destTemplate(href: string): DestTemplate {
  * 가이드/시즌 페이지 CTA 카드 클릭.
  * position 값: related-calc · next-action · related-guide (onClick 직접 호출)
  *   + InternalLinkTracker 가 보내는 data-msy-module id (industry-rank 등, ≤40종 — internalLinkModules.test).
- * destTpl: 목적지 템플릿(destTemplate). 넘긴 호출만 dest_tpl 을 싣는다 — 직접 호출부는 종전 그대로(미전송).
+ * destTpl: 목적지 템플릿(destTemplate). 직접 호출부 3종도 같은 고정값을 전달한다.
  */
 export function trackGuideCTAClick(
   slug: string,

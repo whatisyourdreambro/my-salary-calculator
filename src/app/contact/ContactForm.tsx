@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "@/components/AppLink";
 import { uuidV4 } from "@/lib/uuidV4";
+import { contentIssue } from "@/lib/contentModeration";
 
 const TYPES = [
   ["calculation_error", "계산 오류", "Calculation error"],
@@ -14,6 +15,12 @@ const TYPES = [
   ["other", "기타", "Other"],
 ] as const;
 type InquiryType = (typeof TYPES)[number][0];
+const REPORT_REASONS = [
+  ["abusive", "욕설·모욕 표현", "Abusive or insulting wording"],
+  ["threatening", "위협 표현", "Threatening wording"],
+  ["personal_information", "개인정보 노출", "Personal information disclosure"],
+] as const;
+type ReportReason = (typeof REPORT_REASONS)[number][0];
 const SOURCES: Record<string, string> = {
   "samsung-bonus": "/calc/samsung-bonus",
   "civil-servant-pay-2027": "/civil-servant-pay-2027",
@@ -38,40 +45,40 @@ export default function ContactForm({ locale = "ko" }: { locale?: "ko" | "en" })
     return SOURCES[source] ?? "";
   });
   const [body, setBody] = useState("");
+  const [composing, setComposing] = useState(false);
+  const composingRef = useRef(false);
+  const [reportReason, setReportReason] = useState<ReportReason>("abusive");
+  const [reportLocation, setReportLocation] = useState("");
   const [replyEmail, setReplyEmail] = useState("");
   const [inquiryConsent, setInquiryConsent] = useState(false);
   const [replyConsent, setReplyConsent] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
-  const [errorField, setErrorField] = useState<"page" | "body" | null>(null);
-  const [validationAttempt, setValidationAttempt] = useState(0);
   const [receipt, setReceipt] = useState("");
   const lastAttempt = useRef<{ payload: string; id: string } | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
+  const moderationIssue = composing ? null : contentIssue(body);
+  const moderationMessage = text("욕설·위협 표현은 보낼 수 없습니다. 원문을 인용하지 말고 문제 유형과 페이지 안의 위치를 알려주세요.", "Remove abusive or threatening wording. To report it, describe the issue and its location without quoting the wording.");
 
   useEffect(() => {
     if (receipt) heading.current?.focus();
   }, [receipt]);
 
-  useEffect(() => {
-    if (errorField) document.getElementById(`inquiry-${errorField}`)?.focus();
-  }, [errorField, validationAttempt]);
-
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (pending || receipt) return;
+    if (pending || receipt || composingRef.current) return;
     setError("");
-    setErrorField(null);
-    setValidationAttempt(previous => previous + 1);
     const trimmedPath = pagePath.trim() || (en ? "/en/contact" : "/contact");
     if (!trimmedPath.startsWith("/") || trimmedPath.startsWith("//") || /[?#\\\s]/.test(trimmedPath)) {
-      setErrorField("page");
       setError(text("관련 페이지는 /calc/samsung-bonus처럼 경로만 입력해 주세요. 주소의 ? 또는 # 이후 내용은 제외해 주세요.", "Enter only a site path, such as /en/flat-tax. Remove everything after ? or #."));
       return;
     }
     if (!body.trim()) {
-      setErrorField("body");
       setError(text("문의 내용을 입력해 주세요.", "Enter your message."));
+      return;
+    }
+    if (contentIssue(body)) {
+      setError(moderationMessage);
       return;
     }
     const normalized = { type, pagePath: trimmedPath, body: body.trim(), inquiryConsent, replyEmail: replyEmail.trim(), replyConsent: !!replyEmail.trim() && replyConsent };
@@ -95,6 +102,8 @@ export default function ContactForm({ locale = "ko" }: { locale?: "ko" | "en" })
         setBody("");
       } else if (response.status === 429) {
         setError(text("짧은 시간에 접수가 많았습니다. 잠시 후 다시 시도해 주세요. 입력 내용은 이 화면에 남아 있습니다.", "Too many submissions in a short period. Try again later. Your message remains on this screen."));
+      } else if (typeof data === "object" && data !== null && "error" in data && data.error === "CONTENT_NOT_ALLOWED") {
+        setError(moderationMessage);
       } else if (response.status === 400 || response.status === 413 || response.status === 415) {
         setError(text("입력 형식과 동의 항목을 확인해 주세요. 내용은 HTML 없이 500자 이내로 적고, 관련 페이지에는 사이트 내부 경로만 입력해 주세요.", "Check your input and consent. Use up to 500 characters without HTML and enter only an internal site path."));
       } else if (response.status === 409) {
@@ -123,8 +132,7 @@ export default function ContactForm({ locale = "ko" }: { locale?: "ko" | "en" })
 
   return (
     <form lang={locale} onSubmit={submit} className="mt-8 space-y-5 rounded-2xl border border-canvas-200 bg-white p-5 sm:p-7">
-      <p role="status" aria-live="polite" className="sr-only">{pending ? text("접수 확인 중입니다.", "Confirming receipt.") : ""}</p>
-      <fieldset disabled={pending} aria-busy={pending} className="space-y-5 disabled:opacity-70">
+      <fieldset disabled={pending} className="space-y-5 disabled:opacity-70">
         <div>
           <label htmlFor="inquiry-type" className="text-sm font-bold text-navy">{text("문의 종류", "Message type")}</label>
           <select id="inquiry-type" value={type} onChange={e => setType(e.target.value as InquiryType)} className={fieldClass}>
@@ -133,16 +141,38 @@ export default function ContactForm({ locale = "ko" }: { locale?: "ko" | "en" })
         </div>
         <div>
           <label htmlFor="inquiry-page" className="text-sm font-bold text-navy">{text("관련 페이지", "Related page")} <span className="font-normal text-muted-blue">{text("(선택)", "(optional)")}</span></label>
-          <input id="inquiry-page" value={pagePath} onChange={e => { setPagePath(e.target.value); if (errorField === "page") { setErrorField(null); setError(""); } }} maxLength={200} placeholder={text("예: /calc/samsung-bonus", "For example: /en/flat-tax")} autoComplete="off" spellCheck={false} className={fieldClass} aria-invalid={errorField === "page"} aria-describedby={`inquiry-page-help${errorField === "page" ? " inquiry-submit-error" : ""}`} />
+          <input id="inquiry-page" value={pagePath} onChange={e => setPagePath(e.target.value)} maxLength={200} placeholder={text("예: /calc/samsung-bonus", "For example: /en/flat-tax")} autoComplete="off" spellCheck={false} className={fieldClass} aria-describedby="inquiry-page-help" />
           <p id="inquiry-page-help" className="mt-2 text-xs leading-5 text-muted-blue">{text("주소에서 moneysalary.com 뒤의 경로만 입력하세요. 계산 입력값이 담긴 공유 주소는 보내지 마세요.", "Enter only the path after moneysalary.com. Do not send a result-sharing URL containing personal inputs.")}</p>
         </div>
         <div>
           <label htmlFor="inquiry-body" className="text-sm font-bold text-navy">{text("문의 내용", "Message")}</label>
-          <textarea id="inquiry-body" value={body} onChange={e => { setBody(e.target.value); if (errorField === "body") { setErrorField(null); setError(""); } }} required maxLength={500} rows={6} className={fieldClass} aria-invalid={errorField === "body"} aria-describedby={`inquiry-body-help inquiry-length${errorField === "body" ? " inquiry-submit-error" : ""}`} placeholder={text("어떤 페이지의 어느 설명이나 계산에서 문제가 있었는지 알려주세요.", "Tell us which page, explanation or calculation needs attention.")} />
+          <textarea id="inquiry-body" value={body} onChange={e => setBody(e.target.value)}
+            onCompositionStart={() => { composingRef.current = true; setComposing(true); }}
+            onCompositionEnd={e => { composingRef.current = false; setBody(e.currentTarget.value); setComposing(false); }}
+            required maxLength={500} rows={6} className={fieldClass} aria-invalid={Boolean(moderationIssue)}
+            aria-describedby="inquiry-body-help inquiry-length inquiry-moderation"
+            placeholder={text("어떤 페이지의 어느 설명이나 계산에서 문제가 있었는지 알려주세요.", "Tell us which page, explanation or calculation needs attention.")} />
+          <p id="inquiry-moderation" aria-live="polite" className="mt-2 text-xs leading-5 text-red-700">{moderationIssue ? moderationMessage : ""}</p>
           <div className="mt-2 flex justify-between gap-4 text-xs leading-5 text-muted-blue">
             <p id="inquiry-body-help">{text("실명·사번·정확한 개인 연봉·급여 명세서·계좌번호는 보내지 마세요. 첨부 파일과 HTML은 받지 않습니다. 정정 근거는 자료 이름·기준일 또는 공개 자료 링크로 적어주세요.", "Do not include your full name, employee ID, exact personal salary, payslip or bank account number. Attachments and HTML are not accepted. For corrections, cite a source title, date or public source link.")}</p>
             <span id="inquiry-length" className="shrink-0 tabular-nums">{body.length}/500</span>
           </div>
+          <details className="mt-3 text-xs leading-6 text-muted-blue">
+            <summary className="cursor-pointer font-bold text-electric">{text("문제 표현을 인용하지 않고 신고하기", "Report problematic wording without quoting it")}</summary>
+            <label className="mt-3 block" htmlFor="report-reason">{text("문제 유형", "Issue type")}</label>
+            <select id="report-reason" value={reportReason} onChange={e => setReportReason(e.target.value as ReportReason)} className={fieldClass}>
+              {REPORT_REASONS.map(([value, label, english]) => <option key={value} value={value}>{text(label, english)}</option>)}
+            </select>
+            <label className="mt-3 block" htmlFor="report-location">{text("페이지 안의 위치", "Location on the page")}</label>
+            <input id="report-location" value={reportLocation} onChange={e => setReportLocation(e.target.value)} maxLength={100} className={fieldClass} placeholder={text("예: 두 번째 설명 문단", "For example: the second explanation paragraph")} />
+            <button type="button" className="mt-3 min-h-11 font-bold text-electric underline" onClick={() => {
+              if (contentIssue(reportLocation)) { setError(moderationMessage); return; }
+              const selectedReason = REPORT_REASONS.find(([value]) => value === reportReason);
+              const reason = selectedReason ? text(selectedReason[1], selectedReason[2]) : text("문제 표현", "Problematic wording");
+              setBody(en ? `Issue: ${reason}\nLocation: ${reportLocation.trim() || "Page content"}\nPlease review and correct or remove it.` : `문제 유형: ${reason}\n위치: ${reportLocation.trim() || "관련 페이지 본문"}\n해당 내용을 확인하고 수정 또는 삭제해 주세요.`);
+              setError("");
+            }}>{text("신고 형식으로 문의 내용 채우기", "Use this report in the message field")}</button>
+          </details>
         </div>
         <div>
           <label htmlFor="inquiry-email" className="text-sm font-bold text-navy">{text("회신 이메일", "Reply email")} <span className="font-normal text-muted-blue">{text("(선택)", "(optional)")}</span></label>
@@ -154,10 +184,10 @@ export default function ContactForm({ locale = "ko" }: { locale?: "ko" | "en" })
           <label className="flex min-h-11 items-start gap-3"><input type="checkbox" checked={inquiryConsent} onChange={e => setInquiryConsent(e.target.checked)} required className="mt-1 h-4 w-4 shrink-0 accent-blue-600" /><span>{text("[필수] 문의 접수를 위한 위 정보의 수집·이용에 동의합니다. 동의하지 않으면 접수할 수 없습니다.", "[Required] I consent to collection and use of the information above to receive and handle my message. Submission requires this consent.")}</span></label>
           {!!replyEmail.trim() && <label className="flex min-h-11 items-start gap-3"><input type="checkbox" checked={replyConsent} onChange={e => setReplyConsent(e.target.checked)} required className="mt-1 h-4 w-4 shrink-0 accent-blue-600" /><span>{text("[선택] 회신을 위한 이메일 수집·이용에 동의합니다. 이메일을 지우면 동의 없이 접수할 수 있습니다.", "[Optional] I consent to collection and use of my email for a reply. Remove the email to submit without this consent.")}</span></label>}
         </div>
-        <button type="submit" disabled={pending} className="w-full rounded-xl bg-electric px-5 py-3.5 text-sm font-bold text-white transition-colors hover:bg-blue-600 disabled:cursor-wait">{pending ? text("접수 확인 중…", "Confirming receipt…") : text("운영자에게 비공개로 보내기", "Send privately to the operator")}</button>
+        <button type="submit" disabled={pending || composing || Boolean(moderationIssue)} className="w-full rounded-xl bg-electric px-5 py-3.5 text-sm font-bold text-white transition-colors hover:bg-blue-600 disabled:cursor-wait">{pending ? text("접수 확인 중…", "Confirming receipt…") : text("운영자에게 비공개로 보내기", "Send privately to the operator")}</button>
       </fieldset>
       <p className="text-xs leading-5 text-muted-blue">{text("입력 중인 내용은 자동 저장하지 않습니다. 화면을 닫거나 새로고침하면 사라집니다.", "Drafts are not saved automatically. Closing or refreshing this screen clears your input.")}</p>
-      {error && <p id="inquiry-submit-error" role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-800">{error}</p>}
+      {error && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-800">{error}</p>}
     </form>
   );
 }

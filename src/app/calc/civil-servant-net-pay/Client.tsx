@@ -11,7 +11,7 @@
 //   - 해시 프리셋은 useEffect 에서 읽는다(useSearchParams 는 정적 렌더를 깨뜨림) — 서버 렌더 기본값은 9급 1호봉(골든 A)
 //   새 행·문구를 광고 위에 추가하지 말 것. 설명·표·미리보기는 광고 아래에만 둔다.
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "@/components/AppLink";
 import { CalcResultAd } from "@/components/AdPlacement";
 import NumberInput from "@/components/NumberInput";
@@ -35,6 +35,9 @@ import {
 import { CIVIL_PENSION_2026, CIVIL_OVERTIME_2026 } from "@/lib/civilServantAllowances2026";
 import { RAISE_2027_BUDGET } from "@/lib/civilServantPay";
 import { INSURANCE_RATES_2026 } from "@/lib/taxConstants2026";
+import CivilPayHandoffDialog from "@/components/CivilPayHandoffDialog";
+import { civilPaySelectionInput, consumeCivilPayHandoff, isCivilPayResultReady, type CivilPaySelection } from "@/lib/civilPayHandoff";
+import { trackCivilPayHandoff } from "@/lib/civilPayHandoffTracking";
 
 const fmt = (n: number) => (Number.isFinite(n) ? Math.round(n) : 0).toLocaleString("ko-KR");
 const won = (n: number) => `${fmt(n)}원`;
@@ -122,14 +125,44 @@ export default function CivilNetPayClient({ initialKind = "general" }: { initial
   const [otherTaxDraft, setOtherTaxDraft] = useState("");
   const [otherNonTaxDraft, setOtherNonTaxDraft] = useState("");
   const [bonusDraft, setBonusDraft] = useState("");
+  const [handoff, setHandoff] = useState<CivilPaySelection | null>(null);
+  const [handoffDialogOpen, setHandoffDialogOpen] = useState(false);
+  const [handoffError, setHandoffError] = useState(false);
+  const handoffConsumed = useRef(false);
 
   // 해시 프리셋 (#teacher 등) — 마운트 후에만 읽는다. 서버 렌더·첫 하이드레이션은 항상 기본값.
   useEffect(() => {
     const apply = () => {
       const kind = KIND_HASHES[window.location.hash];
-      if (kind) setInput((prev) => ({ ...prev, ...CIVIL_KIND_PRESETS[kind] }));
+      if (kind) {
+        setHandoff(null);
+        setHandoffDialogOpen(false);
+        setInput((prev) => ({ ...prev, ...CIVIL_KIND_PRESETS[kind] }));
+      }
     };
-    apply();
+    if (!handoffConsumed.current) {
+      handoffConsumed.current = true;
+      try {
+        const saved = consumeCivilPayHandoff(window.sessionStorage);
+        if (saved.status === "accepted") {
+          const selectionInput = civilPaySelectionInput(saved.selection)!;
+          setInput({ ...CIVIL_DEFAULT_INPUT, ...CIVIL_KIND_PRESETS[selectionInput.kind], ...selectionInput });
+          setHandoff(saved.selection);
+          setHandoffDialogOpen(true);
+          trackCivilPayHandoff("accepted", saved.selection.occupation);
+        } else {
+          if (saved.status === "rejected") {
+            setHandoffError(true);
+            trackCivilPayHandoff("rejected", undefined, saved.reason);
+          }
+          apply();
+        }
+      } catch {
+        setHandoffError(true);
+        trackCivilPayHandoff("rejected", undefined, "storage_unavailable");
+        apply();
+      }
+    }
     window.addEventListener("hashchange", apply);
     return () => window.removeEventListener("hashchange", apply);
   }, []);
@@ -158,7 +191,7 @@ export default function CivilNetPayClient({ initialKind = "general" }: { initial
   const inputsOk = Boolean(CIVIL_RANKS[kind]?.[input.rank]) && (soldier || hobongs.includes(input.hobong));
   const measurement = useCalculatorMeasurement({
     calcType: "civil_servant_net_pay",
-    valid: inputsOk && [r.net, r.grossMonthly, r.deductions].every(Number.isFinite),
+    valid: isCivilPayResultReady(Boolean(handoff), inputsOk, r),
     // React 메모리 안의 비교 키일 뿐 — 금액·직종은 분석 이벤트로 보내지 않는다(훅이 전송하지 않음).
     resultKey: `${kind}:${input.rank}:${input.hobong}:${r.net}`,
   });
@@ -166,6 +199,9 @@ export default function CivilNetPayClient({ initialKind = "general" }: { initial
   const update = (patch: Partial<CivilNetPayInput>) => setInput((prev) => ({ ...prev, ...patch }));
   const chooseKind = (next: CivilKind) => {
     if (next === kind) return;
+    // Deliberately choosing another occupation abandons the imported-table flow.
+    setHandoff(null);
+    setHandoffDialogOpen(false);
     setInput((prev) => ({ ...prev, ...CIVIL_KIND_PRESETS[next] }));
   };
   const chooseRank = (rank: number) => setInput((prev) => ({ ...prev, rank, hobong: clampHobong(prev.kind, rank, prev.hobong) }));
@@ -243,6 +279,27 @@ export default function CivilNetPayClient({ initialKind = "general" }: { initial
     : "설·추석 달과 1월·7월에는 아래 명절휴가비·정근수당이 더해지고, 그 달 소득세는 따로 원천징수됩니다.";
 
   return (
+    <>
+      <CivilPayHandoffDialog open={handoffDialogOpen && Boolean(handoff)}
+        selectionLabel={`2026년 ${r.rankLabel} ${input.hobong}호봉`}
+        assumptions={[
+          `재직 ${yearsLabel} · 위험근무수당 ${HAZARD_OPTIONS.find(option => option.value === input.hazard)?.label ?? "없음"} · 시간외근무 월 ${input.overtimeHours}시간`,
+          `배우자 ${input.spouse ? "있음" : "없음"} · 자녀 ${input.children}명(8~20세 ${input.children8to20}명) · 기타 부양가족 ${input.otherDependents}명`,
+          `기준소득월액 ${effective.baseIncomeOverride ? `${won(effective.baseIncomeOverride)} 직접 입력` : "올해 보수로 추정"} · 원천징수 ${input.withholdingPct}%`,
+          `기타 과세 수당 월 ${won(effective.otherTaxableMonthly)} · 기타 비과세 월 ${won(effective.otherNonTaxableMonthly)} · 성과상여금 연 ${won(effective.annualPerformanceBonus ?? 0)}`,
+        ]}
+        onConfirm={event => {
+          if (!event.nativeEvent.isTrusted || !handoff) return;
+          trackCivilPayHandoff("confirmed", handoff.occupation);
+          measurement.interact(event);
+          setHandoff(null);
+          setHandoffDialogOpen(false);
+          document.querySelector<HTMLElement>('[data-civ-block="result"]')?.focus();
+        }}
+        onEdit={() => {
+          setHandoffDialogOpen(false);
+          document.getElementById("civ-years")?.focus();
+        }} />
     <div className="space-y-5 mb-10">
       {/* (1) 입력 카드 — 모든 직종에서 같은 행·칸 수 (광고 위 고정 높이) */}
       <div
@@ -354,16 +411,17 @@ export default function CivilNetPayClient({ initialKind = "general" }: { initial
       <div
         ref={measurement.resultRef}
         data-civ-block="result"
+        tabIndex={-1}
         className="rounded-2xl overflow-hidden border border-canvas-200 dark:border-canvas-800"
         aria-live="polite"
         aria-atomic="true"
       >
         <div className="px-5 sm:px-8 pt-5 pb-4" style={{ background: "linear-gradient(135deg, #0145F2 0%, #0D5BFF 100%)" }}>
           <p className="h-5 overflow-hidden text-ellipsis whitespace-nowrap text-xs font-bold leading-5" style={{ color: "rgba(255,255,255,0.75)" }} data-civ-result-row="">
-            {caption}
+            {handoff ? `2026년 ${r.rankLabel} ${input.hobong}호봉 · 급여 가정 확인 필요` : caption}
           </p>
           <div className="mt-1 h-12 overflow-hidden whitespace-nowrap text-3xl font-black leading-[48px] tracking-tight text-white tabular-nums sm:text-5xl" style={{ letterSpacing: "-0.03em" }}>
-            {won(r.net)}
+            {handoff ? <button type="button" className="h-11 text-xl font-black underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white" onClick={() => setHandoffDialogOpen(true)}>급여 가정 확인</button> : won(r.net)}
           </div>
         </div>
         <dl className="bg-white dark:bg-canvas-900 px-5 sm:px-8 py-3">
@@ -381,6 +439,7 @@ export default function CivilNetPayClient({ initialKind = "general" }: { initial
       <CalcResultAd />
 
       {/* ── 이하 광고 아래 — 높이가 바뀌어도 되는 영역 ── */}
+      {handoffError && <p role="alert" className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200">봉급표 조건이 만료되었거나 불러올 수 없습니다. 계급과 호봉을 직접 선택해 주세요.</p>}
       <section className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-5 sm:p-6">
         <h2 className="text-lg font-black text-navy dark:text-canvas-50 mb-3">수당 상세 (일반 달, 월)</h2>
         <div className="overflow-x-auto">
@@ -649,5 +708,6 @@ export default function CivilNetPayClient({ initialKind = "general" }: { initial
         </Link>
       </nav>
     </div>
+    </>
   );
 }

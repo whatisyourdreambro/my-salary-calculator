@@ -21,6 +21,13 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import type { Metadata } from "next";
 
+// Static page rendering still includes the new client-side handoff button.
+// Supply its router context without replacing the actual table or header.
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/firefighter-pay-2026",
+  useRouter: () => ({ push: vi.fn() }),
+}));
+
 vi.mock("@/components/AppLink", () => ({
   default: (props: AnchorHTMLAttributes<HTMLAnchorElement>) => createElement("a", props),
 }));

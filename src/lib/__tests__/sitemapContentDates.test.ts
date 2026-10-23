@@ -3,6 +3,22 @@ import { describe, expect, it } from 'vitest';
 import { latestContentDate, STATIC_LAST_MODIFIED } from '@/config/siteDates';
 
 describe('sitemap editorial date integrity', () => {
+  it('dates the two factual corrections without refreshing the home, handoff or insurance article', () => {
+    const fixture = `globalThis.fetch=()=>{throw new Error('Network forbidden')};
+      const rows=require('./src/app/sitemap.ts').default();
+      const paths=['/calc/pension-hike-2027','/tools/finance/irp','/','/calc/civil-servant-net-pay','/social-insurance-rates-2027'];
+      console.log(JSON.stringify(paths.map(path=>({path,date:rows.find(row=>new URL(row.url).pathname===path).lastModified.toISOString()}))));`;
+    const rows = JSON.parse(execFileSync(process.execPath, ['--import', 'tsx', '-e', fixture], {
+      cwd: process.cwd(), encoding: 'utf8', timeout: 30_000, maxBuffer: 1024 * 1024,
+    })) as Array<{path: string; date: string}>;
+    const day = (date: string) => new Date(new Date(date).getTime() + 9 * 3600000).toISOString().slice(0, 10);
+    expect(rows.map(row => [row.path, day(row.date)])).toEqual([
+      ['/calc/pension-hike-2027', '2026-10-23'], ['/tools/finance/irp', '2026-10-23'],
+      ['/', '2026-10-19'], ['/calc/civil-servant-net-pay', '2026-09-27'],
+      ['/social-insurance-rates-2027', '2026-10-04'],
+    ]);
+  }, 35_000);
+
   it('shared engine reviews set a lower bound and cannot erase newer page revisions', () => {
     const engine = new Date('2026-09-25');
     const page = new Date('2026-10-19T00:00:00+09:00');

@@ -14,8 +14,10 @@ const MyDashboard = dynamic(() => import("@/components/MyDashboard"), {
 import DashboardFavoritesSection from "@/components/DashboardFavoritesSection";
 import type { StoredFinancialData } from "@/app/types";
 import { FINANCIAL_DATA_KEY, isStoredDashboardData } from "@/lib/storedFinancialData";
+import { requestSavedSalaryRecalculation, savedSalaryRecalculation } from "@/lib/savedSalaryRecalculation";
 import Link from "@/components/AppLink";
 import { useRouter } from "next/navigation";
+import { trackSavedSalaryRecalculate } from "@/lib/analytics";
 import {
  Calculator,
  PiggyBank,
@@ -66,13 +68,24 @@ export default function DashboardPage() {
   if (isStoredDashboardData(parsed)) setDashboardData(parsed);
   else setStorageError("저장된 결과 형식을 확인할 수 없습니다. 기존 값은 삭제하지 않았습니다.");
  }
- } catch (error) {
- console.error("Failed to parse dashboard data from localStorage", error);
+ } catch {
   setStorageError("저장된 결과를 읽지 못했습니다. 기존 값은 삭제하지 않았으며, 브라우저 저장소 설정을 확인해 주세요.");
  } finally {
  setIsLoading(false);
  }
  }, []);
+
+ const handleRecalculateSalary = () => {
+  if (!savedSalaryRecalculation(dashboardData?.salary)) return;
+  try {
+   if (requestSavedSalaryRecalculation(window.sessionStorage)) {
+    trackSavedSalaryRecalculate("request");
+    router.push("/");
+    return;
+   }
+  } catch { /* Access to sessionStorage can itself be denied. */ }
+  setStorageError("저장 조건을 계산기에 전달하지 못했습니다. 기존 결과는 그대로이며, 브라우저 저장소 설정을 확인하거나 계산기에 직접 입력해 주세요.");
+ };
 
  const handleResetDashboard = () => {
   try { localStorage.removeItem(FINANCIAL_DATA_KEY); } catch {
@@ -103,7 +116,7 @@ export default function DashboardPage() {
   {storageError && <p role="alert" className="mb-6 rounded-xl border border-border bg-background p-4 text-sm">{storageError}</p>}
  {dashboardData ? (
  <div className="space-y-12">
- <MyDashboard data={dashboardData} onReset={handleResetDashboard} />
+ <MyDashboard data={dashboardData} onReset={handleResetDashboard} onRecalculateSalary={handleRecalculateSalary} />
  <DashboardFavoritesSection />
  {/* 대시보드 본문 끝 광고 — 데이터 있는 상태에서만 노출 */}
  <PageFooterAds maxWidth="5xl" />

@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 const runtimeBindings = vi.hoisted(() => ({ current: {} as Record<string, unknown> }));
 vi.mock("@/lib/server/cloudflareBindings", () => ({ cloudflareBindings: () => runtimeBindings.current }));
-import { getFeedbackBindings } from "@/lib/server/feedbackBindings";
 import { handleContactPost } from "@/lib/server/contactHandler";
-import { CONTACT_SQL } from "@/lib/server/contactSql";
+import { getFeedbackBindings } from "@/lib/server/feedbackBindings";
+import { CONTACT_RECEIPT_LOOKUP, CONTACT_SQL } from "@/lib/server/contactSql";
 import * as contactRoute from "@/app/api/contact/route";
 import {
-  CONTACT_RETENTION_SECONDS, FEEDBACK_WINDOW_SECONDS, feedbackRateKey, normalizeFeedbackPath,
+  CONTACT_RETENTION_SECONDS, FEEDBACK_WINDOW_SECONDS, feedbackPayloadHash, feedbackRateKey, normalizeFeedbackPath,
   type FeedbackBindings, type FeedbackDatabase, type FeedbackResult, type FeedbackStatement,
 } from "@/lib/server/feedbackStorage";
 
@@ -24,8 +24,9 @@ function request(value: unknown = input, headers: Record<string, string> = {}, u
 }
 
 type Statement = FeedbackStatement & { sql: string; values: (string | number | null)[] };
-function storage() {
-  let savedHash: string | undefined;
+function storage(seed?: { hash: string; version: string }) {
+  let savedHash: string | undefined = seed?.hash;
+  let savedVersion = seed?.version ?? "contact-v1";
   const db: FeedbackDatabase = {
     prepare(sql) {
       const statement: Statement = {
@@ -35,8 +36,10 @@ function storage() {
       return statement;
     },
     batch: vi.fn(async (statements: FeedbackStatement[]): Promise<FeedbackResult[]> => {
+      if (statements.length === 1) return [{ success: true, meta: {}, results: savedHash ? [{ payload_hash: savedHash, consent_version: savedVersion }] : [] }];
       const insert = statements[1] as Statement;
       const replay = savedHash !== undefined;
+      if (!replay) savedVersion = insert.values[7] as string;
       savedHash ??= insert.values[1] as string;
       return [
         { success: true, meta: { changes: replay ? 0 : 1 }, results: [] },
@@ -46,6 +49,10 @@ function storage() {
     }),
   };
   return { db, bindings: { FEEDBACK_DB: db, FEEDBACK_RATE_LIMIT_SECRET: secret } satisfies FeedbackBindings };
+}
+
+function writeStatements(db: FeedbackDatabase): Statement[] {
+  return vi.mocked(db.batch).mock.calls.find(([statements]) => statements.length === 3)![0] as Statement[];
 }
 
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); runtimeBindings.current = {}; });
@@ -160,7 +167,7 @@ describe("private contact persistence and failure handling", () => {
     expect(await result.json()).toEqual({ ok: true, receiptId: id, duplicate: false });
     expect(result.headers.get("cache-control")).toBe("private, no-store");
     expect(result.headers.get("x-robots-tag")).toBe("noindex, nofollow");
-    const statements = vi.mocked(db.batch).mock.calls[0][0] as Statement[];
+    const statements = writeStatements(db);
     expect(statements.map(s => s.sql)).toEqual([CONTACT_SQL.reserveRate, CONTACT_SQL.insertInquiry, CONTACT_SQL.receipt]);
     expect(statements[1].values).toEqual([
       id, expect.stringMatching(/^[a-f0-9]{64}$/), "explanation", "/", input.body,
@@ -175,7 +182,7 @@ describe("private contact persistence and failure handling", () => {
   it("accepts an anonymous inquiry and normalizes an empty email to null", async () => {
     const { db, bindings } = storage();
     expect((await handleContactPost(request({ ...input, replyEmail: "  ", replyConsent: false }), bindings, now)).status).toBe(201);
-    const insert = vi.mocked(db.batch).mock.calls[0][0][1] as Statement;
+    const insert = writeStatements(db)[1];
     expect(insert.values.slice(5, 7)).toEqual([null, 0]);
   });
 
@@ -185,7 +192,7 @@ describe("private contact persistence and failure handling", () => {
     const body = "근거 https://example.com/source 와 사용처 www.example.com 을 확인해 주세요.";
     const result = await handleContactPost(request({ ...input, body }), bindings, now);
     expect(result.status).toBe(201);
-    const insert = vi.mocked(db.batch).mock.calls[0][0][1] as Statement;
+    const insert = writeStatements(db)[1];
     expect(insert.values[4]).toBe(body);
     expect(await result.json()).toEqual({ ok: true, receiptId: id, duplicate: false });
     expect(fetchSpy).not.toHaveBeenCalled();
@@ -211,7 +218,7 @@ describe("private contact persistence and failure handling", () => {
 
   it("reports a real exhausted reservation as 429 with a bounded retry time", async () => {
     const { db, bindings } = storage();
-    vi.mocked(db.batch).mockResolvedValue(Array.from({ length: 3 }, () => ({ success: true, meta: { changes: 0 }, results: [] })));
+    vi.mocked(db.batch).mockImplementation(async statements => statements.map(() => ({ success: true, meta: { changes: 0 }, results: [] })));
     const result = await handleContactPost(request(), bindings, now);
     expect(result.status).toBe(429);
     expect(Number(result.headers.get("retry-after"))).toBeGreaterThan(0);
@@ -222,11 +229,61 @@ describe("private contact persistence and failure handling", () => {
     const { db, bindings } = storage();
     const error = vi.spyOn(console, "error");
     if (kind === "throw") vi.mocked(db.batch).mockRejectedValue(new Error(`private SQL ${input.body}`));
-    else vi.mocked(db.batch).mockResolvedValue(Array.from({ length: 3 }, () => ({ success: kind !== "unsuccessful", meta: { changes: 1 }, results: [] })));
+    else vi.mocked(db.batch).mockImplementation(async statements => statements.map(() => ({ success: kind !== "unsuccessful", meta: { changes: 1 }, results: [] })));
     const result = await handleContactPost(request(), bindings, now);
     expect(result.status).toBe(503);
     expect(await result.json()).toEqual({ ok: false, error: "UNAVAILABLE" });
     expect(error).not.toHaveBeenCalled();
+  });
+});
+
+describe("contact moderation and version-stable receipts", () => {
+  it.each(["ㅆㅂ", "f.u.c.k", "ㅂ\u200bㅅ"])("enforces added bounded evasions on the server without writing: %#", async body => {
+    const { db, bindings } = storage();
+    const result = await handleContactPost(request({ ...input, body }), bindings, now);
+    expect(await result.json()).toEqual({ ok: false, error: "CONTENT_NOT_ALLOWED" });
+    expect(db.batch).toHaveBeenCalledTimes(1);
+    expect((vi.mocked(db.batch).mock.calls[0][0][0] as Statement).values).toEqual([id]);
+  });
+  it.each(["calculation_error", "explanation", "data_correction", "business", "privacy", "other"])("blocks new abusive text in every category, with no rejection write: %s", async type => {
+    const { db, bindings } = storage();
+    const log = vi.spyOn(console, "log");
+    const error = vi.spyOn(console, "error");
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
+    const result = await handleContactPost(request({ ...input, type, body: "씨.발" }), bindings, now);
+    expect(await result.json()).toEqual({ ok: false, error: "CONTENT_NOT_ALLOWED" });
+    expect(db.batch).toHaveBeenCalledTimes(1);
+    const lookup = vi.mocked(db.batch).mock.calls[0][0][0] as Statement;
+    expect(lookup.sql).toBe(CONTACT_RECEIPT_LOOKUP);
+    expect(lookup.values).toEqual([id]);
+    expect(log).not.toHaveBeenCalled();
+    expect(error).not.toHaveBeenCalled();
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it("preserves legitimate criticism, financial vocabulary, and private evidence links", async () => {
+    const { bindings } = storage();
+    const body = "직계비속 보험 계산이 최악이에요. 시발점 근거 https://example.com";
+    expect((await handleContactPost(request({ ...input, body }), bindings, now)).status).toBe(201);
+  });
+
+  it("confirms an unchanged receipt using its saved contract even after the policy changes", async () => {
+    const body = "씨발";
+    const version = "contact-v0";
+    const hash = await feedbackPayloadHash(JSON.stringify([input.type, input.pagePath, body, null, false, version]));
+    const { db, bindings } = storage({ hash, version });
+    const result = await handleContactPost(request({ ...input, body }), bindings, now);
+    expect(result.status).toBe(200);
+    expect(await result.json()).toEqual({ ok: true, receiptId: id, duplicate: true });
+    expect(db.batch).toHaveBeenCalledTimes(1);
+    const conflict = await handleContactPost(request({ ...input, body: "different" }), bindings, now);
+    expect(conflict.status).toBe(409);
+    expect(vi.mocked(db.batch).mock.calls.every(([items]) => items.length === 1)).toBe(true);
+  });
+
+  it("fails closed for an unknown stored receipt contract", async () => {
+    const { bindings } = storage({ hash: "bad", version: "unknown" });
+    expect((await handleContactPost(request(), bindings, now)).status).toBe(503);
   });
 });
 

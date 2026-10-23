@@ -1,3 +1,6 @@
+/** Read only: a retry is compared using the consent version saved at receipt. */
+export const CONTACT_RECEIPT_LOOKUP = "SELECT payload_hash, consent_version FROM contact_inquiries WHERE submission_id = ?";
+
 /** Keep these statements in one D1 batch (one transaction, on the primary). */
 export const CONTACT_SQL = {
   reserveRate: `

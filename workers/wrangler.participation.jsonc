@@ -1,0 +1,12 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "moneysalary-participation-local",
+  "main": "participation-maintenance.ts",
+  "compatibility_date": "2026-10-12",
+  "workers_dev": false,
+  "preview_urls": false,
+  "vars": { "PARTICIPATION_MAINTENANCE_ENABLED": "0" },
+  "triggers": { "crons": ["15 0,12 * * *"] }
+  // Local validation only. No account, routes, DB IDs, secrets or production identity.
+  // Configure the verified FEEDBACK_DB binding separately before any activation.
+}

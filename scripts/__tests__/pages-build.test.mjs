@@ -90,6 +90,19 @@ test('source selection preserves static widget/company pages and public security
     assert.equal(copyableSource(unsafe), false);
 });
 
+test('participation UI flags are explicit binary build settings, without runtime bindings', t => {
+  const root = fixture(t), stage = stagePath(root, 'qa');
+  const env = cleanBuildEnvironment({ NEXT_PUBLIC_PARTICIPATION_REACTIONS_ENABLED: '1', NEXT_PUBLIC_PARTICIPATION_OPINIONS_ENABLED: '0',
+    PARTICIPATION_REACTIONS_ENABLED: '1', FEEDBACK_DB: 'synthetic-private-binding' }, 'qa', stage);
+  assert.equal(env.NEXT_PUBLIC_PARTICIPATION_REACTIONS_ENABLED, '1');
+  assert.equal(env.NEXT_PUBLIC_PARTICIPATION_OPINIONS_ENABLED, '0');
+  assert.equal(env.PARTICIPATION_REACTIONS_ENABLED, undefined);
+  assert.equal(env.FEEDBACK_DB, undefined);
+  assert.equal(cleanBuildEnvironment({}, 'qa', stage).NEXT_PUBLIC_PARTICIPATION_REACTIONS_ENABLED, undefined);
+  for (const value of ['true', 'yes', '2', '']) assert.throws(() => cleanBuildEnvironment({ NEXT_PUBLIC_PARTICIPATION_OPINIONS_ENABLED: value }, 'qa', stage));
+  assert.equal(loadPublicBuildSettings('NEXT_PUBLIC_PARTICIPATION_OPINIONS_ENABLED=1').NEXT_PUBLIC_PARTICIPATION_OPINIONS_ENABLED, '1');
+});
+
 test('clean QA env removes credentials, preload hooks and production ids; production validates public allowlist', t => {
   const root = fixture(t), stage = stagePath(root, 'qa');
   const env = cleanBuildEnvironment({ PATH: 'safe-path', CF_API_TOKEN: 'not-a-real-secret', NODE_OPTIONS: '--require bad',

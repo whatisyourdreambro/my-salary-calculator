@@ -3,6 +3,9 @@
 "use client";
 
 import type { StoredFinancialData } from "@/app/types";
+import { savedSalaryMetadata } from "@/lib/storedFinancialData";
+import { savedSalaryRecalculation } from "@/lib/savedSalaryRecalculation";
+import { CURRENT_RATES_AS_OF, CURRENT_RATES_YEAR } from "@/config/currentRates";
 import {
  calculateHealthScore,
  getFinancialAdvice,
@@ -24,6 +27,7 @@ import {
 interface MyDashboardProps {
  data: StoredFinancialData;
  onReset: () => void;
+ onRecalculateSalary?: () => void;
 }
 
 const formatNumber = (num: number) => num.toLocaleString('ko-KR');
@@ -72,8 +76,10 @@ const AdviceCard = ({ title, message, link, linkText }: { title: string; message
  </div>
 );
 
-export default function MyDashboard({ data, onReset }: MyDashboardProps) {
+export default function MyDashboard({ data, onReset, onRecalculateSalary }: MyDashboardProps) {
  const { salary, severance, rank, futureSalary } = data;
+ const salaryMetadata = savedSalaryMetadata(salary);
+ const canRecalculateSalary = Boolean(savedSalaryRecalculation(salary));
  const { score, rating, missing } = calculateHealthScore(data);
  const advice = getFinancialAdvice(data);
 
@@ -93,6 +99,21 @@ export default function MyDashboard({ data, onReset }: MyDashboardProps) {
  <p className="text-muted-foreground">마지막 업데이트: {new Date(data.lastUpdated).toLocaleString('ko-KR')}</p>
  <p className="mt-2 text-sm text-muted-foreground">이 브라우저에 저장한 항목별 최신 결과입니다. 항목의 계산 시점과 가정이 다를 수 있으며 과거 이력이나 실제 계좌 정보를 조회하지 않습니다.</p>
  </div>
+
+ {salary && (
+ <section aria-label="저장 급여의 계산 기준" className="rounded-2xl border border-border bg-card p-6 space-y-3">
+  <h2 className="text-lg font-bold">저장한 급여, 계산 기준을 확인해 주세요</h2>
+  <p className="text-sm text-muted-foreground">급여 저장일: {salaryMetadata.savedAt ? new Date(salaryMetadata.savedAt).toLocaleString("ko-KR") : "확인되지 않음"}</p>
+  <p className="text-sm">{salaryMetadata.basis === "current" ? "현재 계산 기준으로 저장한 결과입니다." : salaryMetadata.basis === "changed" ? "저장 이후 계산 기준이 바뀌었습니다. 현재 기준으로 다시 확인할 수 있습니다." : "이전 저장값의 계산 기준은 확인되지 않습니다. 현재 기준과 같다고 가정하지 않습니다."}</p>
+  <p className="text-sm text-muted-foreground">현재 홈 계산기는 {CURRENT_RATES_YEAR}년 요율({CURRENT_RATES_AS_OF} 반영)을 사용합니다. 저장 결과는 자동 변경하지 않습니다.</p>
+  <p className="text-xs text-muted-foreground">저장 소득 유형: {salaryMetadata.incomeType === "regular" ? "직장인" : salaryMetadata.incomeType === "freelancer" ? "프리랜서" : salaryMetadata.incomeType === "part_time" ? "알바" : "확인되지 않음"} · 입력 출처: {salaryMetadata.inputOrigin === "user" ? "직접 수정한 조건" : salaryMetadata.inputOrigin === "saved_input" ? "이 브라우저의 이전 입력" : salaryMetadata.inputOrigin === "saved_salary" ? "대시보드에서 확인한 조건" : salaryMetadata.inputOrigin === "default" ? "계산기 기본 조건" : "확인되지 않음"}</p>
+  {canRecalculateSalary && onRecalculateSalary ? (
+   <button type="button" onClick={onRecalculateSalary} className="inline-flex min-h-11 items-center rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground">저장 조건 확인하고 다시 계산</button>
+  ) : (
+   <p className="text-sm text-muted-foreground">저장된 소득 유형·퇴직금 조건 또는 입력 항목을 안전하게 복원할 수 없습니다. <Link href="/" className="font-semibold text-primary underline">계산기에 직접 입력하기</Link></p>
+  )}
+ </section>
+ )}
 
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
  <div className="lg:col-span-1 space-y-6">

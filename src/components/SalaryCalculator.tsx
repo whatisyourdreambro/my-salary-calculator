@@ -9,7 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { calculateSalary2026 } from "@/lib/TaxLogic";
 // 배지·공유 설명의 연도는 현행 요율 포인터 (2026-09-25 N3). 공유 payload 의 taxYear: 2026 은 형식 태그라 그대로.
-import { CURRENT_RATES_YEAR } from "@/config/currentRates";
+import { CURRENT_RATES_AS_OF, CURRENT_RATES_YEAR } from "@/config/currentRates";
 import { calculatePartTimeSalary } from "@/lib/freelancerCalculator";
 import MoneyInput from "./ui/MoneyInput"; // New UI Component
 import SalaryResultCard from "./SalaryResultCard"; // New UI Component
@@ -18,12 +18,15 @@ import { CheckCircle, Calculator, Zap, Sparkles, ArrowRight } from "lucide-react
 import ResultSharePanel from "@/components/ResultSharePanel";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 import { isValidCalculationNumber } from "@/lib/calculationMeasurement";
-import { trackEvent } from "@/lib/analytics";
+import { trackEvent, trackSavedSalaryRecalculate } from "@/lib/analytics";
 import { canHandoffCurrentSalaryResult, writeOfferComparisonHandoff } from "@/lib/offerComparisonHandoff";
 import { encodeSalarySharePayload, validateSalarySharePayload } from "@/lib/salarySharePayload";
 import { salaryOgImagePath } from "@/lib/ogUrlVersion";
 import { isCurrentSalaryResult, mergeSalarySnapshot, parseSavedHomeInputs } from "@/lib/salaryResultSnapshot";
+import { CURRENT_SALARY_BASIS_VERSION, FINANCIAL_DATA_KEY } from "@/lib/storedFinancialData";
+import { consumeSavedSalaryRecalculationRequest, readSavedSalaryRecalculation, type SavedSalaryRecalculation } from "@/lib/savedSalaryRecalculation";
 import type {
+ SalaryInputOrigin,
  StoredSalaryData,
 } from "@/app/types";
 import { ResultAd } from "./AdPlacement";
@@ -114,6 +117,9 @@ export default function SalaryCalculator() {
  const [nonTaxableAmount, setNonTaxableAmount] = useState("200000");
  const [dependents, setDependents] = useState(1);
  const [children, setChildren] = useState(0);
+ const [inputOrigin, setInputOrigin] = useState<SalaryInputOrigin>("default");
+ const [pendingSavedSalary, setPendingSavedSalary] = useState<SavedSalaryRecalculation | null>(null);
+ const [savedSalaryNotice, setSavedSalaryNotice] = useState("");
  const [monthlyExpenses] = useState("");
 
  const [showResult, setShowResult] = useState(false);
@@ -149,12 +155,42 @@ export default function SalaryCalculator() {
  setDependents(parsed.dependents);
  setChildren(parsed.children);
  setNonTaxableAmount(parsed.nonTaxableAmount);
+ setInputOrigin("saved_input");
  }
  }
  } catch {
  // Saved input text and parser errors can contain financial values. Do not log them.
  }
  }, []);
+
+ // A dashboard request offers a confirmation only. Saved results never change on arrival.
+ useEffect(() => {
+  if (pathname !== "/") return;
+  try {
+   if (!consumeSavedSalaryRecalculationRequest(window.sessionStorage)) return;
+   const saved = readSavedSalaryRecalculation(localStorage.getItem(FINANCIAL_DATA_KEY));
+   if (saved) setPendingSavedSalary(saved);
+   else setSavedSalaryNotice("저장 조건을 안전하게 불러올 수 없습니다. 기존 저장 결과는 그대로입니다. 아래에 현재 조건을 직접 입력해 주세요.");
+  } catch {
+   setSavedSalaryNotice("브라우저에서 저장 조건을 읽지 못했습니다. 기존 결과를 변경하지 않았습니다. 아래에 직접 입력해 주세요.");
+  }
+ }, [pathname]);
+
+ const applySavedSalary = () => {
+  if (!pendingSavedSalary) return;
+  trackSavedSalaryRecalculate("apply");
+  setSalaryInput(pendingSavedSalary.salaryInput);
+  setIncomeType("regular");
+  setPayBasis(pendingSavedSalary.payBasis);
+  setDependents(pendingSavedSalary.dependents);
+  setChildren(pendingSavedSalary.children);
+  setNonTaxableAmount(pendingSavedSalary.nonTaxableAmount);
+  setInputOrigin("saved_salary");
+  setShowResult(false);
+  setCalculatedSnapshot(null);
+  setPendingSavedSalary(null);
+  setSavedSalaryNotice("저장 조건을 불러왔습니다. 입력값을 확인한 뒤 ‘결과 확인하기’를 눌러 현재 기준으로 계산해 주세요. 대시보드의 기존 결과는 저장하기를 누르기 전까지 유지됩니다.");
+ };
 
  // Save to Local Storage - DEBOUNCED to prevent constant write/re-render cycles
  useEffect(() => {
@@ -313,10 +349,11 @@ export default function SalaryCalculator() {
  return;
  }
  try {
- const existingDataJSON = localStorage.getItem("moneysalary-financial-data");
+ const existingDataJSON = localStorage.getItem(FINANCIAL_DATA_KEY);
+ const savedAt = new Date().toISOString();
  const existingData: unknown = existingDataJSON
  ? JSON.parse(existingDataJSON)
- : { lastUpdated: new Date().toISOString() };
+ : { lastUpdated: savedAt };
  const salaryDataToStore: StoredSalaryData = {
  annualSalary,
  monthlyNet: result.monthlyNet,
@@ -325,13 +362,20 @@ export default function SalaryCalculator() {
  nonTaxableAmount: parseNumber(nonTaxableAmount),
  dependents,
  children,
+ savedAt,
+ calculationBasisVersion: CURRENT_SALARY_BASIS_VERSION,
+ incomeType: "regular",
+ inputOrigin,
  };
- const updatedData = mergeSalarySnapshot(existingData, salaryDataToStore, new Date().toISOString());
- localStorage.setItem("moneysalary-financial-data", JSON.stringify(updatedData));
+ const updatedData = mergeSalarySnapshot(existingData, salaryDataToStore, savedAt);
+ const savedJSON = JSON.stringify(updatedData);
+ localStorage.setItem(FINANCIAL_DATA_KEY, savedJSON);
+ if (localStorage.getItem(FINANCIAL_DATA_KEY) !== savedJSON) throw new Error("Storage verification failed");
+ if (inputOrigin === "saved_salary") trackSavedSalaryRecalculate("saved");
  alert("연봉 정보가 대시보드에 저장되었습니다!");
  router.push("/dashboard");
  } catch {
- alert("데이터 저장에 실패했습니다.");
+ alert("저장 완료를 확인하지 못했습니다. 브라우저 저장소 설정과 대시보드의 기존 결과를 확인해 주세요.");
  }
  };
 
@@ -356,6 +400,20 @@ export default function SalaryCalculator() {
 
  return (
  <div className="w-full space-y-6">
+ {pendingSavedSalary && (
+ <section aria-label="저장한 급여 조건 확인" className="rounded-2xl border border-primary/20 bg-white p-5 space-y-3">
+  <h2 className="text-lg font-bold text-navy">이 저장 조건을 다시 계산할까요?</h2>
+  <p className="text-sm text-muted-blue">직장인 · 퇴직금 별도 · 세전 연봉 {formatNumber(pendingSavedSalary.annualSalary)}원 · 월 비과세 {formatNumber(Number(pendingSavedSalary.nonTaxableAmount))}원 · 본인 포함 부양가족 {pendingSavedSalary.dependents}명 · 공제 대상 자녀 {pendingSavedSalary.children}명</p>
+  {pendingSavedSalary.incomeTypeUnknown && <p className="text-sm text-muted-blue">이전 기록에는 소득 유형이 없습니다. 직장인 급여 조건이 맞는지 확인한 뒤 불러와 주세요.</p>}
+  <p className="text-sm text-muted-blue">{CURRENT_RATES_YEAR}년 요율({CURRENT_RATES_AS_OF} 반영)로 계산할 조건입니다. 불러오기는 입력만 바꾸며 기존 저장 결과를 덮어쓰지 않습니다.</p>
+  <div className="flex flex-wrap gap-3">
+   <button type="button" onClick={applySavedSalary} className="min-h-11 rounded-xl bg-primary px-4 py-2 text-sm font-bold text-white">직장인 조건 확인 후 불러오기</button>
+   <button type="button" onClick={() => setPendingSavedSalary(null)} className="min-h-11 rounded-xl border border-canvas px-4 py-2 text-sm font-semibold text-navy">불러오지 않기</button>
+  </div>
+ </section>
+ )}
+ {savedSalaryNotice && <p role="status" className="rounded-xl border border-canvas bg-white p-4 text-sm text-muted-blue">{savedSalaryNotice}</p>}
+
  {/* ── Row 1: 입력 + 실수령 결과 나란히 ──────────────────────── */}
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
 
@@ -372,7 +430,7 @@ export default function SalaryCalculator() {
  <MoneyInput
  label={incomeType === "regular" ? (payBasis === "annual" ? "계약 연봉" : "세전 월급") : "지급 총액"}
  value={salaryInput}
- onValueChange={setSalaryInput}
+ onValueChange={(value) => { setSalaryInput(value); setInputOrigin("user"); }}
  aria-invalid={invalidAttempt && salaryAmountInvalid}
  aria-describedby={invalidAttempt && salaryAmountInvalid ? "salary-invalid-hint" : undefined}
  />
@@ -382,7 +440,7 @@ export default function SalaryCalculator() {
  {(["regular", "freelancer", "part_time"] as const).map((type) => (
  <button
  key={type}
- onClick={() => setIncomeType(type)}
+ onClick={() => { setIncomeType(type); setInputOrigin("user"); }}
  className={cn(
  "flex-1 py-2.5 rounded-xl text-sm font-bold transition-all",
  incomeType === type ? "bg-white text-navy shadow-sm" : "text-faint-blue hover:text-muted-blue"
@@ -397,7 +455,7 @@ export default function SalaryCalculator() {
  <>
  <div className="grid grid-cols-2 gap-2">
  <button
- onClick={() => setPayBasis(payBasis === "annual" ? "monthly" : "annual")}
+ onClick={() => { setPayBasis(payBasis === "annual" ? "monthly" : "annual"); setInputOrigin("user"); }}
  className="flex items-center justify-center gap-1.5 py-3 bg-canvas border border-canvas rounded-xl text-sm font-bold text-muted-blue hover:border-primary hover:text-primary transition-all"
  >
  <Calculator size={15} className="text-faint-blue" />
@@ -416,17 +474,17 @@ export default function SalaryCalculator() {
  <div>
  <p className="text-xs font-bold text-faint-blue mb-2">부양가족 수 (본인 포함)</p>
  <div className="flex items-center gap-2">
- <button onClick={() => setDependents(Math.max(1, dependents - 1))} className="w-8 h-8 rounded-full bg-white border border-canvas text-muted-blue font-bold flex items-center justify-center hover:bg-canvas-dark transition-colors">−</button>
+ <button onClick={() => { setDependents(Math.max(1, dependents - 1)); setInputOrigin("user"); }} className="w-8 h-8 rounded-full bg-white border border-canvas text-muted-blue font-bold flex items-center justify-center hover:bg-canvas-dark transition-colors">−</button>
  <span className="font-bold text-navy text-base w-6 text-center">{dependents}</span>
- <button onClick={() => setDependents(Math.min(10, dependents + 1))} className="w-8 h-8 rounded-full bg-primary text-white font-bold flex items-center justify-center hover:bg-primary/90 transition-colors">+</button>
+ <button onClick={() => { setDependents(Math.min(10, dependents + 1)); setInputOrigin("user"); }} className="w-8 h-8 rounded-full bg-primary text-white font-bold flex items-center justify-center hover:bg-primary/90 transition-colors">+</button>
  </div>
  </div>
  <div>
  <p className="text-xs font-bold text-faint-blue mb-2">8세~20세 자녀</p>
  <div className="flex items-center gap-2">
- <button onClick={() => setChildren(Math.max(0, children - 1))} className="w-8 h-8 rounded-full bg-white border border-canvas text-muted-blue font-bold flex items-center justify-center hover:bg-canvas-dark transition-colors">−</button>
+ <button onClick={() => { setChildren(Math.max(0, children - 1)); setInputOrigin("user"); }} className="w-8 h-8 rounded-full bg-white border border-canvas text-muted-blue font-bold flex items-center justify-center hover:bg-canvas-dark transition-colors">−</button>
  <span className="font-bold text-navy text-base w-6 text-center">{children}</span>
- <button onClick={() => setChildren(Math.min(10, children + 1))} className="w-8 h-8 rounded-full bg-primary text-white font-bold flex items-center justify-center hover:bg-primary/90 transition-colors">+</button>
+ <button onClick={() => { setChildren(Math.min(10, children + 1)); setInputOrigin("user"); }} className="w-8 h-8 rounded-full bg-primary text-white font-bold flex items-center justify-center hover:bg-primary/90 transition-colors">+</button>
  </div>
  </div>
  </div>
@@ -601,7 +659,7 @@ export default function SalaryCalculator() {
  {/* Bottom Sheet: 비과세 설정 */}
  <BottomSheet isOpen={activeSheet === "nonTaxable"} onClose={() => setActiveSheet(null)} title="비과세액 설정">
  <div className="p-8 space-y-6">
- <MoneyInput label="월 비과세액" value={nonTaxableAmount} onValueChange={setNonTaxableAmount} aria-invalid={nonTaxableInvalid} aria-describedby={nonTaxableInvalid ? "salary-nontaxable-hint" : undefined} />
+ <MoneyInput label="월 비과세액" value={nonTaxableAmount} onValueChange={(value) => { setNonTaxableAmount(value); setInputOrigin("user"); }} aria-invalid={nonTaxableInvalid} aria-describedby={nonTaxableInvalid ? "salary-nontaxable-hint" : undefined} />
  {nonTaxableInvalid && <p id="salary-nontaxable-hint" role="status" className="ms-status-error rounded-xl p-3 text-sm">월 비과세액은 0 이상이며 세전 월급 이하여야 합니다.</p>}
  <button onClick={() => setActiveSheet(null)} className="w-full py-4 bg-primary font-black rounded-2xl flex items-center justify-center">
  <span className="text-white">저장 후 닫기</span>

@@ -96,7 +96,7 @@ describe("계측 배선", () => {
   it("useCalculatorMeasurement·calc_type civil_servant_net_pay (사이트 전체에서 하나)", () => {
     const src = readFileSync(resolve(process.cwd(), CLIENT), "utf8");
     expect(src).toContain('import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";');
-    expect(src).toMatch(/valid:[^;]*\.every\(Number\.isFinite\)/);
+    expect(src).toContain("valid: isCivilPayResultReady(Boolean(handoff), inputsOk, r)");
     expect(src).toContain("ref={measurement.resultRef}");
     expect(src).not.toMatch(/trackEvent\(|trackCalcSuccess\(|trackCalcStart\(|window\.gtag/);
     // 해시 프리셋은 useSearchParams 가 아닌 useEffect(정적 렌더 유지)

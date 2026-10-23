@@ -63,7 +63,7 @@ test('no POST occurs until both stage isolation and the ad-free server header ar
   assert.equal(sent, 0);
 });
 
-test('all six fixed synthetic cases use literal IPv4 loopback and never follow redirects', async () => {
+test('all fixed synthetic cases use literal IPv4 loopback and never follow redirects', async () => {
   for (const scenario of smokeCases()) {
     let count = 0;
     const sent = [];
@@ -71,7 +71,7 @@ test('all six fixed synthetic cases use literal IPv4 loopback and never follow r
       count++;
       assert.equal(options.hostname, '127.0.0.1'); assert.equal(options.family, 4);
       assert.equal(options.port, 3319); assert.equal(options.method, 'POST'); assert.equal(options.agent, false);
-      assert.ok(['/api/contact', '/api/feedback', '/__qa-body-limit-missing'].includes(options.path));
+      assert.ok(['/api/contact', '/api/feedback', '/api/participation/opinions', '/api/participation/reactions', '/api/participation/summary', '/__qa-body-limit-missing'].includes(options.path));
       assert.equal(options.headers['User-Agent'], 'MoneySalary-QA/1.0');
       assert.equal(options.headers.Origin, 'http://127.0.0.1:3319');
       if (scenario.chunked) { assert.equal(options.headers['Content-Length'], undefined); assert.equal(options.headers['Transfer-Encoding'], 'chunked'); }
@@ -87,8 +87,8 @@ test('all six fixed synthetic cases use literal IPv4 loopback and never follow r
     assert.equal(result.status, 302); assert.equal(count, 1);
     assert.equal(Buffer.concat(sent).length, scenario.chunks.reduce((sum, chunk) => sum + chunk.length, 0));
   }
-  assert.throws(() => postToLoopback(3319, { route: 'https://example.com', chunks: [] }), /three fixed/);
-  assert.throws(() => postToLoopback(3319, { route: '/adgk/x', chunks: [] }), /three fixed/);
+  assert.throws(() => postToLoopback(3319, { route: 'https://example.com', chunks: [] }), /fixed synthetic/);
+  assert.throws(() => postToLoopback(3319, { route: '/adgk/x', chunks: [] }), /fixed synthetic/);
 });
 
 test('scenario validation checks private errors and stops on redirect or accidental success', async () => {
@@ -96,10 +96,10 @@ test('scenario validation checks private errors and stops on redirect or acciden
   const options = { verifyStage: () => events.push('stage'), verifyServer: async base => { assert.equal(base, 'http://127.0.0.1:3319'); events.push('server'); },
     sendPost: async (_port, scenario) => {
       events.push(scenario.name);
-      const status = Array.isArray(scenario.status) ? 403 : 413;
-      return { status, headers: { 'cache-control': 'private, no-store', 'x-content-type-options': 'nosniff' }, body: JSON.stringify({ ok: false, error: status === 413 ? 'PAYLOAD_TOO_LARGE' : 'INVALID_ORIGIN' }) };
+      const status = Array.isArray(scenario.status) ? scenario.status[0] : scenario.status;
+      return { status, headers: { 'cache-control': 'private, no-store', 'x-content-type-options': 'nosniff' }, body: JSON.stringify({ ok: false, error: status === 413 ? 'PAYLOAD_TOO_LARGE' : status === 503 ? 'UNAVAILABLE' : 'INVALID_ORIGIN' }) };
     } };
-  assert.equal((await runBodySmoke(options)).length, 6);
+  assert.equal((await runBodySmoke(options)).length, smokeCases().length);
   assert.deepEqual(events.slice(0, 2), ['stage', 'server']);
   for (const status of [200, 201, 302]) await assert.rejects(runBodySmoke({ ...options, sendPost: async () => ({ status, headers: {} }) }), /unexpected status/);
 });

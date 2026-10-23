@@ -7,7 +7,7 @@
 
 import Link from "@/components/AppLink";
 import { usePathname } from "next/navigation";
-import { trackGuideCTAClick } from "@/lib/analytics";
+import { destTemplate, trackGuideCTAClick } from "@/lib/analytics";
 import {
  ArrowRight,
  Calculator,
@@ -95,7 +95,7 @@ export default function RelatedCalculators({
  <Link
  key={item.path}
  href={item.path}
- onClick={() => trackGuideCTAClick(item.path, "related-calc")}
+ onClick={() => trackGuideCTAClick(item.path, "related-calc", undefined, destTemplate(item.path))}
  className="group flex flex-col gap-2 p-4 rounded-2xl bg-white border border-canvas-200 hover:border-electric hover:bg-electric-5 transition-all"
  >
  <div className="w-10 h-10 rounded-xl bg-canvas flex items-center justify-center group-hover:bg-electric-10 transition-colors">

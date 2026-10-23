@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('..', import.meta.url));
 const excludedDirs = new Set(['node_modules', '.git', '.next', '.next-qa', '.open-next', '.open-next-qa', '.pages-build', '.pages-qa', '.wrangler', '.vercel',
   '.claude', '.codex', 'apps', 'coverage', '.lighthouseci', 'lhci-report', '__pycache__']);
-const managed = new Set(['scripts/ad-depth-audit.mjs', 'scripts/qa-calculator-experience.mjs', 'scripts/qa-focus-input.mjs', 'scripts/qa-interaction-states.mjs', 'scripts/qa-screen-reader.mjs', 'scripts/qa-money-check.mjs', 'scripts/qa-pages-navigation.mjs']);
+const managed = new Set(['scripts/ad-depth-audit.mjs', 'scripts/qa-calculator-experience.mjs', 'scripts/qa-focus-input.mjs', 'scripts/qa-interaction-states.mjs', 'scripts/qa-screen-reader.mjs', 'scripts/qa-money-check.mjs', 'scripts/qa-pages-navigation.mjs', 'scripts/__tests__/qa-saved-recalculation.mjs']);
 const infrastructure = new Set(['scripts/lib/qa-safety.cjs', 'scripts/verify-qa-safety.mjs', 'scripts/__tests__/qa-safety.test.mjs']);
 const executable = /\.(?:[cm]?js|[cm]?ts|tsx|py|ps1|sh)$/i;
 const driverImport = /(?:from\s*|require\s*\(|import\s*\()\s*['"][^'"\r\n]*(?:playwright|puppeteer|selenium|chrome-launcher|lighthouse)[^'"\r\n]*['"]|\bfrom\s+(?:playwright|selenium)\b/;

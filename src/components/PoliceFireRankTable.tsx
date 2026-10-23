@@ -5,6 +5,8 @@
 // 데이터: src/lib/civilServantPay.ts POLICE_RANK_ROWS_2026 (3중 교차검증).
 
 import { POLICE_RANK_ROWS_2026, POLICE_FIRE_RANK_LABELS } from "@/lib/civilServantPay";
+import CivilPayHandoffButton from "@/components/CivilPayHandoffButton";
+import { CIVIL_PAY_BASIS_VERSION, CIVIL_PAY_GRADES, CIVIL_PAY_SOURCES } from "@/lib/civilPayHandoff";
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
 
@@ -28,8 +30,12 @@ export default function PoliceFireRankTable({ variant }: { variant: "police" | "
             <tr key={hobong} className="border-b border-canvas-100">
               <td className="py-2.5 px-2 font-bold text-navy">{hobong}호봉</td>
               {pays.map((pay, i) => (
-                <td key={labels[i]} className="py-2.5 px-2 text-right text-muted-blue tabular-nums">
-                  {fmt(pay)}
+                <td key={labels[i]} className="px-2 text-right text-muted-blue tabular-nums">
+                  <CivilPayHandoffButton gradeLabel={labels[i]} selection={{
+                    source: CIVIL_PAY_SOURCES[variant], occupation: variant,
+                    gradeId: CIVIL_PAY_GRADES[variant].find(grade => grade.label === labels[i])!.id,
+                    step: hobong, payYear: 2026, basisVersion: CIVIL_PAY_BASIS_VERSION,
+                  }}>{fmt(pay)}</CivilPayHandoffButton>
                 </td>
               ))}
             </tr>

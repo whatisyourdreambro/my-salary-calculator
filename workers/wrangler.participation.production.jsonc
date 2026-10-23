@@ -1,0 +1,23 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "moneysalary-participation-maintenance",
+  "account_id": "b01a4e306f09d28f1a0f1d57bda8410d",
+  "main": "participation-maintenance.ts",
+  "compatibility_date": "2026-10-12",
+  "workers_dev": false,
+  "preview_urls": false,
+  "observability": { "enabled": false },
+  "vars": { "PARTICIPATION_MAINTENANCE_ENABLED": "0" },
+  "triggers": { "crons": ["15 0,12 * * *"] },
+  "d1_databases": [
+    {
+      "binding": "FEEDBACK_DB",
+      "database_name": "moneysalary-private-contact",
+      "database_id": "bb7628f9-16ea-408d-803f-3414f06e2557",
+      "migrations_dir": "../migrations"
+    }
+  ]
+  // No secrets or public routes. Approved identifiers only; this file does not
+  // prove deployment. Apply/review migrations and verify local D1 tests before
+  // separately enabling maintenance. Pages participation switches stay separate.
+}
