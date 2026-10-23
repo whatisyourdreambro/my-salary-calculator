@@ -149,6 +149,37 @@ export default async function CompanyDetailPage({
  <CompanyDetailClient
  company={company}
  summary={company.id === "samsung-electronics" ? <SamsungCompanySummary company={company} dartSalaryManwon={dartSalaryManwon} /> : undefined}
+ nameChangeNotice={company.nameChange ? (
+ <section
+ aria-labelledby="company-name-change-title"
+ data-msy-module="company-name-change"
+ className="rounded-2xl border border-border bg-card p-5 sm:p-6"
+ >
+ <h2 id="company-name-change-title" className="text-lg font-bold text-foreground">현재 회사명 안내</h2>
+ <p className="mt-3 break-words text-sm leading-7 text-muted-foreground">
+ {company.name.ko}의 현재 법인명은 <strong className="text-foreground">{company.nameChange.currentLegalName}</strong>입니다.
+ {" "}<time dateTime={company.nameChange.changedAt}>{company.nameChange.changedAt}</time>에 상호가 변경되었습니다.
+ {" "}현재 상장명은 {company.nameChange.currentListedName}이며,
+ {" "}변경상장일은 <time dateTime={company.nameChange.listingChangedAt}>{company.nameChange.listingChangedAt}</time>입니다.
+ </p>
+ {company.disclosed && (
+ <p className="mt-2 text-sm leading-7 text-muted-foreground">
+ 이 페이지의 공시 평균급여는 {company.disclosed.fiscalYear} 사업연도 자료입니다. 직급별 연봉은 별도 추정치입니다.
+ </p>
+ )}
+ <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+ {[company.nameChange.source, company.nameChange.listingSource].map(source => (
+ <a
+ key={source.url}
+ href={source.url}
+ target="_blank"
+ rel="nofollow noopener noreferrer"
+ className="inline-flex min-h-11 items-center text-sm text-link underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric"
+ >{source.label}</a>
+ ))}
+ </div>
+ </section>
+ ) : undefined}
  />
 
  {/* 회사 상단 광고 K1 — 신규 유닛 머니샐러리_회사상단(2026-09-27 운영자 승인·발급, docs/ad-experiments.md 실험 #3).
