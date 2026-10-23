@@ -106,7 +106,8 @@ function assertShareDocument(html, item) {
   const head = /<head\b[^>]*>([\s\S]*?)<\/head\s*>/i.exec(html)?.[1]?.replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, '') || '';
   const title = /<title\b[^>]*>([^<]*)<\/title\s*>/i.exec(head)?.[1];
   if (item.shareToken) {
-    assert.match(title || '', /^연봉 5,000만원 · 월 수령 추정 [\d,]+만원 \| 머니샐러리$/);
+    assert.equal(title, '공유된 연봉 결과 | 머니샐러리');
+    assert.doesNotMatch(head, /[?&](?:amount|net|netPay)=|\/share\/[A-Za-z0-9_%+-]+/);
     const bootstrap = /<script\b[^>]*\bid=["']msy-pages-share-bootstrap["'][^>]*>([^<]*)<\/script\s*>/i.exec(html)?.[1];
     assert.equal(JSON.parse(bootstrap || '{}').token, item.shareToken);
     assert.match(html, /50,000,000/);

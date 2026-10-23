@@ -27,7 +27,7 @@ import { faqLd } from "@/lib/structuredData";
 import { SITE_CONFIG } from "@/lib/seo";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 import { isValidCalculationNumber } from "@/lib/calculationMeasurement";
-import { decodeSimpleCalculatorInputs, encodeSimpleCalculatorInputs, validateSimpleCalculatorInputs } from "@/lib/simpleCalculatorShare";
+import { decodeSimpleCalculatorInputs, validateSimpleCalculatorInputs } from "@/lib/simpleCalculatorShare";
 import NumberInput from "@/components/NumberInput";
 
 interface Props {
@@ -186,14 +186,8 @@ function SimpleCalculatorInstance({ slug, calc, batch, initialResult, shareToken
  measurementResultRef(element);
  }, [measurementResultRef]);
 
- // 입력이 기본값 그대로면 깔끔한 canonical, 바꿨으면 결과 재현 링크로 공유
- // 채널 귀속 utm 은 ShareSection→ShareButtons 가 채널별 withUtm 으로 부여(`?v=` 뒤에 `&utm_…` 결합).
- const shareUrl = useMemo(() => {
- const base = `${SITE_CONFIG.url}/calc/${slug}`;
- if (inputsAreDefault || !fullCalc) return base;
- const encoded = encodeSimpleCalculatorInputs(inputs, fullCalc);
- return encoded ? `${base}?v=${encoded}` : base;
- }, [fullCalc, slug, inputs, inputsAreDefault]);
+ // 기존 ?v= 링크는 위에서 읽되 새 공유 URL은 입력 없는 공용 페이지로 고정한다.
+ const shareUrl = `${SITE_CONFIG.url}/calc/${slug}`;
 
  // 결과 카드 캡처 → 인스타·시스템 공유에서 이미지 파일로 전송
  const getShareImage = async (): Promise<Blob | null> => {
@@ -352,7 +346,7 @@ function SimpleCalculatorInstance({ slug, calc, batch, initialResult, shareToken
  pageUrl={`${SITE_CONFIG.url}/calc/${slug}`}
  pageTitle={`${calc.title} | 머니샐러리`}
  pageDescription={calc.description}
- previewDescription={`결과 링크에 포함되는 입력: ${calc.fields.map((field) => `${field.label} ${inputs[field.name].toLocaleString("ko-KR")}${field.suffix ?? ""}`).join(" · ")}. 받은 사람은 이를 복원할 수 있습니다. 이미지는 아래 미리보기 그대로 공유됩니다. 기본값도 현재 결과로 공유됩니다.`}
+ previewDescription="아래 결과 문구와 이미지에 표시된 내용을 공개해도 되는지 확인해 주세요. 이미지는 이 기기에서 준비하며, 링크와 링크 미리보기 이미지에는 입력값을 넣지 않습니다. 링크로 입력 조건을 복원할 수 없습니다."
  contentType="calc_result"
  title={`${calc.title} — ${primary.label} ${formatNumber(primary.value, primary.suffix)}`}
  description={calc.description}

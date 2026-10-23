@@ -18,7 +18,7 @@ vi.mock("@/components/ResultSharePanel", () => ({ default: () => null }));
 import { generateMetadata } from "@/app/share/[data]/page";
 import { buildSalaryAmountMetadata } from "@/lib/seo";
 import { CURRENT_RATES_YEAR } from "@/config/currentRates";
-import { decodeSharedSalary, encodeSalarySharePayload } from "@/lib/salarySharePayload";
+import { encodeSalarySharePayload } from "@/lib/salarySharePayload";
 import { OG_URL_VERSION } from "@/lib/ogUrlVersion";
 
 const SITE = "https://www.moneysalary.com";
@@ -28,27 +28,26 @@ type OgImage = { url: string; width: number; height: number; alt?: string };
 const ogOf = (meta: Awaited<ReturnType<typeof generateMetadata>>) => meta.openGraph as unknown as { type: string; locale: string; siteName: string; url: string; title: string; images: OgImage[] };
 
 describe("/share/[data] generateMetadata", () => {
-  it("유효 토큰: og type·locale·siteName·자기 url·image alt 를 채우고 noindex 유지", async () => {
+  it("유효 legacy 토큰: 공용 og:url·image와 noindex 유지", async () => {
     const meta = await generateMetadata({ params: Promise.resolve({ data: token }) });
     const og = ogOf(meta);
     expect(og.type).toBe("website");
     expect(og.locale).toBe("ko_KR");
     expect(og.siteName).toBe("머니샐러리");
-    expect(og.url).toBe(`${SITE}/share/${token}`);
+    expect(og.url).toBe(`${SITE}/`);
     expect(og.title).toBe(meta.title);
     expect(og.images).toHaveLength(1);
     expect(og.images[0]).toMatchObject({ width: 1200, height: 630, alt: meta.title });
     expect(meta.robots).toEqual({ index: false, follow: false });
   });
 
-  it("og:image 는 1만원 단위 + v 버전, twitter 이미지와 같은 주소", async () => {
-    const decoded = decodeSharedSalary(token)!;
+  it("legacy 토큰 개인값은 OG 이미지 URL과 제목에 재전송하지 않음", async () => {
     const meta = await generateMetadata({ params: Promise.resolve({ data: token }) });
     const url = ogOf(meta).images[0].url;
-    expect(url).toBe(`/api/og?type=salary&amount=50000000&net=${Math.round(decoded.monthlyNet / 10000) * 10000}&v=${OG_URL_VERSION}`);
+    expect(url).toBe(`${SITE}/og-default.png`);
     expect((meta.twitter as { images: string[] }).images).toEqual([url]);
-    // 제목의 만원 숫자와 카드 주소의 숫자가 같은 단위로 맞는다
-    expect(meta.title).toContain(`${Math.round(decoded.monthlyNet / 10000).toLocaleString("ko-KR")}만원`);
+    expect(meta.title).toBe("공유된 연봉 결과");
+    expect(JSON.stringify(meta)).not.toMatch(/50000000|5,000|amount=|net=/);
   });
 
   it("잘못된 토큰: 브랜드는 템플릿이 한 번만 — 제목에 '머니샐러리' 없음", async () => {

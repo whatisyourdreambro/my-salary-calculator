@@ -128,7 +128,7 @@ export default function ResultSharePanel({
       </div>
       {!active.approved && <button type="button" disabled={active.preparing || active.error} className="mt-3 min-h-11 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50" onClick={() => { if (!active.fromSave) trackSharePreview("approve", contentType); setPreview((current) => current?.key === key ? { ...current, approved: true } : current); }}>{en ? "Use this content for sharing" : "이 내용으로 공유"}</button>}
       {active.approved && <div className="mt-4">
-        <p className="mb-3 text-xs text-slate-600 dark:text-slate-300">{en ? "Images are included only in image sharing or saving. A plain page link does not recreate this result." : "이미지는 이미지 공유·저장에서만 포함됩니다. 일반 페이지 링크만으로는 이 결과가 재현되지 않습니다."}</p>
+        <p className="mb-3 text-xs text-slate-600 dark:text-slate-300">{en ? "Only the approved text or local image includes your result. Links and link-preview images contain no personal inputs and do not recreate this result." : "승인한 문구나 로컬 이미지에만 결과가 포함됩니다. 링크와 링크 미리보기 이미지에는 개인 입력을 넣지 않으며, 링크로 결과를 복원할 수 없습니다."}</p>
         <ShareButtons key={key} shareMode="result" resultKey={resultKey} url={url} title={title} description={description} imageUrl={imageUrl} imageBlob={active.blob} contentType={contentType} locale={locale} register={false} />
         {active.objectUrl && !saveByLongPress && <a href={active.objectUrl} download="moneysalary-result.png" className="mt-3 inline-flex min-h-11 items-center rounded-xl border border-blue-600 px-4 py-2 text-sm font-semibold">{en ? "Save result image" : "결과 이미지 저장"}</a>}
       </div>}

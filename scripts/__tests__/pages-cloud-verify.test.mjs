@@ -122,7 +122,7 @@ const ihdr = Buffer.alloc(13); ihdr.writeUInt32BE(1200, 0); ihdr.writeUInt32BE(6
 const png = Buffer.concat([Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), chunk('IHDR', ihdr), chunk('PLTE', Buffer.alloc(768)), chunk('IDAT', deflateSync(Buffer.alloc(1201 * 630))), chunk('IEND', Buffer.alloc(0))]);
 function html(item) {
   if (item.english404) return '<html><head><title>Page not found | Moneysalary</title><meta name="robots" content="noindex, nofollow"></head><body><main data-page-state="not-found"><div lang="en" data-english-page><h1>This English page could not be found</h1><a href="/en">Home</a><a href="/en/calculators">Calculators</a><a href="/en/guides">Guides</a></div></main></body></html>';
-  if (item.shareToken) return `<html><head><title>연봉 5,000만원 · 월 수령 추정 400만원 | 머니샐러리</title></head><body><main>50,000,000</main><script id="msy-pages-share-bootstrap" type="application/json">${JSON.stringify({ token: item.shareToken })}</script></body></html>`;
+  if (item.shareToken) return `<html><head><title>공유된 연봉 결과 | 머니샐러리</title></head><body><main>50,000,000</main><script id="msy-pages-share-bootstrap" type="application/json">${JSON.stringify({ token: item.shareToken })}</script></body></html>`;
   if (item.invalidShare) return '<html><head><title>공유된 연봉 결과 | 머니샐러리</title></head><body><main data-pages-share-invalid="true">Invalid</main></body></html>';
   return '<html><head><title>Fixture</title></head><body><main>Fixture</main><script src="https://ads.invalid/never"></script></body></html>';
 }

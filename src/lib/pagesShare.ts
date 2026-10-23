@@ -1,7 +1,6 @@
 /** Small Pages/React bridge. No Next runtime, DOM, network, storage or analytics. */
 import { decodeSharedSalary, encodeSalarySharePayload } from "./salarySharePayload";
 import { salaryReportHrefOrNearest } from "./salaryRedirect";
-import { salaryOgImagePath } from "./ogUrlVersion";
 
 export const PAGES_SHARE_BOOTSTRAP_ID = "msy-pages-share-bootstrap";
 export const PAGES_SHARE_RESULT_SELECTOR = "[data-pages-share-result]";
@@ -33,21 +32,16 @@ export function getPagesShareModel(token: unknown): PagesShareModel {
     canonicalUrl: null, imageUrl: `${SITE_URL}/og-default.png`, robots: "noindex, nofollow",
   };
   const canonicalToken = encodeSalarySharePayload(decoded.payload)!;
-  const annualManwon = numberFormatter.format(Math.round(decoded.annualSalary / 10_000));
-  const netManwon = numberFormatter.format(Math.round(decoded.monthlyNet / 10_000));
-  const inputDescription = "annualSalary" in decoded.payload
-    ? `연봉 ${numberFormatter.format(decoded.annualSalary)}원, 월 비과세액 ${numberFormatter.format(decoded.payload.nonTaxableAmount)}원, 본인 포함 부양가족 ${decoded.payload.dependents}명, 공제 대상 자녀 ${decoded.payload.children}명`
-    : `소득 유형 ${decoded.payload.incomeType === "freelancer" ? "프리랜서" : "알바"}, 세전 월 소득 ${numberFormatter.format(decoded.payload.monthlyIncome)}원`;
   return {
     valid: true, token: canonicalToken, decoded,
-    metadataTitle: `${decoded.regular ? "연봉" : "연 환산 소득"} ${annualManwon}만원 · 월 수령 추정 ${netManwon}만원 | 머니샐러리`,
-    openGraphTitle: `${decoded.regular ? "연봉" : "연 환산 소득"} ${annualManwon}만원 · 월 수령 추정 ${netManwon}만원`,
-    metadataDescription: `${decoded.modelLabel}. 공유자가 입력한 조건에 따른 추정액입니다.`,
-    canonicalUrl: `${SITE_URL}/share/${canonicalToken}`,
-    imageUrl: `${SITE_URL}${salaryOgImagePath(decoded.annualSalary, decoded.monthlyNet)}`,
+    metadataTitle: "공유된 연봉 결과 | 머니샐러리",
+    openGraphTitle: "공유된 연봉 결과",
+    metadataDescription: "공유된 연봉 계산 결과 페이지",
+    canonicalUrl: `${SITE_URL}/`,
+    imageUrl: `${SITE_URL}/og-default.png`,
     robots: "noindex, nofollow",
     shareTitle: `${decoded.regular ? "연봉" : "연 환산 소득"} ${numberFormatter.format(decoded.annualSalary)}원 · 월 수령 추정 ${numberFormatter.format(decoded.monthlyNet)}원`,
-    previewDescription: `다시 공유하는 링크에는 원래 공유자의 ${inputDescription}이 포함됩니다. 공개해도 되는지 확인해 주세요. 기본 페이지 링크에는 해당 결과를 넣지 않습니다.`,
+    previewDescription: "아래 문구에 표시된 원래 공유자의 소득과 수령 추정액을 공개해도 되는지 확인해 주세요. 새 링크와 링크 미리보기 이미지에는 원래 입력을 넣지 않으며, 받은 사람이 입력 조건을 복원할 수 없습니다.",
   };
 }
 

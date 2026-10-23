@@ -5,12 +5,11 @@ import ShareableResult from "@/components/ShareableResult";
 import { CalcResultAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import { Suspense } from "react";
-import { decodeSharedSalary, encodeSalarySharePayload } from "@/lib/salarySharePayload";
+import { decodeSharedSalary } from "@/lib/salarySharePayload";
 import NextActions from "@/components/NextActions";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { nextActionHrefs } from "@/lib/nextActionLinks";
 import ResultSharePanel from "@/components/ResultSharePanel";
-import { salaryOgImagePath } from "@/lib/ogUrlVersion";
 
 const SITE_URL = "https://www.moneysalary.com";
 
@@ -25,9 +24,7 @@ type Props = {
 // 실패 시 null → 기본 메타데이터로 폴백.
 const decodeShared = decodeSharedSalary;
 
-// 공유 링크가 카톡·SNS에서 열렸을 때 '실제 금액'이 보이는 미리보기 카드를 생성.
-// 밋밋한 기본 로고 대신 호기심을 자극하는 문구 + 동적 OG 이미지(실수령액)로
-// 단톡방 클릭률을 끌어올린다 (바이럴 유입 루프의 핵심).
+// 기존 토큰 결과는 본문에서 복원한다. 링크 미리보기와 원격 이미지 URL에는 개인값을 넣지 않는다.
 export async function generateMetadata({ params: pendingParams }: Props): Promise<Metadata> {
  const params = await pendingParams;
  const decoded = decodeShared(params.data);
@@ -41,15 +38,9 @@ export async function generateMetadata({ params: pendingParams }: Props): Promis
  };
  }
 
- const annualManwon = Math.round(decoded.annualSalary / 10000).toLocaleString("ko-KR");
- const netManwon = Math.round(decoded.monthlyNet / 10000).toLocaleString("ko-KR");
- const title = `${decoded.regular ? "연봉" : "연 환산 소득"} ${annualManwon}만원 · 월 수령 추정 ${netManwon}만원`;
- const description = `${decoded.modelLabel}. 공유자가 입력한 조건에 따른 추정액입니다.`;
- // /api/og는 net= 파라미터를 읽음 (netPay= 오기로 실수령액이 안 찍히던 버그 수정).
- // 금액은 카드 표시 단위(1만원)로 모으고 &v= 버전을 붙인다 (OG-09·OG-03).
- const ogImage = salaryOgImagePath(decoded.annualSalary, decoded.monthlyNet);
- // og:url — 같은 결과의 정규 토큰(재공유 링크와 같은 인코딩). noindex 는 그대로.
- const shareToken = encodeSalarySharePayload(decoded.payload) ?? params.data;
+ const title = "공유된 연봉 결과";
+ const description = "공유된 연봉 계산 결과 페이지";
+ const ogImage = `${SITE_URL}/og-default.png`;
 
  return {
  title,
@@ -60,7 +51,7 @@ export async function generateMetadata({ params: pendingParams }: Props): Promis
  type: "website",
  locale: "ko_KR",
  siteName: "머니샐러리",
- url: `${SITE_URL}/share/${shareToken}`,
+ url: `${SITE_URL}/`,
  title,
  description,
  images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
@@ -113,11 +104,10 @@ export default async function SharePage({ params: pendingParams }: Props) {
  pageUrl="https://www.moneysalary.com/"
  pageTitle="2026 연봉 실수령액 계산기 | 머니샐러리"
  pageDescription="소득 조건을 입력해 월 수령액을 계산해 보세요."
- previewDescription={`다시 공유하는 링크에는 원래 공유자의 ${"annualSalary" in decoded.payload ? `연봉 ${decoded.annualSalary.toLocaleString("ko-KR")}원, 월 비과세액 ${decoded.payload.nonTaxableAmount.toLocaleString("ko-KR")}원, 본인 포함 부양가족 ${decoded.payload.dependents}명, 공제 대상 자녀 ${decoded.payload.children}명` : `소득 유형 ${decoded.payload.incomeType === "freelancer" ? "프리랜서" : "알바"}, 세전 월 소득 ${decoded.payload.monthlyIncome.toLocaleString("ko-KR")}원`}이 포함됩니다. 공개해도 되는지 확인해 주세요. 기본 페이지 링크에는 해당 결과를 넣지 않습니다.`}
- url={`https://www.moneysalary.com/share/${encodeSalarySharePayload(decoded.payload)}`}
+ previewDescription="아래 문구에 표시된 원래 공유자의 소득과 수령 추정액을 공개해도 되는지 확인해 주세요. 새 링크와 링크 미리보기 이미지에는 원래 입력을 넣지 않으며, 받은 사람이 입력 조건을 복원할 수 없습니다."
+ url={`${SITE_URL}/`}
  title={`${decoded.regular ? "연봉" : "연 환산 소득"} ${decoded.annualSalary.toLocaleString("ko-KR")}원 · 월 수령 추정 ${decoded.monthlyNet.toLocaleString("ko-KR")}원`}
  description={decoded.modelLabel}
- imageUrl={`${SITE_URL}${salaryOgImagePath(decoded.annualSalary, decoded.monthlyNet)}`}
  contentType="salary_result"
  />
  </div>

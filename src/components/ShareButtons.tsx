@@ -13,6 +13,7 @@ export interface ShareButtonsProps {
   url?: string;
   title?: string;
   description?: string;
+  /** Legacy caller option; remote cards are derived from the public page, never this URL. */
   imageUrl?: string;
   contentType?: string;
   shareMode?: ShareMode;
@@ -96,7 +97,7 @@ export default function ShareButtons({
   const en = locale === "en";
   const payload = page && shareMode === "result" ? {
     ...page, url: approvedResultUrl(url, page.url), title: title ?? page.title,
-    description: description ?? page.description, imageUrl: imageUrl ?? page.imageUrl,
+    description: description ?? page.description, imageUrl: page.imageUrl,
   } : page;
   // Deliberately local only; never place this equality key in events or URLs.
   const identity = JSON.stringify([pathname, !!context, shareMode, resultKey, payload?.url, payload?.title, payload?.description, payload?.imageUrl]);

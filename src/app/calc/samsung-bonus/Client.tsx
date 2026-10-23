@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef, useDeferredValue } from "react";
+import { useState, useMemo, useEffect, useDeferredValue } from "react";
 import dynamic from "next/dynamic";
 import Link from "@/components/AppLink";
 import ResultSharePanel from "@/components/ResultSharePanel";
@@ -45,7 +45,7 @@ import {
 import NumberInput from "@/components/NumberInput";
 import { OPI1_MAX_RATE, OPI_LATEST, OPI_LATEST_BOTTOM, opiRateSummary } from "./opiData";
 import { initialProfitTrillion } from "./annualOp";
-import { buildShareHash, parseShareHash, type SamsungShareState } from "./shareState";
+import { parseShareHash, type SamsungShareState } from "./shareState";
 import { computePersonalBonus } from "./personalBonus";
 import SavedScenarios from "./SavedScenarios";
 import type { ScenarioInputs } from "./scenarioStorage";
@@ -69,7 +69,7 @@ const MultiYearBonusSimulator = dynamic(
 // 결과 공유용 canonical URL (page.tsx의 PAGE_PATH와 동일)
 const SHARE_URL = "https://www.moneysalary.com/calc/samsung-bonus";
 
-// 공유 상태 URL 해시 기본값 — 전부 기본값이면 해시를 붙이지 않는다 (shareState.ts, S2-0).
+// 기존 공유 해시를 읽을 때도 사용하는 계산 기본값. 새 개인 해시는 생성하지 않는다.
 // p 는 잠정실적(1/8) 발표 후 자동 치환(annualOp.ts), o1 은 opiData 단일 소스에서 파생.
 const SHARE_DEFAULTS: SamsungShareState = {
   d: "memory",
@@ -150,7 +150,7 @@ export default function SamsungBonusClient() {
     resultKey: result,
   });
 
-  // ── 공유 상태 URL 해시 — 기본 조건 및 사업부 인원·가중치, ?v= 쿼리 신설 금지 ──
+  // 기존 공유 해시 수신 호환성만 유지한다. 입력 변경으로 URL을 새로 작성하지 않는다.
   // 마운트 시 1회 복원. 앵커 해시(#tai-title 등, '=' 없음)는 무시한다.
   useEffect(() => {
     const parsed = parseShareHash(window.location.hash, { divisionIds: DIVISION_IDS, maxOpi1: OPI1_MAX_RATE });
@@ -185,22 +185,6 @@ export default function SamsungBonusClient() {
     setCounts(Object.fromEntries(DIVISION_IDS.map(id => [id, saved.counts[id].toLocaleString("ko-KR")])));
     setRatios(Object.fromEntries(DIVISION_IDS.map(id => [id, String(saved.ratios[id])])));
   }
-  const shareHash = buildShareHash(currentInputs, SHARE_DEFAULTS);
-  const shareStateUrl = `${SHARE_URL}${shareHash}`;
-  // 상태가 바뀔 때만 replaceState — history 항목·hashchange 이벤트가 생기지 않아 DeferredSection 의
-  // 앵커 감시(#multi-year-*)와 충돌하지 않는다. 첫 커밋은 건너뛴다(복원 전 기본값으로 해시를 지우는 것 방지).
-  const hashWriteArmed = useRef(false);
-  useEffect(() => {
-    if (!hashWriteArmed.current) {
-      hashWriteArmed.current = true;
-      return;
-    }
-    const current = window.location.hash;
-    if (shareHash === "" && !current.includes("=")) return; // 앵커 해시는 보존
-    if (current === shareHash) return;
-    history.replaceState(history.state, "", `${window.location.pathname}${window.location.search}${shareHash}`);
-  }, [shareHash]);
-
   // 시뮬레이터 2종 입력은 지연값 — 메인 입력 타이핑 렌더가 먼저 커밋되고 무거운 다년도 재계산이 뒤따른다 (S2-0).
   // IO 지연 마운트(DeferredSection, 고정 min-height 560)는 그대로 — 광고 위 높이 불변.
   const deferredCounts = useDeferredValue(counts);
@@ -643,7 +627,6 @@ export default function SamsungBonusClient() {
         setApplyInsurance={setApplyInsurance}
         opi1Rate={opi1Rate}
         setOpi1Rate={setOpi1Rate}
-        shareUrl={shareStateUrl}
         scenarioInputs={currentInputs}
         onRestoreScenario={restoreSavedScenario}
       />
@@ -782,7 +765,6 @@ function MySalaryCalculator({
   setApplyInsurance,
   opi1Rate,
   setOpi1Rate,
-  shareUrl,
   scenarioInputs,
   onRestoreScenario,
 }: {
@@ -807,8 +789,6 @@ function MySalaryCalculator({
   setApplyInsurance: (v: boolean) => void;
   opi1Rate: number;
   setOpi1Rate: (v: number) => void;
-  /** 공유 상태 URL(해시 포함) — 결과 공유 패널·모바일 공유 바(FloatingShareBar) 동기 */
-  shareUrl: string;
   scenarioInputs: SamsungShareState;
   onRestoreScenario: (inputs: ScenarioInputs) => void;
 }) {
@@ -860,8 +840,6 @@ function MySalaryCalculator({
       className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6"
       aria-labelledby="my-calc-title"
       onChangeCapture={personalMeasurement.inputProps.onChangeCapture}
-      // 기본값과 다른 상태일 때만 선언 — FloatingShareBar 가 이 URL 로 결과 모드 공유(useSharePageContext)
-      data-share-result-url={shareUrl.includes("#") ? shareUrl : undefined}
     >
       <h2
         id="my-calc-title"
@@ -1434,10 +1412,11 @@ function MySalaryCalculator({
             <p className="text-[11px] text-faint-blue mb-3 leading-relaxed tabular-nums">
               {selected.label} 사업부 · 세전 {fmtManwonInt(personal.totalGrossManwon)}만원
               · 세후 {fmtManwonInt(personal.netManwon)}만원 결과를 카카오·링크로
-              공유합니다. 선택한 사업부와 추정 금액이 공유 내용에 포함됩니다.
+              공유할 수 있습니다. 승인한 문구에는 사업부와 추정 금액이 포함되며,
+              링크에는 개인 입력을 넣지 않습니다.
             </p>
             <ResultSharePanel resultIsCurrent={poolInputsValid && isValidCalculationNumber(salaryFmt, Number.MIN_VALUE) && isValidCalculationNumber(creditRate, 0, 50) && isValidCalculationNumber(opi1Rate, 0, OPI1_MAX_RATE) && [personal.totalGrossWon, personal.netWon, personal.deductWon].every(Number.isFinite)} resultKey={JSON.stringify([poolInputsValid, perDivision, salaryFmt, selectedDivId, creditRate, applyInsurance, opi1Rate, personal])}
-              url={shareUrl}
+              url={SHARE_URL}
               title={`삼성전자 ${selected.label} 성과급 — 세전 ${fmtManwonInt(
                 personal.totalGrossManwon
               )}만원·세후 ${fmtManwonInt(personal.netManwon)}만원 (2026 추정)`}
@@ -1446,9 +1425,6 @@ function MySalaryCalculator({
               )}만원, 세금 공제 후 실수령 약 ${fmtManwonInt(
                 personal.netManwon
               )}만원. 머니샐러리 삼성 성과급 계산기로 본인 케이스를 확인하세요.`}
-              imageUrl={`https://www.moneysalary.com/api/og?type=tool&name=${encodeURIComponent(
-                `삼성 성과급 세후 ${fmtManwonInt(personal.netManwon)}만원`
-              )}`}
               contentType="samsung_bonus_result"
             />
           </div>

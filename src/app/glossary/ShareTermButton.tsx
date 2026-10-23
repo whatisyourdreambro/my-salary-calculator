@@ -6,6 +6,7 @@
 import { useState } from "react";
 import { Share2 } from "lucide-react";
 import { trackShare } from "@/lib/analytics";
+import { withUtm } from "@/lib/shareChannels";
 
 export default function ShareTermButton({ title }: { title: string }) {
   const [toast, setToast] = useState<string | null>(null);
@@ -16,8 +17,9 @@ export default function ShareTermButton({ title }: { title: string }) {
   };
 
   const handleShare = async () => {
-    const url = window.location.href;
-    if (navigator.share) {
+    const canShare = typeof navigator.share === "function";
+    const url = withUtm(window.location.pathname, canShare ? "webshare" : "copy");
+    if (canShare) {
       trackShare("webshare", "glossary_term");
       try {
         await navigator.share({

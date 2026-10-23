@@ -3,6 +3,7 @@
 // SNS 공유 채널 정의 — 공유 인텐트 URL 빌더 + 라벨/브랜드 색.
 // React 무관 순수 모듈 (ShareButtons·FloatingShareBar·ShareTermButton 공용).
 // 채널 id는 GA4 trackShare의 method 값과 1:1 대응.
+import { publicShareUrl, publicShareImageUrl, SHARE_ORIGIN } from "./sharePolicy";
 
 export interface SharePayload {
   url: string;
@@ -94,8 +95,8 @@ export const SHARE_CHANNELS: Record<ShareChannelId, ChannelMeta> = {
  * 공유 URL에 채널 귀속 utm 부여 (순수 함수, 2026-09-05 plan-gap-critic-3).
  * 카카오 인앱·클립보드 붙여넣기·PWA 실행은 referrer가 없어 GA4에서 전부 (direct)로
  * 떨어진다 — 채널별 utm_source(kakao|copy|webshare|…)+utm_medium=share 로 분해한다.
- * - `?` 유무 모두 처리, `#fragment`는 뒤로 보존, `/share/{base64}`·`?v=base64` 값은 손대지 않음
- * - 이미 utm_source/utm_medium 이 있으면 교체(멱등) — 상위에서 한 번 더 감싸도 안전
+ * - 새 외부 공유는 공용 페이지 URL과 고정 채널 UTM만 사용한다.
+ * - 기존 결과 링크 수신은 각 decoder가 담당하며 여기서 재전송하지 않는다.
  * - canonical/OG는 pathname 기준(seo.ts)이라 색인 중복 없음. 광고 무접촉.
  * 주의: utm_medium=share 는 GA4 기본 채널 그룹에서 'Unassigned' — 소스/매체 행으로 읽는다.
  */
@@ -104,17 +105,10 @@ export function withUtm(
   source: ShareChannelId | string,
   medium = "share"
 ): string {
-  const hashIdx = url.indexOf("#");
-  const fragment = hashIdx >= 0 ? url.slice(hashIdx) : "";
-  const noFrag = hashIdx >= 0 ? url.slice(0, hashIdx) : url;
-  const qIdx = noFrag.indexOf("?");
-  const base = qIdx >= 0 ? noFrag.slice(0, qIdx) : noFrag;
-  const query = qIdx >= 0 ? noFrag.slice(qIdx + 1) : "";
-  const kept = query
-    .split("&")
-    .filter((p) => p && !/^utm_(source|medium)=/.test(p));
-  kept.push(`utm_source=${enc(source)}`, `utm_medium=${enc(medium)}`);
-  return `${base}?${kept.join("&")}${fragment}`;
+  const base = publicShareUrl(url) ?? `${SHARE_ORIGIN}/`;
+  const pwa = source === "pwa" && medium === "homescreen";
+  const safeSource = pwa ? "pwa" : Object.hasOwn(SHARE_CHANNELS, source) ? source : "copy";
+  return `${base}?utm_source=${safeSource}&utm_medium=${pwa ? "homescreen" : "share"}`;
 }
 
 export function channelLabel(id: ShareChannelId, locale: "ko" | "en"): string {
@@ -164,18 +158,20 @@ export function kakaoFeedImageSize(imageUrl: string): { imageWidth: number; imag
  */
 export function tryKakaoFeedShare(p: KakaoFeedPayload): boolean {
   if (typeof window === "undefined") return false;
+  const url = withUtm(p.url, "kakao");
+  const imageUrl = publicShareImageUrl(url, p.locale ?? "ko");
   const kakao = (window as unknown as { Kakao?: KakaoSdkGlobal }).Kakao;
   try {
     if (!kakao?.isInitialized?.() || typeof kakao.Share?.sendDefault !== "function") return false;
     const buttons: Record<string, unknown>[] = [
       {
         title: p.buttonTitle ?? "자세히 보기",
-        link: { mobileWebUrl: p.url, webUrl: p.url },
+        link: { mobileWebUrl: url, webUrl: url },
       },
     ];
     // 쿼리(utm)·해시 제거 후 홈 판정 — p.url 은 withUtm 으로 감싸져 들어올 수 있음
     const localeHome = p.locale === "en" ? `${HOME_URL}/en` : HOME_URL;
-    const isHome = p.url.replace(/[?#].*$/, "").replace(/\/+$/, "") === localeHome;
+    const isHome = url.replace(/[?#].*$/, "").replace(/\/+$/, "") === localeHome;
     if (!isHome) {
       // 홈 버튼도 카카오 귀속 utm — 공유 1건의 두 접점이 모두 kakao / share 로 잡히도록
       const homeUrl = withUtm(localeHome, "kakao");
@@ -189,9 +185,9 @@ export function tryKakaoFeedShare(p: KakaoFeedPayload): boolean {
       content: {
         title: p.title,
         description: p.description ?? "",
-        imageUrl: p.imageUrl,
-        ...kakaoFeedImageSize(p.imageUrl),
-        link: { mobileWebUrl: p.url, webUrl: p.url },
+        imageUrl,
+        ...kakaoFeedImageSize(imageUrl),
+        link: { mobileWebUrl: url, webUrl: url },
       },
       buttons,
     });

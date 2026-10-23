@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { createShareRequestGuard, sendShare, type ShareTransport } from "../shareTransport";
+import { SHARE_CHANNELS, type ShareChannelId } from "../shareChannels";
 
 const payload = { url: "https://www.moneysalary.com/en/flat-tax", title: "Public calculator", description: "Compare taxes", imageUrl: "https://www.moneysalary.com/og.png", locale: "en" as const };
 function environment(overrides: Partial<ShareTransport> = {}): ShareTransport {
@@ -7,6 +8,29 @@ function environment(overrides: Partial<ShareTransport> = {}): ShareTransport {
 }
 
 describe("sharing outcomes represent observable operations", () => {
+  it.each(Object.keys(SHARE_CHANNELS) as ShareChannelId[])("%s sends only the public destination and fixed campaign fields", async channel => {
+    const env = environment({ kakao: vi.fn(() => true) });
+    const result = { ...payload, url: "https://www.moneysalary.com/calc/samsung-bonus?v=PRIVATE_TOKEN&utm_campaign=PRIVATE#s=987654321&d=memory",
+      title: "Approved result 31415", description: "Approved visible text", imageUrl: "https://www.moneysalary.com/api/og?amount=987654321&title=PRIVATE",
+      shareMode: "result" as const };
+    await sendShare(channel, result, env);
+    const calls = JSON.stringify([vi.mocked(env.copy!).mock.calls, vi.mocked(env.native!).mock.calls,
+      vi.mocked(env.kakao).mock.calls, vi.mocked(env.openIntent).mock.calls]);
+    expect(calls).not.toMatch(/PRIVATE|987654321|%23s|%3Fv/);
+    const expected = `https://www.moneysalary.com/calc/samsung-bonus?utm_source=${channel}&utm_medium=share`;
+    expect(calls.includes(expected) || calls.includes(encodeURIComponent(expected))).toBe(true);
+    if (channel === "copy" || channel === "kakao" || channel === "webshare" || channel === "instagram") expect(calls).toContain("31415");
+    if (channel === "kakao") expect(env.kakao).toHaveBeenCalledWith(expect.objectContaining({ imageUrl: "https://www.moneysalary.com/api/og?path=%2Fcalc%2Fsamsung-bonus&lang=en" }));
+  });
+  it("old salary tokens cannot escape through clipboard fallback or an approved local image", async () => {
+    const result = { ...payload, url: "https://www.moneysalary.com/share/PRIVATE_TOKEN?v=secret#s=987654321", shareMode: "result" as const };
+    const failed = await sendShare("copy", result, environment({ copy: undefined }));
+    expect(failed.manualText).toBe("Public calculator\nCompare taxes\nhttps://www.moneysalary.com/?utm_source=copy&utm_medium=share");
+    const env = environment();
+    await sendShare("webshare", { ...result, imageBlob: new Blob(["approved-local-image"], { type: "image/png" }) }, env);
+    expect(env.native).toHaveBeenCalledWith(expect.objectContaining({ text: "Compare taxes\nhttps://www.moneysalary.com/?utm_source=webshare&utm_medium=share" }));
+    expect(JSON.stringify(vi.mocked(env.native!).mock.calls)).not.toContain("PRIVATE_TOKEN");
+  });
   it("reports clipboard success only after the write resolves", async () => {
     const copy = vi.fn().mockResolvedValue(undefined);
     expect(await sendShare("copy", payload, environment({ copy }))).toEqual({ outcome: "clipboard_success" });

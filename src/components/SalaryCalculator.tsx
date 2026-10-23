@@ -20,8 +20,7 @@ import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 import { isValidCalculationNumber } from "@/lib/calculationMeasurement";
 import { trackEvent, trackSavedSalaryRecalculate } from "@/lib/analytics";
 import { canHandoffCurrentSalaryResult, writeOfferComparisonHandoff } from "@/lib/offerComparisonHandoff";
-import { encodeSalarySharePayload, validateSalarySharePayload } from "@/lib/salarySharePayload";
-import { salaryOgImagePath } from "@/lib/ogUrlVersion";
+import { validateSalarySharePayload } from "@/lib/salarySharePayload";
 import { isCurrentSalaryResult, mergeSalarySnapshot, parseSavedHomeInputs } from "@/lib/salaryResultSnapshot";
 import { CURRENT_SALARY_BASIS_VERSION, FINANCIAL_DATA_KEY } from "@/lib/storedFinancialData";
 import { consumeSavedSalaryRecalculationRequest, readSavedSalaryRecalculation, type SavedSalaryRecalculation } from "@/lib/savedSalaryRecalculation";
@@ -379,20 +378,13 @@ export default function SalaryCalculator() {
  }
  };
 
- // The URL is only passed to the result opt-in panel. Its default page share is amount-free.
- const shareToken = currentResult ? encodeSalarySharePayload(sharePayload) : null;
- const shareUrl = shareToken ? `https://www.moneysalary.com/share/${shareToken}` : undefined;
-
- // 공유 카드 문구·썸네일 — 단톡방 클릭률을 높이는 호기심 훅 + 실제 금액 OG 이미지
+ // 결과 문구만 명시 승인 후 공유한다. 새 링크·원격 OG URL에는 개인 입력을 넣지 않는다.
  const shareMeta = useMemo(() => {
  const netManwon = Math.round(result.monthlyNet / 10000).toLocaleString("ko-KR");
  const annualManwon = Math.round(annualSalary / 10000).toLocaleString("ko-KR");
- const origin = typeof window !== "undefined" ? window.location.origin : "";
  return {
  title: `${incomeType === "regular" ? "연봉" : "월 소득의 연 환산"} ${annualManwon}만원 · 월 수령 추정 ${netManwon}만원`,
  description: incomeType === "freelancer" ? "월 사업소득 3.3% 원천징수 추정입니다. 최종 종합소득세와 다릅니다." : `${CURRENT_RATES_YEAR}년 계산 모델의 추정액입니다. 실제 급여명세서·최종 세액과 다를 수 있습니다.`,
- // 1만원 단위 + &v= 버전 — 카드 표시값은 같고 OG 캐시 키만 모인다 (OG-09·OG-03)
- imageUrl: `${origin}${salaryOgImagePath(annualSalary, result.monthlyNet)}`,
  };
  }, [annualSalary, result.monthlyNet, incomeType]);
 
@@ -568,16 +560,15 @@ export default function SalaryCalculator() {
  {/* 공유/저장 */}
  <div className="bg-white border border-canvas rounded-2xl p-4 flex flex-col items-center gap-3">
  <p className="text-sm font-bold text-muted-blue">결과 공유하기</p>
- {currentResult && shareUrl ? <ResultSharePanel
+ {currentResult ? <ResultSharePanel
  resultKey={inputSnapshot}
  pageUrl="https://www.moneysalary.com/"
  pageTitle="2026 연봉 실수령액 계산기 | 머니샐러리"
  pageDescription="소득 조건을 직접 입력해 월 수령액을 계산해 보세요."
- previewDescription={incomeType === "regular" ? `결과 링크에 연봉 ${formatNumber(annualSalary)}원, 월 비과세액 ${formatNumber(parseNumber(nonTaxableAmount))}원, 본인 포함 부양가족 ${dependents}명, 공제 대상 자녀 ${children}명이 포함됩니다. 받은 사람은 이를 복원할 수 있습니다. 공유 카드에는 연봉과 월 수령 추정액이 표시됩니다.` : `결과 링크에 ${incomeType === "freelancer" ? "프리랜서" : "알바"} 소득 유형과 세전 월 소득 ${formatNumber(parseNumber(salaryInput))}원이 포함됩니다. 받은 사람은 이를 복원할 수 있습니다. 공유 카드에는 연 환산 소득과 월 수령 추정액이 표시됩니다.`}
- url={shareUrl}
+ previewDescription="아래 문구의 연봉 또는 연 환산 소득과 월 수령 추정액을 공개해도 되는지 확인해 주세요. 함께 보내는 링크와 링크 미리보기 이미지에는 개인 입력을 넣지 않으며, 받은 사람이 입력 조건을 복원할 수 없습니다."
+ url="https://www.moneysalary.com/"
  title={shareMeta.title}
  description={shareMeta.description}
- imageUrl={shareMeta.imageUrl}
  contentType="salary_result"
  /> : <p role="status" className="text-sm text-muted-blue">현재 입력으로 다시 계산하면 결과 공유와 저장을 이용할 수 있습니다.</p>}
  <button onClick={handleSaveData} disabled={!currentResult || incomeType !== "regular"} className="w-full py-3 bg-white border border-canvas rounded-2xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-canvas active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
