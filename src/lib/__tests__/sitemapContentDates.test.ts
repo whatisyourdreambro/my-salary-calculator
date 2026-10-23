@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { latestContentDate, STATIC_LAST_MODIFIED } from '@/config/siteDates';
 
 describe('sitemap editorial date integrity', () => {
-  it('dates the two factual corrections without refreshing the home, handoff or insurance article', () => {
+  it('dates the pension, IRP and civil-pay factual corrections without refreshing the home or insurance article', () => {
     const fixture = `globalThis.fetch=()=>{throw new Error('Network forbidden')};
       const rows=require('./src/app/sitemap.ts').default();
       const paths=['/calc/pension-hike-2027','/tools/finance/irp','/','/calc/civil-servant-net-pay','/social-insurance-rates-2027'];
@@ -14,7 +14,7 @@ describe('sitemap editorial date integrity', () => {
     const day = (date: string) => new Date(new Date(date).getTime() + 9 * 3600000).toISOString().slice(0, 10);
     expect(rows.map(row => [row.path, day(row.date)])).toEqual([
       ['/calc/pension-hike-2027', '2026-10-23'], ['/tools/finance/irp', '2026-10-23'],
-      ['/', '2026-10-19'], ['/calc/civil-servant-net-pay', '2026-09-27'],
+      ['/', '2026-10-19'], ['/calc/civil-servant-net-pay', '2026-10-23'],
       ['/social-insurance-rates-2027', '2026-10-04'],
     ]);
   }, 35_000);
