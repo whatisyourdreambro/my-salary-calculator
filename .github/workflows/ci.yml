@@ -36,7 +36,9 @@ jobs:
   verify:
     if: github.event_name != 'schedule' && github.event_name != 'workflow_dispatch'
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # Keep the complete keyboard/interaction matrix: the focus audit alone can
+    # take 27 minutes, and browser dependency downloads can add several minutes.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7.0.1
         with:
