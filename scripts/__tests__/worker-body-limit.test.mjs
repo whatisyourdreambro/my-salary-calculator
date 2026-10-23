@@ -50,12 +50,14 @@ test('strict API limits include trailing, encoded and nested-encoded aliases', (
     ['/%61pi/contact', 4096], ['/api%2fcontact', 4096], ['/api%252fcontact', 4096],
     ['/api%5ccontact', 4096], ['/api/other/../contact', 4096],
     ['/api/feedback?x=1', 1024], ['/api/feed%62ack/', 1024],
+    ['/api/participation/opinions', 2048], ['/api/participation/opinions/', 2048],
+    ['/api%252fparticipation%252fopinions', 2048], ['/api/participation/reactions', 1024], ['/api/participation/summary', 1024],
     ['/api/feedback-other', DEFAULT_BODY_LIMIT], ['/elsewhere', DEFAULT_BODY_LIMIT], ['/api/%zz', DEFAULT_BODY_LIMIT],
   ]) assert.equal(requestBodyLimit(request(route, '')), limit, route);
 });
 
 test('exact API byte limits pass and one byte over fails for canonical and encoded paths', async () => {
-  for (const [route, limit] of [['/api/contact', 4096], ['/api/feedback/', 1024], ['/api%252ffeedback', 1024]]) {
+  for (const [route, limit] of [['/api/contact', 4096], ['/api/feedback/', 1024], ['/api%252ffeedback', 1024], ['/api/participation/opinions', 2048], ['/api/participation/reactions', 1024], ['/api/participation/summary', 1024]]) {
     const accepted = await limitRequestBody(request(route, new Uint8Array(limit)));
     assert.ok(accepted instanceof Request);
     assert.equal((await accepted.arrayBuffer()).byteLength, limit);

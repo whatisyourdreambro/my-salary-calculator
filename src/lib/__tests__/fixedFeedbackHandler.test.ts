@@ -5,7 +5,7 @@ import { FIXED_FEEDBACK_CONFIG, FIXED_FEEDBACK_TARGETS } from "@/lib/fixedFeedba
 import { FIXED_FEEDBACK_RETENTION_SECONDS, handleFixedFeedbackPost } from "@/lib/server/fixedFeedbackHandler";
 import { handleContactPost } from "@/lib/server/contactHandler";
 import { FIXED_FEEDBACK_SQL } from "@/lib/server/fixedFeedbackSql";
-import { CONTACT_SQL } from "@/lib/server/contactSql";
+import { CONTACT_RECEIPT_LOOKUP, CONTACT_SQL } from "@/lib/server/contactSql";
 import * as route from "@/app/api/feedback/route";
 import { feedbackRateKey, type FeedbackBindings, type FeedbackDatabase, type FeedbackResult, type FeedbackStatement } from "@/lib/server/feedbackStorage";
 
@@ -35,6 +35,10 @@ function storage() {
       return statement;
     },
     batch: vi.fn(async (raw: FeedbackStatement[]): Promise<FeedbackResult[]> => {
+      if (raw.length === 1 && (raw[0] as Statement).sql === CONTACT_RECEIPT_LOOKUP) {
+        const hash = receipts.contact.get((raw[0] as Statement).values[0] as string);
+        return [{ success: true, meta: {}, results: hash ? [{ payload_hash: hash, consent_version: "contact-v1" }] : [] }];
+      }
       const [reserve, insert] = raw as Statement[];
       const table = insert.sql === CONTACT_SQL.insertInquiry ? receipts.contact : receipts.feedback;
       const [key, , receiptId, limit] = reserve.values;

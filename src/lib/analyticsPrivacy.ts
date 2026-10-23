@@ -78,6 +78,19 @@ export function sanitizeAnalyticsUrl(
 }
 
 export function sanitizeAnalyticsParams(name: string, params: Record<string, unknown>): Record<string, unknown> {
+  if (name === "saved_salary_recalculate") {
+    return {
+      flow_version: "1",
+      ...(["request", "apply", "saved"].includes(String(params.action)) ? { action: params.action } : {}),
+    };
+  }
+  if (name === "civil_pay_handoff") {
+    const safe: Record<string, unknown> = { flow_version: "1" };
+    if (["selected", "accepted", "rejected", "confirmed"].includes(String(params.stage))) safe.stage = params.stage;
+    if (params.source_group === "fire" || params.source_group === "police") safe.source_group = params.source_group;
+    if (params.stage === "rejected" && ["expired", "invalid", "storage_unavailable", "missing"].includes(String(params.reason))) safe.reason = params.reason;
+    return safe;
+  }
   const isCalculation = name === "calc_start" || name === "calc_success" || name === "result_view" || name === "calc_submit";
   const urlOptions = { keepPublicAmountPath: PAGE_SCOPED_MEASUREMENT_EVENTS.has(name) };
   const safe: Record<string, unknown> = {};

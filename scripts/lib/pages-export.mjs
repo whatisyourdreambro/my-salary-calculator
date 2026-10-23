@@ -19,7 +19,7 @@ export const OG_WORKER_MODULES = Object.freeze(['og/config.mjs', 'og/inflate.mjs
 export const STAGE_MARKER = '.moneysalary-pages-stage.json';
 export const BUILD_MARKER = 'moneysalary-pages-build.json';
 export const EXCLUDED_SOURCE_PATHS = Object.freeze([
-  'src/middleware.ts', 'src/app/api/contact', 'src/app/api/feedback', 'src/app/api/og',
+  'src/middleware.ts', 'src/app/api/contact', 'src/app/api/feedback', 'src/app/api/participation', 'src/app/api/og',
   'src/app/api/salary-table', 'src/app/widget/company', 'src/app/share/[data]',
 ]);
 export const SOURCE_ITEMS = Object.freeze(['src', 'public', 'scripts', 'vendor', 'cloudflare',
@@ -30,6 +30,7 @@ export const PUBLIC_BUILD_KEYS = Object.freeze([
     .map(name => `NEXT_PUBLIC_ADSENSE_SLOT_${name}`),
   'NEXT_PUBLIC_KAKAO_JS_KEY', 'NEXT_PUBLIC_ADS_ID', 'NEXT_PUBLIC_CONVERSION_LABEL_CALCULATION',
   'NEXT_PUBLIC_CONVERSION_LABEL_PAGEVIEW', 'NEXT_PUBLIC_GA_ID',
+  'NEXT_PUBLIC_PARTICIPATION_REACTIONS_ENABLED', 'NEXT_PUBLIC_PARTICIPATION_OPINIONS_ENABLED',
 ]);
 export const PUBLIC_BUILD_CONFIG = '.env.production';
 const PUBLIC_CONFIG_MAX_BYTES = 64 * 1024;
@@ -135,7 +136,8 @@ function assertNoInheritedQaSettings(input) {
 }
 
 function assertPublicBuildValue(key, value) {
-  const valid = typeof value === 'string' && (key.startsWith('NEXT_PUBLIC_ADSENSE_SLOT_') ? /^\d{10}$/.test(value)
+  const valid = typeof value === 'string' && (key.startsWith('NEXT_PUBLIC_PARTICIPATION_') ? /^(?:0|1)$/.test(value)
+    : key.startsWith('NEXT_PUBLIC_ADSENSE_SLOT_') ? /^\d{10}$/.test(value)
     : key === 'NEXT_PUBLIC_KAKAO_JS_KEY' ? /^[a-f0-9]{32}$/i.test(value)
       : key === 'NEXT_PUBLIC_ADS_ID' ? /^AW-\d+$/.test(value)
         : key === 'NEXT_PUBLIC_GA_ID' ? /^G-[A-Z0-9]+$/.test(value) : /^[A-Za-z0-9_-]{1,100}$/.test(value));
@@ -212,6 +214,13 @@ export function cleanBuildEnvironment(input, mode, stage) {
     HOME: path.join(stage, 'build-home'), USERPROFILE: path.join(stage, 'build-home'),
     npm_config_userconfig: path.join(stage, 'empty-user.npmrc'), npm_config_globalconfig: path.join(stage, 'empty-global.npmrc'),
     npm_config_registry: 'https://registry.npmjs.org/', npm_config_audit: 'false', npm_config_fund: 'false' });
+  // Explicit UI-only switches are also permitted in isolated QA builds. Server
+  // flags/DB/secret bindings are never copied into either client environment.
+  for (const key of ['NEXT_PUBLIC_PARTICIPATION_REACTIONS_ENABLED', 'NEXT_PUBLIC_PARTICIPATION_OPINIONS_ENABLED']) {
+    if (input[key] === undefined) continue;
+    assertPublicBuildValue(key, input[key]);
+    env[key] = input[key];
+  }
   if (mode === 'production') {
     for (const key of PUBLIC_BUILD_KEYS) {
       const value = input[key];

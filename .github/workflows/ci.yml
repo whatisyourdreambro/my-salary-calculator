@@ -58,6 +58,7 @@ jobs:
       - run: npm run qa:share
       - run: python3 scripts/verify-contact-storage.py
       - run: python3 scripts/verify-fixed-feedback-storage.py
+      - run: python3 scripts/verify-participation-storage.py
       - run: npm run verify:tax
       - run: npm run verify:site
       - run: npm run verify:companies
@@ -131,6 +132,7 @@ jobs:
           npm run qa:pages:http
           npm run qa:run -- scripts/qa-pages-navigation.mjs
           QA_ROUTES="/calc/samsung-bonus,/" npm run qa:run -- scripts/qa-calculator-experience.mjs
+          npm run qa:run -- scripts/__tests__/qa-saved-recalculation.mjs
           QA_CONTRAST_ONLY=1 QA_ROUTES="/table/2026/monthly,/table/2027/monthly,/job/safety-engineer,/job/software-engineer" npm run qa:run -- scripts/qa-calculator-experience.mjs
           QA_FOCUS_FORCED_COLORS=1 npm run qa:run -- scripts/qa-focus-input.mjs
           npm run qa:run -- scripts/qa-interaction-states.mjs

@@ -1,10 +1,11 @@
 import { CONTACT_TYPES, type ContactErrorCode, type ContactResponse, type ContactType } from "@/lib/contactContract";
+import { contentIssue } from "@/lib/contentModeration";
 import {
   CONTACT_RETENTION_SECONDS, CONTACT_WINDOW_LIMIT, FEEDBACK_WINDOW_SECONDS,
   feedbackClientIp, feedbackPayloadHash, feedbackRateKey, hasFeedbackStorage, normalizeFeedbackPath,
-  type FeedbackBindings,
+  type FeedbackBindings, type FeedbackDatabase,
 } from "./feedbackStorage";
-import { CONTACT_SQL } from "./contactSql";
+import { CONTACT_RECEIPT_LOOKUP, CONTACT_SQL } from "./contactSql";
 
 const MAX_REQUEST_BYTES = 4096;
 const CONSENT_VERSION = "contact-v1";
@@ -73,6 +74,24 @@ interface NormalizedInquiry {
   replyConsent: boolean;
 }
 
+// Freeze this canonical request format independently of the moderation policy.
+function requestHash(inquiry: NormalizedInquiry, consentVersion: string): Promise<string> {
+  return feedbackPayloadHash(JSON.stringify([
+    inquiry.type, inquiry.pagePath, inquiry.body, inquiry.replyEmail, inquiry.replyConsent, consentVersion,
+  ]));
+}
+
+async function existingReceipt(db: FeedbackDatabase, inquiry: NormalizedInquiry): Promise<Response | null> {
+  const results = await db.batch([db.prepare(CONTACT_RECEIPT_LOOKUP).bind(inquiry.submissionId)]);
+  if (results.length !== 1 || !results[0].success) throw new Error("receipt lookup unavailable");
+  const row = results[0].results[0];
+  if (!row) return null;
+  if (typeof row.payload_hash !== "string" || typeof row.consent_version !== "string" ||
+      !/^contact-v[0-9]{1,3}$/.test(row.consent_version)) throw new Error("unsupported receipt contract");
+  if (row.payload_hash !== await requestHash(inquiry, row.consent_version)) return failure("RECEIPT_CONFLICT", 409);
+  return response({ ok: true, receiptId: inquiry.submissionId, duplicate: true }, 200);
+}
+
 function validate(value: unknown): NormalizedInquiry | ContactErrorCode {
   if (!value || typeof value !== "object" || Array.isArray(value)) return "INVALID_REQUEST";
   const data = value as Record<string, unknown>;
@@ -118,11 +137,16 @@ export async function handleContactPost(request: Request, bindings: FeedbackBind
   const windowStart = Math.floor(createdAt / FEEDBACK_WINDOW_SECONDS) * FEEDBACK_WINDOW_SECONDS;
   const windowEnd = windowStart + FEEDBACK_WINDOW_SECONDS;
   try {
-    const payloadHash = await feedbackPayloadHash(JSON.stringify([
-      inquiry.type, inquiry.pagePath, inquiry.body, inquiry.replyEmail, inquiry.replyConsent, CONSENT_VERSION,
-    ]));
-    const rateKey = await feedbackRateKey(bindings.FEEDBACK_RATE_LIMIT_SECRET, ip, windowStart);
     const db = bindings.FEEDBACK_DB;
+    // Syntax/origin/storage checks still apply to every request. An unchanged,
+    // previously accepted request does not become a new write or fail because a
+    // later word list changed. Only the opaque UUID is sent to this read query.
+    const previous = await existingReceipt(db, inquiry);
+    if (previous) return previous;
+    const issue = contentIssue(inquiry.body);
+    if (issue) return failure(issue === "CONTENT_NOT_ALLOWED" ? issue : "INVALID_REQUEST");
+    const payloadHash = await requestHash(inquiry, CONSENT_VERSION);
+    const rateKey = await feedbackRateKey(bindings.FEEDBACK_RATE_LIMIT_SECRET, ip, windowStart);
     const results = await db.batch([
       db.prepare(CONTACT_SQL.reserveRate).bind(rateKey, windowEnd, inquiry.submissionId, CONTACT_WINDOW_LIMIT),
       db.prepare(CONTACT_SQL.insertInquiry).bind(
@@ -138,7 +162,10 @@ export async function handleContactPost(request: Request, bindings: FeedbackBind
       if (results[0].meta.changes !== 0 || results[1].meta.changes !== 0) return failure("UNAVAILABLE", 503);
       return failure("RATE_LIMITED", 429, Math.max(1, windowEnd - createdAt));
     }
-    if (receipt.payload_hash !== payloadHash) return failure("RECEIPT_CONFLICT", 409);
+    if (receipt.payload_hash !== payloadHash) {
+      // Another deployment may have accepted this UUID between lookup and write.
+      return await existingReceipt(db, inquiry) ?? failure("UNAVAILABLE", 503);
+    }
     const inserted = results[1].meta.changes === 1;
     return response({ ok: true, receiptId: inquiry.submissionId, duplicate: !inserted }, inserted ? 201 : 200);
   } catch {

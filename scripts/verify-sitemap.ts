@@ -12,7 +12,7 @@ import { createRequire } from "node:module";
 import { pathToFileURL } from "node:url";
 import sitemap, { ROUTE_OVERRIDES } from "@/app/sitemap";
 import { assessContentReview, isFutureSitemapDate, koreanDay, pageRevisionFields } from "./lib/sitemap-freshness.mjs";
-import { PAGE_LINK_REVIEW_PATHS } from "@/config/pageContentRevisions";
+import { PAGE_ACCURACY_REVIEW_PATHS, PAGE_LINK_REVIEW_PATHS } from "@/config/pageContentRevisions";
 import { STATIC_LAST_MODIFIED_ISO } from "@/config/siteDates";
 import { webApplicationLd } from "@/lib/structuredData";
 import { koGuides, enGuides } from "@/lib/guidesContent";
@@ -67,7 +67,7 @@ function checkValidDates(entries: Awaited<ReturnType<typeof sitemap>>): number {
 
 function checkPageRevisionDates(entries: Awaited<ReturnType<typeof sitemap>>): number {
   let failed = 0;
-  const paths = new Set([...Object.keys(ROUTE_OVERRIDES), ...PAGE_LINK_REVIEW_PATHS]);
+  const paths = new Set([...Object.keys(ROUTE_OVERRIDES), ...PAGE_LINK_REVIEW_PATHS, ...PAGE_ACCURACY_REVIEW_PATHS]);
   for (const route of paths) {
     const file = join(APP_DIR, route.slice(1), 'page.tsx');
     if (!existsSync(file)) continue; // Dynamic templates have their own date/guide contracts.

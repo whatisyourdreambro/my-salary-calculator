@@ -175,7 +175,7 @@ const RELATED_2027_LINKS = [
   {
     href: "/calc/pension-hike-2027",
     title: "국민연금 인상 계산기",
-    description: "내 월급 기준 2027년 매달 더 내는 금액 즉시 계산",
+    description: "같은 기준소득월액으로 연금 보험료 증가분 비교",
   },
   {
     href: "/table/2027/annual",
@@ -365,10 +365,10 @@ export default function SocialInsuranceRates2027Page() {
             <div>
               <p className="text-sm font-bold opacity-90 mb-2">2027년 1월 시행 확정</p>
               <h3 className="text-xl sm:text-2xl font-black mb-2">
-                국민연금 인상, 내 월급에서 얼마나 더 빠지나
+                국민연금 인상분, 같은 소득 기준으로 비교
               </h3>
               <p className="text-sm opacity-90">
-                월급만 입력하면 매달·연간 추가 부담을 즉시 계산
+                기준소득월액으로 월 증가분과 같은 조건의 12개월 환산액 확인
               </p>
             </div>
             <Calculator className="w-12 h-12 opacity-50 group-hover:opacity-80 transition-opacity flex-shrink-0" />

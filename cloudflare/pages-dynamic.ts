@@ -1,11 +1,14 @@
 // Small Pages Functions boundary: no Next/React/OpenNext, database catalog or tax engine.
 import { handleContactPost } from '../src/lib/server/contactHandler';
 import { handleFixedFeedbackPost } from '../src/lib/server/fixedFeedbackHandler';
-import type { FeedbackBindings } from '../src/lib/server/feedbackStorage';
+import { handleOpinionPost } from '../src/lib/server/opinionHandler';
+import { handleReactionPost } from '../src/lib/server/reactionHandler';
+import { handleParticipationSummaryGet } from '../src/lib/server/participationSummaryHandler';
+import type { ParticipationBindings } from '../src/lib/server/participationRuntime';
 import { WIDGET_HEADERS } from '../src/app/widget/shared';
 import type { SalaryData } from '../src/lib/generateData';
 
-export interface PagesDynamicEnv extends FeedbackBindings {
+export interface PagesDynamicEnv extends ParticipationBindings {
   ASSETS: { fetch(request: Request): Promise<Response> };
 }
 
@@ -106,6 +109,9 @@ export async function handlePagesDynamic(request: Request, env: PagesDynamicEnv)
   const path = url.pathname.replace(/\/$/, '');
   if (path === '/api/contact') return request.method === 'POST' ? handleContactPost(request, env) : failure(405, 'POST', request.method === 'HEAD');
   if (path === '/api/feedback') return request.method === 'POST' ? handleFixedFeedbackPost(request, env) : failure(405, 'POST', request.method === 'HEAD');
+  if (path === '/api/participation/opinions') return request.method === 'POST' ? handleOpinionPost(request, env) : failure(405, 'POST', request.method === 'HEAD');
+  if (path === '/api/participation/reactions') return request.method === 'POST' ? handleReactionPost(request, env) : failure(405, 'POST', request.method === 'HEAD');
+  if (path === '/api/participation/summary') return request.method === 'GET' ? handleParticipationSummaryGet(request, env) : failure(405, 'GET', request.method === 'HEAD');
   if (path !== '/api/salary-table' && path !== '/widget/company') return null;
   if (request.method !== 'GET' && request.method !== 'HEAD') return failure(405, 'GET, HEAD');
   try {

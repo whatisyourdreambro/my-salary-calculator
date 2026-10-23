@@ -5,6 +5,9 @@ export const DEFAULT_BODY_LIMIT = 64 * 1024;
 const PRIVATE_API_LIMITS = new Map([
   ['/api/contact', 4096],
   ['/api/feedback', 1024],
+  ['/api/participation/opinions', 2048],
+  ['/api/participation/reactions', 1024],
+  ['/api/participation/summary', 1024],
 ]);
 
 export function requestBodyLimit(request) {

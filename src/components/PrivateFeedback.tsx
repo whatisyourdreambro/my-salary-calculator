@@ -4,6 +4,9 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { usePathname } from "next/navigation";
 import Link from "@/components/AppLink";
 import { uuidV4 } from "@/lib/uuidV4";
+import { REACTION_CONTRACT_VERSION, type ReactionRequest } from "@/lib/participationContract";
+import PrivateOpinion from "@/components/PrivateOpinion";
+import ParticipationSummary from "@/components/ParticipationSummary";
 import {
   FIXED_FEEDBACK_CONFIG,
   type FixedFeedbackRequest,
@@ -23,10 +26,10 @@ const choiceClass = "inline-flex min-h-11 items-center justify-center rounded-xl
 export default function PrivateFeedback({ target }: { target: FixedFeedbackTarget }) {
   const pathname = usePathname();
   if (pathname !== FIXED_FEEDBACK_CONFIG[target].path) return null;
-  return <FeedbackVisit key={`${pathname}:${target}`} target={target} />;
+  return <FeedbackVisit key={`${pathname}:${target}`} target={target} publicMode={process.env.NEXT_PUBLIC_PARTICIPATION_REACTIONS_ENABLED === "1"} />;
 }
 
-function FeedbackVisit({ target }: { target: FixedFeedbackTarget }) {
+function FeedbackVisit({ target, publicMode }: { target: FixedFeedbackTarget; publicMode: boolean }) {
   const [vote, setVote] = useState<FixedFeedbackVote | null>(null);
   const [reason, setReason] = useState<FixedFeedbackReason | null>(null);
   const [consent, setConsent] = useState(false);
@@ -34,7 +37,7 @@ function FeedbackVisit({ target }: { target: FixedFeedbackTarget }) {
   const [locked, setLocked] = useState(false);
   const [error, setError] = useState("");
   const [receipt, setReceipt] = useState("");
-  const attempt = useRef<FixedFeedbackRequest | null>(null);
+  const attempt = useRef<FixedFeedbackRequest | ReactionRequest | null>(null);
   const inFlight = useRef<{ controller: AbortController; timeout: number } | null>(null);
   const visit = useRef<symbol | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
@@ -65,10 +68,13 @@ function FeedbackVisit({ target }: { target: FixedFeedbackTarget }) {
     if (!attempt.current) {
       if (!consent || !vote || (vote === "confusing" && !config.reasons.some(option => option.value === reason))) return;
       try {
-        attempt.current = {
+        const selected = {
           submissionId: uuidV4(), target, vote,
-          reason: vote === "helpful" ? null : reason, feedbackConsent: true,
+          reason: vote === "helpful" ? null : reason,
         };
+        attempt.current = publicMode
+          ? { ...selected, contractVersion: REACTION_CONTRACT_VERSION, publicAggregateConsent: true }
+          : { ...selected, feedbackConsent: true };
       } catch {
         setError("접수 번호를 만들지 못했습니다. 브라우저 연결 환경을 확인해 주세요.");
         return;
@@ -83,7 +89,7 @@ function FeedbackVisit({ target }: { target: FixedFeedbackTarget }) {
     setPending(true);
     setError("");
     try {
-      const response = await fetch("/api/feedback", {
+      const response = await fetch(publicMode ? "/api/participation/reactions" : "/api/feedback", {
         method: "POST", headers: { "Content-Type": "application/json" },
         credentials: "same-origin", body: JSON.stringify(request), signal: controller.signal,
       });
@@ -115,8 +121,8 @@ function FeedbackVisit({ target }: { target: FixedFeedbackTarget }) {
     <section aria-labelledby={headingId} className="my-10 rounded-2xl border border-electric/20 bg-white p-5 sm:p-6 text-navy">
       {receipt ? (
         <>
-          <h2 ref={heading} id={headingId} tabIndex={-1} className="text-base font-black">의견이 비공개로 저장되었습니다</h2>
-          <p role="status" className="mt-2 text-sm leading-6 text-muted-blue">페이지 개선을 위해 운영자가 확인합니다. 공개 댓글이나 개별 답변 알림은 제공하지 않습니다.</p>
+          <h2 ref={heading} id={headingId} tabIndex={-1} className="text-base font-black">{publicMode ? "선택한 반응이 접수되었습니다" : "의견이 비공개로 저장되었습니다"}</h2>
+          <p role="status" className="mt-2 text-sm leading-6 text-muted-blue">{publicMode ? "개별 응답은 공개하지 않으며, 동의한 반응의 건수만 집계에 반영합니다." : "페이지 개선을 위해 운영자가 확인합니다. 공개 댓글이나 개별 답변 알림은 제공하지 않습니다."}</p>
           <details className="mt-3 text-xs text-muted-blue">
             <summary className="inline-flex min-h-11 cursor-pointer items-center font-bold">접수 번호 보기 · 정정·삭제 요청용</summary>
             <p className="mt-2 break-all select-all rounded-lg bg-canvas p-3 font-mono">{receipt}</p>
@@ -144,10 +150,10 @@ function FeedbackVisit({ target }: { target: FixedFeedbackTarget }) {
                 ))}
               </fieldset>
             )}
-            <p className="text-xs leading-6 text-muted-blue">페이지·선택한 의견과 이유·접수 번호·시각을 비공개 개선에 사용합니다. 계산 입력값과 결과는 포함하지 않습니다. 접수일부터 90일을 보유 기준으로 운영자가 삭제 관리합니다. <Link href="/privacy" className="inline-flex min-h-11 items-center font-bold text-electric underline underline-offset-4">개인정보 처리방침</Link></p>
+            <p className="text-xs leading-6 text-muted-blue">{publicMode ? "페이지·선택한 반응과 이유·접수 번호·시각을 개선에 사용하고 90일 보관을 기준으로 정기 삭제합니다. 최근 28일의 동의한 반응이 10건 이상일 때 반응별 건수만 공개하며, 개별 응답과 선택 사유는 공개하지 않습니다." : "페이지·선택한 의견과 이유·접수 번호·시각을 비공개 개선에 사용합니다. 접수일부터 90일을 보유 기준으로 운영자가 삭제 관리합니다."} 계산 입력값과 결과는 포함하지 않습니다. <Link href="/privacy" className="inline-flex min-h-11 items-center font-bold text-electric underline underline-offset-4">개인정보 처리방침</Link></p>
             <label className="flex min-h-11 cursor-pointer items-start gap-3 text-xs leading-6">
               <input type="checkbox" checked={consent} onChange={event => setConsent(event.target.checked)} required className="mt-1 h-4 w-4 shrink-0 accent-blue-600" />
-              <span>의견 접수를 위한 위 정보의 수집·이용에 동의합니다. 동의하지 않아도 계산은 이용할 수 있습니다.</span>
+              <span>{publicMode ? "위 정보의 수집·이용과 반응 건수의 공개 집계에 동의합니다." : "의견 접수를 위한 위 정보의 수집·이용에 동의합니다."} 동의하지 않아도 계산은 이용할 수 있습니다.</span>
             </label>
           </fieldset>
           {locked && !pending && <p className="mt-3 text-xs leading-6 text-muted-blue">중복 접수를 막기 위해 보낸 선택을 유지합니다. 새로고침하면 이 화면의 접수 상태가 사라집니다.</p>}
@@ -158,6 +164,8 @@ function FeedbackVisit({ target }: { target: FixedFeedbackTarget }) {
         </form>
       )}
       <Link href={contactHref} className="mt-3 inline-flex min-h-11 items-center text-xs font-bold text-electric underline underline-offset-4">자세한 내용은 비공개 문의로 보내기</Link>
+      {publicMode && <ParticipationSummary target={target} />}
+      {process.env.NEXT_PUBLIC_PARTICIPATION_OPINIONS_ENABLED === "1" && <PrivateOpinion target={target} />}
     </section>
   );
 }

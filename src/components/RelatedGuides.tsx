@@ -11,7 +11,7 @@
 import Link from "@/components/AppLink";
 import { ArrowRight, BookOpen } from "lucide-react";
 import type { RelatedGuideItem } from "@/lib/relatedGuides";
-import { trackGuideCTAClick } from "@/lib/analytics";
+import { destTemplate, trackGuideCTAClick } from "@/lib/analytics";
 
 interface RelatedGuidesProps {
   items: RelatedGuideItem[];
@@ -35,7 +35,7 @@ export default function RelatedGuides({
           <Link
             key={g.slug}
             href={`/guides/${g.slug}`}
-            onClick={() => trackGuideCTAClick(g.slug, "related-guide")}
+            onClick={() => trackGuideCTAClick(g.slug, "related-guide", undefined, destTemplate(`/guides/${g.slug}`))}
             className="group flex flex-col gap-2 p-4 rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 hover:border-electric hover:bg-electric-5 transition-all"
           >
             <div className="flex items-center gap-2">

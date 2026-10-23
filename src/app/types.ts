@@ -1,6 +1,8 @@
 // src/app/types.ts
 
 // localStorage에 저장될 연봉 계산기 데이터
+export type SalaryInputOrigin = "default" | "user" | "saved_input" | "saved_salary";
+
 export interface StoredSalaryData {
  annualSalary: number;
  monthlyNet: number;
@@ -9,6 +11,11 @@ export interface StoredSalaryData {
  nonTaxableAmount: number;
  dependents: number;
  children: number;
+ // Optional for compatibility: missing metadata means unknown, never today's basis.
+ savedAt?: string;
+ calculationBasisVersion?: string;
+ incomeType?: "regular" | "freelancer" | "part_time";
+ inputOrigin?: SalaryInputOrigin;
  monthlyExpenses?: number; // [추가] 월평균 지출액 (선택적)
 }
 

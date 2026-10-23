@@ -162,7 +162,7 @@ export function createPagesHandler(manifest, { dynamic, salaryRedirect, share, o
         return respond(new Response(null, { status: 308, headers: { Location: url.href } }), path);
       }
       const handled = await dynamic?.(request, env);
-      if (handled) return respond(handled, path, { privateResponse: path === '/api/contact' || path === '/api/feedback', head });
+      if (handled) return respond(handled, path, { privateResponse: path === '/api/contact' || path === '/api/feedback' || path.startsWith('/api/participation/'), head });
       if (!['GET', 'HEAD'].includes(request.method)) return respond(new Response(null, { status: 405, headers: { Allow: 'GET, HEAD' } }), path, { privateResponse: true });
       if (path === '/api/og' && og) return respond(await og(request, env), path, { head });
       if (path.startsWith('/share/') && share) {

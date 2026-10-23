@@ -121,9 +121,9 @@ function mocks() {
   return { events, routes, pageRoutes, context, browser, chromium };
 }
 
-function route(url, status = 200) {
+function route(url, status = 200, disposeError) {
   const calls = [];
-  const response = { status: () => status, dispose: async () => calls.push('dispose') };
+  const response = { status: () => status, dispose: async () => { calls.push('dispose'); if (disposeError) throw disposeError; } };
   return { calls, request: () => ({ url: () => url, method: () => 'GET' }),
     abort: async () => calls.push('abort'),
     fetch: async options => { calls.push({ fetch: options }); return response; },
@@ -244,6 +244,45 @@ for (const headless of [true, false]) test(`context, pages, custom routes, API r
       await assert.rejects(m.routes[1].handler(route(base + '/')), /forbidden request/);
       await assert.rejects(safety.createQaContext({}, base), /local-only transport/);
       await assert.rejects(safety.installQaContext(mocks().context, base), /raw contexts/);
+    } finally { await browser.close(); }
+  });
+});
+
+test('response disposal suppresses only the exact known target-closed cleanup error', async t => {
+  await qaEnvironment(async () => {
+    t.mock.method(globalThis, 'fetch', async () => new Response('', {
+      status: 200, headers: { 'x-moneysalary-qa': 'ads-disabled' },
+    }));
+    // Synthetic classes model the bundled and unbundled Playwright identities.
+    class TargetClosedError extends Error {}
+    class TargetClosedError2 extends Error {}
+    const message = 'apiResponse.dispose: Target page, context or browser has been closed';
+    const m = mocks();
+    const browser = await launchQaBrowser(m.chromium, base);
+    try {
+      await browser.newContext();
+      const handler = m.routes[0].handler;
+      for (const ErrorClass of [TargetClosedError, TargetClosedError2]) {
+        for (const status of [200, 302]) {
+          const local = route(base + '/fixture', status, new ErrorClass(message));
+          await handler(local);
+          assert.deepEqual(local.calls, [{ fetch: { maxRedirects: 0, maxRetries: 0 } }, status === 302 ? 'abort' : 'fulfill', 'dispose']);
+        }
+      }
+      for (const failure of [new Error('Synthetic cleanup failure'), new Error(message),
+        new TargetClosedError2('apiResponse.dispose: another failure'),
+        new TargetClosedError2('apiRequestContext.get: Target page, context or browser has been closed')]) {
+        await assert.rejects(handler(route(base + '/fixture', 200, failure)), error => error === failure);
+      }
+      const originalFailure = new Error('Synthetic fulfill failure');
+      const failed = route(base + '/fixture', 200, new TargetClosedError2(message));
+      failed.fulfill = async () => { throw originalFailure; };
+      await assert.rejects(handler(failed), error => error === originalFailure, 'known cleanup closure cannot hide a request failure');
+      for (const url of ['https://external.invalid/fixture', base + '/adgk/g/collect']) {
+        const forbidden = route(url, 200, new TargetClosedError2(message));
+        await handler(forbidden);
+        assert.deepEqual(forbidden.calls, ['abort'], 'forbidden requests never fetch or dispose');
+      }
     } finally { await browser.close(); }
   });
 });

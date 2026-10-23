@@ -39,7 +39,6 @@ const SAME_WIDTH: [string, string, string][] = [
   ["src/app/health-insurance-fee-2026/page.tsx", "재산세 과세표준 5.4억 이하 필요.", "재산세 과세표준 5.4억 이하 원칙."],
   ["src/app/health-insurance-fee-2026/page.tsx", "본인+회사분 모두 본인 부담.", "본인+회사분 절반 본인 부담."],
   ["src/app/tools/finance/stock-tax/page.tsx", "매년 5월 종합소득세 신고 필요.", "매년 5월 양도소득세 신고 필요."],
-  ["src/app/tools/finance/irp/page.tsx", "기타소득세 16.5% + 그동안 받은 세액공제 환수.", "기타소득세 16.5% = 그동안 받은 세액공제 환수."],
   ["src/app/year-end-tax-settlement-2026/page.tsx", "지정기부금 15% 세액공제. 종교단체도 가능.", "일반기부금 15% 세액공제. 종교단체도 가능."],
   ["src/app/year-end-tax-settlement-2026/page.tsx", "본인·자녀 학원비, 교복비 등 일부 공제 가능.", "유아·초등 예체능, 교복비 등 일부 공제 가능."],
   ["src/app/year-end-tax-checklist/page.tsx", "지정기부금 영수증 (15% 세액공제, 1천만 초과 30%)", "일반기부금 영수증 (15% 세액공제, 1천만 초과 30%)"],
@@ -117,5 +116,23 @@ describe("사실 정정 고정 — 10/2~3 묶음", () => {
     expect(src).toContain("퇴직소득세의 70%(연금 수령 11~20년차는 60%, 21년차부터는 50%)");
     expect(src).toContain("적립금의 100%까지 투자할 수 있습니다");
     expect(src).not.toContain("평균 50~70% 세금 절감");
+  });
+  // 2026-10-23: 16.5%를 과거 공제액의 환수와 동일시하는 문구도 부정확하다.
+  // 원천별 과세 설명으로 교체하고, 기존 본문 광고 뒤의 위치를 고정한다.
+  // 다른 SAME_WIDTH 가드는 유지한다. 이 예외는 하단 광고 높이 불변을 증명하지 않는다.
+  it("IRP 인출 안내 — 원천별 과세를 구분하고 기존 본문 광고 뒤에 둔다", () => {
+    const src = readSrc("src/app/tools/finance/irp/page.tsx");
+    const paragraphStart = src.indexOf("세액공제를 받은 납입금과 운용수익의 일반적인 연금외수령에는");
+    const paragraphEnd = src.indexOf("</p>", paragraphStart);
+    const paragraph = src.slice(paragraphStart, paragraphEnd).replace(/\s+/g, " ");
+    expect(paragraphStart).toBeGreaterThan(src.indexOf("<GuideMidAd />"));
+    expect(paragraph).toContain("기타소득세 15%(지방소득세 포함 16.5%)");
+    expect(paragraph).toContain("미공제 납입 원금은 과세제외");
+    expect(paragraph).toContain("이연퇴직소득에는 퇴직소득세");
+    expect(paragraph).toContain("과거 공제액 전액을 세금에 다시 더하지 않습니다");
+    expect(src).not.toMatch(/기타소득세 16\.5% [+=] 그동안 받은 세액공제 환수/);
+    expect(src).not.toContain("약 600~750만원 페널티");
+    expect(src).not.toContain("10년 이상 분할 수령 시 연금소득세 3.3~5.5%");
+    expect(src).toContain("공제받은 납입금·운용수익과 이연퇴직소득을 구분하세요");
   });
 });

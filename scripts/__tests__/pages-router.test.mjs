@@ -96,6 +96,18 @@ test('private API response policy wins even if the underlying handler provides a
   assert.equal(f.reads.length, 0);
 });
 
+test('all participation responses override public cache policy even on success', async () => {
+  const f = fixture({ dynamic: async request => new URL(request.url).pathname.startsWith('/api/participation/')
+    ? Response.json({ ok: true }, { headers: { 'Cache-Control': 'public, max-age=3600' } }) : null });
+  for (const path of ['/api/participation/opinions', '/api/participation/reactions', '/api/participation/summary']) {
+    const response = await f.request(path);
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('Cache-Control'), 'private, no-store');
+    assert.equal(response.headers.get('Cloudflare-CDN-Cache-Control'), 'no-store');
+  }
+  assert.equal(f.reads.length, 0);
+});
+
 test('only build-listed public assets can be read, never guessed deployment controls', async () => {
   const f = fixture();
   assert.equal((await f.request('/ads.txt')).status, 200);

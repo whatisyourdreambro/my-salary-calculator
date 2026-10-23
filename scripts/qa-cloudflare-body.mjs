@@ -10,7 +10,7 @@ import ts from 'typescript';
 import qa from './lib/qa-safety.cjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
-const PATHS = new Set(['/api/contact', '/api/feedback', '/__qa-body-limit-missing']);
+const PATHS = new Set(['/api/contact', '/api/feedback', '/api/participation/opinions', '/api/participation/reactions', '/api/participation/summary', '/__qa-body-limit-missing']);
 const hash = file => createHash('sha256').update(readFileSync(file)).digest('hex');
 export function parsePort(args = []) {
   if (args.length === 0) return 3319;
@@ -49,16 +49,22 @@ export function smokeCases() {
   return [
     { name: 'contact-overflow', route: '/api/contact', chunks: [Buffer.alloc(4097, 120)], status: 413 },
     { name: 'feedback-overflow', route: '/api/feedback', chunks: [Buffer.alloc(1025, 120)], status: 413 },
+    { name: 'opinion-overflow', route: '/api/participation/opinions', chunks: [Buffer.alloc(2049, 120)], status: 413 },
+    { name: 'reaction-overflow', route: '/api/participation/reactions', chunks: [Buffer.alloc(1025, 120)], status: 413 },
+    { name: 'summary-post-overflow', route: '/api/participation/summary', chunks: [Buffer.alloc(1025, 120)], status: 413 },
+    { name: 'opinion-chunked-overflow', route: '/api/participation/opinions', chunks: [Buffer.alloc(1024, 120), Buffer.alloc(1025, 120)], chunked: true, status: 413 },
     { name: 'unknown-overflow', route: '/__qa-body-limit-missing', chunks: [Buffer.alloc(65537, 120)], status: 413 },
     { name: 'feedback-chunked-overflow', route: '/api/feedback', chunks: [Buffer.alloc(512, 120), Buffer.alloc(513, 120)], chunked: true, status: 413 },
     { name: 'contact-small-fails-closed', route: '/api/contact', chunks: [Buffer.from('{}')], status: [403, 503] },
     { name: 'feedback-small-fails-closed', route: '/api/feedback', chunks: [Buffer.from('{}')], status: [403, 503] },
+    { name: 'opinion-small-fails-closed', route: '/api/participation/opinions', chunks: [Buffer.from('{}')], status: 503 },
+    { name: 'reaction-small-fails-closed', route: '/api/participation/reactions', chunks: [Buffer.from('{}')], status: 503 },
   ];
 }
 
 export function postToLoopback(port, scenario, requestFn = http.request) {
   parsePort(['--port', String(port)]);
-  assert.ok(PATHS.has(scenario.route), 'Only the three fixed synthetic paths are permitted');
+  assert.ok(PATHS.has(scenario.route), 'Only fixed synthetic paths are permitted');
   assert.ok(scenario.chunks.every(chunk => Buffer.isBuffer(chunk)));
   const byteLength = scenario.chunks.reduce((sum, chunk) => sum + chunk.length, 0);
   assert.ok(byteLength <= 65537, 'Unexpected synthetic payload size');
