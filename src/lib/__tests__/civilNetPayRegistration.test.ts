@@ -59,7 +59,7 @@ describe("레지스트리·사이트맵", () => {
   it("사이트맵 정적 목록과 ROUTE_OVERRIDES 에 등재", () => {
     const src = readFileSync(resolve(process.cwd(), "src/app/sitemap.ts"), "utf8");
     expect(src).toContain(` '${ROUTE}',`);
-    expect(src).toMatch(new RegExp(`'${ROUTE}': \\{ lastModified: new Date\\('2026-09-27'\\), priority: 0\\.8, changeFrequency: 'monthly' \\}`));
+    expect(src).toMatch(new RegExp(`'${ROUTE}': \\{ lastModified: new Date\\('2026-10-23T00:00:00\\+09:00'\\), priority: 0\\.8, changeFrequency: 'monthly' \\}`));
     const ledger = JSON.parse(readFileSync(resolve(process.cwd(), "scripts/url-ledger.snapshot.json"), "utf8"));
     expect(JSON.stringify(ledger)).toContain(`"${ROUTE}"`);
   });

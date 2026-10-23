@@ -55,7 +55,7 @@ describe("A. 일반직 9급 1호봉 신규 (계산기 기본값)", () => {
   const r = computeCivilNetPay(CIVIL_DEFAULT_INPUT);
 
   it("기본값은 9급 1호봉·2년 미만·본인만·시간외 10시간", () => {
-    expect(CIVIL_DEFAULT_INPUT).toMatchObject({ kind: "general", rank: 0, hobong: 1, yearsOfService: 0, spouse: false, children: 0, overtimeHours: 10 });
+    expect(CIVIL_DEFAULT_INPUT).toMatchObject({ kind: "general", rank: 0, hobong: 1, yearsOfService: 0, pensionContributionStatus: "paying", spouse: false, children: 0, overtimeHours: 10 });
   });
 
   it("시간외 단가·세전·기준소득월액", () => {
@@ -112,15 +112,30 @@ describe("B. 교원 9호봉 + 담임", () => {
   });
 });
 
-describe("C. 가족수당 (부양가족 4명 이내·자녀 예외)", () => {
+describe("C. 가족수당 (비자녀 부양가족 4명 이내·자녀 예외)", () => {
   it("배우자 + 자녀 2 = 170,000원", () => {
     expect(familyAllowance(true, 2, 0)).toBe(170_000);
   });
   it("배우자 없이 자녀 5 = 490,000원 (자녀는 4명 초과도 지급)", () => {
     expect(familyAllowance(false, 5, 0)).toBe(490_000);
   });
-  it("배우자 + 기타 2 + 자녀 2 = 190,000원 (상한으로 기타 1명만)", () => {
-    expect(familyAllowance(true, 2, 2)).toBe(190_000);
+  it.each([
+    [true, 2, 2, 210_000],
+    [true, 3, 2, 330_000],
+    [true, 4, 0, 410_000],
+    [true, 4, 2, 450_000],
+    [true, 4, 4, 470_000],
+    [false, 4, 5, 450_000],
+  ])("배우자 %s·자녀 %i·기타 %i = %i원 (자녀는 비자녀 한도를 차감하지 않음)", (spouse, children, others, expected) => {
+    expect(familyAllowance(spouse, children, others)).toBe(expected);
+    const r = computeCivilNetPay(withInput({ spouse, children, otherDependents: others }));
+    expect(r.items.find((item) => item.key === "family")?.amount).toBe(expected);
+  });
+  it("부모 등 기타 부양가족 지급액은 자녀가 늘어도 줄지 않는다", () => {
+    for (const children of [0, 1, 2, 3, 4, 5]) {
+      expect(familyAllowance(true, children, 2) - familyAllowance(true, children, 0)).toBe(40_000);
+      expect(familyAllowance(true, children, 4) - familyAllowance(true, children, 0)).toBe(60_000);
+    }
   });
   it("엔진 결과에 반영되고 공제대상가족 수로 소득세가 줄어든다", () => {
     const single = computeCivilNetPay(CIVIL_DEFAULT_INPUT);
@@ -131,13 +146,37 @@ describe("C. 가족수당 (부양가족 4명 이내·자녀 예외)", () => {
   });
 });
 
-describe("D. 공무원연금 기여금 상한·36년", () => {
+describe("D. 공무원연금 기여금 상한·명시적 공단 납부완료 확인", () => {
   it("기준소득월액 1,000만원 → 상한 9,520,000원 × 9% = 856,800원", () => {
     expect(computeCivilNetPay(withInput({ baseIncomeOverride: 10_000_000 })).contribution).toBe(856_800);
   });
-  it("재직 36년 초과(37년) → 기여금 0", () => {
-    expect(computeCivilNetPay(withInput({ yearsOfService: 37 })).contribution).toBe(0);
-    expect(computeCivilNetPay(withInput({ yearsOfService: 36 })).contribution).toBeGreaterThan(0);
+  it.each([0, 25, 33, 34, 35, 36, 37, 60])("재직 %i년은 납부완료를 추론하지 않고 명시적 확인만 적용한다", (yearsOfService) => {
+    const input = withInput({ yearsOfService, baseIncomeOverride: 3_000_000 });
+    expect(computeCivilNetPay(input).contribution).toBe(270_000);
+    expect(computeCivilNetPay({ ...input, pensionContributionStatus: "completed" }).contribution).toBe(0);
+  });
+  it.each([undefined, null, true, "unknown", "Completed", 1])("누락·알 수 없는 납부 상태 %s는 납부 중으로 계산한다", (status) => {
+    const pensionContributionStatus = status as CivilNetPayInput["pensionContributionStatus"];
+    expect(computeCivilNetPay(withInput({ yearsOfService: 37, baseIncomeOverride: 3_000_000, pensionContributionStatus })).contribution).toBe(270_000);
+  });
+  it("납부완료는 정근수당·연간 보수·다른 공제를 바꾸지 않는다", () => {
+    for (const yearsOfService of [0, 5, 25, 37]) {
+      const input = withInput({ yearsOfService, baseIncomeOverride: 3_000_000 });
+      const paying = computeCivilNetPay(input);
+      const completed = computeCivilNetPay({ ...input, pensionContributionStatus: "completed" });
+      expect(completed.items).toEqual(paying.items);
+      expect(completed.annual).toEqual(paying.annual);
+      expect([completed.health, completed.longTermCare, completed.incomeTax, completed.localIncomeTax])
+        .toEqual([paying.health, paying.longTermCare, paying.incomeTax, paying.localIncomeTax]);
+      expect(completed.net - paying.net).toBe(270_000);
+      expect(completed.annual.jeonggeunEach).toBe(Math.floor(completed.pay * jeonggeunPct(yearsOfService) / 100));
+    }
+  });
+  it.each(["general", "teacher", "police", "fire", "soldier"] as const)("%s 직종·해시 프리셋은 납부완료 확인을 납부 중으로 초기화한다", (kind) => {
+    const input = { ...withInput({ pensionContributionStatus: "completed" }), ...CIVIL_KIND_PRESETS[kind] };
+    expect(input.pensionContributionStatus).toBe("paying");
+    const returned = { ...input, ...CIVIL_KIND_PRESETS.general, baseIncomeOverride: 3_000_000 };
+    expect(computeCivilNetPay(returned).contribution).toBe(270_000);
   });
   it("직접 입력한 기준소득월액은 건강보험에도 쓰인다", () => {
     const r = computeCivilNetPay(withInput({ baseIncomeOverride: 3_000_000 }));
@@ -161,6 +200,14 @@ describe("E. 병장", () => {
     MILITARY_PAY_2026.forEach((row, rank) => {
       expect(computeCivilNetPay(withInput({ kind: "soldier", rank })).net).toBe(row.pay);
     });
+  });
+  it.each(["paying", "completed"] as const)("병은 납부 상태 %s와 무관하게 공제가 없다", (pensionContributionStatus) => {
+    const input = withInput({ kind: "soldier", rank: 3, pensionContributionStatus, yearsOfService: 37 });
+    const r = computeCivilNetPay(input);
+    expect(r.contribution).toBe(0);
+    expect(r.deductions).toBe(0);
+    expect(r.net).toBe(r.pay);
+    expect(previewCivilNetPay2027(input)).toBeNull();
   });
 });
 
@@ -205,7 +252,7 @@ describe("수당 구간·시간외 기준호봉", () => {
     ]);
   });
 
-  it("재직 연수 선택지는 지급률·가산금 경계와 36년 초과를 모두 가른다", () => {
+  it("재직 연수 선택지는 지급률·가산금 경계와 기존 장기근속 선택지를 유지한다", () => {
     const values = CIVIL_YEARS_OPTIONS.map((o) => o.value);
     for (const edge of [2, 5, 6, 7, 8, 9, 10, 15, 20, 25, 37]) expect(values).toContain(edge);
   });
@@ -241,6 +288,15 @@ describe("2027 정부안 미리보기", () => {
     expect(p!.pay).toBe(forecast2027(2_133_000));
     expect(p!.baseIncomeEstimated).toBe(true);
     expect(p!.net).toBeGreaterThan(computeCivilNetPay(CIVIL_DEFAULT_INPUT).net);
+  });
+  it("정부안도 재직 연수로 납부종료를 추론하지 않고 명시적 납부 상태를 유지한다", () => {
+    const input = withInput({ yearsOfService: 37 });
+    const paying = previewCivilNetPay2027(input)!;
+    const completed = previewCivilNetPay2027({ ...input, pensionContributionStatus: "completed" })!;
+    expect(paying.contribution).toBeGreaterThan(0);
+    expect(completed.contribution).toBe(0);
+    expect(completed.annual).toEqual(paying.annual);
+    expect(completed.net - paying.net).toBe(paying.contribution);
   });
 });
 

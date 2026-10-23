@@ -45,7 +45,7 @@ describe("공무원수당 등에 관한 규정 2026 스냅샷", () => {
     expect(byGrade["5급"]).toBe(g5);
   });
 
-  it("가족수당(별표 5) 금액과 부양가족 4명 상한", () => {
+  it("가족수당(별표 5) 금액과 비자녀 부양가족 4명 상한", () => {
     expect(CIVIL_FAMILY_ALLOWANCE_2026).toEqual({
       spouse: 40_000,
       otherEach: 20_000,
@@ -109,7 +109,7 @@ describe("공무원수당 등에 관한 규정 2026 스냅샷", () => {
     expect(CIVIL_OVERTIME_2026.flatHours).toBe(10);
   });
 
-  it("공무원연금 기여금 9%·상한 = 평균액 5,950,000원 × 160% = 9,520,000원·36년 초과 면제(연금법 제67조)", () => {
+  it("공무원연금 기여금 9%·상한 = 평균액 5,950,000원 × 160% = 9,520,000원·최장 납부기간 참고값 36년", () => {
     expect(CIVIL_PENSION_2026.rate).toBe(0.09);
     expect(CIVIL_PENSION_2026.avgBaseIncome).toBe(5_950_000);
     expect(CIVIL_PENSION_2026.capMultiplier).toBe(1.6);
