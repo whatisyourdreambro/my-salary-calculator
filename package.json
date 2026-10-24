@@ -101,6 +101,9 @@
     "vite": "8.2.4",
     "cloudflare": {
       "formdata-node": "6.0.3"
+    },
+    "miniflare@5.20261012.1-beta": {
+      "undici": "7.30.1"
     }
   }
 }
