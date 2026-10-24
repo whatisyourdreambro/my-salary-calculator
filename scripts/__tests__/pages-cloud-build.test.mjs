@@ -162,7 +162,11 @@ test('public gate links one owner dispatch to exact main CI verify and productio
     await assert.rejects(verifyCloudBuildApproval(COMMIT, gateFixture(change).get));
 });
 
-test('GitHub gate is bounded fixed-origin GET with no Authorization, redirects or publisher calls', async () => {
+test('GitHub gate is bounded fixed-origin GET with no Authorization, redirects or publisher calls', async t => {
+  const originalTimeout = AbortSignal.timeout;
+  t.mock.method(AbortSignal, 'timeout', milliseconds => {
+    assert.equal(milliseconds, 15000); return originalTimeout.call(AbortSignal, milliseconds);
+  });
   let calls = 0;
   const get = publicGithubBuildClient(async (url, init) => {
     calls++; assert.equal(new URL(url).origin, 'https://api.github.com'); assert.equal(init.method, 'GET');
@@ -176,6 +180,7 @@ test('GitHub gate is bounded fixed-origin GET with no Authorization, redirects o
   for (const response of [new Response(null, { status: 302, headers: { location: 'https://example.invalid/' } }),
     new Response('not JSON'), new Response('x'.repeat(2 * 1024 * 1024 + 1))])
     await assert.rejects(publicGithubBuildClient(async () => response)(resource));
+  assert.equal(await publicGithubBuildClient(async () => new Response('""' + ' '.repeat(2 * 1024 * 1024 - 2)))(resource), '');
 });
 
 test('native orchestration rechecks source and same active approval after build; failure never reports completion', async () => {
@@ -207,6 +212,107 @@ test('GitHub gate transport diagnostics expose only before/after phase and no ra
     await assert.rejects(orchestrateCloudBuild(deps), error => {
       assert.equal(nativeBuildDiagnostic(error).phase, after ? 'approval-after' : 'approval-before');
       assert.equal(JSON.stringify(nativeBuildDiagnostic(error)).includes('private'), false); return true;
+    });
+  }
+});
+
+const approvalCategories = ['main-ref', 'production-ref', 'ci-workflow', 'ci-runs',
+  'ci-jobs', 'publisher-workflow', 'active-approvals'];
+const privateDiagnostic = 'synthetic-private-body-header-url-credential';
+
+async function checkApprovalDiagnostic({ after, request = 1, response, expected }) {
+  const gate = gateFixture(), operations = []; let requests = 0;
+  const failAt = (after ? 7 : 0) + request;
+  const get = publicGithubBuildClient(async (url, init) => {
+    requests++;
+    assert.equal(new URL(url).origin, 'https://api.github.com');
+    assert.equal(init.method, 'GET'); assert.equal(init.redirect, 'manual');
+    assert.equal(new Headers(init.headers).get('authorization'), null);
+    const resource = new URL(url).pathname + new URL(url).search;
+    if (requests === failAt) return response(await gate.get(resource));
+    return Response.json(await gate.get(resource));
+  });
+  let completed = false;
+  await assert.rejects(orchestrateCloudBuild({ env, readLocal: async () => local, get,
+    install: async () => { operations.push('install'); },
+    build: async () => { operations.push('build'); },
+    verify: async () => { operations.push('verify');
+      return { marker: { buildId: 'synthetic-build' }, manifest: { nativeRelease: release() } }; },
+  }).then(() => { completed = true; }), error => {
+    const diagnostic = nativeBuildDiagnostic(error);
+    assert.deepEqual(diagnostic, { schemaVersion: 1, event: 'native-build-failed',
+      phase: after ? 'approval-after' : 'approval-before', outputApproved: false, detailsWithheld: true,
+      approval: { requestCategory: approvalCategories[request - 1], ...expected } });
+    assert.equal(JSON.stringify(diagnostic).includes(privateDiagnostic), false);
+    assert.equal(String(error).includes(privateDiagnostic), false);
+    for (const field of ['cause', 'actual', 'expected', 'response', 'headers', 'url']) assert.equal(error[field], undefined);
+    // A caller cannot mutate the internally registered diagnostic through a previous result.
+    diagnostic.approval.requestCategory = privateDiagnostic;
+    assert.equal(nativeBuildDiagnostic(error).approval.requestCategory, approvalCategories[request - 1]);
+    return true;
+  });
+  assert.equal(completed, false); assert.equal(requests, failAt, 'Failures must not cause automatic retries');
+  assert.deepEqual(operations, after ? ['install', 'build', 'verify'] : []);
+}
+
+test('approval diagnostics retain every request category and HTTP status before and after the build', async () => {
+  for (const after of [false, true]) {
+    for (let request = 1; request <= approvalCategories.length; request++) {
+      await checkApprovalDiagnostic({ after, request,
+        response: () => new Response(privateDiagnostic, { status: 403, headers: { 'x-private': privateDiagnostic } }),
+        expected: { reason: 'http-status', httpStatus: 403 } });
+    }
+    for (const status of [302, 429, 500]) await checkApprovalDiagnostic({ after, request: 7,
+      response: () => new Response(privateDiagnostic, { status, headers: { location: 'https://invalid.test/' + privateDiagnostic } }),
+      expected: { reason: 'http-status', httpStatus: status } });
+  }
+});
+
+test('approval diagnostics distinguish transport and bounded response failures without exposing raw details', async () => {
+  const cases = [
+    { reason: 'transport', response: () => { throw Object.assign(new Error(privateDiagnostic), {
+      requestCategory: privateDiagnostic, reason: privateDiagnostic, httpStatus: 401,
+      approval: { requestCategory: 'ci-jobs', reason: 'http-status', httpStatus: 401 },
+    }); } },
+    { reason: 'missing-body', httpStatus: 200, response: () => new Response(null) },
+    { reason: 'body-read', httpStatus: 200, response: () => new Response(new ReadableStream({
+      start(controller) { controller.error(new Error(privateDiagnostic)); },
+    })) },
+    { reason: 'body-limit', httpStatus: 200, response: () => new Response(privateDiagnostic + 'x'.repeat(2 * 1024 * 1024)) },
+    { reason: 'invalid-json', httpStatus: 200, response: () => new Response(privateDiagnostic) },
+  ];
+  for (const after of [false, true]) for (const { response, ...expected } of cases)
+    await checkApprovalDiagnostic({ after, request: 7, response, expected });
+});
+
+test('approval contract mismatches retain their request category without assertion values', async () => {
+  const change = [
+    data => { data.sha = privateDiagnostic; },
+    data => { data.object.sha = privateDiagnostic; },
+    data => { data.state = privateDiagnostic; },
+    data => { data.workflow_runs[0].conclusion = privateDiagnostic; },
+    data => { data.jobs[0].head_sha = privateDiagnostic; },
+    data => { data.path = privateDiagnostic; },
+    data => { data.workflow_runs[0].actor.login = privateDiagnostic; },
+  ];
+  for (const after of [false, true]) for (let request = 1; request <= change.length; request++)
+    await checkApprovalDiagnostic({ after, request,
+      response: data => { change[request - 1](data); return Response.json(data); },
+      expected: { reason: 'contract-mismatch' } });
+});
+
+test('forged diagnostic properties and non-status values never enter native diagnostics', async () => {
+  const forged = { phase: 'approval-before', requestCategory: privateDiagnostic, reason: privateDiagnostic,
+    httpStatus: 403, approval: { requestCategory: 'main-ref', reason: 'http-status', httpStatus: 403 },
+    message: privateDiagnostic, cause: privateDiagnostic };
+  for (const value of [forged, Object.assign(new Error(privateDiagnostic), forged), privateDiagnostic, null, undefined])
+    assert.deepEqual(nativeBuildDiagnostic(value), { schemaVersion: 1, event: 'native-build-failed',
+      phase: 'unclassified', outputApproved: false, detailsWithheld: true });
+  for (const status of [privateDiagnostic, 99, 600, 403.5, NaN]) {
+    const get = publicGithubBuildClient(async () => ({ status }));
+    await assert.rejects(get(`/repos/${CLOUD_BUILD_REPOSITORY}/commits/main`, privateDiagnostic), error => {
+      assert.deepEqual(nativeBuildDiagnostic(error).approval, { requestCategory: 'unclassified', reason: 'http-status' });
+      assert.equal(JSON.stringify(nativeBuildDiagnostic(error)).includes(privateDiagnostic), false); return true;
     });
   }
 });

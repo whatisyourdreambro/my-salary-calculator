@@ -24,21 +24,38 @@ const PHASES = new Set(['arguments', 'node-version', 'git-head', 'git-status', '
 // Keep original errors, assertion actual/expected values and environment content
 // out of diagnostics. Only errors created here can carry an allowed phase.
 const failurePhases = new WeakMap();
-function phaseFailure(phase) {
+const approvalDiagnostics = new WeakMap();
+const APPROVAL_CATEGORIES = new Set(['main-ref', 'production-ref', 'ci-workflow', 'ci-runs',
+  'ci-jobs', 'publisher-workflow', 'active-approvals']);
+const APPROVAL_REASONS = new Set(['transport', 'http-status', 'missing-body', 'body-read',
+  'body-limit', 'invalid-json', 'contract-mismatch']);
+function approvalFailure(requestCategory, reason, httpStatus) {
+  const error = new Error('Native Pages approval checkpoint failed; details withheld');
+  approvalDiagnostics.set(error, {
+    requestCategory: APPROVAL_CATEGORIES.has(requestCategory) ? requestCategory : 'unclassified',
+    reason: APPROVAL_REASONS.has(reason) ? reason : 'unclassified',
+    ...(Number.isInteger(httpStatus) && httpStatus >= 100 && httpStatus <= 599 ? { httpStatus } : {}),
+  });
+  return error;
+}
+function phaseFailure(phase, previous) {
   const error = new Error('Native Pages build checkpoint failed; details withheld');
+  // Copy only internally registered enums/status, never properties from a thrown value.
+  if (approvalDiagnostics.has(previous)) approvalDiagnostics.set(error, approvalDiagnostics.get(previous));
   failurePhases.set(error, PHASES.has(phase) ? phase : 'unclassified'); return error;
 }
 function checkpoint(phase, operation) {
   try { return operation(); }
-  catch (error) { throw failurePhases.has(error) ? error : phaseFailure(phase); }
+  catch (error) { throw failurePhases.has(error) ? error : phaseFailure(phase, error); }
 }
 async function asyncCheckpoint(phase, operation) {
   try { return await operation(); }
-  catch (error) { throw failurePhases.has(error) ? error : phaseFailure(phase); }
+  catch (error) { throw failurePhases.has(error) ? error : phaseFailure(phase, error); }
 }
 export function nativeBuildDiagnostic(error) {
   return { schemaVersion: 1, event: 'native-build-failed', phase: failurePhases.get(error) || 'unclassified',
-    outputApproved: false, detailsWithheld: true };
+    outputApproved: false, detailsWithheld: true,
+    ...(approvalDiagnostics.has(error) ? { approval: { ...approvalDiagnostics.get(error) } } : {}) };
 }
 
 export function matchesCloudRepositoryOrigin(origin) {
@@ -77,59 +94,76 @@ export function assertCloudBuildContext(env, local) {
 
 export function publicGithubBuildClient(fetchFn = globalThis.fetch) {
   let calls = 0;
-  return async resource => {
+  return async (resource, requestCategory) => {
     assert.ok(resource.startsWith(PREFIX) && !/[\r\n#\\]|\.\./.test(resource));
     assert.ok(++calls <= 24, 'Public GitHub build gate request bound exceeded');
     let response;
     try { response = await fetchFn(`https://api.github.com${resource}`, { method: 'GET', redirect: 'manual',
       signal: AbortSignal.timeout(15000), headers: { accept: 'application/vnd.github+json',
         'x-github-api-version': '2022-11-28', 'user-agent': 'MoneySalary-native-build-gate/1.0' } }); }
-    catch { throw new Error('Public build gate transport failed'); }
-    assert.equal(response.status, 200, 'Public build gate did not return HTTP 200');
-    const reader = response.body?.getReader(); assert.ok(reader);
+    catch { throw approvalFailure(requestCategory, 'transport'); }
+    if (response.status !== 200) throw approvalFailure(requestCategory, 'http-status', response.status);
+    let reader;
+    try { reader = response.body?.getReader(); }
+    catch { throw approvalFailure(requestCategory, 'body-read', response.status); }
+    if (!reader) throw approvalFailure(requestCategory, 'missing-body', response.status);
     const chunks = []; let length = 0;
     try {
       for (;;) { const { done, value } = await reader.read(); if (done) break;
-        length += value.byteLength; assert.ok(length <= 2 * 1024 * 1024, 'Public build gate response exceeded its bound'); chunks.push(value); }
+        length += value.byteLength;
+        if (length > 2 * 1024 * 1024) throw approvalFailure(requestCategory, 'body-limit', response.status);
+        chunks.push(value); }
       try { return JSON.parse(Buffer.concat(chunks).toString('utf8')); }
-      catch { throw new Error('Public build gate returned invalid JSON'); }
+      catch { throw approvalFailure(requestCategory, 'invalid-json', response.status); }
+    } catch (error) {
+      throw approvalDiagnostics.has(error) ? error : approvalFailure(requestCategory, 'body-read', response.status);
     } finally { await reader.cancel().catch(() => {}); reader.releaseLock(); }
   };
 }
 
 export async function verifyCloudBuildApproval(commit, get) {
   assert.match(commit || '', SHA);
-  assert.equal((await get(`${PREFIX}commits/main`)).sha, commit, 'Main moved; stop native publication');
-  assert.equal((await get(`${PREFIX}git/ref/heads/${CLOUD_BUILD_BRANCH}`)).object?.sha, commit, 'Production ref does not match this build');
-  const workflow = async name => {
-    const result = await get(`${PREFIX}actions/workflows/${name}`);
-    assert.equal(result.path, `.github/workflows/${name}`); assert.equal(result.state, 'active');
-    assert.ok(Number.isSafeInteger(result.id) && result.id > 0); return result;
-  };
-  const ci = await workflow('ci.yml');
-  const runs = await get(`${PREFIX}actions/workflows/${ci.id}/runs?event=push&branch=main&head_sha=${commit}&per_page=100`);
-  assert.ok(Array.isArray(runs.workflow_runs) && runs.total_count <= 100);
-  const matching = runs.workflow_runs.filter(run => run.workflow_id === ci.id && run.head_sha === commit
-    && run.head_branch === 'main' && run.event === 'push' && run.head_repository?.full_name === CLOUD_BUILD_REPOSITORY)
-    .sort((a, b) => b.id - a.id);
-  const verified = matching[0]; assert.ok(verified); assert.equal(verified.status, 'completed'); assert.equal(verified.conclusion, 'success');
-  assert.ok(Number.isSafeInteger(verified.id) && verified.id > 0);
-  const jobs = await get(`${PREFIX}actions/runs/${verified.id}/jobs?filter=latest&per_page=100`);
-  assert.ok(Array.isArray(jobs.jobs) && jobs.total_count <= 100);
-  const selected = jobs.jobs.filter(job => job.name === 'verify'); assert.equal(selected.length, 1);
-  const job = selected[0]; assert.equal(job.run_id, verified.id); assert.equal(job.head_sha, commit);
-  assert.equal(job.status, 'completed'); assert.equal(job.conclusion, 'success'); assert.ok(Number.isSafeInteger(job.id) && job.id > 0);
-  const publisher = await workflow('pages-publish.yml');
-  const approvals = await get(`${PREFIX}actions/workflows/${publisher.id}/runs?event=workflow_dispatch&branch=main&head_sha=${commit}&status=in_progress&per_page=100`);
-  assert.ok(Array.isArray(approvals.workflow_runs) && approvals.total_count <= 100);
-  const active = approvals.workflow_runs.filter(run => run.workflow_id === publisher.id && run.head_sha === commit
-    && run.head_branch === 'main' && run.event === 'workflow_dispatch' && run.status === 'in_progress'
-    && run.head_repository?.full_name === CLOUD_BUILD_REPOSITORY);
-  assert.equal(active.length, 1, 'Exactly one active approval is required');
-  const approval = active[0]; assert.equal(approval.actor?.login, OWNER); assert.equal(approval.triggering_actor?.login, OWNER);
-  assert.equal(approval.run_attempt, 1); assert.equal(approval.conclusion, null);
-  assert.ok(Number.isSafeInteger(approval.id) && approval.id > 0);
-  return { commit, branch: CLOUD_BUILD_BRANCH, ci: { runId: verified.id, jobId: job.id }, approval: { runId: approval.id, actor: OWNER } };
+  let requestCategory = 'main-ref';
+  try {
+    assert.equal((await get(`${PREFIX}commits/main`, requestCategory)).sha, commit, 'Main moved; stop native publication');
+    requestCategory = 'production-ref';
+    assert.equal((await get(`${PREFIX}git/ref/heads/${CLOUD_BUILD_BRANCH}`, requestCategory)).object?.sha, commit, 'Production ref does not match this build');
+    const workflow = async (name, category) => {
+      requestCategory = category;
+      const result = await get(`${PREFIX}actions/workflows/${name}`, requestCategory);
+      assert.equal(result.path, `.github/workflows/${name}`); assert.equal(result.state, 'active');
+      assert.ok(Number.isSafeInteger(result.id) && result.id > 0); return result;
+    };
+    const ci = await workflow('ci.yml', 'ci-workflow');
+    requestCategory = 'ci-runs';
+    const runs = await get(`${PREFIX}actions/workflows/${ci.id}/runs?event=push&branch=main&head_sha=${commit}&per_page=100`, requestCategory);
+    assert.ok(Array.isArray(runs.workflow_runs) && runs.total_count <= 100);
+    const matching = runs.workflow_runs.filter(run => run.workflow_id === ci.id && run.head_sha === commit
+      && run.head_branch === 'main' && run.event === 'push' && run.head_repository?.full_name === CLOUD_BUILD_REPOSITORY)
+      .sort((a, b) => b.id - a.id);
+    const verified = matching[0]; assert.ok(verified); assert.equal(verified.status, 'completed'); assert.equal(verified.conclusion, 'success');
+    assert.ok(Number.isSafeInteger(verified.id) && verified.id > 0);
+    requestCategory = 'ci-jobs';
+    const jobs = await get(`${PREFIX}actions/runs/${verified.id}/jobs?filter=latest&per_page=100`, requestCategory);
+    assert.ok(Array.isArray(jobs.jobs) && jobs.total_count <= 100);
+    const selected = jobs.jobs.filter(job => job.name === 'verify'); assert.equal(selected.length, 1);
+    const job = selected[0]; assert.equal(job.run_id, verified.id); assert.equal(job.head_sha, commit);
+    assert.equal(job.status, 'completed'); assert.equal(job.conclusion, 'success'); assert.ok(Number.isSafeInteger(job.id) && job.id > 0);
+    const publisher = await workflow('pages-publish.yml', 'publisher-workflow');
+    requestCategory = 'active-approvals';
+    const approvals = await get(`${PREFIX}actions/workflows/${publisher.id}/runs?event=workflow_dispatch&branch=main&head_sha=${commit}&status=in_progress&per_page=100`, requestCategory);
+    assert.ok(Array.isArray(approvals.workflow_runs) && approvals.total_count <= 100);
+    const active = approvals.workflow_runs.filter(run => run.workflow_id === publisher.id && run.head_sha === commit
+      && run.head_branch === 'main' && run.event === 'workflow_dispatch' && run.status === 'in_progress'
+      && run.head_repository?.full_name === CLOUD_BUILD_REPOSITORY);
+    assert.equal(active.length, 1, 'Exactly one active approval is required');
+    const approval = active[0]; assert.equal(approval.actor?.login, OWNER); assert.equal(approval.triggering_actor?.login, OWNER);
+    assert.equal(approval.run_attempt, 1); assert.equal(approval.conclusion, null);
+    assert.ok(Number.isSafeInteger(approval.id) && approval.id > 0);
+    return { commit, branch: CLOUD_BUILD_BRANCH, ci: { runId: verified.id, jobId: job.id }, approval: { runId: approval.id, actor: OWNER } };
+  } catch (error) {
+    throw approvalDiagnostics.has(error) ? error : approvalFailure(requestCategory, 'contract-mismatch');
+  }
 }
 
 export function trustedNpmCli(execPath = process.execPath) {
