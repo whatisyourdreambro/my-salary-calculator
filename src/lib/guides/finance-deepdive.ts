@@ -48,7 +48,7 @@ export const financeGuides = [
 <p>연금저축 600만에 더해 IRP 추가 300만 = 합계 900만 한도. <strong>연금저축은 한도 차면 IRP로 추가</strong>.</p>
 <ul>
 <li>퇴직금 운용 계좌 역할</li>
-<li>30% 이상 안전자산(예금·채권) 의무 (위험자산 70% 제한)</li>
+<li>일반 위험자산 투자한도는 적립금의 70%. 법정 요건을 충족한 적격 TDF는 이 한도에서 제외</li>
 <li>중도 해지 시 손해 큼</li>
 </ul>
 
@@ -77,7 +77,7 @@ export const financeGuides = [
 <ul>
 <li><strong>ISA 만기 후 미인출</strong>: 만기 연장·해지·연금계좌 전환 등 가능한 절차와 처리기한을 금융회사에 확인해야 함. 만기 후의 과세·자산 처리 방식을 자동 전환으로 단정하지 말 것</li>
 <li><strong>연금저축 중도 해지</strong>: 그동안 받은 환급금 + 추가 세금까지 회수당함</li>
-<li><strong>IRP 30% 안전자산</strong>: 주식형 100%로 못 굴림. 일부 예금·채권 필수</li>
+<li><strong>IRP 투자한도 확인</strong>: 일반 위험자산은 70% 한도이며, 법정 요건을 충족한 적격 TDF는 한도에서 제외</li>
 <li><strong>ISA 손실 시</strong>: 만기에도 손실분은 비과세 의미 없음. 환매 시점 주의</li>
 </ul>
 

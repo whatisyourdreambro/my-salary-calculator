@@ -498,7 +498,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-10-03",
   "views": 71000,
   "lang": "ko",
-  "contentChars": 5403
+  "contentChars": 5435
  },
  {
   "slug": "jeonse-scam-prevention",
@@ -1085,7 +1085,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2570
+  "contentChars": 2604
  },
  {
   "slug": "youth-jump-account-2026",
