@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 import {
  buildCoupangSubId,
@@ -111,21 +111,68 @@ export interface CoupangBannerProps {
 const DISCLOSURE_TEXT =
  "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.";
 
-// 페이지별 쿠팡 배너 렌더 추적 — "페이지당 최대 2회 + 같은 사이즈 중복 금지" 강제.
-// (이전 1회 하드캡은 본문 배너가 사이드바 skyscraper 를 전역에서 죽여 데스크톱
-// 쿠팡 인벤토리가 통째로 0이었음 — 2026-08-15 수익 개선 Phase 1 에서 완화.)
-// 같은 사이즈 2회는 동일 배너 이미지가 중복 노출되므로 여전히 차단.
-// 공정위 고지문은 첫 번째 인스턴스만 표시(중복 고지 방지).
-// pathname 변경 시 cleanup 으로 뒤로가기/라우트 전환에도 정상 동작.
+// 대기 중인 기존 슬롯도 등록 순서를 유지한다. 화면 크기 변경 때 모든 후보의
+// 실제 크기를 함께 판정해 최대 2개·같은 크기 1개·고지 소유자 1개를 유지한다.
 const MAX_BANNERS_PER_PAGE = 2;
-const renderedBannersByPath = new Map<string, CoupangBannerSize[]>();
+type BannerCandidate = {
+ id: symbol;
+ desktop: CoupangBannerSize;
+ mobile: CoupangBannerSize | undefined;
+};
+type BannerSelection = Omit<BannerCandidate, "id"> & {
+ pathname: string;
+ size: CoupangBannerSize;
+ disclosureOwner: boolean;
+};
+const candidatesByPath = new Map<string, BannerCandidate[]>();
+const selections = new Map<symbol, BannerSelection>();
+const selectionSubscribers = new Set<() => void>();
+function subscribeSelections(callback: () => void) {
+ selectionSubscribers.add(callback);
+ return () => { selectionSubscribers.delete(callback); };
+}
+const serverSelection = () => null;
 
-// 고지문 소유권 변경 구독자 — 배너가 등록/해제될 때 같은 경로의 모든 배너에
-// 재평가를 알린다. 소유자가 언마운트(오퍼 승격 등)돼도 남은 배너가 즉시
-// 고지문을 이어받고, 반대로 두 배너가 동시에 소유권을 주장하는 일도 없다.
-const disclosureSubscribers = new Map<string, Set<() => void>>();
-function notifyDisclosureOwners(pathname: string) {
-  disclosureSubscribers.get(pathname)?.forEach((fn) => fn());
+function reconcileSelections() {
+ let changed = false;
+ for (const [pathname, candidates] of candidatesByPath) {
+ const sizes = new Set<CoupangBannerSize>();
+ for (const candidate of candidates) {
+ const size = candidate.mobile && window.innerWidth < 768 ? candidate.mobile : candidate.desktop;
+ const previous = selections.get(candidate.id);
+ if (sizes.size >= MAX_BANNERS_PER_PAGE || sizes.has(size)) {
+ changed = selections.delete(candidate.id) || changed;
+ continue;
+ }
+ const disclosureOwner = sizes.size === 0;
+ sizes.add(size);
+ if (!previous || previous.pathname !== pathname || previous.desktop !== candidate.desktop ||
+ previous.mobile !== candidate.mobile || previous.size !== size || previous.disclosureOwner !== disclosureOwner) {
+ selections.set(candidate.id, { pathname, desktop: candidate.desktop, mobile: candidate.mobile, size, disclosureOwner });
+ changed = true;
+ }
+ }
+ }
+ // Publish after the whole arbitration, so subscribers cannot read half-updated
+ // effective sizes. React also rechecks these snapshots before committing.
+ if (changed) selectionSubscribers.forEach(callback => callback());
+}
+
+function registerCandidate(pathname: string, candidate: BannerCandidate) {
+ if (candidatesByPath.size === 0) window.addEventListener("resize", reconcileSelections);
+ const candidates = candidatesByPath.get(pathname) ?? [];
+ candidates.push(candidate);
+ candidatesByPath.set(pathname, candidates);
+ reconcileSelections();
+ return () => {
+ const remaining = (candidatesByPath.get(pathname) ?? []).filter(item => item.id !== candidate.id);
+ if (remaining.length) candidatesByPath.set(pathname, remaining);
+ else candidatesByPath.delete(pathname);
+ const removedSelection = selections.delete(candidate.id);
+ reconcileSelections();
+ if (removedSelection) selectionSubscribers.forEach(callback => callback());
+ if (candidatesByPath.size === 0) window.removeEventListener("resize", reconcileSelections);
+ };
 }
 
 export default function CoupangBannerCore({
@@ -137,94 +184,22 @@ export default function CoupangBannerCore({
  category,
 }: CoupangBannerProps) {
  const pathname = usePathname();
- const [liveEnabled, setLiveEnabled] = useState(false);
- useEffect(() => {
- setLiveEnabled(canRequestLiveAds());
- }, [pathname]);
- const [resolvedSize, setResolvedSize] = useState<CoupangBannerSize>(
- responsive ? responsive.desktop : size
- );
- const [allowed, setAllowed] = useState(true);
- // bannerIndex 는 고지문 판정에서 제거됐다(isDisclosureOwner 로 대체).
- // 등록 순서는 더 이상 상태로 들고 있지 않는다 — 순서가 바뀌어도 렌더 시점의
- // renderedBannersByPath 를 직접 보므로 stale 값이 생기지 않는다.
-
- // 페이지별 dedup — 최대 2회, 같은 사이즈 중복 금지.
- // (effect 가 트리 순서대로 실행되므로 본문 배너가 우선권)
- //
- // ★ deps 는 반드시 원시값이어야 한다. 호출부 대부분이
- //   responsive={{ mobile: "...", desktop: "..." }} 인라인 객체를 넘기므로,
- //   deps 에 responsive 를 두면 부모가 한 번만 리렌더돼도(예: 가이드 상세의
- //   setMounted(true)) cleanup→setup 이 재실행되어 등록 순서가 뒤집힌다.
- //   그 결과 두 배너가 모두 bannerIndex!==0 이 되어 공정위 고지문이 페이지에서
- //   통째로 사라졌다 — 가이드 상세 334쪽에서 100% 재현 (2026-09-06 전수검사).
- const registrationKey = responsive ? responsive.desktop : size;
- // 모바일 렌더 사이즈 키 — 등록(dedup)은 실제 렌더될 사이즈로 비교해야 한다. 데스크톱 키만 비교하면
- // large-portrait(본문)+leaderboard(푸터)가 모바일에서 둘 다 mobile-banner 로 렌더돼 같은 크리에이티브가
- // 한 페이지에 2번 나왔다(가이드 상세 ~308쪽, 2026-09-11 감사). 원시값이라 deps 규칙(위 주석)을 지킨다.
+ const [candidateId] = useState(() => Symbol("coupang-banner"));
+ const desktopKey = responsive ? responsive.desktop : size;
  const mobileKey = responsive?.mobile;
- // 등록 배열의 첫 항목이 고지문 소유자다. 첫 렌더에는 아직 등록 전이라
- // 아무도 소유자가 아니고(=false), 등록 이펙트가 끝난 뒤 구독 알림으로
- // 정확히 한 배너만 true 가 된다. 렌더 중에 레지스트리를 읽으면 등록 전
- // 두 배너가 동시에 소유권을 주장해 고지문이 2번 나온다.
- const [isDisclosureOwner, setIsDisclosureOwner] = useState(false);
+ const selection = useSyncExternalStore(subscribeSelections, () => selections.get(candidateId) ?? null, serverSelection);
+ // Primitive dependencies preserve registration order across ordinary rerenders
+ // with fresh responsive object literals. No candidate renders before admission.
  useEffect(() => {
- if (!pathname) return;
- // 사이즈 키는 마운트 시점의 실제 렌더 사이즈(뷰포트 768px 기준) — resize 로 바뀌어도 등록 키는 고정
- const sizeKey: CoupangBannerSize =
- mobileKey && window.innerWidth < 768 ? mobileKey : registrationKey;
- const sizes = renderedBannersByPath.get(pathname) ?? [];
- if (sizes.length >= MAX_BANNERS_PER_PAGE || sizes.includes(sizeKey)) {
- setAllowed(false);
- return;
- }
- sizes.push(sizeKey);
- renderedBannersByPath.set(pathname, sizes);
- setAllowed(true);
+ if (!pathname || pathname.startsWith("/en") || !canRequestLiveAds()) return;
+ return registerCandidate(pathname, { id: candidateId, desktop: desktopKey, mobile: mobileKey });
+ }, [pathname, candidateId, desktopKey, mobileKey]);
 
- // 소유권 재평가 구독 — 이 경로의 배너가 늘거나 줄 때마다 다시 판정한다.
- const reevaluate = () =>
- setIsDisclosureOwner(
- renderedBannersByPath.get(pathname)?.[0] === sizeKey
- );
- const subs = disclosureSubscribers.get(pathname) ?? new Set<() => void>();
- subs.add(reevaluate);
- disclosureSubscribers.set(pathname, subs);
- notifyDisclosureOwners(pathname);
-
- return () => {
- const current = renderedBannersByPath.get(pathname) ?? [];
- const idx = current.indexOf(sizeKey);
- if (idx >= 0) current.splice(idx, 1);
- if (current.length === 0) renderedBannersByPath.delete(pathname);
- else renderedBannersByPath.set(pathname, current);
- subs.delete(reevaluate);
- if (subs.size === 0) disclosureSubscribers.delete(pathname);
- setIsDisclosureOwner(false);
- notifyDisclosureOwners(pathname);
- };
- }, [pathname, registrationKey, mobileKey]);
-
- useEffect(() => {
- if (!responsive) {
- setResolvedSize(size);
- return;
- }
- const update = () => {
- setResolvedSize(
- window.innerWidth < 768 ? responsive.mobile : responsive.desktop
- );
- };
- update();
- window.addEventListener("resize", update);
- return () => window.removeEventListener("resize", update);
- }, [responsive, size]);
-
- // 영문 페이지(/en/*)에서는 한국 트래픽 전용 쿠팡 배너 숨김
- if (pathname?.startsWith("/en")) return null;
-
- // 페이지당 1회 dedup — 두 번째 이후 인스턴스는 렌더하지 않음
- if (!allowed || !liveEnabled) return null;
+ // A previous route/prop snapshot cannot authorize the next document's image.
+ if (!selection || selection.pathname !== pathname || selection.desktop !== desktopKey ||
+ selection.mobile !== mobileKey || pathname?.startsWith("/en") || !canRequestLiveAds()) return null;
+ const resolvedSize = selection.size;
+ const isDisclosureOwner = selection.disclosureOwner;
 
  const banner = BANNERS[resolvedSize];
  // subId: 카테고리 접두사 + path → 쿠팡 대시보드에서 카테고리/페이지 단위 분리 측정.
