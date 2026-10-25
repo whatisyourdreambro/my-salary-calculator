@@ -103,7 +103,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/weekly-holiday-allowance-2026': { lastModified: new Date('2026-09-12') },
  '/civil-servant-pay-2026': { lastModified: new Date('2026-10-04') },
  // 공무원 월급 실수령액 계산기 (2026-09-27 신설 — 운영자 승인 동결 예외)
- '/calc/civil-servant-net-pay': { lastModified: new Date('2026-09-27'), priority: 0.8, changeFrequency: 'monthly' },
+ '/calc/civil-servant-net-pay': { lastModified: new Date('2026-10-23T00:00:00+09:00'), priority: 0.8, changeFrequency: 'monthly' },
  '/tools/finance/compound': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
  '/tools/finance/bonus': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
  '/donation-tax-credit-2026': { lastModified: new Date('2026-09-25') },

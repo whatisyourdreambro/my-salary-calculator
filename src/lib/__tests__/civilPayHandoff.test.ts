@@ -51,6 +51,7 @@ describe("2026 police/fire table handoff", () => {
           expect(isCivilPaySelection(item)).toBe(true);
           expect(civilHobongOptions(input.kind, input.rank)).toContain(input.hobong);
           const result = computeCivilNetPay({ ...CIVIL_DEFAULT_INPUT, ...CIVIL_KIND_PRESETS[input.kind], ...input });
+          expect({ ...CIVIL_DEFAULT_INPUT, ...CIVIL_KIND_PRESETS[input.kind], ...input }.pensionContributionStatus).toBe("paying");
           expect(result.rankLabel).toBe(grade.label);
           expect(result.pay).toBe(row[column]);
           const store = storage();
@@ -69,6 +70,7 @@ describe("2026 police/fire table handoff", () => {
     { ...selection, occupation: "teacher" }, { ...selection, payYear: 2027 },
     { ...selection, basisVersion: "new-basis" }, { ...selection, source: "/civil-servant-pay-2027" },
     { ...selection, salary: 2290400 }, { ...selection, children: 2 }, { ...selection, rank: 1 },
+    { ...selection, pensionContributionStatus: "completed" },
   ])("rejects unsupported selection rather than clamping: %j", invalid => {
     const store = storage();
     store.setItem(key, "stale");

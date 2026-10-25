@@ -530,15 +530,20 @@
       "sha256": "87b9bd163b08a0e2985bd578df44cbd7bdcd09135eb190e6f4cc62446bcf0c06"
     },
     "/calc/civil-servant-net-pay": {
-      "contentDate": "2026-09-27",
-      "reviewedAtCommit": "3f100889bbed837a794d1e6849dbe1b6c1efd1f0",
-      "reason": "Reviewed October 23 against deployed commit 3f100889. Added same-tab selection handoff with explicit assumptions confirmation. The existing 2026 pay data, formulas and article remain unchanged, so retain the September 27 editorial date.",
-      "dependencies": [],
+      "contentDate": "2026-10-23",
+      "reviewedAtCommit": "813aa1ec013119e5ae04ec7bdd0623c046068f3f",
+      "reason": "Reviewed October 23 against commit 813aa1ec. Official allowance regulation Article 10 and GEPS contribution guidance support two substantive corrections: children do not consume the four-person nonchild family-allowance cap, and pension contribution completion requires explicit confirmation instead of a years-of-service inference. Related controls, explanation and FAQ were corrected. This is the content correction date, not a deployment date; salary tables and insurance-rate values were not changed.",
+      "dependencies": [
+        "src/lib/civilServantAllowances2026.ts",
+        "src/lib/civilServantNetPay.ts"
+      ],
       "files": [
         "src/app/calc/civil-servant-net-pay/Client.tsx",
-        "src/app/calc/civil-servant-net-pay/page.tsx"
+        "src/app/calc/civil-servant-net-pay/page.tsx",
+        "src/lib/civilServantAllowances2026.ts",
+        "src/lib/civilServantNetPay.ts"
       ],
-      "sha256": "736409c0ebb59b7b9e097c911916c3e35cf00a5b69971092301ed2f7cbeecdc4"
+      "sha256": "4809bc892b6b3761e1ceae177f3b7b3e7a3c398f293bfe5b8a75e130bb568cdb"
     },
     "/tools/finance/compound": {
       "contentDate": "2026-10-19",
@@ -621,13 +626,13 @@
     },
     "/teacher-pay-2026": {
       "contentDate": "2026-10-04",
-      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
-      "reason": "352451886 (October 4) corrects the destination and label to the teacher-specific civil-net-pay model.",
+      "reviewedAtCommit": "60d647aa95d352cc2a80fce78f5dfd5c7241df80",
+      "reason": "352451886 (October 4) corrects the destination and label to the teacher-specific civil-net-pay model. The October 23 review against 60d647aa plus the recorded source patch distinguishes only the copied quote's base-pay and homeroom-allowance regulation names, verified in current Allowances Regulations Annex 11 (effective October 2, 2026; official PDF flSeq169692831, pages 6-8). Amounts, calculation, title and layout are unchanged; this bibliographic correction retains the October 4 content date.",
       "dependencies": [],
       "files": [
         "src/app/teacher-pay-2026/page.tsx"
       ],
-      "sha256": "95fed90798df363da29e47325d0c5cbaeec227cb1665c12ec7de6c4e31e6ad00"
+      "sha256": "3699d73d5de8d172a9ee8300fe193b9489a29e9d2885a64bf11960ad26cd9458"
     },
     "/police-pay-2026": {
       "contentDate": "2026-10-04",

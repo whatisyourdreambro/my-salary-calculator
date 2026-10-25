@@ -472,6 +472,21 @@ export default function CivilNetPayClient({ initialKind = "general" }: { initial
           </table>
         </div>
         {!soldier && (
+          <>
+          <div {...measurement.inputProps} className="mt-4">
+            <label htmlFor="civ-pension-status" className="block text-sm font-bold text-navy dark:text-canvas-50">공무원연금 기여금 납부 상태</label>
+            <select id="civ-pension-status" className={`${CONTROL} mt-2`}
+              aria-describedby="civ-pension-status-help"
+              value={input.pensionContributionStatus === "completed" ? "completed" : "paying"}
+              onChange={(e) => update({ pensionContributionStatus: e.target.value === "completed" ? "completed" : "paying" })}>
+              <option value="paying">납부 중 / 미확인 (기본)</option>
+              <option value="completed">공단에서 납부완료 확인</option>
+            </select>
+            <p id="civ-pension-status-help" className="mt-2 text-xs leading-relaxed text-muted-blue dark:text-canvas-300">
+              공무원연금공단에서 기여금 납부완료를 확인한 경우에만 선택하세요. 납부상한은 가입 이력에 따라 33~36년이며,
+              재직 연수만으로 판정할 수 없습니다. 직종을 바꾸면 납부 중으로 돌아갑니다. 이 선택은 정근수당·건강보험 계산에는 영향을 주지 않습니다.
+            </p>
+          </div>
           <dl className="mt-4 grid gap-1 text-xs text-muted-blue dark:text-canvas-300 sm:grid-cols-2">
             <div>
               <dt className="inline font-bold">기준소득월액{r.baseIncomeEstimated ? " (추정)" : " (직접 입력)"}: </dt>
@@ -480,7 +495,9 @@ export default function CivilNetPayClient({ initialKind = "general" }: { initial
             <div>
               <dt className="inline font-bold">기여금: </dt>
               <dd className="inline tabular-nums">
-                min(기준소득월액, {won(CIVIL_PENSION_2026.cap)}) × 9% = {won(r.contribution)}
+                {input.pensionContributionStatus === "completed"
+                  ? "공단 납부완료 확인 선택 · 기여금 0원"
+                  : <>min(기준소득월액, {won(CIVIL_PENSION_2026.cap)}) × 9% = {won(r.contribution)}</>}
               </dd>
             </div>
             <div>
@@ -504,6 +521,7 @@ export default function CivilNetPayClient({ initialKind = "general" }: { initial
               </div>
             )}
           </dl>
+          </>
         )}
       </section>
 
@@ -666,13 +684,15 @@ export default function CivilNetPayClient({ initialKind = "general" }: { initial
           <li>봉급: 인사혁신처 2026년 공무원 봉급표(공무원보수규정 별표 3·10·11), 병 봉급 별표 13.</li>
           <li>
             수당: 공무원수당 등에 관한 규정(대통령령 제36015호, 2026-01-02) — 정액급식비 월 16만원(제18조), 직급보조비(별표 15),
-            가족수당(제10조·별표 5, 부양가족 4명 이내·자녀는 예외), 정근수당·가산금(별표 2), 명절휴가비 60%(제18조의3), 교직수당(별표 11),
+            가족수당(제10조·별표 5, 자녀를 제외한 부양가족 4명 이내), 정근수당·가산금(별표 2), 명절휴가비 60%(제18조의3), 교직수당(별표 11),
             위험근무수당(별표 8·9), 시간외근무수당 = 기준호봉 봉급 × 55%(8급 이하 60%) ÷ 209 × 150%(제15조·별표 12). 일반직 기본 10시간은
             월 15일 이상 출근 시 지급되는 정액분(인사혁신처 공무원보수 등의 업무지침).
           </li>
           <li>
             공무원연금 기여금: 기준소득월액 × 9%, 상한 {won(CIVIL_PENSION_2026.cap)} = 공무원 전체 평균 {won(CIVIL_PENSION_2026.avgBaseIncome)}(인사혁신처 고시
-            2026-04-30) × 160%, 36년 초과 납부 시 면제(공무원연금법 제67조). 기준소득월액 추정 = (연간 세전 − 비과세) ÷ 12 — 실제 값은 전년도 과세소득
+            2026-04-30) × 160%(공무원연금법 제67조). 납부상한은 가입 이력에 따라 33~36년이며, 공단에서 납부완료를 확인한 경우만 기여금을 0원으로 계산합니다.{" "}
+            <a href="https://www.geps.or.kr/pensionInfo_information_card_pay" target="_blank" rel="noopener noreferrer" className="text-electric underline">공무원연금공단 기여금 안내</a>.
+            기준소득월액 추정 = (연간 세전 − 비과세) ÷ 12 — 실제 값은 전년도 과세소득
             기준으로 매년 5월 정해집니다.
           </li>
           <li>
@@ -682,6 +702,11 @@ export default function CivilNetPayClient({ initialKind = "general" }: { initial
           <li>
             소득세: 근로소득 간이세액표(소득세법 시행령 별표 2) — 공제대상가족 = 본인 + 배우자 + 자녀 + 기타 부양가족(소득요건 충족 가정), 8~20세 자녀 공제
             반영. 지방소득세 = 소득세의 10%. 정액급식비는 식사대 비과세(소득세법 제12조제3호러목, 월 20만원 이하).
+          </li>
+          <li>
+            가족수당은 입력한 가족이 지급요건을 충족한다고 가정합니다. 자녀 수가 늘어도 배우자·기타 부양가족의 한도는 줄지 않습니다.
+            성년 자녀 제외 후의 출생순위·부부 중복지급 등 개별 자격은 별도로 확인해야 합니다.{" "}
+            <a href="https://law.go.kr/LSW/lsLinkCommonInfo.do?chrClsCd=010202&amp;lspttninfSeq=57447" target="_blank" rel="noopener noreferrer" className="text-electric underline">가족수당 규정 제10조</a>.
           </li>
           <li>일반 달 기준 추정치입니다. 실제 급여명세서와는 기준소득월액·건강보험 정산·기타 수당에 따라 차이가 날 수 있습니다.</li>
         </ul>
