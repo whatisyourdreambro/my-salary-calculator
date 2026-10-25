@@ -359,7 +359,7 @@ export default function YearEndTaxCalculator() {
  <option value="irp">IRP·퇴직연금</option>
  </select>
  }
- tip="연금저축은 600만원, 퇴직연금 합산 900만원까지 공제 대상입니다. ISA 전환 추가한도는 제외합니다."
+ tip="연금저축 600만원·퇴직연금 합산 900만원 한도. ISA 추가한도 제외."
  value={inputs[pensionAccount]}
  max={Math.max(PENSION_ACCOUNT_CREDIT_2026.TOTAL_CAP, inputs[pensionAccount])}
  onChange={(v) => handleNumberChange(pensionAccount, v)}
