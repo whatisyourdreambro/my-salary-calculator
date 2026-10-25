@@ -6,7 +6,6 @@
   "note_guides_meta": "2026-09-25 B9: src/lib/guidesMeta.generated.ts 는 scripts/gen-guides-meta.ts 가 가이드 정본에서 뽑은 카드 메타(제목·설명) 산출물이다 — 손으로 고치지 말고 정본 가이드·상수를 바꾼 뒤 재생성할 것. 2026-09-26 GUIDES-07 로 구직급여 두 편(hot-news-2026-deep-dive.ts)이 /guides/unemployment-benefits-complete 에 308 통합되며 상·하한 표시 텍스트가 산출물에서 사라져, 2026-09-28 감사 S31 에서 files 항목을 뺐다(verify:tax 상시 WARN 해소). 재생성 뒤 리터럴이 다시 생기면 verify:tax 가 실패하므로 그때 사유와 함께 재등재. switch_scan.fixed 항목은 별개라 유지.",
   "files": [
     { "src/app/health-insurance-fee-2026/HealthInsuranceFeeClient.tsx": ["건강보험 3.595%", "장기요양 13.14%"] },
-    { "src/app/social-insurance-rates-2026/page.tsx": ["국민연금 4.75%", "건강보험 3.595%", "장기요양 13.14%", "연금 상한 월 659만"] },
     { "src/app/calc/page.tsx": ["최저시급 10,320"] },
     { "src/app/minimum-wage-2026/page.tsx": ["최저시급 10,320", "최저임금 월 2,156,880"] },
     { "src/app/minimum-wage-2027/page.tsx": ["최저시급 10,320", "최저임금 월 2,156,880"] },

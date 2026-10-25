@@ -106,6 +106,7 @@ export const CATEGORY_RECOMMENDATIONS: Record<string, RelatedItem[]> = {
  { path: "/calc/life-insurance-needs", title: "생명보험 필요 보장액", description: "부양가족 기준 적정 보장액", icon: "Heart" },
  { path: "/calc/auto-insurance-quick", title: "자동차보험 견적", description: "차종·연령별 평균 보험료", icon: "Calculator" },
  { path: "/health-insurance-fee-2026", title: "건강보험료 계산기", description: "직장/지역 가입자 본인 부담", icon: "Heart" },
+ { path: "/health-insurance-2026", title: "건강보험료 정산 안내", description: "4월 추가납부·환급 이해", icon: "Heart" },
  ],
  business: [
  { path: "/hub/business", title: "사장님·프리랜서 허브", description: "수익·인건비·세금 계산 모음", icon: "Briefcase" },

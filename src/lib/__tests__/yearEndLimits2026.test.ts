@@ -106,8 +106,8 @@ describe("공제 한도표 — 2026년 귀속 현행법 수치", () => {
     const credit = (grossSalary: number) =>
       calculateYearEndTax({ ...base, grossSalary }).determinedTax -
       calculateYearEndTax({ ...base, grossSalary, pensionSavings: 12_000_000 }).determinedTax;
-    expect(credit(55_000_000)).toBe(1_350_000); // 900만 × 15%
-    expect(credit(55_000_001)).toBe(1_080_000); // 900만 × 12%
+    expect(credit(55_000_000)).toBe(900_000); // 연금저축 단독 600만 × 15%
+    expect(credit(55_000_001)).toBe(720_000); // 연금저축 단독 600만 × 12%
   });
 
   it("월세 — 17%/15%, 연 1,000만원, 최대 170만원, 총급여 8,000만원 이하", () => {

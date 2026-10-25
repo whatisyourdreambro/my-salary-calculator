@@ -83,8 +83,8 @@
     },
     "/": {
       "contentDate": "2026-10-19",
-      "reviewedAtCommit": "e2961ffb8408490cc147773ae069ad0352e8cd0c",
-      "reason": "Reviewed October 23 against deployed commit 3f100889. Added explicit saved-condition reuse and storage metadata, with no salary rate, tax calculation or home article correction. Retain the October 19 editorial date; this review covers the changed NextActions measurement and SalaryCalculator dependencies. Reviewed October 23 at e2961ffb: the SalaryCalculator diff removes newly generated private result tokens and remote amount-image URLs, and explains explicit result-text approval. It does not change salary rates, calculations or the home financial article. Retain the October 19 editorial content date for this sharing/privacy workflow change; old result readers remain supported.",
+      "reviewedAtCommit": "e424ac7718fc09b7f42126811659a6734a9d46e6",
+      "reason": "Reviewed October 23 against deployed commit 3f100889. Added explicit saved-condition reuse and storage metadata, with no salary rate, tax calculation or home article correction. Retain the October 19 editorial date; this review covers the changed NextActions measurement and SalaryCalculator dependencies. Reviewed October 23 at e2961ffb: the SalaryCalculator diff removes newly generated private result tokens and remote amount-image URLs, and explains explicit result-text approval. It does not change salary rates, calculations or the home financial article. Retain the October 19 editorial content date for this sharing/privacy workflow change; old result readers remain supported. Reviewed October 25 against e424ac77 plus this candidate: insurance NextActions now opens the existing fee calculator and names the FIRE destination accurately. This is a navigation correction; retain the home article date.",
       "dependencies": [
         "src/components/NextActions.tsx",
         "src/components/SalaryCalculator.tsx"
@@ -95,7 +95,7 @@
         "src/components/NextActions.tsx",
         "src/components/SalaryCalculator.tsx"
       ],
-      "sha256": "45471b1ce801f0b5e03d6b16898a46b30f6d538b28f97797053f9dfaa4cb1ea9"
+      "sha256": "9d4e4653639aa72d85365b4a6d7d623faa3a4372f8fc07c45e5a6f75d070c4de"
     },
     "/home-loan": {
       "contentDate": "2026-09-19",
@@ -605,13 +605,22 @@
     },
     "/social-insurance-rates-2027": {
       "contentDate": "2026-10-04",
-      "reviewedAtCommit": "3f100889bbed837a794d1e6849dbe1b6c1efd1f0",
-      "reason": "Reviewed October 23 against deployed commit 3f100889. Narrowed the existing pension link description to same-base monthly difference and a 12-month scenario. No insurance rate table or source-policy revision was made on this page; retain the October 4 content date.",
-      "dependencies": [],
-      "files": [
-        "src/app/social-insurance-rates-2027/page.tsx"
+      "reviewedAtCommit": "e424ac7718fc09b7f42126811659a6734a9d46e6",
+      "reason": "Reviewed October 23 against deployed commit 3f100889. Narrowed the existing pension link description to same-base monthly difference and a 12-month scenario. No insurance rate table or source-policy revision was made on this page; retain the October 4 content date. Reviewed October 25 against e424ac77 plus this candidate: correct pension sample arithmetic with the existing thousand-won normalized basis and existing per-item ten-won truncation; clarify same-base and July-boundary limitations. No new rate or policy effective date is introduced; retain the October 4 source-policy date.",
+      "dependencies": [
+        "src/lib/insuranceRateExample.ts",
+        "src/lib/pensionHike.ts",
+        "src/lib/taxConstants2026.ts",
+        "src/lib/taxConstants2027.ts"
       ],
-      "sha256": "d431ea61acb9a42ef9b15cbc0dcc93352965ec28758b3aa3950665dc0497c027"
+      "files": [
+        "src/app/social-insurance-rates-2027/page.tsx",
+        "src/lib/insuranceRateExample.ts",
+        "src/lib/pensionHike.ts",
+        "src/lib/taxConstants2026.ts",
+        "src/lib/taxConstants2027.ts"
+      ],
+      "sha256": "3eba70488c94b70bc2ec35a1605ee0b8497fcce35dd9768cfffdd7c4f386ab37"
     },
     "/military-pay-2026": {
       "contentDate": "2026-09-27",

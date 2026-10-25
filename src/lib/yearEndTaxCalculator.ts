@@ -165,10 +165,15 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  // 자녀세액공제 (소득세법 §59의2, 2025 개정) — 첫째 25만·둘째 30만·셋째+ 40만
  const childTaxCredit = childTaxCredit2026(inputs.children);
 
- // 연금계좌세액공제 — PENSION_ACCOUNT_CREDIT_2026 정본 (화면 입력이 연금저축/IRP 합산
- // 1칸이라 연금저축 단독 600만 한도는 구분하지 않는다)
+ // 소득세법 §59의3: 연금저축은 먼저 600만원 한도를 적용하고,
+ // 퇴직연금 본인 납입액과 합산해 900만원 한도를 적용한다. ISA 전환 추가한도는 미포함.
+ const pensionAccountBase = Math.min(
+ Math.min(Math.max(0, inputs.pensionSavings), PENSION_ACCOUNT_CREDIT_2026.SAVINGS_CAP) +
+ Math.max(0, inputs.irp),
+ PENSION_ACCOUNT_CREDIT_2026.TOTAL_CAP
+ );
  const pensionAccountCredit =
- Math.min(inputs.pensionSavings + inputs.irp, PENSION_ACCOUNT_CREDIT_2026.TOTAL_CAP) *
+ pensionAccountBase *
  (grossSalary <= PENSION_ACCOUNT_CREDIT_2026.SALARY_15_MAX
  ? PENSION_ACCOUNT_CREDIT_2026.RATE_HIGH
  : PENSION_ACCOUNT_CREDIT_2026.RATE_LOW);

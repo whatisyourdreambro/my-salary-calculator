@@ -23,7 +23,7 @@ test('QA server refuses arbitrary commands, interface overrides and invalid port
   }
 });
 
-test('ordinary QA overrides an inherited Cloudflare staging flag and preserves production output', t => {
+test('ordinary QA overrides inherited staging flags and Kakao key while preserving production output', t => {
   const cwd = mkdtempSync(path.join(tmpdir(), 'msy-qa-next-fixture-'));
   t.after(() => {
     assert.equal(path.dirname(path.resolve(cwd)), path.resolve(tmpdir()));
@@ -46,18 +46,18 @@ const fs=require('node:fs');
   fs.mkdirSync(config.distDir,{recursive:true});
   fs.appendFileSync('observed.jsonl',JSON.stringify({mode:process.argv[2],distDir:config.distDir,
     stage:process.env.MSY_QA_WORKER_STAGE,pagesStage:process.env.MSY_QA_PAGES_STAGE,staticExport:process.env.MSY_PAGES_STATIC_EXPORT,
-    qa:process.env.MSY_QA_MODE,ads:process.env.NEXT_PUBLIC_ADS_DISABLED})+'\\n');
+    qa:process.env.MSY_QA_MODE,ads:process.env.NEXT_PUBLIC_ADS_DISABLED,kakaoKey:process.env.NEXT_PUBLIC_KAKAO_JS_KEY})+'\\n');
 })().catch(error=>{console.error(error);process.exitCode=1});
 `);
   for (const mode of ['build', 'dev', 'start']) {
     const result = spawnSync(process.execPath, ['scripts/qa-server.mjs', mode], {
-      cwd, env: { ...process.env, MSY_QA_WORKER_STAGE: '1', MSY_QA_PAGES_STAGE: '1', MSY_PAGES_STATIC_EXPORT: '1', MSY_QA_MODE: '0', NEXT_PUBLIC_ADS_DISABLED: '0' },
+      cwd, env: { ...process.env, MSY_QA_WORKER_STAGE: '1', MSY_QA_PAGES_STAGE: '1', MSY_PAGES_STATIC_EXPORT: '1', MSY_QA_MODE: '0', NEXT_PUBLIC_ADS_DISABLED: '0', NEXT_PUBLIC_KAKAO_JS_KEY: 'synthetic-inherited-kakao-key' },
       encoding: 'utf8', timeout: 20000, windowsHide: true,
     });
     assert.equal(result.status, 0, result.stderr);
   }
   const observed = readFileSync(path.join(cwd, 'observed.jsonl'), 'utf8').trim().split('\n').map(JSON.parse);
-  assert.deepEqual(observed, ['build', 'dev', 'start'].map(mode => ({ mode, distDir: '.next-qa', stage: '0', pagesStage: '0', staticExport: '0', qa: '1', ads: '1' })));
+  assert.deepEqual(observed, ['build', 'dev', 'start'].map(mode => ({ mode, distDir: '.next-qa', stage: '0', pagesStage: '0', staticExport: '0', qa: '1', ads: '1', kakaoKey: '' })));
   assert.equal(JSON.parse(readFileSync(path.join(cwd, '.next-qa/moneysalary-qa-build.json'), 'utf8')).adsDisabled, true);
   assert.deepEqual(readdirSync(path.join(cwd, '.next')), ['sentinel.txt']);
   assert.equal(readFileSync(path.join(cwd, '.next/sentinel.txt'), 'utf8'), 'production must remain unchanged');

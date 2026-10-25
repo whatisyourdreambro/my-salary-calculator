@@ -105,8 +105,8 @@ export function buildActions(
  {
  icon: Shield,
  title: "건강보험료 자동 계산",
- description: "직장/지역 가입자 비교",
- href: "/health-insurance-2026",
+ description: "직장 보험료·지역 재산분 추정",
+ href: "/health-insurance-fee-2026",
  },
  {
  icon: Calculator,
@@ -116,7 +116,7 @@ export function buildActions(
  },
  {
  icon: PiggyBank,
- title: "노후 대비 보험 시뮬",
+ title: "FIRE 은퇴 자금 계산",
  description: "은퇴 후 필요 자금 분석",
  href: "/fire-calculator",
  },

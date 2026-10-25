@@ -14,12 +14,13 @@ if (contrastOnly) assert(process.env.QA_ROUTES, 'Contrast-only QA requires expli
 const receiptMode = process.env.QA_RECEIPT_MODE || '';
 const sharePrivacyMode = process.env.QA_SHARE_PRIVACY_MODE === '1';
 const civilRulesMode = process.env.QA_CIVIL_RULES_MODE === '1';
+const accuracyLayoutMode = process.env.QA_ACCURACY_LAYOUT_MODE === '1';
 if (!['', 'public', 'legacy'].includes(receiptMode)) throw new Error('QA_RECEIPT_MODE must be public or legacy.');
 if (receiptMode && contrastOnly) throw new Error('Receipt and contrast audits must run separately.');
 if (sharePrivacyMode && (receiptMode || contrastOnly)) throw new Error('Share privacy must run separately from receipt and contrast audits.');
 const runLabel = process.env.QA_RUN_LABEL || '';
 if (runLabel && !/^[a-z0-9][a-z0-9-]{0,63}$/.test(runLabel)) throw new Error('QA_RUN_LABEL must be a short lowercase name without paths.');
-const output = path.resolve('.artifacts/experience-qa', runLabel || (civilRulesMode ? 'civil-rules' : receiptMode ? `receipt-${receiptMode}` : contrastOnly ? 'contrast' : '.'));
+const output = path.resolve('.artifacts/experience-qa', runLabel || (accuracyLayoutMode ? 'accuracy-layout' : civilRulesMode ? 'civil-rules' : receiptMode ? `receipt-${receiptMode}` : contrastOnly ? 'contrast' : '.'));
 const routes = process.env.QA_ROUTES?.split(',') || ['/calc', '/calc/refinance-break-even', '/calc/advertising-profit-roas', '/', '/en', '/home-loan', '/year-end-tax', '/calc/samsung-bonus', '/calc/jeonse-loan', '/calc/year-end-bonus-tax', '/savings-interest-2026', '/tools/finance/compound', '/money-check'];
 const report = [];
 const interactionReport = [];
@@ -30,11 +31,125 @@ if (!['', 'off', 'fixtures'].includes(participationMode)) throw new Error('QA_PA
 if (civilRulesMode && (sharePrivacyMode || receiptMode || contrastOnly || participationMode || process.env.QA_ROUTES)) {
   throw new Error('Civil rules QA must run alone, without other modes or QA_ROUTES.');
 }
+if (accuracyLayoutMode && (civilRulesMode || sharePrivacyMode || receiptMode || contrastOnly || participationMode || process.env.QA_ROUTES)) {
+  throw new Error('Accuracy layout QA must run alone, without other modes or QA_ROUTES.');
+}
 const participationTargets = {
   '/calc/samsung-bonus': 'samsung_bonus',
   '/civil-servant-pay-2027': 'civil_pay_2027',
   '/salary-db/samsung-electronics': 'samsung_company',
 };
+
+// Initial-state geometry only, using the same structural selectors on base and
+// candidate builds. No ad fixture, product flag, form edit or link navigation.
+// Compare these content coordinates across builds; disabled ads are not measured.
+async function auditAccuracyLayout(browser) {
+  const layoutRoutes = ['/year-end-tax', '/social-insurance-rates-2026', '/social-insurance-rates-2027', '/calc/auto-insurance-quick'];
+  for (const theme of ['light', 'dark']) for (const width of [320, 390, 1280]) for (const route of layoutRoutes) {
+    const viewport = { width, height: 900 };
+    const context = await browser.newContext({ viewport, colorScheme: theme, reducedMotion: 'reduce', serviceWorkers: 'block' });
+    await context.addInitScript(theme => localStorage.setItem('theme', theme), theme);
+    const network = { requestCount: 0, responseCount: 0, externalRequests: [], forbiddenRequests: [], externalResponses: [], nonReadRequests: [], failedRequests: [], errorResponses: [] };
+    const item = { route, theme, viewport, passed: false, network, pageErrors: [], consoleErrors: [], screenshots: [],
+      geometryScope: 'Initial local content with normal default accordion state; ads disabled, no ad geometry or cross-build equivalence asserted' };
+    report.push(item); // Preserve diagnostics even when navigation or an assertion fails.
+    context.on('request', request => {
+      network.requestCount++;
+      const url = new URL(request.url());
+      const entry = { method: request.method(), origin: url.origin, path: url.pathname };
+      if (url.origin !== base) network.externalRequests.push(entry);
+      if (!isAllowedQaRequest(url.href, base, request.method())) network.forbiddenRequests.push(entry);
+      if (!['GET', 'HEAD'].includes(request.method())) network.nonReadRequests.push(entry);
+    });
+    context.on('response', response => {
+      network.responseCount++;
+      const url = new URL(response.url());
+      const entry = { origin: url.origin, path: url.pathname, status: response.status() };
+      if (url.origin !== base) network.externalResponses.push(entry);
+      if (response.status() >= 400) network.errorResponses.push(entry);
+    });
+    context.on('requestfailed', request => {
+      const url = new URL(request.url());
+      network.failedRequests.push({ method: request.method(), origin: url.origin, path: url.pathname, error: request.failure()?.errorText });
+    });
+    const page = await context.newPage();
+    page.on('pageerror', error => item.pageErrors.push(error.message));
+    page.on('console', message => { if (message.type() === 'error') item.consoleErrors.push(message.text()); });
+    try {
+      const response = await page.goto(base + route, { waitUntil: 'networkidle', timeout: 120000 });
+      item.document = { status: response?.status(), qaHeader: response?.headers()['x-moneysalary-qa'] ?? null };
+      assert.equal(item.document.status, 200, route);
+      assert.equal(item.document.qaHeader, 'ads-disabled');
+      await page.locator('h1').first().waitFor();
+      await page.evaluate(() => document.fonts.ready);
+      // The existing result CountUp has a finite 500ms initial animation; leave
+      // its value untouched and allow it to settle before collecting evidence.
+      await page.waitForTimeout(650);
+      assert.equal(await page.evaluate(() => document.documentElement.classList.contains('dark')), theme === 'dark');
+      assert.equal(await page.locator('#msy-ga-loader,#msy-adsense-loader,ins.adsbygoogle').count(), 0);
+      item.geometry = await page.evaluate(() => {
+        const rect = element => {
+          if (!element) return null;
+          const r = element.getBoundingClientRect();
+          return { x: r.x + scrollX, top: r.top + scrollY, width: r.width, height: r.height, bottom: r.bottom + scrollY };
+        };
+        const text = element => element?.textContent?.replace(/\s+/g, ' ').trim() ?? '';
+        const heading = element => text(element.querySelector('h1,h2,h3'));
+        const main = document.querySelector('h1')?.closest('main');
+        if (!main) throw new Error('Missing content main');
+        const yearEndResult = main.querySelector('[data-calculation-result="year-end-tax"]');
+        const result = yearEndResult ?? main.querySelector('section[aria-label="현재 조건의 계산 결과"]');
+        const resultCard = yearEndResult?.parentElement ?? result;
+        const calculator = yearEndResult?.closest('.grid') ?? main.querySelector('section[aria-labelledby$="input-heading"]')?.parentElement;
+        const next = [...main.querySelectorAll('h3')].find(element => text(element) === '다음 단계로')?.closest('section');
+        return {
+          documentHeight: document.documentElement.scrollHeight,
+          viewport: { width: innerWidth, height: innerHeight, scrollX, scrollY },
+          overflow: document.documentElement.scrollWidth > innerWidth,
+          main: rect(main),
+          sections: [...main.querySelectorAll('section')].map((element, index) => ({ index, heading: heading(element), label: element.getAttribute('aria-label'), ...rect(element) })),
+          calculator: rect(calculator), result: rect(result), resultCard: rect(resultCard),
+          nextActions: next ? { ...rect(next), cards: [...next.querySelectorAll(':scope > div.grid > a')].map(element => ({ href: element.getAttribute('href'), text: text(element), ...rect(element) })) } : null,
+          accordions: [...main.querySelectorAll('h3 > button[aria-expanded]')].map(element => ({ label: text(element), expanded: element.getAttribute('aria-expanded'), ...rect(element.parentElement.parentElement) })),
+          openDetails: main.querySelectorAll('details[open]').length,
+        };
+      });
+      const filename = `accuracy-layout${route.replaceAll('/', '_')}-${theme}-${width}.png`;
+      await page.screenshot({ path: path.join(output, filename), fullPage: true, animations: 'disabled' });
+      item.screenshots.push(filename);
+      assert.equal(item.geometry.overflow, false, `${route}: horizontal overflow`);
+      assert(item.geometry.sections.length > 0, 'Content section coverage must not be empty');
+      assert.equal(item.geometry.openDetails, 0, 'Details must retain their closed initial state');
+      if (route === '/year-end-tax') {
+        assert(item.geometry.calculator && item.geometry.resultCard, 'Year-end calculator/result geometry is required');
+        assert.deepEqual(item.geometry.accordions.map(({ label, expanded }) => ({ label, expanded })), [
+          { label: '1. 기본 정보', expanded: 'true' },
+          { label: '2. 소득 공제 항목', expanded: 'false' },
+          { label: '3. 세액 공제 항목', expanded: 'false' },
+        ]);
+      }
+      if (route === '/calc/auto-insurance-quick') assert.equal(item.geometry.nextActions?.cards.length, 3, 'Existing next-action cards must be measured');
+      await page.waitForLoadState('networkidle');
+      assert.deepEqual(network.forbiddenRequests, [], 'No external, advertising or analytics request attempted');
+      assert.deepEqual(network.externalResponses, [], 'No external response reached the browser');
+      assert.deepEqual(network.nonReadRequests, [], 'No non-read request attempted');
+      assert.deepEqual(network.failedRequests, [], 'All initial document/asset requests must finish');
+      assert.deepEqual(network.errorResponses, [], 'No error response');
+      assert.deepEqual(item.pageErrors, [], 'No page runtime error');
+      assert.deepEqual(item.consoleErrors.filter(message => /hydration|hydrating|Minified React error #(?:418|423|425)/i.test(message)), [], 'No hydration error');
+      item.passed = true;
+    } catch (error) {
+      item.failure = error instanceof Error ? error.message : String(error);
+      errors.push(`${theme}/${width}/${route}: ${item.failure}`);
+    } finally {
+      await fs.writeFile(path.join(output, 'summary.json'), JSON.stringify({ mode: 'accuracy-layout', report, interactionReport, errors }, null, 2));
+      console.log(`accuracy layout ${theme} ${width} ${route}: ${item.passed ? 'PASS' : item.failure}`);
+      await context.close();
+    }
+  }
+  assert.equal(report.length, 24, 'Exactly four routes across three widths and two themes');
+  assert.deepEqual(errors, []);
+}
 
 // In-memory delivery fixtures only: no system clipboard, native share sheet,
 // SDK transport, popup or recipient. The network guard exists before the page.
@@ -943,7 +1058,8 @@ async function auditContrastCases(browser) {
 await fs.mkdir(output, { recursive: true });
 const browser = await launchQaBrowser(chromium, base, { headless: true, ...(process.platform === 'win32' ? { channel: 'chrome' } : {}) });
 try {
-  if (civilRulesMode) await auditCivilRules(browser);
+  if (accuracyLayoutMode) await auditAccuracyLayout(browser);
+  else if (civilRulesMode) await auditCivilRules(browser);
   else if (sharePrivacyMode) await auditSharePrivacy(browser);
   else if (receiptMode) await auditReceiptCompatibility(browser);
   else if (contrastOnly) await auditContrastCases(browser);
@@ -1160,10 +1276,12 @@ try {
   assert.deepEqual(errors, []);
   }
 } finally {
-  await fs.writeFile(path.join(output, 'summary.json'), JSON.stringify({ mode: civilRulesMode ? 'civil-rules' : sharePrivacyMode ? 'share-privacy' : receiptMode ? `receipt-${receiptMode}` : contrastOnly ? 'contrast-only' : 'experience', report, interactionReport, errors }, null, 2));
+  await fs.writeFile(path.join(output, 'summary.json'), JSON.stringify({ mode: accuracyLayoutMode ? 'accuracy-layout' : civilRulesMode ? 'civil-rules' : sharePrivacyMode ? 'share-privacy' : receiptMode ? `receipt-${receiptMode}` : contrastOnly ? 'contrast-only' : 'experience', report, interactionReport, errors }, null, 2));
   await browser.close();
 }
-console.log(civilRulesMode
+console.log(accuracyLayoutMode
+  ? `PASS: ${report.length} initial-state accuracy layout cases; content geometry and screenshots recorded for cross-build comparison, without advertising.`
+  : civilRulesMode
   ? `PASS: ${report.length} mobile civil-pay cases; explicit pension status, family allowance, fixed pre-ad geometry and no forbidden transport.`
   : sharePrivacyMode
   ? `PASS: ${report.length} share privacy cases; public destinations, explicit result text and isolated delivery fixtures.`

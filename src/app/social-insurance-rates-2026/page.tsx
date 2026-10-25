@@ -12,6 +12,7 @@ import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
+import { calculateInsuranceRateExample } from "@/lib/insuranceRateExample";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 4대보험 요율표 — 국민연금·건강보험·고용보험·산재보험",
@@ -35,7 +36,7 @@ const FAQ_ITEMS = [
  {
  question: "4대보험 본인 부담은 월급의 몇 %인가요?",
  answer:
- "본인 부담은 월급(보수월액)의 약 9.7% 수준입니다. 국민연금 4.75% + 건강보험 3.595% + 장기요양 약 0.47% + 고용보험 0.9% = 약 9.7%. 산재보험은 회사가 100% 부담합니다.",
+ "본인 부담은 월급(보수월액)의 약 9.7% 수준입니다. 국민연금 4.75% + 건강보험 3.595% + 장기요양 약 0.47% + 고용보험 0.9% = 약 9.7%. 산재보험은 회사가 100% 부담합니다. 국민연금 기준소득월액은 신고 소득의 천 원 미만을 버리고 상·하한을 적용하므로 실제 월급과 다를 수 있습니다. 2026년 7월~2027년 6월 상·하한은 41만~659만원입니다.",
  },
  {
  question: "건강보험료는 왜 4월에 갑자기 늘어나나요?",
@@ -55,7 +56,7 @@ const INSURANCE_RATES = [
  totalRate: "9.5%",
  selfRate: "4.75%",
  companyRate: "4.75%",
- base: "보수월액 기준 (상한 659만, 2026.7~2027.6)",
+ base: "기준소득월액 (상한 659만, 2026.7~2027.6)",
  purpose: "노후 연금 (65세부터 수령)",
  },
  {
@@ -98,16 +99,6 @@ const SAMPLE_SALARIES = [
  { salary: 70000000, monthly: 5833333 },
  { salary: 100000000, monthly: 8333333 },
 ];
-
-function calculateInsurance(monthly: number) {
- // 국민연금은 보수월액 상한 659만원(2026.7~2027.6)까지만 보험료 산정
- const pension = Math.floor((Math.min(monthly, 6_590_000) * 0.0475) / 10) * 10;
- const health = Math.floor((monthly * 0.03595) / 10) * 10;
- const longTermCare = Math.floor((health * 0.1314) / 10) * 10;
- const employment = Math.floor((monthly * 0.009) / 10) * 10;
- const total = pension + health + longTermCare + employment;
- return { pension, health, longTermCare, employment, total };
-}
 
 export default function SocialInsuranceRates2026Page() {
  return (
@@ -199,7 +190,7 @@ export default function SocialInsuranceRates2026Page() {
  </thead>
  <tbody>
  {SAMPLE_SALARIES.map(({ salary, monthly }) => {
- const ins = calculateInsurance(monthly);
+ const ins = calculateInsuranceRateExample(monthly, 2026);
  return (
  <tr key={salary} className="border-b border-canvas">
  <td className="py-3 px-2 font-bold text-navy">
@@ -225,7 +216,8 @@ export default function SocialInsuranceRates2026Page() {
  </div>
  <div className="mt-4 p-3 bg-canvas rounded-xl">
  <p className="text-xs text-muted-blue">
- ※ 본인 부담만 표시. 회사 부담은 별도 (산재보험 100% 회사). 정확한 금액은 비과세 항목·세부 조건에 따라 다름.
+ ※ 본인 부담 예시. 연금 기준소득은 천 원 미만 절사·상하한 적용, 각 보험료는 10원 미만 절사.
+ 실제 금액은 비과세·가입 조건에 따라 다름.
  </p>
  </div>
  </section>

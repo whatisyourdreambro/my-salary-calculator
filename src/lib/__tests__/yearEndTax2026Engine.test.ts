@@ -195,6 +195,33 @@ describe("세액공제 항목 — 법정 금액만큼 결정세액이 준다 (�
   });
 });
 
+describe("연금계좌 공제 — 연금저축 개별 한도와 퇴직연금 합산 한도", () => {
+  for (const [salary, rate] of [[55_000_000, 0.15], [55_000_001, 0.12]] as const) {
+    it(`총급여 ${salary}: 계좌를 구분해 국세 공제율 ${rate}을 적용한다`, () => {
+      const base = plain(salary);
+      const noPension = calculateYearEndTax(base);
+      const reduction = (pensionSavings: number, irp: number) => noPension.determinedTax -
+        calculateYearEndTax({ ...base, pensionSavings, irp }).determinedTax;
+      expect(reduction(0, 0)).toBe(0);
+      expect(reduction(5_000_000, 0)).toBe(5_000_000 * rate);
+      expect(reduction(6_000_000, 0)).toBe(6_000_000 * rate);
+      expect(reduction(9_000_000, 0)).toBe(6_000_000 * rate);
+      expect(reduction(0, 9_000_000)).toBe(9_000_000 * rate);
+      expect(reduction(6_000_000, 3_000_000)).toBe(9_000_000 * rate);
+      expect(reduction(9_000_000, 1_000_000)).toBe(7_000_000 * rate);
+      expect(reduction(9_000_000, 9_000_000)).toBe(9_000_000 * rate);
+      expect(reduction(-1_000_000, 1_000_000)).toBe(1_000_000 * rate);
+    });
+  }
+
+  it("기납부세액이 없어도 공제로 환급을 만들어 내지 않고 결정세액 0원에서 멈춘다", () => {
+    const result = calculateYearEndTax({ ...plain(20_000_000), pensionSavings: 9_000_000, irp: 9_000_000 });
+    expect(result.determinedTax).toBe(0);
+    expect(result.finalRefund).toBe(0);
+    expect(result.taxCredit).toBe(result.calculatedTax);
+  });
+});
+
 describe("대조 — 위젯·맞벌이 계산기와 같은 입력이면 같은 결과", () => {
   it("4대보험 파생 산식이 연금 기준소득월액 상·하한을 적용한다", () => {
     const low = deriveAnnualSocialInsurance2026(3_000_000);

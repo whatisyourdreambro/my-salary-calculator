@@ -3,8 +3,8 @@
 // 배경: useCalculatorMeasurement 를 쓰는 계산기 16곳 중 연말정산 계산기는 하나도 없어, 시즌 클러스터의
 // GA4 calc_start·calc_success 가 0 이었다. /year-end-tax(홈 연말정산 탭 포함)와 비-/calc 정밀 계산기 4종에
 // 같은 훅을 배선한다. /calc/* 4종과 IRP 는 10/10 동결 해제 뒤 별도 배치.
-// 원칙(bonusCalcMeasurement.test.ts 와 같음): 기존 입력 컨테이너에만 inputProps, 기존 결과 요소에만 resultRef,
-// DOM 노드·래퍼 추가 없음, 금액 미전송(훅만 사용).
+// 원칙(bonusCalcMeasurement.test.ts 와 같음): 계산 입력 컨테이너·컨트롤에만 inputProps, 기존 결과 요소에만 resultRef,
+// 계측만을 위한 DOM 노드·래퍼 추가 없음, 금액 미전송(훅만 사용).
 
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -23,7 +23,7 @@ const loadCalculator: Record<string, () => Promise<{ default: ComponentType }>> 
 };
 
 const CALCS = [
-  { file: "src/components/YearEndTaxCalculator.tsx", calcType: "year_end_tax", spreads: 1, contentProps: 3, resultRefs: 1 },
+  { file: "src/components/YearEndTaxCalculator.tsx", calcType: "year_end_tax", spreads: 0, contentProps: 3, resultRefs: 1 },
   { file: "src/app/credit-card-deduction-2026/Client.tsx", calcType: "credit_card_deduction_2026", spreads: 3, contentProps: 0, resultRefs: 1 },
   { file: "src/app/medical-tax-credit-2026/Client.tsx", calcType: "medical_tax_credit_2026", spreads: 3, contentProps: 0, resultRefs: 1 },
   // 결과는 공제 가능 카드·요건 미충족 카드 중 하나만 렌더 — 두 카드에 같은 ref
@@ -73,9 +73,26 @@ describe("연말정산 시즌 계산기 계측 배선", () => {
     expect(header).not.toContain("inputProps");
     // '리포트 보기' 토글도 입력 영역 밖
     const reportToggle = src.indexOf("setShowReport(!showReport)");
-    const simulator = src.indexOf("{...measurement.inputProps}");
+    const simulator = src.indexOf("inputProps={measurement.inputProps}");
     expect(reportToggle).toBeGreaterThan(-1);
     expect(simulator).toBeGreaterThan(reportToggle);
+  });
+
+  it("/year-end-tax 슬라이더 2개의 실제 range만 계측하고 계좌 보기 선택은 제외한다", () => {
+    const src = read("src/components/YearEndTaxCalculator.tsx");
+    const sliders = src.match(/<OptimizationSlider\b[\s\S]*?\/>/g) ?? [];
+    expect(sliders).toHaveLength(2);
+    for (const slider of sliders) expect(slider).toContain("inputProps={measurement.inputProps}");
+    const definition = src.slice(src.indexOf("const OptimizationSlider"), src.indexOf("export default function YearEndTaxCalculator"));
+    const input = definition.match(/<input\b[\s\S]*?\/>/)?.[0];
+    expect(input).toContain('type="range"');
+    expect(input).toContain("{...inputProps}");
+    expect(definition.match(/\{\.\.\.inputProps\}/g)).toHaveLength(1);
+    const accountChoice = src.match(/<select\b[\s\S]*?<\/select>/)?.[0];
+    expect(accountChoice).toContain('aria-label="조정할 연금계좌"');
+    expect(accountChoice).not.toMatch(/inputProps|measurement/);
+    // The functional capture-path regression lives in yearEndPensionMeasurement.test.ts.
+    // Together with zero enclosing measurement spreads, this also protects the selector's ancestors.
   });
 
   it("정밀 계산기 4종은 계측 속성 없이 같은 결과 카드를 서버 렌더한다", async () => {

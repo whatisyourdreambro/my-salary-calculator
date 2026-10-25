@@ -656,6 +656,43 @@ export async function main() {
       await text('[data-calculation-result="year-end-tax"]', 'year-end additional payment');
       await prepaid.fill('10000000'); await announcement('year-end-tax', '예상 환급액');
       await text('[data-calculation-result="year-end-tax"]', 'year-end refund');
+      await page.getByRole('button', { name: '3. 세액 공제 항목', exact: true }).click();
+      const savings = page.getByRole('textbox', { name: '연금저축 납입액', exact: true });
+      const irp = page.getByRole('textbox', { name: 'IRP·퇴직연금 본인 납입액', exact: true });
+      const readRefund = async () => {
+        const value = await page.locator('[data-calculation-announcement="year-end-tax"]').textContent();
+        const match = /예상 환급액: ([\d,]+)원/.exec(value);
+        assert(match, 'Expected a finite income-tax refund in the synthetic scenario');
+        return Number(match[1].replaceAll(',', ''));
+      };
+      const readGain = async () => {
+        const value = await page.getByText(/^환급액 [\d,]+원 증가!$/).textContent();
+        return Number(/환급액 ([\d,]+)원 증가!/.exec(value)[1].replaceAll(',', ''));
+      };
+      await savings.fill('0'); await irp.fill('0');
+      const baseRefund = await readRefund();
+      const baseGain = await readGain();
+      await savings.fill('9000000');
+      assert.equal(await readRefund() - baseRefund, 900000, 'Savings-only credit must stop at the 6m base');
+      await savings.fill('0'); await irp.fill('9000000');
+      assert.equal(await readRefund() - baseRefund, 1350000, 'IRP-only credit may use the 9m base');
+      assert.equal(await readGain() - baseGain, 1350000, 'IRP must be removed from the no-contribution comparison too');
+      await savings.fill('9000000'); await irp.fill('1000000');
+      assert.equal(await readRefund() - baseRefund, 1050000, 'Cap savings before adding IRP');
+      await savings.fill('6000000'); await irp.fill('3000000');
+      assert.equal(await readRefund() - baseRefund, 1350000);
+      const account = page.getByRole('combobox', { name: '조정할 연금계좌', exact: true });
+      await account.selectOption('irp');
+      const irpSlider = page.getByRole('slider', { name: 'IRP·퇴직연금 본인 납입액 조정', exact: true });
+      assert.equal(await irpSlider.inputValue(), '3000000');
+      await irpSlider.focus(); await page.keyboard.press('ArrowLeft');
+      assert.equal(await irp.inputValue(), '2,900,000');
+      assert.equal(await savings.inputValue(), '6,000,000');
+      await account.selectOption('pensionSavings');
+      assert.equal(await page.getByRole('slider', { name: '연금저축 납입액 조정', exact: true }).inputValue(), '6000000');
+      await account.selectOption('irp');
+      assert.equal(await irpSlider.inputValue(), '2900000');
+      await text('[data-calculation-result="year-end-tax"]', 'year-end separate pension accounts');
     },
   };
   if (selected) assert(selected.every(name => Object.hasOwn(scenarios, name)), 'Unknown scenario filter');

@@ -32,11 +32,10 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd, GuideMidAd, CalcResultAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import {
-  NET_SALARY_RATES_2027,
   MIN_WAGE_2027,
   MIN_WAGE_2027_MONTHLY,
 } from "@/lib/generateData2027";
-import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
+import { calculateInsuranceRateExample } from "@/lib/insuranceRateExample";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "2027 4대보험 요율표 — 국민연금 10.0% 확정·건강보험 7.19% 동결 확정",
@@ -65,7 +64,7 @@ const FAQ_ITEMS = [
   {
     question: "2027년 국민연금은 내 월급에서 얼마나 더 빠지나요?",
     answer:
-      "근로자 부담률이 4.75%에서 5.0%로 0.25%포인트 오릅니다. 월급 300만원이면 매달 7,500원(연 9만원), 월급 500만원이면 매달 12,500원(연 15만원)을 더 냅니다. 기준소득월액 상한(659만원, 2027년 6월까지) 이상 고소득자는 월 16,475원 증가입니다. 회사도 같은 금액을 추가 부담합니다.",
+      "근로자 부담률이 4.75%에서 5.0%로 0.25%포인트 오릅니다. 같은 기준소득월액이 300만원이면 월 7,500원, 500만원이면 월 12,500원 증가합니다. 같은 조건을 12개월 유지한 환산액은 각각 9만원·15만원이며 실제 연간 추가 납부액을 확정한 값은 아닙니다. 기준소득월액은 신고 소득의 천 원 미만을 버리고 상·하한을 적용하므로 실제 월급과 다를 수 있습니다. 상한 659만원·하한 41만원은 2027년 6월까지 적용하며, 7월 이후 조정은 미반영입니다. 회사도 같은 요율을 부담합니다. 이는 연금 보험료 차이이며 전체 실수령액 차이가 아닙니다.",
   },
   {
     question: "2027년 건강보험료율은 오르나요?",
@@ -84,8 +83,8 @@ const FAQ_ITEMS = [
   },
 ];
 
-// 요율 카드 — 계산 로직은 아래 calculateInsurance2027()이 정본 상수
-// (NET_SALARY_RATES_2027·INSURANCE_RATES_2026)를 직접 사용. 카드의 표시 문자열은
+// 요율 카드 — 계산 로직은 calculateInsuranceRateExample()이 정본 상수
+// (INSURANCE_RATES_2027·INSURANCE_RATES_2026)를 직접 사용. 카드의 표시 문자열은
 // 그 상수와 정합 (국민연금 5.0%=NET_SALARY_RATES_2027.pension, 건보 3.595%=2027 동결 확정(2026 정본 참조)).
 // ★갱신 슬롯 (완료 2026-09-25): 건보 동결 확정 반영. 건강보험 카드는 광고(InArticleAd) 위라
 //   totalRate·purpose·status 문자열 폭을 기존 이하로 유지 (카드 높이 증가 금지 — 2026-08-16 규칙).
@@ -97,7 +96,7 @@ const INSURANCE_RATES_2027_CARDS = [
     totalRate: "10.0%",
     selfRate: "5.0%",
     companyRate: "5.0%",
-    base: "보수월액 기준 (상한 659만·하한 41만, 2027.6까지 — 2027.7 재조정)",
+    base: "기준소득월액 (상한 659만·하한 41만, 2027.6까지 — 2027.7 재조정)",
     purpose: "노후 연금 — 2027-01-01부터 총 9.5%→10.0% 인상",
     status: "확정 — 2025 연금개혁법 법정 스케줄 (매년 0.5%p 인상, 2033년 13%)",
   },
@@ -145,31 +144,6 @@ const SAMPLE_SALARIES = [
   { salary: 70000000, monthly: 5833333 },
   { salary: 100000000, monthly: 8333333 },
 ];
-
-// 2027 요율 시뮬 — 정본 상수 재사용 (병렬 로직 신설 금지 원칙):
-// 연금 5.0%는 NET_SALARY_RATES_2027, 건보 3.595%는 2027 동결 확정(2026 정본 참조), 장기요양·고용은 2026 준용값,
-// 2026 대비 증가분은 INSURANCE_RATES_2026.NATIONAL_PENSION(4.75%) 대비 연금 인상 효과.
-function calculateInsurance2027(monthly: number) {
-  const pensionBase = Math.min(monthly, PENSION_BASE_2026.MAX_MONTHLY);
-  const pension =
-    Math.floor((pensionBase * NET_SALARY_RATES_2027.pension) / 10) * 10;
-  const pension2026 =
-    Math.floor((pensionBase * INSURANCE_RATES_2026.NATIONAL_PENSION) / 10) * 10;
-  const health = Math.floor((monthly * NET_SALARY_RATES_2027.health) / 10) * 10;
-  const longTermCare =
-    Math.floor((health * NET_SALARY_RATES_2027.ltcRatio) / 10) * 10;
-  const employment =
-    Math.floor((monthly * NET_SALARY_RATES_2027.employment) / 10) * 10;
-  const total = pension + health + longTermCare + employment;
-  return {
-    pension,
-    health,
-    longTermCare,
-    employment,
-    total,
-    diff2026: pension - pension2026,
-  };
-}
 
 const RELATED_2027_LINKS = [
   {
@@ -316,7 +290,7 @@ export default function SocialInsuranceRates2027Page() {
               </thead>
               <tbody>
                 {SAMPLE_SALARIES.map(({ salary, monthly }) => {
-                  const ins = calculateInsurance2027(monthly);
+                  const ins = calculateInsuranceRateExample(monthly, 2027);
                   return (
                     <tr key={salary} className="border-b border-canvas">
                       <td className="py-3 px-2 font-bold text-navy">
@@ -345,9 +319,9 @@ export default function SocialInsuranceRates2027Page() {
           </div>
           <div className="mt-4 p-3 bg-canvas rounded-xl">
             <p className="text-xs text-muted-blue">
-              ※ 본인 부담만 표시. 회사 부담은 별도(산재보험 100% 회사). 건강보험 2027
-              동결, 장기요양·고용보험은 2026 준용 참고치. 국민연금은 기준소득월액
-              상한(659만원)까지만 산정. 정확한 금액은 비과세 항목·세부 조건에 따라 다름.
+              ※ 본인 부담 예시. 건보는 2027 동결, 장기요양·고용은 2026 준용.
+              연금 기준소득은 천 원 미만 절사·41만~659만원 적용(2027.6까지),
+              각 보험료는 10원 미만 절사. 비과세·가입 조건에 따라 다름.
               최저임금 근로자(월 {MIN_WAGE_2027_MONTHLY.toLocaleString("ko-KR")}원) 기준
               시뮬은 2027 최저임금 페이지 참조.
             </p>
