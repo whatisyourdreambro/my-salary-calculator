@@ -20,7 +20,7 @@ export const metadata: Metadata = buildPageMetadata({
  path: "/retirement-pension-2026",
  ogType: "article",
  publishedTime: "2026-02-01",
- modifiedTime: "2026-05-12",
+ modifiedTime: "2026-10-26",
  keywords: [
  "퇴직연금",
  "DB DC 차이",
@@ -195,7 +195,7 @@ export default function RetirementPension2026Page() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  퇴직연금 <span className="text-electric">완벽 가이드</span>
  </h1>
- <PublishedMeta publishedDate="2026-02-01" updatedDate="2026-05-12" className="mb-2" />
+ <PublishedMeta publishedDate="2026-02-01" updatedDate="2026-10-26" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  DB·DC·IRP 3가지 퇴직연금 차이와 본인에게 맞는 선택.
  잘못 고르면 노후 자산 1억 차이.

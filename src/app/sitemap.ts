@@ -84,6 +84,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/minimum-wage-2027': { lastModified: new Date('2026-09-30') },
  '/minimum-wage-2026': { lastModified: new Date('2026-09-12') },
  '/year-end-tax': { lastModified: new Date('2026-10-04') }, // 2026 귀속 공제 한도표·한도 FAQ 5문항 추가
+ '/retirement-pension-2026': { lastModified: new Date('2026-10-26T00:00:00+09:00') }, // 일반 위험자산 한도·적격 TDF 예외·공제와 환급 구분 정정
  // 2026-08-23 시즌 패키지 (연말정산 허브·미리보기·시즌 사이드바)
  '/year-end-tax-2027': { lastModified: new Date('2026-09-25') },
  '/year-end-tax-preview': { lastModified: new Date('2026-09-30') },
