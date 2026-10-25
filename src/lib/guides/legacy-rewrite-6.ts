@@ -299,7 +299,7 @@ export const legacyRewrite6: Record<string, string> = {
 <tr><td>가입 자격</td><td><strong>누구나</strong> (소득 없는 주부·미성년자도 가능)</td><td><strong>소득이 있는 사람</strong> (근로자·자영업자 등)</td></tr>
 <tr><td>단독 세액공제 한도</td><td>연 600만원</td><td><strong>연 900만원</strong> (연금저축 없이 IRP만으로 한도 전부 채우기 가능)</td></tr>
 <tr><td>담을 수 있는 상품</td><td>펀드·ETF·리츠 등 실적배당형 (예금 불가)</td><td>예금 등 원리금보장상품 + 펀드·ETF·리츠</td></tr>
-<tr><td>위험자산 한도</td><td><strong>100% 투자 가능</strong></td><td>위험자산 <strong>70% 한도</strong>, 30%는 안전자산 의무(퇴직연금감독규정)</td></tr>
+<tr><td>위험자산 한도</td><td><strong>100% 투자 가능</strong></td><td>일반 위험자산 <strong>70% 한도</strong>. 법정 요건을 충족한 적격 TDF는 한도에서 제외</td></tr>
 <tr><td>중도 인출</td><td><strong>부분 인출 가능</strong> (공제분+수익에 기타소득세 16.5%)</td><td>법정 사유 외 <strong>부분 인출 불가</strong> — 급전 필요 시 계좌 전체 해지</td></tr>
 <tr><td>계좌 수수료</td><td>없음 (편입 상품 보수만)</td><td>운용·자산관리 수수료 있음 (비대면 개설 시 면제하는 증권사 다수)</td></tr>
 <tr><td>퇴직금 수령</td><td>불가</td><td><strong>퇴직급여 수령 계좌</strong>로 사용 (이직·퇴직 시 필수에 가까움)</td></tr>
@@ -310,7 +310,7 @@ export const legacyRewrite6: Record<string, string> = {
 <h2>🧭 나에게 맞는 조합 찾기 — 상황별 결론</h2>
 <ul>
 <li><strong>사회초년생·유동성 불확실</strong>: <strong>연금저축펀드부터.</strong> 600만원 한도를 먼저 채우고, 노후까지 확실히 묶어둘 수 있는 여유가 생기면 IRP 300만원을 추가하는 순서가 방어적입니다. 부분 인출이라는 탈출구가 있는 계좌를 앞에 두는 것입니다</li>
-<li><strong>공격적 투자 성향</strong>: 연금저축펀드 중심. 위험자산 100%가 가능해 주식형 ETF로만 채울 수 있습니다. IRP는 어떤 경우에도 30%를 안전자산으로 남겨야 합니다</li>
+<li><strong>공격적 투자 성향</strong>: 연금저축펀드 중심. 위험자산 100%가 가능해 주식형 ETF로만 채울 수 있습니다. IRP는 일반 위험자산 투자한도가 70%이며, 법정 요건을 충족한 적격 TDF는 이 한도에서 제외됩니다</li>
 <li><strong>안정 추구·예금 선호</strong>: IRP 중심. 연금저축펀드에는 예금을 담을 수 없으므로, 원리금보장상품으로 세액공제만 챙기고 싶다면 IRP가 유일한 선택지입니다</li>
 <li><strong>소득 없는 배우자 명의 준비</strong>: 연금저축만 가능합니다. IRP는 소득이 있어야 가입할 수 있습니다</li>
 <li><strong>곧 이직·퇴직 예정</strong>: IRP는 어차피 퇴직급여를 받을 때 필요합니다. 이 기회에 비대면(수수료 면제 조건)으로 만들어 세액공제 계좌로 같이 쓰는 것이 효율적입니다. 퇴직금을 일시금으로 받을 때의 세금은 <a href="/calc/retirement-income-tax-quick">퇴직소득세 계산기</a>로 확인해 보세요</li>

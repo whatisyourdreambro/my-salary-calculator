@@ -20,7 +20,7 @@ export const metadata: Metadata = buildPageMetadata({
  path: "/retirement-pension-2026",
  ogType: "article",
  publishedTime: "2026-02-01",
- modifiedTime: "2026-05-12",
+ modifiedTime: "2026-10-26",
  keywords: [
  "퇴직연금",
  "DB DC 차이",
@@ -45,17 +45,17 @@ const FAQ_ITEMS = [
  {
  question: "DC 운용은 어떻게 하나요?",
  answer:
- "회사 지정 운용기관(증권사·은행)에서 펀드·예금·ETF 선택. 일반 권장: 30~70% 위험자산(주식형·TDF) + 30~70% 안전자산(예금·채권). 단, DC는 위험자산 비중 70% 상한 규제. 20대~30대는 위험자산 70%, 40대 50%, 50대 30~40%로 점진 축소 권장. 분기별 점검 + 연 1회 리밸런싱.",
+ "회사 지정 운용기관(증권사·은행)에서 펀드·예금·ETF 선택. 일반 권장: 30~70% 위험자산(주식형) + 30~70% 안전자산(예금·채권). 단, DC는 일반 위험자산 비중 70% 상한 규제가 있으며, 법정 요건을 충족한 적격 TDF는 이 한도에서 제외됩니다. 20대~30대는 위험자산 70%, 40대 50%, 50대 30~40%로 점진 축소 권장. 분기별 점검 + 연 1회 리밸런싱.",
  },
  {
  question: "IRP 추가 납입은 얼마까지 가능한가요?",
  answer:
- "연 1,800만원까지 입금 가능하지만 세액공제 한도는 연 900만원 (연금저축 합산). 연봉 5,500만 이하는 16.5%, 초과는 13.2% 세액공제 (지방세 포함). 900만원 풀로 채우면 환급액 최대 148.5만원. 입금 후 운용 수익도 인출 시까지 과세이연되므로 일반 투자 대비 복리 효과↑.",
+ "연 1,800만원까지 입금 가능하지만 세액공제 한도는 연 900만원 (연금저축 합산). 연봉 5,500만 이하는 16.5%, 초과는 13.2% 세액공제 (지방세 포함). 900만원 납입 시 예상 세액공제는 최대 148.5만원이며, 실제 환급·추가납부는 결정세액과 기납부세액에 따라 달라집니다. 입금 후 운용 수익도 인출 시까지 과세이연되므로 일반 투자 대비 복리 효과↑.",
  },
  {
- question: "IRP 30% 안전자산 의무는 무엇인가요?",
+ question: "IRP 위험자산 70% 한도와 적격 TDF 예외는 무엇인가요?",
  answer:
- "IRP는 퇴직급여보장법상 안전자산(예금·채권·TDF의 채권 부분) 비중을 30% 이상 유지해야 합니다. 위험자산(주식형 펀드·ETF)은 70%까지만. TDF(타겟데이트펀드)는 만기에 가까울수록 자동으로 채권 비중이 늘어나 30% 의무를 자연스럽게 충족합니다.",
+ "IRP의 일반 위험자산 투자한도는 적립금의 70%입니다. 다만 퇴직연금감독규정과 시행세칙의 요건을 충족한 적격 TDF(타겟데이트펀드)는 이 한도에서 제외되어 적립금의 100%까지 투자할 수 있습니다. 모든 TDF가 해당하는 것은 아니므로 상품의 적격 여부를 확인해야 합니다.",
  },
  {
  question: "55세 전 IRP를 인출하면 어떻게 되나요?",
@@ -112,7 +112,7 @@ const AGE_RECOMMEND = [
  age: "20대",
  strategy: "DC + IRP 풀 활용",
  detail:
- "위험자산 70% (주식형·TDF) + 안전자산 30%. IRP 연 900만 세액공제 최대 활용. 시간이 가장 큰 자산.",
+ "위험자산 70% (주식형) + 안전자산 30%. IRP 연 900만 세액공제 최대 활용. 시간이 가장 큰 자산.",
  color: "#0145F2",
  },
  {
@@ -157,7 +157,7 @@ const COMPARISON = [
  name: "IRP (개인형퇴직연금)",
  desc: "본인 명의 계좌 + 추가 납입 가능.",
  pros: ["연금저축 합산 최대 900만원 세액공제(IRP 단독 900만 가능)", "퇴직금 합산 운용", "55세 후 연금 수령 저세율"],
- cons: ["30% 안전자산 의무", "55세 전 인출 손실 큼"],
+ cons: ["일반 위험자산 70% 한도(적격 TDF 예외)", "55세 전 인출 손실 큼"],
  suitable: "절세 + 노후 자금 동시 추구",
  },
 ];
@@ -195,7 +195,7 @@ export default function RetirementPension2026Page() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  퇴직연금 <span className="text-electric">완벽 가이드</span>
  </h1>
- <PublishedMeta publishedDate="2026-02-01" updatedDate="2026-05-12" className="mb-2" />
+ <PublishedMeta publishedDate="2026-02-01" updatedDate="2026-10-26" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  DB·DC·IRP 3가지 퇴직연금 차이와 본인에게 맞는 선택.
  잘못 고르면 노후 자산 1억 차이.
@@ -339,8 +339,8 @@ export default function RetirementPension2026Page() {
  항상 유리.
  </li>
  <li>
- • <strong>IRP 안전자산 30% 무시</strong> — 위험자산만 채워서 거부됨.
- TDF 활용하면 자동 충족.
+ • <strong>IRP 투자한도 오해</strong> — 일반 위험자산 70% 한도와 적격 TDF 예외를 구분.
+ TDF라는 이름만으로 한도에서 제외되는 것은 아님.
  </li>
  <li>
  • <strong>국민연금만 노후 자산으로</strong> — 평균 월 60만원대 수령.
