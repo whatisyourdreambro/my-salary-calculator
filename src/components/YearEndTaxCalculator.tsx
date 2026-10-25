@@ -10,6 +10,7 @@ import {
  TaxInputs,
  TaxResult,
 } from "@/lib/yearEndTaxCalculator";
+import { PENSION_ACCOUNT_CREDIT_2026 } from "@/lib/taxConstants2026";
 import NumberStepper from "./NumberStepper";
 import { ChevronDown } from "lucide-react";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
@@ -106,23 +107,29 @@ const OptimizationSlider = ({
  value,
  max,
  onChange,
+ labelControl,
+ inputProps,
 }: {
  label: string;
  tip: string;
  value: number;
  max: number;
  onChange: (value: number) => void;
+ labelControl?: React.ReactNode;
+ inputProps?: HTMLAttributes<HTMLInputElement>;
 }) => {
  // label htmlFor ↔ input id 연결 (인스턴스 고유)
  const sliderId = useId();
  return (
  <div>
  <div className="flex justify-between items-center mb-2">
- <label htmlFor={sliderId} className="text-sm font-medium text-muted-foreground">{label}</label>
+ {labelControl ?? <label htmlFor={sliderId} className="text-sm font-medium text-muted-foreground">{label}</label>}
  <span className="text-sm font-bold text-primary">{formatNumber(value)}원</span>
  </div>
  <input
+ {...inputProps}
  id={sliderId}
+ aria-label={labelControl ? label : undefined}
  type="range"
  min="0"
  max={max}
@@ -176,6 +183,7 @@ export default function YearEndTaxCalculator() {
  });
 
  const [showReport, setShowReport] = useState(false);
+ const [pensionAccount, setPensionAccount] = useState<"pensionSavings" | "irp">("pensionSavings");
  // 사용자가 기납부세액을 직접 입력했는지 — 그 전까지는 총급여·부양가족·자녀 수에서 추정한다
  const [prepaidTaxTouched, setPrepaidTaxTouched] = useState(false);
 
@@ -212,6 +220,7 @@ export default function YearEndTaxCalculator() {
  calculateYearEndTax({
  ...derivedInputs,
  pensionSavings: 0,
+ irp: 0,
  creditCard: 0,
  donation: 0,
  }).finalRefund,
@@ -273,9 +282,15 @@ export default function YearEndTaxCalculator() {
  <Accordion title="3. 세액 공제 항목" contentProps={measurement.inputProps}>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <CurrencyInput
- label="연금저축/IRP 납입액"
+ label="연금저축 납입액"
  value={inputs.pensionSavings.toLocaleString('ko-KR')}
  onValueChange={(v) => handleInputChange("pensionSavings", v)}
+ quickAmounts={[3000000, 1000000, 500000]}
+ />
+ <CurrencyInput
+ label="IRP·퇴직연금 본인 납입액"
+ value={inputs.irp.toLocaleString('ko-KR')}
+ onValueChange={(v) => handleInputChange("irp", v)}
  quickAmounts={[3000000, 1000000, 500000]}
  />
  <CurrencyInput
@@ -329,15 +344,28 @@ export default function YearEndTaxCalculator() {
 
  <div className="mt-6 pt-6 border-t border-border">
  <h3 className="text-lg font-bold text-center mb-4">절세 최적화 시뮬레이터</h3>
- <div {...measurement.inputProps} className="space-y-4">
+ <div className="space-y-4">
  <OptimizationSlider
- label="연금저축/IRP"
- tip="연 900만원까지 세액공제 혜택을 최대로 받을 수 있어요!"
- value={inputs.pensionSavings}
- max={9000000}
- onChange={(v) => handleNumberChange("pensionSavings", v)}
+ inputProps={measurement.inputProps}
+ label={pensionAccount === "pensionSavings" ? "연금저축 납입액 조정" : "IRP·퇴직연금 본인 납입액 조정"}
+ labelControl={
+ <select
+ aria-label="조정할 연금계좌"
+ value={pensionAccount}
+ onChange={(event) => setPensionAccount(event.target.value === "irp" ? "irp" : "pensionSavings")}
+ className="min-w-0 max-w-[60%] bg-card text-sm font-medium text-foreground rounded border border-border"
+ >
+ <option value="pensionSavings">연금저축</option>
+ <option value="irp">IRP·퇴직연금</option>
+ </select>
+ }
+ tip="연금저축은 600만원, 퇴직연금 합산 900만원까지 공제 대상입니다. ISA 전환 추가한도는 제외합니다."
+ value={inputs[pensionAccount]}
+ max={Math.max(PENSION_ACCOUNT_CREDIT_2026.TOTAL_CAP, inputs[pensionAccount])}
+ onChange={(v) => handleNumberChange(pensionAccount, v)}
  />
  <OptimizationSlider
+ inputProps={measurement.inputProps}
  label="신용카드"
  tip="총급여의 25% 초과 사용분부터 공제 대상이 됩니다."
  value={inputs.creditCard}

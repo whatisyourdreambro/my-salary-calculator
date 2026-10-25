@@ -31,7 +31,7 @@ export type NextActionIncomeType = "regular" | "freelancer" | "part_time";
 // 목적지만 해당 소득에 맞춘다. annualSalary 유무는 문구에만 영향을 준다.
 const LOAN_HREFS = ["/home-loan", "/calc/jeonse-loan", "/property-holding-tax-2026"] as const;
 const TAX_HREFS = ["/year-end-tax", "/tools/finance/freelance-tax", "/salary-db"] as const;
-const INSURANCE_HREFS = ["/health-insurance-2026", "/calc/medical-expense-coverage", "/fire-calculator"] as const;
+const INSURANCE_HREFS = ["/health-insurance-fee-2026", "/calc/medical-expense-coverage", "/fire-calculator"] as const;
 const INVESTMENT_HREFS = ["/calc/compound-interest-quick", "/calc/stock-capital-gains-quick", "/fire-calculator"] as const;
 const SALARY_HREFS = ["/home-loan", "/salary-db", "/year-end-tax"] as const;
 const FREELANCER_HREFS = ["/tools/finance/freelance-tax", "/health-insurance-2026", "/calc/freelancer-yearly-quick"] as const;
