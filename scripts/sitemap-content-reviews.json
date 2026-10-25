@@ -273,13 +273,13 @@
     },
     "/calc/bonus-calculators": {
       "contentDate": "2026-10-09",
-      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
-      "reason": "Existing explicit editorial baseline 2026-10-09 retained after route-owned history review; no later substantive change was identified in the reviewed scope.",
+      "reviewedAtCommit": "8bccfd382c84f88e07cd504dd751d617c44995dc",
+      "reason": "Reviewed October 25 against 8bccfd38 plus this candidate. This narrow correction updates only the tax-saving FAQ: distinguish eligible personal contributions under the general 6m savings/9m combined pension limits, the separate ISA transfer exception, national 15%/12% credit rates and actual refund; remove unsupported contribution-timing/max-effect wording. Source: NTS pension-account guidance, cntntsId=7875, rechecked October 25. The visible FAQ and JSON-LD share this answer. Retain the October 9 editorial date; this review does not refresh company payout claims, page title, calculation features or advertising.",
       "dependencies": [],
       "files": [
         "src/app/calc/bonus-calculators/page.tsx"
       ],
-      "sha256": "1b12a015b345c3640cc36c8696616901dd491d8ccc5611ee3933d090519232dc"
+      "sha256": "0dde12e1ede3a17ff6b8fe03a4c142aa7c429d325a4728107d84f3a12c604356"
     },
     "/calc/bonus-home-plan": {
       "contentDate": "2026-10-19",
