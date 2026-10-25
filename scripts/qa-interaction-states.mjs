@@ -643,6 +643,142 @@ export async function main() {
         item.roundIndicator.keyboardSelections.push({ key, buttonIndex: index, labels, expectedPair, afterKey, singlePairAdvance: true });
       }
     },
+    async childCreditEligibility() {
+      await open('/calc/child-deduction');
+      const basicLabel = '기본공제 대상 전체';
+      const creditLabel = '그중 연간 자녀세액공제 대상';
+      const basic = page.getByRole('group', { name: basicLabel, exact: true });
+      const credit = page.getByRole('group', { name: creditLabel, exact: true });
+      const result = page.getByRole('region', { name: '자녀 공제액 결과', exact: true });
+      const increaseBasic = basic.getByRole('button', { name: `${basicLabel} 늘리기`, exact: true });
+      const decreaseBasic = basic.getByRole('button', { name: `${basicLabel} 줄이기`, exact: true });
+      const increaseCredit = credit.getByRole('button', { name: `${creditLabel} 늘리기`, exact: true });
+      item.childEligibility = [];
+      async function snapshot(state, basicCount, eligibleCount, incomeDeduction, annualCredit) {
+        await page.waitForFunction(({ basicCount, eligibleCount, incomeDeduction, annualCredit }) => {
+          const count = label => document.querySelector(`[role="group"][aria-label="${label}"] [aria-live]`)?.textContent.trim();
+          const region = document.querySelector('section[aria-label="자녀 공제액 결과"]');
+          const cards = region?.querySelectorAll('dl > div');
+          const income = cards?.[0]?.querySelector('dd')?.textContent.trim();
+          const detail = cards?.[1]?.querySelectorAll('dd')[1]?.textContent || '';
+          return count('기본공제 대상 전체') === `${basicCount}명`
+            && count('그중 연간 자녀세액공제 대상') === `${eligibleCount}명`
+            && income === `${incomeDeduction.toLocaleString('ko-KR')}원`
+            && detail.includes(`자녀세액공제 ${annualCredit.toLocaleString('ko-KR')}원`)
+            && detail.includes('출산·입양 공제 0원');
+        }, { basicCount, eligibleCount, incomeDeduction, annualCredit });
+        assert.equal(await result.getAttribute('aria-live'), 'polite');
+        const total = await result.locator('dl > div').nth(1).locator('dd').first().textContent();
+        assert.equal(total.trim(), `${annualCredit.toLocaleString('ko-KR')}원`);
+        item.childEligibility.push({ state, basicCount, eligibleCount, incomeDeduction, annualCredit,
+          observedBasic: (await basic.locator('[aria-live]').textContent()).trim(),
+          observedEligible: (await credit.locator('[aria-live]').textContent()).trim(),
+          observedResult: (await result.innerText()).replace(/\s+/g, ' ').trim() });
+      }
+      await snapshot('initial', 0, 0, 0, 0);
+      assert.equal(await increaseCredit.isDisabled(), true, 'No eligible child may be added without a basic-deduction child');
+      await increaseBasic.click();
+      await snapshot('basic-only', 1, 0, 1_500_000, 0);
+      await increaseCredit.click();
+      await snapshot('one-explicit-eligible', 1, 1, 1_500_000, 250_000);
+      assert.equal(await increaseCredit.isDisabled(), true);
+      await increaseBasic.click();
+      await snapshot('mixed-eligibility', 2, 1, 3_000_000, 250_000);
+      await increaseCredit.click();
+      await snapshot('two-eligible', 2, 2, 3_000_000, 550_000);
+      assert.equal(await increaseCredit.isDisabled(), true);
+      await decreaseBasic.click();
+      await snapshot('subset-clamped-to-one', 1, 1, 1_500_000, 250_000);
+      assert.equal(await increaseCredit.isDisabled(), true);
+      await decreaseBasic.click();
+      await snapshot('subset-clamped-to-zero', 0, 0, 0, 0);
+      assert.equal(await increaseCredit.isDisabled(), true);
+      // Leave the synthetic mixed case visible in the maintained screenshot.
+      await increaseBasic.click(); await increaseBasic.click(); await increaseCredit.click();
+      await snapshot('mixed-final', 2, 1, 3_000_000, 250_000);
+    },
+    async dualIncomeChildEligibility() {
+      await open('/calc/dual-income-year-end');
+      const basic = page.getByLabel('자녀 수 (기본공제 대상)', { exact: true });
+      const credit = page.getByLabel('그중 연간 자녀세액공제 대상 (2026년 귀속)', { exact: true });
+      assert.equal(await basic.inputValue(), '0');
+      assert.equal(await credit.inputValue(), '0');
+      assert.deepEqual(await credit.locator('option').evaluateAll(options => options.map(option => option.value)), ['0']);
+      assert.equal(await credit.getAttribute('aria-describedby'), 'di-child-credit-help');
+      assert.match(await page.locator('#di-child-credit-help').textContent(), /9세 이상.*2017년생은 제외/s);
+      // Fixed synthetic salaries leave enough income tax to observe a 250,000-won credit.
+      await page.getByRole('textbox', { name: '본인 총급여 (연봉, 비과세 제외)', exact: true }).fill('60000000');
+      await page.getByRole('textbox', { name: '배우자 총급여 (연봉, 비과세 제외)', exact: true }).fill('40000000');
+      await basic.selectOption('2');
+      for (const name of ['자녀 의료비 (연간)', '자녀 교육비 (연간)', '자녀 명의 기부금 (연간)', '서로를 위한 의료비 (부부 상호 지출분)']) {
+        await page.getByRole('textbox', { name, exact: true }).fill('0');
+      }
+      const table = page.getByRole('table').filter({ has: page.getByRole('columnheader', { name: '본인 결정세액', exact: true }) });
+      async function snapshot(state, basicCount, eligibleCount) {
+        await page.waitForFunction(({ basicCount, eligibleCount }) => {
+          if (document.querySelector('#di-children')?.value !== String(basicCount)
+            || document.querySelector('#di-credit-children')?.value !== String(eligibleCount)) return false;
+          if (basicCount === 0) return true;
+          return [...document.querySelectorAll('main li')].some(li => {
+            const match = /그중 연간 자녀세액공제 본인 (\d+)명 · 배우자 (\d+)명/.exec(li.textContent || '');
+            return match && Number(match[1]) + Number(match[2]) === eligibleCount;
+          });
+        }, { basicCount, eligibleCount });
+        const rows = await table.locator('tbody tr').evaluateAll(nodes => nodes.map(row => {
+          const cells = [...row.querySelectorAll('td')].map(cell => cell.textContent.trim());
+          const amount = value => /^\+?[\d,]+원$/.test(value) ? Number(value.replace(/[^\d]/g, '')) : null;
+          return { label: cells[0].replace(/\s*BEST$/, ''), taxMe: amount(cells[1]), taxSp: amount(cells[2]),
+            total: amount(cells[3]), difference: cells[4] === '—' ? 0 : amount(cells[4]) };
+        }));
+        assert.deepEqual(rows.map(row => row.label), ['전부 본인 귀속', '전부 배우자 귀속', '최적 배분']);
+        for (const row of rows) {
+          assert([row.taxMe, row.taxSp, row.total, row.difference].every(value => Number.isFinite(value) && value >= 0));
+          assert.equal(row.total, row.taxMe + row.taxSp, `${state}: displayed spouse totals must add up`);
+          assert.equal(row.difference, row.total - rows[2].total);
+        }
+        const summary = await page.getByText(/잘못 몰아줬을 때 대비 · 최적 합산 결정세액/).textContent();
+        assert(summary.includes(`최적 합산 결정세액 ${rows[2].total.toLocaleString('ko-KR')}원`));
+        let assignment = null;
+        if (basicCount > 0) {
+          const basicText = await page.locator('main li').filter({ hasText: /자녀 (?:\d+명 기본공제 전부|기본공제 본인)/ }).textContent();
+          const split = /자녀 기본공제 본인 (\d+)명 · 배우자 (\d+)명/.exec(basicText);
+          const whole = /자녀 (\d+)명 기본공제 전부 → (본인|배우자)/.exec(basicText);
+          assert(split || whole, 'Visible basic-deduction allocation is required');
+          const kidsToMe = split ? Number(split[1]) : whole[2] === '본인' ? Number(whole[1]) : 0;
+          const kidsToSp = split ? Number(split[2]) : whole[2] === '배우자' ? Number(whole[1]) : 0;
+          const creditText = await page.locator('main li').filter({ hasText: '그중 연간 자녀세액공제 본인' }).textContent();
+          const match = /그중 연간 자녀세액공제 본인 (\d+)명 · 배우자 (\d+)명/.exec(creditText);
+          assert(match);
+          assignment = { kidsToMe, kidsToSp, creditKidsToMe: Number(match[1]), creditKidsToSp: Number(match[2]) };
+          assert.equal(kidsToMe + kidsToSp, basicCount);
+          assert.equal(assignment.creditKidsToMe + assignment.creditKidsToSp, eligibleCount);
+          assert(assignment.creditKidsToMe <= kidsToMe && assignment.creditKidsToSp <= kidsToSp,
+            'Annual child credit must stay with the same spouse who has that child basic deduction');
+        }
+        const record = { state, basicCount, eligibleCount, rows, assignment };
+        item.dualChildEligibility.push(record);
+        return record;
+      }
+      item.dualChildEligibility = [];
+      const withoutCredit = await snapshot('two-basic-no-annual-credit', 2, 0);
+      assert.deepEqual(await credit.locator('option').evaluateAll(options => options.map(option => option.value)), ['0', '1', '2']);
+      await credit.selectOption('1');
+      const mixed = await snapshot('two-basic-one-annual-credit', 2, 1);
+      for (let index = 0; index < 3; index++) {
+        assert.equal(withoutCredit.rows[index].total - mixed.rows[index].total, 250_000,
+          'One explicit eligible child must reduce the synthetic scenario by 250,000 won');
+      }
+      await credit.selectOption('2');
+      await snapshot('two-basic-two-annual-credit', 2, 2);
+      await basic.selectOption('1');
+      await snapshot('subset-clamped-to-one', 1, 1);
+      assert.deepEqual(await credit.locator('option').evaluateAll(options => options.map(option => option.value)), ['0', '1']);
+      await basic.selectOption('0');
+      await snapshot('subset-clamped-to-zero', 0, 0);
+      assert.deepEqual(await credit.locator('option').evaluateAll(options => options.map(option => option.value)), ['0']);
+      await basic.selectOption('2'); await credit.selectOption('1');
+      await snapshot('mixed-final', 2, 1);
+    },
     async yearEnd() {
       await open('/year-end-tax'); await announcement('year-end-tax');
       await text('[data-calculation-result="year-end-tax"]', 'year-end result');

@@ -136,6 +136,7 @@ describe("연말정산 — 장기요양보험료 소득공제", () => {
     traditionalMarket: 0,
     publicTransport: 0,
     children: 0,
+    childTaxCreditEligibleChildren: 0,
     birthsOrAdoptions: 0,
     pensionSavings: 0,
     irp: 0,

@@ -289,6 +289,7 @@ describe("연말정산 엔진 (yearEndTaxCalculator)", () => {
     traditionalMarket: 0,
     publicTransport: 500_000,
     children: 0,
+    childTaxCreditEligibleChildren: 0,
     birthsOrAdoptions: 0,
     pensionSavings: 0,
     irp: 0,
@@ -300,10 +301,11 @@ describe("연말정산 엔진 (yearEndTaxCalculator)", () => {
   };
 
   it("자녀세액공제가 결정세액에 정확히 반영된다 (25/55/95만)", () => {
-    const t0 = calculateYearEndTax(base).determinedTax;
-    expect(t0 - calculateYearEndTax({ ...base, children: 1 }).determinedTax).toBe(250_000);
-    expect(t0 - calculateYearEndTax({ ...base, children: 2 }).determinedTax).toBe(550_000);
-    expect(t0 - calculateYearEndTax({ ...base, children: 3 }).determinedTax).toBe(950_000);
+    const household = { ...base, dependents: 4 };
+    const t0 = calculateYearEndTax(household).determinedTax;
+    expect(t0 - calculateYearEndTax({ ...household, childTaxCreditEligibleChildren: 1 }).determinedTax).toBe(250_000);
+    expect(t0 - calculateYearEndTax({ ...household, childTaxCreditEligibleChildren: 2 }).determinedTax).toBe(550_000);
+    expect(t0 - calculateYearEndTax({ ...household, childTaxCreditEligibleChildren: 3 }).determinedTax).toBe(950_000);
   });
 
   it("월세 세액공제 — 한도 1,000만·총급여 구간별 17%/15%/0%", () => {

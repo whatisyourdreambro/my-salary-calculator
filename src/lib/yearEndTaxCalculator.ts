@@ -55,7 +55,9 @@ export interface TaxInputs {
  publicTransport: number; // 대중교통 사용액
 
  // 세액공제 항목
- children: number; // 자녀 수 (8세 이상 기본공제대상 자녀 — 자녀세액공제·카드 한도·간이세액표 자녀 공제)
+ children: number; // 기존 카드공제 한도 산정 인원. 연간 자녀세액공제·월 원천징수 인원과 별도.
+ /** 2026년 귀속 기본공제 대상 중 연간 자녀세액공제 적격 인원(9세 이상, 2017년생 제외). */
+ childTaxCreditEligibleChildren: number;
  /**
   * 해당년도 출산/입양 자녀 수 — birthOrders 가 없을 때만 쓰는 보수적 대체값.
   * 순서를 모르므로 1명당 첫째 금액(30만원)을 적용한다(실제는 둘째 50만·셋째 이상 70만일 수 있음).
@@ -110,6 +112,11 @@ export interface TaxResult {
 // 2026년 귀속 연말정산 계산 함수
 export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  const { grossSalary } = inputs;
+ // 이전 children 값을 새 연간 공제 인원으로 추정하거나 대체하지 않는다.
+ if (!Number.isInteger(inputs.childTaxCreditEligibleChildren) || inputs.childTaxCreditEligibleChildren < 0
+   || inputs.childTaxCreditEligibleChildren > Math.max(0, inputs.dependents - 1)) {
+   throw new RangeError("연간 자녀세액공제 인원은 본인을 제외한 기본공제 인원 이내의 정수여야 합니다.");
+ }
 
  // 1. 근로소득공제 — taxConstants2026 정본 사용 (2,000만원 캡 포함)
  const earnedIncomeDeduction = earnedIncomeDeduction2026(grossSalary);
@@ -162,8 +169,8 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  grossSalary
  );
 
- // 자녀세액공제 (소득세법 §59의2, 2025 개정) — 첫째 25만·둘째 30만·셋째+ 40만
- const childTaxCredit = childTaxCredit2026(inputs.children);
+ // 금액 산식과 적격 인원을 분리한다. 카드공제·월 원천징수 인원을 재사용하지 않는다.
+ const childTaxCredit = childTaxCredit2026(inputs.childTaxCreditEligibleChildren);
 
  // 소득세법 §59의3: 연금저축은 먼저 600만원 한도를 적용하고,
  // 퇴직연금 본인 납입액과 합산해 900만원 한도를 적용한다. ISA 전환 추가한도는 미포함.

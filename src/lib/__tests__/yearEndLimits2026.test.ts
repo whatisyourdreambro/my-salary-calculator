@@ -99,7 +99,7 @@ describe("공제 한도표 — 2026년 귀속 현행법 수치", () => {
       grossSalary: 55_000_000, prepaidTax: 0, nationalPension: 0, healthInsurance: 0,
       employmentInsurance: 0, dependents: 1, disabledDependents: 0, seniorDependents: 0,
       housingSubscription: 0, mortgageInterest: 0, creditCard: 0, debitCardAndCash: 0,
-      traditionalMarket: 0, publicTransport: 0, children: 0, birthsOrAdoptions: 0,
+      traditionalMarket: 0, publicTransport: 0, children: 0, childTaxCreditEligibleChildren: 0, birthsOrAdoptions: 0,
       pensionSavings: 0, irp: 0, lifeInsurance: 0, medicalExpenses: 0, educationExpenses: 0,
       donation: 0, monthlyRent: 0,
     };

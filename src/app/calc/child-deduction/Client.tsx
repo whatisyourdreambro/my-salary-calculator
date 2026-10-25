@@ -8,11 +8,14 @@ function fmt(n: number) { return n.toLocaleString("ko-KR"); }
 
 export default function ChildDeductionClient() {
   const [input, setInput] = useState<ChildDeductionInput>({
-    eligibleUnder8: 0, eligible8Plus: 0,
+    basicDeductionChildren: 0, childTaxCreditEligibleChildren: 0,
     firstBirthOrAdoption: 0, secondBirthOrAdoption: 0, thirdPlusBirthOrAdoption: 0,
   });
   const result = calculateChildDeduction2026(input);
-  const update = (field: keyof ChildDeductionInput, value: number) => setInput((previous) => ({ ...previous, [field]: value }));
+  const update = (field: keyof ChildDeductionInput, value: number) => setInput((previous) => ({
+    ...previous, [field]: value,
+    ...(field === "basicDeductionChildren" ? { childTaxCreditEligibleChildren: Math.min(previous.childTaxCreditEligibleChildren, value) } : {}),
+  }));
 
   return (
     <div className="space-y-5 mb-10">
@@ -25,10 +28,10 @@ export default function ChildDeductionClient() {
             장애인은 나이 제한이 없지만 소득 요건은 확인해야 합니다.
           </p>
           <div className="grid sm:grid-cols-2 gap-5">
-            <Counter label="만 8세 미만" value={input.eligibleUnder8} onChange={(value) => update("eligibleUnder8", value)} />
-            <Counter label="만 8세 이상" value={input.eligible8Plus} onChange={(value) => update("eligible8Plus", value)} />
+            <Counter label="기본공제 대상 전체" value={input.basicDeductionChildren} onChange={(value) => update("basicDeductionChildren", value)} />
+            <Counter label="그중 연간 자녀세액공제 대상" value={input.childTaxCreditEligibleChildren} max={input.basicDeductionChildren} onChange={(value) => update("childTaxCreditEligibleChildren", value)} />
           </div>
-          <p className="mt-3 text-xs text-muted-blue dark:text-canvas-300">일반적인 연령 판정은 2026년 12월 31일 기준입니다. 만 7세는 8세 미만에 포함합니다. 요건을 충족하지 않는 자녀는 입력에서 제외해 주세요.</p>
+          <p className="mt-3 text-xs text-muted-blue dark:text-canvas-300">2026년 귀속 연간 자녀세액공제는 기본공제 대상 중 9세 이상이며, 2017년생은 제외합니다. 해당 과세기간 중 요건 나이에 해당되는 날이 있는지 확인하세요. 기본공제의 소득·부양 요건과 사망 등 판정 시점 예외는 별도로 확인합니다. 두 번째 인원은 첫 번째 인원에 포함됩니다.</p>
         </fieldset>
 
         <fieldset aria-describedby="child-birth-help">

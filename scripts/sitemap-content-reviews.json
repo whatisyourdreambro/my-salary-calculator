@@ -423,15 +423,22 @@
       "sha256": "a36bc192dbd740fd84be4663fe74c5601900c1e41f2c609ef9dd77b15be80923"
     },
     "/calc/dual-income-year-end": {
-      "contentDate": "2026-09-06",
-      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
-      "reason": "a99c53ba6 (September 6) corrects annual health premium calculation. 075f9bed9 (September 10) replaces the numeric input component without changing calculation/content.",
-      "dependencies": [],
+      "contentDate": "2026-10-26",
+      "reviewedAtCommit": "d4ea19856c47996acf917a3092879359ca6bb060",
+      "reason": "Reviewed October 26 against d4ea1985 plus this candidate: separately input basic-deduction children and the eligible annual-credit subset (2026 age 9+, excluding 2017 births), preserving both counts during parent assignment. Start both counts at zero; retain existing insurance and simplified expense allocation. No whole-page financial certification.",
+      "dependencies": [
+        "src/lib/dualIncomeYearEnd2026.ts",
+        "src/lib/yearEndTaxCalculator.ts",
+        "src/lib/taxConstants2026.ts"
+      ],
       "files": [
         "src/app/calc/dual-income-year-end/Client.tsx",
-        "src/app/calc/dual-income-year-end/page.tsx"
+        "src/app/calc/dual-income-year-end/page.tsx",
+        "src/lib/dualIncomeYearEnd2026.ts",
+        "src/lib/taxConstants2026.ts",
+        "src/lib/yearEndTaxCalculator.ts"
       ],
-      "sha256": "e8547aa549d42a655ad77dfdfe25567586a7c5d55b5d9e796e80fffc5a191fc8"
+      "sha256": "f5823665211c921687d53830af313e6b85ecf438c94075a4aa1438a39ae0d085"
     },
     "/calc/voluntary-retirement": {
       "contentDate": "2026-09-03",
@@ -478,15 +485,20 @@
       "sha256": "9262c5d649bd13591975b17bcc3b57d95d1e78e4847c950f125e53af84ed27e8"
     },
     "/calc/child-deduction": {
-      "contentDate": "2026-09-09",
-      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
-      "reason": "Existing explicit editorial baseline 2026-09-09 retained after route-owned history review; no later substantive change was identified in the reviewed scope.",
-      "dependencies": [],
+      "contentDate": "2026-10-26",
+      "reviewedAtCommit": "d4ea19856c47996acf917a3092879359ca6bb060",
+      "reason": "Reviewed October 26 against d4ea1985 plus this candidate: correct the 2026 annual child-credit eligibility to age 9+ excluding 2017 births under Act 21548 supplementary article 2 and Income Tax Act article 53; split basic-deduction children from the eligible annual-credit subset. Preserve basic and birth/adoption credit amounts; no whole-page financial certification.",
+      "dependencies": [
+        "src/lib/childDeduction.ts",
+        "src/lib/taxConstants2026.ts"
+      ],
       "files": [
         "src/app/calc/child-deduction/Client.tsx",
-        "src/app/calc/child-deduction/page.tsx"
+        "src/app/calc/child-deduction/page.tsx",
+        "src/lib/childDeduction.ts",
+        "src/lib/taxConstants2026.ts"
       ],
-      "sha256": "de7e27a4863ca3e6eba5c531b26c96990cebd22df29d12fb49acf7acfd5b7ac1"
+      "sha256": "7b37ce4dac6212d1d62b6c7751665470e714acbd4989c8c0433415a234f11c1d"
     },
     "/tax-changes-2026": {
       "contentDate": "2026-09-09",
@@ -605,8 +617,8 @@
     },
     "/social-insurance-rates-2027": {
       "contentDate": "2026-10-04",
-      "reviewedAtCommit": "e424ac7718fc09b7f42126811659a6734a9d46e6",
-      "reason": "Reviewed October 23 against deployed commit 3f100889. Narrowed the existing pension link description to same-base monthly difference and a 12-month scenario. No insurance rate table or source-policy revision was made on this page; retain the October 4 content date. Reviewed October 25 against e424ac77 plus this candidate: correct pension sample arithmetic with the existing thousand-won normalized basis and existing per-item ten-won truncation; clarify same-base and July-boundary limitations. No new rate or policy effective date is introduced; retain the October 4 source-policy date.",
+      "reviewedAtCommit": "d4ea19856c47996acf917a3092879359ca6bb060",
+      "reason": "Reviewed October 23 against deployed commit 3f100889. Narrowed the existing pension link description to same-base monthly difference and a 12-month scenario. No insurance rate table or source-policy revision was made on this page; retain the October 4 content date. Reviewed October 25 against e424ac77 plus this candidate: correct pension sample arithmetic with the existing thousand-won normalized basis and existing per-item ten-won truncation; clarify same-base and July-boundary limitations. No new rate or policy effective date is introduced; retain the October 4 source-policy date. Reviewed October 26 against d4ea1985 plus this candidate: the shared taxConstants2026 dependency changes only annual child-credit eligibility comments; insurance rates, calculations and this page content are unchanged. Retain the October 4 source-policy date.",
       "dependencies": [
         "src/lib/insuranceRateExample.ts",
         "src/lib/pensionHike.ts",
@@ -620,7 +632,7 @@
         "src/lib/taxConstants2026.ts",
         "src/lib/taxConstants2027.ts"
       ],
-      "sha256": "3eba70488c94b70bc2ec35a1605ee0b8497fcce35dd9768cfffdd7c4f386ab37"
+      "sha256": "d27ac5248cfc61f05a20c93639eecb8861004cdded14b0869c3d046e1d09dd5d"
     },
     "/military-pay-2026": {
       "contentDate": "2026-09-27",

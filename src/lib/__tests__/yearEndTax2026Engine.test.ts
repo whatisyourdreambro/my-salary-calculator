@@ -54,6 +54,7 @@ const plain = (grossSalary: number, prepaidTax = 0): TaxInputs => ({
   traditionalMarket: 0,
   publicTransport: 0,
   children: 0,
+  childTaxCreditEligibleChildren: 0,
   birthsOrAdoptions: 0,
   pensionSavings: 0,
   irp: 0,
@@ -195,6 +196,45 @@ describe("세액공제 항목 — 법정 금액만큼 결정세액이 준다 (�
   });
 });
 
+describe("연간 자녀세액공제 인원 분리", () => {
+  const household = () => ({ ...plain(80_000_000, 2_000_000), dependents: 4, children: 2,
+    creditCard: 35_000_000, debitCardAndCash: 10_000_000, birthOrders: [1] });
+
+  it("적격 인원만 바꾸면 소득공제·카드공제·출산공제·기납부세액은 그대로다", () => {
+    const input = household();
+    const without = calculateYearEndTax(input);
+    for (const [count, credit] of [[1, 250_000], [2, 550_000], [3, 950_000]]) {
+      const withCredit = calculateYearEndTax({ ...input, childTaxCreditEligibleChildren: count });
+      expect(withCredit.incomeDeduction).toBe(without.incomeDeduction);
+      expect(withCredit.taxBase).toBe(without.taxBase);
+      expect(withCredit.calculatedTax).toBe(without.calculatedTax);
+      expect(without.determinedTax - withCredit.determinedTax).toBe(credit);
+      expect(withCredit.finalRefund - without.finalRefund).toBe(credit);
+    }
+    const withoutBirth = calculateYearEndTax({ ...input, birthOrders: [] });
+    expect(withoutBirth.determinedTax - without.determinedTax).toBe(300_000);
+  });
+
+  it("기존 카드용 자녀 인원에서 연간 적격 인원을 추론하지 않는다", () => {
+    const input = { ...plain(80_000_000), dependents: 3 };
+    expect(calculateYearEndTax({ ...input, children: 2 })).toEqual(calculateYearEndTax(input));
+    const missing = { ...input } as Partial<TaxInputs>;
+    delete missing.childTaxCreditEligibleChildren;
+    expect(() => calculateYearEndTax(missing as TaxInputs)).toThrow(RangeError);
+  });
+
+  it.each([-1, 0.5, Number.NaN, Infinity, 4])("적격 인원 %s가 정수·부분집합 계약을 위반하면 거부한다", (count) => {
+    expect(() => calculateYearEndTax({ ...household(), childTaxCreditEligibleChildren: count })).toThrow(RangeError);
+  });
+
+  it("낮은 세액에서 공제가 새 환급을 만들지 않고 이미 낸 세금까지만 돌려준다", () => {
+    const result = calculateYearEndTax({ ...plain(5_000_000, 100_000), dependents: 2, childTaxCreditEligibleChildren: 1 });
+    expect(result.determinedTax).toBe(0);
+    expect(result.finalRefund).toBe(100_000);
+    expect(result.taxCredit).toBe(result.calculatedTax);
+  });
+});
+
 describe("연금계좌 공제 — 연금저축 개별 한도와 퇴직연금 합산 한도", () => {
   for (const [salary, rate] of [[55_000_000, 0.15], [55_000_001, 0.12]] as const) {
     it(`총급여 ${salary}: 계좌를 구분해 국세 공제율 ${rate}을 적용한다`, () => {
@@ -253,9 +293,9 @@ describe("대조 — 위젯·맞벌이 계산기와 같은 입력이면 같은 �
         medicalExpenses: medical,
         educationExpenses: education,
       }).determinedTax;
-    // 기본 입력: 본인 6,000만·배우자 4,000만·자녀 1명·자녀 의료비 300만·교육비 200만·부부 상호 의료비 100만
-    const allMe = { me: person(60_000_000, 1, 4_000_000, 2_000_000), sp: person(40_000_000, 0, 0, 0) };
-    const allSp = { me: person(60_000_000, 0, 0, 0), sp: person(40_000_000, 1, 4_000_000, 2_000_000) };
+    // 기본 입력: 본인 6,000만·배우자 4,000만·자녀 0명·연간 적격 0명·부부 상호 의료비 100만
+    const allMe = { me: person(60_000_000, 0, 1_000_000, 0), sp: person(40_000_000, 0, 0, 0) };
+    const allSp = { me: person(60_000_000, 0, 0, 0), sp: person(40_000_000, 0, 1_000_000, 0) };
     for (const v of [allMe.me, allMe.sp, allMe.me + allMe.sp, allSp.me, allSp.sp, allSp.me + allSp.sp]) {
       expect(html).toContain(fmt(v));
     }
