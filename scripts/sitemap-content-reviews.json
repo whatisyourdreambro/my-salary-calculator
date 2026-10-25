@@ -750,13 +750,13 @@
     },
     "/retirement-pension-2026": {
       "contentDate": "2026-10-26",
-      "reviewedAtCommit": "e24a2464cbcf1c616524b323db1b9ce3d63ad704",
-      "reason": "October 26 substantive corrections distinguish the general 70% risk-asset cap from the qualifying TDF exception, remove automatic TDF compliance claims, and distinguish estimated tax credit from actual refund. Reviewed against e24a2464 plus the explicit date alignment patch. The date records this bounded content correction, not full financial certification or deployment completion. The original February 1 publication date and other pages' dates are preserved.",
+      "reviewedAtCommit": "20f1bbbf1dfd029945547dd39549df7ee62c306f",
+      "reason": "October 26 bounded corrections distinguish the general 70% risk-asset cap from the qualifying TDF exception and estimated tax credit from actual refund. Reviewed against 20f1bbbf plus explicit body/CTA and one tax-credit FAQ corrections: salary-only total-wage terminology, neutral tax deferral, and removal of the 30-year refund projection. Four adjacent common-mistake items replace unsupported return, universal liquidity, transfer-benefit and pension-sufficiency claims with reader checks; the risk-limit item is unchanged. The existing October 26 review date and February 1 publication date are preserved; this is not full financial certification or deployment completion.",
       "dependencies": [],
       "files": [
         "src/app/retirement-pension-2026/page.tsx"
       ],
-      "sha256": "003a4c413f7ff6b610121da64a0d32c5bb714550a90f5ba72de0c51f1c86f7e6"
+      "sha256": "72414af3f5918039309455d897d11385638f1a4500fd0651be6b495436827402"
     }
   }
 }
