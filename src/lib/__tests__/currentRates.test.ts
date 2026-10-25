@@ -192,7 +192,7 @@ describe("연도 고정 표면 — 포인터와 무관하게 2026 요율", () =>
       "src/lib/yearEndTaxCalculator.ts",
       "src/components/YearEndTaxCalculator.tsx",
       "src/app/widget/year-end-tax/route.ts",
-      "src/app/calc/dual-income-year-end/Client.tsx",
+      "src/lib/dualIncomeYearEnd2026.ts",
       "src/lib/smbTaxBreak.ts",
     ]) {
       const src = readFileSync(file, "utf8");
@@ -204,6 +204,17 @@ describe("연도 고정 표면 — 포인터와 무관하게 2026 요율", () =>
     }
     // 본문 검산 예시(연봉 3,000만 · 2026년 귀속 연금보험료공제 142만 5,000원)와 같은 요율
     expect(computeSmbTaxBreak({ annualSalary: 30_000_000, dependents: 1, breakType: "youth" }).taxBase).toBe(17_325_000);
+  });
+
+  it("맞벌이 UI는 2026 요율 고정 헬퍼에 계산을 위임한다", () => {
+    const client = readFileSync("src/app/calc/dual-income-year-end/Client.tsx", "utf8");
+    const helper = readFileSync("src/lib/dualIncomeYearEnd2026.ts", "utf8");
+    expect(client).not.toMatch(/from ["']@\/config\/currentRates["']/);
+    expect(client).toMatch(/import\s*\{[^}]*\bcalculateDualIncomeYearEnd2026\b[^}]*\}\s*from\s*["']@\/lib\/dualIncomeYearEnd2026["']/);
+    expect(client).toMatch(/=\s*calculateDualIncomeYearEnd2026\(\{/);
+    // 이름만 남은 import로 통과하지 않도록 보험료 파생 함수의 출처와 실제 호출도 확인한다.
+    expect(helper).toMatch(/import\s*\{[^}]*\bderiveAnnualSocialInsurance2026\b[^}]*\}\s*from\s*["']\.\/yearEndTaxCalculator["']/);
+    expect(helper).toMatch(/\.\.\.deriveAnnualSocialInsurance2026\(gross\)/);
   });
 });
 

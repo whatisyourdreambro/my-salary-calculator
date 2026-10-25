@@ -146,6 +146,8 @@ const OptimizationSlider = ({
 
 // 기본값 총급여 — 4대보험 기본값은 이 값에서 요율로 파생 (드리프트 방지)
 const DEFAULT_SALARY = 50_000_000;
+// 이 화면에는 월 원천징수 자녀 입력이 없다. 연간 자녀세액공제 인원으로 대체하지 않는다.
+const WITHHOLDING_CHILDREN_8_TO_20 = 0;
 
 export default function YearEndTaxCalculator() {
  const [inputs, setInputs] = useState<TaxInputs>({
@@ -172,6 +174,7 @@ export default function YearEndTaxCalculator() {
  traditionalMarket: 0,
  publicTransport: 0,
  children: 0,
+ childTaxCreditEligibleChildren: 0,
  birthsOrAdoptions: 0,
  pensionSavings: 0,
  irp: 0,
@@ -199,7 +202,7 @@ export default function YearEndTaxCalculator() {
  ...deriveAnnualSocialInsurance2026(inputs.grossSalary),
  prepaidTax: prepaidTaxTouched
  ? inputs.prepaidTax
- : estimatePrepaidIncomeTax2026(inputs.grossSalary, inputs.dependents, inputs.children),
+ : estimatePrepaidIncomeTax2026(inputs.grossSalary, inputs.dependents, WITHHOLDING_CHILDREN_8_TO_20),
  }),
  [inputs, prepaidTaxTouched]
  );

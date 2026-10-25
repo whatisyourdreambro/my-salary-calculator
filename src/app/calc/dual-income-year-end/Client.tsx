@@ -8,12 +8,8 @@
 
 import { useMemo, useState } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
-import {
-  calculateYearEndTax,
-  deriveAnnualHealthPremium,
-} from "@/lib/yearEndTaxCalculator";
+import { calculateDualIncomeYearEnd2026, type AssignmentSide as Side } from "@/lib/dualIncomeYearEnd2026";
 import { calcCardDeduction2026 } from "@/lib/cardDeduction2026";
-import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
 import NumberInput from "@/components/NumberInput";
 
 function fmt(n: number) {
@@ -27,72 +23,6 @@ function parseInput(s: string): number {
   return Number(s.replace(/[^0-9]/g, "")) || 0;
 }
 
-/** 표준 가정 연간 4대보험(근로자 부담분) — widget/year-end-tax 와 동일한 정본 요율 산출 */
-function derivedInsurance(grossSalary: number) {
-  const monthly = grossSalary / 12;
-  const pensionBase = Math.min(
-    Math.max(monthly, PENSION_BASE_2026.MIN_MONTHLY),
-    PENSION_BASE_2026.MAX_MONTHLY
-  );
-  return {
-    nationalPension: Math.round(
-      pensionBase * INSURANCE_RATES_2026.NATIONAL_PENSION * 12
-    ),
-    healthInsurance: deriveAnnualHealthPremium(grossSalary),
-    employmentInsurance: Math.round(
-      grossSalary * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE
-    ),
-  };
-}
-
-/** 한 사람의 결정세액 — 배분된 자녀·지출만 넣고 연말정산 엔진 호출 */
-function personDeterminedTax(
-  gross: number,
-  kids: number,
-  medical: number,
-  education: number,
-  donation: number
-): number {
-  return calculateYearEndTax({
-    grossSalary: gross,
-    prepaidTax: 0,
-    ...derivedInsurance(gross),
-    dependents: 1 + kids, // 본인 + 귀속 자녀 (맞벌이는 서로 배우자공제 불가)
-    disabledDependents: 0,
-    seniorDependents: 0,
-    housingSubscription: 0,
-    mortgageInterest: 0,
-    creditCard: 0,
-    debitCardAndCash: 0,
-    traditionalMarket: 0,
-    publicTransport: 0,
-    children: kids,
-    birthsOrAdoptions: 0,
-    pensionSavings: 0,
-    irp: 0,
-    lifeInsurance: 0,
-    medicalExpenses: medical,
-    educationExpenses: education,
-    donation,
-    monthlyRent: 0,
-  }).determinedTax;
-}
-
-type Side = "me" | "sp";
-
-interface Assignment {
-  kidsToMe: number;
-  childExpTo: Side | null;
-  coupleMedTo: Side | null;
-}
-
-interface ScenarioResult {
-  taxMe: number;
-  taxSp: number;
-  total: number;
-  assign: Assignment;
-}
-
 const SIDE_LABEL: Record<Side, string> = { me: "본인", sp: "배우자" };
 
 export default function DualIncomeYearEndClient() {
@@ -104,80 +34,18 @@ export default function DualIncomeYearEndClient() {
     childDonation: "0",
     coupleMedical: "1,000,000",
   });
-  const [children, setChildren] = useState(1);
+  const [children, setChildren] = useState(0);
+  const [childTaxCreditEligibleChildren, setChildTaxCreditEligibleChildren] = useState(0);
 
   const r = useMemo(() => {
     const salaryMe = parseInput(vals.salaryMe);
     const salarySp = parseInput(vals.salarySp);
-    // 자녀가 없으면 부양가족 지출 배분 자체가 성립하지 않음 — 0 처리
-    const cMed = children > 0 ? parseInput(vals.childMedical) : 0;
-    const cEdu = children > 0 ? parseInput(vals.childEducation) : 0;
-    const cDon = children > 0 ? parseInput(vals.childDonation) : 0;
     const spMed = parseInput(vals.coupleMedical);
-
-    const runScenario = (assign: Assignment): ScenarioResult => {
-      const medMe =
-        (assign.childExpTo === "me" ? cMed : 0) +
-        (assign.coupleMedTo === "me" ? spMed : 0);
-      const medSp =
-        (assign.childExpTo === "sp" ? cMed : 0) +
-        (assign.coupleMedTo === "sp" ? spMed : 0);
-      const taxMe = personDeterminedTax(
-        salaryMe,
-        assign.kidsToMe,
-        medMe,
-        assign.childExpTo === "me" ? cEdu : 0,
-        assign.childExpTo === "me" ? cDon : 0
-      );
-      const taxSp = personDeterminedTax(
-        salarySp,
-        children - assign.kidsToMe,
-        medSp,
-        assign.childExpTo === "sp" ? cEdu : 0,
-        assign.childExpTo === "sp" ? cDon : 0
-      );
-      return { taxMe, taxSp, total: taxMe + taxSp, assign };
-    };
-
-    const allMe = runScenario({
-      kidsToMe: children,
-      childExpTo: children > 0 ? "me" : null,
-      coupleMedTo: spMed > 0 ? "me" : null,
+    const { allMe, allSp, optimal, saving } = calculateDualIncomeYearEnd2026({
+      salaryMe, salarySp, children, childTaxCreditEligibleChildren,
+      childMedical: parseInput(vals.childMedical), childEducation: parseInput(vals.childEducation),
+      childDonation: parseInput(vals.childDonation), coupleMedical: spMed,
     });
-    const allSp = runScenario({
-      kidsToMe: 0,
-      childExpTo: children > 0 ? "sp" : null,
-      coupleMedTo: spMed > 0 ? "sp" : null,
-    });
-
-    // 최적 탐색 — 자녀 귀속 수 × 부양가족 지출 귀속 × 배우자 의료비 지출자 전수 비교
-    // (자녀 지출은 자녀별 분리 없이 한 덩어리로 귀속 — 자녀가 있는 쪽만 가능)
-    let best: ScenarioResult | null = null;
-    for (let k = 0; k <= children; k++) {
-      const expSides: (Side | null)[] =
-        children === 0
-          ? [null]
-          : k === children
-            ? ["me"]
-            : k === 0
-              ? ["sp"]
-              : ["me", "sp"];
-      const medSides: (Side | null)[] = spMed > 0 ? ["me", "sp"] : [null];
-      for (const expTo of expSides) {
-        for (const medTo of medSides) {
-          const s = runScenario({
-            kidsToMe: k,
-            childExpTo: expTo,
-            coupleMedTo: medTo,
-          });
-          if (!best || s.total < best.total) best = s;
-        }
-      }
-    }
-    const optimal = best ?? allMe;
-
-    const worstTotal = Math.max(allMe.total, allSp.total);
-    const saving = worstTotal - optimal.total;
 
     // 최적 배분 설명 문구
     const parts: string[] = [];
@@ -190,6 +58,7 @@ export default function DualIncomeYearEndClient() {
             ? `자녀 ${children}명 기본공제 전부 → 배우자`
             : `자녀 기본공제 본인 ${k}명 · 배우자 ${children - k}명`
       );
+      parts.push(`그중 연간 자녀세액공제 본인 ${optimal.assign.creditKidsToMe}명 · 배우자 ${childTaxCreditEligibleChildren - optimal.assign.creditKidsToMe}명`);
       if (optimal.assign.childExpTo)
         parts.push(
           `자녀 의료비·교육비·기부금 → ${SIDE_LABEL[optimal.assign.childExpTo]}`
@@ -213,7 +82,7 @@ export default function DualIncomeYearEndClient() {
     const cardMinSp = calcCardDeduction2026({ grossSalary: salarySp, ...zeroCard }).minUsage;
 
     return { allMe, allSp, optimal, saving, parts, cardMinMe, cardMinSp };
-  }, [vals, children]);
+  }, [vals, children, childTaxCreditEligibleChildren]);
 
   const scenarioRows = [
     { label: "전부 본인 귀속", res: r.allMe },
@@ -271,7 +140,11 @@ export default function DualIncomeYearEndClient() {
           <select
             id="di-children"
             value={children}
-            onChange={(e) => setChildren(Number(e.target.value))}
+            onChange={(e) => {
+              const count = Number(e.target.value);
+              setChildren(count);
+              setChildTaxCreditEligibleChildren((previous) => Math.min(previous, count));
+            }}
             className="w-full rounded-xl px-4 py-4 text-lg font-black bg-canvas-50 dark:bg-canvas-800 border border-canvas-200 dark:border-canvas-700 text-navy dark:text-canvas-50 focus:outline-none focus:ring-2 focus:ring-electric/50"
           >
             {[0, 1, 2, 3, 4, 5].map((n) => (
@@ -280,6 +153,21 @@ export default function DualIncomeYearEndClient() {
               </option>
             ))}
           </select>
+        </div>
+
+        <div>
+          <label htmlFor="di-credit-children" className="text-xs font-bold tracking-tight block mb-2 text-faint-blue">
+            그중 연간 자녀세액공제 대상 (2026년 귀속)
+          </label>
+          <select id="di-credit-children" value={childTaxCreditEligibleChildren}
+            onChange={(e) => setChildTaxCreditEligibleChildren(Number(e.target.value))}
+            aria-describedby="di-child-credit-help"
+            className="w-full rounded-xl px-4 py-4 text-lg font-black bg-canvas-50 dark:bg-canvas-800 border border-canvas-200 dark:border-canvas-700 text-navy dark:text-canvas-50 focus:outline-none focus:ring-2 focus:ring-electric/50">
+            {Array.from({ length: children + 1 }, (_, count) => <option key={count} value={count}>{count}명</option>)}
+          </select>
+          <p id="di-child-credit-help" className="mt-2 text-xs leading-relaxed text-faint-blue">
+            기본공제 대상 중 9세 이상이며, 2017년생은 제외합니다. 해당 과세기간 중 요건 나이에 해당되는 날이 있는지 확인하세요. 소득·부양 요건과 사망 등 판정 시점 예외는 별도로 확인합니다.
+          </p>
         </div>
 
         {moneyFields.slice(2).map(
@@ -408,8 +296,9 @@ export default function DualIncomeYearEndClient() {
           <p className="text-[11px] leading-relaxed text-faint-blue">
             ※ 본 계산은 소득세 기준(지방소득세 10% 별도)이며, 계산 엔진이 일부 한도를
             단순화합니다 — 부양가족 의료비 공제대상 한도(연 700만원)·교육비 한도(취학
-            단계별 300만~900만원) 미적용, 자녀세액공제는 8세 이상 요건 없이 입력 자녀
-            전원 적용. 이 때문에 몰아주기 이익이 실제보다 크게 표시될 수 있습니다.
+            단계별 300만~900만원) 미적용이며 자녀별 지출도 구분하지 않습니다. 연간 자녀세액공제는
+            별도로 입력한 적격 인원만 같은 자녀의 기본공제 배정에 맞춰 적용합니다. 지출 단순화 때문에
+            배분 이익이 실제보다 크게 표시될 수 있습니다.
             국세청 홈택스 최종 수치와 반드시 대조하세요.
           </p>
         </div>

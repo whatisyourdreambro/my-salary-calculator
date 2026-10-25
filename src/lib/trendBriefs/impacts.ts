@@ -268,6 +268,7 @@ export const IMPACT_KINDS: Readonly<Record<string, ImpactKind>> = {
           traditionalMarket: 0,
           publicTransport: 0,
           children: 0,
+          childTaxCreditEligibleChildren: 0,
           birthsOrAdoptions: 0,
           pensionSavings: 0,
           irp: 0,

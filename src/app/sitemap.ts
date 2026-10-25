@@ -93,12 +93,12 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/tax-reform-2026': { lastModified: new Date('2026-09-30') },
  '/civil-servant-pay-2027': { lastModified: new Date('2026-10-19T00:00:00+09:00') }, // B20 리드·메타 정렬(네이버 저CTR)
  // R2 신규 8라우트 (2026-08-31)
- '/calc/dual-income-year-end': { lastModified: new Date('2026-09-06') },
+ '/calc/dual-income-year-end': { lastModified: new Date('2026-10-26T00:00:00+09:00') },
  '/calc/voluntary-retirement': { lastModified: new Date('2026-09-03') },
  '/calc/dependent-check': { lastModified: new Date('2026-09-05') },
  '/calc/smb-income-tax-break': { lastModified: new Date('2026-10-04') },
  '/calc/offer-compare': { lastModified: new Date('2026-09-25') }, // A17 — 본문 '(설명 수정 2026-09-25)'와 일치
- '/calc/child-deduction': { lastModified: new Date('2026-09-09') },
+ '/calc/child-deduction': { lastModified: new Date('2026-10-26T00:00:00+09:00') },
  '/tax-changes-2026': { lastModified: new Date('2026-09-09') },
  '/year-end-tax-checklist': { lastModified: new Date('2026-09-30') },
  '/weekly-holiday-allowance-2026': { lastModified: new Date('2026-09-12') },

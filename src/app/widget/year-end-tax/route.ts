@@ -57,6 +57,7 @@ function buildGrid(): number[] {
       traditionalMarket: 0,
       publicTransport: 0,
       children: 0,
+      childTaxCreditEligibleChildren: 0,
       birthsOrAdoptions: 0,
       pensionSavings: 0,
       irp: 0,
