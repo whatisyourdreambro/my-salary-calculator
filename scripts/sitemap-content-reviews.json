@@ -424,8 +424,8 @@
     },
     "/calc/dual-income-year-end": {
       "contentDate": "2026-10-26",
-      "reviewedAtCommit": "d4ea19856c47996acf917a3092879359ca6bb060",
-      "reason": "Reviewed October 26 against d4ea1985 plus this candidate: separately input basic-deduction children and the eligible annual-credit subset (2026 age 9+, excluding 2017 births), preserving both counts during parent assignment. Start both counts at zero; retain existing insurance and simplified expense allocation. No whole-page financial certification.",
+      "reviewedAtCommit": "555448246026ed59d7d89ffed0410d669767890f",
+      "reason": "Retains the October 26 child-credit eligibility review. Follow-up against 55544824 plus this candidate clarifies child-named general/special donation input scope, separate spouse income-limit checks and unmodeled carryovers without changing calculations. No whole-page financial certification.",
       "dependencies": [
         "src/lib/dualIncomeYearEnd2026.ts",
         "src/lib/yearEndTaxCalculator.ts",
@@ -438,7 +438,7 @@
         "src/lib/taxConstants2026.ts",
         "src/lib/yearEndTaxCalculator.ts"
       ],
-      "sha256": "f5823665211c921687d53830af313e6b85ecf438c94075a4aa1438a39ae0d085"
+      "sha256": "ab1700939b00b2c2292f9dd5f926f6d1bbf73e14ed3217c98ff0f0fb2fc4d668"
     },
     "/calc/voluntary-retirement": {
       "contentDate": "2026-09-03",

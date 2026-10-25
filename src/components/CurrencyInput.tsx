@@ -1,7 +1,7 @@
 // src/components/CurrencyInput.tsx
 "use client";
 
-import { useRef, useId } from "react";
+import { useRef, useId, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import NumberInput from "@/components/NumberInput";
 
@@ -25,6 +25,7 @@ interface CurrencyInputProps {
  onCurrencyChange?: (value: string) => void;
  currencies?: Currency[];
  className?: string;
+ description?: ReactNode;
 }
 
 export default function CurrencyInput({
@@ -36,11 +37,13 @@ export default function CurrencyInput({
  onCurrencyChange,
  currencies,
  className,
+ description,
 }: CurrencyInputProps) {
  const inputRef = useRef<HTMLInputElement>(null);
  // 14차 — 접근성(a11y) 보강: label-input·select 명시 연결 (WCAG 2.1 레벨 A)
  const inputId = useId();
  const selectId = useId();
+ const descriptionId = description ? `${inputId}-description` : undefined;
 
  const symbol =
  currencies?.find((c) => c.id === selectedCurrency)?.symbol || "원";
@@ -95,6 +98,7 @@ export default function CurrencyInput({
  value={value}
  onChange={handleChange}
  aria-label={label}
+ aria-describedby={descriptionId}
  className={cn(
  "ms-field w-full py-4 pr-14 text-2xl sm:text-3xl font-semibold tabular-nums",
  className,
@@ -106,6 +110,12 @@ export default function CurrencyInput({
  {symbol}
  </span>
  </div>
+
+ {description && (
+ <p id={descriptionId} className="mt-2 text-xs leading-relaxed text-muted-foreground">
+ {description}
+ </p>
+ )}
 
  <div className="mt-4 flex flex-wrap gap-2">
  {quickAmounts.map((amount) => (
