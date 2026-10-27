@@ -829,6 +829,9 @@ export async function main() {
       await account.selectOption('irp');
       assert.equal(await irpSlider.inputValue(), '2900000');
       await text('[data-calculation-result="year-end-tax"]', 'year-end separate pension accounts');
+      await page.getByRole('textbox', { name: '일반·특례 기부금 공제대상액', exact: true }).scrollIntoViewIfNeeded();
+      await page.screenshot({ path: path.join(OUTPUT, `year-end-donation-guidance-${item.width}-${item.theme}.png`), fullPage: false });
+      await irpSlider.scrollIntoViewIfNeeded();
     },
   };
   if (selected) assert(selected.every(name => Object.hasOwn(scenarios, name)), 'Unknown scenario filter');

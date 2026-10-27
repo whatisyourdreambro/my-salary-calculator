@@ -11,6 +11,7 @@ import { CalcResultAd } from "@/components/AdPlacement";
 import { calculateDualIncomeYearEnd2026, type AssignmentSide as Side } from "@/lib/dualIncomeYearEnd2026";
 import { calcCardDeduction2026 } from "@/lib/cardDeduction2026";
 import NumberInput from "@/components/NumberInput";
+import AppLink from "@/components/AppLink";
 
 function fmt(n: number) {
   return Math.round(n).toLocaleString("ko-KR");
@@ -194,11 +195,17 @@ export default function DualIncomeYearEndClient() {
                     }
                     className="w-full rounded-xl px-4 py-4 text-lg font-black bg-canvas-50 dark:bg-canvas-800 border border-canvas-200 dark:border-canvas-700 text-navy dark:text-canvas-50 focus:outline-none focus:ring-2 focus:ring-electric/50 pr-9"
                     aria-label={f.label}
+                    aria-describedby={f.key === "childDonation" ? "di-child-donation-help" : undefined}
                   />
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-faint-blue">
                     원
                   </span>
                 </div>
+                {f.key === "childDonation" && (
+                  <p id="di-child-donation-help" className="mt-2 text-xs leading-relaxed text-faint-blue">
+                    자녀 명의 일반·특례 기부금만 입력하며, 정치자금·고향사랑 기부금은 제외하세요. 이 화면은 유형별 소득 한도·이월액을 자동 반영하지 않아 배우자별 공제대상 금액이 달라질 수 있습니다. <AppLink href="/donation-tax-credit-2026" className="underline underline-offset-2">유형별 계산기</AppLink>에 본인과 배우자의 총급여를 각각 넣어 한도를 확인하고, 세액공제액을 이 칸에 입력하지 마세요.
+                  </p>
+                )}
               </div>
             )
         )}

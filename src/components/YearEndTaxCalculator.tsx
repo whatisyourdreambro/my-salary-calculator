@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useId, type HTMLAttributes } from "react";
 import CurrencyInput from "./CurrencyInput";
+import AppLink from "./AppLink";
 import CountUp from "react-countup";
 import {
  calculateYearEndTax,
@@ -297,7 +298,8 @@ export default function YearEndTaxCalculator() {
  quickAmounts={[3000000, 1000000, 500000]}
  />
  <CurrencyInput
- label="기부금"
+ label="일반·특례 기부금 공제대상액"
+ description={<>유형별 한도를 확인한 공제대상 금액(원)을 입력하세요. 이 화면은 한도·이월액을 자동 계산하지 않습니다. 정치자금·고향사랑 기부금은 <AppLink href="/donation-tax-credit-2026" className="underline underline-offset-2">유형별 계산기</AppLink>에서 확인하고, 계산된 세액공제액을 이 칸에 옮겨 입력하지 마세요.</>}
  value={inputs.donation.toLocaleString('ko-KR')}
  onValueChange={(v) => handleInputChange("donation", v)}
  quickAmounts={[100000, 50000, 10000]}
