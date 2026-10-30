@@ -249,6 +249,11 @@ async function checkApprovalDiagnostic({ after, request = 1, response, expected 
     // A caller cannot mutate the internally registered diagnostic through a previous result.
     diagnostic.approval.requestCategory = privateDiagnostic;
     assert.equal(nativeBuildDiagnostic(error).approval.requestCategory, approvalCategories[request - 1]);
+    if (expected.responseMetadata) {
+      diagnostic.approval.responseMetadata.rateLimitRemaining = privateDiagnostic;
+      diagnostic.approval.responseMetadata.extra = privateDiagnostic;
+      assert.deepEqual(nativeBuildDiagnostic(error).approval.responseMetadata, expected.responseMetadata);
+    }
     return true;
   });
   assert.equal(completed, false); assert.equal(requests, failAt, 'Failures must not cause automatic retries');
@@ -268,11 +273,106 @@ test('approval diagnostics retain every request category and HTTP status before 
   }
 });
 
+const numericResponseHeaders = {
+  'x-ratelimit-limit': 'rateLimitLimit',
+  'x-ratelimit-remaining': 'rateLimitRemaining',
+  'x-ratelimit-reset': 'rateLimitResetEpochSeconds',
+  'retry-after': 'retryAfterSeconds',
+};
+
+test('403 and 429 diagnostics retain only numeric response metadata and still stop before or after building', async () => {
+  const headers = { 'x-ratelimit-limit': '60', 'x-ratelimit-remaining': '0',
+    'x-ratelimit-reset': '1793400000', 'retry-after': '120' };
+  const responseMetadata = { rateLimitLimit: 60, rateLimitRemaining: 0,
+    rateLimitResetEpochSeconds: 1793400000, retryAfterSeconds: 120 };
+  for (const after of [false, true]) for (const status of [403, 429]) {
+    const headerReads = []; let bodyReads = 0;
+    await checkApprovalDiagnostic({ after, response: () => ({ status,
+      headers: { get(name) { headerReads.push(name); return headers[name] ?? privateDiagnostic; } },
+      get body() { bodyReads++; throw new Error(privateDiagnostic); },
+    }), expected: { reason: 'http-status', httpStatus: status, responseMetadata } });
+    assert.deepEqual(headerReads.sort(), Object.keys(numericResponseHeaders).sort(),
+      'Only the four allowed headers may be read; no raw header enumeration or unrelated fields');
+    assert.equal(bodyReads, 0, 'An HTTP failure body must never be read');
+  }
+});
+
+test('response metadata rejects noncanonical and unsafe integers without retaining the supplied strings', async () => {
+  // Plain synthetic headers preserve whitespace that the platform Headers class would normalize.
+  const invalid = [null, undefined, '', '-1', '+1', '-0', '1.0', '1e3', ' 1', '1 ', '1\n', '01',
+    '0x10', '1, 2', '9007199254740992', '10000000000000000', 'Fri, 30 Oct 2026 16:00:00 GMT',
+    privateDiagnostic, 1, NaN, true, {}, ['1']];
+  for (const [header, field] of Object.entries(numericResponseHeaders)) {
+    const keeper = header === 'retry-after' ? 'x-ratelimit-limit' : 'retry-after';
+    for (const value of invalid) {
+      const expected = { reason: 'http-status', httpStatus: 403,
+        responseMetadata: { [numericResponseHeaders[keeper]]: 0 } };
+      await checkApprovalDiagnostic({ after: false, response: () => ({ status: 403,
+        headers: { get(name) { return name === header ? value : name === keeper ? '0' : null; } },
+      }), expected });
+      assert.equal(Object.hasOwn(expected.responseMetadata, field), false);
+    }
+  }
+  await checkApprovalDiagnostic({ after: false, response: () => ({ status: 429,
+    headers: { get() { return 'not-a-number'; } },
+  }), expected: { reason: 'http-status', httpStatus: 429 } });
+});
+
+test('numeric response metadata accepts zero and the largest safe canonical integer', async () => {
+  for (const value of ['0', '1', '9007199254740991']) {
+    const responseMetadata = Object.fromEntries(Object.values(numericResponseHeaders).map(field => [field, Number(value)]));
+    await checkApprovalDiagnostic({ after: false, response: () => ({ status: 403,
+      headers: { get() { return value; } },
+    }), expected: { reason: 'http-status', httpStatus: 403, responseMetadata } });
+  }
+});
+
+test('missing or throwing response header access cannot obscure the HTTP failure or leak raw errors', async () => {
+  const cases = [
+    () => ({ status: 403 }),
+    () => ({ status: 403, headers: null }),
+    () => ({ status: 403, headers: {} }),
+    () => ({ status: 403, get headers() { throw new Error(privateDiagnostic); } }),
+    () => ({ status: 403, headers: { get get() { throw new Error(privateDiagnostic); } } }),
+    () => ({ status: 403, headers: { get() { throw new Error(privateDiagnostic); } } }),
+  ];
+  for (const after of [false, true]) for (const response of cases)
+    await checkApprovalDiagnostic({ after, response, expected: { reason: 'http-status', httpStatus: 403 } });
+  for (const brokenHeader of Object.keys(numericResponseHeaders)) {
+    const responseMetadata = Object.fromEntries(Object.entries(numericResponseHeaders)
+      .filter(([header]) => header !== brokenHeader).map(([, field]) => [field, 1]));
+    await checkApprovalDiagnostic({ after: false, response: () => ({ status: 403,
+      headers: { get(name) { if (name === brokenHeader) throw new Error(privateDiagnostic); return '1'; } },
+    }), expected: { reason: 'http-status', httpStatus: 403, responseMetadata } });
+  }
+});
+
+test('successful GitHub responses do not inspect diagnostic response headers', async () => {
+  let headersRead = 0, requests = 0;
+  const gate = gateFixture(), operations = [];
+  const get = publicGithubBuildClient(async url => {
+    requests++;
+    const data = await gate.get(new URL(url).pathname + new URL(url).search);
+    const response = Response.json(data);
+    return { status: 200, body: response.body,
+      get headers() { headersRead++; throw new Error(privateDiagnostic); } };
+  });
+  const result = await orchestrateCloudBuild({ env, readLocal: async () => local, get,
+    install: async () => { operations.push('install'); }, build: async () => { operations.push('build'); },
+    verify: async () => { operations.push('verify');
+      return { marker: { buildId: 'synthetic-build' }, manifest: { nativeRelease: release() } }; },
+  });
+  assert.equal(result.completed, true); assert.equal(requests, 14); assert.equal(headersRead, 0);
+  assert.deepEqual(operations, ['install', 'build', 'verify']);
+});
+
 test('approval diagnostics distinguish transport and bounded response failures without exposing raw details', async () => {
   const cases = [
     { reason: 'transport', response: () => { throw Object.assign(new Error(privateDiagnostic), {
       requestCategory: privateDiagnostic, reason: privateDiagnostic, httpStatus: 401,
-      approval: { requestCategory: 'ci-jobs', reason: 'http-status', httpStatus: 401 },
+      responseMetadata: { rateLimitRemaining: 0, retryAfterSeconds: 1 },
+      approval: { requestCategory: 'ci-jobs', reason: 'http-status', httpStatus: 401,
+        responseMetadata: { rateLimitRemaining: 0, retryAfterSeconds: 1 } },
     }); } },
     { reason: 'missing-body', httpStatus: 200, response: () => new Response(null) },
     { reason: 'body-read', httpStatus: 200, response: () => new Response(new ReadableStream({
@@ -303,11 +403,29 @@ test('approval contract mismatches retain their request category without asserti
 
 test('forged diagnostic properties and non-status values never enter native diagnostics', async () => {
   const forged = { phase: 'approval-before', requestCategory: privateDiagnostic, reason: privateDiagnostic,
-    httpStatus: 403, approval: { requestCategory: 'main-ref', reason: 'http-status', httpStatus: 403 },
+    httpStatus: 403, responseMetadata: { rateLimitRemaining: 0, retryAfterSeconds: 1 },
+    approval: { requestCategory: 'main-ref', reason: 'http-status', httpStatus: 403,
+      responseMetadata: { rateLimitRemaining: 0, retryAfterSeconds: 1 } },
     message: privateDiagnostic, cause: privateDiagnostic };
   for (const value of [forged, Object.assign(new Error(privateDiagnostic), forged), privateDiagnostic, null, undefined])
     assert.deepEqual(nativeBuildDiagnostic(value), { schemaVersion: 1, event: 'native-build-failed',
       phase: 'unclassified', outputApproved: false, detailsWithheld: true });
+  for (const after of [false, true]) {
+    const gate = gateFixture(), operations = []; let built = false;
+    await assert.rejects(orchestrateCloudBuild({ env, readLocal: async () => local,
+      get: async resource => { if (built === after) throw forged; return gate.get(resource); },
+      install: async () => { operations.push('install'); },
+      build: async () => { built = true; operations.push('build'); },
+      verify: async () => { operations.push('verify');
+        return { marker: { buildId: 'synthetic-build' }, manifest: { nativeRelease: release() } }; },
+    }), error => {
+      assert.deepEqual(nativeBuildDiagnostic(error), { schemaVersion: 1, event: 'native-build-failed',
+        phase: after ? 'approval-after' : 'approval-before', outputApproved: false, detailsWithheld: true,
+        approval: { requestCategory: 'main-ref', reason: 'contract-mismatch' } });
+      return true;
+    });
+    assert.deepEqual(operations, after ? ['install', 'build', 'verify'] : []);
+  }
   for (const status of [privateDiagnostic, 99, 600, 403.5, NaN]) {
     const get = publicGithubBuildClient(async () => ({ status }));
     await assert.rejects(get(`/repos/${CLOUD_BUILD_REPOSITORY}/commits/main`, privateDiagnostic), error => {

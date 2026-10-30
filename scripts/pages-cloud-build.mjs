@@ -29,18 +29,40 @@ const APPROVAL_CATEGORIES = new Set(['main-ref', 'production-ref', 'ci-workflow'
   'ci-jobs', 'publisher-workflow', 'active-approvals']);
 const APPROVAL_REASONS = new Set(['transport', 'http-status', 'missing-body', 'body-read',
   'body-limit', 'invalid-json', 'contract-mismatch']);
-function approvalFailure(requestCategory, reason, httpStatus) {
+function readApprovalResponseMetadata(response) {
+  let headers;
+  try { headers = response.headers; } catch { return undefined; }
+  const metadata = {};
+  // Numeric observations only: never retain raw headers or infer a retry decision.
+  for (const [header, field] of [
+    ['x-ratelimit-limit', 'rateLimitLimit'],
+    ['x-ratelimit-remaining', 'rateLimitRemaining'],
+    ['x-ratelimit-reset', 'rateLimitResetEpochSeconds'],
+    ['retry-after', 'retryAfterSeconds'],
+  ]) {
+    try {
+      const raw = headers.get(header);
+      if (typeof raw !== 'string' || raw.length > 16 || !/^(?:0|[1-9][0-9]*)$/.test(raw)) continue;
+      const value = Number(raw);
+      // The exact round trip also rejects a trailing line break accepted by `$`.
+      if (Number.isSafeInteger(value) && value >= 0 && String(value) === raw) metadata[field] = value;
+    } catch { /* Unavailable metadata must not replace the original HTTP failure. */ }
+  }
+  return Object.keys(metadata).length ? metadata : undefined;
+}
+function approvalFailure(requestCategory, reason, httpStatus, responseMetadata) {
   const error = new Error('Native Pages approval checkpoint failed; details withheld');
   approvalDiagnostics.set(error, {
     requestCategory: APPROVAL_CATEGORIES.has(requestCategory) ? requestCategory : 'unclassified',
     reason: APPROVAL_REASONS.has(reason) ? reason : 'unclassified',
     ...(Number.isInteger(httpStatus) && httpStatus >= 100 && httpStatus <= 599 ? { httpStatus } : {}),
+    ...(responseMetadata ? { responseMetadata: { ...responseMetadata } } : {}),
   });
   return error;
 }
 function phaseFailure(phase, previous) {
   const error = new Error('Native Pages build checkpoint failed; details withheld');
-  // Copy only internally registered enums/status, never properties from a thrown value.
+  // Copy only internally registered diagnostics, never properties from a thrown value.
   if (approvalDiagnostics.has(previous)) approvalDiagnostics.set(error, approvalDiagnostics.get(previous));
   failurePhases.set(error, PHASES.has(phase) ? phase : 'unclassified'); return error;
 }
@@ -53,9 +75,12 @@ async function asyncCheckpoint(phase, operation) {
   catch (error) { throw failurePhases.has(error) ? error : phaseFailure(phase, error); }
 }
 export function nativeBuildDiagnostic(error) {
+  const approval = approvalDiagnostics.get(error);
   return { schemaVersion: 1, event: 'native-build-failed', phase: failurePhases.get(error) || 'unclassified',
     outputApproved: false, detailsWithheld: true,
-    ...(approvalDiagnostics.has(error) ? { approval: { ...approvalDiagnostics.get(error) } } : {}) };
+    ...(approval ? { approval: { ...approval,
+      ...(approval.responseMetadata ? { responseMetadata: { ...approval.responseMetadata } } : {}),
+    } } : {}) };
 }
 
 export function matchesCloudRepositoryOrigin(origin) {
@@ -102,7 +127,8 @@ export function publicGithubBuildClient(fetchFn = globalThis.fetch) {
       signal: AbortSignal.timeout(15000), headers: { accept: 'application/vnd.github+json',
         'x-github-api-version': '2022-11-28', 'user-agent': 'MoneySalary-native-build-gate/1.0' } }); }
     catch { throw approvalFailure(requestCategory, 'transport'); }
-    if (response.status !== 200) throw approvalFailure(requestCategory, 'http-status', response.status);
+    if (response.status !== 200) throw approvalFailure(requestCategory, 'http-status', response.status,
+      readApprovalResponseMetadata(response));
     let reader;
     try { reader = response.body?.getReader(); }
     catch { throw approvalFailure(requestCategory, 'body-read', response.status); }
