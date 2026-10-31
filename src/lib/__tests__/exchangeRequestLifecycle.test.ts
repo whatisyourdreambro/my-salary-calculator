@@ -4,6 +4,7 @@ import vm from "node:vm";
 import ts from "typescript";
 import { describe, expect, it } from "vitest";
 import { assetInComparisonCurrency } from "../exchangeMath";
+import { formatRateString } from "../exchangeRatePrecision";
 
 const source = ts.transpileModule(readFileSync("src/components/ExchangeRateDisplay.tsx", "utf8"), {
   compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2020 },
@@ -50,6 +51,7 @@ function runtime() {
       if (name === "react/jsx-runtime") return { jsx, jsxs: jsx };
       if (name === "next/navigation") return { useSearchParams: () => new URLSearchParams() };
       if (name === "@/lib/exchangeMath") return { assetInComparisonCurrency };
+      if (name === "@/lib/exchangeRatePrecision") return { formatRateString };
       if (name === "framer-motion") return { motion: new Proxy({}, { get: (_, key) => `motion.${String(key)}` }), AnimatePresence: "AnimatePresence" };
       if (["lucide-react", "recharts"].includes(name)) return new Proxy({}, { get: (_, key) => `${name}.${String(key)}` });
       if (name.startsWith("./") || name.startsWith("@/components/") || name === "react-countup") return { __esModule: true, default: name };
