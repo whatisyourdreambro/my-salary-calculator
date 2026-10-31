@@ -869,3 +869,23 @@ describe.skipIf(REGEN.size > 0)("(7) 2026-11-01 사실 정정 묶음 — 일시�
     expect(g.content).not.toContain("36737");
   });
 });
+
+// 표준세액공제 비교 가이드(CALC-02) — 연말정산 엔진이 표준세액공제 13만원 방식(소득세법 제59조의4 제9항)과 비교해
+// 낮은 결정세액을 쓰게 된 변경(PKG-10, yearEndStandardCredit2026.test.ts 가 엔진 값을 고정)과 같은 배포에 실린다.
+describe.skipIf(REGEN.size > 0)("(7) 2026-11-01 사실 정정 묶음 — 표준세액공제 비교 가이드 문장·2,500만원 행 (CALC-02)", () => {
+  const g = bySlug.get("standard-vs-special-deduction-2026")!;
+
+  it("계산기가 특별공제 방식만 쓴다는 옛 안내 대신 두 방식을 비교한다고 쓴다(더 짧은 문장)", () => {
+    const next = "이 사이트 계산기도 두 방식을 비교해 결정세액이 낮은 쪽을 보여 줍니다.";
+    const prev = "이 사이트 계산기는 특별공제 방식으로 계산하므로, 총급여 3,000만원 이하라면 위 표와 함께 비교하는 것이 좋습니다.";
+    expect(g.content).toContain(next);
+    expect(g.content).not.toContain("특별공제 방식으로 계산하므로");
+    expect(chars(next)).toBeLessThan(chars(prev));
+  });
+
+  it("2,500만원 행은 엔진 표준 경로 값(229,438원)이고 차이는 본문 카드 사례와 같은 96,470원이다", () => {
+    expect(g.content).toContain("<tr><td>2,500만원</td><td>1,241,846원</td><td>325,908원</td><td>229,438원</td><td>표준 (96,470원)</td></tr>");
+    expect(g.content).toContain("이 경우 표준세액공제가 96,470원 유리");
+    expect(325_908 - 229_438).toBe(96_470);
+  });
+});
