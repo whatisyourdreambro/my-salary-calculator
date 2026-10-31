@@ -47,17 +47,21 @@ describe('sitemap editorial date integrity', () => {
   it('new explanatory sections advance only their reviewed scope; recommendation-only pages retain dates', () => {
     const fixture = `globalThis.fetch=()=>{throw new Error('Network forbidden')};
       const {pageContentRevision,PAGE_LINK_REVIEW_PATHS}=require('./src/config/pageContentRevisions.ts');
-      const sitemap=require('./src/app/sitemap.ts').default();
+      const {default:sitemapRows,ROUTE_OVERRIDES}=require('./src/app/sitemap.ts');
+      const sitemap=sitemapRows();
       const industry=require('./src/data/industriesData.ts').industriesData[0].id;
       const region=require('./src/data/regionsData.ts').regionsData[0].id;
       const changed=[...PAGE_LINK_REVIEW_PATHS,'/industry/'+industry,'/region/'+region];
-      console.log(JSON.stringify({changed:changed.map(path=>({path,date:pageContentRevision(path)?.toISOString(),matches:sitemap.filter(row=>new URL(row.url).pathname===path).map(row=>row.lastModified.toISOString())})),untouched:['/job/nurse','/calc/loan-balance-after-payments','/en/calculators','/en/salary-converter','/fun','/guides/tax-guide','/en/guides/tax-deduction'].map(path=>[path,!!pageContentRevision(path)])}));`;
+      console.log(JSON.stringify({changed:changed.map(path=>({path,date:pageContentRevision(path)?.toISOString(),override:ROUTE_OVERRIDES[path]?.lastModified?.toISOString(),matches:sitemap.filter(row=>new URL(row.url).pathname===path).map(row=>row.lastModified.toISOString())})),untouched:['/job/nurse','/calc/loan-balance-after-payments','/en/calculators','/en/salary-converter','/fun','/guides/tax-guide','/en/guides/tax-deduction'].map(path=>[path,!!pageContentRevision(path)])}));`;
     const result = JSON.parse(execFileSync(process.execPath, ['--import', 'tsx', '-e', fixture], {
       cwd: process.cwd(), encoding: 'utf8', timeout: 30_000, maxBuffer: 1024 * 1024,
-    })) as { changed: Array<{path: string; date: string; matches: string[]}>; untouched: Array<[string, boolean]> };
+    })) as { changed: Array<{path: string; date: string; override?: string; matches: string[]}>; untouched: Array<[string, boolean]> };
     for (const row of result.changed) {
       expect(row.date, row.path).toBe('2026-10-18T15:00:00.000Z');
-      expect(row.matches, row.path).toEqual([row.date]);
+      // A later page revision recorded in ROUTE_OVERRIDES wins (latestContentDate); verify:sitemap
+      // checks that date against the content-review ledger. Nothing may fall below the review date.
+      const expected = row.override && row.override > row.date ? row.override : row.date;
+      expect(row.matches, row.path).toEqual([expected]);
     }
     expect(result.untouched.every(([, changed]) => !changed)).toBe(true);
   }, 35_000);
