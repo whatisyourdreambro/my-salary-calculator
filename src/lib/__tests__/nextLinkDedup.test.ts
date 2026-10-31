@@ -273,6 +273,16 @@ describe("NextActions.tsx ↔ nextActionLinks 드리프트", () => {
     if (incomeType !== "regular") expect(hrefs).not.toContain("/year-end-tax");
   });
 
+  // 프리랜서 '건강보험료 확인' 카드(직장·지역 가입 조건별 보험료)는 4월 정산 가이드(/health-insurance-2026)가 아니라
+  // 직장·지역 보험료 계산기로 간다 (2026-11-01 P4-07).
+  it("홈 프리랜서 소득의 건강보험료 카드는 보험료 계산기로 연결된다", () => {
+    expect(nextActionHrefs("salary", undefined, "freelancer")).toContain("/health-insurance-fee-2026");
+    expect(nextActionHrefs("salary", undefined, "freelancer")).not.toContain("/health-insurance-2026");
+    const card = buildActions("salary", 50_000_000, "freelancer").find((action) => action.title === "건강보험료 확인");
+    expect(card?.href).toBe("/health-insurance-fee-2026");
+    expect(card?.description).toBe("직장·지역 가입 조건별 보험료");
+  });
+
   it("income context never overrides an explicit non-salary category", () => {
     expect(buildActions("loan", undefined, "freelancer")).toEqual(buildActions("loan", undefined));
     expect(nextActionHrefs("loan", undefined, "part_time")).toEqual(nextActionHrefs("loan"));

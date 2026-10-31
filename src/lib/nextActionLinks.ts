@@ -34,7 +34,7 @@ const TAX_HREFS = ["/year-end-tax", "/tools/finance/freelance-tax", "/salary-db"
 const INSURANCE_HREFS = ["/health-insurance-fee-2026", "/calc/medical-expense-coverage", "/fire-calculator"] as const;
 const INVESTMENT_HREFS = ["/calc/compound-interest-quick", "/calc/stock-capital-gains-quick", "/fire-calculator"] as const;
 const SALARY_HREFS = ["/home-loan", "/salary-db", "/year-end-tax"] as const;
-const FREELANCER_HREFS = ["/tools/finance/freelance-tax", "/health-insurance-2026", "/calc/freelancer-yearly-quick"] as const;
+const FREELANCER_HREFS = ["/tools/finance/freelance-tax", "/health-insurance-fee-2026", "/calc/freelancer-yearly-quick"] as const;
 const PART_TIME_HREFS = ["/weekly-holiday-allowance-2026", "/minimum-wage-2026", "/tools/finance/severance"] as const;
 
 function hrefsOf(category: NextActionCategory | undefined, incomeType?: NextActionIncomeType): readonly string[] {
