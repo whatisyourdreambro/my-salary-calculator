@@ -5,7 +5,14 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
+const label = (m: number) => `${(m / 10000).toFixed(2).replace(/\.?0+$/, "")}억`;
+
 describe("/calc/naver-bonus", () => {
+  it("빠른 선택 라벨이 실제 금액과 같다", () => {
+    expect([5500, 7000, 9000, 12000, 15000].map(label)).toEqual(["0.55억", "0.7억", "0.9억", "1.2억", "1.5억"]);
+    const src = readFileSync(resolve(process.cwd(), "src/app/calc/naver-bonus/Client.tsx"), "utf8");
+    expect(src).toContain('{(m / 10000).toFixed(2).replace(/\\.?0+$/, "")}억');
+  });
   it("PI 기준 표기는 연봉의 10~40%", () => {
     const page = readFileSync(resolve(process.cwd(), "src/app/calc/naver-bonus/page.tsx"), "utf8");
     expect(page).not.toContain("기본급의 10~40%");
