@@ -225,6 +225,7 @@ test('native export packages HTML/TXT without mutating originals or moving ordin
   assert.equal(routes.exclude.some(x => x.includes('_msy')), false);
   assert.deepEqual(routes.exclude, [...PAGES_FUNCTION_EXCLUDES]);
   assert.equal(routes.exclude.includes('/verify.html'), false, 'public verification HTML is a Function document');
+  for (const p of ['/ads.txt', '/app-ads.txt']) assert.ok(routes.exclude.includes(p), p);
   assert.match(readFileSync(path.join(stage, 'dist/_headers'), 'utf8'), /X-MoneySalary-QA: ads-disabled/);
   assert.equal(readFileSync(path.join(stage, 'dist/.assetsignore'), 'utf8'), QA_ASSETS_IGNORE);
   assert.equal(manifest.publicAssets.some(file => file.startsWith('/_worker.js')), false);
