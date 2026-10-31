@@ -131,13 +131,20 @@ describe("critic fix 2026-09-26 — 출처 전체 유사도 · 레이더 후보 
     const noBase = { ...params };
     delete noBase.base;
     expect(impactTable("insurance-rate-change", noBase).provisional).toEqual([]);
-    const y27 = { ...FX.good, impact: { ...FX.good.impact, table: { ...FX.good.impact.table, params: { ...params, base: "2027" } } } } as TrendBriefDraft;
-    expect(impactTable("insurance-rate-change", y27.impact.table.params).provisional).toEqual(["INSURANCE_RATES_2027.LONG_TERM_CARE_RATIO"]);
+    // 2027 장기요양 비율은 2026-10-30 장기요양위원회 의결로 확정 — 아직 결정 전인 2027 요율은 고용보험뿐이다.
+    // 출처 요율(override)로 고용보험을 덮으면 2027 바탕이어도 결정 전 항목이 없다.
+    expect(impactTable("insurance-rate-change", { ...params, base: "2027" }).provisional).toEqual([]);
+    const y27 = { ...FX.good, impact: { ...FX.good.impact, table: { ...FX.good.impact.table, params: { ...params, base: "2027", override: {} } } } } as TrendBriefDraft;
+    expect(impactTable("insurance-rate-change", y27.impact.table.params).provisional).toEqual(["INSURANCE_RATES_2027.EMPLOYMENT_INSURANCE"]);
     const html = draftToHtml(y27);
-    expect(html).toContain("표의 장기요양보험 비율 2027년 값은 아직 결정 전이라 2026년 값을 그대로 넣었습니다.");
+    expect(html).toContain("표의 고용보험 요율 2027년 값은 아직 결정 전이라 2026년 값을 그대로 넣었습니다.");
     expect(draftToHtml(FX.good as TrendBriefDraft)).not.toContain("아직 결정 전이라");
     const noOverride = { monthlyPays: [2000000, 3000000, 4000000], base: "2027" };
     expect(provisionalDisclosure(impactTable("insurance-rate-change", noOverride).provisional)).toBe(
+      "표의 고용보험 요율 2027년 값은 아직 결정 전이라 2026년 값을 그대로 넣었습니다."
+    );
+    // 결정 전 요율이 여럿이면 '·' 로 잇는다
+    expect(provisionalDisclosure(["INSURANCE_RATES_2027.LONG_TERM_CARE_RATIO", "INSURANCE_RATES_2027.EMPLOYMENT_INSURANCE"])).toBe(
       "표의 장기요양보험 비율·고용보험 요율 2027년 값은 아직 결정 전이라 2026년 값을 그대로 넣었습니다."
     );
     // 고지 문장은 '확정' 이라는 낱말을 쓰지 않는다(정부안 글의 확정 표현 검사와 부딪히지 않게)
