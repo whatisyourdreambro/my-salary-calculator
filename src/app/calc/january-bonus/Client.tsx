@@ -185,7 +185,7 @@ export default function JanuaryBonusClient() {
           />
           <Field
             id="medical"
-            label="의료비 (총급여 3% 초과분)"
+            label="의료비 지출액 (3% 초과분 공제)"
             value={medicalFmt}
             onChange={(v) => setMedicalFmt(v)}
           />
