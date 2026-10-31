@@ -17,7 +17,7 @@ import ShareButtons from "@/components/ShareButtons";
 import HealthInsuranceDependentClient from "./Client";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "건강보험 피부양자 간이조건 확인 — 소득·재산 입력",
+  title: "건강보험 피부양자 자격 간이 확인 — 소득 2,000만원·재산과표 5.4억",
   description:
     "건강보험 피부양자 유지/탈락 간이 판정. 연 소득 2,000만원·사업소득 요건·재산세 과세표준 5.4억(초과 시 9억까지 소득 1,000만원 조건)·형제자매 예외 반영. 동거·부양·배우자 소득·주택임대 예외와 실제 자격은 공단에서 확인하세요. 11월 연례 재산정 전에 미리 확인하세요.",
   path: "/health-insurance-dependent",
