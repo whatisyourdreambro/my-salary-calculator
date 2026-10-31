@@ -34,12 +34,12 @@ const FAQ_ITEMS = [
   {
     question: "환급액을 늘리는 방법이 있나요?",
     answer:
-      "12월 31일 이전에 다음 항목을 챙기면 환급을 늘릴 수 있습니다: (1) IRP·연금저축 추가 납입(연 900만원 한도, 13.2~16.5% 세액공제), (2) 의료비 영수증 정리(총급여 3% 초과분 15% 공제), (3) 기부금(10만원까지 100% 세액공제), (4) 신용카드·체크카드 사용액 25% 초과분 공제, (5) 주택청약 납입(소득 7천만원 이하 시 40% 공제).",
+      "12월 31일 이전에 다음 항목을 챙기면 환급을 늘릴 수 있습니다: (1) IRP·연금저축 추가 납입(연 900만원 한도, 13.2~16.5% 세액공제), (2) 의료비 영수증 정리(총급여 3% 초과분 15% 공제), (3) 고향사랑·정치자금 기부(10만원까지 전액 세액공제), (4) 신용카드·체크카드 사용액 25% 초과분 공제, (5) 주택청약 납입(소득 7천만원 이하 시 40% 공제).",
   },
   {
     question: "맞벌이 부부 연말정산 전략은?",
     answer:
-      "총급여가 더 높은 배우자가 인적공제를 받는 것이 유리합니다(높은 한계세율 구간이므로 절세 효과가 큼). 의료비·교육비·기부금은 한 사람에게 몰아서 신청하면 공제 임계값(3%, 600만원 한도 등)을 더 효율적으로 넘길 수 있습니다. 부부 연말정산 시뮬레이션을 해서 최적 조합을 찾으세요.",
+      "총급여가 더 높은 배우자가 인적공제를 받는 것이 유리합니다(높은 한계세율 구간이므로 절세 효과가 큼). 의료비·교육비·기부금은 한 사람에게 몰아서 신청하면 공제 임계값(3%, 700만원 한도 등)을 더 효율적으로 넘길 수 있습니다. 부부 연말정산 시뮬레이션을 해서 최적 조합을 찾으세요.",
   },
   {
     question: "환급금은 정확히 언제 받나요?",
@@ -138,8 +138,7 @@ export default function JanuaryBonusPage() {
               <li>
                 <strong className="text-navy dark:text-canvas-50">기부금 공제</strong>
                 <br />
-                기부금 10만원까지 100% 세액공제, 초과분은 15~30% 세액공제. 종교단체·정당·
-                인증 비영리단체 모두 가능.
+                정치·고향사랑 기부는 10만원까지 전액, 종교·비영리단체 기부는 15~30% 세액공제.
               </li>
               <li>
                 <strong className="text-navy dark:text-canvas-50">월세 세액공제</strong>
@@ -153,7 +152,7 @@ export default function JanuaryBonusPage() {
             <GuideMidAd />
 
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-8 mb-4">
-              연말정산 일정표 (2026년)
+              연말정산 일정표 (2027년)
             </h2>
             <ul className="space-y-2 text-muted-blue dark:text-canvas-300">
               <li>
@@ -196,7 +195,7 @@ export default function JanuaryBonusPage() {
             <Info size={18} className="text-electric flex-shrink-0 mt-1" />
             <p className="text-xs text-muted-blue dark:text-canvas-300 leading-relaxed">
               본 시뮬레이션은 주요 공제 항목만 반영한 추정치입니다. 정확한 환급액은 국세청
-              연말정산 간소화 서비스(<Link href="/year-end-tax-2026" className="text-electric font-bold underline">2026 가이드</Link>)에서 자료를 제출한 후 회사가 산정합니다.
+              연말정산 간소화 서비스(<Link href="/year-end-tax-2027" className="text-electric font-bold underline">2026 가이드</Link>)에서 자료를 제출한 후 회사가 산정합니다.
             </p>
           </div>
 
