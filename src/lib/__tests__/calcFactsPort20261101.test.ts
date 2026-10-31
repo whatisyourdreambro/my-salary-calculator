@@ -71,6 +71,20 @@ describe("STR-02-d bmi-quick 판정 — 질병관리청 비만 단계(1단계 25
   });
 });
 
+describe("STR-02-d bmi-quick 판정 줄 — 0 대신 소수 첫째 자리 BMI (결과 카드, CalcResultAd 위)", () => {
+  const row = (weight: number, height: number) => calc("bmi-quick").compute({ weight, height }).secondary?.[0];
+
+  it("판정 라벨은 '판정: 단계', 값은 BMI 소수 첫째 자리", () => {
+    expect(row(91.9, 170)).toEqual({ label: "판정: 2단계 비만", value: 31.8, suffix: "" });
+    expect(row(80, 170)).toEqual({ label: "판정: 1단계 비만", value: 27.7, suffix: "" });
+    expect(row(104.9, 170)).toEqual({ label: "판정: 고도비만", value: 36.3, suffix: "" });
+  });
+
+  it("기본값(70kg · 170cm) 판정 줄은 '판정: 과체중 | 24.2' (종전 '과체중 | 0')", () => {
+    expect(row(70, 170)).toEqual({ label: "판정: 과체중", value: 24.2, suffix: "" });
+  });
+});
+
 describe("STR-02-d /tools/health/bmi BmiCalculator 판정 단계", () => {
   const src = readFileSync(resolve(process.cwd(), "src/components/calculators/health/BmiCalculator.tsx"), "utf8");
 

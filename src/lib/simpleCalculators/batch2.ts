@@ -861,7 +861,7 @@ const HEALTH: CalculatorDef[] = [
  bmi < 18.5 ? "저체중" : bmi < 23 ? "정상" : bmi < 25 ? "과체중" : bmi < 30 ? "1단계 비만" : bmi < 35 ? "2단계 비만" : "고도비만";
  return {
  primary: { label: "BMI", value: bmi, suffix: "" },
- secondary: [{ label: status, value: 0, suffix: "" }],
+ secondary: [{ label: `판정: ${status}`, value: Math.round(bmi * 10) / 10, suffix: "" }],
  };
  },
  },
