@@ -14,7 +14,9 @@ describe("annual leave date boundaries", () => {
   it("preserves normal month/year grants and leap-day handling", () => {
     const normal = entryBasedSchedule("2023-03-02", "2024-03-02");
     expect(normal).toHaveLength(12); expect(normal.at(-1)).toMatchObject({ grantDate: "2024-03-02", days: 15 });
-    expect(entryBasedSchedule("2024-02-29", "2025-02-28").at(-1)).toMatchObject({ grantDate: "2025-02-28", days: 15 });
+    // 2024-02-29 입사: 만 1년 기간은 2025-02-28 에 만료(민법 제160조 제3항) → 15일은 다음 날 2025-03-01 발생 (code37-08)
+    expect(entryBasedSchedule("2024-02-29", "2025-03-01").at(-1)).toMatchObject({ grantDate: "2025-03-01", days: 15 });
+    expect(entryBasedSchedule("2024-02-29", "2025-02-28").at(-1)).toMatchObject({ grantDate: "2025-01-29", days: 1 });
     expect(fiscalYearSchedule("2023-03-02", "2026-01-01").at(-1)).toMatchObject({ grantDate: "2026-01-01", days: 15 });
     expect(statutoryLeaveDays(NaN)).toBe(0);
   });

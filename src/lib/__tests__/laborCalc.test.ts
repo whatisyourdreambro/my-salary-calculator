@@ -91,3 +91,24 @@ describe("fiscalYearSchedule — 회계연도 기준 (근기 68207-620)", () => 
     expect(second?.days).toBe(15);
   });
 });
+
+// 2026-10-05 감사 code37-08 — 민법 제160조 제3항(해당일 없는 달은 말일 만료 → 다음 날 발생), 비례연차 15일 상한
+describe("연차 발생일 — 마지막 달에 해당일이 없을 때", () => {
+  it("3/31 입사 첫 월차는 4/30 이 아니라 5/1 발생", () => {
+    const g = entryBasedSchedule("2026-03-31", "2026-05-01");
+    expect(g[0].grantDate).toBe("2026-05-01");
+    // 4/30 에 퇴사하면 첫 월차는 아직 발생하지 않는다
+    expect(entryBasedSchedule("2026-03-31", "2026-04-30")).toHaveLength(0);
+  });
+  it("2024-02-29 입사의 만 1년 발생일은 2025-03-01", () => {
+    const g = entryBasedSchedule("2024-02-29", "2025-03-01");
+    expect(g.find((x) => x.label === "만 1년")?.grantDate).toBe("2025-03-01");
+  });
+  it("보통 날짜는 종전과 같다 (3/15 입사 → 4/15 발생)", () => {
+    expect(entryBasedSchedule("2026-03-15", "2026-04-15")[0].grantDate).toBe("2026-04-15");
+  });
+  it("윤년 1/1 입사의 비례연차는 15일을 넘지 않는다 (종전 15.04)", () => {
+    const g = fiscalYearSchedule("2024-01-01", "2025-01-01");
+    expect(g.find((x) => x.label === "비례연차")?.days).toBe(15);
+  });
+});
