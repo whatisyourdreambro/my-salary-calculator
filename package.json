@@ -97,7 +97,7 @@
     },
     "postcss-selector-parser": "7.1.6",
     "braces": "$braces",
-    "glob": "13.0.6",
+    "glob": "14.0.3",
     "vite": "8.2.4",
     "cloudflare": {
       "formdata-node": "6.0.3"

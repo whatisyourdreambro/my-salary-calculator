@@ -38,7 +38,9 @@ test('glob override supports the sync string/array consumers in node-minify', as
 test('glob override supports the async per-file consumer used by Sucrase', async t => {
   const dir = fixture(t);
   const glob = require('glob');
-  assert.equal(require('glob/package.json').version, '13.0.6');
+  assert.equal(require('glob/package.json').version, '14.0.3');
+  // glob bundles minimatch; 14.0.3 is the first release whose bundle carries the GHSA-g3hv-75wg-m249 pattern limit.
+  assert.ok(fs.readFileSync(require.resolve('glob'), 'utf8').includes('>1e3'));
   const files = await glob.glob('**/*.{ts,js}', { cwd: dir, nodir: true });
   assert.deepEqual(files.map(file => file.replaceAll('\\', '/')).sort(), ['nested/three.js', 'one.js', 'other.ts', 'two.js']);
 });
