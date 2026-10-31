@@ -102,7 +102,7 @@ describe("samsung-wage-negotiation-2026 — 타결 결과는 광고 아래 보�
   it("보강 섹션이 가결 날짜·투표 결과·인상률·특별경영성과급 조건을 담는다", () => {
     expect(s).toContain("5월 22~27일 조합원 찬반투표(투표율 95.5%, 찬성 73.7%) → 2026년 5월 27일 가결");
     expect(s).toContain("기본인상률 4.1% + 성과인상률 평균 2.1%, 합계 평균 6.2%입니다");
-    expect(s).toContain("노사가 합의해 정한 DS부문 사업성과의 10.5%를 재원으로 하고 지급률 상한은 두지 않습니다");
+    expect(s).toContain("DS부문 영업이익의 10.5%를 재원으로 하고 지급률 상한은 두지 않습니다");
     expect(s).toContain("재원은 부문 40%·사업부 60%로 나누고, 세후 금액 전액을 자사주로 지급합니다");
     expect(s).toContain("받은 주식의 3분의 1은 즉시 팔 수 있고 나머지 3분의 1씩은 1년·2년 동안 매각이 제한됩니다");
     expect(s).toContain("지급 조건은 DS부문 연간 영업이익 200조원(2026~2028년)·100조원(2029~2035년)입니다");
@@ -165,11 +165,15 @@ describe("samsung-wage-negotiation-2026 — 타결 결과는 광고 아래 보�
     expect(body).toContain("1월 1일자 소급 적용 시 7월 급여에 5~7개월치 차액이 일시 지급되는 패턴");
   });
 
-  it("재원은 '노사가 합의해 정한 DS부문 사업성과의 10.5%'이고 '영업이익의 10.5%'로 줄여 쓰지 않는다(본문·FAQ 모두)", () => {
-    expect(s.match(/노사가 합의해 정한 DS부문 사업성과의 10\.5%/g)?.length).toBe(2);
-    expect(s).not.toContain("DS부문 영업이익의 10.5%");
+  // 2026-11-01 표현 통일(STR-04 광고 아래 보강분): 10월 7일 세부안 보도(한국경제 https://www.hankyung.com/article/2026100792131
+  // '성과급 재원은 올해 DS부문 영업이익의 10.5%로 마련된다', 이투데이 https://www.etoday.co.kr/news/view/2633534
+  // '2026년도 DS부문 영업이익의 10.5%')에 맞춰 'DS부문 영업이익의 10.5%'로 쓴다.
+  it("재원은 'DS부문 영업이익의 10.5%'이고 '사업성과의 10.5%'·DS부문 없는 '영업이익의 10.5%'는 없다(보강 본문·FAQ 모두)", () => {
+    expect(s.match(/DS부문 영업이익의 10\.5%/g)?.length).toBe(2);
+    expect(s).not.toContain("사업성과의 10.5%");
+    expect(s.replace(/DS부문 영업이익의 10\.5%/g, "")).not.toContain("영업이익의 10.5%");
     const faqs = extractGuideFaqs(guide(slug).content + (guideSupplements[slug] ?? ""));
-    expect(faqs[1].answer).toContain("사업성과의 10.5%");
+    expect(faqs[1].answer).toContain("DS부문 영업이익의 10.5%");
   });
 
   it("OPI 줄은 지급 조건(연간 영업이익) 기준과 10/7 세부안 보도(지급 시기·지급률 공지)를 날짜·매체와 함께 적는다", () => {
