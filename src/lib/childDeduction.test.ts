@@ -95,4 +95,13 @@ describe("계산기 밖 자녀세액공제 나이 표기", () => {
     // 입력 칸은 간이세액표 규정 — 9세로 바꾸지 않는다
     expect(comparator).toContain(">만 8세 이상 공제 대상 자녀</label>");
   });
+  it("/tax-rates-2026 접힌 FAQ 는 자녀 공제·결혼세액공제가 새로 추가됐다고 하지 않고 2026년 귀속 기준을 적는다", () => {
+    const rates = read("src/app/tax-rates-2026/page.tsx");
+    // 문자열(화면·FAQ 구조화 데이터)만 본다 — 정정 이유를 적은 주석의 종전 문구는 허용
+    expect(rates).not.toMatch(/"[^"\n]*50만 부활[^"\n]*"/);
+    expect(rates).not.toMatch(/"[^"\n]*만 8세 이상[^"\n]*"/);
+    expect(rates).toContain(
+      "혼인세액공제(1명 50만원)는 2024~2026년 혼인신고분에 적용되며, 2026년 귀속 자녀세액공제는 9세 이상(2017년생 제외) 자녀가 대상입니다.",
+    );
+  });
 });
