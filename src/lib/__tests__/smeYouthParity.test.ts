@@ -121,6 +121,16 @@ describe("중소기업 감면 전용 계산기 — 4대보험료 소득공제 (c
       expect({ s, found: src.includes(s) }).toEqual({ s, found: false });
     }
   });
+
+  it("결과 아래 안내문(InArticleAd 위) — 4대보험료 공제 반영·보장성보험료 미반영, 종전 문장보다 길지 않게", () => {
+    // 4대보험료 소득공제 로 쓰면 종전(국민연금 연금보험료공제)보다 숫자 1자 길어져 326~331px 에서 한 줄이 는다
+    // (사이트 글꼴 정적 모델, 2026-11-01 PKG-14). 4대보험료 공제 는 종전보다 한글 2자 짧고 320~1440px 어디서도 줄이 늘지 않는다.
+    const src = readFileSync(resolve(process.cwd(), "src/app/calc/smb-income-tax-break/Client.tsx"), "utf8");
+    expect(src).toContain("기본 인적공제(1인 150만원)와 4대보험료 공제만 반영했습니다.");
+    expect(src).toContain("월세·보장성보험료·의료비·자녀세액공제 등 개인별 공제는 미반영");
+    expect(src).not.toContain("4대보험료 소득공제만 반영했습니다");
+    expect(src).not.toContain("국민연금 연금보험료공제만");
+  });
 });
 
 describe("applySmeYouthReduction — 순수 헬퍼", () => {
