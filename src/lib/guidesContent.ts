@@ -427,6 +427,10 @@ const guideMetaDescriptions: Record<string, string> = {
 // ★화면 TL;DR·카드·RSS 는 10/4 description 그대로 — 9/27 문구를 화면에 되살리면 1,123폭 스윕에서
 //   본문 광고(GuideMidAd 등)·관련 글 카드 아래 광고가 내려가는 폭이 생겼다(운영 대비 광고 위치 변경 0 원칙).
 // META-07 과 같이 guides/[slug] generateMetadata 에서만 쓰인다. guideSpec.test.ts (6) 이 이 맵의 편수를 고정한다.
+// + temp-two-home-3year-rule-2026 (2026-11-01, STR-07 — 운영자 답 3 G2 2단계 T2 대안): 조정대상지역 두 주택 2년 기한
+//   (소득세법 시행령 제155조 제1항 제1호, 대통령령 제36737호 2026-10-01 시행)을 검색 설명에만 — T2 를 화면 TL;DR 에 넣으면
+//   347px 에서 한 줄 늘어 GuideMidAd 이하 광고가 26px 내려갔다(1,123폭 스윕). 화면 TL;DR·카드 설명은 운영 문구 그대로.
+//   검색 설명은 T2 문구 + 적용 시점 한 문장(META-07 규칙 80~120자, guideFactCorrections.test).
 const guideKeywordMetaDescriptions: Record<string, string> = {
  "child-fund-gift-strategy-2026": "자녀 0세에 2,000만원 비과세 증여 → 연 7% 운용 가정 → 18세 6,760만원. 부모 종합소득과 분리, 세대 간 자산 이전. 세금·수수료 전 금액이며 수익률은 보장되지 않습니다.",
  "credit-score-850-strategy-2026": "카드 사용액 한도 30% 이하·자동이체 6건·카뱅/토스 신용관리·마통 자제·카드론 즉시 정리. 750점 → 900점 시 이자 절감액은 금융사·상품별 상이.",
@@ -439,6 +443,7 @@ const guideKeywordMetaDescriptions: Record<string, string> = {
  "individual-vs-corporate-tax": "개인사업자 종합소득세(누진 6~45%) vs 법인세(10~25%). 매출 기준 전환 시점 단정 불가. 4대보험·대표급여 비교. 세금은 대표 급여·배당·공제에 따라 달라집니다.",
  "newlywed-loan-limit-2x-2026": "부부 합산 DSR 40% + LTV 70%. 부부 연 1.2억 시 8.38억 대출 예시(30년·4% 가정). 규제·심사 별도. 공동 채무자 리스크 점검 필수.",
  "retirement-planning-30s": "30대부터 매달 50만 적립 + ETF 운용 시 60세 6억 시뮬(연 7% 가정). 국민연금·퇴직연금·개인연금 3층 보장 활용법과 적립액별 60세 자산 비교.",
+ "temp-two-home-3year-rule-2026": "신규 취득 후 3년, 조정 두 채는 2년 내 종전 주택 매도 시 비과세 12억. 기한 초과면 다주택자 분류 양도세 폭탄. 2년 기한은 2026년 8월 4일 이후 조정대상지역 신규 취득분부터 적용.",
 };
 
 // Generate the final guides array with content

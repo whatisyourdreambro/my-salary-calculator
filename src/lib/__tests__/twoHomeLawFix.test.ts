@@ -5,6 +5,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
+import { GUIDE_FACT_FIX_1101_PUSH } from "@/config/guideFactFixPush";
 import { TWO_HOME_LAW_FIX_PUSH } from "@/config/twoHomeLawFixPush";
 import { GUIDE_CONTENT_REVISED_TWO_HOME_LAW } from "@/lib/guideContentRevisions.twoHomeLaw";
 import { getGuideContentDate } from "@/lib/guideContentRevisions";
@@ -19,6 +20,14 @@ const SLUGS = [
   "real-estate-capital-gains-2026",
   "temp-two-home-3year-rule-2026",
 ] as const;
+
+/** 슬러그별 본문 정정일 — 광고 아래 보강만 받은 글은 10/6 푸시일, 2026-11-01 묶음(STR-07)에서 광고 위 제목·본문 문장까지 고친 글은 그 푸시일 */
+const EXPECTED_REVISION: Readonly<Record<(typeof SLUGS)[number], string>> = {
+  "one-home-capital-gains-12eok-2026": TWO_HOME_LAW_FIX_PUSH,
+  "property-downsizing-1home-2026": TWO_HOME_LAW_FIX_PUSH,
+  "real-estate-capital-gains-2026": TWO_HOME_LAW_FIX_PUSH,
+  "temp-two-home-3year-rule-2026": GUIDE_FACT_FIX_1101_PUSH,
+};
 
 const text = (html: string) => html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
 
@@ -84,12 +93,23 @@ describe("일시적 2주택 처분 기한 개정 — 날짜", () => {
     expect(TWO_HOME_LAW_FIX_PUSH >= "2026-10-01").toBe(true);
   });
 
-  it("날짜 표는 보강 4편과 같은 슬러그이고, 4편의 본문 정정일은 max(modifiedDate, 푸시일) 이다", () => {
+  it("날짜 표는 보강 4편과 같은 슬러그이고, 4편의 본문 정정일은 max(modifiedDate, 그 글의 푸시일) 이다", () => {
     expect(Object.keys(GUIDE_CONTENT_REVISED_TWO_HOME_LAW).sort()).toEqual([...SLUGS]);
+    expect({ ...GUIDE_CONTENT_REVISED_TWO_HOME_LAW }).toEqual(EXPECTED_REVISION);
     for (const slug of SLUGS) {
       const guide = koGuides.find((g) => g.slug === slug)!;
       const base = getGuideModifiedDate(guide);
-      expect(getGuideContentDate(guide), slug).toBe(base > TWO_HOME_LAW_FIX_PUSH ? base : TWO_HOME_LAW_FIX_PUSH);
+      const revised = EXPECTED_REVISION[slug];
+      expect(getGuideContentDate(guide), slug).toBe(base > revised ? base : revised);
     }
+  });
+
+  it("2026-11-01 묶음 푸시일 상수는 실재 날짜이고 보강 푸시일(10/6) 뒤다 — 정본 modifiedDate 는 그대로 둔다", () => {
+    expect(GUIDE_FACT_FIX_1101_PUSH).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(new Date(`${GUIDE_FACT_FIX_1101_PUSH}T00:00:00Z`).toISOString().slice(0, 10)).toBe(GUIDE_FACT_FIX_1101_PUSH);
+    expect(GUIDE_FACT_FIX_1101_PUSH > TWO_HOME_LAW_FIX_PUSH).toBe(true);
+    // modifiedDate 를 올리면 목록·관련 글 동점 순서가 바뀌어 광고 위 카드가 달라진다(guideFactFixPush.ts) — 날짜는 정정일 표로만
+    const temp = koGuides.find((g) => g.slug === "temp-two-home-3year-rule-2026")!;
+    expect(temp.modifiedDate).toBeUndefined();
   });
 });

@@ -29,6 +29,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import type { Guide } from "@/lib/guidesData";
 import { koGuides } from "@/lib/guidesContent";
+import { guideCards } from "@/lib/guidesMeta.generated";
 import { extractGuideFaqs } from "@/lib/guideFaq";
 import { guideSupplements } from "@/lib/guides/supplements";
 import { hotNewsMay2026 } from "@/lib/guides/hot-news-2026-may";
@@ -809,7 +810,7 @@ describe.skipIf(REGEN.size > 0)("(5) 키퍼 표 — 2026 요율·상한은 정�
 // (6) 검색 전용 설명(metaDescription)의 출처 — guidesContent 의 META-07 맵(39편 + W3-A 기둥 글 year-end-tax-2026
 //     메타 개명 1편 = 40편)과 KEEPERS 뿐이다. guideFactCorrections 의 META-07 은 키퍼가 늘 때마다 개수가 바뀌어
 //     '39편 이상'만 본다. 키퍼가 아닌 글에 metaDescription 이 새로 붙는 실수는 KEEPERS 를 가진 이 파일에서 정확히 막는다.
-describe.skipIf(REGEN.size > 0)("(6) metaDescription 은 META-07 맵(40편)·검색어 복원 맵(11편)과 KEEPERS 에만", () => {
+describe.skipIf(REGEN.size > 0)("(6) metaDescription 은 META-07 맵(40편)·검색어 복원 맵(12편)과 KEEPERS 에만", () => {
   it("META-07 맵은 40편(39 + year-end-tax-2026) 그대로이고, 맵 밖에서 metaDescription 을 가진 글은 모두 키퍼다", () => {
     const src = read("src/lib/guidesContent.ts");
     const start = src.indexOf("const guideMetaDescriptions");
@@ -820,11 +821,12 @@ describe.skipIf(REGEN.size > 0)("(6) metaDescription 은 META-07 맵(40편)·검
     expect(meta07.has("year-end-tax-2026"), "W3-A 연말정산 기둥 글 메타 개명").toBe(true);
     expect([...meta07].filter((s) => !bySlug.get(s)?.metaDescription)).toEqual([]);
     // 검색어 복원 맵(code51-01, 2026-10-06) — 10/4 에 TL;DR 이 바뀐 11편. 화면 TL;DR 은 10/4 문구, 검색 설명만 9/27 검색어.
+    // + 2026-11-01 STR-07(G2 2단계 T2 대안) temp-two-home-3year-rule-2026 — 화면 TL;DR 은 운영 문구, 검색 설명만 조정 두 채 2년 기한 = 12편.
     const kwStart = src.indexOf("const guideKeywordMetaDescriptions");
     expect(kwStart, "guidesContent.ts 의 검색어 복원 맵을 찾지 못함").toBeGreaterThan(-1);
     const kwBlock = src.slice(kwStart, src.indexOf("\n};", kwStart));
     const keywordMeta = new Set([...kwBlock.matchAll(/^\s*"([a-z0-9-]+)"\s*:/gm)].map((m) => m[1]));
-    expect(keywordMeta.size).toBe(11);
+    expect(keywordMeta.size).toBe(12);
     expect([...keywordMeta].filter((s) => meta07.has(s) || keeperSet.has(s)), "META-07·키퍼와 겹치지 않는다").toEqual([]);
     expect([...keywordMeta].filter((s) => !bySlug.get(s)?.metaDescription)).toEqual([]);
     expect(
@@ -835,5 +837,35 @@ describe.skipIf(REGEN.size > 0)("(6) metaDescription 은 META-07 맵(40편)·검
       .filter((g) => g.metaDescription && !meta07.has(g.slug) && !keywordMeta.has(g.slug) && !keeperSet.has(g.slug))
       .map((g) => g.slug);
     expect(stray, "키퍼로 등록하지 않은 글에는 metaDescription 을 붙이지 않는다").toEqual([]);
+  });
+});
+
+// ═════════════════════════════════════════════════════════════
+// (7) 2026-11-01 가이드 사실 정정 묶음(PKG-23) 문자열 가드 — claude/fix-content-1030 의 twoHomeLawBody1102 단언을 옮겼다.
+//     일시적 2주택(STR-07): 소득세법 시행령 제155조 제1항 제1호(조정대상지역 두 주택 2년)·제2호(그 밖 3년), 부칙 제2조
+//     (대통령령 제36737호, 2026-09-30 공포·10-01 시행). 조문·경과 규정 설명은 마지막 광고 아래 보강(twoHomeLawFix.test.ts)에 있다.
+//     광고 위치 판정은 실브라우저 스윕 몫이고, 여기서는 승인 문자열과 화면/검색 설명의 분리만 고정한다.
+describe.skipIf(REGEN.size > 0)("(7) 2026-11-01 사실 정정 묶음 — 일시적 2주택 제목·검색 설명 (STR-07 T1·T2)", () => {
+  const g = bySlug.get("temp-two-home-3year-rule-2026")!;
+
+  it("T1 제목은 조정 두 채 2년 기한 — 근거 없는 2~3억 점프 수치 없음, 카드 메타도 같다", () => {
+    expect(g.title).toBe("일시적 2주택 3년 룰 — 조정 두 채는 2년 기한 주의");
+    expect(g.title).not.toContain("2~3억");
+    expect(g.title).not.toContain("비과세 상실");
+    const card = guideCards.find((c) => c.slug === g.slug)!;
+    expect(card.title).toBe(g.title);
+    expect(card.description).toBe(g.description);
+  });
+
+  it("T2 대안 — 화면 TL;DR·카드 설명은 운영 문구 그대로, 조정 두 채 2년은 검색 설명(metaDescription)에만", () => {
+    // T2 를 화면 TL;DR 에 넣으면 347px 에서 한 줄(26px) 늘어 GuideMidAd 이하 광고가 내려갔다(1,123폭 스윕) — 승인된 대안.
+    expect(g.description).toBe("신규 주택 취득 후 3년 이내 종전 주택 매도 시 1주택자 비과세 12억. 3년 1일 초과 시 다주택자 분류, 양도세 폭탄.");
+    expect(g.metaDescription).toBe(
+      "신규 취득 후 3년, 조정 두 채는 2년 내 종전 주택 매도 시 비과세 12억. 기한 초과면 다주택자 분류 양도세 폭탄. 2년 기한은 2026년 8월 4일 이후 조정대상지역 신규 취득분부터 적용.",
+    );
+  });
+
+  it("본문(광고 위)에는 개정 조문·대통령령 번호를 넣지 않는다(설명은 광고 아래 보강)", () => {
+    expect(g.content).not.toContain("36737");
   });
 });
