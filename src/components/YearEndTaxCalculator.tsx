@@ -219,6 +219,10 @@ export default function YearEndTaxCalculator() {
  resultKey: result,
  });
 
+ // 시뮬레이터 두 슬라이더(연금저축/IRP·신용카드)를 0 으로 둔 환급액 — 아래 문구는 '두 공제 덕분에 늘어난 환급' 이다.
+ // 2026-10-05 감사 code26-08 정정: 종전 문구 '환급액 N원 증가!' 는 기본값(카드 1,500만원)만으로 첫 화면부터 떠서
+ // 사용자가 바꾸지도 않은 증가를 주장했다(기준에서 기부금까지 0 으로 둬 슬라이더와 무관한 몫도 섞였다).
+ // 같은 자리·같은 글자 구성의 '공제로 환급 +N원' 으로 바꿔 높이는 그대로 둔다.
  const initialRefund = useMemo(
  () =>
  calculateYearEndTax({
@@ -226,7 +230,6 @@ export default function YearEndTaxCalculator() {
  pensionSavings: 0,
  irp: 0,
  creditCard: 0,
- donation: 0,
  }).finalRefund,
  [derivedInputs]
  );
@@ -381,7 +384,7 @@ export default function YearEndTaxCalculator() {
  {result.finalRefund > initialRefund && (
  <div className="mt-4 text-center p-2 bg-primary/10 rounded-lg">
  <p className="text-sm font-bold text-primary">
- 환급액 {formatNumber(result.finalRefund - initialRefund)}원 증가!
+ 공제로 환급 +{formatNumber(result.finalRefund - initialRefund)}원
  </p>
  </div>
  )}
