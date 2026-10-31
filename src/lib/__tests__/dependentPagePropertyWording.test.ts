@@ -36,3 +36,17 @@ describe("/health-insurance-dependent — 연결 계산기는 재산분만 계�
     after.forEach((n, i) => expect(n).toBeLessThanOrEqual(before[i]));
   });
 });
+
+// HomeTopAd 위 리드 문장 문법 정정(NEW-v07b-seo-meta-dates-1, 2026-11-01): '…까지' 로 끊긴 문장에 '반영.' 을 붙이고
+// 별도 확인 문장을 줄였다. 전체 2자 짧지만 keep-all 어절 구성이 바뀌므로(소득·주택임대·사업소득 한 어절) 통합 단계
+// 320px 광고 깊이 실측에서 줄 수가 같거나 줄어야 배포한다 — 늘면 이 커밋(문구+이 단언)을 통째로 되돌린다(B 보류).
+describe("/health-insurance-dependent — HomeTopAd 위 리드 문장", () => {
+  const flat = readFileSync(resolve(process.cwd(), "src/app/health-insurance-dependent/page.tsx"), "utf8").replace(/\s+/g, " ");
+  it("끊긴 '…까지' 문장을 '반영.' 으로 맺고 전체 길이는 줄었다", () => {
+    const before = "형제자매 예외(1억 8,000만원)까지 동거·부양, 배우자 소득, 주택임대·사업소득 예외는 별도 확인이 필요합니다.";
+    const after = "형제자매 예외(1억 8,000만원)까지 반영. 동거·부양·배우자 소득·주택임대·사업소득 예외는 따로 확인하세요.";
+    expect(flat).toContain(after);
+    expect(flat).not.toContain(before);
+    expect([...after].length).toBe([...before].length - 2);
+  });
+});
