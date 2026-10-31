@@ -109,3 +109,15 @@ Apple SD Gothic Neo, 맑은 고딕, Noto Sans KR 및 시스템 sans-serif를 한
 
 동작 배경은 [Chrome의 웹 글꼴 최적화 안내](https://web.dev/learn/performance/optimize-web-fonts)를 참고합니다.
 출시 전에는 한국어·영어의 실제 요청 파일과 바이트, 첫 방문·캐시 재방문, 폰트 요청 실패 시 가독성과 배치 이동을 확인합니다.
+
+## Windows 로컬 빌드 주의 (2026-11-01 감사 PD-10)
+
+Windows에서 만든 로컬 빌드(`.pages-qa`, `.next-qa`)의 HTML에는 분할 글꼴의 `<link rel="preload" as="font">`가 빠집니다.
+Next 15.5의 `next/dist/build/webpack/plugins/next-font-manifest-plugin.js` 60번째 줄이 글꼴 로더 경로를
+슬래시(`/next-font-loader/index.js?`)로만 찾기 때문에, 경로 구분자가 역슬래시인 Windows에서는
+`next-font-manifest.json`이 비고 preload가 만들어지지 않습니다. 운영(Linux) 빌드의 HTML은 Latin과 공통 Korean
+두 `.p.woff2` 파일을 정상적으로 preload합니다.
+
+preload와 LCP는 Linux CI 결과나 운영 HTML로만 판단합니다. 운영 HTML은 렌더링하지 않는 HTTP GET
+(`MoneySalary-QA/1.0` User-Agent, 리디렉션 수동 처리)으로만 받습니다.
+Windows 결과 때문에 글꼴 설정이나 분할 파일을 바꾸지 않습니다.
