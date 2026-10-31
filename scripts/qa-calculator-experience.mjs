@@ -630,7 +630,7 @@ async function auditContactInput(page, theme) {
   await form.getByRole('checkbox', { name: /필수.*문의 접수를 위한/ }).check();
   await body.fill('씨발 계산이 틀렸어요');
   assert(await send.isDisabled());
-  for (const text of ['설명이 불친절합니다. 개선해 주세요.', '이 문제의 시발점을 알려주세요.', '직계비속 보험 공제 설명이 필요합니다.']) {
+  for (const text of ['설명이 불친절합니다. 개선해 주세요.', '이 문제의 시발점을 알려주세요.', '직계비속 보험 공제 설명이 필요합니다.', '연봉 조정 관련 문의입니다.']) {
     await body.fill(text);
     assert(!(await send.isDisabled()), text);
   }
