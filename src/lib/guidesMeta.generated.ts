@@ -3246,7 +3246,7 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "temp-two-home-3year-rule-2026",
-  "title": "일시적 2주택 3년 룰 — 1일 초과 시 양도세 2~3억 점프",
+  "title": "일시적 2주택 3년 룰 — 조정 두 채는 2년 기한 주의",
   "description": "신규 주택 취득 후 3년 이내 종전 주택 매도 시 1주택자 비과세 12억. 3년 1일 초과 시 다주택자 분류, 양도세 폭탄.",
   "category": "부동산",
   "tags": [
@@ -3425,7 +3425,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5572
+  "contentChars": 5546
  },
  {
   "slug": "medical-edu-donation-limits-2026",
@@ -4509,8 +4509,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "child-support-100-2026",
-  "title": "아동수당 — 만 0~7세 매월 10만원 + 부모급여 100만원 중복",
-  "description": "소득 무관 보편 지급. 만 0세 부모급여 100만/월 + 아동수당 10만 중복. 7년 누적 840만원.",
+  "title": "아동수당 — 만 0~8세 월 10만원 + 부모급여 100만원 중복",
+  "description": "소득 무관 보편 지급. 만 0세 부모급여 100만/월 + 아동수당 10만 중복. 비수도권 가산.",
   "category": "기초",
   "tags": [
    "아동수당",
@@ -4523,7 +4523,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 712
+  "contentChars": 705
  },
  {
   "slug": "basic-pension-65-2026",
