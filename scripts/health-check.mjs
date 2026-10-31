@@ -50,7 +50,7 @@ function diagnoseSeasonKey(html) {
 
 /** 시즌 키 "빌드 미갱신" 조치 */
 const SEASON_BUILD_FIX =
-  "tsx scripts/gen-season-key.ts 실행 후 커밋·재배포(또는 src/lib/seasonKey.ts 의 SEASON_KEY_OVERRIDE 설정) → 배포 후 CF 캐시 퍼지";
+  "tsx scripts/gen-season-key.ts 실행 후 커밋(또는 src/lib/seasonKey.ts 의 SEASON_KEY_OVERRIDE 설정) → CI 초록 → 운영자 Actions 'Pages · 승인 후 게시'";
 
 // [경로, 기대 상태코드, 본문 필수 문자열(선택), 설명, 마커 불일치 시 진단 함수(선택, html → string),
 //  기대 Location 정규식(선택 — 리다이렉트 목적지까지 검사, redirect: "manual" 이라 헤더가 그대로 보인다),

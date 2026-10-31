@@ -38,7 +38,7 @@
    - 변수 이름: `NEXT_PUBLIC_KAKAO_JS_KEY`
    - 값: 2단계에서 복사한 JavaScript 키
    - **Production 과 Preview 양쪽 모두** 등록 (광고 슬롯 ID들과 같은 방식)
-3. **Deployments 탭 → 최신 배포의 ⋯ 메뉴 → Retry deployment** (재배포해야 키가 반영됩니다)
+3. 키는 저장소 `.env.production` 에서만 읽힌다(빌드가 이 파일 값을 쓰므로 위 1~2 의 Cloudflare 변수 등록이나 Deployments 탭의 Retry deployment 로는 바뀌지 않음) — 그 줄을 바꾼 커밋을 main 에 합침 → CI 초록 → 운영자 Actions 'Pages · 승인 후 게시'.
 
 ## 확인 방법
 재배포 완료 후 아무 계산기 페이지에서 노란 카카오 버튼을 누르면:

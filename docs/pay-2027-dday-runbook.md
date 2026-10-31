@@ -5,7 +5,7 @@
 인사혁신처가 2027 공무원 봉급표를 게시하면 **24시간 안에** 확정 숫자를 사이트에 올리는 절차입니다.
 숫자는 손으로 옮기지 않습니다. 원문 HTML 표를 파서로 읽고, 파서를 쓸 수 없으면(이미지·HWP 뿐) 두 번 따로 입력해 차이 0을 확인합니다.
 
-- 누가: Claude 가 1~7단계와 게이트를 하고, 운영자는 **'메인 푸시'** 한마디와 수집 요청(네이버 10개 이하, GSC 3개 이하)만 합니다.
+- 누가: Claude 가 1~7단계와 게이트를 하고, 운영자는 CI 초록 뒤 **'Pages · 승인 후 게시'** 실행과 수집 요청(네이버 10개 이하, GSC 3개 이하)만 합니다.
 - 언제: 12/20 부터 매일 감시. 날짜와 무관한 절차라 1월로 밀려도 그대로 씁니다.
 - 동결기(11/1~1/31) 안이지만 **허용되는 작업**입니다. 바꾸는 것은 데이터(`PAY_FULL_2027`)·상수·문자열뿐이고, 새 URL·새 컴포넌트·광고 변경은 0입니다.
 
@@ -21,7 +21,7 @@
 | **R6-3**: `/civil-servant-pay-2027` 광고 위 확정 문구 변형(`PAY_2027_CONFIRMED` 로 선택, 꺼진 동안 바이트 동일, 폭 맞춤) + 교원·경찰·소방 확정 문구 1,123폭 증명 | 10/28 | 5단계 |
 | 이 키트(파서·픽스처·이 문서) | R6-1 푸시(10/4) | 3·4-B단계 |
 | r6-announce 등록부 `docs/season-urls-2026-27.json` + `scripts/season-announce.ts` | R6-1 푸시(10/4) | 9단계 |
-| A35 자동 퍼지(cf-purge.yml 시크릿 3개) | 9/28 운영자 콘솔 | 8단계 |
+| 게시 경로 = GitHub Actions 'Pages · 승인 후 게시'(README — main 푸시·CI 초록만으로는 게시되지 않음). 종전 A35 자동 퍼지(cf-purge)는 폐기돼 쓰지 않음 | 10/18 | 8단계 |
 
 하나라도 빠졌으면: 빠진 것 없이 할 수 있는 부분만 합니다. 예) R6-3 이 없으면 `/civil-servant-pay-2027` 은 맨 끝 일반직 확정표·Dataset 만 나오고 광고 위 문구는 예상 상태 그대로 둡니다(폭 증명 없는 문구 교체 금지).
 
@@ -165,16 +165,18 @@ npm run verify:autoads                                # 0.0% 손실
   - 기대: **9쪽 모두 1,123폭에서 광고 top 차이 0.** 확정표는 마지막 광고 아래에 붙으므로 문서 높이만 광고 아래에서 늘어납니다.
   - 차이가 하나라도 있으면 푸시하지 않습니다. 원인 문구를 폭 맞춤하거나, 맞출 수 없으면 광고 아래 데이터(확정표·Dataset)만 내보내고 광고 위 문구는 예상 상태로 둡니다.
 
-## 8. 배포 (15분)
+## 8. 배포 (70분 — CI·게시 대기 포함)
 
-1. 운영자에게 결과 표(게이트·스윕·앵커 4칸·인상률)를 보여 주고 **'메인 푸시'** 를 받습니다.
-2. `git push origin HEAD:main` (main 만, 브랜치 푸시 금지).
-3. cf-purge: A35 가 켜져 있으면 cf-purge.yml 이 CF 배포 뒤 자동 퍼지. 아니면 운영자가 Cloudflare Purge Everything.
-4. 마커(브라우저 UA + `?cb=<n>`, 옛 빌드에는 없는 것):
+1. 운영자에게 결과 표(게이트·스윕·앵커 4칸·인상률)를 보여 주고 승인을 받습니다.
+2. main 에 합칩니다(main 만, 브랜치 푸시 금지). 합치는 것만으로는 게시되지 않습니다.
+3. ci(verify) 초록(약 40~46분) 뒤 운영자에게 'Pages · 승인 후 게시' 요청 — Actions → Pages · 승인 후 게시 → Run workflow → Branch main → approved_commit 에 그 커밋 40자리 → Run. 7~20분 뒤 초록이면 끝이고, 끝날 때까지 main 동결(아무것도 합치지 않음). 초록이면 `/.well-known/moneysalary-release.json` 의 commit 이 그 40자리인지 4번과 같은 방법으로 확인합니다.
+   - 빨강이면 운영자는 run 번호만 알려 주고, Claude 가 `docs/operator-console-pack.md` '게시 절차와 실패 시 재시도 (2026-11)' 5a·5b·6 으로 갈래를 정합니다. 승격 전 실패(5a — 'Verify exact approved CI and promote the existing deployment branch' 단계나 그 앞에서 멈춤)는 CI 초록 확인 뒤 같은 40자리로 다시 Run, 승격 뒤 실패(5b)는 `docs/release-retry.md` 한 줄 커밋을 main 에 합치고 3번부터 다시 합니다.
+   - HTML 캐시 규칙이 꺼져 있으면 Purge 는 필요 없습니다(cf-purge 는 폐기).
+4. 마커(비렌더링 GET — `scripts/lib/qa-production-http.cjs` fetchProductionQaDocument, 또는 `curl -sS -A "Mozilla/5.0 MoneySalary-QA/1.0" --max-redirs 0`, 캐시 무력화 쿼리(?cb) 없이. 옛 빌드에는 없는 것):
    - `/civil-servant-pay-2027`: `<title>` 에 '확정' 있음·'예상' 없음(R6-3), HTML 에 `id="general-full-table"`
    - `/teacher-pay-2027`: `id="teacher-full-table"` · `/police-pay-2027`: `id="police-full-table"` · `/firefighter-pay-2027`: `id="fire-full-table"`
 5. `node scripts/health-check.mjs`
-6. 푸시·CF 성공·퍼지 시각을 `docs/ad-experiments.md` 2026-09-25 절 3(c) 공변량 표에 적습니다(문서 커밋).
+6. 합침·CI 초록·게시 시각을 `docs/ad-experiments.md` 2026-09-25 절 3(c) 공변량 표에 적습니다(문서 커밋 — 게시가 끝난 뒤).
 
 ## 9. 알리기·기록 (15분)
 
@@ -197,21 +199,21 @@ npm run verify:autoads                                # 0.0% 손실
 | 6 피드 메타 | 10분 | |
 | 7 게이트(빌드 포함) | 40분 | |
 | 7 스윕(기준 빌드 + 9쪽 × 1,123폭) | 30분 | |
-| 8 '메인 푸시' → CF 배포 → 퍼지 → 마커 | 15분 | |
+| 8 main 합침 → CI(40~46분) → 승인 후 게시(7~20분) → 마커 | 70분 | |
 | 9 수집 요청·기록 | 15분 | |
-| **손 작업 합계** | **약 2시간 25분** (두 번 입력 시 약 4시간) | |
+| **합계(CI·게시 대기 포함)** | **약 3시간 20분** (두 번 입력 시 약 4시간 반) | |
 
 - T0 가 밤이면 다음 날 오전에 끝내도 24시간 안입니다.
-- 1/1 빌드(`CURRENT_MINIMUM_WAGE_YEAR` 전환, 요율 연도 등 E8)와 **같은 푸시에 묶지 않습니다.** D-Day 가 12/31~1/2 이면 두 푸시를 따로, 각자 게이트를 돌립니다.
+- 1/1 빌드(`CURRENT_MINIMUM_WAGE_YEAR` 전환, 요율 연도 등 E8)와 **같은 게시에 묶지 않습니다.** D-Day 가 12/31~1/2 이면 두 게시를 따로(각자 커밋·게이트·CI·'승인 후 게시') 합니다.
 
 ## 되돌리기 (Rollback)
 
-- 언제: 마커가 퍼지 30분 뒤에도 안 보임, health-check 실패, 숫자 오류 제보, CF 빌드 실패, 운영 화면에서 광고 위치가 달라 보임.
+- 언제: 마커가 게시 초록 30분 뒤에도 안 보임, health-check 실패, 숫자 오류 제보, 운영 화면에서 광고 위치가 달라 보임. 게시 빨강(CF 빌드 실패 포함)은 되돌리기 전에 8단계 3번의 재시도 갈래부터 따릅니다.
 - 어떻게:
   1. `git revert --no-edit <D-Day 커밋>` → `PAY_FULL_2027 = null` 로 돌아가 모든 페이지가 예상 상태로 돌아갑니다.
   2. 빠른 게이트: `npx tsc --noEmit`, 7단계 vitest 4종, `npm run build`, `npm run verify:autoads`.
-  3. 운영자 '메인 푸시' → 퍼지 → 반대 마커 확인(`/teacher-pay-2027` 에 `id="teacher-full-table"` 없음).
-- 급하면 운영자가 Cloudflare Pages 대시보드에서 직전 배포로 Rollback 할 수 있습니다. 이 경우에도 main 에 되돌림 커밋을 넣어야 다음 빌드가 다시 올리지 않고, 퍼지는 손으로 합니다.
+  3. 되돌림 커밋을 main 에 합침 → CI 초록 → 운영자 'Pages · 승인 후 게시' → 반대 마커 확인(8단계 4번과 같은 비렌더링 GET, `/teacher-pay-2027` 에 `id="teacher-full-table"` 없음).
+- 급하면 운영자가 Cloudflare Pages 대시보드에서 직전 배포로 Rollback 할 수 있습니다. 이 경우에도 main 에 되돌림 커밋을 넣어야 다음 게시가 D-Day 커밋을 다시 올리지 않습니다. HTML 캐시 규칙이 꺼져 있으면 Purge 는 필요 없습니다.
 - 한 칸만 틀렸으면 손으로 고치지 말고 원문을 다시 저장해 3단계부터 다시 합니다(새 커밋).
 
 ## 10/29 드라이런 (푸시 없음)
@@ -237,7 +239,7 @@ npm run verify:autoads                                # 0.0% 손실
 
 Goal: publish the official 2027 pay tables within 24 hours of the Ministry of Personnel Management (MPM) posting them. Numbers are never hand-copied: parse the official HTML, or, if the table is image/HWP/PDF only, transcribe it twice independently and require zero differences. This is a data/constants/strings change, so it is allowed during the 11/1–1/31 structural freeze (no new URLs, no ad changes).
 
-0. **Prerequisites on main:** r2-l2 (10/14: `payTablesFull2026.ts`, `payTablesFull2027.ts` with `PAY_FULL_2027 = null`, three 2027 pages, tests), R4-RSS (10/16: `TABLES_FEED_META`), b2-civilpay (already live since 9/27, origin/main `41fb5ff4`), R6-3 (10/28: confirmed copy variants for `/civil-servant-pay-2027` selected by `PAY_2027_CONFIRMED`, width-proven), this kit (R6-1, 10/4), r6-announce registry (10/4), A35 auto purge. If R6-3 is missing, ship only the below-the-last-ad table and Dataset; keep the copy above ads in the forecast state.
+0. **Prerequisites on main:** r2-l2 (10/14: `payTablesFull2026.ts`, `payTablesFull2027.ts` with `PAY_FULL_2027 = null`, three 2027 pages, tests), R4-RSS (10/16: `TABLES_FEED_META`), b2-civilpay (already live since 9/27, origin/main `41fb5ff4`), R6-3 (10/28: confirmed copy variants for `/civil-servant-pay-2027` selected by `PAY_2027_CONFIRMED`, width-proven), this kit (R6-1, 10/4), r6-announce registry (10/4), and the approved publish workflow (Actions > 'Pages · 승인 후 게시', live since 10/18; the A35 auto purge is retired). If R6-3 is missing, ship only the below-the-last-ad table and Dataset; keep the copy above ads in the forecast state.
 1. **Watch from 12/20, daily 09:00 and 18:00 KST:** the MPM page `https://www.mpm.go.kr/mpm/info/resultPay/bizSalary/2027/` (T0 = the 2027 tab shows the tables), MPM press releases (the 2027 common raise = `commonRate`), the Official Gazette (gwanbo.go.kr), and the law.go.kr web view of 공무원보수규정 [별표 3·10·11]. No law.go.kr Open API key, no sign-up. News is a trigger only, never a number source.
 2. **Save** the MPM page with a browser as "HTML only" outside the repo (e.g. `C:/Users/ruby1/moneysalary-exports/pay-official/`). Record fetch time (KST) and SHA-256 for the commit body. Image/HWP/PDF only: go to 4-B.
 3. **Parse and validate** (commands in section 3): run `--against-module` on the 2026 fixture (must report a full match), then parse the saved 2027 page with `--prev scripts/__tests__/fixtures/pay-official/mpm-2026.html`, `--json` (outside repo) and `--emit-ts`. Read each exit code directly (0 pass, 1 validation failure, 2 usage/input error). Hand-check the four anchors (9급 1호봉, 경사 1호봉, 경감 1호봉, 교원 9호봉) against the official page, check that the modal raise matches the announced common raise, and that the year is 2027. A shape change versus 2026 means stop: publish nothing and tell the operator.
@@ -246,11 +248,11 @@ Goal: publish the official 2027 pay tables within 24 hours of the Ministry of Pe
 5-b. **Related surfaces (added 2026-09-29):** in the same commit, flip the forecast selector widget (`CivilPayForecastSelector.tsx` + `civilServantForecast.ts`, return the confirmed cell when `PAY_FULL_2027` is set), the forecast table `#civil-forecast-table` (title, caption, '(예상)' → '(확정)' column heads, confirmed values), the recommendation/basis paragraphs and schedule steps 3–4, the `/calc/civil-servant-net-pay` 2027 preview (metadata description, featureList, FAQ 5, H2, `Client.tsx` preview box, `previewCivilNetPay2027`), and the season header/search/trend-brief strings. Above-ad copy only in R6-3 width-proven variants; add `/calc/civil-servant-net-pay` to the sweep when its above-ad copy changes. At E3 (~12/2) switch the '정부안' status wording even before the tables are confirmed.
 6. **Feed meta:** recopy `TABLES_FEED_META` title and description for the four pay-2027 items from the confirmed page metadata; `rssTablesFeed.test.ts` must pass. Lengths no longer than today; og:title = title.
 7. **Gates** (exit codes read directly): `npx tsc --noEmit`; vitest `payTablesFull2027`, `pay2027ConfirmedSlot`, `payTableSnippets`, `rssTablesFeed`; `npm test`; `node --test scripts/__tests__/*.test.mjs`; `verify:tax`, `verify:site`, `verify:sitemap`; `ad-audit --diff --base origin/main` ERROR 0 / WARN 0; `npm run build`; `verify:autoads` 0.0% loss; build-vs-build ad-top sweep at 1,123 widths (320–1440 every px, 1536, 1920; viewport resize without reload; all `.ad-container` tops and counts; non-localhost requests blocked) on the six pay pages (`/civil-servant-pay-2026`, `/civil-servant-pay-2027`, `/teacher-pay-2026`, `/police-pay-2026`, `/firefighter-pay-2026`, `/military-pay-2026`) plus `/teacher-pay-2027`, `/police-pay-2027`, `/firefighter-pay-2027`. Expect zero differences. Any difference: do not push.
-8. **Deploy:** show the operator the gate table and wait for '메인 푸시'; `git push origin HEAD:main`; cf-purge (automatic with A35, otherwise the operator purges); markers with a browser UA and `?cb=<n>`: `/civil-servant-pay-2027` title contains 확정 and not 예상 plus `id="general-full-table"`, `/teacher-pay-2027` `id="teacher-full-table"`, `/police-pay-2027` `id="police-full-table"`, `/firefighter-pay-2027` `id="fire-full-table"`; `node scripts/health-check.mjs`; record push, CF success and purge times in `docs/ad-experiments.md` 3(c).
+8. **Deploy:** show the operator the gate table and get approval; merge to main (a merge alone never publishes); wait for green CI verify (about 40–46 min); the owner runs Actions > 'Pages · 승인 후 게시' with the full SHA (7–20 min; merge nothing to main until it finishes); confirm /.well-known/moneysalary-release.json shows it; markers via non-rendering GET with a User-Agent containing MoneySalary-QA/1.0 (`scripts/lib/qa-production-http.cjs` fetchProductionQaDocument, or `curl -sS -A "Mozilla/5.0 MoneySalary-QA/1.0" --max-redirs 0`), no cache-busting query (?cb): `/civil-servant-pay-2027` title contains 확정 and not 예상 plus `id="general-full-table"`, `/teacher-pay-2027` `id="teacher-full-table"`, `/police-pay-2027` `id="police-full-table"`, `/firefighter-pay-2027` `id="fire-full-table"`; `node scripts/health-check.mjs`; record merge, CI and publish times in `docs/ad-experiments.md` 3(c). A red publish run: the agent follows 5a/5b/6 in `docs/operator-console-pack.md` '게시 절차와 실패 시 재시도 (2026-11)' (stopped before promotion → run again with the same SHA after CI is green; failed after promotion → merge a one-line `docs/release-retry.md` commit and start again from CI). No purge while the HTML cache rules are off.
 9. **Notify and record:** changed URLs only (`season-announce diff` = the `[indexnow]` list); Naver collection requests ≤ 10; GSC inspections ≤ 3; E7 registry row in `docs/season-urls-2026-27.json` marked done; one line in `docs/metrics-log.md`.
 
-**Timing budget:** about 2 h 25 min hands-on (about 4 h with double entry), inside T0 + 24 h. Never bundle with the 1/1 build.
+**Timing budget:** about 3 h 20 min including the CI and publish waits (about 4.5 h with double entry), inside T0 + 24 h. Never bundle with the 1/1 build.
 
-**Rollback:** `git revert` the D-Day commit (restores `PAY_FULL_2027 = null`), quick gates, operator '메인 푸시', purge, negative marker check. In an emergency the operator can roll back the Cloudflare Pages deployment, but the revert must still land on main and the purge is then manual. Never hand-edit a wrong cell; re-save and re-parse.
+**Rollback:** `git revert` the D-Day commit (restores `PAY_FULL_2027 = null`), quick gates, merge to main, green CI, the owner runs 'Pages · 승인 후 게시' with the full SHA, negative marker check (non-rendering GET as in step 8). In an emergency the operator can roll back the Cloudflare Pages deployment, but the revert must still land on main so the next publish does not bring the D-Day commit back; no purge is needed while the HTML cache rules are off. A red publish is handled by the retry branches in step 8 before any rollback. Never hand-edit a wrong cell; re-save and re-parse.
 
 **10/29 dry run (no push):** worktree from `origin/main` after R6-3; `--against-module` full match; rehearse parsing with the 2026 fixture as "new" and 2025 as `--prev`; make a clearly fake 2027 table (2026 × 1.035, rounded up to 100 won) and run it through `--compare … --emit-ts`; paste with `basis: "드라이런 가짜 숫자"`, fill R6-3 placeholders, sync feed meta; run every gate and the 9-page sweep; record step times and the R6-3 constant names in this document (docs-only commit); remove the worktree and the fake files.

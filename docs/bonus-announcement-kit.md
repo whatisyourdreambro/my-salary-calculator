@@ -28,7 +28,8 @@
 5. **알림**: `npx tsx scripts/season-announce.ts event E10`(삼성) / `E11`(SK하이닉스·현대차) 목록대로. 이 세 URL 은 sitemap lastmod 손잡이가 `bonus-engine`(공유 날짜)이라
    사이트맵 diff·[indexnow] 에 나오지 않는다 — 'diff 밖 수동 요청'으로 네이버 수집 요청 1개.
 6. **피드**: R4-RSS(rss-tables, `TABLES_FEED_META`)가 main 에 들어온 뒤라면, 이 세 URL 이 피드 메타에 설명문을 따로 들고 있는지 확인하고 같은 커밋에서 맞춘다.
-7. 운영자 '메인 푸시' → cf-purge → 운영 HTML 에서 구절 확인(브라우저 UA, `?cb=`). 푸시·CF 성공·퍼지 시각을 `docs/ad-experiments.md` 3(c)에 적는다.
+7. main 에 합침 → CI 초록 → 운영자 'Pages · 승인 후 게시' → 운영 HTML 에서 구절 확인(비렌더링 GET — `scripts/lib/qa-production-http.cjs` fetchProductionQaDocument, 또는 `curl -sS -A "Mozilla/5.0 MoneySalary-QA/1.0" --max-redirs 0`, 캐시 무력화 쿼리(?cb) 없이). 합침·CI·게시 시각을 `docs/ad-experiments.md` 3(c)에 적는다.
+   - 게시가 빨강이면 운영자는 run 번호만 알려 주고, 에이전트가 `docs/operator-console-pack.md` '게시 절차와 실패 시 재시도 (2026-11)' 5a·5b·6 으로 갈래를 정한다(승격 전 실패는 CI 초록 뒤 같은 40자리로 다시 Run, 승격 뒤 실패는 `docs/release-retry.md` 한 줄 커밋으로 새 커밋을 만들어 다시). HTML 캐시 규칙이 꺼져 있으면 Purge 는 필요 없다.
 
 ## 3. 끄는 법 · 저절로 꺼지는 날
 

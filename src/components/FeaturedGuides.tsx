@@ -12,7 +12,7 @@ import { koGuideCards as allKoGuideCards } from "@/lib/guidesData";
 import { compareGuideDates } from "@/lib/guideDiscovery";
 import { TREND_BRIEF_TAG } from "@/lib/trendBriefs/types";
 
-// 시즌 우선 노출 슬러그 — 월별 분기 (빌드 시점 기준. CF Pages는 배포마다 재빌드)
+// 시즌 우선 노출 슬러그 — 월별 분기 (빌드 시점 기준. '승인 후 게시'마다 재빌드 — 12/1 이후 게시 필요)
 const PRIORITY_SLUGS_BY_SEASON: Record<string, string[]> = {
  // 임금협상 시즌 (3~5월)
  negotiation: ["samsung-wage-negotiation-2026", "sk-hynix-wage-2026"],
