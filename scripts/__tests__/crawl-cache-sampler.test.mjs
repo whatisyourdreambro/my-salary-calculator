@@ -447,6 +447,8 @@ test("rss-tables 404 stays 'not yet live' while R4-RSS is unshipped; live sitema
   assert.match(line, / · 5xx 0\/24 · /);
   assert.match(line, /feeds 4\/5 ok \(rss-tables not yet live\)$/);
   assertNoUrl(line);
+  // 보고서 피드 줄에도 지난 공개 예정일(10/16)이 아니라 미배포 상태를 적는다
+  assert.match(r.stdout, /^피드: .* · rss-tables not yet live\(404, 아직 미배포\)$/m);
 });
 
 test("feedVerdicts / aggregateLine unit: empty families print '-', marker failure is reported", () => {

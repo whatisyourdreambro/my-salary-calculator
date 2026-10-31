@@ -707,7 +707,7 @@ export function formatReport({ rows, feeds, records, runDate, seed, passes, inte
     lines.push("");
     lines.push(
       `피드: ${feeds
-        .map((f) => `${f.name} ${f.verdict === "ok" ? "ok" : f.verdict === "notYetLive" ? "not yet live(404, 10/16 공개 예정)" : `FAIL ${f.reason}`}`)
+        .map((f) => `${f.name} ${f.verdict === "ok" ? "ok" : f.verdict === "notYetLive" ? "not yet live(404, 아직 미배포)" : `FAIL ${f.reason}`}`)
         .join(" · ")}`
     );
   }
