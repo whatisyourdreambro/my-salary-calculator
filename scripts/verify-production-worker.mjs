@@ -286,8 +286,8 @@ export function verifyProductionWorker({ root = path.resolve(path.dirname(fileUR
   insist(config.name === 'moneysalary' && config.account_id === 'b01a4e306f09d28f1a0f1d57bda8410d', 'unexpected production Worker identity');
   insist(config.main === 'cloudflare/worker-entry.mjs' && config.assets?.directory === '.open-next/assets' && config.assets.binding === 'ASSETS', 'incorrect production entry/assets');
   insist(config.workers_dev === false && config.preview_urls === false && !config.env, 'preview or environment-specific Worker configuration');
-  const routes = (config.routes ?? []).map(route => `${route.pattern}|${route.zone_name}`).sort();
-  insist(JSON.stringify(routes) === JSON.stringify(['moneysalary.com/*|moneysalary.com', 'www.moneysalary.com/*|moneysalary.com']), 'canonical routes changed');
+  // Pages is production; the historical Worker must not claim canonical traffic on a plain deploy.
+  insist(config.routes === undefined && config.route === undefined, 'canonical routes must stay detached from the historical Worker');
   for (const key of ['MSY_QA_MODE', 'MSY_QA_WORKER_STAGE', 'NEXT_PUBLIC_ADS_DISABLED']) insist(String(config.vars?.[key] ?? '') !== '1', 'QA variable in deployment config');
   const entry = js(file(config.main).toString('utf8'), config.main);
   const workerImport = nodes(entry, ts.isImportDeclaration).find(node => node.moduleSpecifier.text === '../.open-next/worker.js');

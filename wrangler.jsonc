@@ -7,10 +7,6 @@
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "workers_dev": false,
   "preview_urls": false,
-  "routes": [
-    { "pattern": "www.moneysalary.com/*", "zone_name": "moneysalary.com" },
-    { "pattern": "moneysalary.com/*", "zone_name": "moneysalary.com" }
-  ],
   "d1_databases": [
     {
       "binding": "FEEDBACK_DB",
@@ -26,7 +22,7 @@
     "html_handling": "none",
     "not_found_handling": "none"
   }
-  // Install FEEDBACK_RATE_LIMIT_SECRET before activating the domain routes.
-  // The existing Pages project/DNS stay available for immediate route rollback.
+  // No canonical routes: Pages serves production. A reviewed cutover commit must add them deliberately.
+  // Pages is production; this Worker config is historical and unrouted.
   // Local QA copies wrangler.qa.jsonc and cannot use these production bindings.
 }

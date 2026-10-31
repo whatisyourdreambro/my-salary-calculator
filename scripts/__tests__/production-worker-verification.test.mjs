@@ -31,7 +31,7 @@ function fixture(t) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'msy-production-artifact-'));
   const write = (relative, value) => { const file = path.join(root, relative); fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, value); };
   write('wrangler.jsonc', json({ name: 'moneysalary', account_id: 'b01a4e306f09d28f1a0f1d57bda8410d', main: 'cloudflare/worker-entry.mjs', workers_dev: false, preview_urls: false,
-    routes: [{ pattern: 'www.moneysalary.com/*', zone_name: 'moneysalary.com' }, { pattern: 'moneysalary.com/*', zone_name: 'moneysalary.com' }], assets: { directory: '.open-next/assets', binding: 'ASSETS' } }));
+    assets: { directory: '.open-next/assets', binding: 'ASSETS' } }));
   write('cloudflare/worker-entry.mjs', `import generated from '../.open-next/worker.js'; import {withRequestBodyLimits} from './request-body-limit.mjs'; export * from '../.open-next/worker.js'; export default withRequestBodyLimits(generated);`);
   write('cloudflare/request-body-limit.mjs', 'export function withRequestBodyLimits(worker){return worker}');
   write('.open-next/worker.js', `export default {async fetch(r,e,c){const {handler}=await import('./server-functions/default/handler.mjs');return handler(r,e,c)}};`);
@@ -48,6 +48,11 @@ function fixture(t) {
   t.after(() => { assert.equal(path.dirname(path.resolve(root)), path.resolve(os.tmpdir())); assert.match(path.basename(root), /^msy-production-artifact-/); fs.rmSync(root, { recursive: true, force: true }); });
   return { root, write, read: relative => JSON.parse(fs.readFileSync(path.join(root, relative), 'utf8')), verify: () => verifyProductionWorker({ root, env: {} }) };
 }
+
+test('root historical Worker config claims no canonical routes', () => {
+  const source = fs.readFileSync(new URL('../../wrangler.jsonc', import.meta.url), 'utf8');
+  assert.doesNotMatch(source, /"routes?"\s*:/);
+});
 
 test('production guard rejects all QA environments and QA build roots', () => {
   for (const key of ['MSY_QA_MODE', 'MSY_QA_WORKER_STAGE', 'NEXT_PUBLIC_ADS_DISABLED']) assert.throws(() => assertProductionEnvironment({ [key]: '1' }, '/production'), /disables production/);
@@ -144,6 +149,7 @@ for (const [label, mutate, expected] of [
   ['QA-only CSP', f => f.write('.next/routes-manifest.json', json({ headers: [{ headers: [{ key: 'Content-Security-Policy', value: "default-src 'self'; frame-src 'none'" }] }] })), /CSP is absent/],
   ['wrong Worker', f => { const value = f.read('wrangler.jsonc'); value.name = 'preview'; f.write('wrangler.jsonc', json(value)); }, /Worker identity/],
   ['wrong assets root', f => { const value = f.read('wrangler.jsonc'); value.assets.directory = '.open-next-qa/.open-next/assets'; f.write('wrangler.jsonc', json(value)); }, /entry\/assets/],
+  ['attached canonical routes', f => { const value = f.read('wrangler.jsonc'); value.routes = [{ pattern: 'www.moneysalary.com/*', zone_name: 'moneysalary.com' }]; f.write('wrangler.jsonc', json(value)); }, /routes must stay detached/],
   ['different build ID', f => f.write('.open-next/assets/BUILD_ID', 'other'), /BUILD_ID mismatch/],
   ['changed deployed JS', f => f.write('.open-next/assets/_next/static/chunks/app/layout.js', chunk() + '\n// drift'), /client chunk differs/],
   ['QA optimized guard with real ad URL strings', f => { const source = chunk('function can(){return!1;}'); f.write('.next/static/chunks/app/layout.js', source); f.write('.open-next/assets/_next/static/chunks/app/layout.js', source); }, /no executable/],
