@@ -18,10 +18,11 @@ const PATH = "/salary-db/listed/top-employees";
 const top1 = topEmployeesRows[0];
 
 export const metadata: Metadata = buildPageMetadata({
-  title: `직원 수 TOP ${topEmployeesRows.length} — 가장 큰 공시기업 (${DART_RANKING_YEAR} 공시)`,
-  description: `직원 수가 가장 많은 공시기업 TOP ${topEmployeesRows.length}. DART 사업보고서 공시 기준(공시기업 ${LISTED_ALL_TOTAL.toLocaleString("ko-KR")}곳) — 고용 규모와 평균연봉을 함께 확인하세요.`,
+  // 검색어 '상장사'는 head 메타 전용 — 본문은 공시기업+상장 여부 단서 유지 (591d437de/SEO-04)
+  title: `직원 수 TOP ${topEmployeesRows.length} — 가장 큰 상장사 (${DART_RANKING_YEAR} 공시)`,
+  description: `직원 수가 가장 많은 상장사 TOP ${topEmployeesRows.length}. DART 사업보고서 공시 기준(상장사 ${LISTED_ALL_TOTAL.toLocaleString("ko-KR")}곳) — 고용 규모와 평균연봉을 함께 확인하세요.`,
   path: PATH,
-  keywords: ["직원 수 많은 회사", "대기업 직원 수", "고용 규모 순위", "공시기업 직원 수"],
+  keywords: ["직원 수 많은 회사", "대기업 직원 수", "고용 규모 순위", "상장사 직원 수"],
 });
 
 export default function TopEmployeesPage() {
