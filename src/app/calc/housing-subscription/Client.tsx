@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
+import { calcHousingSubscriptionSaving } from "@/lib/housingSubscriptionSaving";
 
 function fmt(n: number) { return Math.round(n).toLocaleString("ko-KR"); }
 
@@ -9,26 +10,9 @@ export default function HousingSubscriptionClient() {
   const [monthly, setMonthly] = useState(250_000);
   const [salary, setSalary] = useState(50_000_000);
 
-  const result = useMemo(() => {
-    const annualPayment = Math.min(monthly * 12, 3_000_000);
-    const eligibleForDeduction = salary <= 70_000_000;
-    const deduction = eligibleForDeduction ? annualPayment * 0.4 : 0;
-
-    // 한계세율 추정
-    const marginalRate = salary > 150_000_000 ? 0.38 : salary > 88_000_000 ? 0.35 : salary > 50_000_000 ? 0.24 : salary > 14_000_000 ? 0.15 : 0.06;
-    const taxSaving = deduction * marginalRate;
-    const yearlyContribution = monthly * 12;
-
-    return {
-      annualPayment,
-      yearlyContribution,
-      deduction,
-      taxSaving,
-      eligibleForDeduction,
-      marginalRate,
-      maxedOut: monthly >= 250_000,
-    };
-  }, [monthly, salary]);
+  // 절세액 = 연말정산 정본 엔진의 결정세액 차이 + 지방소득세 (1인 가구 근로자 가정) — src/lib/housingSubscriptionSaving.ts.
+  // 종전 '공제액 x 총급여로 고른 한계세율' 은 1.45~5배 과대였다 (2026-10-05 감사 code2-01).
+  const result = useMemo(() => calcHousingSubscriptionSaving(monthly, salary), [monthly, salary]);
 
   return (
     <div className="space-y-5 mb-10">
@@ -76,7 +60,7 @@ export default function HousingSubscriptionClient() {
             {fmt(result.taxSaving)}원
           </div>
           <p className="text-sm font-bold mt-1" style={{ color: "rgba(255,255,255,0.85)" }}>
-            소득공제 {fmt(result.deduction)}원 × 한계세율 {(result.marginalRate * 100).toFixed(0)}%
+            {fmt(result.deduction)}원 공제 · 지방세 포함
           </p>
         </div>
         <div className="bg-white dark:bg-canvas-900 px-6 py-4 grid grid-cols-3 gap-2 text-sm">
