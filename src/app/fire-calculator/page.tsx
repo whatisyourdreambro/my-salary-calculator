@@ -165,11 +165,14 @@ const calculateFireDate = (inputs: FireInputs, lifeEvents: LifeEvent[]) => {
 
  while (futureValue < currentTargetAmount && years < 100) {
  years++;
- currentMonthlySavings *= 1 + annualSalaryGrowth;
+ // 1년차는 입력한 월 저축액 그대로 — 연봉 상승은 그해 저축 뒤(연말)에 반영한다 (2026-10-05 감사 code10-05:
+ // 종전에는 1년차부터 상승분을 먼저 곱해 입력값이 한 번도 쓰이지 않았고, 기본값에서 21년이 20년으로 나왔다)
  totalContributions += currentMonthlySavings * 12;
 
  futureValue = futureValue * (1 + annualReturnRate);
  futureValue += currentMonthlySavings * 12;
+
+ currentMonthlySavings *= 1 + annualSalaryGrowth;
 
  const eventsForYear = lifeEvents.filter((e) => e.year === years);
  for (const eventForYear of eventsForYear) {
