@@ -101,7 +101,7 @@ const seasonPages: SearchEntry[] = [
  { title: "홈택스 연말정산 미리보기 이용법", href: "/year-end-tax-preview", category: "시즌", description: "오픈 시점·절차·확인 포인트", priority: 2 },
  { title: "중도퇴사자 연말정산", href: "/year-end-tax-mid-resign", category: "시즌", description: "퇴사 후 환급 방법·이직 합산·경정청구", priority: 2 },
  { title: "신입 초봉 2026 TOP 50", href: "/new-employee-salary-2026", category: "시즌", description: `회사 ${companyCountKo} 영끌 연봉 인덱스`, priority: 2 },
- { title: "2026 국민건강검진 안내", href: "/health-checkup-2026", category: "시즌", description: "직장인 무료 검진 + 5대 암검진 본인부담 10%", priority: 2 },
+ { title: "2026 국민건강검진 안내", href: "/health-checkup-2026", category: "시즌", description: "직장인 무료 검진 + 6대 암검진 본인부담 0~10%", priority: 2 },
  { title: "기초연금 계산기 2026", href: "/basic-pension-2026", category: "계산기", description: "월 349,700원 기준·감액 3종 간이 계산", priority: 2 },
  { title: "실업급여 계산기 2026", href: "/unemployment-benefit", category: "계산기", description: "수령액·기간·신청 조건 즉시 계산", priority: 1 },
  { title: "근로장려금 계산기 2026", href: "/earned-income-credit", category: "계산기", description: "단독·홑벌이·맞벌이 수령액 즉시 계산", priority: 1 },

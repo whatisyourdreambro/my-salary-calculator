@@ -80,14 +80,34 @@ describe("/savings-interest-2026 청년미래적금(청년도약계좌 신규 �
 describe("/health-checkup-2026 암검진 본인부담·수검 기한·6대 암 표기", () => {
   const src = flat(readSrc("src/app/health-checkup-2026/page.tsx"));
 
-  // 메타 교체는 운영자 승인 대기 — 제목·설명은 동결 대상이라(동결 예외는 결정 7 삼성·결정 11(1) 15건뿐) 이번 R8 통합 푸시에서는
-  // origin/main 값 그대로 둔다(2026-09-30 R8-B 메타 분리). 1회 교정은 10/9 뒤 운영자 승인 항목 (a) 로 따로 올린다.
-  it("제목·설명은 동결된 원래 값 그대로다(메타 교체는 운영자 승인 대기)", () => {
-    expect(src).toContain('title: "2026 국민건강검진 — 직장인 무료 검진 + 5대 암검진 본인부담 10%"');
+  // 2026-09-30 R8-B 메타 분리 때 동결했던 제목·설명을 운영자 승인(답 6)으로 2026-11-01 1회 교정했다(STR-06).
+  // 본문·FAQ·비용 표와 같은 기준(6대 암, 대장·자궁경부 0원, 하위 50%·의료급여 0원, 12/31 기한)이다.
+  it("제목·설명은 승인된 1회 교정 값(6대 암·본인부담 0~10%·12/31 기한)이고 옛 5대 암 10% 문구가 없다", () => {
+    expect(src).toContain('title: "2026 국민건강검진 — 직장인 무료 검진 + 6대 암검진 본인부담 0~10%"');
     expect(src).toContain(
-      '"직장가입자 일반검진 사무직 격년·비사무직 매년 100% 무료. 5대 암(위·대장·간·유방·자궁경부) 본인부담 10%. 2026 대상자 조회·항목·예약·미수검 과태료(최대 1,000만원) 한 번에 정리."',
+      '"직장가입자 일반검진 사무직 격년·비사무직 매년 100% 무료, 수검 기한 12월 31일. 6대 암검진 본인부담: 대장·자궁경부 0원, 위·간·유방·폐 10%(보험료 하위 50%·의료급여 0원). 대상자 조회·예약·미수검 과태료(최대 1,000만원) 정리."',
     );
-    expect(src).not.toContain("6대 암검진 본인부담 0~10%");
+    expect(src).toContain('"6대 암검진",');
+    expect(src).not.toContain("5대 암검진 본인부담 10%");
+    expect(src).not.toContain("5대 암(위·대장·간·유방·자궁경부) 본인부담 10%");
+    expect(src).not.toContain('"5대 암검진",');
+    expect(src).not.toContain("운영자 승인 대기");
+    // 사이트 검색 색인 설명도 같은 기준
+    const searchIndex = flat(readSrc("src/lib/searchIndex.ts"));
+    expect(searchIndex).toContain('description: "직장인 무료 검진 + 6대 암검진 본인부담 0~10%"');
+    expect(searchIndex).not.toContain("5대 암검진 본인부담 10%");
+  });
+
+  // 본문 첫 문단(InArticleAd 위, 문단 중간)은 6대 암 전부를 90%/10% 로 말하던 문장을 더 짧게 정정했다(2026-11-01 STR-06).
+  // 줄 수가 늘지 않도록 전체가 더 짧고, 새 단어 중 옛 문단의 가장 긴 단어보다 긴 것이 없다.
+  it("광고 위 본문: 6대 암 일괄 90%/10% 문장 대신 본인 10%(일부 0원) — 더 짧고 더 긴 단어 없음", () => {
+    const before = "90% 공단 + 10% 본인 부담입니다.";
+    const after = "본인 10%(일부 0원).";
+    expect(src).toContain(`간·유방·자궁경부·폐 등 6대 암)은 ${after} 직장가입자`);
+    expect(src).not.toContain(before);
+    expect([...after].length).toBeLessThan([...before].length);
+    const longest = (s: string) => Math.max(...syllables(s));
+    expect(longest(after)).toBeLessThanOrEqual(longest(before));
   });
 
   it("접힌 FAQ 의 새 글자는 사이트 글꼴 서브셋 안이다('多' 대신 '많음')", () => {
@@ -123,10 +143,11 @@ describe("/health-checkup-2026 암검진 본인부담·수검 기한·6대 암 �
     expect(src).not.toContain("본인 부담 약 8,000~15,000원");
   });
 
-  it("원발행일을 유지하고 새 설명을 추가한 10/19 수정일 3곳이 같다", () => {
-    expect(src).toContain('modifiedTime: "2026-10-19T00:00:00+09:00"');
-    expect(src).toContain('modifiedDate: "2026-10-19T00:00:00+09:00"');
-    expect(src).toContain('<PublishedMeta publishedDate="2026-05-22" updatedDate="2026-10-19"');
+  it("원발행일을 유지하고 제목·설명·본문을 정정한 11/1 수정일 3곳이 같다", () => {
+    expect(src).toContain('publishedTime: "2026-05-22"');
+    expect(src).toContain('modifiedTime: "2026-11-01T00:00:00+09:00"');
+    expect(src).toContain('modifiedDate: "2026-11-01T00:00:00+09:00"');
+    expect(src).toContain('<PublishedMeta publishedDate="2026-05-22" updatedDate="2026-11-01"');
   });
 });
 
