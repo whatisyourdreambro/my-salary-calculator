@@ -25,9 +25,12 @@ export const EXCLUDED_SOURCE_PATHS = Object.freeze([
 export const SOURCE_ITEMS = Object.freeze(['src', 'public', 'scripts', 'vendor', 'cloudflare',
   'package.json', 'package-lock.json', 'next.config.mjs', 'tsconfig.json', 'eslint.config.mjs',
   'postcss.config.cjs', 'tailwind.config.ts', 'wrangler.pages.qa.jsonc']);
+// Every manual ad component reads one of these slots. An unset slot silently removes
+// units (InArticleAd falls back to GUIDE_MID and is then deduplicated away), so a
+// production build must carry all of them.
+export const PRODUCTION_AD_SLOTS = Object.freeze(['HOME_TOP', 'CALC_RESULT', 'GUIDE_MID', 'SIDEBAR', 'IN_ARTICLE', 'MULTIPLEX', 'DISPLAY_2', 'COMPANY_TOP']);
 export const PUBLIC_BUILD_KEYS = Object.freeze([
-  ...['HOME_TOP', 'CALC_RESULT', 'GUIDE_MID', 'SIDEBAR', 'IN_ARTICLE', 'MULTIPLEX', 'DISPLAY_2', 'COMPANY_TOP']
-    .map(name => `NEXT_PUBLIC_ADSENSE_SLOT_${name}`),
+  ...PRODUCTION_AD_SLOTS.map(name => `NEXT_PUBLIC_ADSENSE_SLOT_${name}`),
   'NEXT_PUBLIC_KAKAO_JS_KEY', 'NEXT_PUBLIC_ADS_ID', 'NEXT_PUBLIC_CONVERSION_LABEL_CALCULATION',
   'NEXT_PUBLIC_CONVERSION_LABEL_PAGEVIEW', 'NEXT_PUBLIC_GA_ID',
   'NEXT_PUBLIC_PARTICIPATION_REACTIONS_ENABLED', 'NEXT_PUBLIC_PARTICIPATION_OPINIONS_ENABLED',
@@ -228,7 +231,7 @@ export function cleanBuildEnvironment(input, mode, stage) {
       assertPublicBuildValue(key, value);
       env[key] = value;
     }
-    for (const slot of ['HOME_TOP', 'CALC_RESULT', 'GUIDE_MID', 'COMPANY_TOP'])
+    for (const slot of PRODUCTION_AD_SLOTS)
       if (!env[`NEXT_PUBLIC_ADSENSE_SLOT_${slot}`]) throw new Error(`Missing production public ad slot: ${slot}`);
   }
   return env;

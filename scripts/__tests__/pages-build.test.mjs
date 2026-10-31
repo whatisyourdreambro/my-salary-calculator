@@ -6,6 +6,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, 
 import os from 'node:os';
 import path from 'node:path';
 import { artifactHash, assertEnglishNotFoundDocument, BUILD_MARKER, canonicalPathname, checkAssetLimits, checkWorkerBundle, cleanBuildEnvironment,
+  PRODUCTION_AD_SLOTS,
   compileRoutingConfig, copyableSource, copySources, EXCLUDED_SOURCE_PATHS, inventoryHash, packageExport,
   loadPublicBuildSettings, PUBLIC_BUILD_CONFIG, QA_ASSETS_IGNORE, readPublicBuildConfiguration, resetOwnedStage,
   sha256, SOURCE_ITEMS, sourceInventory, stagePath, verifyArtifact, workerModuleInventory,
@@ -55,7 +56,7 @@ function exportFixture(root) {
   moduleFixture(path.join(root, 'out'));
 }
 function productionEnv() {
-  return Object.fromEntries(['HOME_TOP', 'CALC_RESULT', 'GUIDE_MID', 'COMPANY_TOP'].map(slot => [`NEXT_PUBLIC_ADSENSE_SLOT_${slot}`, '1234567890']));
+  return Object.fromEntries(PRODUCTION_AD_SLOTS.map(slot => [`NEXT_PUBLIC_ADSENSE_SLOT_${slot}`, '1234567890']));
 }
 const productionConfigText = () => Object.entries(productionEnv()).map(([key, value]) => `${key}=${value}`).join('\n');
 
@@ -115,6 +116,11 @@ test('clean QA env removes credentials, preload hooks and production ids; produc
   assert.equal(env.npm_config_registry, 'https://registry.npmjs.org/');
   assert.equal(env.HOME, path.join(stage, 'build-home'));
   assert.throws(() => cleanBuildEnvironment({}, 'production', stage), /Missing production/);
+  assert.deepEqual([...PRODUCTION_AD_SLOTS], ['HOME_TOP', 'CALC_RESULT', 'GUIDE_MID', 'SIDEBAR', 'IN_ARTICLE', 'MULTIPLEX', 'DISPLAY_2', 'COMPANY_TOP']);
+  for (const slot of PRODUCTION_AD_SLOTS) {
+    const missing = productionEnv(); delete missing[`NEXT_PUBLIC_ADSENSE_SLOT_${slot}`];
+    assert.throws(() => cleanBuildEnvironment(missing, 'production', stage), new RegExp(`Missing production public ad slot: ${slot}$`));
+  }
   assert.throws(() => cleanBuildEnvironment({ ...productionEnv(), MSY_QA_MODE: '1' }, 'production', stage), /inherited QA/);
   assert.throws(() => cleanBuildEnvironment({ ...productionEnv(), NEXT_PUBLIC_ADSENSE_SLOT_HOME_TOP: 'bad' }, 'production', stage), /Invalid/);
   const prod = cleanBuildEnvironment({ ...productionEnv(), NEXT_PUBLIC_GA_ID: 'G-ABC123', NEXT_PUBLIC_CONVERSION_LABEL_PAGEVIEW: 'Abc_def' }, 'production', stagePath(root, 'production'));
