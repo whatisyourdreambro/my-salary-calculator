@@ -50,8 +50,9 @@ export function pagesReleaseCases() {
     doc('english-404', '/en/not-a-pages-release-route', { status: 404, private: true, english404: true, robots: 'noindex, nofollow' }),
     doc('korean-404', '/not-a-pages-release-route', { status: 404, private: true, robots: 'noindex, nofollow' }),
   ];
-  const first = [doc('home', '/'), { kind: 'sitemap', route: '/sitemap.xml', status: 200, type: 'xml', staticAsset: true },
-    doc('samsung-calculator', '/calc/samsung-bonus'), doc('salary', '/salary/50000000'), ...privateCases,
+  // indexable: self-canonical and no noindex, checked on the response already fetched (no extra request).
+  const first = [doc('home', '/', { indexable: true }), { kind: 'sitemap', route: '/sitemap.xml', status: 200, type: 'xml', staticAsset: true },
+    doc('samsung-calculator', '/calc/samsung-bonus', { indexable: true }), doc('salary', '/salary/50000000'), ...privateCases,
     { kind: 'salary-og', route: '/api/og?type=salary&amount=58321000&net=4123400', status: 200, type: 'image/png', png: true },
     { kind: 'company-og', route: '/api/og?type=company&name=Local%20release%20QA', status: 200, type: 'image/png', png: true }];
   const cases = [...first.map(item => ({ ...item, pass: 1 })), ...privateCases.map(item => ({ ...item, pass: 2 }))];
@@ -102,6 +103,21 @@ export function assertReleasePng(bytes) {
   for (let row = 0; row < 630; row++) assert.equal(pixels[row * 1201], 0);
 }
 
+// Audit OPP-25: an indexable release page names itself as the only canonical URL (origin only
+// for /) and carries no robots/googlebot noindex meta. Comments and raw-text containers are
+// removed first, so Flight data or inline JSON can neither satisfy nor fail the check.
+export function assertIndexableDocument(html, route) {
+  const markup = html.replace(/<!--[\s\S]*?-->/g, '').replace(/<(script|style|template|noscript)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, '');
+  const head = /<head\b[^>]*>([\s\S]*?)<\/head\s*>/i.exec(markup)?.[1] || '';
+  const canonical = head.match(/<link\b(?=[^>]*\brel=["']canonical["'])[^>]*>/gi) || [];
+  assert.equal(canonical.length, 1, 'Indexable release page needs exactly one canonical link');
+  assert.equal(/\bhref=["']([^"']*)["']/i.exec(canonical[0])?.[1], ORIGIN + (route === '/' ? '' : route), 'Canonical link must name the page itself');
+  for (const tag of head.match(/<meta\b(?=[^>]*\bname=["'](?:robots|googlebot)["'])[^>]*>/gi) || []) {
+    const directives = (/\bcontent=["']([^"']*)["']/i.exec(tag)?.[1] || '').toLowerCase().split(/[\s,]+/);
+    assert.ok(!directives.includes('noindex') && !directives.includes('none'), 'Indexable release page carries a noindex robots meta');
+  }
+}
+
 function assertShareDocument(html, item) {
   const head = /<head\b[^>]*>([\s\S]*?)<\/head\s*>/i.exec(html)?.[1]?.replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, '') || '';
   const title = /<title\b[^>]*>([^<]*)<\/title\s*>/i.exec(head)?.[1];
@@ -148,7 +164,7 @@ export async function runPagesResponseContracts({ buildId, sitemapHash }, {
       if (item.private) { result.checkpoint = 'private-cache-policy'; assertPagesPrivateCache(response.headers); }
       result.checkpoint = 'robots-policy';
       if (item.robots) assert.equal(result.robots, item.robots);
-      if (item.kind === 'home' || item.staticAsset) assert.doesNotMatch(result.robots || '', /\bnoindex\b/i);
+      if (item.indexable || item.staticAsset) assert.doesNotMatch(result.robots || '', /\bnoindex\b/i);
       result.checkpoint = 'bounded-response-body';
       const bytes = Buffer.from(await bodyGuard.readPagesQaBody(response, { kind: item.png ? 'png' : 'document', maxBytes: item.png ? 2 * 1024 * 1024 : 8 * 1024 * 1024 }));
       result.bytes = bytes.length; result.sha256 = sha(bytes);
@@ -161,6 +177,7 @@ export async function runPagesResponseContracts({ buildId, sitemapHash }, {
         assert.doesNotMatch(html, /Error 1102|Worker exceeded resource limits|error code: 1102/i);
         if (item.english404) assertEnglishNotFoundDocument(html);
         if (item.shareToken || item.invalidShare) assertShareDocument(html, item);
+        if (item.indexable) { result.checkpoint = 'indexable-canonical'; assertIndexableDocument(html, item.route); }
       }
       if (item.staticAsset) await onSitemap(bytes);
       result.checkpoint = 'passed';
