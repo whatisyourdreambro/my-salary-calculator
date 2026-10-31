@@ -247,7 +247,7 @@ export default function YearEndTaxCalculator() {
  <div className="lg:col-span-2 space-y-6">
  <Accordion title="1. 기본 정보" defaultOpen={true} contentProps={measurement.inputProps}>
  <CurrencyInput
- label="총급여액 (연봉)"
+ label="총급여 (연봉, 비과세 제외)"
  value={inputs.grossSalary.toLocaleString('ko-KR')}
  onValueChange={(v) => handleInputChange("grossSalary", v)}
  quickAmounts={[10000000, 5000000, 1000000]}

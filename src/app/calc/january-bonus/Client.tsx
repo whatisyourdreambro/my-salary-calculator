@@ -167,7 +167,7 @@ export default function JanuaryBonusClient() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Field
             id="salary"
-            label="총급여 (연봉)"
+            label="총급여 (비과세 제외)"
             value={salaryFmt}
             onChange={(v) => setSalaryFmt(v)}
           />
