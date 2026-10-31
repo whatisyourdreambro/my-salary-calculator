@@ -33,7 +33,7 @@
 //   pay-table 5 /{civil-servant|teacher|police|firefighter|military}-pay-{연도}
 //   salary   5  /salary/{금액}·/monthly/{금액}
 //   feeds (60 에 포함 안 함): /robots.txt /sitemap.xml /rss.xml /rss-companies.xml /rss-tables.xml
-//     — rss-tables 가 10/16 전에 404 면 실패가 아니라 'not yet live' 로 보고한다.
+//     — rss-tables 는 RSS_TABLES_LIVE_FROM 전(null = 아직 main 미배포)에 404 면 실패가 아니라 'not yet live' 로 보고한다.
 //   --limit N 은 계열을 돌아가며(각 계열 상위 순번부터) N 개만 남긴다(스모크용). 피드는 그대로 잰다.
 //
 // 요청: 순차, 요청 사이 300ms 이상, scripts/health-check.mjs 와 같은 브라우저 UA(기본 node UA 는 CF 가 403).
@@ -74,8 +74,8 @@ export const UA =
 export const FAMILIES = ["company", "lite", "calc", "guides", "pay-table", "salary"];
 export const QUOTAS = { company: 20, lite: 10, calc: 10, guides: 10, "pay-table": 5, salary: 5 };
 export const FEED_PATHS = ["/robots.txt", "/sitemap.xml", "/rss.xml", "/rss-companies.xml", "/rss-tables.xml"];
-/** /rss-tables.xml 공개 예정일(KST) — 이 날짜 전의 404 는 'not yet live'. */
-export const RSS_TABLES_LIVE_FROM = "2026-10-16";
+/** /rss-tables.xml 공개일(KST). null = R4-RSS 가 main 에 없음(2026-11-01 감사 STR-12) — 404 는 'not yet live'. 피드를 배포하는 커밋에서 그날 날짜로 바꾼다. */
+export const RSS_TABLES_LIVE_FROM = null;
 export const MIN_GAP_MS = 300;
 export const FETCH_TIMEOUT_MS = 20000;
 /** 앞선 실행과의 겹침 창 — 엣지 캐시 TTL 중 가장 긴 /salary/* 4h 를 모든 계열에 보수적으로 쓴다. */
@@ -496,7 +496,7 @@ export function aggregate(records, { families = [...FAMILIES, "feeds"], carried 
 
 const feedName = (p) => p.replace(/^\//, "").replace(/\.[a-z]+$/, "");
 
-/** 피드별 판정 — ok(전 pass 200 + 본문 표지) · notYetLive(10/16 전 rss-tables 404) · fail(사유). */
+/** 피드별 판정 — ok(전 pass 200 + 본문 표지) · notYetLive(RSS_TABLES_LIVE_FROM 전 rss-tables 404, null 이면 항상) · fail(사유). */
 export function feedVerdicts(records, runDate) {
   const out = [];
   for (const p of FEED_PATHS) {
@@ -505,7 +505,7 @@ export function feedVerdicts(records, runDate) {
     const name = feedName(p);
     const bad = rs.find((r) => !(responded(r) && r.status === 200 && r.marker === true));
     if (!bad) out.push({ name, path: p, verdict: "ok" });
-    else if (p === "/rss-tables.xml" && runDate < RSS_TABLES_LIVE_FROM && rs.every((r) => responded(r) && r.status === 404))
+    else if (p === "/rss-tables.xml" && (RSS_TABLES_LIVE_FROM === null || runDate < RSS_TABLES_LIVE_FROM) && rs.every((r) => responded(r) && r.status === 404))
       out.push({ name, path: p, verdict: "notYetLive" });
     else {
       const reason = bad.error != null ? "net" : bad.status !== 200 ? String(bad.status) : "marker";

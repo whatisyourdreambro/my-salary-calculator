@@ -433,7 +433,7 @@ test("5xx and network errors → exit 1, counted per family; aggregate line stil
   assert.match(lastLine(only403.stdout), / · 403 1 · /);
 });
 
-test("rss-tables 404 counts as a feed failure from 10/16; live sitemap doubles as its pass-1 record", async () => {
+test("rss-tables 404 stays 'not yet live' while R4-RSS is unshipped; live sitemap doubles as its pass-1 record", async () => {
   const stub = makeStub();
   const r = await runMain(["--seed", "2026-10-20", "--passes", "2", "--interval", "1", "--limit", "12"], { stub, clock: OCT_20 });
   assert.equal(r.code, 0, r.stderr);
@@ -445,7 +445,7 @@ test("rss-tables 404 counts as a feed failure from 10/16; live sitemap doubles a
   const line = legacyLine(r.stdout);
   assert.match(line, /^crawl-sampler 10\/20: /);
   assert.match(line, / · 5xx 0\/24 · /);
-  assert.match(line, /feeds 4\/5 ok FAIL rss-tables 404$/);
+  assert.match(line, /feeds 4\/5 ok \(rss-tables not yet live\)$/);
   assertNoUrl(line);
 });
 
