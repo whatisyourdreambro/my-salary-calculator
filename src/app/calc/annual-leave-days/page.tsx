@@ -12,6 +12,11 @@ import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { CalendarDays, Info } from "lucide-react";
 import AnnualLeaveDaysClient from "./Client";
 
+/** 정적 HTML 의 기준일 — 빌드 시각의 KST 날짜 (클라이언트가 마운트 뒤 방문일로 바꾼다) */
+function buildDayKst(): string {
+  return new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+}
+
 const FAQ_ITEMS = [
   {
     question: "연차는 1년에 몇 개 발생하나요?",
@@ -77,7 +82,7 @@ export default function AnnualLeaveDaysPage() {
             </p>
           </header>
 
-          <AnnualLeaveDaysClient />
+          <AnnualLeaveDaysClient initialUntil={buildDayKst()} />
 
           <article className="prose prose-sm sm:prose-base dark:prose-invert max-w-none mb-10 mt-10">
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-8 mb-4">연차 발생 규칙 (근로기준법 60조)</h2>
