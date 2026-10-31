@@ -8,7 +8,8 @@ import {
   Zap, Shield,
   AlertCircle, BarChart3, Sparkles, BookOpen,
 } from "lucide-react";
-import { earnedIncomeTaxCredit2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
+import { PENSION_BASE_2026 } from "@/lib/taxConstants2026";
+import { estimateAnnualIncomeTaxBreakdown2026 } from "@/lib/bonusTaxCalc";
 import { CURRENT_INSURANCE_RATES, CURRENT_RATE_LABELS, CURRENT_RATES_YEAR } from "@/config/currentRates";
 import ResultSharePanel from "@/components/ResultSharePanel";
 import { CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
@@ -17,15 +18,6 @@ import NumberInput from "@/components/NumberInput";
 // ─────────────────────────────────────────────────────────────────────────────
 // 2026 세법 기준 로직 (소득세법 제47조, 제55조, 제59조)
 // ─────────────────────────────────────────────────────────────────────────────
-
-/** 근로소득공제 (소득세법 제47조) — 최대 2,000만원 */
-function calcEmpDeduction(totalIncome: number): number {
-  if (totalIncome <= 5_000_000)   return totalIncome * 0.70;
-  if (totalIncome <= 15_000_000)  return 3_500_000 + (totalIncome - 5_000_000) * 0.40;
-  if (totalIncome <= 45_000_000)  return 7_500_000 + (totalIncome - 15_000_000) * 0.15;
-  if (totalIncome <= 100_000_000) return 12_000_000 + (totalIncome - 45_000_000) * 0.05;
-  return Math.min(14_750_000 + (totalIncome - 100_000_000) * 0.02, 20_000_000);
-}
 
 /** 기본공제 (소득세법 제50조) — 1인당 150만원 */
 function calcBasicDeduction(dependents: number, hasSpouse: boolean): number {
@@ -46,16 +38,6 @@ const TAX_BRACKETS = [
   { limit: Infinity,      rate: 0.45,  deduction: 65_940_000 },
 ];
 
-function calcProgressiveTax(taxableIncome: number): number {
-  if (taxableIncome <= 0) return 0;
-  for (const b of TAX_BRACKETS) {
-    if (taxableIncome <= b.limit) {
-      return Math.max(0, Math.round(taxableIncome * b.rate - b.deduction));
-    }
-  }
-  return 0;
-}
-
 function getMarginalRate(taxableIncome: number): number {
   for (const b of TAX_BRACKETS) {
     if (taxableIncome <= b.limit) return Math.round(b.rate * 100);
@@ -63,13 +45,10 @@ function getMarginalRate(taxableIncome: number): number {
   return 45;
 }
 
-// 근로소득세액공제는 taxConstants2026.earnedIncomeTaxCredit2026 이 정본이다.
-// 2026-09-06 전수검사 정정: 여기에 계단식 한도(74만·66만·50만 + 3,300만 이하
-// 무한도)를 별도로 재구현해 두어, 정본이 §59② 체감 산식으로 바뀐 뒤에도
-// 이 페이지만 옛 값을 썼다(총급여 2,800만 + 성과급 500만 기준 세금 182,050원
-// 과소). 재구현을 제거하고 정본을 그대로 부른다.
-const calcTaxCredit = (incomeTax: number, totalIncome: number): number =>
-  incomeTax <= 0 ? 0 : Math.round(earnedIncomeTaxCredit2026(incomeTax, totalIncome));
+// 연간 세액은 bonusTaxCalc.estimateAnnualIncomeTaxBreakdown2026 이 정본이다 — 회사별 성과급 계산기(calcBonusNet)와
+// 같은 산식(근로소득공제·인적공제·연금·건강·장기요양·고용보험료 공제·근로소득세액공제).
+// 종전에는 보험료 공제 없이 과세표준을 잡아 성과급 세금이 회사별 계산기보다 많았다(2026-11 CALC-03 — 기본값
+// 6,000만+1,000만 68만원, 1억+5,000만 약 201만원, 성과급이 클수록 차이가 더 벌어진다).
 
 
 /**
@@ -125,6 +104,7 @@ interface CalcResult {
   totalIncome: number;
   empDeductNew: number;
   basicDeduct: number;
+  insuranceDeductNew: number;
   taxableNew: number;
   taxableBase: number;
   grossTaxNew: number;
@@ -139,24 +119,25 @@ function calculate(
 ): CalcResult {
   const basicDeduct = calcBasicDeduction(dependents, hasSpouse);
 
-  // ① 기본급만의 세금
-  const empDeductBase = calcEmpDeduction(annualSalary);
-  const taxableBase   = Math.max(0, annualSalary - empDeductBase - basicDeduct);
-  const grossTaxBase  = calcProgressiveTax(taxableBase);
-  const creditBase    = calcTaxCredit(grossTaxBase, annualSalary);
-  const taxBeforeBonus = Math.max(0, grossTaxBase - creditBase);
+  // ① 기본급만의 연간 세액 (4대보험료 공제 포함 — calcBonusNet 과 같은 정본 산식)
+  const before = estimateAnnualIncomeTaxBreakdown2026(annualSalary, CURRENT_INSURANCE_RATES, annualSalary, basicDeduct);
 
-  // ② 기본급 + 성과급 합산 세금
+  // ② 기본급 + 성과급 합산 연간 세액 (성과급에도 4대보험이 붙으므로 보험료 공제도 합산 보수 기준)
   const totalIncome   = annualSalary + bonus;
-  const empDeductNew  = calcEmpDeduction(totalIncome);
-  const taxableNew    = Math.max(0, totalIncome - empDeductNew - basicDeduct);
-  const grossTaxNew   = calcProgressiveTax(taxableNew);
-  const creditNew     = calcTaxCredit(grossTaxNew, totalIncome);
-  const taxAfterBonus = Math.max(0, grossTaxNew - creditNew);
+  const after = estimateAnnualIncomeTaxBreakdown2026(totalIncome, CURRENT_INSURANCE_RATES, totalIncome, basicDeduct);
+  const taxableBase   = before.taxBase;
+  const empDeductNew  = after.earnedIncomeDeduction;
+  const insuranceDeductNew = Math.round(after.insuranceDeduction);
+  const taxableNew    = after.taxBase;
+  const grossTaxNew   = after.calculatedTax;
+  const creditNew     = Math.round(after.earnedIncomeTaxCredit);
+  const taxBeforeBonus = Math.round(before.determinedTax);
+  const taxAfterBonus = Math.round(after.determinedTax);
 
-  // ③ 성과급 귀속 소득세
-  const bonusIncomeTax = Math.max(0, taxAfterBonus - taxBeforeBonus);
-  const localTax       = Math.round(bonusIncomeTax * 0.1);
+  // ③ 성과급 귀속 소득세 — calcBonusNet 과 같은 반올림 (지방세는 반올림 전 증가분의 10%)
+  const incomeTaxDelta = Math.max(0, after.determinedTax - before.determinedTax);
+  const bonusIncomeTax = Math.round(incomeTaxDelta);
+  const localTax       = Math.round(incomeTaxDelta * CURRENT_INSURANCE_RATES.LOCAL_INCOME_TAX_RATIO);
   const totalIncomeTax = bonusIncomeTax + localTax;
 
   // ④ 4대보험
@@ -183,6 +164,7 @@ function calculate(
     totalIncome,
     empDeductNew,
     basicDeduct,
+    insuranceDeductNew,
     taxableNew,
     taxableBase,
     grossTaxNew,
@@ -565,7 +547,7 @@ export default function BonusCalculatorPage() {
             이 결과는 지급일 입금액이나 연말정산 확정액이 아닙니다.
           </p>
           <p className="mt-1">
-            보험료의 소득공제, 추가 소득·세액공제와 보험별 실제 정산은 반영하지 않습니다.
+            추가 소득·세액공제와 보험별 실제 정산은 반영하지 않습니다.
             입력한 가족은 공제 요건을 충족한다고 가정합니다.
           </p>
           <p className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
@@ -653,7 +635,7 @@ export default function BonusCalculatorPage() {
                   {[
                     { step: "①", label: "연봉 + 성과급 합계",    value: fmt(r.totalIncome) + "원",      sub: "총 근로소득" },
                     { step: "②", label: "근로소득공제",           value: "-" + fmt(r.empDeductNew) + "원", sub: "소득 규모별 체감 공제" },
-                    { step: "③", label: "기본 인적공제",          value: "-" + fmt(r.basicDeduct) + "원",  sub: `본인+${hasSpouse ? "배우자+" : ""}부양가족 ${dependents}명` },
+                    { step: "③", label: "인적·보험료 공제",       value: "-" + fmt(r.basicDeduct + r.insuranceDeductNew) + "원", sub: `본인+${hasSpouse ? "배우자+" : ""}부양가족 ${dependents}명` },
                     { step: "④", label: "과세표준",                value: fmt(r.taxableNew) + "원",         sub: "세율이 적용되는 금액" },
                     { step: "⑤", label: "산출세액",                value: fmt(r.grossTaxNew) + "원",        sub: "누진세율 적용" },
                     { step: "⑥", label: "근로소득세액공제",        value: "-" + fmt(r.creditNew) + "원",    sub: "총급여 구간별 한도 적용" },
@@ -688,7 +670,7 @@ export default function BonusCalculatorPage() {
                 <div className="px-6 py-4 flex gap-3" style={{ backgroundColor: "#F8FAFB", borderTop: "1px solid #DDE4EC" }}>
                   <Info size={14} style={{ color: "#0145F2", flexShrink: 0, marginTop: "2px" }} />
                   <p className="text-xs leading-relaxed" style={{ color: "#526176" }}>
-                    근로소득공제·기본 인적공제·근로소득세액공제를 적용한 연간 세액의 전후 차이입니다.
+                    근로소득공제·인적·보험료공제·근로소득세액공제를 적용한 연간 세액의 전후 차이입니다.
                     국민연금은 월 상한 659만원(2026.7~2027.6)을 12개월로 환산해 단순 추정합니다.
                     실제 국민연금은 결정된 기준소득월액을 따르며, 건강보험 등의 상한·정산 일정도 이 모델과 다를 수 있습니다.
                   </p>
