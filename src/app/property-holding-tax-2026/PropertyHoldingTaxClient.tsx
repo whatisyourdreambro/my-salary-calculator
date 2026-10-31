@@ -46,7 +46,8 @@ export default function PropertyHoldingTaxClient() {
           />
           <p className="mt-2 text-xs text-faint-blue">
             {fmt(Math.floor(publishedValue / 100_000_000))}억{" "}
-            {fmt((publishedValue % 100_000_000) / 10000)}만원
+            {fmt((publishedValue % 100_000_000) / 10000)}만원{" "}
+            {/* {" "} 필수 — 줄바꿈 뒤 {식} 앞 공백은 JSX 가 지워 '만원(' 으로 붙는다. 기본 화면은 종전 '만원 (' 그대로 */}
             {multi
               ? "(주택마다 공시가격이 같다고 보고 재산세를 집별로 계산)"
               : "(공시가격과 시세는 다릅니다. 실제 시세는 별도로 확인하세요)"}
