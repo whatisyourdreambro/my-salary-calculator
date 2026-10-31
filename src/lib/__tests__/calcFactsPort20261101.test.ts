@@ -106,3 +106,31 @@ describe("NEW-v07-content-facts-1 baby-yearly-cost FAQ — 아동수당 2026년 
     expect(answers).not.toContain("만 8세 미만");
   });
 });
+
+// STR-02-q (a) — 10/13 사슬(6d0dd4edb) 문자열 포팅. 접힌 FAQ 답변(<details>)이라 기본 화면 광고 위치와 무관하다.
+describe("STR-02-q b5d0048b0 severance-pay-quick 접힌 FAQ — 근로자퇴직급여 보장법 제4조·제8조, 소득세법 제129조", () => {
+  it("1년 11개월은 받는다 — 재직일수 비례로 약 1.92년치", () => {
+    const first = calc("severance-pay-quick").faqs?.[0];
+    expect(first?.q).toBe("1년 11개월 일하고 퇴직하면 퇴직금이 없나요?");
+    expect(first?.a.startsWith("받습니다.")).toBe(true);
+    expect(first?.a).toContain("근로자퇴직급여 보장법 제4조·제8조");
+    expect(first?.a).toContain("약 1.92년치");
+  });
+
+  it("IRP 연금 수령 감면은 수령 연차에 따라 30~50% (원천징수세율의 70·60·50%)", () => {
+    const answers = (calc("severance-pay-quick").faqs ?? []).map((f) => f.a).join(" ");
+    expect(answers).toContain("30~50% 감면");
+    expect(answers).not.toContain("추가 30% 감면");
+    expect(answers).not.toContain("30% 절세 효과");
+  });
+});
+
+describe("STR-02-q 84e313f6e loan-affordability 접힌 FAQ2 — 신용대출 연소득 이내(2025-06-28), 규제지역 LTV 40%(2025-10-15)", () => {
+  it("연소득 100~200% 한도와 LTV 70% 단일값이 없다", () => {
+    const answer = calc("loan-affordability").faqs?.[1]?.a ?? "";
+    expect(answer).toContain("2025년 6월 28일부터 전 금융권에서 차주별 연소득 이내");
+    expect(answer).toContain("LTV(비규제지역 70%, 규제지역 무주택 일반 40%)");
+    expect(answer).not.toContain("100~200%");
+    expect(answer).not.toContain("주택가치 대비 70%");
+  });
+});
