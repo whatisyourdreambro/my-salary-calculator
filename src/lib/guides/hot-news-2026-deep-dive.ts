@@ -648,10 +648,10 @@ const youthMonthlyRentSupport = `
 `;
 
 const childSupport100 = `
-<p class="lead">아동수당 — 만 0~7세 자녀에게 월 10만원, 매월 25일 지급. 2026년 부모 소득 무관. 자녀 1명 기준 연 120만원, 7년 누적 840만원.</p>
+<p class="lead">아동수당 — 만 0~8세 자녀에게 월 10만원, 매월 25일 지급. 2026년 부모 소득 무관. 자녀 1명 기준 연 120만원, 비수도권 가산.</p>
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 아동수당</h2>
 <ul class="space-y-2 mt-4">
-<li>· 대상: 만 0~7세 모든 아동 (출생 직후~만 8세 생일 전월)</li>
+<li>· 대상: 만 0~8세 모든 아동 (출생~만 9세 생일 전월)</li>
 <li>· 금액: 월 10만원</li>
 <li>· 지급일: 매월 25일</li>
 <li>· 소득 무관 보편 지급</li>
@@ -808,7 +808,7 @@ export const hotNewsDeepDive: Guide[] = [
   { slug: "voluntary-vs-recommended-resignation-2026", title: "권고사직 안전 절차 5단계 — \"일신상 사유\" 절대 금지", description: "권고사직 → 실업급여 가능. 단 \"일신상 사유\" 표현 거부 + \"경영상 이유\" 명시. 잘못 처리 시 약 1,000만원 손해.", category: "커리어", tags: ["권고사직", "자진퇴사", "실업급여", "사직서", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: employmentEstoppel, lang: "ko" },
   // 2026 정책 신설 10편
   { slug: "youth-monthly-rent-support-2026", title: "2026 청년 월세 한시 특별지원 — 월 20만원 × 12개월 = 240만원", description: "만 19~34세 무주택 + 본인 소득 중위 60% 이하 + 보증금 5천·월세 70만 이하. 복지로·주민센터 신청.", category: "부동산", tags: ["청년월세", "정부지원", "무주택", "특별지원", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: youthMonthlyRentSupport, lang: "ko" },
-  { slug: "child-support-100-2026", title: "아동수당 — 만 0~7세 매월 10만원 + 부모급여 100만원 중복", description: "소득 무관 보편 지급. 만 0세 부모급여 100만/월 + 아동수당 10만 중복. 7년 누적 840만원.", category: "기초", tags: ["아동수당", "부모급여", "출산", "보편지급", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: childSupport100, lang: "ko" },
+  { slug: "child-support-100-2026", title: "아동수당 — 만 0~8세 월 10만원 + 부모급여 100만원 중복", description: "소득 무관 보편 지급. 만 0세 부모급여 100만/월 + 아동수당 10만 중복. 비수도권 가산.", category: "기초", tags: ["아동수당", "부모급여", "출산", "보편지급", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: childSupport100, lang: "ko" },
   { slug: "basic-pension-65-2026", title: "기초연금 2026 — 단독 349,700원·부부 559,520원", description: "소득 하위 70%. 단독 최대 349,700원, 부부 동시 수령 시 각 20% 감액(합산 559,520원). 국민연금 수령자도 일부 가능.", category: "기초", tags: ["기초연금", "노후", "65세", "정부지원", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: basicPension2026, lang: "ko" },
   { slug: "digital-nomad-visa-korea-2026", title: "한국 디지털 노마드 비자 — 연소득 8만 달러+ 외국인 IT 인재 유치", description: "외국 회사 원격 근무 + 연소득 8만 달러+ + 건강보험. 1+1년 체류. 한국 비거주자 분류로 한국 소득세 없음.", category: "커리어", tags: ["디지털노마드", "비자", "외국인", "원격근무", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: digitalNomadVisa, lang: "ko" },
   { slug: "childcare-support-comprehensive-2026", title: "자녀 1명 0~18세 정부 지원 — 아동수당·부모급여 나이별 정리", description: "0~1세 부모급여부터 2026년 만 9세 미만 아동수당 월 10만원, 어린이집 보육료, 초등 돌봄, 자녀세액공제까지.", category: "기초", tags: ["육아지원", "아동수당", "보육료", "학자금", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: childcareSupport, lang: "ko" },
