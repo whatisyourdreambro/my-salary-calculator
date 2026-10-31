@@ -653,7 +653,7 @@ async function auditContactInput(page, theme) {
 async function auditCivilPayHandoff(page, sourceRoute, theme) {
   const occupation = sourceRoute === '/firefighter-pay-2026' ? 'fire' : 'police';
   const label = occupation === 'fire' ? '소방교' : '경장';
-  const choice = page.getByRole('button', { name: `2026년 ${label} 3호봉 조건으로 실수령액 계산`, exact: true });
+  const choice = page.getByRole('button', { name: new RegExp(`^[\\d,]+원, 2026년 ${label} 3호봉 조건으로 실수령액 계산$`) });
   const cell = await choice.boundingBox();
   assert(cell && cell.height >= 44 && cell.width >= 44, 'mobile selection target');
   await choice.focus();

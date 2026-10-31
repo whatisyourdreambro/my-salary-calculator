@@ -31,7 +31,7 @@ export default function PoliceFireRankTable({ variant }: { variant: "police" | "
               <td className="py-2.5 px-2 font-bold text-navy">{hobong}호봉</td>
               {pays.map((pay, i) => (
                 <td key={labels[i]} className="px-2 text-right text-muted-blue tabular-nums">
-                  <CivilPayHandoffButton gradeLabel={labels[i]} selection={{
+                  <CivilPayHandoffButton gradeLabel={labels[i]} amountLabel={fmt(pay)} selection={{
                     source: CIVIL_PAY_SOURCES[variant], occupation: variant,
                     gradeId: CIVIL_PAY_GRADES[variant].find(grade => grade.label === labels[i])!.id,
                     step: hobong, payYear: 2026, basisVersion: CIVIL_PAY_BASIS_VERSION,

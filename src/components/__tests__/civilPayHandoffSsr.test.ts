@@ -15,7 +15,7 @@ describe("readable and keyboard-operable source pay tables", () => {
     expect((html.match(/type="button"/g) ?? []).length).toBe(25);
     for (const grade of CIVIL_PAY_GRADES[variant]) {
       for (const row of POLICE_RANK_ROWS_2026) {
-        expect(html).toContain(`aria-label="2026년 ${grade.label} ${row[0]}호봉 조건으로 실수령액 계산"`);
+        expect(html).toContain(`aria-label="${row[grade.engineRank + 1].toLocaleString("ko-KR")}원, 2026년 ${grade.label} ${row[0]}호봉 조건으로 실수령액 계산"`);
         expect(html).toContain(row[grade.engineRank + 1].toLocaleString("ko-KR"));
       }
     }
