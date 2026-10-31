@@ -188,4 +188,17 @@ describe("calcDividendTax — 금융소득 몫 (화면 머리 금액)", () => {
     expect(page).toContain('{ label: "세금 합계", value: r.financialTotal, main: true }');
     expect(page).not.toContain("{fmt(r.total)}");
   });
+  it("종합과세 소득세 행 라벨은 종전 라벨보다 짧다 (CalcResultAd 위 행 줄바꿈 방지)", async () => {
+    const { readFileSync } = await import("node:fs");
+    const { resolve } = await import("node:path");
+    const page = readFileSync(resolve(process.cwd(), "src/app/tools/finance/dividend-tax/page.tsx"), "utf8");
+    const before = "소득세 (두 방식 중 큰 금액)";
+    const after = "소득세 (기타소득분 제외)";
+    expect(page).toContain(`label: r.isComprehensive ? "${after}" : "소득세 (14%)"`);
+    expect(page).not.toContain(`"${before}"`);
+    const hangul = (s: string) => [...s].filter((c) => /[가-힣]/.test(c)).length;
+    const other = (s: string) => [...s].filter((c) => !/[가-힣]/.test(c)).length;
+    expect(hangul(after)).toBeLessThanOrEqual(hangul(before));
+    expect(other(after)).toBeLessThan(other(before));
+  });
 });
