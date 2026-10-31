@@ -708,13 +708,22 @@ const LIFE: CalculatorDef[] = [
  keywords: ["전기료", "전기세"],
  fields: [{ name: "kwh", label: "월 사용량", defaultValue: 300, suffix: "kWh" }],
  compute: ({ kwh }) => {
- let charge = 0;
- if (kwh <= 200) charge = kwh * 120;
- else if (kwh <= 400) charge = 200 * 120 + (kwh - 200) * 215;
- else charge = 200 * 120 + 200 * 215 + (kwh - 400) * 308;
- const tax = charge * 0.137;
+ // 주택용 저압(기타계절) 누진 3구간 — 기본요금 910 / 1,600 / 7,300원, 전력량요금 120.0 / 214.6 / 307.3원/kWh
+ // (법제처 찾기쉬운 생활법령 2026-10-15 기준). 부가가치세 10% + 전력산업기반기금 2.7%(전기사업법 시행령 제36조) = × 1.127.
+ // 종전 계산(기금 3.7% 가정의 × 1.137, 정액 기본료 1,900원, 215·308원)을 바꿨다 (2026-11-01, a77e9b284 포팅).
+ // 기후환경요금·연료비조정요금(유의사항 2번)과 7~8월 누진구간 완화(FAQ 3번)는 반영하지 않는다.
+ let energy = 0;
+ let base = 910;
+ if (kwh <= 200) energy = kwh * 120;
+ else if (kwh <= 400) {
+ energy = 200 * 120 + (kwh - 200) * 214.6;
+ base = 1600;
+ } else {
+ energy = 200 * 120 + 200 * 214.6 + (kwh - 400) * 307.3;
+ base = 7300;
+ }
  return {
- primary: { label: "예상 전기료", value: Math.round(charge + tax + 1900), suffix: "원" },
+ primary: { label: "예상 전기료", value: Math.round((energy + base) * 1.127), suffix: "원" },
  note: "한국전력 주택용 누진제 단순 적용. 계절·정확한 단가는 한전 공식 안내 확인.",
  };
  },

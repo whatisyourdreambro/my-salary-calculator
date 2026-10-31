@@ -125,6 +125,50 @@ describe("STR-02-q b5d0048b0 severance-pay-quick 접힌 FAQ — 근로자퇴직�
   });
 });
 
+// STR-02-q (b) a77e9b284 포팅 — 주택용 저압(기타계절) 요금: 법제처 찾기쉬운 생활법령(2026-10-15 기준)
+// 기본요금 910 / 1,600 / 7,300원, 전력량요금 120.0 / 214.6 / 307.3원/kWh, 전력산업기반기금 2.7%(전기사업법 시행령 제36조 1천분의 27).
+describe("STR-02-q electricity-bill — 구간별 기본요금, 214.6·307.3원, 부가세 10% + 기금 2.7% = × 1.127", () => {
+  const run = (kwh: number) => calc("electricity-bill").compute({ kwh }).primary.value;
+
+  it("기본값 300kWh 는 53,037원 (종전 53,634원과 자릿수 같음)", () => {
+    expect(run(300)).toBe(53037);
+    expect(String(run(300)).length).toBe(String(53634).length);
+  });
+
+  it("구간 경계 — 200kWh 이하 910원, 201~400kWh 1,600원, 400kWh 초과 7,300원", () => {
+    expect(run(150)).toBe(Math.round((150 * 120 + 910) * 1.127));
+    expect(run(200)).toBe(Math.round((200 * 120 + 910) * 1.127));
+    expect(run(201)).toBe(Math.round((24000 + 214.6 + 1600) * 1.127));
+    expect(run(400)).toBe(Math.round((24000 + 42920 + 1600) * 1.127));
+    expect(run(500)).toBe(Math.round((24000 + 42920 + 100 * 307.3 + 7300) * 1.127));
+  });
+
+  it("계산 공식이 새 계산과 같은 구조(1.127, 기본료 포함 곱셈)를 쓴다", () => {
+    const formula = calc("electricity-bill").formula ?? "";
+    expect(formula).toContain("예상 전기료 = (전력량요금+기본료) × 1.127(세금·기금)");
+    expect(formula).not.toContain("1.137");
+  });
+
+  it("공식은 광고(InArticle) 위 고정폭 블록이라 줄마다 원문보다 길지 않다 — 한글·그 밖의 글자 수 모두 같거나 적음", () => {
+    const before = "기본 요금 = 구간별 누진 단가 적용\n  200kWh 이하: 사용량 × 약 120원\n  200~400kWh: 200×120 + 초과분 × 약 215원\n  400kWh 초과: 200×120 + 200×215 + 초과분 × 약 308원\n예상 전기료 = 기본 요금 × 1.137(부가세·기금) + 기본료".split("\n");
+    const after = (calc("electricity-bill").formula ?? "").split("\n");
+    expect(after).toHaveLength(before.length);
+    after.forEach((line, i) => {
+      const [ha, oa] = glyphCounts(line);
+      const [hb, ob] = glyphCounts(before[i]);
+      expect(ha, `line ${i + 1} hangul`).toBeLessThanOrEqual(hb);
+      expect(oa, `line ${i + 1} other`).toBeLessThanOrEqual(ob);
+    });
+  });
+
+  it("접힌 FAQ 에 요금표 값과 1.127 근거를 적는다", () => {
+    const answers = (calc("electricity-bill").faqs ?? []).map((f) => f.a).join(" ");
+    expect(answers).toContain("200kWh 이하 120.0원, 201~400kWh 214.6원, 400kWh 초과 307.3원");
+    expect(answers).toContain("910원·1,600원·7,300원");
+    expect(answers).toContain("전력산업기반기금 2.7%(전기사업법 시행령 제36조)를 합친 1.127");
+  });
+});
+
 describe("STR-02-q 84e313f6e loan-affordability 접힌 FAQ2 — 신용대출 연소득 이내(2025-06-28), 규제지역 LTV 40%(2025-10-15)", () => {
   it("연소득 100~200% 한도와 LTV 70% 단일값이 없다", () => {
     const answer = calc("loan-affordability").faqs?.[1]?.a ?? "";
