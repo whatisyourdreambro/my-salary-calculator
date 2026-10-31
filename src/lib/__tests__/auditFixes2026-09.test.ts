@@ -156,7 +156,8 @@ describe("연말정산 — 장기요양보험료 소득공제", () => {
   });
 
   it("장기요양보험료를 포함하면 결정세액이 낮아진다(환급 증가)", () => {
-    for (const gross of [30_000_000, 50_000_000, 80_000_000, 120_000_000]) {
+    // 총급여 3,000만원 1인은 표준세액공제 방식(보험료 소득공제를 쓰지 않음)이 유리해 두 값이 같다 — 특별공제 방식이 이기는 구간만 본다
+    for (const gross of [50_000_000, 80_000_000, 120_000_000]) {
       const withoutLtc = calculateYearEndTax(
         inputs(gross, Math.round(gross * INSURANCE_RATES_2026.HEALTH_INSURANCE))
       ).determinedTax;
