@@ -1197,7 +1197,7 @@ try {
         await calculate.click();
         assert(await summary.evaluate(el => document.activeElement === el));
         const expectedIncomeLinks = {
-          '프리랜서': ['/tools/finance/freelance-tax', '/health-insurance-2026', '/calc/freelancer-yearly-quick'],
+          '프리랜서': ['/tools/finance/freelance-tax', '/health-insurance-fee-2026', '/calc/freelancer-yearly-quick'],
           '알바': ['/weekly-holiday-allowance-2026', '/minimum-wage-2026', '/tools/finance/severance'],
         };
         for (const [income, links] of Object.entries(expectedIncomeLinks)) {
