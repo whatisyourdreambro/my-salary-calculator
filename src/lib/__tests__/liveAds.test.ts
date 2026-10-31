@@ -108,6 +108,19 @@ describe("live advertising and measurement gate", () => {
     expect(queued.filter((item) => item[0] === "config")).toHaveLength(1);
   });
 
+  // Korean in-app and browser visitors are ordinary traffic, not automation (audit OPP-23).
+  // The NAVER/KakaoTalk/Whale strings match src/lib/__tests__/inAppBrowser.test.ts.
+  it.each([
+    ["NAVER app on iOS", "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 NAVER(inapp; search; 2000; 12.7.3; 15PRO)"],
+    ["NAVER app on Android", "Mozilla/5.0 (Linux; Android 14; SM-S921N Build/UP1A.231005.007; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/128.0.6613.146 Mobile Safari/537.36 NAVER(inapp; search; 2000; 12.8.1)"],
+    ["KakaoTalk on iOS", "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 KAKAOTALK 10.8.5"],
+    ["KakaoTalk on Android", "Mozilla/5.0 (Linux; Android 14; SM-S921N Build/UP1A.231005.007; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/128.0.6613.146 Mobile Safari/537.36 KAKAOTALK/10.8.5 (INAPP)"],
+    ["Naver Whale", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Whale/3.27.254.15 Safari/537.36"],
+    ["Samsung Internet", "Mozilla/5.0 (Linux; Android 14; SM-S921N) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/26.0 Chrome/122.0.0.0 Mobile Safari/537.36"],
+  ])("keeps ads and measurement eligible for %s visitors", (_label, userAgent) => {
+    expect(isLiveAdsContext({ production: true, protocol: "https:", hostname: "www.moneysalary.com", topLevel: true, automated: false, userAgent })).toBe(true);
+  });
+
   it("does not queue or retry GA callbacks in test mode even if gtag already exists", () => {
     vi.useFakeTimers(); const win = browser(); win.__MSY_TEST_MODE__ = true;
     vi.stubGlobal("window", Object.assign(win, { gtag: vi.fn() })); const send = vi.fn();
