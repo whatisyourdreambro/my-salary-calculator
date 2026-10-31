@@ -183,6 +183,33 @@ describe("STR-02-q electricity-bill — 구간별 기본요금, 214.6·307.3원,
   });
 });
 
+// STR-02-q (a) 결과 카드 안내(CalcResultAd 바로 위) — 6d0dd4edb 문자열 그대로. 원문과 글자 수가 같고 폭이 비슷한 교체라
+// '원문보다 짧은 문구'가 아니다 → 통합 단계의 실측 광고 위치 스윕을 통과해야 내보낸다(이 단언은 그 문구를 고정할 뿐).
+describe("STR-02-q b5d0048b0·39cb16538 결과 안내 — 정규직 요건 삭제, 50세 이상·장애인 1년부터 +30일", () => {
+  it("퇴직금 간편 계산 안내: 정규직이 아니라 1년·주 15시간 요건 (근로자퇴직급여 보장법 제4조)", () => {
+    const note = calc("severance-pay-quick").compute({ monthly: 3500000, years: 5 }).note ?? "";
+    expect(note).toBe("근속 1년/주 15시간 이상이면 의무 지급. IRP 이전시 절세 가능.");
+    expect(note).not.toContain("정규직");
+  });
+
+  it("실업급여 안내: 1년 미만은 50세 이상·장애인도 120일이라 '각 구간 +30일'이 아니라 1년부터 +30일 (고용보험법 별표 1)", () => {
+    const note = calc("unemployment-benefit").compute({ avgMonthly: 3000000, workMonths: 24 }).note ?? "";
+    expect(note).toContain("50세 이상·장애인은 1년부터 +30일(최대 270일).");
+    expect(note).not.toContain("각 구간");
+  });
+
+  it("두 안내 모두 원문과 글자 수가 같다 (늘지 않음)", () => {
+    const pairs: Array<[string, string]> = [
+      ["근속 1년 이상 정규직 근로자 의무 지급. IRP 이전 시 절세 가능.", "근속 1년/주 15시간 이상이면 의무 지급. IRP 이전시 절세 가능."],
+      ["50세 이상·장애인은 각 구간 +30일(최대 270일).", "50세 이상·장애인은 1년부터 +30일(최대 270일)."],
+    ];
+    for (const [before, after] of pairs) {
+      expect([...after].length).toBe([...before].length);
+      expect(glyphCounts(after)[0]).toBeLessThanOrEqual(glyphCounts(before)[0]);
+    }
+  });
+});
+
 describe("STR-02-q 84e313f6e loan-affordability 접힌 FAQ2 — 신용대출 연소득 이내(2025-06-28), 규제지역 LTV 40%(2025-10-15)", () => {
   it("연소득 100~200% 한도와 LTV 70% 단일값이 없다", () => {
     const answer = calc("loan-affordability").faqs?.[1]?.a ?? "";
