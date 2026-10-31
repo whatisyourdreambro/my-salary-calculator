@@ -2,6 +2,8 @@
 
 > **2026-10-17 현재 결정:** Workers 업로드와 잠시 연결한 도메인 경로는 [결과 기록](workers-release-2026-10-17/deployment-outcome.json)처럼 롤백됐다. 기존 무료 Pages를 유지하고 GitHub `ci.yml`은 검증만 수행한다. 저장소 변수는 `PAGES_AUTO_DEPLOY_ENABLED=false`, `PAGES_LOCAL_PUBLISH_ENABLED=true`로 두며 Cloudflare Git production·preview 빌드는 계속 중지한다. 글별 승인 뒤 정확한 SHA의 검증 성공을 확인한 로컬 발행기가 운영 빌드·단일 업로드·실제 Purge·비렌더링 HTTP 16건·IndexNow를 순서대로 진행한다. 기존 Wrangler OAuth는 로컬 프로세스 메모리에서만 전달하며 새 Cloudflare 토큰을 GitHub에 저장하지 않는다. 완료까지 컴퓨터가 켜져 있어야 하며 정기 게시 작업을 새로 등록하지 않는다. [현재 README 절차](../README.md)와 아래 현재 Pages 절차가 과거 Workers 전환 설명보다 우선한다. 운영/preview 게시자 브라우저 점검은 [AGENTS.md](../AGENTS.md)에 따라 금지하며, 문서 수정은 실제 배포 완료를 뜻하지 않는다.
 
+> ★정정 2026-11-01 (감사 SEO-02·PD-04): 10/17 Pages 전환 뒤 운영 규칙은 README의 "HTML/OG 사용자 캐시 규칙은 꺼 둔다"입니다. 승인된 게시 파이프라인에는 퍼지 단계가 없어 캐시 규칙을 켜면 게시 뒤 옛 HTML이 지워진 /_next/static 파일을 가리켜 계산기·광고가 깨질 수 있습니다. 이 문서의 HTML 엣지 TTL·캐시 규칙 B/C·승인 6·7·8·R6-02 콘솔 TTL 대응은 모두 폐기됐고, 다시 켜려면 PD-04 결정(퍼지 방법 포함)을 먼저 받습니다.
+
 정본 계획: `docs/revenue-10x-plan-2026-09.md` §4·§5 + `docs/revenue-100x-plan-2026-09.md` §6(승인 A~J)·§7(세션 추가분, 2026-09-05). 이 문서는 그 세션표의 실행판이다.
 원칙: **한 세션 = 최대 3항목·25분**, 격주 고정 요일. 각 항목은 클릭 경로 ≤5줄 + 완료 증빙 1장.
 메뉴 이름이 다르면 첫 화면 캡처만 보내면 경로를 보정한다. 무응답 = 보류(자동 승인 없음).
@@ -30,7 +32,7 @@
 7. ☐ **GSC 확인 (C16, 1번 적용 7일 뒤)**: 설정 → 크롤링 통계 → 호스트 상태('서버 연결' 양호 복귀)·5xx 비율(9/22 까지 90일 4%)·요청 목적 중 '검색(발견)'(3%). 통합 배포 뒤 Sitemaps 에서 가져오기 성공 확인. **깨끗해지기 전에는 대량 색인 요청·사이트맵 재제출을 하지 않는다.** 사이트맵의 얇은 URL 31개(주로 /fun)는 28일 노출 0 인 순수 게임만 사이트맵 제외 후보로(noindex 아님).
 
 그다음(순서 무관):
-- ☐ **9/26 시즌 푸시 뒤 재확인(C07)**: Purge → 운영 페이지 소스에 `data-season-key="OCT"`, 헤더 칩 '추석' 0건. 10/1·11/25 재산세 날짜 분기는 Deployments → Retry(재빌드) 뒤 다시 Purge.
+- ☐ **9/26 시즌 푸시 뒤 재확인(C07)**: Purge → 운영 페이지 소스에 `data-season-key="OCT"`, 헤더 칩 '추석' 0건. 11/25·12/16 보유세 날짜 분기와 12/1 DEC 세트는 그날 0시 이후 P 로만 바뀐다(P = 이 문서 끝 '게시 절차와 실패 시 재시도 (2026-11)' 1~4번 — Deployments → Retry 불가, HTML 캐시 규칙이 꺼져 있으면 Purge 불필요).
 - ☐ **CF HSTS (C05, 3분)**: SSL/TLS → Edge Certificates → HSTS → max-age **6개월**, includeSubDomains 는 모든 서브도메인이 HTTPS 일 때만, **preload 안 함**. 확인: HTML 한 쪽의 `strict-transport-security` 헤더가 **하나만**. X-Frame-Options 규칙은 하지 않는다(`/widget/*` 임베드 예외 필요). 운영 HTML 보안 헤더는 2/6(`docs/inspection-2026-09-full.md` §10 주석).
 - ☐ **AdSense 오버레이 형식 캡처 (C13, 1분 — 저장 금지)**: 광고 → 사이트 기준 → moneysalary.com 연필 → '오버레이 형식' 패널 캡처(변경 기록이 보이면 함께) → **저장하지 않고 닫기**. 앵커·사이드레일·전면이 원래 켜져 있었다는 근거. 설정은 현행 유지(운영자 9/25 승인 12번).
 - ☐ **승인 J 적용 여부 한 줄 (C21)**: Cloudflare → Security → Bots(또는 AI Crawl Control)의 AI bot policy(Search·Agent·Training)와 적용일 → 세션 3 ① 아래 기록란. robots 규칙·Bingbot crawl-delay 는 바꾸지 않는다.
@@ -104,6 +106,8 @@
    - (한 줄 답변) 리포트 CSV/JSON 의 데이터 라이선스는 현재 사이트 인용 정책 URL(`/insights#citation-policy`, 출처 표기 시 자유 인용) 사용 중 — CC BY 4.0 등 외부 라이선스 채택 여부(100배 계획 **승인 I**). 무응답 = 현행 유지.
 
 ## 세션 3 — 9/21 (25분)
+> ★정정 2026-11-01 (감사 SEO-02·PD-04): 10/17 Pages 전환 뒤 운영 규칙은 README의 "HTML/OG 사용자 캐시 규칙은 꺼 둔다"입니다. 승인된 게시 파이프라인에는 퍼지 단계가 없어 캐시 규칙을 켜면 게시 뒤 옛 HTML이 지워진 /_next/static 파일을 가리켜 계산기·광고가 깨질 수 있습니다. 이 문서의 HTML 엣지 TTL·캐시 규칙 B/C·승인 6·7·8·R6-02 콘솔 TTL 대응은 모두 폐기됐고, 다시 켜려면 PD-04 결정(퍼지 방법 포함)을 먼저 받습니다.
+
 > **★정정 2026-09-23 (Workers CPU 한도 1102 사건)** — 9/23 실측: 규칙 A·B 미생성(전 HTML DYNAMIC, HIT 게이트 실패), 하루 요청 21,700건 중 CPU 초과 425건, CPU 중앙값 11.2ms(무료 한도 10ms). 아래 원안에서 다음을 **바꿔서** 생성할 것:
 > 1. **규칙 A 는 만들지 않는다.** Cloudflare Cache Rules 는 여러 규칙이 맞으면 **마지막에 맞는 규칙이 이긴다**(last match wins) — 원안처럼 A(Bypass)를 B 위에 두면 B 가 A 를 덮어 RSC 페이로드가 캐시된다. 대신 RSC 제외 조건을 규칙 B 표현식 안에 넣는다(아래 2).
 > 2. **규칙 B(HTML 캐시)** — 표현식(Edit expression 에 그대로 붙여넣기):
@@ -157,6 +161,8 @@ AdSense 페이지·광고단위 28일 CSV 2장 → GA4 트래픽 획득 CSV → 
 
 ## 현재 Pages 발행과 Purge 확인 (2026-10-17)
 
+> ★2026-11-01: 아래 1~5 의 로컬 발행기·`cf-purge` 절차는 README 기준 역사 기록이다(README 설정값 `PAGES_CLOUD_PUBLISH_ENABLED=true`·`PAGES_LOCAL_PUBLISH_ENABLED=false`). 지금 게시는 이 문서 끝 '게시 절차와 실패 시 재시도 (2026-11)'를 따른다.
+
 1. 운영자가 글별 발행을 승인하면 기존 초안 해시·달력·한도 검사를 거쳐 main에 반영한다. 저장소 변수 `PAGES_AUTO_DEPLOY_ENABLED=false`, `PAGES_LOCAL_PUBLISH_ENABLED=true`를 사용한다. GitHub의 정확한 SHA `verify` 성공은 필수이며 push 자체는 게시하지 않는다.
 2. 깨끗한 최신 main 워크트리에서 `node scripts/pages-release-local.mjs --approved-commit <전체 SHA>`를 실행한다. 로컬 운영 빌드·검증과 사이트맵 보관 뒤 기존 Wrangler OAuth로 한 번 업로드한다. 컴퓨터와 프로세스가 완료까지 실행 중이어야 한다. 정기 게시 작업은 새로 등록하지 않는다.
 3. 발행기는 canonical 배포 ID·커밋·빌드 및 기존 설정을 확인하고 `cf-purge`의 `pages-verified-purge`를 `workflow_dispatch`로 호출한다. 기존 GitHub `CF_API_TOKEN`은 Pages Read·Zone Cache Purge에만 사용한다. 로컬로 복사하거나 Wrangler에 전달하지 않으며, `CF_PAGES_API_TOKEN` 등 새 Cloudflare 토큰을 GitHub에 추가하지 않는다.
@@ -206,3 +212,38 @@ CSV 는 `C:\Users\ruby1\.moneysalary-secrets\adsense\` 에 두고 절대 경로�
 
 ## 네이버 블로그 원고
 운영자 블로그가 없어 발행 루틴은 없음. 원고 7편은 `docs/naver-blog/`에 보존(개설 시 재사용).
+
+## 게시 절차와 실패 시 재시도 (2026-11)
+
+README 기준 지금 게시 경로는 GitHub Actions 'Pages · 승인 후 게시'(`.github/workflows/pages-publish.yml`) 하나다. main 푸시나 CI 초록만으로는 게시되지 않고, 같은 커밋은 두 번 게시되지 않는다. 이 문서와 `docs/next-upgrade-plan-2026-09-11.md` 의 **P** 는 아래 1~4번을 뜻한다.
+
+1. 에이전트가 변경을 main 에 합친다. 날짜로만 바뀌는 문구(보유세 기간·시즌 세트)를 켜는 날은 문서 한 줄 커밋이어도 된다.
+2. GitHub 커밋 옆 ci 검사(verify)가 초록이 될 때까지 기다린다(약 40~46분). 초록 전에는 누르지 않는다.
+3. 운영자: Actions → Pages · 승인 후 게시 → Run workflow → Branch main → approved_commit 에 main 최신 커밋 40자리 → Run.
+4. 7~20분 뒤 초록이면 끝(publish 작업 완료). 끝날 때까지 main 에 아무것도 합치지 않는다. 확인은 `/.well-known/moneysalary-release.json` 의 commit 이 그 40자리인지 — 비렌더링 GET(`scripts/lib/qa-production-http.cjs` fetchProductionQaDocument, 또는 `curl -sS -A "Mozilla/5.0 MoneySalary-QA/1.0" --max-redirs 0`, 캐시 무력화 쿼리(?cb) 없이). 브라우저로 운영 페이지를 열어 확인하지 않는다(AGENTS.md).
+5. 빨강이면 운영자는 run 번호만 알려 주고, 에이전트가 갈래를 정한다(먼저 6번에 해당하는지 본다).
+   - **5a — 게시 전 실패**: 빨강이 'Verify exact approved CI and promote the existing deployment branch' 단계이고 아직 승격 전이다(대개 CI 가 아직 안 끝났거나 빨강). 에이전트 확인: `codex/pages-production` 끝 커밋이 그 40자리가 아니고, 실행 아티팩트 `pages-cloud-release-<run 번호>` 의 promotion-state.json phase 가 claimed 또는 checking-ci. 이때는 ci 초록을 확인한 뒤 같은 40자리로 Run workflow 를 다시 누르면 된다.
+   - **5b — 승격 뒤 실패**: 그 밖의 빨강 — 이미 승격됐거나(`codex/pages-production` 끝이 그 40자리) 승격 여부가 불명확한 경우(phase promotion-requested), 또는 'Verify the native Pages deployment…' 같은 뒤 단계 — 는 같은 커밋을 다시 게시할 수 없다(Re-run·Cloudflare Retry deployment 도 실패). 6번에 해당하지 않으면 에이전트가 `docs/release-retry.md` 에 "<실패 run 번호> 재시도 <날짜>" 한 줄을 더한 커밋을 main 에 합치고 2번부터 다시 한다.
+6. 'Verify the native Pages deployment…' 단계만 빨강인데 `/.well-known/moneysalary-release.json`(비렌더링 GET, UA 에 MoneySalary-QA/1.0)의 commit 이 새 커밋이면 사이트는 반영된 것이다. 재시도하지 말고 바뀐 URL 만 네이버 수집 요청(10개 이하 — 이 경우 IndexNow 단계는 돌지 않았다).
+
+CI 대기 시간 연장(게시 작업이 CI 끝까지 기다리게 하는 코드 변경)은 이번 범위가 아니다 — 'CI 초록 뒤에 누른다'가 규칙이다. HTML 캐시 규칙이 꺼져 있으면 게시 뒤 Purge 는 필요 없다.
+
+## 시즌 게시 달력 (2026-11-02 ~ 2027-03-31)
+
+버튼은 운영자 계정만 누른다: GitHub → Actions → 'Pages · 승인 후 게시' → Run workflow → Branch main → approved_commit = main 최신 커밋 40자리 → Run. 공통: 에이전트가 main 에 합침 → ci(verify) 초록 확인(약 37~46분) → 운영자 버튼 → 7~20분 뒤 초록. 끝날 때까지 main 에 합치지 않는다. 빨강이면 위 절차 5번(5a·5b)과 6번. HTML 캐시 규칙은 11/1 확인 기준 꺼져 있으므로 Purge 불필요(다시 켰다면 PD-04 결정부터). 데이터 파일을 바꾸는 날은 합치기 전에 `npm run verify:sitemap` — 바꾼 파일이 `scripts/sitemap-content-reviews.json` 어느 항목의 해시 대상이면 같은 커밋에서 그 항목을 다시 검토해야 CI 가 초록이 된다(삼성 파일은 `docs/growth-playbook-2026.md` §3 발표 런북).
+
+1. 11/2(월)~11/3(화) 최우선: 보안 검사 수정(SEC-03, main `5ccd079e6`) 단독 게시 — 이것 없이는 CI 가 초록이 안 돼 아무것도 못 올린다. 화면 변화 없음.
+2. 11/4(수)~11/6(금): 감사 A 묶음(직접 PR 몇 개 + 통합 PR 1개) — 문구·숫자 정정.
+3. 11/25(수) 0시 이후, 권장 오전: 보유세 페이지·홈 칩 '종합부동산세 납부기간 12/1~12/15'(`src/lib/propertyTaxPeriod.ts` 11/25 경계). 새 커밋 필요. 생략하면 12/1 게시에서 같이 바뀐다(엿새 손해).
+4. 12/1(화) 0시 이후, 권장 오전: 시즌 메뉴 OCT→DEC(`src/lib/seasonKey.ts` DEC 세트) + 홈 추천 글 성과급 우선. 빌드 날짜로 자동 결정되므로 아무 새 커밋이나 되지만, 저장소 일치를 위해 `tsx scripts/gen-season-key.ts` 재생성 포함 권장. 놓치면 12월 내내 10월 메뉴가 남고 12/7(월) 주간 점검 실패 메일이 온다.
+5. 국회 예산·세법 통과 다음 날(보통 12/2~12/10, 선택): 공무원 2027 인상률·세법 문구(6번과 합쳐도 된다).
+6. 12/16(수) 0시 이후: 보유세 비시즌 복귀(`propertyTaxPeriod.ts` 12/16 경계). 놓치면 지난 '12/1~12/15 납부' 문구가 남는다.
+7. 삼성 TAI 하반기 공개 보도 당일(보통 12월 하순): `taiData.ts`(+`docs/next-upgrade-plan-2026-09-11.md` §5-1 P-3, 승인 시). samsung-bonus 폴더 파일이라 같은 커밋에 sitemap 원장 `/calc/samsung-bonus` 항목 갱신.
+8. 공무원 2027 확정 봉급표 공표 당일(12월 말~1월 초): `docs/pay-2027-dday-runbook.md`.
+9. 1/1(금·공휴일) 0시 이후 main 합침, 권장 1/1 오전 버튼: 4대보험 요율 2027 전환(`CURRENT_RATES_YEAR` — `docs/next-upgrade-plan-2026-09-11.md` §5-1, 선행 P-1~P-4 와 운영자 '고시 확인 시 예' 승인 전제). 0시 전에 합치면 verify:tax 가 CI 실패.
+10. 1/2(토) 이후, 확인 2건(공무원 확정표·간소화 개통일)이 끝난 날(보통 1월 첫 주): JAN 수동 전환(`seasonKey.ts` `SEASON_KEY_OVERRIDE`). 미리 끝나면 9번과 합친다.
+11. 삼성 4분기 잠정실적(보통 1/8 전후): `annualOp.ts`(7번과 같은 원장 갱신).
+12. SK하이닉스 PI 하반기·삼성 OPI(보통 1월 하순)·SK 4분기 실적: `opiData.ts`·`psData.ts` 등(원장 항목 `/calc/samsung-bonus`·`/calc/sk-hynix-bonus` 갱신). 최대 수익일이라 오전에 게시해 재시도 여유를 둔다.
+13. 2월 SK하이닉스 PS 확정: `psData.ts`(원장 `/calc/sk-hynix-bonus` 갱신).
+14. 3/11(목) 0시 이후: 연말정산 귀속연도 2027(`src/lib/yearEndSeason.ts`) + JAN 세트 만료(`seasonKey.ts` `SEASON_EXPIRES_KST`) → 다음 세트.
+15. 3/31(수)까지: 보안 예외 GHSA-g3hv-75wg-m249 재검토(`scripts/lib/framework-security-policy.mjs`). 4/1 09:00 KST(00:00 UTC)부터 다시 막힌다.
