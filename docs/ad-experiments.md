@@ -371,7 +371,7 @@ L9(samsung-bonus 첫 광고 깊이 상향)는 그 병합이 선행돼야 효과�
 **지표(사전 등록)**
 - **시작일 D0 = CF Production 배포 성공일**(당일 제외). 후 창 = D+1~D+14 완료일. **기록(9/27)**: origin/main `77ee189e` 푸시 15:28:51 KST(배포 A, 배치2 비광고와 같은 푸시) → D0 = 9/27, 후 창 9/28~10/11. CF 성공·Purge 시각은 3(c) 표 같은 행에 기입. 새 유닛이라 유닛 지표에는 전 창이 없다 — 페이지군 지표만 D0 직전 14완료일과 비교.
 - M1 — AdSense 광고 단위 보고서, 날짜 × 광고 단위 **`5077529791`**(머니샐러리_회사상단): 노출·노출RPM·CTR·CPC·커버리지·Active View·수익. `node scripts/adsense-report.mjs units`(ID 열 또는 이름 '회사상단'으로 매핑).
-- M2 — GA4 `ad_impression` ÷ 회사 상세 `page_view`(페이지 경로 `^/salary-db/[^/]+$`, `nav_type=landing` 병기), 전 창 대비. 자동광고 회복 추세와 섞이므로 단독 판정 금지(운영자 9/26 측정 9/10 전 7.04 → 붕괴 뒤 3.05).
+- M2 — GA4 `ad_impression` ÷ 회사 상세 `page_view`(페이지 경로 `^/salary-db/[^/]+$`, `nav_type=landing` 병기), 전 창 대비. 자동광고 회복 추세와 섞이므로 단독 판정 금지(운영자 9/26 측정: 9/10 붕괴 뒤 크게 감소 — 수치 비공개).
   보조: GA4 `ad_filled`(slot_kind=`company-top`) ÷ 같은 PV = 수동 몫, `ad_height`(slot_kind=`company-top` × viewport) = 예약 344/324 적정성.
 - M3 — `autoads_seen`(aa1) `page_group=salary-db` 자동 인페이지/PV(`aa_filled` ÷ 착지 뷰, `nav_type=landing` — 판독 절차 `docs/analytics-measurement.md`). 새 유닛이 자동 인페이지를 밀어내는지 본다.
 - 관찰(롤백 조건 아님): 우발 클릭 서명(scripts/adsense-report.mjs 플래그 기준 — 이 문서 3절 (e)) · GUIDE_MID·DISPLAY_2·IN_ARTICLE 회사 상세 `ad_filled`/PV(아래 유닛 +440/+420px 하강 잠식).
