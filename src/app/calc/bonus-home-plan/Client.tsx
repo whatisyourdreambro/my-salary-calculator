@@ -507,7 +507,7 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
             note={raw.company === "samsung" ? `기본 ${SAMSUNG_WAGE_2026.totalPct}% — ${SAMSUNG_WAGE_2026.note}. 이후에도 같다고 가정` : raw.company === "sk" ? "기본 6.3% — 2026 임금 인상률(2026-09-16 가결 보도). 이후에도 같다고 가정" : "기본 0%(가정)"} />
           {raw.company === "samsung" && (
             <>
-              <AdvancedNumber id="bhp-opi1" label={`OPI 지급률 (연봉 대비 %, 0~${SAMSUNG_OPI1_MAX_PCT})`} value={raw.opi1} onChange={(v) => set("opi1", v)} note="기본 47% — 2025년분 DS부문 공통 실지급률(노조 공지 기반 보도). 매년 같다고 가정" />
+              <AdvancedNumber id="bhp-opi1" label={`OPI 지급률 (연봉 대비 %, 0~${SAMSUNG_OPI1_MAX_PCT})`} value={raw.opi1} onChange={(v) => set("opi1", v)} note="기본 47% — 2025년분 DS부문 공통 실지급률(복수 언론 보도). 매년 같다고 가정" />
               <AdvancedNumber id="bhp-tai" label="TAI 계산용 월 기본급 (원, 2026년)" value={raw.taiBase} placeholder={String(effectiveTaiBase(state))} onChange={(v) => set("taiBase", v)}
                 note={`기본 = 연봉 × ${TAI_BASE_SHARE_OF_SALARY * 100}% ÷ 12 (가정 — 삼성 TAI 계산기 안내: 기본급은 통상 연봉의 60~75%). 급여명세서 기본급으로 바꾸세요`} />
             </>
