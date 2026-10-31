@@ -8,6 +8,18 @@ export const PAGES_LIMITS = Object.freeze({ files: 20000, assetBytes: 25 * 1024 
 // The existing Pages API rejected a 53 MB package with code 8000101 on
 // 2026-10-17. Its 25 MiB limit is lower than the generic Workers documentation.
 export const PAGES_WORKER_LIMIT = 25 * 1024 * 1024;
+// Below this margin the build still passes but prints a CI warning (audit PD-03, 2026-11-01).
+export const PAGES_WORKER_WARN_HEADROOM = 1024 * 1024;
+// Exact static files served by Pages without invoking the Function (headers come from public/_headers).
+// Public verification HTML stays in the Function: it is stored as /_msy/doc/*.body to avoid Pages'
+// automatic .html -> clean-URL redirect, so excluding it would serve the 404 page. No /.well-known/*
+// wildcard: /.well-known/moneysalary-release.json is answered by the Function.
+export const PAGES_FUNCTION_EXCLUDES = Object.freeze(['/_next/static/*',
+  '/favicon.ico', '/favicon.svg', '/ads.txt', '/app-ads.txt', '/robots.txt', '/sitemap.xml', '/rss.xml', '/rss-companies.xml',
+  '/icon-192.png', '/icon-512.png', '/icon-maskable-192.png', '/icon-maskable-512.png', '/apple-touch-icon.png',
+  '/apple-touch-icon-precomposed.png', '/logo.svg', '/logo-full.png', '/grid.svg', '/og-default.png', '/sw.js',
+  '/manifest.webmanifest', '/manifest.en.webmanifest', '/security.txt', '/.well-known/security.txt',
+  '/b112e39a5933ca97201c83a7c5d7d91e.txt']);
 export const QA_ASSETS_IGNORE = '/_worker.js/\n/_routes.json\n';
 export const OG_POOL_CHUNK_BYTES = 1024 * 1024;
 export const OG_RAW_MODULE_BYTES = Object.freeze({ 'pool.bin': 38907807,
@@ -354,10 +366,7 @@ export function packageExport({ stage, mode, routingConfig, buildId }) {
     redirects: routingConfig.redirects, headers: routingConfig.headers };
   writeJson(path.join(stage, 'generated/pages-manifest.json'), manifest);
   // Private document/data URLs must stay inside the Worker to reject direct requests.
-  writeJson(path.join(dist, '_routes.json'), { version: 1, include: ['/*'], exclude: ['/_next/static/*',
-    '/favicon.ico', '/favicon.svg', '/ads.txt', '/app-ads.txt', '/robots.txt', '/sitemap.xml', '/rss.xml', '/rss-companies.xml',
-    '/icon-192.png', '/icon-512.png', '/icon-maskable-192.png', '/icon-maskable-512.png', '/apple-touch-icon.png',
-    '/apple-touch-icon-precomposed.png', '/logo.svg', '/logo-full.png', '/grid.svg', '/og-default.png', '/sw.js'] });
+  writeJson(path.join(dist, '_routes.json'), { version: 1, include: ['/*'], exclude: [...PAGES_FUNCTION_EXCLUDES] });
   // Static assets bypass the Worker; provide the QA marker and immutable policy there.
   const oldHeaders = existsSync(path.join(stage, 'public/_headers')) ? readFileSync(path.join(stage, 'public/_headers'), 'utf8') : '';
   writeFileSync(path.join(dist, '_headers'), `${oldHeaders}\n${mode === 'qa' ? '/*\n  X-MoneySalary-QA: ads-disabled\n' : ''}`);
@@ -393,6 +402,12 @@ export function checkWorkerBundle(dist, { workerBytes = PAGES_WORKER_LIMIT } = {
   if (total > workerBytes) throw new Error(`Pages Worker modules exceed ${workerBytes} uncompressed bytes`);
   return { workerModuleCount: files.length, workerBytes: total,
     maxWorkerModuleBytes: Math.max(...files.map(file => file.size)), workerHash: inventoryHash(files) };
+}
+
+/** Visible margin report only; checkWorkerBundle remains the fail-closed limit. */
+export function workerHeadroomWarning(workerBytes, { limit = PAGES_WORKER_LIMIT, warnAt = PAGES_WORKER_WARN_HEADROOM } = {}) {
+  const headroom = limit - workerBytes;
+  return headroom < warnAt ? `Pages Worker has only ${headroom} bytes of headroom under the ${limit}-byte package limit; compact the route manifest or OG data before adding routes.` : null;
 }
 
 export function artifactHash(stage) {
