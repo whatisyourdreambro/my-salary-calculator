@@ -874,7 +874,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-10",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2749
+  "contentChars": 2748
  },
  {
   "slug": "crypto-tax-2026",
@@ -3260,7 +3260,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1014
+  "contentChars": 1004
  },
  {
   "slug": "redevelopment-tax-3-step-2026",
@@ -4322,7 +4322,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 898
+  "contentChars": 897
  },
  {
   "slug": "rental-dispute-protection-2026",

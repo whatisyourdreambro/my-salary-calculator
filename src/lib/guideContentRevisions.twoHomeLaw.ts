@@ -11,7 +11,7 @@ import { TWO_HOME_LAW_FIX_PUSH } from "@/config/twoHomeLawFixPush";
 
 export const GUIDE_CONTENT_REVISED_TWO_HOME_LAW: Readonly<Record<string, string>> = {
   "one-home-capital-gains-12eok-2026": TWO_HOME_LAW_FIX_PUSH,
-  "property-downsizing-1home-2026": TWO_HOME_LAW_FIX_PUSH,
-  "real-estate-capital-gains-2026": TWO_HOME_LAW_FIX_PUSH,
-  "temp-two-home-3year-rule-2026": GUIDE_FACT_FIX_1101_PUSH, // 제목 T1 조정 두 채는 2년 기한 주의·검색 설명 T2 (STR-07)
+  "property-downsizing-1home-2026": GUIDE_FACT_FIX_1101_PUSH, // 절차 목록 2. 큰 집 원칙 3년 내 매도 (STR-07 D1)
+  "real-estate-capital-gains-2026": GUIDE_FACT_FIX_1101_PUSH, // Step 3 신규 취득 후 원칙 3년 내 (STR-07 R1)
+  "temp-two-home-3year-rule-2026": GUIDE_FACT_FIX_1101_PUSH, // 제목 T1·검색 설명 T2·본문 T3~T6 원칙 3년·3단계 근거 없는 수치 삭제 (STR-07)
 };

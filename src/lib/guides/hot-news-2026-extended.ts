@@ -299,21 +299,21 @@ const parcelRightVsOccupancyRight = `
 `;
 
 const tempTwoHomeRule = `
-<p class="lead">이사를 위해 잠시 2주택이 된 경우 일시적 2주택자 특례 적용. 종전 주택을 신규 주택 취득 후 3년 이내 매도하면 1주택자로 인정 = 12억 비과세.</p>
+<p class="lead">이사를 위해 잠시 2주택이 된 경우 일시적 2주택자 특례 적용. 종전 주택을 신규 취득 후 원칙 3년 이내 매도하면 1주택자로 인정 = 12억 비과세.</p>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">📋 일시적 2주택 3년 룰 핵심</h2>
+<h2 class="mt-12 text-2xl font-bold text-primary">📋 일시적 2주택 기한 핵심</h2>
 <ol class="space-y-2 mt-4">
-<li><strong>① 신규 주택 취득 후 3년 이내 종전 주택 매도</strong></li>
+<li><strong>① 신규 취득 후 원칙 3년 내 종전 주택 매도</strong></li>
 <li><strong>② 신규 주택은 1년 이상 보유 후 매도</strong></li>
 <li><strong>③ 종전 주택은 2년 이상 보유 + 2년 거주(조정)</strong></li>
 <li><strong>④ 종전 주택을 비과세 받으려면 매도 시점에 1주택만 보유 인정</strong></li>
 </ol>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 함정 — 3년 초과 시 양도세 폭탄</h2>
-<p>3년 1일 초과해서 종전 주택 매도 시 일시적 2주택 적용 X → 다주택자로 분류 → 비과세 0원 + 양도세 중과 가능성. 양도세 1억 → 3억 점프 가능.</p>
+<p>3년 1일 초과해서 종전 주택 매도 시 일시적 2주택 적용 X → 다주택자로 분류 → 비과세 0원 + 양도세 중과 가능성. 세액 증가폭은 사례별.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 안전 매도 일정</h2>
-<p>신규 주택 잔금일 기준 정확히 3년 이내. 예: 2026.6.1 신규 취득 → 2029.5.31까지 매도 필수.</p>
+<p>신규 주택 잔금일 기준 원칙 3년 이내. 예: 2026.6.1 신규 취득 → 2029.5.31까지 매도 필수.</p>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련 도구</p><ul class="space-y-1 text-sm"><li>· <a href="/calc/real-estate-capital-gains-quick" class="text-primary underline">양도세 계산</a></li></ul></div>
 `;

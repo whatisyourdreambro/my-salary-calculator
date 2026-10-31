@@ -24,8 +24,8 @@ const SLUGS = [
 /** 슬러그별 본문 정정일 — 광고 아래 보강만 받은 글은 10/6 푸시일, 2026-11-01 묶음(STR-07)에서 광고 위 제목·본문 문장까지 고친 글은 그 푸시일 */
 const EXPECTED_REVISION: Readonly<Record<(typeof SLUGS)[number], string>> = {
   "one-home-capital-gains-12eok-2026": TWO_HOME_LAW_FIX_PUSH,
-  "property-downsizing-1home-2026": TWO_HOME_LAW_FIX_PUSH,
-  "real-estate-capital-gains-2026": TWO_HOME_LAW_FIX_PUSH,
+  "property-downsizing-1home-2026": GUIDE_FACT_FIX_1101_PUSH,
+  "real-estate-capital-gains-2026": GUIDE_FACT_FIX_1101_PUSH,
   "temp-two-home-3year-rule-2026": GUIDE_FACT_FIX_1101_PUSH,
 };
 

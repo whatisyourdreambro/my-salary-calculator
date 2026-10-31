@@ -428,7 +428,7 @@ const propertyDownsizing = `
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 절세 다운사이징 절차</h2>
 <ol class="space-y-2 mt-4">
 <li><strong>1. 일시적 2주택 전환</strong>: 작은 집 먼저 매수</li>
-<li><strong>2. 기존 큰 집 3년 이내 매도</strong>: 1주택자 비과세 적용</li>
+<li><strong>2. 큰 집 원칙 3년 내 매도</strong>: 1주택자 비과세 적용</li>
 <li><strong>3. 차액 노후 자금화</strong>: 4억 큰집 - 2억 작은집 = 2억 확보</li>
 </ol>
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬</h2>

@@ -845,7 +845,7 @@ describe.skipIf(REGEN.size > 0)("(6) metaDescription 은 META-07 맵(40편)·검
 //     일시적 2주택(STR-07): 소득세법 시행령 제155조 제1항 제1호(조정대상지역 두 주택 2년)·제2호(그 밖 3년), 부칙 제2조
 //     (대통령령 제36737호, 2026-09-30 공포·10-01 시행). 조문·경과 규정 설명은 마지막 광고 아래 보강(twoHomeLawFix.test.ts)에 있다.
 //     광고 위치 판정은 실브라우저 스윕 몫이고, 여기서는 승인 문자열과 화면/검색 설명의 분리만 고정한다.
-describe.skipIf(REGEN.size > 0)("(7) 2026-11-01 사실 정정 묶음 — 일시적 2주택 제목·검색 설명 (STR-07 T1·T2)", () => {
+describe.skipIf(REGEN.size > 0)("(7) 2026-11-01 사실 정정 묶음 — 일시적 2주택 제목·검색 설명·본문 (STR-07 T1~T6·D1·R1)", () => {
   const g = bySlug.get("temp-two-home-3year-rule-2026")!;
 
   it("T1 제목은 조정 두 채 2년 기한 — 근거 없는 2~3억 점프 수치 없음, 카드 메타도 같다", () => {
@@ -866,7 +866,29 @@ describe.skipIf(REGEN.size > 0)("(7) 2026-11-01 사실 정정 묶음 — 일시�
   });
 
   it("본문(광고 위)에는 개정 조문·대통령령 번호를 넣지 않는다(설명은 광고 아래 보강)", () => {
-    expect(g.content).not.toContain("36737");
+    for (const slug of ["temp-two-home-3year-rule-2026", "property-downsizing-1home-2026", "real-estate-capital-gains-2026"]) {
+      expect(bySlug.get(slug)!.content, slug).not.toContain("36737");
+    }
+  });
+
+  it("T3~T6 본문은 원칙 3년, 3단계는 근거 없는 1억 → 3억 문장 삭제(모두 같은 폭이거나 더 짧은 10/6 실측 문자열)", () => {
+    expect(g.content).toContain("종전 주택을 신규 취득 후 원칙 3년 이내 매도하면 1주택자로 인정 = 12억 비과세.");
+    expect(g.content).toContain(">📋 일시적 2주택 기한 핵심</h2>");
+    expect(g.content).toContain("<li><strong>① 신규 취득 후 원칙 3년 내 종전 주택 매도</strong></li>");
+    expect(g.content).toContain("<p>신규 주택 잔금일 기준 원칙 3년 이내. 예: 2026.6.1 신규 취득 → 2029.5.31까지 매도 필수.</p>");
+    expect(g.content).toContain("비과세 0원 + 양도세 중과 가능성. 세액 증가폭은 사례별.</p>");
+    for (const s of ["1억 → 3억", "정확히 3년", "3년 룰 핵심", "신규 주택 취득 후 3년 이내"]) expect(g.content).not.toContain(s);
+  });
+
+  it("D1 다운사이징 목록 2·R1 양도세 Step 3 — 광고 아래 보강 bodyRef 가 바뀐 본문 문구를 그대로 인용한다", () => {
+    const downsizing = bySlug.get("property-downsizing-1home-2026")!;
+    expect(downsizing.content).toContain("<li><strong>2. 큰 집 원칙 3년 내 매도</strong>: 1주택자 비과세 적용</li>");
+    expect(downsizing.content).not.toContain("기존 큰 집 3년 이내 매도");
+    expect(guideSupplements[downsizing.slug]).toContain("본문의 '큰 집 원칙 3년 내 매도'는 2년 대상이 아닐 때의 기한입니다.");
+    const capitalGains = bySlug.get("real-estate-capital-gains-2026")!;
+    // 승인 문구 '원칙 3년 이내' 는 381~385px 에서 한 줄(32px) 늘어 InArticle 이하 광고가 내려갔다(10/6 스윕) — T5·D1 과 같은 '원칙 3년 내'.
+    expect(capitalGains.content).toContain("<p>이사로 일시 2주택이 된 경우, 신규 취득 후 원칙 3년 내 기존 주택 매도 시 비과세 적용.</p>");
+    expect(guideSupplements[capitalGains.slug]).toContain("본문 Step 3의 '원칙 3년 내'는 2년 대상이 아닐 때의 기한입니다.");
   });
 });
 
