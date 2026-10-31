@@ -75,9 +75,9 @@ const FILLED: Record<BonusAnnouncementKey, BonusAnnouncement> = {
   "hyundai-bonus": { confirmed: true, rateLabel: "2026년 성과급", date: "2027-02-10", source: "https://example.com/hyundai-notice" },
 };
 const SUFFIX: Record<BonusAnnouncementKey, string> = {
-  "samsung-bonus": " 2026년 OPI 지급률 확정(1/27, 회사 공지).",
-  "sk-hynix-bonus": " 2026년 PS 지급률 확정(2/3, 회사 공지).",
-  "hyundai-bonus": " 2026년 성과급 지급률 확정(2/10, 회사 공지).",
+  "samsung-bonus": " 2026년 OPI 지급률 확정(1/27 보도).",
+  "sk-hynix-bonus": " 2026년 PS 지급률 확정(2/3 보도).",
+  "hyundai-bonus": " 2026년 성과급 지급률 확정(2/10 보도).",
 };
 
 const kst = (iso: string) => new Date(`${iso}+09:00`);
@@ -132,7 +132,7 @@ describe("꼬리 구절 규칙", () => {
     expect(kstDate(new Date("2027-01-26T15:00:00Z"))).toBe("2027-01-27");
   });
 
-  it("세 회사 구절 모양: ' {이름} 지급률 확정(M/D, 회사 공지).'", () => {
+  it("세 회사 구절 모양: ' {이름} 지급률 확정(M/D 보도).' — '회사 공지'·'사내 공지' 출처 표기 없음(공개 출처 규칙 2026-10-08)", () => {
     for (const key of BONUS_ANNOUNCEMENT_KEYS) {
       expect(bonusAnnouncementSuffix(key, kst("2027-02-20T09:00:00"), table), key).toBe(SUFFIX[key]);
     }

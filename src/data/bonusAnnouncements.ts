@@ -6,46 +6,48 @@
 // ★ 지금은 휴면이다. 세 항목 모두 confirmed:false 라 세 페이지의 description 이 종전과 바이트 동일하다
 //   (src/lib/__tests__/bonusAnnouncements.test.ts 가 종전 문자열 고정값과 대조).
 //
-// 켜는 법 (회사 공지가 나온 날 — 절차 전체는 docs/bonus-announcement-kit.md)
+// 켜는 법 (지급률 확정이 언론에 보도된 날 — 절차 전체는 docs/bonus-announcement-kit.md)
+// ★공개 출처만(운영자 2026-10-08): 언론 보도·회사 뉴스룸·공시로 확인한다. 사내 공지 원문 인용이나 '회사 공지' 출처 표기는 쓰지 않는다
+//   (2026-10-23: 꼬리 구절을 '(M/D, 회사 공지)' 에서 '(M/D 보도)' 로 바꿨다 — 휴면이라 지금 출력은 그대로).
 //   해당 회사 항목 하나에 네 칸을 한 번에 채운다. 하나라도 비면 꼬리 구절은 붙지 않는다.
 //     confirmed: true
 //     rateLabel: 무엇의 지급률이 확정됐는지 — '2026년 OPI' 처럼 짧은 이름만(숫자·% 금지 — 수치는 계산기 데이터
 //                파일 opiData·psData 등의 갱신 몫이고, 설명문에는 추정 수치를 넣지 않는다)
-//     date:      회사 공지일 YYYY-MM-DD (KST). 2027-01-01 ~ 2027-02-28 안이어야 한다(승인 6 = 1~2월 발표)
-//     source:    회사 공지 URL 또는 회사를 인용한 보도 URL (https)
-//   → 그 페이지 description 끝에 ' {rateLabel} 지급률 확정(M/D, 회사 공지).' 가 한 번 붙는다.
+//     date:      확정 보도일 YYYY-MM-DD (KST). 2027-01-01 ~ 2027-02-28 안이어야 한다(승인 6 = 1~2월 발표)
+//     source:    지급률 확정을 전한 언론 보도 URL (https). 회사 뉴스룸·공시 URL 도 된다
+//   → 그 페이지 description 끝에 ' {rateLabel} 지급률 확정(M/D 보도).' 가 한 번 붙는다.
 //
 // 날짜 조건 (빌드 시각 KST 기준 — 계산기 페이지는 정적이라 배포 빌드 때 한 번 정해진다)
-//   - 빌드 날짜가 공지일 이전이면 붙지 않는다(미래 날짜로 미리 채워 두어도 새지 않음).
+//   - 빌드 날짜가 보도일 이전이면 붙지 않는다(미래 날짜로 미리 채워 두어도 새지 않음).
 //   - 빌드 날짜가 BONUS_ANNOUNCEMENT_SHOW_UNTIL(2027-03-31) 을 넘으면 붙지 않는다 — 그 뒤 첫 배포에서 저절로 빠진다.
 //
 // 규칙
 //   - 회사 하나에 항목 하나 — 한 시즌에 한 번만 켠다(승인 6 '회사별 1회'). 같은 설명에 두 번 붙지 않는다(멱등).
 //   - description·JSON-LD description·공유 설명(ShareButtons)에만 쓰인다. 화면 문장·H1·광고 위 문구는 건드리지 않는다.
-//   - 삼성 OPI 를 켤 때는 src/data/opiAnnouncement.ts(홈 1월 배너 슬롯)도 같은 공지로 함께 채운다 — 별도 파일, 별도 줄.
+//   - 삼성 OPI 를 켤 때는 src/data/opiAnnouncement.ts(홈 1월 배너 슬롯)도 같은 보도로 함께 채운다 — 별도 파일, 별도 줄.
 
 export const BONUS_ANNOUNCEMENT_KEYS = ["samsung-bonus", "sk-hynix-bonus", "hyundai-bonus"] as const;
 export type BonusAnnouncementKey = (typeof BONUS_ANNOUNCEMENT_KEYS)[number];
 
 export interface BonusAnnouncement {
-  /** 회사 공지로 지급률이 확정됐는가 — true 일 때만 아래 세 칸을 채운다 */
+  /** 지급률 확정이 언론에 보도됐는가 — true 일 때만 아래 세 칸을 채운다 */
   confirmed: boolean;
-  /** 확정된 지급률의 이름(예: '2026년 OPI'). 숫자·% 금지. 공지 전 null */
+  /** 확정된 지급률의 이름(예: '2026년 OPI'). 숫자·% 금지. 보도 전 null */
   rateLabel: string | null;
-  /** 회사 공지일 YYYY-MM-DD (KST). 공지 전 null */
+  /** 확정 보도일 YYYY-MM-DD (KST). 보도 전 null */
   date: string | null;
-  /** 회사 공지 URL 또는 회사를 인용한 보도 URL. 공지 전 null */
+  /** 지급률 확정을 전한 언론 보도 URL(회사 뉴스룸·공시도 가능). 보도 전 null */
   source: string | null;
 }
 
-/** 회사별 공지 상태 — 공지 전에는 전부 false/null (추정 기입 금지) */
+/** 회사별 확정 상태 — 보도 전에는 전부 false/null (추정 기입 금지) */
 export const BONUS_ANNOUNCEMENTS: Readonly<Record<BonusAnnouncementKey, BonusAnnouncement>> = {
   "samsung-bonus": { confirmed: false, rateLabel: null, date: null, source: null },
   "sk-hynix-bonus": { confirmed: false, rateLabel: null, date: null, source: null },
   "hyundai-bonus": { confirmed: false, rateLabel: null, date: null, source: null },
 };
 
-/** 공지일로 인정하는 범위 — 2027년 1~2월 발표 (승인 6) */
+/** 확정 보도일로 인정하는 범위 — 2027년 1~2월 발표 (승인 6) */
 export const BONUS_ANNOUNCEMENT_SEASON = { from: "2027-01-01", to: "2027-02-28" } as const;
 /** 이 날짜(포함)까지의 빌드에서만 꼬리 구절이 붙는다 */
 export const BONUS_ANNOUNCEMENT_SHOW_UNTIL = "2027-03-31";
@@ -95,8 +97,8 @@ export function bonusAnnouncementProblems(entry: BonusAnnouncement): string[] {
 }
 
 /**
- * 설명문 꼬리 구절 — ' 2026년 OPI 지급률 확정(1/27, 회사 공지).' 또는 빈 문자열.
- * 붙는 조건: 항목 점검 통과 + confirmed + 빌드 KST 날짜가 [공지일, SHOW_UNTIL] 안.
+ * 설명문 꼬리 구절 — ' 2026년 OPI 지급률 확정(1/27 보도).' 또는 빈 문자열.
+ * 붙는 조건: 항목 점검 통과 + confirmed + 빌드 KST 날짜가 [보도일, SHOW_UNTIL] 안.
  */
 export function bonusAnnouncementSuffix(
   key: BonusAnnouncementKey,
@@ -109,7 +111,7 @@ export function bonusAnnouncementSuffix(
   const date = entry.date as string;
   if (today < date || today > BONUS_ANNOUNCEMENT_SHOW_UNTIL) return "";
   const [, m, d] = date.split("-").map(Number);
-  return ` ${entry.rateLabel} ${BONUS_ANNOUNCEMENT_MARK}${m}/${d}, 회사 공지).`;
+  return ` ${entry.rateLabel} ${BONUS_ANNOUNCEMENT_MARK}${m}/${d} 보도).`;
 }
 
 /**
