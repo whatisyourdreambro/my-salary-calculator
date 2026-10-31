@@ -849,7 +849,7 @@ const HEALTH: CalculatorDef[] = [
  compute: ({ weight, height }) => {
  const bmi = weight / (height / 100) ** 2;
  const status =
- bmi < 18.5 ? "저체중" : bmi < 23 ? "정상" : bmi < 25 ? "과체중" : bmi < 30 ? "비만" : "고도비만";
+ bmi < 18.5 ? "저체중" : bmi < 23 ? "정상" : bmi < 25 ? "과체중" : bmi < 30 ? "1단계 비만" : bmi < 35 ? "2단계 비만" : "고도비만";
  return {
  primary: { label: "BMI", value: bmi, suffix: "" },
  secondary: [{ label: status, value: 0, suffix: "" }],
