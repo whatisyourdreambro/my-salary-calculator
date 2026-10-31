@@ -352,13 +352,13 @@
     },
     "/year-end-tax": {
       "contentDate": "2026-10-04",
-      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
-      "reason": "352451886 (October 4) corrects the distinction between income deductions and tax credits in the FAQ.",
+      "reviewedAtCommit": "a5f8ec3231adef98e3e68ce1fd5c0a2651baedda",
+      "reason": "352451886 (October 4) corrects the distinction between income deductions and tax credits in the FAQ. Technical review on 2026-10-31 against a5f8ec32 plus this candidate: replace only the route-level main wrapper with div because the shared root layout supplies main-content. Classes, children, calculator behavior and editorial text are unchanged; retain the existing content date.",
       "dependencies": [],
       "files": [
         "src/app/year-end-tax/page.tsx"
       ],
-      "sha256": "9e5eeaa391e023baa4832964b3ecf2b894dca4c30cd5112f040f9c88c3fa0c3d"
+      "sha256": "83b25ee04bd80a1ff01096c96d52af42c141481cfbea77a88e163b0c1355e2ac"
     },
     "/year-end-tax-2027": {
       "contentDate": "2026-09-25",
@@ -424,8 +424,8 @@
     },
     "/calc/dual-income-year-end": {
       "contentDate": "2026-10-26",
-      "reviewedAtCommit": "555448246026ed59d7d89ffed0410d669767890f",
-      "reason": "Retains the October 26 child-credit eligibility review. Follow-up against 55544824 plus this candidate clarifies child-named general/special donation input scope, separate spouse income-limit checks and unmodeled carryovers without changing calculations. No whole-page financial certification.",
+      "reviewedAtCommit": "a5f8ec3231adef98e3e68ce1fd5c0a2651baedda",
+      "reason": "Retains the October 26 child-credit eligibility review. Follow-up against 55544824 plus this candidate clarifies child-named general/special donation input scope, separate spouse income-limit checks and unmodeled carryovers without changing calculations. No whole-page financial certification. Technical review on 2026-10-31 against a5f8ec32 plus this candidate: replace only the route-level main wrapper with div because the shared root layout supplies main-content. Classes, children, calculator behavior and editorial text are unchanged; retain the existing content date.",
       "dependencies": [
         "src/lib/dualIncomeYearEnd2026.ts",
         "src/lib/yearEndTaxCalculator.ts",
@@ -438,7 +438,7 @@
         "src/lib/taxConstants2026.ts",
         "src/lib/yearEndTaxCalculator.ts"
       ],
-      "sha256": "ab1700939b00b2c2292f9dd5f926f6d1bbf73e14ed3217c98ff0f0fb2fc4d668"
+      "sha256": "6e2e92f529aae57424bae9aaef323ca16b31beeac66b6d08c1fb8745996efee4"
     },
     "/calc/voluntary-retirement": {
       "contentDate": "2026-09-03",
@@ -486,8 +486,8 @@
     },
     "/calc/child-deduction": {
       "contentDate": "2026-10-26",
-      "reviewedAtCommit": "d4ea19856c47996acf917a3092879359ca6bb060",
-      "reason": "Reviewed October 26 against d4ea1985 plus this candidate: correct the 2026 annual child-credit eligibility to age 9+ excluding 2017 births under Act 21548 supplementary article 2 and Income Tax Act article 53; split basic-deduction children from the eligible annual-credit subset. Preserve basic and birth/adoption credit amounts; no whole-page financial certification.",
+      "reviewedAtCommit": "a5f8ec3231adef98e3e68ce1fd5c0a2651baedda",
+      "reason": "Reviewed October 26 against d4ea1985 plus this candidate: correct the 2026 annual child-credit eligibility to age 9+ excluding 2017 births under Act 21548 supplementary article 2 and Income Tax Act article 53; split basic-deduction children from the eligible annual-credit subset. Preserve basic and birth/adoption credit amounts; no whole-page financial certification. Technical review on 2026-10-31 against a5f8ec32 plus this candidate: replace only the route-level main wrapper with div because the shared root layout supplies main-content. Classes, children, calculator behavior and editorial text are unchanged; retain the existing content date.",
       "dependencies": [
         "src/lib/childDeduction.ts",
         "src/lib/taxConstants2026.ts"
@@ -498,7 +498,7 @@
         "src/lib/childDeduction.ts",
         "src/lib/taxConstants2026.ts"
       ],
-      "sha256": "7b37ce4dac6212d1d62b6c7751665470e714acbd4989c8c0433415a234f11c1d"
+      "sha256": "d8094eeb7e351be3445d75067b70446f6830f9c1fb0ca2d0a88e881631c81a74"
     },
     "/tax-changes-2026": {
       "contentDate": "2026-09-09",

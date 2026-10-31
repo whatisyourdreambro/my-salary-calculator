@@ -57,7 +57,7 @@ export default function ChildDeductionPage() {
           faqLd(FAQ_ITEMS),
         ]}
       />
-      <main className="min-h-screen pb-32 pt-24 px-4 font-sans bg-canvas dark:bg-canvas-950">
+      <div className="min-h-screen pb-32 pt-24 px-4 font-sans bg-canvas dark:bg-canvas-950">
         <div className="max-w-3xl mx-auto">
           <header className="text-center mb-10">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-5 bg-electric-10 text-electric border border-electric-30">
@@ -123,7 +123,7 @@ export default function ChildDeductionPage() {
 
           <RelatedCalculators currentPath="/calc/child-deduction" />
         </div>
-      </main>
+      </div>
     </>
   );
 }

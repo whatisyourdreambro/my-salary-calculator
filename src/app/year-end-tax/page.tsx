@@ -65,7 +65,7 @@ const FAQ_ITEMS = [
 
 export default function YearEndTaxPage() {
  return (
- <main className="w-full min-h-screen bg-canvas">
+ <div className="w-full min-h-screen bg-canvas">
  <JsonLd
  data={[
  breadcrumbLd([
@@ -311,6 +311,6 @@ export default function YearEndTaxPage() {
  </section>
  </div>
  </section>
- </main>
+ </div>
  );
 }
