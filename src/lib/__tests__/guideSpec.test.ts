@@ -821,7 +821,8 @@ describe.skipIf(REGEN.size > 0)("(6) metaDescription 은 META-07 맵(40편)·검
     expect(meta07.has("year-end-tax-2026"), "W3-A 연말정산 기둥 글 메타 개명").toBe(true);
     expect([...meta07].filter((s) => !bySlug.get(s)?.metaDescription)).toEqual([]);
     // 검색어 복원 맵(code51-01, 2026-10-06) — 10/4 에 TL;DR 이 바뀐 11편. 화면 TL;DR 은 10/4 문구, 검색 설명만 9/27 검색어.
-    // + 2026-11-01 STR-07(G2 2단계 T2 대안) temp-two-home-3year-rule-2026 — 화면 TL;DR 은 운영 문구, 검색 설명만 조정 두 채 2년 기한 = 12편.
+    // + 2026-11-01 STR-07(G2 2단계 T2 대안) temp-two-home-3year-rule-2026 — 검색 설명에 조정 두 채 2년 기한·적용 시점 = 12편.
+    //   화면 TL;DR 은 2026-11-02 OF3 C2(운영자 결정)로 운영 문구보다 짧은 '2·3년 내' 문구 — 검색 설명과는 여전히 다르다.
     const kwStart = src.indexOf("const guideKeywordMetaDescriptions");
     expect(kwStart, "guidesContent.ts 의 검색어 복원 맵을 찾지 못함").toBeGreaterThan(-1);
     const kwBlock = src.slice(kwStart, src.indexOf("\n};", kwStart));
@@ -857,9 +858,11 @@ describe.skipIf(REGEN.size > 0)("(7) 2026-11-01 사실 정정 묶음 — 일시�
     expect(card.description).toBe(g.description);
   });
 
-  it("T2 대안 — 화면 TL;DR·카드 설명은 운영 문구 그대로, 조정 두 채 2년은 검색 설명(metaDescription)에만", () => {
-    // T2 를 화면 TL;DR 에 넣으면 347px 에서 한 줄(26px) 늘어 GuideMidAd 이하 광고가 내려갔다(1,123폭 스윕) — 승인된 대안.
-    expect(g.description).toBe("신규 주택 취득 후 3년 이내 종전 주택 매도 시 1주택자 비과세 12억. 3년 1일 초과 시 다주택자 분류, 양도세 폭탄.");
+  it("T2 — 화면 TL;DR·카드 설명은 더 짧은 2·3년 내 문구(OF3 C2 운영자 결정), 조정 두 채 2년 조건·적용 시점은 검색 설명(metaDescription)에", () => {
+    // 긴 T2 문구를 화면 TL;DR 에 넣으면 347px 에서 한 줄(26px) 늘어 GuideMidAd 이하 광고가 내려갔다(1,123폭 스윕) — 그래서 11/1 에는
+    // 운영 문구('신규 주택 취득 후 3년 이내 … 3년 1일 초과 시 …')를 그대로 두었다. 11/2 OF3 C2(11/1 결정을 바꾸는 운영자 결정):
+    // 앞부분만 더 좁게 바꾸고 '3년 1일' 두 단어를 지운 문구라 어느 폭에서도 줄이 늘지 않는다(검증·반박 폭 모델, 83px 좁음).
+    expect(g.description).toBe("신규 취득 후 2·3년 내 종전 주택 매도 시 1주택자 비과세 12억. 초과 시 다주택자 분류, 양도세 폭탄.");
     expect(g.metaDescription).toBe(
       "신규 취득 후 3년, 조정 두 채는 2년 내 종전 주택 매도 시 비과세 12억. 기한 초과면 다주택자 분류 양도세 폭탄. 2년 기한은 2026년 8월 4일 이후 조정대상지역 신규 취득분부터 적용.",
     );
@@ -878,6 +881,12 @@ describe.skipIf(REGEN.size > 0)("(7) 2026-11-01 사실 정정 묶음 — 일시�
     expect(g.content).toContain("<p>신규 주택 잔금일 기준 원칙 3년 이내. 예: 2026.6.1 신규 취득 → 2029.5.31까지 매도 필수.</p>");
     expect(g.content).toContain("비과세 0원 + 양도세 중과 가능성. 세액 증가폭은 사례별.</p>");
     for (const s of ["1억 → 3억", "정확히 3년", "3년 룰 핵심", "신규 주택 취득 후 3년 이내"]) expect(g.content).not.toContain(s);
+  });
+
+  it("OF3 C2 함정 H2·문단 — 3년만 기한인 듯한 문구 대신 늦게 팔면·2·3년 기한 (GuideMidAd 바로 아래 둘째 조각 첫머리)", () => {
+    expect(g.content).toContain(">⚠️ 함정 — 늦게 팔면 양도세 폭탄</h2>");
+    expect(g.content).toContain("<p>2·3년 기한 넘겨 종전 주택 매도 시 일시적 2주택 적용 X → 다주택자로 분류 → 비과세 0원 + 양도세 중과 가능성.");
+    for (const s of ["3년 초과 시 양도세 폭탄", "3년 1일 초과"]) expect(g.content).not.toContain(s);
   });
 
   it("D1 다운사이징 목록 2·R1 양도세 Step 3 — 광고 아래 보강 bodyRef 가 바뀐 본문 문구를 그대로 인용한다", () => {

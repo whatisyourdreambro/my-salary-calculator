@@ -428,8 +428,11 @@ const guideMetaDescriptions: Record<string, string> = {
 //   본문 광고(GuideMidAd 등)·관련 글 카드 아래 광고가 내려가는 폭이 생겼다(운영 대비 광고 위치 변경 0 원칙).
 // META-07 과 같이 guides/[slug] generateMetadata 에서만 쓰인다. guideSpec.test.ts (6) 이 이 맵의 편수를 고정한다.
 // + temp-two-home-3year-rule-2026 (2026-11-01, STR-07 — 운영자 답 3 G2 2단계 T2 대안): 조정대상지역 두 주택 2년 기한
-//   (소득세법 시행령 제155조 제1항 제1호, 대통령령 제36737호 2026-10-01 시행)을 검색 설명에만 — T2 를 화면 TL;DR 에 넣으면
-//   347px 에서 한 줄 늘어 GuideMidAd 이하 광고가 26px 내려갔다(1,123폭 스윕). 화면 TL;DR·카드 설명은 운영 문구 그대로.
+//   (소득세법 시행령 제155조 제1항 제1호, 대통령령 제36737호 2026-10-01 시행)을 검색 설명에 — T2 를 화면 TL;DR 에 넣으면
+//   347px 에서 한 줄 늘어 GuideMidAd 이하 광고가 26px 내려갔다(1,123폭 스윕). 그래서 11/1 에는 화면 TL;DR 을 운영 문구로 두었다.
+//   2026-11-02 OF3 C2(11/1 결정을 바꾸는 운영자 결정): 화면 TL;DR·카드 설명은 운영 문구보다 좁은 '신규 취득 후 2·3년 내 …
+//   초과 시 …'(어느 폭에서도 줄이 늘지 않음). 조정 두 채 조건과 적용 시점은 검색 결과에선 이 검색 설명에, 화면에선 마지막
+//   광고 아래 보강(supplements-two-home-law.ts)에 있다.
 //   검색 설명은 T2 문구 + 적용 시점 한 문장(META-07 규칙 80~120자, guideFactCorrections.test).
 const guideKeywordMetaDescriptions: Record<string, string> = {
  "child-fund-gift-strategy-2026": "자녀 0세에 2,000만원 비과세 증여 → 연 7% 운용 가정 → 18세 6,760만원. 부모 종합소득과 분리, 세대 간 자산 이전. 세금·수수료 전 금액이며 수익률은 보장되지 않습니다.",

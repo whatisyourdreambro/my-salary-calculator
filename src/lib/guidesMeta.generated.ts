@@ -3247,7 +3247,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "temp-two-home-3year-rule-2026",
   "title": "일시적 2주택 3년 룰 — 조정 두 채는 2년 기한 주의",
-  "description": "신규 주택 취득 후 3년 이내 종전 주택 매도 시 1주택자 비과세 12억. 3년 1일 초과 시 다주택자 분류, 양도세 폭탄.",
+  "description": "신규 취득 후 2·3년 내 종전 주택 매도 시 1주택자 비과세 12억. 초과 시 다주택자 분류, 양도세 폭탄.",
   "category": "부동산",
   "tags": [
    "일시적2주택",
@@ -3260,7 +3260,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1003
+  "contentChars": 1001
  },
  {
   "slug": "redevelopment-tax-3-step-2026",
