@@ -2,7 +2,7 @@
 //
 // 성과급 내 집 마련 계산기 — 연도별 보상 엔진(순수 함수). 회사 제도 숫자는 새로 적지 않고 기존 계산기 모듈을 그대로 쓴다:
 //   삼성전자  samsung-bonus/model.ts(DS부문 영업이익 10.5%·부문:사업부 4:6·임계값 200조/100조·사업부 인원·가중치·세후 엔진)
-//             opiData.ts(2025년분 OPI 실지급률, 노조 공지 기반 보도) · taiData.ts(2026 상반기 TAI, 2026-07-06 발표 보도)
+//             opiData.ts(2025년분 OPI 실지급률, 복수 언론 보도) · taiData.ts(2026 상반기 TAI, 2026-07-06 발표 보도)
 //   SK하이닉스 sk-hynix-bonus/psData.ts(AGREEMENT_2026: PS 재원 10%·지급 50/30/10/10·임금 6.3% — 2026-09-16 가결 보도,
 //             EMPLOYEES 34,549명(2025 사업보고서)·REFERENCE_SALARY 1억·BASIC_RATIO 20·PS_HISTORY 2025 2,964%)
 //   세후      bonusTaxCalc.calcBonusNet(2026 요율 명시) · samsung model.calcSamsungBonusNet(성과급 계산기 공통 엔진)
@@ -65,7 +65,7 @@ export const DEFAULT_WAGE_GROWTH_PCT: Record<CompanyId, number> = {
 };
 
 // ── 삼성전자 DS ──────────────────────────────────────────────────
-/** OPI1 기본값 — 2025년분 DS부문 공통 실지급률(opiData 'ds-common' 47%, 노조 공지 기반 보도). 이후 연도에도 같다고 가정 */
+/** OPI1 기본값 — 2025년분 DS부문 공통 실지급률(opiData 'ds-common' 47%, 복수 언론 보도). 이후 연도에도 같다고 가정 */
 export const SAMSUNG_OPI1_DEFAULT_PCT: number = (() => {
   const row = OPI_ACTUAL_2025.rates.find((r) => r.id === "ds-common");
   if (!row) throw new Error("[bonusHome] opiData 에 ds-common 행이 없다");

@@ -51,7 +51,7 @@ const BASE_DESC: Record<BonusAnnouncementKey, string> = {
   "samsung-bonus":
     "삼성전자 기존 OPI1·DS 특별경영성과급(OPI2) 합산 세후 실수령액 추정. 내 연봉·사업부별로 계산하고, 2026 상반기 TAI 메모리 100%와 RSU 매도도 시뮬레이션합니다. 개인 지급 확정액은 아닙니다.",
   "sk-hynix-bonus":
-    "SK하이닉스 PS·PI 성과급 계산기. 2026 임단협 9/16 가결(현금 50%+자사주 50%) 반영 — 영업이익·연봉만 입력하면 주식 지급분·하방 보전·세후 실수령까지 무료 시뮬레이션. 2026 상반기 PI 150% 확정.",
+    "SK하이닉스 성과급(PS)은 영업이익 10%가 재원이고 2026년분부터 현금 50%·자사주 50%로 지급됩니다(9/16 가결). 영업이익·연봉을 넣으면 PS·PI 세후 예상액을 계산합니다. 2026 상반기 PI 150% 확정.",
   "hyundai-bonus":
     "현대차 성과급 계산기. 월 기준금액과 주가를 입력해 2026·2025 보도 시나리오의 현금 성과금, 주식·포인트 평가액, 예상 공제액을 비교합니다. 개인별 지급 확정액이 아닌 가정에 따른 계산입니다.",
 };
@@ -75,9 +75,9 @@ const FILLED: Record<BonusAnnouncementKey, BonusAnnouncement> = {
   "hyundai-bonus": { confirmed: true, rateLabel: "2026년 성과급", date: "2027-02-10", source: "https://example.com/hyundai-notice" },
 };
 const SUFFIX: Record<BonusAnnouncementKey, string> = {
-  "samsung-bonus": " 2026년 OPI 지급률 확정(1/27, 회사 공지).",
-  "sk-hynix-bonus": " 2026년 PS 지급률 확정(2/3, 회사 공지).",
-  "hyundai-bonus": " 2026년 성과급 지급률 확정(2/10, 회사 공지).",
+  "samsung-bonus": " 2026년 OPI 지급률 확정(1/27 보도).",
+  "sk-hynix-bonus": " 2026년 PS 지급률 확정(2/3 보도).",
+  "hyundai-bonus": " 2026년 성과급 지급률 확정(2/10 보도).",
 };
 
 const kst = (iso: string) => new Date(`${iso}+09:00`);
@@ -132,7 +132,7 @@ describe("꼬리 구절 규칙", () => {
     expect(kstDate(new Date("2027-01-26T15:00:00Z"))).toBe("2027-01-27");
   });
 
-  it("세 회사 구절 모양: ' {이름} 지급률 확정(M/D, 회사 공지).'", () => {
+  it("세 회사 구절 모양: ' {이름} 지급률 확정(M/D 보도).' — '회사 공지'·'사내 공지' 출처 표기 없음(공개 출처 규칙 2026-10-08)", () => {
     for (const key of BONUS_ANNOUNCEMENT_KEYS) {
       expect(bonusAnnouncementSuffix(key, kst("2027-02-20T09:00:00"), table), key).toBe(SUFFIX[key]);
     }

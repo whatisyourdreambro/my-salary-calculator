@@ -44,16 +44,18 @@ import {
 const SITE_URL = "https://www.moneysalary.com";
 const SITE_NAME = "머니샐러리";
 const PAGE_PATH = "/calc/sk-hynix-bonus";
-const PAGE_TITLE = "SK하이닉스 성과급 계산기 2026 — PS 현금·자사주";
+const PAGE_TITLE = "SK하이닉스 성과급 2026 — PS 예상액 계산기(현금·자사주)";
 const PAGE_TITLE_FULL = `${PAGE_TITLE} | ${SITE_NAME}`;
 
 // 잠정합의 상태별 문구 (psData.AGREEMENT_2026.status 로 일괄 분기)
 const STATUS = AGREEMENT_2026.status;
 // 1~2월 지급률 확정 공지 꼬리 구절(승인 6) — src/data/bonusAnnouncements.ts 가 휴면이면 종전 문자열 그대로
+// 2026-11-01(CTR-5): 가결 분기 설명과 제목을 뉴스형 검색 의도(재원·지급 구성)에 먼저 답하도록 교체 — psData 의
+// poolRate 0.1·newSplit 50/30/10/10·appliesFrom 2026년분과 같은 사실. 제목·설명은 head·JSON-LD·공유에만 쓰여 화면 문장은 그대로다.
 const PAGE_DESC = withBonusAnnouncement(
   "sk-hynix-bonus",
   STATUS === "ratified"
-    ? "SK하이닉스 PS·PI 성과급 계산기. 2026 임단협 9/16 가결(현금 50%+자사주 50%) 반영 — 영업이익·연봉만 입력하면 주식 지급분·하방 보전·세후 실수령까지 무료 시뮬레이션. 2026 상반기 PI 150% 확정."
+    ? "SK하이닉스 성과급(PS)은 영업이익 10%가 재원이고 2026년분부터 현금 50%·자사주 50%로 지급됩니다(9/16 가결). 영업이익·연봉을 넣으면 PS·PI 세후 예상액을 계산합니다. 2026 상반기 PI 150% 확정."
     : STATUS === "rejected"
       ? "SK하이닉스 PS·PI 성과급 계산기. 잠정합의안(현금 40%+자사주 60%) 8/25 총투표 부결·재협상 중 — 신·구 체계 모두 영업이익·연봉만 입력하면 주식 지급분·세후 실수령까지 무료 시뮬레이션. 2026 상반기 PI 150% 확정."
       : "SK하이닉스 PS·PI 성과급 계산기. 2026 임단협 잠정합의(현금 40%+자사주 60%) 반영 — 영업이익·연봉만 입력하면 주식 지급분·하방 보전·세후 실수령까지 무료 시뮬레이션. 2026 상반기 PI 150% 확정."

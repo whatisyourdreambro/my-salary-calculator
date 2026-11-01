@@ -196,12 +196,13 @@ describe("/samsung-negotiation-2026 2026 임금협약 타결 결과(5/27 가결)
     );
   });
 
-  it("요약의 특별경영성과급: 노사가 합의한 사업성과의 10.5%·지급 조건이 정본(FIXED_RERATE·getThreshold)과 같다", () => {
-    expect(src).toContain(`재원은 노사가 합의한 DS부문 사업성과의 ${FIXED_RERATE}%(상한 없음)이고`);
+  // 2026-10-23: 재원 표현을 'DS부문 영업이익의 10.5%'로 통일(한국경제 2026-10-07 https://www.hankyung.com/article/2026100792131).
+  it("요약의 특별경영성과급: DS부문 영업이익의 10.5%·지급 조건이 정본(FIXED_RERATE·getThreshold)과 같다", () => {
+    expect(src).toContain(`재원은 DS부문 영업이익의 ${FIXED_RERATE}%(상한 없음)이고`);
     expect(src).toContain(
       `2026~2028년 DS부문 연간 영업이익 ${getThreshold(2026)}조원·2029~2035년 ${getThreshold(2029)}조원 이상일 때만 지급됩니다`,
     );
-    expect(src).toContain("사업성과의 10.5%");
+    expect(src).not.toContain("사업성과의 10.5%");
     expect(src).toContain("200조원");
     expect(src).not.toContain("재원은 영업이익의 10.5%");
     expect([getThreshold(2028), getThreshold(2035)]).toEqual([getThreshold(2026), getThreshold(2029)]);
@@ -226,13 +227,17 @@ describe("/samsung-negotiation-2026 2026 임금협약 타결 결과(5/27 가결)
     expect(src).not.toContain("Operating Profit Incentive");
   });
 
-  it("FAQ SK하이닉스 PS: psData PS_HISTORY 의 2024·2025 실적분 지급률과 같다", () => {
+  // 2026-10-23: 2024년 실적분 1,500% 는 'PS 1,000% + 특별성과급 500%' 합계다(뉴스핌 2025-02-07
+  // https://www.newspim.com/news/view/20250207000985). 접힌 FAQ 라 구성을 그대로 적는다(광고 위 높이 0). 합계는 psData 정본과 같다.
+  it("FAQ SK하이닉스 PS: psData PS_HISTORY 의 2024·2025 실적분 지급률과 같고, 2024년은 PS 1,000% + 특별성과급 500% 로 나눠 적는다", () => {
     const ps = (y: number) => PS_HISTORY.find((r) => r.year === y)?.psRatePct;
     expect(ps(2024)).toBe(1500);
     expect(ps(2025)).toBe(2964);
+    expect(1000 + 500).toBe(ps(2024));
     expect(src).toContain(
-      `2024년 실적분은 기본급의 ${ps(2024)!.toLocaleString("en-US")}%, 2025년 실적분은 ${ps(2025)!.toLocaleString("en-US")}%(2026년 2월 5일 지급)였습니다(보도 기준)`,
+      `2024년 실적분은 PS 1,000%와 특별성과급 500%(합계 기본급의 ${ps(2024)!.toLocaleString("en-US")}%), 2025년 실적분은 PS ${ps(2025)!.toLocaleString("en-US")}%(2026년 2월 5일 지급)였습니다(보도 기준)`,
     );
+    expect(src).not.toContain("2024년 실적분은 기본급의 1,500%");
     expect(src).not.toContain("2024~2025년 호황기에는 기본급 기준 1,500% 수준");
   });
 

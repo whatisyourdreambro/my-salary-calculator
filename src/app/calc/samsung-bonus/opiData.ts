@@ -4,7 +4,10 @@
 //
 // 갱신 절차(매년 1월 말 OPI 발표 D0): OPI_ACTUAL 에 새 연도 블록 추가 → OPI_LATEST 가
 // 자동 파생 → src/data/opiAnnouncement.ts(홈 배너 게이트) 4필드 동시 기입 → vitest.
-// 추정치 기입 금지 — 노조 공지·복수 보도로 확인된 값만.
+// 추정치 기입 금지 — 복수 언론 보도로 확인된 값만
+// (2026-10-23 공개 출처 규칙 — 운영자 2026-10-08: 언론 보도·회사 발표·DART 만, '노조 공지'·'사내 공지' 표현 금지).
+// 화면 출처 표기(sourceNote)를 '복수 언론 보도'로 바꾸는 일은 page.tsx 의 광고 위 OPI 실지급률 문단에 나오는 문구라
+// 폭 실측 뒤로 보류했다(STR-04-B, 2026-11-01 — 그때 data.test.ts 의 테스트 제목도 함께 바꾼다). 수치(rates)는 그대로다.
 
 /** OPI 지급률 상한 — 연봉 대비 % (회사 제도상 상한) */
 export const OPI1_MAX_RATE = 50;
@@ -32,7 +35,12 @@ export type OpiActualYear = {
   rates: OpiActualRate[];
 };
 
-/** 2025년 실적분 OPI — 2026-01-30 지급 (노조 공지 기반 복수 보도) */
+/** 2025년 실적분 OPI — 2026-01-30 지급 (복수 언론 보도).
+ *  서울신문 2026-01-16 https://www.seoul.co.kr/news/economy/industry/2026/01/16/20260116500182 ·
+ *  머니투데이 2026-01-16 https://www.mt.co.kr/industry/2026/01/16/2026011615081356804 — DS 47%·MX 50%·VD·DA·네트워크·의료기기 12%·
+ *  경영지원·하만 39%·생산기술연구소 36%, 1월 30일 지급. 한국총괄·SR·CDO 37%·EHS 34%·CSS 11% 행은 언론 기사에 없고
+ *  전국삼성전자노동조합 홈페이지 공개 공지(로그인 없음, 2026-01-16)에만 있다 —
+ *  https://samsunglabor.co.kr/bbs/board.php?bo_table=notice&wr_id=496 (운영자 결정 2 권장안: 공개 URL 을 밝히고 유지). */
 export const OPI_ACTUAL_2025: OpiActualYear = {
   fiscalYear: 2025,
   payDate: "2026-01-30",
