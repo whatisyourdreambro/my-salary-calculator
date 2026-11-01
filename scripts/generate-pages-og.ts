@@ -21,7 +21,7 @@ function decodeHtml(value: string) {
   return value.replace(/&(?:amp|quot|apos|lt|gt);|&#(?:x[0-9a-f]+|\d+);/gi, entity => {
     if (entity.startsWith('&#')) {
       const point = entity[2].toLowerCase() === 'x' ? Number.parseInt(entity.slice(3, -1), 16) : Number(entity.slice(2, -1));
-      return point > 0 && point <= 0x10ffff ? String.fromCodePoint(point) : '�';
+      return point > 0 && point <= 0x10ffff ? String.fromCodePoint(point) : '\ufffd';
     }
     return ({ '&amp;': '&', '&quot;': '"', '&apos;': "'", '&lt;': '<', '&gt;': '>' } as Record<string, string>)[entity.toLowerCase()];
   });
