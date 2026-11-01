@@ -8,7 +8,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { artifactHash, BUILD_MARKER, checkAssetLimits, checkWorkerBundle, cleanBuildEnvironment, compileRoutingConfig,
   copySources, EXCLUDED_SOURCE_PATHS, inventoryHash, packageExport, QA_ASSETS_IGNORE, resetOwnedStage, sha256,
   readPublicBuildConfiguration, sourceInventory, stagePath, verifyArtifact, workerModuleInventory,
-  createNativeReleaseAttestation } from './lib/pages-export.mjs';
+  createNativeReleaseAttestation, workerHeadroomWarning } from './lib/pages-export.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const writeJson = (file, value) => writeFileSync(file, `${JSON.stringify(value, null, 2)}\n`);
@@ -174,6 +174,8 @@ async function build(mode, nativeContext) {
   const forbiddenRuntime = Object.keys(bundle.metafile.inputs).filter(file => /(?:^|\/)node_modules\/(?:next|@opennextjs|react|react-dom)(?:\/|$)/.test(file));
   if (forbiddenRuntime.length) throw new Error(`Pages Worker must not contain Next/OpenNext/React runtime: ${forbiddenRuntime[0]}`);
   const worker = checkWorkerBundle(path.join(stage, 'dist'));
+  const headroomWarning = workerHeadroomWarning(worker.workerBytes);
+  if (headroomWarning) console.warn(`::warning title=Pages Worker size::${headroomWarning}`);
   writeJson(path.join(stage, 'generated/worker-metafile.json'), bundle.metafile);
   if (mode === 'production') {
     const { verifyPagesAdvertising } = await import(pathToFileURL(path.join(stage, 'scripts/verify-pages-advertising.mjs')).href);

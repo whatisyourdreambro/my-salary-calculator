@@ -45,7 +45,7 @@ test('native bootstrap imports without node_modules and finds Linux Node-distrib
 
 test('native npm environment retains public ads while excluding inherited secrets and bootstrap hooks', t => {
   const directory = temporary(t);
-  writeFileSync(path.join(directory, '.env.production'), ['HOME_TOP', 'CALC_RESULT', 'GUIDE_MID', 'COMPANY_TOP']
+  writeFileSync(path.join(directory, '.env.production'), ['HOME_TOP', 'CALC_RESULT', 'GUIDE_MID', 'SIDEBAR', 'IN_ARTICLE', 'MULTIPLEX', 'DISPLAY_2', 'COMPANY_TOP']
     .map(slot => `NEXT_PUBLIC_ADSENSE_SLOT_${slot}=1234567890`).join('\n'));
   const output = installationEnvironment(directory, { PATH: 'fixture-path', CF_API_TOKEN: 'synthetic', GITHUB_TOKEN: 'synthetic',
     FEEDBACK_RATE_LIMIT_SECRET: 'synthetic', NODE_OPTIONS: '--require unknown', npm_config_registry: 'https://invalid.test' });
@@ -127,7 +127,7 @@ test('provider credentialized Git origin matches only the exact HTTPS repository
 });
 
 test('installation diagnostics identify missing config, settings, owned paths, npmrc and npm without raw errors', t => {
-  const writeConfig = directory => writeFileSync(path.join(directory, '.env.production'), ['HOME_TOP', 'CALC_RESULT', 'GUIDE_MID', 'COMPANY_TOP']
+  const writeConfig = directory => writeFileSync(path.join(directory, '.env.production'), ['HOME_TOP', 'CALC_RESULT', 'GUIDE_MID', 'SIDEBAR', 'IN_ARTICLE', 'MULTIPLEX', 'DISPLAY_2', 'COMPANY_TOP']
     .map(slot => `NEXT_PUBLIC_ADSENSE_SLOT_${slot}=1234567890`).join('\n'));
   const check = (phase, run) => assert.throws(run, error => { assert.equal(nativeBuildDiagnostic(error).phase, phase);
     assert.equal(error.cause, undefined); assert.equal(error.path, undefined); return true; });

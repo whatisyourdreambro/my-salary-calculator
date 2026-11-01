@@ -154,7 +154,7 @@ test('npm resolution supports only the Windows sibling and Unix prefix/lib insta
 test('production packaging environment keeps approved public settings while removing credentials and inherited executables', () => {
   const root = mkdtempSync(path.join(os.tmpdir(), 'msy-local-package-test-'));
   try {
-    writeFileSync(path.join(root, '.env.production'), ['HOME_TOP', 'CALC_RESULT', 'GUIDE_MID', 'COMPANY_TOP']
+    writeFileSync(path.join(root, '.env.production'), ['HOME_TOP', 'CALC_RESULT', 'GUIDE_MID', 'SIDEBAR', 'IN_ARTICLE', 'MULTIPLEX', 'DISPLAY_2', 'COMPANY_TOP']
       .map(slot => `NEXT_PUBLIC_ADSENSE_SLOT_${slot}=1234567890`).join('\n'));
     const env = localPackagingEnvironment(root, { PATH: 'synthetic-path', GH_TOKEN: 'private-fixture', GITHUB_TOKEN: 'private-fixture',
       CF_API_TOKEN: 'private-fixture', CLOUDFLARE_API_TOKEN: 'private-fixture', LAW_OC: 'private-fixture',

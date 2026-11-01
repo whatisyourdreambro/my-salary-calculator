@@ -6,7 +6,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { crc32, deflateSync } from 'node:zlib';
 import { configurationHash } from '../lib/pages-release.mjs';
-import { assertPagesPrivateCache, assertPagesReleaseIdentity, assertReleasePng, pagesReleaseCases,
+import { assertIndexableDocument, assertPagesPrivateCache, assertPagesReleaseIdentity, assertReleasePng, pagesReleaseCases,
   readPagesReleasePins, readPagesReleaseState, resolvePagesReleaseReceiptDirectory,
   verificationReceipt, verifyPagesReleaseHttp, writeVerificationJson } from '../verify-pages-release-http.mjs';
 
@@ -36,11 +36,14 @@ function png() {
 }
 const validPng = png();
 const generic = '<html><head><title>Fixture</title></head><body><main>Fixture</main><script src="https://ads.example.invalid/never-requested.js"></script></body></html>';
+// Same head shape Next renders for public pages: one absolute self-canonical (origin only for /).
+const canonicalLink = route => `<link rel="canonical" href="https://www.moneysalary.com${route === '/' ? '' : route}"/>`;
+const publicPage = route => generic.replace('</head>', `${canonicalLink(route)}<meta name="robots" content="index, follow"/></head>`);
 function htmlFor(item) {
   if (item.english404) return english404;
   if (item.shareToken) return `<html><head><title>공유된 연봉 결과 | 머니샐러리</title></head><body><main>50,000,000</main><script id="msy-pages-share-bootstrap" type="application/json">${JSON.stringify({ v: 1, token: item.shareToken })}</script></body></html>`;
   if (item.invalidShare) return '<html><head><title>공유된 연봉 결과 | 머니샐러리</title></head><body><div data-pages-share-invalid="true">Invalid</div></body></html>';
-  return generic;
+  return publicPage(item.route);
 }
 function fixture(change = () => {}, after = async () => {}) {
   const state = context(), cases = pagesReleaseCases(), calls = [], reports = [];
@@ -136,6 +139,44 @@ test('share metadata, English 404 DOM, and corrupted PNGs are substantive respon
   }
   assert.doesNotThrow(() => assertReleasePng(validPng));
   const bad = Buffer.from(validPng); bad[0] = 0; assert.throws(() => assertReleasePng(bad));
+});
+
+test('home and Samsung calculator must stay indexable with one self-canonical; violations stop at that request', async () => {
+  assert.deepEqual(pagesReleaseCases().filter(item => item.indexable).map(item => item.kind), ['home', 'samsung-calculator']);
+  const samsung = canonicalLink('/calc/samsung-bonus');
+  for (const [kind, checkpoint, mutate] of [
+    ['home', 'indexable-canonical', output => { output.body = output.body.replace('content="index, follow"', 'content="noindex, follow"'); }],
+    ['samsung-calculator', 'indexable-canonical', output => { output.body = output.body.replace('</head>', '<meta name="googlebot" content="noindex"/></head>'); }],
+    ['samsung-calculator', 'indexable-canonical', output => { output.body = output.body.replace(samsung, canonicalLink('/')); }],
+    ['samsung-calculator', 'indexable-canonical', output => { output.body = output.body.replace(samsung, ''); }],
+    ['home', 'indexable-canonical', output => { output.body = output.body.replace('</head>', `${canonicalLink('/')}</head>`); }],
+    ['home', 'indexable-canonical', output => { output.body = output.body.replace('https://www.moneysalary.com"', 'https://moneysalary.com"'); }],
+    ['samsung-calculator', 'robots-policy', output => { output.headers.set('x-robots-tag', 'noindex'); }],
+  ]) {
+    const f = fixture((item, output) => { if (item.kind === kind) mutate(output); });
+    await assert.rejects(verifyPagesReleaseHttp(f.state, f.options));
+    const failed = f.reports.at(-1).results.at(-1);
+    assert.equal(f.calls.length, kind === 'home' ? 1 : 3); assert.equal(f.checks(), 1);
+    assert.equal(failed.kind, kind); assert.equal(failed.contractFailed, true); assert.equal(failed.checkpoint, checkpoint);
+  }
+});
+
+test('indexable check reads head markup only and rejects near-miss canonicals or noindex directives', () => {
+  const page = (head, body = '') => `<!DOCTYPE html><html lang="ko"><head>${head}</head><body>${body}</body></html>`;
+  const route = '/calc/samsung-bonus';
+  const good = `<meta charSet="utf-8"/>${canonicalLink(route)}<meta name="robots" content="index, follow"/><meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1"/>`;
+  assert.doesNotThrow(() => assertIndexableDocument(page(good), route));
+  assert.doesNotThrow(() => assertIndexableDocument(page(canonicalLink('/')), '/'));
+  assert.doesNotThrow(() => assertIndexableDocument(page(good.replace('max-snippet:-1', 'max-image-preview:none')), route));
+  // Flight data, comments and body markup are not head metadata.
+  assert.doesNotThrow(() => assertIndexableDocument(page(`${good}<script>self.__next_f.push('<link rel="canonical" href="/x"><meta name="robots" content="noindex">')</script><!-- <link rel="canonical" href="/y"> -->`,
+    `${canonicalLink('/other')}<meta name="robots" content="noindex"/>`), route));
+  for (const head of ['', good.replace(`${route}"`, `${route}/"`), good.replace('https://www.', 'http://www.'),
+    good.replace(`https://www.moneysalary.com${route}`, route), good + canonicalLink(route),
+    good.replace('content="index, follow"', 'content="NOINDEX,follow"'), good.replace('content="index, follow"', 'content="none"'),
+    `${good}<meta content="noindex" name="robots"/>`]) {
+    assert.throws(() => assertIndexableDocument(page(head), route), /canonical|noindex/i);
+  }
 });
 
 test('transport errors and canonical drift produce failed sanitized receipts', async () => {

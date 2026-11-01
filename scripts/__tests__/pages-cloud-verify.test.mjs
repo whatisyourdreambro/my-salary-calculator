@@ -124,7 +124,8 @@ function html(item) {
   if (item.english404) return '<html><head><title>Page not found | Moneysalary</title><meta name="robots" content="noindex, nofollow"></head><body><main data-page-state="not-found"><div lang="en" data-english-page><h1>This English page could not be found</h1><a href="/en">Home</a><a href="/en/calculators">Calculators</a><a href="/en/guides">Guides</a></div></main></body></html>';
   if (item.shareToken) return `<html><head><title>공유된 연봉 결과 | 머니샐러리</title></head><body><main>50,000,000</main><script id="msy-pages-share-bootstrap" type="application/json">${JSON.stringify({ token: item.shareToken })}</script></body></html>`;
   if (item.invalidShare) return '<html><head><title>공유된 연봉 결과 | 머니샐러리</title></head><body><main data-pages-share-invalid="true">Invalid</main></body></html>';
-  return '<html><head><title>Fixture</title></head><body><main>Fixture</main><script src="https://ads.invalid/never"></script></body></html>';
+  // Public pages carry one absolute self-canonical (origin only for /), as Next renders them.
+  return `<html><head><title>Fixture</title><link rel="canonical" href="${ORIGIN}${item.route === '/' ? '' : item.route}"/><meta name="robots" content="index, follow"/></head><body><main>Fixture</main><script src="https://ads.invalid/never"></script></body></html>`;
 }
 function cohort(change = () => {}, readAfter = async () => attestation()) {
   const cases = pagesReleaseCases(), calls = [], receipts = []; let refChecks = 0;
@@ -152,12 +153,14 @@ test('native acceptance reuses all sixteen substantive contracts without fabrica
   assert.equal(JSON.stringify(report).includes('ads.invalid'), false);
 });
 
-test('wrong build, sitemap, private-cache HIT, broken share and PNG fail fast; no second cohort', async () => {
+test('wrong build, sitemap, private-cache HIT, broken share, PNG, noindex or wrong canonical fail fast; no second cohort', async () => {
   for (const change of [(item, o) => o.headers.set('x-moneysalary-build', 'old'),
     (item, o) => { if (item.staticAsset) o.body = '<urlset></urlset>'; },
     (item, o, n) => { if (n === 12) o.headers.set('cf-cache-status', 'HIT'); },
     (item, o) => { if (item.shareToken) o.body = '<html>wrong title</html>'; },
     (item, o) => { if (item.png) { o.body = Buffer.from(png); o.body[40] ^= 1; } },
+    (item, o) => { if (item.kind === 'home') o.body = o.body.replace('content="index, follow"', 'content="noindex, follow"'); },
+    (item, o) => { if (item.kind === 'samsung-calculator') o.body = o.body.replace(`${ORIGIN}/calc/samsung-bonus"`, `${ORIGIN}/"`); },
   ]) {
     const f = cohort(change); await assert.rejects(verifyNativePublicRelease(attestation(), promotion(), f.options));
     assert.ok(f.calls.length <= 12); assert.equal(f.refChecks(), 2); assert.equal(f.receipts.at(-1).finished, false);

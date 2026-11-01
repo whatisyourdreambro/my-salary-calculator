@@ -6,10 +6,11 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, 
 import os from 'node:os';
 import path from 'node:path';
 import { artifactHash, assertEnglishNotFoundDocument, BUILD_MARKER, canonicalPathname, checkAssetLimits, checkWorkerBundle, cleanBuildEnvironment,
+  PRODUCTION_AD_SLOTS,
   compileRoutingConfig, copyableSource, copySources, EXCLUDED_SOURCE_PATHS, inventoryHash, packageExport,
   loadPublicBuildSettings, PUBLIC_BUILD_CONFIG, QA_ASSETS_IGNORE, readPublicBuildConfiguration, resetOwnedStage,
   sha256, SOURCE_ITEMS, sourceInventory, stagePath, verifyArtifact, workerModuleInventory,
-  OG_WORKER_MODULES, PAGES_WORKER_LIMIT } from '../lib/pages-export.mjs';
+  OG_WORKER_MODULES, PAGES_WORKER_LIMIT, PAGES_WORKER_WARN_HEADROOM, PAGES_FUNCTION_EXCLUDES, workerHeadroomWarning } from '../lib/pages-export.mjs';
 import { pagesWorkerEntrySource, parseArgs, qaMiniflareOptions, validateQaConfig } from '../pages-build.mjs';
 
 const require = createRequire(import.meta.url);
@@ -55,7 +56,7 @@ function exportFixture(root) {
   moduleFixture(path.join(root, 'out'));
 }
 function productionEnv() {
-  return Object.fromEntries(['HOME_TOP', 'CALC_RESULT', 'GUIDE_MID', 'COMPANY_TOP'].map(slot => [`NEXT_PUBLIC_ADSENSE_SLOT_${slot}`, '1234567890']));
+  return Object.fromEntries(PRODUCTION_AD_SLOTS.map(slot => [`NEXT_PUBLIC_ADSENSE_SLOT_${slot}`, '1234567890']));
 }
 const productionConfigText = () => Object.entries(productionEnv()).map(([key, value]) => `${key}=${value}`).join('\n');
 
@@ -115,6 +116,11 @@ test('clean QA env removes credentials, preload hooks and production ids; produc
   assert.equal(env.npm_config_registry, 'https://registry.npmjs.org/');
   assert.equal(env.HOME, path.join(stage, 'build-home'));
   assert.throws(() => cleanBuildEnvironment({}, 'production', stage), /Missing production/);
+  assert.deepEqual([...PRODUCTION_AD_SLOTS], ['HOME_TOP', 'CALC_RESULT', 'GUIDE_MID', 'SIDEBAR', 'IN_ARTICLE', 'MULTIPLEX', 'DISPLAY_2', 'COMPANY_TOP']);
+  for (const slot of PRODUCTION_AD_SLOTS) {
+    const missing = productionEnv(); delete missing[`NEXT_PUBLIC_ADSENSE_SLOT_${slot}`];
+    assert.throws(() => cleanBuildEnvironment(missing, 'production', stage), new RegExp(`Missing production public ad slot: ${slot}$`));
+  }
   assert.throws(() => cleanBuildEnvironment({ ...productionEnv(), MSY_QA_MODE: '1' }, 'production', stage), /inherited QA/);
   assert.throws(() => cleanBuildEnvironment({ ...productionEnv(), NEXT_PUBLIC_ADSENSE_SLOT_HOME_TOP: 'bad' }, 'production', stage), /Invalid/);
   const prod = cleanBuildEnvironment({ ...productionEnv(), NEXT_PUBLIC_GA_ID: 'G-ABC123', NEXT_PUBLIC_CONVERSION_LABEL_PAGEVIEW: 'Abc_def' }, 'production', stagePath(root, 'production'));
@@ -217,6 +223,9 @@ test('native export packages HTML/TXT without mutating originals or moving ordin
   assert.equal(manifest.routes['/en/page-unavailable'].headers['cache-control'], 'private, no-store');
   const routes = JSON.parse(readFileSync(path.join(stage, 'dist/_routes.json')));
   assert.equal(routes.exclude.some(x => x.includes('_msy')), false);
+  assert.deepEqual(routes.exclude, [...PAGES_FUNCTION_EXCLUDES]);
+  assert.equal(routes.exclude.includes('/verify.html'), false, 'public verification HTML is a Function document');
+  for (const p of ['/ads.txt', '/app-ads.txt']) assert.ok(routes.exclude.includes(p), p);
   assert.match(readFileSync(path.join(stage, 'dist/_headers'), 'utf8'), /X-MoneySalary-QA: ads-disabled/);
   assert.equal(readFileSync(path.join(stage, 'dist/.assetsignore'), 'utf8'), QA_ASSETS_IGNORE);
   assert.equal(manifest.publicAssets.some(file => file.startsWith('/_worker.js')), false);
@@ -410,6 +419,24 @@ test('production marker tracks root public configuration without copying it; QA 
   delete marker.publicConfig;
   write(stages.production, BUILD_MARKER, JSON.stringify(marker));
   assert.throws(() => verifyArtifact(root, 'production'), /public configuration is stale/);
+});
+
+test('Function excludes keep public/_routes.json parity except reviewed Function-only paths', () => {
+  const legacy = JSON.parse(readFileSync(new URL('../../public/_routes.json', import.meta.url), 'utf8')).exclude;
+  const functionOnly = ['/.well-known/*', '/naver226c8e8c348e204e98efbcf23514d286.html'];
+  assert.deepEqual([...PAGES_FUNCTION_EXCLUDES].filter(x => x !== '/.well-known/security.txt').sort(),
+    legacy.filter(x => !functionOnly.includes(x)).sort());
+  assert.equal(PAGES_FUNCTION_EXCLUDES.some(x => x.endsWith('.html') || x === '/.well-known/*'), false);
+  const generatedRoutes = new Set(['/robots.txt', '/sitemap.xml', '/rss.xml', '/rss-companies.xml']);
+  for (const x of PAGES_FUNCTION_EXCLUDES.filter(x => !x.endsWith('*') && !generatedRoutes.has(x)))
+    assert.ok(existsSync(new URL(`../../public${x}`, import.meta.url)), `${x} is excluded but public${x} is missing`);
+  assert.ok(PAGES_FUNCTION_EXCLUDES.length + 1 <= 100);
+});
+
+test('Worker headroom warning is visible below 1 MiB and silent above it', () => {
+  assert.equal(workerHeadroomWarning(PAGES_WORKER_LIMIT - PAGES_WORKER_WARN_HEADROOM), null);
+  assert.match(workerHeadroomWarning(PAGES_WORKER_LIMIT - PAGES_WORKER_WARN_HEADROOM + 1), /only 1048575 bytes of headroom/);
+  assert.match(workerHeadroomWarning(PAGES_WORKER_LIMIT - 1000), /only 1000 bytes of headroom/);
 });
 
 test('private Worker modules have a separate byte budget and an exact allowlist', t => {
