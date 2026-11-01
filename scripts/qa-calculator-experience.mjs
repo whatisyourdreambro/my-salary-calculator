@@ -1116,7 +1116,8 @@ try {
         assert.equal(await page.getByLabel(/대환 초기 비용 합계/).inputValue(), '600,000');
         assert((await page.getByRole('region', { name: '현재 조건의 계산 결과' }).innerText()).includes('6개월'));
         assert.equal(await page.locator('link[rel="canonical"]').getAttribute('href'), 'https://www.moneysalary.com' + route);
-        assert.equal(await page.getByRole('heading', { name: '자주 묻는 질문', exact: true }).locator('..').locator('details').count(), 3);
+        // FAQ 는 calc.faqs 한 항목당 details 1개(SimpleCalculatorView). expandedFinance.ts 의 이 계산기 질문이 5개로 늘었다(2026-11-02 확인).
+        assert.equal(await page.getByRole('heading', { name: '자주 묻는 질문', exact: true }).locator('..').locator('details').count(), 5);
       }
       if (route === '/calc/advertising-profit-roas') {
         const margin = page.getByLabel(/광고 전 공헌이익률/);
