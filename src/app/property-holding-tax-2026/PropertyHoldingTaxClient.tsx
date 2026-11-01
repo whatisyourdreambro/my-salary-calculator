@@ -1,27 +1,23 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import Link from "@/components/AppLink";
 import { ArrowRight } from "lucide-react";
 import NumberInput from "@/components/NumberInput";
-import { calcHoldingTax2026 } from "@/lib/propertyHoldingTax2026";
+import { setHoldingTaxInputs, useHoldingTax } from "./holdingTaxInputs";
 
 // 계산은 src/lib/propertyHoldingTax2026.ts — 재산세는 주택별(지방세법 제113조 제2항), 종부세는 인별 합계.
 // 2주택 이상이면 입력값을 공시가격 합계로 보고 주택마다 같은 금액이라 보고 재산세를 집별로 계산한다 (2026-10-05 감사 code15-02).
+// 2026-11-01 R2-HOLD: 총액·12월 줄에 농어촌특별세(종부세의 20%)와 1세대 1주택 고령자·장기보유 세액공제를 넣었다.
+// 이 블록은 HomeTopAd 와 CalcResultAd 사이라 줄을 늘리지 않는다 — 나이·보유기간 입력과 항목별 내역은 맨 아래
+// 상세(PropertyHoldingTaxDetail, 마지막 광고 아래)에 있고 입력은 holdingTaxInputs.ts 로 공유한다.
 
 function fmt(n: number): string {
   return Math.round(n).toLocaleString("ko-KR");
 }
 
 export default function PropertyHoldingTaxClient() {
-  const [publishedValue, setPublishedValue] = useState(1_000_000_000);
-  const [numHomes, setNumHomes] = useState(1);
-  const [isOnlyOneHome, setIsOnlyOneHome] = useState(true);
-
-  const result = useMemo(
-    () => calcHoldingTax2026(publishedValue, numHomes, isOnlyOneHome),
-    [publishedValue, numHomes, isOnlyOneHome]
-  );
+  const { inputs, result } = useHoldingTax();
+  const { publishedValue, numHomes, isOnlyOneHome } = inputs;
   const multi = numHomes >= 2;
 
   return (
@@ -38,7 +34,7 @@ export default function PropertyHoldingTaxClient() {
           <NumberInput
             type="number"
             value={publishedValue}
-            onChange={(e) => setPublishedValue(Math.max(0, Number(e.target.value) || 0))}
+            onChange={(e) => setHoldingTaxInputs({ publishedValue: Math.max(0, Number(e.target.value) || 0) })}
             min={0}
             step={100_000_000}
             className="w-full px-4 py-3 rounded-xl border border-canvas-200 dark:border-canvas-700 bg-white dark:bg-canvas-800 text-navy dark:text-canvas-50 font-bold text-lg focus:outline-none focus:border-electric"
@@ -61,7 +57,7 @@ export default function PropertyHoldingTaxClient() {
           <input
             type="range"
             value={numHomes}
-            onChange={(e) => setNumHomes(Number(e.target.value))}
+            onChange={(e) => setHoldingTaxInputs({ numHomes: Number(e.target.value) })}
             min={1}
             max={5}
             step={1}
@@ -83,7 +79,7 @@ export default function PropertyHoldingTaxClient() {
             <input
               type="checkbox"
               checked={isOnlyOneHome}
-              onChange={(e) => setIsOnlyOneHome(e.target.checked)}
+              onChange={(e) => setHoldingTaxInputs({ isOnlyOneHome: e.target.checked })}
               className="w-4 h-4"
             />
             <span className="text-sm font-medium text-navy dark:text-canvas-100">
@@ -113,9 +109,17 @@ export default function PropertyHoldingTaxClient() {
               <span>재산세 합계 (7·9월)</span>
               <span>{fmt(result.totalRegional)}원</span>
             </div>
+            {/* 12월 고지 = 종부세(1세대 1주택 세액공제 뒤) + 농어촌특별세 20%. 광고 위 줄이라 라벨은 종전 12자
+                라벨(종부세 정식 명칭 + 공백·괄호 월 표기)을 7자로 줄였다: 줄어든 폭(약 2.8em)이 값이 1.2배가 되며
+                늘 수 있는 최대 폭(숫자 1자리 + 쉼표, 약 0.9em)보다 커서 어떤 입력에서도 이 줄이 종전보다 넓지 않다.
+                12월 표기·항목별 내역·나이·보유기간 입력은 맨 아래 상세(마지막 광고 아래)로 잇는다 */}
             <div className="flex justify-between text-muted-blue dark:text-canvas-300 pt-2">
-              <span>종합부동산세 (12월)</span>
-              <span>{result.comprehensiveTax > 0 ? fmt(result.comprehensiveTax) + "원" : "—"}</span>
+              <span>
+                <a href="#holding-tax-detail" className="underline decoration-dotted underline-offset-2 hover:text-electric">
+                  종부세·농특세
+                </a>
+              </span>
+              <span>{result.totalNational > 0 ? fmt(result.totalNational) + "원" : "—"}</span>
             </div>
           </div>
         </div>
