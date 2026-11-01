@@ -37,7 +37,9 @@ import {
   AGREEMENT_2026,
   EMPLOYEES,
   LAST_UPDATED,
+  PROFIT_SCENARIOS,
   PS_HISTORY,
+  Q1_Q3_2026_PROFIT_TRIL,
   SOURCES,
 } from "./psData";
 
@@ -66,6 +68,10 @@ const STATUS_BADGE =
     : STATUS === "rejected"
       ? "🔔 2026 임단협 잠정합의 부결 — 재협상 중"
       : "🔔 2026-08-20 임단협 잠정합의 · 현금 40% + 자사주 60%";
+// 2026-11-01 B27 DATA-03: 3분기 실적(10/28 SK하이닉스 뉴스룸) 반영 시나리오 값 — psData PROFIT_SCENARIOS 단일 소스.
+// 아래 FAQ(접힌 <details>, 기본 높이 0)·HowTo(JSON-LD 전용)에만 긴 문장을 쓴다. 광고 위 화면 문구는 Client.tsx 칩·문단(더 짧게).
+const SCENARIO_CONSERVATIVE = PROFIT_SCENARIOS[1];
+const SCENARIO_RUNRATE = PROFIT_SCENARIOS[2];
 const STATUS_SENTENCE =
   STATUS === "ratified"
     ? "9월 9일 수정안(현금 50%+자사주 50%)이 9월 16일 조합원 총투표에서 가결(찬성 57.08%)돼 최종 타결됐습니다."
@@ -111,7 +117,7 @@ const FAQ_ITEMS = [
   {
     question: "2026년 SK하이닉스 PS는 1인당 얼마나 될까요?",
     answer:
-      "증권가의 2026년 영업이익 컨센서스 250조원이 실현되면 PS 재원은 그 10%인 25조원, 임직원 약 3만 5천 명 기준 1인 평균 세전 약 7억원으로 추정하는 보도가 있습니다. 현재 계산기는 현금 50% + 자사주 50%(이연분 포함) 가정으로 비교합니다. 실제 실적·개인 평가에 따라 크게 달라지는 추정치입니다.",
+      `증권가의 2026년 영업이익 컨센서스 250조원이 실현되면 PS 재원은 그 10%인 25조원, 임직원 약 3만 5천 명 기준 1인 평균 세전 약 7억원으로 추정하는 보도가 있습니다. 회사가 2026년 10월 28일 발표한 1~3분기 누적 영업이익은 ${Q1_Q3_2026_PROFIT_TRIL}조원(3분기 83조 3,338억원, SK하이닉스 뉴스룸)입니다. 계산기의 '${SCENARIO_CONSERVATIVE.label}' 시나리오(${SCENARIO_CONSERVATIVE.trillion}조원)는 4분기 영업이익을 0으로 둔 값이고, '${SCENARIO_RUNRATE.label}'(${SCENARIO_RUNRATE.trillion}조원)은 1~3분기 흐름이 4분기에도 이어진다고 가정한 값입니다. 같은 발표에서 회사는 자사주 20조원 매입을 결의했고, 그중 약 10조원은 임직원 보상용이라고 밝혔습니다. 현재 계산기는 현금 50% + 자사주 50%(이연분 포함) 가정으로 비교합니다. 실제 실적·개인 평가에 따라 크게 달라지는 추정치입니다.`,
   },
   {
     question: "2026년 상반기 PI는 확정됐나요?",
@@ -167,7 +173,7 @@ const FAQ_ITEMS = [
 const HOW_TO_STEPS = [
   {
     name: "영업이익 시나리오 선택",
-    text: "2025 실적(47.2조) / 보수(150조) / 상반기 연환산(196.4조) / 컨센서스(250조) 중 선택하거나 직접 입력합니다. 2026 상반기 실적만 98.2조원입니다.",
+    text: `${PROFIT_SCENARIOS.map((s) => `${s.label}(${s.trillion}조)`).join(" / ")} 중 선택하거나 직접 입력합니다. 2026년 1~3분기 누적 영업이익은 ${Q1_Q3_2026_PROFIT_TRIL}조원(10/28 회사 발표)입니다.`,
   },
   {
     name: "본인 연봉 입력",
