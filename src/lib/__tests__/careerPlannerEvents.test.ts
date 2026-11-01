@@ -1,0 +1,53 @@
+// 커리어 플래너 — 같은 해 이벤트 여러 개를 모두 적용 (2026-10-05 감사 code38-02)
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { describe, expect, it } from "vitest";
+import { runCareerSimulation, type CareerSimulationInput } from "@/lib/careerPlanner";
+
+const base: CareerSimulationInput = {
+  currentAge: 30,
+  simulationYears: 3,
+  initialSalary: 50_000_000,
+  initialAssets: 0,
+  baseSalaryIncreasePercent: 0,
+  inflationPercent: 0,
+  investmentReturnPercent: 0,
+  events: [],
+};
+
+describe("runCareerSimulation 같은 해 이벤트", () => {
+  it("승진 + 사이드 프로젝트가 같은 해면 둘 다 반영 (종전 뒤 이벤트가 앞 이벤트를 덮음)", () => {
+    const r = runCareerSimulation({
+      ...base,
+      events: [
+        { year: 1, type: "promotion", description: "승진", salaryIncreasePercent: 10 },
+        { year: 1, type: "side_project", description: "사이드", initialAnnualIncome: 6_000_000, growthRatePercent: 0 },
+      ],
+    });
+    expect(r[1].salary).toBeCloseTo(55_000_000, 0);
+    expect(r[1].sideIncome).toBe(6_000_000);
+    expect(r[1].eventDescription).toBe("승진 · 사이드");
+  });
+  it("이벤트 하나면 종전과 같다", () => {
+    const r = runCareerSimulation({ ...base, events: [{ year: 2, type: "job_change", description: "이직", newSalary: 70_000_000 }] });
+    expect(r[2].salary).toBe(70_000_000);
+    expect(r[2].eventDescription).toBe("이직");
+    expect(r[0].eventDescription).toBeUndefined();
+  });
+  it("같은 해 이벤트는 목록 순서대로 적용된다 — 이직 뒤 승진이면 새 연봉에 인상률이 붙는다", () => {
+    const r = runCareerSimulation({
+      ...base,
+      events: [
+        { year: 1, type: "job_change", description: "이직", newSalary: 60_000_000 },
+        { year: 1, type: "promotion", description: "승진", salaryIncreasePercent: 10 },
+      ],
+    });
+    expect(r[1].salary).toBe(66_000_000);
+    expect(r[1].eventDescription).toBe("이직 · 승진");
+  });
+  it("화면 안내문이 종전 동작(같은 연도는 마지막 이벤트만 반영)을 말하지 않는다", () => {
+    const page = readFileSync(resolve(process.cwd(), "src/app/pro/career-planner/page.tsx"), "utf8");
+    expect(page).not.toContain("마지막 이벤트만 계산에 반영");
+    expect(page).toContain("같은 연도에 이벤트를 여러 개 설정하면 목록 순서대로 모두 계산에 반영됩니다.");
+  });
+});

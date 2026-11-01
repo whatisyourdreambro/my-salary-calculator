@@ -255,7 +255,7 @@ export default function CareerPlannerPage() {
 
  <div className="bg-card p-6 rounded-xl border border-border">
  <h2 className="text-xl font-bold mb-4">커리어 이벤트</h2>
-  <p className="mb-4 text-xs text-muted-foreground">이벤트는 연도별로 하나씩 설정하세요. 같은 연도에 여러 개를 설정하면 목록의 마지막 이벤트만 계산에 반영됩니다.</p>
+  <p className="mb-4 text-xs text-muted-foreground">같은 연도에 이벤트를 여러 개 설정하면 목록 순서대로 모두 계산에 반영됩니다.</p>
  <div className="space-y-4 max-h-[40rem] overflow-y-auto pr-2">
  {inputs.events.map((event, index) => (
  <EventCard key={index} event={event} index={index} updateEvent={updateEvent} removeEvent={removeEvent} simulationYears={inputs.simulationYears} />

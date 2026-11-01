@@ -5,6 +5,7 @@ import {
 } from "@/lib/taxConstants2026";
 // 4대보험 요율은 현행 포인터 — 1/1 연도 전환 시 src/config/currentRates.ts 한 줄로 반영 (2026-09-25 N3)
 import { CURRENT_INSURANCE_RATES } from "@/config/currentRates";
+import { estimateAnnualIncomeTax2026 } from "@/lib/bonusTaxCalc";
 
 export type CountryCode = 'KR' | 'US' | 'JP' | 'SG' | 'UK';
 
@@ -85,9 +86,13 @@ export class GlobalTaxEngine {
 
  switch (country) {
  case 'KR':
- // Simplified KR Tax (2026) — 근로소득공제 반영해 과대계산 완화
- // Income Tax: 총급여 − 근로소득공제 → 2026 누진세율 6~45% (8구간)
- tax = calcKrProgressiveTax(localGross - earnedIncomeDeduction(localGross));
+ // KR 소득세 = 사이트 정본 연간 근사(estimateAnnualIncomeTax2026: 근로소득공제·본인 기본공제·4대보험 소득공제·
+ // 근로소득세액공제) + 지방소득세 10%. 2026-10-05 감사 code40-05·code11-06 정정: 종전에는 (총급여 − 근로소득공제)에
+ // 누진세율만 매겨 인적·보험료 공제와 근로소득세액공제가 빠졌고(6,000만원 5,827,500원 vs 정본 4,474,730원),
+ // 한국 세후가 사이트 연봉 계산기보다 약 135만원 낮게 나왔다.
+ tax =
+ estimateAnnualIncomeTax2026(localGross, CURRENT_INSURANCE_RATES) *
+ (1 + CURRENT_INSURANCE_RATES.LOCAL_INCOME_TAX_RATIO);
 
  // Social: 현행 요율 포인터 — 2026 기준 Pension 4.75% (월 659만 상한, 2026.7~) + Health 3.595% + 장기요양 + Employment 0.9%
  social = krSocialInsurance(localGross);

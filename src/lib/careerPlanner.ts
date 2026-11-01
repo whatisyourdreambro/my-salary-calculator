@@ -86,8 +86,10 @@ export function runCareerSimulation(
  let currentSideIncome = 0;
  let investedAssets = inputs.initialAssets;
 
- const eventsByYear = new Map<number, CareerEvent>();
- inputs.events.forEach(event => eventsByYear.set(event.year, event));
+ // 같은 해 이벤트를 모두 적용한다 — 종전 Map.set 은 같은 해 두 번째 이벤트가 첫 번째를 덮어 조용히 빠졌다
+ // (2026-10-05 감사 code38-02). 입력 순서대로 적용하고 설명은 ' · ' 로 잇는다.
+ const eventsByYear = new Map<number, CareerEvent[]>();
+ inputs.events.forEach(event => eventsByYear.set(event.year, [...(eventsByYear.get(event.year) ?? []), event]));
 
  for (let i = 0; i < inputs.simulationYears; i++) {
  const year = i + 1;
@@ -106,9 +108,8 @@ export function runCareerSimulation(
  }
 
  // Check for and apply career events
- if (eventsByYear.has(i)) {
- const event = eventsByYear.get(i)!;
- eventDescription = event.description;
+ for (const event of eventsByYear.get(i) ?? []) {
+ eventDescription = eventDescription ? `${eventDescription} · ${event.description}` : event.description;
  switch (event.type) {
  case "promotion":
  currentSalary *= (1 + event.salaryIncreasePercent / 100);
