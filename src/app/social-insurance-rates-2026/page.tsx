@@ -85,7 +85,7 @@ const INSURANCE_RATES = [
  },
  {
  name: "산재보험",
- totalRate: "업종별 (평균 1.4%)",
+ totalRate: "업종별 (평균 1.5%)",
  selfRate: "0%",
  companyRate: "100% (업종별 차등)",
  base: "보수월액",
