@@ -4,57 +4,10 @@ import { useMemo, useState } from "react";
 import Link from "@/components/AppLink";
 import { ArrowRight } from "lucide-react";
 import NumberInput from "@/components/NumberInput";
+import { calcHoldingTax2026 } from "@/lib/propertyHoldingTax2026";
 
-// 재산세 (주택분) — 1세대 1주택 특례 반영 (2026년 기준, 행안부·지방세법)
-// · 공정시장가액비율: 1세대1주택 43~45% 특례(공시 3억 이하 43% / 3~6억 44% /
-//   6억 초과 45% — 2026년 유지 확정), 그 외 일반 60%
-// · 특례세율: 1세대1주택 & 공시가 9억 이하 → 표준세율 대비 구간별 0.05%p 인하
-//   (지방세법 제111조의2, 2026년 납부분까지 연장)
-function calcPropertyTax(publishedValue: number, isSpecialOneHome: boolean): number {
-  const fairMarketRatio = isSpecialOneHome
-    ? publishedValue <= 300_000_000
-      ? 0.43
-      : publishedValue <= 600_000_000
-      ? 0.44
-      : 0.45
-    : 0.6;
-  const taxableBase = publishedValue * fairMarketRatio;
-
-  if (isSpecialOneHome && publishedValue <= 900_000_000) {
-    // 특례세율 0.05~0.35% (누진공제 3만/12만/42만원)
-    if (taxableBase <= 60_000_000) return taxableBase * 0.0005;
-    if (taxableBase <= 150_000_000) return 30_000 + (taxableBase - 60_000_000) * 0.001;
-    if (taxableBase <= 300_000_000) return 120_000 + (taxableBase - 150_000_000) * 0.002;
-    return 420_000 + (taxableBase - 300_000_000) * 0.0035;
-  }
-  // 표준세율 0.1~0.4% (누진공제 6만/19.5만/57만원)
-  if (taxableBase <= 60_000_000) return taxableBase * 0.001;
-  if (taxableBase <= 150_000_000) return 60_000 + (taxableBase - 60_000_000) * 0.0015;
-  if (taxableBase <= 300_000_000) return 195_000 + (taxableBase - 150_000_000) * 0.0025;
-  return 570_000 + (taxableBase - 300_000_000) * 0.004;
-}
-
-// 종합부동산세 (일반세율 기준)
-// 기본공제: 1세대 1주택 12억원, 그 외 인별 9억원 (2023년 개정 — 다주택자도 9억.
-// 이전 코드가 다주택 공제 0원으로 계산해 최대 12배 과대산출하던 것을 정정)
-function calcComprehensiveTax(
-  publishedValue: number,
-  isOnlyOneHome: boolean,
-  fairMarketRatio = 0.6
-): number {
-  const deduction = isOnlyOneHome ? 1_200_000_000 : 900_000_000;
-  const afterDeduction = Math.max(0, publishedValue - deduction);
-  const taxableBase = afterDeduction * fairMarketRatio;
-
-  if (taxableBase <= 0) return 0;
-  if (taxableBase <= 300_000_000) return taxableBase * 0.005;
-  if (taxableBase <= 600_000_000) return 1_500_000 + (taxableBase - 300_000_000) * 0.007;
-  if (taxableBase <= 1_200_000_000) return 3_600_000 + (taxableBase - 600_000_000) * 0.01;
-  if (taxableBase <= 2_500_000_000) return 9_600_000 + (taxableBase - 1_200_000_000) * 0.013;
-  if (taxableBase <= 5_000_000_000) return 26_500_000 + (taxableBase - 2_500_000_000) * 0.015;
-  if (taxableBase <= 9_400_000_000) return 64_000_000 + (taxableBase - 5_000_000_000) * 0.02;
-  return 152_000_000 + (taxableBase - 9_400_000_000) * 0.027;
-}
+// 계산은 src/lib/propertyHoldingTax2026.ts — 재산세는 주택별(지방세법 제113조 제2항), 종부세는 인별 합계.
+// 2주택 이상이면 입력값을 공시가격 합계로 보고 주택마다 같은 금액이라 보고 재산세를 집별로 계산한다 (2026-10-05 감사 code15-02).
 
 function fmt(n: number): string {
   return Math.round(n).toLocaleString("ko-KR");
@@ -65,15 +18,11 @@ export default function PropertyHoldingTaxClient() {
   const [numHomes, setNumHomes] = useState(1);
   const [isOnlyOneHome, setIsOnlyOneHome] = useState(true);
 
-  const result = useMemo(() => {
-    const special = isOnlyOneHome && numHomes === 1;
-    const propertyTax = calcPropertyTax(publishedValue, special);
-    const educationTax = propertyTax * 0.2; // 지방교육세 20%
-    const comprehensiveTax = calcComprehensiveTax(publishedValue, special);
-    const totalRegional = propertyTax + educationTax;
-    const total = totalRegional + comprehensiveTax;
-    return { propertyTax, educationTax, comprehensiveTax, totalRegional, total };
-  }, [publishedValue, numHomes, isOnlyOneHome]);
+  const result = useMemo(
+    () => calcHoldingTax2026(publishedValue, numHomes, isOnlyOneHome),
+    [publishedValue, numHomes, isOnlyOneHome]
+  );
+  const multi = numHomes >= 2;
 
   return (
     <section className="my-6">
@@ -84,7 +33,7 @@ export default function PropertyHoldingTaxClient() {
 
         <div className="mb-4">
           <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
-            주택 공시가격 (원)
+            {multi ? "공시가격 합계 (원)" : "주택 공시가격 (원)"}
           </label>
           <NumberInput
             type="number"
@@ -93,12 +42,15 @@ export default function PropertyHoldingTaxClient() {
             min={0}
             step={100_000_000}
             className="w-full px-4 py-3 rounded-xl border border-canvas-200 dark:border-canvas-700 bg-white dark:bg-canvas-800 text-navy dark:text-canvas-50 font-bold text-lg focus:outline-none focus:border-electric"
-            aria-label="주택 공시가격 (원)"
+            aria-label={multi ? "보유 주택 공시가격 합계 (원)" : "주택 공시가격 (원)"}
           />
           <p className="mt-2 text-xs text-faint-blue">
             {fmt(Math.floor(publishedValue / 100_000_000))}억{" "}
-            {fmt((publishedValue % 100_000_000) / 10000)}만원
-            (공시가격과 시세는 다릅니다. 실제 시세는 별도로 확인하세요)
+            {fmt((publishedValue % 100_000_000) / 10000)}만원{" "}
+            {/* {" "} 필수 — 줄바꿈 뒤 {식} 앞 공백은 JSX 가 지워 '만원(' 으로 붙는다. 기본 화면은 종전 '만원 (' 그대로 */}
+            {multi
+              ? "(주택마다 공시가격이 같다고 보고 재산세를 집별로 계산)"
+              : "(공시가격과 시세는 다릅니다. 실제 시세는 별도로 확인하세요)"}
           </p>
         </div>
 
@@ -117,9 +69,12 @@ export default function PropertyHoldingTaxClient() {
             aria-label="보유 주택 수"
           />
           <div className="flex justify-between text-xs text-faint-blue mt-1">
+            {/* 눈금 5개 = 슬라이더 값 1~5 (종전 3개 라벨이 justify-between 으로 퍼져 '2주택'이 값 3 위에 있었다) */}
             <span>1주택</span>
-            <span>2주택</span>
-            <span>3주택+</span>
+            <span>2</span>
+            <span>3</span>
+            <span>4</span>
+            <span>5주택</span>
           </div>
         </div>
 
