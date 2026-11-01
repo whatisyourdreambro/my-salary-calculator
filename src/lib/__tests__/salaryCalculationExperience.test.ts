@@ -185,9 +185,12 @@ describe("salary result user action lifecycle (offline hook/element fixture)", (
     expect(nodes(stale).find((node) => node.type === SalaryResultCard)?.props.stale).toBe(true);
     expect(textOf(cardTitle(stale))).toBe("이전 결과 · 다시 계산해 주세요");
     expect(cardTitle(stale)?.props.className).toContain("text-amber-700");
-    // Amber text now sits on the panel itself, so dark mode needs its own shade (amber-700 on the dark card is about 3.4:1).
+    // Explicit dark shade, as in the other text-amber-700 dark:text-amber-400 pairs (about 10:1 on the dark card).
+    // Without a dark: class the legacy literal-colour rule in globals.css would paint it #f5cf85 instead; both pass contrast.
     expect(cardTitle(stale)?.props.className).toContain("dark:text-amber-400");
     // Same elements in the same order above ResultAd and above the card's InArticleAd: no box is added on edit.
+    // This checks structure, not height: NextActions above ResultAd still switches to its generic copy while the
+    // result is stale (owner decision (c) left it as is), which can change its height by about one text line at some widths.
     expect(beforeResultAd(stale)).toEqual(freshBeforeResultAd);
     expect(beforeInArticleAd(stale)).toEqual(freshBeforeInArticleAd);
     expect(region(stale).findIndex((node) => node.type === SalaryResultCard))
