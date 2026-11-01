@@ -11,6 +11,7 @@ import {
   PI_2026,
   PI_SCENARIOS,
   PROFIT_SCENARIOS,
+  Q1_Q3_2026_PROFIT_TRIL,
   REFERENCE_SALARY,
 } from "./psData";
 import NumberInput from "@/components/NumberInput";
@@ -180,12 +181,14 @@ export default function SkHynixBonusClient() {
             className="w-full mt-1 p-3 rounded-lg border border-canvas-deep text-lg font-bold tabular-nums focus:outline-none focus:border-primary"
           />
         </label>
+        {/* 2026-11-01 B27 DATA-03: CalcResultAd 위 문단 — 꼬리 문장은 옛 '2026 상반기 실적만 98.2조원(Q1 37.6 + Q2 60.5)입니다.'
+            보다 짧은 문장으로만 바꾼다(1~3분기 누적, 10/28 SK하이닉스 뉴스룸 발표 — psData Q1_Q3_2026_PROFIT_TRIL). */}
         <p className="mt-3 text-xs text-faint leading-relaxed">
           연간 영업이익 × <strong>10%</strong> 풀 ÷ 직원{" "}
           {EMPLOYEES.toLocaleString()}명 ={" "}
           <strong className="text-primary">{fmtEok(calc.psAvgWon)}</strong> 1인
-          평균 PS (평균 연봉 1억 기준). 2026 상반기 실적만 98.2조원(Q1 37.6 +
-          Q2 60.5)입니다.
+          평균 PS (평균 연봉 1억 기준). 2026년 1~3분기 실적만{" "}
+          {Q1_Q3_2026_PROFIT_TRIL}조원(10/28 발표)입니다.
         </p>
       </section>
 
