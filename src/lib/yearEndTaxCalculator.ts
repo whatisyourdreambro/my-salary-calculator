@@ -115,6 +115,21 @@ export interface TaxResult {
   * true 면 위 단계별 값(과세표준·산출세액·세액공제)도 표준세액공제 방식의 값이다.
   */
  standardTaxCreditApplied: boolean;
+ /**
+  * 고른 방식(위 standardTaxCreditApplied)에 넣은 항목별 금액 — 계산기 상세 행 표시용 (2026-11-01 B23 CALC-01,
+  * /calc/january-bonus). 산출세액 한도를 적용하기 전 금액이고 원 단위 반올림을 하지 않는다(화면이 반올림).
+  * 추가 필드일 뿐이라 위 필드들의 값은 그대로다 (januaryBonus2026.test.ts 가 추가 전 엔진 값으로 대조).
+  */
+ breakdown: {
+ /** 신용카드 등 소득공제 (조특법 §126의2) — 두 방식 공통 */
+ cardDeduction: number;
+ /** 연금계좌 세액공제 (§59의3, 연금저축 600만·합산 900만원 한도) — 두 방식 공통 */
+ pensionAccountCredit: number;
+ /** 의료비 세액공제 (§59의4②) — 특별세액공제라 표준세액공제 방식을 고르면 0 */
+ medicalCredit: number;
+ /** 고향사랑기부금 세액공제 (조특법 §58) — 두 방식 공통 */
+ hometownCredit: number;
+ };
 }
 
 // 2026년 귀속 연말정산 계산 함수
@@ -294,6 +309,12 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  calculatedTax,
  taxCredit: calculatedTax - roundedDeterminedTax,
  standardTaxCreditApplied,
+ breakdown: {
+ cardDeduction,
+ pensionAccountCredit,
+ medicalCredit: standardTaxCreditApplied ? 0 : medicalCredit,
+ hometownCredit,
+ },
  };
 }
 

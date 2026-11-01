@@ -11,6 +11,7 @@ import { describe, expect, it, vi } from "vitest";
 import { MINIMUM_WAGE_2027 } from "@/config/minimumWage";
 import { calculateNetSalary2026 } from "@/lib/calculator";
 import { calculateNetSalary2027 } from "@/lib/generateData2027";
+import { PENSION_ACCOUNT_CREDIT_2026 } from "@/lib/taxConstants2026";
 
 vi.mock("@/components/AdPlacement", () => ({
   CalcResultAd: () => createElement("div", { "data-test-ad": "result" }),
@@ -84,9 +85,16 @@ describe("CALC-10 /calc/january-bonus — IRP 세액공제 소득세분 15%/12%"
   });
 
   it("소스에 지방세 포함 공제율(0.165/0.132)이 소득세 단계에 남아 있지 않다", () => {
+    // 2026-11-01 B23 CALC-01: 계산부가 연말정산 정본 엔진 어댑터 src/lib/januaryBonus2026.ts 로 옮겨졌다.
+    // IRP 행은 엔진 연금계좌 세액공제(PENSION_ACCOUNT_CREDIT_2026 — 총급여 5,500만원 이하 15%, 초과 12%,
+    // 소득세분)를 breakdown.pensionAccountCredit 로 그대로 보여준다.
     const src = read("src/app/calc/january-bonus/Client.tsx");
-    expect(src).toContain("salary > 55_000_000 ? 0.12 : 0.15");
+    const lib = read("src/lib/januaryBonus2026.ts");
+    expect(lib).toContain("r.breakdown.pensionAccountCredit");
+    expect(PENSION_ACCOUNT_CREDIT_2026.RATE_HIGH).toBe(0.15);
+    expect(PENSION_ACCOUNT_CREDIT_2026.RATE_LOW).toBe(0.12);
     expect(src).not.toMatch(/0\.165|0\.132/);
+    expect(lib).not.toMatch(/0\.165|0\.132/);
   });
 });
 
