@@ -75,12 +75,30 @@ describe("청약통장 소득공제 가이드 — 표·리드가 계산기 엔�
     expect(g.content).toContain("<tr><td>3,000만원</td><td>약 1,583만원</td><td>15% (근로소득세액공제 55% 구간)</td><td>81,000원</td><td>89,100원</td></tr>");
   });
 
-  it("표 설명은 '특별공제 방식 값' — '같은 엔진' 문장이 없고 원문보다 짧다", () => {
-    const after = "아래 표는 연말정산 계산기 엔진으로 낸 특별공제 방식 값입니다.";
+  // 11/1 통합 스윕 수리: R2 문장('… 엔진으로 낸 특별공제 방식 값입니다.')은 원문보다 2자 짧았지만 keep-all 단어 구성이 달라
+  // 320~322px 에서 한 줄이 늘어 InArticleAd 가 32px 내려갔다. 새 문장은 원문 단어 순서를 지키며 단어마다 원문 단어보다
+  // 넓지 않게(한글 글자 수·기호 이하) 고른 것이라, 줄바꿈이 단어 단위(keep-all)인 한 어느 폭에서도 줄이 늘 수 없다.
+  it("표 설명은 '특별공제 방식' — '같은 엔진' 문장이 없고, 원문 단어열 안에서만 줄인 문장이다", () => {
+    const before = "아래 표는 이 사이트 연말정산 계산기와 같은 엔진으로 계산했습니다.";
+    const after = "아래 표는 이 사이트 연말정산 계산기의 특별공제 방식입니다.";
     expect(g.content).not.toContain("같은 엔진");
     expect(text(g.content)).toContain(after);
-    expect(g.content).toContain('<a href="/year-end-tax">연말정산 계산기</a> 엔진으로 낸 특별공제 방식 값입니다.');
-    expectNotLonger("아래 표는 이 사이트 연말정산 계산기와 같은 엔진으로 계산했습니다.", after);
+    expect(g.content).toContain('아래 표는 이 사이트 <a href="/year-end-tax">연말정산 계산기</a>의 특별공제 방식입니다.');
+    expectNotLonger(before, after);
+    // 단어 단위 단조성: 새 단어 i 를 원문 단어 j(i) (j 증가)에 짝지을 때 한글 수·기타 글자 수가 모두 원문 단어 이하
+    const words = (s: string) => s.split(" ");
+    const fits = (w: string, v: string) => {
+      const a = counts(w);
+      const b = counts(v);
+      return a.hangul <= b.hangul && a.other <= b.other;
+    };
+    const b = words(before);
+    let j = 0;
+    for (const w of words(after)) {
+      while (j < b.length && !fits(w, b[j])) j++;
+      expect(j).toBeLessThan(b.length);
+      j++;
+    }
   });
 
   it("리드의 3,000만원은 계산기가 고르는 표준 방식 값(약 9만원)이 먼저 — 원문보다 짧다", () => {

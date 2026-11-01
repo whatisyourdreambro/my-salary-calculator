@@ -2674,7 +2674,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
-  "contentChars": 7129
+  "contentChars": 7127
  },
  {
   "slug": "internet-bank-savings-5percent-2026",
