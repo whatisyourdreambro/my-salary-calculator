@@ -36,9 +36,17 @@ export interface DividendTaxResult {
   incomeTax: number;
   /** 지방소득세 */
   localTax: number;
-  /** 소득세 + 지방소득세 */
+  /** 소득세 + 지방소득세 — 제62조 종합소득 산출세액 전체 (종합과세면 근로·사업 등 기타소득분 포함) */
   total: number;
-  /** 금융소득 대비 실효세율(%) */
+  /** 기타 종합소득만 있을 때의 산출세액 (분리과세로 종결되면 0 — 금융소득과 무관) */
+  otherIncomeTax: number;
+  /** 금융소득 때문에 늘어나는 소득세 = incomeTax − otherIncomeTax (분리과세면 14% 원천징수액) */
+  financialIncomeTax: number;
+  /** financialIncomeTax 의 지방소득세 (10%) */
+  financialLocalTax: number;
+  /** 금융소득 관련 세금 합계 = financialIncomeTax + financialLocalTax */
+  financialTotal: number;
+  /** 금융소득 대비 실효세율(%) = financialTotal / 금융소득 */
   effectiveRate: number;
 }
 
@@ -73,15 +81,26 @@ export function calcDividendTax(
 
   // 세액은 원 단위 정수로 반올림한다. 부동소수점 잔차(예: 3,080,000.0000000005)가
   // 그대로 노출되면 표시·검증 양쪽에서 문제가 된다 (stock-tax 등 기존 엔진과 동일 관례).
+  //
+  // 2026-10-05 감사 code20-02·code39-01 정정: 화면 머리 금액 '금융소득 관련 세금 합계' 와 '금융소득 대비 실효세율' 에
+  // total(제62조 산출세액 전체 — 근로·사업소득분 포함)을 써서, 금융소득이 2,000만원을 1원만 넘어도 기타소득 세금이
+  // 금융소득 세금처럼 더해졌다(기타 과세표준 5,000만원: 3,080,000원 → 9,944,000원, 실효세율 15.4% → 49.7%,
+  // 기타 1억이면 100% 초과). 이제 금융소득 몫은 '제62조 산출세액 − 기타소득만의 산출세액' 으로 따로 낸다.
+  // total 은 제62조 값 그대로 둔다(세액 계산 단계 표시용).
   const finish = (
     incomeTaxRaw: number,
     isComprehensive: boolean,
     methodARaw: number,
-    methodBRaw: number
+    methodBRaw: number,
+    otherIncomeTaxRaw: number
   ): DividendTaxResult => {
     const incomeTax = Math.round(incomeTaxRaw);
     const localTax = Math.round(incomeTax * LOCAL_TAX_RATE);
     const total = incomeTax + localTax;
+    const otherIncomeTax = Math.round(otherIncomeTaxRaw);
+    const financialIncomeTax = Math.max(0, incomeTax - otherIncomeTax);
+    const financialLocalTax = Math.round(financialIncomeTax * LOCAL_TAX_RATE);
+    const financialTotal = financialIncomeTax + financialLocalTax;
     return {
       financial,
       isComprehensive,
@@ -90,12 +109,16 @@ export function calcDividendTax(
       incomeTax,
       localTax,
       total,
-      effectiveRate: financial > 0 ? (total / financial) * 100 : 0,
+      otherIncomeTax,
+      financialIncomeTax,
+      financialLocalTax,
+      financialTotal,
+      effectiveRate: financial > 0 ? (financialTotal / financial) * 100 : 0,
     };
   };
 
   if (financial <= FINANCIAL_INCOME_THRESHOLD) {
-    return finish(financial * WITHHOLDING_RATE, false, 0, 0);
+    return finish(financial * WITHHOLDING_RATE, false, 0, 0, 0);
   }
 
   const excess = financial - FINANCIAL_INCOME_THRESHOLD;
@@ -103,5 +126,5 @@ export function calcDividendTax(
     progressiveTax(excess + other) + FINANCIAL_INCOME_THRESHOLD * WITHHOLDING_RATE;
   const methodB = financial * WITHHOLDING_RATE + progressiveTax(other);
 
-  return finish(Math.max(methodA, methodB), true, methodA, methodB);
+  return finish(Math.max(methodA, methodB), true, methodA, methodB, progressiveTax(other));
 }

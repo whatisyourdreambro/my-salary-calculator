@@ -26,12 +26,17 @@ export default function DividendTaxPage() {
           { label: "2) 분리과세 상당 산출세액", value: r.methodB },
         ]
       : []),
+    // 종합과세면 1)·2) 는 기타소득분까지 포함한 제62조 산출세액이고, 아래 세 행은 그중 금융소득 몫
+    // (큰 금액 − 기타소득만의 산출세액). 2026-10-05 감사 code20-02·code39-01 — 종전에는 기타소득분까지
+    // '금융소득 관련 세금' 으로 표시해 2,000만원 경계에서 세금·실효세율이 몇 배로 튀었다.
+    // 라벨은 종전 '소득세 (두 방식 중 큰 금액)' 보다 짧게 — 이 행은 CalcResultAd 위라 라벨이 길면
+    // 327~352px 에서 행이 두 줄로 늘어 광고가 밀린다(정적 글꼴 모델, 2026-11-01 PKG-14).
     {
-      label: r.isComprehensive ? "소득세 (두 방식 중 큰 금액)" : "소득세 (14%)",
-      value: r.incomeTax,
+      label: r.isComprehensive ? "소득세 (기타소득분 제외)" : "소득세 (14%)",
+      value: r.financialIncomeTax,
     },
-    { label: "지방소득세 (소득세의 10%)", value: r.localTax },
-    { label: "세금 합계", value: r.total, main: true },
+    { label: "지방소득세 (소득세의 10%)", value: r.financialLocalTax },
+    { label: "세금 합계", value: r.financialTotal, main: true },
   ];
 
   return (
@@ -107,7 +112,7 @@ export default function DividendTaxPage() {
               금융소득 관련 세금 합계
             </p>
             <p className="text-5xl font-black text-navy tracking-tight">
-              {fmt(r.total)}
+              {fmt(r.financialTotal)}
               <span className="text-2xl ml-1">원</span>
             </p>
             <p className="text-navy/70 text-sm mt-2">

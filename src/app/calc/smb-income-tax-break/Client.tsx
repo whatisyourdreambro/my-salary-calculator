@@ -5,8 +5,8 @@ import { CalcResultAd } from "@/components/AdPlacement";
 import {
   computeSmbTaxBreak,
   youthAdjustedAge,
+  youthAgeVerdict,
   YOUTH_MAX_AGE,
-  YOUTH_MIN_AGE,
   type SmbBreakType,
 } from "@/lib/smbTaxBreak";
 import NumberInput from "@/components/NumberInput";
@@ -36,13 +36,17 @@ export default function SmbTaxBreakClient() {
   );
 
   const adjAge = youthAdjustedAge(parseInput(age), parseInput(militaryMonths));
-  const youthOk = adjAge >= YOUTH_MIN_AGE && adjAge <= YOUTH_MAX_AGE;
+  // 환산 34~35세 구간은 생일에 따라 충족 가능 — 일률 '미충족' 이 아니다 (2026-10-05 감사 code7-02)
+  const youthVerdict = youthAgeVerdict(parseInput(age), parseInput(militaryMonths));
+  const youthOk = youthVerdict === "eligible";
 
   const rows = [
     {
       label: "근로소득 산출세액",
       value: `${fmt(r.calculatedTax)}원`,
-      sub: `과세표준 ${fmt(r.taxBase)}원 × 누진세율 (소득세법 55조)`,
+      // 괄호 앞 공백 없음 — 기본값(연봉 3,000만) 과세표준 숫자가 code7-03 수정으로 넓어져 399·741~743px 에서
+      // 줄이 늘던 것을 막는다 (광고 위 높이 변화 0 이하, 2026-10-06 실측)
+      sub: `과세표준 ${fmt(r.taxBase)}원 × 누진세율(소득세법 55조)`,
     },
     {
       label: `감면세액 (${Math.round(r.rate * 100)}%)`,
@@ -173,10 +177,12 @@ export default function SmbTaxBreakClient() {
                 </div>
               </div>
             </div>
-            <p className={`mt-3 text-sm font-bold ${youthOk ? "text-electric" : "text-red-500"}`}>
+            <p className={`mt-3 text-sm font-bold ${youthOk ? "text-electric" : youthVerdict === "birthday" ? "text-amber-600 dark:text-amber-400" : "text-red-500"}`}>
               {parseInput(age) > 0
                 ? youthOk
                   ? `병역 차감 후 환산 ${adjAge % 1 === 0 ? adjAge : adjAge.toFixed(1)}세 — 청년 연령 요건 충족`
+                  : youthVerdict === "birthday"
+                  ? `병역 차감 후 환산 ${adjAge.toFixed(1)}세 — 생일에 따라 충족 가능 (근로계약일 현재 만 나이를 생년월일로 확인)`
                   : `병역 차감 후 환산 ${adjAge % 1 === 0 ? adjAge : adjAge.toFixed(1)}세 — 만 ${YOUTH_MAX_AGE}세 초과로 청년 요건 미충족 (60세 이상·장애인·경력단절여성 해당 여부 확인)`
                 : "만 나이를 입력하면 연령 요건을 판정합니다"}
             </p>
@@ -213,10 +219,12 @@ export default function SmbTaxBreakClient() {
       {/* 결과 직하 광고 */}
       <CalcResultAd />
 
+      {/* 이 안내문은 본문 InArticleAd 위 — 글자를 늘리지 않는다. 4대보험료 소득공제 그대로면 종전보다 숫자 1자가
+          길어져 326~331px 에서 한 줄이 늘어(정적 글꼴 모델) 4대보험료 공제 로 줄였다 (2026-11-01 PKG-14) */}
       <p className="text-[11px] text-faint-blue leading-relaxed">
         근사 계산 안내: 급여 전액이 감면대상 중소기업 근로 제공분이라 가정하고, 공제는
-        기본 인적공제(1인 150만원)와 국민연금 연금보험료공제만 반영했습니다. 신용카드·
-        월세·보험료·의료비·자녀세액공제 등 개인별 공제는 미반영이므로 실제 결정세액과
+        기본 인적공제(1인 150만원)와 4대보험료 공제만 반영했습니다. 신용카드·
+        월세·보장성보험료·의료비·자녀세액공제 등 개인별 공제는 미반영이므로 실제 결정세액과
         차이가 날 수 있습니다(감면-세액공제 연동 축소는 반영). 감면기간 총액은 연봉이
         기간 내 동일하다는 가정의 추정치입니다.
       </p>

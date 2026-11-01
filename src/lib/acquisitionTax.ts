@@ -35,9 +35,14 @@ export function calcAcquisitionTax(price: number, isFirst: boolean, type: "apt" 
  const localEdu = isHeavyHousing
  ? Math.round(price * 0.004)
  : Math.round(tax * 0.1); // 지방교육세
- // 농어촌특별세: 전용면적 85㎡ 초과 주택만 부과 (85㎡ 이하 면제)
+ // 농어촌특별세 = 표준세율을 2%로 적용한 취득세액 x 10% (농어촌특별세법 제5조 제1항 제6호) = 취득가 x 0.2%.
+ // 주택은 전용 85㎡ 이하(서민주택) 면제(같은 법 제4조), 중과 주택은 0.6%. 토지는 85㎡ 기준과 무관하게 0.2%.
+ // 2026-10-05 감사 code20-01·code37-04 정정: 종전에는 토지도 0원이라 합계가 4.6% 가 아닌 4.4% 였다
+ // (5억 토지 2,200만 → 2,300만). 자경농민 농지 감면(지방세특례제한법 제6조)은 모델링하지 않는다.
  const agriSpecial =
- (type === "apt" || type === "single") && isOver85
+ type === "land"
+ ? Math.round(price * 0.002)
+ : isOver85
  ? Math.round(price * (isHeavyHousing ? 0.006 : 0.002))
  : 0;
  const total = tax + localEdu + agriSpecial;

@@ -6,8 +6,12 @@
 //   src/lib/calculator.ts 의 근로소득 산출세액 흐름과 동일하게, 단일 진실 소스
 //   taxConstants2026 의 earnedIncomeDeduction2026(근로소득공제) → 과세표준 →
 //   calcIncomeTax2026(산출세액) → earnedIncomeTaxCredit2026(근로소득세액공제)를
-//   호출한다. 연금보험료공제도 동일 정본 상수(INSURANCE_RATES_2026·
-//   PENSION_BASE_2026, 2026-07 상·하한)로 산출한다.
+//   호출한다. 4대보험료 소득공제(국민연금 §51의3 + 건강·장기요양·고용 §52①)도 동일 정본
+//   상수(INSURANCE_RATES_2026·PENSION_BASE_2026, 2026-07 상·하한)로, 연말정산 엔진
+//   yearEndTaxCalculator.deriveAnnualSocialInsurance2026 과 같은 산식(원 단위 반올림)으로 산출한다.
+//   그 함수를 직접 import 하지 않는 이유: 이 파일은 withholdingTaxTable2026 → calculator.ts 를
+//   통해 홈·계산기 번들에 실리고, yearEndTaxCalculator 는 withholdingTaxTable2026 을 import 해
+//   순환 참조가 된다. 두 산식의 일치는 smeYouthParity.test.ts 가 원 단위로 고정한다.
 //   ★ 2026 요율 고정 (2026-09-25 N3): 이 계산기와 본문 검산 예시는 '2026년 귀속' 기준이라
 //   1/1 현행 요율 포인터(src/config/currentRates.ts)를 따르지 않는다. 2027 귀속 전환은
 //   조특법 §30 일몰 연장 여부(12월 세법개정)와 함께 본문 예시·이 상수를 한 번에 바꾼다.
@@ -22,9 +26,11 @@
 //   ★이 축소를 반영하지 않으면 홈택스·연말정산 결과와 불일치한다.
 //
 // 근사 단순화(결과 화면에 명시): 급여 전액이 감면대상 중소기업 근로 제공분이라고
-// 가정하고, 소득·세액공제는 기본 인적공제와 국민연금 연금보험료공제만 반영한다
-// (신용카드·월세·보험료·의료비·자녀세액공제 등 미반영). 감면기간 총액은 연봉이
-// 기간 내 동일하다는 가정의 추정치다.
+// 가정하고, 소득·세액공제는 기본 인적공제와 4대보험료 소득공제(국민연금·건강·장기요양·
+// 고용)만 반영한다 (신용카드·월세·보장성보험료·의료비·자녀세액공제 등 미반영). 감면기간
+// 총액은 연봉이 기간 내 동일하다는 가정의 추정치다.
+// 2026-10-06 감사 code7-03: 종전에는 건강·장기요양·고용보험료 공제(소득세법 §52①)가 빠져
+// 과세표준·산출세액이 커지고 절감액이 과대했다(연봉 3,000만 연 606,004원 → 496,830원, +22%).
 
 import {
   INSURANCE_RATES_2026,
@@ -65,6 +71,24 @@ export function youthAdjustedAge(ageYears: number, militaryMonths: number): numb
   return ageYears - deductYears;
 }
 
+/**
+ * 청년 연령 판정 — 입력 만 나이(정수)와 병역 개월 수로.
+ * 실제 만 나이는 N 이상 N+1 미만이라, 환산 연령(N − 병역 개월/12)이 34 초과 35 미만이면 생일에 따라
+ * 근로계약일 기준 '만 34세 이하' 일 수도 아닐 수도 있다. 종전에는 이 구간을 일률 '미충족' 으로 표시했다
+ * (2026-10-05 감사 code7-02 — 예: 만 36세·병역 21개월은 생일에 따라 충족 가능). '충족' 판정은 바뀌지 않는다.
+ * @returns eligible 충족 / birthday 생일에 따라 충족 가능 / ineligible 미충족
+ */
+export function youthAgeVerdict(
+  ageYears: number,
+  militaryMonths: number
+): "eligible" | "birthday" | "ineligible" {
+  const adj = youthAdjustedAge(ageYears, militaryMonths);
+  if (adj < YOUTH_MIN_AGE) return "ineligible";
+  if (adj <= YOUTH_MAX_AGE) return "eligible";
+  if (adj < YOUTH_MAX_AGE + 1) return "birthday";
+  return "ineligible";
+}
+
 export interface SmbTaxBreakInput {
   /** 연봉 — 총급여 기준 (비과세 급여 제외, 원) */
   annualSalary: number;
@@ -77,7 +101,11 @@ export interface SmbTaxBreakInput {
 export interface SmbTaxBreakResult {
   /** 근로소득공제 (소득세법 §47) */
   earnedIncomeDeduction: number;
-  /** 과세표준 (총급여 − 근로소득공제 − 인적공제 − 연금보험료공제) */
+  /** 연금보험료공제 — 국민연금 근로자 부담분 (소득세법 §51의3) */
+  pensionDeduction: number;
+  /** 보험료공제 — 건강·장기요양·고용보험료 근로자 부담분 (소득세법 §52①) */
+  insurancePremiumDeduction: number;
+  /** 과세표준 (총급여 − 근로소득공제 − 인적공제 − 연금보험료공제 − 건강·장기요양·고용보험료공제) */
   taxBase: number;
   /** 근로소득 산출세액 (소득세법 §55 누진세율) */
   calculatedTax: number;
@@ -163,11 +191,22 @@ export function computeSmbTaxBreak(input: SmbTaxBreakInput): SmbTaxBreakResult {
     Math.max(monthly, PENSION_BASE_2026.MIN_MONTHLY),
     PENSION_BASE_2026.MAX_MONTHLY
   );
+  // 4대보험료 소득공제 — 연말정산 엔진 deriveAnnualSocialInsurance2026 과 같은 산식·반올림
+  //   연금보험료공제(§51의3): 기준소득월액(상·하한) × 4.75% × 12
+  //   보험료공제(§52①): 건강보험료 + 장기요양보험료(건보료 × 13.14%) + 고용보험료 — 전액 공제
   const pensionDeduction =
-    annual > 0 ? pensionBase * INSURANCE_RATES_2026.NATIONAL_PENSION * 12 : 0;
+    annual > 0 ? Math.round(pensionBase * INSURANCE_RATES_2026.NATIONAL_PENSION * 12) : 0;
+  const healthPremium = annual * INSURANCE_RATES_2026.HEALTH_INSURANCE;
+  const insurancePremiumDeduction =
+    Math.round(healthPremium + healthPremium * INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO) +
+    Math.round(annual * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE);
   const taxBase = Math.max(
     0,
-    annual - earnedIncomeDeduction - personalDeduction - pensionDeduction
+    annual -
+      earnedIncomeDeduction -
+      personalDeduction -
+      pensionDeduction -
+      insurancePremiumDeduction
   );
   const calculatedTax = calcIncomeTax2026(taxBase);
 
@@ -194,6 +233,8 @@ export function computeSmbTaxBreak(input: SmbTaxBreakInput): SmbTaxBreakResult {
 
   return {
     earnedIncomeDeduction: Math.round(earnedIncomeDeduction),
+    pensionDeduction,
+    insurancePremiumDeduction,
     taxBase: Math.round(taxBase),
     calculatedTax: Math.round(calculatedTax),
     reduction,

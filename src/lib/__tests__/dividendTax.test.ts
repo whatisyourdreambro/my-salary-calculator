@@ -141,3 +141,64 @@ describe("calcDividendTax — 입력 방어", () => {
     expect(r.total).toBe(1_540_000);
   });
 });
+
+// 2026-10-05 감사 code20-02·code39-01 — 화면 머리 금액·실효세율은 금융소득 몫(제62조 산출세액 − 기타소득만의 산출세액)
+describe("calcDividendTax — 금융소득 몫 (화면 머리 금액)", () => {
+  it("2,000만원 경계에서 금융소득 몫이 튀지 않는다 (기타 과세표준 5,000만원)", () => {
+    const at = calcDividendTax(0, 20_000_000, 50_000_000);
+    const over = calcDividendTax(0, 20_000_001, 50_000_000);
+    expect(at.financialTotal).toBe(3_080_000);
+    // 종전 화면값 9,944,000원(49.7%) — 제62조 전체 total 은 그대로 남아 있다
+    expect(over.total).toBe(9_944_000);
+    expect(over.financialTotal).toBeGreaterThanOrEqual(3_080_000);
+    expect(over.financialTotal).toBeLessThan(3_080_100);
+    expect(over.effectiveRate).toBeCloseTo(15.4, 1);
+  });
+  it("감사 재계산값 — 배당 2,500만·기타 5,000만 → 금융소득 몫 4,400,000원(17.6%)", () => {
+    const r = calcDividendTax(0, 25_000_000, 50_000_000);
+    expect(r.total).toBe(11_264_000);
+    expect(r.otherIncomeTax).toBe(6_240_000);
+    expect(r.financialIncomeTax).toBe(4_000_000);
+    expect(r.financialTotal).toBe(4_400_000);
+    expect(r.effectiveRate).toBeCloseTo(17.6, 6);
+  });
+  it("실효세율은 어떤 입력에서도 100%를 넘지 않는다 (종전 기타 1억·배당 2,500만 106%)", () => {
+    for (const [fin, other] of [
+      [25_000_000, 100_000_000],
+      [20_000_001, 300_000_000],
+      [50_000_000, 100_000_000],
+      [500_000_000, 1_000_000_000],
+    ] as const) {
+      const r = calcDividendTax(0, fin, other);
+      expect(r.effectiveRate).toBeLessThan(50);
+      expect(r.financialTotal).toBeGreaterThanOrEqual(Math.floor(fin * 0.154) - 1);
+      expect(r.financialIncomeTax + r.otherIncomeTax).toBe(r.incomeTax);
+    }
+  });
+  it("분리과세 구간은 종전과 같다 — 금융소득 몫 = 전체", () => {
+    const r = calcDividendTax(0, 15_000_000, 200_000_000);
+    expect(r.financialTotal).toBe(r.total);
+    expect(r.otherIncomeTax).toBe(0);
+  });
+  it("페이지 머리 금액·세금 합계 행은 금융소득 몫을 쓴다", async () => {
+    const { readFileSync } = await import("node:fs");
+    const { resolve } = await import("node:path");
+    const page = readFileSync(resolve(process.cwd(), "src/app/tools/finance/dividend-tax/page.tsx"), "utf8");
+    expect(page).toContain("{fmt(r.financialTotal)}");
+    expect(page).toContain('{ label: "세금 합계", value: r.financialTotal, main: true }');
+    expect(page).not.toContain("{fmt(r.total)}");
+  });
+  it("종합과세 소득세 행 라벨은 종전 라벨보다 짧다 (CalcResultAd 위 행 줄바꿈 방지)", async () => {
+    const { readFileSync } = await import("node:fs");
+    const { resolve } = await import("node:path");
+    const page = readFileSync(resolve(process.cwd(), "src/app/tools/finance/dividend-tax/page.tsx"), "utf8");
+    const before = "소득세 (두 방식 중 큰 금액)";
+    const after = "소득세 (기타소득분 제외)";
+    expect(page).toContain(`label: r.isComprehensive ? "${after}" : "소득세 (14%)"`);
+    expect(page).not.toContain(`"${before}"`);
+    const hangul = (s: string) => [...s].filter((c) => /[가-힣]/.test(c)).length;
+    const other = (s: string) => [...s].filter((c) => !/[가-힣]/.test(c)).length;
+    expect(hangul(after)).toBeLessThanOrEqual(hangul(before));
+    expect(other(after)).toBeLessThan(other(before));
+  });
+});

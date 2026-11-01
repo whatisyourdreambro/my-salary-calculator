@@ -45,3 +45,38 @@ describe("calcAcquisitionTax — 1주택·아파트·85㎡ 이하 고정값", ()
     expect(page).not.toMatch(/function calcAcquisitionTax\(/);
   });
 });
+
+// 2026-10-05 감사 code20-01·code37-04 — 토지 농어촌특별세 0.2% (농어촌특별세법 제5조 제1항 제6호: 표준세율을 2%로
+// 적용한 취득세액의 10%. 85㎡ 이하 면제는 서민주택에만 — 같은 법 제4조). 토지 합계 4.6% = 4% + 교육세 0.4% + 농특세 0.2%.
+describe("calcAcquisitionTax — 토지 농특세", () => {
+  it("5억 토지: 2,000만 + 200만 + 100만 = 2,300만 (종전 2,200만)", () => {
+    for (const isOver85 of [false, true]) {
+      for (const isFirst of [true, false]) {
+        const r = calcAcquisitionTax(500_000_000, isFirst, "land", isOver85);
+        expect(r.tax).toBe(20_000_000);
+        expect(r.localEdu).toBe(2_000_000);
+        expect(r.agriSpecial).toBe(1_000_000);
+        expect(r.total).toBe(23_000_000);
+      }
+    }
+  });
+  it("주택은 종전대로 — 85㎡ 이하 0, 초과 0.2%·중과 0.6%", () => {
+    expect(calcAcquisitionTax(500_000_000, true, "single", false).agriSpecial).toBe(0);
+    expect(calcAcquisitionTax(500_000_000, true, "single", true).agriSpecial).toBe(1_000_000);
+    expect(calcAcquisitionTax(1_000_000_000, false, "apt", true).agriSpecial).toBe(6_000_000);
+  });
+  it("결과 라벨·안내문 — 토지는 면적과 무관하게 0.2%, 안내문 글자 수 원문 이하", () => {
+    const page = readFileSync(resolve(process.cwd(), "src/app/tools/real-estate/acquisition-tax/page.tsx"), "utf8");
+    expect(page).toContain('propType === "land"\n ? "농어촌특별세 (0.2%)"'.replace(/\n/g, page.includes("\r\n") ? "\r\n" : "\n"));
+    const before = "농어촌특별세는 전용면적 85㎡ 초과 주택에만 부과되며 85㎡ 이하는 면제됩니다.";
+    const after = "농어촌특별세는 토지와 85㎡ 초과 주택에만 부과되며 85㎡ 이하는 면제됩니다.";
+    expect(page).toContain(after);
+    const hangul = (s: string) => [...s].filter((c) => /[가-힣]/.test(c)).length;
+    const other = (s: string) => [...s].filter((c) => !/[가-힣]/.test(c)).length;
+    expect(hangul(after)).toBeLessThanOrEqual(hangul(before));
+    expect(other(after)).toBeLessThanOrEqual(other(before));
+    const content = readFileSync(resolve(process.cwd(), "src/lib/toolContent.ts"), "utf8");
+    expect(content).toContain("그리고 토지와 85㎡ 초과 주택에는 농어촌특별세 0.2%가 더해지며");
+    expect(content).toContain("토지는 면적과 관계없이 취득가액의 0.2%");
+  });
+});
