@@ -6,15 +6,15 @@ import Link from "@/components/AppLink";
 import { CIVIL_PAY_DESTINATION, isCivilPaySelection, writeCivilPayHandoff, type CivilPaySelection } from "@/lib/civilPayHandoff";
 import { trackCivilPayHandoff } from "@/lib/civilPayHandoffTracking";
 
-export default function CivilPayHandoffButton({ selection, gradeLabel, children }: {
-  selection: CivilPaySelection; gradeLabel: string; children: ReactNode;
+export default function CivilPayHandoffButton({ selection, gradeLabel, amountLabel, children }: {
+  selection: CivilPaySelection; gradeLabel: string; amountLabel: string; children: ReactNode;
 }) {
   const pathname = usePathname();
   const router = useRouter();
   const [failed, setFailed] = useState(false);
   return <>
     <button type="button"
-      aria-label={`2026년 ${gradeLabel} ${selection.step}호봉 조건으로 실수령액 계산`}
+      aria-label={`${amountLabel}원, 2026년 ${gradeLabel} ${selection.step}호봉 조건으로 실수령액 계산`}
       title="이 계급·호봉으로 실수령액 계산"
       className="min-h-11 min-w-11 rounded px-1 font-bold text-electric underline decoration-electric/30 underline-offset-4 hover:decoration-electric focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-electric"
       onClick={event => {

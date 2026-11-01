@@ -23,7 +23,25 @@ describe("bounded input moderation", () => {
   ])("allows ordinary criticism, reports, and financial words: %#", value => {
     expect(contentIssue(value)).toBeNull();
   });
+  it.each([
+    "조정", "연봉 조정 관련 문의입니다", "임금 조정률이 틀렸어요", "조직 개편 후 연봉 정보가 달라요", "구조조정 이후 성과급 계산",
+    "제휴 조건 조정 문의드립니다", "광고 단가 조정 제안드립니다", "보조지원금 기준", "조절·조작·조짐", "조종사 연봉",
+    "작년 공시 발표 기준과 다릅니다", "최저임금 고시 발표 내용과 달라요", "원천징수영수증 다시 발급 받았는데 금액이 달라요",
+    "즉시 발송 부탁드립니다", "오류 표시 발생합니다", "표시 바랍니다", "공시·발표 자료", "다시 발급",
+    "화면이 꺼져요", "계산 중에 앱이 자꾸 꺼져서 결과를 못 봤어요", "닥쳐올 연말정산", "질병 신고", "질병신고 관련 설명", "성과급 1조 지급", "몇 조 정도", "김씨 발언",
+  ])("does not match across syllable or word boundaries in ordinary text: %#", value => {
+    expect(contentIssue(value)).toBeNull();
+    expect(contentIssue(value, "opinion")).toBeNull();
+  });
+  it.each([
+    "좆", "ㅈㅗㅈ", "조ㅈ", "ㅅ.ㅣ.ㅂ.ㅏ.ㄹ", "씨 발", "아 씨.발", "이 병신아", "개새끼야", "병신같은 계산기",
+    "꺼져", "꺼져!", "그냥 꺼져", "꺼져라", "닥쳐", "닥쳐라", "죽여버린다", "죽여버림", "죽여 버린다",
+  ])("still blocks whole-syllable, spaced-token and standalone imperative forms: %#", value => {
+    expect(contentIssue(value)).toBe("CONTENT_NOT_ALLOWED");
+    expect(contentIssue(value, "opinion")).toBe("CONTENT_NOT_ALLOWED");
+  });
   it("does not let an allowed span exempt another blocked expression", () => {
+    expect(contentIssue("질병신고 설명 병신")).toBe("CONTENT_NOT_ALLOWED");
     expect(contentIssue("시발점 설명 씨발")).toBe("CONTENT_NOT_ALLOWED");
     expect(contentIssue("시발점 설명 ㅅㅂ")).toBe("CONTENT_NOT_ALLOWED");
     expect(contentIssue("보험 설명 f.u.c.k")).toBe("CONTENT_NOT_ALLOWED");

@@ -90,7 +90,7 @@ describe("private opinion moderation, receipts and storage", () => {
     expect(result.headers.get("cache-control")).toBe("private, no-store");
     const statements = vi.mocked(db.batch).mock.calls.find(([items]) => items.length === 4)![0] as Statement[];
     expect(statements.map(item => item.sql)).toEqual(Object.values(OPINION_SQL));
-    expect(statements[1].values).toEqual([id, expect.stringMatching(/^[a-f0-9]{64}$/), input.target, input.body, input.contractVersion, "ko-input-v3", seconds, seconds + OPINION_RETENTION_SECONDS]);
+    expect(statements[1].values).toEqual([id, expect.stringMatching(/^[a-f0-9]{64}$/), input.target, input.body, input.contractVersion, "ko-input-v4", seconds, seconds + OPINION_RETENTION_SECONDS]);
     expect(JSON.stringify(statements)).not.toContain("192.0.2.1");
     const again = await handleOpinionPost(request({ ...input, body: ` ${input.body} ` }), bindings, now);
     expect(again.status).toBe(200);

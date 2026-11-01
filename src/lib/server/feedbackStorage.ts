@@ -52,7 +52,26 @@ export async function feedbackRateKey(secret: string, ip: string, windowStart: n
   const key = await crypto.subtle.importKey(
     "raw", encoder.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"],
   );
-  return hex(await crypto.subtle.sign("HMAC", key, encoder.encode(`${scope}\0${windowStart}\0${ip}`)));
+  return hex(await crypto.subtle.sign("HMAC", key, encoder.encode(`${scope}\0${windowStart}\0${rateLimitSubject(ip)}`)));
+}
+
+/**
+ * One IPv6 subscriber usually controls a whole /64, so rotating the interface ID
+ * must not open a fresh bucket (SEC-07). IPv4 and IPv4-mapped addresses stay exact.
+ */
+export function rateLimitSubject(ip: string): string {
+  const host = ip.replace(/^\[|\]$/g, "").toLowerCase();
+  if (!host.includes(":")) return host;
+  const [head, tail = ""] = host.split("::");
+  const left = head ? head.split(":") : [];
+  const right = tail ? tail.split(":") : [];
+  const groups = host.includes("::") ? [...left, ...Array(Math.max(0, 8 - left.length - right.length)).fill("0"), ...right] : left;
+  if (groups.length !== 8 || !groups.every(group => /^[a-f\d]{1,4}$/.test(group))) return host;
+  const words = groups.map(group => parseInt(group, 16));
+  if (words.slice(0, 5).every(word => word === 0) && words[5] === 0xffff) {
+    return [words[6] >> 8, words[6] & 255, words[7] >> 8, words[7] & 255].join(".");
+  }
+  return `${words.slice(0, 4).map(word => word.toString(16)).join(":")}::/64`;
 }
 
 /** Trust only the header Cloudflare supplies; never use X-Forwarded-For. */
