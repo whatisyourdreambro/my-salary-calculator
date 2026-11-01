@@ -2,50 +2,8 @@
 
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
-import { earnedIncomeTaxCredit2026 } from "@/lib/taxConstants2026";
 import NumberInput from "@/components/NumberInput";
-
-const TAX_BRACKETS = [
-  { limit: 14_000_000, rate: 0.06, deduction: 0 },
-  { limit: 50_000_000, rate: 0.15, deduction: 1_260_000 },
-  { limit: 88_000_000, rate: 0.24, deduction: 5_760_000 },
-  { limit: 150_000_000, rate: 0.35, deduction: 15_440_000 },
-  { limit: 300_000_000, rate: 0.38, deduction: 19_940_000 },
-  { limit: 500_000_000, rate: 0.40, deduction: 25_940_000 },
-  { limit: 1_000_000_000, rate: 0.42, deduction: 35_940_000 },
-  { limit: Infinity, rate: 0.45, deduction: 65_940_000 },
-];
-
-function calcEmpDeduction(total: number): number {
-  if (total <= 5_000_000) return total * 0.7;
-  if (total <= 15_000_000) return 3_500_000 + (total - 5_000_000) * 0.4;
-  if (total <= 45_000_000) return 7_500_000 + (total - 15_000_000) * 0.15;
-  if (total <= 100_000_000) return 12_000_000 + (total - 45_000_000) * 0.05;
-  return Math.min(14_750_000 + (total - 100_000_000) * 0.02, 20_000_000);
-}
-
-function calcTax(taxable: number): number {
-  if (taxable <= 0) return 0;
-  for (const b of TAX_BRACKETS) {
-    if (taxable <= b.limit) return Math.max(0, Math.round(taxable * b.rate - b.deduction));
-  }
-  return 0;
-}
-
-// 근로소득세액공제는 taxConstants2026.earnedIncomeTaxCredit2026 이 정본이다.
-// 2026-09-06 전수검사 정정: 계단식 한도를 여기서 재구현해 두어 정본이 §59②
-// 체감 산식으로 바뀐 뒤에도 이 계산기만 옛 값을 썼다.
-const earnedIncomeTaxCredit = (grossTax: number, salary: number): number =>
-  earnedIncomeTaxCredit2026(grossTax, salary);
-
-// 원천징수세액 미입력 시 연간 세액을 추정한다. 연 급여에 근로소득공제·인적공제,
-// 8구간 세율·근로소득세액공제를 적용하며 월별 간이세액표를 조회하지 않는다.
-function estimateAnnualWithholding(salary: number, basicDeduct: number): number {
-  const taxable = Math.max(0, salary - calcEmpDeduction(salary) - basicDeduct);
-  const grossTax = calcTax(taxable);
-  const incomeTax = Math.max(0, grossTax - earnedIncomeTaxCredit(grossTax, salary));
-  return Math.round(incomeTax * 1.1); // 지방소득세 10% 포함
-}
+import { estimateJanuaryBonus2026 } from "@/lib/januaryBonus2026";
 
 function fmt(n: number) {
   return Math.round(n).toLocaleString("ko-KR");
@@ -77,84 +35,24 @@ export default function JanuaryBonusClient() {
   const donation = parseInput(donationFmt);
   const withheldInput = parseInput(withheldFmt);
 
-  const result = useMemo(() => {
-    // 인적공제
-    const basicDeduct = 1_500_000 * (1 + (hasSpouse ? 1 : 0) + dependents);
-
-    // 근로소득공제
-    const empDeduct = calcEmpDeduction(salary);
-
-    // 카드공제: 총급여 25% 초과분의 15%
-    const cardThreshold = salary * 0.25;
-    const cardDeduction = Math.max(0, card - cardThreshold) * 0.15;
-    const cardDeductionCapped = Math.min(cardDeduction, 3_000_000);
-
-    // 과세표준 (소득공제 후) — IRP/연금저축은 소득공제가 아닌 세액공제 항목이므로 여기서 빼지 않음
-    const taxableIncome = Math.max(
-      0,
-      salary - empDeduct - basicDeduct - cardDeductionCapped
-    );
-
-    // 산출세액
-    const grossTax = calcTax(taxableIncome);
-
-    // 근로소득세액공제
-    const earnedIncomeCredit = earnedIncomeTaxCredit(grossTax, salary);
-
-    // 의료비 세액공제: 총급여 3% 초과분의 15%
-    const medicalThreshold = salary * 0.03;
-    const medicalCredit = Math.max(0, medical - medicalThreshold) * 0.15;
-
-    // 기부금 세액공제: 10만원까지 100%(지방세 포함 환산 100/110), 초과분 15%.
-    // 종전에는 초과 분기가 100,000 에서 시작해 정확히 10만원 경계에서
-    // 90,909 → 100,000 으로 9,091원 점프했다(디폴트 기부금이 정확히 100,000이라
-    // 첫 화면이 낮은 쪽 분기). 두 분기를 같은 기준점에서 이어 붙인다.
-    const DONATION_FULL_CREDIT = 100_000 * (100 / 110);
-    const donationCredit =
-      donation <= 100_000
-        ? donation * (100 / 110)
-        : DONATION_FULL_CREDIT + (donation - 100_000) * 0.15;
-
-    // IRP/연금저축(연금계좌) 세액공제: 한도 900만, 총급여 5,500만 이하 15% / 초과 12%
-    // (소득세법 §59의3①). 여기서는 소득세에서 빼고 아래에서 지방소득세 10%를 붙이므로
-    // 소득세분 공제율을 쓴다 — 흔히 말하는 16.5%/13.2%는 지방소득세까지 포함한 값이다.
-    // 종전에는 16.5%/13.2%를 소득세에서 빼 지방세가 두 번 반영됐다(실효 18.15%/14.52%,
-    // IRP 900만 기준 환급 148,500원 과대 — 2026-09-25 감사 CALC-10).
-    const irpCreditRate = salary > 55_000_000 ? 0.12 : 0.15;
-    const irpCredit = Math.min(irp, 9_000_000) * irpCreditRate;
-
-    const totalCredit =
-      earnedIncomeCredit + medicalCredit + donationCredit + irpCredit;
-
-    // 결정세액 (소득세 + 지방소득세)
-    const finalTax = Math.max(0, grossTax - totalCredit);
-    const finalLocal = finalTax * 0.1;
-    const totalFinalTax = finalTax + finalLocal;
-
-    // 원천징수세액: 직접 입력값 우선, 미입력 시 연간 세액 추정치
-    const isWithheldEstimated = withheldInput <= 0;
-    const withheld = isWithheldEstimated
-      ? estimateAnnualWithholding(salary, basicDeduct)
-      : withheldInput;
-
-    // 환급(+) / 추징(−) = 미리 낸 세금(원천징수) − 결정세액
-    const refund = withheld - totalFinalTax;
-
-    return {
-      taxableIncome,
-      grossTax,
-      totalCredit,
-      finalTax,
-      totalFinalTax,
-      withheld,
-      isWithheldEstimated,
-      refund,
-      cardDeductionCapped,
-      irpCredit,
-      medicalCredit,
-      donationCredit,
-    };
-  }, [salary, card, irp, medical, donation, withheldInput, hasSpouse, dependents]);
+  // 2026-11-01 B23 CALC-01: 계산은 연말정산 정본 엔진 어댑터(src/lib/januaryBonus2026.ts)만 쓴다.
+  // 종전 이 파일의 포크 엔진은 국민연금·건강·장기요양·고용보험료 소득공제가 없어 결정세액이 부풀었고,
+  // 실제 원천징수세액을 넣으면 환급이 추가 납부로 뒤집혔다. 원천징수세액을 비우면 간이세액표 추정치,
+  // 기부금 칸은 고향사랑기부금으로 계산한다. IRP 공제율은 엔진의 소득세분 15%/12%(지방세 이중 반영 없음).
+  const result = useMemo(
+    () =>
+      estimateJanuaryBonus2026({
+        salary,
+        card,
+        irp,
+        medical,
+        donation,
+        withheldWithLocal: withheldInput,
+        hasSpouse,
+        dependents,
+      }),
+    [salary, card, irp, medical, donation, withheldInput, hasSpouse, dependents]
+  );
 
   const isRefund = result.refund >= 0;
 
@@ -191,7 +89,7 @@ export default function JanuaryBonusClient() {
           />
           <Field
             id="donation"
-            label="기부금 (10만원까지 100%)"
+            label="고향사랑기부금 (10만원 전액)"
             value={donationFmt}
             onChange={(v) => setDonationFmt(v)}
           />
