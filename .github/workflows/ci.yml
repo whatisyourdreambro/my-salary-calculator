@@ -11,6 +11,7 @@ on:
   pull_request:
   # 주간 프로덕션 헬스체크 (2026-09-05) — scripts/health-check.mjs 를 사람이 돌려야만 했던 공백 해소.
   # 배경: 2026-08 /salary 전량 500 을 수개월 미발견. 실패 시 GitHub 워크플로 실패 알림 메일로 통지.
+  # 2026-11-01(B20, 운영자 승인 11번): main 에 합쳐진 변경이 48시간 넘게 미게시(문서만 바뀐 경우 제외)여도 같은 실패 메일.
   schedule:
     - cron: "0 0 * * 1" # 매주 월요일 09:00 KST (00:00 UTC)
   workflow_dispatch:
@@ -22,6 +23,10 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          # 게시 대기 감시(B20)가 운영 커밋(/.well-known/moneysalary-release.json 의 commit)과 main 을 git diff 로 비교한다.
+          # 기본값 1(얕은 clone)이면 운영 커밋이 clone 에 없어 그 점검이 WARN 으로 생략된다.
+          fetch-depth: 0
       - uses: actions/setup-node@v7.1.0
         with:
           node-version: 22
