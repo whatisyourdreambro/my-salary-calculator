@@ -59,6 +59,11 @@ export interface TaxInputs {
  debitCardAndCash: number; // 체크카드 및 현금영수증 사용액
  traditionalMarket: number; // 전통시장 사용액
  publicTransport: number; // 대중교통 사용액
+ /**
+  * 문화·체육 사용액 (도서·신문·공연·박물관·미술관·영화관·체육시설 — 조특법 §126의2②3, 30%). 총급여 7천만원
+  * 초과는 공제 대상이 아니다(cardDeduction2026 이 0 으로 본다). 선택 입력이라 넘기지 않는 호출부는 종전과 같다.
+  */
+ culture?: number;
 
  // 세액공제 항목
  children: number; // 기존 카드공제 한도 산정 인원. 연간 자녀세액공제·월 원천징수 인원과 별도.
@@ -189,6 +194,7 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  checkCash: inputs.debitCardAndCash,
  traditionalMarket: inputs.traditionalMarket,
  publicTransport: inputs.publicTransport,
+ culture: inputs.culture,
  }).finalDeduction;
 
  const totalIncomeDeduction =

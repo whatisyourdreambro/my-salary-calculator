@@ -159,7 +159,7 @@ const OptimizationSlider = ({
 };
 
 // ── 접힌 아코디언 2·3 안의 추가 입력 (2026-11-01 B24 YE-03·STR-10, 2026-09-26 W2-A 90f1359d3 포팅) ──────────
-// 페이지 설명이 약속한 의료비 등과 전통시장·대중교통·주택청약·보장성보험·교육비·월세·자녀·출산·혼인 입력.
+// 페이지 설명이 약속한 의료비 등과 전통시장·대중교통·문화·체육·주택청약·보장성보험·교육비·월세·자녀·출산·혼인 입력.
 // 아코디언 2·3 은 기본으로 접혀 있어 새 입력은 펼친 뒤에만 그려진다 — 기본 상태의 서버 렌더는 포팅 전
 // (origin/main 3b49d42e5)과 바이트 동일하다(HomeTopAd~InArticleAd 사이 높이 불변, yearEndTax2026Engine.test.ts
 // 고정본 대조). 안내 문구의 한도·공제율은 전부 정본 상수에서 만든다(리터럴 금지).
@@ -179,12 +179,14 @@ const won = (value: number | undefined) => (value ?? 0).toLocaleString('ko-KR');
 
 /**
  * 새 입력란의 한도 안내 한 줄 — 근거: 소득세법 §59의2(자녀·출산입양, 연령은 법률 제21548호 부칙 제2조)·
- * §59의4(보장성보험·의료비·교육비), 조특법 §87②(주택청약)·§92(혼인)·§95의2(월세)·§126의2(전통시장·대중교통).
+ * §59의4(보장성보험·의료비·교육비), 조특법 §87②(주택청약)·§92(혼인)·§95의2(월세)·§126의2(전통시장·대중교통·
+ * 문화·체육 — 문화·체육은 총급여 7천만원 이하만, 추가 한도 300만원을 전통시장·대중교통과 함께 쓴다).
  * 고향사랑·정치자금 기부는 이 화면이 다루지 않는다(기부금 칸 안내대로 /donation-tax-credit-2026).
  */
 export const YEAR_END_FIELD_TIPS = {
  traditionalMarket: `공제율 ${pct(CARD_RATES_2026.TRADITIONAL)} · 카드 기본 한도를 넘으면 대중교통과 합산해 추가 ${man(CARD_EXTRA_LIMIT_2026.LOW_SALARY)}(총급여 ${man(CARD_SALARY_THRESHOLD)} 초과 ${man(CARD_EXTRA_LIMIT_2026.HIGH_SALARY)})까지`,
  publicTransport: `공제율 ${pct(CARD_RATES_2026.TRANSIT)} · 추가 한도는 전통시장과 합산`,
+ culture: `공제율 ${pct(CARD_RATES_2026.CULTURE)} · 총급여 ${man(CARD_SALARY_THRESHOLD)} 이하만 · 추가 한도는 전통시장·대중교통과 합산`,
  housingSubscription: `무주택 세대주(배우자 포함)·총급여 ${man(HOUSING_SUBSCRIPTION_DEDUCTION_2026.SALARY_CAP)} 이하 · 연 ${man(HOUSING_SUBSCRIPTION_DEDUCTION_2026.LIMIT)} 한도 납입액의 ${pct(HOUSING_SUBSCRIPTION_DEDUCTION_2026.RATE)} 소득공제`,
  lifeInsurance: `연 ${man(INSURANCE_CREDIT_2026.LIMIT)} 한도 · ${pct(INSURANCE_CREDIT_2026.RATE)} 세액공제`,
  children: `2026년 귀속 9세 이상·2017년생 제외 · 부양가족에 자동 포함 · 1명 ${man(childTaxCredit2026(1))} · 2명 ${man(childTaxCredit2026(2))} · 3명부터 1명당 ${man(CHILD_TAX_CREDIT_2026.THIRD_PLUS)} 추가`,
@@ -260,6 +262,7 @@ export default function YearEndTaxCalculator() {
  // 아코디언 2 에 입력란이 있고 기본값은 0 이다 — 아래 새 항목도 전부 0 (출산·입양·혼인은 미선택).
  traditionalMarket: 0,
  publicTransport: 0,
+ culture: 0,
  children: 0,
  childTaxCreditEligibleChildren: 0,
  birthsOrAdoptions: 0,
@@ -537,6 +540,13 @@ export function IncomeDeductionExtraFields({ inputs, handleInputChange }: ExtraF
  description={YEAR_END_FIELD_TIPS.publicTransport}
  value={won(inputs.publicTransport)}
  onValueChange={(v) => handleInputChange("publicTransport", v)}
+ quickAmounts={[500000, 100000, 50000]}
+ />
+ <CurrencyInput
+ label="문화·체육 (도서·공연·영화·체육시설 등)"
+ description={YEAR_END_FIELD_TIPS.culture}
+ value={won(inputs.culture)}
+ onValueChange={(v) => handleInputChange("culture", v)}
  quickAmounts={[500000, 100000, 50000]}
  />
  <CurrencyInput

@@ -377,6 +377,19 @@ describe("B24 엔진 — 새 입력이 전형값에서 법정 금액만큼 결�
     expect(CARD_EXTRA_LIMIT_2026.HIGH_SALARY).toBe(2_000_000);
   });
 
+  it("문화·체육: 30% 공제, 총급여 7천만원 이하만, 추가 한도 300만원은 전통시장·대중교통과 함께 쓴다 (조특법 §126의2②3·⑪1)", () => {
+    const card = { ...base, creditCard: 20_000_000 };
+    expect(drop({ culture: 1_000_000 }, card)).toBe(45_000); // 100만 × 30% × 15%
+    // 넘기지 않으면 0 과 같다 (기존 호출부 불변)
+    expect(calculateYearEndTax({ ...card, culture: 0 })).toEqual(calculateYearEndTax(card));
+    const full = { ...base, creditCard: 40_000_000 }; // 기본 한도 300만원이 찬 상태
+    expect(drop({ culture: 10_000_000 }, full)).toBe(450_000); // 300만(추가 한도) × 15%
+    // 전통시장과 합쳐도 추가 한도는 300만원 하나
+    expect(drop({ culture: 10_000_000, traditionalMarket: 10_000_000 }, full)).toBe(450_000);
+    // 총급여 7천만원 초과는 문화·체육 사용분을 공제하지 않는다
+    expect(drop({ culture: 10_000_000 }, { ...plain(80_000_000), creditCard: 30_000_000 })).toBe(0);
+  });
+
   it("자녀세액공제 대상(2026년 귀속 9세 이상·2017년생 제외): 1명 25만·2명 55만·3명 95만원 (소득세법 §59의2①)", () => {
     expect(drop({ childTaxCreditEligibleChildren: 1 }, { ...base, dependents: 2 })).toBe(CHILD_TAX_CREDIT_2026.FIRST);
     expect(drop({ childTaxCreditEligibleChildren: 2 }, { ...base, dependents: 3 })).toBe(550_000);
@@ -430,6 +443,7 @@ const UI_DEFAULT: TaxInputs = {
   ...plain(50_000_000),
   creditCard: 15_000_000,
   debitCardAndCash: 5_000_000,
+  culture: 0,
   medicalExpensesGeneral: 0,
   educationSelf: 0,
   educationChildSchool: 0,
@@ -495,7 +509,7 @@ describe("B24 화면 — 새 입력은 접힌 아코디언 2·3 안에만 있고
     // 아코디언 2·3 은 접힌 채로, 1 만 펼쳐져 있다
     expect(html.match(/aria-expanded="false"/g)?.length).toBe(2);
     expect(html.match(/aria-expanded="true"/g)?.length).toBe(1);
-    for (const label of ["전통시장", "대중교통", "주택청약", "의료비", "교육비", "월세", "보장성보험료", "혼인", "출산", "자녀세액공제"]) {
+    for (const label of ["전통시장", "대중교통", "문화·체육", "주택청약", "의료비", "교육비", "월세", "보장성보험료", "혼인", "출산", "자녀세액공제"]) {
       expect({ label, visible: html.includes(label) }).toEqual({ label, visible: false });
     }
   });
@@ -507,6 +521,7 @@ describe("B24 화면 — 새 입력은 접힌 아코디언 2·3 안에만 있고
     expect(YEAR_END_FIELD_TIPS).toEqual({
       traditionalMarket: "공제율 40% · 카드 기본 한도를 넘으면 대중교통과 합산해 추가 300만원(총급여 7,000만원 초과 200만원)까지",
       publicTransport: "공제율 40% · 추가 한도는 전통시장과 합산",
+      culture: "공제율 30% · 총급여 7,000만원 이하만 · 추가 한도는 전통시장·대중교통과 합산",
       housingSubscription: "무주택 세대주(배우자 포함)·총급여 7,000만원 이하 · 연 300만원 한도 납입액의 40% 소득공제",
       lifeInsurance: "연 100만원 한도 · 12% 세액공제",
       children: "2026년 귀속 9세 이상·2017년생 제외 · 부양가족에 자동 포함 · 1명 25만원 · 2명 55만원 · 3명부터 1명당 40만원 추가",
@@ -528,11 +543,11 @@ describe("B24 화면 — 새 입력은 접힌 아코디언 2·3 안에만 있고
     expect(opened).not.toContain("8~20세");
     // 고향사랑 입력은 이 화면에 두지 않는다 (기부금 칸 안내대로 유형별 계산기)
     expect(opened).not.toContain("고향사랑");
-    // 새 항목 기본값은 0·미선택 — 금액 입력 10개와 출산·입양 '없음'
+    // 새 항목 기본값은 0·미선택 — 금액 입력 11개와 출산·입양 '없음'
     expect(opened).not.toContain("checked");
-    expect(opened.match(/value="0"/g)?.length).toBe(11);
+    expect(opened.match(/value="0"/g)?.length).toBe(12);
     // 금액 입력의 한도 안내는 aria-describedby 로 입력에 이어진다 (기부금 칸과 같은 CurrencyInput description)
-    expect(opened.match(/aria-describedby="[^"]+-description"/g)?.length).toBe(10);
+    expect(opened.match(/aria-describedby="[^"]+-description"/g)?.length).toBe(11);
   });
 
   it("안내 문구 소스에 금액·비율 리터럴이 없다 (정본 상수에서만 만든다)", () => {
@@ -553,6 +568,7 @@ describe("B24 화면 — 새 입력은 접힌 아코디언 2·3 안에만 있고
   const CURRENCY_GOLDENS: [label: string, field: keyof TaxInputs, typed: string, drop: number][] = [
     ["전통시장", "traditionalMarket", "1,000,000", 60_000], // 100만 × 40% × 15%
     ["대중교통", "publicTransport", "1,000,000", 60_000],
+    ["문화·체육 (도서·공연·영화·체육시설 등)", "culture", "1,000,000", 45_000], // 100만 × 30% × 15%
     ["주택청약 납입액", "housingSubscription", "3,000,000", 180_000], // 300만 × 40% × 15%
     ["보장성보험료", "lifeInsurance", "1,000,000", 120_000], // 100만 × 12%
     ["의료비 (본인·6세 이하·65세 이상·장애인)", "medicalExpenses", "3,000,000", 225_000], // (300만 − 3% 150만) × 15%
