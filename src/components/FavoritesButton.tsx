@@ -140,7 +140,7 @@ export default function FavoritesButton({
     setActive(!exists);
     trackBookmarkClick(resolvedPath, exists ? "remove" : "add");
     if (!exists) {
-      // 추가 시에만 토스트 — 링크 없는 글자 알림(대시보드는 헤더 배지에서)
+      // 추가 시에만 토스트 — 링크 없는 글자 알림(대시보드는 헤더의 대시보드 버튼·모바일 메뉴에서)
       setToast(true);
       setTimeout(() => setToast(false), 3000);
     }
