@@ -2,6 +2,7 @@
 
 import type { Metadata, Viewport } from "next";
 import LiveServices from "@/components/LiveServices";
+import AdConnectionHints from "@/components/AdConnectionHints";
 import { siteFontVariables } from "./fonts/siteFonts.generated";
 import "./globals.css";
 import { NextThemesProvider } from "@/app/providers";
@@ -143,6 +144,7 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning className={siteFontVariables}>
       <head>
+        <AdConnectionHints />
         <JsonLd data={[organizationLd(), webSiteLd()]} />
       </head>
       <body className="antialiased bg-canvas text-navy dark:bg-canvas-950 dark:text-canvas-50">
