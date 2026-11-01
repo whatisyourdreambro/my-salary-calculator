@@ -76,8 +76,10 @@ const Report = () => {
  };
 
  if (!data) {
+ // 저장 리포트가 없는 빈 화면 — 콘텐츠 없는 화면이라 자동광고 요청을 보류한다(NotFoundAdPause 가 data-page-state 를 읽는다, IVT-10 후속·OF4 A3).
+ // 리포트 화면의 main 요소에는 표시를 달지 않는다 — 리포트가 빈 화면을 대체하면 표시가 사라져 요청이 다시 열린다.
  return (
- <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 text-center">
+ <main data-page-state="error" className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 text-center">
  <h1 className="text-3xl font-bold">저장된 리포트가 없습니다</h1>
  {loadError && <p role="alert" className="mb-4 text-sm text-muted-blue">{loadError}</p>}
  <p className="mt-4 text-muted-blue">
