@@ -12,6 +12,7 @@ import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { AlertTriangle } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
+import { yearEndToolTitle } from "@/lib/yearEndSeason";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";
 import { HomeTopAd, InArticleAd, CalcResultAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
@@ -23,7 +24,8 @@ import ShareButtons from "@/components/ShareButtons";
 import DonationTaxCreditClient from "./Client";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "기부금 세액공제 계산기 2026 — 정치자금·고향사랑·종교단체 한도 자동 계산",
+  // SEASON-06 (2026-09-26): 종전 '기부금 세액공제 계산기 2026 — 정치자금·고향사랑·종교단체 한도 자동 계산'
+  title: yearEndToolTitle("기부금 세액공제 계산기"),
   description:
     "2026년 귀속 기부금 세액공제 즉시 계산. 1천만원 이하 15%·초과분 30%, 정치자금·고향사랑 10만원 전액공제(100/110), 종교단체 10%·일반 30% 한도와 10년 이월공제까지 유형별로 자동 판정합니다.",
   path: "/donation-tax-credit-2026",

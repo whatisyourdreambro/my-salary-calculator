@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { CheckCircle2, AlertCircle, ArrowRight, Calculator } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
-import { YEAR_END_SEASON } from "@/lib/yearEndSeason";
+import { YEAR_END_SEASON, yearEndLeadTitle } from "@/lib/yearEndSeason";
 import JsonLd from "@/components/JsonLd";
 import ShareSection from "@/components/ShareSection";
 import PublishedMeta from "@/components/PublishedMeta";
@@ -17,13 +17,14 @@ import CoupangBanner from "@/components/CoupangBanner";
 
 export const metadata: Metadata = buildPageMetadata({
  // 의도: 12월 31일 마감 전 항목별 점검표 (체크 형태). 계산기·전략은 별도 페이지.
- title: `${YEAR_END_SEASON.attributionYear} 연말정산 체크리스트 — 12월 31일 마감 전 40+ 항목 점검표`,
+ // SEASON-06 (2026-09-26): 종전 '2026 연말정산 체크리스트 — 12월 31일 마감 전 40+ 항목 점검표'
+ title: yearEndLeadTitle("체크리스트", "12월 마감 전 점검표"),
  description:
  "12월 31일 마감 전 빠짐없이 점검해야 할 연말정산 40+ 항목 체크리스트. 신용카드·연금저축·기부금·월세·인적공제 카테고리별 점검표 형식으로 빠르게 확인.",
  path: "/year-end-tax-checklist",
  ogType: "article",
  publishedTime: "2026-01-10",
- modifiedTime: "2026-09-30",
+ modifiedTime: "2026-11-01",
  keywords: [
  "연말정산 체크리스트",
  "2026 연말정산 달라지는 점",
@@ -54,7 +55,7 @@ const FAQ_ITEMS = [
  {
  question: "올해(2026년 귀속) 연말정산에서 새로 챙길 항목은?",
  answer:
- "2026년에는 자녀 수에 따른 카드공제 기본 한도 가산, 회사 보육수당의 자녀 1명당 월 20만원 비과세 한도, 초등 저학년 예체능 교육비 확대 등을 확인하세요. 교육비의 자녀 소득 요건과 기본 인적공제의 소득 요건은 다릅니다. 향후 개편안은 공포·시행 내용을 확인하기 전 올해 공제에 적용하지 않습니다.",
+ "2026년에는 자녀 수에 따른 카드공제 기본 한도 가산, 회사 보육수당의 자녀 1명당 월 20만원 비과세 한도, 초등 저학년 예체능 교육비 확대 등을 확인하세요. 자녀세액공제는 2026년 4월 법 개정(법률 제21548호)으로 2026년 귀속 9세 이상(2017년생 제외), 즉 2016년 이전 출생 자녀만 대상입니다. 교육비의 자녀 소득 요건과 기본 인적공제의 소득 요건은 다릅니다. 향후 개편안은 공포·시행 내용을 확인하기 전 올해 공제에 적용하지 않습니다.",
  },
 ];
 
@@ -143,7 +144,8 @@ const CHECKLIST = [
  items: [
  "혼인세액공제: 2024~2026년 신고한 해, 1명당 생애 1회 50만원과 실제 공제 가능 세액 확인",
  "출산·입양 세액공제 (첫째 30만, 둘째 50만, 셋째 70만)",
- "기본공제 대상 자녀·손자녀 중 만 8세 이상 자녀세액공제 확인 (6세 이하 추가 100만원 없음)",
+ // 2026년 귀속 9세 이상·2017년생 제외(부칙 법률 제21548호 제2조) = 12월 31일 기준 만 9세 초과. 종전 '만 8세 이상'(c09347eb8 정정을 2026-11-01 이식, 같은 글자 구성)
+ "기본공제 대상 자녀·손자녀 중 만 9세 초과 자녀세액공제 확인 (6세 이하 추가 100만원 없음)",
  "산후조리원비 의료비 공제",
  ],
  },
@@ -173,9 +175,9 @@ export default function YearEndTaxChecklistPage() {
  12월 마감 전 점검
  </p>
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
- 2026 연말정산 <span className="text-electric">체크리스트</span>
+ {YEAR_END_SEASON.filingYear} 연말정산 <span className="text-electric">체크리스트</span>
  </h1>
- <PublishedMeta publishedDate="2026-01-10" updatedDate="2026-09-30" className="mb-2" />
+ <PublishedMeta publishedDate="2026-01-10" updatedDate="2026-11-01" className="mb-2" />
  <YearEndTaxCluster />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  공제 요건과 증빙 누락을 확인하는 9개 카테고리·40+ 항목.

@@ -2,6 +2,7 @@
 
 import type { Metadata } from "next";
 import { buildToolMetadata } from "@/lib/seo";
+import { yearEndToolTitle } from "@/lib/yearEndSeason";
 import { softwareApplicationLd, autoBreadcrumbLd, faqLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -40,6 +41,8 @@ const FAQ_ITEMS = [
 
 export const metadata: Metadata = buildToolMetadata({
   name: "자녀 인적공제·세액공제 계산기",
+  // SEASON-06 (2026-09-26): 제목만 '… — 2026년 귀속·2027 연말정산' — 설명·OG(name)·주소 불변
+  title: yearEndToolTitle("자녀 인적공제·세액공제 계산기"),
   tagline: "2026 귀속 소득공제·세액공제 구분",
   description:
     "2026년 귀속 기본공제 인원과 그중 연간 자녀세액공제 적격 인원을 나눠 계산합니다. 9세 이상·2017년생 제외 기준과 별도 출산입양 공제, 실제 환급액의 차이를 확인하세요.",
