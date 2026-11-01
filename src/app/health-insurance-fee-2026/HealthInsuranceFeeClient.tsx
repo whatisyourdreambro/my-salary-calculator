@@ -2,6 +2,11 @@
 
 import { useMemo, useState } from "react";
 import NumberInput from "@/components/NumberInput";
+import {
+  MAX_PROPERTY_GRADE,
+  propertyGradeRangeText,
+  propertyScoreOfGrade,
+} from "@/lib/healthInsuranceRegionalScore";
 
 function fmt(n: number): string {
   return Math.round(n).toLocaleString("ko-KR");
@@ -12,7 +17,10 @@ type Type = "workplace" | "regional";
 export default function HealthInsuranceFeeClient() {
   const [type, setType] = useState<Type>("workplace");
   const [monthlyWage, setMonthlyWage] = useState(4_000_000);
-  const [regionalScore, setRegionalScore] = useState(1500);
+  // 지역가입자 재산 등급 (0~60, 시행령 별표 4). 기본 23등급 = 559점 (공제 후 재산 1억 6,400만~1억 8,300만원).
+  // 종전 점수 슬라이더 100~5,000점·기본 1,500점은 법정 최고 2,341점을 넘었다 (2026-10-05 감사 code12-02).
+  const [regionalGrade, setRegionalGrade] = useState(23);
+  const regionalScore = propertyScoreOfGrade(regionalGrade);
 
   const result = useMemo(() => {
     if (type === "workplace") {
@@ -99,20 +107,22 @@ export default function HealthInsuranceFeeClient() {
         ) : (
           <div className="mb-4">
             <label className="block text-sm font-bold text-navy dark:text-canvas-100 mb-2">
-              부과 점수: {fmt(regionalScore)}점
+              부과 점수: {fmt(regionalScore)}점{regionalGrade > 0 ? ` (${regionalGrade}등급)` : ""}
             </label>
             <input
               type="range"
-              value={regionalScore}
-              onChange={(e) => setRegionalScore(Number(e.target.value))}
-              min={100}
-              max={5000}
-              step={50}
+              value={regionalGrade}
+              onChange={(e) => setRegionalGrade(Number(e.target.value))}
+              min={0}
+              max={MAX_PROPERTY_GRADE}
+              step={1}
               className="w-full"
-              aria-label="부과 점수"
+              aria-label="재산 등급"
+              aria-valuetext={`${fmt(regionalScore)}점`}
             />
+            {/* 결과 광고(CalcResultAd) 위 — 지역가입자 토글 후에만 보이는 안내문. 구간 문구는 '공제 후 재산 {구간}.' 으로 짧게 유지 */}
             <p className="mt-2 text-xs text-faint-blue">
-              ※ 재산 점수 기준(자동차 부과는 2024년 폐지, 소득은 정률 7.19% 별도). 평균 자영업자 약 1,500~2,500점. 정확한 점수는 건보공단에서 조회.
+              ※ 재산 점수 기준(자동차 부과는 2024년 폐지, 소득은 정률 7.19% 별도). 공제 후 재산 {propertyGradeRangeText(regionalGrade)}. 정확한 점수는 건보공단에서 조회.
             </p>
           </div>
         )}
