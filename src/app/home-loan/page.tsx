@@ -24,10 +24,10 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "주택담보대출 계산기 2026 | 월 상환액·총 이자 비교",
+  title: "주택담보대출·주담대 금리 계산기 2026 — 월 상환액·총이자",
   description:
-    // S2-5(2026-09-12) 네이버 저CTR 스니펫 실험: 질의어(주택담보대출 계산기)를 선두에 둔다. 판정 = 서치어드바이저 페이지별 CTR 28일(10/5 전후). title 무접촉.
-    "주택담보대출 계산기 — 주택 가격·자기 자본·대출금리·기간을 넣으면 원리금균등·원금균등 월 상환액과 총 이자를 비교합니다. 기준금리와 대출금리의 차이, 별도로 확인할 DSR·LTV 심사 기준도 안내합니다.",
+    // 2026-11 네이버 질의 정렬: title 에 "주담대 금리 계산기"를 그대로 넣고 "주택담보대출"을 앞에 유지한다(콘솔 수치는 저장소에 적지 않는다). 판정 = 서치어드바이저 페이지별 28일 비교.
+    "주담대 금리 계산기 — 대출금리·주택 가격·자기 자본·기간을 넣으면 원리금균등·원금균등 월 상환액과 총이자를 바로 비교합니다. 금리가 0.25%p 오를 때 이자 차이와 DSR·LTV 한도 확인 순서도 안내합니다.",
   path: "/home-loan",
   ogType: "article",
   publishedTime: "2026-05-23",
@@ -461,7 +461,7 @@ export default function HomeLoanPage() {
             이자 약 3.01억원
           </li>
           <li>
-            • <strong>총 이자 차이 약 5,893만원</strong> · 전 기간 금리 동일, 수수료·중도상환 없음
+            • <strong>총 이자 차이 약 5,851만원</strong> · 전 기간 금리 동일, 수수료·중도상환 없음
           </li>
         </ul>
         <p className="text-muted-blue leading-relaxed">

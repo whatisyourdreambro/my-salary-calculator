@@ -34,8 +34,10 @@ const ENTRY_PAY = FIRST_STEP[1]; // 소방사 1호봉
 const CAPTAIN_PAY = FIRST_STEP[5]; // 소방경 1호봉
 
 // 이전(2026-08-30~09-24) title: "2026 소방공무원 봉급표 — 소방사~소방경 계급·호봉별 월급"
-const PAGE_TITLE = `2026 소방공무원 봉급표 — 소방사 ${Math.floor(ENTRY_PAY / 10000)}만원부터 계급별 월급`;
-const PAGE_DESCRIPTION = `2026년 소방공무원 봉급표(경찰·소방 공통, 인사혁신처 공표). 소방사 1호봉 월 ${fmt(ENTRY_PAY)}원부터 소방경까지 계급·호봉별 월급과 위험근무수당 월 ${HAZARD_ALLOWANCE_2026 / 10000}만원 등 수당, 실수령 계산 흐름을 정리했습니다.`;
+// 이전(B20 정렬, 2026-09-25 감사 배치) title: "2026 소방공무원 봉급표 — 소방사 213만원부터 계급별 월급"
+// 2026-11 (CTR-4): title·description 에 검색어 '소방관 월급'을 넣음 — 접두 '2026 소방공무원 봉급표'·H1·리드는 그대로.
+const PAGE_TITLE = `2026 소방공무원 봉급표 — 소방관 월급, 소방사 ${Math.floor(ENTRY_PAY / 10000)}만원부터`;
+const PAGE_DESCRIPTION = `소방관 월급의 기본인 2026년 소방공무원 봉급표(경찰·소방 공통, 인사혁신처 공표)는 소방사 1호봉 월 ${fmt(ENTRY_PAY)}원부터입니다. 소방경까지 계급·호봉별 봉급과 위험근무수당 월 ${HAZARD_ALLOWANCE_2026 / 10000}만원 등 수당을 정리했습니다.`;
 const MODIFIED = "2026-10-04";
 
 export const metadata: Metadata = buildPageMetadata({

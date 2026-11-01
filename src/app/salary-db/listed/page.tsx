@@ -19,10 +19,11 @@ import { GuideMidAd } from "@/components/AdPlacement";
 export const dynamic = "force-static";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: `공시기업 공시 평균연봉 ${listedCohort.length}곳 — DART 사업보고서 전수`,
-  description: `금융감독원 전자공시(DART) 사업보고서 기준 공시기업 ${listedCohort.length}곳의 공시 평균연봉을 업종별로 정리했습니다. 급여총액÷직원 수 산정치 — 추정 0, 월 실수령 환산 제공.`,
+  // 검색어 '상장사'는 head 메타 전용 — 본문은 공시기업+상장 여부 단서 유지 (591d437de/SEO-04)
+  title: `상장사 공시 평균연봉 ${listedCohort.length}곳 — DART 사업보고서 전수`,
+  description: `금융감독원 전자공시(DART) 사업보고서 기준 상장사 ${listedCohort.length}곳의 공시 평균연봉을 업종별로 정리했습니다. 급여총액÷직원 수 산정치 — 추정 0, 월 실수령 환산 제공.`,
   path: "/salary-db/listed",
-  keywords: ["공시기업 평균연봉", "공시 연봉", "사업보고서 연봉", "DART 연봉"],
+  keywords: ["상장사 평균연봉", "공시 연봉", "사업보고서 연봉", "DART 연봉"],
 });
 
 export default function ListedIndexPage() {

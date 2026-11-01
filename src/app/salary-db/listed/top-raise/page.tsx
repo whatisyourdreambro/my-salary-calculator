@@ -37,10 +37,11 @@ const minWageLabel = (year: string) =>
   `${Math.round(MIN_WAGE_ANNUAL_MANWON[year]).toLocaleString("ko-KR")}만원`;
 
 export const metadata: Metadata = buildPageMetadata({
-  title: `연봉 인상률 TOP ${topRaiseRows.length} — 공시기업 공시 기준 (${DART_RANKING_YEAR})`,
-  description: `전년 대비 평균연봉 인상률이 가장 높은 공시기업 TOP ${topRaiseRows.length}. DART 사업보고서 공시 원값 기준(비교 가능 ${raiseEligibleCount.toLocaleString("ko-KR")}곳), 직원 수 급변·최저임금 미달·이상치 제외 — 추정 0.`,
+  // 검색어 '상장사'는 head 메타 전용 — 본문은 공시기업+상장 여부 단서 유지 (591d437de/SEO-04)
+  title: `연봉 인상률 TOP ${topRaiseRows.length} — 상장사 공시 기준 (${DART_RANKING_YEAR})`,
+  description: `전년 대비 평균연봉 인상률이 가장 높은 상장사 TOP ${topRaiseRows.length}. DART 사업보고서 공시 원값 기준(비교 가능 ${raiseEligibleCount.toLocaleString("ko-KR")}곳), 직원 수 급변·최저임금 미달·이상치 제외 — 추정 0.`,
   path: PATH,
-  keywords: ["연봉 인상률 높은 기업", "연봉 인상률 순위", "공시기업 연봉 인상", "연봉 많이 오른 회사"],
+  keywords: ["연봉 인상률 높은 기업", "연봉 인상률 순위", "상장사 연봉 인상", "연봉 많이 오른 회사"],
 });
 
 /** 순위에서 뺀 이상치 목록 — 계산 방법 FAQ(접힌 details) 답변 아래에만 보인다 */

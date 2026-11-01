@@ -25,15 +25,14 @@ import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
 
 export const metadata: Metadata = buildPageMetadata({
- // 제목·설명은 메타 동결 대상이라 origin/main 값 그대로 둔다(2026-09-30 R8-B 메타 분리 — 동결 예외는 결정 7·11(1) 목록뿐).
- // 6대 암·본인부담 0~10%·12/31 기한으로 바꾸는 1회 교정은 운영자 승인 대기(10/9 뒤, 주 3건 이하).
- title: "2026 국민건강검진 — 직장인 무료 검진 + 5대 암검진 본인부담 10%",
+ // 2026-11-01 제목·설명 1회 교정(운영자 승인 답 6, STR-06): 6대 암·본인부담 0~10%·12/31 기한 — 본문·FAQ 와 같은 기준.
+ title: "2026 국민건강검진 — 직장인 무료 검진 + 6대 암검진 본인부담 0~10%",
  description:
- "직장가입자 일반검진 사무직 격년·비사무직 매년 100% 무료. 5대 암(위·대장·간·유방·자궁경부) 본인부담 10%. 2026 대상자 조회·항목·예약·미수검 과태료(최대 1,000만원) 한 번에 정리.",
+ "직장가입자 일반검진 사무직 격년·비사무직 매년 100% 무료, 수검 기한 12월 31일. 6대 암검진 본인부담: 대장·자궁경부 0원, 위·간·유방·폐 10%(보험료 하위 50%·의료급여 0원). 대상자 조회·예약·미수검 과태료(최대 1,000만원) 정리.",
  path: "/health-checkup-2026",
  ogType: "article",
  publishedTime: "2026-05-22",
- modifiedTime: "2026-10-19T00:00:00+09:00",
+ modifiedTime: "2026-11-01T00:00:00+09:00",
  keywords: [
  "건강검진 2026",
  "2026 건강검진",
@@ -43,7 +42,7 @@ export const metadata: Metadata = buildPageMetadata({
  "건강검진 비용",
  "건강검진 미수검 과태료",
  "건강검진 예약",
- "5대 암검진",
+ "6대 암검진",
  "건강검진 본인부담금",
  ],
 });
@@ -143,7 +142,7 @@ export default function HealthCheckup2026Page() {
  slug: "health-checkup-2026",
  url: "/health-checkup-2026",
  publishedDate: "2026-05-22",
- modifiedDate: "2026-10-19T00:00:00+09:00",
+ modifiedDate: "2026-11-01T00:00:00+09:00",
  }),
  speakableLd({
  url: "/health-checkup-2026",
@@ -161,7 +160,7 @@ export default function HealthCheckup2026Page() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  건강검진 2026 <span className="text-electric">대상·비용·예약</span>
  </h1>
- <PublishedMeta publishedDate="2026-05-22" updatedDate="2026-10-19" className="mb-2" />
+ <PublishedMeta publishedDate="2026-05-22" updatedDate="2026-11-01" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  본인이 2026년 건강검진 대상자인지, 어떤 항목을 받고, 비용은 얼마인지,
  예약은 어디서 하는지 한 페이지에서 확인하세요. 직장인은 미수검 시 사업주
@@ -186,7 +185,7 @@ export default function HealthCheckup2026Page() {
  <p className="text-sm leading-7 text-muted-blue">
  국민건강검진은 국민건강보험 가입자라면 누구나 받을 수 있는 무료 검진입니다.
  일반건강검진(혈압·혈액·소변 등 17개 항목)은 공단이 전액 부담하고, 암검진(위·대장·
- 간·유방·자궁경부·폐 등 6대 암)은 90% 공단 + 10% 본인 부담입니다. 직장가입자
+ 간·유방·자궁경부·폐 등 6대 암)은 본인 10%(일부 0원). 직장가입자
  사무직은 2년에 1회, 비사무직은 매년 실시 의무.
  </p>
  <p className="text-sm leading-7 text-muted-blue mt-4">

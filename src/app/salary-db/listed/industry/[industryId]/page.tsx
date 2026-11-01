@@ -100,8 +100,9 @@ export async function generateMetadata({ params: pendingParams }: Props): Promis
   const r = getIndustryRanking(params.industryId);
   if (!r) return { title: "페이지를 찾을 수 없습니다", robots: { index: false, follow: false } };
   return buildPageMetadata({
-    title: `${r.industryKo} 공시기업 연봉 순위 — 공시 평균연봉 ${r.companyCount}곳 (${DART_RANKING_YEAR})`,
-    description: `${r.industryKo} 공시기업 ${r.companyCount}곳의 DART 사업보고서 공시 평균연봉 순위입니다. 업종 가중 평균 ${fmtManwon(
+    // 검색어 '상장사'는 head 메타 전용 — 본문은 공시기업+상장 여부 단서 유지 (591d437de/SEO-04)
+    title: `${r.industryKo} 상장사 연봉 순위 — 공시 평균연봉 ${r.companyCount}곳 (${DART_RANKING_YEAR})`,
+    description: `${r.industryKo} 상장사 ${r.companyCount}곳의 DART 사업보고서 공시 평균연봉 순위입니다. 업종 가중 평균 ${fmtManwon(
       r.weightedAvgManwon
     )}·중위 ${fmtManwon(r.medianManwon)} — 추정이 아닌 공시 원값 전수 순위표.`,
     path: `/salary-db/listed/industry/${r.industryId}`,
@@ -109,7 +110,7 @@ export async function generateMetadata({ params: pendingParams }: Props): Promis
       `${r.industryKo} 연봉 순위`,
       `${r.industryKo} 평균연봉`,
       `${r.industryKo} 연봉`,
-      "공시기업 연봉 순위",
+      "상장사 연봉 순위",
     ],
   });
 }

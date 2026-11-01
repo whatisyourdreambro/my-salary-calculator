@@ -147,7 +147,7 @@ export function buildActions(
 
  if (incomeType === "freelancer") return [
  { icon: Receipt, title: "종합소득세 예상액", description: "3.3% 원천징수와 최종 세금 구분", href: "/tools/finance/freelance-tax" },
- { icon: Shield, title: "건강보험료 확인", description: "직장·지역 가입 조건별 보험료", href: "/health-insurance-2026" },
+ { icon: Shield, title: "건강보험료 확인", description: "직장·지역 가입 조건별 보험료", href: "/health-insurance-fee-2026" },
  { icon: Calculator, title: "연간 수입 계획", description: "성수기·비수기 월 수입으로 비교", href: "/calc/freelancer-yearly-quick" },
  ];
  if (incomeType === "part_time") return [
