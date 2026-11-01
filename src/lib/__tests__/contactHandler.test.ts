@@ -267,6 +267,16 @@ describe("contact moderation and version-stable receipts", () => {
     expect((await handleContactPost(request({ ...input, body }), bindings, now)).status).toBe(201);
   });
 
+  it("accepts 시 (when) before a common 발- word but still rejects 시발 before other words", async () => {
+    const { bindings } = storage();
+    const body = "계산 시 발생하는 차이가 있어요. 신청 시 발급되는 서류도 알려 주세요";
+    expect((await handleContactPost(request({ ...input, body }), bindings, now)).status).toBe(201);
+    const blocked = storage();
+    const result = await handleContactPost(request({ ...input, body: "시발 생각" }), blocked.bindings, now);
+    expect(await result.json()).toEqual({ ok: false, error: "CONTENT_NOT_ALLOWED" });
+    expect(blocked.db.batch).toHaveBeenCalledTimes(1);
+  });
+
   it("confirms an unchanged receipt using its saved contract even after the policy changes", async () => {
     const body = "씨발";
     const version = "contact-v1";
