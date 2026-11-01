@@ -9,7 +9,7 @@ const manifest = {
   version: 1, mode: 'qa', buildId: 'fixture-build',
   routes: { '/': htmlRoute('home'), '/guides': htmlRoute('guides'), '/en/guides': htmlRoute('en-guides'),
     '/share': htmlRoute('share'), '/404': htmlRoute('404', 404), '/en/page-unavailable': htmlRoute('en404', 404), [korean]: htmlRoute('korean') },
-  publicAssets: ['/ads.txt'], notFound: { ko: '/404', en: '/en/page-unavailable' },
+  publicAssets: ['/ads.txt', '/b112e39a5933ca97201c83a7c5d7d91e.txt'], notFound: { ko: '/404', en: '/en/page-unavailable' },
   headers: [{ regex: '^/.*$', headers: [{ key: 'Content-Security-Policy', value: "default-src 'self'" }, { key: 'Cache-Control', value: 'public, max-age=0, s-maxage=21600' }] }],
   redirects: [{ regex: '^/old/([^/]+)$', keys: ['id'], destination: '/new/:id', statusCode: 308 }],
 };
@@ -38,6 +38,8 @@ test('HTML and native export Flight have different URLs, MIME and private ASCII 
   assert.equal(html.headers.get('Content-Security-Policy'), "default-src 'self'");
   const rsc = await f.request('/guides.txt?_rsc=fixture', { headers: { rsc: '1' } });
   assert.match(rsc.headers.get('Content-Type'), /^text\/x-component/); assert.match(await rsc.text(), /^FLIGHT:/);
+  assert.equal(rsc.headers.get('X-Robots-Tag'), 'noindex');
+  assert.equal(html.headers.get('X-Robots-Tag'), null);
   assert.equal((await f.request('/index.txt', { headers: { rsc: '1' } })).status, 200);
   assert.ok(f.reads.every(read => !new URL(read.url).search && !read.headers.cookie && !read.headers.authorization));
   assert.equal((await f.request('/guides', { headers: { rsc: '1' } })).status, 404);
@@ -85,6 +87,11 @@ test('private assets, malformed paths, wrong methods and denied agents fail befo
   assert.equal((await f.request('/guides', { headers: { 'User-Agent': 'curl/9' } })).status, 403);
   assert.equal(f.reads.length, 0);
   assert.equal((await f.request('/guides', { headers: { 'User-Agent': 'Googlebot SemrushBot' } })).status, 200);
+  // IndexNow verifiers may use library agents; the public key file stays readable (SEO-05).
+  for (const agent of ['', 'Go-http-client/1.1', 'python-requests/2.32']) {
+    assert.equal((await f.request('/b112e39a5933ca97201c83a7c5d7d91e.txt', { headers: { 'User-Agent': agent } })).status, 200, agent);
+  }
+  assert.equal((await f.request('/other.txt', { headers: { 'User-Agent': 'curl/9' } })).status, 403);
   const head = await f.request('/guides', { method: 'HEAD' }); assert.equal(await head.text(), '');
 });
 

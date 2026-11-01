@@ -4,7 +4,7 @@ import { NATIVE_RELEASE_PATH, validateNativeRelease } from './pages-native-relea
 const ALLOWED_BOTS = /(Googlebot|AdsBot-Google|Mediapartners-Google|Google-InspectionTool|Bingbot|NaverBot|Yeti|Daum|DuckDuckBot|Applebot|FacebookExternalHit|Twitterbot|LinkedInBot|Slackbot|TelegramBot|WhatsApp|KakaoTalk-scrap|ClaudeBot|PerplexityBot|GPTBot|Google-Extended|cohere-ai|anthropic-ai|Amazonbot)/i;
 const BAD_BOTS = /(SemrushBot|AhrefsBot|MJ12bot|Bytespider|DotBot|PetalBot|SeznamBot|YandexBot|BLEXBot|DataForSeoBot|SerpstatBot|MegaIndex|Barkrowler|ZoominfoBot|ImagesiftBot|MauiBot|SerendeputyBot)/i;
 const SUSPICIOUS_UA = /^(curl|python-requests|Go-http-client|libwww-perl|Java\/|node-fetch|axios|okhttp|aiohttp|HTTrack|wget|scrapy|httpx)/i;
-const MIDDLEWARE_EXEMPT = /^\/(?:_next\/static|_next\/image|favicon.ico|robots.txt|sitemap.xml|rss.xml|rss-companies.xml|insights\/[a-z0-9-]+\/data.csv|insights\/[a-z0-9-]+\/data.json|api\/og|opengraph-image|naver226c8e8c348e204e98efbcf23514d286.html)/;
+const MIDDLEWARE_EXEMPT = /^\/(?:_next\/static|_next\/image|favicon.ico|robots.txt|sitemap.xml|rss.xml|rss-companies.xml|insights\/[a-z0-9-]+\/data.csv|insights\/[a-z0-9-]+\/data.json|api\/og|opengraph-image|naver226c8e8c348e204e98efbcf23514d286.html|b112e39a5933ca97201c83a7c5d7d91e.txt)/;
 const PRIVATE = 'private, no-store';
 const ENGLISH_MISSING = '/en/page-unavailable';
 
@@ -187,6 +187,8 @@ export function createPagesHandler(manifest, { dynamic, salaryRedirect, share, o
         // Native export payloads have their own .txt URL; never negotiate HTML at
         // the same URL based on RSC headers, which Cloudflare does not vary on.
         if (!rsc && request.headers.get('rsc') === '1') return missing(request, env, path);
+        // Flight payloads are router data, not documents for search results (PH-07).
+        if (rsc) response.headers.set('X-Robots-Tag', 'noindex');
         if ((routePath === '/guides' || routePath === '/en/guides') && url.searchParams.get('q')?.trim()) {
           response.headers.set('X-Robots-Tag', 'noindex, follow');
           response.headers.set('Cache-Control', PRIVATE);
