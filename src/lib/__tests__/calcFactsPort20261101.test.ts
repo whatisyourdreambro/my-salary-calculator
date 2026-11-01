@@ -7,9 +7,10 @@
 // - 아동수당: 아동수당법 제4조 제1항(개정 2026.3.20) + 부칙(법률 제21489호) 제2조 — 2026년 지급 대상은 9세 미만.
 //
 // 광고 위 문구 원칙: 공식(계산 공식 블록)은 같은 자릿수 숫자 교체만, DSR 해설은 원문보다 짧은 문구만.
-// bmi-quick 계산 방식 설명(explanation)의 '25~29.9 비만, 30 이상 고도비만'은 이번에 고치지 않았다 —
-// 2026-09-29 1,123폭 스윕에서 같은 숫자 교체가 442·493·555px 에서 GuideMid 이하 광고 3개를 한 줄(28px) 밀었다(941cfad86).
-// 그 문장은 운영자 결정(광고 아래로 옮기기 또는 스윕 통과 후 교체) 대상이다.
+// bmi-quick 계산 방식 설명(explanation, GuideMid 위)은 2026-11-02 OF3 C1 에서 '25~29.9 비만, 30 이상 고도비만으로'를
+// '25 이상 비만으로'로 줄였다. 같은 숫자 교체(25~34.9·35)는 2026-09-29 1,123폭 스윕에서 442·493·555px 에서 GuideMid 이하
+// 광고 3개를 한 줄(28px) 밀어 되돌렸다(941cfad86). 새 문장은 원문에서 글자만 지운 것(단어는 줄거나 빠질 뿐 합쳐지지 않음)이라
+// 어느 폭에서도 줄이 늘지 않는다. 비만 단계 구분은 결과 판정과 GuideMid 아래 계산 공식 블록에 있다.
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -68,6 +69,28 @@ describe("STR-02-d bmi-quick 판정 — 질병관리청 비만 단계(1단계 25
     const after = "25~34.9 비만 / 35 이상 고도비만";
     expect([...after].length).toBe([...before].length);
     expect(after.replace(/\d/g, "0")).toBe(before.replace(/\d/g, "0"));
+  });
+
+  it("계산 방식 설명 — '25 이상 비만으로 분류됩니다.', '30 이상 고도비만' 없음 (OF3 C1)", () => {
+    const explanation = calc("bmi-quick").explanation ?? "";
+    expect(explanation).toContain("23~24.9 과체중, 25 이상 비만으로 분류됩니다.");
+    expect(explanation).not.toContain("30 이상 고도비만");
+  });
+
+  it("설명 교체는 원문에서 글자만 지운다 — 새 단어마다 원문 단어의 부분열, 순서 그대로 (GuideMid 위 문단)", () => {
+    const before = "25~29.9 비만, 30 이상 고도비만으로 분류됩니다.".split(" ");
+    const after = "25 이상 비만으로 분류됩니다.".split(" ");
+    const isSubsequence = (short: string, long: string) => {
+      let i = 0;
+      for (const c of long) if (c === short[i]) i++;
+      return i === short.length;
+    };
+    let j = 0;
+    for (const word of after) {
+      while (j < before.length && !isSubsequence(word, before[j])) j++;
+      expect(j, word).toBeLessThan(before.length);
+      j++;
+    }
   });
 });
 

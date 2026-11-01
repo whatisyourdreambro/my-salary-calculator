@@ -32,10 +32,12 @@ describe("정책상품 한도·소득 요건", () => {
     expect(rates["신혼부부 버팀목"]).toBe(1.9);
     expect(rates["청년 전세 (만 19~34)"]).toBe(2.2);
   });
-  it("최저 비용 배지는 대상 상품 중에서만", () => {
+  it("최저 금리 배지는 대상 상품 중에서만", () => {
     const best = cheapestEligible(calcJeonseLoans(300_000_000, 60_000_000));
     expect(best?.name).toBe("신혼부부 버팀목");
     expect(cheapestEligible(calcJeonseLoans(0, 60_000_000))).toBeNull();
+    // 종전 연 이자 순위는 한도가 작은 버팀목(1.2억 x 2.5% = 연 300만)에 배지를 달았다 — 금리 순이면 신혼부부 1.9% (OF3 C3)
+    expect(cheapestEligible(calcJeonseLoans(300_000_000, 40_000_000))?.name).toBe("신혼부부 버팀목");
   });
   it("합산 연소득 0원(입력란을 비운 순간)에도 NaN 없음 — 정책상품은 보증금 비율·호당 한도로", () => {
     const results = calcJeonseLoans(300_000_000, 0);

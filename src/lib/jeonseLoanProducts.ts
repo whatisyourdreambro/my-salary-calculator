@@ -76,9 +76,12 @@ export function calcJeonseLoans(deposit: number, income: number): JeonseLoanResu
   });
 }
 
-/** 최저 비용 배지 대상 — 대상 상품 중 연 이자가 가장 적은 것 (한도 0 제외). 없으면 null */
+// 2026-11-02 OF3 C3: 종전에는 연 이자(한도 x 금리)가 가장 적은 상품에 '최저 비용' 배지를 달아, 한도가 작은 상품이 이겼다
+// (보증금 3억·합산 4천만: 버팀목 1.2억 x 2.5% = 연 300만 < 신혼부부 2.4억 x 1.9% = 456만). 보증료·인지세도 빠져 '비용'이
+// 아니었다. 금리 순으로 고르고, 금리가 같으면 한도가 큰 상품. 자격은 여전히 소득 요건만 본다(혼인·나이는 묻지 않음).
+/** 최저 금리 배지 대상 — 대상 상품 중 (하한) 금리가 가장 낮은 것 (한도 0 제외). 없으면 null */
 export function cheapestEligible(results: readonly JeonseLoanResult[]): JeonseLoanResult | null {
   const pool = results.filter((r) => r.eligible && r.limit > 0);
   if (pool.length === 0) return null;
-  return pool.reduce((min, r) => (r.annualInterest < min.annualInterest ? r : min), pool[0]);
+  return pool.reduce((min, r) => (r.rate < min.rate || (r.rate === min.rate && r.limit > min.limit) ? r : min), pool[0]);
 }

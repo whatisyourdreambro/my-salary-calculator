@@ -309,8 +309,8 @@ const tempTwoHomeRule = `
 <li><strong>④ 종전 주택을 비과세 받으려면 매도 시점에 1주택만 보유 인정</strong></li>
 </ol>
 
-<h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 함정 — 3년 초과 시 양도세 폭탄</h2>
-<p>3년 1일 초과해서 종전 주택 매도 시 일시적 2주택 적용 X → 다주택자로 분류 → 비과세 0원 + 양도세 중과 가능성. 세액 증가폭은 사례별.</p>
+<h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 함정 — 늦게 팔면 양도세 폭탄</h2>
+<p>2·3년 기한 넘겨 종전 주택 매도 시 일시적 2주택 적용 X → 다주택자로 분류 → 비과세 0원 + 양도세 중과 가능성. 세액 증가폭은 사례별.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 안전 매도 일정</h2>
 <p>신규 주택 잔금일 기준 원칙 3년 이내. 예: 2026.6.1 신규 취득 → 2029.5.31까지 매도 필수.</p>
@@ -1376,7 +1376,7 @@ export const hotNewsExtended: Guide[] = [
   // 부동산 심화 10편
   { slug: "gangnam-vs-gangbuk-prop-tax-2026", title: "강남 1주택 20억 vs 강북 2주택 16억 — 보유세 632만 vs 544만원", description: "강남 1주택 20억 보유세 약 632만원 vs 강북 2주택 합 16억 약 544만원. 1주택 12억 공제로 공시가 4억 차이에도 세금 차이는 약 88만원.", category: "부동산", tags: ["보유세", "종부세", "1주택자", "다주택", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: gangnamVsGangbuk, lang: "ko" },
   { slug: "parcel-vs-occupancy-right-tax-2026", title: "분양권 vs 입주권 양도세 — 단기 양도세 70%·60% 점검", description: "분양권의 1년 기준 70%·60% 세율과 승계취득 입주권의 보유기간·공제 차이를 확인합니다.", category: "부동산", tags: ["분양권", "입주권", "양도세", "재개발", "2026"], level: "고급", publishedDate: "2026-05-23", modifiedDate: "2026-10-03", views: 0, content: parcelRightVsOccupancyRight, lang: "ko" },
-  { slug: "temp-two-home-3year-rule-2026", title: "일시적 2주택 3년 룰 — 조정 두 채는 2년 기한 주의", description: "신규 주택 취득 후 3년 이내 종전 주택 매도 시 1주택자 비과세 12억. 3년 1일 초과 시 다주택자 분류, 양도세 폭탄.", category: "부동산", tags: ["일시적2주택", "양도세", "비과세", "이사", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: tempTwoHomeRule, lang: "ko" },
+  { slug: "temp-two-home-3year-rule-2026", title: "일시적 2주택 3년 룰 — 조정 두 채는 2년 기한 주의", description: "신규 취득 후 2·3년 내 종전 주택 매도 시 1주택자 비과세 12억. 초과 시 다주택자 분류, 양도세 폭탄.", category: "부동산", tags: ["일시적2주택", "양도세", "비과세", "이사", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: tempTwoHomeRule, lang: "ko" },
   { slug: "redevelopment-tax-3-step-2026", title: "재건축·재개발 양도세 3단계 — 사업시행·관리처분·준공 시점별", description: "사업시행 전 일반 양도세, 관리처분~준공 입주권 보유기간 합산, 준공 후 새 주택 양도세 + 청산금 차익 별도.", category: "부동산", tags: ["재건축", "재개발", "양도세", "입주권", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: redevelopmentTax, lang: "ko" },
   { slug: "lease-right-transfer-tax-2026", title: "전세권·임차권 양도세 — 권리금 차익도 신고 의무", description: "전세권 매매 시 권리금 차익에 양도세 6~45%. 보유 3년 미만은 단기 세율 45%. 등기 전세권은 임대인 동의 없이 양도 가능.", category: "부동산", tags: ["전세권", "임차권", "양도세", "권리금", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: leaseRightTax, lang: "ko" },
   { slug: "farmland-forest-capital-gains-2026", title: "농지·임야 양도세 — 자경 8년 100% 감면 vs 비사업용 10%p 가산", description: "자경 농지 8년+ 거주 + 직접 경작 시 양도세 100% 감면(연 1억 한도). 비사업용 토지는 10%p 가산세 추가.", category: "부동산", tags: ["농지", "임야", "양도세", "자경", "2026"], level: "고급", modifiedDate: "2026-10-03", publishedDate: "2026-05-23", views: 0, content: farmlandForestTax, lang: "ko" },

@@ -65,7 +65,7 @@ export default function JeonseLoanClient() {
               }}>
               {isBest && (
                 <div className="absolute top-3 right-3 text-[10px] font-black px-2 py-0.5 rounded-full bg-white text-electric">
-                  최저 비용
+                  최저 금리
                 </div>
               )}
               <p className="text-xs font-black uppercase tracking-widest mb-2"

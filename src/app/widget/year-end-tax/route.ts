@@ -6,7 +6,12 @@
 // 축소판 성립 근거: 표준 가정(본인 1인 기본공제, 4대보험은 총급여에서 요율로
 // 자동 산출, 그 외 공제 0)을 두면 결정세액이 총급여만의 함수가 된다 —
 // 결정세액 1D 그리드를 인라인하고, 환급 = 기납부세액 − 결정세액(보간)만
-// 클라이언트에서 뺄셈. 결과는 "기본 공제만 반영한 보수적 추정"으로 프레이밍
+// 클라이언트에서 뺄셈. 그리드 값은 엔진(calculateYearEndTax)이 두 방식 중 낮은 쪽으로 고른
+// 결정세액이다 — 건강·장기요양·고용보험료 특별소득공제(소득세법 §52) 방식과, 그 공제 없이
+// 표준세액공제 연 13만원(§59의4⑨1)을 받는 방식(국민연금 공제는 두 방식 모두). 2026 상수로는
+// 총급여 3,000만원 이하 그리드 점이 표준세액공제 쪽, 3,100만원부터 보험료 공제 쪽이다.
+// 그래서 note·/embed 설명은 '4대보험만 반영'이라 쓰지 않는다(2026-11-02 OF3 C4).
+// 결과는 "기본 공제만 반영한 보수적 추정"으로 프레이밍
 // (카드·연금저축 등 입력 시 실제 환급은 이보다 늘어남 → 본편 CTA).
 // ★가정 문구와 계산 로직 일치 유지 — 아래 상수 변경 시 note 문구도 함께.
 
@@ -146,7 +151,7 @@ function buildHtml(): string {
     <span class="label" id="resLabel">올해 결정세액(추정)</span>
     <span class="value" id="res">—</span>
   </div>
-  <p class="note">2026년 귀속 · 본인 1인 공제·4대보험만 반영한 보수적 추정 — 공제 요건과 결정세액에 따라 실제 환급액은 달라질 수 있습니다. 지방소득세(소득세의 10%)는 별도.</p>
+  <p class="note">2026년 귀속 · 본인 1인 공제 반영한 보수적 추정 — 공제 요건과 결정세액에 따라 실제 환급액은 달라질 수 있습니다. 지방소득세(소득세의 10%)는 별도.</p>
   <a class="cta" href="https://www.moneysalary.com/year-end-tax?utm_source=widget&amp;utm_medium=iframe" target="_blank" rel="noopener">추가 공제 넣고 예상액 비교하기 →</a>
   <p class="brand"><a href="https://www.moneysalary.com/year-end-tax?utm_source=widget&amp;utm_medium=iframe" target="_blank" rel="noopener">by 머니샐러리</a></p>
 <script>
