@@ -114,7 +114,7 @@ export default function BonusHomePlanPage() {
             <p className="text-muted-blue dark:text-canvas-300 leading-relaxed">
               실적 연도 2026~2030년 성과급을 받는 해(2027~2031년)에 맞춰 더하고, 받는 해 연봉에 합산해 세금(연간 결정세액 차이)과
               4대보험을 뺍니다. 삼성전자 DS는 OPI(연봉의 {DEFAULT_PLAN_STATE.opi1Pct}% — 2025년분 DS부문 공통 실지급률, 보도 기준)와
-              특별경영성과급(영업이익 10.5% 재원, 2026~28년 200조·2029년부터 100조 미만이면 0), TAI(월 기본급 × 2026년 상반기 지급률,
+              특별경영성과급(DS 영업이익 10.5%, 2026~28년 200조·29년부터 100조 미만이면 0), TAI(월 기본급 × 2026년 상반기 지급률,
               연 2회)를 더합니다. SK하이닉스는 PS(영업이익 10% ÷ 직원 34,549명 × 연봉/1억)와 PI(반기마다 기본급 × PI%)입니다.
               연봉은 삼성 {SAMSUNG_WAGE_2026.totalPct}%(2026 임금협약 {SAMSUNG_WAGE_2026.basePct}% + 성과 평균 {SAMSUNG_WAGE_2026.meritAvgPct}%),
               SK 6.3%씩 오른다고 가정합니다.

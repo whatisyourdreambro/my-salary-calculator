@@ -20,7 +20,7 @@ import {
 } from "./taiData";
 
 describe("opiData — 2025년 실적분 동결값·파생", () => {
-  it("2025년분 8행 (노조 공지 기반 보도, 2026-01-30 지급)", () => {
+  it("2025년분 8행 (복수 언론 보도 등, 2026-01-30 지급)", () => {
     expect(OPI_ACTUAL_2025.payDate).toBe("2026-01-30");
     expect(OPI_ACTUAL_2025.rates.map((r) => [r.division, r.rate])).toEqual([
       ["MX (스마트폰)", 50],
