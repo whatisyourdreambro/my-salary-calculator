@@ -31,7 +31,13 @@ export default function robots(): MetadataRoute.Robots {
  // 크롤까지 막으면 (a) 카카오·페이스북·트위터 크롤러가 OG 태그를 못 읽어
  // 바이럴 공유 카드가 제목·설명·이미지 전부 빈칸이 되고, (b) noindex 메타를
  // 읽을 수 없어 URL-only 색인이 오히려 남을 수 있다.
- const corePathDisallow = ['/private/', '/api/', '/widget/'];
+ // /adgk/ = Cloudflare 구글 태그 게이트웨이(GA4 수집·광고 전환 핑의 1st-party 경로).
+ // GSC 크롤 통계(2026-11-01, 지난 90일 8.24만 건)에서 '다른 파일 형식' 2.43만 건(GA4
+ // 수집 핑)과 302 3.37천 건(전환 핑)이 전부 이 경로였다 — 구글 렌더러가 페이지를 그릴
+ // 때마다 측정 요청을 보내 크롤 몫의 약 1/3을 쓰고, 새 페이지 발견 크롤은 1%였다.
+ // 측정은 본문 렌더링에 필요 없으므로 크롤만 막는다. AdsBot·Mediapartners 그룹은
+ // '/' 허용 그대로라 광고 매칭에는 영향이 없다.
+ const corePathDisallow = ['/private/', '/api/', '/widget/', '/adgk/'];
 
  return {
  rules: [
