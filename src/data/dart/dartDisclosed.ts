@@ -44,7 +44,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "avgTenureYears": 13.7,
   "rceptNo": "20260310002820",
   "ksicCode": "264",
-  "reportedAvgManwonRaw": 15706,
+  "reportedAvgManwonRaw": 15800,
   "divergencePct": 2.2,
   "history": [
    {

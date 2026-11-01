@@ -317,7 +317,7 @@ export const krCompanies_Batch16: CompanyProfile[] = [
     industry: "Mobility / Leasing",
     tier: "conglomerate",
     logo: "🚗",
-    description: "국내 2위 렌터카·카셰어링 기업. 롯데그룹 모빌리티 사업의 핵심으로 EV 전환 가속.",
+    description: "국내 1위 렌터카·카셰어링 기업. 롯데그룹 모빌리티 사업의 핵심으로 EV 전환 가속.",
     salary: {
       entry: { base: 48000000, incentive: { target: 12, max: 25, avgAmount: 7500000 } },
       junior: { base: 57000000, incentive: { target: 12, max: 25, avgAmount: 9000000 } },

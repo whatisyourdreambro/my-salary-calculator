@@ -504,6 +504,16 @@ function aggregate(list) {
   return { totalHead, avgWon, tenure, divergence, reportedWon };
 }
 
+// 사업보고서 원문 '직원 등의 현황' 표의 '합 계' 행 1인평균 급여액(만원) — OpenDART 직원현황 API 는 부문·성별 행만 주고
+// 합계 행을 주지 않아, 회사가 평균 재직자 기준으로 산출한 공식 합계와 성별 행(백만원 반올림) 인원 가중값이 다를 수 있다.
+// 원문을 직접 확인한 회사만 적고, 같은 접수번호일 때만 공시 1인평균 기준값(reportedAvgManwonRaw)으로 쓴다
+// (다음 해 사업보고서는 접수번호가 달라 자동으로 빠진다 — 그때 원문을 다시 보고 갱신). 추정·보정 금지.
+const FILING_TOTAL_AVG_MANWON = {
+  // 삼성전자 2025 사업보고서 VIII-1 바. 직원 등의 현황 합 계: 128,881명·연간급여 총액 19,799,762백만원·1인평균 158백만원
+  // (※ 평균 재직자 125,516명 기준 산출). 성별합계 행 167·130 의 인원 가중은 157.06 -> 15,706 이었다. (2026-10-05 원문 확인)
+  "00126380": { rceptNo: "20260310002820", manwon: 15800 },
+};
+
 // ═══════════ ④ emit ═══════════
 function emit() {
   const entries = getTargets();
@@ -541,7 +551,13 @@ function emit() {
     const tenureOk = agg.tenure != null && agg.tenure >= 0 && agg.tenure <= 40;
     // 회사 공시 1인평균 기준값 (A19) — 산정치와 같은 V3 범위(1,200~30,000만원) 통과분만.
     // 범위 밖(월평균을 연평균 칸에 적은 공시 등)은 싣지 않는다 — 추정·보정 금지.
-    const reportedManwon = agg.reportedWon != null ? agg.reportedWon / 10_000 : null;
+    const filingTotal = FILING_TOTAL_AVG_MANWON[e.corpCode];
+    const reportedManwon =
+      filingTotal && filingTotal.rceptNo === list[0].rcept_no
+        ? filingTotal.manwon
+        : agg.reportedWon != null
+          ? agg.reportedWon / 10_000
+          : null;
     const reportedOk = reportedManwon != null && reportedManwon >= 1200 && reportedManwon <= 30000;
     if (reportedOk) reportedCount++;
 

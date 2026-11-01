@@ -222,7 +222,7 @@ export const krCompanies_Batch26: CompanyProfile[] = [
     industry: "Entertainment / K-pop",
     tier: "unicorn",
     logo: "🎶",
-    description: "TWICE·Stray Kids·ITZY·aespa 경쟁사. 일본·미국 시장 K-pop 수출 강자.",
+    description: "TWICE·Stray Kids·ITZY 소속사. 일본·미국 시장 K-pop 수출 강자.",
     salary: {
       entry: { base: 47000000, incentive: { target: 16, max: 32, avgAmount: 8500000 } },
       junior: { base: 59000000, incentive: { target: 16, max: 32, avgAmount: 12000000 } },

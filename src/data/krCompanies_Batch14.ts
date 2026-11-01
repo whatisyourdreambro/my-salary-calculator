@@ -240,7 +240,7 @@ export const krCompanies_Batch14: CompanyProfile[] = [
     industry: "Mobility/Leasing",
     tier: "conglomerate",
     logo: "🚗",
-    description: "업계 1위 법인 렌터카. 어피니티 인수 이후로 SK 계열에서 분리됨.",
+    description: "업계 2위 렌터카. 어피니티 인수 이후로 SK 계열에서 분리됨.",
     salary: {
       entry: { base: 48000000, incentive: { target: 15, max: 30, avgAmount: 9000000 } },
       junior: { base: 58000000, incentive: { target: 15, max: 30, avgAmount: 12000000 } },
