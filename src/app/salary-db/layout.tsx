@@ -5,6 +5,7 @@ import PageFooterAds from "@/components/PageFooterAds";
 import AutoShareSection from "@/components/AutoShareSection";
 import FloatingShareBar from "@/components/FloatingShareBar";
 import CompanyRelatedJobs from "@/components/CompanyRelatedJobs";
+import EditorialTrustNoteFromPath from "@/components/EditorialTrustNoteFromPath";
 import { buildCompanyJobsMap } from "@/lib/companyJobsMap";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
 import { listedCohort } from "@/lib/salary-data/dartLite";
@@ -49,6 +50,10 @@ export default function SalaryDbLayout({ children }: { children: React.ReactNode
  {/* "{회사명} 연봉" 검색 = 최대 유입 엔진. 히어로 공유가 스크롤 밖으로
      사라진 뒤에도 모바일에서 공유 접점 유지 (광고·PWA 배너 감지 시 자동 숨김) */}
  <FloatingShareBar />
+ {/* 만든 사람과 확인 방법(G4, 운영자 승인 2026-11-01 구글 개선 5번) — 회사 페이지(/salary-db/[id])에서만, PageFooterAds·
+     직업 링크·공유 뒤 맨 끝(광고 위 UI 금지 + 기존 형제의 자동광고 CSS 경로 불변). 인덱스·ranking·compare·상장 lite 는 null
+     (src/lib/editorialTrust.ts). page.tsx 에는 두지 말 것 — PageFooterAds 위가 된다. */}
+ <EditorialTrustNoteFromPath className="mx-auto my-10 max-w-5xl px-4 sm:px-6 lg:px-8" />
  </>
  );
 }

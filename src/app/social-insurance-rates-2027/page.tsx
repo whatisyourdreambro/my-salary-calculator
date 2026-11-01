@@ -34,6 +34,7 @@ import { breadcrumbLd, faqLd, speakableLd } from "@/lib/structuredData";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd, GuideMidAd, CalcResultAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
+import EditorialTrustNote from "@/components/EditorialTrustNote";
 import {
   MIN_WAGE_2027,
   MIN_WAGE_2027_MONTHLY,
@@ -415,6 +416,9 @@ export default function SocialInsuranceRates2027Page() {
         <div className="mt-10">
           <MultiplexAd />
         </div>
+
+        {/* 만든 사람과 확인 방법(G4, 운영자 승인 2026-11-01 구글 개선 5번) — 마지막 광고(MultiplexAd) 아래 컨테이너 맨 끝 */}
+        <EditorialTrustNote path="/social-insurance-rates-2027" className="mt-10" />
       </div>
     </main>
   );

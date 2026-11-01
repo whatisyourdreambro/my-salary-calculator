@@ -20,6 +20,7 @@ import { InArticleAd, HomeTopAd, GuideMidAd, CalcResultAd } from "@/components/A
 // 부활 팩 ④ (운영자 승인 2026-08-31) — CPA 오퍼 슬롯
 import { OfferSlot } from "@/components/affiliate/AffiliateSlot";
 import CoupangBanner from "@/components/CoupangBanner";
+import EditorialTrustNote from "@/components/EditorialTrustNote";
 
 export const metadata: Metadata = buildPageMetadata({
  // 의도: 계산기 도구 (시즌 무관, 연 1회 사용). 시즌 가이드는 별도 페이지.
@@ -319,6 +320,9 @@ export default function YearEndTaxPage() {
  ))}
  </div>
  </section>
+
+ {/* 만든 사람과 확인 방법(G4, 운영자 승인 2026-11-01 구글 개선 5번) — 마지막 광고(쿠팡 배너)·공유·한도표 아래 컨테이너 맨 끝 */}
+ <EditorialTrustNote path="/year-end-tax" className="mt-14" />
  </div>
  </section>
  </main>
