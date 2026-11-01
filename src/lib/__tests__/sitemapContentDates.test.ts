@@ -1,6 +1,10 @@
 import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { latestContentDate, STATIC_LAST_MODIFIED } from '@/config/siteDates';
+import { PAGE_VISIBLE_REVISION_DATES } from '@/config/pageContentRevisions';
+import { koreanDay, pageRevisionFields } from '../../../scripts/lib/sitemap-freshness.mjs';
 
 describe('sitemap editorial date integrity', () => {
   it('dates the pension, IRP and civil-pay factual corrections without refreshing the home or insurance article', () => {
@@ -65,5 +69,32 @@ describe('sitemap editorial date integrity', () => {
       expect(row.matches, row.path).toEqual([expected]);
     }
     expect(result.untouched.every(([, changed]) => !changed)).toBe(true);
+  }, 35_000);
+
+  // B36 (owner approval 8, 2026-11-01): the October 19 change on these pages only added the
+  // TopicNextSteps link box. The sitemap keeps that link-review lastmod; visible, OG and Article
+  // dates return to the last substantive revision (about-page date policy).
+  it('link boxes keep the sitemap link-review date without advancing visible, OG or Article dates', () => {
+    const routes = Object.keys(PAGE_VISIBLE_REVISION_DATES).sort();
+    expect(routes).toEqual(['/basic-pension-2026', '/chuseok-bonus-2026', '/civil-servant-pay-2027', '/health-insurance-2026']);
+    const fixture = `globalThis.fetch=()=>{throw new Error('Network forbidden')};
+      const rows=require('./src/app/sitemap.ts').default();
+      const paths=${JSON.stringify(routes)};
+      console.log(JSON.stringify(paths.map(path=>({path,dates:rows.filter(row=>new URL(row.url).pathname===path).map(row=>new Date(row.lastModified).toISOString())}))));`;
+    const rows = JSON.parse(execFileSync(process.execPath, ['--import', 'tsx', '-e', fixture], {
+      cwd: process.cwd(), encoding: 'utf8', timeout: 30_000, maxBuffer: 1024 * 1024,
+    })) as Array<{ path: string; dates: string[] }>;
+    expect(rows.map(row => row.path)).toEqual(routes);
+    for (const row of rows) expect(row.dates, row.path).toEqual(['2026-10-18T15:00:00.000Z']);
+    for (const route of routes) {
+      const visibleDay = PAGE_VISIBLE_REVISION_DATES[route];
+      expect(visibleDay < '2026-10-19', route).toBe(true);
+      const file = resolve(process.cwd(), 'src/app', route.slice(1), 'page.tsx');
+      const fields = pageRevisionFields(readFileSync(file, 'utf8'), file);
+      expect(fields.length, route).toBeGreaterThan(0);
+      for (const field of fields) {
+        expect(field.value === null ? null : koreanDay(field.value), `${route} ${field.name}`).toBe(visibleDay);
+      }
+    }
   }, 35_000);
 });

@@ -11,8 +11,13 @@ import { join } from "node:path";
 import { createRequire } from "node:module";
 import { pathToFileURL } from "node:url";
 import sitemap, { ROUTE_OVERRIDES } from "@/app/sitemap";
-import { assessContentReview, isFutureSitemapDate, koreanDay, pageRevisionFields } from "./lib/sitemap-freshness.mjs";
-import { PAGE_ACCURACY_REVIEW_PATHS, PAGE_LINK_REVIEW_PATHS } from "@/config/pageContentRevisions";
+import { assessContentReview, expectedPageRevisionDay, isFutureSitemapDate, koreanDay, pageRevisionFields } from "./lib/sitemap-freshness.mjs";
+import {
+  PAGE_ACCURACY_REVIEW_PATHS,
+  PAGE_LINK_REVIEW_DATE,
+  PAGE_LINK_REVIEW_PATHS,
+  PAGE_VISIBLE_REVISION_DATES,
+} from "@/config/pageContentRevisions";
 import { STATIC_LAST_MODIFIED_ISO } from "@/config/siteDates";
 import { webApplicationLd } from "@/lib/structuredData";
 import { koGuides, enGuides } from "@/lib/guidesContent";
@@ -65,16 +70,39 @@ function checkValidDates(entries: Awaited<ReturnType<typeof sitemap>>): number {
   return failed;
 }
 
+// Page revision fields (OG modifiedTime, Article modifiedDate, PublishedMeta updatedDate) follow
+// the sitemap day. A PAGE_VISIBLE_REVISION_DATES route keeps its last substantive revision on screen
+// while the sitemap carries the link-only review day (about-page policy, owner approval 2026-11-01).
 function checkPageRevisionDates(entries: Awaited<ReturnType<typeof sitemap>>): number {
   let failed = 0;
-  const paths = new Set([...Object.keys(ROUTE_OVERRIDES), ...PAGE_LINK_REVIEW_PATHS, ...PAGE_ACCURACY_REVIEW_PATHS]);
+  const linkReviewDay = koreanDay(PAGE_LINK_REVIEW_DATE);
+  const visibleRoutes = Object.keys(PAGE_VISIBLE_REVISION_DATES);
+  const paths = new Set([...Object.keys(ROUTE_OVERRIDES), ...PAGE_LINK_REVIEW_PATHS, ...PAGE_ACCURACY_REVIEW_PATHS, ...visibleRoutes]);
   for (const route of paths) {
     const file = join(APP_DIR, route.slice(1), 'page.tsx');
-    if (!existsSync(file)) continue; // Dynamic templates have their own date/guide contracts.
+    const visibleDay = visibleRoutes.includes(route) ? PAGE_VISIBLE_REVISION_DATES[route] : undefined;
+    if (!existsSync(file)) {
+      // Dynamic templates have their own date/guide contracts; a visible-date exception needs a static page.
+      if (visibleDay !== undefined) {
+        console.error(`[FAIL] 화면 수정일 예외 경로에 정적 page.tsx 없음: ${route}`);
+        failed++;
+      }
+      continue;
+    }
     const entry = entries.find(item => new URL(item.url).pathname === route);
-    for (const field of pageRevisionFields(readFileSync(file, 'utf8'), file)) {
-      if (!field.value || !entry?.lastModified || koreanDay(field.value) !== koreanDay(entry.lastModified)) {
-        console.error(`[FAIL] 페이지 수정일 불일치: ${route} ${field.name}=${field.value ?? '정적 날짜 판정 불가'} sitemap=${entry?.lastModified ?? '없음'}`);
+    const expected = expectedPageRevisionDay({ sitemapLastModified: entry?.lastModified, visibleDay, linkReviewDay });
+    for (const issue of expected.issues) {
+      console.error(`[FAIL] 화면 수정일 예외 불일치: ${route} visible=${visibleDay} sitemap=${entry?.lastModified ?? '없음'} 링크 검토일=${linkReviewDay}: ${issue}`);
+      failed++;
+    }
+    const fields = pageRevisionFields(readFileSync(file, 'utf8'), file);
+    if (visibleDay !== undefined && fields.length === 0) {
+      console.error(`[FAIL] 화면 수정일 예외인데 페이지 수정일 필드 없음: ${route}`);
+      failed++;
+    }
+    for (const field of fields) {
+      if (!field.value || !expected.day || koreanDay(field.value) !== expected.day) {
+        console.error(`[FAIL] 페이지 수정일 불일치: ${route} ${field.name}=${field.value ?? '정적 날짜 판정 불가'} 기대=${expected.day ?? '없음'} sitemap=${entry?.lastModified ?? '없음'}`);
         failed++;
       }
     }
