@@ -802,8 +802,8 @@ export async function main() {
         return Number(match[1].replaceAll(',', ''));
       };
       const readGain = async () => {
-        const value = await page.getByText(/^환급액 [\d,]+원 증가!$/).textContent();
-        return Number(/환급액 ([\d,]+)원 증가!/.exec(value)[1].replaceAll(',', ''));
+        const value = await page.getByText(/^공제로 환급 \+[\d,]+원$/).textContent();
+        return Number(/공제로 환급 \+([\d,]+)원/.exec(value)[1].replaceAll(',', ''));
       };
       await savings.fill('0'); await irp.fill('0');
       const baseRefund = await readRefund();
