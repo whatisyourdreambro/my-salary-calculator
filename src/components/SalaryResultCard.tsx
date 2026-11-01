@@ -42,18 +42,30 @@ interface SalaryResultCardProps {
  incomeTax: number;
  localTax: number;
  };
+ // 홈 연봉 계산기 전용. 입력을 고친 뒤 아직 다시 계산하지 않은 이전 결과면 true.
+ // 안내는 아래 제목 한 줄의 글자와 색만 바꾼다. 카드 위에 안내문을 따로 넣으면 입력을 고칠 때마다
+ // 카드 안 InArticleAd 와 아래 ResultAd 가 그 높이만큼 오르내린다(IVT-03, 2026-11-01 승인 B07).
+ // 이 값을 넘기지 않는 서버 렌더 화면(/salary/[amount], /monthly/[amount])은 role 없이 종전 HTML 그대로다.
+ stale?: boolean;
 }
 
 export default function SalaryResultCard({
  monthlyNet,
  totalDeduction,
  breakdown,
+ stale,
 }: SalaryResultCardProps) {
  return (
  <div className="w-full max-w-lg mx-auto space-y-4">
  <div className="ms-panel">
  <div className="flex justify-between items-center mb-2">
- <span className="text-sm font-semibold text-muted-foreground">예상 월 실수령액</span>
+ {/* 이전 결과 문구는 320px 폭에서도 한 줄(14px 굵게 약 166px)이라 광고 위 줄 수가 그대로다. 두 줄이 되는 문구로 바꾸지 말 것. */}
+ <span
+ role={stale === undefined ? undefined : "status"}
+ className={cn("text-sm font-semibold", stale ? "text-amber-700 dark:text-amber-400" : "text-muted-foreground")}
+ >
+ {stale ? "이전 결과 · 다시 계산해 주세요" : "예상 월 실수령액"}
+ </span>
  </div>
 
  <div className="flex flex-wrap items-baseline gap-1 mb-6">

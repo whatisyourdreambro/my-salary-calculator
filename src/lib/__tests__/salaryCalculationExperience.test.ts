@@ -90,6 +90,14 @@ function changeIncome(tree: unknown, value: string) {
   const input = nodes(tree).find((node) => node.type === MoneyInput && node.props.label !== "월 비과세액");
   (input!.props.onValueChange as (value: string) => void)(value); return render();
 }
+// The result card stays an element in this fixture; call it with its props to inspect what it renders.
+function cardNodes(tree: unknown) {
+  const card = nodes(tree).find((node) => node.type === SalaryResultCard)!;
+  return nodes(SalaryResultCard(card.props as unknown as Parameters<typeof SalaryResultCard>[0]));
+}
+function cardTitle(tree: unknown) {
+  return cardNodes(tree).find((node) => node.props.role === "status");
+}
 beforeEach(() => {
   vi.useFakeTimers(); fixture.slots = []; fixture.pending = []; fixture.cursor = 0;
   fixture.summary.focus.mockClear(); fixture.summary.scrollIntoView.mockClear();
@@ -118,7 +126,7 @@ describe("salary result user action lifecycle (offline hook/element fixture)", (
     let tree = click(render(), "결과 확인하기");
     tree = changeIncome(tree, "60,000,000");
     expect(fixture.measurement.valid).toBe(false);
-    expect(textOf(tree)).toContain("아래는 이전 계산 결과");
+    expect(textOf(cardTitle(tree))).toBe("이전 결과 · 다시 계산해 주세요");
     expect(fixture.summary.focus).toHaveBeenCalledTimes(1);
     tree = changeIncome(tree, "0"); tree = click(tree, "결과 확인하기");
     expect(nodes(tree).some((node) => node.props.role === "alert")).toBe(true);
@@ -151,6 +159,55 @@ describe("salary result user action lifecycle (offline hook/element fixture)", (
     expect(adIndex).toBeGreaterThan(all.findIndex((node) => node.type === NextActions));
     expect(handoffIndex).toBeGreaterThan(adIndex);
     expect(all.filter((node) => node.type === ResultAd)).toHaveLength(1);
+  });
+
+  // 2026-11-01 운영자 승인 1번(IVT-03, B07): 이전 결과 안내는 결과 카드 제목 자리에서 글자와 색만 바꾼다.
+  // 카드 위에 안내문을 따로 넣으면 입력을 고칠 때마다 카드 안 InArticleAd 와 아래 ResultAd 가 그 높이만큼 오르내린다.
+  it("marks a stale result only in the card title, inserting nothing above either result ad", () => {
+    const region = (tree: unknown) => nodes(nodes(tree).find((node) => node.props.id === "calculation-result")!.props.children);
+    const beforeResultAd = (tree: unknown) => {
+      const all = region(tree);
+      return all.slice(0, all.findIndex((node) => node.type === ResultAd)).map((node) => node.type);
+    };
+    const beforeInArticleAd = (tree: unknown) => {
+      const all = cardNodes(tree);
+      return all.slice(0, all.findIndex((node) => node.type === InArticleAd)).map((node) => node.type);
+    };
+    const fresh = click(render(), "결과 확인하기");
+    expect(nodes(fresh).find((node) => node.type === SalaryResultCard)?.props.stale).toBe(false);
+    expect(textOf(cardTitle(fresh))).toBe("예상 월 실수령액");
+    expect(cardTitle(fresh)?.props.className).toBe("text-sm font-semibold text-muted-foreground");
+    const freshBeforeResultAd = beforeResultAd(fresh);
+    const freshBeforeInArticleAd = beforeInArticleAd(fresh);
+
+    const stale = changeIncome(fresh, "60,000,000");
+    expect(fixture.measurement.valid).toBe(false);
+    expect(nodes(stale).find((node) => node.type === SalaryResultCard)?.props.stale).toBe(true);
+    expect(textOf(cardTitle(stale))).toBe("이전 결과 · 다시 계산해 주세요");
+    expect(cardTitle(stale)?.props.className).toContain("text-amber-700");
+    // Amber text now sits on the panel itself, so dark mode needs its own shade (amber-700 on the dark card is about 3.4:1).
+    expect(cardTitle(stale)?.props.className).toContain("dark:text-amber-400");
+    // Same elements in the same order above ResultAd and above the card's InArticleAd: no box is added on edit.
+    expect(beforeResultAd(stale)).toEqual(freshBeforeResultAd);
+    expect(beforeInArticleAd(stale)).toEqual(freshBeforeInArticleAd);
+    expect(region(stale).findIndex((node) => node.type === SalaryResultCard))
+      .toBeLessThan(region(stale).findIndex((node) => node.type === ResultAd));
+    expect(textOf(stale)).not.toContain("아래는 이전 계산 결과");
+
+    const recalculated = click(stale, "결과 확인하기");
+    expect(textOf(cardTitle(recalculated))).toBe("예상 월 실수령액");
+    expect(beforeResultAd(recalculated)).toEqual(freshBeforeResultAd);
+  });
+
+  it("keeps the server-rendered card title unchanged when no stale state is passed (/salary/[amount], /monthly/[amount])", () => {
+    const tree = SalaryResultCard({
+      monthlyNet: 3_521_236, totalDeduction: 645_431,
+      breakdown: { pension: 197_917, health: 152_778, longTermCare: 19_859, employment: 37_500, incomeTax: 215_797, localTax: 21_580 },
+    });
+    const title = nodes(tree).find((node) => node.type === "span" && textOf(node) === "예상 월 실수령액");
+    expect(title).toBeDefined();
+    expect(title!.props.role).toBeUndefined();
+    expect(title!.props.className).toBe("text-sm font-semibold text-muted-foreground");
   });
 
   it("new salary result sharing keeps personal values in approved text, never in destination or OG URLs", () => {
