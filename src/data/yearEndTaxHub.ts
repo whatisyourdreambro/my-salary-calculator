@@ -116,7 +116,7 @@ export interface YearEndNewsRow {
  */
 export const YEAR_END_NEWS: YearEndNewsRow[] = [
   { date: "2026-01", text: "2026년 귀속부터 신용카드 기본공제 한도가 자녀 수(최대 2명분)에 따라 상향 적용" },
-  { date: "2026-01", text: "출산·보육수당 비과세 한도 자녀 1인당 월 20만원 적용" },
+  { date: "2026-01", text: "보육수당 비과세 한도 자녀 1인당 월 20만원 적용" },
   { date: "2026-08", text: "2026 세제개편안 발표 — 국회 통과 시 2027년 소득분부터 적용(올해 정산 무관)" },
 ];
 

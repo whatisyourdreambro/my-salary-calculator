@@ -129,7 +129,7 @@ export default function SmbTaxBreakClient() {
               aria-label="감면 대상 유형"
             >
               <option value="youth">청년 (만 15~34세) — 90% · 5년</option>
-              <option value="other">60세 이상·장애인·경력단절여성 — 70% · 3년</option>
+              <option value="other">60세 이상·장애인·경력단절자 — 70% · 3년</option>
             </select>
           </div>
         </div>
@@ -183,7 +183,7 @@ export default function SmbTaxBreakClient() {
                   ? `병역 차감 후 환산 ${adjAge % 1 === 0 ? adjAge : adjAge.toFixed(1)}세 — 청년 연령 요건 충족`
                   : youthVerdict === "birthday"
                   ? `병역 차감 후 환산 ${adjAge.toFixed(1)}세 — 생일에 따라 충족 가능 (근로계약일 현재 만 나이를 생년월일로 확인)`
-                  : `병역 차감 후 환산 ${adjAge % 1 === 0 ? adjAge : adjAge.toFixed(1)}세 — 만 ${YOUTH_MAX_AGE}세 초과로 청년 요건 미충족 (60세 이상·장애인·경력단절여성 해당 여부 확인)`
+                  : `병역 차감 후 환산 ${adjAge % 1 === 0 ? adjAge : adjAge.toFixed(1)}세 — 만 ${YOUTH_MAX_AGE}세 초과로 청년 요건 미충족 (60세 이상·장애인·경력단절자 해당 여부 확인)`
                 : "만 나이를 입력하면 연령 요건을 판정합니다"}
             </p>
           </div>

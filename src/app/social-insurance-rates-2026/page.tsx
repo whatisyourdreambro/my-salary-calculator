@@ -77,15 +77,15 @@ const INSURANCE_RATES = [
  },
  {
  name: "고용보험",
- totalRate: "1.95~2.7%",
+ totalRate: "2.1~2.7%",
  selfRate: "0.9%",
- companyRate: "1.05~1.65% (회사 규모별)",
+ companyRate: "1.15~1.75% (회사 규모별)",
  base: "보수월액",
  purpose: "실업급여·고용안정",
  },
  {
  name: "산재보험",
- totalRate: "업종별 (평균 1.4%)",
+ totalRate: "업종별 (평균 1.5%)",
  selfRate: "0%",
  companyRate: "100% (업종별 차등)",
  base: "보수월액",
