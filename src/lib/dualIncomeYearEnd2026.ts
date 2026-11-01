@@ -96,5 +96,11 @@ export function calculateDualIncomeYearEnd2026(input: DualIncomeInput) {
     }
   }
   const optimal = scenarios.reduce((best, current) => current.total < best.total ? current : best, scenarios[0]);
-  return { allMe, allSp, optimal, saving: Math.max(allMe.total, allSp.total) - optimal.total, scenarios };
+  // 부부 상호 의료비만 반대쪽에 귀속해도 합계가 최적과 같으면 동점이다 (예: 의료비가 두 사람 3% 문턱에 모두 못 미침).
+  // optimal 은 동점 중 첫 시나리오(본인)라서, 화면은 이때 배분 대신 동점 문구를 보여 준다 (2026-11-01 B25 P4-06).
+  const coupleMedTie = optimal.assign.coupleMedTo !== null && scenarios.some((s) =>
+    s.assign.kidsToMe === optimal.assign.kidsToMe && s.assign.creditKidsToMe === optimal.assign.creditKidsToMe
+    && s.assign.childExpTo === optimal.assign.childExpTo && s.assign.coupleMedTo !== optimal.assign.coupleMedTo
+    && s.total === optimal.total);
+  return { allMe, allSp, optimal, saving: Math.max(allMe.total, allSp.total) - optimal.total, scenarios, coupleMedTie };
 }
