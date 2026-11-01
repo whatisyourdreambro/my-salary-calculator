@@ -275,7 +275,8 @@ export default function CompanyDetailClient({ company, summary, nameChangeNotice
  <div>
  <p className="text-sm font-bold">{benefit.title}</p>
  <p className="text-xs text-muted-foreground">{benefit.description}</p>
- {benefit.value && benefit.value > 0 && (
+ {/* value 0 은 숫자 0 이 그대로 찍히던 && 단락 평가 — 불리언으로 비교 (29쪽 '0' 잔여 글자 제거) */}
+ {benefit.value != null && benefit.value > 0 && (
  <p className="text-xs text-primary font-medium mt-0.5">
  + 연 {formatMoney(benefit.value)} 가치
  </p>

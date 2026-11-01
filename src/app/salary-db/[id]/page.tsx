@@ -35,6 +35,7 @@ import UpdatedBadge from "@/components/UpdatedBadge";
 import SalaryLookupTracker from "@/components/SalaryLookupTracker";
 import { buildCompanyMetadata } from "@/lib/seo";
 import { companyMetadataInput } from "@/lib/companyPageMetadata";
+import { DISCLOSED_CORRECTION_HOLD_IDS } from "@/lib/companyMetaDisclosed";
 // 회사 FAQ 문항(JSON-LD·본문 공용) — 회귀 테스트를 위해 lib 로 분리 (2026-09-25 B14)
 import { buildCompanyFaq } from "@/lib/companyFaqItems";
 import {
@@ -238,6 +239,9 @@ export default async function CompanyDetailPage({
  // 첫 행에 올린다(CompanyDisclosedSalary disclosedHistoryRows — 행 수 불변).
  // (게이트로 빠지면 광고 위 카드가 줄어 GuideMidAd 위치가 바뀐다, 2026-09-25).
  if (company.disclosed.basis) return stats;
+ // 수기 값을 원문 값으로 바로잡아 괴리가 사라진 회사 — 종전(괴리 10% 초과로 미전달)과 같은 카드 모양 유지
+ // (배지·이력 표가 새로 붙으면 GuideMidAd 위 카드가 길어진다, A5 2026-10 — companyMetaDisclosed 주석 참조)
+ if (DISCLOSED_CORRECTION_HOLD_IDS.has(company.id)) return null;
  const gap =
  Math.abs(stats.dartSalaryManwon - company.disclosed.avgSalaryManwon) /
  company.disclosed.avgSalaryManwon;

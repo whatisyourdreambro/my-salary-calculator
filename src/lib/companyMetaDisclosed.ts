@@ -52,7 +52,19 @@ export interface CompanyMetaDisclosedFigure {
   fiscalYear: string;
 }
 
+/**
+ * 수기 공시 카드 값을 원문 값으로 바로잡은 회사 — 바로잡기 때문에 새로 켜질 표면을 종전대로 꺼 둔다.
+ *  - meta description 공시 후미·sitemap lastmod·RSS pubDate 승격(아래 판정이 null): 제목·설명 동결 규칙(35일 창)
+ *  - 공시 카드의 DART 배지·과년도 이력 표(회사 page.tsx dartStats): GuideMidAd 위 카드가 길어진다
+ * db-insurance(A5, 2026-10): 뉴스 인용 1억3,700만원 -> DART 원문 1억370만원. 출처가 DART 원문이 되어 L10' 대상 조건을
+ * 새로 채우고, DART 산정치와의 괴리(종전 32%)가 사라져 배지·이력 게이트(10%)를 새로 통과한다.
+ * 운영자가 메타·카드 모양 변경을 승인하면 여기서 id 를 지운다(2월 메타 동결 해제 때 재판단).
+ */
+export const DISCLOSED_CORRECTION_HOLD_IDS: ReadonlySet<string> = new Set(["db-insurance"]);
+
 type MetaDisclosedInput = {
+  /** 있으면 DISCLOSED_CORRECTION_HOLD_IDS 를 본다(회사 객체를 통째로 넘기는 호출부) */
+  id?: string;
   salary?: CompanyProfile["salary"];
   disclosed?: CompanyProfile["disclosed"];
 };
@@ -69,6 +81,7 @@ export function companyMetaDisclosedFigure(
   const d = company.disclosed;
   const salary = company.salary;
   if (!d || !salary) return null;
+  if (company.id && DISCLOSED_CORRECTION_HOLD_IDS.has(company.id)) return null;
   if (!isOfficialDisclosureUrl(d.sourceUrl)) return null;
   if (d.fiscalYear !== COMPANY_META_DISCLOSED_FISCAL_YEAR) return null;
   if (d.basis === "computed") return null;

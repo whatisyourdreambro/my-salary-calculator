@@ -16,6 +16,7 @@ import {
  industryLabelKo,
 } from "@/lib/companyContentBuilder";
 import { josa } from "@/lib/josa";
+import { insightsTierParts, insightsTopicParticle } from "@/lib/companyTierPhrase";
 
 interface CompanyInsightsProps {
  company: CompanyProfile;
@@ -26,6 +27,7 @@ export default function CompanyInsights({ company }: CompanyInsightsProps) {
  const similarCompanies = getSimilarSalaryCompanies(company, 5);
  const koName = company.name.ko;
  const enName = company.name.en;
+ const [tierWord, tierParticle] = insightsTierParts(company.tier);
  const entryTotal =
  company.salary.entry.base + (company.salary.entry.incentive.avgAmount || 0);
 
@@ -38,7 +40,10 @@ export default function CompanyInsights({ company }: CompanyInsightsProps) {
  </h2>
  <div className="space-y-3 text-sm sm:text-base text-muted-blue leading-relaxed">
  <p>
- <strong className="text-navy">{koName}</strong>({enName})는 {industryLabelKo(company.industry)} 업종의 {company.tier === "conglomerate" ? "대기업" : company.tier === "unicorn" ? "유니콘" : company.tier === "startup" ? "스타트업" : company.tier === "public" ? "공기업/공공기관" : "외국계"}로,{" "}
+ {/* 조사 자동(은/는은 괄호 앞 한글 이름 기준) + 분류 문구는 단어마다 종전 폭 이하 — src/lib/companyTierPhrase.ts.
+ 텍스트 노드는 종전과 같은 구조(')는 ' 한 노드, 분류 낱말 + '로,' 두 노드) — 노드가 잘게 나뉘면 글자 사이 간격 반올림으로
+ 폭이 0.03px 늘어 꼭 맞던 문장이 한 줄 늘어난다(insightsTierParts 주석) */}
+ <strong className="text-navy">{koName}</strong>({enName}{`)${insightsTopicParticle(koName)} `}{industryLabelKo(company.industry)} 업종의 {tierWord}{`${tierParticle},`}{" "}
  신입 영끌 연봉 <strong className="text-electric">{formatSalaryKorean(entryTotal)}</strong> 수준을 형성합니다.
  </p>
  <p>
