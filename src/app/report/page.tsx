@@ -131,6 +131,7 @@ const Report = () => {
  : [];
 
  return (
+ <>
  <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
  <div
  ref={reportRef}
@@ -265,6 +266,9 @@ const Report = () => {
  </Link>
  </div>
  </main>
+ {/* 페이지 끝 광고 — 저장 리포트가 있을 때만. 리포트 없는 빈 화면에는 광고를 두지 않는다 (IVT-10, 2026-11-01 운영자 승인) */}
+ <PageFooterAds maxWidth="4xl" />
+ </>
  );
 };
 
@@ -272,7 +276,6 @@ export default function ReportPage() {
  return (
  <Suspense fallback={<div>Loading Report...</div>}>
  <Report />
- <PageFooterAds maxWidth="4xl" />
  </Suspense>
  );
 }
