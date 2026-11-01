@@ -188,7 +188,9 @@ export default function FlappyGamePage() {
  }, []);
 
  return (
- <main className="w-full min-h-screen bg-electric flex flex-col items-center justify-center p-4 pb-16 overflow-hidden">
+ // 캔버스 아래 끝에서 fun/layout 공통 광고 라벨까지 152px 이상 — Google 권장 150px(OF4 A2, 운영자 결정).
+ // 세로 가운데 정렬이라 남는 높이는 거리만 늘린다. 최소 = pb-32(128px)+광고 여백 24px. 줄이지 말 것.
+ <main className="w-full min-h-screen bg-electric flex flex-col items-center justify-center p-4 pb-32 overflow-hidden">
  <div className="max-w-md w-full space-y-6">
  <div className="text-center">
  <h1 className="text-4xl font-black text-navy mb-2 tracking-tight">
