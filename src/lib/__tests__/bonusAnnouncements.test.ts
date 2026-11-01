@@ -1,6 +1,6 @@
 // 성과급 지급률 확정 공지 키트 (src/data/bonusAnnouncements.ts, 2026-09-27 R8 · 운영자 9/27 승인 6)
 //
-//  1) 휴면: 세 항목 모두 공지 전 상태 → 세 페이지 description 이 승인된 기본 설명과 같다.
+//  1) 휴면: 세 항목 모두 공지 전 상태 → 세 페이지 description 이 기본 설명(삼성: 2026-10-19 Codex 579d60bb 변경 + 운영자 승인 2026-11-01)과 같다.
 //  2) 꼬리 구절 규칙: 네 칸이 모두 맞고, 빌드 KST 날짜가 [공지일, 2027-03-31] 안일 때만 한 번 붙는다.
 //  3) 점검 규칙이 잘못 채운 값(%·시즌 밖 날짜·가짜 날짜·http·반쯤 채움)을 잡는다.
 //  4) 채운 상태를 모킹하면 세 페이지의 meta·og·twitter description 끝에 구절이 정확히 한 번 붙는다.
@@ -46,10 +46,14 @@ vi.mock("next/navigation", () => ({
   },
 }));
 
-/** 승인된 기본 설명. 삼성은 2026-10-19 OPI1·OPI2 세후 추정 범위 정합 수정 반영. */
+/**
+ * 기본 설명 (삼성: 2026-10-19 Codex 579d60bb 변경 + 운영자 승인 2026-11-01).
+ * 삼성은 10/19 의 OPI1·OPI2 합산 세후 추정 범위를 두고, 579d60bb 가 뺀 앞머리 'OPI(초과이익성과금)·TAI(목표달성장려금) 계산기'를
+ * 되살린 문자열이다(2026-11-01 승인 8번, B37 P2UX-04). SK하이닉스·현대차 줄은 각 페이지의 현재 기본 설명이다.
+ */
 const BASE_DESC: Record<BonusAnnouncementKey, string> = {
   "samsung-bonus":
-    "삼성전자 기존 OPI1·DS 특별경영성과급(OPI2) 합산 세후 실수령액 추정. 내 연봉·사업부별로 계산하고, 2026 상반기 TAI 메모리 100%와 RSU 매도도 시뮬레이션합니다. 개인 지급 확정액은 아닙니다.",
+    "삼성전자 OPI(초과이익성과금)·TAI(목표달성장려금) 계산기. 기존 OPI1·DS 특별경영성과급(OPI2) 합산 세후 실수령액과 2026 상반기 TAI 메모리 100%, RSU 매도까지 추정합니다. 개인 지급 확정액은 아닙니다.",
   "sk-hynix-bonus":
     "SK하이닉스 성과급(PS)은 영업이익 10%가 재원이고 2026년분부터 현금 50%·자사주 50%로 지급됩니다(9/16 가결). 영업이익·연봉을 넣으면 PS·PI 세후 예상액을 계산합니다. 2026 상반기 PI 150% 확정.",
   "hyundai-bonus":
@@ -89,7 +93,7 @@ afterEach(() => {
   vi.resetModules();
 });
 
-describe("휴면 — 승인된 기본 설명에 공지를 덧붙이지 않는다", () => {
+describe("휴면 — 기본 설명에 공지를 덧붙이지 않는다", () => {
   it("세 항목 모두 공지 전 상태(false + null 세 칸)이고 점검 통과", () => {
     expect(Object.keys(BONUS_ANNOUNCEMENTS).sort()).toEqual([...BONUS_ANNOUNCEMENT_KEYS].sort());
     for (const key of BONUS_ANNOUNCEMENT_KEYS) {
@@ -107,7 +111,7 @@ describe("휴면 — 승인된 기본 설명에 공지를 덧붙이지 않는다
     }
   });
 
-  it.each([...BONUS_ANNOUNCEMENT_KEYS])("%s: metadata·og·twitter description 이 승인된 기본 설명과 같다", async (key) => {
+  it.each([...BONUS_ANNOUNCEMENT_KEYS])("%s: metadata·og·twitter description 이 기본 설명과 같다", async (key) => {
     const { metadata } = await PAGE_IMPORT[key]();
     const og = metadata.openGraph as { description?: string };
     const tw = metadata.twitter as { description?: string };

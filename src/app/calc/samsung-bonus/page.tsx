@@ -75,9 +75,13 @@ const PAGE_TITLE = "삼성전자 성과급 계산기 2026 — OPI·OPI2 세후, 
 // SERP 표시 한도(한글 80~90자) 안에 핵심 키워드 전진 배치
 // 반기 라벨·최고 지급률은 taiData TAI_LATEST 파생 — 오늘 출력은 종전 문자열과 동일
 // 1~2월 지급률 확정 공지 꼬리 구절(승인 6) — src/data/bonusAnnouncements.ts 가 휴면이면 종전 문자열 그대로
+// 2026-11-01 운영자 승인 8번(B37 P2UX-04): 10/19(579d60bb)에 빠졌던 앞머리 'OPI(초과이익성과금)·TAI(목표달성장려금) 계산기'를
+// 되살리고, 10/19 의 OPI1·OPI2 합산 세후 추정 범위와 '개인 지급 확정액은 아닙니다'는 그대로 둔다. meta·OG·JSON-LD 에만 쓰이고
+// 화면 문장에는 나오지 않는다(bonusAnnouncements.test.ts 5번). TAI 명칭·상반기 메모리 100%: 뉴스핌 2026-07-06
+// https://www.newspim.com/news/view/20260706000905 (언론은 OPI 를 주로 '초과이익성과급'으로 쓴다 — 여기는 승인된 종전 표기 그대로).
 const PAGE_DESC = withBonusAnnouncement(
   "samsung-bonus",
-  `삼성전자 기존 OPI1·DS 특별경영성과급(OPI2) 합산 세후 실수령액 추정. 내 연봉·사업부별로 계산하고, ${TAI_LATEST.shortLabel} TAI ${TAI_LATEST_TOP.division} ${TAI_LATEST_TOP.rate}%와 RSU 매도도 시뮬레이션합니다. 개인 지급 확정액은 아닙니다.`
+  `삼성전자 OPI(초과이익성과금)·TAI(목표달성장려금) 계산기. 기존 OPI1·DS 특별경영성과급(OPI2) 합산 세후 실수령액과 ${TAI_LATEST.shortLabel} TAI ${TAI_LATEST_TOP.division} ${TAI_LATEST_TOP.rate}%, RSU 매도까지 추정합니다. 개인 지급 확정액은 아닙니다.`
 );
 
 // ─────────────────────────────────────────────────────────────

@@ -442,7 +442,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const hasEn = enSlugSet.has(guide.slug);
  return {
  url: koUrl,
- // 본문 정정일(guideContentRevisions, 히어로 칩 없는 별도 필드 — GA-32·GA-33·GB-30 승인 대안)과 modifiedDate 중 늦은 날
+ // 본문 정정일(guideContentRevisions)과 modifiedDate 중 늦은 날. 10/6(28d72f5b0)에는 히어로 칩 없는 별도 필드였지만
+ // 10/19(579d60bb)부터 상세 히어로 '수정' 칩·OG modifiedTime·Article dateModified·이 lastmod 가 모두 같은 날짜를 쓴다
+ // (guides/[slug]/page.tsx·seo.ts buildGuideMetadata). 칩 유지는 2026-11-01 운영자 승인 8번(B37 P2UX-04 c).
  lastModified: getGuideContentDate(guide), // Editorial calendar date; do not turn it into a future UTC midnight.
  changeFrequency: 'monthly' as ChangeFrequency,
  priority: 0.7,
