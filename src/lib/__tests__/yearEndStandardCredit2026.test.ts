@@ -5,13 +5,19 @@
 // 교육비·기부금)·조특법 §95의2 월세를 빼고 연 13만원. 국민연금·인적·카드·청약 소득공제와 근로소득·자녀·
 // 출산입양·연금계좌·혼인·고향사랑 세액공제는 두 방식 모두에 남는다. 엔진은 결정세액이 낮은 쪽을 쓴다.
 // 기대값은 /guides/standard-vs-special-deduction-2026 표(같은 엔진, 2026-09-26)와 같다.
+// B24 (2026-11-01, 650a826ff/70cc5bf04 엔진 포팅): 주택청약 총급여 7천만원 요건(조특법 §87② — 조특법 소득공제라
+// 두 방식 모두에 남는다)과 그 밖의 부양가족 의료비 700만원 한도(소득세법 §59의4②1 — 특별세액공제라 특별공제 방식만).
 import { describe, expect, it } from "vitest";
 import {
   calculateYearEndTax,
   deriveAnnualSocialInsurance2026,
   type TaxInputs,
 } from "@/lib/yearEndTaxCalculator";
-import { STANDARD_TAX_CREDIT_2026 } from "@/lib/taxConstants2026";
+import {
+  HOUSING_SUBSCRIPTION_DEDUCTION_2026,
+  MEDICAL_CREDIT_2026,
+  STANDARD_TAX_CREDIT_2026,
+} from "@/lib/taxConstants2026";
 
 const plain = (grossSalary: number): TaxInputs => ({
   grossSalary,
@@ -94,5 +100,51 @@ describe("표준세액공제 13만원 비교 (소득세법 §59의4⑨1)", () =>
     const prepaid = 427_200;
     const r = calculateYearEndTax({ ...plain(30_000_000), prepaidTax: prepaid });
     expect(r.finalRefund).toBe(prepaid - 482_125);
+  });
+});
+
+describe("엔진 한도 (B24 — 650a826ff 포팅): 주택청약 총급여 7천만원·그 밖의 부양가족 의료비 700만원", () => {
+  const drop = (p: Partial<TaxInputs>, from: TaxInputs) =>
+    calculateYearEndTax(from).determinedTax - calculateYearEndTax({ ...from, ...p }).determinedTax;
+
+  it("주택청약: 연 300만원 한도 40% 소득공제, 총급여 7천만원 초과는 0 (조특법 §87②)", () => {
+    expect(HOUSING_SUBSCRIPTION_DEDUCTION_2026).toEqual({ LIMIT: 3_000_000, RATE: 0.4, SALARY_CAP: 70_000_000 });
+    expect(drop({ housingSubscription: 3_000_000 }, plain(50_000_000))).toBe(180_000);
+    expect(drop({ housingSubscription: 5_000_000 }, plain(50_000_000))).toBe(180_000);
+    expect(drop({ housingSubscription: 3_000_000 }, plain(70_000_000))).toBe(180_000);
+    expect(drop({ housingSubscription: 3_000_000 }, plain(70_000_001))).toBe(0);
+    expect(drop({ housingSubscription: 3_000_000 }, plain(100_000_000))).toBe(0);
+  });
+
+  it("주택청약 공제는 표준세액공제 방식에도 남는다 — 3,000만원 1인은 표준 방식 그대로 결정세액이 준다", () => {
+    // 손계산: 표준 방식 과세표준 17,325,000 − 120만 = 16,125,000 → 산출 1,158,750 − 근로소득세액공제 55% 637,312.5
+    // − 13만 = 391,437.5 → 391,438. 특별공제 방식(14,634,785 → 420,848)보다 낮아 표준 방식을 쓴다.
+    const r = calculateYearEndTax({ ...plain(30_000_000), housingSubscription: 3_000_000 });
+    expect(r.standardTaxCreditApplied).toBe(true);
+    expect(r.determinedTax).toBe(391_438);
+    expect(r.taxBase).toBe(16_125_000);
+  });
+
+  it("의료비: 본인 등은 3% 초과분 한도 없이, 그 밖의 부양가족은 3% 초과분 연 700만원까지 15% (소득세법 §59의4②)", () => {
+    const base = plain(50_000_000); // 3% 문턱 150만원
+    expect(MEDICAL_CREDIT_2026.DEPENDENT_CAP).toBe(7_000_000);
+    expect(drop({ medicalExpenses: 20_000_000 }, base)).toBe(2_775_000);
+    expect(drop({ medicalExpensesGeneral: 10_000_000 }, base)).toBe(1_050_000);
+    expect(drop({ medicalExpensesGeneral: 1_000_000, medicalExpenses: 3_000_000 }, base)).toBe(375_000);
+    expect(drop({ medicalExpensesGeneral: 20_000_000, medicalExpenses: 3_000_000 }, base)).toBe(1_500_000);
+    expect(drop({ medicalExpenses: 4_000_000, medicalExpensesGeneral: 0 }, base)).toBe(drop({ medicalExpenses: 4_000_000 }, base));
+  });
+
+  it("그 밖의 부양가족 의료비는 특별세액공제라 표준 방식과 비교한 뒤에만 들어간다 (3,000만원 1인)", () => {
+    // 문턱 90만원: 200만 → (200만 − 90만) × 15% = 165,000 → 특별 501,848 − 165,000 = 336,848 < 표준 482,125
+    const some = calculateYearEndTax({ ...plain(30_000_000), medicalExpensesGeneral: 2_000_000 });
+    expect(some.standardTaxCreditApplied).toBe(false);
+    expect(some.determinedTax).toBe(336_848);
+    expect(some.breakdown.medicalCredit).toBe(165_000);
+    // 문턱 이하면 특별공제 방식에 보탤 것이 없어 표준 방식 그대로, 상세 행의 의료비도 0
+    const below = calculateYearEndTax({ ...plain(30_000_000), medicalExpensesGeneral: 900_000 });
+    expect(below.standardTaxCreditApplied).toBe(true);
+    expect(below.determinedTax).toBe(482_125);
+    expect(below.breakdown.medicalCredit).toBe(0);
   });
 });
