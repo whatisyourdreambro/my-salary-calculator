@@ -6,6 +6,10 @@
 // 갱신 체크포인트: 10월 말 홈택스 미리보기 오픈 시 캘린더·뉴스 확정일 반영,
 // 1월 초 간소화 오픈일 확정 반영.
 
+import { formatManwonKorean } from "@/lib/manwonFormat";
+import { MARRIAGE_CREDIT_2026 } from "@/lib/taxConstants2026";
+import { MARRIAGE_CREDIT_WINDOW } from "@/lib/yearEndLimits2026";
+
 export interface YearEndStepEntry {
   href: string;
   title: string;
@@ -105,9 +109,90 @@ export interface YearEndNewsRow {
   text: string;
 }
 
-/** 뉴스·변경사항 타임라인 — 확정 사실만 (갱신: 10월 말·12월·1월) */
+/**
+ * 뉴스·변경사항 타임라인 — 확정 사실만 (갱신: 10월 말·12월·1월)
+ * ★행 수 고정 — 새 소식은 가장 오래된 행과 폭 맞춰 교체(CalcResultAd 와 InArticleAd 사이 광고 위 목록,
+ *   seasonAboveAdListGuard.test.ts 가 3행 고정). 행 수를 바꿔야 하면 실측 스윕으로 광고 위 높이 불변을 먼저 증명한다.
+ */
 export const YEAR_END_NEWS: YearEndNewsRow[] = [
   { date: "2026-01", text: "2026년 귀속부터 신용카드 기본공제 한도가 자녀 수(최대 2명분)에 따라 상향 적용" },
   { date: "2026-01", text: "출산·보육수당 비과세 한도 자녀 1인당 월 20만원 적용" },
   { date: "2026-08", text: "2026 세제개편안 발표 — 국회 통과 시 2027년 소득분부터 적용(올해 정산 무관)" },
 ];
+
+/**
+ * 허브 맨 끝(마지막 광고 MultiplexAd·RelatedCalculators 아래) '연말정산 시즌 도구 더 보기' — TS-08 2026-09-29 작성,
+ * 2026-11-01 B30 이식. RelatedCalculators(limit 4)가 yearEnd 앞 4개만 보여 빠져 있던 시즌 도구. 라벨은 각 페이지 실제 이름.
+ */
+export const YEAR_END_MORE_TOOLS: YearEndStepEntry[] = [
+  { href: "/donation-tax-credit-2026", title: "기부금 세액공제 계산기", desc: "고향사랑·정치자금 구간별 공제", kind: "calculator" },
+  { href: "/calc/dual-income-year-end", title: "맞벌이 연말정산 몰아주기 계산기", desc: "부부 중 누가 공제받을지 비교", kind: "calculator" },
+  { href: "/calc/child-deduction", title: "자녀 인적공제·세액공제 계산기", desc: "자녀 수·나이별 공제 계산", kind: "calculator" },
+  { href: "/calc/january-bonus", title: "13월의 월급 시뮬레이터", desc: "환급 예상액 미리 보기", kind: "calculator" },
+  { href: "/tools/finance/irp", title: "IRP·연금저축 세액공제 계산기", desc: "12월 31일 납입분까지 공제", kind: "calculator" },
+  { href: "/calc/smb-income-tax-break", title: "중소기업 취업자 소득세 감면 계산기", desc: "청년 90%·감면 한도 반영", kind: "calculator" },
+  { href: "/tax-reform-2026", title: "2026 세법개정안 총정리", desc: "2027년 귀속부터 달라지는 공제", kind: "guide" },
+];
+
+export interface YearEndReformRow {
+  item: string;
+  /** 현행(2026년 귀속까지) */
+  now: string;
+  /** 정부안(국회 통과 시) */
+  plan: string;
+}
+
+/**
+ * 2026 세제개편안 정부안 — 허브(/year-end-tax-2027) 마지막 광고(MultiplexAd) 아래 날짜 박힌 블록
+ * (SEASON-05 2026-09-26 작성, 2026-11-01 B30 이식·재확인).
+ * 출처(2026-11-01 원문 재확인): 재정경제부 「2026년 세제개편안」 상세본(2026-08-03 발표, mofe.go.kr 보도자료
+ * MOSF_000000000078809 첨부) — 조특법 §126의2(대중교통 추가공제 적용 종료·추가공제 한도 200/100만원·도서공연 총급여 요건 삭제)·
+ * §95의2(월세 한도 1,200만원·청년 15~34세 17%)·§92(혼인세액공제 적용기한 종료, 재정지출 전환), 소득법 §50①(소득금액 300만원·
+ * 총급여 750만원) 항목의 현행/개정안 표와 적용시기(카드·기본공제 '27.1.1. 이후 개시 과세기간분, 월세 '27.1.1. 이후 지급분).
+ * 「2026년 세제개편안 정부안 확정」(2026-09-01 국무회의 의결, MOSF_000000000079193 첨부 — 9/3 까지 국회 제출, 정기국회 심사)
+ * 수정사항은 ISA·생산적금융 ISA·종부세 기본공제·세부담 상한·지방이전 환류기간뿐이라 아래 항목과 무관.
+ * ★국회 통과 전 제안이다 — 확정 사실(YEAR_END_NEWS)과 섞지 않는다. statusCheckedOn 은 '국회 의결 전'을 확인한 날.
+ *   국회 의결(예산부수법안, 12월 초 예상) 뒤에는 통과안으로 label·화면 문단·행을 다시 쓰고 statusCheckedOn 을 바꾼다
+ *   (정밀 계산기 날짜 FAQ 와 /year-end-tax 혼인 FAQ 의 '정부안' 문장도 같은 날 함께).
+ */
+export const YEAR_END_REFORM_2027: {
+  label: string;
+  announced: string;
+  confirmed: string;
+  /** 국회 의결 전임을 확인한 날 (YYYY-MM-DD, 화면에 날짜로 표기) */
+  statusCheckedOn: string;
+  rows: YearEndReformRow[];
+} = {
+  label: "정부안 — 국회 통과 시 2027년 귀속부터",
+  announced: "2026-08-03",
+  confirmed: "2026-09-01",
+  statusCheckedOn: "2026-11-01",
+  rows: [
+    {
+      item: "신용카드 대중교통 사용분",
+      now: "40% 추가공제",
+      plan: "추가공제 폐지, 결제수단별 기본공제(신용 15%·체크 30%)로 일원화",
+    },
+    {
+      item: "신용카드 추가공제 한도",
+      now: "총급여 7천만원 이하 300만원·초과 200만원",
+      plan: "200만원·100만원(100만원씩 하향), 도서·공연 등 30% 공제는 총급여 요건 폐지",
+    },
+    {
+      item: "월세 세액공제",
+      now: "월세 연 1,000만원 한도, 15%(총급여 5,500만원 이하 17%)",
+      plan: "월세 연 1,200만원 한도, 청년(15~34세)은 17%",
+    },
+    {
+      item: "부양가족 기본공제 소득요건",
+      now: "연 소득금액 100만원(근로소득만 있으면 총급여 500만원) 이하",
+      plan: "300만원(총급여 750만원) 이하",
+    },
+    {
+      item: "혼인세액공제",
+      // 기간·금액은 정본 상수에서 — 조특법 §92①·부칙(법률 제20617호) 제14조: 2024-01-01~2026-12-31 혼인신고분
+      now: `${MARRIAGE_CREDIT_WINDOW} 혼인신고한 해에 1명당 ${formatManwonKorean(MARRIAGE_CREDIT_2026.AMOUNT / 10_000)}(생애 1회)`,
+      plan: "적용기한 연장 없이 종료, 재정지원으로 전환",
+    },
+  ],
+};

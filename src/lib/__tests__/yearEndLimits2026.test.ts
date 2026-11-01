@@ -36,10 +36,13 @@ import { calcCardDeduction2026 } from "@/lib/cardDeduction2026";
 import { calcDonationCredit2026 } from "@/lib/donationCredit";
 import { calculateYearEndTax, type TaxInputs } from "@/lib/yearEndTaxCalculator";
 import {
+  MARRIAGE_CREDIT_WINDOW,
   YEAR_END_LIMIT_FAQS,
   YEAR_END_LIMIT_ROWS,
   YEAR_END_LIMITS_SOURCE_NOTE,
 } from "@/lib/yearEndLimits2026";
+import { MARRIAGE_CREDIT_2026 } from "@/lib/taxConstants2026";
+import { YEAR_END_REFORM_2027 } from "@/data/yearEndTaxHub";
 
 const row = (item: string) => {
   const r = YEAR_END_LIMIT_ROWS.find((x) => x.item === item);
@@ -157,10 +160,10 @@ describe("공제 한도표 — 2026년 귀속 현행법 수치", () => {
   });
 });
 
-describe("공제 한도 FAQ 5문항", () => {
-  it("5문항이고 질문이 서로 다르며 소수점·NaN 없이 만들어진다", () => {
-    expect(YEAR_END_LIMIT_FAQS).toHaveLength(5);
-    expect(new Set(YEAR_END_LIMIT_FAQS.map((f) => f.question)).size).toBe(5);
+describe("공제 한도 FAQ 6문항", () => {
+  it("6문항이고 질문이 서로 다르며 소수점·NaN 없이 만들어진다 (6번째 = 혼인세액공제, SEASON-15)", () => {
+    expect(YEAR_END_LIMIT_FAQS).toHaveLength(6);
+    expect(new Set(YEAR_END_LIMIT_FAQS.map((f) => f.question)).size).toBe(6);
     for (const f of YEAR_END_LIMIT_FAQS) {
       expect(f.answer).not.toMatch(/NaN|undefined|\d\.\d{3,}/);
     }
@@ -170,6 +173,18 @@ describe("공제 한도 FAQ 5문항", () => {
     expect(all).toContain("최대 170만원을 돌려받습니다");
     expect(all).toContain("총급여 5,000만원이라면 150만원을 넘는 금액이 대상");
     expect(all).toContain("대학생은 1명당 연 900만원까지 인정됩니다");
+    expect(all).toContain("2024년 1월 1일부터 2026년 12월 31일까지 혼인신고를 한 사람은");
+    expect(all).toContain("1회(생애 1회) 50만원");
+  });
+
+  it("혼인세액공제 기간은 정본 상수에서 만든다 — 조특법 §92①·부칙(법률 제20617호) 제14조: 2024-01-01~2026-12-31", () => {
+    expect(MARRIAGE_CREDIT_2026.REGISTERED_FROM).toBe("2024-01-01");
+    expect(MARRIAGE_CREDIT_2026.REGISTERED_UNTIL).toBe("2026-12-31");
+    expect(MARRIAGE_CREDIT_WINDOW).toBe("2024년 1월 1일부터 2026년 12월 31일까지");
+    const faq = YEAR_END_LIMIT_FAQS.find((f) => f.question.startsWith("혼인세액공제"));
+    expect(faq?.answer.startsWith(MARRIAGE_CREDIT_WINDOW)).toBe(true);
+    const hubRow = YEAR_END_REFORM_2027.rows.find((r) => r.item === "혼인세액공제");
+    expect(hubRow?.now).toBe("2024년 1월 1일부터 2026년 12월 31일까지 혼인신고한 해에 1명당 50만원(생애 1회)");
   });
 });
 
@@ -195,11 +210,11 @@ describe("/year-end-tax 페이지 — 한도표·FAQ 배치와 FAQPage JSON-LD",
   const html = renderToStaticMarkup(createElement(YearEndTaxPage));
   const visible = decodeEntities(visibleContent(html));
 
-  it("FAQPage 는 하나이고 모든 문항이 화면 본문과 글자 그대로 같다 (기존 4 + 한도 5)", () => {
+  it("FAQPage 는 하나이고 모든 문항이 화면 본문과 글자 그대로 같다 (기존 4 + 한도 6)", () => {
     const faqPages = structuredItems(html).filter((d) => d["@type"] === "FAQPage");
     expect(faqPages).toHaveLength(1);
     const entities = faqPages[0].mainEntity as { name: string; acceptedAnswer: { text: string } }[];
-    expect(entities).toHaveLength(9);
+    expect(entities).toHaveLength(10);
     expect(entities.slice(4).map((e) => e.name)).toEqual(YEAR_END_LIMIT_FAQS.map((f) => f.question));
     for (const e of entities) {
       expect(visible).toContain(e.name);
