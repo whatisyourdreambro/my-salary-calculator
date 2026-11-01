@@ -409,7 +409,7 @@ export function buildCompanyMetadata(company: {
  "로그인 없이 확인하세요.",
  ];
  //  - 상호 변경 회사(B34 OPP-17, 2026-11-01 승인): 맨 앞에 '{변경일} {name}에서 상호 변경.' 한 문장. 이 문장이
- //    회사명을 이미 담으므로 뒤 구절의 회사명은 뺀다 — 150자 상한(lig-nex1 은 회사명을 두면 가장 짧은 꼬리로도 153자).
+ //    회사명을 이미 담으므로 뒤 구절의 회사명은 뺀다 — 150자 상한(lig-nex1 은 회사명을 두면 가장 짧은 꼬리로도 154자).
  //    적용 전 분기(아래 else)는 bd68d860 고정본과 바이트 동일해야 해서 넣지 않는다.
  const nameChangeLead =
  company.currentListedName && company.nameChangedAt
