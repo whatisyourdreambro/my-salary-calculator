@@ -8,6 +8,7 @@
 import Link from "@/components/AppLink";
 import { Calendar, ArrowRight, Clock } from "lucide-react";
 import { getCurrentSeasonal, getDaysLeft } from "@/lib/seasonalCalendar";
+import { OPI_2026_ANNOUNCEMENT } from "@/data/opiAnnouncement";
 
 interface SeasonalBannerProps {
   className?: string;
@@ -15,7 +16,8 @@ interface SeasonalBannerProps {
 
 export default function SeasonalBanner({ className = "" }: SeasonalBannerProps) {
   const now = new Date();
-  const seasonal = getCurrentSeasonal(now);
+  // 1월 OPI 슬롯(1/20~31)은 발표 확인(announced=true) 뒤에만 열린다 — 그 전에는 카드공제로 폴스루.
+  const seasonal = getCurrentSeasonal(now, { opiAnnounced: OPI_2026_ANNOUNCEMENT.announced });
   if (!seasonal) return null;
 
   const daysLeft = seasonal.deadline ? getDaysLeft(seasonal.deadline, now) : null;

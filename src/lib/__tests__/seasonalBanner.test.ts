@@ -6,6 +6,8 @@
 // 배경: find() 첫 매치 규칙이라 days 범위 겹침·순서 실수가 조용히 다른 배너를
 // 노출시킨다. 또 10월 항목 부재로 홈 배너가 한 달 비어 있었다(2026-09 감사).
 
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   SEASONAL_CALENDAR,
@@ -155,6 +157,11 @@ describe("1월 OPI 게이트 — getCurrentSeasonal(now, { opiAnnounced })", () 
         }
       }
     }
+  });
+
+  it("홈 배너가 OPI 발표 게이트를 getCurrentSeasonal 에 전달한다(발표 전에는 무동작)", () => {
+    const src = readFileSync(resolve(process.cwd(), "src/components/SeasonalBanner.tsx"), "utf8");
+    expect(src).toContain("getCurrentSeasonal(now, { opiAnnounced: OPI_2026_ANNOUNCEMENT.announced })");
   });
 
   it("OPI 발표 정본: 발표 전에는 announced=false·전 필드 null, announced=true 면 전 필드 non-null", () => {
