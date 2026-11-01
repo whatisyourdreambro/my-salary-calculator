@@ -192,8 +192,11 @@ export default function YearEndTaxPreviewPage() {
             {/* 시즌 보강 광고(운영자 승인 2026-08-30, 제안 C) — 체크포인트와 FAQ 사이 */}
             <InArticleAd />
 
-            {/* 부활 팩 ④ (운영자 승인 2026-08-31): 광고 직후 CPA 오퍼 */}
-            <OfferSlot vertical="loan" />
+            {/* 부활 팩 ④ (운영자 승인 2026-08-31): 광고 직후 CPA 오퍼.
+                mt-8 래퍼: 오퍼 카드(my-6, 카드 전체가 링크)가 광고 아래 24px 에 붙던 것을 병합 32px 로(2026-10-05 운영자 승인 #5, 광고 아래만) */}
+            <div className="mt-8">
+              <OfferSlot vertical="loan" />
+            </div>
 
             {/* FAQ */}
             <section className="mb-8" aria-labelledby="faq-heading">

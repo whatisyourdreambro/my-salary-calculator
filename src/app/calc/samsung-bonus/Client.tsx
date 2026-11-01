@@ -1311,10 +1311,12 @@ function MySalaryCalculator({
         <CalcResultAd />
 
         {/* 결과 직하 다음 액션 — 세후 확인 직후가 페이지 최대 참여 순간.
-            calcResult: 오퍼 활성 시 "성과급 {amount}만원 …" 보간용 (내부 링크는 유지) */}
+            calcResult: 오퍼 활성 시 "성과급 {amount}만원 …" 보간용 (내부 링크는 유지)
+            pt-2: 부모 space-y-4 가 mt-8 을 덮어 광고 아래 첫 링크가 광고 바깥 여백(24px)에 바로 붙던 것을 32px 로 띄운다
+            (2026-09-26 승인 5번 — 광고 아래 간격만, 광고 위치 불변. padding 이라 margin 병합에 먹히지 않는다). */}
         {personal.totalGrossWon > 0 && (
           <ResultNextLinks
-            className="mt-8"
+            className="mt-8 pt-2"
             position="samsung-personal-next"
             calcResult={{ amount: Math.round(personal.totalGrossWon / 10000) }}
             links={[

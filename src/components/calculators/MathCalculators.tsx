@@ -10,7 +10,9 @@ export default function MathCalculators() {
  const [activeTab, setActiveTab] = useState<"percent" | "unit">("percent");
 
  return (
- <div className="w-full max-w-4xl mx-auto">
+ // mt-8: /tools/math 에서 바로 위 CalcResultAd 바깥 여백(24px)과 병합돼 탭 버튼이 광고 아래 32px(2026-10-05 운영자 승인 #5, 광고 아래만).
+ // 이 기본 내보내기는 /tools/math 한 곳에서만 쓴다(하위 계산기 PercentCalculator·NumberGenerator 는 별도 내보내기).
+ <div className="mt-8 w-full max-w-4xl mx-auto">
  {/* Tabs */}
  <div className="flex justify-center mb-8">
  <div className="bg-white p-1 rounded-xl border border-canvas flex gap-1">

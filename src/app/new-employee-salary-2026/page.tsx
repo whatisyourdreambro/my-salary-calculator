@@ -200,10 +200,11 @@ export default function NewEmployeeSalary2026Page() {
  <InArticleAd />
 
  {/* 데이터 리포트 1호 크로스링크 — 회사 단위(이 페이지)와 업종 단위(리포트)는
-     상호보완 관계. 광고 아래 배치 (신규 UI 광고 위 금지 규칙, 2026-08-17) */}
+     상호보완 관계. 광고 아래 배치 (신규 UI 광고 위 금지 규칙, 2026-08-17).
+     mt-8: 위 광고 바깥 여백(24px)과 병합돼 광고 아래 32px(2026-10-05 운영자 승인 #5, 광고 아래만) */}
  <Link
  href="/insights/entry-salary-by-industry-2026"
- className="group flex items-center justify-between gap-4 p-5 mb-12 rounded-2xl bg-electric/5 border border-electric/30 hover:border-electric transition-colors"
+ className="group flex items-center justify-between gap-4 p-5 mt-8 mb-12 rounded-2xl bg-electric/5 border border-electric/30 hover:border-electric transition-colors"
  >
  <span className="min-w-0">
  <span className="block text-xs font-bold text-electric mb-1">

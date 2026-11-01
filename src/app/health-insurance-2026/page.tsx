@@ -207,10 +207,11 @@ export default function HealthInsurance2026Page() {
 
  <InArticleAd />
 
- {/* CTA — 건보료 전용 계산기 (기존엔 홈으로만 연결돼 단방향 링크였음) */}
+ {/* CTA — 건보료 전용 계산기 (기존엔 홈으로만 연결돼 단방향 링크였음).
+     mt-8: 위 광고 바깥 여백(24px)과 병합돼 광고 아래 32px(2026-10-05 운영자 승인 #5, 광고 아래만) */}
  <Link
  href="/health-insurance-fee-2026"
- className="block mb-4 p-6 sm:p-8 bg-electric rounded-3xl text-white hover:bg-blue-600 transition-colors group"
+ className="block mt-8 mb-4 p-6 sm:p-8 bg-electric rounded-3xl text-white hover:bg-blue-600 transition-colors group"
  >
  <div className="flex items-center justify-between gap-4">
  <div>

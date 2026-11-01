@@ -44,7 +44,8 @@ export default function InstallmentPage() {
  {/* 페이지 끝 배치는 tools/layout 하단 InArticleAd와 연속 광고가 되어 금지 → 헤더 직후 배치 */}
  <CalcResultAd />
 
- <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-8">
+ {/* 프리셋 버튼 — mt-8: 위 광고 바깥 여백(24px)과 병합돼 광고 아래 32px(2026-10-05 운영자 승인 #5, 광고 아래만) */}
+ <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-2 mb-8">
  {presets.map(p => (
  <button key={p.label} onClick={() => { setMonths(p.months); setAnnualRate(p.rate); }}
  className={`p-3 rounded-xl border text-xs font-bold transition-all ${months === p.months && annualRate === p.rate ? "bg-primary text-white border-primary" : "bg-white border-canvas text-muted-blue hover:border-primary"}`}>
