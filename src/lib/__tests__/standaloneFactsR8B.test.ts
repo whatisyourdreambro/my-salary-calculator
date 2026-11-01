@@ -23,6 +23,8 @@ import { seedCompanies } from "@/data/seedCompanies";
 import { FIXED_RERATE, getThreshold } from "@/app/calc/samsung-bonus/model";
 import { PS_HISTORY } from "@/app/calc/sk-hynix-bonus/psData";
 import { OPI1_MAX_RATE } from "@/app/calc/samsung-bonus/opiData";
+import { calcBonusNet, DEFAULT_BONUS_CREDIT_RATE } from "@/lib/bonusTaxCalc";
+import { INSURANCE_RATES_2026 } from "@/lib/taxConstants2026";
 
 const readSrc = (rel: string) => readFileSync(resolve(process.cwd(), rel), "utf8");
 const flat = (s: string) => s.replace(/\s+/g, " ");
@@ -261,16 +263,20 @@ describe("/chuseok-bonus-2026 연휴 이후 히어로 문구", () => {
   const src = flat(readSrc("src/app/chuseok-bonus-2026/page.tsx"));
 
   // B36 (운영자 승인 8, 2026-11-01): 10/19 에는 링크 상자(TopicNextSteps)만 추가됐다 — 화면·OG·Article
-  // 수정일은 마지막 실질 수정일(8/16)이고, sitemap 만 10/19 링크 검토일을 유지한다(sitemapContentDates.test.ts).
-  it("계절 문구와 원발행일은 유지하고, 링크 상자는 화면·OG·Article 수정일을 올리지 않는다(8/16)", () => {
+  // 수정일은 마지막 실질 수정일이고, sitemap 만 10/19 링크 검토일을 유지한다(sitemapContentDates.test.ts).
+  // 마지막 실질 수정은 본문(8/16)이 아니라 9/25 A18 계산 기준 변경이다: 간편 계산기의 calcBonusNet 결과가 바뀌었다.
+  it("계절 문구와 원발행일은 유지하고, 링크 상자는 화면·OG·Article 수정일을 올리지 않는다(9/25 계산 기준 변경일)", () => {
     expect(src).toContain("추석 전후로 궁금한 돈 문제를");
     expect(src).not.toContain("추석 앞두고 궁금한");
     expect(syllables("추석 전후로")).toEqual(syllables("추석 앞두고"));
     expect(src).toContain('publishedTime: "2026-08-16"');
-    expect(src).toContain('modifiedTime: "2026-08-16"');
-    expect(src).toContain('modifiedDate: "2026-08-16"');
-    expect(src).toContain('<PublishedMeta publishedDate="2026-08-16" updatedDate="2026-08-16"');
+    expect(src).toContain('modifiedTime: "2026-09-25"');
+    expect(src).toContain('modifiedDate: "2026-09-25"');
+    expect(src).toContain('<PublishedMeta publishedDate="2026-08-16" updatedDate="2026-09-25"');
     expect(src).not.toContain("2026-10-19");
     expect(src).toContain("2026 추석 9/25(금) · 연휴 9/24~26 · 대체공휴일 없음");
+    // 9/25 이후 계산 결과가 다시 바뀌면 이 쪽의 화면 수정일도 다시 검토해야 한다(사이트 소개 날짜 원칙).
+    const mini = calcBonusNet(42_000_000, 1_000_000, DEFAULT_BONUS_CREDIT_RATE, true, INSURANCE_RATES_2026);
+    expect(Math.round(mini.net), "추석 간편 계산기 기본값 결과가 바뀌면 수정일 재검토").toBe(769_810);
   });
 });
