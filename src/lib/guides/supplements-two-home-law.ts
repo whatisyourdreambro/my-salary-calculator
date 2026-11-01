@@ -3,7 +3,8 @@
 // 일시적 2주택 처분 기한 개정(2026-10-01 시행) 보강 — supplements.ts 와 같은 규칙을 따른다.
 // - guides/layout.tsx 의 PageFooterAds(HomeTopAd·InArticleAd·쿠팡 — 그 쪽의 마지막 광고) 아래에서만 렌더된다(GuideSupplement).
 //   본문 정본(hot-news-2026-extended.ts·hot-news-2026-deep-dive.ts·hot-news-2026-may.ts·tax-deepdive.ts)은 건드리지 않는다
-//   — 광고 위 '3년' 문구 교체는 운영자 승인 뒤 같은 폭으로 따로 한다.
+//   — 광고 위 '3년' 문구 교체는 운영자 승인 뒤 같은 폭으로 따로 한다(2026-11-01 STR-07, 운영자 답 3 G2 2·3단계: 원칙 3년·
+//   조정 두 채 2년 문구 — 10/6 실측 문자열, 통합 스윕 대상). 본문 문구를 인용하는 bodyRef 는 그 본문과 같이 고친다.
 // - "자주 묻는 질문" H2 를 쓰지 않는다(FAQPage 항목 수 불변). 이모지 헤더 금지.
 // - GuideSupplement 는 맵 전체를 모든 /guides/* 의 클라이언트 prop 으로 넘긴다 — 짧게 쓸 것(본편 1개 + 짧은 안내 3개).
 //
@@ -43,7 +44,7 @@ const twoHomeLawNote = (bodyRef: string): string => `
 /** 슬러그 → 보강 HTML (알파벳 순). supplements.ts 가 guideSupplements 에 합친다. */
 export const guideSupplementsTwoHomeLaw: Record<string, string> = {
   "one-home-capital-gains-12eok-2026": twoHomeLawNote("본문 '함정 — 일시적 2주택'의 처분 기한은 경우에 따라 2년입니다."),
-  "property-downsizing-1home-2026": twoHomeLawNote("본문의 '기존 큰 집 3년 이내 매도'는 2년 대상이 아닐 때의 기한입니다."),
-  "real-estate-capital-gains-2026": twoHomeLawNote("본문 Step 3의 '3년 이내'는 2년 대상이 아닐 때의 기한입니다."),
+  "property-downsizing-1home-2026": twoHomeLawNote("본문의 '큰 집 원칙 3년 내 매도'는 2년 대상이 아닐 때의 기한입니다."),
+  "real-estate-capital-gains-2026": twoHomeLawNote("본문 Step 3의 '원칙 3년 내'는 2년 대상이 아닐 때의 기한입니다."),
   "temp-two-home-3year-rule-2026": tempTwoHomeRuleSupplement,
 };

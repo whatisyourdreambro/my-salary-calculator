@@ -29,6 +29,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import type { Guide } from "@/lib/guidesData";
 import { koGuides } from "@/lib/guidesContent";
+import { guideCards } from "@/lib/guidesMeta.generated";
 import { extractGuideFaqs } from "@/lib/guideFaq";
 import { guideSupplements } from "@/lib/guides/supplements";
 import { hotNewsMay2026 } from "@/lib/guides/hot-news-2026-may";
@@ -809,7 +810,7 @@ describe.skipIf(REGEN.size > 0)("(5) 키퍼 표 — 2026 요율·상한은 정�
 // (6) 검색 전용 설명(metaDescription)의 출처 — guidesContent 의 META-07 맵(39편 + W3-A 기둥 글 year-end-tax-2026
 //     메타 개명 1편 = 40편)과 KEEPERS 뿐이다. guideFactCorrections 의 META-07 은 키퍼가 늘 때마다 개수가 바뀌어
 //     '39편 이상'만 본다. 키퍼가 아닌 글에 metaDescription 이 새로 붙는 실수는 KEEPERS 를 가진 이 파일에서 정확히 막는다.
-describe.skipIf(REGEN.size > 0)("(6) metaDescription 은 META-07 맵(40편)·검색어 복원 맵(11편)과 KEEPERS 에만", () => {
+describe.skipIf(REGEN.size > 0)("(6) metaDescription 은 META-07 맵(40편)·검색어 복원 맵(12편)과 KEEPERS 에만", () => {
   it("META-07 맵은 40편(39 + year-end-tax-2026) 그대로이고, 맵 밖에서 metaDescription 을 가진 글은 모두 키퍼다", () => {
     const src = read("src/lib/guidesContent.ts");
     const start = src.indexOf("const guideMetaDescriptions");
@@ -820,11 +821,12 @@ describe.skipIf(REGEN.size > 0)("(6) metaDescription 은 META-07 맵(40편)·검
     expect(meta07.has("year-end-tax-2026"), "W3-A 연말정산 기둥 글 메타 개명").toBe(true);
     expect([...meta07].filter((s) => !bySlug.get(s)?.metaDescription)).toEqual([]);
     // 검색어 복원 맵(code51-01, 2026-10-06) — 10/4 에 TL;DR 이 바뀐 11편. 화면 TL;DR 은 10/4 문구, 검색 설명만 9/27 검색어.
+    // + 2026-11-01 STR-07(G2 2단계 T2 대안) temp-two-home-3year-rule-2026 — 화면 TL;DR 은 운영 문구, 검색 설명만 조정 두 채 2년 기한 = 12편.
     const kwStart = src.indexOf("const guideKeywordMetaDescriptions");
     expect(kwStart, "guidesContent.ts 의 검색어 복원 맵을 찾지 못함").toBeGreaterThan(-1);
     const kwBlock = src.slice(kwStart, src.indexOf("\n};", kwStart));
     const keywordMeta = new Set([...kwBlock.matchAll(/^\s*"([a-z0-9-]+)"\s*:/gm)].map((m) => m[1]));
-    expect(keywordMeta.size).toBe(11);
+    expect(keywordMeta.size).toBe(12);
     expect([...keywordMeta].filter((s) => meta07.has(s) || keeperSet.has(s)), "META-07·키퍼와 겹치지 않는다").toEqual([]);
     expect([...keywordMeta].filter((s) => !bySlug.get(s)?.metaDescription)).toEqual([]);
     expect(
@@ -835,5 +837,77 @@ describe.skipIf(REGEN.size > 0)("(6) metaDescription 은 META-07 맵(40편)·검
       .filter((g) => g.metaDescription && !meta07.has(g.slug) && !keywordMeta.has(g.slug) && !keeperSet.has(g.slug))
       .map((g) => g.slug);
     expect(stray, "키퍼로 등록하지 않은 글에는 metaDescription 을 붙이지 않는다").toEqual([]);
+  });
+});
+
+// ═════════════════════════════════════════════════════════════
+// (7) 2026-11-01 가이드 사실 정정 묶음(PKG-23) 문자열 가드 — claude/fix-content-1030 의 twoHomeLawBody1102 단언을 옮겼다.
+//     일시적 2주택(STR-07): 소득세법 시행령 제155조 제1항 제1호(조정대상지역 두 주택 2년)·제2호(그 밖 3년), 부칙 제2조
+//     (대통령령 제36737호, 2026-09-30 공포·10-01 시행). 조문·경과 규정 설명은 마지막 광고 아래 보강(twoHomeLawFix.test.ts)에 있다.
+//     광고 위치 판정은 실브라우저 스윕 몫이고, 여기서는 승인 문자열과 화면/검색 설명의 분리만 고정한다.
+describe.skipIf(REGEN.size > 0)("(7) 2026-11-01 사실 정정 묶음 — 일시적 2주택 제목·검색 설명·본문 (STR-07 T1~T6·D1·R1)", () => {
+  const g = bySlug.get("temp-two-home-3year-rule-2026")!;
+
+  it("T1 제목은 조정 두 채 2년 기한 — 근거 없는 2~3억 점프 수치 없음, 카드 메타도 같다", () => {
+    expect(g.title).toBe("일시적 2주택 3년 룰 — 조정 두 채는 2년 기한 주의");
+    expect(g.title).not.toContain("2~3억");
+    expect(g.title).not.toContain("비과세 상실");
+    const card = guideCards.find((c) => c.slug === g.slug)!;
+    expect(card.title).toBe(g.title);
+    expect(card.description).toBe(g.description);
+  });
+
+  it("T2 대안 — 화면 TL;DR·카드 설명은 운영 문구 그대로, 조정 두 채 2년은 검색 설명(metaDescription)에만", () => {
+    // T2 를 화면 TL;DR 에 넣으면 347px 에서 한 줄(26px) 늘어 GuideMidAd 이하 광고가 내려갔다(1,123폭 스윕) — 승인된 대안.
+    expect(g.description).toBe("신규 주택 취득 후 3년 이내 종전 주택 매도 시 1주택자 비과세 12억. 3년 1일 초과 시 다주택자 분류, 양도세 폭탄.");
+    expect(g.metaDescription).toBe(
+      "신규 취득 후 3년, 조정 두 채는 2년 내 종전 주택 매도 시 비과세 12억. 기한 초과면 다주택자 분류 양도세 폭탄. 2년 기한은 2026년 8월 4일 이후 조정대상지역 신규 취득분부터 적용.",
+    );
+  });
+
+  it("본문(광고 위)에는 개정 조문·대통령령 번호를 넣지 않는다(설명은 광고 아래 보강)", () => {
+    for (const slug of ["temp-two-home-3year-rule-2026", "property-downsizing-1home-2026", "real-estate-capital-gains-2026"]) {
+      expect(bySlug.get(slug)!.content, slug).not.toContain("36737");
+    }
+  });
+
+  it("T3~T6 본문은 원칙 3년, 3단계는 근거 없는 1억 → 3억 문장 삭제(모두 같은 폭이거나 더 짧은 10/6 실측 문자열)", () => {
+    expect(g.content).toContain("종전 주택을 신규 취득 후 원칙 3년 이내 매도하면 1주택자로 인정 = 12억 비과세.");
+    expect(g.content).toContain(">📋 일시적 2주택 기한 핵심</h2>");
+    expect(g.content).toContain("<li><strong>① 신규 취득 후 원칙 3년 내 종전 주택 매도</strong></li>");
+    expect(g.content).toContain("<p>신규 주택 잔금일 기준 원칙 3년 이내. 예: 2026.6.1 신규 취득 → 2029.5.31까지 매도 필수.</p>");
+    expect(g.content).toContain("비과세 0원 + 양도세 중과 가능성. 세액 증가폭은 사례별.</p>");
+    for (const s of ["1억 → 3억", "정확히 3년", "3년 룰 핵심", "신규 주택 취득 후 3년 이내"]) expect(g.content).not.toContain(s);
+  });
+
+  it("D1 다운사이징 목록 2·R1 양도세 Step 3 — 광고 아래 보강 bodyRef 가 바뀐 본문 문구를 그대로 인용한다", () => {
+    const downsizing = bySlug.get("property-downsizing-1home-2026")!;
+    expect(downsizing.content).toContain("<li><strong>2. 큰 집 원칙 3년 내 매도</strong>: 1주택자 비과세 적용</li>");
+    expect(downsizing.content).not.toContain("기존 큰 집 3년 이내 매도");
+    expect(guideSupplements[downsizing.slug]).toContain("본문의 '큰 집 원칙 3년 내 매도'는 2년 대상이 아닐 때의 기한입니다.");
+    const capitalGains = bySlug.get("real-estate-capital-gains-2026")!;
+    // 승인 문구 '원칙 3년 이내' 는 381~385px 에서 한 줄(32px) 늘어 InArticle 이하 광고가 내려갔다(10/6 스윕) — T5·D1 과 같은 '원칙 3년 내'.
+    expect(capitalGains.content).toContain("<p>이사로 일시 2주택이 된 경우, 신규 취득 후 원칙 3년 내 기존 주택 매도 시 비과세 적용.</p>");
+    expect(guideSupplements[capitalGains.slug]).toContain("본문 Step 3의 '원칙 3년 내'는 2년 대상이 아닐 때의 기한입니다.");
+  });
+});
+
+// 표준세액공제 비교 가이드(CALC-02) — 연말정산 엔진이 표준세액공제 13만원 방식(소득세법 제59조의4 제9항)과 비교해
+// 낮은 결정세액을 쓰게 된 변경(PKG-10, yearEndStandardCredit2026.test.ts 가 엔진 값을 고정)과 같은 배포에 실린다.
+describe.skipIf(REGEN.size > 0)("(7) 2026-11-01 사실 정정 묶음 — 표준세액공제 비교 가이드 문장·2,500만원 행 (CALC-02)", () => {
+  const g = bySlug.get("standard-vs-special-deduction-2026")!;
+
+  it("계산기가 특별공제 방식만 쓴다는 옛 안내 대신 두 방식을 비교한다고 쓴다(더 짧은 문장)", () => {
+    const next = "이 사이트 계산기도 두 방식을 비교해 결정세액이 낮은 쪽을 보여 줍니다.";
+    const prev = "이 사이트 계산기는 특별공제 방식으로 계산하므로, 총급여 3,000만원 이하라면 위 표와 함께 비교하는 것이 좋습니다.";
+    expect(g.content).toContain(next);
+    expect(g.content).not.toContain("특별공제 방식으로 계산하므로");
+    expect(chars(next)).toBeLessThan(chars(prev));
+  });
+
+  it("2,500만원 행은 엔진 표준 경로 값(229,438원)이고 차이는 본문 카드 사례와 같은 96,470원이다", () => {
+    expect(g.content).toContain("<tr><td>2,500만원</td><td>1,241,846원</td><td>325,908원</td><td>229,438원</td><td>표준 (96,470원)</td></tr>");
+    expect(g.content).toContain("이 경우 표준세액공제가 96,470원 유리");
+    expect(325_908 - 229_438).toBe(96_470);
   });
 });
