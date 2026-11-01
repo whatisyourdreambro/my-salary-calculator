@@ -26,9 +26,22 @@ describe("donationTaxCeiling2026", () => {
   it("화면 — 초과분 줄은 미공제분과 특례·일반 이월을 함께 적고 원문보다 짧다", () => {
     const src = readFileSync(resolve(process.cwd(), "src/app/donation-tax-credit-2026/Client.tsx"), "utf8");
     const label = "산출세액(최대치) 초과 미공제분(특례·일반은 이월)";
-    expect(src).toContain(`<span>${label}</span>`);
-    expect(src).toContain("<span>{fmt(ceilingExcess)}원 이상</span>");
+    expect(src).toContain(`${label} = {fmt(ceilingExcess)}원 이상`);
     expect(src).not.toContain("공제·환급 안 됨");
     expect(label.length).toBeLessThan("산출세액(최대치)을 넘는 공제액 — 공제·환급 안 됨".length);
+  });
+  // 11/1 통합 스윕 수리: 결과 카드의 '한도 초과분 안내' 칸(CalcResultAd 위)은 종전 세 조건으로만 열린다. 초과분 줄은 접힌
+  // '계산 근거 자세히 보기' 안이라 큰 기부 입력에서도 펼치기 전 결과 카드 높이가 종전과 같다.
+  it("화면 — 한도 초과분 안내 칸은 종전 조건만, 초과분 줄은 접힌 근거 안 합계 줄 다음", () => {
+    const src = readFileSync(resolve(process.cwd(), "src/app/donation-tax-credit-2026/Client.tsx"), "utf8");
+    expect(src).toMatch(/result\.hometownExcess > 0\) && \(/);
+    expect(src).not.toContain("result.hometownExcess > 0 ||");
+    const details = src.indexOf("<details");
+    const total = src.indexOf("(산출세액 한도 미반영)");
+    const row = src.indexOf("ceilingExcess > 0 && (");
+    expect(details).toBeGreaterThan(0);
+    expect(total).toBeGreaterThan(details);
+    expect(row).toBeGreaterThan(total);
+    expect(row).toBeLessThan(src.indexOf("</details>"));
   });
 });
