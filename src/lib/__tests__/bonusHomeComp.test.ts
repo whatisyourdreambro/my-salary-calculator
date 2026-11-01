@@ -104,8 +104,9 @@ describe("설계 대조값 — 삼성 메모리·연봉 8천만·인상 6.2%·�
     expect(y27.effRate).toBeGreaterThan(44);
     expect(y27.effRate).toBeLessThan(46);
   });
-  it("세후는 calcSamsungBonusNet(그해 연봉, 그해 성과급 세전, 0, true) 그대로", () => {
-    for (const y of r.years) expect(y.net).toBe(calcSamsungBonusNet(y.salary, y.gross, 0, true).net);
+  it("세후는 calcSamsungBonusNet(그해 연봉, 그해 성과급 세전, 0, true, 2026 요율) 그대로", () => {
+    // 2026 요율 명시 — 1/1 요율 포인터 전환 뒤에도 이 계산기(2026 요율·세율 기준)는 그대로다 (2026-11-01 B17)
+    for (const y of r.years) expect(y.net).toBe(calcSamsungBonusNet(y.salary, y.gross, 0, true, INSURANCE_RATES_2026).net);
   });
   it("특별경영성과급 세후 자사주 1/3 즉시 · 1/3 1년 · 1/3 2년 잠금", () => {
     const ratio = y27.net / y27.gross;

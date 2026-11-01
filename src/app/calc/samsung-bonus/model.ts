@@ -2,7 +2,8 @@
 // shared.tsx 가 그대로 재수출하므로 Client·시뮬레이터의 "./shared" import 는 바뀌지 않는다.
 // 2026-09-21 S2-0 배치: 계산 로직·사업부 데이터를 shared.tsx(use client)에서 분리.
 
-import { INSURANCE_RATES_2026, PENSION_BASE_2026 } from "@/lib/taxConstants2026";
+import { PENSION_BASE_2026, type InsuranceRates } from "@/lib/taxConstants2026";
+import { CURRENT_INSURANCE_RATES } from "@/config/currentRates";
 import { estimateAnnualIncomeTax2026 } from "@/lib/bonusTaxCalc";
 import { OPI1_DEFAULT_RATE } from "./opiData";
 
@@ -32,17 +33,24 @@ export function getThresholdPeriod(year: number): string {
 
 // ────────────────────────────────────────────────────────────
 // 세금 로직 — 소득세 증가분은 성과급 계산기 23종 공통 엔진(bonusTaxCalc.estimateAnnualIncomeTax2026)
-// 의 연간 결정세액 차이, 요율은 taxConstants2026.ts 단일 진실 소스. (2026-09-25 A18: 종전
-// '산출세액 차이 × (1 − 세액공제 30%)' 가정 대체 — 근로소득세액공제는 한도가 있어 비례하지 않는다.)
+// 의 연간 결정세액 차이. (2026-09-25 A18: 종전 '산출세액 차이 × (1 − 세액공제 30%)' 가정 대체 —
+// 근로소득세액공제는 한도가 있어 비례하지 않는다.)
+// 요율은 선택 인자 rates — 기본값은 현행 요율 포인터(src/config/currentRates.ts CURRENT_INSURANCE_RATES,
+// 지금은 2026)라 1/1 요율 전환(CURRENT_RATES_YEAR 한 줄)이 공통 엔진 calcBonusNet 과 같이 반영된다
+// (2026-11-01 B17 — 런북 docs/next-upgrade-plan-2026-09-11.md §5-1 P-3). 두 결정세액 호출에 같은 요율을
+// 넘겨 한 계산 안에서 연도가 섞이지 않게 한다. 2026 요율로 고정할 표면은 INSURANCE_RATES_2026 을
+// 명시해 부른다(bonusHome/compEngines.ts). 국민연금 상한 PENSION_BASE_2026 은 7월 주기라 그대로.
 // (반환 shape는 UI가 4대보험 4개 행을 분리 렌더링하므로 유지)
 // ────────────────────────────────────────────────────────────
 
-// 세금/4대보험 계산. credit = 추가 세액공제 가정(0~50%, 기본 0), applyInsurance = 4대보험 추가 부과 적용 여부
+// 세금/4대보험 계산. credit = 추가 세액공제 가정(0~50%, 기본 0), applyInsurance = 4대보험 추가 부과 적용 여부,
+// rates = 4대보험·지방세 요율(기본 = 현행 요율 포인터)
 export function calcSamsungBonusNet(
   salary: number,
   bonusWon: number,
   credit: number,
-  applyInsurance: boolean
+  applyInsurance: boolean,
+  rates: InsuranceRates = CURRENT_INSURANCE_RATES
 ) {
   if (bonusWon <= 0)
     return { net: 0, deduct: 0, effRate: 0, breakdown: emptyBreakdown() };
@@ -50,11 +58,11 @@ export function calcSamsungBonusNet(
   const total = salary + bonusWon;
   const grossIncomeTaxOnBonus = Math.max(
     0,
-    estimateAnnualIncomeTax2026(total, INSURANCE_RATES_2026, applyInsurance ? total : salary) -
-      estimateAnnualIncomeTax2026(salary)
+    estimateAnnualIncomeTax2026(total, rates, applyInsurance ? total : salary) -
+      estimateAnnualIncomeTax2026(salary, rates)
   );
   const incomeTaxOnBonus = grossIncomeTaxOnBonus * (1 - credit / 100);
-  const localTax = incomeTaxOnBonus * INSURANCE_RATES_2026.LOCAL_INCOME_TAX_RATIO;
+  const localTax = incomeTaxOnBonus * rates.LOCAL_INCOME_TAX_RATIO;
 
   let nationalPension = 0;
   let healthIns = 0;
@@ -65,12 +73,12 @@ export function calcSamsungBonusNet(
     // — 본봉이 상한 미달일 때만 추가 부과
     const pensionBase = Math.max(0, PENSION_BASE_2026.MAX_ANNUAL - salary);
     nationalPension =
-      Math.min(bonusWon, pensionBase) * INSURANCE_RATES_2026.NATIONAL_PENSION;
+      Math.min(bonusWon, pensionBase) * rates.NATIONAL_PENSION;
     // 건강·요양보험의 법정 상한과 실제 보수 신고·정산 시점은 이 간이 모형에 미반영.
     // 고용보험도 입력 성과급에 근로자 요율을 적용하는 비교용 추정이다.
-    healthIns = bonusWon * INSURANCE_RATES_2026.HEALTH_INSURANCE;
-    longTermCare = healthIns * INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO;
-    employment = bonusWon * INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE;
+    healthIns = bonusWon * rates.HEALTH_INSURANCE;
+    longTermCare = healthIns * rates.LONG_TERM_CARE_RATIO;
+    employment = bonusWon * rates.EMPLOYMENT_INSURANCE;
   }
   const insurance = nationalPension + healthIns + longTermCare + employment;
 
