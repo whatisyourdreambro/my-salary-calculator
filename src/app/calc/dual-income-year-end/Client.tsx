@@ -34,7 +34,8 @@ export default function DualIncomeYearEndClient() {
     childMedical: "3,000,000",
     childEducation: "2,000,000",
     childDonation: "0",
-    coupleMedical: "1,000,000",
+    // 기본 예시 300만원: 배우자(문턱 120만) 공제 27만 vs 본인(문턱 180만) 18만 → 첫 화면 절감 9만원 (2026-11-01 B25 P4-06)
+    coupleMedical: "3,000,000",
   });
   const [children, setChildren] = useState(0);
   const [childTaxCreditEligibleChildren, setChildTaxCreditEligibleChildren] = useState(0);
@@ -43,7 +44,7 @@ export default function DualIncomeYearEndClient() {
     const salaryMe = parseInput(vals.salaryMe);
     const salarySp = parseInput(vals.salarySp);
     const spMed = parseInput(vals.coupleMedical);
-    const { allMe, allSp, optimal, saving } = calculateDualIncomeYearEnd2026({
+    const { allMe, allSp, optimal, saving, coupleMedTie } = calculateDualIncomeYearEnd2026({
       salaryMe, salarySp, children, childTaxCreditEligibleChildren,
       childMedical: parseInput(vals.childMedical), childEducation: parseInput(vals.childEducation),
       childDonation: parseInput(vals.childDonation), coupleMedical: spMed,
@@ -66,9 +67,13 @@ export default function DualIncomeYearEndClient() {
           `자녀 의료비·교육비·기부금 → ${SIDE_LABEL[optimal.assign.childExpTo]}`
         );
     }
+    // 결과 카드(CalcResultAd 위) 줄 — B25: 머리말을 '부부 상호'(입력칸 괄호와 같은 말)로 한 글자 줄여, 기본 예시가
+    // '배우자가'(한 글자 더 김)로 바뀌어도 종전 기본 줄과 같은 글자 구성·폭을 유지한다. 동점이면 배분 대신 동점 문구.
     if (optimal.assign.coupleMedTo)
       parts.push(
-        `서로를 위한 의료비 → ${SIDE_SUBJECT[optimal.assign.coupleMedTo]} 결제·공제`
+        coupleMedTie
+          ? "부부 상호 의료비 → 어느 쪽이든 같음"
+          : `부부 상호 의료비 → ${SIDE_SUBJECT[optimal.assign.coupleMedTo]} 결제·공제`
       );
     if (parts.length === 0) parts.push("배분할 항목이 없습니다");
 

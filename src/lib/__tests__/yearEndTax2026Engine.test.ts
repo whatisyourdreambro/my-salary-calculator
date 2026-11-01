@@ -316,14 +316,19 @@ describe("대조 — 위젯·맞벌이 계산기와 같은 입력이면 같은 �
         medicalExpensesGeneral: coupleMedical,
         educationExpenses: education,
       }).determinedTax;
-    // 기본 입력: 본인 6,000만·배우자 4,000만·자녀 0명·연간 적격 0명·부부 상호 의료비 100만
-    const allMe = { me: person(60_000_000, 0, 1_000_000, 0), sp: person(40_000_000, 0, 0, 0) };
-    const allSp = { me: person(60_000_000, 0, 0, 0), sp: person(40_000_000, 0, 1_000_000, 0) };
+    // 기본 입력: 본인 6,000만·배우자 4,000만·자녀 0명·연간 적격 0명·부부 상호 의료비 300만 (B25 P4-06 — 종전 100만은
+    // 두 사람 3% 문턱에 모두 못 미쳐 첫 화면 절감액이 0원이었다)
+    const allMe = { me: person(60_000_000, 0, 3_000_000, 0), sp: person(40_000_000, 0, 0, 0) };
+    const allSp = { me: person(60_000_000, 0, 0, 0), sp: person(40_000_000, 0, 3_000_000, 0) };
     for (const v of [allMe.me, allMe.sp, allMe.me + allMe.sp, allSp.me, allSp.sp, allSp.me + allSp.sp]) {
       expect(html).toContain(fmt(v));
     }
     // 자녀·지출이 없는 쪽은 홑벌이 1인 근로자와 같다
     expect(allMe.sp).toBe(calculateYearEndTax(plain(40_000_000)).determinedTax);
+    // 문턱(본인 180만·배우자 120만) 차이 60만원 × 15% = 9만원 — 첫 화면 절감액과 '전부 본인 귀속' 줄의 최적 대비 칸
+    expect(allMe.me + allMe.sp - (allSp.me + allSp.sp)).toBe(90_000);
+    expect(html).toContain(">90,000원<");
+    expect(html).toContain(">+90,000원<");
   });
 
   it("/year-end-tax 계산기는 기본 상태에서 간이세액표 추정 기납부세액을 보여준다 (줄 추가 없이 라벨만)", () => {

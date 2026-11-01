@@ -121,6 +121,72 @@ describe("맞벌이 기본공제와 연간 자녀세액공제 배분", () => {
     expect(client.indexOf(text.slice(0, 10))).toBeLessThan(client.indexOf("<CalcResultAd />"));
   });
 
+  // B25 P4-06 (2026-11-01): 화면 기본 예시 — 본인 6,000만·배우자 4,000만·자녀 0명·부부 상호 의료비 300만원.
+  // 종전 100만원은 두 사람 3% 문턱(180만·120만)에 모두 못 미쳐 첫 화면 절감액이 0원이었다.
+  const screenDefault: DualIncomeInput = {
+    salaryMe: 60_000_000, salarySp: 40_000_000, children: 0, childTaxCreditEligibleChildren: 0,
+    childMedical: 3_000_000, childEducation: 2_000_000, childDonation: 0, coupleMedical: 3_000_000,
+  };
+
+  it("화면 기본 예시는 3% 문턱이 낮은 배우자 귀속으로 9만원을 절감한다 (B25)", () => {
+    const r = calculateDualIncomeYearEnd2026(screenDefault);
+    // 소득세법 §59의4②1: (의료비 − 총급여 3%) × 15% — 배우자 (300만 − 120만) × 15% = 27만, 본인 (300만 − 180만) × 15% = 18만
+    const credit = (gross: number) =>
+      Math.round((screenDefault.coupleMedical - gross * MEDICAL_CREDIT_2026.THRESHOLD_RATIO) * MEDICAL_CREDIT_2026.RATE);
+    expect([credit(40_000_000), credit(60_000_000)]).toEqual([270_000, 180_000]);
+    expect(r.saving).toBe(credit(40_000_000) - credit(60_000_000));
+    expect(r.saving).toBe(90_000);
+    expect(r.allMe.total - r.allSp.total).toBe(90_000);
+    expect(r.optimal.assign.coupleMedTo).toBe("sp");
+    expect(r.optimal.total).toBe(r.allSp.total);
+    expect(r.coupleMedTie).toBe(false);
+    // 자녀 0명이면 자녀 지출 기본값은 계산에 들어가지 않는다 (입력칸도 숨김)
+    expect(calculateDualIncomeYearEnd2026({ ...screenDefault, childMedical: 0, childEducation: 0 }).optimal.total)
+      .toBe(r.optimal.total);
+  });
+
+  it("부부 상호 의료비 귀속이 합계를 바꾸지 못하면 동점으로 알린다 (B25)", () => {
+    // 종전 기본 100만원과 배우자 문턱과 같은 120만원: 두 사람 모두 3% 초과분이 없다 → 절감 0, 동점
+    for (const coupleMedical of [1_000_000, 1_200_000]) {
+      const r = calculateDualIncomeYearEnd2026({ ...screenDefault, coupleMedical });
+      expect(r.saving).toBe(0);
+      expect(r.optimal.assign.coupleMedTo).toBe("me"); // 동점이면 첫 시나리오(본인)가 남는다
+      expect(r.coupleMedTie).toBe(true);
+    }
+    // 배우자 문턱만 넘는 180만원은 배우자 귀속이 (180만 − 120만) × 15% = 9만원 유리 — 동점 아님
+    const past = calculateDualIncomeYearEnd2026({ ...screenDefault, coupleMedical: 1_800_000 });
+    expect([past.saving, past.optimal.assign.coupleMedTo, past.coupleMedTie]).toEqual([90_000, "sp", false]);
+    // 부부 상호 의료비가 없으면 배분 항목이 아니다
+    expect(calculateDualIncomeYearEnd2026({ ...screenDefault, coupleMedical: 0 }).coupleMedTie).toBe(false);
+    // 자녀 배분으로 절감이 있어도 부부 상호 의료비만 동점이면 동점 (8,000만·6,000만, 100만원은 두 문턱 미달)
+    const kids = calculateDualIncomeYearEnd2026({ ...base, coupleMedical: 1_000_000 });
+    expect(kids.saving).toBeGreaterThan(0);
+    expect(kids.coupleMedTie).toBe(true);
+    // 산출세액이 없는 부부는 의료비가 커도 어느 쪽이든 같다
+    expect(calculateDualIncomeYearEnd2026({ ...base, salaryMe: 5_000_000, salarySp: 5_000_000, coupleMedical: 3_000_000 })
+      .coupleMedTie).toBe(true);
+  });
+
+  it("동점 표시는 최적 자녀 배분에서 의료비만 반대로 돌린 시나리오와 합계가 같을 때뿐이다 (B25)", () => {
+    for (const salaryMe of [3_000_000, 25_000_000, 60_000_000, 150_000_000])
+      for (const salarySp of [3_000_000, 40_000_000, 90_000_000])
+        for (const coupleMedical of [0, 500_000, 1_200_000, 2_500_000, 20_000_000])
+          for (const children of [0, 1, 2]) {
+            const r = calculateDualIncomeYearEnd2026({ salaryMe, salarySp, children, childTaxCreditEligibleChildren: children,
+              childMedical: 1_000_000, childEducation: 1_000_000, childDonation: 0, coupleMedical });
+            const o = r.optimal.assign;
+            const flip = r.scenarios.find((s) => s.assign.kidsToMe === o.kidsToMe && s.assign.creditKidsToMe === o.creditKidsToMe
+              && s.assign.childExpTo === o.childExpTo && s.assign.coupleMedTo !== o.coupleMedTo);
+            if (o.coupleMedTo === null) {
+              expect(r.coupleMedTie).toBe(false);
+              continue;
+            }
+            expect(flip).toBeDefined();
+            expect(r.coupleMedTie).toBe(flip!.total === r.optimal.total);
+            if (!r.coupleMedTie) expect(flip!.total).toBeGreaterThan(r.optimal.total);
+          }
+  });
+
   it("연금 상·하한에 걸리는 기존 부부의 배분 금액도 보존한다", () => {
     const result = calculateDualIncomeYearEnd2026({ ...base, salaryMe: 200_000_000, salarySp: 3_000_000,
       children: 3, childTaxCreditEligibleChildren: 3 });
