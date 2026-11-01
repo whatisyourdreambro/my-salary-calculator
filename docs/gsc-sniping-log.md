@@ -263,3 +263,9 @@ Breadcrumbs/speakable(온페이지) + 허브(/calc/bonus-calculators) 신설 + 2
 - 제목은 그대로이고 검색 설명만 바뀐 쪽(판정 각주용): /calc/samsung-bonus — P2UX-04 a (B37, 운영자 승인 8번). 10/19 에 빠졌던 앞머리를 되살림: 삼성전자 기존 OPI1·DS 특별경영성과급(OPI2) 합산 세후 실수령액 추정. … → 삼성전자 OPI(초과이익성과금)·TAI(목표달성장려금) 계산기. 기존 OPI1·DS 특별경영성과급(OPI2) 합산 세후 실수령액과 …(뒤 문장 범위·개인 지급 확정액 아님 문구는 그대로). 판정은 위 Round 3 규칙(T0 직전 28일 vs T0+1~T0+28, 읽는 날 T0+35)대로 하고, T0 = 운영자가 이 단계 승인 게시를 마친 시각(게시 뒤 이 줄에 기입: `T0 = ____`).
 - 회사 쪽 430곳은 제목·설명·companyPageModified 가 모두 그대로다(B05 는 삼성전자 회사 요약·의견 폼, B11 은 LIG 사명 안내를 광고 아래로 옮긴 배치만).
 - 같은 단계 원장이 sitemap lastmod 를 2026-11-01 로 앞당긴 쪽은 제목이 그대로인 내용 변경이라 표를 두지 않는다: /calc/samsung-bonus (B28·B37) · /calc/bonus-home-plan (B28) · /year-end-tax-2027 · /year-end-tax-preview (B30) · /tax-reform-2026 (B43, 페이지 수정일 3곳 함께) · /calc/child-deduction (B09) · /en/guides (B12) · /credit-card-deduction-2026 · /medical-tax-credit-2026 · /rent-tax-credit-2026 (B30, 첫 원장 항목). /year-end-tax · /calc/dual-income-year-end · /donation-tax-credit-2026 은 이미 2026-11-01 이다(scripts/sitemap-content-reviews.json 사유 참조).
+
+## 2026-11-02 2차 통합 3·4단계 제목 변경 기록 (claude/integration-1101b · 원장 마무리, append-only)
+
+2차 통합 3단계(B14 CSP-01, 운영 CSP)와 4단계(B15 PD-01, 애드센스 서버 미리 연결)에는 head `<title>`·검색 설명 변경이 없고 sitemap 원장 항목도 없다. 바뀐 것은 모든 응답의 Content-Security-Policy 헤더(next.config.mjs)와 운영 빌드 루트 head 의 link 2줄(preconnect·dns-prefetch, QA·개발 빌드는 출력 없음)뿐이고, 쪽 metadata·회사 쪽 제목 함수·본문은 그대로다(두 단계 diff 로 확인). 수치(클릭·노출·CTR)는 적지 않는다.
+
+- 판정 각주용: 3단계를 게시한 날부터 그동안 CSP 가 막던 일부 구글 측정·광고 요청(광고 기능 GA4 연결, Google Ads 전환, Funding Choices 연결 등)이 통과한다. 그 날을 사이에 둔 GA4 기반 비교에는 같은 창의 다른 변경으로 적는다(서치콘솔 클릭·노출은 페이지 안 스크립트로 집계되지 않는다). 게시 뒤 이 줄에 기입: `T0(3단계 B14) = ____` · `T0(4단계 B15) = ____`.
