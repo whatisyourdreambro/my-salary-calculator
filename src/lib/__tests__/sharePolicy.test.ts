@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { approvedResultUrl, defaultShareTitle, isSharePageReady, publicShareImageUrl, publicShareUrl, resolvePublicShare, resolveShareLocale, SHARE_ORIGIN, shareAnalyticsPath } from "../sharePolicy";
+import { approvedResultUrl, defaultShareTitle, isSharePageReady, publicShareImageUrl, publicShareUrl, resolvePublicShare, resolveResultShareTarget, resolveShareLocale, safePageOgImage, SHARE_ORIGIN, shareAnalyticsPath } from "../sharePolicy";
 
 const context = { pathname: "/guides/example", canonical: `${SHARE_ORIGIN}/guides/example`, title: "Public guide", notFound: false };
 
@@ -69,5 +69,115 @@ describe("public share context and payload boundaries", () => {
     expect(page.title).toBe("Approved salary 987654321");
     expect(page.imageUrl).toBe(`${SHARE_ORIGIN}/api/og?path=%2Fguides%2Fexample&lang=ko`);
     expect(publicShareImageUrl(`${SHARE_ORIGIN}/share/private?salary=987654321#private`, "en")).toBe(`${SHARE_ORIGIN}/api/og?path=%2F&lang=en`);
+  });
+});
+
+// B38 (owner approval 2026-11-01, item 8): a page's own public og:image becomes its Kakao card; result values never do.
+describe("page og:image as the share card (B38)", () => {
+  const guideCard = `${SHARE_ORIGIN}/api/og?type=guide&title=${encodeURIComponent("Public guide")}`;
+  const companyCard = `${SHARE_ORIGIN}/api/og?type=company&name=${encodeURIComponent("삼성전자")}`;
+  const pageCards = [
+    `${SHARE_ORIGIN}/og-default.png`,
+    guideCard,
+    companyCard,
+    `${SHARE_ORIGIN}/api/og?type=tool&name=${encodeURIComponent("삼성전자 성과급 계산기")}`,
+    `${SHARE_ORIGIN}/api/og?path=${encodeURIComponent("/calc/2026-year")}&title=${encodeURIComponent("2026 연봉 계산기 PRO")}`,
+    `${SHARE_ORIGIN}/api/og?lang=en&path=${encodeURIComponent("/en/tools/loan")}&title=${encodeURIComponent("Loan calculator")}`,
+    `${SHARE_ORIGIN}/api/og?lang=en&title=Korea%20Salary%20%26%20Tax%20Calculator`,
+    `${SHARE_ORIGIN}/api/og?lang=en&title=English+Pay+Tax+and+Money+Guides`,
+    `${SHARE_ORIGIN}/api/og?path=%2Fcalc%2Fx&title=t&v=20260924`,
+    `${SHARE_ORIGIN}/api/og?title=${encodeURIComponent("가".repeat(120))}`,
+  ];
+  it.each(pageCards)("accepts the public build-time card %s unchanged", (card) => {
+    expect(safePageOgImage(card)).toBe(card);
+  });
+
+  it("page mode uses this page's og:image for its own link, including an explicit same-page URL", () => {
+    const page = { ...context, ogImage: guideCard };
+    expect(resolvePublicShare(page).imageUrl).toBe(guideCard);
+    expect(resolvePublicShare(page, { url: `${SHARE_ORIGIN}/guides/example/?utm_source=x#top`, title: "Curated" }).imageUrl).toBe(guideCard);
+    expect(resolvePublicShare(page, { imageUrl: `${SHARE_ORIGIN}/api/og?amount=987654321`, title: "Approved 987654321" }).imageUrl).toBe(guideCard);
+    const company = { pathname: "/salary-db/samsung-electronics", canonical: `${SHARE_ORIGIN}/salary-db/samsung-electronics`, title: "삼성전자 연봉", notFound: false, ogImage: companyCard };
+    expect(resolvePublicShare(company).imageUrl).toBe(companyCard);
+    const en = { pathname: "/en/guides/example", canonical: `${SHARE_ORIGIN}/en/guides/example`, title: "English guide", notFound: false, ogImage: `${SHARE_ORIGIN}/api/og?lang=en&title=English%20guide` };
+    expect(resolvePublicShare(en)).toMatchObject({ locale: "en", imageUrl: en.ogImage });
+  });
+
+  it("result mode also uses the page's static og:image, never result text or a caller image", () => {
+    const page = resolvePublicShare({ ...context, ogImage: guideCard }, { locale: "ko" });
+    expect(page.imageUrl).toBe(guideCard);
+    expect(resolveResultShareTarget(page, undefined)).toEqual({ url: `${SHARE_ORIGIN}/guides/example`, imageUrl: guideCard });
+    expect(resolveResultShareTarget(page, `${SHARE_ORIGIN}/guides/example?v=987654321#s=987654321`)).toEqual({ url: `${SHARE_ORIGIN}/guides/example`, imageUrl: guideCard });
+    expect(resolveResultShareTarget(page, "https://evil.example/987654321")).toEqual({ url: `${SHARE_ORIGIN}/guides/example`, imageUrl: guideCard });
+  });
+
+  it("a result linking to another page gets that page's path-only card, not this page's og:image", () => {
+    const page = resolvePublicShare({ pathname: "/calc/2026-year", canonical: `${SHARE_ORIGIN}/calc/2026-year`, title: "2026 연봉 계산기 PRO", notFound: false, ogImage: pageCards[4] }, { locale: "ko" });
+    expect(page.imageUrl).toBe(pageCards[4]);
+    expect(resolveResultShareTarget(page, `${SHARE_ORIGIN}/`)).toEqual({ url: `${SHARE_ORIGIN}/`, imageUrl: `${SHARE_ORIGIN}/api/og?path=%2F&lang=ko` });
+    expect(resolveResultShareTarget(page, `${SHARE_ORIGIN}/share/PRIVATE_TOKEN?salary=987654321`)).toEqual({ url: `${SHARE_ORIGIN}/`, imageUrl: `${SHARE_ORIGIN}/api/og?path=%2F&lang=ko` });
+  });
+
+  it("legacy /share paths, override URLs and excluded paths keep the path-only card", () => {
+    const legacy = resolvePublicShare({ ...context, pathname: "/share/eyJhbW91bnQiOjk4NzY1NDMyMX0=", title: "987654321 private", ogImage: `${SHARE_ORIGIN}/og-default.png` });
+    expect(legacy).toMatchObject({ url: `${SHARE_ORIGIN}/`, imageUrl: `${SHARE_ORIGIN}/api/og?path=%2F&lang=ko` });
+    const page = { ...context, ogImage: guideCard };
+    expect(resolvePublicShare(page, { url: "/salary-db/samsung-electronics", title: "Curated public title" }).imageUrl).toBe(`${SHARE_ORIGIN}/api/og?path=%2Fsalary-db%2Fsamsung-electronics&lang=ko`);
+    expect(resolvePublicShare(page, { url: "/" }).imageUrl).toBe(`${SHARE_ORIGIN}/api/og?path=%2F&lang=ko`);
+    // A context the UI would never mark ready (private path): its head card must not ride on the home fallback link.
+    expect(resolvePublicShare({ ...context, pathname: "/contact", canonical: `${SHARE_ORIGIN}/contact`, ogImage: guideCard }).imageUrl).toBe(`${SHARE_ORIGIN}/api/og?path=%2F&lang=ko`);
+    expect(resolvePublicShare({ ...context, ogImage: null }).imageUrl).toBe(`${SHARE_ORIGIN}/api/og?path=%2Fguides%2Fexample&lang=ko`);
+  });
+
+  it.each([
+    `${SHARE_ORIGIN}/api/og?type=salary&amount=50000000&net=3520000&v=20260924`,
+    `${SHARE_ORIGIN}/api/og?amount=987654321`,
+    `${SHARE_ORIGIN}/api/og?type=tool&name=x&net=123`,
+    `${SHARE_ORIGIN}/api/og?type=tool&name=x&netPay=123`,
+    `${SHARE_ORIGIN}/api/og?type=tool&name=x&%61mount=1`,
+  ])("rejects an og:image carrying result values: %s", (card) => {
+    expect(safePageOgImage(card)).toBeNull();
+    expect(resolvePublicShare({ ...context, ogImage: card }).imageUrl).toBe(`${SHARE_ORIGIN}/api/og?path=%2Fguides%2Fexample&lang=ko`);
+  });
+
+  it.each([
+    "https://example.com/api/og?title=x",
+    "https://cdn.example.com/og-default.png",
+    "https://www.moneysalary.com.evil.example/api/og?title=x",
+    "https://evil.example/https://www.moneysalary.com/api/og?title=x",
+    "http://www.moneysalary.com/api/og?title=x",
+    "https://moneysalary.com/api/og?title=x",
+    "https://user:pass@www.moneysalary.com/api/og?title=x",
+    "https://www.moneysalary.com:8443/api/og?title=x",
+    "//www.moneysalary.com/api/og?title=x",
+    "/api/og?title=x",
+    "https://www.moneysalary.com/api/og-other?title=x",
+    "https://www.moneysalary.com/api/og/?title=x",
+    "https://www.moneysalary.com/images/card.png",
+    "https://www.moneysalary.com/og-default.png?v=1",
+    "https://www.moneysalary.com/api/og?title=x#frag",
+    "https://www.moneysalary.com/api/og?title=a&title=b",
+    "https://www.moneysalary.com/api/og?title=x&utm_source=kakao",
+    "https://www.moneysalary.com/api/og?Title=x",
+    `https://www.moneysalary.com/api/og?title=${encodeURIComponent("가".repeat(121))}`,
+    `https://www.moneysalary.com/api/og?type=company&name=${"n".repeat(121)}`,
+    " https://www.moneysalary.com/og-default.png",
+    "https://www.moneysalary.com/api/og?title=a\nb",
+    "https://www.moneysalary.com/api/og?title=a b",
+    "javascript:alert(1)",
+    "data:image/png;base64,iVBORw0KGgo=",
+    "",
+  ])("rejects an external, ambiguous or oversized image %j", (card) => {
+    expect(safePageOgImage(card)).toBeNull();
+    expect(resolvePublicShare({ ...context, ogImage: card }).imageUrl).toBe(`${SHARE_ORIGIN}/api/og?path=%2Fguides%2Fexample&lang=ko`);
+  });
+
+  it("treats a missing or non-string og:image as no card", () => {
+    expect(safePageOgImage(null)).toBeNull();
+    expect(safePageOgImage(undefined)).toBeNull();
+    expect(safePageOgImage(42 as unknown as string)).toBeNull();
+    // An over-long URL is refused even when every key is a page key (path is not otherwise length-checked).
+    expect(safePageOgImage(`${SHARE_ORIGIN}/api/og?path=%2F${"x".repeat(2100)}`)).toBeNull();
+    expect(safePageOgImage(`${SHARE_ORIGIN}/api/og?path=%2F${"x".repeat(1000)}`)).not.toBeNull();
   });
 });

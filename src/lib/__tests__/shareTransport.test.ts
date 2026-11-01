@@ -79,6 +79,17 @@ describe("sharing outcomes represent observable operations", () => {
     await sendShare("webshare", { ...payload, imageBlob: new Blob(["image"], { type: "image/png" }) }, env);
     expect(env.native).toHaveBeenCalledWith(expect.objectContaining({ files: [{ type: "image/png", size: 5 }] }));
   });
+  it("Kakao receives the page's public og:image unchanged, and nothing else as its card (B38)", async () => {
+    const pageCard = "https://www.moneysalary.com/api/og?lang=en&path=%2Fen%2Fflat-tax&title=Flat%20tax";
+    const kakao = vi.fn(() => true);
+    expect(await sendShare("kakao", { ...payload, imageUrl: pageCard }, environment({ kakao }))).toEqual({ outcome: "sdk_requested" });
+    expect(kakao).toHaveBeenCalledWith(expect.objectContaining({ url: "https://www.moneysalary.com/en/flat-tax?utm_source=kakao&utm_medium=share", imageUrl: pageCard }));
+    for (const imageUrl of ["https://www.moneysalary.com/og.png", "https://www.moneysalary.com/api/og?lang=en&title=x&net=1", "https://cdn.example.com/og-default.png"]) {
+      kakao.mockClear();
+      await sendShare("kakao", { ...payload, imageUrl, shareMode: "result" }, environment({ kakao }));
+      expect(kakao).toHaveBeenCalledWith(expect.objectContaining({ imageUrl: "https://www.moneysalary.com/api/og?path=%2Fen%2Fflat-tax&lang=en" }));
+    }
+  });
   it("Kakao request and fallback copy have different outcomes", async () => {
     expect(await sendShare("kakao", payload, environment())).toEqual({ outcome: "sdk_requested" });
     expect(await sendShare("kakao", payload, environment({ kakao: () => false }))).toEqual({ outcome: "clipboard_success" });

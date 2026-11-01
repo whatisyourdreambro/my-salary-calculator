@@ -15,6 +15,8 @@ function refresh() {
     canonical: document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href ?? null,
     title: document.title,
     notFound: !!document.querySelector('[data-page-state="not-found"]'),
+    // Build-time head metadata; sharePolicy.safePageOgImage decides whether it may become the Kakao card (B38).
+    ogImage: document.querySelector<HTMLMetaElement>('meta[property="og:image"]')?.content ?? null,
   };
   if (JSON.stringify(next) === JSON.stringify(snapshot)) return;
   snapshot = next;
@@ -26,7 +28,8 @@ function subscribe(listener: () => void) {
   if (listeners.size === 1) {
     // One observer shared by inline, compact, fallback and floating controls.
     observer = new MutationObserver(refresh);
-    observer.observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ["href", "data-page-state"] });
+    // content: a route change may update the og:image meta in place instead of replacing it.
+    observer.observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ["href", "data-page-state", "content"] });
     window.addEventListener("popstate", refresh);
   }
   refresh();

@@ -6,7 +6,7 @@ import { trackShare, trackShareOutcome, trackEvent } from "@/lib/analytics";
 import { SHARE_CHANNELS, channelLabel, openShareWindow, tryKakaoFeedShare, type ShareChannelId } from "@/lib/shareChannels";
 import { registerPrimary } from "@/lib/shareRegistry";
 import { useSharePageContext } from "@/hooks/useSharePageContext";
-import { approvedResultUrl, resolvePublicShare, type ShareMode } from "@/lib/sharePolicy";
+import { resolvePublicShare, resolveResultShareTarget, type ShareMode } from "@/lib/sharePolicy";
 import { createShareRequestGuard, sendShare } from "@/lib/shareTransport";
 
 export interface ShareButtonsProps {
@@ -119,9 +119,11 @@ export default function ShareButtons({
   const page = context ? resolvePublicShare(context, shareMode === "page" ? { url, title, description, imageUrl, locale: explicitLocale } : { locale: explicitLocale }) : null;
   const locale = page?.locale ?? explicitLocale ?? (/^\/en(?:\/|$)/.test(pathname) ? "en" : "ko");
   const en = locale === "en";
-  const payload = page && shareMode === "result" ? {
-    ...page, url: approvedResultUrl(url, page.url), title: title ?? page.title,
-    description: description ?? page.description, imageUrl: page.imageUrl,
+  // B38: the page card goes with this page's link only; a result linking elsewhere gets that link's path-only card.
+  const target = page && shareMode === "result" ? resolveResultShareTarget(page, url) : null;
+  const payload = page && target ? {
+    ...page, url: target.url, title: title ?? page.title,
+    description: description ?? page.description, imageUrl: target.imageUrl,
   } : page;
   // Deliberately local only; never place this equality key in events or URLs.
   const identity = JSON.stringify([pathname, !!context, shareMode, resultKey, payload?.url, payload?.title, payload?.description, payload?.imageUrl]);
