@@ -324,3 +324,9 @@ Breadcrumbs/speakable(온페이지) + 허브(/calc/bonus-calculators) 신설 + 2
 | 날짜 | 단계 | 결정 | 근거 숫자(위 표·색인률) | 게시일 |
 |---|---|---|---|---|
 | | | | | |
+
+## 2026-11-02 2차 통합 3·4단계 제목 변경 기록 (claude/integration-1101b · 원장 마무리, append-only)
+
+2차 통합 3단계(B14 CSP-01, 운영 CSP)와 4단계(B15 PD-01, 애드센스 서버 미리 연결)에는 head `<title>`·검색 설명 변경이 없고 sitemap 원장 항목도 없다. 바뀐 것은 모든 응답의 Content-Security-Policy 헤더(next.config.mjs)와 운영 빌드 루트 head 의 link 2줄(preconnect·dns-prefetch, QA·개발 빌드는 출력 없음)뿐이고, 쪽 metadata·회사 쪽 제목 함수·본문은 그대로다(두 단계 diff 로 확인). 수치(클릭·노출·CTR)는 적지 않는다.
+
+- 판정 각주용: 3단계를 게시한 날부터 그동안 CSP 가 막던 일부 구글 측정·광고 요청(광고 기능 GA4 연결, Google Ads 전환, Funding Choices 연결 등)이 통과한다. 그 날을 사이에 둔 GA4 기반 비교에는 같은 창의 다른 변경으로 적는다(서치콘솔 클릭·노출은 페이지 안 스크립트로 집계되지 않는다). 게시 뒤 이 줄에 기입: `T0(3단계 B14) = ____` · `T0(4단계 B15) = ____`.
