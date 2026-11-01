@@ -157,7 +157,7 @@ AdSense 페이지·광고단위 28일 CSV 2장 → GA4 트래픽 획득 CSV → 
 - ☐ **Pages 로컬 발행 준비 기록**: 알려진 정상 Pages 배포·커밋과 롤백 ID, Cloudflare Git 빌드 중지, 저장소 변수 `PAGES_AUTO_DEPLOY_ENABLED=false`·`PAGES_LOCAL_PUBLISH_ENABLED=true`를 확인한다. 계정의 현재 값은 로컬 소스로 추정하지 않는다. GitHub CI는 Node 22의 광고 없는 Pages QA를 검증하며, 운영 패키지는 로컬 `pages:build`·`pages:verify`로 별도 생성한다. 기존 D1·환경 바인딩과 일반 방문자 광고를 보존하고, 로컬 Wrangler 로그인·기존 Purge 워크플로의 실행 권한을 확인한다. 새 Cloudflare 토큰을 GitHub에 등록하거나 토큰·시크릿 값을 기록하지 않는다.
 - ☐ developers.kakao.com → 내 애플리케이션 → 플랫폼 → Web에 `https://www.moneysalary.com` 등록 확인.
 - ☐ GA4와 AdSense가 **같은 구글 계정**인지 한 줄 답변 → 같으면 GA4 관리 → 제품 링크 → AdSense 링크 연결(페이지별 광고 수익을 GA4에서 보게 됨).
-- ☐ **트리거형(날짜 없음) — SK하이닉스 재협상 타결 보도 당일(약 10분)**: 코드 배포 후 Cloudflare → Caching → Configuration → **Purge Everything**(또는 `/calc/sk-hynix-bonus`·`/calc/bonus-calculators`·`/sitemap.xml`·`/rss.xml` 커스텀 퍼지) → Search Console URL 검사 2건(`/calc/sk-hynix-bonus`·`/calc/bonus-calculators`) 색인 생성 요청 + Sitemaps 다시 제출 → D+1 '실제 URL 테스트'로 타결 문구 렌더 확인. 세부는 `docs/drafts/sk-ps-sync-kit-2027.md` §3 런북 표(코드 5점 동기화는 Claude).
+- ✅ **트리거형 — SK하이닉스 재협상 타결(완료, 지금 할 일 없음)**: 2026-09-16 수정안 총투표 가결 → 사이트 동기화 완료(커밋 a5328adb, 2026-09-20, sync kit 5점). 예전 당일 절차에 있던 'Sitemaps 다시 제출'과 D+1 '실제 URL 테스트'는 쓰지 않는다 — 다음에 비슷한 타결·확정 보도가 와도 아래 '게시 뒤 구글 확인' 규칙대로 사이트맵은 다시 내지 않고, D+1 확인은 비렌더링 GET 으로 한다. 동기화 세부는 `docs/drafts/sk-ps-sync-kit-2027.md` §3 런북 표(코드 동기화는 Claude).
 
 ## 현재 Pages 발행과 Purge 확인 (2026-10-17)
 
@@ -217,7 +217,7 @@ CSV 는 `C:\Users\ruby1\.moneysalary-secrets\adsense\` 에 두고 절대 경로�
 
 README 기준 지금 게시 경로는 GitHub Actions 'Pages · 승인 후 게시'(`.github/workflows/pages-publish.yml`) 하나다. main 푸시나 CI 초록만으로는 게시되지 않고, 같은 커밋은 두 번 게시되지 않는다. 이 문서와 `docs/next-upgrade-plan-2026-09-11.md` 의 **P** 는 아래 1~4번을 뜻한다.
 
-**게시 횟수 — 한 주에 1~2번으로 모은다(2026-11-01 운영자 '구글 개선' 승인 6번).** 게시할 때마다 자바스크립트 파일 이름이 새로 바뀌어 구글이 그 파일들을 다시 받아 간다. 11/1 Search Console 크롤링 통계에서 최근 90일 구글 크롤의 21%(약 1만 7천 회)가 자바스크립트 파일이었고, 표본 919개 중 708개가 서로 다른 주소였다. 그래서 평소 변경은 main 에 모아 두었다가 한 주에 한두 번만 게시하고, 그 주에 아래 '시즌 게시 달력'의 날짜 게시가 있으면 평소 변경도 그 게시에 함께 싣는다. 바로 게시하는 예외는 세 가지다: 급한 사실 정정(틀린 금액·세율·날짜), 달력에 정해진 날짜 전환·발표일 반영, 보안 수정. 예외 게시에도 그때까지 main 에 모인 변경이 함께 나간다.
+**게시 횟수 — 한 주에 1~2번으로 모은다(2026-11-01 운영자 '구글 개선' 승인 6번).** 게시할 때마다 자바스크립트 파일 이름이 새로 바뀌어 구글이 그 파일들을 다시 받아 간다. 11/1 Search Console 크롤링 통계에서 최근 90일 구글 크롤의 21%(약 1만 7천 회)가 자바스크립트 파일이었고, 표본 919개 중 708개가 서로 다른 주소였다. 그래서 평소 변경은 main 에 모아 두었다가 한 주에 한두 번만 게시하고, 그 주에 아래 '시즌 게시 달력'의 날짜 게시가 있으면 평소 변경도 그 게시에 함께 싣는다. 바로 게시하는 예외는 네 가지다: 급한 사실 정정(틀린 금액·세율·날짜), 달력에 정해진 날짜 전환·발표일 반영, 보안 수정, 깨진 페이지나 게시 뒤 생긴 오류(운영 회귀) 수정. 예외 게시에도 그때까지 main 에 모인 변경이 함께 나간다.
 
 1. 에이전트가 변경을 main 에 합친다. 날짜로만 바뀌는 문구(보유세 기간·시즌 세트)를 켜는 날은 문서 한 줄 커밋이어도 된다.
 2. GitHub 커밋 옆 ci 검사(verify)가 초록이 될 때까지 기다린다(약 40~46분). 초록 전에는 누르지 않는다.
