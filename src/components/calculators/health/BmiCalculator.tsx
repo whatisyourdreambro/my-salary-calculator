@@ -27,7 +27,10 @@ export default function BmiCalculator() {
  status = "과체중";
  color = "text-primary";
  } else if (bmi < 30) {
- status = "비만";
+ status = "1단계 비만";
+ color = "text-primary";
+ } else if (bmi < 35) {
+ status = "2단계 비만";
  color = "text-primary";
  } else {
  status = "고도비만";

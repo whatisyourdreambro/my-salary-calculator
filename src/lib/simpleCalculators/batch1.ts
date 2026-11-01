@@ -621,7 +621,7 @@ const SALARY: CalculatorDef[] = [
  const severance = monthly * years;
  return {
  primary: { label: "예상 퇴직금", value: Math.round(severance), suffix: "원" },
- note: "근속 1년 이상 정규직 근로자 의무 지급. IRP 이전 시 절세 가능.",
+ note: "근속 1년/주 15시간 이상이면 의무 지급. IRP 이전시 절세 가능.",
  };
  },
  },

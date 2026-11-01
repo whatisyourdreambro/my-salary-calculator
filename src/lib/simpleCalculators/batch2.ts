@@ -517,7 +517,10 @@ const BUSINESS: CalculatorDef[] = [
  { name: "simpleRate", label: "간이세율 (업종)", defaultValue: 3, suffix: "%" },
  ],
  compute: ({ revenue, purchase, simpleRate }) => {
- const simpleVat = revenue * (simpleRate / 100);
+ // 간이과세자는 해당 과세기간 공급대가 합계가 4,800만원 미만이면 납부의무 면제(부가가치세법 제69조 제1항).
+ // 종전에는 매출 4,000만원에도 간이 부가세 120만원을 표시했다 (2026-10-05 감사 code56-03). 기본값(6,000만원)은 그대로.
+ const simpleExempt = revenue < 48_000_000;
+ const simpleVat = simpleExempt ? 0 : revenue * (simpleRate / 100);
  const generalVat = revenue * 0.1 - purchase * 0.1;
  return {
  primary: { label: "간이 부가세", value: Math.round(simpleVat), suffix: "원" },
@@ -525,7 +528,9 @@ const BUSINESS: CalculatorDef[] = [
  { label: "일반 부가세", value: Math.round(generalVat), suffix: "원" },
  { label: "간이 절감액", value: Math.round(generalVat - simpleVat), suffix: "원" },
  ],
- note: "연 매출 1억 400만원 미만 간이과세 가능(2024-07 상향, 부동산임대·과세유흥업은 4,800만원). 매입 비중 작으면 간이가 유리.",
+ note: simpleExempt
+ ? "연 공급대가 4,800만원 미만 간이과세자는 부가세 납부의무 면제(부가가치세법 69조). 일반과세자는 면제 없음."
+ : "연 매출 1억 400만원 미만 간이과세 가능(2024-07 상향, 부동산임대·과세유흥업은 4,800만원). 매입 비중 작으면 간이가 유리.",
  };
  },
  },
@@ -703,13 +708,22 @@ const LIFE: CalculatorDef[] = [
  keywords: ["전기료", "전기세"],
  fields: [{ name: "kwh", label: "월 사용량", defaultValue: 300, suffix: "kWh" }],
  compute: ({ kwh }) => {
- let charge = 0;
- if (kwh <= 200) charge = kwh * 120;
- else if (kwh <= 400) charge = 200 * 120 + (kwh - 200) * 215;
- else charge = 200 * 120 + 200 * 215 + (kwh - 400) * 308;
- const tax = charge * 0.137;
+ // 주택용 저압(기타계절) 누진 3구간 — 기본요금 910 / 1,600 / 7,300원, 전력량요금 120.0 / 214.6 / 307.3원/kWh
+ // (법제처 찾기쉬운 생활법령 2026-10-15 기준). 부가가치세 10% + 전력산업기반기금 2.7%(전기사업법 시행령 제36조) = × 1.127.
+ // 종전 계산(기금 3.7% 가정의 × 1.137, 정액 기본료 1,900원, 215·308원)을 바꿨다 (2026-11-01, a77e9b284 포팅).
+ // 기후환경요금·연료비조정요금(유의사항 2번)과 7~8월 누진구간 완화(FAQ 3번)는 반영하지 않는다.
+ let energy = 0;
+ let base = 910;
+ if (kwh <= 200) energy = kwh * 120;
+ else if (kwh <= 400) {
+ energy = 200 * 120 + (kwh - 200) * 214.6;
+ base = 1600;
+ } else {
+ energy = 200 * 120 + 200 * 214.6 + (kwh - 400) * 307.3;
+ base = 7300;
+ }
  return {
- primary: { label: "예상 전기료", value: Math.round(charge + tax + 1900), suffix: "원" },
+ primary: { label: "예상 전기료", value: Math.round((energy + base) * 1.127), suffix: "원" },
  note: "한국전력 주택용 누진제 단순 적용. 계절·정확한 단가는 한전 공식 안내 확인.",
  };
  },
@@ -844,10 +858,10 @@ const HEALTH: CalculatorDef[] = [
  compute: ({ weight, height }) => {
  const bmi = weight / (height / 100) ** 2;
  const status =
- bmi < 18.5 ? "저체중" : bmi < 23 ? "정상" : bmi < 25 ? "과체중" : bmi < 30 ? "비만" : "고도비만";
+ bmi < 18.5 ? "저체중" : bmi < 23 ? "정상" : bmi < 25 ? "과체중" : bmi < 30 ? "1단계 비만" : bmi < 35 ? "2단계 비만" : "고도비만";
  return {
  primary: { label: "BMI", value: bmi, suffix: "" },
- secondary: [{ label: status, value: 0, suffix: "" }],
+ secondary: [{ label: `판정: ${status}`, value: Math.round(bmi * 10) / 10, suffix: "" }],
  };
  },
  },
@@ -1087,7 +1101,7 @@ const UNEMPLOYMENT: CalculatorDef[] = [
          { label: "수급 가능 기간", value: benefitDays, suffix: "일" },
          { label: "월 환산 수급액", value: monthlyBenefit, suffix: "원" },
        ],
-       note: `근무 ${workMonths}개월 기준 수급기간 ${benefitDays}일(50세 미만 기준). 50세 이상·장애인은 각 구간 +30일(최대 270일). 실제 수급은 고용24(고용센터) 수급자격 인정 후 지급됩니다.`,
+       note: `근무 ${workMonths}개월 기준 수급기간 ${benefitDays}일(50세 미만 기준). 50세 이상·장애인은 1년부터 +30일(최대 270일). 실제 수급은 고용24(고용센터) 수급자격 인정 후 지급됩니다.`,
      };
    },
    explanation:
