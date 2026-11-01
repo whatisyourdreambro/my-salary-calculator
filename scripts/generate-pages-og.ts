@@ -8,7 +8,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { OG_ROOT, ogImageKey, renderPagesOg, isValidPagesPng, type PagesOgEnv } from '../cloudflare/pages-og';
 import type { OgStripData } from '../cloudflare/pages-og-strips';
 import { normalizeOgParams } from '../src/lib/ogImageCache';
-import { readStaticExportHead } from './lib/static-export-head';
+import { readStaticExportHead, readStaticExportJsonLd } from './lib/static-export-head';
 import { OG_POOL_CHUNK_BYTES, OG_POOL_MODULES, OG_RAW_MODULE_BYTES } from './lib/pages-export.mjs';
 
 type FileInfo = { bytes: number; sha256: string; gzipBytes: number; gzipSha256: string };
@@ -27,13 +27,25 @@ function decodeHtml(value: string) {
 export function collectExportedOgParams(out: string): URLSearchParams[] {
   const values = new Map<string, URLSearchParams>();
   const add = (params: URLSearchParams) => { const normalized = normalizeOgParams(params); values.set(normalized.toString(), normalized); };
+  // JSON-LD images (Article.image of guides, season pages and reports) are real page cards
+  // too. The runtime draws no caller text (SEC-08), so every exported /api/og URL in
+  // structured data is prebuilt with its exact title, like og:image and twitter:image.
+  const addJsonLd = (node: unknown): void => {
+    if (Array.isArray(node)) { node.forEach(addJsonLd); return; }
+    if (node && typeof node === 'object') { Object.values(node).forEach(addJsonLd); return; }
+    if (typeof node !== 'string' || !node.includes('/api/og')) return;
+    let url: URL;
+    try { url = new URL(node, 'https://og-build.invalid'); } catch { return; }
+    if (url.pathname === '/api/og' || url.pathname === '/api/og/') add(url.searchParams);
+  };
   add(new URLSearchParams());
   const visit = (directory: string) => {
     for (const entry of readdirSync(directory, { withFileTypes: true })) {
       if (entry.isSymbolicLink()) throw new Error('Symlinks are not accepted in Pages OG export input');
       if (entry.isDirectory()) { if (!['_msy', '_next', '_worker.js'].includes(entry.name)) visit(join(directory, entry.name)); continue; }
       if (!entry.name.endsWith('.html')) continue;
-      for (const tag of readStaticExportHead(join(directory, entry.name)).metaTags) {
+      const file = join(directory, entry.name);
+      for (const tag of readStaticExportHead(file).metaTags) {
         const attributes = new Map([...tag.matchAll(/([\w:-]+)\s*=\s*(?:"([^"]*)"|'([^']*)')/g)].map(m => [m[1].toLowerCase(), decodeHtml(m[2] ?? m[3])]));
         if (attributes.get('property') !== 'og:image' && attributes.get('name') !== 'twitter:image') continue;
         const content = attributes.get('content');
@@ -42,6 +54,7 @@ export function collectExportedOgParams(out: string): URLSearchParams[] {
         if (url.pathname !== '/api/og' && url.pathname !== '/api/og/') continue;
         add(url.searchParams);
       }
+      readStaticExportJsonLd(file).forEach(addJsonLd);
     }
   };
   visit(out);
