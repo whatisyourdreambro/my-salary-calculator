@@ -327,3 +327,15 @@ Breadcrumbs/speakable(온페이지) + 허브(/calc/bonus-calculators) 신설 + 2
 | 날짜 | 단계 | 결정 | 근거 숫자(위 표·색인률) | 게시일 |
 |---|---|---|---|---|
 | | | | | |
+
+## 2026-11-02 운영자 결정 수정 묶음 OF1~OF4 제목·설명 변경 기록 (claude/owner-fixes-1102 · 원장 마무리, append-only)
+
+운영자 결정 수정 묶음(OF1 세금·보험 사실, OF2 삼성 성과급 공개 출처, OF3 계산기 문구, OF4 광고 안전)에는 head `<title>` 변경이 없고 검색 설명만 2곳 바뀐다. 이전 값 = 2단계+구글 머리 2cab06bc, 이후 값 = 통합 브랜치 — 둘 다 정적 207쪽과 회사 430쪽의 metadata, 바뀐 가이드 10편의 generateMetadata 를 tsx 로 직접 읽은 값이다(정적 4쪽 /, /calc, /earned-income-credit, /work-clock 은 두 트리에서 똑같이 읽기 실패이고, 이 묶음에서 그 head 파일은 바뀌지 않았다). 수치(클릭·노출·CTR)는 적지 않는다 — 판정은 위 Round 3 규칙(T0 직전 28일 vs T0+1~T0+28, 읽는 날 T0+35)대로 하고, T0 = 운영자가 이 묶음 승인 게시를 마친 시각(게시 뒤 이 줄에 기입: `T0 = ____`).
+
+| 날짜 | 경로 | 항목 ID (패키지) | 바뀐 것: 이전 → 이후 |
+|---|---|---|---|
+| 2026-11-02 | /calc/samsung-bonus | S1 (OF2) | 검색 설명 한 글자(언론 표기): 삼성전자 OPI(초과이익성과금)·TAI(목표달성장려금) 계산기. … → 삼성전자 OPI(초과이익성과급)·TAI(목표달성장려금) 계산기. … (문장·길이 그대로, 제목 그대로 — 위 2단계 추기 줄의 T1 과 같은 변경) |
+| 2026-11-02 | /calc/smb-income-tax-break | T3 (OF1) | 검색 설명: … 60세 이상·장애인·경력단절여성 70%·3년 … → … 60세 이상·장애인·경력단절자 70%·3년 … (2025-03-14 조특법 개정 반영, 한 글자 짧아짐, 제목 그대로) |
+
+- 회사 쪽 430곳은 제목·설명·companyPageModified 가 모두 그대로다. 일시적 2주택 글(OF3 C2, 운영자 결정)은 화면 핵심 요약과 카드 설명만 바뀌고 제목·검색 설명(guideMetaDescriptions)은 그대로다. 삼성 OPI 가이드 3편(OF2 S1·S2)도 제목·검색 설명이 그대로다.
+- 같은 묶음의 원장이 sitemap lastmod 를 2026-11-02 로 옮긴 쪽: /year-end-tax-2027 (OF1 T2) · /calc/smb-income-tax-break (OF1 T3) · /embed (OF3 C4) · /social-insurance-rates-2026 (OF1 T1·C5, 첫 원장 항목 — 화면 최종 갱신 2026.05.12 → 2026.11.02) · /calc/jeonse-loan (OF3 C3, 첫 원장 항목). /calc/samsung-bonus · /calc/bonus-calculators · /year-end-tax · /tax-reform-2026 은 내용이 바뀌었지만 날짜를 유지했고(광고 위 화면 수정일 폭, G4 확인일 고정 — scripts/sitemap-content-reviews.json 사유 참조), /year-end-tax-settlement-2026 · /calc/earned-income-tax-quick · /calc/bmi-quick 은 날짜를 옮기지 않았다(화면 수정일 2026.11.02 가 2026.10.19 보다 넓음, 간이 계산기는 날짜 손잡이 없음).

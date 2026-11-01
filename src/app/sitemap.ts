@@ -90,7 +90,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/january-bonus': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 13월의 월급 계산기를 연말정산 정본 엔진으로 (B23 CALC-01)
  '/retirement-pension-2026': { lastModified: new Date('2026-10-26T00:00:00+09:00') }, // 일반 위험자산 한도·적격 TDF 예외·공제와 환급 구분 정정
  // 2026-08-23 시즌 패키지 (연말정산 허브·미리보기·시즌 사이드바)
- '/year-end-tax-2027': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 마지막 광고 아래 세제개편안 정부안 블록·도구 링크·날짜 FAQ (B30 SEO-07-b)
+ '/year-end-tax-2027': { lastModified: new Date('2026-11-02T00:00:00+09:00') }, // 보육수당 비과세 소식 줄 정정(OF1 T2) — 11/1 마지막 광고 아래 세제개편안 정부안 블록·도구 링크·날짜 FAQ (B30 SEO-07-b)
  '/year-end-tax-preview': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 마지막 광고 아래 최근 3년 개통일 표·메뉴 경로 (B30 SEO-07-b)
  // 각 페이지의 Article·OG·표시된 수정일과 동기화. 광고/escape 편집일은 사용하지 않는다.
  '/chuseok-bonus-2026': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
@@ -100,9 +100,10 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/dual-income-year-end': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 표준세액공제 비교 엔진(PKG-10)·문구(PKG-11·PKG-20)·부부 상호 의료비 700만원 한도(B24)·동점 문구(B25)·입력 기준 접힌 상자(B09)
  '/calc/voluntary-retirement': { lastModified: new Date('2026-09-03') },
  '/calc/dependent-check': { lastModified: new Date('2026-09-05') },
- '/calc/smb-income-tax-break': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 4대보험료 소득공제·환산 나이 판정 반영(PKG-14)
+ '/calc/smb-income-tax-break': { lastModified: new Date('2026-11-02T00:00:00+09:00') }, // 경력단절여성 → 경력단절자(2025-03-14 조특법 개정, OF1 T3) — 11/1 4대보험료 소득공제·환산 나이 판정 반영(PKG-14)
  '/calc/offer-compare': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 자녀 공제 나이 FAQ 정정(PKG-21) — 본문 '(설명 수정 2026-11-01)'와 일치
  '/calc/child-deduction': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 결과 광고 위 입력 안내를 짧은 요약으로 (B09 P4-05)
+ '/calc/jeonse-loan': { lastModified: new Date('2026-11-02T00:00:00+09:00') }, // 결과 카드 배지 최저 비용 → 최저 금리, 금리 순 판정(OF3 C3, 첫 원장 항목)
  '/tax-changes-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 자녀세액공제 나이 정정(PKG-21)
  '/year-end-tax-checklist': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 2027 연말정산 제목·자녀세액공제 나이 정정(PKG-20)
  '/weekly-holiday-allowance-2026': { lastModified: new Date('2026-09-12') },
@@ -121,13 +122,15 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  // 2026-11-01: 6대 암검진 본인부담 0~10%·수검 기한 1회 교정(운영자 승인, PKG-22 STR-06) — 10/19 링크 검토일 대신
  '/health-checkup-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') },
  '/social-insurance-rates-2027': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 2027 장기요양 13.90% 확정(PKG-10)
+ // 2026-11-02: 고용보험 회사 부담 1.15~1.75%·총 2.1~2.7%, 산재 평균 1.5% 정정(OF1 T1·C5, 첫 원장 항목) — 페이지 수정일 2곳도 같은 날
+ '/social-insurance-rates-2026': { lastModified: new Date('2026-11-02T00:00:00+09:00') },
  // 봉급표 버티컬 4종 (2026-08-30)
  '/military-pay-2026': { lastModified: new Date('2026-09-27') },
  '/teacher-pay-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 1~40호봉 전체 표(접힌 상자, 마지막 본문 광고 아래 — B35)
  '/police-pay-2026': { lastModified: new Date('2026-10-04') },
  '/firefighter-pay-2026': { lastModified: new Date('2026-10-04') }, // B20 리드·메타 정렬(네이버 저CTR)
  // 2026-08-25 P2 백로그 (임베드 위젯 5종 확장·구조화데이터 보강·영문 메뉴)
- '/embed': { lastModified: new Date('2026-10-04') },
+ '/embed': { lastModified: new Date('2026-11-02T00:00:00+09:00') }, // 연말정산 위젯 안내 ·4대보험만 삭제(OF3 C4)
  '/en': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
  '/en/flat-tax': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
  '/en/salary-converter': { lastModified: new Date('2026-09-09') },

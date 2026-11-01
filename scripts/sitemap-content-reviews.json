@@ -109,13 +109,13 @@
     },
     "/about": {
       "contentDate": "2026-09-27",
-      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
-      "reason": "c3d53bdae (September 27) adds the editorial method paragraph about official announcements and AI-assisted drafting.",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "c3d53bdae (September 27) adds the editorial method paragraph about official announcements and AI-assisted drafting. Rehashed 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF4 A1 moves the share box, which renders nothing in SSR, from above HomeTopAd (the last ad) to directly below it. Layout only, no text change, so the 2026-09-27 date is retained.",
       "dependencies": [],
       "files": [
         "src/app/about/page.tsx"
       ],
-      "sha256": "6d7ef9e0fa9edd65536c5fe14c605e424fa4c76d95bdc26f58f30408d938130e"
+      "sha256": "fbc50a2276aa892add354fb34153950b66c574bc6ce9d97ea0671e0eda8f0283"
     },
     "/tools/loan": {
       "contentDate": "2026-09-10",
@@ -231,7 +231,7 @@
     "/calc/samsung-bonus": {
       "contentDate": "2026-11-01",
       "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
-      "reason": "Reviewed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B05, B06, B12, B28, B37). B28 STR-04-B (owner approval 2026-11-01 item 5) ports the held 10/9 public-press wording above the ads: the division scenario intro (기존 OPI 포함 세전; 370조원 is a company-wide or DS부문 forecast depending on the outlet), the distribution-model step 1 title OPI2 재원 = DS 영업이익 × 10.5%, the CL paragraph with the lower 0.9·0.8배 grades (10/7 reports) and the note that the multi-year simulator models only 가·나·일반, the 재원 heading and paragraph, the bottom info box, the simulator note and the OPI source label 복수 언론 보도 등. B37 P2UX-04 b returns the hero subtitle (2026 OPI·TAI 예상 금액) and the first summary sentence to the pre-10/19 line count; P2UX-04 a restores the OPI·TAI calculator head of the search description (head only). B05 STR-05 moves the hero jump links below the first ad and drops the redundant 내 연봉으로 바로 계산 link, B06 adds pt-2 under the personal-result CalcResultAd and B12 P2UX-01 moves the TopicNextSteps box from the page main to the end of calc/layout; those three are layout only. Visible text change: content date advanced from 2026-10-19 to 2026-11-01, matching article:modified_time, the JSON-LD dateModified and the visible 페이지 수정일 that B28 set. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 replaces the SoftwareApplication JSON-LD dateModified string with staticRouteLastModified(PAGE_PATH), still 2026-11-01 and equal to the visible page revision date; the G4 trust note (공개 자료 label, check date 2026-11-01) arrives through calc/layout.tsx, which this entry does not hash. JSON-LD source only, so the 2026-11-01 date is retained.",
+      "reason": "Reviewed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B05, B06, B12, B28, B37). B28 STR-04-B (owner approval 2026-11-01 item 5) ports the held 10/9 public-press wording above the ads: the division scenario intro (기존 OPI 포함 세전; 370조원 is a company-wide or DS부문 forecast depending on the outlet), the distribution-model step 1 title OPI2 재원 = DS 영업이익 × 10.5%, the CL paragraph with the lower 0.9·0.8배 grades (10/7 reports) and the note that the multi-year simulator models only 가·나·일반, the 재원 heading and paragraph, the bottom info box, the simulator note and the OPI source label 복수 언론 보도 등. B37 P2UX-04 b returns the hero subtitle (2026 OPI·TAI 예상 금액) and the first summary sentence to the pre-10/19 line count; P2UX-04 a restores the OPI·TAI calculator head of the search description (head only). B05 STR-05 moves the hero jump links below the first ad and drops the redundant 내 연봉으로 바로 계산 link, B06 adds pt-2 under the personal-result CalcResultAd and B12 P2UX-01 moves the TopicNextSteps box from the page main to the end of calc/layout; those three are layout only. Visible text change: content date advanced from 2026-10-19 to 2026-11-01, matching article:modified_time, the JSON-LD dateModified and the visible 페이지 수정일 that B28 set. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 replaces the SoftwareApplication JSON-LD dateModified string with staticRouteLastModified(PAGE_PATH), still 2026-11-01 and equal to the visible page revision date; the G4 trust note (공개 자료 label, check date 2026-11-01) arrives through calc/layout.tsx, which this entry does not hash. JSON-LD source only, so the 2026-11-01 date is retained. Rehashed 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF2 S1 spells OPI and OPI2 as the press does (초과이익성과금 to 초과이익성과급, 특별경영성과금 to 특별경영성과급; spelling only, identical glyph advance, no layout change, also in the meta description); OF2 S2 removes the two 2025 OPI rows not found in press (한국총괄·SR·CDO 37%, EHS 34%), sets sourceNote to 복수 언론 보도 and cites press URLs only in the opiData.ts comments, so ads only move up. The skeptic keeps contentDate 2026-11-01 because the visible 페이지 수정일 above the calc/layout ads uses proportional digits (publicSourceWording.test.ts ties it to the sitemap date), so the 2026-11-01 date is retained.",
       "dependencies": [
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
@@ -255,7 +255,7 @@
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
       ],
-      "sha256": "f60cbec395f3111c8f94d1818e03d3f3eb9218d6f81f3e2b8b4a911fcd9ddd5a"
+      "sha256": "4534ed0a694feb4b89b8516ce908e26ed4e20e7d73c7bfde66e45ad835b19c87"
     },
     "/calc/sk-hynix-bonus": {
       "contentDate": "2026-11-01",
@@ -273,13 +273,13 @@
     },
     "/calc/bonus-calculators": {
       "contentDate": "2026-11-01",
-      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B27 DATA-03): the visible 최근 소식 list (src/data/bonusCalcHub.ts) gains the 10/28 SK hynix Q3 results item at the top and drops the oldest 2026-05-27 item. That data file is not hashed for this route, so the source hash is unchanged; as with the 2026-10-09 news update, the content date is advanced from 2026-10-09 to 2026-11-01.",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B27 DATA-03): the visible 최근 소식 list (src/data/bonusCalcHub.ts) gains the 10/28 SK hynix Q3 results item at the top and drops the oldest 2026-05-27 item. That data file is not hashed for this route, so the source hash is unchanged; as with the 2026-10-09 news update, the content date is advanced from 2026-10-09 to 2026-11-01. Rehashed 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF2 S1 changes the hub paragraph above HomeTopAd and the collapsed FAQ answer from OPI(삼성 초과이익성과금) to OPI(삼성 초과이익성과급) (press wording, spelling only, identical glyph advance, no layout change), so the 2026-11-01 date is retained.",
       "dependencies": [],
       "files": [
         "src/app/calc/bonus-calculators/page.tsx"
       ],
-      "sha256": "ab88d0dd580a74625dab61ed1b3f1fd06f2750b71198ebc3beccca013ddd6e38"
+      "sha256": "435134eb3d6f21c02d22daaa83cd5bc1d574f6f7e71efa841c5b7f45edcc78f8"
     },
     "/calc/bonus-home-plan": {
       "contentDate": "2026-11-01",
@@ -353,7 +353,7 @@
     "/year-end-tax": {
       "contentDate": "2026-11-01",
       "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
-      "reason": "Reviewed 2026-11-01 for the stage-1 and stage-2 releases (origin/main 9c82ac01 plus B24 in stage 1; B06, B30, B43 in stage 2). Stage 1, B24 YE-03 and STR-10: inputs inside the collapsed accordions (주택청약, 전통시장, 대중교통, 문화·체육, 자녀세액공제 대상 자녀, 출산·입양, 혼인, 의료비 구분, 보험료, 월세, 교육비), and the engine applies the 주택청약 총급여 7천만원 requirement (조특법 제87조②) and the 700만원 cap on other-dependent medical; the default first view is byte-identical. Stage 2, all below the last ad: B30 SEO-07-b adds calculator links to 5 rows of the limits table and a 6th limits FAQ (혼인세액공제 for marriages registered 2024-01-01 to 2026-12-31; FAQPage now has 10 entries), and B43 YE-06 adds 2 limits-table rows (기업 출산지원금 비과세; 중소기업 취업자 소득세 감면 with a /calc/smb-income-tax-break link), an intro sentence, per-row mobile labels and an extended source note; B06 STR-05 wraps the loan OfferSlot under InArticleAd in div.mt-8 (spacing only). Result and content changes: the content date stays at the release date 2026-11-01 (the page has no revision date field). The calculator component, the engine, taxConstants2026.ts and now src/lib/yearEndLimits2026.ts (limits rows, limits FAQ and source note) are dependencies, so later edits to them require a content review of this route. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G4 appends the trust note (official-source check date 2026-11-01, equal to this content date and the latest YEAR_END_LIMITS_SOURCE_NOTE date) as the last sibling after the last ad (CoupangBanner), share and the limits table. No limit, FAQ, engine or calculator change, so the 2026-11-01 date is retained.",
+      "reason": "Reviewed 2026-11-01 for the stage-1 and stage-2 releases (origin/main 9c82ac01 plus B24 in stage 1; B06, B30, B43 in stage 2). Stage 1, B24 YE-03 and STR-10: inputs inside the collapsed accordions (주택청약, 전통시장, 대중교통, 문화·체육, 자녀세액공제 대상 자녀, 출산·입양, 혼인, 의료비 구분, 보험료, 월세, 교육비), and the engine applies the 주택청약 총급여 7천만원 requirement (조특법 제87조②) and the 700만원 cap on other-dependent medical; the default first view is byte-identical. Stage 2, all below the last ad: B30 SEO-07-b adds calculator links to 5 rows of the limits table and a 6th limits FAQ (혼인세액공제 for marriages registered 2024-01-01 to 2026-12-31; FAQPage now has 10 entries), and B43 YE-06 adds 2 limits-table rows (기업 출산지원금 비과세; 중소기업 취업자 소득세 감면 with a /calc/smb-income-tax-break link), an intro sentence, per-row mobile labels and an extended source note; B06 STR-05 wraps the loan OfferSlot under InArticleAd in div.mt-8 (spacing only). Result and content changes: the content date stays at the release date 2026-11-01 (the page has no revision date field). The calculator component, the engine, taxConstants2026.ts and now src/lib/yearEndLimits2026.ts (limits rows, limits FAQ and source note) are dependencies, so later edits to them require a content review of this route. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G4 appends the trust note (official-source check date 2026-11-01, equal to this content date and the latest YEAR_END_LIMITS_SOURCE_NOTE date) as the last sibling after the last ad (CoupangBanner), share and the limits table. No limit, FAQ, engine or calculator change, so the 2026-11-01 date is retained. Rehashed 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF1 T2 shortens the 달라진 점 item above CalcResultAd from 출산·보육수당 비과세 to 보육수당 비과세 (deletion only), and the collapsed FAQ 4 answer now reads 보육수당 비과세 자녀 1인당 월 20만원. The limits table, its source note, the engine and the calculator are unchanged, and editorialTrustNote.test.ts ties this content date to the trust-note check date and the latest YEAR_END_LIMITS_SOURCE_NOTE date (G4), so the 2026-11-01 date is retained.",
       "dependencies": [
         "src/components/YearEndTaxCalculator.tsx",
         "src/lib/yearEndTaxCalculator.ts",
@@ -367,12 +367,12 @@
         "src/lib/yearEndLimits2026.ts",
         "src/lib/yearEndTaxCalculator.ts"
       ],
-      "sha256": "25f39909948aa57bd9578bc61bdc44b00ad73693909f3dc4b8280db3c5f5e79a"
+      "sha256": "d5c6a46157b70917b75344e60a3a3cd023bbeda01b29d600ec59fe5ecd0b6320"
     },
     "/year-end-tax-2027": {
-      "contentDate": "2026-11-01",
-      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "Reviewed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B30 SEO-07-b): below MultiplexAd the hub gains the 2026 세제개편안 정부안 block with a dated not-yet-voted status, 7 more-tools links and a 3-question dated FAQ (확인일 2026-11-01) merged into FAQPage. New visible content: content date advanced from 2026-09-25 to 2026-11-01 (the page has no revision date field). src/data/yearEndTaxHub.ts, src/lib/yearEndDatedFaqs.ts and src/components/YearEndDatedFaq.tsx are now dependencies because the new blocks render from them.",
+      "contentDate": "2026-11-02",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "Reviewed 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF1 T2 corrects the second YEAR_END_NEWS row (src/data/yearEndTaxHub.ts, between CalcResultAd and InArticleAd) from 출산·보육수당 비과세 한도 to 보육수당 비과세 한도 자녀 1인당 월 20만원 적용, because birth support is fully tax-free and the monthly 200,000 won limit applies only to the childcare allowance (deletion only); OF4 A1 moves the share box from above the MultiplexAd wrapper to directly below it (layout only, the SSR HTML above the ad is unchanged). Fact correction: content date advanced from 2026-11-01 to 2026-11-02 (the page has no revision date field). The B30 dependencies src/data/yearEndTaxHub.ts, src/lib/yearEndDatedFaqs.ts and src/components/YearEndDatedFaq.tsx stay.",
       "dependencies": [
         "src/data/yearEndTaxHub.ts",
         "src/lib/yearEndDatedFaqs.ts",
@@ -384,7 +384,7 @@
         "src/data/yearEndTaxHub.ts",
         "src/lib/yearEndDatedFaqs.ts"
       ],
-      "sha256": "99ca689bfbebfdbdbd1dc611816735b4ebd757c18c6e839d822716bc30336594"
+      "sha256": "7bd3413c6051705f0c7b3826aef2a81780e7e10f6ee5055eee77fb98a9887a49"
     },
     "/year-end-tax-preview": {
       "contentDate": "2026-11-01",
@@ -414,13 +414,13 @@
     },
     "/tax-reform-2026": {
       "contentDate": "2026-11-01",
-      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "Reviewed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B43 YE-06): a new section below the last ad (HomeTopAd) at the end of the page lists the government-proposal items that remove a deduction or turn it into direct fiscal support, as 2 cards marked 정부안·국회 통과 전 (출산·입양, 혼인 세액공제 → 직접 재정지원으로 전환; 신용카드 대중교통 추가공제(40%) 폐지), with a status checked 2026-11-01 and sources korea.kr newsId 148969870 and the MOFE 2026-08-03 release. New visible content: content date advanced from 2026-09-30 to 2026-11-01, and the page modifiedTime, Article modifiedDate and visible PublishedMeta 최종 갱신 date move to 2026-11-01 in the same commit.",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "Reviewed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B43 YE-06): a new section below the last ad (HomeTopAd) at the end of the page lists the government-proposal items that remove a deduction or turn it into direct fiscal support, as 2 cards marked 정부안·국회 통과 전 (출산·입양, 혼인 세액공제 → 직접 재정지원으로 전환; 신용카드 대중교통 추가공제(40%) 폐지), with a status checked 2026-11-01 and sources korea.kr newsId 148969870 and the MOFE 2026-08-03 release. New visible content: content date advanced from 2026-09-30 to 2026-11-01, and the page modifiedTime, Article modifiedDate and visible PublishedMeta 최종 갱신 date move to 2026-11-01 in the same commit. Rehashed 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF1 T2 shortens the 3부 card title between InArticleAd and GuideMidAd from 출산·보육수당 비과세 to 보육수당 비과세 (deletion only), and the collapsed FAQ answer now reads 보육수당 비과세 자녀 1인당 월 20만원 등. The visible PublishedMeta 최종 갱신 2026.11.01 sits above the ads together with modifiedTime and the Article modifiedDate, and 2026.11.02 would print about 1.8px wider at 12px in the served Latin subset, so the 2026-11-01 date is retained with all three page dates.",
       "dependencies": [],
       "files": [
         "src/app/tax-reform-2026/page.tsx"
       ],
-      "sha256": "9154cb4d71a4a68b1de9310032a4410ccf175c228cf8866e61ebe9c6c23c4172"
+      "sha256": "18ad6da815df024de16b6956cf9e1996e82cda0e92e0a313dd0d4fe8d4f915f4"
     },
     "/civil-servant-pay-2027": {
       "contentDate": "2026-10-19",
@@ -479,15 +479,15 @@
       "sha256": "74c405d8923e5b8b4dcd304b26e77259ee4cef6bcd80e12af2bc12f8d741bf77"
     },
     "/calc/smb-income-tax-break": {
-      "contentDate": "2026-11-01",
-      "reviewedAtCommit": "5ccd079e6ff58f48b5896abeae13e0a71c949058",
-      "reason": "Reviewed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-14): health, long-term-care and employment insurance deductions now enter the tax base before the SMB youth reduction (code7-03), the converted 34-35 age band can qualify depending on the birthday (code7-02), and the note under the result is shortened. Result change: content date advanced from 2026-10-04 to 2026-11-01 (the page has no revision date field).",
+      "contentDate": "2026-11-02",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "Reviewed 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF1 T3 renames the 70%·3-year group from 경력단절여성 to 경력단절자 after the 2025-03-14 amendment of the Restriction of Special Taxation Act (career-break workers of any gender, article 29-8(2); Enforcement Decree article 27(1)4): the select option and the conditional youth-ineligible verdict above CalcResultAd, the 감면율 list item above InArticleAd, the meta description, and FAQ 1 (collapsed details and FAQPage JSON-LD), which adds that hires before 2025-03-14 keep the former career-break-women rule; the src/lib/smbTaxBreak.ts labels follow (not hashed for this route). The PKG-14 calculation is unchanged. Fact correction: content date advanced from 2026-11-01 to 2026-11-02 (the page has no revision date field).",
       "dependencies": [],
       "files": [
         "src/app/calc/smb-income-tax-break/Client.tsx",
         "src/app/calc/smb-income-tax-break/page.tsx"
       ],
-      "sha256": "92ab7b28ad568cab0bb2efb7019a81d52fa2a69dfcb91e84c57ac2f211692c33"
+      "sha256": "2f736260cc71e068b8843dc03571c740a14d690af44fe55def3959a7e36c10f3"
     },
     "/calc/offer-compare": {
       "contentDate": "2026-11-01",
@@ -528,13 +528,13 @@
     },
     "/year-end-tax-checklist": {
       "contentDate": "2026-11-01",
-      "reviewedAtCommit": "5ccd079e6ff58f48b5896abeae13e0a71c949058",
-      "reason": "Reviewed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-20): SEO-07-a 2027 연말정산 (2026년 귀속) title with the H1 filing year 2027, and STR-03 corrects the child tax credit item from 만 8세 이상 to the 2026 attribution rule (9+, 2017 births excluded). Fact correction: content date advanced from 2026-09-30 to 2026-11-01, matching modifiedTime and the visible updated date.",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "Reviewed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-20): SEO-07-a 2027 연말정산 (2026년 귀속) title with the H1 filing year 2027, and STR-03 corrects the child tax credit item from 만 8세 이상 to the 2026 attribution rule (9+, 2017 births excluded). Fact correction: content date advanced from 2026-09-30 to 2026-11-01, matching modifiedTime and the visible updated date. Rehashed 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF4 A1 moves the main-column share box from between HomeTopAd and MultiplexAd to directly below MultiplexAd; the desktop-only sticky aside is unchanged. Layout only, no text change, so the 2026-11-01 date is retained.",
       "dependencies": [],
       "files": [
         "src/app/year-end-tax-checklist/page.tsx"
       ],
-      "sha256": "3001662e6e36af953a6da57f22bf15faa22d491a574004095f08c53ab6b14fad"
+      "sha256": "58aa375260c818dbf5b24d751b7afbc829cba3e76073f4a594f46e6c8e2c3315"
     },
     "/weekly-holiday-allowance-2026": {
       "contentDate": "2026-09-12",
@@ -641,7 +641,7 @@
     "/social-insurance-rates-2027": {
       "contentDate": "2026-11-01",
       "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
-      "reason": "Reviewed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-10 DATA-01): the 2027 long-term-care ratio is the confirmed 13.90% of the health premium (decided 2026-10-30, MOHW) in taxConstants2027 and in the LTC card, hero line, FAQ and simulation totals; only industrial-accident and employment insurance stay unconfirmed. Substantive rate correction: content date advanced from 2026-10-04 to 2026-11-01, matching modifiedTime and the visible updated date. Rehashed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B17, B24): B17 changes only a taxConstants2027.ts comment (employment-insurance decree pre-announcement status and the ministry URL; the 0.9% rate stays provisional), and B24 adds HOUSING_SUBSCRIPTION_DEDUCTION_2026 and a MEDICAL_CREDIT_2026 comment to taxConstants2026.ts, neither used by this page. No visible change, so the 2026-11-01 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G4 appends the trust note (check date 2026-11-01 = PublishedMeta updatedDate) after the last MultiplexAd. No rate or wording change above it, so the 2026-11-01 date is retained.",
+      "reason": "Reviewed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-10 DATA-01): the 2027 long-term-care ratio is the confirmed 13.90% of the health premium (decided 2026-10-30, MOHW) in taxConstants2027 and in the LTC card, hero line, FAQ and simulation totals; only industrial-accident and employment insurance stay unconfirmed. Substantive rate correction: content date advanced from 2026-10-04 to 2026-11-01, matching modifiedTime and the visible updated date. Rehashed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B17, B24): B17 changes only a taxConstants2027.ts comment (employment-insurance decree pre-announcement status and the ministry URL; the 0.9% rate stays provisional), and B24 adds HOUSING_SUBSCRIPTION_DEDUCTION_2026 and a MEDICAL_CREDIT_2026 comment to taxConstants2026.ts, neither used by this page. No visible change, so the 2026-11-01 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G4 appends the trust note (check date 2026-11-01 = PublishedMeta updatedDate) after the last MultiplexAd. No rate or wording change above it, so the 2026-11-01 date is retained. Rehashed 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF4 A1 moves the share box from between HomeTopAd and MultiplexAd to directly below MultiplexAd, before the G4 trust note, which stays the last child. Layout only, no text change, so the 2026-11-01 date is retained.",
       "dependencies": [
         "src/lib/insuranceRateExample.ts",
         "src/lib/pensionHike.ts",
@@ -655,7 +655,7 @@
         "src/lib/taxConstants2026.ts",
         "src/lib/taxConstants2027.ts"
       ],
-      "sha256": "a3f7d684e8023e6b8198039979a8938764501f51ce074d7d70c2370171d62ac4"
+      "sha256": "e1ed6af25f5ee9ff36a864456096aafbd7f5d6884b2616f59eec31332595ba2a"
     },
     "/military-pay-2026": {
       "contentDate": "2026-09-27",
@@ -704,9 +704,9 @@
       "sha256": "43e0d0a2de800d8cb390c98b3136c67a45736d1deb90de54affeb4b9e5edbcde"
     },
     "/embed": {
-      "contentDate": "2026-10-04",
-      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
-      "reason": "352451886 (October 4) corrects guaranteed accuracy, dwell-time and automatic legal-update claims in the embed FAQ.",
+      "contentDate": "2026-11-02",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "Reviewed 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF3 C4 deletes ·4대보험만 from the year-end-tax widget basis in src/app/embed/widgets.ts (now 2026년 귀속 기준, 본인 1인 공제 반영한 보수적 추정입니다 …), because the widget grid uses the 130,000 won standard tax credit up to a total salary of 30 million won and the insurance-premium deduction only above it (Income Tax Act article 59-4(9)1 and article 52(8)); the noindex /widget/year-end-tax note changes with it. Visible wording correction: content date advanced from 2026-10-04 to 2026-11-02 (the page has no revision date field).",
       "dependencies": [],
       "files": [
         "src/app/embed/EmbedCompanyPicker.tsx",
@@ -714,7 +714,7 @@
         "src/app/embed/page.tsx",
         "src/app/embed/widgets.ts"
       ],
-      "sha256": "52efa0cd5dc1f78449dc51aeb2c6ccc17633e5b86a7e8a0c795c4268d4232e00"
+      "sha256": "fe5eb3c5b07af81ef39e9376209c5024dade063194e79a60c4a5b89debfe6e39"
     },
     "/en": {
       "contentDate": "2026-10-19",
@@ -792,13 +792,13 @@
     },
     "/retirement-pension-2026": {
       "contentDate": "2026-10-26",
-      "reviewedAtCommit": "20f1bbbf1dfd029945547dd39549df7ee62c306f",
-      "reason": "October 26 bounded corrections distinguish the general 70% risk-asset cap from the qualifying TDF exception and estimated tax credit from actual refund. Reviewed against 20f1bbbf plus explicit body/CTA and one tax-credit FAQ corrections: salary-only total-wage terminology, neutral tax deferral, and removal of the 30-year refund projection. Four adjacent common-mistake items replace unsupported return, universal liquidity, transfer-benefit and pension-sufficiency claims with reader checks; the risk-limit item is unchanged. The existing October 26 review date and February 1 publication date are preserved; this is not full financial certification or deployment completion.",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "October 26 bounded corrections distinguish the general 70% risk-asset cap from the qualifying TDF exception and estimated tax credit from actual refund. Reviewed against 20f1bbbf plus explicit body/CTA and one tax-credit FAQ corrections: salary-only total-wage terminology, neutral tax deferral, and removal of the 30-year refund projection. Four adjacent common-mistake items replace unsupported return, universal liquidity, transfer-benefit and pension-sufficiency claims with reader checks; the risk-limit item is unchanged. The existing October 26 review date and February 1 publication date are preserved; this is not full financial certification or deployment completion. Rehashed 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF4 A1 moves the share box from between HomeTopAd and MultiplexAd to directly below MultiplexAd. Layout only, no text change, so the 2026-10-26 date is retained.",
       "dependencies": [],
       "files": [
         "src/app/retirement-pension-2026/page.tsx"
       ],
-      "sha256": "72414af3f5918039309455d897d11385638f1a4500fd0651be6b495436827402"
+      "sha256": "317c4581416863e0aed851c3483051837620de20be75eab4294418c5d941ebb8"
     },
     "/health-checkup-2026": {
       "contentDate": "2026-11-01",
@@ -902,6 +902,33 @@
         "src/lib/yearEndDatedFaqs.ts"
       ],
       "sha256": "ef2ae766b19c3879246df199f045bbcc7c371910d01c984e6ae9bcb48b56c50f"
+    },
+    "/social-insurance-rates-2026": {
+      "contentDate": "2026-11-02",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "New explicit review 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF1 T1 corrects the 고용보험 card above InArticleAd to the employer share 1.15~1.75% (회사 규모별) and the total 2.1~2.7% (Enforcement Decree of the Employment Insurance and Industrial Accident Compensation Insurance Premium Collection Act, article 12, in force 2025-12-23), and OF1 C5 rounds the 산재보험 average to 평균 1.5% (the 2026 average rate 1.47% was kept, MOEL 2025-12-31). Substantive rate correction: content date set to 2026-11-02 (the sitemap carried STATIC_LAST_MODIFIED 2026-07-16), with the page modifiedTime and the visible PublishedMeta 최종 갱신 moved from 2026-05-12 to 2026-11-02 in the preceding commit (2026.11.02 prints narrower than 2026.05.12). src/lib/insuranceRateExample.ts renders the worked example on this page, so it is a dependency.",
+      "dependencies": [
+        "src/lib/insuranceRateExample.ts"
+      ],
+      "files": [
+        "src/app/social-insurance-rates-2026/page.tsx",
+        "src/lib/insuranceRateExample.ts"
+      ],
+      "sha256": "a013b79c2a32cde2eb49164eb231ca9b9ffab564baa7f88e122948fb4d348bba"
+    },
+    "/calc/jeonse-loan": {
+      "contentDate": "2026-11-02",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "New explicit review 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF3 C3 renames the result-card badge above CalcResultAd from 최저 비용 to 최저 금리 and gives it to the eligible product with the lowest rate (ties: the larger limit) instead of the lowest annual interest, which a product with a smaller limit could win (cheapestEligible in src/lib/jeonseLoanProducts.ts; product terms per nhuf.molit.go.kr). Visible result change: content date set to 2026-11-02 (the sitemap carried STATIC_LAST_MODIFIED 2026-07-16; the page has no revision date field). src/lib/jeonseLoanProducts.ts holds the product table and the ranking, so it is a dependency.",
+      "dependencies": [
+        "src/lib/jeonseLoanProducts.ts"
+      ],
+      "files": [
+        "src/app/calc/jeonse-loan/Client.tsx",
+        "src/app/calc/jeonse-loan/page.tsx",
+        "src/lib/jeonseLoanProducts.ts"
+      ],
+      "sha256": "0c8f3bcf557c54709933a587da80c264be3cb244621a8fbcd65fb78b1d4c79e2"
     }
   }
 }
