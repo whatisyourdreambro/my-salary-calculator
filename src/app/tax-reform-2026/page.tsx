@@ -8,6 +8,14 @@
 //       반영 — 비거주 1주택 기본공제 12억 현행 유지·비거주 부부 공동명의 1인당 6억·세부담상한 150% 유지·
 //       ISA 계약기간·납입한도 현행 유지·청년형 생산적금융 ISA 중복가입 허용. 11개 법안 9.3 국회 제출.
 //       광고 위 카드는 어절 폭을 원문과 같게 맞춘 제자리 표기만, 상세는 맨 아래(마지막 광고 아래) 섹션.
+// 2026-11-01 (YE-06, 운영자 승인 8번 — B43): 정부안 중 공제가 없어지거나 재정지원으로 바뀌는 항목
+//       (출산·입양·혼인 세액공제 → 직접 재정지원, 신용카드 대중교통 추가공제 폐지)을 마지막 광고(HomeTopAd)
+//       아래 PHASEOUT_ITEMS 섹션에만 추가. 출처: 대한민국 정책브리핑 「청년·서민 세 부담 낮추고 지방 지원 늘린다…
+//       세제개편안 살펴보니」(2026.8.13, newsId 148969870) + 재정경제부 「2026년 세제개편안」 상세본(2026.8.3)
+//       【재정전환】(1) 출산·입양 세액공제 적용 종료·(2) 혼인세액공제 적용기한 종료(둘 다 적용시기 표기 없음 — 화면에도
+//       시기를 적지 않는다)·(10) 신용카드등 소득공제 대중교통 추가공제 적용 종료·추가공제 한도 200/100만원·도서공연 총급여
+//       요건 삭제('27.1.1. 이후 개시하는 과세기간 분부터). 현행 수치는 정본 상수 BIRTH_CREDIT_2026·MARRIAGE_CREDIT_2026·
+//       CARD_RATES_2026·CARD_EXTRA_LIMIT_2026 와 같다(taxReformPhaseout.test.ts).
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -139,6 +147,25 @@ const REALESTATE_ITEMS = [
     detail:
       "보유 기간 위주였던 장기보유특별공제를 실제 거주 기간 중심으로 재편합니다. 발표 전 거론되던 방향이 그대로 발표에 담겼습니다.",
     tag: "양도세",
+  },
+];
+
+// 맨 아래(마지막 광고 HomeTopAd 아래) — 정부안 중 공제가 없어지거나 재정지원으로 바뀌는 항목 (YE-06, B43 2026-11-01).
+// 근거는 파일 머리말. 광고 위 2부 목록과 섞지 않는다. 국회 의결 뒤에는 아래 [국회 의결 후 갱신 슬롯] 4번에서 함께 고친다.
+/** '국회 의결 전'을 확인한 날 (YYYY-MM-DD, 화면에 날짜로 표기) */
+const PHASEOUT_CHECKED_ON = "2026-11-01";
+const PHASEOUT_ITEMS = [
+  {
+    title: "출산·입양, 혼인 세액공제 → 직접 재정지원으로 전환",
+    detail:
+      "출산·입양 세액공제(첫째 30만원, 둘째 50만원, 셋째 이상 70만원)는 적용을 끝내고, 혼인세액공제(혼인신고한 해에 1명당 50만원, 생애 1회)는 2026년 12월 31일 혼인신고분까지인 적용기한을 연장하지 않습니다. 세액공제는 낼 세금이 있어야 혜택을 받는 구조라, 세금을 적게 내는 사람까지 지원하도록 직접 재정지원으로 바꾼다는 것이 정부 설명입니다. 정부는 출산·입양 때 지금의 최대 공제액 이상을 받도록 재정지원 방안을 마련하고, 혼인 지원은 대상을 넓히는 방안을 검토하고 있다고 밝혔습니다. 현행법상 2026년에 출산·입양하거나 혼인신고(12월 31일까지)했다면 2027년 1~2월 연말정산(2026년 귀속)에서 그대로 공제받습니다.",
+    tag: "가족",
+  },
+  {
+    title: "신용카드 대중교통 추가공제(40%) 폐지",
+    detail:
+      "신용카드 등 소득공제에서 대중교통 사용분에 주던 40% 공제율을 없애고 결제수단별 기본공제율(신용카드 15%, 체크카드·현금영수증 30%)로 일원화합니다. 근로소득자만 받는 공제 대신 대중교통비 환급 사업을 늘리는 재정지원으로 바꾼다는 설명입니다. 같은 개정안에서 추가공제 한도는 총급여 7천만원 이하 300만→200만원, 초과 200만→100만원으로 낮아지고, 도서·공연·체육시설 등 30% 공제의 총급여 7천만원 이하 요건은 없어집니다. 국회를 통과하면 2027년 사용분부터 적용되며, 2026년 사용분에는 현행 40%가 그대로 적용됩니다.",
+    tag: "연말정산",
   },
 ];
 
@@ -352,6 +379,9 @@ export default function TaxReform2026Page() {
           2) metadata modifiedTime·PublishedMeta updatedDate·articleLd
              modifiedDate를 의결 반영일로 갱신
           3) 시행 시기가 항목별로 확정되면 각 detail에 반영
+          4) 맨 아래(마지막 광고 HomeTopAd 아래) PHASEOUT_ITEMS 의
+             '정부안·국회 통과 전' 표기·PHASEOUT_CHECKED_ON 을 의결
+             결과로 교체 (YE-06, B43)
           ─────────────────────────────────────────────────────────
         */}
 
@@ -495,6 +525,63 @@ export default function TaxReform2026Page() {
         <div className="mt-8">
           <HomeTopAd />
         </div>
+
+        {/* 정부안 중 공제가 없어지거나 재정지원으로 바뀌는 항목 (YE-06, 운영자 승인 2026-11-01 8번 — B43).
+            마지막 광고(HomeTopAd)보다 아래, page-width 컨테이너 맨 끝에만 추가 — 광고 위 요소·순서 불변 (광고 위 UI 금지 규칙). */}
+        <section className="mt-12 max-w-3xl mx-auto" aria-labelledby="reform-phaseout-heading">
+          <h2 id="reform-phaseout-heading" className="text-xl sm:text-2xl font-black text-navy mb-2">
+            공제가 없어지거나 재정지원으로 바뀌는 항목
+          </h2>
+          <p className="text-sm leading-7 text-muted-blue mb-2">
+            위 &lsquo;직장인·연말정산 관련&rsquo; 목록은 공제를 넓히는 항목 위주입니다. 같은
+            정부안에는 공제를 없애고 직접 재정지원으로 바꾸는 항목도 들어 있습니다.
+          </p>
+          <p className="text-xs text-faint-blue mb-4">
+            <strong>정부안 · 국회 통과 전</strong> —{" "}
+            <time dateTime={PHASEOUT_CHECKED_ON}>2026년 11월 1일</time> 확인 기준 아직 국회
+            의결 전이며, 국회 심의·의결 과정에서 내용이나 시행 시기가 달라질 수 있습니다.
+          </p>
+          <div className="space-y-3">
+            {PHASEOUT_ITEMS.map((item) => (
+              <div
+                key={item.title}
+                className="p-5 bg-white rounded-2xl border border-canvas-200"
+              >
+                <div className="flex items-start justify-between gap-4 flex-wrap">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-navy text-base mb-2">{item.title}</h3>
+                    <p className="text-sm text-muted-blue leading-relaxed">
+                      {item.detail}
+                    </p>
+                  </div>
+                  <div className="flex-shrink-0 px-3 py-1.5 rounded-full bg-canvas text-faint-blue text-xs font-bold">
+                    {item.tag} · 정부안·국회 통과 전
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="mt-4 text-xs text-faint-blue leading-relaxed">
+            출처:{" "}
+            <a
+              href="https://www.korea.kr/news/policyNewsView.do?newsId=148969870"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-electric font-bold hover:underline"
+            >
+              대한민국 정책브리핑 「청년·서민 세 부담 낮추고 지방 지원 늘린다…세제개편안 살펴보니」 (2026.8.13)
+            </a>{" "}
+            ·{" "}
+            <a
+              href="https://mofe.go.kr/nw/nes/detailNesDtaView.do?searchBbsId1=MOSFBBS_000000000028&searchNttId1=MOSF_000000000078809&menuNo=4010100"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-electric font-bold hover:underline"
+            >
+              재정경제부 「2026년 세제개편안」 상세본 (2026.8.3)
+            </a>
+          </p>
+        </section>
       </div>
     </main>
   );

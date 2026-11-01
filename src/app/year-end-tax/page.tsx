@@ -252,7 +252,8 @@ export default function YearEndTaxPage() {
  </h2>
  <p className="text-sm text-muted-blue leading-relaxed mb-4">
  위 계산기에 넣을 금액을 정하기 전에 항목별 공제율과 한도를 확인하세요.
- 소득공제는 과세표준을, 세액공제는 세금을 직접 줄입니다.
+ 소득공제는 과세표준을, 세액공제는 세금을 직접 줄입니다. 표 끝의 비과세
+ 소득은 총급여에서 빠지고, 감면은 산출세액의 일정 비율을 덜어 줍니다.
  </p>
  <div className="bg-white rounded-2xl border border-canvas-200 px-4 sm:px-0">
  <table className="w-full text-sm border-collapse block sm:table">
@@ -283,11 +284,11 @@ export default function YearEndTaxPage() {
  )}
  </th>
  <td className="block sm:table-cell mt-2 sm:mt-0 sm:py-3 sm:px-4 text-muted-blue leading-relaxed">
- <span className="sm:hidden font-bold text-navy">공제율 </span>
+ <span className="sm:hidden font-bold text-navy">{row.rateLabel ?? "공제율"} </span>
  {row.rate}
  </td>
  <td className="block sm:table-cell mt-1 sm:mt-0 sm:py-3 sm:px-4 text-muted-blue leading-relaxed">
- <span className="sm:hidden font-bold text-navy">한도 </span>
+ <span className="sm:hidden font-bold text-navy">{row.limitLabel ?? "한도"} </span>
  {row.limit}
  </td>
  </tr>

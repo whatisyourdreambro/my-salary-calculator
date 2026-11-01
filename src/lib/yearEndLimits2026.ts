@@ -13,6 +13,15 @@
 //   (2024년 기부분 한정 3천만원 초과분 추가 10%는 ⑧ 한시 규정 — 2026년 미적용), 조특법 §76① 정치자금
 //   10만원까지 100/110·초과분 15%·3천만원 초과분 25%, §58①1~3호 고향사랑 10만원까지 100/110·10만원 초과
 //   20만원 이하 40%·20만원 초과 2천만원 이하 15%(특별재난지역 선포 지자체 기부 30%) — 부칙 제13조 2026-01-01 기부분부터.
+// 출산지원금 비과세·중소기업 취업자 감면 행(YE-06, 운영자 승인 2026-11-01 8번 — B43, 국가법령정보센터 현행 조문 2026-11-01 확인):
+//   소득세법 §12(3)머목1)(법률 제21221호 시행 2026-07-01 본 — 자녀 출생일 이후 2년 이내, 최대 두 차례, 특수관계인 제외)·
+//   같은 법 시행령 §17의2(대통령령 제36737호 시행 2026-10-01 본 — 첫 번째·두 번째 지급분, 사용자별 계산)·소득세법(법률) §20②
+//   (총급여액은 비과세소득 제외 — 시행령 §20 은 일용근로자 범위라 무관)·소득세법 §12(3)머목2)(6세 이하 자녀 보육수당 1명당
+//   월 20만원), 조특법 §30①②(법률 제21467호 시행 2026-09-18 본 —
+//   청년 90%·5년, 60세 이상·장애인·경력단절 근로자 70%·3년, 과세기간별 200만원 한도, 원천징수의무자에게 감면 신청)·
+//   조특법 시행령 §27①1호(청년 = 근로계약 체결일 15~34세, 병역 최대 6년 차감). 감면 수치는 smbTaxBreak 정본 상수에서 만든다.
+//   연말정산 엔진(yearEndTaxCalculator)에는 감면 경로가 없다 — 감면 대상자는 위 계산기 결정세액이 실제보다 크게 나오므로
+//   그 사실과 전용 계산기(/calc/smb-income-tax-break) 링크를 행에 적는다.
 // ★이 표는 2026년 귀속 값이다. YEAR_END_SEASON 은 2027-03-10 까지 2026년 귀속으로 고정되고
 //   2027-03-11 부터만 2027년 귀속 프레임으로 넘어간다(yearEndSeason.ts·yearEndSeasonGuard.test.ts) —
 //   그때 2027 세법 개정(2026-08-03 세제개편안: 대중교통 우대공제 폐지·추가공제 한도 하향 등) 확정값으로
@@ -27,6 +36,13 @@ import {
 } from "@/lib/cardDeduction2026";
 import { DONATION_CREDIT_2026 } from "@/lib/donationCredit";
 import { formatManwonKorean } from "@/lib/manwonFormat";
+import {
+  SMB_BREAK_CAP_PER_YEAR,
+  SMB_BREAK_RULES,
+  YOUTH_MAX_AGE,
+  YOUTH_MILITARY_DEDUCT_MAX_MONTHS,
+  YOUTH_MIN_AGE,
+} from "@/lib/smbTaxBreak";
 import {
   EDUCATION_CREDIT_2026,
   INSURANCE_RATES_2026,
@@ -63,16 +79,22 @@ const P = PENSION_ACCOUNT_CREDIT_2026;
 const M = MEDICAL_CREDIT_2026;
 const E = EDUCATION_CREDIT_2026;
 const D = DONATION_CREDIT_2026;
+const SMB_YOUTH = SMB_BREAK_RULES.youth;
+const SMB_OTHER = SMB_BREAK_RULES.other;
 
 export interface YearEndLimitRow {
   /** 항목명 */
   item: string;
   /** 근거 조문 */
   basis: string;
-  /** 공제율 */
+  /** 공제율 (비과세·감면 행은 비과세 범위·감면율) */
   rate: string;
   /** 한도·요건 */
   limit: string;
+  /** 모바일 카드에서 rate 앞에 붙는 이름 — 없으면 "공제율" (데스크톱은 열 제목) */
+  rateLabel?: string;
+  /** 모바일 카드에서 limit 앞에 붙는 이름 — 없으면 "한도" */
+  limitLabel?: string;
   /** 해당 항목 정밀 계산기(표 th 안 링크, 2026-09-29) — 표는 /year-end-tax 마지막 광고 아래 */
   calc?: { href: string; label: string };
 }
@@ -125,10 +147,28 @@ export const YEAR_END_LIMIT_ROWS: readonly YearEndLimitRow[] = [
     limit: `일반기부금 근로소득금액의 ${pct(D.LIMIT_GENERAL_RATIO)}(종교단체 ${pct(D.LIMIT_RELIGIOUS_RATIO)}) · 고향사랑 연 ${man(D.HOMETOWN_CAP)}까지`,
     calc: { href: "/donation-tax-credit-2026", label: "기부금 세액공제 계산기 →" },
   },
+  // YE-06 (B43, 2026-11-01): 공제가 아닌 비과세·감면 2행 — 근거는 파일 머리말. 페이지 끝(마지막 광고 아래) 표에만 렌더.
+  {
+    item: "기업 출산지원금 비과세",
+    basis: "소득세법 제12조제3호머목 · 같은 법 시행령 제17조의2",
+    rateLabel: "비과세",
+    rate: "근로자 본인 또는 배우자의 출산과 관련해 회사에서 받은 출산지원금 전액(총급여에서 제외)",
+    limitLabel: "요건",
+    limit:
+      "자녀 출생일 이후 2년 이내 첫 번째·두 번째 지급분(회사별로 계산) · 금액 한도 없음 · 사업주의 친족이나 지배주주 등 특수관계인은 제외 · 6세 이하 자녀 보육수당 비과세(1명당 월 20만원)와 별도",
+  },
+  {
+    item: "중소기업 취업자 소득세 감면",
+    basis: "조세특례제한법 제30조",
+    rateLabel: "감면율",
+    rate: `소득세의 ${pct(SMB_YOUTH.rate)}(청년: 근로계약 체결일 ${YOUTH_MIN_AGE}~${YOUTH_MAX_AGE}세, 병역 이행기간 최대 ${YOUTH_MILITARY_DEDUCT_MAX_MONTHS / 12}년은 나이에서 뺌, 취업일부터 ${SMB_YOUTH.years}년) · ${pct(SMB_OTHER.rate)}(60세 이상·장애인·경력단절 근로자, ${SMB_OTHER.years}년)`,
+    limit: `과세기간별 ${man(SMB_BREAK_CAP_PER_YEAR)}까지 · 회사(퇴사자는 세무서)에 감면 신청 · 위 계산기는 감면을 반영하지 않아 감면 대상이면 결정세액이 더 낮습니다`,
+    calc: { href: "/calc/smb-income-tax-break", label: "중소기업 감면 계산기 →" },
+  },
 ];
 
 export const YEAR_END_LIMITS_SOURCE_NOTE =
-  "근거: 국가법령정보센터 소득세법 제59조의3·제59조의4(2026. 1. 1. 시행)와 조세특례제한법 제58조·제76조·제95조의2·제126조의2 현행 조문, 국세청 근로자를 위한 연말정산 안내. 2026년 8월 발표된 세제개편안(대중교통 우대공제 폐지 등)은 국회를 통과해야 2027년 귀속부터 적용되므로 반영하지 않았습니다. 기준일 2026-09-25.";
+  "근거: 국가법령정보센터 소득세법 제12조·제59조의3·제59조의4(2026. 1. 1. 시행)·같은 법 시행령 제17조의2와 조세특례제한법 제30조·제58조·제76조·제95조의2·제126조의2 현행 조문, 국세청 근로자를 위한 연말정산 안내. 2026년 8월 발표된 세제개편안(대중교통 우대공제 폐지 등)은 국회를 통과해야 2027년 귀속부터 적용되므로 반영하지 않았습니다. 기준일 2026-09-25(출산지원금·중소기업 감면 행은 2026-11-01).";
 
 export interface YearEndLimitFaq {
   question: string;
