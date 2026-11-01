@@ -208,9 +208,10 @@ export default function YearEndTaxPreviewPage() {
               </div>
             </section>
 
-            <ShareSection contentType="guide" className="mb-8" />
             {/* FAQ 직후 보강 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
             <CalcResultAd />
+            {/* 공유 버튼 — 광고 아래(하이드레이션 뒤 나타나도 광고가 밀리지 않게). 광고 위로 되돌리지 말 것. */}
+            <ShareSection contentType="guide" className="mt-8 mb-8" />
             {/* 클러스터 칩 — 광고 아래 배치 준수 */}
             <YearEndTaxCluster />
           </div>
