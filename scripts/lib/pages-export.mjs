@@ -419,7 +419,7 @@ export function checkWorkerBundle(dist, { workerBytes = PAGES_WORKER_LIMIT } = {
 /** Visible margin report only; checkWorkerBundle remains the fail-closed limit. */
 export function workerHeadroomWarning(workerBytes, { limit = PAGES_WORKER_LIMIT, warnAt = PAGES_WORKER_WARN_HEADROOM } = {}) {
   const headroom = limit - workerBytes;
-  return headroom < warnAt ? `Pages Worker has only ${headroom} bytes of headroom under the ${limit}-byte package limit; compact the route manifest or OG data before adding routes.` : null;
+  return headroom < warnAt ? `Pages Worker has only ${headroom} bytes of headroom under the ${limit}-byte package limit; compact the route manifest before adding routes (G2/PD-02: the Worker carries no OG data).` : null;
 }
 
 export function artifactHash(stage) {
