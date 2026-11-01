@@ -321,8 +321,8 @@ export default function ReincarnationPage() {
                 <InArticleAd />
               </div>
 
-              {/* Share buttons */}
-              <div className="mb-3">
+              {/* Share buttons — mt-8: 위 결과 인접 광고 아래 32px(2026-10-05 운영자 승인 #5, 광고 아래만) */}
+              <div className="mt-8 mb-3">
                 <motion.button
                   whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                   onClick={handleDownload}

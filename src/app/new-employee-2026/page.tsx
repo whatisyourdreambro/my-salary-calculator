@@ -166,8 +166,8 @@ export default function NewEmployee2026Page() {
 
  <InArticleAd />
 
- {/* CTAs */}
- <section className="mb-12 grid grid-cols-1 md:grid-cols-3 gap-4">
+ {/* CTAs — mt-8: 위 광고 바깥 여백(24px)과 병합돼 광고 아래 32px(2026-10-05 운영자 승인 #5, 광고 아래만) */}
+ <section className="mt-8 mb-12 grid grid-cols-1 md:grid-cols-3 gap-4">
  <Link
  href="/salary-db"
  className="block p-6 bg-electric rounded-3xl text-white hover:bg-blue-600 transition-colors"

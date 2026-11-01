@@ -280,8 +280,8 @@ export default function SalaryRankCalculator() {
                   <InArticleAd />
                 </div>
 
-                {/* 액션 버튼 */}
-                <div className="mt-4 flex gap-4">
+                {/* 액션 버튼 — mt-8: 위 결과 인접 광고의 바깥 여백(24px)과 병합돼 광고 아래 32px(2026-10-05 운영자 승인 #5, 광고 아래만) */}
+                <div className="mt-8 flex gap-4">
                   <button
                     onClick={() => setResult(null)}
                     className="flex-1 py-4 bg-white text-muted-blue font-bold rounded-2xl hover:bg-canvas-dark hover:text-navy transition-all flex items-center justify-center gap-2 border border-canvas"

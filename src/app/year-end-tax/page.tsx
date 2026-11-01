@@ -121,8 +121,11 @@ export default function YearEndTaxPage() {
  <div className="max-w-4xl mx-auto mt-10">
  <InArticleAd />
 
- {/* 부활 팩 ④ (운영자 승인 2026-08-31): 광고 직후 CPA 오퍼 */}
+ {/* 부활 팩 ④ (운영자 승인 2026-08-31): 광고 직후 CPA 오퍼.
+     mt-8 래퍼: 오퍼 카드(my-6, 카드 전체가 링크)가 광고 아래 24px 에 붙던 것을 병합 32px 로(2026-10-05 운영자 승인 #5, 광고 아래만) */}
+ <div className="mt-8">
  <OfferSlot vertical="loan" />
+ </div>
 
  {/* 2026년 귀속 확정 변경사항 — "연말정산 미리보기" 검색 의도 대응 */}
  <section className="mt-10 p-6 bg-white rounded-2xl border border-canvas-200">

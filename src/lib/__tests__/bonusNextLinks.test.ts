@@ -149,6 +149,10 @@ describe("성과급 22쪽 배치 — CalcResultAd 아래 1회", () => {
     expect(pillLines[0]).toBeGreaterThan(adLines[0]);
     expect(pillLines[0]).toBe(adLines[0] + 1);
 
+    // 2026-10-05 승인 #5 점검: 광고·pill 을 싼 래퍼가 space-y·flex·grid 없는 일반 블록이어야 pill 의 mt-8 이
+    // 광고 바깥 여백(1.5rem)과 병합돼 32px 가 된다(space-y-* 안이면 삼성 개인 결과처럼 24px 로 줄어든다).
+    expect(ls[adLines[0] - 1].trim(), `${file}: 광고 래퍼`).toBe('<div className="mt-8">');
+
     expect(ls).toContain(IMPORT_LINE);
   });
 

@@ -187,7 +187,8 @@ export default function SalarySlipPage() {
  <InArticleAd />
  </div>
 
- <div className="mt-4">
+ {/* mt-8: 위 결과 인접 광고 아래 32px(2026-10-05 운영자 승인 #5, 광고 아래만) */}
+ <div className="mt-8">
  <button onClick={handleReset} className="toss-button-secondary w-full"><RefreshCw size={18} /> 다시 만들기</button>
  </div>
 

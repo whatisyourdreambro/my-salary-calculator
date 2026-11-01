@@ -469,8 +469,8 @@ export default function WeekendDutyGame() {
             <InArticleAd />
           </div>
 
-          {/* Share & Actions */}
-          <div className="max-w-4xl mx-auto mt-6">
+          {/* Share & Actions — mt-8: 위 결과 인접 광고 아래 32px(2026-10-05 운영자 승인 #5, 광고 아래만) */}
+          <div className="max-w-4xl mx-auto mt-8">
             <motion.button
               whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
               onClick={handleDownload}

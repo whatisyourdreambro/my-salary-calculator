@@ -151,8 +151,11 @@ export default function CreditCardDeduction2026Page() {
 
         <CalcResultAd />
 
-        {/* 부활 팩 ④ (운영자 승인 2026-08-31): CalcResultAd 직후 CPA 오퍼 — 하단 쿠팡은 폴백 유지 */}
-        <OfferSlot vertical="loan" />
+        {/* 부활 팩 ④ (운영자 승인 2026-08-31): CalcResultAd 직후 CPA 오퍼 — 하단 쿠팡은 폴백 유지.
+            mt-8 래퍼: 오퍼 카드(my-6, 카드 전체가 링크)가 광고 아래 24px 에 붙던 것을 병합 32px 로(2026-10-05 운영자 승인 #5, 광고 아래만) */}
+        <div className="mt-8">
+          <OfferSlot vertical="loan" />
+        </div>
 
         {/* 연말정산 클러스터 칩 — 메쉬 비대칭 해소 (2026-08-23). 광고 아래 배치 준수 */}
         <YearEndTaxCluster />
