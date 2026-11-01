@@ -304,7 +304,7 @@ const tempTwoHomeRule = `
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 일시적 2주택 기한 핵심</h2>
 <ol class="space-y-2 mt-4">
 <li><strong>① 신규 취득 후 원칙 3년 내 종전 주택 매도</strong></li>
-<li><strong>② 신규 주택은 1년 이상 보유 후 매도</strong></li>
+<li><strong>② 종전 주택 취득 1년 뒤 신규 취득</strong></li>
 <li><strong>③ 종전 주택은 2년 이상 보유 + 2년 거주(조정)</strong></li>
 <li><strong>④ 종전 주택을 비과세 받으려면 매도 시점에 1주택만 보유 인정</strong></li>
 </ol>

@@ -93,7 +93,7 @@ Verify defaults, invalid input, accepted input, a visible current result, repeat
 | 봉급표 2026 4종(추가) | `^/(teacher\|police\|firefighter\|civil-servant)-pay-2026$` | URL 채널 4개(9/26 추가). 10/14 봉급표 예약 병합 전 기준선 |
 | 공무원 2027(추가) | `^/civil-servant-pay-2027$` | B20 페이지 |
 | 연봉표(추가) | `^/table/` | URL 채널 `/table/`(9/26 추가) |
-| 전체 | 필터 없음 | 가설의 25% 확인용 |
+| 전체 | 필터 없음 | 가설 확인용(차이 비율은 위 GA4 값과 곱하면 애드센스 집계 페이지뷰가 역산되므로 비공개) |
 
 - **계산(템플릿마다)**
   - 착지 요청률 `R_landing = ad_request_attempt(landing) ÷ page_view(landing)`

@@ -12,4 +12,7 @@ import { GUIDE_FACT_FIX_1101_PUSH } from "@/config/guideFactFixPush";
 export const GUIDE_CONTENT_REVISED_FACT_FIX_1101: Readonly<Record<string, string>> = {
   // 계산기가 표준세액공제 13만원 방식과 비교해 낮은 결정세액을 쓴다는 문장(CALC-02, 엔진은 PKG-10)·2,500만원 행 229,438원
   "standard-vs-special-deduction-2026": GUIDE_FACT_FIX_1101_PUSH,
+  // 같은 CALC-02 후속(R2-FOLLOWUPS): 표가 '계산기와 같은 엔진'이라던 문장을 '계산기 엔진으로 낸 특별공제 방식 값'으로,
+  // 리드의 3,000만원 값을 계산기가 고르는 표준세액공제 방식(약 9만원) 먼저로. 이미 수정일(9/26)이 있어 칩은 날짜만 바뀐다.
+  "housing-subscription-25man-deduction-2026": GUIDE_FACT_FIX_1101_PUSH,
 };
