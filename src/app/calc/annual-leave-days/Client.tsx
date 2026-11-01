@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import {
   entryBasedSchedule,
@@ -48,10 +48,15 @@ function GrantTable({ grants, empty }: { grants: LeaveGrant[]; empty: string }) 
   );
 }
 
-export default function AnnualLeaveDaysClient() {
-  const today = toISO(new Date());
+// initialUntil 은 서버(빌드)가 정한 기준일이다. 렌더 중에 new Date() 를 부르면 정적 HTML(빌드일)과 첫 클라이언트
+// 렌더(방문일)가 달라 입력칸이 빌드일로 남거나 하이드레이션이 어긋난다 — 마운트 뒤 방문일로 한 번 맞춘다.
+export default function AnnualLeaveDaysClient({ initialUntil }: { initialUntil: string }) {
   const [entry, setEntry] = useState("2023-03-02");
-  const [until, setUntil] = useState(today);
+  const [until, setUntil] = useState(initialUntil);
+  const untilEdited = useRef(false);
+  useEffect(() => {
+    if (!untilEdited.current) setUntil(toISO(new Date()));
+  }, []);
 
   const { entryGrants, fiscalGrants, entryTotal, fiscalTotal, valid } = useMemo(() => {
     const ok = /^\d{4}-\d{2}-\d{2}$/.test(entry) && /^\d{4}-\d{2}-\d{2}$/.test(until) && entry <= until;
@@ -81,7 +86,10 @@ export default function AnnualLeaveDaysClient() {
             id="al-until"
             type="date"
             value={until}
-            onChange={(e) => setUntil(e.target.value)}
+            onChange={(e) => {
+              untilEdited.current = true;
+              setUntil(e.target.value);
+            }}
             className="w-full rounded-xl px-4 py-4 text-lg font-black focus:outline-none transition"
             style={{ backgroundColor: "#0145F208", border: "2px solid #0145F2", color: "#0145F2" }}
             aria-label="기준일"

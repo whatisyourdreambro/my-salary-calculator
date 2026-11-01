@@ -34,6 +34,7 @@ import CurrencyInput from "./CurrencyInput";
 import { motion, AnimatePresence } from "framer-motion";
 import NumberInput from "@/components/NumberInput";
 import { assetInComparisonCurrency } from "@/lib/exchangeMath";
+import { formatRateString } from "@/lib/exchangeRatePrecision";
 
 const formatNumber = (num: number) => {
   if (isNaN(num)) return "0";
@@ -281,8 +282,9 @@ export default function ExchangeRateImpactCalculator() {
       if (![pastRateValue, currentRateValue].every((rate) => Number.isFinite(rate) && rate > 0)) {
         throw new Error("유효한 환율 정보를 받지 못했습니다.");
       }
-      setManualPastRateStr(pastRateValue.toFixed(4));
-      setManualCurrentRateStr(currentRateValue.toFixed(4));
+      // 1 미만 환율은 유효숫자 6자리로 — 종전 toFixed(4) 는 0.0007 로 뭉개 변동률이 0%·±14% 로 튀었다 (2026-10-05 감사 code23-04)
+      setManualPastRateStr(formatRateString(pastRateValue));
+      setManualCurrentRateStr(formatRateString(currentRateValue));
     } catch (e) {
       if (controller.signal.aborted) return;
       if (e instanceof Error) setError(e.message);

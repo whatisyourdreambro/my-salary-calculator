@@ -47,16 +47,20 @@ function toISO(d: Date): string {
   return `${String(d.getFullYear()).padStart(4, "0")}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
 
+// 발생일 = 기간이 끝난 다음 날. 보통은 입사일과 같은 날짜(3/15 입사 → 4/14 만료 → 4/15 발생, 민법 제160조 제2항).
+// 마지막 달에 그 날짜가 없으면 그 달 말일로 기간이 만료하므로(민법 제160조 제3항) 발생일은 다음 달 1일이다
+// (3/31 입사 → 4/30 만료 → 5/1 발생, 2/29 입사 → 다음 해 2/28 만료 → 3/1 발생).
+// 2026-10-05 감사 code37-08 정정: 종전에는 말일(4/30·2/28)을 발생일로 써 그날 퇴사하는 사람에게 연차가 하루 일찍 잡혔다.
 function addMonths(d: Date, months: number): Date {
   const r = localDate(d.getFullYear(), d.getMonth() + months, d.getDate());
-  // 말일 보정 (1/31 + 1개월 → 2/28)
-  if (r.getDate() !== d.getDate()) return localDate(r.getFullYear(), r.getMonth(), 0);
+  // 해당 날짜가 없는 달(1/31 + 1개월 → 3/3 로 넘침) → 그 달 말일 만료 다음 날 = 넘친 달의 1일
+  if (r.getDate() !== d.getDate()) return localDate(r.getFullYear(), r.getMonth(), 1);
   return r;
 }
 
 function addYears(d: Date, years: number): Date {
   const r = localDate(d.getFullYear() + years, d.getMonth(), d.getDate());
-  if (r.getDate() !== d.getDate()) return localDate(r.getFullYear(), r.getMonth(), 0);
+  if (r.getDate() !== d.getDate()) return localDate(r.getFullYear(), r.getMonth(), 1);
   return r;
 }
 
@@ -124,7 +128,8 @@ export function fiscalYearSchedule(entryISO: string, untilISO: string): LeaveGra
   const firstJan = localDate(entry.getFullYear() + 1, 0, 1);
   if (firstJan <= until) {
     const served = daysBetween(entry, localDate(entry.getFullYear() + 1, 0, 1));
-    const prorated = Math.round((15 * served) / 365 * 100) / 100;
+    // 윤년이 낀 해(1/1 입사 → 재직 366일)는 15 를 넘지 않게 상한 (code37-08 — 종전 15.04일)
+    const prorated = Math.min(15, Math.round((15 * served) / 365 * 100) / 100);
     grants.push({
       grantDate: toISO(firstJan),
       days: prorated,
