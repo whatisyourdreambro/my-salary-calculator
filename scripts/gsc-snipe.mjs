@@ -1,9 +1,9 @@
 // GSC 저격 분석기 — 서치콘솔 성과 내보내기 CSV를 3버킷으로 분류해 마크다운 표 출력.
 // 의존성 0 (node 내장만). postbuild와 무관한 수동 도구.
 //
-// 사용법:
-//   node scripts/gsc-snipe.mjs docs/gsc/2026-09-05-queries.csv
-//   node scripts/gsc-snipe.mjs docs/gsc/2026-09-05-pages.csv
+// 사용법 (CSV 원본은 리포 밖 C:\Users\ruby1\.moneysalary-secrets\gsc\ 에 두고 절대 경로로 넘긴다 — 공개 저장소 커밋 금지):
+//   node scripts/gsc-snipe.mjs C:\Users\ruby1\.moneysalary-secrets\gsc\2026-09-06\queries.csv
+//   node scripts/gsc-snipe.mjs C:\Users\ruby1\.moneysalary-secrets\gsc\2026-09-06\pages.csv
 //   node scripts/gsc-snipe.mjs <csv> --a-impr=300 --b-impr=150 --c-impr=100
 //
 // 옵션(전부 선택):

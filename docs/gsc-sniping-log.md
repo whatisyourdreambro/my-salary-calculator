@@ -1,8 +1,8 @@
 # GSC 저격 로그 (append-only)
 
 운영 절차 — 격주 금요일(플레이북 §2 금 15분 슬롯 확장):
-1. 운영자: GSC → 실적 → 내보내기(CSV) → `docs/gsc/YYYY-MM-DD-queries.csv`·`-pages.csv`로 저장(28일 윈도)
-2. `node scripts/gsc-snipe.mjs docs/gsc/<파일>` 실행 → 3버킷 표 확인
+1. 운영자: GSC → 실적 → 내보내기(CSV) → 리포 밖 `C:\Users\ruby1\.moneysalary-secrets\gsc\YYYY-MM-DD\` 에 `queries.csv`·`pages.csv`로 저장(28일 윈도). ★공개 저장소(docs/ 포함)에는 CSV 원본을 넣지 않고 집계만 적는다 — 2026-11-01 운영자 승인 9번(B42)으로 아래 Round 0·1 의 2026-08-16 내보내기 7개도 리포에서 빼고 같은 폴더 `gsc\2026-08-16\` 에 보관
+2. `node scripts/gsc-snipe.mjs C:\Users\ruby1\.moneysalary-secrets\gsc\YYYY-MM-DD\pages.csv`(절대 경로) 실행 → 3버킷 표 확인
 3. 우선순위 상위 **5건만** 실행 (주 1~2시간 제약):
    - **버킷 A**(타이틀 개선): 랜딩 페이지 title/description에 쿼리 표현 반영 — 메타만 수정, 11~1월 동결기에도 허용
    - **버킷 B**(순위 8~20 보강): FAQ 1~2개 추가(faqLd 연동)·관련 계산기 내부링크·섹션 1개 확장 — 수치는 보도·공식 출처만
