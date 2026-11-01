@@ -300,9 +300,10 @@ export default function CivilServantPay2027Page() {
           </p>
         </section>
 
-        <PrivateFeedback target="civil_pay_2027" />
-
         <CalcResultAd />
+
+        {/* 의견 보내기 — 광고 아래(제출 뒤 접수 화면으로 줄어들어도 광고가 움직이지 않게). 광고 위로 되돌리지 말 것. */}
+        <PrivateFeedback target="civil_pay_2027" />
 
         {/* 권고안 해설 */}
         <section className="mt-10 mb-12 max-w-3xl mx-auto prose prose-slate">
