@@ -25,6 +25,7 @@ function parseInput(s: string): number {
 }
 
 const SIDE_LABEL: Record<Side, string> = { me: "본인", sp: "배우자" };
+const SIDE_SUBJECT: Record<Side, string> = { me: "본인이", sp: "배우자가" };
 
 export default function DualIncomeYearEndClient() {
   const [vals, setVals] = useState<Record<string, string>>({
@@ -67,7 +68,7 @@ export default function DualIncomeYearEndClient() {
     }
     if (optimal.assign.coupleMedTo)
       parts.push(
-        `서로를 위한 의료비 → ${SIDE_LABEL[optimal.assign.coupleMedTo]}가 결제·공제`
+        `서로를 위한 의료비 → ${SIDE_SUBJECT[optimal.assign.coupleMedTo]} 결제·공제`
       );
     if (parts.length === 0) parts.push("배분할 항목이 없습니다");
 
