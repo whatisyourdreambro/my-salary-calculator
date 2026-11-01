@@ -27,8 +27,32 @@ export interface ShareButtonsProps {
   register?: boolean;
   variant?: "row" | "compact" | "floating";
 }
-const CIRCLE = "w-11 h-11 shrink-0 rounded-full flex items-center justify-center shadow transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 disabled:opacity-50";
+export const CIRCLE = "w-11 h-11 shrink-0 rounded-full flex items-center justify-center shadow transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 disabled:opacity-50";
+export const COMPACT_BUTTON = "inline-flex min-w-11 min-h-11 items-center justify-center rounded-full border border-canvas bg-canvas-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric disabled:opacity-50";
 const INSTAGRAM_STYLE = { background: "linear-gradient(45deg,#F58529,#DD2A7B,#8134AF,#515BD4)" };
+
+/** 첫 줄 채널 — 실제 줄과 SSR 자리 예약(OPP-21)이 같은 함수를 쓴다. */
+export function primaryShareChannels(variant: "row" | "compact" | "floating", en: boolean, canWebShare: boolean): ShareChannelId[] {
+  return variant === "floating" ? (en ? (canWebShare ? ["webshare", "copy"] : ["copy"]) : (canWebShare ? ["kakao", "webshare", "copy"] : ["kakao", "copy"])) : en ? (canWebShare ? ["webshare", "copy", "x"] : ["copy", "x", "facebook"]) : (canWebShare ? ["kakao", "webshare", "copy"] : ["kakao", "copy", "naver_blog", "x"]);
+}
+
+/**
+ * OPP-21(운영자 2026-11-01 승인 1번): head 를 읽기 전(SSR·하이드레이션 첫 렌더)에 그리던 '없음' 대신
+ * 같은 크기의 보이지 않는 자리. 원 버튼은 w-11 h-11 고정이라 줄 높이 44px(한 줄일 때). 칸 수는 Web Share 가 있는
+ * 브라우저의 최종 줄(4칸)과 같게 — 컨테이너 폭 268px 이상(320 화면의 px-4 헤더 = 288px)에서는 4칸이든 5칸이든 한 줄이라
+ * 최종 높이와 같다. data-share-root 는 달지 않는다(떠 있는 공유 바의 '인라인 공유 보임' 판정 불변). 제목·링크 미포함.
+ */
+function ShareButtonsReserve({ variant, className, en }: { variant: "row" | "compact"; className: string; en: boolean }) {
+  if (variant === "compact") return <div className={`${className} invisible`} aria-hidden="true" data-cls-reserve="share-compact">
+    <button type="button" disabled tabIndex={-1} className={COMPACT_BUTTON}><Share2 className="w-5 h-5 text-faint-blue" /></button>
+  </div>;
+  return <div className={`${className} invisible`} aria-hidden="true" data-cls-reserve="share-row">
+    <div className="flex flex-wrap items-center gap-3">
+      {primaryShareChannels("row", en, true).map((id) => <span key={id} className={`${CIRCLE} ${id === "copy" ? "bg-canvas-dark border border-canvas" : ""}`} />)}
+      <span className={`${CIRCLE} border border-canvas bg-canvas-dark`} />
+    </div>
+  </div>;
+}
 
 function ChannelIcon({ id }: { id: ShareChannelId }) {
   switch (id) {
@@ -80,7 +104,7 @@ export default function ShareButtons({
   contentType = "page", className = "", locale: explicitLocale,
   register, variant = "row", shareMode = "page",
 }: ShareButtonsProps) {
-  const { pathname, context } = useSharePageContext();
+  const { pathname, context, pending } = useSharePageContext();
   const panelId = useId();
   const [toast, setToast] = useState<string | null>(null);
   const [manual, setManual] = useState<string | null>(null);
@@ -172,7 +196,11 @@ export default function ShareButtons({
     }
   }
 
-  if (!context || !payload || (shareMode === "result" && !resultKey)) return null;
+  if (!context || !payload || (shareMode === "result" && !resultKey)) {
+    // 최종에도 없을 자리(떠 있는 바·결과 키 없는 결과 공유·head 확인 뒤 '없음')는 종전대로 null.
+    if (!pending || variant === "floating" || (shareMode === "result" && !resultKey)) return null;
+    return <ShareButtonsReserve variant={variant} className={className} en={en} />;
+  }
   const status = <>
     {toast && <p role="status" aria-live="polite" className="mt-3 text-sm text-slate-700 dark:text-slate-200">{toast}</p>}
     {manual && <div className="mt-3 w-full rounded-xl border border-slate-300 p-3 dark:border-slate-600">
@@ -182,10 +210,10 @@ export default function ShareButtons({
     </div>}
   </>;
   if (variant === "compact") return <div className={className}>
-    <button type="button" disabled={busy} onClick={() => void handleShare(canWebShare ? "webshare" : "copy")} aria-label={en ? "Share page link" : "페이지 링크 공유"} title={en ? "Share page link" : "페이지 링크 공유"} className="inline-flex min-w-11 min-h-11 items-center justify-center rounded-full border border-canvas bg-canvas-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric disabled:opacity-50"><Share2 className="w-5 h-5 text-faint-blue" /></button>
+    <button type="button" disabled={busy} onClick={() => void handleShare(canWebShare ? "webshare" : "copy")} aria-label={en ? "Share page link" : "페이지 링크 공유"} title={en ? "Share page link" : "페이지 링크 공유"} className={COMPACT_BUTTON}><Share2 className="w-5 h-5 text-faint-blue" /></button>
     {status}
   </div>;
-  const primary: ShareChannelId[] = variant === "floating" ? (en ? (canWebShare ? ["webshare", "copy"] : ["copy"]) : (canWebShare ? ["kakao", "webshare", "copy"] : ["kakao", "copy"])) : en ? (canWebShare ? ["webshare", "copy", "x"] : ["copy", "x", "facebook"]) : (canWebShare ? ["kakao", "webshare", "copy"] : ["kakao", "copy", "naver_blog", "x"]);
+  const primary: ShareChannelId[] = primaryShareChannels(variant, en, canWebShare);
   const more = (Object.keys(SHARE_CHANNELS) as ShareChannelId[]).filter((id) => !primary.includes(id) && (id !== "webshare" || canWebShare));
   const label = (id: ShareChannelId) => id === "copy" && shareMode === "result" ? (en ? "Copy result text and link" : "결과 문구·링크 복사") : id === "webshare" && shareMode === "result" && (imageBlob || getShareImage) ? (en ? "Share result image" : "결과 이미지 공유") : channelLabel(id, locale);
   const button = (id: ShareChannelId) => <button key={id} type="button" disabled={busy} onClick={() => void handleShare(id)} aria-label={label(id)} title={label(id)} className={`${CIRCLE} ${id === "copy" ? "bg-canvas-dark border border-canvas" : ""}`} style={id === "instagram" ? INSTAGRAM_STYLE : { backgroundColor: SHARE_CHANNELS[id].bg }}><ChannelIcon id={id} /></button>;

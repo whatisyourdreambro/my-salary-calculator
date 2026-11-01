@@ -15,7 +15,12 @@ afterEach(() => vi.unstubAllGlobals());
 
 describe("shared UI server boundary", () => {
   it("all variants use an identical empty server/initial snapshot without document access", () => {
-    expect(renderToString(createElement(ShareButtons, { title: "private 987654321", variant: "compact" }))).toBe("");
+    // OPP-21: inline buttons reserve their box with an inert hidden placeholder that carries no title, URL or share root.
+    const compact = renderToString(createElement(ShareButtons, { title: "private 987654321", variant: "compact" }));
+    expect(compact).toContain('data-cls-reserve="share-compact"');
+    expect(compact).not.toContain("987654321");
+    expect(compact).not.toContain("data-share-root");
+    expect(renderToString(createElement(ShareButtons, { title: "private 987654321", variant: "floating" }))).toBe("");
     expect(renderToString(createElement(ShareSection, { title: "private 987654321" }))).toBe("");
     expect(renderToString(createElement(AutoShareSection))).toBe("");
     expect(renderToString(createElement(FloatingShareBar))).toBe("");

@@ -196,7 +196,14 @@ function CalculatorTabsComponent() {
  aria-labelledby={`calc-tab-${activeTab}`}
  className="w-full rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
  >
+ {/* Keep the selected tab mounted while its calculator chunk loads. */}
+ <Suspense fallback={
+ <div className="flex min-h-[560px] items-center justify-center" role="status">
+ <span className="text-sm text-muted-foreground">계산기를 준비하고 있습니다.</span>
+ </div>
+ }>
  {renderActiveCalculator()}
+ </Suspense>
  </div>
  </div>
  );

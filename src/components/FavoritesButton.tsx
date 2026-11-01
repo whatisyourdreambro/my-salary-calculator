@@ -75,6 +75,28 @@ export function saveFavorites(items: FavoriteItem[]): boolean {
   }
 }
 
+/**
+ * 버튼·별 아이콘 class 와 문구 — 실제 버튼과 SSR 자리 예약(OPP-21)이 같은 함수를 쓴다.
+ * 켜짐/꺼짐 차이는 색 class 뿐이라(여백·글자 크기·테두리 두께 동일) 상자 높이가 같다(테스트가 검사).
+ */
+export function favoritesButtonClassName(variant: "icon" | "labeled", active: boolean, className = ""): string {
+  return variant === "icon"
+    ? `min-h-11 min-w-11 p-2 rounded-full hover:bg-canvas-100 transition-colors ${className}`
+    : `inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-colors text-sm font-bold ${
+        active
+          ? "bg-amber-50 border-amber-200 text-amber-700"
+          : "bg-white border-canvas-200 text-navy hover:border-electric"
+      } ${className}`;
+}
+
+export function favoritesStarClassName(variant: "icon" | "labeled", active: boolean): string {
+  return `${variant === "icon" ? "w-5 h-5" : "w-4 h-4"} ${active ? "fill-amber-400 text-amber-400" : "text-faint-blue"}`;
+}
+
+export function favoritesButtonLabel(isEnglish: boolean, active: boolean): string {
+  return isEnglish ? (active ? "Saved to favorites" : "Save page to favorites") : (active ? "즐겨찾기 추가됨" : "즐겨찾기 추가");
+}
+
 interface FavoritesButtonProps {
   /** 저장될 경로 — 없으면 현재 페이지 pathname */
   path?: string;
@@ -93,7 +115,7 @@ export default function FavoritesButton({
   className = "",
   locale,
 }: FavoritesButtonProps) {
-  const { pathname, context } = useSharePageContext();
+  const { pathname, context, pending } = useSharePageContext();
   const isEnglish = locale ? locale === "en" : /^\/en(?:\/|$)/.test(pathname ?? "");
   const target = resolveFavoriteTarget(pathname, context, { path, title });
   const resolvedPath = target?.path ?? "";
@@ -112,6 +134,27 @@ export default function FavoritesButton({
     window.addEventListener("storage", refresh);
     return () => { window.removeEventListener(FAVORITES_EVENT, refresh); window.removeEventListener("storage", refresh); };
   }, [resolvedPath, resolvedTitle]);
+
+  // OPP-21(운영자 2026-11-01 승인 1번): 경로를 넘기지 않는 버튼은 정본 head 를 읽기 전(SSR·하이드레이션 첫 렌더)에
+  // 그리지 않아 하이드레이션 뒤 0 -> 42px 로 튀어나와 아래 광고까지 밀었다(감사 code24-01). 그동안 같은 class·같은
+  // 내용의 보이지 않는 상자로 자리만 잡는다 — 하이드레이션 뒤 최종 DOM 은 종전과 같다(아래 실제 버튼 그대로).
+  // 공유 제외 경로·명시 경로·head 확인 뒤 '없음'은 종전대로 아래 null(최종에 없는 자리는 잡지 않는다).
+  // 훅은 모두 위에서 호출됐다 — 여기서 돌아가도 훅 순서는 같다.
+  if (!target && pending && path === undefined) {
+    return (
+      <button
+        type="button"
+        disabled
+        tabIndex={-1}
+        aria-hidden="true"
+        data-cls-reserve="favorites"
+        className={`${favoritesButtonClassName(variant, false, className)} invisible`}
+      >
+        <Star className={favoritesStarClassName(variant, false)} />
+        {variant === "labeled" && favoritesButtonLabel(isEnglish, false)}
+      </button>
+    );
+  }
 
   const toggle = () => {
     if (!target) return;
@@ -169,10 +212,10 @@ export default function FavoritesButton({
           onClick={toggle}
           aria-label={isEnglish ? (active ? "Remove favorite" : "Save page to favorites") : (active ? "즐겨찾기 해제" : "즐겨찾기 추가")}
           aria-pressed={active}
-          className={`min-h-11 min-w-11 p-2 rounded-full hover:bg-canvas-100 transition-colors ${className}`}
+          className={favoritesButtonClassName("icon", active, className)}
         >
           <Star
-            className={`w-5 h-5 ${active ? "fill-amber-400 text-amber-400" : "text-faint-blue"}`}
+            className={favoritesStarClassName("icon", active)}
           />
         </button>
         {toastNode}
@@ -187,16 +230,12 @@ export default function FavoritesButton({
         type="button"
         onClick={toggle}
         aria-pressed={active}
-        className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-colors text-sm font-bold ${
-          active
-            ? "bg-amber-50 border-amber-200 text-amber-700"
-            : "bg-white border-canvas-200 text-navy hover:border-electric"
-        } ${className}`}
+        className={favoritesButtonClassName("labeled", active, className)}
       >
         <Star
-          className={`w-4 h-4 ${active ? "fill-amber-400 text-amber-400" : "text-faint-blue"}`}
+          className={favoritesStarClassName("labeled", active)}
         />
-        {isEnglish ? (active ? "Saved to favorites" : "Save page to favorites") : (active ? "즐겨찾기 추가됨" : "즐겨찾기 추가")}
+        {favoritesButtonLabel(isEnglish, active)}
       </button>
       {toastNode}
       {errorNode}
