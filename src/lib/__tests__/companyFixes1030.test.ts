@@ -40,9 +40,13 @@ function company(id: string) {
   return c;
 }
 
-/** 단어별 폭 등급 — [한글 수, 숫자 수, 그 밖의 글자 수] */
+/**
+ * 단어별 폭 등급 — [한글 수, 숫자 수, 그 밖의 글자 수].
+ * 단어 = keep-all 줄바꿈 자리로 나뉜 묶음: 띄어쓰기와 '/' 뒤('공기업/공공기관로,' = '공기업/' + '공공기관로,').
+ * '/' 뒤 자리를 없애면 글자 수가 줄어도 줄이 는다(11/1 통합 실측 '공공기관으로,' — 공공기관 5쪽 HomeTopAd +23px).
+ */
 function wordWidths(text: string): [number, number, number][] {
-  return text.split(" ").map((word) => {
+  return text.split(" ").flatMap((word) => word.split(/(?<=\/)/)).map((word) => {
     const chars = [...word];
     const hangul = chars.filter((ch) => /[가-힣]/.test(ch)).length;
     const digits = chars.filter((ch) => /[0-9]/.test(ch)).length;
@@ -94,7 +98,9 @@ describe("핵심 요약 첫 문장 조사 (CompanyInsights — '대기업로'·'
       if (m) expect(josaParticle(m[1], "으로/로"), `${tier}: ${phrase}`).toBe("로");
     }
     expect(insightsTierPhrase("conglomerate")).toBe("대형사로");
-    expect(insightsTierPhrase("public")).toBe("공공기관으로");
+    expect(insightsTierPhrase("public")).toBe("공기업/공공기관");
+    // 묶음 수가 같아야 한다 — '공공기관으로,'(한 묶음)는 종전 두 묶음 '공기업/'+'공공기관로,' 보다 좁아 보여도 줄이 는다
+    expect(notWiderPerWord("공공기관으로,", OLD_TIER_WORD.public)).toBe(false);
     expect(insightsTierPhrase("foreign")).toBe("외국계로");
   });
 
@@ -125,6 +131,8 @@ describe("핵심 요약 첫 문장 조사 (CompanyInsights — '대기업로'·'
     expect(html("woori-card")).toContain("(<!-- -->Woori Card<!-- -->)는 <!-- -->카드·캐피탈<!-- --> 업종의 <!-- -->대형사<!-- -->로,<!-- --> <!-- -->신입 영끌 연봉 ");
     expect(html("tesla")).toContain(" 업종의 <!-- -->외국계<!-- -->로,<!-- --> <!-- -->신입 영끌 연봉 ");
     expect(html("coupang")).toContain(")은 <!-- -->유통·이커머스<!-- --> 업종의 <!-- -->유니콘<!-- -->,<!-- --> <!-- -->신입 영끌 연봉 ");
+    // 공공기관 분류: 종전 낱말 노드 '공기업/공공기관' 그대로 + ',' 노드 (종전 '로,' 보다 좁다)
+    expect(html("k-water")).toContain(" 업종의 <!-- -->공기업/공공기관<!-- -->,<!-- --> <!-- -->신입 영끌 연봉 ");
   });
 });
 
