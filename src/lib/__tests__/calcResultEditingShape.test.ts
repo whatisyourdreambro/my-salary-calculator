@@ -123,7 +123,9 @@ describe("/calc/dual-income-year-end — 최적 배분 줄 수는 자녀 수로�
 
   it("첫 화면(자녀 0명)은 1줄 그대로 — 의료비 칸을 비워도 1줄", () => {
     let tree = render(DualIncomeYearEndClient);
-    expect(allocation(tree)).toEqual([{ text: "· 부부 상호 의료비 → 배우자가 결제·공제", hidden: undefined, className: "text-sm font-bold text-navy dark:text-canvas-50" }]);
+    // 첫 화면 기본값은 서로를 위한 의료비 100만원(두 사람 3% 문턱 미달 → 동점 문구). B25 의 300만원 예시(배우자가 결제·공제)는
+    // 2차 통합 1단계 스윕 수리(6c2a168db)가 되돌렸다 — 줄 수(1줄)는 같다.
+    expect(allocation(tree)).toEqual([{ text: "· 부부 상호 의료비 → 어느 쪽이든 같음", hidden: undefined, className: "text-sm font-bold text-navy dark:text-canvas-50" }]);
     type(tree, "di-coupleMedical", ""); tree = render(DualIncomeYearEndClient);
     expect(allocation(tree).map((row) => row.text)).toEqual(["· 배분할 항목이 없습니다"]);
   });
