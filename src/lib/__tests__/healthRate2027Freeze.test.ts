@@ -2,13 +2,15 @@
 //
 // 2027 건강보험료율 동결 확정 반영 가드 (2026-09-25, 키트 docs/drafts/health-rate-2027-kit.md 분기 B).
 // 근거: 보건복지부 보도자료 2026-09-08(보험정책과) — 2026년 제15차 건정심이 2027년도 건강보험료율을
-// 올해와 같은 7.19%로 동결 의결. 2027 장기요양보험료율은 아직 미결정(장기요양위원회 별도 의결).
+// 올해와 같은 7.19%로 동결 의결. 2027 장기요양보험료율은 보건복지부 보도자료 2026-10-30 — 2026년 제5차
+// 장기요양위원회가 소득 대비 0.9994%(건강보험료의 13.90%, 2026년 0.9448%)로 의결.
 //
 // 지키는 것
 // 1) 정본 값: 동결이므로 NET_SALARY_RATES_2027.health 는 2026 정본(0.03595)을 그대로 참조한다.
 //    이 값이 바뀌면(예: 착오 인상 반영) 아래 페이지들의 "동결" 문구와 어긋나므로 함께 고쳐야 한다.
 // 2) 문구: 2027 요율표·실수령액 표 4종·공통 배너에 "건강보험 미확정/2026 준용" 계열 옛 문구가 남지 않는다.
-// 3) 장기요양은 여전히 미확정 고지를 유지한다(지우면 실패 — 12월 고시 전까지 준용 표기 필수).
+// 3) 장기요양은 2026-10-30 확정(13.90%) — 정본·상태 플래그·요율표 카드가 확정을 담고, 미확정(준용)
+//    목록에서 빠진다(2026-11-01). 산재는 미확정 고지를 유지한다(12월 고시 전까지).
 // 4) 고용보험: 2026-09-01 고용노동부가 2027 실업급여 요율 2.0%(근로자 0.9%→1.0%) 인상안을 발표
 //    (고용보험위원회 심의, moel.go.kr news_seq=19866 — 법령 개정 전). "인상 발표 없음·현행 유지"나
 //    "2027 인상은 국민연금뿐" 같은 문구가 되살아나지 않고, 미확정(준용) 목록에 고용보험이 남는다.
@@ -26,6 +28,7 @@ vi.mock("@/app/table/2027/TableTabsNav", () => ({ default: () => null }));
 
 import { NET_SALARY_RATES_2027 } from "@/lib/generateData2027";
 import { INSURANCE_RATES_2026 } from "@/lib/taxConstants2026";
+import { INSURANCE_RATES_2027_STATUS } from "@/lib/taxConstants2027";
 import Table2027Layout from "@/app/table/2027/layout";
 
 const read = (rel: string) => readFileSync(join(process.cwd(), rel), "utf8");
@@ -63,9 +66,14 @@ describe("2027 건강보험료율 동결 확정 (건정심 2026-09-08)", () => {
     expect(NET_SALARY_RATES_2027.health).toBe(0.03595);
   });
 
-  it("장기요양 비율·고용보험은 2027 미결정 — 2026 준용 유지", () => {
-    expect(NET_SALARY_RATES_2027.ltcRatio).toBe(INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO);
+  it("장기요양 비율은 2027 확정 13.90%(2026-10-30 장기요양위원회) — 고용보험만 2026 준용 유지", () => {
+    expect(NET_SALARY_RATES_2027.ltcRatio).toBe(0.139);
+    expect(INSURANCE_RATES_2027_STATUS.LONG_TERM_CARE_RATIO).toBe("confirmed");
     expect(NET_SALARY_RATES_2027.employment).toBe(INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE);
+    const provisional = Object.entries(INSURANCE_RATES_2027_STATUS)
+      .filter(([, status]) => status === "provisional")
+      .map(([key]) => key);
+    expect(provisional).toEqual(["EMPLOYMENT_INSURANCE"]);
   });
 
   it("옛 '건강보험 미확정·2026 준용' 문구가 2027 페이지 7곳에 남지 않는다", () => {
@@ -104,12 +112,30 @@ describe("2027 건강보험료율 동결 확정 (건정심 2026-09-08)", () => {
     expect(text).toMatch(/name: "건강보험", totalRate: "7\.19% \(2027 동결\)", selfRate: "3\.595%", companyRate: "3\.595%"/);
   });
 
-  it("장기요양·산재 미확정 고지는 그대로 남는다", () => {
+  it("장기요양 카드는 2027 확정(2026-10-30 의결)을 담고, 미확정(준용) 목록에서 빠지며 산재 미확정 고지는 남는다", () => {
     const rates = flat(RATES_PAGE);
-    expect(rates).toContain('totalRate: "건강보험료의 13.14% (2026 준용)"');
-    expect(rates).toContain("미확정(2026 기준 준용):</strong> 장기요양·산재");
+    expect(rates).toContain('totalRate: "건강보험료의 13.90% (2027 확정)"');
+    expect(rates).toContain('status: "확정 — 2026-10-30 장기요양위원회 의결"');
+    expect(rates).toContain("미확정(2026 기준 준용):</strong> 산재·고용보험");
     expect(rates).toContain('status: "미확정 — 2027 요율은 통상 12월 고용노동부 고시, 확정 시 갱신"');
-    expect(flat(TABLE_LAYOUT)).toContain("미확정(2026 기준 준용):</strong>{\" \"} 장기요양");
+    expect(flat(TABLE_LAYOUT)).toContain("미확정(2026 기준 준용):</strong>{\" \"} 고용보험(인상안 심의 중)");
+    // 확정 전(2026-08-30~10-31)에 쓰던 '장기요양 = 미확정·2026 준용' 문구가 2027 페이지 7곳에 남지 않는다
+    const staleLtc = [
+      "13.14% (2026 준용)",
+      "장기요양·산재",
+      "장기요양·고용보험",
+      "장기요양·고용은",
+      "장기요양/고용 2026 준용",
+      "통상 10~11월 장기요양위원회",
+    ];
+    const hits: string[] = [];
+    for (const file of ALL_FILES) {
+      const text = flat(file);
+      for (const phrase of staleLtc) {
+        if (text.includes(phrase)) hits.push(`${file}: ${phrase}`);
+      }
+    }
+    expect(hits).toEqual([]);
   });
 
   it("고용보험 2027 인상안(2026-09-01 고용보험위원회) — '인상 없음·국민연금뿐' 문구 금지, 미확정 고지 유지", () => {
@@ -132,15 +158,15 @@ describe("2027 건강보험료율 동결 확정 (건정심 2026-09-08)", () => {
 
     const rates = flat(RATES_PAGE);
     expect(rates).toContain('status: "인상안 심의 — 2027 실업급여 2.0%(근로자 1.0%), 법령 개정 전"');
-    expect(rates).toContain("미확정(2026 기준 준용):</strong> 장기요양·산재·고용보험");
+    expect(rates).toContain("미확정(2026 기준 준용):</strong> 산재·고용보험");
     expect(rates).toContain("고용보험위원회");
-    expect(flat(TABLE_LAYOUT)).toContain("장기요양·고용보험(인상안 심의 중)");
+    expect(flat(TABLE_LAYOUT)).toContain("고용보험(인상안 심의 중)");
     // 인상안은 아직 법령 개정 전 — 계산 정본은 현행 0.9% 유지 (위 '2026 준용 유지' 단언과 짝)
     expect(NET_SALARY_RATES_2027.employment).toBe(0.009);
   });
 
-  it("표 4종 dataset dateModified 가 동결 반영일로 갱신됐다", () => {
-    const stale = TABLE_PAGES.filter((file) => !read(file).includes('dateModified: "2026-09-25"'));
+  it("표 4종 dataset dateModified 가 장기요양 확정 반영일로 갱신됐다 (표 값이 바뀐 날)", () => {
+    const stale = TABLE_PAGES.filter((file) => !read(file).includes('dateModified: "2026-11-01"'));
     expect(stale).toEqual([]);
   });
 });

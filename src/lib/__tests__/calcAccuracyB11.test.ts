@@ -68,8 +68,9 @@ describe("CALC-08 /minimum-wage-2027 — 2027 요율 엔진", () => {
   it("국민연금 인상을 '오를 예정'이 아니라 법정 인상 일정 확정으로 쓴다", () => {
     expect(page).not.toContain("오를 예정");
     expect(page.split("법정 인상 일정 확정").length - 1).toBeGreaterThanOrEqual(2);
-    // 건강보험·장기요양·간이세액표 2026 준용 단서는 유지
-    expect(page).toContain("건강보험·장기요양·고용보험·간이세액표는 2026년 기준");
+    // 고용보험·간이세액표 2026 준용 단서는 유지 (건강보험은 2027 동결, 장기요양은 2026-10-30 확정 비율 반영)
+    expect(page).toContain("고용보험·간이세액표는 2026년 기준");
+    expect(page).not.toContain("국민연금만 2027년 요율");
   });
 });
 

@@ -5,6 +5,8 @@
 // 지방소득세(소득세의 10%)는 미포함 (UI에서 별도 고지).
 // 2026-09-26 W1-A: 기납부세액 기본값을 간이세액표 추정(estimatePrepaidIncomeTax2026)으로 바꾸고,
 // 보장성보험 100만원 한도·출산입양 30/50/70만원·혼인 50만원·고향사랑·교육비 1명당 한도를 반영했다.
+// 2026-11-01: 표준세액공제(소득세법 §59의4⑨1, 연 13만원) 방식과 특별공제 방식의 결정세액을 비교해
+// 낮은 쪽을 쓴다 (종전에는 특별공제 방식만 계산해 저소득 1인의 결정세액이 과대했다).
 
 import {
   earnedIncomeDeduction2026,
@@ -20,6 +22,7 @@ import {
   INSURANCE_CREDIT_2026,
   BIRTH_CREDIT_2026,
   MARRIAGE_CREDIT_2026,
+  STANDARD_TAX_CREDIT_2026,
 } from "@/lib/taxConstants2026";
 import { calcCardDeduction2026 } from "@/lib/cardDeduction2026";
 import { calcDonationCredit2026 } from "@/lib/donationCredit";
@@ -107,6 +110,11 @@ export interface TaxResult {
  incomeDeduction: number; // 과세표준에 실제 반영된 소득공제 합계 (근로소득금액 한도)
  calculatedTax: number; // 산출세액
  taxCredit: number; // 결정세액에 실제 반영된 세액공제 합계 (산출세액 한도)
+ /**
+  * 표준세액공제(소득세법 §59의4⑨1, 연 13만원) 방식이 특별공제 방식보다 결정세액이 낮아 그쪽을 썼는지.
+  * true 면 위 단계별 값(과세표준·산출세액·세액공제)도 표준세액공제 방식의 값이다.
+  */
+ standardTaxCreditApplied: boolean;
 }
 
 // 2026년 귀속 연말정산 계산 함수
@@ -155,19 +163,23 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  insuranceDeduction +
  housingSubscriptionDeduction +
  cardDeduction;
+ // 표준세액공제 방식(소득세법 §59의4⑨1)은 §52 특별소득공제(건강·장기요양·고용보험료)를 빼지 않는다.
+ // 국민연금(§51의3 연금보험료공제)·인적공제·주택청약(조특법 §87)·카드(조특법 §126의2)는 그대로 남는다.
+ const standardIncomeDeduction =
+ totalIncomeDeduction - Math.max(0, inputs.healthInsurance) - Math.max(0, inputs.employmentInsurance);
 
  // 3. 과세표준
- const taxBase = Math.max(0, earnedIncomeAmount - totalIncomeDeduction);
+ const itemizedTaxBase = Math.max(0, earnedIncomeAmount - totalIncomeDeduction);
+ const standardTaxBase = Math.max(0, earnedIncomeAmount - standardIncomeDeduction);
 
  // 4. 산출세액 — taxConstants2026 누진세율표 정본 사용 (수학적 동치,
  // 경계값 1,400만/5,000만/8,800만 일치 확인)
- const calculatedTax = calcIncomeTax2026(taxBase);
+ const itemizedCalculatedTax = calcIncomeTax2026(itemizedTaxBase);
+ const standardCalculatedTax = calcIncomeTax2026(standardTaxBase);
 
  // 5. 세액공제 — 근로소득세액공제·자녀세액공제는 taxConstants2026 정본 함수 사용
- const earnedIncomeTaxCredit = earnedIncomeTaxCredit2026(
- calculatedTax,
- grossSalary
- );
+ const itemizedEarnedIncomeTaxCredit = earnedIncomeTaxCredit2026(itemizedCalculatedTax, grossSalary);
+ const standardEarnedIncomeTaxCredit = earnedIncomeTaxCredit2026(standardCalculatedTax, grossSalary);
 
  // 금액 산식과 적격 인원을 분리한다. 카드공제·월 원천징수 인원을 재사용하지 않는다.
  const childTaxCredit = childTaxCredit2026(inputs.childTaxCreditEligibleChildren);
@@ -233,21 +245,36 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  }).hometownCredit
  : 0;
 
- const totalTaxCredit =
- earnedIncomeTaxCredit +
+ // 두 방식 공통 세액공제 — 자녀·출산입양(§59의2)·연금계좌(§59의3)·혼인(조특법 §92)·고향사랑(조특법 §58)
+ const commonTaxCredit =
  childTaxCredit +
  birthCredit +
  marriageCredit +
  pensionAccountCredit +
+ hometownCredit;
+ // 특별공제 방식에만 있는 세액공제 — 보험료·의료비·교육비·기부금(§59의4①~④)·월세(조특법 §95의2)
+ const specialTaxCredit =
  insuranceCredit +
  medicalCredit +
  educationCredit +
  donationCredit +
- hometownCredit +
  rentCredit;
 
- // 6. 최종 결정세액 및 환급액
- const determinedTax = Math.max(0, calculatedTax - totalTaxCredit);
+ // 6. 최종 결정세액 — 특별공제 방식과 표준세액공제 방식 중 낮은 쪽 (근로자가 유리한 쪽을 신청한다.
+ // 소득세법 §59의4⑨1: 특별소득공제·특별세액공제·월세세액공제를 신청하지 않으면 연 13만원)
+ const itemizedDeterminedTax = Math.max(
+ 0,
+ itemizedCalculatedTax - (itemizedEarnedIncomeTaxCredit + commonTaxCredit + specialTaxCredit)
+ );
+ const standardDeterminedTax = Math.max(
+ 0,
+ standardCalculatedTax -
+ (standardEarnedIncomeTaxCredit + commonTaxCredit + STANDARD_TAX_CREDIT_2026.WAGE_EARNER)
+ );
+ const standardTaxCreditApplied = standardDeterminedTax < itemizedDeterminedTax;
+ const taxBase = standardTaxCreditApplied ? standardTaxBase : itemizedTaxBase;
+ const calculatedTax = standardTaxCreditApplied ? standardCalculatedTax : itemizedCalculatedTax;
+ const determinedTax = standardTaxCreditApplied ? standardDeterminedTax : itemizedDeterminedTax;
  const finalRefund = inputs.prepaidTax - determinedTax;
 
  // 리포트 산식이 원 단위로 맞아떨어지도록 반올림된 값끼리 차감한다
@@ -266,6 +293,7 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  incomeDeduction: grossSalary - roundedEarnedIncomeDeduction - roundedTaxBase,
  calculatedTax,
  taxCredit: calculatedTax - roundedDeterminedTax,
+ standardTaxCreditApplied,
  };
 }
 

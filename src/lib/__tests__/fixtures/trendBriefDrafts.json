@@ -251,6 +251,6 @@
       }
     },
     { "rule": "unannounced-facts", "contextPatch": { "snapshotPatch": { "moel-pr": { "title": "고용보험료징수법 시행령 일부개정령안 입법예고" } } } },
-    { "rule": "unannounced-facts", "draftPatch": { "impact.table.params.base": "2027" }, "contextPatch": { "renderedWithoutDisclosure": true } }
+    { "rule": "unannounced-facts", "draftPatch": { "impact.table.params.base": "2027", "impact.table.params.override": {} }, "contextPatch": { "renderedWithoutDisclosure": true } }
   ]
 }

@@ -18,8 +18,10 @@ import { INSURANCE_RATES_2026, type InsuranceRates } from "./taxConstants2026";
  *   법정 스케줄: 총 9.5%(2026) → 10.0%(2027) → 매년 0.5%p → 13.0%(2033). 사업장가입자는 절반씩.
  *   출처: 보건복지부 연금개혁 Q&A · 국민연금공단 법령정보(국민연금법 개정 안내).
  * - 건강보험 3.595% — ★확정: 2027 동결(총 7.19%). 2026년 제15차 건강보험정책심의위원회(2026-09-08).
- * - 장기요양 비율 — 미확정: 2027년분은 장기요양위원회가 10월 이후 결정 예정(보건복지부 2026-08-14
- *   제7기 장기요양위원회 출범 보도). 그 전까지 2026 비율(건보료의 13.14%) 준용.
+ * - 장기요양 비율 13.90% — ★확정: 2026년 제5차 장기요양위원회(2026-10-30) 의결, 소득 대비 0.9994%
+ *   (2026 0.9448%, +5.78%). 출처: 보건복지부 보도자료 2026-10-30
+ *   https://www.mohw.go.kr/board.es?act=view&bid=0027&list_no=1492396&mid=a10503010100&nPage=1&tag=
+ *   (0.9994% ÷ 7.19% = 13.8999…% — 고시 비율 13.90% 를 쓴다. 근로자 부담 소득 대비 0.4997%)
  * - 고용보험 0.9% — 미확정: 고용노동부 2026-09-01 「고용보험 제도개편 방안」이 실업급여 요율을
  *   근로자·회사 각 0.9%→1.0% 로 올리는 안을 냈으나 법령 개정 전(연내 개정 목표). 개정 공포 전까지 현행.
  * - 지방소득세 — 소득세의 10% (변동 없음).
@@ -27,7 +29,7 @@ import { INSURANCE_RATES_2026, type InsuranceRates } from "./taxConstants2026";
 export const INSURANCE_RATES_2027: InsuranceRates = {
   NATIONAL_PENSION: 0.05,
   HEALTH_INSURANCE: INSURANCE_RATES_2026.HEALTH_INSURANCE,
-  LONG_TERM_CARE_RATIO: INSURANCE_RATES_2026.LONG_TERM_CARE_RATIO,
+  LONG_TERM_CARE_RATIO: 0.139,
   EMPLOYMENT_INSURANCE: INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE,
   LOCAL_INCOME_TAX_RATIO: INSURANCE_RATES_2026.LOCAL_INCOME_TAX_RATIO,
 };
@@ -35,15 +37,16 @@ export const INSURANCE_RATES_2027: InsuranceRates = {
 /**
  * 2027 요율 항목별 확정 상태.
  * confirmed = 공식 결정·법령으로 2027 값이 확정됨 / provisional = 2026 값 준용 중(결정 대기).
- * 갱신 슬롯: 장기요양 — 2026년 10~11월 장기요양위원회 의결 · 고용보험 — 징수법 시행령 개정 공포 시
+ * 갱신 슬롯: 고용보험 — 징수법 시행령 개정 공포 시
  * (개정 없이 해를 넘기면 현행 0.9% 가 그대로 2027 법정 요율이므로 확인 후 confirmed).
+ * 장기요양은 2026-10-30 장기요양위원회 의결로 확정(위 INSURANCE_RATES_2027 주석).
  */
 export const INSURANCE_RATES_2027_STATUS: Readonly<
   Record<keyof InsuranceRates, "confirmed" | "provisional">
 > = {
   NATIONAL_PENSION: "confirmed",
   HEALTH_INSURANCE: "confirmed",
-  LONG_TERM_CARE_RATIO: "provisional",
+  LONG_TERM_CARE_RATIO: "confirmed",
   EMPLOYMENT_INSURANCE: "provisional",
   LOCAL_INCOME_TAX_RATIO: "confirmed",
 };

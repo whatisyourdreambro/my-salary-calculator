@@ -20,11 +20,13 @@ import Rates2027 from "@/app/social-insurance-rates-2027/page";
 
 // Same reported-income base in both years, with the tables' existing per-item
 // 10-won truncation. These non-thousand examples previously overstated pension.
+// 2027 long-term care is 13.90% of the health premium (2026: 13.14%), decided by the
+// long-term care committee on 2026-10-30; health and employment stay at the 2026 values.
 const examples = [
   { monthly: 4_166_667, base: 4_166_000, p2026: 197_880, p2027: 208_300,
-    health: 149_790, longTermCare: 19_680, employment: 37_500, total2027: 415_270, diff: 10_420 },
+    health: 149_790, ltc2026: 19_680, longTermCare: 20_820, employment: 37_500, total2027: 416_410, diff: 10_420 },
   { monthly: 5_833_333, base: 5_833_000, p2026: 277_060, p2027: 291_650,
-    health: 209_700, longTermCare: 27_550, employment: 52_490, total2027: 581_390, diff: 14_590 },
+    health: 209_700, ltc2026: 27_550, longTermCare: 29_140, employment: 52_490, total2027: 582_980, diff: 14_590 },
 ];
 
 describe("insurance rate-page examples", () => {
@@ -37,9 +39,10 @@ describe("insurance rate-page examples", () => {
       health: row.health, longTermCare: row.longTermCare, employment: row.employment,
       total: row.total2027, diff2026: row.diff });
     expect(current.health).toBe(next.health);
-    expect(current.longTermCare).toBe(next.longTermCare);
+    expect(current.longTermCare).toBe(row.ltc2026);
     expect(current.employment).toBe(next.employment);
-    expect(next.total - current.total).toBe(row.diff);
+    // diff2026 is the pension difference only; the total also carries the long-term care increase
+    expect(next.total - current.total).toBe(row.diff + row.longTermCare - row.ltc2026);
   });
 
   it.each([

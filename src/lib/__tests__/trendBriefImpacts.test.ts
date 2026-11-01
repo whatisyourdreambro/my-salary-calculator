@@ -114,7 +114,8 @@ describe("정본 상수 표기 (constText)", () => {
 
   it("확정 상태는 taxConstants2027 상태 플래그를 따른다", () => {
     expect(CANONICAL_CONSTS.PENSION_RATE_2027.confirmed).toBe(true);
-    expect(CANONICAL_CONSTS.LTC_RATIO_2027.confirmed).toBe(false);
+    // 2027 장기요양 비율 13.90% — 2026-10-30 장기요양위원회 의결로 확정
+    expect(CANONICAL_CONSTS.LTC_RATIO_2027.confirmed).toBe(true);
     expect(CANONICAL_CONSTS.EMPLOYMENT_RATE_2027.confirmed).toBe(false);
     // 흔한 표기('5%'·'0.9%')는 자동 치환하지 않는다
     expect(CANONICAL_CONSTS.PENSION_RATE_2027.autoReplace).toBe(false);
