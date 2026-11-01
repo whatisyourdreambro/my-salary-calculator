@@ -150,37 +150,6 @@ export default async function CompanyDetailPage({
  <CompanyDetailClient
  company={company}
  summary={company.id === "samsung-electronics" ? <SamsungCompanySummary company={company} dartSalaryManwon={dartSalaryManwon} /> : undefined}
- nameChangeNotice={company.nameChange ? (
- <section
- aria-labelledby="company-name-change-title"
- data-msy-module="company-name-change"
- className="rounded-2xl border border-border bg-card p-5 sm:p-6"
- >
- <h2 id="company-name-change-title" className="text-lg font-bold text-foreground">현재 회사명 안내</h2>
- <p className="mt-3 break-words text-sm leading-7 text-muted-foreground">
- {company.name.ko}의 현재 법인명은 <strong className="text-foreground">{company.nameChange.currentLegalName}</strong>입니다.
- {" "}<time dateTime={company.nameChange.changedAt}>{company.nameChange.changedAt}</time>에 상호가 변경되었습니다.
- {" "}현재 상장명은 {company.nameChange.currentListedName}이며,
- {" "}변경상장일은 <time dateTime={company.nameChange.listingChangedAt}>{company.nameChange.listingChangedAt}</time>입니다.
- </p>
- {company.disclosed && (
- <p className="mt-2 text-sm leading-7 text-muted-foreground">
- 이 페이지의 공시 평균급여는 {company.disclosed.fiscalYear} 사업연도 자료입니다. 직급별 연봉은 별도 추정치입니다.
- </p>
- )}
- <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
- {[company.nameChange.source, company.nameChange.listingSource].map(source => (
- <a
- key={source.url}
- href={source.url}
- target="_blank"
- rel="nofollow noopener noreferrer"
- className="inline-flex min-h-11 items-center text-sm text-link underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric"
- >{source.label}</a>
- ))}
- </div>
- </section>
- ) : undefined}
  />
 
  {/* 회사 상단 광고 K1 — 신규 유닛 머니샐러리_회사상단(2026-09-27 운영자 승인·발급, docs/ad-experiments.md 실험 #3).
@@ -199,6 +168,11 @@ export default async function CompanyDetailPage({
  <CompanyTopAd />
  </aside>
  )}
+
+ {/* 사명 안내(company.nameChange, 현재 LIG넥스원만) — K1 회사 상단 광고 아래·직급별 연봉표 위 (2026-11-01 운영자 승인 B11·P3G-04).
+     10/23 추가 때는 CompanyDetailClient 안 결과창 광고 바로 아래, 곧 K1 위에 있어 K1 과 그 아래 광고를 상자 높이+32px 만큼 밀었다.
+     K1 위로 되돌리지 말 것 — companyTopAd.test.ts 가 K1 바로 뒤 이 상자, 그 바로 뒤 연봉표 순서를 고정한다. 여백은 아래 컴포넌트 주석. */}
+ <CompanyNameChangeNotice company={company} />
 
  <SamsungSectionAnchor companyId={company.id} id="samsung-salary-table">
  <CompanySalaryTable company={company} />
@@ -352,5 +326,46 @@ export default async function CompanyDetailPage({
  </aside>
  </div>
  </>
+ );
+}
+
+/** 사명 안내 상자 — company.nameChange 가 있는 회사(현재 LIG넥스원)만, 없으면 아무것도 렌더하지 않는다.
+ *  페이지는 K1 회사 상단 광고 바로 아래·연봉표 바로 위에 둔다(2026-11-01 운영자 승인 B11 — 광고 위로 옮기지 말 것).
+ *  mt-8 은 K1 aside 의 my-12 와 겹쳐 K1 아래 48px(env 가 없어 K1 이 없으면 요약 영역 main 아래 32px).
+ *  아래 연봉표가 자체 py-12 라 바닥 여백은 두지 않는다. */
+function CompanyNameChangeNotice({ company }: { company: CompanyProfile }) {
+ if (!company.nameChange) return null;
+ return (
+ <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+ <section
+ aria-labelledby="company-name-change-title"
+ data-msy-module="company-name-change"
+ className="rounded-2xl border border-border bg-card p-5 sm:p-6"
+ >
+ <h2 id="company-name-change-title" className="text-lg font-bold text-foreground">현재 회사명 안내</h2>
+ <p className="mt-3 break-words text-sm leading-7 text-muted-foreground">
+ {company.name.ko}의 현재 법인명은 <strong className="text-foreground">{company.nameChange.currentLegalName}</strong>입니다.
+ {" "}<time dateTime={company.nameChange.changedAt}>{company.nameChange.changedAt}</time>에 상호가 변경되었습니다.
+ {" "}현재 상장명은 {company.nameChange.currentListedName}이며,
+ {" "}변경상장일은 <time dateTime={company.nameChange.listingChangedAt}>{company.nameChange.listingChangedAt}</time>입니다.
+ </p>
+ {company.disclosed && (
+ <p className="mt-2 text-sm leading-7 text-muted-foreground">
+ 이 페이지의 공시 평균급여는 {company.disclosed.fiscalYear} 사업연도 자료입니다. 직급별 연봉은 별도 추정치입니다.
+ </p>
+ )}
+ <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+ {[company.nameChange.source, company.nameChange.listingSource].map(source => (
+ <a
+ key={source.url}
+ href={source.url}
+ target="_blank"
+ rel="nofollow noopener noreferrer"
+ className="inline-flex min-h-11 items-center text-sm text-link underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric"
+ >{source.label}</a>
+ ))}
+ </div>
+ </section>
+ </div>
  );
 }

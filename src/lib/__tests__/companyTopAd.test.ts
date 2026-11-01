@@ -2,6 +2,7 @@
 //  - 회사 페이지 전수(400+)에서 K1 자리(aside[data-msy-ad="company-upper"])가 정확히 1번, 안에는 CompanyTopAd 하나뿐
 //  - 순증 1: 기존 유닛(페이지 끝 HomeTop·결과창·가이드중간·디스플레이2·인아티클·사이드바)은 각 1번 그대로, 멀티플렉스 0
 //  - 위치: H1·결과창 광고 아래, 연봉표·가이드중간 광고 위 — 바로 앞은 요약 영역 끝(</main>), 바로 뒤는 연봉표
+//    (사명 안내가 있는 회사는 K1 바로 뒤 안내 상자, 그 바로 뒤 연봉표 — 안내 상자는 K1 위로 가지 않는다, 2026-11-01 B11)
 //  - 예약 높이: aside 클래스(my-12 + 폭별 min-h)와 광고 칸 minHeight 280 고정(점프 링크 CLS 대책 — 줄이면 실패)
 //  - env 미설정: 컴포넌트는 아무것도 렌더하지 않고, 회사 페이지에도 빈 자리(aside)가 남지 않는다
 //  - 회사 상세에만: 사용처·env 참조·표식이 회사 page.tsx(와 정의 파일 AdPlacement.tsx)에만 있다
@@ -61,6 +62,15 @@ const MARKER = 'data-msy-ad="company-upper"';
 const ASIDE_CLASS = "max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 my-12 min-h-[344px] lg:min-h-[324px]";
 const adTag = (name: string) => `<i data-test-ad="${name}"></i>`;
 const count = (s: string, sub: string) => s.split(sub).length - 1;
+// 사명 안내(company.nameChange — 현재 LIG넥스원) 래퍼. K1 아래·연봉표 위 (2026-11-01 운영자 승인 B11·P3G-04)
+const NOTICE_WRAPPER =
+  '<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-8"><section aria-labelledby="company-name-change-title" data-msy-module="company-name-change"';
+/** 사명 안내 래퍼(div 안 section 하나)로 시작하면 그 뒤 나머지, 아니면 null */
+const skipNotice = (s: string) => {
+  if (!s.startsWith(NOTICE_WRAPPER)) return null;
+  const close = s.indexOf("</section></div>");
+  return close < 0 ? null : s.slice(close + "</section></div>".length);
+};
 const read = (rel: string) => readFileSync(path.join(ROOT, rel), "utf8");
 
 const companies = companyRepository.getAll();
@@ -133,14 +143,39 @@ describe("회사 상세 K1 신규 유닛 — 전수 렌더(env 설정)", () => {
       const order = h1 >= 0 && h1 < result && result < upper && upper < table && table < guideMid;
       const beforeOk = html.slice(0, start).endsWith("</main>");
       const after = html.slice(end);
+      // 사명 안내가 있는 회사는 K1 바로 뒤 안내 상자 하나, 그 바로 뒤가 연봉표
+      const rest = companyRepository.getById(id)?.nameChange ? skipNotice(after) : after;
       const afterOk =
-        after.startsWith('<section data-msy-module="company-salary-net"') ||
-        (id === "samsung-electronics" && after.startsWith('<div id="samsung-salary-table"'));
+        rest !== null &&
+        (rest.startsWith('<section data-msy-module="company-salary-net"') ||
+          (id === "samsung-electronics" && rest.startsWith('<div id="samsung-salary-table"')));
       if (upper < 0 || !order || !beforeOk || !afterOk) {
         bad.push(`${id}: order=${order} before=${html.slice(start - 40, start)} after=${after.slice(0, 60)}`);
       }
     }
     expect(bad.slice(0, 20)).toEqual([]);
+  });
+
+  // 2026-11-01 운영자 승인 B11(P3G-04): 10/23 LIG 사명 안내가 요약 영역(main) 안 결과창 광고 바로 아래, 곧 K1 위에 들어가
+  // K1 과 그 아래 광고를 상자 높이만큼 밀었다. K1 아래·연봉표 위로 옮겼다 — 결과창 광고와 K1 사이로 되돌아가면 여기서 잡힌다.
+  it("사명 안내(LIG넥스원)는 K1 아래 — 결과창 광고와 K1 사이(요약 영역 main 안)에 없다", () => {
+    const named = companies.filter((c) => c.nameChange).map((c) => c.id);
+    expect(named).toContain("lig-nex1");
+    for (const id of named) {
+      const html = pages.get(id)!;
+      const result = html.indexOf(adTag("CalcResultAd"));
+      const mainEnd = html.indexOf("</main>");
+      const upper = html.indexOf(MARKER);
+      const notice = html.indexOf('data-msy-module="company-name-change"');
+      const table = html.indexOf('data-msy-module="company-salary-net"');
+      expect(count(html, 'data-msy-module="company-name-change"'), id).toBe(1);
+      expect(result, id).toBeGreaterThan(-1);
+      expect(mainEnd, id).toBeGreaterThan(result);
+      expect(upper, id).toBeGreaterThan(mainEnd);
+      expect(notice, id).toBeGreaterThan(upper);
+      expect(notice, id).toBeLessThan(table);
+      expect(html.slice(result, upper), id).not.toContain("company-name-change");
+    }
   });
 });
 
@@ -153,6 +188,15 @@ describe("env 미설정 — 아무것도 렌더하지 않음", () => {
       expect(count(html, adTag("CompanyTopAd")), id).toBe(0);
       expect(count(html, adTag("HomeTopAd")), id).toBe(1);
     }
+  });
+
+  it("env 미설정이어도 사명 안내는 요약 영역(main) 바로 뒤, 그 바로 뒤가 연봉표 — 결과창 광고 쪽(main 안)으로 돌아가지 않는다", async () => {
+    vi.stubEnv(ENV_KEY, "");
+    const html = (await renderAll(["lig-nex1"])).get("lig-nex1")!;
+    const mainEnd = html.indexOf("</main>") + "</main>".length;
+    expect(count(html, MARKER)).toBe(0);
+    expect(html.slice(mainEnd).startsWith(NOTICE_WRAPPER)).toBe(true);
+    expect(skipNotice(html.slice(mainEnd))?.startsWith('<section data-msy-module="company-salary-net"')).toBe(true);
   });
 
   it("실제 CompanyTopAd: env 없으면 빈 문자열, 있으면 광고 칸 1개(ad-slot-company-top · 예약 280+라벨 20)", async () => {

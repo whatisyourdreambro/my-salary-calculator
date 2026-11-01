@@ -29,8 +29,10 @@ export default function PoliceFireRankTable({ variant }: { variant: "police" | "
           {POLICE_RANK_ROWS_2026.map(([hobong, ...pays]) => (
             <tr key={hobong} className="border-b border-canvas-100">
               <td className="py-2.5 px-2 font-bold text-navy">{hobong}호봉</td>
+              {/* 줄 높이 40px(호봉 칸 py-2.5 와 같음) — 금액 칸은 py-0 으로 전역 td 위아래 여백(0.75rem)을 없애고 버튼(min-h-10)이 높이를 낸다.
+                  10/23 버튼 도입 때 줄마다 높아져 표 아래 결과창 광고(CalcResultAd)를 밀었다(2026-11-01 운영자 승인 B11). 줄을 다시 키우지 말 것. */}
               {pays.map((pay, i) => (
-                <td key={labels[i]} className="px-2 text-right text-muted-blue tabular-nums">
+                <td key={labels[i]} className="px-2 py-0 text-right text-muted-blue tabular-nums">
                   <CivilPayHandoffButton gradeLabel={labels[i]} amountLabel={fmt(pay)} selection={{
                     source: CIVIL_PAY_SOURCES[variant], occupation: variant,
                     gradeId: CIVIL_PAY_GRADES[variant].find(grade => grade.label === labels[i])!.id,

@@ -51,7 +51,9 @@ export default function PensionHikeClient() {
           />
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-electric">원</span>
         </div>
-        <p id="ph-input-help" className="mt-2 text-[11px] font-bold text-electric">
+        {/* 평소(정상 입력, 상·하한 밖)에는 sr-only — aria-describedby 대상과 낭독 문구는 남기고 화면 높이는 0.
+            10/23 상시 노출로 결과창 광고(CalcResultAd)가 한 줄 내려갔다(2026-11-01 운영자 승인 B11). 입력 오류·상한·하한일 때만 보이는 한 줄. */}
+        <p id="ph-input-help" className={!r || r.capped || r.floored ? "mt-2 text-[11px] font-bold text-electric" : "sr-only"}>
           {!r ? "0보다 큰 월 소득을 입력해 주세요." : r.capped
             ? `상한 ${fmt(BASE_CAP)}원 적용 · 2027년 7월 이후 기준은 미반영`
             : r.floored ? `하한 ${fmt(BASE_FLOOR)}원 적용 · 실제 가입·납부 대상 여부를 확인해 주세요.`
