@@ -159,25 +159,46 @@ describe("calculation result/error accessibility (offline hook and element fixtu
       labels: rows.map(([label]) => label), values: rows.map(([, value]) => value), rowsHidden: rowsBlock?.props["aria-hidden"],
       note: note ? text(note) : null, noteRole: note?.props.role };
   }
+  // Stage s2 sweep repair (2026-11-02): a message the last valid card did not show (zero divisor status, model-invalid
+  // explanation, a note only the edited input has) is no longer added as a note block under the kept '—' rows. It sits right
+  // under the value, and an invisible copy of the last valid card below the value (≈ slot, gap, rows, note) shares its grid
+  // cell, so the card keeps the valid height and the CalcResultAd below it does not move down.
+  function messageShape(tree: unknown) {
+    const elementsOf = (value: unknown) => [value].flat(Infinity).filter((child): child is Element => Boolean(child) && typeof child === "object" && "props" in (child as object));
+    const section = nodes(tree).find(node => node.props["aria-label"] === "현재 조건의 계산 결과")!;
+    const children = elementsOf(section.props.children);
+    const grid = children.find(node => node.type === "div" && node.props.className === "grid");
+    if (!grid) return null;
+    const [message, reserve, ...rest] = elementsOf(grid.props.children);
+    const parts = elementsOf(reserve.props.children);
+    const rowsBlock = parts.find(node => node.type === "div" && String(node.props.className).includes("border-t"));
+    const rows = rowsBlock ? nodes(rowsBlock.props.children).filter(node => String(node.props.className).startsWith("flex flex-wrap"))
+      .map(node => (node.props.children as Element[]).map(span => text(span).trim())) : [];
+    return { elements: children.length, gridIndex: children.indexOf(grid), extra: rest.length, value: text(children[2]).trim(),
+      message: text(message), messageTag: message.type, messageRole: message.props.role, messageClass: String(message.props.className),
+      reserveHidden: reserve.props["aria-hidden"], reserveClass: String(reserve.props.className),
+      reserveClasses: parts.map(node => String(node.props.className)), reserveText: parts.filter(node => node !== rowsBlock).map(node => text(node).trim()),
+      labels: rows.map(([label]) => label), values: rows.map(([, value]) => value) };
+  }
+  // The valid card's elements below the value, in order: ≈ line, gap, rows block, note — the overlay copies these classes.
+  const VALID_BELOW_VALUE = ["mt-2 text-sm text-primary-foreground", "mb-6", "border-t border-white/20 pt-5 space-y-2", "mt-5 pt-5 border-t border-white/20 text-xs text-white/85 leading-relaxed"];
   it("invalid states keep the same result row count, labels from the last valid result and the note slot", async () => {
     fixture.load.mockResolvedValue(shapeCompute); let tree = render(shapeView); await Promise.resolve(); tree = render(shapeView);
     const valid = resultShape(tree);
     expect(valid).toMatchObject({ elements: 7, value: "50,000원", approx: "≈ 5만원", labels: ["총 납입액", "판정: 작음"], values: ["600,000원", "12개월"], note: "예시 계산입니다." });
     expect(valid.approxHidden).toBeUndefined(); expect(valid.rowsHidden).toBeUndefined(); expect(valid.noteRole).toBeUndefined();
+    // Empty or out-of-range input whose result keeps the valid view's own note: the '—' rows and the same note stay visible.
+    // (The zero divisor and model-invalid messages are covered by the message overlay test below.)
     const cases = [
       { id: "amount", raw: "", value: "입력값 확인", note: "예시 계산입니다.", role: undefined },
       { id: "amount", raw: "2000000000", value: "입력값 확인", note: "예시 계산입니다.", role: undefined },
-      // 0 divisor: the status moves into the note slot instead of adding a line under the value; the zero-input result's
-      // own verdict label (Infinity -> '판정: 큼') is not shown
-      { id: "months", raw: "0", value: "입력값 확인", note: "0으로 입력된 항목(기간)이 있어 계산할 수 없습니다. 0보다 큰 값을 입력해 주세요.", role: "status" },
-      // model-invalid result with secondary: [] — the rows stay instead of collapsing
-      { id: "months", raw: "600", value: "입력값 확인", note: "기간을 599개월 이하로 입력해 주세요.", role: undefined },
     ];
     for (const { id, raw, value, note, role } of cases) {
       change(tree, `accessible-fixture${id}`, raw); tree = render(shapeView);
       const editing = resultShape(tree);
       expect(editing, `${id}=${raw}`).toMatchObject({ elements: valid.elements, value, approx: "—", approxHidden: "true", labels: valid.labels, values: ["—", "—"], rowsHidden: "true", note });
       expect(editing.noteRole, `${id}=${raw}`).toBe(role);
+      expect(messageShape(tree), `${id}=${raw}`).toBeNull();
       expect(announcement(tree, "simple")).toBe("");
       change(tree, `accessible-fixture${id}`, id === "amount" ? "600000" : "12"); tree = render(shapeView);
       expect(resultShape(tree)).toEqual(valid);
@@ -187,6 +208,68 @@ describe("calculation result/error accessibility (offline hook and element fixtu
     const small = resultShape(tree); expect(small).toMatchObject({ elements: 6, approx: null, labels: ["총 납입액", "판정: 작음"] });
     change(tree, "accessible-fixtureamount", ""); tree = render(shapeView);
     expect(resultShape(tree)).toMatchObject({ elements: small.elements, approx: null, labels: small.labels, values: ["—", "—"] });
+  });
+  it("a message the valid card did not show overlays an invisible copy of the valid card instead of adding a note block", async () => {
+    fixture.load.mockResolvedValue(shapeCompute); let tree = render(shapeView); await Promise.resolve(); tree = render(shapeView);
+    const valid = resultShape(tree);
+    const validSection = nodes(tree).find(node => node.props["aria-label"] === "현재 조건의 계산 결과")!;
+    const validChildren = [validSection.props.children].flat(Infinity).filter((child): child is Element => Boolean(child) && typeof child === "object" && "props" in (child as object));
+    expect(validChildren.slice(3).map(node => String(node.props.className))).toEqual(VALID_BELOW_VALUE);
+    const cases = [
+      // 0 divisor: the status (role=status) sits right under the value; the zero-input verdict label ('판정: 큼') is not shown
+      { raw: "0", message: "0으로 입력된 항목(기간)이 있어 계산할 수 없습니다. 0보다 큰 값을 입력해 주세요.", role: "status" },
+      // model-invalid result with secondary: [] — its explanation takes the place of the '—' rows instead of being added below
+      { raw: "600", message: "기간을 599개월 이하로 입력해 주세요.", role: undefined },
+    ];
+    for (const { raw, message, role } of cases) {
+      change(tree, "accessible-fixturemonths", raw); tree = render(shapeView);
+      const shape = messageShape(tree)!;
+      expect(shape, `months=${raw}`).toMatchObject({ elements: 4, gridIndex: 3, extra: 0, value: "입력값 확인", message, messageTag: "p", reserveHidden: "true",
+        reserveClasses: VALID_BELOW_VALUE, reserveText: ["—", "", "예시 계산입니다."], labels: valid.labels, values: ["—", "—"] });
+      expect(shape.messageRole, `months=${raw}`).toBe(role);
+      expect(shape.messageClass).toBe("col-start-1 row-start-1 mt-2 text-xs leading-relaxed text-white/85");
+      expect(shape.reserveClass).toBe("invisible col-start-1 row-start-1");
+      // nothing else below the value: no visible '—' line, rows or note block next to the overlay
+      expect(resultShape(tree)).toMatchObject({ approx: null, labels: [], note: null });
+      expect(announcement(tree, "simple")).toBe("");
+      change(tree, "accessible-fixturemonths", "12"); tree = render(shapeView);
+      expect(resultShape(tree)).toEqual(valid); expect(messageShape(tree)).toBeNull();
+    }
+  });
+  // Like loan-total-interest and cagr-quick: one row and no note in the valid view, where B08 added a whole note block.
+  const plainCalc: ClientCalculatorDef = { slug: "plain-fixture", title: "Plain", description: "Offline only", category: "loan", categoryLabel: "대출", keywords: [],
+    fields: [{ name: "amount", label: "대출액", defaultValue: 100_000_000, min: 0, max: 1e12, suffix: "원" }, { name: "years", label: "기간", defaultValue: 30, min: 0, max: 50, suffix: "년" }] };
+  const plainCompute: CalculatorDef["compute"] = ({ amount, years }) => years <= 0
+    ? { primary: { label: "총 이자", value: NaN, suffix: "원" }, note: "기간은 1년 이상이어야 계산할 수 있습니다." }
+    : { primary: { label: "총 이자", value: amount * 0.7, suffix: "원" }, secondary: [{ label: "원금 대비 비율", value: (amount * 0.7 / amount) * 100, suffix: "%" }] };
+  function plainView() {
+    const wrapper = SimpleCalculatorView({ slug: "plain-fixture", calc: plainCalc, batch: "batch1", initialResult: plainCompute({ amount: 100_000_000, years: 30 }) });
+    const instance = (wrapper.props.children as unknown as Element[])[1]; return (instance.type as (p: unknown) => unknown)(instance.props);
+  }
+  it("without a valid note, a message overlays the '—' slots and adds no note block; plain editing keeps the visible '—' slots", async () => {
+    fixture.load.mockResolvedValue(plainCompute); let tree = render(plainView); await Promise.resolve(); tree = render(plainView);
+    const valid = resultShape(tree);
+    expect(valid).toMatchObject({ elements: 6, approx: "≈ 7,000만원", labels: ["원금 대비 비율"], values: ["70.00%"], note: null });
+    change(tree, "accessible-fixtureamount", ""); tree = render(plainView);
+    expect(resultShape(tree)).toMatchObject({ elements: 6, value: "입력값 확인", approx: "—", labels: ["원금 대비 비율"], values: ["—"], note: null });
+    expect(messageShape(tree)).toBeNull();
+    change(tree, "accessible-fixtureamount", "100000000"); tree = render(plainView); expect(resultShape(tree)).toEqual(valid);
+    const cases = [
+      { id: "amount", raw: "0", message: "0으로 입력된 항목(대출액)이 있어 계산할 수 없습니다. 0보다 큰 값을 입력해 주세요.", role: "status", restore: "100000000" },
+      // a note that only the edited input has (like cagr-quick with 기간 emptied) is a message as well
+      { id: "years", raw: "", message: "기간은 1년 이상이어야 계산할 수 있습니다.", role: undefined, restore: "30" },
+    ];
+    for (const { id, raw, message, role, restore } of cases) {
+      change(tree, `accessible-fixture${id}`, raw); tree = render(plainView);
+      const shape = messageShape(tree)!;
+      expect(shape, `${id}=${raw}`).toMatchObject({ elements: 4, gridIndex: 3, extra: 0, value: "입력값 확인", message, reserveHidden: "true",
+        reserveClasses: VALID_BELOW_VALUE.slice(0, 3), reserveText: ["—", ""], labels: ["원금 대비 비율"], values: ["—"] });
+      expect(shape.messageRole, `${id}=${raw}`).toBe(role);
+      expect(resultShape(tree)).toMatchObject({ approx: null, labels: [], note: null });
+      expect(announcement(tree, "simple")).toBe("");
+      change(tree, `accessible-fixture${id}`, restore); tree = render(plainView);
+      expect(resultShape(tree)).toEqual(valid); expect(messageShape(tree)).toBeNull();
+    }
   });
   it("while the compute chunk is still loading, an edited input keeps the server result's ≈ line and rows", () => {
     let tree = render(shapeView); expect(resultShape(tree)).toMatchObject({ elements: 7, approx: "≈ 5만원", labels: ["총 납입액", "판정: 작음"], note: "예시 계산입니다." });

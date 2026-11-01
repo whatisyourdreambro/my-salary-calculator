@@ -241,6 +241,27 @@ function SimpleCalculatorInstance({ slug, calc, batch, initialResult, shareToken
  : "이 입력 조합으로는 결과를 계산할 수 없습니다. 값을 확인해 주세요."
  : null;
  const noteText = zeroFieldStatus ?? result?.note;
+ // 마지막 정상 결과에 없던 안내(0 나눗셈 안내, 입력 조건 확인 설명, 고친 입력에만 붙는 note)는 결과 칸을 늘리지 않는다
+ // (2026-11-02 2단계 스윕 수리). B08 은 이 안내를 남겨 둔 '—' 줄 아래 note 자리에 붙여, 정상 화면에 note 가 없는
+ // 계산기는 카드가 길어지고 결과 직하 CalcResultAd 가 기본 위치보다 60~128px 내려갔다(대출 총 이자·CAGR 첫 칸 0,
+ // 납입 횟수별 대출 잔액 원금 상한 초과 실측). 이제 안내는 값 바로 아래에 보이고, 같은 칸에 마지막 정상 결과의
+ // 값 아래 자리(≈ 줄·보조 항목 줄·note)를 보이지 않게 겹쳐 높이를 받친다. 안내가 그 자리보다 길 때만 카드가 늘어난다.
+ const messageText = !resultValid && noteText && (zeroFieldStatus || noteText !== shownShape.note) ? noteText : null;
+ // 결과가 없을 때 같은 자리를 지키는 '—' 줄 (B08) — 입력 중 화면과 위 안내의 높이 받침에 같이 쓴다
+ const dashApprox = shownShape.primary.suffix === "원" && compactKo(shownShape.primary.value) && (
+ <p className="mt-2 text-sm text-primary-foreground" aria-hidden="true">—</p>
+ );
+ const dashRows = shownShape.secondary && shownShape.secondary.length > 0 && (
+ // 결과가 없을 때: 같은 라벨·같은 줄 수로 값만 '—' (읽을 값이 없어 보조기기에는 숨긴다)
+ <div className="border-t border-white/20 pt-5 space-y-2" aria-hidden="true">
+ {shownShape.secondary.map((item, idx) => (
+ <div key={idx} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+ <span className="text-sm text-white/80">{item.label}</span>
+ <span className="font-bold tabular-nums text-white">—</span>
+ </div>
+ ))}
+ </div>
+ );
 
  return (
  <div className="min-h-screen bg-background pb-16 pt-24 text-foreground sm:pt-28">
@@ -316,7 +337,7 @@ function SimpleCalculatorInstance({ slug, calc, batch, initialResult, shareToken
  {resultValid ? formatNumber(primary.value, primary.suffix) : result ? "입력값 확인" : computeFailed ? "계산을 불러오지 못했습니다" : "계산 준비 중…"}
  </p>
  {/* 정확값 아래에 억/만 감각 표기 — 정확값을 대체하지 않는 보조 표기. 결과가 없을 때는 같은 자리를 '—' 로 남긴다 */}
- {resultValid
+ {!messageText && (resultValid
  ? primary.suffix === "원" &&
  typeof primary.value === "number" &&
  compactKo(primary.value) && (
@@ -324,11 +345,9 @@ function SimpleCalculatorInstance({ slug, calc, batch, initialResult, shareToken
  ≈ {compactKo(primary.value)}원
  </p>
  )
- : shownShape.primary.suffix === "원" && compactKo(shownShape.primary.value) && (
- <p className="mt-2 text-sm text-primary-foreground" aria-hidden="true">—</p>
- )}
- <div className="mb-6" />
- {resultValid
+ : dashApprox)}
+ {!messageText && <div className="mb-6" />}
+ {!messageText && (resultValid
  ? result?.secondary && result.secondary.length > 0 && (
  <div className="border-t border-white/20 pt-5 space-y-2">
  {result.secondary.map((item, idx) => (
@@ -341,21 +360,29 @@ function SimpleCalculatorInstance({ slug, calc, batch, initialResult, shareToken
  ))}
  </div>
  )
- : shownShape.secondary && shownShape.secondary.length > 0 && (
- // 결과가 없을 때: 같은 라벨·같은 줄 수로 값만 '—' (읽을 값이 없어 보조기기에는 숨긴다)
- <div className="border-t border-white/20 pt-5 space-y-2" aria-hidden="true">
- {shownShape.secondary.map((item, idx) => (
- <div key={idx} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
- <span className="text-sm text-white/80">{item.label}</span>
- <span className="font-bold tabular-nums text-white">—</span>
- </div>
- ))}
- </div>
- )}
- {noteText && (
- <p role={zeroFieldStatus ? "status" : undefined} className="mt-5 pt-5 border-t border-white/20 text-xs text-white/85 leading-relaxed">
+ : dashRows)}
+ {!messageText && noteText && (
+ <p className="mt-5 pt-5 border-t border-white/20 text-xs text-white/85 leading-relaxed">
  {noteText}
  </p>
+ )}
+ {messageText && (
+ // 안내 겹침 (2단계 스윕 수리): 안내는 값 바로 아래, 같은 칸의 보이지 않는 받침은 마지막 정상 결과의 값 아래 자리
+ <div className="grid">
+ <p role={zeroFieldStatus ? "status" : undefined} className="col-start-1 row-start-1 mt-2 text-xs leading-relaxed text-white/85">
+ {messageText}
+ </p>
+ <div aria-hidden="true" className="invisible col-start-1 row-start-1">
+ {dashApprox}
+ <div className="mb-6" />
+ {dashRows}
+ {shownShape.note && (
+ <p className="mt-5 pt-5 border-t border-white/20 text-xs text-white/85 leading-relaxed">
+ {shownShape.note}
+ </p>
+ )}
+ </div>
+ </div>
  )}
  </section>
 
