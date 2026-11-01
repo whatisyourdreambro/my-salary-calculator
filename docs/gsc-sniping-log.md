@@ -243,3 +243,15 @@ Breadcrumbs/speakable(온페이지) + 허브(/calc/bonus-calculators) 신설 + 2
 
 - 제목은 그대로이고 검색 설명만 바뀐 쪽(판정 각주용): /year-end-tax-preview (OPP-6 1단계 오픈 시기 10월 말~11월 중순, PKG-22) · /tools/finance/irp (P3G-03 2026년·공제율·900만원 기준, PKG-22) · /social-insurance-rates-2027 (2027 장기요양 13.90% 확정, PKG-10).
 - sitemap lastmod 는 같은 커밋 묶음의 PKG-LEDGER 가 정한다: 2026-11-01 로 앞당긴 쪽은 /year-end-tax · /year-end-tax-checklist · /calc/dual-income-year-end · /health-checkup-2026 등 내용·결과가 바뀐 14곳이고, 제목·설명만 바뀐 쪽(/home-loan · /firefighter-pay-2026 · /health-insurance-dependent · /calc/sk-hynix-bonus · /calc/dependent-check · /calc/child-deduction · /donation-tax-credit-2026 등)은 종전 날짜를 유지했다(scripts/sitemap-content-reviews.json 사유 참조).
+
+## 2026-11-01 2차 통합 1단계 제목 변경 기록 (claude/integration-1101b · 원장 마무리, append-only)
+
+2차 통합 1단계(B·R2 패키지 21개)에 실린 head `<title>` 변경 전부. 이전 값 = origin/main 9c82ac01, 이후 값 = 통합 브랜치 — 둘 다 정적 207쪽과 회사 430쪽의 metadata 를 tsx 로 직접 읽은 값이다. 정적 207쪽은 제목·설명 변경이 없고 회사 쪽 2곳만 바뀐다. ` | 머니샐러리` 꼬리는 생략. 수치(클릭·노출·CTR)는 적지 않는다 — 판정은 위 Round 3 규칙(T0 직전 28일 vs T0+1~T0+28, 읽는 날 T0+35)대로 하고, T0 = 운영자가 이 단계 승인 게시를 마친 시각(게시 뒤 이 줄에 기입: `T0 = ____`).
+
+| 날짜 | 경로 | 항목 ID (패키지) | 이전 → 이후 |
+|---|---|---|---|
+| 2026-11-01 | /salary-db/kotra | CTR-6 (B34) | KOTRA 연봉 2026 — 신입 6,100만원~시니어 9,200만원 직급별 연봉표 → 코트라 연봉 2026 (KOTRA) — 신입 초봉·직급별 연봉표 (설명·H1 그대로, 키워드에 코트라 연봉 추가) |
+| 2026-11-01 | /salary-db/lig-nex1 | OPP-17 (B34) | LIG넥스원 연봉 2026 — 신입 6,700만원~시니어 1억 1,500만원 직급별 연봉표 → LIG디펜스앤에어로스페이스(구 LIG넥스원) 연봉 2026 — 신입 초봉·직급별 연봉표 (설명도 2026-03-31 상호 변경 문구로 시작, H1 그대로) |
+
+- 두 회사 쪽의 sitemap lastmod(companyPageModified)는 그대로이고, rss-companies.xml 항목 제목(LIG 는 설명도)이 같은 함수를 따라 바뀐다.
+- 같은 단계 원장이 sitemap lastmod 를 2026-11-01 로 앞당긴 쪽은 제목이 그대로인 내용·결과 변경이라 위 표에 넣지 않는다: /calc/sk-hynix-bonus · /calc/bonus-calculators (B27) · /teacher-pay-2026 (B35) · /donation-tax-credit-2026 (B26) · /calc/january-bonus (B23, 첫 원장 항목) · /property-holding-tax-2026 (R2-HOLD, 첫 원장 항목). /year-end-tax · /calc/dual-income-year-end 는 이미 2026-11-01 이다(scripts/sitemap-content-reviews.json 사유 참조).

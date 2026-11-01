@@ -73,8 +73,8 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  // 차이·세액공제 30% 기본 가정 제거). 나머지 A18 계산기는 sitemap() 의 BONUS_ENGINE_ROUTES 루프.
  // 2026-10-09: 삼성 DS 특별성과급 세부안(10/7 보도) — 지급 시기·재원(DS부문)·원천징수 문구, 공개 출처 표현 정리.
  '/calc/samsung-bonus': { lastModified: new Date('2026-10-19T00:00:00+09:00'), priority: 0.95 },
- '/calc/sk-hynix-bonus': { lastModified: new Date('2026-10-04'), priority: 0.9 }, // 2026-09-16 임단협 가결 반영
- '/calc/bonus-calculators': { lastModified: new Date('2026-10-09'), priority: 0.9 }, // 2026-10-09 최근 소식 10/7 삼성 DS 세부안
+ '/calc/sk-hynix-bonus': { lastModified: new Date('2026-11-01T00:00:00+09:00'), priority: 0.9 }, // 3분기 실적(10/28) 시나리오·PS FAQ (B27 DATA-03)
+ '/calc/bonus-calculators': { lastModified: new Date('2026-11-01T00:00:00+09:00'), priority: 0.9 }, // 최근 소식 10/28 SK하이닉스 3분기 실적 (B27)
  // 2026-09-27 신설 — 시세 스냅숏이 매월(16일 이후) 갱신되므로 monthly. lastModified 는 스냅숏을 바꾼 배포에만 올린다.
  '/calc/bonus-home-plan': { lastModified: new Date('2026-10-19T00:00:00+09:00'), changeFrequency: 'monthly' },
  // priority 0.85 는 sitemap() 내 성과급 클러스터 루프와 같은 값 — override 가 있으면
@@ -84,7 +84,8 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/kia-bonus': { lastModified: new Date('2026-09-25'), priority: 0.85 },
  '/minimum-wage-2027': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 2027 장기요양 13.90% 확정 반영 실수령 참고치·FAQ (PKG-10)
  '/minimum-wage-2026': { lastModified: new Date('2026-09-12') },
- '/year-end-tax': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 표준세액공제 13만원 비교 엔진(PKG-10)·2027 연말정산 제목과 접힌 FAQ 사실 정정(PKG-20)
+ '/year-end-tax': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 표준세액공제 13만원 비교 엔진(PKG-10)·2027 연말정산 제목과 접힌 FAQ 사실 정정(PKG-20)·접힌 아코디언 추가 입력과 엔진 한도(B24)
+ '/calc/january-bonus': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 13월의 월급 계산기를 연말정산 정본 엔진으로 (B23 CALC-01)
  '/retirement-pension-2026': { lastModified: new Date('2026-10-26T00:00:00+09:00') }, // 일반 위험자산 한도·적격 TDF 예외·공제와 환급 구분 정정
  // 2026-08-23 시즌 패키지 (연말정산 허브·미리보기·시즌 사이드바)
  '/year-end-tax-2027': { lastModified: new Date('2026-09-25') },
@@ -94,7 +95,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/tax-reform-2026': { lastModified: new Date('2026-09-30') },
  '/civil-servant-pay-2027': { lastModified: new Date('2026-10-19T00:00:00+09:00') }, // B20 리드·메타 정렬(네이버 저CTR)
  // R2 신규 8라우트 (2026-08-31)
- '/calc/dual-income-year-end': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 표준세액공제 비교 엔진(PKG-10)·문구(PKG-11·PKG-20)
+ '/calc/dual-income-year-end': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 표준세액공제 비교 엔진(PKG-10)·문구(PKG-11·PKG-20)·부부 상호 의료비 700만원 한도(B24)·기본 예시(B25)·자녀 분할 조건(B26)
  '/calc/voluntary-retirement': { lastModified: new Date('2026-09-03') },
  '/calc/dependent-check': { lastModified: new Date('2026-09-05') },
  '/calc/smb-income-tax-break': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 4대보험료 소득공제·환산 나이 판정 반영(PKG-14)
@@ -108,14 +109,15 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/civil-servant-net-pay': { lastModified: new Date('2026-10-23T00:00:00+09:00'), priority: 0.8, changeFrequency: 'monthly' },
  '/tools/finance/compound': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
  '/tools/finance/bonus': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 과세표준 4대보험료 공제 반영(PKG-12)
- '/donation-tax-credit-2026': { lastModified: new Date('2026-09-25') },
+ '/donation-tax-credit-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 산출세액 한도 미반영 정정·한도 초과 미공제분 줄 (B26 STR-02-o)
+ '/property-holding-tax-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 종부세 농어촌특별세·1세대 1주택 세액공제·12월 상세 (R2-HOLD)
  '/health-insurance-dependent': { lastModified: new Date('2026-10-17') },
  // 2026-11-01: 6대 암검진 본인부담 0~10%·수검 기한 1회 교정(운영자 승인, PKG-22 STR-06) — 10/19 링크 검토일 대신
  '/health-checkup-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') },
  '/social-insurance-rates-2027': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 2027 장기요양 13.90% 확정(PKG-10)
  // 봉급표 버티컬 4종 (2026-08-30)
  '/military-pay-2026': { lastModified: new Date('2026-09-27') },
- '/teacher-pay-2026': { lastModified: new Date('2026-10-04') }, // B20 리드·메타 정렬(네이버 저CTR)
+ '/teacher-pay-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 1~40호봉 전체 표(접힌 상자, 마지막 본문 광고 아래 — B35)
  '/police-pay-2026': { lastModified: new Date('2026-10-04') },
  '/firefighter-pay-2026': { lastModified: new Date('2026-10-04') }, // B20 리드·메타 정렬(네이버 저CTR)
  // 2026-08-25 P2 백로그 (임베드 위젯 5종 확장·구조화데이터 보강·영문 메뉴)

@@ -5,8 +5,8 @@
   "routes": {
     "/health-insurance-2026": {
       "contentDate": "2026-10-19",
-      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
-      "reason": "3f0ae5bf8 (October 5) changed the health-insurance search lead and metadata; this release adds explanatory health/tax next steps on October 19.",
+      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
+      "reason": "3f0ae5bf8 (October 5) changed the health-insurance search lead and metadata; this release adds explanatory health/tax next steps on October 19. Rehashed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B36 P2UX-03, owner approval 2026-11-01): the visible, OG and Article revision dates return to 2026-10-04 (분납 기준 and FAQ correction); the 10/5 lead and keyword restoration and the 10/19 link box are not substantive, so the sitemap keeps the 2026-10-19 link-review date (PAGE_VISIBLE_REVISION_DATES).",
       "dependencies": [
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
@@ -16,7 +16,7 @@
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
       ],
-      "sha256": "763af51a190fba184e80eae3dfa40b6629c14f9edc6a53163f58db1d46490bed"
+      "sha256": "dd94f71b67216b7dcf8fc8063947821e0a8bbe3b794e5269e0b57851cb123e3d"
     },
     "/public-institutions": {
       "contentDate": "2026-10-19",
@@ -230,8 +230,8 @@
     },
     "/calc/samsung-bonus": {
       "contentDate": "2026-10-19",
-      "reviewedAtCommit": "5ccd079e6ff58f48b5896abeae13e0a71c949058",
-      "reason": "579d60bb (October 19) aligns OPI2/net-estimate metadata and adds saved scenarios; this release also adds explanatory next-step content. The September 25 shared engine is only a lower bound. Reviewed October 20: the three ChartViewToggle button classes now use an inset keyboard focus indicator. The one-line style-only diff changes no calculations, visible copy or editorial content; retain the existing contentDate. Reviewed October 23 at e2961ffb: the Client diff stops writing private input hashes and uses a public share destination/image while retaining incoming hash decoding. The revised sharing notice explains that approved result text can contain amounts but the destination has no private inputs. Bonus formulas, OPI data and the financial article are unchanged, so retain the October 19 editorial content date. Rehashed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-16a, PKG-24): PKG-16a blocks double counting when a year already used by another simulator row is typed and shows 하위 25% instead of a fixed 상위 90% below the reference table; PKG-24 STR-04 A ports only the head source comments and the collapsed grade-multiplier FAQ (visible above-ad source wording is held as STR-04-B). The 2026-10-19 date is retained.",
+      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
+      "reason": "579d60bb (October 19) aligns OPI2/net-estimate metadata and adds saved scenarios; this release also adds explanatory next-step content. The September 25 shared engine is only a lower bound. Reviewed October 20: the three ChartViewToggle button classes now use an inset keyboard focus indicator. The one-line style-only diff changes no calculations, visible copy or editorial content; retain the existing contentDate. Reviewed October 23 at e2961ffb: the Client diff stops writing private input hashes and uses a public share destination/image while retaining incoming hash decoding. The revised sharing notice explains that approved result text can contain amounts but the destination has no private inputs. Bonus formulas, OPI data and the financial article are unchanged, so retain the October 19 editorial content date. Rehashed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-16a, PKG-24): PKG-16a blocks double counting when a year already used by another simulator row is typed and shows 하위 25% instead of a fixed 상위 90% below the reference table; PKG-24 STR-04 A ports only the head source comments and the collapsed grade-multiplier FAQ (visible above-ad source wording is held as STR-04-B). The 2026-10-19 date is retained. Rehashed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B17 SRR-04): model.ts takes a rates parameter defaulting to CURRENT_INSURANCE_RATES for both decided-tax calls, and Client.tsx derives the deduction labels from CURRENT_RATE_LABELS. With the 2026 rates current, the rendered output is identical, so the 2026-10-19 date is retained.",
       "dependencies": [
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
@@ -255,12 +255,12 @@
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
       ],
-      "sha256": "f98c4b80514a294e38beffe2c47c3a0c8884b932fc535de0a927eb2c51647c9a"
+      "sha256": "54eb0cb6b67a12594f66183ef903c9db1abc8c936d41ad6852e07fd7da109fb9"
     },
     "/calc/sk-hynix-bonus": {
-      "contentDate": "2026-10-04",
-      "reviewedAtCommit": "5ccd079e6ff58f48b5896abeae13e0a71c949058",
-      "reason": "352451886 (October 4) corrects the cash/stock and percentage-point FAQ assumptions. Later merge timestamps alone do not date new content. Rehashed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-24): CTR-5 rewrites the ratified-branch head title and description to lead with the PS pool (operating profit 10%) and the cash/stock split, and psData gains public-source URL comments only. Head metadata and comments only, so the 2026-10-04 date is retained.",
+      "contentDate": "2026-11-01",
+      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
+      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B27 DATA-03): the operating-profit scenario chips use the Q3 results (보수 181.5조 with the fourth quarter at 0, 누적 연환산 242조 = 181.5조×4/3), the step-1 paragraph says 1~3분기, the footer 마지막 갱신 shows psData LAST_UPDATED 2026-11-01, and the collapsed PS FAQ answer (also in FAQPage JSON-LD) and the HowTo cite the 10/28 SK hynix newsroom cumulative operating profit. Visible content change: content date advanced from 2026-10-04 to 2026-11-01.",
       "dependencies": [],
       "files": [
         "src/app/calc/sk-hynix-bonus/Client.tsx",
@@ -269,12 +269,12 @@
         "src/app/calc/sk-hynix-bonus/page.tsx",
         "src/app/calc/sk-hynix-bonus/psData.ts"
       ],
-      "sha256": "ed8a6d9cb3c14cc106660e710397a4f9bbd953ccd927e3dde33262b755f03ff8"
+      "sha256": "dd1297c9b28101904a0bb5165dd64438f084d00a5de435e03be374e961347648"
     },
     "/calc/bonus-calculators": {
-      "contentDate": "2026-10-09",
-      "reviewedAtCommit": "5ccd079e6ff58f48b5896abeae13e0a71c949058",
-      "reason": "Reviewed October 25 against 8bccfd38 plus this candidate. This narrow correction updates only the tax-saving FAQ: distinguish eligible personal contributions under the general 6m savings/9m combined pension limits, the separate ISA transfer exception, national 15%/12% credit rates and actual refund; remove unsupported contribution-timing/max-effect wording. Source: NTS pension-account guidance, cntntsId=7875, rechecked October 25. The visible FAQ and JSON-LD share this answer. Retain the October 9 editorial date; this review does not refresh company payout claims, page title, calculation features or advertising. Rehashed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-24 OPP-26): the collapsed tax-saving FAQ answer again names the source-checked main methods (pension accounts, employee stock ownership contribution deduction) without timing or maximum-effect claims. Collapsed FAQ only, so the 2026-10-09 date is retained.",
+      "contentDate": "2026-11-01",
+      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
+      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B27 DATA-03): the visible 최근 소식 list (src/data/bonusCalcHub.ts) gains the 10/28 SK hynix Q3 results item at the top and drops the oldest 2026-05-27 item. That data file is not hashed for this route, so the source hash is unchanged; as with the 2026-10-09 news update, the content date is advanced from 2026-10-09 to 2026-11-01.",
       "dependencies": [],
       "files": [
         "src/app/calc/bonus-calculators/page.tsx"
@@ -352,13 +352,20 @@
     },
     "/year-end-tax": {
       "contentDate": "2026-11-01",
-      "reviewedAtCommit": "5ccd079e6ff58f48b5896abeae13e0a71c949058",
-      "reason": "Reviewed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-10, PKG-20). PKG-10 CALC-02 lets the year-end engine choose the 130,000 won standard tax credit when it gives a lower determined tax; PKG-20 SEO-07-a retitles the page to the 2027 연말정산 (2026년 귀속) frame and PKG-20 corrects the meta description input list and collapsed FAQ facts (pension-account limit wording, 2026 attribution changes). Result and fact changes: content date advanced from 2026-10-04 to 2026-11-01 (the page has no revision date field).",
-      "dependencies": [],
-      "files": [
-        "src/app/year-end-tax/page.tsx"
+      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
+      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B24 YE-03 and STR-10): the calculator gains inputs inside the collapsed accordions (주택청약, 전통시장, 대중교통, 문화·체육, 자녀세액공제 대상 자녀, 출산·입양, 혼인, 의료비 구분, 보험료, 월세, 교육비), and the engine applies the 주택청약 총급여 7천만원 requirement (조특법 제87조②) and the 700만원 cap on other-dependent medical; the default first view is byte-identical. Result change: the content date stays at the release date 2026-11-01 (the page has no revision date field). The calculator component, the engine and taxConstants2026.ts are now dependencies, so later edits to them require a content review of this route.",
+      "dependencies": [
+        "src/components/YearEndTaxCalculator.tsx",
+        "src/lib/yearEndTaxCalculator.ts",
+        "src/lib/taxConstants2026.ts"
       ],
-      "sha256": "7521ebb4fbb5801650157b9843c336b72c4932150c5e0cade8b77ed89f00a1c4"
+      "files": [
+        "src/app/year-end-tax/page.tsx",
+        "src/components/YearEndTaxCalculator.tsx",
+        "src/lib/taxConstants2026.ts",
+        "src/lib/yearEndTaxCalculator.ts"
+      ],
+      "sha256": "ca66e06ff20d3bed2486e6f237588969672f79b7d8e7ea41fc820049bc6b0642"
     },
     "/year-end-tax-2027": {
       "contentDate": "2026-09-25",
@@ -382,8 +389,8 @@
     },
     "/chuseok-bonus-2026": {
       "contentDate": "2026-10-19",
-      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
-      "reason": "1895f456e only changes seasonal wording (before/around Chuseok), which did not warrant a new article date. This release adds explanatory bonus/tax next steps on October 19, with visible/OG/Article dates synchronized.",
+      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
+      "reason": "1895f456e only changes seasonal wording (before/around Chuseok), which did not warrant a new article date. This release adds explanatory bonus/tax next steps on October 19, with visible/OG/Article dates synchronized. Rehashed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B36 P2UX-03, owner approval 2026-11-01): the visible, OG and Article revision dates return to 2026-09-25, the last substantive revision (A18 78f10ee20 changed the mini calculator results through calcBonusNet); the October 19 change only added the TopicNextSteps link box, so the sitemap keeps the 2026-10-19 link-review date (PAGE_VISIBLE_REVISION_DATES).",
       "dependencies": [
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
@@ -394,7 +401,7 @@
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
       ],
-      "sha256": "244ca8be3fe365df0633524e0bd244f4f00e0d13f07423d595c873b7fd6e8f01"
+      "sha256": "3edd9a4b61ff5b8f0be1d71eda168693e01ce4fb799b92a111926de42c4ce2e3"
     },
     "/tax-reform-2026": {
       "contentDate": "2026-09-30",
@@ -408,8 +415,8 @@
     },
     "/civil-servant-pay-2027": {
       "contentDate": "2026-10-19",
-      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
-      "reason": "69ddc736a (September 27) adds a contextual civil-net-pay reference; this release adds public-institution/career next-step explanations on October 19.",
+      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
+      "reason": "69ddc736a (September 27) adds a contextual civil-net-pay reference; this release adds public-institution/career next-step explanations on October 19. Rehashed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B36 P2UX-03, owner approval 2026-11-01): the visible, OG and Article revision dates return to 2026-09-25 (B20 lead and FAQ); the 9/27 backlink and the 10/19 link box are not substantive, so the sitemap keeps the 2026-10-19 link-review date (PAGE_VISIBLE_REVISION_DATES).",
       "dependencies": [
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
@@ -420,12 +427,12 @@
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
       ],
-      "sha256": "a36bc192dbd740fd84be4663fe74c5601900c1e41f2c609ef9dd77b15be80923"
+      "sha256": "176f8ead7f849f365d3ad9b6e4f5a5296a04d7787777d69439292a9c9005911e"
     },
     "/calc/dual-income-year-end": {
       "contentDate": "2026-11-01",
-      "reviewedAtCommit": "5ccd079e6ff58f48b5896abeae13e0a71c949058",
-      "reason": "Reviewed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-10, PKG-11, PKG-20). PKG-10 CALC-02 makes the shared year-end engine compare the 130,000 won standard tax credit path and keep the lower determined tax, which changes results for splits with few special deductions; PKG-11 corrects the allocation sentence particle (본인이 결제·공제); PKG-20 SEO-07-a retitles the page to the 2027 연말정산 (2026년 귀속) frame. Calculation change: content date advanced from 2026-10-26 to 2026-11-01 (the page has no revision date field).",
+      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
+      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B23, B24, B25, B26). B24 YE-03 treats couple medical (서로를 위한 의료비) as other-dependent medical capped at 700만원 after the 3% threshold (소득세법 제59조의4②) and rewords the disclosure above the result ad; B25 P4-06 raises the default couple-medical example from 100만 to 300만원 so the first view shows a 90,000원 saving, and a tie reads 어느 쪽이든 같음; B26 STR-02-o adds the split-children condition (본인/배우자 쪽 자녀 지출일 때만 가능, 소득세법 제59조의4②③④) to the allocation line; B23 only adds the engine breakdown field. Result changes: the content date stays at the release date 2026-11-01 (the page has no revision date field).",
       "dependencies": [
         "src/lib/dualIncomeYearEnd2026.ts",
         "src/lib/yearEndTaxCalculator.ts",
@@ -438,7 +445,7 @@
         "src/lib/taxConstants2026.ts",
         "src/lib/yearEndTaxCalculator.ts"
       ],
-      "sha256": "43abf3278ef2c57aa3db139758483b894cfdd08bc774ed0512aa4b78097c5b05"
+      "sha256": "28516eb9c1531536debe33327959f3d0a69a4fdae2641d5ca1d108e7a3ab3a56"
     },
     "/calc/voluntary-retirement": {
       "contentDate": "2026-09-03",
@@ -486,8 +493,8 @@
     },
     "/calc/child-deduction": {
       "contentDate": "2026-10-26",
-      "reviewedAtCommit": "5ccd079e6ff58f48b5896abeae13e0a71c949058",
-      "reason": "Reviewed October 26 against d4ea1985 plus this candidate: correct the 2026 annual child-credit eligibility to age 9+ excluding 2017 births under Act 21548 supplementary article 2 and Income Tax Act article 53; split basic-deduction children from the eligible annual-credit subset. Preserve basic and birth/adoption credit amounts; no whole-page financial certification. Rehashed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-10, PKG-20): PKG-10 adds the 130,000 won standard tax credit constant to the shared taxConstants2026 dependency (no child deduction or credit value changes) and PKG-20 SEO-07-a retitles the page. This calculator's results are unchanged, so the 2026-10-26 date is retained.",
+      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
+      "reason": "Reviewed October 26 against d4ea1985 plus this candidate: correct the 2026 annual child-credit eligibility to age 9+ excluding 2017 births under Act 21548 supplementary article 2 and Income Tax Act article 53; split basic-deduction children from the eligible annual-credit subset. Preserve basic and birth/adoption credit amounts; no whole-page financial certification. Rehashed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-10, PKG-20): PKG-10 adds the 130,000 won standard tax credit constant to the shared taxConstants2026 dependency (no child deduction or credit value changes) and PKG-20 SEO-07-a retitles the page. This calculator's results are unchanged, so the 2026-10-26 date is retained. Rehashed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B24): taxConstants2026.ts gains HOUSING_SUBSCRIPTION_DEDUCTION_2026 and an updated MEDICAL_CREDIT_2026 comment, neither used by this calculator. Results are unchanged, so the 2026-10-26 date is retained.",
       "dependencies": [
         "src/lib/childDeduction.ts",
         "src/lib/taxConstants2026.ts"
@@ -498,7 +505,7 @@
         "src/lib/childDeduction.ts",
         "src/lib/taxConstants2026.ts"
       ],
-      "sha256": "6d4e65ad2f5c13f04ef505981b6ad7712457aeddca0e59ab9500651ca22faae4"
+      "sha256": "f5ef7ed26f2446ec4f432e66973de0a09710faa1936b2a2b7d1a7f5d15d03c58"
     },
     "/tax-changes-2026": {
       "contentDate": "2026-11-01",
@@ -594,15 +601,18 @@
       "sha256": "01f58ce93c254e9f95a920b78ec274b163ff394c1fe61fe849f63cbf5cff13d9"
     },
     "/donation-tax-credit-2026": {
-      "contentDate": "2026-09-25",
-      "reviewedAtCommit": "5ccd079e6ff58f48b5896abeae13e0a71c949058",
-      "reason": "September 25 donation-rate and explanatory corrections (af8b1426e/bd68d8607). fa26128f3 (September 26) only wires measurement events; it is not an editorial revision. Rehashed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-20 SEO-07-a): the head title moves to the 2027 연말정산 (2026년 귀속) frame. Title only, so the 2026-09-25 date is retained.",
-      "dependencies": [],
+      "contentDate": "2026-11-01",
+      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
+      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B26 STR-02-o): the result-card basis line is corrected to (산출세액 한도 미반영), and a conditional row 산출세액(최대치) 초과 미공제분(특례·일반은 이월) appears when the credit exceeds the computed-tax ceiling (donationTaxCeiling2026; 소득세법 제61조② carryover). Fact correction and new result row: content date advanced from 2026-09-25 to 2026-11-01 (the page has no revision date field). src/lib/donationCredit.ts is now a dependency because the new row comes from it.",
+      "dependencies": [
+        "src/lib/donationCredit.ts"
+      ],
       "files": [
         "src/app/donation-tax-credit-2026/Client.tsx",
-        "src/app/donation-tax-credit-2026/page.tsx"
+        "src/app/donation-tax-credit-2026/page.tsx",
+        "src/lib/donationCredit.ts"
       ],
-      "sha256": "e479beeb0fec0d4e963b115c82c1bcc14f95497652bcef37d108fc99eeeeab40"
+      "sha256": "264954beb384a6ceb06495a7fc77d72f39e2a1f985de4e109912a6c2477b6bbe"
     },
     "/health-insurance-dependent": {
       "contentDate": "2026-10-17",
@@ -617,8 +627,8 @@
     },
     "/social-insurance-rates-2027": {
       "contentDate": "2026-11-01",
-      "reviewedAtCommit": "5ccd079e6ff58f48b5896abeae13e0a71c949058",
-      "reason": "Reviewed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-10 DATA-01): the 2027 long-term-care ratio is the confirmed 13.90% of the health premium (decided 2026-10-30, MOHW) in taxConstants2027 and in the LTC card, hero line, FAQ and simulation totals; only industrial-accident and employment insurance stay unconfirmed. Substantive rate correction: content date advanced from 2026-10-04 to 2026-11-01, matching modifiedTime and the visible updated date.",
+      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
+      "reason": "Reviewed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-10 DATA-01): the 2027 long-term-care ratio is the confirmed 13.90% of the health premium (decided 2026-10-30, MOHW) in taxConstants2027 and in the LTC card, hero line, FAQ and simulation totals; only industrial-accident and employment insurance stay unconfirmed. Substantive rate correction: content date advanced from 2026-10-04 to 2026-11-01, matching modifiedTime and the visible updated date. Rehashed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B17, B24): B17 changes only a taxConstants2027.ts comment (employment-insurance decree pre-announcement status and the ministry URL; the 0.9% rate stays provisional), and B24 adds HOUSING_SUBSCRIPTION_DEDUCTION_2026 and a MEDICAL_CREDIT_2026 comment to taxConstants2026.ts, neither used by this page. No visible change, so the 2026-11-01 date is retained.",
       "dependencies": [
         "src/lib/insuranceRateExample.ts",
         "src/lib/pensionHike.ts",
@@ -632,7 +642,7 @@
         "src/lib/taxConstants2026.ts",
         "src/lib/taxConstants2027.ts"
       ],
-      "sha256": "ac7bcf1b10f5b1545cf868a874ee2c5c3e19b06a41a6321168ca93c240f931ba"
+      "sha256": "86913314d883c2cb01d3eea40fd2dc5ea6b02c94802dec498fe16ac93a242c50"
     },
     "/military-pay-2026": {
       "contentDate": "2026-09-27",
@@ -646,14 +656,19 @@
       "sha256": "cf2a5f4d16c770d7131ee3210b387a8bf8fb92091e70e9894015316d00cd18aa"
     },
     "/teacher-pay-2026": {
-      "contentDate": "2026-10-04",
-      "reviewedAtCommit": "60d647aa95d352cc2a80fce78f5dfd5c7241df80",
-      "reason": "352451886 (October 4) corrects the destination and label to the teacher-specific civil-net-pay model. The October 23 review against 60d647aa plus the recorded source patch distinguishes only the copied quote's base-pay and homeroom-allowance regulation names, verified in current Allowances Regulations Annex 11 (effective October 2, 2026; official PDF flSeq169692831, pages 6-8). Amounts, calculation, title and layout are unchanged; this bibliographic correction retains the October 4 content date.",
-      "dependencies": [],
-      "files": [
-        "src/app/teacher-pay-2026/page.tsx"
+      "contentDate": "2026-11-01",
+      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
+      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B35 NEW-v12-search-console-2): a closed details box 1~40호봉 전체 보기 after the FAQ, below the last in-content ad (the Coupang slot), shows all 40 rows of the 2026 teacher pay table (TEACHER_PAY_FULL_2026) with a source note, and the Dataset JSON-LD description changed. MODIFIED (modifiedTime, Article modifiedDate, visible 최종 갱신) is 2026-11-01. Content date advanced from 2026-10-04 to 2026-11-01. src/lib/civilServantPay.ts and src/lib/payTablesFull2026.ts are now dependencies because the excerpt and the full table render from them.",
+      "dependencies": [
+        "src/lib/civilServantPay.ts",
+        "src/lib/payTablesFull2026.ts"
       ],
-      "sha256": "3699d73d5de8d172a9ee8300fe193b9489a29e9d2885a64bf11960ad26cd9458"
+      "files": [
+        "src/app/teacher-pay-2026/page.tsx",
+        "src/lib/civilServantPay.ts",
+        "src/lib/payTablesFull2026.ts"
+      ],
+      "sha256": "9a950dad2718c8e7caf8859da63086785439471b8de83e1eca3487c8e5d98380"
     },
     "/police-pay-2026": {
       "contentDate": "2026-10-04",
@@ -784,6 +799,40 @@
         "src/lib/topicNextSteps.ts"
       ],
       "sha256": "1f09ab5f06bf01e5d6e3fcb12abf4cea819505f2163e77c2fbd72f4bcba3a08c"
+    },
+    "/calc/january-bonus": {
+      "contentDate": "2026-11-01",
+      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
+      "reason": "New explicit review 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B23 CALC-01): the 13월의 월급 simulator now runs on the canonical year-end engine (calculateYearEndTax through src/lib/januaryBonus2026.ts, with the four social-insurance deductions), so the default refund changes from +731,125원 to +532,183원 together with the withheld and 결정세액 rows, and the donation input becomes 고향사랑기부금 (10만원 전액). Result change: first explicit ledger entry and sitemap override at 2026-11-01 (previously STATIC_LAST_MODIFIED 2026-07-16; the page has no revision date field).",
+      "dependencies": [
+        "src/lib/januaryBonus2026.ts",
+        "src/lib/yearEndTaxCalculator.ts",
+        "src/lib/taxConstants2026.ts"
+      ],
+      "files": [
+        "src/app/calc/january-bonus/Client.tsx",
+        "src/app/calc/january-bonus/page.tsx",
+        "src/lib/januaryBonus2026.ts",
+        "src/lib/taxConstants2026.ts",
+        "src/lib/yearEndTaxCalculator.ts"
+      ],
+      "sha256": "bdc8afc21506c19d781d9452db26109444fc74d0d9fbbad6cc3c0135a350b586"
+    },
+    "/property-holding-tax-2026": {
+      "contentDate": "2026-11-01",
+      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
+      "reason": "New explicit review 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus R2-HOLD): the result total and the 12월 row now include 농어촌특별세 (20% of the payable 종부세) and the 1세대 1주택 고령자·장기보유 credits (combined 80% cap), the row label reads 종부세·농특세, a 12월 종부세 상세 section with age and holding-period selects sits below the last ad, and FAQ answers 1 and 3 plus the HowTo JSON-LD changed. Result change: first explicit ledger entry and sitemap override at 2026-11-01 (previously STATIC_LAST_MODIFIED 2026-07-16), with modifiedTime moved from 2026-08-30 to 2026-11-01.",
+      "dependencies": [
+        "src/lib/propertyHoldingTax2026.ts"
+      ],
+      "files": [
+        "src/app/property-holding-tax-2026/PropertyHoldingTaxClient.tsx",
+        "src/app/property-holding-tax-2026/PropertyHoldingTaxDetail.tsx",
+        "src/app/property-holding-tax-2026/holdingTaxInputs.ts",
+        "src/app/property-holding-tax-2026/page.tsx",
+        "src/lib/propertyHoldingTax2026.ts"
+      ],
+      "sha256": "5a0dec418fcff6925fc889fc5fa23d6484282d830a332471cd23818b77a16dd1"
     }
   }
 }
