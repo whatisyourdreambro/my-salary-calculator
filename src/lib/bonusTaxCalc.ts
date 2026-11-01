@@ -17,8 +17,8 @@
 // ★ 2026 블록을 제자리 수정 금지 — 연도 전환은 calcBonusNet 의 선택 인자 rates 로 한다.
 //   calcBonusNet 의 기본값은 현행 요율 포인터(src/config/currentRates.ts CURRENT_INSURANCE_RATES —
 //   지금은 2026)라 1/1 전환은 포인터 한 줄로 인자 없는 성과급 계산기 전부에 반영된다.
-//   estimateAnnualIncomeTax2026 의 기본값은 2026 고정이다 — 인자 없이 부르는 곳(samsung-bonus/model.ts)이
-//   다른 호출에 2026 요율을 명시하고 있어, 기본값만 포인터로 바꾸면 한 계산 안에서 연도가 섞인다.
+//   estimateAnnualIncomeTax2026 의 기본값은 2026 고정이다(런북 §5-1 '2026 고정' 열) — 현행 연도 계산은 rates 를
+//   명시해 부른다. samsung-bonus/model.ts 는 2026-11-01 B17(런북 P-3)부터 두 결정세액 호출에 같은 rates 를 넘긴다.
 
 import { CURRENT_INSURANCE_RATES } from "@/config/currentRates";
 import {

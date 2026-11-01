@@ -129,6 +129,16 @@ export const RATE_YEAR_SURFACES: RateYearSurface[] = [
     expected: (y) => [` ${y} 기준 · 성과급 연간 간이 추정`],
   },
   {
+    // 2026-11-01 B17(런북 P-3): 삼성 계산(model.ts 기본 요율)이 포인터를 따르게 되면서 공제 행 요율 라벨도 CURRENT_RATE_LABELS 파생.
+    // 건강보험 3.595% 는 2027 동결이라, 고용보험은 2027 미확정이라 두 해를 가르는 연금·장기요양 라벨만 본다.
+    id: "/calc/samsung-bonus 공제 항목 상세 요율 라벨",
+    load: async () => render((await import("@/app/calc/samsung-bonus/Client")).default),
+    expected: (y) =>
+      y === 2026
+        ? ["국민연금 (4.75% · 기준소득월액 상한 적용)", "장기요양 (건강보험의 13.14%)"]
+        : ["국민연금 (5.0% · 기준소득월액 상한 적용)", "장기요양 (건강보험의 13.9%)"],
+  },
+  {
     id: "/pro/career-planner FAQ",
     load: async () => render((await import("@/app/pro/career-planner/page")).default),
     expected: (y) => [`머니샐러리 홈의 연봉 계산기에서 ${y}년 세법 기준으로 확인하세요.`],

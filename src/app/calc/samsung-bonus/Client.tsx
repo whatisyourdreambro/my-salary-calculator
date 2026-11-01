@@ -20,6 +20,7 @@ import {
   Share2,
 } from "lucide-react";
 import { DEFAULT_BONUS_CREDIT_RATE } from "@/lib/bonusTaxCalc";
+import { CURRENT_RATE_LABELS } from "@/config/currentRates";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 import { isValidCalculationNumber } from "@/lib/calculationMeasurement";
 import {
@@ -1351,20 +1352,21 @@ function MySalaryCalculator({
               />
               {applyInsurance && (
                 <>
+                  {/* 요율 라벨은 계산(model.ts 기본 요율 = 현행 포인터)과 같은 출처 — 1/1 전환 때 함께 바뀐다 (2026-11-01 B17) */}
                   <DeductRow
-                    label="국민연금 (4.75% · 기준소득월액 상한 적용)"
+                    label={`국민연금 (${CURRENT_RATE_LABELS.pension} · 기준소득월액 상한 적용)`}
                     value={personal.breakdown.nationalPension}
                   />
                   <DeductRow
-                    label="건강보험 (3.595%)"
+                    label={`건강보험 (${CURRENT_RATE_LABELS.health})`}
                     value={personal.breakdown.healthIns}
                   />
                   <DeductRow
-                    label="장기요양 (건강보험의 13.14%)"
+                    label={`장기요양 (건강보험의 ${CURRENT_RATE_LABELS.ltcRatio})`}
                     value={personal.breakdown.longTermCare}
                   />
                   <DeductRow
-                    label="고용보험 (0.9%)"
+                    label={`고용보험 (${CURRENT_RATE_LABELS.employment})`}
                     value={personal.breakdown.employment}
                   />
                 </>

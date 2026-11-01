@@ -57,6 +57,10 @@ import { calcAnnualNet } from "@/app/salary-raise-2026/Client";
 import MonthlyPage, { generateMetadata as monthlyMetadata } from "@/app/monthly/[amount]/page";
 import SalaryPage, { generateMetadata as salaryMetadata } from "@/app/salary/[amount]/page";
 import { GET as salaryWidget } from "@/app/widget/salary/route";
+import { calcSamsungBonusNet } from "@/app/calc/samsung-bonus/model";
+import { computeComp, defaultTaiBaseMonthly, SAMSUNG_OPI1_DEFAULT_PCT } from "@/lib/bonusHome/compEngines";
+import { companyScenarioOps } from "@/lib/bonusHome/scenarios";
+import { INSURANCE_RATES_2026 } from "@/lib/taxConstants2026";
 import { RATE_YEAR_SURFACES } from "./currentRatesSurfaces";
 
 const adv = { isSmeYouth: false, disabledDependents: 0, seniorDependents: 0 };
@@ -100,6 +104,37 @@ describe("1/1 전환 리허설 — 포인터 2027", () => {
     expect(row.monthlyNet).toBe(3_571_546);
     expect(calculateNetSalary2026(200_000_000, 0, 1, 0, adv).pension).toBe(Math.round(6_590_000 * 0.0475));
     expect(calcAnnualNet(50_000_000)).toBe(3_571_546 * 12);
+  });
+
+  it("삼성 성과급 계산기(samsung-bonus/model.ts)도 기본 요율이 2027 로 바뀐다 — 런북 P-3 (2026-11-01 B17)", () => {
+    // 연봉 5,000만은 국민연금 연 상한 미달 → 성과급 500만 전액 × 5.0%
+    const t = calcSamsungBonusNet(50_000_000, 5_000_000, 0, true);
+    expect(t).toEqual(calcSamsungBonusNet(50_000_000, 5_000_000, 0, true, INSURANCE_RATES_2027));
+    expect(t.breakdown.nationalPension).toBeCloseTo(250_000, 6);
+    // 공통 엔진(calcBonusNet 기본 = 포인터)과 원 단위 일치 — model.test.ts 와 같은 단언이 전환 뒤에도 성립
+    const s = calcSamsungBonusNet(80_000_000, 40_000_000, 0, true);
+    const b = calcBonusNet(80_000_000, 40_000_000);
+    expect(Math.abs(s.net - b.net)).toBeLessThanOrEqual(1);
+    expect(Math.abs(s.breakdown.incomeTax - b.incomeTaxDelta)).toBeLessThanOrEqual(1);
+  });
+
+  it("성과급 내 집 마련 계산기(/calc/bonus-home-plan, 2026 요율·세율 기준)의 삼성 세후는 2026 요율에 머문다", () => {
+    const r = computeComp({
+      company: "samsung",
+      division: "memory",
+      salary0: 80_000_000,
+      wageGrowthPct: 6.2,
+      ops: companyScenarioOps("samsung", "base"),
+      opi1Pct: SAMSUNG_OPI1_DEFAULT_PCT,
+      taiBaseMonthly0: defaultTaiBaseMonthly(80_000_000),
+      piPct: 150,
+      customBonusPct: 0,
+      stockGrowthPct: 0,
+    });
+    const y = r.years[0];
+    expect(y.net).toBe(calcSamsungBonusNet(y.salary, y.gross, 0, true, INSURANCE_RATES_2026).net);
+    // 포인터(2027) 기본 호출과는 달라야 한다 — 같으면 2026 고정이 풀린 것
+    expect(y.net).not.toBe(calcSamsungBonusNet(y.salary, y.gross, 0, true).net);
   });
 
   it("/monthly/3000000 — 제목·설명·FAQ 가 2027 연도·요율·금액으로 함께 바뀐다", async () => {

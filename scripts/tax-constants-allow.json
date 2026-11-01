@@ -31,6 +31,7 @@
     "note": "2026-09-25 N3 리뷰 반영: 1/1 요율 전환 표기 스캔 목록 — verify-tax-constants.mjs 가 주석 아닌 줄의 '2026년 세법·모델·요율'·'국민연금 4.75%' 표기를 찾아 대조한다. 파일 경로에 2026/2027 이 든 파일은 자동으로 연도 고정. 포인터가 계산을 바꾸는 표면은 여기 올리지 말고 CURRENT_RATES_YEAR·CURRENT_RATE_LABELS 로 파생할 것. fixed = 전환 뒤에도 그대로(연도 고정·포인터 무관), manual = 전환 당일(또는 그 전) 문자열 교체 — 포인터 2027 에서 표기가 남아 있으면 verify:tax 실패. 런북 docs/next-upgrade-plan-2026-09-11.md §5-1 P-4.",
     "fixed": {
       "src/app/health-insurance-dependent/page.tsx": "링크 라벨 '2026 4대보험 요율표' — 연도 페이지 /social-insurance-rates-2026 로 가는 링크",
+      "src/app/calc/samsung-bonus/Client.tsx": "공제 안내의 링크 라벨 '2026 4대보험 요율표' — 연도 페이지 /social-insurance-rates-2026 로 가는 링크. 공제 행 요율 라벨은 2026-11-01 B17(런북 P-3)에서 CURRENT_RATE_LABELS 파생으로 바꿔 manual 에서 옮겼다",
       "src/config/seasonLinks.ts": "푸터 링크 라벨 '2026 4대보험 요율' — 연도 페이지 링크",
       "src/lib/searchIndex.ts": "검색 항목 '2026 4대보험 요율' — 연도 페이지 링크",
       "src/lib/simpleCalculators/enrichments.ts": "earned-income-tax-quick 산식 설명 — 2026 간이세액표 근사라 2026 요율 고정(batch1 과 같음)",
@@ -41,13 +42,12 @@
       "src/app/tools/finance/stock-tax/": "'2026 세법 기준' 배지 — 양도소득세, 4대보험 포인터 무관",
       "src/app/tools/real-estate/acquisition-tax/": "'2026 세법 기준' 배지 — 취득세, 4대보험 포인터 무관",
       "src/app/tools/real-estate/gift-tax/": "'2026 세법 기준' 배지 — 증여세, 4대보험 포인터 무관",
-      "src/app/calc/bonus-home-plan/Client.tsx": "연도별 표 캡션 '2026년 요율·세율 기준' — 성과급 세후는 compEngines 가 calcBonusNet 에 INSURANCE_RATES_2026 을 명시하고 삼성은 model.calcSamsungBonusNet(2026 고정)이라 포인터 무관. 삼성 model 을 포인터로 옮기는 런북 P-3 때 compEngines 와 이 문구를 함께 고친다",
+      "src/app/calc/bonus-home-plan/Client.tsx": "연도별 표 캡션 '2026년 요율·세율 기준' — 성과급 세후는 compEngines 가 calcBonusNet 과 model.calcSamsungBonusNet 양쪽에 INSURANCE_RATES_2026 을 명시해 포인터 무관(2026-11-01 B17 런북 P-3: 삼성 model 기본값이 현행 포인터로 바뀌어 compEngines 가 2026 요율을 명시하게 했다 — 이 문구는 그대로 맞다)",
       "src/lib/guides/supplements.ts": "간호사 가이드 보강 — 본문 2026년 요율 표(legacy-rewrite-2)를 가리키는 연도 명시 문장. 그 표를 2027 로 다시 계산하면 함께 고친다",
       "src/lib/guidesMeta.generated.ts": "gen-guides-meta 산출물 — 손으로 고치지 않는다. 정본 가이드 파일(manual)을 고친 뒤 재생성하면 따라간다"
     },
     "manual": {
       "src/app/calc/holiday-bonus/page.tsx": "메타 설명 '2026년 세법 기준' — /calc 제목·설명 동결(10/10) 뒤 CURRENT_RATES_YEAR 로 파생하거나 전환 당일 교체(본문은 파생 완료)",
-      "src/app/calc/samsung-bonus/Client.tsx": "라벨 '국민연금 (4.75% …)' — P-3 삼성 배치와 함께. 남는 '2026 4대보험 요율표' 링크 라벨은 연도 페이지 링크라 그때 fixed 로 옮긴다",
       "src/app/embed/page.tsx": "FAQ '공통적으로 2026년 세법 기준' — 연말정산 위젯은 2026 귀속 고정이라 파생 불가, 전환 당일 문장 교체",
       "src/app/qna/layout.tsx": "메타 설명 '2026년 세법 기준' — qnaData 의 요율·금액(P-4)과 함께 교체",
       "src/app/region/[slug]/page.tsx": "메타 설명 '2026 세법 기준' — 제목 '평균 연봉 2026' 과 함께 연도 롤오버",

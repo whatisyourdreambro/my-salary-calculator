@@ -4,6 +4,9 @@
 // 스냅샷한 것이다. 세율(taxConstants2026)·가중치·인원 기본값이 바뀌면 이 파일도 같은 커밋에서
 // 갱신한다. jsdom 없음 — 순수 함수만 검증. 세후 동결값은 2026-09-25 A18 에서 공통 엔진 기준으로
 // 재산출했다(손 검산 주석 포함). 풀 분배(791/553/252% 매칭) 값은 세금과 무관해 그대로다.
+// 2026-11-01 B17(런북 §5-1 P-3): 요율 인자 rates(기본 = 현행 요율 포인터)가 생겼다. 세후 동결값은
+// '2026 요율 명시 호출'에 고정하고, 기본 호출은 '현행 포인터 명시 호출'과 같음을 본다(taxRatesParam.test.ts
+// 와 같은 방식) — 지금(포인터 = 2026)은 기본 호출도 동결값과 같고, 1/1 포인터 전환 뒤에도 수정 없이 통과한다.
 import { describe, expect, it } from "vitest";
 import {
   DIVISIONS,
@@ -20,6 +23,11 @@ import {
 } from "./model";
 import { OPI1_DEFAULT_RATE, OPI1_MAX_RATE, OPI_LATEST_TOP } from "./opiData";
 import { calcBonusNet } from "@/lib/bonusTaxCalc";
+import { CURRENT_INSURANCE_RATES } from "@/config/currentRates";
+import { INSURANCE_RATES_2026 } from "@/lib/taxConstants2026";
+import { INSURANCE_RATES_2027 } from "@/lib/taxConstants2027";
+
+const R26 = INSURANCE_RATES_2026;
 
 const pct = (manwon: number) => (manwon * 10_000) / REFERENCE_SALARY * 100;
 
@@ -85,8 +93,8 @@ describe("samsung-bonus/model calcSamsungBonusNet — 세후 동결값", () => {
   //   T(1억 2,000만) — 근로소득공제 1,515만, 연금 3,756,300, 건강·장기요양 4,880,859.6,
   //     고용 108만 → 과표 93,632,840.4 → 산출 17,331,494 − 50만 = 16,831,494
   //   소득세 증가분 = 9,406,744 (종전 '산출세액 차이 × (1 − 30%)' = 7,666,750)
-  it("연봉 8,000만 · 성과급 4,000만(OPI1 50%) · 추가 공제 0%(기본) · 4대보험 ON", () => {
-    const t = calcSamsungBonusNet(80_000_000, 40_000_000, 0, true);
+  it("연봉 8,000만 · 성과급 4,000만(OPI1 50%) · 추가 공제 0%(기본) · 4대보험 ON — 2026 요율 명시", () => {
+    const t = calcSamsungBonusNet(80_000_000, 40_000_000, 0, true, R26);
     expect(t.net).toBeCloseTo(27_665_628.4, 1);
     expect(t.deduct).toBeCloseTo(12_334_371.6, 1);
     expect(t.effRate).toBeCloseTo(30.836, 3);
@@ -101,21 +109,52 @@ describe("samsung-bonus/model calcSamsungBonusNet — 세후 동결값", () => {
   it("4대보험 OFF 는 소득세+지방세만 — 보험료 공제도 연봉분만", () => {
     // T(1억 2,000만, 보험료는 8,000만분) = 과표 95,619,793.6 → 산출 18,026,928 − 50만 = 17,526,928
     // → 증가분 10,102,178
-    const t = calcSamsungBonusNet(80_000_000, 40_000_000, 0, false);
+    const t = calcSamsungBonusNet(80_000_000, 40_000_000, 0, false, R26);
     expect(t.breakdown.incomeTax).toBeCloseTo(10_102_178, 0);
     expect(t.net).toBeCloseTo(28_887_604.2, 1);
     expect(t.effRate).toBeCloseTo(27.781, 3);
     expect(t.breakdown.healthIns).toBe(0);
   });
   it("추가 세액공제 가정은 엔진 증가분에 비례 적용 (30% → 소득세 × 0.7)", () => {
-    const t = calcSamsungBonusNet(80_000_000, 40_000_000, 30, true);
+    const t = calcSamsungBonusNet(80_000_000, 40_000_000, 30, true, R26);
     expect(t.breakdown.incomeTax).toBeCloseTo(9_406_744 * 0.7, 1);
   });
-  it("공통 엔진(calcBonusNet)과 원 단위로 일치", () => {
+  it("기본 호출 = 현행 요율 포인터 명시 호출 (1/1 전환은 CURRENT_RATES_YEAR 한 줄로 반영)", () => {
+    const cases: Array<[number, number, number, boolean]> = [
+      [80_000_000, 40_000_000, 0, true],
+      [80_000_000, 40_000_000, 0, false],
+      [60_000_000, 30_000_000, 30, true],
+      [50_000_000, 5_000_000, 0, true], // 국민연금 상한 미달 — 추가 부과 있음
+    ];
+    for (const [s, b, c, ins] of cases) {
+      expect(calcSamsungBonusNet(s, b, c, ins)).toEqual(calcSamsungBonusNet(s, b, c, ins, CURRENT_INSURANCE_RATES));
+    }
+  });
+  it("공통 엔진(calcBonusNet)과 원 단위로 일치 — 기본(현행 포인터)·2026·2027 요율 모두", () => {
     const t = calcSamsungBonusNet(80_000_000, 40_000_000, 0, true);
     const b = calcBonusNet(80_000_000, 40_000_000);
     expect(Math.abs(t.net - b.net)).toBeLessThanOrEqual(1);
     expect(Math.abs(t.breakdown.incomeTax - b.incomeTaxDelta)).toBeLessThanOrEqual(1);
+    for (const rates of [INSURANCE_RATES_2026, INSURANCE_RATES_2027]) {
+      for (const [s, g] of [[80_000_000, 40_000_000], [50_000_000, 5_000_000], [100_000_000, 50_000_000]] as const) {
+        const ty = calcSamsungBonusNet(s, g, 0, true, rates);
+        const by = calcBonusNet(s, g, 0, true, rates);
+        expect(Math.abs(ty.net - by.net)).toBeLessThanOrEqual(2);
+        expect(Math.abs(ty.breakdown.incomeTax - by.incomeTaxDelta)).toBeLessThanOrEqual(1);
+      }
+    }
+  });
+  it("요율 인자가 실제로 쓰인다 — 2027 요율(국민연금 5.0%·장기요양 13.90%)이면 연금·장기요양이 그 요율로", () => {
+    // 연봉 5,000만은 국민연금 연 상한(7,908만) 미달 → 성과급 500만 전액에 연금 부과
+    const t26 = calcSamsungBonusNet(50_000_000, 5_000_000, 0, true, INSURANCE_RATES_2026);
+    const t27 = calcSamsungBonusNet(50_000_000, 5_000_000, 0, true, INSURANCE_RATES_2027);
+    expect(t26.breakdown.nationalPension).toBeCloseTo(5_000_000 * INSURANCE_RATES_2026.NATIONAL_PENSION, 6);
+    expect(t27.breakdown.nationalPension).toBeCloseTo(5_000_000 * INSURANCE_RATES_2027.NATIONAL_PENSION, 6);
+    expect(t27.breakdown.longTermCare).toBeCloseTo(
+      5_000_000 * INSURANCE_RATES_2027.HEALTH_INSURANCE * INSURANCE_RATES_2027.LONG_TERM_CARE_RATIO,
+      6
+    );
+    expect(t27.breakdown.employment).toBeCloseTo(5_000_000 * INSURANCE_RATES_2027.EMPLOYMENT_INSURANCE, 6);
   });
   it("성과급 0 이면 전부 0", () => {
     expect(calcSamsungBonusNet(80_000_000, 0, 0, true)).toEqual({

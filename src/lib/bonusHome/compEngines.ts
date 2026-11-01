@@ -5,7 +5,7 @@
 //             opiData.ts(2025년분 OPI 실지급률, 복수 언론 보도) · taiData.ts(2026 상반기 TAI, 2026-07-06 발표 보도)
 //   SK하이닉스 sk-hynix-bonus/psData.ts(AGREEMENT_2026: PS 재원 10%·지급 50/30/10/10·임금 6.3% — 2026-09-16 가결 보도,
 //             EMPLOYEES 34,549명(2025 사업보고서)·REFERENCE_SALARY 1억·BASIC_RATIO 20·PS_HISTORY 2025 2,964%)
-//   세후      bonusTaxCalc.calcBonusNet(2026 요율 명시) · samsung model.calcSamsungBonusNet(성과급 계산기 공통 엔진)
+//   세후      bonusTaxCalc.calcBonusNet(2026 요율 명시) · samsung model.calcSamsungBonusNet(성과급 계산기 공통 엔진, 2026 요율 명시)
 // 여기서 새로 정한 값은 '가정'이라고 적힌 기본값뿐이다(월기본급 비율·주가 변동·직접 입력 인상률 0% 등).
 //
 // 연도 축: 실적 연도 FY(2026~2030)의 성과급을 FY+1 년(2027~2031)에 받는다.
@@ -220,7 +220,9 @@ function computeSamsung(inputs: CompInputs): CompResult {
     const opi2Won = samsungOpi2(opOf(inputs, fy), fy, inputs.division, salaryFy);
     const taiWon = taiBase(year) * taiRate * 2;
     const gross = opi1Won + opi2Won + taiWon;
-    const tax = calcSamsungBonusNet(salary, gross, 0, true);
+    // 2026 요율 명시 — 이 계산기는 2026 요율·세율 기준(SK 쪽 calcBonusNet 과 같음). model 기본값은 현행 요율 포인터라
+    // 인자를 빼면 1/1 전환 뒤 삼성만 2027 요율로 바뀐다 (2026-11-01 B17)
+    const tax = calcSamsungBonusNet(salary, gross, 0, true, INSURANCE_RATES_2026);
     const net = gross > 0 ? tax.net : 0;
     const ratio = gross > 0 ? net / gross : 0;
     const opi2Net = opi2Won * ratio;
