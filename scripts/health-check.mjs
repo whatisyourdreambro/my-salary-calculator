@@ -11,10 +11,14 @@
 //       그래서 시즌 키·날짜 게이트 검사는 두 번 가져온다 — 원본 = ?hc=<실행 시각>(쿼리가 다르면 캐시 키가
 //       달라 MISS), 엣지 = 평문 URL. FAIL 문구가 "빌드 미갱신"(원본부터 틀림 → 재생성·재배포)과
 //       "퍼지 누락"(원본은 맞고 엣지만 구버전 → CF 퍼지)을 가른다. 두 쪽의 cf-cache-status·Age 를 찍는다.
+// 게시 대기 감시(B20, 2026-11-01 운영자 승인 11번): main 에 합쳐졌는데 48시간 넘게 사이트에 게시되지 않은 변경
+//       (docs/** · *.md 만 바뀐 경우 제외)이 있으면 FAIL → 주간 ci health 실패 메일. 아래 '게시 대기 감시' 절.
 
+import { execFileSync } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { resolve } from "node:path";
 import qaHttp from "./lib/qa-production-http.cjs";
+import { NATIVE_RELEASE_PATH, validateNativeRelease } from "../cloudflare/pages-native-release.mjs";
 import {
   isJanManualWindow,
   isSeasonKeyExpired,
@@ -241,24 +245,232 @@ async function checkOriginEdge({ path, expect, marker, desc, diagnose, fixBuild 
   if (!ok) failed++;
 }
 
+// ── 게시 대기 감시 (B20 · P1-INFRA-03, 2026-11-01 운영자 승인 11번) ──
+// 승인 문구: main 에 합쳐졌는데 48시간 넘게 사이트에 게시되지 않은 변경(문서만 바뀐 경우 제외)이 있으면 월요일 주간
+// 점검이 실패 메일을 보낸다. 게시는 운영자가 Actions 'Pages · 승인 후 게시' 를 눌러야만 일어나서, 잊으면 조용히 밀린다.
+//   운영 커밋 = /.well-known/moneysalary-release.json 의 commit. 비렌더링 GET 1회(쿼리 없이 — 쿼리가 붙으면 404),
+//               형식은 cloudflare/pages-native-release.mjs 의 validateNativeRelease 로 검증.
+//   남은 변경 = git diff --no-renames --name-only <운영> HEAD 에서 docs/** 와 *.md 를 뺀 경로(사이트 파일을 docs/ 로 옮긴 이름 바꾸기도 옛 경로 삭제로 남긴다). 없으면 통과(같음 · 문서만 다름).
+//   경과 시간 = 운영 커밋 뒤 main 1부모 이력에서 남은 경로를 처음 바꾼 커밋의 커밋 시각(%ct)부터.
+//               HEAD 시각만 보면 뒤에 붙은 문서 커밋이 48시간 시계를 되돌린다. 그런 커밋을 못 찾으면 HEAD 시각.
+// FAIL 은 GitHub Actions 의 main 실행(ci health — fetch-depth: 0 체크아웃, HEAD = GITHUB_SHA)에서만 낸다. 로컬 ·
+// 다른 브랜치 실행은 운영 커밋 INFO 한 줄(오래된 로컬 main 과 비교하면 거짓 경보). 식별 파일을 못 읽거나 운영 커밋을
+// git 이력과 비교하지 못하면 WARN 만 — 새 실패 메일 조건은 승인된 '48시간 미게시' 하나뿐이다.
+export const RELEASE_DRIFT_LIMIT_HOURS = 48;
+const PUBLISH_WORKFLOW = "Pages · 승인 후 게시";
+const SHA40 = /^[a-f0-9]{40}$/;
+
+/** 사이트에 안 나가는 문서 경로 — docs/** 와 *.md */
+export function isDocsPath(path) {
+  return path.startsWith("docs/") || path.endsWith(".md");
+}
+
+/**
+ * 게시 대기 판정 — 순수 함수(테스트가 합성 입력으로 부른다).
+ *   changed  = git diff --no-renames --name-only <prod> <head> 경로
+ *   since    = 운영 뒤 main 1부모 이력에서 남은(문서 제외) 경로를 처음 바꾼 커밋 { sha, time(unix 초) } — 없으면 null
+ *   headTime = HEAD 커밋 시각(unix 초) — since 가 null 일 때 대신 쓴다
+ *   behind   = 운영 뒤 main 커밋이 0개(HEAD 가 운영 커밋의 조상 — main 되감기)
+ * @returns {{ state: "same" | "docs-only" | "behind" | "within" | "stale", ok: boolean, paths: string[],
+ *   hours: number | null, since: string | null }}
+ */
+export function classifyReleaseDrift({
+  prod,
+  head,
+  changed,
+  since = null,
+  headTime,
+  behind = false,
+  nowMs,
+  limitHours = RELEASE_DRIFT_LIMIT_HOURS,
+}) {
+  if (prod === head) return { state: "same", ok: true, paths: [], hours: null, since: null };
+  const paths = changed.filter((p) => !isDocsPath(p));
+  if (!paths.length) return { state: "docs-only", ok: true, paths, hours: null, since: null };
+  if (behind) return { state: "behind", ok: true, paths, hours: null, since: null };
+  const from = since ?? { sha: head, time: headTime };
+  const hours = (nowMs - from.time * 1000) / 3_600_000;
+  if (!Number.isFinite(hours)) throw new Error("커밋 시각을 알 수 없음");
+  const stale = hours > limitHours;
+  return { state: stale ? "stale" : "within", ok: !stale, paths, hours: Math.max(0, hours), since: from.sha };
+}
+
+const outputLines = (text) => text.split(/\r?\n/).filter(Boolean);
+const unixSeconds = (text) => {
+  if (!/^\d+$/.test(text)) throw new Error(`커밋 시각 형식 오류: ${text}`);
+  return Number(text);
+};
+
+/** git 실행기 — 셸 없이, core.quotePath=false(한글 경로를 따옴표 없이 그대로). 실패는 throw. */
+export function gitRunner(cwd) {
+  return (args) =>
+    execFileSync("git", ["-c", "core.quotePath=false", ...args], {
+      cwd,
+      encoding: "utf8",
+      windowsHide: true,
+      maxBuffer: 64 * 1024 * 1024,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+}
+
+/**
+ * 판정 입력 수집 — git 만 쓴다(네트워크 없음). 운영 커밋이 clone 에 없으면(얕은 clone · 지워진 이력) throw.
+ * @param {string} prod 운영 커밋 40자(validateNativeRelease 통과값)
+ * @param {(args: string[]) => string} git
+ */
+export function collectReleaseDrift(prod, git) {
+  if (!SHA40.test(prod)) throw new Error("운영 커밋 형식 오류");
+  const head = git(["rev-parse", "--verify", "HEAD^{commit}"]).trim();
+  if (!SHA40.test(head)) throw new Error(`HEAD 형식 오류: ${head}`);
+  git(["cat-file", "-e", `${prod}^{commit}`]);
+  const changed = outputLines(git(["diff", "--no-renames", "--name-only", prod, head]));
+  const headTime = unixSeconds(git(["log", "-1", "--format=%ct", head]).trim());
+  const remaining = new Set(changed.filter((p) => !isDocsPath(p)));
+  let since = null;
+  let behind = false;
+  if (prod !== head && remaining.size) {
+    // 오래된 순. 커밋마다 1부모 대비 변경 경로를 보고, 남은 경로를 처음 건드린 커밋에서 멈춘다(보통 첫 커밋).
+    const commits = outputLines(git(["log", "--first-parent", "--reverse", "--format=%H %ct", `${prod}..${head}`]));
+    behind = commits.length === 0;
+    for (const row of commits) {
+      const [sha, ct] = row.split(" ");
+      if (outputLines(git(["diff", "--no-renames", "--name-only", `${sha}^1`, sha])).some((p) => remaining.has(p))) {
+        since = { sha, time: unixSeconds(ct) };
+        break;
+      }
+    }
+  }
+  return { head, changed, headTime, since, behind };
+}
+
+/** 운영 게시 식별 읽기 — 비렌더링 GET 1회, 리다이렉트는 따라가지 않는다. 실패는 { error } 로 돌려준다(throw 안 함). */
+export async function readReleaseIdentity(fetchFn = globalThis.fetch) {
+  try {
+    const res = await qaHttp.fetchProductionQaDocument(BASE + NATIVE_RELEASE_PATH, {
+      fetchFn,
+      headers: { "user-agent": UA },
+      timeoutMs: 20000,
+    });
+    if (res.status !== 200) {
+      const location = res.headers.get("location");
+      await res.body?.cancel().catch(() => {});
+      return { error: `status=${res.status}${location ? ` Location=${location}` : ""}` };
+    }
+    const text = await res.text();
+    if (text.length > 16384) return { error: `응답이 너무 큼(${text.length}자)` };
+    return { value: validateNativeRelease(JSON.parse(text)) };
+  } catch (e) {
+    return { error: e?.message ?? String(e) };
+  }
+}
+
+/** FAIL 판정은 GitHub Actions 의 main 실행에서만(스케줄 · 수동 실행 모두 GITHUB_REF=refs/heads/main 일 때) */
+export function releaseDriftEnforced(env = process.env) {
+  return env.GITHUB_ACTIONS === "true" && env.GITHUB_REF === "refs/heads/main";
+}
+
+/**
+ * 게시 대기 점검 — 출력 줄과 판정. judged=false(INFO · WARN)는 PASS/FAIL 집계에 넣지 않는다.
+ * 주입(테스트용): fetchFn · git · env · nowMs
+ * @returns {Promise<{ judged: boolean, ok: boolean, lines: string[] }>}
+ */
+export async function checkReleaseDrift({
+  fetchFn = globalThis.fetch,
+  git = gitRunner(ROOT),
+  env = process.env,
+  nowMs = NOW.getTime(),
+} = {}) {
+  const id = await readReleaseIdentity(fetchFn);
+  if (id.error) {
+    return {
+      judged: false,
+      ok: true,
+      lines: [`WARN  게시 대기 점검 생략 — 운영 게시 식별(${NATIVE_RELEASE_PATH})을 읽지 못함: ${id.error}`],
+    };
+  }
+  const prod = id.value.commit;
+  const prod7 = prod.slice(0, 7);
+  if (!releaseDriftEnforced(env)) {
+    return {
+      judged: false,
+      ok: true,
+      lines: [`INFO  운영 게시 커밋 ${prod7} (빌드 ${id.value.buildId}) — 게시 대기 판정은 GitHub Actions 의 main 주간 점검에서만`],
+    };
+  }
+  let input;
+  let verdict;
+  try {
+    input = collectReleaseDrift(prod, git);
+    verdict = classifyReleaseDrift({ prod, ...input, nowMs });
+  } catch (e) {
+    const why = String(e?.message ?? e).split(/\r?\n/)[0];
+    return {
+      judged: false,
+      ok: true,
+      lines: [`WARN  게시 대기 점검 생략 — 운영 커밋 ${prod7} 을 main 이력과 비교하지 못함: ${why}`],
+    };
+  }
+  const head7 = input.head.slice(0, 7);
+  const n = verdict.paths.length;
+  switch (verdict.state) {
+    case "same":
+      return { judged: true, ok: true, lines: [`PASS  게시 대기 없음 — 운영 커밋 = main ${head7}`] };
+    case "docs-only":
+      return {
+        judged: true,
+        ok: true,
+        lines: [`PASS  게시 대기 없음 — main ${head7} 과 운영 ${prod7} 의 차이는 문서(docs/** · *.md)뿐`],
+      };
+    case "behind":
+      return {
+        judged: false,
+        ok: true,
+        lines: [`WARN  게시 대기 판정 불가 — main ${head7} 이 운영 커밋 ${prod7} 보다 뒤(main 되감기?)`],
+      };
+    case "within":
+      return {
+        judged: true,
+        ok: true,
+        lines: [
+          `PASS  게시 대기 ${Math.floor(verdict.hours)}시간(${RELEASE_DRIFT_LIMIT_HOURS}시간 이내) — main ${head7}, 운영 ${prod7}, 문서 제외 변경 파일 ${n}개`,
+        ],
+      };
+    default:
+      return {
+        judged: true,
+        ok: false,
+        lines: [
+          `FAIL 게시 대기: main ${head7} 이 ${Math.floor(verdict.hours)}시간째 미게시 — Actions '${PUBLISH_WORKFLOW}'`,
+          `INFO  운영 커밋 ${prod7} · 첫 미게시 변경 ${verdict.since.slice(0, 7)} · 문서 제외 변경 파일 ${n}개 · ` +
+            `ci(verify) 초록 확인 뒤 approved_commit=${input.head}`,
+        ],
+      };
+  }
+}
+
 // 동시성 5로 실행
 async function main() {
 const queue = [
   ...CHECKS.map((c) => () => check(c)),
   ...ORIGIN_EDGE_CHECKS.map((c) => () => checkOriginEdge(c)),
 ];
-const TOTAL = queue.length;
+const PAGE_TOTAL = queue.length;
 await Promise.all(
   Array.from({ length: 5 }, async () => {
     while (queue.length) await queue.shift()();
   })
 );
+// 게시 대기 감시 — 페이지 점검 뒤 1회(운영 식별 GET 1회 + git). 판정한 경우에만 1건으로 센다.
+const drift = await checkReleaseDrift();
+if (drift.judged && !drift.ok) failed++;
+const TOTAL = PAGE_TOTAL + (drift.judged ? 1 : 0);
 
 console.log(`\n=== moneysalary.com 헬스체크 (${TOTAL}건) ===\n`);
 for (const r of results) {
   const tail = r.ok ? (r.info ? `— ${r.info}` : "") : `— ${r.detail}`;
   console.log(`${r.ok ? "PASS" : "FAIL"}  ${r.path}  [${r.desc}] ${tail}`);
 }
+for (const line of drift.lines) console.log(line);
 // 시즌 키 참고 정보 (PASS/FAIL 과 별개 — 사람이 볼 알림)
 if (SEASON_OVERRIDE.source !== "file") {
   console.log(
