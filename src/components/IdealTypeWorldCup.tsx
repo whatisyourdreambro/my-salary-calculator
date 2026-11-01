@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Crown, RefreshCw } from "lucide-react";
 import ResultSharePanel from "@/components/ResultSharePanel";
-import { InArticleAd } from "@/components/AdPlacement";
 
 // 서버(page.tsx)가 내려주는 경량 인덱스 — 회사 전체 프로필(~860KB)을 클라 번들에
 // 싣지 않기 위한 5필드 축약형 (SalaryDbClient 경량 인덱스 패턴).
@@ -145,11 +144,7 @@ export default function IdealTypeWorldCup({ companies }: { companies: WorldcupCo
  <p className="text-xl text-muted-foreground">{winner.industry}</p>
  </div>
 
- {/* 결과 인접 광고 */}
- <div className="w-full max-w-2xl">
- <InArticleAd />
- </div>
-
+ {/* 우승 화면에는 광고를 두지 않는다 — 방금 누른 후보 카드 자리라 오클릭 위험(2026-11-01 운영자 승인 1번). 광고는 fun/layout 공통 슬롯만 */}
  <div className="flex flex-col items-center gap-5">
  <button
  onClick={startNewGame}
@@ -165,9 +160,6 @@ export default function IdealTypeWorldCup({ companies }: { companies: WorldcupCo
  />
  </div>
  </div>
-
- {/* Ad Unit */}
- 
  </motion.div>
  ) : (
  // Match View

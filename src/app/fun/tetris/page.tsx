@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, ArrowDown, RotateCw, RefreshCw, Play, Trophy } from "lucide-react";
 import ResultSharePanel from "@/components/ResultSharePanel";
-import { InArticleAd } from "@/components/AdPlacement";
 // --- Game Constants & Types ---
 const ROWS = 20;
 const COLS = 10;
@@ -410,14 +409,7 @@ export default function TetrisPage() {
  </div>
  </div>
 
- {/* 게임오버 시에만 보드 아래 광고 — 오버레이 내부 배치는 오클릭 정책 리스크라
- 금지, 본문 흐름에만 둔다. fun/layout 슬롯과 무충돌 (운영자 일괄 승인 2026-08-23) */}
- {gameOver && (
- <div className="w-full max-w-2xl order-4">
- <InArticleAd />
- </div>
- )}
-
+ {/* 보드·방향 버튼 바로 아래에는 광고를 두지 않는다 — 조작 중 오클릭 방지(2026-11-01 운영자 승인 1번). 광고는 fun/layout 공통 슬롯만 */}
  </div>
  </main>
  );
