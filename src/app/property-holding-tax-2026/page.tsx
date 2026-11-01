@@ -18,6 +18,7 @@ import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import ShareButtons from "@/components/ShareButtons";
+import EditorialTrustNote from "@/components/EditorialTrustNote";
 import PropertyHoldingTaxClient from "./PropertyHoldingTaxClient";
 import PropertyHoldingTaxDetail from "./PropertyHoldingTaxDetail";
 import {
@@ -316,6 +317,9 @@ export default function PropertyHoldingTax2026Page() {
         {/* 2026-11-01 R2-HOLD: 12월 종부세 상세(나이·보유기간 입력, 세액공제·농특세 내역) — 마지막 광고 아래라
             어떤 광고도 밀지 않는다. 입력은 위 계산기와 공유(holdingTaxInputs.ts) */}
         <PropertyHoldingTaxDetail />
+
+        {/* 만든 사람과 확인 방법(G4, 운영자 승인 2026-11-01 구글 개선 5번) — 마지막 광고(MultiplexAd)·종부세 상세 아래 맨 끝 */}
+        <EditorialTrustNote path="/property-holding-tax-2026" className="mt-10" />
       </div>
     </main>
   );

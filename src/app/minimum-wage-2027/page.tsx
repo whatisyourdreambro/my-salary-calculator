@@ -13,6 +13,7 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
+import EditorialTrustNote from "@/components/EditorialTrustNote";
 import { calculateNetSalary2027 } from "@/lib/generateData2027";
 import type { AdvancedSettings } from "@/app/types";
 import { MINIMUM_WAGE_2026, MINIMUM_WAGE_2027 } from "@/config/minimumWage";
@@ -375,6 +376,9 @@ export default function MinimumWage2027Page() {
         <div className="mt-8">
           <HomeTopAd />
         </div>
+
+        {/* 만든 사람과 확인 방법(G4, 운영자 승인 2026-11-01 구글 개선 5번) — 마지막 광고(HomeTopAd) 아래 컨테이너 맨 끝 */}
+        <EditorialTrustNote path="/minimum-wage-2027" className="mx-auto mt-10 max-w-3xl" />
       </div>
     </main>
   );

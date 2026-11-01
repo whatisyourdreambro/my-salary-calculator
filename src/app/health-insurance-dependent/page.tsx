@@ -14,6 +14,7 @@ import CoupangBanner from "@/components/CoupangBanner";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import ShareButtons from "@/components/ShareButtons";
+import EditorialTrustNote from "@/components/EditorialTrustNote";
 import HealthInsuranceDependentClient from "./Client";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -460,6 +461,9 @@ export default function HealthInsuranceDependentPage() {
             </Link>
           </div>
         </section>
+
+        {/* 만든 사람과 확인 방법(G4, 운영자 승인 2026-11-01 구글 개선 5번) — 마지막 광고(쿠팡 배너)·공유·관련 도구 아래 맨 끝 */}
+        <EditorialTrustNote path="/health-insurance-dependent" className="mt-10" />
       </div>
     </main>
   );

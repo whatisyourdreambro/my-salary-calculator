@@ -29,6 +29,8 @@ const MODULES: Record<string, string[]> = {
   "src/components/CompanySalaryTable.tsx": ["company-salary-net"],
   // 2026-10-09 삼성 DS 특별성과급 세부안 보도 요약 — calc/layout 맨 끝(모든 광고 아래), 새 글 링크 1개
   "src/components/CalcNewsNote.tsx": ["calc-news-note"],
+  // 2026-11-01 G4 '만든 사람과 확인 방법' — 핵심 페이지·layout 맨 끝(모든 광고 아래), /about·/contact 링크 2개
+  "src/components/EditorialTrustNote.tsx": ["editorial-trust-note"],
   "src/app/job/[slug]/page.tsx": [
     "job-related-calc",
     "job-companies",
@@ -74,6 +76,7 @@ const P1_FOLLOW_UP_FILES: Record<string, string[]> = {
     "src/app/calc/samsung-bonus/shared.tsx", // ResultNextLinks — onClick 직접 계측
     "src/components/CalcNewsNote.tsx", // 2026-10-09 calc/layout 맨 끝 보도 요약(data-msy-module)
     "src/components/RelatedCalculators.tsx",
+    "src/components/EditorialTrustNote.tsx", // 2026-11-01 G4 calc/layout 맨 끝 확인 방법 상자(data-msy-module)
   ],
   "/calc/bonus-calculators": [
     "src/app/calc/bonus-calculators/page.tsx",
@@ -93,6 +96,7 @@ const P1_FOLLOW_UP_FILES: Record<string, string[]> = {
     "src/components/CompanyFaq.tsx",
     "src/components/RelatedCompanies.tsx",
     "src/components/RelatedCalculators.tsx",
+    "src/components/EditorialTrustNote.tsx", // 2026-11-01 G4 salary-db/layout 맨 끝 확인 방법 상자(data-msy-module)
   ],
 };
 const CHILD_LINK_WRAPPERS = new Set(["src/app/salary-db/[id]/SamsungCompanySummaryLinks.tsx"]);

@@ -15,6 +15,7 @@ import HomeToolsSection from "@/components/home/HomeToolsSection";
 import TrafficEnginesNav from "@/components/home/TrafficEnginesNav";
 import FloatingShareBar from "@/components/FloatingShareBar";
 import AutoShareSection from "@/components/AutoShareSection";
+import EditorialTrustNote from "@/components/EditorialTrustNote";
 import { RSS_FEED_ALTERNATES } from "@/lib/seo";
 
 // canonical/hreflang은 홈 전용 값 — 루트 layout에 두면 alternates를 자체 정의하지
@@ -48,6 +49,9 @@ export default function HomePage() {
       <AutoShareSection contentType="page" maxWidth="7xl" className="pb-12" />
       {/* 모바일 전용 — 스크롤 후 하단 공유 pill (앵커 광고·PWA 배너 감지 시 자동 숨김) */}
       <FloatingShareBar />
+      {/* 만든 사람과 확인 방법(G4, 운영자 승인 2026-11-01 구글 개선 5번) — 마지막 광고(HomeClient 끝 MultiplexAd)·본문·공유 아래
+          맨 끝. 기존 형제의 자동광고 CSS 경로가 바뀌지 않게 마지막 형제로만 둔다(광고 위로 옮기지 말 것). */}
+      <EditorialTrustNote path="/" className="page-width max-w-3xl pb-16" />
     </>
   );
 }

@@ -4,6 +4,7 @@ import AutoShareSection from "@/components/AutoShareSection";
 import FloatingShareBar from "@/components/FloatingShareBar";
 import CalcNewsNote from "@/components/CalcNewsNote";
 import TopicNextSteps from "@/components/TopicNextSteps";
+import EditorialTrustNoteFromPath from "@/components/EditorialTrustNoteFromPath";
 
 export default function CalcLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -28,6 +29,9 @@ export default function CalcLayout({ children }: { children: React.ReactNode }) 
           bonus-home-plan·samsung-bonus page.tsx 의 <main> 끝에 들어가 위 광고 블록을 밀던 것을 옮겼다.
           path 없이 usePathname 으로 고르고, src/lib/topicNextSteps.ts 맵에 없는 계산기 경로는 null (TopicNextSteps.tsx) */}
       <TopicNextSteps />
+      {/* 만든 사람과 확인 방법(G4, 운영자 승인 2026-11-01 구글 개선 5번) — 위 상자들 뒤 맨 끝(모든 광고 아래 + 기존 형제의
+          자동광고 CSS 경로 불변). 삼성전자·SK하이닉스 성과급 계산기에서만 그리고 다른 계산기는 null (src/lib/editorialTrust.ts) */}
+      <EditorialTrustNoteFromPath className="mx-auto my-10 max-w-4xl px-4 sm:px-6 lg:px-8" />
     </>
   );
 }

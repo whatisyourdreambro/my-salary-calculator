@@ -10,6 +10,9 @@
 //  2) 영문: EnglishPageExtras 광고는 하이드레이션 뒤에만 그려진다 — SSR 에서도 링크는 본문 바로 뒤에 있고(프리렌더 HTML 포함),
 //     광고가 그려지면 광고·공유 아래에 놓인다. /en/guides 맨 위 HomeTopAd 위의 소개 문단은 없다.
 //  3) 소스: 8개 표·3개 계산기·/insights·영문 도구 page.tsx 에 상자가 다시 들어오지 않고, layout 에서는 마지막 형제다.
+// G4(운영자 승인 2026-11-01 구글 개선 5번): 표 8종·삼성전자 성과급에서는 '만든 사람과 확인 방법' 상자(EditorialTrustNoteFromPath)가
+//  이 상자 뒤 맨 끝에 온다 — 이 상자는 여전히 모든 광고·공유 뒤이고, 그 뒤에는 그 상자 하나만 올 수 있다
+//  (그 상자의 배치는 editorialTrustNote.test.ts 가 따로 고정).
 
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -78,6 +81,13 @@ const TABLE_BOX = 'data-msy-module="salary-table-comparison"';
 const TOPIC_BOX = 'data-msy-module="topic-next-steps"';
 const TOOL_LINKS = 'aria-labelledby="tool-next-question"';
 const PAGE_LINKS = 'aria-label="Related pages"';
+// G4 '만든 사람과 확인 방법' 상자 — 표 8종·삼성전자 성과급에서 이 테스트의 상자 뒤 맨 끝
+const TRUST_NOTE = 'data-msy-module="editorial-trust-note"';
+/** 표지부터 다음 표지(없으면 문서 끝) 전까지 — 상자 하나의 링크만 보기 위함 */
+const sliceBox = (html: string, marker: string, next: string) => {
+  const end = html.indexOf(next);
+  return html.slice(html.indexOf(marker), end > -1 ? end : undefined);
+};
 
 function renderAt(pathname: string, Layout: (props: { children: ReactNode }) => ReactNode) {
   location.pathname = pathname;
@@ -118,14 +128,14 @@ const hrefs = (html: string) => [...html.matchAll(/href="([^"]+)"/g)].map((m) =>
 describe("표 8종: 급여 단위·연도 비교 상자는 표 layout 맨 끝", () => {
   const paths = [2026, 2027].flatMap((year) => ["annual", "monthly", "weekly", "hourly"].map((unit) => `/table/${year}/${unit}`));
 
-  it.each(paths)("%s: GuideMid → 본문 → HomeTopAd·InArticleAd·쿠팡 → 공유 → 비교 상자", (path) => {
+  it.each(paths)("%s: GuideMid → 본문 → HomeTopAd·InArticleAd·쿠팡 → 공유 → 비교 상자 → (G4) 확인 방법 상자", (path) => {
     const html = renderAt(path, path.startsWith("/table/2026/") ? Table2026Layout : Table2027Layout);
-    expectInOrder(html, ['data-placement="mid"', BODY, ...AD_MARKERS, SHARE, TABLE_BOX]);
-    expectLastElement(html, TABLE_BOX, "section");
+    expectInOrder(html, ['data-placement="mid"', BODY, ...AD_MARKERS, SHARE, TABLE_BOX, TRUST_NOTE]);
+    expectLastElement(html, TRUST_NOTE, "section");
     // 경로에서 고른 연도·단위가 상자 링크와 맞는다: 같은 연도 다른 3단위 + 다른 연도 같은 단위, 자기 자신은 없음
     const [, , yearText, unit] = path.split("/");
     const year = Number(yearText);
-    const box = html.slice(html.indexOf(TABLE_BOX));
+    const box = sliceBox(html, TABLE_BOX, TRUST_NOTE);
     const others = ["annual", "monthly", "weekly", "hourly"].filter((u) => u !== unit).map((u) => `/table/${year}/${u}`);
     expect(hrefs(box)).toEqual(expect.arrayContaining([...others, `/table/${year === 2026 ? 2027 : 2026}/${unit}`]));
     expect(hrefs(box)).not.toContain(path);
@@ -145,11 +155,14 @@ describe("계산기 3종: 이어서 확인할 내용 상자는 calc/layout 광�
   it.each(["/calc/2026-year", "/calc/bonus-home-plan", "/calc/samsung-bonus"])("%s", (path) => {
     const html = renderAt(path, CalcLayout);
     const news = path === "/calc/samsung-bonus" ? ['data-msy-module="calc-news-note"'] : [];
-    expectInOrder(html, [BODY, 'data-placement="article"', 'data-placement="affiliate"', 'data-placement="home"', SHARE, ...news, TOPIC_BOX]);
-    expectLastElement(html, TOPIC_BOX, "section");
+    // G4: 삼성전자 성과급만 '만든 사람과 확인 방법' 상자가 이 상자 뒤 맨 끝에 온다(나머지 두 계산기는 이 상자가 맨 끝)
+    const trust = path === "/calc/samsung-bonus" ? [TRUST_NOTE] : [];
+    expectInOrder(html, [BODY, 'data-placement="article"', 'data-placement="affiliate"', 'data-placement="home"', SHARE, ...news, TOPIC_BOX, ...trust]);
+    expectLastElement(html, trust.length ? TRUST_NOTE : TOPIC_BOX, "section");
+    if (!trust.length) expect(html).not.toContain(TRUST_NOTE);
     const expected = getTopicNextSteps(path).map((item) => item.href);
     expect(expected.length).toBeGreaterThan(0);
-    expect(hrefs(html.slice(html.indexOf(TOPIC_BOX)))).toEqual(expected);
+    expect(hrefs(sliceBox(html, TOPIC_BOX, TRUST_NOTE))).toEqual(expected);
   });
 
   it.each(["/calc", "/calc/sk-hynix-bonus", "/calc/bmi-quick", "/calc/samsung-bonus/extra"])("%s: 맵에 없는 경로는 상자 없음", (path) => {
@@ -255,7 +268,9 @@ describe("소스: 페이지 본문에 상자를 다시 두지 않고, layout 에
     expect(src.split(box)).toHaveLength(2);
     for (const sibling of before) expect(src.indexOf(sibling), `${file}: ${sibling}`).toBeGreaterThan(-1);
     for (const sibling of before) expect(src.indexOf(sibling), `${file}: ${sibling} 가 ${box} 뒤`).toBeLessThan(at);
-    expect(src.slice(at + box.length).replace(/\s+/g, "").startsWith(close)).toBe(true);
+    // G4: 이 상자 뒤에는 '만든 사람과 확인 방법' 상자(EditorialTrustNoteFromPath) 하나만 올 수 있다
+    const rest = src.slice(at + box.length).replace(/\s+/g, "").replace(/^<EditorialTrustNoteFromPath[^>]*\/>/, "");
+    expect(rest.startsWith(close)).toBe(true);
   });
 
   it("영문 도구·도움말·소개·가이드 목록 본문에 옮긴 링크가 다시 들어오지 않는다", () => {
