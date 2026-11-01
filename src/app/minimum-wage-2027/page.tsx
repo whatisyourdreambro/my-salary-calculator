@@ -137,7 +137,7 @@ export default function MinimumWage2027Page() {
             slug: "minimum-wage-2027",
             url: "/minimum-wage-2027",
             publishedDate: "2026-07-16",
-            modifiedDate: "2026-09-30",
+            modifiedDate: "2026-11-01",
           }),
           speakableLd({
             url: "/minimum-wage-2027",
