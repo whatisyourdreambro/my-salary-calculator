@@ -33,9 +33,14 @@ describe("삼성 성과급 검색 진입 설명", () => {
     const html = renderToStaticMarkup(createElement(SamsungPage));
     const h1 = html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/)?.[1];
     expect(h1).toContain("삼성전자 성과급 계산기");
-    expect(h1).toContain("2026 OPI·OPI2 세후 / TAI 예상");
-    expect(html).toContain("기존 OPI1과 DS 특별경영성과급(OPI2)은 합산 세후 금액을");
-    expect(html).toContain("회사의 개인별 지급 확정액은 아닙니다");
+    // 히어로 부제·요약은 모든 광고 위 — 10/19(579d60bb)에 길어진 문구를 10/19 이전 줄 수로 되돌렸다
+    // (2026-11-01 운영자 승인 8번, B37 P2UX-04 b). 바꾸려면 광고 위 폭 실측 스윕부터.
+    expect(h1?.match(/<span\b[^>]*>([\s\S]*?)<\/span>/)?.[1]).toBe("2026 OPI·TAI 예상 금액");
+    const summary = html.match(/<p\b[^>]*id="calc-hero-summary"[^>]*>([\s\S]*?)<\/p>/)?.[1];
+    expect(summary).toBe(
+      "OPI1과 OPI2는 합산 세후로, TAI는 월 기본급과 지급률로 계산합니다. 지난 지급 이력과 앞으로의 가정을 구분해 비교하세요. " +
+        "세후 금액과 RSU 가치는 입력 조건에 따른 추정이며, 회사의 개인별 지급 확정액은 아닙니다.",
+    );
     // 페이지 안 바로가기 줄은 히어로(모든 광고 위)에서 첫 광고(Client 의 평균 결과 HomeTopAd) 아래로 옮겼다
     // (2026-10-05 운영자 승인 #6, 11/1 재승인 B05). 이동 목적지와 그리로 가는 링크는 그대로 있다 — 링크는 Client 에서 렌더하고,
     // 그 위치(광고 아래)는 samsungBonusJumpNav.test.ts 가 고정한다. 여기서는 Client 를 모킹하므로 소스로 확인한다.
