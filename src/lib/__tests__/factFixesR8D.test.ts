@@ -41,10 +41,8 @@ const card = (slug: string) => {
 /** [옛 문구, 새 문구] — 광고 위 제자리 교체 쌍 */
 const BIG3_PAIRS: ReadonlyArray<readonly [string, string]> = [
   ["<strong>LG CNS = DX·AX 전문, 상장 추진 스토리.</strong>", "<strong>LG CNS = DX·AX 전문, 상장 이후 스토리.</strong>"],
-  [
-    "2025년 초 코스피 상장 추진이 보도됐고 당시 예상 시가총액은 6조원대였습니다(뉴스투데이 2025-01 — 추진 보도 기준).",
-    "2025년 초 코스피 신규 상장을 완료했고 당시 예상 시가총액은 6조원대였습니다(뉴스투데이 2025-01 — 상장 직전 보도).",
-  ],
+  // 2026-11-01(B28): 이 쌍의 뒤 구절(시가총액)은 아래 'LG CNS 공모가 기준 시가총액' 테스트가 따로 정정했다 — 여기서는 R8 교체 앞 구절만 본다.
+  ["2025년 초 코스피 상장 추진이 보도됐고", "2025년 초 코스피 신규 상장을 완료했고"],
   ["상장 추진 스토리는 향후 보상 체계 변화의 변수입니다.", "상장 이후 주식시장 평가 또한 보상 체계의 변수입니다."],
 ];
 const SKAX_PAIRS: ReadonlyArray<readonly [string, string]> = [
@@ -85,6 +83,23 @@ describe("LG CNS 상장 완료(KRX KIND 상장일 2025-02-05) — 광고 위 제
   it("it-service-big3: LG CNS 항목이 상장 완료를 말한다", () => {
     const c = flat(guide("it-service-big3-salary-2026").content);
     expect(c).toContain("코스피 신규 상장을 완료했고");
+  });
+
+  // 2026-11-01 공개 출처 정정(B28 STR-04-B, 10/9 4b717914c 의 사실 정정 이식): 공모가(6만1,900원) 기준 시가총액은 5조 9,972억원이라
+  // '6조원대'가 아니라 '약 6조원'이다(아주경제 2025-01-17 https://www.ajunews.com/view/20250117180301056
+  // '공모 금액은 1조1994억원, 시가총액은 5조9972억원으로 결정됐다' — 2026-11-01 재확인). 광고 위 본문이라 더 짧은 문구만 쓴다.
+  // 10/9 문구('공모가 기준 시가총액은 … (아주경제 2025-01-17 보도).')는 사이트 글꼴 폭 모델에서 320~332px 에 한 줄이 늘어
+  // (같은 모델이 10/9 스윕이 잰 15조 가이드 하향 폭 322~327px 를 그대로 재현함), 앞 구절 '당시 예상'을 그대로 두고 '보도'를 뺀
+  // 이 문구로 바꿨다 — 모델상 320~1440px 어디서도 줄이 늘지 않는다(줄어드는 폭 130곳). 단계 스윕에서 다시 잰다.
+  it("it-service-big3: LG CNS 당시 예상 시가총액은 '약 6조원'(아주경제 2025-01-17)이고 '6조원대'가 아니다", () => {
+    const c = flat(guide("it-service-big3-salary-2026").content);
+    const oldText = "당시 예상 시가총액은 6조원대였습니다(뉴스투데이 2025-01 — 상장 직전 보도).";
+    const newText = "당시 예상 시가총액은 약 6조원이었습니다(아주경제 2025-01-17).";
+    expect(c).toContain(`코스피 신규 상장을 완료했고 ${newText}`);
+    expect(c).not.toContain("6조원대");
+    expect(newText.length).toBeLessThan(oldText.length);
+    const hangul = (s: string) => [...s].filter((ch) => /[가-힣]/.test(ch)).length;
+    expect(hangul(newText)).toBeLessThan(hangul(oldText));
   });
 });
 

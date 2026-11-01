@@ -26,8 +26,14 @@
 //    하반기 TAI 최대 수준 가능성 전망: 파이낸셜뉴스 https://www.fnnews.com/news/202607061454005430
 //  - DS부문 OPI 2024년 실적분 14%(2023년 실적분 0%): 뉴시스 2025-01-17 https://www.newsis.com/view/NISX20250117_0003036286
 //  - OPI 재원 = 초과이익의 20% 한도·연봉 50% 상한: 서울신문 2026-01-16(위 URL), 대법원 2021다248299
-// 2026-11-01 이식(PKG-24): 이 머리 주석과 접힌 FAQ(가고과·나고과 답)만 먼저 반영했다. 광고 위 화면 문구
-// (재원 표현 DS 영업이익·CL4 하위 0.9·0.8배 문단·370조 소개·OPI 출처 표기 sourceNote)는 폭 실측 뒤로 보류(STR-04-B).
+// 2026-11-01 이식(PKG-24): 이 머리 주석과 접힌 FAQ(가고과·나고과 답)를 먼저 반영했다.
+// 2026-11-01 이식(B28 STR-04-B, 운영자 승인 5번 — 폭 실측 뒤 게시): 광고 위 화면 문구 — 370조 소개 문단, 분배 모델 1단계 제목,
+// CL4 하위 0.9·0.8배 문단·각주, DS 영업이익 10.5% 제목·본문, 하단 안내 상자, OPI 출처 표기(sourceNote '복수 언론 보도 등').
+// 위 사실은 2026-11-01 에 한국경제·이투데이·데일리안·인더스트리뉴스(2026-10-07) 원문으로 다시 확인했다. 문자열은 10/9 1,123폭
+// 스윕에서 광고 하향 0이던 9820064e3 최종본이고, 두 곳만 더 줄였다: sourceNote '복수 언론 보도 등'(opiData.ts 주석),
+// CL 문단 '하위 등급 0.9배' → '하위 0.9배'(사이트 글꼴 폭 모델에서 518px 에 늘던 한 줄을 없앰 — 아래 본문이 같은 광고 위에서
+// 한 줄 줄어 상쇄되던 자리지만 문단 자체도 늘지 않게). 모델상 이 페이지의 바뀐 문단은 320~1440px 어디서도 줄이 늘지 않는다.
+// 단계 스윕에서 다시 잰다.
 
 import type { Metadata } from "next";
 import { bonusCalcCountKo } from "@/config/site";
@@ -269,7 +275,7 @@ export const metadata: Metadata = {
     "삼성 임금협상 2026",
   ].join(", "),
   other: {
-    "article:modified_time": "2026-10-09",
+    "article:modified_time": "2026-11-01",
   },
 };
 
@@ -279,7 +285,8 @@ export const metadata: Metadata = {
 // 한국경제 https://www.hankyung.com/article/2026100792131 · 이투데이 https://www.etoday.co.kr/news/view/2633534).
 // 2026-10-23: 370조원의 기준은 매체마다 다르다 — 한국경제·이투데이는 '삼성전자 올해 영업이익 컨센서스(회사 전체)',
 // 데일리안 https://www.dailian.co.kr/news/view/1699059 은 '증권가의 올해 DS부문 영업이익 전망치'로 썼다. 세 기사 모두
-// '기존 OPI 포함 세전'. 소개 문단에 둘 다 밝히는 대안(첫 문장을 줄임)은 광고 위 문구라 폭 실측 뒤로 보류했다(STR-04-B, 2026-11-01).
+// '기존 OPI 포함 세전'. 소개 문단에 둘 다 밝힌다(첫 문장을 줄인 9820064e3 문구 — B28 STR-04-B 로 2026-11-01 이식,
+// 세 기사 2026-11-01 재확인. 10/9 1,123폭 스윕 광고 하향 0, 단계 스윕에서 다시 잰다).
 // 광고(Display2Ad) 위라 문구는 1,123폭 실측으로 같은 높이 이하만 쓴다.
 // ─────────────────────────────────────────────────────────────
 
@@ -332,7 +339,7 @@ export default function SamsungBonusCalculatorPage() {
             name: "삼성전자 성과급 계산기",
             description: PAGE_DESC,
             url: PAGE_PATH,
-            dateModified: "2026-10-09",
+            dateModified: "2026-11-01",
             featureList: [
               "OPI(초과이익성과금) 사업부별 1인당 분배 계산",
               `TAI(목표달성장려금) ${TAI_LATEST.shortLabel} 지급률 자동 적용`,
@@ -642,10 +649,9 @@ export default function SamsungBonusCalculatorPage() {
               사업부별 1인당 성과급 시나리오
             </h2>
             <p className="text-sm text-muted-blue dark:text-canvas-300 mb-5 leading-relaxed">
-              삼성전자 DS(반도체) 부문은 메모리·공통·파운드리·시스템LSI 세
-              갈래로 구성되며, 사업부별 영업이익 기여도에 따라 1인당 성과급이
-              크게 달라집니다. 아래는 10월 7일 보도된 노조의 가정 추정(연봉
-              8천만원대, 세전)입니다.
+              사업부에 따라 1인당 성과급이 크게 다릅니다. 아래는 10월 7일 보도된
+              노조의 가정 추정(연봉 8천만원대, 기존 OPI 포함 세전)이며, 370조원은
+              매체에 따라 회사 전체 또는 DS부문 영업이익 전망치입니다.
             </p>
             <div className="space-y-3">
               {DIVISION_SCENARIOS.map((s) => (
@@ -801,7 +807,7 @@ export default function SamsungBonusCalculatorPage() {
               />
               <Step
                 num="1"
-                title="OPI2 재원 산정 (영업이익 × 10.5%)"
+                title="OPI2 재원 = DS 영업이익 × 10.5%"
                 desc="예) 350조 × 10.5% = 36.75조원. 영업이익 임계값(26~28년 200조, 29~35년 100조) 미달 시 OPI2만 0."
               />
               <Step
@@ -841,12 +847,12 @@ export default function SamsungBonusCalculatorPage() {
               삼성 CL 직급·평가등급별 성과급 배수
             </h2>
             <p className="text-sm text-muted-blue dark:text-canvas-300 mb-4 leading-relaxed">
-              삼성전자 직급 체계(CL, Career Level)에서 성과급 차등은 주로{" "}
+              삼성전자 CL 직급 체계에서 성과급 차등은 주로{" "}
               <strong>CL4의 평가 등급</strong>에서 발생합니다 — 가고과 1.4배 ·
-              나고과 1.2배 · 일반 1.0배(보도 기준). CL1~CL3은 평가 배수 없이
-              1.0배가 적용되지만, 같은 사업부 풀 안에서 가/나고과 인력이 더
-              가져가는 만큼 영향을 받습니다. 아래 다년도 시뮬레이터에서 본인
-              직급·등급을 연도별로 설정할 수 있습니다.
+              나고과 1.2배 · 일반 1.0배, 하위 0.9배 · 0.8배(10월 7일 보도).
+              CL1~CL3은 평가 배수 없이 1.0배가 적용되지만, 같은 사업부 풀 안에서
+              가/나고과 인력이 더 가져가는 만큼 영향을 받습니다. 위 다년도
+              시뮬레이터는 가·나·일반 3단계만 반영합니다.
             </p>
             <div className="overflow-x-auto">
               <table className="w-full text-sm border-collapse min-w-[480px]">
@@ -899,7 +905,7 @@ export default function SamsungBonusCalculatorPage() {
               </table>
             </div>
             <p className="mt-2 text-xs text-faint-blue leading-relaxed">
-              * 배수는 복수 언론 보도 기준이며, 등급별 분포는 공개되지
+              * 배수는 언론 보도 기준이며, 등급별 분포는 공개되지
               않았습니다. 실제 평가·분배 정책은 회사 비공개 영역입니다.
             </p>
           </section>
@@ -907,15 +913,14 @@ export default function SamsungBonusCalculatorPage() {
           {/* 본문 */}
           <article className="prose prose-sm sm:prose-base dark:prose-invert max-w-none mb-10">
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-8 mb-4">
-              영업이익 10.5% 재원 — 의미와 한계
+              DS 영업이익 10.5% — 의미와 한계
             </h2>
             <p className="text-muted-blue dark:text-canvas-300 leading-relaxed">
-              공개 보도에 따르면 삼성전자는 영업이익의 일정 비율을 성과급 풀로
-              책정하는 방식으로 알려져 있고, 본 계산기는 그 비율을 10.5%로 고정해
-              시뮬레이션합니다. 다만 이 비율은 회사 공식 발표가 아닌 보도 기반
-              가정이므로 실제 분배 정책과 차이가 있을 수 있습니다. 사용자가
-              영업이익만 다양하게 바꿔가며 사업부별 1인당 추정치 변화를 빠르게
-              비교하는 도구로 활용하세요.
+              공개 보도에 따르면 특별경영성과급 재원은 DS부문 영업이익의 10.5%이고,
+              본 계산기는 이 비율을 고정해 시뮬레이션합니다. 다만 사업부별 지급률은
+              회사가 정하므로 실제 분배와 차이가 있을 수 있습니다. 영업이익만
+              다양하게 바꿔가며 사업부별 1인당 추정치 변화를 빠르게 비교하는 도구로
+              활용하세요.
             </p>
 
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-10 mb-4">
@@ -1207,10 +1212,10 @@ export default function SamsungBonusCalculatorPage() {
               aria-hidden
             />
             <p className="text-xs text-muted-blue dark:text-canvas-300 leading-relaxed">
-              본 계산기는 공개된 노사 합의 보도와 영업이익 분배 모델 추정치이며
-              참고용입니다. 영업이익 10.5% 재원·부문 사업부 4:6 비율은 보도 기반
+              본 계산기는 공개된 노사 합의 보도와 분배 모델 추정치이며
+              참고용입니다. DS부문 영업이익 10.5% 재원·부문 사업부 4:6 비율은 보도 기반
               고정값, 사업부 인원·가중치·세금 가정은 사용자 조정 가능. 정확한
-              본인 케이스는 회사 명세서 확인. 페이지 수정일: <time dateTime="2026-10-09">2026-10-09</time>.
+              본인 케이스는 회사 명세서 확인. 페이지 수정일: <time dateTime="2026-11-01">2026-11-01</time>.
             </p>
           </div>
 

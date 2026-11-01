@@ -2002,7 +2002,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-12",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5034
+  "contentChars": 5029
  },
  {
   "slug": "sk-hynix-wage-2026",
@@ -2021,7 +2021,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-13",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5062
+  "contentChars": 5057
  },
  {
   "slug": "samsung-hynix-2026-deepdive",
@@ -2040,7 +2040,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-13",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5351
+  "contentChars": 5346
  },
  {
   "slug": "semiconductor-performance-bonus-tax",
@@ -2061,7 +2061,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 6041
+  "contentChars": 6036
  },
  {
   "slug": "hbm-supercycle-worker-2026",
@@ -2080,7 +2080,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-14",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5071
+  "contentChars": 5066
  },
  {
   "slug": "semiconductor-entry-salary-2026",
@@ -2100,7 +2100,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-12",
   "views": 0,
   "lang": "ko",
-  "contentChars": 4982
+  "contentChars": 4977
  },
  {
   "slug": "chip-rsu-stock-tax-2026",
@@ -2120,7 +2120,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-13",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5930
+  "contentChars": 5925
  },
  {
   "slug": "year-end-tax-refund-secrets-2026",
@@ -4690,7 +4690,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
-  "contentChars": 7195
+  "contentChars": 7183
  },
  {
   "slug": "sk-hynix-ps-history-2026-prospect",
@@ -5202,7 +5202,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 6627
+  "contentChars": 6624
  },
  {
   "slug": "sk-hynix-ps-forecast-2027",
@@ -5413,7 +5413,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 4754
+  "contentChars": 4747
  },
  {
   "slug": "mortgage-refinance-guide-2026",
@@ -5552,7 +5552,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-09-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 12092
+  "contentChars": 12089
  },
  {
   "slug": "samsung-vs-sk-hynix-stock-bonus-2026",
@@ -5572,7 +5572,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-09-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 14112
+  "contentChars": 14099
  },
  {
   "slug": "samsung-special-bonus-q3-preview-2027",
@@ -5593,6 +5593,6 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 12947
+  "contentChars": 12944
  }
 ];
