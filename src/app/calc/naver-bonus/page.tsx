@@ -3,7 +3,7 @@
 // 네이버 RSU·인센티브 계산기.
 // 네이버는 임원 보수 = 단기 타깃 인센티브 + 장기 RSU 구조.
 // 2025년 자사주 처분 465억 / 1,683명 = 1인당 약 2,765만원 (RSU 형태).
-// 정기 PI: 기본급의 10~40% 연 1회.
+// 정기 PI: 연봉의 10~40% 연 1회 (계산기 산식 = 연봉 × %).
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
@@ -38,7 +38,7 @@ const FAQ_ITEMS = [
   {
     question: "네이버 성과급은 어떻게 구성되나요?",
     answer:
-      "네이버는 (1) 정기 PI(Performance Incentive, 타깃 인센티브) — 기본급의 10~40% 연 1회 지급, (2) 장기 RSU(Restricted Stock Unit, 양도제한조건부주식) — 핵심 인재·임원 위주로 부여되며 가득 조건(보통 1~3년 근속) 후 자사주로 지급. 두 가지가 합쳐져 영끌 연봉이 결정됩니다.",
+      "네이버는 (1) 정기 PI(Performance Incentive, 타깃 인센티브) — 연봉의 10~40% 연 1회 지급, (2) 장기 RSU(Restricted Stock Unit, 양도제한조건부주식) — 핵심 인재·임원 위주로 부여되며 가득 조건(보통 1~3년 근속) 후 자사주로 지급. 두 가지가 합쳐져 영끌 연봉이 결정됩니다.",
   },
   {
     question: "RSU는 누가 얼마나 받나요?",
@@ -158,7 +158,7 @@ export default function NaverBonusPage() {
                 <h3 className="font-bold mb-2 text-lg">📊 PI (Performance Incentive)</h3>
                 <ul className="space-y-1 text-sm leading-relaxed">
                   <li>• 정기 단기 성과급</li>
-                  <li>• 기본급의 <strong>10~40%</strong> 연 1회</li>
+                  <li>• 연봉의 <strong>10~40%</strong> 연 1회</li>
                   <li>• 본인 평가 등급 + 사업부 성과 연동</li>
                 </ul>
               </article>
