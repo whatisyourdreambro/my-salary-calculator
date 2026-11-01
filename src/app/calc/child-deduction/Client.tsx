@@ -6,6 +6,8 @@ import { calculateChildDeduction2026, CHILD_DEDUCTION_COUNT_LIMIT, type ChildDed
 
 function fmt(n: number) { return n.toLocaleString("ko-KR"); }
 
+const RESULT_NOTE = "두 금액을 더해 환급액으로 계산하지 않습니다. 실제 적용 세액공제는 다른 공제와 남은 세액 등에 따라 제한될 수 있습니다. 실제 환급·추가 납부는 최종 결정세액과 이미 낸 세금의 차이이며, 이 계산에는 지방소득세와 장애인 등 추가공제를 포함하지 않습니다.";
+
 export default function ChildDeductionClient() {
   const [input, setInput] = useState<ChildDeductionInput>({
     basicDeductionChildren: 0, childTaxCreditEligibleChildren: 0,
@@ -48,27 +50,32 @@ export default function ChildDeductionClient() {
         </fieldset>
       </div>
 
+      {/* 입력 조합이 맞지 않아도(예: 출산·입양 인원이 기본공제 인원보다 많음) 두 카드 구성은 그대로 두고 금액만 '—'
+          (2026-11-01 B08 IVT-05). 종전에는 결과가 오류 문장 한 줄로 줄어 버튼을 누를 때마다 아래 CalcResultAd 가 크게
+          오르내렸다. 오류는 설명 문단 자리에 보이고, 설명 문단은 보이지 않게 남겨 같은 높이를 유지한다(오류 문장이 더 짧다). */}
       <section aria-label="자녀 공제액 결과" aria-live="polite" aria-atomic="true" className="rounded-2xl border border-canvas-200 dark:border-canvas-800 bg-white dark:bg-canvas-900 p-5 sm:p-6">
-        {!result.valid ? <p className="font-medium text-red-700 dark:text-red-300">{result.error}</p> : (
-          <>
-            <h2 className="text-xl font-black text-navy dark:text-canvas-50 mb-4">공제액은 두 종류로 나뉩니다</h2>
-            <dl className="grid sm:grid-cols-2 gap-4">
-              <div className="rounded-xl bg-canvas-50 dark:bg-canvas-800 p-4">
-                <dt className="text-sm font-bold text-muted-blue dark:text-canvas-300">소득공제액</dt>
-                <dd className="mt-2 text-3xl font-black tabular-nums text-navy dark:text-canvas-50">{fmt(result.incomeDeduction)}원</dd>
-                <dd className="mt-2 text-sm text-muted-blue dark:text-canvas-300">기본공제 대상 1명당 150만원. 세금 계산의 기초가 되는 소득을 줄이는 금액입니다.</dd>
-              </div>
-              <div className="rounded-xl bg-electric-5 dark:bg-canvas-800 p-4">
-                <dt className="text-sm font-bold text-muted-blue dark:text-canvas-300">세액공제 계산액 · 소득세 기준</dt>
-                <dd className="mt-2 text-3xl font-black tabular-nums text-electric dark:text-canvas-50">{fmt(result.taxCreditBeforeLimit)}원</dd>
-                <dd className="mt-2 text-sm text-muted-blue dark:text-canvas-300">자녀세액공제 {fmt(result.childTaxCredit)}원<br />출산·입양 공제 {fmt(result.birthAdoptionTaxCredit)}원</dd>
-              </div>
-            </dl>
-            <p className="mt-4 text-sm leading-relaxed text-muted-blue dark:text-canvas-300">
-              두 금액을 더해 환급액으로 계산하지 않습니다. 실제 적용 세액공제는 다른 공제와 남은 세액 등에 따라 제한될 수 있습니다.
-              실제 환급·추가 납부는 최종 결정세액과 이미 낸 세금의 차이이며, 이 계산에는 지방소득세와 장애인 등 추가공제를 포함하지 않습니다.
-            </p>
-          </>
+        <h2 className="text-xl font-black text-navy dark:text-canvas-50 mb-4">공제액은 두 종류로 나뉩니다</h2>
+        <dl className="grid sm:grid-cols-2 gap-4">
+          <div className="rounded-xl bg-canvas-50 dark:bg-canvas-800 p-4">
+            <dt className="text-sm font-bold text-muted-blue dark:text-canvas-300">소득공제액</dt>
+            <dd className="mt-2 text-3xl font-black tabular-nums text-navy dark:text-canvas-50">{result.valid ? <>{fmt(result.incomeDeduction)}원</> : "—"}</dd>
+            <dd className="mt-2 text-sm text-muted-blue dark:text-canvas-300">기본공제 대상 1명당 150만원. 세금 계산의 기초가 되는 소득을 줄이는 금액입니다.</dd>
+          </div>
+          <div className="rounded-xl bg-electric-5 dark:bg-canvas-800 p-4">
+            <dt className="text-sm font-bold text-muted-blue dark:text-canvas-300">세액공제 계산액 · 소득세 기준</dt>
+            <dd className="mt-2 text-3xl font-black tabular-nums text-electric dark:text-canvas-50">{result.valid ? <>{fmt(result.taxCreditBeforeLimit)}원</> : "—"}</dd>
+            <dd className="mt-2 text-sm text-muted-blue dark:text-canvas-300">자녀세액공제 {result.valid ? <>{fmt(result.childTaxCredit)}원</> : "—"}<br />출산·입양 공제 {result.valid ? <>{fmt(result.birthAdoptionTaxCredit)}원</> : "—"}</dd>
+          </div>
+        </dl>
+        {result.valid ? (
+          <p className="mt-4 text-sm leading-relaxed text-muted-blue dark:text-canvas-300">
+            {RESULT_NOTE}
+          </p>
+        ) : (
+          <div className="mt-4 grid">
+            <p aria-hidden="true" className="invisible col-start-1 row-start-1 text-sm leading-relaxed">{RESULT_NOTE}</p>
+            <p className="col-start-1 row-start-1 text-sm font-medium leading-relaxed text-red-700 dark:text-red-300">{result.error}</p>
+          </div>
         )}
       </section>
 

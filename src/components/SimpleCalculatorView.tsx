@@ -173,6 +173,13 @@ function SimpleCalculatorInstance({ slug, calc, batch, initialResult, shareToken
  const captureSnapshot = useRef<string | null>(null);
  captureSnapshot.current = resultValid ? resultSnapshot : null;
  useEffect(() => () => { captureSnapshot.current = null; }, []);
+ // 입력 중 결과 칸 높이 고정 (2026-11-01 B08 IVT-05) — 빈칸·0·범위 밖·계산 준비 중에도 ≈ 줄과 보조 항목 줄을
+ // 같은 수로 남기고 값만 '—' 로 바꾼다. 줄 구성은 마지막으로 보인 정상 결과(처음엔 서버 기본 결과)를 따른다:
+ // 0 입력으로 다시 계산한 결과는 보조 항목이 빠지거나(입력 조건 확인 결과는 빈 목록) 판정 라벨이 바뀌어
+ // 줄 수가 달라질 수 있기 때문이다. 결과 직하 CalcResultAd 가 타이핑 중 오르내리지 않게 한다.
+ const lastValidResult = useRef<CalculatorResult>(initialResult);
+ if (resultValid && result) lastValidResult.current = result;
+ const shownShape = lastValidResult.current;
 
  const measurement = useCalculatorMeasurement({
  calcType: slug,
@@ -227,6 +234,13 @@ function SimpleCalculatorInstance({ slug, calc, batch, initialResult, shareToken
 
  const primary = result?.primary ?? initialResult.primary;
  const computeLoading = !compute && !computeFailed;
+ // 범위는 맞는데 계산할 수 없는 입력(0 나눗셈 등)의 안내 — 새 줄을 끼우지 않고 note 자리에 보인다 (B08 IVT-05).
+ const zeroFieldStatus = !resultValid && result && rawValid && result.status !== "invalid"
+ ? zeroFieldLabels.length > 0
+ ? `0으로 입력된 항목(${zeroFieldLabels.join(", ")})이 있어 계산할 수 없습니다. 0보다 큰 값을 입력해 주세요.`
+ : "이 입력 조합으로는 결과를 계산할 수 없습니다. 값을 확인해 주세요."
+ : null;
+ const noteText = zeroFieldStatus ?? result?.note;
 
  return (
  <div className="min-h-screen bg-background pb-16 pt-24 text-foreground sm:pt-28">
@@ -301,23 +315,21 @@ function SimpleCalculatorInstance({ slug, calc, batch, initialResult, shareToken
  <p className="break-words text-[clamp(1.75rem,6vw,2.75rem)] font-bold leading-tight tracking-tight text-primary-foreground tabular-nums">
  {resultValid ? formatNumber(primary.value, primary.suffix) : result ? "입력값 확인" : computeFailed ? "계산을 불러오지 못했습니다" : "계산 준비 중…"}
  </p>
- {!resultValid && result && rawValid && result.status !== "invalid" && (
- <p role="status" className="mt-2 text-sm leading-6 text-primary-foreground/90">
- {zeroFieldLabels.length > 0
- ? `0으로 입력된 항목(${zeroFieldLabels.join(", ")})이 있어 계산할 수 없습니다. 0보다 큰 값을 입력해 주세요.`
- : "이 입력 조합으로는 결과를 계산할 수 없습니다. 값을 확인해 주세요."}
- </p>
- )}
- {/* 정확값 아래에 억/만 감각 표기 — 정확값을 대체하지 않는 보조 표기 */}
- {resultValid && primary.suffix === "원" &&
+ {/* 정확값 아래에 억/만 감각 표기 — 정확값을 대체하지 않는 보조 표기. 결과가 없을 때는 같은 자리를 '—' 로 남긴다 */}
+ {resultValid
+ ? primary.suffix === "원" &&
  typeof primary.value === "number" &&
  compactKo(primary.value) && (
  <p className="mt-2 text-sm text-primary-foreground">
  ≈ {compactKo(primary.value)}원
  </p>
+ )
+ : shownShape.primary.suffix === "원" && compactKo(shownShape.primary.value) && (
+ <p className="mt-2 text-sm text-primary-foreground" aria-hidden="true">—</p>
  )}
  <div className="mb-6" />
- {resultValid && result?.secondary && result.secondary.length > 0 && (
+ {resultValid
+ ? result?.secondary && result.secondary.length > 0 && (
  <div className="border-t border-white/20 pt-5 space-y-2">
  {result.secondary.map((item, idx) => (
  <div key={idx} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
@@ -328,10 +340,21 @@ function SimpleCalculatorInstance({ slug, calc, batch, initialResult, shareToken
  </div>
  ))}
  </div>
+ )
+ : shownShape.secondary && shownShape.secondary.length > 0 && (
+ // 결과가 없을 때: 같은 라벨·같은 줄 수로 값만 '—' (읽을 값이 없어 보조기기에는 숨긴다)
+ <div className="border-t border-white/20 pt-5 space-y-2" aria-hidden="true">
+ {shownShape.secondary.map((item, idx) => (
+ <div key={idx} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+ <span className="text-sm text-white/80">{item.label}</span>
+ <span className="font-bold tabular-nums text-white">—</span>
+ </div>
+ ))}
+ </div>
  )}
- {result?.note && (
- <p className="mt-5 pt-5 border-t border-white/20 text-xs text-white/85 leading-relaxed">
- {result.note}
+ {noteText && (
+ <p role={zeroFieldStatus ? "status" : undefined} className="mt-5 pt-5 border-t border-white/20 text-xs text-white/85 leading-relaxed">
+ {noteText}
  </p>
  )}
  </section>

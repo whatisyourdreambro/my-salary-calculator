@@ -97,6 +97,9 @@ export default function DualIncomeYearEndClient() {
     return { allMe, allSp, optimal, saving, parts, cardMinMe, cardMinSp };
   }, [vals, children, childTaxCreditEligibleChildren]);
 
+  // 최적 배분 줄 수 — 금액 입력이 아니라 자녀 수(선택 상자)로만 정해진다 (B08 IVT-05, 아래 결과 카드)
+  const allocationRows = children > 0 ? 4 : 1;
+
   const scenarioRows = [
     { label: "전부 본인 귀속", res: r.allMe },
     { label: "전부 배우자 귀속", res: r.allSp },
@@ -256,6 +259,14 @@ export default function DualIncomeYearEndClient() {
               {r.parts.map((p) => (
                 <li key={p} className="text-sm font-bold text-navy dark:text-canvas-50">
                   · {p}
+                </li>
+              ))}
+              {/* 입력 중 줄 수 고정 (2026-11-01 B08 IVT-05) — 자녀가 있으면 배분 줄은 자녀·자녀세액공제·자녀 지출에
+                  부부 상호 의료비까지 4줄이고, 의료비 칸을 비우면 3줄이 된다. 빈 줄을 보이지 않게 채워 금액을 고쳐
+                  쓰는 동안 아래 CalcResultAd 가 오르내리지 않게 한다. 자녀 0명(첫 화면)은 언제나 1줄이라 채우지 않는다. */}
+              {Array.from({ length: Math.max(0, allocationRows - r.parts.length) }, (_, i) => (
+                <li key={`pad-${i}`} aria-hidden="true" className="invisible text-sm font-bold">
+                  ·
                 </li>
               ))}
             </ul>
