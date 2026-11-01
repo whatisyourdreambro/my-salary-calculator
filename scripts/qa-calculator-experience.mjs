@@ -655,7 +655,9 @@ async function auditCivilPayHandoff(page, sourceRoute, theme) {
   const label = occupation === 'fire' ? '소방교' : '경장';
   const choice = page.getByRole('button', { name: new RegExp(`^[\\d,]+원, 2026년 ${label} 3호봉 조건으로 실수령액 계산$`) });
   const cell = await choice.boundingBox();
-  assert(cell && cell.height >= 44 && cell.width >= 44, 'mobile selection target');
+  // 2026-11-01 B11: rows went back to their pre-button 40px height (min-h-10) so the CalcResultAd below the
+  // table is not pushed down. 40px still exceeds WCAG 2.2 SC 2.5.8 (AA, 24px); the width keeps 44px.
+  assert(cell && cell.height >= 40 && cell.width >= 44, 'mobile selection target');
   await choice.focus();
   await choice.press('Enter');
   const dialog = page.getByRole('dialog');

@@ -71,10 +71,9 @@ function DeferredRoadmapChart({ data }: { data: SalaryRoadmapDatum[] }) {
  );
 }
 
-export default function CompanyDetailClient({ company, summary, nameChangeNotice }: {
+export default function CompanyDetailClient({ company, summary }: {
  company: CompanyProfile;
  summary?: ReactNode;
- nameChangeNotice?: ReactNode;
 }) {
  // Prepare Chart Data
  const salaryData = [
@@ -159,9 +158,9 @@ export default function CompanyDetailClient({ company, summary, nameChangeNotice
 
  {/* 회사 전용 요약(현재 삼성전자만, page.tsx 가 넘김) — 9/9 에 첫 광고 위(Quick Stats 앞)로 들어갔던 블록을 광고 바로 아래로 내렸다
      (2026-10-05 운영자 승인 #6). space-y-8 이라 광고 아래 32px, 테두리·안쪽 여백 뒤에 링크가 있다. 광고 위로 되돌리지 말 것.
-     사명 안내(nameChangeNotice, 현재 LIG넥스원만)와는 같은 회사에 함께 나오지 않는다 — 둘 다 광고 아래. */}
+     사명 안내(현재 LIG넥스원만)는 여기에 두지 않는다 — 여기는 K1 회사 상단 광고보다 위라 K1 과 그 아래 광고를 밀었다.
+     page.tsx 가 K1 아래·연봉표 위에 렌더한다(2026-11-01 운영자 승인 B11). 이 자리로 되돌리지 말 것. */}
  {summary}
- {nameChangeNotice}
 
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
  {/* Left Column: Charts & Analysis */}

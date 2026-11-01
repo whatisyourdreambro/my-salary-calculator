@@ -145,13 +145,17 @@ describe("전국 순위 표기 — 상위 50% 밖은 구간 라벨 (A22)", () =>
 });
 
 describe("LIG 상호 변경의 공식 근거와 기존 급여 자료 구분", () => {
-  it("기존 H1을 유지하면서 첫 광고 뒤에 현재 법인명·두 변경일·공식 출처를 서버 본문으로 표시한다", () => {
+  it("기존 H1을 유지하면서 첫 광고·요약 영역 뒤(K1 자리 아래)에 현재 법인명·두 변경일·공식 출처를 서버 본문으로 표시한다", () => {
     const html = pages.get("lig-nex1")!;
     const notice = html.match(/<section\b[^>]*data-msy-module="company-name-change"[\s\S]*?<\/section>/)?.[0];
     expect(notice).toBeDefined();
     const firstAdPosition = html.indexOf('data-testid="calc-result-ad-marker"');
     expect(firstAdPosition).toBeGreaterThanOrEqual(0);
     expect(html.indexOf('data-msy-module="company-name-change"')).toBeGreaterThan(firstAdPosition);
+    // 2026-11-01 운영자 승인 B11: 요약 영역(main) 안 결과창 광고 바로 아래는 K1 회사 상단 광고보다 위라 K1 을 밀었다 —
+    // main 밖(K1 자리 아래)·연봉표 위. K1 순서 자체는 companyTopAd.test.ts 가 env 설정 렌더로 본다.
+    expect(html.indexOf('data-msy-module="company-name-change"')).toBeGreaterThan(html.indexOf("</main>"));
+    expect(html.indexOf('data-msy-module="company-name-change"')).toBeLessThan(html.indexOf('data-msy-module="company-salary-net"'));
     expect(html).toMatch(/<h1\b[^>]*>LIG넥스원 연봉 2026<\/h1>/);
     expect(notice).toContain("엘아이지디펜스앤에어로스페이스 주식회사");
     expect(notice).toContain("LIG디펜스앤에어로스페이스");

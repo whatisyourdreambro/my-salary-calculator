@@ -13,10 +13,12 @@ export default function CivilPayHandoffButton({ selection, gradeLabel, amountLab
   const router = useRouter();
   const [failed, setFailed] = useState(false);
   return <>
+    {/* 높이 min-h-10(40px): 경찰·소방 봉급표 줄 높이 40px 에 맞춘다 — 44px 이면 줄마다 높아져 표 아래 결과창 광고가 내려간다
+        (2026-11-01 운영자 승인 B11). WCAG 2.2 SC 2.5.8(AA) 최소 24px 은 충족하고 너비는 min-w-11(44px) 그대로. */}
     <button type="button"
       aria-label={`${amountLabel}원, 2026년 ${gradeLabel} ${selection.step}호봉 조건으로 실수령액 계산`}
       title="이 계급·호봉으로 실수령액 계산"
-      className="min-h-11 min-w-11 rounded px-1 font-bold text-electric underline decoration-electric/30 underline-offset-4 hover:decoration-electric focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-electric"
+      className="min-h-10 min-w-11 rounded px-1 font-bold text-electric underline decoration-electric/30 underline-offset-4 hover:decoration-electric focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-electric"
       onClick={event => {
         if (!event.nativeEvent.isTrusted) return;
         if (!isCivilPaySelection(selection) || pathname !== selection.source) {
