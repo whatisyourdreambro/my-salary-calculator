@@ -142,8 +142,6 @@ export default async function HubPage({ params: pendingParams }: { params: Promi
           />
         </div>
 
-        <ShareSection contentType="page" className="mt-10" />
-
         <nav className="mt-12 pt-8 border-t border-canvas-200 dark:border-canvas-800">
           <h2 className="text-sm font-black text-faint-blue uppercase tracking-widest mb-4">
             다른 주제 종합 가이드
@@ -164,10 +162,12 @@ export default async function HubPage({ params: pendingParams }: { params: Promi
           </div>
         </nav>
 
-        {/* 본문 끝 멀티플렉스(관련 콘텐츠형) — 다른 주제 링크 직후, 쿠팡·공유 아래로 기존 광고 밀림 없음 — 전면 최적화 (운영자 지시 2026-09-02) */}
+        {/* 본문 끝 멀티플렉스(관련 콘텐츠형) — 다른 주제 링크 직후, 쿠팡 아래로 기존 광고 밀림 없음 — 전면 최적화 (운영자 지시 2026-09-02) */}
         <div className="mt-10">
           <MultiplexAd />
         </div>
+        {/* 공유 버튼 — 마지막 광고 아래(하이드레이션 뒤에 나타나도 광고가 밀리지 않게, OF4 A1). 광고 위로 되돌리지 말 것. */}
+        <ShareSection contentType="page" className="mt-10" />
       </div>
       <TopicNextSteps path={`/hub/${hub.id}`} />
     </main>

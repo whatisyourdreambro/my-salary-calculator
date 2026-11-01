@@ -66,10 +66,11 @@ export default function HubIndexPage() {
         <div className="mt-10">
           <GuideMidAd />
         </div>
-        <ShareSection contentType="page" className="mt-10" />
         <div className="mt-10">
           <HomeTopAd />
         </div>
+        {/* 공유 버튼 — 마지막 광고 아래(하이드레이션 뒤에 나타나도 광고가 밀리지 않게, OF4 A1). 광고 위로 되돌리지 말 것. */}
+        <ShareSection contentType="page" className="mt-10" />
       </div>
       <TopicNextSteps path="/hub" />
     </main>

@@ -263,12 +263,12 @@ export default function AboutPage() {
  </div>
  </section>
 
- <ShareSection contentType="page" className="mt-12" />
-
  {/* 부활 팩 P2-A (운영자 승인 2026-08-31): 페이지 끝 유닛 */}
  <div className="mt-12">
  <HomeTopAd />
  </div>
+ {/* 공유 버튼 — 마지막 광고 아래(하이드레이션 뒤에 나타나도 광고가 밀리지 않게, OF4 A1). 광고 위로 되돌리지 말 것. */}
+ <ShareSection contentType="page" className="mt-12" />
 
  {/* 운영자 승인 2026-09-27: 공식 발표 해설(트렌드 브리프) 작성 방식 고지 — '정보를 확인하고 수정하는 기준'의 보충.
      그 절은 이 페이지 끝 광고보다 위에 있어 거기에 넣으면 모든 폭에서 광고가 아래로 밀리므로, 광고 높이를 바꾸지

@@ -472,12 +472,6 @@ export default async function RegionDetailPage({
           />
         </div>
 
-        <ShareSection
-          heading="우리 지역 연봉, 친구에게도 알려주세요"
-          contentType="page"
-          className="mt-10"
-        />
-
         {/* 다음 단계 */}
         <section className="mt-10 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 rounded-2xl p-6">
           <h2 className="text-lg font-black text-navy dark:text-canvas-50 mb-4">
@@ -510,10 +504,17 @@ export default async function RegionDetailPage({
           </ul>
         </section>
 
-        {/* 본문 끝 멀티플렉스(관련 콘텐츠형) — 쿠팡·공유·다음 단계 섹션 전부 아래, 기존 광고 밀림 없음 — 전면 최적화 (운영자 지시 2026-09-02) */}
+        {/* 본문 끝 멀티플렉스(관련 콘텐츠형) — 쿠팡·다음 단계 섹션 전부 아래, 기존 광고 밀림 없음 — 전면 최적화 (운영자 지시 2026-09-02) */}
         <div className="mt-10">
           <MultiplexAd />
         </div>
+
+        {/* 공유 버튼 — 마지막 광고 아래(하이드레이션 뒤에 나타나도 광고가 밀리지 않게, OF4 A1). 광고 위로 되돌리지 말 것. */}
+        <ShareSection
+          heading="우리 지역 연봉, 친구에게도 알려주세요"
+          contentType="page"
+          className="mt-10"
+        />
       </div>
     </main>
   );
