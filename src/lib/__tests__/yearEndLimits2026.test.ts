@@ -5,6 +5,9 @@
 //   2) 수치 문자열이 2026년 귀속 현행법 값 그대로다 (조문 확인 2026-09-25 — yearEndLimits2026.ts 머리말).
 //   3) FAQPage JSON-LD 는 한 개이며 모든 질문·답변이 화면 본문과 글자 그대로 같다.
 //   4) 새 섹션은 마지막 광고(쿠팡 배너)보다 아래 — 광고 위 FAQ 문항 수(4)는 그대로.
+//   5) YE-06 (B43, 운영자 승인 2026-11-01 8번): 표 끝 비과세·감면 2행(기업 출산지원금 비과세·중소기업 취업자 소득세 감면)은
+//      현행 조문(소득세법 §12(3)머목·시행령 §17의2, 조특법 §30①·시행령 §27①, 2026-11-01 확인)과 smbTaxBreak 정본 상수
+//      그대로이고, 감면 행은 전용 계산기 링크와 '감면 대상이면 결정세액이 더 낮습니다'를 마지막 광고 아래에만 싣는다.
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createElement, type AnchorHTMLAttributes } from "react";
@@ -43,6 +46,13 @@ import {
 } from "@/lib/yearEndLimits2026";
 import { MARRIAGE_CREDIT_2026 } from "@/lib/taxConstants2026";
 import { YEAR_END_REFORM_2027 } from "@/data/yearEndTaxHub";
+import {
+  SMB_BREAK_CAP_PER_YEAR,
+  SMB_BREAK_RULES,
+  YOUTH_MAX_AGE,
+  YOUTH_MILITARY_DEDUCT_MAX_MONTHS,
+  YOUTH_MIN_AGE,
+} from "@/lib/smbTaxBreak";
 
 const row = (item: string) => {
   const r = YEAR_END_LIMIT_ROWS.find((x) => x.item === item);
@@ -51,7 +61,7 @@ const row = (item: string) => {
 };
 
 describe("공제 한도표 — 2026년 귀속 현행법 수치", () => {
-  it("7개 항목을 모두 싣는다", () => {
+  it("공제 7개 + 표 끝 비과세·감면 2개(YE-06, B43) 항목을 싣는다", () => {
     expect(YEAR_END_LIMIT_ROWS.map((r) => r.item)).toEqual([
       "신용카드 등 소득공제",
       "신용카드 추가 한도",
@@ -60,7 +70,14 @@ describe("공제 한도표 — 2026년 귀속 현행법 수치", () => {
       "의료비 세액공제",
       "교육비 세액공제",
       "기부금 세액공제",
+      "기업 출산지원금 비과세",
+      "중소기업 취업자 소득세 감면",
     ]);
+    // 기존 공제 7행은 모바일 이름표가 기본값(공제율·한도) 그대로
+    for (const r of YEAR_END_LIMIT_ROWS.slice(0, 7)) {
+      expect(r.rateLabel).toBeUndefined();
+      expect(r.limitLabel).toBeUndefined();
+    }
   });
 
   it("신용카드 — 공제율 15/30/40%·문화체육 30%, 기본 한도 자녀 수별 300/350/400만(초과 250/275/300만)", () => {
@@ -153,10 +170,58 @@ describe("공제 한도표 — 2026년 귀속 현행법 수치", () => {
   });
 
   it("출처 문구 — 조문·기준일·2027 개편안 미반영을 밝힌다", () => {
-    expect(YEAR_END_LIMITS_SOURCE_NOTE).toContain("소득세법 제59조의3·제59조의4");
-    expect(YEAR_END_LIMITS_SOURCE_NOTE).toContain("조세특례제한법 제58조·제76조·제95조의2·제126조의2");
+    expect(YEAR_END_LIMITS_SOURCE_NOTE).toContain("소득세법 제12조·제59조의3·제59조의4");
+    expect(YEAR_END_LIMITS_SOURCE_NOTE).toContain("같은 법 시행령 제17조의2");
+    expect(YEAR_END_LIMITS_SOURCE_NOTE).toContain("조세특례제한법 제30조·제58조·제76조·제95조의2·제126조의2");
     expect(YEAR_END_LIMITS_SOURCE_NOTE).toContain("2027년 귀속부터");
-    expect(YEAR_END_LIMITS_SOURCE_NOTE).toContain("기준일 2026-09-25");
+    expect(YEAR_END_LIMITS_SOURCE_NOTE).toContain("기준일 2026-09-25(출산지원금·중소기업 감면 행은 2026-11-01)");
+  });
+});
+
+describe("표 끝 비과세·감면 행 — YE-06 (B43, 현행 조문 2026-11-01 확인)", () => {
+  it("기업 출산지원금 — 소득세법 §12(3)머목1)·시행령 §17의2: 출생 후 2년 이내 첫 번째·두 번째 지급분 전액, 사용자별 계산, 특수관계인 제외", () => {
+    const r = row("기업 출산지원금 비과세");
+    expect(r.basis).toBe("소득세법 제12조제3호머목 · 같은 법 시행령 제17조의2");
+    expect(r.rateLabel).toBe("비과세");
+    expect(r.limitLabel).toBe("요건");
+    expect(r.rate).toBe("근로자 본인 또는 배우자의 출산과 관련해 회사에서 받은 출산지원금 전액(총급여에서 제외)");
+    expect(r.limit).toBe(
+      "자녀 출생일 이후 2년 이내 첫 번째·두 번째 지급분(회사별로 계산) · 금액 한도 없음 · 사업주의 친족이나 지배주주 등 특수관계인은 제외 · 6세 이하 자녀 보육수당 비과세(1명당 월 20만원)와 별도"
+    );
+    expect(r.calc).toBeUndefined();
+  });
+
+  it("중소기업 취업자 감면 — 조특법 §30①: 청년 90%·5년, 60세 이상·장애인·경력단절 근로자 70%·3년, 과세기간별 200만원 (smbTaxBreak 정본 상수)", () => {
+    expect(SMB_BREAK_RULES.youth).toMatchObject({ rate: 0.9, years: 5 });
+    expect(SMB_BREAK_RULES.other).toMatchObject({ rate: 0.7, years: 3 });
+    expect(SMB_BREAK_CAP_PER_YEAR).toBe(2_000_000);
+    expect([YOUTH_MIN_AGE, YOUTH_MAX_AGE, YOUTH_MILITARY_DEDUCT_MAX_MONTHS]).toEqual([15, 34, 72]);
+    const r = row("중소기업 취업자 소득세 감면");
+    expect(r.basis).toBe("조세특례제한법 제30조");
+    expect(r.rateLabel).toBe("감면율");
+    expect(r.limitLabel).toBeUndefined();
+    expect(r.rate).toBe(
+      "소득세의 90%(청년: 근로계약 체결일 15~34세, 병역 이행기간 최대 6년은 나이에서 뺌, 취업일부터 5년) · 70%(60세 이상·장애인·경력단절 근로자, 3년)"
+    );
+    expect(r.limit).toBe(
+      "과세기간별 200만원까지 · 회사(퇴사자는 세무서)에 감면 신청 · 위 계산기는 감면을 반영하지 않아 감면 대상이면 결정세액이 더 낮습니다"
+    );
+    expect(r.calc).toEqual({ href: "/calc/smb-income-tax-break", label: "중소기업 감면 계산기 →" });
+  });
+
+  it("'위 계산기는 감면을 반영하지 않아' 문장의 전제 — /year-end-tax 계산기 엔진·화면에 중소기업 감면 경로가 없다", () => {
+    // 연말정산 엔진에 감면 경로가 생기면 이 단언이 깨진다 — 그때 감면 행의 안내 문장을 함께 고칠 것.
+    for (const file of ["src/lib/yearEndTaxCalculator.ts", "src/components/YearEndTaxCalculator.tsx"]) {
+      const src = readFileSync(resolve(process.cwd(), file), "utf8");
+      expect(src, `${file} 에 감면 경로가 생겼다면 yearEndLimits2026 감면 행 문장을 고칠 것`).not.toMatch(
+        /smbTaxBreak|applySmeYouthReduction|SmbBreak|감면/
+      );
+    }
+  });
+
+  it("전용 계산기 페이지가 있다 (/calc/smb-income-tax-break)", () => {
+    const src = readFileSync(resolve(process.cwd(), "src/app/calc/smb-income-tax-break/page.tsx"), "utf8");
+    expect(src).toContain('path: "/calc/smb-income-tax-break"');
   });
 });
 
@@ -243,6 +308,25 @@ describe("/year-end-tax 페이지 — 한도표·FAQ 배치와 FAQPage JSON-LD",
     expect(html.indexOf('data-test="share"')).toBeLessThan(sectionAt);
     const lastAd = Math.max(...adPositions);
     expect((html.slice(0, lastAd).match(/<details/g) ?? []).length).toBe(4);
+  });
+
+  it("표 끝 비과세·감면 행(YE-06)은 모바일 이름표가 맞고, 감면 계산기 링크·안내 문장은 마지막 광고 아래에만 있다", () => {
+    expect(html).toContain('<span class="sm:hidden font-bold text-navy">비과세 </span>');
+    expect(html).toContain('<span class="sm:hidden font-bold text-navy">요건 </span>');
+    expect(html).toContain('<span class="sm:hidden font-bold text-navy">감면율 </span>');
+    expect(html.split('<span class="sm:hidden font-bold text-navy">공제율 </span>')).toHaveLength(8); // 기존 7행
+    expect(html.split('<span class="sm:hidden font-bold text-navy">한도 </span>')).toHaveLength(9); // 기존 7행 + 감면 행
+    const lastAd = Math.max(...[...html.matchAll(/data-test-ad="([^"]+)"/g)].map((m) => m.index ?? -1));
+    const link = html.indexOf('href="/calc/smb-income-tax-break"');
+    expect(link).toBeGreaterThan(lastAd);
+    expect(html.indexOf("중소기업 감면 계산기 →")).toBeGreaterThan(lastAd);
+    expect(html.indexOf("감면 대상이면 결정세액이 더 낮습니다")).toBeGreaterThan(lastAd);
+    expect(html.indexOf("기업 출산지원금 비과세")).toBeGreaterThan(lastAd);
+    // 광고 위에는 이 행·링크가 없다
+    const aboveLastAd = html.slice(0, lastAd);
+    expect(aboveLastAd).not.toContain("/calc/smb-income-tax-break");
+    expect(aboveLastAd).not.toContain("출산지원금");
+    expect(aboveLastAd).not.toContain("중소기업 취업자");
   });
 
   it("page.tsx 소스에서도 광고 태그가 새 섹션보다 모두 앞에 있다", () => {
