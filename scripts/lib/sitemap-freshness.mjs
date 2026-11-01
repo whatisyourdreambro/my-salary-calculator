@@ -62,6 +62,26 @@ export function pageRevisionFields(source, filename = 'page.tsx') {
   return fields;
 }
 
+// A link-only review may move the sitemap lastmod while the visible revision date stays
+// at the last substantive revision (about-page date policy). Such an exception is valid
+// only while the sitemap still carries that link-review day, and the visible date may
+// never be later than the sitemap date. Returns the Korean day every page revision field
+// must show (null when it cannot be determined) and the issues of the exception itself.
+export function expectedPageRevisionDay({ sitemapLastModified, visibleDay, linkReviewDay }) {
+  const sitemapDay = sitemapLastModified ? koreanDay(sitemapLastModified) : null;
+  if (visibleDay === undefined) return { day: sitemapDay, issues: [] };
+  const issues = [];
+  const midnight = `${visibleDay}T00:00:00+09:00`;
+  const valid = typeof visibleDay === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(visibleDay) &&
+    Number.isFinite(Date.parse(midnight)) && koreanDay(midnight) === visibleDay;
+  if (!valid) issues.push('invalid visible revision date');
+  else if (!sitemapDay || visibleDay > sitemapDay) issues.push('visible revision date is later than the sitemap date');
+  if (!sitemapDay || sitemapDay !== linkReviewDay) {
+    issues.push('visible-date exception applies only while the sitemap keeps the link-review date (re-review the page date)');
+  }
+  return { day: valid ? visibleDay : null, issues };
+}
+
 function safeSource(relative) {
   if (!/^src\/[\w./[\]-]+\.(?:tsx?|mjs|cjs|json)$/.test(relative) || relative.split('/').includes('..')) {
     throw new Error('Invalid review source path');

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { koreanDay, contentSnapshot, assessContentReview, isFutureSitemapDate, pageRevisionFields } from '../lib/sitemap-freshness.mjs';
+import { koreanDay, contentSnapshot, assessContentReview, isFutureSitemapDate, pageRevisionFields, expectedPageRevisionDay } from '../lib/sitemap-freshness.mjs';
 
 function fixture(t) {
   const root = mkdtempSync(path.join(tmpdir(), 'sitemap-review-'));
@@ -42,6 +42,29 @@ test('page revision scan resolves constants/templates and ignores Dataset dates'
     {name:'modifiedDate',value:'2026-10-19'},
     {name:'updatedDate',value:'2026-10-19'},
   ]);
+});
+test('a visible revision date may trail only the link-review sitemap day and never lead it', () => {
+  const linkReviewDay = '2026-10-19';
+  const at = (sitemapLastModified, visibleDay) => expectedPageRevisionDay({ sitemapLastModified, visibleDay, linkReviewDay });
+  // Pages without an exception follow the sitemap day, as before.
+  assert.deepEqual(at('2026-10-18T15:00:00.000Z', undefined), { day: '2026-10-19', issues: [] });
+  assert.deepEqual(at(undefined, undefined), { day: null, issues: [] });
+  // A link-only review keeps the last substantive revision on screen.
+  assert.deepEqual(at(new Date('2026-10-19T00:00:00+09:00'), '2026-08-16'), { day: '2026-08-16', issues: [] });
+  // A visible date after the sitemap date, a missing sitemap row, or a sitemap that moved
+  // past the link review (a new revision) fails closed until the page date is reviewed again.
+  assert.match(at('2026-10-18T15:00:00.000Z', '2026-10-20').issues.join(), /later than the sitemap/);
+  assert.match(at(undefined, '2026-08-16').issues.join(), /later than the sitemap/);
+  const moved = at('2026-11-30T15:00:00.000Z', '2026-08-16');
+  assert.equal(moved.day, '2026-08-16');
+  assert.match(moved.issues.join(), /link-review date/);
+  // Malformed exception dates never pass and leave no expected day.
+  for (const bad of ['2026-8-16', '2026-02-30', '', '2026-08-16T00:00:00+09:00', null]) {
+    const result = at('2026-10-18T15:00:00.000Z', bad);
+    assert.equal(result.day, null, String(bad));
+    assert.match(result.issues.join(), /invalid visible revision date/, String(bad));
+  }
+  assert.throws(() => at('not a date', undefined), /Invalid content date/);
 });
 test('unknown dynamic date expressions require review instead of silently passing', () => {
   assert.deepEqual(pageRevisionFields('const metadata={modifiedTime: externalDate()}; <PublishedMeta updatedDate={outside}/>;'), [

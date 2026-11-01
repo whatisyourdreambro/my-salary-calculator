@@ -71,7 +71,9 @@ const g9h1 = forecast2027(GENERAL_PAY_ROWS_2026[0][1]);
 // 이전(2026-09-09~09-24) title: "2027 공무원 봉급표 예상 — 예산안 3.9%·9급 1호봉·확정 일정"
 const PAGE_TITLE = `2027년 공무원 봉급표 예상 — 예산안 인상률 ${pct}%·호봉별 월급`;
 const PAGE_DESCRIPTION = `2027년 공무원 보수 인상률은 정부 예산안 ${pct}%로 국회 심의 중(확정 전)입니다. 2026년 봉급에 적용한 9급~5급 호봉별 예상 월급, 9급 1호봉 약 ${fmt(g9h1)}원(저연차 추가 인상 전)을 확인하세요.`;
-const MODIFIED = "2026-10-19";
+// 마지막 실질 수정 9/25(B20 리드·FAQ·자료 확인일). 9/27 계산기 역링크·10/19 링크 상자는 날짜를 올리지 않는다
+// (B36, 운영자 승인 8 — sitemap 은 10/19 링크 검토일 유지, PAGE_VISIBLE_REVISION_DATES).
+const MODIFIED = "2026-09-25";
 const MODIFIED_AT = `${MODIFIED}T00:00:00+09:00`;
 
 export const metadata: Metadata = buildPageMetadata({

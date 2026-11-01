@@ -260,14 +260,17 @@ describe("/samsung-negotiation-2026 2026 임금협약 타결 결과(5/27 가결)
 describe("/chuseok-bonus-2026 연휴 이후 히어로 문구", () => {
   const src = flat(readSrc("src/app/chuseok-bonus-2026/page.tsx"));
 
-  it("계절 문구와 원발행일은 유지하고 새 설명을 추가한 10/19 수정일을 구분한다", () => {
+  // B36 (운영자 승인 8, 2026-11-01): 10/19 에는 링크 상자(TopicNextSteps)만 추가됐다 — 화면·OG·Article
+  // 수정일은 마지막 실질 수정일(8/16)이고, sitemap 만 10/19 링크 검토일을 유지한다(sitemapContentDates.test.ts).
+  it("계절 문구와 원발행일은 유지하고, 링크 상자는 화면·OG·Article 수정일을 올리지 않는다(8/16)", () => {
     expect(src).toContain("추석 전후로 궁금한 돈 문제를");
     expect(src).not.toContain("추석 앞두고 궁금한");
     expect(syllables("추석 전후로")).toEqual(syllables("추석 앞두고"));
     expect(src).toContain('publishedTime: "2026-08-16"');
-    expect(src).toContain('modifiedTime: "2026-10-19T00:00:00+09:00"');
-    expect(src).toContain('modifiedDate: "2026-10-19T00:00:00+09:00"');
-    expect(src).toContain('updatedDate="2026-10-19"');
+    expect(src).toContain('modifiedTime: "2026-08-16"');
+    expect(src).toContain('modifiedDate: "2026-08-16"');
+    expect(src).toContain('<PublishedMeta publishedDate="2026-08-16" updatedDate="2026-08-16"');
+    expect(src).not.toContain("2026-10-19");
     expect(src).toContain("2026 추석 9/25(금) · 연휴 9/24~26 · 대체공휴일 없음");
   });
 });
