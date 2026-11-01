@@ -144,8 +144,10 @@ export default function JanuaryBonusClient() {
         className="rounded-2xl overflow-hidden"
         style={{ boxShadow: "0 8px 40px #0145F225" }}
       >
+        {/* 360px 미만은 좌우 여백 20px — 정본 엔진 기본 환급액(+532,183원, 48px 비례 숫자)이 여백 32px 로는 338px 부터
+            한 줄이라 322~337px 에서 원이 접혀 CalcResultAd 가 48px 내려갔다(11/1 통합 스윕 실측). 20px 면 320px 부터 한 줄. */}
         <div
-          className="px-8 py-8 text-center"
+          className="px-5 min-[360px]:px-8 py-8 text-center"
           style={{
             background: isRefund
               ? "linear-gradient(135deg, #10B981 0%, #14C997 100%)"
