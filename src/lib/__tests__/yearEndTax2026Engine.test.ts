@@ -52,6 +52,7 @@ import { CARD_EXTRA_LIMIT_2026 } from "@/lib/cardDeduction2026";
 import { calcDonationCredit2026, DONATION_CREDIT_2026 } from "@/lib/donationCredit";
 import { withholdingIncomeTax2026 } from "@/lib/withholdingTaxTable2026";
 import { GET as widgetGET } from "@/app/widget/year-end-tax/route";
+import { EMBED_WIDGETS } from "@/app/embed/widgets";
 import DualIncomeYearEndClient from "@/app/calc/dual-income-year-end/Client";
 import YearEndTaxCalculator, {
   IncomeDeductionExtraFields,
@@ -302,6 +303,19 @@ describe("대조 — 위젯·맞벌이 계산기와 같은 입력이면 같은 �
       const gross = 12_000_000 + i * 1_000_000;
       expect(tax).toBe(Math.round(calculateYearEndTax(plain(gross)).determinedTax));
     });
+  });
+
+  it("위젯 안내·/embed 설명에 '4대보험만 반영'이 없다 — 3,000만원 이하 그리드는 표준세액공제 13만원 방식 (OF3 C4)", async () => {
+    // 소득세법 §59의4⑨1(보험료 특별소득공제를 신청하지 않으면 연 13만원)·§52⑧ — 엔진은 두 방식 중 낮은 결정세액을 고른다
+    expect(calculateYearEndTax(plain(30_000_000)).standardTaxCreditApplied).toBe(true);
+    expect(calculateYearEndTax(plain(31_000_000)).standardTaxCreditApplied).toBe(false);
+    const html = await (await widgetGET()).text();
+    expect(html).toContain("2026년 귀속 · 본인 1인 공제 반영한 보수적 추정 — ");
+    expect(html).not.toContain("4대보험만");
+    const basis = EMBED_WIDGETS.find((w) => w.id === "year-end-tax")?.basis ?? "";
+    expect(basis).toBe(
+      "2026년 귀속 기준, 본인 1인 공제 반영한 보수적 추정입니다. 카드·연금저축 등 추가 공제를 넣은 예상 세액은 본편 계산기에서 비교할 수 있습니다.",
+    );
   });
 
   it("/calc/dual-income-year-end 의 1인분 결정세액 = calculateYearEndTax (기본 입력 SSR)", () => {
