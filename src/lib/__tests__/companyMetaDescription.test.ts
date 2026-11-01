@@ -1,7 +1,7 @@
 // L10'(승인⑧) 회사 meta description 회귀 가드 — A7'·A4'·COMP-06 동봉 (2026-09-25 준비, 2026-10-01 KST 적용)
 //
-//  - 회사 <title> 은 영구 불변: 전 회사 제목을 fixtures/companyTitles-2026-09-25.json(58b8876d 출력 그대로)과
-//    적용 전·후 두 시점 모두 대조한다.
+//  - 회사 <title> 은 불변 원칙: 전 회사 제목을 fixtures/companyTitles-2026-09-25.json(58b8876d 출력 그대로 — 재생성·수정
+//    금지)과 적용 전·후 두 시점 모두 대조한다. 운영자 승인 예외(APPROVED_TITLE_CHANGES)만 새 제목을 기대한다.
 //  - 적용 후 description: 150자 이하 · '로그인 없이'(A7') · 'N월 업데이트'/'최신' 없음(COMP-06) ·
 //    og:description = meta description, og:title = <title>(NV-8).
 //  - 공시 평균연봉 후미(L10'): DART·알리오 원문 + 2025 사업연도 + 공시 1인평균 기준(산정치 제외) +
@@ -87,6 +87,18 @@ const DISCLOSED_VALUE_CORRECTED_AFTER_FIXTURE: readonly string[] = ["db-insuranc
 /** 고정본 뒤 연봉 FAQ(평균·신입 초봉 두 문항) 문장이 바뀐 회사 — bd68d860 고정본 연봉 FAQ 바이트 대조(적용 전)에서만 뺀다.
  *  적용 후 검사는 현재 데이터로 게이트 전후를 비교하므로 그대로 받는다. */
 const SALARY_FAQ_CHANGED_AFTER_FIXTURE: readonly string[] = [...DISCLOSED_VALUE_CORRECTED_AFTER_FIXTURE];
+/** 고정본(58b8876d 출력) 뒤 운영자 승인으로 <title> 을 바꾼 회사 — 이 회사만 새 제목을 기대하고, 나머지 전 회사는
+ *  고정본과 바이트 동일해야 한다. 2026-11-01 승인 목록 8번(B34):
+ *  - kotra: 검색 표기 '코트라' + 자체 추정 수치 생략(titleName·titleFigures — 신입 추정이 알리오 2025 결산 초임보다 높다)
+ *  - lig-nex1: 2026-03-31 상호 변경 — 현재 상장명(구 사명), 수치 없음(nameChange.currentListedName) */
+const APPROVED_TITLE_CHANGES: Readonly<Record<string, string>> = {
+  kotra: "코트라 연봉 2026 (KOTRA) — 신입 초봉·직급별 연봉표 | 머니샐러리",
+  "lig-nex1": "LIG디펜스앤에어로스페이스(구 LIG넥스원) 연봉 2026 — 신입 초봉·직급별 연봉표 | 머니샐러리",
+};
+const expectedTitle = (id: string) => APPROVED_TITLE_CHANGES[id] ?? snapshot[id];
+/** 상호 변경 회사의 적용 후 description 머리 문장 — seo.ts buildCompanyMetadata 와 같은 규칙(B34). 그 밖의 회사는 빈 문자열 */
+const nameChangeLead = (c: CompanyProfile) =>
+  c.nameChange ? `${c.nameChange.changedAt} ${c.name.ko}에서 상호 변경. ` : "";
 const SUFFIX_RE = / 공시 평균연봉 (.+)\((\d{4}) 사업연도\)\.$/;
 const INJECTED_SOURCE_SAMPLE = "금융감독원 전자공시(DART) 사업보고서(2025 사업연도) '직원 등의 현황'";
 
@@ -133,12 +145,75 @@ describe("회사 <title> 불변 — 전 회사 고정 스냅샷", () => {
   it.each([
     ["적용 전", BEFORE],
     ["적용 후", LIVE],
-  ])("%s: <title> 이 58b8876d 출력과 문자열 그대로 같다", (_label, when) => {
+  ])("%s: <title> 이 58b8876d 출력과 문자열 그대로 같다 (승인 예외 회사만 새 제목)", (_label, when) => {
     at(when);
+    const changed: string[] = [];
     for (const c of companies) {
-      expect(metaOf(c).title, c.id).toBe(snapshot[c.id]);
-      expect(companyPageTitleAndDescription(c).title, c.id).toBe(snapshot[c.id]);
+      const { title } = metaOf(c);
+      expect(title, c.id).toBe(expectedTitle(c.id));
+      expect(companyPageTitleAndDescription(c).title, c.id).toBe(expectedTitle(c.id));
+      if (title !== snapshot[c.id]) changed.push(c.id);
     }
+    // 고정본과 다른 회사 = 승인 예외 목록 그대로 — 다른 회사 제목은 한 글자도 바뀌지 않았다
+    expect(changed.sort()).toEqual(Object.keys(APPROVED_TITLE_CHANGES).sort());
+  });
+});
+
+describe("B34 승인 예외(2026-11-01 승인 목록 8번) — 코트라 제목·LIG 새 이름", () => {
+  it("예외 키는 kotra(titleName·titleFigures)와 상호 변경 회사 lig-nex1(nameChange)에만 있다", () => {
+    expect(companies.filter((c) => c.titleName !== undefined).map((c) => c.id)).toEqual(["kotra"]);
+    expect(companies.filter((c) => c.titleFigures !== undefined).map((c) => c.id)).toEqual(["kotra"]);
+    expect(companies.filter((c) => c.nameChange).map((c) => c.id)).toEqual(["lig-nex1"]);
+    // 검색 별칭은 CompanyNarrative 본문 문단으로도 렌더된다 — kotra 는 넣지 않는다(광고 위 줄 불변)
+    expect(companies.find((c) => c.id === "kotra")!.aliases).toBeUndefined();
+  });
+
+  it.each([
+    ["적용 전", BEFORE],
+    ["적용 후", LIVE],
+  ])("%s: kotra 제목은 '코트라'·수치 없음(43자), og·twitter·RSS 제목도 같고 description·회사명은 그대로", (_label, when) => {
+    at(when);
+    const kotra = companies.find((c) => c.id === "kotra")!;
+    expect(kotra.name.ko).toBe("KOTRA"); // H1·본문 회사명
+    const { metadata, title, description } = metaOf(kotra);
+    expect(title).toBe("코트라 연봉 2026 (KOTRA) — 신입 초봉·직급별 연봉표 | 머니샐러리");
+    expect(title.length).toBe(43);
+    expect(title).not.toContain("만원"); // 자체 추정 수치 없음
+    expect(metadata.openGraph?.title).toBe(title);
+    expect(metadata.twitter?.title).toBe(title);
+    expect(companyPageTitleAndDescription(kotra)).toEqual({ title, description });
+    // titleName·titleFigures 는 description 을 바꾸지 않는다(제목 전용)
+    const plain = { ...companyMetadataInput(kotra), titleName: undefined, titleFigures: undefined };
+    expect(description).toBe(buildCompanyMetadata(plain).description);
+    expect(description.startsWith("KOTRA 연봉 자체 추정치:")).toBe(true);
+    // keywords 는 '코트라 연봉' 하나만 더한다
+    const keywords = String(metadata.keywords).split(", ");
+    const plainKeywords = String(buildCompanyMetadata(plain).keywords).split(", ");
+    expect(keywords).toEqual([...plainKeywords, "코트라 연봉"]);
+  });
+
+  it("lig-nex1: 제목은 현재 상장명(구 사명)·수치 없음, 적용 후 description 은 변경일 머리 문장 + 150자 안, 적용 전 description 은 고정본 그대로", () => {
+    const lig = companies.find((c) => c.id === "lig-nex1")!;
+    expect(lig.name.ko).toBe("LIG넥스원"); // H1·본문 회사명
+    expect(lig.nameChange?.currentListedName).toBe("LIG디펜스앤에어로스페이스");
+    expect(lig.nameChange?.changedAt).toBe("2026-03-31");
+    const expected = "LIG디펜스앤에어로스페이스(구 LIG넥스원) 연봉 2026 — 신입 초봉·직급별 연봉표 | 머니샐러리";
+
+    at(LIVE);
+    const { metadata, title, description } = metaOf(lig);
+    expect(title).toBe(expected);
+    expect(metadata.openGraph?.title).toBe(title);
+    expect(metadata.twitter?.title).toBe(title);
+    expect(description.startsWith("2026-03-31 LIG넥스원에서 상호 변경. 연봉 자체 추정치: 신입 6,700만원, ")).toBe(true);
+    expect(description.length).toBeLessThanOrEqual(COMPANY_DESCRIPTION_MAX_CHARS);
+    expect(description).toContain("로그인 없이");
+    expect(description.endsWith(" 공시 평균연봉 1억 1,000만원(2025 사업연도).")).toBe(true);
+    expect(metadata.openGraph?.description).toBe(description);
+    expect(companyPageTitleAndDescription(lig)).toEqual({ title, description });
+
+    at(BEFORE);
+    expect(metaOf(lig).title).toBe(expected);
+    expect(metaOf(lig).description).toBe(pre.descriptions["lig-nex1"]);
   });
 });
 
@@ -155,7 +230,8 @@ describe("적용 후 description — 150자·A7'·COMP-06·NV-8", () => {
       expect(description, c.id).toContain("로그인 없이");
       expect(description, c.id).not.toMatch(/업데이트|최신/);
       expect(description, c.id).toContain("자체 추정치");
-      expect(description.startsWith(`${c.name.ko}`), c.id).toBe(true);
+      // 첫 구절은 회사명 — 상호 변경 회사만 '{변경일} {회사명}에서 상호 변경.' 이 앞선다(B34)
+      expect(description.startsWith(nameChangeLead(c) || c.name.ko), c.id).toBe(true);
     }
     expect(Math.max(...lengths)).toBeLessThanOrEqual(150);
   });
@@ -218,7 +294,12 @@ describe("L10' 공시 평균연봉 후미 — 대상 판정과 문구", () => {
       expect(description.indexOf("공시 평균연봉"), c.id).toBeGreaterThan(
         description.indexOf("자체 추정치")
       );
-      expect(description.startsWith(`${c.name.ko} 연봉 자체 추정치:`), c.id).toBe(true);
+      // 상호 변경 회사는 머리 문장이 회사명을 담아 뒤 구절의 회사명을 뺀다(B34 — 150자 상한)
+      const lead = nameChangeLead(c);
+      expect(
+        description.startsWith(lead ? `${lead}연봉 자체 추정치:` : `${c.name.ko} 연봉 자체 추정치:`),
+        c.id
+      ).toBe(true);
     }
     expect(withSuffix).toBe(eligible.length);
   });

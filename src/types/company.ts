@@ -82,6 +82,18 @@ export interface CompanyProfile {
  };
  /** 검색 표기 변형(옛 사명·영문/한글 차이·줄임말 등). data/companyAliases.ts에서 주입됨 */
  aliases?: string[];
+ /**
+  * <title>(og·twitter 제목·rss-companies item 제목 포함)의 회사명 자리에만 쓰는 검색 표기 — 없으면 name.ko.
+  * 회사명과 다르면 제목이 '{titleName} 연봉 2026 ({name.ko}) — …' 가 된다. H1·본문·description·keywords 의
+  * 회사명은 그대로(keywords 에는 '{titleName} 연봉' 한 개만 더한다). 회사 <title> 불변 원칙의 운영자 승인 예외만 적는다.
+  * 예: kotra '코트라' (2026-11-01 승인 목록 8번, B34 CTR-6).
+  */
+ titleName?: string;
+ /**
+  * false 면 <title> 에서 자체 추정 수치(신입~시니어)를 빼고 '신입 초봉·직급별 연봉표' 꼬리만 쓴다.
+  * 추정 근거가 약한 회사의 운영자 승인 예외만 적는다(kotra, 2026-11-01). 없거나 true 면 종전 수치 제목.
+  */
+ titleFigures?: boolean;
  /** 공식 상호 변경 안내. 기존 검색명·URL·급여 자료의 기준연도와 별도로 표시한다. */
  nameChange?: {
  currentLegalName: string;
