@@ -62,10 +62,18 @@ export default function DualIncomeYearEndClient() {
             : `자녀 기본공제 본인 ${k}명 · 배우자 ${children - k}명`
       );
       parts.push(`그중 연간 자녀세액공제 본인 ${optimal.assign.creditKidsToMe}명 · 배우자 ${childTaxCreditEligibleChildren - optimal.assign.creditKidsToMe}명`);
-      if (optimal.assign.childExpTo)
+      // 자녀를 나눠 귀속할 때(0 < k < 자녀 수) 자녀 지출은 한 덩어리로 한쪽에 몰린다. 실제로는 지출한 자녀를 기본공제
+      // 받는 쪽만 공제받으므로(소득세법 제59조의4제2항·제3항·제4항), 그 조건을 결과에 붙인다 (2026-10-05 감사 code2-02 —
+      // 지출이 여러 자녀에 퍼져 있으면 이 배분은 그대로 할 수 없고 절감액도 달라진다. 2026-11-01 B26: 위 자녀세액공제 줄 다음에 재이식)
+      if (optimal.assign.childExpTo) {
+        const splitKids = k > 0 && k < children;
+        const side = SIDE_LABEL[optimal.assign.childExpTo];
         parts.push(
-          `자녀 의료비·교육비·기부금 → ${SIDE_LABEL[optimal.assign.childExpTo]}`
+          splitKids
+            ? `자녀 의료비·교육비·기부금 → ${side} (${side} 쪽 자녀 지출일 때만 가능)`
+            : `자녀 의료비·교육비·기부금 → ${side}`
         );
+      }
     }
     // 결과 카드(CalcResultAd 위) 줄 — B25: 머리말을 '부부 상호'(입력칸 괄호와 같은 말)로 한 글자 줄여, 기본 예시가
     // '배우자가'(한 글자 더 김)로 바뀌어도 종전 기본 줄과 같은 글자 구성·폭을 유지한다. 동점이면 배분 대신 동점 문구.

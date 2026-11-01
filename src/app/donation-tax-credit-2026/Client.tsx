@@ -8,6 +8,7 @@
 import { useMemo, useState } from "react";
 import {
   calcDonationCredit2026,
+  donationTaxCeiling2026,
   DONATION_CREDIT_2026,
 } from "@/lib/donationCredit";
 import NumberInput from "@/components/NumberInput";
@@ -59,6 +60,11 @@ export default function DonationTaxCreditClient() {
     () => calcDonationCredit2026({ grossSalary, ...amounts }),
     [grossSalary, amounts]
   );
+
+  // 산출세액 상한(근사)을 넘는 세액공제 — 올해 공제되지 않는 금액. 넘을 때만 아래 '한도 초과분 안내' 에 한 줄 (code9-01).
+  // 특례·일반기부금분은 그 기부금을 10년간 이월공제하고(소득세법 제61조제2항 단서) 정치자금·고향사랑분은 이월이 없어
+  // 문구를 '미공제분(특례·일반은 이월)' 으로 한다 — 413091de5 원문보다 짧다 (2026-11-01 B26)
+  const ceilingExcess = Math.max(0, result.totalCredit - donationTaxCeiling2026(result.earnedIncomeAmount));
 
   const totalInput =
     amounts.statutory +
@@ -171,7 +177,8 @@ export default function DonationTaxCreditClient() {
           {/* 한도 초과분 안내 */}
           {(result.carryoverTotal > 0 ||
             result.politicalExcess > 0 ||
-            result.hometownExcess > 0) && (
+            result.hometownExcess > 0 ||
+            ceilingExcess > 0) && (
             <div className="mt-3 pt-3 border-t border-electric-20 space-y-1 text-sm">
               {result.carryoverTotal > 0 && (
                 <div className="flex justify-between text-amber-600 dark:text-amber-400">
@@ -192,6 +199,12 @@ export default function DonationTaxCreditClient() {
                 <div className="flex justify-between text-red-600 dark:text-red-400">
                   <span>고향사랑 연 2,000만원 초과분 — 기부 불가·이월 불가</span>
                   <span>{fmt(result.hometownExcess)}원</span>
+                </div>
+              )}
+              {ceilingExcess > 0 && (
+                <div className="flex justify-between text-red-600 dark:text-red-400">
+                  <span>산출세액(최대치) 초과 미공제분(특례·일반은 이월)</span>
+                  <span>{fmt(ceilingExcess)}원 이상</span>
                 </div>
               )}
             </div>
@@ -234,7 +247,7 @@ export default function DonationTaxCreditClient() {
                 {fmt(result.generalAxisCredit)}원
               </li>
               <li>
-                합계 세액공제 = {fmt(result.totalCredit)}원 (산출세액 한도 내 차감)
+                합계 세액공제 = {fmt(result.totalCredit)}원 (산출세액 한도 미반영)
               </li>
             </ol>
             <p className="mt-2 text-xs leading-5 text-faint-blue">
