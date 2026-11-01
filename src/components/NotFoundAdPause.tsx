@@ -15,6 +15,7 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { canRequestLiveAds } from "@/lib/liveAds";
+import { beginAdPageView } from "@/lib/adPageViewLedger";
 
 type AdsQueue = unknown[] & { pauseAdRequests?: number };
 
@@ -39,6 +40,10 @@ export function observePageAdPause() {
 
 export default function NotFoundAdPause() {
   const pathname = usePathname();
-  useEffect(observePageAdPause, [pathname]);
+  useEffect(() => {
+    // 루트 layout 에 항상 마운트돼 광고 없는 페이지를 거쳐 돌아와도(A→B→A) 새 페이지뷰로 장부를 비운다.
+    if (pathname) beginAdPageView(pathname);
+    return observePageAdPause();
+  }, [pathname]);
   return null;
 }
