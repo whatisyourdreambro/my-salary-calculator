@@ -8,6 +8,8 @@
 // 회사 페이지 <title> 이 바뀐다(회사 <title> 은 불변 원칙). 수정 금지에 가깝게 다룰 것.
 // disclosedAverage(L10', 2026-09-25 준비)는 description 후미에만 쓰이고 title 산식과 무관하다 —
 // companyMetaDescription.test.ts 가 전 회사 <title> 을 고정 스냅샷과 대조한다.
+// 운영자 승인 예외(2026-11-01 승인 목록 8번, B34): titleName·titleFigures(kotra)와 nameChange 의
+// 현재 상장명·변경일(lig-nex1)만 제목·description 을 바꾼다 — 해당 회사에만 키가 생겨 다른 회사 입력은 그대로.
 
 import type { Metadata } from "next";
 import type { CompanyProfile } from "@/types/company";
@@ -41,6 +43,16 @@ export function companyMetadataInput(company: CompanyProfile): CompanyMetadataIn
     lastUpdated: company.lastUpdated,
     // L10' 대상 회사만 — 날짜 게이트(10/1 KST)는 buildCompanyMetadata 가 건다
     ...(disclosedAverage ? { disclosedAverage } : {}),
+    // 제목 승인 예외(B34 CTR-6) — 회사 데이터에 적힌 회사만 키가 생긴다
+    ...(company.titleName ? { titleName: company.titleName } : {}),
+    ...(company.titleFigures === false ? { titleFigures: false } : {}),
+    // 상호 변경 회사(B34 OPP-17) — 새 상장명(구 사명) 제목과 description 머리 문장
+    ...(company.nameChange
+      ? {
+          currentListedName: company.nameChange.currentListedName,
+          nameChangedAt: company.nameChange.changedAt,
+        }
+      : {}),
   };
 }
 

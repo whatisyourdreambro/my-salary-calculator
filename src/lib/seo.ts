@@ -324,6 +324,20 @@ export function buildCompanyMetadata(company: {
  * companyMetaDisclosedFigure). title 에는 쓰지 않는다.
  */
  disclosedAverage?: { avgSalaryManwon: number; fiscalYear: string };
+ /**
+ * <title> 회사명 자리 전용 검색 표기(CompanyProfile.titleName — 운영자 승인 예외만). 회사명과 다르면
+ * '{titleName} 연봉 2026 ({name}) — …'. keywords 에 '{titleName} 연봉' 을 더한다. description 은 그대로.
+ */
+ titleName?: string;
+ /** false 면 <title> 에서 자체 추정 수치를 빼고 수치 없는 꼬리만 쓴다(CompanyProfile.titleFigures) */
+ titleFigures?: boolean;
+ /**
+ * 상호 변경 회사의 현재 상장명(CompanyProfile.nameChange.currentListedName) — 있으면 <title> 이
+ * '{상장명}(구 {name}) 연봉 2026 — 신입 초봉·직급별 연봉표'(수치 없음 — 제목 길이).
+ */
+ currentListedName?: string;
+ /** 상호 변경일 YYYY-MM-DD(nameChange.changedAt) — L10' 적용 후 description 머리 '{날짜} {name}에서 상호 변경.' */
+ nameChangedAt?: string;
 }): Metadata {
  // 네이버 검색 데이터 기준: "{회사} 연봉"·"{회사} 신입 연봉"·"{회사} 초봉"·
  // "{회사} 직급" 쿼리 비중이 압도적. page.tsx가 넘기는 averageSalary는 실제로
@@ -340,12 +354,24 @@ export function buildCompanyMetadata(company: {
  // 제목에 연봉 "범위"(신입~시니어)를 노출 — 상한선이 보여 "{회사} 연봉" 검색의
  // 클릭을 더 끈다. 꼬리의 "직급별 연봉표"는 "{회사} 직급별 연봉" 쿼리 매칭 훅.
  // (기존 꼬리 "실수령액"은 데스크톱 SERP에서 잘리던 위치라 description으로 이동)
+ // 회사명 자리·수치 생략은 운영자 승인 예외만(2026-11-01 승인 목록 8번, B34) — 그 밖의 회사는 종전 제목 그대로:
+ //  - 상호 변경 회사(currentListedName): '{상장명}(구 {name}) 연봉 2026' + 수치 없는 꼬리 (OPP-17)
+ //  - 검색 표기(titleName): '{titleName} 연봉 2026 ({name})' — H1 의 회사명을 괄호로 남긴다 (CTR-6)
+ //  - titleFigures false: 자체 추정 수치 대신 수치 없는 꼬리 (CTR-6 — 공시 확인 전까지)
+ // 수치 없는 꼬리는 '신입 초봉·직급별 연봉표'(종전 '… 정보' 는 신입 수치 없는 회사용이었고 해당 회사 0곳).
+ const titleName = company.titleName ?? company.name;
+ const titleLead = company.currentListedName
+ ? `${company.currentListedName}(구 ${company.name}) 연봉 2026`
+ : titleName !== company.name
+ ? `${titleName} 연봉 2026 (${company.name})`
+ : `${company.name} 연봉 2026`;
+ const showTitleFigures = company.titleFigures !== false && !company.currentListedName;
  const title =
- entryFigure && seniorFigureTitle
- ? `${company.name} 연봉 2026 — 신입 ${entryFigure}~시니어 ${seniorFigureTitle} 직급별 연봉표`
- : entryFigure
- ? `${company.name} 연봉 2026 — 신입 초봉 ${entryFigure}·직급별 연봉표`
- : `${company.name} 연봉 2026 — 신입 초봉·직급별 연봉표 정보`;
+ showTitleFigures && entryFigure && seniorFigureTitle
+ ? `${titleLead} — 신입 ${entryFigure}~시니어 ${seniorFigureTitle} 직급별 연봉표`
+ : showTitleFigures && entryFigure
+ ? `${titleLead} — 신입 초봉 ${entryFigure}·직급별 연봉표`
+ : `${titleLead} — 신입 초봉·직급별 연봉표`;
 
  // 별칭(옛 사명·표기 변형)을 "{별칭} 연봉/초봉" 키워드로 확장
  const aliasKeywords = (company.aliases ?? []).flatMap((alias) => [
@@ -382,20 +408,28 @@ export function buildCompanyMetadata(company: {
  `${tableLabel}·실수령액을 로그인 없이 확인하세요.`,
  "로그인 없이 확인하세요.",
  ];
+ //  - 상호 변경 회사(B34 OPP-17, 2026-11-01 승인): 맨 앞에 '{변경일} {name}에서 상호 변경.' 한 문장. 이 문장이
+ //    회사명을 이미 담으므로 뒤 구절의 회사명은 뺀다 — 150자 상한(lig-nex1 은 회사명을 두면 가장 짧은 꼬리로도 153자).
+ //    적용 전 분기(아래 else)는 bd68d860 고정본과 바이트 동일해야 해서 넣지 않는다.
+ const nameChangeLead =
+ company.currentListedName && company.nameChangedAt
+ ? `${company.nameChangedAt} ${company.name}에서 상호 변경. `
+ : "";
+ const estimateSubject = nameChangeLead ? `${nameChangeLead}연봉` : `${company.name} 연봉`;
  description =
  entryFigure && seniorFigureTitle && juniorFigure && leadFigure
  ? fitCompanyDescription(
- `${company.name} 연봉 자체 추정치: 신입 ${entryFigure}, 주니어 ${juniorFigure}, 시니어 ${seniorFigureTitle}, 리드 ${leadFigure} (성과급 포함).`,
+ `${estimateSubject} 자체 추정치: 신입 ${entryFigure}, 주니어 ${juniorFigure}, 시니어 ${seniorFigureTitle}, 리드 ${leadFigure} (성과급 포함).`,
  [`${tableLabel}와 세후 실수령액, 성과급·복지를 로그인 없이 확인하세요.`, ...shorterTails],
  disclosedSuffix
  )
  : entryFigure && seniorFigureTitle
  ? fitCompanyDescription(
- `${company.name} 연봉 자체 추정치: 신입 초봉 약 ${entryFigure}, 시니어 약 ${seniorFigureTitle}.`,
+ `${estimateSubject} 자체 추정치: 신입 초봉 약 ${entryFigure}, 시니어 약 ${seniorFigureTitle}.`,
  [`${tableLabel}와 세후 실수령액, 인센티브·복지를 로그인 없이 확인하세요.`, ...shorterTails],
  disclosedSuffix
  )
- : `${company.name}의 신입 초봉부터 직급별 연봉 자체 추정치와 세후 실수령액을 2026년 기준으로 안내합니다. 동종업계 비교·연봉 협상 팁을 로그인 없이 확인하세요.`;
+ : `${nameChangeLead || `${company.name}의 `}신입 초봉부터 직급별 연봉 자체 추정치와 세후 실수령액을 2026년 기준으로 안내합니다. 동종업계 비교·연봉 협상 팁을 로그인 없이 확인하세요.`;
  } else {
  // L10' 적용 전(10/1 KST 이전 빌드) — 종전 문구 그대로. 적용 배포 확인 뒤 이 분기는 지운다
  // (그때 companyMetaDescription.test.ts 의 적용 전 테스트와 fixtures/companyPreGate-bd68d860.json 도 같이 지운다).
@@ -441,6 +475,8 @@ export function buildCompanyMetadata(company: {
  `${company.name} 성과급`,
  `${company.name} 인센티브`,
  ...aliasKeywords,
+ // 제목 검색 표기(titleName, 승인 예외 회사만) — 다른 회사 keywords 는 그대로
+ ...(company.titleName ? [`${company.titleName} 연봉`] : []),
  ],
  ogImage: `${SITE_URL}/api/og?type=company&name=${encodeURIComponent(company.name)}`,
  });

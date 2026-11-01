@@ -108,6 +108,12 @@ describe("companyMetadataInput — 회사 페이지 <title> 불변 이동", () =
         lastUpdated: c.lastUpdated,
         // L10'(2026-09-25 준비) — description 후미 전용, title 산식과 무관
         ...(companyMetaDisclosedFigure(c) ? { disclosedAverage: companyMetaDisclosedFigure(c) } : {}),
+        // B34 승인 예외(2026-11-01) — 회사 데이터에 적힌 회사(kotra 제목 표기, lig-nex1 상호 변경)만 키가 생긴다
+        ...(c.titleName ? { titleName: c.titleName } : {}),
+        ...(c.titleFigures === false ? { titleFigures: false } : {}),
+        ...(c.nameChange
+          ? { currentListedName: c.nameChange.currentListedName, nameChangedAt: c.nameChange.changedAt }
+          : {}),
       });
     }
   });
