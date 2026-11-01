@@ -15,7 +15,8 @@ describe('sitemap editorial date integrity', () => {
     expect(rows.map(row => [row.path, day(row.date)])).toEqual([
       ['/calc/pension-hike-2027', '2026-10-23'], ['/tools/finance/irp', '2026-10-23'],
       ['/', '2026-10-19'], ['/calc/civil-servant-net-pay', '2026-10-23'],
-      ['/social-insurance-rates-2027', '2026-10-04'],
+      // 2026-11-01: 2027 장기요양 13.90% 확정 반영(PKG-10 DATA-01) — 요율표만 앞당긴다(홈·공무원 계산기는 그대로).
+      ['/social-insurance-rates-2027', '2026-11-01'],
     ]);
   }, 35_000);
 

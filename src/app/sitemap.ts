@@ -64,10 +64,11 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/table/2026/weekly': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
  '/table/2026/hourly': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
  // 2027 표 4종·요율표: 2027 건보료율 동결 확정(건정심 2026-09-08) 문구 반영 2026-09-25
- '/table/2027/annual': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
- '/table/2027/monthly': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
- '/table/2027/weekly': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
- '/table/2027/hourly': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
+ // 2026-11-01: 2027 장기요양 13.90% 확정(2026-10-30 의결) 반영 — 표 4종 실수령액 재산출(PKG-10 DATA-01)
+ '/table/2027/annual': { lastModified: new Date('2026-11-01T00:00:00+09:00') },
+ '/table/2027/monthly': { lastModified: new Date('2026-11-01T00:00:00+09:00') },
+ '/table/2027/weekly': { lastModified: new Date('2026-11-01T00:00:00+09:00') },
+ '/table/2027/hourly': { lastModified: new Date('2026-11-01T00:00:00+09:00') },
  // 성과급 samsung·sk-hynix·hyundai·year-end·kia 2026-09-25: A18 세후 엔진 교체(연간 결정세액
  // 차이·세액공제 30% 기본 가정 제거). 나머지 A18 계산기는 sitemap() 의 BONUS_ENGINE_ROUTES 루프.
  // 2026-10-09: 삼성 DS 특별성과급 세부안(10/7 보도) — 지급 시기·재원(DS부문)·원천징수 문구, 공개 출처 표현 정리.
@@ -81,9 +82,9 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/hyundai-bonus': { lastModified: new Date('2026-09-25'), priority: 0.85 },
  '/calc/year-end-bonus': { lastModified: new Date('2026-09-25') },
  '/calc/kia-bonus': { lastModified: new Date('2026-09-25'), priority: 0.85 },
- '/minimum-wage-2027': { lastModified: new Date('2026-09-30') },
+ '/minimum-wage-2027': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 2027 장기요양 13.90% 확정 반영 실수령 참고치·FAQ (PKG-10)
  '/minimum-wage-2026': { lastModified: new Date('2026-09-12') },
- '/year-end-tax': { lastModified: new Date('2026-10-04') }, // 2026 귀속 공제 한도표·한도 FAQ 5문항 추가
+ '/year-end-tax': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 표준세액공제 13만원 비교 엔진(PKG-10)·2027 연말정산 제목과 접힌 FAQ 사실 정정(PKG-20)
  '/retirement-pension-2026': { lastModified: new Date('2026-10-26T00:00:00+09:00') }, // 일반 위험자산 한도·적격 TDF 예외·공제와 환급 구분 정정
  // 2026-08-23 시즌 패키지 (연말정산 허브·미리보기·시즌 사이드바)
  '/year-end-tax-2027': { lastModified: new Date('2026-09-25') },
@@ -93,23 +94,25 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/tax-reform-2026': { lastModified: new Date('2026-09-30') },
  '/civil-servant-pay-2027': { lastModified: new Date('2026-10-19T00:00:00+09:00') }, // B20 리드·메타 정렬(네이버 저CTR)
  // R2 신규 8라우트 (2026-08-31)
- '/calc/dual-income-year-end': { lastModified: new Date('2026-10-26T00:00:00+09:00') },
+ '/calc/dual-income-year-end': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 표준세액공제 비교 엔진(PKG-10)·문구(PKG-11·PKG-20)
  '/calc/voluntary-retirement': { lastModified: new Date('2026-09-03') },
  '/calc/dependent-check': { lastModified: new Date('2026-09-05') },
- '/calc/smb-income-tax-break': { lastModified: new Date('2026-10-04') },
- '/calc/offer-compare': { lastModified: new Date('2026-09-25') }, // A17 — 본문 '(설명 수정 2026-09-25)'와 일치
+ '/calc/smb-income-tax-break': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 4대보험료 소득공제·환산 나이 판정 반영(PKG-14)
+ '/calc/offer-compare': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 자녀 공제 나이 FAQ 정정(PKG-21) — 본문 '(설명 수정 2026-11-01)'와 일치
  '/calc/child-deduction': { lastModified: new Date('2026-10-26T00:00:00+09:00') },
- '/tax-changes-2026': { lastModified: new Date('2026-09-09') },
- '/year-end-tax-checklist': { lastModified: new Date('2026-09-30') },
+ '/tax-changes-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 자녀세액공제 나이 정정(PKG-21)
+ '/year-end-tax-checklist': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 2027 연말정산 제목·자녀세액공제 나이 정정(PKG-20)
  '/weekly-holiday-allowance-2026': { lastModified: new Date('2026-09-12') },
  '/civil-servant-pay-2026': { lastModified: new Date('2026-10-04') },
  // 공무원 월급 실수령액 계산기 (2026-09-27 신설 — 운영자 승인 동결 예외)
  '/calc/civil-servant-net-pay': { lastModified: new Date('2026-10-23T00:00:00+09:00'), priority: 0.8, changeFrequency: 'monthly' },
  '/tools/finance/compound': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
- '/tools/finance/bonus': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
+ '/tools/finance/bonus': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 과세표준 4대보험료 공제 반영(PKG-12)
  '/donation-tax-credit-2026': { lastModified: new Date('2026-09-25') },
  '/health-insurance-dependent': { lastModified: new Date('2026-10-17') },
- '/social-insurance-rates-2027': { lastModified: new Date('2026-10-04') },
+ // 2026-11-01: 6대 암검진 본인부담 0~10%·수검 기한 1회 교정(운영자 승인, PKG-22 STR-06) — 10/19 링크 검토일 대신
+ '/health-checkup-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') },
+ '/social-insurance-rates-2027': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 2027 장기요양 13.90% 확정(PKG-10)
  // 봉급표 버티컬 4종 (2026-08-30)
  '/military-pay-2026': { lastModified: new Date('2026-09-27') },
  '/teacher-pay-2026': { lastModified: new Date('2026-10-04') }, // B20 리드·메타 정렬(네이버 저CTR)
