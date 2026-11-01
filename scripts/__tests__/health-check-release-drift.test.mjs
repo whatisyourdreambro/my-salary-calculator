@@ -185,6 +185,21 @@ test("수집기(실제 git): 오래전에 만든 브랜치 커밋이라도 병�
   assert.equal(verdict.ok, true);
 });
 
+test("수집기(실제 git): 사이트 파일을 docs/ 로 옮겨 이름 바꾸기로 묶여도 옛 경로 삭제를 사이트 변경으로 센다", (t) => {
+  const { run, commit, git } = fixtureRepo(t);
+  const body = Array.from({ length: 40 }, (_, i) => `export const line${i} = ${i};`).join("\n") + "\n";
+  const prod = commit(200, "base", { "src/retired.ts": body, "src/keep.ts": "k\n" });
+  run(["rm", "-q", "src/retired.ts"]);
+  const moved = commit(100, "move retired site file into docs", { "docs/archive/retired.ts": body });
+  commit(1, "docs only", { "docs/later.md": "l\n" });
+  const input = collectReleaseDrift(prod, git);
+  assert.deepEqual([...input.changed].sort(), ["docs/archive/retired.ts", "docs/later.md", "src/retired.ts"]);
+  assert.deepEqual(input.since, { sha: moved, time: ago(100) });
+  const verdict = classifyReleaseDrift({ prod, ...input, nowMs: NOW });
+  assert.equal(verdict.state, "stale");
+  assert.deepEqual(verdict.paths, ["src/retired.ts"]);
+});
+
 test("수집기(실제 git): main 이 운영보다 뒤면 behind, 운영 커밋이 clone 에 없으면 throw", (t) => {
   const { run, commit, git } = fixtureRepo(t);
   const old = commit(100, "base", { "src/a.ts": "a1\n" });

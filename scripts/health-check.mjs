@@ -250,7 +250,7 @@ async function checkOriginEdge({ path, expect, marker, desc, diagnose, fixBuild 
 // 점검이 실패 메일을 보낸다. 게시는 운영자가 Actions 'Pages · 승인 후 게시' 를 눌러야만 일어나서, 잊으면 조용히 밀린다.
 //   운영 커밋 = /.well-known/moneysalary-release.json 의 commit. 비렌더링 GET 1회(쿼리 없이 — 쿼리가 붙으면 404),
 //               형식은 cloudflare/pages-native-release.mjs 의 validateNativeRelease 로 검증.
-//   남은 변경 = git diff --name-only <운영> HEAD 에서 docs/** 와 *.md 를 뺀 경로. 없으면 통과(같음 · 문서만 다름).
+//   남은 변경 = git diff --no-renames --name-only <운영> HEAD 에서 docs/** 와 *.md 를 뺀 경로(사이트 파일을 docs/ 로 옮긴 이름 바꾸기도 옛 경로 삭제로 남긴다). 없으면 통과(같음 · 문서만 다름).
 //   경과 시간 = 운영 커밋 뒤 main 1부모 이력에서 남은 경로를 처음 바꾼 커밋의 커밋 시각(%ct)부터.
 //               HEAD 시각만 보면 뒤에 붙은 문서 커밋이 48시간 시계를 되돌린다. 그런 커밋을 못 찾으면 HEAD 시각.
 // FAIL 은 GitHub Actions 의 main 실행(ci health — fetch-depth: 0 체크아웃, HEAD = GITHUB_SHA)에서만 낸다. 로컬 ·
@@ -267,7 +267,7 @@ export function isDocsPath(path) {
 
 /**
  * 게시 대기 판정 — 순수 함수(테스트가 합성 입력으로 부른다).
- *   changed  = git diff --name-only <prod> <head> 경로
+ *   changed  = git diff --no-renames --name-only <prod> <head> 경로
  *   since    = 운영 뒤 main 1부모 이력에서 남은(문서 제외) 경로를 처음 바꾼 커밋 { sha, time(unix 초) } — 없으면 null
  *   headTime = HEAD 커밋 시각(unix 초) — since 가 null 일 때 대신 쓴다
  *   behind   = 운영 뒤 main 커밋이 0개(HEAD 가 운영 커밋의 조상 — main 되감기)
@@ -323,7 +323,7 @@ export function collectReleaseDrift(prod, git) {
   const head = git(["rev-parse", "--verify", "HEAD^{commit}"]).trim();
   if (!SHA40.test(head)) throw new Error(`HEAD 형식 오류: ${head}`);
   git(["cat-file", "-e", `${prod}^{commit}`]);
-  const changed = outputLines(git(["diff", "--name-only", prod, head]));
+  const changed = outputLines(git(["diff", "--no-renames", "--name-only", prod, head]));
   const headTime = unixSeconds(git(["log", "-1", "--format=%ct", head]).trim());
   const remaining = new Set(changed.filter((p) => !isDocsPath(p)));
   let since = null;
@@ -334,7 +334,7 @@ export function collectReleaseDrift(prod, git) {
     behind = commits.length === 0;
     for (const row of commits) {
       const [sha, ct] = row.split(" ");
-      if (outputLines(git(["diff", "--name-only", `${sha}^1`, sha])).some((p) => remaining.has(p))) {
+      if (outputLines(git(["diff", "--no-renames", "--name-only", `${sha}^1`, sha])).some((p) => remaining.has(p))) {
         since = { sha, time: unixSeconds(ct) };
         break;
       }
