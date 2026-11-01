@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import NumberInput from "@/components/NumberInput";
+import { calcJeonseLoans, cheapestEligible } from "@/lib/jeonseLoanProducts";
 
 function fmt(n: number) { return Math.round(n).toLocaleString("ko-KR"); }
 function formatInput(raw: string): string {
@@ -11,12 +12,8 @@ function formatInput(raw: string): string {
 }
 function parseInput(s: string): number { return Number(s.replace(/[^0-9]/g, "")) || 0; }
 
-const PRODUCTS = [
-  { name: "일반 전세대출", rate: 5.0, maxRate: 0.8 },
-  { name: "버팀목 전세대출", rate: 2.4, maxRate: 0.8 },
-  { name: "신혼부부 버팀목", rate: 1.7, maxRate: 0.8 },
-  { name: "청년 전세 (만 19~34)", rate: 2.5, maxRate: 0.8 },
-];
+// 상품 조건(소득 요건·보증금 비율·호당 한도·금리 하한)은 src/lib/jeonseLoanProducts.ts — 주택도시기금 상품 안내 2026-10-05 확인.
+// 종전에는 네 상품 모두 min(보증금 x 80%, 연소득 x 4) 라 기본값에서 버팀목·청년도 2.4억이 나왔다 (감사 code3-03).
 
 export default function JeonseLoanClient() {
   const [depositFmt, setDepositFmt] = useState("300,000,000");
@@ -25,22 +22,8 @@ export default function JeonseLoanClient() {
   const deposit = parseInput(depositFmt);
   const salary = parseInput(salaryFmt);
 
-  const results = useMemo(() => {
-    return PRODUCTS.map((p) => {
-      const limit = Math.min(deposit * p.maxRate, salary * 4); // 보증금×80%, 연봉×4 중 작은 값
-      const monthlyInterest = (limit * (p.rate / 100)) / 12;
-      const annualInterest = limit * (p.rate / 100);
-      return {
-        name: p.name,
-        rate: p.rate,
-        limit,
-        monthlyInterest,
-        annualInterest,
-      };
-    });
-  }, [deposit, salary]);
-
-  const cheapest = results.reduce((min, r) => r.annualInterest < min.annualInterest ? r : min, results[0]);
+  const results = useMemo(() => calcJeonseLoans(deposit, salary), [deposit, salary]);
+  const cheapest = cheapestEligible(results);
 
   return (
     <div className="space-y-5 mb-10">
@@ -57,12 +40,12 @@ export default function JeonseLoanClient() {
           </div>
         </div>
         <div>
-          <label htmlFor="jl-salary" className="text-xs font-bold uppercase tracking-widest block mb-2 text-faint-blue">본인 연소득</label>
+          <label htmlFor="jl-salary" className="text-xs font-bold uppercase tracking-widest block mb-2 text-faint-blue">합산 연소득</label>
           <div className="relative">
             <NumberInput id="jl-salary" type="text" inputMode="numeric" value={salaryFmt}
               onChange={(e) => setSalaryFmt(formatInput(e.target.value))}
               className="w-full rounded-xl px-4 py-4 text-xl font-black bg-canvas-50 dark:bg-canvas-800 border border-canvas-200 dark:border-canvas-700 text-navy dark:text-canvas-50 focus:outline-none focus:ring-2 focus:ring-electric/50 pr-10"
-              aria-label="연소득" />
+              aria-label="부부합산 연소득" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-faint-blue">원</span>
           </div>
         </div>
@@ -70,7 +53,7 @@ export default function JeonseLoanClient() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {results.map((r) => {
-          const isBest = r.name === cheapest.name;
+          const isBest = cheapest !== null && r.name === cheapest.name;
           return (
             <div key={r.name}
               className="rounded-2xl p-5 relative"
@@ -89,20 +72,23 @@ export default function JeonseLoanClient() {
                 style={{ color: isBest ? "rgba(255,255,255,0.85)" : "hsl(var(--muted-foreground))" }}>
                 {r.name}
               </p>
-              <p className="text-2xl font-black tabular-nums mb-1">{fmt(r.limit)}원</p>
+              <p className="text-2xl font-black tabular-nums mb-1">{r.eligible ? `${fmt(r.limit)}원` : "대상 아님"}</p>
               <p className="text-xs mb-3"
                 style={{ color: isBest ? "rgba(255,255,255,0.85)" : "hsl(var(--muted-foreground))" }}>
-                금리 연 {r.rate.toFixed(1)}%
+                {r.eligible
+                  ? `${r.rateIsFloor ? "최저" : "금리"} 연 ${r.rate.toFixed(1)}%`
+                  : // 결과 광고 위 — 기본값에서 이 줄('5천만 초과')이 종전 '금리 연 2.4%' 보다 좁게
+                    `${r.incomeLimit % 10_000_000 === 0 ? `${r.incomeLimit / 10_000_000}천만` : `${fmt(r.incomeLimit / 10_000)}만`} 초과`}
               </p>
               <div className="flex justify-between text-xs"
                 style={{ color: isBest ? "rgba(255,255,255,0.8)" : "hsl(var(--muted-foreground))", borderTop: isBest ? "1px solid rgba(255,255,255,0.2)" : "1px solid hsl(var(--border))", paddingTop: "8px" }}>
                 <span>월 이자</span>
-                <span className="font-black">{fmt(r.monthlyInterest)}원</span>
+                <span className="font-black">{r.eligible ? `${fmt(r.monthlyInterest)}원` : "—"}</span>
               </div>
               <div className="flex justify-between text-xs mt-1"
                 style={{ color: isBest ? "rgba(255,255,255,0.8)" : "hsl(var(--muted-foreground))" }}>
                 <span>연 이자</span>
-                <span className="font-black">{fmt(r.annualInterest)}원</span>
+                <span className="font-black">{r.eligible ? `${fmt(r.annualInterest)}원` : "—"}</span>
               </div>
             </div>
           );
