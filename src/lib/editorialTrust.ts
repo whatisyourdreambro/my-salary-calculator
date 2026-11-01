@@ -3,8 +3,9 @@
 // 핵심 페이지의 '만든 사람과 확인 방법' 상자 내용 (G4, 운영자 승인 2026-11-01 구글 개선 5번 — 돈·세금(YMYL) 신뢰 신호).
 // 화면은 src/components/EditorialTrustNote.tsx 하나가 모든 페이지에서 같은 모양으로 그리고, 이 파일은 경로별 내용만 둔다.
 //  - 작성자: /about '운영자 소개'와 같은 사실(현직 직장인 1인이 운영)만 쓴다. 실명은 절대 넣지 않는다(운영자 겸직 규정).
-//  - sources: 그 페이지가 화면에 실제로 인용하는 출처만 적는다. 언론 보도가 섞인 페이지(성과급 계산기)는 official=false —
-//    '공식 자료'라고 쓰지 않고 '공개 자료'·'자료 대조일'로 표기한다(두 페이지 모두 '회사 공식 자료가 아닙니다' 고지).
+//  - sources: 그 페이지가 화면에 실제로 인용하는 출처만 적는다. 언론 보도가 섞인 페이지는 official=false —
+//    '공식 자료'라고 쓰지 않고 '공개 자료'·'자료 대조일'로 표기한다: 성과급 계산기 2곳(두 페이지 모두 '회사 공식 자료가
+//    아닙니다' 고지)과, 공시 평균급여가 언론 보도 인용뿐이고 화면에 견줄 DART 값이 없는 회사 페이지(EDITORIAL_TRUST_COMPANY_PRESS).
 //  - checkedOn: 위 자료와 마지막으로 대조한 날. 이미 있는 날짜(화면 수정일·PublishedMeta·데이터 상수·Dataset dateModified,
 //    그것도 없으면 내용 검토 원장 contentDate)에서만 가져온다. 새 날짜를 만들지 않고, 믿을 근거가 없으면 비운다(날짜 줄 없음).
 //    링크·배치만 바뀐 날(10/19 링크 검토일 등)은 대조일이 아니다. 일자를 모르면 월(YYYY-MM)까지만 쓴다.
@@ -102,21 +103,48 @@ export const EDITORIAL_TRUST_TABLE_2027: EditorialTrustNoteContent = {
   checkedOn: "2026-11-01",
 };
 
+const COMPANY_ESTIMATE_NOTE = "직급별 연봉은 공개 자료를 종합한 자체 추정치입니다.";
+
 /** /salary-db/[id] 회사 페이지 — 회사마다 공시·데이터 날짜가 달라 하나의 대조일이 없다(상단 업데이트 배지가 회사별 데이터일).
  *  문구는 /about '회사 연봉 데이터는 어떻게 산출하나요?'와 같은 구분(공시 인용값 vs 자체 추정치).
- *  공시 부분은 '공시가 있는 회사는'으로 조건을 단다(2026-11-02 통합 수정) — 430개사 중 140곳은 공시 평균급여 카드가 없고
- *  (CompanyDisclosedSalary 는 disclosed 가 있을 때만 그린다), 보도 인용 2곳(meritz-fire·deloitte-anjin)은 DART 값도 없다.
- *  layout 은 params 가 없고 회사 데이터를 클라이언트에 싣지 않으므로 회사별로 문구를 가르지 않고 모든 회사에 맞는 한 문장을 쓴다. */
+ *  공시 부분은 '공시가 있는 회사는'으로 조건을 단다(2026-11-02 통합 수정) — 430개사 중 140곳은 공시 평균급여 카드가 없다
+ *  (CompanyDisclosedSalary 는 disclosed 가 있을 때만 그린다). 카드가 언론 보도 인용이어도 그 회사의 dartCompanyStatsById
+ *  값이 있으면 같은 페이지가 DART 값과 견주므로(5% 넘는 차이 병기·급여총액÷인원 이력 표) 이 문장이 맞다.
+ *  견줄 DART 값이 화면에 없는 보도 인용 회사는 아래 EDITORIAL_TRUST_COMPANY_PRESS 로 가른다(2026-11-02 통합 리뷰). */
 export const EDITORIAL_TRUST_COMPANY: EditorialTrustNoteContent = {
   sources: "공시가 있는 회사는 사업보고서 등 공시 원문(공시 평균급여), 실수령액은 국세청 근로소득 간이세액표",
   official: true,
-  note: "직급별 연봉은 공개 자료를 종합한 자체 추정치입니다.",
+  note: COMPANY_ESTIMATE_NOTE,
+};
+
+/** 공시 평균급여 카드가 언론 보도 인용(출처 링크가 DART·알리오 원문이 아님)이고 dartCompanyStatsById 항목이 없어 화면에
+ *  견줄 DART 값이 없는 회사. meritz-fire 는 DART 주입값이 있지만 수기 카드가 우선이고 DART 두 산정 방식의 괴리 플래그로
+ *  통계에서 빠져 화면에 나오지 않는다. deloitte-anjin(회계법인)은 상장사식 DART '직원 등 현황' 공시가 없다.
+ *  layout 은 params 가 없고 이 모듈은 클라이언트 번들에 실리므로 회사 데이터를 import 하지 않고 id 만 둔다 —
+ *  서버 데이터로 다시 계산한 집합과 같은지는 editorialTrustNote.test.ts 가 고정한다(데이터가 바뀌면 그 테스트가 알려 준다). */
+export const EDITORIAL_TRUST_PRESS_ONLY_COMPANY_IDS: ReadonlySet<string> = new Set(["deloitte-anjin", "meritz-fire"]);
+
+/** 위 회사들의 상자 — 공시 평균급여가 공시를 인용한 언론 보도 값이라 성과급 계산기와 같이 official=false('공개 자료와 대조').
+ *  카드 문구('공식 공시(또는 이를 인용한 언론 보도)에 기반한 값')와 같은 구분이다. */
+export const EDITORIAL_TRUST_COMPANY_PRESS: EditorialTrustNoteContent = {
+  sources: "공시를 인용한 언론 보도(공시 평균급여), 실수령액은 국세청 근로소득 간이세액표",
+  official: false,
+  note: COMPANY_ESTIMATE_NOTE,
 };
 
 const TABLE_PATH = /^\/table\/(2026|2027)\/(?:annual|monthly|weekly|hourly)$/;
 const COMPANY_PATH = /^\/salary-db\/([^/]+)$/;
 /** /salary-db/ 바로 아래의 회사 아닌 경로(인덱스형 페이지·비교 상위). 없는 회사 id 는 page 가 /salary-db 로 308 한다. */
 const NOT_COMPANY = new Set(["listed", "ranking", "compare", "submit"]);
+
+/** 한글 회사 id 는 인코딩된 채로 올 수 있다 — 깨진 인코딩은 그대로 비교한다 */
+function decodePathSegment(segment: string): string {
+  try {
+    return decodeURIComponent(segment);
+  } catch {
+    return segment;
+  }
+}
 
 /** 경로(끝 슬래시 무시) → 상자 내용. 대상이 아니면 null */
 export function editorialTrustNoteFor(pathname: string | null | undefined): EditorialTrustNoteContent | null {
@@ -126,7 +154,11 @@ export function editorialTrustNoteFor(pathname: string | null | undefined): Edit
   const table = TABLE_PATH.exec(path);
   if (table) return table[1] === "2026" ? EDITORIAL_TRUST_TABLE_2026 : EDITORIAL_TRUST_TABLE_2027;
   const company = COMPANY_PATH.exec(path);
-  if (company && !NOT_COMPANY.has(company[1])) return EDITORIAL_TRUST_COMPANY;
+  if (company && !NOT_COMPANY.has(company[1])) {
+    return EDITORIAL_TRUST_PRESS_ONLY_COMPANY_IDS.has(decodePathSegment(company[1]))
+      ? EDITORIAL_TRUST_COMPANY_PRESS
+      : EDITORIAL_TRUST_COMPANY;
+  }
   return null;
 }
 

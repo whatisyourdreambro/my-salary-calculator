@@ -2,8 +2,9 @@
 //
 // 이 테스트가 고정하는 것:
 //  1) 내용: 작성자는 /about 운영자 소개와 같은 사실(현직 직장인 1인 운영)만, 실명 없음. 링크는 이미 있는 주소 2개
-//     (/about#editorial-method, /contact) — 새 쿼리 주소를 만들지 않는다. 언론 보도가 섞인 성과급 계산기는 '공식 자료'라고
-//     쓰지 않는다. 회사 페이지는 회사마다 날짜가 달라 날짜 줄이 없다.
+//     (/about#editorial-method, /contact) — 새 쿼리 주소를 만들지 않는다. 언론 보도가 섞인 성과급 계산기와, 공시 평균급여가
+//     보도 인용뿐이고 견줄 DART 값이 없는 회사 페이지는 '공식 자료'라고 쓰지 않는다(그 회사 집합은 서버 데이터로 다시 계산해
+//     맞춘다). 회사 페이지는 회사마다 날짜가 달라 날짜 줄이 없다.
 //  2) 날짜: 각 대조일은 이미 있는 출처 값(화면 수정일·PublishedMeta·데이터 상수·Dataset dateModified·내용 검토 원장)과 같다.
 //     페이지를 실질 수정해 출처 날짜가 바뀌면 여기서 걸린다 — 링크·배치·이 상자만 바뀐 경우에는 대조일을 올리지 않는다.
 //  3) 배치: 실제 page·layout 을 서버 렌더하면(광고는 표지 div) 상자는 모든 광고·공유 뒤, 맨 마지막에 1번 나온다.
@@ -76,7 +77,9 @@ import EditorialTrustNote from "@/components/EditorialTrustNote";
 import {
   EDITORIAL_TRUST_AUTHOR,
   EDITORIAL_TRUST_COMPANY,
+  EDITORIAL_TRUST_COMPANY_PRESS,
   EDITORIAL_TRUST_PAGES,
+  EDITORIAL_TRUST_PRESS_ONLY_COMPANY_IDS,
   EDITORIAL_TRUST_TABLE_2026,
   EDITORIAL_TRUST_TABLE_2027,
   editorialTrustNoteFor,
@@ -86,6 +89,8 @@ import { TAX_TABLE_EFFECTIVE_DATE } from "@/config/siteDates";
 import { LAST_UPDATED as SK_HYNIX_LAST_UPDATED } from "@/app/calc/sk-hynix-bonus/psData";
 import { YEAR_END_LIMITS_SOURCE_NOTE } from "@/lib/yearEndLimits2026";
 import { companyRepository } from "@/lib/salary-data/CompanyRepository";
+import { dartCompanyStatsById } from "@/lib/salary-data/dartReport";
+import { isOfficialDisclosureUrl } from "@/lib/companyMetaDisclosed";
 import { pageRevisionFields } from "../../../scripts/lib/sitemap-freshness.mjs";
 import HomePage from "@/app/page";
 import CalcLayout from "@/app/calc/layout";
@@ -195,7 +200,7 @@ describe("내용: 작성자·확인 방법·대조일·링크", () => {
     );
   });
 
-  it.each([...TARGET_PAGES, ...TABLE_PATHS, "/salary-db/samsung-electronics"])("%s: 같은 틀 — 작성자·링크 2개·모듈 표지·광고 없음", (path) => {
+  it.each([...TARGET_PAGES, ...TABLE_PATHS, "/salary-db/samsung-electronics", "/salary-db/meritz-fire"])("%s: 같은 틀 — 작성자·링크 2개·모듈 표지·광고 없음", (path) => {
     const html = renderNote(path);
     expect(html.startsWith(`<section ${NOTE}`)).toBe(true);
     expect(html).toContain(`<dd>${EDITORIAL_TRUST_AUTHOR}</dd>`);
@@ -215,7 +220,7 @@ describe("내용: 작성자·확인 방법·대조일·링크", () => {
     expect(about).toContain("정보를 확인하고 수정하는 기준");
   });
 
-  it("언론 보도가 섞인 성과급 계산기 2곳만 '공개 자료'·'자료 대조일' — '공식 자료'라고 쓰지 않는다", () => {
+  it("언론 보도가 섞인 성과급 계산기 2곳은 '공개 자료'·'자료 대조일' — '공식 자료'라고 쓰지 않는다", () => {
     for (const path of ["/calc/samsung-bonus", "/calc/sk-hynix-bonus"]) {
       const html = renderNote(path);
       expect(html, path).toContain("공개 자료와 대조: ");
@@ -252,6 +257,44 @@ describe("내용: 작성자·확인 방법·대조일·링크", () => {
     expect(EDITORIAL_TRUST_COMPANY.sources).toContain("실수령액은 국세청 근로소득 간이세액표");
   });
 
+  it("보도 인용뿐인 회사 집합 = 서버 데이터로 다시 계산한 집합 — 카드 출처가 원문 링크가 아니고 견줄 DART 값이 없는 회사", () => {
+    // 회사 페이지(src/app/salary-db/[id]/page.tsx)는 dartCompanyStatsById 의 DART 값으로만 카드 값과 견준다(5% 넘는 차이 병기·
+    // 급여총액÷인원 이력 표). 카드 출처가 DART·알리오 원문이 아니고(CompanyDisclosedSalary '보도:' 라벨) 그 값도 없으면 화면에
+    // 공시 원문과 견준 흔적이 없다 — 그 회사의 상자는 '공식 자료와 대조: … 공시 원문'이라고 쓰면 안 된다.
+    // 상수 집합은 클라이언트 번들에 실리는 모듈이라 회사 데이터 없이 둔다 — 데이터가 바뀌면 여기서 걸린다.
+    const recomputed = companyRepository
+      .getAll()
+      .filter(
+        (company) =>
+          company.disclosed &&
+          !isOfficialDisclosureUrl(company.disclosed.sourceUrl) &&
+          !dartCompanyStatsById.has(company.id),
+      )
+      .map((company) => company.id)
+      .sort();
+    expect([...EDITORIAL_TRUST_PRESS_ONLY_COMPANY_IDS].sort()).toEqual(recomputed);
+  });
+
+  it("보도 인용뿐인 회사는 '공개 자료와 대조' — 공식 자료·공시 원문이라고 쓰지 않고, 날짜 줄 없이 같은 틀", () => {
+    expect(EDITORIAL_TRUST_COMPANY_PRESS.official).toBe(false);
+    expect(EDITORIAL_TRUST_COMPANY_PRESS.note).toBe(EDITORIAL_TRUST_COMPANY.note);
+    for (const id of EDITORIAL_TRUST_PRESS_ONLY_COMPANY_IDS) {
+      const path = `/salary-db/${id}`;
+      const html = renderNote(path);
+      expect(html, path).toContain(
+        '<dd>공개 자료와 대조: 공시를 인용한 언론 보도(공시 평균급여), 실수령액은 국세청 근로소득 간이세액표<span class="mt-1 block">직급별 연봉은 공개 자료를 종합한 자체 추정치입니다.</span></dd>',
+      );
+      expect(html, path).not.toContain("공식 자료");
+      expect(html, path).not.toContain("공시 원문");
+      expect(html, path).not.toContain("<time");
+      expect(html.match(/<dt /g), path).toHaveLength(2);
+      // layout 맨 끝에서도 같은 문구 — 배치는 다른 회사와 같다(마지막 형제)
+      const inLayout = renderLayoutAt(path, SalaryDbLayout);
+      expectNoteIsLast(inLayout);
+      expect(inLayout, path).toContain("공개 자료와 대조: 공시를 인용한 언론 보도(공시 평균급여)");
+    }
+  });
+
   it("피부양자 판정기는 화면 출처의 조회 월까지만 쓴다", () => {
     expect(renderNote("/health-insurance-dependent")).toContain('<time dateTime="2026-08">2026.08</time>');
   });
@@ -278,13 +321,17 @@ describe("내용: 작성자·확인 방법·대조일·링크", () => {
     for (const path of TABLE_PATHS) {
       expect(editorialTrustNoteFor(path)).toBe(path.startsWith("/table/2026/") ? EDITORIAL_TRUST_TABLE_2026 : EDITORIAL_TRUST_TABLE_2027);
     }
-    // 회사 id 가 회사 아닌 경로 이름과 겹치지 않고, 한글 id 는 인코딩돼 와도 회사로 본다
+    // 회사 id 가 회사 아닌 경로 이름과 겹치지 않고, 한글 id 는 인코딩돼 와도 회사로 본다(보도 인용뿐인 회사도 같다)
     const companies = companyRepository.getAll();
     expect(companies.length).toBeGreaterThan(400);
     for (const company of companies) {
-      expect(editorialTrustNoteFor(`/salary-db/${company.id}`), company.id).toBe(EDITORIAL_TRUST_COMPANY);
-      expect(editorialTrustNoteFor(`/salary-db/${encodeURIComponent(company.id)}`), company.id).toBe(EDITORIAL_TRUST_COMPANY);
+      const expected = EDITORIAL_TRUST_PRESS_ONLY_COMPANY_IDS.has(company.id) ? EDITORIAL_TRUST_COMPANY_PRESS : EDITORIAL_TRUST_COMPANY;
+      expect(editorialTrustNoteFor(`/salary-db/${company.id}`), company.id).toBe(expected);
+      expect(editorialTrustNoteFor(`/salary-db/${encodeURIComponent(company.id)}`), company.id).toBe(expected);
     }
+    // 보도 인용뿐인 회사 id 는 실제 회사이고, 깨진 인코딩 경로는 예외 없이 일반 회사 상자
+    for (const id of EDITORIAL_TRUST_PRESS_ONLY_COMPANY_IDS) expect(companyRepository.getById(id), id).toBeTruthy();
+    expect(editorialTrustNoteFor("/salary-db/%E0%A4%A")).toBe(EDITORIAL_TRUST_COMPANY);
   });
 
   it("날짜 표기는 PublishedMeta 와 같은 점 표기, 형식이 아니면 날짜 줄 없음", () => {
@@ -358,6 +405,7 @@ describe("대조일: 이미 있는 출처 값과 같다 (새 날짜를 만들지
       expect(checked! <= reviewed!, `${path}: ${checked} > ${reviewed}`).toBe(true);
     }
     expect(EDITORIAL_TRUST_COMPANY.checkedOn).toBeUndefined();
+    expect(EDITORIAL_TRUST_COMPANY_PRESS.checkedOn).toBeUndefined();
   });
 });
 
