@@ -153,6 +153,15 @@ test('cloud identity requires genuine provider branch, full exact source and no 
 test('public gate links one owner dispatch to exact main CI verify and production ref', async () => {
   const f = gateFixture(); assert.deepEqual(await verifyCloudBuildApproval(COMMIT, f.get), context);
   assert.equal(f.calls.length, 7);
+  // The after-build form reuses verified workflow ids and skips both workflow definition reads.
+  const reuse = gateFixture();
+  assert.deepEqual(await verifyCloudBuildApproval(COMMIT, reuse.get, { ciWorkflowId: 1, publisherWorkflowId: 2 }), context);
+  assert.equal(reuse.calls.length, 5); assert.equal(reuse.calls.some(resource => resource.endsWith('.yml')), false);
+  for (const known of [null, {}, { ciWorkflowId: 1 }, { ciWorkflowId: 0, publisherWorkflowId: 2 },
+    { ciWorkflowId: 1, publisherWorkflowId: '2' }, { ciWorkflowId: 1.5, publisherWorkflowId: 2 }]) {
+    const fixture = gateFixture();
+    await assert.rejects(verifyCloudBuildApproval(COMMIT, fixture.get, known)); assert.equal(fixture.calls.length, 0);
+  }
   for (const change of [{ main: OTHER }, { branch: OTHER }, { ci: { conclusion: 'failure' } }, { ci: { status: 'in_progress' } },
     { ci: { head_sha: OTHER } }, { ci: { head_repository: { full_name: 'other/repo' } } },
     { job: { conclusion: 'skipped' } }, { job: { run_id: 99 } }, { job: { head_sha: OTHER } },
@@ -185,10 +194,12 @@ test('GitHub gate is bounded fixed-origin GET with no Authorization, redirects o
 
 test('native orchestration rechecks source and same active approval after build; failure never reports completion', async () => {
   const expected = { install: 'dependency-install', build: 'application-build', verify: 'artifact-verification',
-    source: 'checkout-head', approval: 'approval-unchanged' };
-  for (const failure of [null, 'install', 'build', 'verify', 'source', 'approval']) {
+    source: 'checkout-head', approval: 'approval-unchanged', workflow: 'approval-after' };
+  for (const failure of [null, 'install', 'build', 'verify', 'source', 'approval', 'workflow']) {
     const calls = []; let built = false;
-    const initial = gateFixture(), after = gateFixture(failure === 'approval' ? { approval: { id: 21 } } : {});
+    // 'workflow': after the build, the CI run lists another workflow id than the one verified before it.
+    const initial = gateFixture(), after = gateFixture(failure === 'approval' ? { approval: { id: 21 } }
+      : failure === 'workflow' ? { ci: { workflow_id: 3 } } : {});
     const deps = { env, readLocal: async () => built && failure === 'source' ? { ...local, head: OTHER } : local,
       get: async resource => (built ? after : initial).get(resource),
       install: async () => { calls.push('install'); if (failure === 'install') throw Error('synthetic'); },
@@ -198,7 +209,12 @@ test('native orchestration rechecks source and same active approval after build;
     if (failure) await assert.rejects(orchestrateCloudBuild(deps), error => {
       assert.equal(nativeBuildDiagnostic(error).phase, expected[failure]); return true;
     });
-    else assert.deepEqual(await orchestrateCloudBuild(deps), { completed: true, commit: COMMIT, buildId: 'synthetic-build', approvalRunId: 20 });
+    else {
+      assert.deepEqual(await orchestrateCloudBuild(deps), { completed: true, commit: COMMIT, buildId: 'synthetic-build', approvalRunId: 20 });
+      // The after-build check reuses the workflow ids verified before the build: 7 + 5 requests.
+      assert.equal(initial.calls.length, 7); assert.equal(after.calls.length, 5);
+      assert.equal(after.calls.some(resource => resource.endsWith('.yml')), false);
+    }
     assert.ok(calls.every(value => ['install', 'build', 'verify'].includes(value)));
   }
 });
@@ -218,20 +234,28 @@ test('GitHub gate transport diagnostics expose only before/after phase and no ra
 
 const approvalCategories = ['main-ref', 'production-ref', 'ci-workflow', 'ci-runs',
   'ci-jobs', 'publisher-workflow', 'active-approvals'];
+// The after-build check reuses the workflow ids verified before the build (7 + 5 = 12 requests).
+const afterBuildCategories = ['main-ref', 'production-ref', 'ci-runs', 'ci-jobs', 'active-approvals'];
 const privateDiagnostic = 'synthetic-private-body-header-url-credential';
+const syntheticNow = 1_793_400_000_000;
 
-async function checkApprovalDiagnostic({ after, request = 1, response, expected }) {
-  const gate = gateFixture(), operations = []; let requests = 0;
-  const failAt = (after ? 7 : 0) + request;
+// `sleeps` lists the expected rate-limit waits; each one repeats the failing request once.
+async function checkApprovalDiagnostic({ after, category = 'main-ref', response, expected, sleeps: expectedSleeps = [] }) {
+  const categories = after ? afterBuildCategories : approvalCategories;
+  assert.ok(categories.includes(category), 'The failing request must belong to the checked phase');
+  const gate = gateFixture(), operations = [], sleeps = []; let requests = 0, failing;
+  const failAt = (after ? approvalCategories.length : 0) + categories.indexOf(category) + 1;
   const get = publicGithubBuildClient(async (url, init) => {
     requests++;
     assert.equal(new URL(url).origin, 'https://api.github.com');
     assert.equal(init.method, 'GET'); assert.equal(init.redirect, 'manual');
     assert.equal(new Headers(init.headers).get('authorization'), null);
     const resource = new URL(url).pathname + new URL(url).search;
-    if (requests === failAt) return response(await gate.get(resource));
+    // A retry of the failing request receives the same failure again.
+    if (requests === failAt) failing = resource;
+    if (resource === failing) return response(await gate.get(resource));
     return Response.json(await gate.get(resource));
-  });
+  }, { sleep: async milliseconds => { sleeps.push(milliseconds); }, now: () => syntheticNow });
   let completed = false;
   await assert.rejects(orchestrateCloudBuild({ env, readLocal: async () => local, get,
     install: async () => { operations.push('install'); },
@@ -242,13 +266,13 @@ async function checkApprovalDiagnostic({ after, request = 1, response, expected 
     const diagnostic = nativeBuildDiagnostic(error);
     assert.deepEqual(diagnostic, { schemaVersion: 1, event: 'native-build-failed',
       phase: after ? 'approval-after' : 'approval-before', outputApproved: false, detailsWithheld: true,
-      approval: { requestCategory: approvalCategories[request - 1], ...expected } });
+      approval: { requestCategory: category, ...expected } });
     assert.equal(JSON.stringify(diagnostic).includes(privateDiagnostic), false);
     assert.equal(String(error).includes(privateDiagnostic), false);
     for (const field of ['cause', 'actual', 'expected', 'response', 'headers', 'url']) assert.equal(error[field], undefined);
     // A caller cannot mutate the internally registered diagnostic through a previous result.
     diagnostic.approval.requestCategory = privateDiagnostic;
-    assert.equal(nativeBuildDiagnostic(error).approval.requestCategory, approvalCategories[request - 1]);
+    assert.equal(nativeBuildDiagnostic(error).approval.requestCategory, category);
     if (expected.responseMetadata) {
       diagnostic.approval.responseMetadata.rateLimitRemaining = privateDiagnostic;
       diagnostic.approval.responseMetadata.extra = privateDiagnostic;
@@ -256,18 +280,20 @@ async function checkApprovalDiagnostic({ after, request = 1, response, expected 
     }
     return true;
   });
-  assert.equal(completed, false); assert.equal(requests, failAt, 'Failures must not cause automatic retries');
+  assert.equal(completed, false);
+  assert.equal(requests, failAt + expectedSleeps.length, 'Only a documented rate-limit wait may repeat a request');
+  assert.deepEqual(sleeps, expectedSleeps);
   assert.deepEqual(operations, after ? ['install', 'build', 'verify'] : []);
 }
 
-test('approval diagnostics retain every request category and HTTP status before and after the build', async () => {
+test('approval diagnostics retain every request category and HTTP status; failures without rate-limit headers never retry', async () => {
   for (const after of [false, true]) {
-    for (let request = 1; request <= approvalCategories.length; request++) {
-      await checkApprovalDiagnostic({ after, request,
+    for (const category of after ? afterBuildCategories : approvalCategories) {
+      await checkApprovalDiagnostic({ after, category,
         response: () => new Response(privateDiagnostic, { status: 403, headers: { 'x-private': privateDiagnostic } }),
         expected: { reason: 'http-status', httpStatus: 403 } });
     }
-    for (const status of [302, 429, 500]) await checkApprovalDiagnostic({ after, request: 7,
+    for (const status of [302, 429, 500]) await checkApprovalDiagnostic({ after, category: 'active-approvals',
       response: () => new Response(privateDiagnostic, { status, headers: { location: 'https://invalid.test/' + privateDiagnostic } }),
       expected: { reason: 'http-status', httpStatus: status } });
   }
@@ -280,19 +306,20 @@ const numericResponseHeaders = {
   'retry-after': 'retryAfterSeconds',
 };
 
-test('403 and 429 diagnostics retain only numeric response metadata and still stop before or after building', async () => {
+test('rate-limited 403 and 429 retry twice within the caps, then retain only numeric metadata and stop before or after building', async () => {
   const headers = { 'x-ratelimit-limit': '60', 'x-ratelimit-remaining': '0',
     'x-ratelimit-reset': '1793400000', 'retry-after': '120' };
   const responseMetadata = { rateLimitLimit: 60, rateLimitRemaining: 0,
     rateLimitResetEpochSeconds: 1793400000, retryAfterSeconds: 120 };
   for (const after of [false, true]) for (const status of [403, 429]) {
     const headerReads = []; let bodyReads = 0;
+    // retry-after takes precedence over the reset time; 2 x 120 s reaches the 240 s cap exactly.
     await checkApprovalDiagnostic({ after, response: () => ({ status,
       headers: { get(name) { headerReads.push(name); return headers[name] ?? privateDiagnostic; } },
       get body() { bodyReads++; throw new Error(privateDiagnostic); },
-    }), expected: { reason: 'http-status', httpStatus: status, responseMetadata } });
-    assert.deepEqual(headerReads.sort(), Object.keys(numericResponseHeaders).sort(),
-      'Only the four allowed headers may be read; no raw header enumeration or unrelated fields');
+    }), expected: { reason: 'http-status', httpStatus: status, responseMetadata }, sleeps: [120_000, 120_000] });
+    assert.deepEqual(headerReads.sort(), Object.keys(numericResponseHeaders).sort().flatMap(name => [name, name, name]),
+      'Only the four allowed headers may be read, once per attempt; no raw header enumeration or unrelated fields');
     assert.equal(bodyReads, 0, 'An HTTP failure body must never be read');
   }
 });
@@ -307,9 +334,10 @@ test('response metadata rejects noncanonical and unsafe integers without retaini
     for (const value of invalid) {
       const expected = { reason: 'http-status', httpStatus: 403,
         responseMetadata: { [numericResponseHeaders[keeper]]: 0 } };
+      // A retained canonical retry-after of 0 is a zero-length rate-limit wait: two immediate retries.
       await checkApprovalDiagnostic({ after: false, response: () => ({ status: 403,
         headers: { get(name) { return name === header ? value : name === keeper ? '0' : null; } },
-      }), expected });
+      }), expected, sleeps: keeper === 'retry-after' ? [0, 0] : [] });
       assert.equal(Object.hasOwn(expected.responseMetadata, field), false);
     }
   }
@@ -319,11 +347,12 @@ test('response metadata rejects noncanonical and unsafe integers without retaini
 });
 
 test('numeric response metadata accepts zero and the largest safe canonical integer', async () => {
-  for (const value of ['0', '1', '9007199254740991']) {
+  // retry-after decides the wait; one beyond 120 s fails at once instead of falling back to the reset time.
+  for (const [value, sleeps] of [['0', [0, 0]], ['1', [1000, 1000]], ['9007199254740991', []]]) {
     const responseMetadata = Object.fromEntries(Object.values(numericResponseHeaders).map(field => [field, Number(value)]));
     await checkApprovalDiagnostic({ after: false, response: () => ({ status: 403,
       headers: { get() { return value; } },
-    }), expected: { reason: 'http-status', httpStatus: 403, responseMetadata } });
+    }), expected: { reason: 'http-status', httpStatus: 403, responseMetadata }, sleeps });
   }
 });
 
@@ -341,9 +370,11 @@ test('missing or throwing response header access cannot obscure the HTTP failure
   for (const brokenHeader of Object.keys(numericResponseHeaders)) {
     const responseMetadata = Object.fromEntries(Object.entries(numericResponseHeaders)
       .filter(([header]) => header !== brokenHeader).map(([, field]) => [field, 1]));
+    // Without retry-after, a remaining quota of 1 is not exhausted and never retries.
     await checkApprovalDiagnostic({ after: false, response: () => ({ status: 403,
       headers: { get(name) { if (name === brokenHeader) throw new Error(privateDiagnostic); return '1'; } },
-    }), expected: { reason: 'http-status', httpStatus: 403, responseMetadata } });
+    }), expected: { reason: 'http-status', httpStatus: 403, responseMetadata },
+    sleeps: brokenHeader === 'retry-after' ? [] : [1000, 1000] });
   }
 });
 
@@ -362,7 +393,7 @@ test('successful GitHub responses do not inspect diagnostic response headers', a
     verify: async () => { operations.push('verify');
       return { marker: { buildId: 'synthetic-build' }, manifest: { nativeRelease: release() } }; },
   });
-  assert.equal(result.completed, true); assert.equal(requests, 14); assert.equal(headersRead, 0);
+  assert.equal(result.completed, true); assert.equal(requests, 12); assert.equal(headersRead, 0);
   assert.deepEqual(operations, ['install', 'build', 'verify']);
 });
 
@@ -382,23 +413,141 @@ test('approval diagnostics distinguish transport and bounded response failures w
     { reason: 'invalid-json', httpStatus: 200, response: () => new Response(privateDiagnostic) },
   ];
   for (const after of [false, true]) for (const { response, ...expected } of cases)
-    await checkApprovalDiagnostic({ after, request: 7, response, expected });
+    await checkApprovalDiagnostic({ after, category: 'active-approvals', response, expected });
 });
 
 test('approval contract mismatches retain their request category without assertion values', async () => {
-  const change = [
-    data => { data.sha = privateDiagnostic; },
-    data => { data.object.sha = privateDiagnostic; },
-    data => { data.state = privateDiagnostic; },
-    data => { data.workflow_runs[0].conclusion = privateDiagnostic; },
-    data => { data.jobs[0].head_sha = privateDiagnostic; },
-    data => { data.path = privateDiagnostic; },
-    data => { data.workflow_runs[0].actor.login = privateDiagnostic; },
-  ];
-  for (const after of [false, true]) for (let request = 1; request <= change.length; request++)
-    await checkApprovalDiagnostic({ after, request,
-      response: data => { change[request - 1](data); return Response.json(data); },
+  const change = {
+    'main-ref': data => { data.sha = privateDiagnostic; },
+    'production-ref': data => { data.object.sha = privateDiagnostic; },
+    'ci-workflow': data => { data.state = privateDiagnostic; },
+    'ci-runs': data => { data.workflow_runs[0].conclusion = privateDiagnostic; },
+    'ci-jobs': data => { data.jobs[0].head_sha = privateDiagnostic; },
+    'publisher-workflow': data => { data.path = privateDiagnostic; },
+    'active-approvals': data => { data.workflow_runs[0].actor.login = privateDiagnostic; },
+  };
+  for (const after of [false, true]) for (const category of after ? afterBuildCategories : approvalCategories)
+    await checkApprovalDiagnostic({ after, category,
+      response: data => { change[category](data); return Response.json(data); },
       expected: { reason: 'contract-mismatch' } });
+});
+
+const gateResource = `/repos/${CLOUD_BUILD_REPOSITORY}/commits/main`;
+// Answers the scripted statuses in order (200 returns { ok: true }) and records every wait.
+function scriptedClient(script, options = {}) {
+  const sleeps = []; let calls = 0;
+  const get = publicGithubBuildClient(async () => {
+    const step = script[calls++];
+    return step.status === 200 ? Response.json({ ok: true })
+      : new Response(privateDiagnostic, { status: step.status, headers: step.headers });
+  }, { sleep: async milliseconds => { sleeps.push(milliseconds); }, now: () => syntheticNow, ...options });
+  return { get, sleeps, calls: () => calls };
+}
+const limitedBy = seconds => ({ status: 429, headers: { 'retry-after': String(seconds) } });
+const rejectsWithStatus = (promise, requestCategory, httpStatus, responseMetadata) => assert.rejects(promise, error => {
+  assert.deepEqual(nativeBuildDiagnostic(error).approval, { requestCategory, reason: 'http-status', httpStatus,
+    ...(responseMetadata ? { responseMetadata } : {}) });
+  return true;
+});
+
+test('a 429 with retry-after 30 waits 30 s once and then succeeds', async () => {
+  const client = scriptedClient([limitedBy(30), { status: 200 }]);
+  assert.deepEqual(await client.get(gateResource, 'main-ref'), { ok: true });
+  assert.equal(client.calls(), 2); assert.deepEqual(client.sleeps, [30_000]);
+});
+
+test('an exhausted quota waits until its reset plus 1 s only when that is at most 120 s away', async () => {
+  const quota = seconds => ({ 'x-ratelimit-limit': '60', 'x-ratelimit-remaining': '0',
+    'x-ratelimit-reset': String(syntheticNow / 1000 + seconds) });
+  // A reset already in the past still waits 1 s.
+  for (const [seconds, wait] of [[30, 31_000], [-5, 1000], [119, 120_000]]) {
+    const client = scriptedClient([{ status: 403, headers: quota(seconds) }, { status: 200 }]);
+    assert.deepEqual(await client.get(gateResource, 'main-ref'), { ok: true });
+    assert.equal(client.calls(), 2); assert.deepEqual(client.sleeps, [wait]);
+  }
+  for (const seconds of [600, 120]) {
+    const client = scriptedClient([{ status: 403, headers: quota(seconds) }]);
+    await rejectsWithStatus(client.get(gateResource, 'main-ref'), 'main-ref', 403,
+      { rateLimitLimit: 60, rateLimitRemaining: 0, rateLimitResetEpochSeconds: syntheticNow / 1000 + seconds });
+    assert.equal(client.calls(), 1); assert.deepEqual(client.sleeps, []);
+  }
+  // Remaining quota, a missing reset or no rate-limit header at all is not an exhausted quota.
+  for (const headers of [{ ...quota(30), 'x-ratelimit-remaining': '1' }, { 'x-ratelimit-remaining': '0' }, {}]) {
+    const client = scriptedClient([{ status: 403, headers }]);
+    await assert.rejects(client.get(gateResource, 'main-ref'));
+    assert.equal(client.calls(), 1); assert.deepEqual(client.sleeps, []);
+  }
+});
+
+test('only 403 and 429 answers can wait, even when other statuses carry rate-limit headers', async () => {
+  const headers = { 'retry-after': '1', 'x-ratelimit-remaining': '0', 'x-ratelimit-reset': String(syntheticNow / 1000 + 5) };
+  for (const status of [401, 404, 500, 503]) {
+    const client = scriptedClient([{ status, headers }]);
+    await rejectsWithStatus(client.get(gateResource, 'main-ref'), 'main-ref', status,
+      { rateLimitRemaining: 0, rateLimitResetEpochSeconds: syntheticNow / 1000 + 5, retryAfterSeconds: 1 });
+    assert.equal(client.calls(), 1); assert.deepEqual(client.sleeps, []);
+  }
+  const redirect = scriptedClient([{ status: 302, headers: { ...headers, location: 'https://invalid.test/' } }]);
+  await assert.rejects(redirect.get(gateResource, 'main-ref'));
+  assert.equal(redirect.calls(), 1); assert.deepEqual(redirect.sleeps, []);
+});
+
+test('rate-limit waits stop at 240 s in total per build client', async () => {
+  const client = scriptedClient([limitedBy(60), { status: 200 }, limitedBy(90), limitedBy(90), { status: 200 }, limitedBy(1)]);
+  assert.deepEqual(await client.get(gateResource, 'main-ref'), { ok: true });
+  assert.deepEqual(await client.get(gateResource, 'production-ref'), { ok: true });
+  assert.deepEqual(client.sleeps, [60_000, 90_000, 90_000]);
+  // 240 s already waited: one more second exceeds the cap, so the request fails without sleeping.
+  await rejectsWithStatus(client.get(gateResource, 'ci-workflow'), 'ci-workflow', 429, { retryAfterSeconds: 1 });
+  assert.equal(client.calls(), 6); assert.deepEqual(client.sleeps, [60_000, 90_000, 90_000]);
+});
+
+test('a rate-limit wait starts only when 60 s of the build deadline remain after it', async () => {
+  const fits = scriptedClient([limitedBy(30), { status: 200 }], { deadline: syntheticNow + 90_000 });
+  assert.deepEqual(await fits.get(gateResource, 'main-ref'), { ok: true });
+  assert.deepEqual(fits.sleeps, [30_000]);
+  const late = scriptedClient([limitedBy(30)], { deadline: syntheticNow + 89_999 });
+  await rejectsWithStatus(late.get(gateResource, 'main-ref'), 'main-ref', 429, { retryAfterSeconds: 30 });
+  assert.equal(late.calls(), 1); assert.deepEqual(late.sleeps, []);
+});
+
+test('retries count toward the 24-request bound', async () => {
+  // Eight requests that each need two immediate retries use all 24 calls.
+  const client = scriptedClient(Array.from({ length: 8 }, () => [limitedBy(0), limitedBy(0), { status: 200 }]).flat());
+  for (let i = 0; i < 8; i++) assert.deepEqual(await client.get(gateResource, 'main-ref'), { ok: true });
+  assert.equal(client.calls(), 24); assert.deepEqual(client.sleeps, Array(16).fill(0));
+  await assert.rejects(client.get(gateResource, 'main-ref'), /request bound exceeded/);
+  assert.equal(client.calls(), 24);
+  // On the last allowed call a rate-limited answer keeps its own diagnostic instead of waiting for nothing.
+  const edge = scriptedClient([...Array(23).fill({ status: 200 }), limitedBy(0)]);
+  for (let i = 0; i < 23; i++) await edge.get(gateResource, 'main-ref');
+  await rejectsWithStatus(edge.get(gateResource, 'ci-runs'), 'ci-runs', 429, { retryAfterSeconds: 0 });
+  assert.equal(edge.calls(), 24); assert.deepEqual(edge.sleeps, []);
+});
+
+test('a rate-limited approval request that clears within the caps lets the build complete with one identity', async () => {
+  for (const after of [false, true]) {
+    const gate = gateFixture(), operations = [], sleeps = []; let requests = 0;
+    const limitedAt = (after ? approvalCategories.length : 0) + 1;
+    const get = publicGithubBuildClient(async url => {
+      requests++;
+      if (requests === limitedAt) return new Response(privateDiagnostic, { status: 429, headers: { 'retry-after': '30' } });
+      return Response.json(await gate.get(new URL(url).pathname + new URL(url).search));
+    }, { sleep: async milliseconds => { sleeps.push(milliseconds); }, now: () => syntheticNow });
+    assert.deepEqual(await orchestrateCloudBuild({ env, readLocal: async () => local, get,
+      install: async () => { operations.push('install'); }, build: async () => { operations.push('build'); },
+      verify: async () => { operations.push('verify');
+        return { marker: { buildId: 'synthetic-build' }, manifest: { nativeRelease: release() } }; },
+    }), { completed: true, commit: COMMIT, buildId: 'synthetic-build', approvalRunId: 20 });
+    assert.equal(requests, 13); assert.deepEqual(sleeps, [30_000]);
+    assert.deepEqual(operations, ['install', 'build', 'verify']);
+  }
+});
+
+test('the native build gives the GitHub gate client its 18-minute deadline', () => {
+  const source = readFileSync(new URL('../pages-cloud-build.mjs', import.meta.url), 'utf8');
+  assert.match(source, /^const MAX_BUILD_MS = 18 \* 60 \* 1000;$/m);
+  assert.match(source, /const get = publicGithubBuildClient\(globalThis\.fetch, \{ deadline: Date\.now\(\) \+ MAX_BUILD_MS \}\);/);
 });
 
 test('forged diagnostic properties and non-status values never enter native diagnostics', async () => {

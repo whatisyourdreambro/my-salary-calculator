@@ -33,7 +33,7 @@ function readApprovalResponseMetadata(response) {
   let headers;
   try { headers = response.headers; } catch { return undefined; }
   const metadata = {};
-  // Numeric observations only: never retain raw headers or infer a retry decision.
+  // Numeric observations only: never retain raw headers. The client alone derives a bounded rate-limit wait.
   for (const [header, field] of [
     ['x-ratelimit-limit', 'rateLimitLimit'],
     ['x-ratelimit-remaining', 'rateLimitRemaining'],
@@ -117,38 +117,63 @@ export function assertCloudBuildContext(env, local) {
   return env.CF_PAGES_COMMIT_SHA;
 }
 
-export function publicGithubBuildClient(fetchFn = globalThis.fetch) {
-  let calls = 0;
+// Anonymous GitHub REST quota is 60 requests/hour per IP; an exhausted quota or a secondary limit answers
+// 403/429 with x-ratelimit-remaining 0 (wait until x-ratelimit-reset, epoch seconds) or retry-after (seconds).
+// https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api
+// Only those documented waits are retried: twice per request, at most 120 s each and 240 s per client,
+// while the build deadline keeps 60 s spare and the request bound still has a call left.
+export function publicGithubBuildClient(fetchFn = globalThis.fetch,
+  { sleep = ms => new Promise(resolve => setTimeout(resolve, ms)), now = Date.now, deadline = Infinity } = {}) {
+  let calls = 0, waited = 0;
   return async (resource, requestCategory) => {
     assert.ok(resource.startsWith(PREFIX) && !/[\r\n#\\]|\.\./.test(resource));
-    assert.ok(++calls <= 24, 'Public GitHub build gate request bound exceeded');
-    let response;
-    try { response = await fetchFn(`https://api.github.com${resource}`, { method: 'GET', redirect: 'manual',
-      signal: AbortSignal.timeout(15000), headers: { accept: 'application/vnd.github+json',
-        'x-github-api-version': '2022-11-28', 'user-agent': 'MoneySalary-native-build-gate/1.0' } }); }
-    catch { throw approvalFailure(requestCategory, 'transport'); }
-    if (response.status !== 200) throw approvalFailure(requestCategory, 'http-status', response.status,
-      readApprovalResponseMetadata(response));
-    let reader;
-    try { reader = response.body?.getReader(); }
-    catch { throw approvalFailure(requestCategory, 'body-read', response.status); }
-    if (!reader) throw approvalFailure(requestCategory, 'missing-body', response.status);
-    const chunks = []; let length = 0;
-    try {
-      for (;;) { const { done, value } = await reader.read(); if (done) break;
-        length += value.byteLength;
-        if (length > 2 * 1024 * 1024) throw approvalFailure(requestCategory, 'body-limit', response.status);
-        chunks.push(value); }
-      try { return JSON.parse(Buffer.concat(chunks).toString('utf8')); }
-      catch { throw approvalFailure(requestCategory, 'invalid-json', response.status); }
-    } catch (error) {
-      throw approvalDiagnostics.has(error) ? error : approvalFailure(requestCategory, 'body-read', response.status);
-    } finally { await reader.cancel().catch(() => {}); reader.releaseLock(); }
+    for (let attempt = 0; ; attempt++) {
+      // Retries count toward the same request bound.
+      assert.ok(++calls <= 24, 'Public GitHub build gate request bound exceeded');
+      let response;
+      try { response = await fetchFn(`https://api.github.com${resource}`, { method: 'GET', redirect: 'manual',
+        signal: AbortSignal.timeout(15000), headers: { accept: 'application/vnd.github+json',
+          'x-github-api-version': '2022-11-28', 'user-agent': 'MoneySalary-native-build-gate/1.0' } }); }
+      catch { throw approvalFailure(requestCategory, 'transport'); }
+      if (response.status !== 200) {
+        // The failure body stays unread. A 403 without rate-limit headers never retries.
+        const metadata = readApprovalResponseMetadata(response);
+        const delay = attempt < 2 && [403, 429].includes(response.status) && metadata
+          ? (Number.isSafeInteger(metadata.retryAfterSeconds) ? metadata.retryAfterSeconds * 1000
+            : metadata.rateLimitRemaining === 0 && Number.isSafeInteger(metadata.rateLimitResetEpochSeconds)
+              ? Math.max(0, metadata.rateLimitResetEpochSeconds * 1000 - now()) + 1000 : null)
+          : null;
+        if (delay !== null && delay <= 120_000 && waited + delay <= 240_000 && now() + delay + 60_000 <= deadline
+          && calls < 24) { waited += delay; await sleep(delay); continue; }
+        throw approvalFailure(requestCategory, 'http-status', response.status, metadata);
+      }
+      let reader;
+      try { reader = response.body?.getReader(); }
+      catch { throw approvalFailure(requestCategory, 'body-read', response.status); }
+      if (!reader) throw approvalFailure(requestCategory, 'missing-body', response.status);
+      const chunks = []; let length = 0;
+      try {
+        for (;;) { const { done, value } = await reader.read(); if (done) break;
+          length += value.byteLength;
+          if (length > 2 * 1024 * 1024) throw approvalFailure(requestCategory, 'body-limit', response.status);
+          chunks.push(value); }
+        try { return JSON.parse(Buffer.concat(chunks).toString('utf8')); }
+        catch { throw approvalFailure(requestCategory, 'invalid-json', response.status); }
+      } catch (error) {
+        throw approvalDiagnostics.has(error) ? error : approvalFailure(requestCategory, 'body-read', response.status);
+      } finally { await reader.cancel().catch(() => {}); reader.releaseLock(); }
+    }
   };
 }
 
-export async function verifyCloudBuildApproval(commit, get) {
+// Workflow ids (path and active state checked) behind each verified identity, so the
+// after-build check can reuse them: 12 instead of 14 anonymous requests per build.
+const verifiedWorkflowIds = new WeakMap();
+
+export async function verifyCloudBuildApproval(commit, get, known) {
   assert.match(commit || '', SHA);
+  if (known !== undefined) for (const id of [known?.ciWorkflowId, known?.publisherWorkflowId])
+    assert.ok(Number.isSafeInteger(id) && id > 0, 'Known workflow ids must be positive safe integers');
   let requestCategory = 'main-ref';
   try {
     assert.equal((await get(`${PREFIX}commits/main`, requestCategory)).sha, commit, 'Main moved; stop native publication');
@@ -160,7 +185,7 @@ export async function verifyCloudBuildApproval(commit, get) {
       assert.equal(result.path, `.github/workflows/${name}`); assert.equal(result.state, 'active');
       assert.ok(Number.isSafeInteger(result.id) && result.id > 0); return result;
     };
-    const ci = await workflow('ci.yml', 'ci-workflow');
+    const ci = known ? { id: known.ciWorkflowId } : await workflow('ci.yml', 'ci-workflow');
     requestCategory = 'ci-runs';
     const runs = await get(`${PREFIX}actions/workflows/${ci.id}/runs?event=push&branch=main&head_sha=${commit}&per_page=100`, requestCategory);
     assert.ok(Array.isArray(runs.workflow_runs) && runs.total_count <= 100);
@@ -175,7 +200,7 @@ export async function verifyCloudBuildApproval(commit, get) {
     const selected = jobs.jobs.filter(job => job.name === 'verify'); assert.equal(selected.length, 1);
     const job = selected[0]; assert.equal(job.run_id, verified.id); assert.equal(job.head_sha, commit);
     assert.equal(job.status, 'completed'); assert.equal(job.conclusion, 'success'); assert.ok(Number.isSafeInteger(job.id) && job.id > 0);
-    const publisher = await workflow('pages-publish.yml', 'publisher-workflow');
+    const publisher = known ? { id: known.publisherWorkflowId } : await workflow('pages-publish.yml', 'publisher-workflow');
     requestCategory = 'active-approvals';
     const approvals = await get(`${PREFIX}actions/workflows/${publisher.id}/runs?event=workflow_dispatch&branch=main&head_sha=${commit}&status=in_progress&per_page=100`, requestCategory);
     assert.ok(Array.isArray(approvals.workflow_runs) && approvals.total_count <= 100);
@@ -186,7 +211,9 @@ export async function verifyCloudBuildApproval(commit, get) {
     const approval = active[0]; assert.equal(approval.actor?.login, OWNER); assert.equal(approval.triggering_actor?.login, OWNER);
     assert.equal(approval.run_attempt, 1); assert.equal(approval.conclusion, null);
     assert.ok(Number.isSafeInteger(approval.id) && approval.id > 0);
-    return { commit, branch: CLOUD_BUILD_BRANCH, ci: { runId: verified.id, jobId: job.id }, approval: { runId: approval.id, actor: OWNER } };
+    const identity = { commit, branch: CLOUD_BUILD_BRANCH, ci: { runId: verified.id, jobId: job.id }, approval: { runId: approval.id, actor: OWNER } };
+    verifiedWorkflowIds.set(identity, { ciWorkflowId: ci.id, publisherWorkflowId: publisher.id });
+    return identity;
   } catch (error) {
     throw approvalDiagnostics.has(error) ? error : approvalFailure(requestCategory, 'contract-mismatch');
   }
@@ -236,7 +263,7 @@ export async function orchestrateCloudBuild(deps) {
     assert.equal(verified.manifest.nativeRelease.commit, commit);
   });
   assertCloudBuildContext(deps.env, await deps.readLocal());
-  const after = await asyncCheckpoint('approval-after', () => verifyCloudBuildApproval(commit, deps.get));
+  const after = await asyncCheckpoint('approval-after', () => verifyCloudBuildApproval(commit, deps.get, verifiedWorkflowIds.get(before)));
   checkpoint('approval-unchanged', () => assert.deepEqual(after, before, 'Approval or verification changed during the build'));
   return { completed: true, commit, buildId: verified.marker.buildId, approvalRunId: before.approval.runId };
 }
@@ -254,7 +281,8 @@ export async function main(args = process.argv.slice(2), input = process.env) {
     origin: checkpoint('git-origin', () => git(['remote', 'get-url', 'origin']).trim()) });
   assertCloudBuildContext(env, await readLocal());
   const childEnv = installationEnvironment(ROOT, env);
-  const get = publicGithubBuildClient();
+  // A rate-limit wait starts only while the 18-minute budget keeps 60 s spare after it.
+  const get = publicGithubBuildClient(globalThis.fetch, { deadline: Date.now() + MAX_BUILD_MS });
   const timer = setTimeout(() => { console.error(JSON.stringify(nativeBuildDiagnostic(phaseFailure('time-budget')))); process.exit(1); }, MAX_BUILD_MS);
   try {
     const result = await orchestrateCloudBuild({ env, readLocal, get,
