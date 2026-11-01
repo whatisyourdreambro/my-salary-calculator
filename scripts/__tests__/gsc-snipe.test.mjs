@@ -11,6 +11,10 @@ import { after, test } from "node:test";
 // 순위≤2.5·클릭 0 URL 은 표에 남되 꼬리표가 붙는다. 버킷 B·C 는 그대로. 네트워크 없음.
 const SCRIPT = fileURLToPath(new URL("../gsc-snipe.mjs", import.meta.url));
 const REPO_ROOT = fileURLToPath(new URL("../..", import.meta.url));
+// 실제 GSC 내보내기 CSV 는 공개 저장소에 두지 않는다(2026-11-01 운영자 승인 9번, B42 — 원본은 리포 밖
+// C:\Users\ruby1\.moneysalary-secrets\gsc\). 아래 고정 자료는 같은 한국어 헤더에 지어낸 숫자 2행:
+// sk-hynix 는 버킷 A 대역(노출≥100·CTR<2%·순위 2.5~8)이라 동결 줄로, /salary-db 목록은 버킷 B 대역(순위 10~20·노출 50~99).
+const PAGES_FIXTURE = fileURLToPath(new URL("./fixtures/gsc-pages-synthetic.csv", import.meta.url));
 const FROZEN_PREFIX = "제목 변경 금지(회사 title 불변 / /salary·/monthly 제목은 2월 결정)";
 const SITELINK_NOTE = "(브랜드 사이트링크 추정 — 손대지 말 것)";
 const KR_REMINDER = "CTR·순위 판정은 국가=한국 필터 CSV로만(gsc-sniping-log Round 1)";
@@ -40,8 +44,8 @@ function writeCsv(name, header, rows) {
   return p;
 }
 
-test("repo 3-month pages export: sk-hynix leaves the actionable bucket A table and shows on the frozen line", () => {
-  const out = run("docs/gsc/2026-08-16-full3mo-pages.csv");
+test("synthetic pages fixture (GSC export header): sk-hynix leaves the actionable bucket A table and shows on the frozen line", () => {
+  const out = run(PAGES_FIXTURE);
   const a = section(out, "A");
   assert.equal(tableRows(a).some((l) => l.includes("/salary-db/sk-hynix")), false);
   assert.match(a, /— 0건/);
@@ -50,12 +54,14 @@ test("repo 3-month pages export: sk-hynix leaves the actionable bucket A table a
   assert.match(line, /— 1건: https:\/\/www\.moneysalary\.com\/salary-db\/sk-hynix$/);
   assert.ok(out.includes(KR_REMINDER));
   // 버킷 B 는 그대로 (/salary-db 목록 페이지)
-  assert.equal(tableRows(section(out, "B")).length, 1);
+  const b = tableRows(section(out, "B"));
+  assert.equal(b.length, 1);
+  assert.ok(b[0].startsWith("| https://www.moneysalary.com/salary-db |"), b[0]);
 });
 
 test("synthetic pages CSV: frozen paths, static salary-db pages, sitelinks and bucket B", () => {
   const csv = writeCsv("pages.csv", "인기 페이지,클릭수,노출,CTR,게재 순위", [
-    "https://www.moneysalary.com/salary-db/sk-hynix,2,109,1.83%,3.2",
+    "https://www.moneysalary.com/salary-db/sk-hynix,3,160,1.88%,3.4",
     "https://moneysalary.com/salary/49500000,0,300,0%,4.1",
     "https://www.moneysalary.com/monthly/3000000/,1,200,0.5%,5",
     "https://www.moneysalary.com/salary-db/ranking,1,150,0.67%,6",
