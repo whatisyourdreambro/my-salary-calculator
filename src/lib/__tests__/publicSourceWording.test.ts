@@ -174,8 +174,8 @@ describe("성과급 화면 문자열에 '사내 공지'·'노조 공지 기반'�
       expect(y.sourceNote, String(y.fiscalYear)).not.toMatch(FORBIDDEN);
       expect(y.sourceNote, String(y.fiscalYear)).toMatch(/보도/);
     }
-    // 2025년분 8행 중 3행(한국총괄·SR·CDO·EHS·CSS)은 언론 기사에 없고 노조 홈페이지 공개 공지에만 있어 '등'을 붙인다(opiData.ts 주석).
-    expect(OPI_LATEST.sourceNote).toBe("복수 언론 보도 등");
+    // 2025년분 6행은 모두 둘 이상의 언론 기사에 있다(2026-11-02 재검색, opiData.ts 주석).
+    expect(OPI_LATEST.sourceNote).toBe("복수 언론 보도");
     const page = readFileSync(resolve(ROOT, "src/app/calc/samsung-bonus/page.tsx"), "utf8");
     expect(page).toContain("{OPI_LATEST.sourceNote}에 따른 실제 지급률은");
     expect(page).toContain("`${OPI_LATEST.sourceNote}에 따르면 ${OPI_LATEST.fiscalYear}년 실적분 OPI");
@@ -272,7 +272,8 @@ describe("B28 광고 위 문구 — 2026-11-01 재확인한 공개 보도·정�
 
   it("가이드: OPI 표 머리는 언론 보도를 앞에 두고, 반도체 심층 가이드 면책문에 직원 후기 플랫폼이 없다", () => {
     const opi = guideText(koGuides.find((g) => g.slug === "samsung-opi-forecast-2027")!);
-    expect(opi).toContain("언론 보도(2026-01-16)·노조 공개 공지로 확인된 2025년분 OPI(2026-01-30 지급) 사업부별 지급률입니다.");
+    expect(opi).toContain("언론 보도(2026-01-16·28)로 확인된 2025년분 OPI(2026-01-30 지급) 사업부별 지급률입니다.");
+    expect(opi).not.toContain("노조 공개 공지");
     expect(opi).not.toContain("전국삼성전자노동조합 공지(2026-01-16)와 보도로");
     for (const s of ["samsung-wage-negotiation-2026", "sk-hynix-wage-2026", "chip-rsu-stock-tax-2026"]) {
       const t = guideText(koGuides.find((g) => g.slug === s)!);
