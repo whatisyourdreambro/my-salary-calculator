@@ -121,14 +121,23 @@ describe("맞벌이 기본공제와 연간 자녀세액공제 배분", () => {
     expect(client.indexOf(text.slice(0, 10))).toBeLessThan(client.indexOf("<CalcResultAd />"));
   });
 
-  // B25 P4-06 (2026-11-01): 화면 기본 예시 — 본인 6,000만·배우자 4,000만·자녀 0명·부부 상호 의료비 300만원.
-  // 종전 100만원은 두 사람 3% 문턱(180만·120만)에 모두 못 미쳐 첫 화면 절감액이 0원이었다.
+  // B25 P4-06 (2026-11-01): 본인 6,000만·배우자 4,000만·자녀 0명·부부 상호 의료비 300만원 예시. 11/1 통합 스윕 수리로
+  // 화면 기본값은 100만원 그대로다('최적 대비' 칸이 넓어져 CalcResultAd 가 내려가 되돌림) — 아래 화면 기본값 테스트.
   const screenDefault: DualIncomeInput = {
     salaryMe: 60_000_000, salarySp: 40_000_000, children: 0, childTaxCreditEligibleChildren: 0,
     childMedical: 3_000_000, childEducation: 2_000_000, childDonation: 0, coupleMedical: 3_000_000,
   };
 
-  it("화면 기본 예시는 3% 문턱이 낮은 배우자 귀속으로 9만원을 절감한다 (B25)", () => {
+  it("화면 기본값(의료비 100만원)은 두 사람 3% 문턱 미달로 동점 — 절감 0원, 어느 쪽이든 같음", () => {
+    const client = readFileSync(join(process.cwd(), "src/app/calc/dual-income-year-end/Client.tsx"), "utf8");
+    expect(client).toContain('coupleMedical: "1,000,000",');
+    const r = calculateDualIncomeYearEnd2026({ ...screenDefault, coupleMedical: 1_000_000 });
+    expect(r.saving).toBe(0);
+    expect(r.coupleMedTie).toBe(true);
+    expect(r.allMe.total).toBe(r.allSp.total);
+  });
+
+  it("300만원이면 3% 문턱이 낮은 배우자 귀속으로 9만원을 절감한다 (B25 예시 — 엔진)", () => {
     const r = calculateDualIncomeYearEnd2026(screenDefault);
     // 소득세법 §59의4②1: (의료비 − 총급여 3%) × 15% — 배우자 (300만 − 120만) × 15% = 27만, 본인 (300만 − 180만) × 15% = 18만
     const credit = (gross: number) =>

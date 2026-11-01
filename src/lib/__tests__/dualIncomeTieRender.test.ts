@@ -1,6 +1,7 @@
 // /calc/dual-income-year-end 결과 카드 — 부부 상호 의료비 동점 문구 (2026-11-01 B25 P4-06, synthesizer correction)
-// 화면 기본 예시(300만원)는 동점이 아니므로, 엔진 호출만 종전 기본 100만원(두 사람 3% 문턱 미달 — 실제 동점)으로 바꿔
-// 렌더한다. 종전에는 이 상태에서 동점 중 첫 시나리오인 '본인이 결제·공제'가 추천처럼 보였다.
+// 엔진 호출을 의료비 100만원(두 사람 3% 문턱 미달 — 실제 동점)으로 고정해 렌더한다. 화면 기본 예시도 100만원이라
+// (11/1 통합 스윕 수리로 B25 의 300만원 예시를 되돌림) 첫 화면이 곧 이 상태다. 종전에는 동점 중 첫 시나리오인
+// '본인이 결제·공제'가 추천처럼 보였다.
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";

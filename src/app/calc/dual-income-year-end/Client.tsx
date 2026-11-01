@@ -34,8 +34,10 @@ export default function DualIncomeYearEndClient() {
     childMedical: "3,000,000",
     childEducation: "2,000,000",
     childDonation: "0",
-    // 기본 예시 300만원: 배우자(문턱 120만) 공제 27만 vs 본인(문턱 180만) 18만 → 첫 화면 절감 9만원 (2026-11-01 B25 P4-06)
-    coupleMedical: "3,000,000",
+    // 기본 예시 100만원 유지(두 사람 3% 문턱 미달 → 동점, 결과 줄은 '어느 쪽이든 같음'). 2026-11-01 B25 의 300만원 예시는
+    // '최적 대비' 칸이 — → +90,000원으로 넓어져 min-w-[480px] 표의 시나리오 이름이 한 줄 더 접히고, CalcResultAd 이하
+    // 광고가 320~661px 에서 20~80px 내려가(통합 스윕 실측) 되돌렸다. 동점이 아닌 기본값은 어떤 금액이든 같은 칸이 넓어진다.
+    coupleMedical: "1,000,000",
   });
   const [children, setChildren] = useState(0);
   const [childTaxCreditEligibleChildren, setChildTaxCreditEligibleChildren] = useState(0);
@@ -62,21 +64,17 @@ export default function DualIncomeYearEndClient() {
             : `자녀 기본공제 본인 ${k}명 · 배우자 ${children - k}명`
       );
       parts.push(`그중 연간 자녀세액공제 본인 ${optimal.assign.creditKidsToMe}명 · 배우자 ${childTaxCreditEligibleChildren - optimal.assign.creditKidsToMe}명`);
-      // 자녀를 나눠 귀속할 때(0 < k < 자녀 수) 자녀 지출은 한 덩어리로 한쪽에 몰린다. 실제로는 지출한 자녀를 기본공제
-      // 받는 쪽만 공제받으므로(소득세법 제59조의4제2항·제3항·제4항), 그 조건을 결과에 붙인다 (2026-10-05 감사 code2-02 —
-      // 지출이 여러 자녀에 퍼져 있으면 이 배분은 그대로 할 수 없고 절감액도 달라진다. 2026-11-01 B26: 위 자녀세액공제 줄 다음에 재이식)
-      if (optimal.assign.childExpTo) {
-        const splitKids = k > 0 && k < children;
-        const side = SIDE_LABEL[optimal.assign.childExpTo];
+      // 자녀를 나눠 귀속할 때(0 < k < 자녀 수)도 이 줄은 종전 문구 그대로다. B26 이 줄 끝에 붙였던 귀속 조건 괄호는
+      // 320px 에서 이미 한 줄을 거의 채운 이 줄을 320~500px 에서 두 줄로 만들어 CalcResultAd 를 내렸다(통합 스윕 실측).
+      // 지출 자녀를 기본공제하는 쪽만 공제받는다는 조건(소득세법 제59조의4)은 아래 고지의 '자녀별 지출도 구분하지 않습니다 …
+      // 배분 이익이 실제보다 크게 표시될 수 있습니다' 가 대신한다.
+      if (optimal.assign.childExpTo)
         parts.push(
-          splitKids
-            ? `자녀 의료비·교육비·기부금 → ${side} (${side} 쪽 자녀 지출일 때만 가능)`
-            : `자녀 의료비·교육비·기부금 → ${side}`
+          `자녀 의료비·교육비·기부금 → ${SIDE_LABEL[optimal.assign.childExpTo]}`
         );
-      }
     }
-    // 결과 카드(CalcResultAd 위) 줄 — B25: 머리말을 '부부 상호'(입력칸 괄호와 같은 말)로 한 글자 줄여, 기본 예시가
-    // '배우자가'(한 글자 더 김)로 바뀌어도 종전 기본 줄과 같은 글자 구성·폭을 유지한다. 동점이면 배분 대신 동점 문구.
+    // 결과 카드(CalcResultAd 위) 줄 — B25: 머리말을 '부부 상호'(입력칸 괄호와 같은 말)로 한 글자 줄였다('배우자가' 줄도
+    // B25 전 기본 화면의 '본인이' 줄과 글자 구성·폭이 같다). 동점이면 배분 대신 더 짧은 동점 문구 — 기본 화면이 이 경우다.
     if (optimal.assign.coupleMedTo)
       parts.push(
         coupleMedTie
