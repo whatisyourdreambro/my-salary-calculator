@@ -18,6 +18,14 @@ const compiled = ts.transpileModule(readFileSync(sourcePath, "utf8"), {
     target: ts.ScriptTarget.ES2020,
   },
 }).outputText;
+// The real page-view request ledger (one request per slot per page view), not a stub.
+const ledgerPath = resolve(dirname(fileURLToPath(import.meta.url)), "../../src/lib/adPageViewLedger.ts");
+const compiledLedger = ts.transpileModule(readFileSync(ledgerPath, "utf8"), {
+  compilerOptions: {
+    module: ts.ModuleKind.CommonJS,
+    target: ts.ScriptTarget.ES2020,
+  },
+}).outputText;
 
 function createRuntime({ liveAllowed = true } = {}) {
   let currentFiber;
@@ -25,6 +33,10 @@ function createRuntime({ liveAllowed = true } = {}) {
   const intersections = [];
   const adPushes = [];
   const events = [];
+  // Evaluate the ledger once per runtime so its module state never leaks between tests.
+  const ledgerContext = { exports: {} };
+  vm.runInNewContext(compiledLedger, ledgerContext, { filename: ledgerPath });
+  const ledger = ledgerContext.exports;
 
   function hook() {
     assert.ok(currentFiber, "hooks must run inside an AdSlot render");
@@ -41,7 +53,8 @@ function createRuntime({ liveAllowed = true } = {}) {
     },
     useState(initial) {
       const { fiber, index } = hook();
-      fiber.hooks[index] ??= { kind: "state", value: initial };
+      // Like React, a function argument is a lazy initializer that runs on the first render only.
+      fiber.hooks[index] ??= { kind: "state", value: typeof initial === "function" ? initial() : initial };
       const state = fiber.hooks[index];
       return [state.value, (next) => fiber.updates.push(() => {
         const value = typeof next === "function" ? next(state.value) : next;
@@ -120,6 +133,7 @@ function createRuntime({ liveAllowed = true } = {}) {
       if (name === "next/navigation") return { usePathname: () => currentFiber.pathname };
       if (name === "@/lib/vitalsAttribution") return { viewportBucket: () => "m" };
       if (name === "@/lib/liveAds") return { canRequestLiveAds: () => liveAllowed };
+      if (name === "@/lib/adPageViewLedger") return ledger;
       if (name === "@/lib/analytics") return {
         trackAdRequestAttempt: (...params) => events.push({ name: "attempt", params }),
         trackAdRequestError: (...params) => events.push({ name: "error", params }),
@@ -216,7 +230,22 @@ function createRuntime({ liveAllowed = true } = {}) {
     flushUpdates();
   }
 
-  return { mount, navigate, flushUpdates, intersections, adPushes, events, disableLiveAds: () => { liveAllowed = false; } };
+  // Like a React unmount (replay round, keyed list filter, rotation): run every effect
+  // cleanup, detach the DOM and drop the fiber so its pending updates are ignored.
+  function unmount(fiber) {
+    for (const hookState of fiber.hooks) if (hookState?.kind === "effect") hookState.cleanup?.();
+    if (fiber.container) {
+      fiber.container.isConnected = false;
+      if (fiber.container.ins) fiber.container.ins.isConnected = false;
+    }
+    if (fiber.tree) fiber.tree.props.ref.current = null;
+    fiber.container = null;
+    fiber.tree = null;
+    fiber.updates = [];
+    fibers.splice(fibers.indexOf(fiber), 1);
+  }
+
+  return { mount, navigate, unmount, flushUpdates, intersections, adPushes, events, disableLiveAds: () => { liveAllowed = false; } };
 }
 
 test("a queued old-page intersection cannot mount/request an offscreen new-page ad", () => {
@@ -298,6 +327,52 @@ test("a surviving layout slot can request once again after a fresh pathname inte
   runtime.flushUpdates();
   assert.ok(fiber.container.ins);
   assert.notEqual(fiber.container.ins, previousIns);
+  assert.equal(runtime.adPushes.length, 2);
+  assert.deepEqual(runtime.events.map(({ name }) => name), ["attempt", "attempt"]);
+});
+
+test("a same-path remount of an already requested slot renders nothing and never requests again", () => {
+  const runtime = createRuntime();
+  const first = runtime.mount("/a");
+  runtime.intersections[0].deliverQueuedIntersection();
+  runtime.flushUpdates();
+  assert.equal(runtime.adPushes.length, 1);
+
+  runtime.unmount(first);
+  const again = runtime.mount("/a");
+  assert.equal(again.tree, null, "no label or reserved box for the spent instance");
+  assert.equal(runtime.intersections.length, 1, "the spent instance never observes visibility");
+  for (const observer of runtime.intersections) observer.deliverQueuedIntersection();
+  runtime.flushUpdates();
+  assert.equal(again.tree, null);
+  assert.equal(runtime.adPushes.length, 1, "one request per slot per page view");
+  assert.deepEqual(runtime.events.map(({ name }) => name), ["attempt"]);
+});
+
+test("an instance unmounted before it requested does not use up the page view", () => {
+  const runtime = createRuntime();
+  const early = runtime.mount("/a");
+  runtime.unmount(early);
+  const later = runtime.mount("/a");
+  assert.ok(later.tree);
+  runtime.intersections.at(-1).deliverQueuedIntersection();
+  runtime.flushUpdates();
+  assert.ok(later.container.ins);
+  assert.equal(runtime.adPushes.length, 1);
+});
+
+test("a fresh instance on a new pathname starts a new page view and may request again", () => {
+  const runtime = createRuntime();
+  const first = runtime.mount("/a");
+  runtime.intersections[0].deliverQueuedIntersection();
+  runtime.flushUpdates();
+  runtime.unmount(first);
+
+  const next = runtime.mount("/b");
+  assert.ok(next.tree);
+  runtime.intersections.at(-1).deliverQueuedIntersection();
+  runtime.flushUpdates();
+  assert.ok(next.container.ins);
   assert.equal(runtime.adPushes.length, 2);
   assert.deepEqual(runtime.events.map(({ name }) => name), ["attempt", "attempt"]);
 });

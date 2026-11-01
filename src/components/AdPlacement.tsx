@@ -10,6 +10,7 @@ import {
 } from "@/lib/analytics";
 import { viewportBucket } from "@/lib/vitalsAttribution";
 import { canRequestLiveAds } from "@/lib/liveAds";
+import { hasRequestedInPageView, markRequestedInPageView } from "@/lib/adPageViewLedger";
 
 const CLIENT_ID = "ca-pub-2873403048341290";
 // 라벨("광고 (Sponsored)") 높이 — 컨테이너 예약 높이에 포함해 <ins> 지연 마운트 때 아래 콘텐츠가 ~20px 밀리지 않게 한다 (2026-09-11).
@@ -64,8 +65,14 @@ function AdSlot({
   const pathname = usePathname();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const pushed = useRef(false);
+  const pagePath = useRef(pathname);
   const [visible, setVisible] = useState(false);
   const [allowed, setAllowed] = useState(true);
+  // 같은 페이지뷰에서 이미 요청한 슬롯의 재마운트 인스턴스 — 다시 요청하지 않고 아무것도 렌더하지 않는다
+  // (src/lib/adPageViewLedger.ts). 첫 렌더에서 바로 판정해 빈 광고 상자가 한 프레임도 생기지 않게 한다.
+  const [spent, setSpent] = useState(
+    () => typeof window !== "undefined" && !!slot && !!pathname && hasRequestedInPageView(pathname, slot)
+  );
   const [liveEnabled, setLiveEnabled] = useState(false);
   useEffect(() => {
     setLiveEnabled(canRequestLiveAds());
@@ -78,15 +85,19 @@ function AdSlot({
   // (이전: pushed.current 영구 true 가 되어 뒤로가기 시 viewability 0% — 매출 손실)
   useEffect(() => {
     pushed.current = false;
+    pagePath.current = pathname;
     setVisible(false);
     setAllowed(true);
     setUnfilled(false);
-  }, [pathname]);
+    // 레이아웃 상주 슬롯은 경로가 바뀌면 새 페이지뷰이므로 다시 요청할 수 있다.
+    setSpent(!!slot && !!pathname && hasRequestedInPageView(pathname, slot));
+    // slot 은 env 상수라 바뀌지 않는다 — 실질적으로 종전처럼 경로 변경 때만 실행된다.
+  }, [pathname, slot]);
 
   // 페이지별 슬롯 dedup — 같은 페이지에 동일 슬롯 ID 두 번째 호출은 자동 skip
   // (AdSense 정책 + GUIDE_MID 같은 fallback 슬롯이 두 컴포넌트에 쓰일 때 안전망)
   useEffect(() => {
-    if (!slot || !pathname) return;
+    if (!slot || !pathname || spent) return;
     const seen = renderedSlotsByPath.get(pathname) ?? new Set<string>();
     if (seen.has(slot)) {
       setAllowed(false);
@@ -98,11 +109,11 @@ function AdSlot({
       seen.delete(slot);
       if (seen.size === 0) renderedSlotsByPath.delete(pathname);
     };
-  }, [slot, pathname]);
+  }, [slot, pathname, spent]);
 
   // Lazy load: viewport 진입 시에만 광고 마운트 → CLS↓ viewability↑
   useEffect(() => {
-    if (!liveEnabled || !canRequestLiveAds() || !slot || !containerRef.current || !allowed) return;
+    if (!liveEnabled || !canRequestLiveAds() || !slot || !containerRef.current || !allowed || spent) return;
     if (typeof IntersectionObserver === "undefined") {
       setVisible(true);
       return;
@@ -127,7 +138,7 @@ function AdSlot({
       active = false;
       observer.disconnect();
     };
-  }, [slot, pathname, allowed, liveEnabled]);
+  }, [slot, pathname, allowed, liveEnabled, spent]);
 
   // 광고 클릭 감지 — iframe 내부 클릭은 이벤트가 버블되지 않으므로
   // window blur 시점에 activeElement 가 이 슬롯의 iframe 인지로 판별 (페이지당 슬롯별 1회)
@@ -151,10 +162,17 @@ function AdSlot({
   }, [visible, slot, slotKind, pathname]);
 
   useEffect(() => {
-    if (!liveEnabled || !canRequestLiveAds() || !visible || pushed.current || !slot || !allowed) return;
+    if (!liveEnabled || !canRequestLiveAds() || !visible || pushed.current || !slot || !allowed || spent) return;
     const ins = containerRef.current?.querySelector("ins.adsbygoogle[data-ad-slot]");
     if (!ins || ins.getAttribute("data-ad-slot") !== slot) return;
+    // 같은 페이지뷰에서 이 슬롯을 이미 요청했다면(재마운트) 다시 요청하지 않는다.
+    const path = pagePath.current;
+    if (path && hasRequestedInPageView(path, slot)) {
+      setSpent(true);
+      return;
+    }
     pushed.current = true;
+    if (path) markRequestedInPageView(path, slot);
     trackAdRequestAttempt(slotKind ?? "unknown");
     try {
       // @ts-expect-error adsbygoogle global
@@ -163,7 +181,7 @@ function AdSlot({
       // AdSense push errors are non-fatal
       trackAdRequestError(slotKind ?? "unknown");
     }
-  }, [visible, slot, slotKind, allowed, liveEnabled]);
+  }, [visible, slot, slotKind, allowed, liveEnabled, spent]);
 
   // 미충족(unfilled) 광고 감지 → 컨테이너째 접기.
   // 이전에는 unfilled 여도 "광고 (Sponsored)" 라벨 + minHeight 공백이 남아 UX·정책 양쪽 손해.
@@ -221,7 +239,7 @@ function AdSlot({
     return () => mo.disconnect();
   }, [visible, pathname, slot, slotKind]);
 
-  if (!slot || !allowed) return null;
+  if (!slot || !allowed || spent) return null;
 
   const unfilledStyle: React.CSSProperties =
     unfilled === "collapse" ? { display: "none" } : unfilled === "keep" ? { visibility: "hidden" } : {};
