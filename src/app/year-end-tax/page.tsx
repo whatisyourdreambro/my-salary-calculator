@@ -322,7 +322,7 @@ export default function YearEndTaxPage() {
  </section>
 
  {/* 만든 사람과 확인 방법(G4, 운영자 승인 2026-11-01 구글 개선 5번) — 마지막 광고(쿠팡 배너)·공유·한도표 아래 컨테이너 맨 끝 */}
- <EditorialTrustNote path="/year-end-tax" className="mt-12" />
+ <EditorialTrustNote path="/year-end-tax" className="mt-14" />
  </div>
  </section>
  </main>

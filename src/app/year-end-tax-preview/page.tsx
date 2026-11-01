@@ -274,7 +274,7 @@ export default function YearEndTaxPreviewPage() {
             </section>
 
             {/* 만든 사람과 확인 방법(G4, 운영자 승인 2026-11-01 구글 개선 5번) — 마지막 광고(CalcResultAd)·공유·개통일 표 아래 맨 끝 */}
-            <EditorialTrustNote path={PAGE_PATH} className="mt-10" />
+            <EditorialTrustNote path={PAGE_PATH} className="mt-12" />
           </div>
         </div>
       </main>

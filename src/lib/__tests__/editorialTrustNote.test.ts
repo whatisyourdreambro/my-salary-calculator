@@ -148,6 +148,23 @@ function expectNoteIsLast(html: string) {
   throw new Error("상자의 닫는 태그를 찾지 못함");
 }
 
+/** 자동광고가 저장하는 선택자는 태그+class 경로(querySelectorAll)다. 같은 렌더 안의 다른 section 의 class 가 전부 상자에도 있으면
+ *  그 section 의 선택자가 상자에도 맞아, 순번이 하나 더 생긴다. 상자 class 가 다른 section 의 class 를 통째로 포함하지 않게 한다
+ *  (렌더 전체의 section 과 비교 — 형제만 보는 것보다 엄격). */
+function expectNoSectionSelectorMatchesNote(html: string) {
+  const sections = [...html.matchAll(/<section\b([^>]*)>/g)].map((m) => ({
+    attrs: m[1],
+    classes: (/\bclass="([^"]*)"/.exec(m[1])?.[1] ?? "").split(/\s+/).filter(Boolean),
+  }));
+  const note = sections.find((s) => s.attrs.includes(NOTE));
+  expect(note, "상자 없음").toBeTruthy();
+  const own = new Set(note!.classes);
+  for (const other of sections) {
+    if (other === note) continue;
+    expect(other.classes.every((c) => own.has(c)), `section class="${other.classes.join(" ")}" 의 선택자가 상자에도 맞음`).toBe(false);
+  }
+}
+
 /** 모든 광고 표지·공유 표지가 상자보다 앞에 있다 */
 function expectAfterEveryAd(html: string, minimumAds: number) {
   const at = html.indexOf(NOTE);
@@ -342,6 +359,7 @@ describe("배치: layout 맨 끝(계산기·표·회사 페이지)", () => {
       if (html.includes(box)) expect(html.indexOf(box)).toBeLessThan(html.indexOf(NOTE));
     }
     expectNoteIsLast(html);
+    expectNoSectionSelectorMatchesNote(html);
   });
 
   it.each(["/calc", "/calc/bmi-quick", "/calc/2026-year", "/calc/hyundai-bonus"])("%s: 다른 계산기는 상자 없음", (path) => {
@@ -354,6 +372,7 @@ describe("배치: layout 맨 끝(계산기·표·회사 페이지)", () => {
     expect(html.indexOf('data-msy-module="salary-table-comparison"')).toBeGreaterThan(-1);
     expect(html.indexOf('data-msy-module="salary-table-comparison"')).toBeLessThan(html.indexOf(NOTE));
     expectNoteIsLast(html);
+    expectNoSectionSelectorMatchesNote(html);
     expect(html).toContain(path.startsWith("/table/2026/") ? '<time dateTime="2026-09-25">2026.09.25</time>' : '<time dateTime="2026-11-01">2026.11.01</time>');
   });
 
@@ -369,6 +388,7 @@ describe("배치: layout 맨 끝(계산기·표·회사 페이지)", () => {
       expect(html.indexOf('data-msy-module="job-related"')).toBeLessThan(html.indexOf(NOTE));
     }
     expectNoteIsLast(html);
+    expectNoSectionSelectorMatchesNote(html);
   });
 
   it.each(["/salary-db", "/salary-db/ranking", "/salary-db/listed", "/salary-db/listed/005930", "/salary-db/compare/samsung-electronics-vs-sk-hynix"])(
@@ -394,6 +414,7 @@ describe("배치: 단일 페이지는 마지막 광고 아래 컨테이너 맨 �
     const html = renderPageAt(path, Page);
     expectAfterEveryAd(html, minimumAds);
     expectNoteIsLast(html);
+    expectNoSectionSelectorMatchesNote(html);
     expect(html).toContain(`<dd>${EDITORIAL_TRUST_AUTHOR}</dd>`);
   });
 });
