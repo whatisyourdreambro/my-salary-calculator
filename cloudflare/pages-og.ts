@@ -8,7 +8,9 @@ export interface PagesOgEnv {
   OG_STRIPS?: OgStripData;
 }
 export const OG_ROOT = '/_msy/og/v1';
-export const OG_VERSION = 'pages-strips-20261017-1';
+// 20261101: runtime renders no longer draw caller title/name text (SEC-08). The new key
+// also retires colo copies of older runtime text renders, which the Cache API keeps 30 days.
+export const OG_VERSION = 'pages-strips-20261101-1';
 const HEADERS = { 'Content-Type': 'image/png', 'X-Robots-Tag': 'noindex, noimageindex, nofollow', 'Cache-Control': OG_CLIENT_CACHE_CONTROL };
 type Kind = 'salary' | 'tool' | 'guide' | 'fun' | 'company' | 'report' | 'en' | 'default';
 export interface OgContent { kind: Kind; title: string; net?: string; label?: string }
@@ -78,6 +80,19 @@ export async function renderPagesOg(params: URLSearchParams, env: PagesOgEnv): P
   return renderStripPng(resolveOgContent(params), env.OG_STRIPS);
 }
 
+/**
+ * Only build-time renders draw page text (SEC-08). The build prebuilds every og:image,
+ * twitter:image and JSON-LD image URL of the static export with its exact title, so a key
+ * without an asset is no real page card: it gets the default card of its kind instead of
+ * caller-supplied text on the MoneySalary design. Salary amounts and path/lang stay.
+ */
+export function runtimeOgParams(params: URLSearchParams): URLSearchParams {
+  const safe = new URLSearchParams(params);
+  safe.delete('title');
+  safe.delete('name');
+  return safe;
+}
+
 function edgeCache(): OgEdgeCache | undefined {
   try { return (globalThis as typeof globalThis & { caches?: { default?: OgEdgeCache } }).caches?.default; } catch { return undefined; }
 }
@@ -133,7 +148,7 @@ export async function handlePagesOg(request: Request, env: PagesOgEnv): Promise<
     if (built.status === 200 && built.headers.get('Content-Type')?.split(';')[0] === 'image/png') {
       image = await boundedBody(built, 2 * 1024 * 1024);
       if (!isValidPagesPng(image)) throw new Error('Corrupt OG build PNG');
-    } else image = await renderPagesOg(params, env);
+    } else image = await renderPagesOg(runtimeOgParams(params), env);
     if (image.length < 100 || image[0] !== 137 || image[1] !== 80) throw new Error('Invalid OG PNG');
     const response = new Response(image, { headers: { ...HEADERS, 'X-OG-Cache': cache ? 'MISS' : 'UNAVAILABLE' } });
     try { await cache?.put(cacheKey, new Response(image, { headers: { ...HEADERS, 'Cache-Control': 'public, max-age=2592000' } })); } catch { /* Best effort only. */ }

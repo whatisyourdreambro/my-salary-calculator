@@ -6,19 +6,28 @@ import { inflateSync } from 'node:zlib';
 import { createHash } from 'node:crypto';
 import { build } from 'esbuild';
 import { generatePagesOg, collectExportedOgParams, main } from '../../../scripts/generate-pages-og';
-import { handlePagesOg, OG_ROOT, ogImageKey, renderPagesOg, resolveOgContent, isValidPagesPng, type PagesOgEnv } from '../../../cloudflare/pages-og';
+import { handlePagesOg, OG_ROOT, ogImageKey, renderPagesOg, resolveOgContent, isValidPagesPng, runtimeOgParams, type PagesOgEnv } from '../../../cloudflare/pages-og';
 import type { OgStripData } from '../../../cloudflare/pages-og-strips';
 import { CURRENT_RATES_YEAR } from '@/config/currentRates';
+import { normalizeOgParams } from '@/lib/ogImageCache';
 import { inflateOgChunks } from '../../../cloudflare/pages-og-inflate.mjs';
 import { OG_POOL_MODULES, OG_RAW_MODULE_BYTES } from '../../../scripts/lib/pages-export.mjs';
 
 let out: string;
 let runtimeStrips: OgStripData;
 const forbiddenFetch = vi.fn(() => { throw new Error('External network forbidden'); });
+// A season page: its og:image comes from buildPageMetadata (path+title) while articleLd's
+// JSON-LD image is a different type=guide URL. Both are real page cards (SEC-08).
+const SEASON_JSON_LD_QUERY = 'type=guide&title=' + encodeURIComponent('2026 시즌 가이드 — 실제 제목');
+const DECOY = '<script type="application/ld+json">{"image":"/api/og?title=decoy"}';
 beforeAll(async () => {
   vi.stubGlobal('fetch', forbiddenFetch);
   out = mkdtempSync(join(tmpdir(), 'msy-pages-og-'));
   writeFileSync(join(out, 'index.html'), '<html><head><meta property="og:image" content="/api/og?type=tool&amp;name=삼성전자 성과급 계산기"><meta content="/api/og?lang=en&amp;title=Korea%20Salary" name="twitter:image"></head><body></body></html>');
+  writeFileSync(join(out, 'season.html'), '<html><head><meta property="og:image" content="https://www.moneysalary.com/api/og?path=%2Fseason&amp;title=%EC%8B%9C%EC%A6%8C%20%EB%A9%94%ED%83%80"></head><body>'
+    + `<!-- ${DECOY}</script> --><script>self.f='${DECOY}<\\/script>';</script><main>본문</main>`
+    + `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'Article', headline: '2026 시즌 가이드',
+      image: `https://www.moneysalary.com/api/og?${SEASON_JSON_LD_QUERY}`, publisher: { logo: { url: 'https://www.moneysalary.com/logo-full.png' } } })}</script></body></html>`);
   await generatePagesOg(out);
   const load = (name: string) => new Uint8Array(readFileSync(join(out, '_worker.js/og', name))).buffer;
   const configSource = readFileSync(join(out, '_worker.js/og/config.mjs'), 'utf8');
@@ -178,10 +187,94 @@ describe('real bitmap output, boundaries and cold path', () => {
     expect(collectExportedOgParams(out).map(query => query.toString())).toContain('name=%EC%82%BC%EC%84%B1%EC%A0%84%EC%9E%90+%EC%84%B1%EA%B3%BC%EA%B8%89+%EA%B3%84%EC%82%B0%EA%B8%B0&type=tool');
     await expect(main([])).rejects.toThrow('Usage');
   });
+  it('prebuilds og:image, twitter:image and JSON-LD image URLs, never literals in comments or other scripts', () => {
+    const inventory = collectExportedOgParams(out).map(query => query.toString()).sort();
+    const expected = ['', 'type=tool&name=삼성전자 성과급 계산기', 'lang=en&title=Korea Salary', 'path=/season&title=시즌 메타', SEASON_JSON_LD_QUERY]
+      .map(query => normalizeOgParams(params(query)).toString()).sort();
+    expect(inventory).toEqual(expected);
+    expect(inventory.join('\n')).not.toContain('decoy');
+  });
   it('has no heavy runtime dependency or network library in the actual bundled graph', async () => {
     const result = await build({ entryPoints: ['cloudflare/pages-og.ts'], bundle: true, write: false, platform: 'browser', format: 'esm', metafile: true });
     expect(Object.keys(result.metafile!.inputs).join('\n')).not.toMatch(/node_modules|next\/|react|satori|opennext|generateData|companyData/);
     expect(result.outputFiles[0].contents.length).toBeLessThan(50000);
+  });
+});
+
+describe('runtime renders never draw caller text on the branded card (SEC-08)', () => {
+  const served = async (query: string, env = assets().env) => {
+    const response = await handlePagesOg(request(query), env);
+    expect(response.status).toBe(200); expect(response.headers.get('Content-Type')).toBe('image/png');
+    expect(response.headers.get('X-OG-Error')).toBeNull();
+    return new Uint8Array(await response.arrayBuffer());
+  };
+  const rendered = async (query: string) => renderPagesOg(params(query), { ASSETS: { fetch: async () => new Response(null, { status: 404 }) }, OG_STRIPS: runtimeStrips });
+  const phishing = encodeURIComponent('[머니샐러리 공지] 환급금 지급 대상입니다 — 지금 신청');
+
+  it('drops only title and name from runtime render input', () => {
+    expect(runtimeOgParams(params('type=company&name=x&title=y&amount=50000000&net=3000000&lang=en&path=/salary-db/a')).toString())
+      .toBe('type=company&amount=50000000&net=3000000&lang=en&path=%2Fsalary-db%2Fa');
+    const input = params('title=keep'); runtimeOgParams(input);
+    expect(input.get('title')).toBe('keep');
+  });
+  it.each([
+    ['type=company&name=' + phishing, 'type=company'],
+    ['type=company&name=Local%20release%20QA', 'type=company'],
+    ['type=tool&name=' + phishing + '&title=' + phishing, 'type=tool'],
+    ['type=guide&title=' + phishing, 'type=guide'],
+    ['type=fun&title=' + phishing, 'type=fun'],
+    ['type=report&title=' + phishing, 'type=report'],
+    ['title=' + phishing, ''],
+    ['lang=en&title=Claim%20your%20refund%20now', 'lang=en'],
+    ['path=/insights/x&title=' + phishing, 'path=/insights/x'],
+  ])('a non-prebuilt %s gets the default card of its kind', async (query, defaultQuery) => {
+    const { env, calls } = assets();
+    const image = await served(query, env);
+    expect(calls).toHaveLength(1); expect(calls[0]).toBe(`${OG_ROOT}/images/${await ogImageKey(params(query))}.png`);
+    expect(Buffer.from(image).equals(Buffer.from(await rendered(defaultQuery)))).toBe(true);
+    // The strip renderer itself still draws text; only the request path no longer passes it.
+    expect(Buffer.from(image).equals(Buffer.from(await rendered(query)))).toBe(false);
+  });
+  it('a company card with an arbitrary name is byte-equal to ?type=company', async () => {
+    expect(Buffer.from(await served('type=company&name=' + phishing)).equals(Buffer.from(await served('type=company')))).toBe(true);
+  });
+  it('keeps numeric salary cards and path/lang default cards exactly as before', async () => {
+    for (const query of ['type=salary&amount=58321000&net=4123400', 'amount=61000000', 'path=/fun/x&lang=ko', 'path=/salary-db/a'])
+      expect(Buffer.from(await served(query)).equals(Buffer.from(await rendered(query)))).toBe(true);
+    const salary = decodePng(await served('type=salary&amount=58321000&net=4123400'));
+    expect(salary.equals(decodePng(await rendered('type=salary')))).toBe(false);
+  });
+  it('serves prebuilt og:image and JSON-LD cards with their exact titles through one asset read', async () => {
+    for (const [query, defaultQuery] of [['type=tool&name=삼성전자 성과급 계산기', 'type=tool'], [SEASON_JSON_LD_QUERY, 'type=guide'],
+      ['path=/season&title=시즌 메타', 'path=/season'], ['lang=en&title=Korea Salary', 'lang=en']]) {
+      const { env, calls } = assets();
+      const image = await served(query, env);
+      expect(calls).toEqual([`${OG_ROOT}/images/${await ogImageKey(params(query))}.png`]);
+      expect(Buffer.from(image).equals(readFileSync(join(out, calls[0].slice(1))))).toBe(true);
+      const pixels = decodePng(image);
+      expect(pixels.equals(decodePng(await rendered(query)))).toBe(true);
+      expect(pixels.equals(decodePng(await rendered(defaultQuery)))).toBe(false);
+    }
+  });
+  it('stores only the default card in the colo cache for a non-prebuilt text key', async () => {
+    const stored = new Map<string, Uint8Array<ArrayBuffer>>();
+    const cache = {
+      match: vi.fn(async (key: Request) => stored.has(key.url) ? new Response(stored.get(key.url), { headers: { 'Content-Type': 'image/png' } }) : undefined),
+      put: vi.fn(async (key: Request, response: Response) => { stored.set(key.url, new Uint8Array(await response.arrayBuffer())); }),
+    };
+    vi.stubGlobal('caches', { default: cache });
+    try {
+      const query = 'type=guide&title=' + phishing;
+      const miss = await handlePagesOg(request(query), assets().env);
+      expect(miss.headers.get('X-OG-Cache')).toBe('MISS');
+      const defaultCard = Buffer.from(await rendered('type=guide'));
+      expect(Buffer.from(await miss.arrayBuffer()).equals(defaultCard)).toBe(true);
+      expect([...stored.keys()]).toEqual([`https://og-test.invalid${OG_ROOT}/images/${await ogImageKey(params(query))}.png`]);
+      expect(Buffer.from([...stored.values()][0]).equals(defaultCard)).toBe(true);
+      const hit = await handlePagesOg(request(query), { ASSETS: { fetch: async () => { throw new Error('a hit must not read assets'); } } });
+      expect(hit.headers.get('X-OG-Cache')).toBe('HIT');
+      expect(Buffer.from(await hit.arrayBuffer()).equals(defaultCard)).toBe(true);
+    } finally { vi.stubGlobal('caches', undefined); }
   });
 });
 

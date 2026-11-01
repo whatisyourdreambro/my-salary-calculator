@@ -1,10 +1,12 @@
 // Build-only parser for Next's static export, not arbitrary streamed SSR HTML.
-import { openSync, readSync, closeSync } from 'node:fs';
+import { openSync, readSync, closeSync, readFileSync, statSync } from 'node:fs';
 import { basename } from 'node:path';
 import { StringDecoder } from 'node:string_decoder';
 
 export const STATIC_HEAD_CHUNK_BYTES = 16 * 1024;
 export const STATIC_HEAD_MAX_BYTES = 128 * 1024;
+/** A larger document already fails the Pages per-asset limit (PAGES_LIMITS.assetBytes). */
+export const STATIC_DOCUMENT_MAX_BYTES = 25 * 1024 * 1024;
 const VERIFICATION = 'naver226c8e8c348e204e98efbcf23514d286.html';
 type Head = { metaTags: string[]; bytesRead: number; kind: 'head' | 'verification' };
 
@@ -86,4 +88,47 @@ export function readStaticExportHead(file: string): Head {
     }
     throw new Error(`Static export head exceeds ${STATIC_HEAD_MAX_BYTES} bytes: ${basename(file)}`);
   } finally { closeSync(fd); }
+}
+
+function scriptType(tag: string): string {
+  for (const match of tag.matchAll(/([\w:-]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+))/g))
+    if (match[1].toLowerCase() === 'type') return (match[2] ?? match[3] ?? match[4]).trim().toLowerCase();
+  return '';
+}
+
+/**
+ * Every parsed <script type="application/ld+json"> of one exported document, in the head
+ * or the body (JsonLd renders in place). Only comments and raw-text elements are
+ * tokenized, and their contents are skipped as an HTML parser would, so a literal inside
+ * another script, style, title, textarea or comment is never taken for structured data.
+ * An unterminated element or invalid JSON-LD fails closed.
+ */
+export function readStaticExportJsonLd(file: string, maxBytes = STATIC_DOCUMENT_MAX_BYTES): unknown[] {
+  const name = basename(file);
+  if (statSync(file).size > maxBytes) throw new Error(`Static export document exceeds ${maxBytes} bytes: ${name}`);
+  const html = readFileSync(file, 'utf8');
+  const blocks: unknown[] = [];
+  const next = /<(?:!--|(script|style|title|textarea)(?=[\s/>]))/gi;
+  for (let at = 0; ;) {
+    next.lastIndex = at;
+    const found = next.exec(html);
+    if (!found) return blocks;
+    if (!found[1]) {
+      const end = html.indexOf('-->', found.index + 4);
+      if (end < 0) throw new Error(`Static export has an unterminated comment: ${name}`);
+      at = end + 3; continue;
+    }
+    const element = found[1].toLowerCase();
+    const open = tagEnd(html, found.index);
+    const close = new RegExp(`</${element}(?=[\\s/>])`, 'ig');
+    close.lastIndex = Math.max(open, 0);
+    const closing = open < 0 ? null : close.exec(html);
+    const after = closing ? tagEnd(html, closing.index) : -1;
+    if (!closing || after < 0) throw new Error(`Static export has an unterminated ${element}: ${name}`);
+    if (element === 'script' && scriptType(html.slice(found.index, open)) === 'application/ld+json') {
+      try { blocks.push(JSON.parse(html.slice(open, closing.index))); }
+      catch { throw new Error(`Static export has invalid JSON-LD: ${name}`); }
+    }
+    at = after;
+  }
 }
