@@ -1193,7 +1193,8 @@ try {
         await summary.waitFor({ state: 'visible' });
         assert(await summary.evaluate(el => document.activeElement === el));
         await page.getByLabel('계약 연봉', { exact: true }).fill('60000000');
-        await page.getByText('아래는 이전 계산 결과입니다. 입력값을 확인하고 다시 계산해 주세요.', { exact: true }).waitFor({ state: 'visible' });
+        // B07(IVT-03): the stale notice is the result card title, not a box above the card.
+        await page.getByText('이전 결과 · 다시 계산해 주세요', { exact: true }).waitFor({ state: 'visible' });
         await calculate.click();
         assert(await summary.evaluate(el => document.activeElement === el));
         const expectedIncomeLinks = {

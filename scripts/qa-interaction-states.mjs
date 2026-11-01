@@ -291,7 +291,7 @@ export async function main() {
       await text('#calculation-result', 'current salary result');
       item.resultFocus = await page.evaluate(() => ({ tag: document.activeElement.tagName, text: document.activeElement.textContent.slice(0, 120) }));
       await input.fill('60000000');
-      const stale = page.getByRole('status').filter({ hasText: '아래는 이전 계산 결과입니다' });
+      const stale = page.getByRole('status').filter({ hasText: '이전 결과 · 다시 계산해 주세요' }); // card title (B07, IVT-03)
       await stale.waitFor();
       assert((await stale.textContent()).includes('다시 계산'));
       await text('#calculation-result', 'stale result visibly identified');

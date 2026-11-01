@@ -513,12 +513,14 @@ export default function SalaryCalculator() {
  initial={false}
  className="space-y-4"
  >
- {!currentResult && <p role="status" className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">아래는 이전 계산 결과입니다. 입력값을 확인하고 다시 계산해 주세요.</p>}
  {/* 마스코트 + 결과 카드 */}
  <div ref={measurement.resultRef} className="relative pt-10">
  <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20">
  <MungMascot mood={mungMood} />
  </div>
+ {/* 이전 결과 안내는 카드 제목 자리에서 글자만 바꾼다(stale). 카드 위에 안내문을 따로 두면 입력을 고칠 때마다
+ 결과 광고 두 개(카드 안 InArticleAd, 아래 ResultAd)가 그 높이만큼 오르내렸다(IVT-03, 2026-11-01 승인 B07).
+ 카드 위로 되돌리지 말 것. */}
  <SalaryResultCard
  monthlyNet={result.monthlyNet}
  totalDeduction={result.totalDeduction}
@@ -530,6 +532,7 @@ export default function SalaryCalculator() {
  incomeTax: result.incomeTax,
  localTax: result.localTax,
  }}
+ stale={!currentResult}
  />
  </div>
 
