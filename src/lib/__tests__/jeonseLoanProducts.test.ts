@@ -1,6 +1,6 @@
-// /calc/jeonse-loan 회귀 가드 (2026-10-05 감사 code3-03)
-// 출처: 주택도시기금 상품 안내(nhuf.molit.go.kr) 2026-10-05 확인 — 버팀목전세자금 FP05020101, 신혼부부전용 전세자금
-// FP05020401, 청년전용 버팀목전세자금 FP05020301
+// /calc/jeonse-loan 회귀 가드 (2026-10-05 감사 code3-03, 2026-11-01 STR-02-k 재대조)
+// 출처: 주택도시기금 상품 안내(nhuf.molit.go.kr) 2026-10-05 확인, 2026-11-01 재대조 — 버팀목전세자금 FP05020101,
+// 신혼부부전용 전세자금 FP05020401, 청년전용 버팀목전세자금 FP05020301
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -36,6 +36,32 @@ describe("정책상품 한도·소득 요건", () => {
     const best = cheapestEligible(calcJeonseLoans(300_000_000, 60_000_000));
     expect(best?.name).toBe("신혼부부 버팀목");
     expect(cheapestEligible(calcJeonseLoans(0, 60_000_000))).toBeNull();
+  });
+});
+
+describe("정책상품 네 값 — 주택도시기금 상품 페이지 2026-11-01 재대조 (6.27 대책 한도 축소 뒤 현행)", () => {
+  const pick = (name: string) => {
+    const p = JEONSE_LOAN_PRODUCTS.find((x) => x.name === name);
+    return p && { incomeLimit: p.incomeLimit, rate: p.rate, depositRatio: p.depositRatio, cap: p.cap };
+  };
+  it("소득 요건·금리 하한·보증금 비율·수도권 호당 한도", () => {
+    // FP05020101 버팀목: 5천만원 이하, 연 2.5~3.5%, 전세금액 70%, 일반가구 수도권 1.2억
+    expect(pick("버팀목 전세대출")).toEqual({ incomeLimit: 50_000_000, rate: 2.5, depositRatio: 0.7, cap: 120_000_000 });
+    // FP05020401 신혼부부전용: 7.5천만원 이하, 연 1.9~3.3%, 전세금액 80%, 수도권 2.5억 (2025.6.27. 이전 계약분 3억은 쓰지 않음)
+    expect(pick("신혼부부 버팀목")).toEqual({ incomeLimit: 75_000_000, rate: 1.9, depositRatio: 0.8, cap: 250_000_000 });
+    // FP05020301 청년전용: 5천만원 이하, 연 2.2~3.3%, 전세금액 80%, 1.5억 (2025.6.27. 이전 계약분 2억은 쓰지 않음)
+    expect(pick("청년 전세 (만 19~34)")).toEqual({ incomeLimit: 50_000_000, rate: 2.2, depositRatio: 0.8, cap: 150_000_000 });
+  });
+  it("신혼 호당 한도 2.5억이 보증금 80% 보다 작으면 2.5억 (보증금 4억)", () => {
+    const r = byName(400_000_000, 70_000_000);
+    expect(r["신혼부부 버팀목"].eligible).toBe(true);
+    expect(r["신혼부부 버팀목"].limit).toBe(250_000_000);
+  });
+  it("소득 요건 경계 — 요건 금액까지는 대상, 1원 넘으면 대상 아님", () => {
+    expect(byName(300_000_000, 50_000_000)["버팀목 전세대출"].eligible).toBe(true);
+    expect(byName(300_000_000, 50_000_001)["버팀목 전세대출"].eligible).toBe(false);
+    expect(byName(300_000_000, 75_000_000)["신혼부부 버팀목"].eligible).toBe(true);
+    expect(byName(300_000_000, 75_000_001)["신혼부부 버팀목"].eligible).toBe(false);
   });
 });
 
