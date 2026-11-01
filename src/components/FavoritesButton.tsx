@@ -7,7 +7,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "@/components/AppLink";
 import { Star } from "lucide-react";
 import { trackBookmarkClick } from "@/lib/analytics";
 import { useSharePageContext } from "@/hooks/useSharePageContext";
@@ -96,7 +95,6 @@ export default function FavoritesButton({
 }: FavoritesButtonProps) {
   const { pathname, context } = useSharePageContext();
   const isEnglish = locale ? locale === "en" : /^\/en(?:\/|$)/.test(pathname ?? "");
-  const dashboardPath = isEnglish ? "/en/dashboard" : "/dashboard";
   const target = resolveFavoriteTarget(pathname, context, { path, title });
   const resolvedPath = target?.path ?? "";
   const resolvedTitle = target?.title ?? "";
@@ -142,27 +140,21 @@ export default function FavoritesButton({
     setActive(!exists);
     trackBookmarkClick(resolvedPath, exists ? "remove" : "add");
     if (!exists) {
-      // 추가 시에만 토스트 — 대시보드 재방문 루프의 첫 안내
+      // 추가 시에만 토스트 — 링크 없는 글자 알림(대시보드는 헤더 배지에서)
       setToast(true);
       setTimeout(() => setToast(false), 3000);
     }
   };
 
-  // fixed 오버레이 — 문서 흐름·광고 위치를 밀지 않음
+  // fixed 오버레이 — 문서 흐름·광고 위치를 밀지 않음. 탭 대상 없음: 하단 앵커 광고 구역(bottom-20)에
+  // 링크·버튼을 두지 않는다(IVT-09). 위치는 종전 bottom-20 그대로.
   const toastNode = toast && (
     <div
       role="status"
       aria-live="polite"
-      className="share-toast fixed bottom-20 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-3 bg-navy text-white pl-5 pr-3 py-2.5 rounded-full text-sm font-bold shadow-xl whitespace-nowrap"
+      className="share-toast fixed bottom-20 left-1/2 -translate-x-1/2 z-[60] bg-navy text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-xl whitespace-nowrap"
     >
       {isEnglish ? "⭐ Saved to favorites" : "⭐ 즐겨찾기에 추가됨"}
-      <Link
-        href={dashboardPath}
-        onClick={() => trackBookmarkClick(resolvedPath, "toast_dashboard")}
-        className="px-3 py-1 bg-electric rounded-full text-xs font-bold hover:bg-blue-600 transition-colors"
-      >
-        {isEnglish ? "View saved pages →" : "대시보드에서 보기 →"}
-      </Link>
     </div>
   );
 
