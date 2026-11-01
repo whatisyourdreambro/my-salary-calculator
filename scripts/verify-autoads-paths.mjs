@@ -4,7 +4,7 @@
 // 배경: AdSense 자동광고는 학습한 인페이지 배치 위치를 CSS 경로로 저장한다
 //   (예: BODY>DIV.flex.flex-col.min-h-screen>MAIN#main-content.flex-grow.w-full>DIV.w-full.h-full>…).
 //   2026-09-10 `4eda6889` 가 루트 템플릿 래퍼의 h-full 을 없애자 저장된 경로가 사이트 전체에서 맞지 않게 됐고,
-//   자동 인페이지 노출/PV 가 2.99 → 0.72 로 약 75% 줄어든 채 2주가 갔다(복구 `4d80ce3e`, 9/24 23:25 KST 배포 —
+//   자동 인페이지 노출/PV 가 크게 줄어든 채 2주가 갔다(복구 `4d80ce3e`, 9/24 23:25 KST 배포 —
 //   docs/ad-experiments.md 2026-09-25 절 1). 소스 쪽 고정은 src/lib/__tests__/adCriticalShell.test.ts 가 하고,
 //   이 스크립트는 빌드 산출물 쪽에서 같은 사고(셸·페이지 래퍼 클래스 개명·삭제)를 잡는다.
 // 방식: `npm run build` 뒤 .next/server/app/*.html(프리렌더 HTML) 대표 페이지를 읽어 #main-content 안의 블록 요소

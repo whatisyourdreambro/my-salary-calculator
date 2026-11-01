@@ -2,6 +2,8 @@
 
 > **2026-10-17 현재 결정:** Workers 업로드와 잠시 연결한 도메인 경로는 [결과 기록](workers-release-2026-10-17/deployment-outcome.json)처럼 롤백됐다. 기존 무료 Pages를 유지하고 GitHub `ci.yml`은 검증만 수행한다. 저장소 변수는 `PAGES_AUTO_DEPLOY_ENABLED=false`, `PAGES_LOCAL_PUBLISH_ENABLED=true`로 두며 Cloudflare Git production·preview 빌드는 계속 중지한다. 글별 승인 뒤 정확한 SHA의 검증 성공을 확인한 로컬 발행기가 운영 빌드·단일 업로드·실제 Purge·비렌더링 HTTP 16건·IndexNow를 순서대로 진행한다. 기존 Wrangler OAuth는 로컬 프로세스 메모리에서만 전달하며 새 Cloudflare 토큰을 GitHub에 저장하지 않는다. 완료까지 컴퓨터가 켜져 있어야 하며 정기 게시 작업을 새로 등록하지 않는다. [현재 README 절차](../README.md)와 아래 현재 Pages 절차가 과거 Workers 전환 설명보다 우선한다. 운영/preview 게시자 브라우저 점검은 [AGENTS.md](../AGENTS.md)에 따라 금지하며, 문서 수정은 실제 배포 완료를 뜻하지 않는다.
 
+> ★정정 2026-11-01 (감사 SEO-02·PD-04): 10/17 Pages 전환 뒤 운영 규칙은 README의 "HTML/OG 사용자 캐시 규칙은 꺼 둔다"입니다. 승인된 게시 파이프라인에는 퍼지 단계가 없어 캐시 규칙을 켜면 게시 뒤 옛 HTML이 지워진 /_next/static 파일을 가리켜 계산기·광고가 깨질 수 있습니다. 이 문서의 HTML 엣지 TTL·캐시 규칙 B/C·승인 6·7·8·R6-02 콘솔 TTL 대응은 모두 폐기됐고, 다시 켜려면 PD-04 결정(퍼지 방법 포함)을 먼저 받습니다.
+
 정본 계획: `docs/revenue-10x-plan-2026-09.md` §4·§5 + `docs/revenue-100x-plan-2026-09.md` §6(승인 A~J)·§7(세션 추가분, 2026-09-05). 이 문서는 그 세션표의 실행판이다.
 원칙: **한 세션 = 최대 3항목·25분**, 격주 고정 요일. 각 항목은 클릭 경로 ≤5줄 + 완료 증빙 1장.
 메뉴 이름이 다르면 첫 화면 캡처만 보내면 경로를 보정한다. 무응답 = 보류(자동 승인 없음).
@@ -12,7 +14,7 @@
   → 보관 `C:\Users\ruby1\.moneysalary-secrets\adsense\` (리포 밖). 집계는 계획서 §2.
 - ✅ 2026-09-05 코드 배포: 27a692c(IN_ARTICLE 폭 0px) 병합 · 광고 채움 계측 · 하단 고정 UI 앵커 감지 · 회사 RSS 소스 교체·자동발견 링크 · 헬스체크 주간 cron
 - ✅ 2026-09-05/06 **배치 1(B1~B14) 코드 완료** — 브랜치 `claude/100x-batch-20260905`(metrics-ingest·rss 리포트 3편·신선도 단일 상수·PWA manifest·공유 utm·내부링크 귀속·위젯 utm_content·리포트 CSV/JSON·회사→직업 링크·12/1·1/2 세트+OPI 게이트·계산기 7종 data.ts+SK 키트·ad-audit INFO 게이트·companyData 정합). main 푸시는 이 세션. 정본 `docs/revenue-100x-plan-2026-09.md` §4, 실행 현황 `docs/revenue-10x-plan-2026-09.md` §2-3. 콘솔 작업 0건(아래 세션표에 하위 항목으로만 병합).
-- ✅ 2026-09-06 **광고 단위별 CSV**(13행·합계 $131.32) + **GSC 361일 내보내기**(countries·devices·dates·pages·queries·appearance) 수령 → 보관 `C:\Users\ruby1\.moneysalary-secrets\adsense\` · `...\gsc\2026-09-06\`(리포 밖). 집계·판정은 `docs/revenue-100x-plan-2026-09.md` §1 F13~F17 · `docs/gsc-sniping-log.md` Round 2. ★두 자료가 9/7·9/13 세션 항목을 앞당겨 해소했으므로 **아래 세션표의 해당 항목을 축소·교체**했다(신규 세션 없음).
+- ✅ 2026-09-06 **광고 단위별 CSV**(13행 — 합계 비공개) + **GSC 361일 내보내기**(countries·devices·dates·pages·queries·appearance) 수령 → 보관 `C:\Users\ruby1\.moneysalary-secrets\adsense\` · `...\gsc\2026-09-06\`(리포 밖). 집계·판정은 `docs/revenue-100x-plan-2026-09.md` §1 F13~F17 · `docs/gsc-sniping-log.md` Round 2. ★두 자료가 9/7·9/13 세션 항목을 앞당겨 해소했으므로 **아래 세션표의 해당 항목을 축소·교체**했다(신규 세션 없음).
 - (참고 — 콘솔 조작 아님) 브리프의 "GSC 16개월"은 실제로 **361일(2025-09-08~2026-09-03)**이고 "2026-09 6일분 104클릭"은 **3일분(9/1~9/3)**이었다. 다음 내보내기 때 기간 라벨을 실데이터 범위로 적어 주시면 창 판정이 빨라집니다.
 - ✅ 2026-09-24 운영자 보고서(`docs/revenue-audit-2026-09-24/naver-cloudflare-adsense-report.md`) — 네이버 30일·진단, CF Functions 7일, AdSense 30일, 공개 HTTP 확인 수령. 같은 날 AdSense·GA4·GSC 콘솔 읽기 전용 추출(세션 scratchpad, 저장소 밖). 집계는 `docs/metrics-log.md` 2026-09-25 행.
 
@@ -30,7 +32,7 @@
 7. ☐ **GSC 확인 (C16, 1번 적용 7일 뒤)**: 설정 → 크롤링 통계 → 호스트 상태('서버 연결' 양호 복귀)·5xx 비율(9/22 까지 90일 4%)·요청 목적 중 '검색(발견)'(3%). 통합 배포 뒤 Sitemaps 에서 가져오기 성공 확인. **깨끗해지기 전에는 대량 색인 요청·사이트맵 재제출을 하지 않는다.** 사이트맵의 얇은 URL 31개(주로 /fun)는 28일 노출 0 인 순수 게임만 사이트맵 제외 후보로(noindex 아님).
 
 그다음(순서 무관):
-- ☐ **9/26 시즌 푸시 뒤 재확인(C07)**: Purge → 운영 페이지 소스에 `data-season-key="OCT"`, 헤더 칩 '추석' 0건. 10/1·11/25 재산세 날짜 분기는 Deployments → Retry(재빌드) 뒤 다시 Purge.
+- ☐ **9/26 시즌 푸시 뒤 재확인(C07)**: Purge → 운영 페이지 소스에 `data-season-key="OCT"`, 헤더 칩 '추석' 0건. 11/25·12/16 보유세 날짜 분기와 12/1 DEC 세트는 그날 0시 이후 P 로만 바뀐다(P = 이 문서 끝 '게시 절차와 실패 시 재시도 (2026-11)' 1~4번 — Deployments → Retry 불가, HTML 캐시 규칙이 꺼져 있으면 Purge 불필요).
 - ☐ **CF HSTS (C05, 3분)**: SSL/TLS → Edge Certificates → HSTS → max-age **6개월**, includeSubDomains 는 모든 서브도메인이 HTTPS 일 때만, **preload 안 함**. 확인: HTML 한 쪽의 `strict-transport-security` 헤더가 **하나만**. X-Frame-Options 규칙은 하지 않는다(`/widget/*` 임베드 예외 필요). 운영 HTML 보안 헤더는 2/6(`docs/inspection-2026-09-full.md` §10 주석).
 - ☐ **AdSense 오버레이 형식 캡처 (C13, 1분 — 저장 금지)**: 광고 → 사이트 기준 → moneysalary.com 연필 → '오버레이 형식' 패널 캡처(변경 기록이 보이면 함께) → **저장하지 않고 닫기**. 앵커·사이드레일·전면이 원래 켜져 있었다는 근거. 설정은 현행 유지(운영자 9/25 승인 12번).
 - ☐ **승인 J 적용 여부 한 줄 (C21)**: Cloudflare → Security → Bots(또는 AI Crawl Control)의 AI bot policy(Search·Agent·Training)와 적용일 → 세션 3 ① 아래 기록란. robots 규칙·Bingbot crawl-delay 는 바꾸지 않는다.
@@ -70,8 +72,8 @@
 2. ☐ **GA4 맞춤 측정기준 5개** (8분): 관리 → 데이터 표시 → **맞춤 정의** → 맞춤 측정기준 만들기 → 범위 **이벤트** → 측정기준 이름·이벤트 매개변수에 같은 값 입력 → 저장. 5개: `slot_kind`, `position`, `calc_type`, `offer_id`, `vertical`. 증빙: 맞춤 정의 목록 캡처 1장. (나머지 8개 `page`·`company_id`·`method`·`content_type`·`size_key`·`target_path`·`metric_name`·`metric_rating`는 9/21)
    - 2-b **맞춤 채널 그룹(3분)**: 관리 → 데이터 표시 → **채널 그룹** → 새 채널 그룹 만들기(기본 복사) → Organic Search 규칙에 '세션 소스 정확히 일치' `m.search.naver.com` / `search.naver.com` / `m.search.daum.net` OR 추가 → 저장 → **보고서 기본 채널 그룹으로 지정**. 이유: 기본 채널 그룹은 네이버 모바일 검색(세션 53%)을 Referral 로 분류. 맞춤 채널 그룹은 조회 시점 적용(소급 반영)이라 25분 초과 시 9/21 세션 3 ④로 이월해도 손실 없음. 페이지 집계는 `page_title` 대신 **`page_path`** 측정기준 사용(삼성전자 2제목 분리 함정).
    - `position`(이벤트 범위, 매개변수 position)이 위 5개에 포함돼 있으면 추가 작업 없음 — 기존 related-calc·next-action·related-guide 외에 내부 링크 모듈 id 11종(industry-rank·related-companies·company-connections·bonus-cluster·year-end-cluster·sibling-hubs·listed-band·job-related-calc·job-companies·job-pay-table·job-siblings)도 값으로 들어옴(별도 등록 불필요, 등록 전 데이터는 이벤트 수만 보이고 모듈 분해 불가 — M04와 동일 주의). `href`/`slug`는 측정기준으로 등록하지 말 것(일 500 고유값 한도 초과 시 절삭).
-3. ☐ **AdSense 광고 단위 CSV 1장** (4분 — ★2026-09-06 축소: 종전 3장 중 **앞의 2장(8/3~8/16 · 8/17~8/30)은 취소**): adsense.google.com → 보고서 → 날짜 **최근 28일** → 분류 기준 **광고 단위** → 표 우측 상단 다운로드 CSV. 파일명 `2026-09-07-units-28d.csv`. **원본은 리포에 넣지 않는다**(채팅 첨부만). **취소 사유**: 실험 #1은 전 창(8/3~8/16)에 유닛이 **1.03일**만 존재했고(f5c1375 2026-08-15 23:21 KST) 표본도 19클릭이라 그 2장을 받아도 판정이 불가능하다 — 실험 #1은 "판정 불가·현상 유지"로 **종결 권고**(승인 L, docs/ad-experiments.md). **이 1장의 목적은 실험 판정이 아니라** 결과창_본문(5584143639) 우발 클릭 서명이 **현재도 발화 중인지** 재판정하는 것이다(누적 CTR 4.147%는 7~8월 유산이고 9/1~9/4 수동 CTR은 2.20%). 절약된 8분은 아래 정책 센터 캡처와 9/13 항목으로.
-   - **점검 후보쌍 7종(유닛×페이지군)과 판정 서명** — `node scripts/adsense-report.mjs units <28d.csv> --md` 표를 이 기준으로 읽는다. 서명은 내부 휴리스틱(8월 평균 대비, AdSense 정책 기준 아님): 우발 클릭 = CTR≥3.5% AND CPC≤$0.015(스크립트 플래그; Active View<50% 는 수동 판독) · 미채움 = 커버리지<80%(8월 94%) · 저뷰어빌리티 = Active View<45%.
+3. ☐ **AdSense 광고 단위 CSV 1장** (4분 — ★2026-09-06 축소: 종전 3장 중 **앞의 2장(8/3~8/16 · 8/17~8/30)은 취소**): adsense.google.com → 보고서 → 날짜 **최근 28일** → 분류 기준 **광고 단위** → 표 우측 상단 다운로드 CSV. 파일명 `2026-09-07-units-28d.csv`. **원본은 리포에 넣지 않는다**(채팅 첨부만). **취소 사유**: 실험 #1은 전 창(8/3~8/16)에 유닛이 **1.03일**만 존재했고(f5c1375 2026-08-15 23:21 KST) 클릭 표본도 부족해 그 2장을 받아도 판정이 불가능하다 — 실험 #1은 "판정 불가·현상 유지"로 **종결 권고**(승인 L, docs/ad-experiments.md). **이 1장의 목적은 실험 판정이 아니라** 결과창_본문(5584143639) 우발 클릭 서명이 **현재도 발화 중인지** 재판정하는 것이다(누적 CTR 은 7~8월 유산이고 9/1~9/4 수동 CTR 은 임계 아래). 절약된 8분은 아래 정책 센터 캡처와 9/13 항목으로.
+   - **점검 후보쌍 7종(유닛×페이지군)과 판정 서명** — `node scripts/adsense-report.mjs units <28d.csv> --md` 표를 이 기준으로 읽는다. 서명은 내부 휴리스틱(8월 평균 대비, AdSense 정책 기준 아님): 우발 클릭 = scripts/adsense-report.mjs 플래그 기준(Active View 낮음은 수동 판독) · 미채움 = 커버리지가 8월 평균(비공개 기준선)보다 크게 낮음 · 저뷰어빌리티 = Active View 가 정상 대역 아래.
      (1) 결과창_본문 5584143639 × /salary·/monthly(NextActions 직하)·/calc/[slug] SimpleCalculatorView(ShareSection 직하)·홈 SalaryCalculator(NextActions 직후)·listed/[stockCode](9/2 신설) — 우발 1순위 ·
      (2) 인아티클 3302558597 × 홈·/salary SalaryResultCard(결과 카드↔공제 상세 사이)·samsung-bonus(시뮬레이터 직하)·/calc/[slug] — 우발 2순위(27a692c 9/5 이후 첫 요청분은 구간 분리) ·
      (3) 상단 9958502911 × /job·/industry(fixed 헤더 가림 — 승인 A)·홈 히어로 직하·계산기형 15곳 H1 직하(⑦) — 저뷰어빌리티 ·
@@ -80,8 +82,8 @@
      (6) PC_날개 1397486615 × salary-db/[id]·calc/[slug]·/salary 하단 그리드·guides — 저뷰어빌리티 ·
      (7) 디스플레이2 8284703133 × /monthly·/table·홈 — ★실험 #1은 2026-09-06 **판정 불가·현상 유지 확정**(측정 설계 불성립)이므로 이제 판정 축이 아니다. 그래도 **관찰만·변경 금지**(승인 L 확정 전까지 배치 불변).
      주의: CSV 는 유닛 단위(2026-09-06 실측 **13행** — 현재 배선 7 + 사장 유닛 6종)라 페이지군 귀속은 9/13 세션 2 ②의 GA4 탐색(ad_unit_click·ad_unfilled × slot_kind × page_path — 9/7 측정기준 등록 이후 적재분만, prefix 단위) 보조 귀속표이며 **판정 축은 광고단위 1축**. ★그리고 **날짜 열이 없는 CSV(계정 누적표)는 어떤 창 판정에도 쓸 수 없다** — 2026-09-06분이 그랬다(F13). 반드시 **날짜 맞춤 지정**으로 받아야 창 비교가 성립한다. 커버리지 비교는 배치 변경 0건 유닛(상단·디스플레이2)도 같은 창으로 봐 "코드 vs 트래픽 믹스"를 먼저 가르고, 9/2~9/4 vs 9/5~ 구간을 나눠 읽는다. 결과는 docs/ad-experiments.md 9/17 판정 절에 "유닛×페이지군 후보표(보조)"로 기록, 철회·수리는 승인 항목으로만.
-   - [코드 산출] `node scripts/ad-audit.mjs --verbose` 의 [인접] 41건·[헤더가림] 4건 목록을 보고 실제 화면에서 간격(광고↔공유 버튼)·헤더 겹침을 눈으로 확인, 수리할 항목만 승인 큐에 체크(자동 수정 없음). 운영자 눈 확인 3건(각 1분, 여유 시): ① 모바일에서 /job/개발자(임의 1곳)·/industry/it(임의 1곳)·/job·/industry 4종을 열어 상단 광고가 fixed 헤더(72px)에 가려지는지 → 가려지면 '헤더 가림 4곳 래퍼 pt-header 수리'(100배 계획 승인 A) 예/아니오 ② AdSense '광고 단위별' CTR 3% 이상 유닛이 있으면 [인접] 목록 중 해당 페이지와 대조 — 겹치는 곳만 '간격 수리' 승인 큐에 체크 ③ 공유 섹션 바로 위에 광고가 있는 시즌 페이지(year-end-tax-2026·tax-rates-2026·social-insurance-rates-2027 등 HomeTop+Multiplex 가 ShareSection 을 사이에 둔 9곳) 모바일에서 광고↔공유 버튼 여백이 손가락 한 마디(약 24px) 이상인지.
-   - ☐ **AdSense > 계정 > 정책 센터 캡처 1장 (2분, 신규 2026-09-06)**: adsense.google.com → 계정 → **정책 센터** 화면 1장 + "무효 클릭 / 무효 트래픽" 관련 **알림 이력**이 있으면 그 문구 그대로 채팅에. 목적: 결과창_본문(수동 수익 **64.5%** · 사이트 누적 수익 **9.98%**)의 **정책 리스크 상한 확정**. 알림 0건이면 리스크 상한이 닫히고 **승인 M(⑦ 위치 이동 앞당김)을 계속 보류**할 수 있다 — 지금 이 유닛을 근거 없이 건드리면 상방은 불명확한데 하방이 사이트 수익의 10%다.
+   - [코드 산출] `node scripts/ad-audit.mjs --verbose` 의 [인접] 41건·[헤더가림] 4건 목록을 보고 실제 화면에서 간격(광고↔공유 버튼)·헤더 겹침을 눈으로 확인, 수리할 항목만 승인 큐에 체크(자동 수정 없음). 운영자 눈 확인 3건(각 1분, 여유 시): ① 모바일에서 /job/개발자(임의 1곳)·/industry/it(임의 1곳)·/job·/industry 4종을 열어 상단 광고가 fixed 헤더(72px)에 가려지는지 → 가려지면 '헤더 가림 4곳 래퍼 pt-header 수리'(100배 계획 승인 A) 예/아니오 ② AdSense '광고 단위별' CTR 이 우발 클릭 임계(scripts/adsense-report.mjs 플래그 기준)를 넘는 유닛이 있으면 [인접] 목록 중 해당 페이지와 대조 — 겹치는 곳만 '간격 수리' 승인 큐에 체크 ③ 공유 섹션 바로 위에 광고가 있는 시즌 페이지(year-end-tax-2026·tax-rates-2026·social-insurance-rates-2027 등 HomeTop+Multiplex 가 ShareSection 을 사이에 둔 9곳) 모바일에서 광고↔공유 버튼 여백이 손가락 한 마디(약 24px) 이상인지.
+   - ☐ **AdSense > 계정 > 정책 센터 캡처 1장 (2분, 신규 2026-09-06)**: adsense.google.com → 계정 → **정책 센터** 화면 1장 + "무효 클릭 / 무효 트래픽" 관련 **알림 이력**이 있으면 그 문구 그대로 채팅에. 목적: 결과창_본문(수동 수익의 **대부분** · 사이트 누적 수익의 **일부**)의 **정책 리스크 상한 확정**. 알림 0건이면 리스크 상한이 닫히고 **승인 M(⑦ 위치 이동 앞당김)을 계속 보류**할 수 있다 — 지금 이 유닛을 근거 없이 건드리면 상방은 불명확한데 하방이 사이트 수익의 적지 않은 몫이다.
 
 ## 9/8 (10분)
 - ☐ 건강보험 요율 결정 결과 한 줄: "인상 총요율 X.XX% (근로자 Y.YYY%) 시행 2027-01-01, 부과체계 변경 없음" 또는 "동결". 키트: `docs/drafts/health-rate-2027-kit.md`.
@@ -99,11 +101,13 @@
    - 같은 표에 보조 측정기준 **방문 페이지** 추가 → 세션 소스 × 방문 페이지 교차 CSV 1장 더(사내망 `sec.media.samsung.net`·AI `chatgpt.com` 이 어느 페이지에 착지하는지 — AI 채널 D0 기준선, 결정②/승인 J 해제 여부와 무관하게 유효). /share/* 와 /calc/*?v= 랜딩은 noindex 라 utm 없이도 공유 유입으로 분리됨. 같은 표에서 `kakao / share`·`copy / share`·`webshare / share` 행 출현 여부만 확인(배포 후 7일치 — 비중 판정은 10/5 로 이월). `pwa / homescreen` 세션 수는 기준선 0 확인만(설치된 클라이언트가 SW v2·새 manifest 를 수신하기 전이라 0이 정상) → 값은 docs/metrics-log.md.
    - 주의: `utm_medium=share` 는 GA4 기본 채널 그룹에서 Unassigned 로 떨어진다 — 채널 그룹 보고서가 아니라 **소스/매체 행**으로 읽을 것. 커뮤니티(dcinside·fmkorea) referral 행은 `copy / share` 로 일부 이동하므로 전월 비교 시 합산.
    - **탐색 분석 2개(5분)**: ① 자유 형식: 행=`position`, 열=이벤트 이름(`guide_cta_click` 필터), 값=이벤트 수·총 사용자, 세그먼트 없음, 기간=배포일~9/12 → CSV(`ga4-guide-cta-position-0913.csv`); 2차 표 행=페이지 경로+position(`/salary-db/*` 필터)로 모듈별 클릭/PV — 7일치라 상대 순위용, 실질 판정은 10/5 D+28 재조회. ② 이벤트 in {`ad_unit_click`, `ad_unfilled`} × `slot_kind` × `page_path`(9/7 등록 이후 적재분 ≈5일치, prefix 단위) → 9/7 후보쌍 7종의 페이지군 귀속(보조 귀속표 — 판정 축 아님, 셀 클릭<50 은 판정 보류).
-3. ☐ **★AdSense 광고단위 기간 지정 CSV + 기기별 + 서치콘솔 사이트맵** (12분): **① 1순위(신규 2026-09-06) — 보고서 → 날짜 맞춤 `2026-09-06~09-12` → 분류 기준 광고 단위 → CSV 다운로드**(파일명 `2026-09-13-units-0906_0912.csv`). 이 한 장이 27a692c(IN_ARTICLE 3302558597) 회수 판정의 **유일한 자료**다 — 판정선: 주 요청 **≥5,000**(≈노출 4,500) 완전 회수 / **1,000~5,000** 부분 회수 / **<1,000** 미회수·재조사. **② 2순위 — 같은 화면에서 가능하면 "날짜 및 광고 단위" 교차 보고서 1장(2026-09-01~09-08)**, 불가하면 창 지정 units 2장(9/1~9/2 · 9/3~9/6): 9/3~9/4 수동 유닛 커버리지 하락(93.2%→84.5%)의 **멀티플렉스 단독 귀속 확정**용 — 멀티플렉스(1910866475) 일 요청이 9/3부터 약 1,000건대로 뛰었는지만 보면 닫힌다(승인 K 판정 자료). ★교차 보고서 1장이 ①까지 함께 해결한다면 **그것 하나만 받아도 된다**. **③ 분류 기준 기기**(모바일/데스크톱 노출·RPM) 캡처 1장. 원본은 리포에 넣지 말고 채팅 첨부만. 서치콘솔 → 색인 생성 → **Sitemaps** → sitemap.xml 행 "다시 제출". 상단 URL 검사창에 아래 5개를 하나씩 넣고 **색인 생성 요청**: `/civil-servant-pay-2027`, `/chuseok-bonus-2026`, `/calc/bonus-calculators`, `/salary-db/ranking`, `/year-end-tax-2027`.
+3. ☐ **★AdSense 광고단위 기간 지정 CSV + 기기별 + 서치콘솔 사이트맵** (12분): **① 1순위(신규 2026-09-06) — 보고서 → 날짜 맞춤 `2026-09-06~09-12` → 분류 기준 광고 단위 → CSV 다운로드**(파일명 `2026-09-13-units-0906_0912.csv`). 이 한 장이 27a692c(IN_ARTICLE 3302558597) 회수 판정의 **유일한 자료**다 — 판정선: 주 요청을 비공개 기준값(GuideMid 환산 기대치, 운영자 기록)과 비교 — **대부분** 완전 회수 / **일부** 부분 회수 / **극소** 미회수·재조사. **② 2순위 — 같은 화면에서 가능하면 "날짜 및 광고 단위" 교차 보고서 1장(2026-09-01~09-08)**, 불가하면 창 지정 units 2장(9/1~9/2 · 9/3~9/6): 9/3~9/4 수동 유닛 커버리지 하락(수치 비공개)의 **멀티플렉스 단독 귀속 확정**용 — 멀티플렉스(1910866475) 일 요청이 9/3부터 크게 뛰었는지만 보면 닫힌다(승인 K 판정 자료). ★교차 보고서 1장이 ①까지 함께 해결한다면 **그것 하나만 받아도 된다**. **③ 분류 기준 기기**(모바일/데스크톱 노출·RPM) 캡처 1장. 원본은 리포에 넣지 말고 채팅 첨부만. 서치콘솔 → 색인 생성 → **Sitemaps** → sitemap.xml 행 "다시 제출". 상단 URL 검사창에 아래 5개를 하나씩 넣고 **색인 생성 요청**: `/civil-servant-pay-2027`, `/chuseok-bonus-2026`, `/calc/bonus-calculators`, `/salary-db/ranking`, `/year-end-tax-2027`.
    - (≤1분) Cloudflare → Workers & Pages → **사용량**(일 요청·CPU 시간) 화면 1장 캡처 — 9/21 규칙 B 생성 전 기준선(CR-01·02 우선순위 판정값).
    - (한 줄 답변) 리포트 CSV/JSON 의 데이터 라이선스는 현재 사이트 인용 정책 URL(`/insights#citation-policy`, 출처 표기 시 자유 인용) 사용 중 — CC BY 4.0 등 외부 라이선스 채택 여부(100배 계획 **승인 I**). 무응답 = 현행 유지.
 
 ## 세션 3 — 9/21 (25분)
+> ★정정 2026-11-01 (감사 SEO-02·PD-04): 10/17 Pages 전환 뒤 운영 규칙은 README의 "HTML/OG 사용자 캐시 규칙은 꺼 둔다"입니다. 승인된 게시 파이프라인에는 퍼지 단계가 없어 캐시 규칙을 켜면 게시 뒤 옛 HTML이 지워진 /_next/static 파일을 가리켜 계산기·광고가 깨질 수 있습니다. 이 문서의 HTML 엣지 TTL·캐시 규칙 B/C·승인 6·7·8·R6-02 콘솔 TTL 대응은 모두 폐기됐고, 다시 켜려면 PD-04 결정(퍼지 방법 포함)을 먼저 받습니다.
+
 > **★정정 2026-09-23 (Workers CPU 한도 1102 사건)** — 9/23 실측: 규칙 A·B 미생성(전 HTML DYNAMIC, HIT 게이트 실패), 하루 요청 21,700건 중 CPU 초과 425건, CPU 중앙값 11.2ms(무료 한도 10ms). 아래 원안에서 다음을 **바꿔서** 생성할 것:
 > 1. **규칙 A 는 만들지 않는다.** Cloudflare Cache Rules 는 여러 규칙이 맞으면 **마지막에 맞는 규칙이 이긴다**(last match wins) — 원안처럼 A(Bypass)를 B 위에 두면 B 가 A 를 덮어 RSC 페이로드가 캐시된다. 대신 RSC 제외 조건을 규칙 B 표현식 안에 넣는다(아래 2).
 > 2. **규칙 B(HTML 캐시)** — 표현식(Edit expression 에 그대로 붙여넣기):
@@ -121,7 +125,7 @@
    - **HIT 확인 후 → AI bot policy(승인 J, 운영자 예/아니오, 2분)**: Security → Settings → **Configure AI bot policies**: Search = **Allow**, Agent = **Allow**, Training = **Block 유지** → 저장 → 검증 `curl.exe -s -o NUL -w "%{http_code}" -A "Mozilla/5.0 (compatible; OAI-SearchBot/1.0)" https://www.moneysalary.com/calc/samsung-bonus` → **200**. 배경: 2026-09-05 실측에서 CF 엣지가 OAI-SearchBot·ChatGPT-User·PerplexityBot·Claude-SearchBot·Claude-User·GPTBot·DuckAssistBot 전부 403(robots.txt 의 CF 관리 블록 9종 + Content-Signal ai-train=no 는 별개). 해제해도 자동광고·검색 무접촉, 효과는 AI 답변엔진 인용·Gemini 앱 그라운딩 노출뿐(AI Overview·AI Mode 는 Googlebot 이라 무관). 하방: Worker 요청 소폭 증가(캐시 HIT 전제).
      - ★**2026-09-24·25 실측 — J 는 이미 적용된 모양**: robots.txt 1,265B 에 CF 관리 블록·Content-Signal 없음. GPTBot·ClaudeBot 403 / OAI-SearchBot·ChatGPT-User·PerplexityBot 200 / Googlebot·bingbot·Yeti·Daum 200. 규칙 B HIT 전에 적용된 것일 수 있다(100x §10-4 순서). **C21 기록란 — 적용 여부: ____ · 적용일: ____ · AI bot policy 값(Search/Agent/Training): ____**
 2. ☐ **앵커 광고 ON + 인피드 단위 발급** (8분): AdSense → 광고 → **사이트 기준** → moneysalary.com 연필 → 저장 전 패널 전체 캡처 1장(현재값) → **앵커 광고: 사용**, **사이드 레일: 사용 안 함**, **동적 앵커(접이식): 사용 안 함**, 전면(비네트)·인페이지 설정은 **건드리지 않음** → 사이트에 적용 → 저장 후 캡처 1장 + 채팅에 "앵커 켬 9/21". 이어서 광고 → **광고 단위 기준** → **인피드 광고** → 이름 `머니샐러리_인피드` → 스타일 자동 제안 → 만들기 → 코드의 `data-ad-slot` 숫자와 `data-ad-layout-key` 값을 채팅으로 전달.
-   - ★**2026-09-25 정정(감사 CON-01) — 앵커·사이드레일 토글은 취소**: AdSense 광고 형식 보고서상 앵커·사이드레일·모바일 전면은 **9/1 이전부터 이미 게재 중**이었다(9/1~9/9 앵커 25,431노출, 9/21~9/23 사이드레일 3,002노출, 9/8 라이브 감사 '오버레이 3/3 활성'). 이 항목은 처치가 없어 10/5 앵커 판정도 취소됐다. **'저장'은 누르지 않고 오버레이 형식 화면 캡처만**(위 할 일 목록 C13). 사이드레일 OFF 도 하지 않는다(28일 약 $10.5 순감, 측정된 이득 없음 — 운영자 9/25 승인 12번 '현행 유지'). 9/25 기준 광고 단위 15개 중 인피드는 0개 — **인피드 발급은 승인 7번(A07 /salary-db 목록, 10/25 주)과 함께 남는다**.
+   - ★**2026-09-25 정정(감사 CON-01) — 앵커·사이드레일 토글은 취소**: AdSense 광고 형식 보고서상 앵커·사이드레일·모바일 전면은 **9/1 이전부터 이미 게재 중**이었다(9/1~9/9 앵커 노출, 9/21~9/23 사이드레일 노출 계속 — 수치 비공개, 9/8 라이브 감사 '오버레이 3/3 활성'). 이 항목은 처치가 없어 10/5 앵커 판정도 취소됐다. **'저장'은 누르지 않고 오버레이 형식 화면 캡처만**(위 할 일 목록 C13). 사이드레일 OFF 도 하지 않는다(28일 수익의 아주 작은 비중 순감, 측정된 이득 없음 — 운영자 9/25 승인 12번 '현행 유지'). 9/25 기준 광고 단위 15개 중 인피드는 0개 — **인피드 발급은 승인 7번(A07 /salary-db 목록, 10/25 주)과 함께 남는다**.
 3. ☐ **LinkPrice 머천트 실사** (5분+): LinkPrice 대시보드 → 머천트 검색에 `카드`·`증권`·`ISA`·`IRP`·`대출비교`·`보험` 각각 → 결과 화면 캡처(모집 중 여부·커미션·소재 규정). 있으면 제휴 신청(머천트당 3분). **없으면 '없음' 한 줄** — 그러면 제휴 확장 항목은 계획에서 제거된다.
 4. (여유 시) GA4 맞춤 측정기준 나머지 8개 + 세션 1·2 에서 이월된 하위 항목(맞춤 채널 그룹 등).
 
@@ -157,6 +161,8 @@ AdSense 페이지·광고단위 28일 CSV 2장 → GA4 트래픽 획득 CSV → 
 
 ## 현재 Pages 발행과 Purge 확인 (2026-10-17)
 
+> ★2026-11-01: 아래 1~5 의 로컬 발행기·`cf-purge` 절차는 README 기준 역사 기록이다(README 설정값 `PAGES_CLOUD_PUBLISH_ENABLED=true`·`PAGES_LOCAL_PUBLISH_ENABLED=false`). 지금 게시는 이 문서 끝 '게시 절차와 실패 시 재시도 (2026-11)'를 따른다.
+
 1. 운영자가 글별 발행을 승인하면 기존 초안 해시·달력·한도 검사를 거쳐 main에 반영한다. 저장소 변수 `PAGES_AUTO_DEPLOY_ENABLED=false`, `PAGES_LOCAL_PUBLISH_ENABLED=true`를 사용한다. GitHub의 정확한 SHA `verify` 성공은 필수이며 push 자체는 게시하지 않는다.
 2. 깨끗한 최신 main 워크트리에서 `node scripts/pages-release-local.mjs --approved-commit <전체 SHA>`를 실행한다. 로컬 운영 빌드·검증과 사이트맵 보관 뒤 기존 Wrangler OAuth로 한 번 업로드한다. 컴퓨터와 프로세스가 완료까지 실행 중이어야 한다. 정기 게시 작업은 새로 등록하지 않는다.
 3. 발행기는 canonical 배포 ID·커밋·빌드 및 기존 설정을 확인하고 `cf-purge`의 `pages-verified-purge`를 `workflow_dispatch`로 호출한다. 기존 GitHub `CF_API_TOKEN`은 Pages Read·Zone Cache Purge에만 사용한다. 로컬로 복사하거나 Wrangler에 전달하지 않으며, `CF_PAGES_API_TOKEN` 등 새 Cloudflare 토큰을 GitHub에 추가하지 않는다.
@@ -188,21 +194,56 @@ node scripts/adsense-report.mjs exp1 <광고단위_전.csv> <광고단위_후.cs
 node scripts/adsense-report.mjs --selftest                                                        # 예시 파일 2개 join 자가 점검
 node scripts/metrics-ingest.mjs gsc-coverage <표.csv> <차트.csv> --not-indexed <사유별상세.csv>... [--indexed <색인목록.csv>] [--section /salary-db/listed/ | --section-total 219] [--out <gsc.json>]  # 색인/미색인·사유별 행수·상장사 lite 섹션 색인률(10/19 게이트)
 node scripts/metrics-ingest.mjs ga4-sources <세션소스매체.csv> [--out <ga4.json>]                                        # GA4 트래픽 획득 CSV → 네이버 합산·direct·사내망·google·bing·AI·커뮤니티 점유
-node scripts/metrics-ingest.mjs log --date <YYYY-MM-DD> --window "…" --ga4 <ga4.json> --gsc <gsc.json> --adsense "<window 요약>" --note "…"  # docs/metrics-log.md 집계 1행 append(원본 목록 금지)
-#   v2 추가 플래그(2026-09-06): --gsc-block-clicks/-impr/-ctr/-pos/-window/-prev · --coverage-exmux --coverage-total (총 커버리지는 멀티플렉스 때문에 건강 게이트로 못 씀 — ex-mux 로 판정)
+node scripts/metrics-ingest.mjs log --date <YYYY-MM-DD> --window "…" --ga4 <ga4.json> --gsc <gsc.json> --adsense "<방향만 — 애드센스 수치 금지(약관 비밀유지)>" --note "…"  # docs/metrics-log.md 집계 1행 append(원본 목록 금지)
+#   v2 추가 플래그(2026-09-06): --gsc-block-clicks/-impr/-ctr/-pos/-window/-prev · --coverage-exmux --coverage-total (저장소 기록 금지 — 운영자 로컬 로그 전용. 총 커버리지는 멀티플렉스 때문에 건강 게이트로 못 씀 — ex-mux 로 판정)
 node scripts/metrics-ingest.mjs --selftest                                                                              # 합성 예시로 자가 점검(exit 0 필수)
 ```
-CSV 는 `C:\Users\ruby1\.moneysalary-secrets\adsense\` 에 두고 절대 경로로 지정. 2026-09-05 실측(6/1~9/4 조인 96일): 수동(추정) 수익 점유 16.2%·클릭 39.7%·CPC $0.015 vs 나머지 $0.050.
+CSV 는 `C:\Users\ruby1\.moneysalary-secrets\adsense\` 에 두고 절대 경로로 지정. 2026-09-05 실측(6/1~9/4 조인 96일): 수동(추정) 수익 점유는 일부·클릭 점유는 그보다 큼·수동 CPC 는 나머지(자동광고 추정)보다 크게 낮음(수치 비공개).
 
 ## 참고: 광고 단위 목록 (2026-09-05 캡처 기준)
-**현재 배선 7개**: 가이드중간 1848295488 · 디스플레이2 8284703133 · 멀티플렉스 1910866475 · 인아티클 3302558597 · 상단 9958502911 · 결과창_본문 5584143639 · PC_날개 1397486615. 이 7개가 누적 수익의 **95.95%**($126.00/$131.32)이고 나머지 $5.32는 아래 사장 유닛 6종 — 종전 "살아 있는 7개 = 수동 수익 100%"는 **오류**.
+**현재 배선 7개**: 가이드중간 1848295488 · 디스플레이2 8284703133 · 멀티플렉스 1910866475 · 인아티클 3302558597 · 상단 9958502911 · 결과창_본문 5584143639 · PC_날개 1397486615. 이 7개가 누적 수익의 **대부분**(전부 아님)이고 나머지는 아래 사장 유닛 6종 — 종전 "살아 있는 7개 = 수동 수익 전부"는 **오류**.
 
 ★**2026-09-06 정정(광고단위 CSV × git 이력 실측) — 종전 "미사용" 서술은 오류였다**:
-- **6458241606 (구 "머니샐러리_모바일_앵커")**: 미사용 유닛이 **아니다**. 2026-03-02~04-17 layout.tsx 하드코딩 모바일 앵커(50a41e7→3a9684f) → **2026-05-05~08-24 GUIDE_MID 정본 슬롯**(dbec822 `.env.production` 등록 → 13b7c62 2026-08-24 00:05 에 1848295488 로 교체). 누적 **12,087노출 · 380클릭 · $4.94 · 커버리지 95.50%로 13유닛 중 1위**. 타입은 디스플레이가 맞고 **현재 미배선 · 삭제 금지** · 재사용은 슬롯 env 접촉이므로 **승인 항목 N**(권고: 보존만).
-- **2025-11 생성분 7개 중 5개는 실사용 이력이 있다** — 중앙01 3348584614 · 왼쪽01 2717302873 · 왼쪽02 1464657303 · 오른쪽01 2773143192 · 오른쪽02 1404221203. 1720efc(2025-11-24) 좌우 스티키 사이드바 배선 → 574a31a(2025-12-30) 재렌더 추가 → c667d2e(2026-02-12) 제거. 4종 합 **2,696노출 · 3,775요청 · $0.38 · 커버리지 72.2~74.4%** — 이 커버리지는 유닛 결함이 아니라 **2025-12~2026-02 계정 채움률(66.5 / 71.8 / 79.3%)의 잔상**이다(같은 창 수동 누적 요청 ≈3,729건과 근사 일치 = 그 시기 수동 활동의 사실상 전부). 중앙01은 요청 2 · 노출 0 — `flex justify-center` 안 `display:block` ins 로 폭 0px 이 된 구조로, 27a692c 가 고친 IN_ARTICLE 과 **같은 계열의 반복 패턴**. **중앙02 · 001 두 개만 CSV 에 행이 없어 진짜 무실적.**
-- 시대 판별자: 평균 가시시간이 레거시 4종 18.74 / 19.08 / 27.42 / 25.70초 vs 현행 유닛 4.64~12.05초.
+- **6458241606 (구 "머니샐러리_모바일_앵커")**: 미사용 유닛이 **아니다**. 2026-03-02~04-17 layout.tsx 하드코딩 모바일 앵커(50a41e7→3a9684f) → **2026-05-05~08-24 GUIDE_MID 정본 슬롯**(dbec822 `.env.production` 등록 → 13b7c62 2026-08-24 00:05 에 1848295488 로 교체). 누적 노출·클릭·수익 비공개 · **커버리지 13유닛 중 1위**. 타입은 디스플레이가 맞고 **현재 미배선 · 삭제 금지** · 재사용은 슬롯 env 접촉이므로 **승인 항목 N**(권고: 보존만).
+- **2025-11 생성분 7개 중 5개는 실사용 이력이 있다** — 중앙01 3348584614 · 왼쪽01 2717302873 · 왼쪽02 1464657303 · 오른쪽01 2773143192 · 오른쪽02 1404221203. 1720efc(2025-11-24) 좌우 스티키 사이드바 배선 → 574a31a(2025-12-30) 재렌더 추가 → c667d2e(2026-02-12) 제거. 4종 합 노출·요청·수익 비공개 · **커버리지 낮음** — 이 커버리지는 유닛 결함이 아니라 **2025-12~2026-02 계정 채움률(당시 낮았음)의 잔상**이다(같은 창 수동 누적 요청과 근사 일치 = 그 시기 수동 활동의 사실상 전부). 중앙01은 요청 극소 · 노출 없음 — `flex justify-center` 안 `display:block` ins 로 폭 0px 이 된 구조로, 27a692c 가 고친 IN_ARTICLE 과 **같은 계열의 반복 패턴**. **중앙02 · 001 두 개만 CSV 에 행이 없어 진짜 무실적.**
+- 시대 판별자: 평균 가시시간이 레거시 4종은 현행 유닛보다 크게 길다(수치 비공개).
 
 인피드 유닛은 아직 없음(세션 3). `.env.production:12` 주석의 "6458241606 앵커 타입"은 8/24 시점 기록 — **타입은 디스플레이가 맞고 "미사용"만 오류**였다. env 파일은 규칙 1(슬롯 env)로 무접촉. 9/21 앵커 ON 은 자동광고 사이트 설정 토글이지 유닛이 아니므로 이 유닛 번호와 무관.
 
 ## 네이버 블로그 원고
 운영자 블로그가 없어 발행 루틴은 없음. 원고 7편은 `docs/naver-blog/`에 보존(개설 시 재사용).
+
+## 게시 절차와 실패 시 재시도 (2026-11)
+
+README 기준 지금 게시 경로는 GitHub Actions 'Pages · 승인 후 게시'(`.github/workflows/pages-publish.yml`) 하나다. main 푸시나 CI 초록만으로는 게시되지 않고, 같은 커밋은 두 번 게시되지 않는다. 이 문서와 `docs/next-upgrade-plan-2026-09-11.md` 의 **P** 는 아래 1~4번을 뜻한다.
+
+1. 에이전트가 변경을 main 에 합친다. 날짜로만 바뀌는 문구(보유세 기간·시즌 세트)를 켜는 날은 문서 한 줄 커밋이어도 된다.
+2. GitHub 커밋 옆 ci 검사(verify)가 초록이 될 때까지 기다린다(약 40~46분). 초록 전에는 누르지 않는다.
+3. 운영자: Actions → Pages · 승인 후 게시 → Run workflow → Branch main → approved_commit 에 main 최신 커밋 40자리 → Run.
+4. 7~20분 뒤 초록이면 끝(publish 작업 완료). 끝날 때까지 main 에 아무것도 합치지 않는다. 확인은 `/.well-known/moneysalary-release.json` 의 commit 이 그 40자리인지 — 비렌더링 GET(`scripts/lib/qa-production-http.cjs` fetchProductionQaDocument, 또는 `curl -sS -A "Mozilla/5.0 MoneySalary-QA/1.0" --max-redirs 0`, 캐시 무력화 쿼리(?cb) 없이). 브라우저로 운영 페이지를 열어 확인하지 않는다(AGENTS.md).
+5. 빨강이면 운영자는 run 번호만 알려 주고, 에이전트가 갈래를 정한다(먼저 6번에 해당하는지 본다).
+   - **5a — 게시 전 실패**: 빨강이 'Verify exact approved CI and promote the existing deployment branch' 단계이거나 그 앞 단계(npm ci·'Capture the publication delta…')이고 아직 승격 전이다(대개 CI 가 아직 안 끝났거나 빨강). 에이전트 확인: `codex/pages-production` 끝 커밋이 그 40자리가 아니고, 실행 아티팩트 `pages-cloud-release-<run id>`(실행 주소 `/actions/runs/` 뒤 숫자 — 화면의 #번호가 아니다)에 promotion-state.json 이 없거나 그 phase 가 claimed 또는 checking-ci. 이때는 ci 초록을 확인한 뒤 같은 40자리로 Run workflow 를 다시 누르면 된다.
+   - **5b — 승격 뒤 실패**: 그 밖의 빨강 — 이미 승격됐거나(`codex/pages-production` 끝이 그 40자리) 승격 여부가 불명확한 경우(phase promotion-requested), 또는 'Verify the native Pages deployment…' 같은 뒤 단계 — 는 같은 커밋을 다시 게시할 수 없다(Re-run·Cloudflare Retry deployment 도 실패). 6번에 해당하지 않으면 에이전트가 `docs/release-retry.md` 에 "<실패 run 번호> 재시도 <날짜>" 한 줄을 더한 커밋을 main 에 합치고 2번부터 다시 한다.
+6. 'Verify the native Pages deployment…' 단계만 빨강인데 `/.well-known/moneysalary-release.json`(비렌더링 GET, UA 에 MoneySalary-QA/1.0)의 commit 이 새 커밋이면 사이트는 반영된 것이다. 재시도하지 말고 바뀐 URL 만 네이버 수집 요청(10개 이하 — 이 경우 IndexNow 단계는 돌지 않았다).
+
+CI 대기 시간 연장(게시 작업이 CI 끝까지 기다리게 하는 코드 변경)은 이번 범위가 아니다 — 'CI 초록 뒤에 누른다'가 규칙이다. HTML 캐시 규칙이 꺼져 있으면 게시 뒤 Purge 는 필요 없다.
+
+## 시즌 게시 달력 (2026-11-02 ~ 2027-03-31)
+
+버튼은 운영자 계정만 누른다: GitHub → Actions → 'Pages · 승인 후 게시' → Run workflow → Branch main → approved_commit = main 최신 커밋 40자리 → Run. 공통: 에이전트가 main 에 합침 → ci(verify) 초록 확인(약 37~46분) → 운영자 버튼 → 7~20분 뒤 초록. 끝날 때까지 main 에 합치지 않는다. 빨강이면 위 절차 5번(5a·5b)과 6번. HTML 캐시 규칙은 11/1 확인 기준 꺼져 있으므로 Purge 불필요(다시 켰다면 PD-04 결정부터). 데이터 파일을 바꾸는 날은 합치기 전에 `npm run verify:sitemap` — 바꾼 파일이 `scripts/sitemap-content-reviews.json` 어느 항목의 해시 대상이면 같은 커밋에서 그 항목을 다시 검토해야 CI 가 초록이 된다(삼성 파일은 `docs/growth-playbook-2026.md` §3 발표 런북).
+
+1. 11/2(월)~11/3(화) 최우선: 보안 검사 수정(SEC-03, main `5ccd079e6`) 단독 게시 — 이것 없이는 CI 가 초록이 안 돼 아무것도 못 올린다. 화면 변화 없음.
+2. 11/4(수)~11/6(금): 감사 A 묶음(직접 PR 몇 개 + 통합 PR 1개) — 문구·숫자 정정.
+3. 11/25(수) 0시 이후, 권장 오전: 보유세 페이지·홈 칩 '종합부동산세 납부기간 12/1~12/15'(`src/lib/propertyTaxPeriod.ts` 11/25 경계). 새 커밋 필요. 생략하면 12/1 게시에서 같이 바뀐다(엿새 손해).
+4. 12/1(화) 0시 이후, 권장 오전: 시즌 메뉴 OCT→DEC(`src/lib/seasonKey.ts` DEC 세트) + 홈 추천 글 성과급 우선. 빌드 날짜로 자동 결정되므로 아무 새 커밋이나 되지만, 저장소 일치를 위해 `tsx scripts/gen-season-key.ts` 재생성 포함 권장. 놓치면 12월 내내 10월 메뉴가 남고 12/7(월) 주간 점검 실패 메일이 온다.
+5. 국회 예산·세법 통과 다음 날(보통 12/2~12/10, 선택): 공무원 2027 인상률·세법 문구(6번과 합쳐도 된다).
+6. 12/16(수) 0시 이후: 보유세 비시즌 복귀(`propertyTaxPeriod.ts` 12/16 경계). 놓치면 지난 '12/1~12/15 납부' 문구가 남는다.
+7. 삼성 TAI 하반기 공개 보도 당일(보통 12월 하순): `taiData.ts`(+`docs/next-upgrade-plan-2026-09-11.md` §5-1 P-3, 승인 시). samsung-bonus 폴더 파일이라 같은 커밋에 sitemap 원장 `/calc/samsung-bonus` 항목 갱신.
+8. 공무원 2027 확정 봉급표 공표 당일(12월 말~1월 초): `docs/pay-2027-dday-runbook.md`.
+9. 1/1(금·공휴일) 0시 이후 main 합침, 권장 1/1 오전 버튼: 4대보험 요율 2027 전환(`CURRENT_RATES_YEAR` — `docs/next-upgrade-plan-2026-09-11.md` §5-1, 선행 P-1~P-4 와 운영자 '고시 확인 시 예' 승인 전제). 0시 전에 합치면 verify:tax 가 CI 실패.
+10. 1/2(토) 이후, 확인 2건(공무원 확정표·간소화 개통일)이 끝난 날(보통 1월 첫 주): JAN 수동 전환(`seasonKey.ts` `SEASON_KEY_OVERRIDE`). 미리 끝나면 9번과 합친다.
+11. 삼성 4분기 잠정실적(보통 1/8 전후): `annualOp.ts`(7번과 같은 원장 갱신).
+12. SK하이닉스 PI 하반기·삼성 OPI(보통 1월 하순)·SK 4분기 실적: `opiData.ts`·`psData.ts` 등(원장 항목 `/calc/samsung-bonus`·`/calc/sk-hynix-bonus` 갱신). 최대 수익일이라 오전에 게시해 재시도 여유를 둔다.
+13. 2월 SK하이닉스 PS 확정: `psData.ts`(원장 `/calc/sk-hynix-bonus` 갱신).
+14. 3/11(목) 0시 이후: 연말정산 귀속연도 2027(`src/lib/yearEndSeason.ts`) + JAN 세트 만료(`seasonKey.ts` `SEASON_EXPIRES_KST`) → 다음 세트.
+15. 3/31(수)까지: 보안 예외 GHSA-g3hv-75wg-m249 재검토(`scripts/lib/framework-security-policy.mjs`). 4/1 09:00 KST(00:00 UTC)부터 다시 막힌다.

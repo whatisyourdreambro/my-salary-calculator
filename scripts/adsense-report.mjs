@@ -17,7 +17,7 @@
 //   (b) 광고 단위 보고서: 광고 단위(Ad unit) 열 (+ 날짜 열이 있으면 날짜×단위). 단위 ID 는
 //       이름 열 안의 10자리 숫자 또는 별도 ID 열에서 추출해 내장 매핑(UNIT_NAMES)으로 이름을 붙인다.
 // 비율 열(CTR·Active View·Coverage)은 0.0445 같은 소수와 "4.45%" 표기 모두 인식.
-// 숫자는 소수 둘째 자리(건수는 정수). CPC 만 셋째 자리 — 우발 클릭 기준($0.015)이 셋째 자리에 있음.
+// 숫자는 소수 둘째 자리(건수는 정수). CPC 만 셋째 자리 — 우발 클릭 기준($0.015)이 셋째 자리에 있음. adsense-figure-ok(휴리스틱 기준값)
 // 오류(파일·열 누락·기간 밖)는 한국어 메시지와 함께 exit 1.
 
 import { readFileSync, readdirSync, existsSync } from "node:fs";
@@ -709,7 +709,7 @@ function cmdUnits(pos, opts) {
   console.log(heading(`AdSense 광고 단위별 — ${data.base}${rangeText}`, opts.md));
   console.log(renderTable(UNIT_COLUMNS, unitRows(groups), opts.md));
   console.log(
-    note("플래그 기준: 우발 클릭 의심 = CTR ≥ 3.5% AND CPC ≤ $0.015 · 죽은 유닛 의심 = 노출 0 또는 채움률 < 50%", opts.md)
+    note("플래그 기준: 우발 클릭 의심 = CTR ≥ 3.5% AND CPC ≤ $0.015 · 죽은 유닛 의심 = 노출 0 또는 채움률 < 50%", opts.md) // adsense-figure-ok(휴리스틱 기준값)
   );
   if (data.mode === "units")
     console.log(

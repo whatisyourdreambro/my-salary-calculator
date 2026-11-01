@@ -90,7 +90,7 @@ jobs:
       - run: npm run qa:pages:build
       - run: npm run qa:pages:verify
       # 자동광고 배치 경로 회귀 게이트 (2026-09-25, 수익 추천 #4) — 9/10 루트 래퍼 h-full 삭제(4eda6889)로
-      # AdSense 자동 인페이지 노출/PV 가 약 75% 줄어든 채 2주가 간 사건의 재발 방지. 대표 11쪽 프리렌더 HTML 의
+      # AdSense 자동 인페이지 노출/PV 가 크게 줄어든 채 2주가 간 사건의 재발 방지. 대표 11쪽 프리렌더 HTML 의
       # CSS 경로를 scripts/autoads-paths.baseline.json 과 대조해 루트 셸이 깨지거나 한 쪽이라도 20% 넘게 사라지면 실패.
       # 의도한 개편이면 스크립트 머리말의 --update 절차(기준선 갱신 = 자동광고 학습 위치를 버리는 결정).
       - run: node scripts/verify-autoads-paths.mjs --next-dir .pages-qa/.next

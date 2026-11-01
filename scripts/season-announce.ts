@@ -162,7 +162,7 @@ async function cmdEvent(registry: SeasonRegistry, raw: string | undefined, root:
   lines.push("   수동 요청 목록은 날짜 손잡이가 없어 diff·[indexnow] 에 나올 수 없는 URL 입니다(성과급 계산기 등).");
   lines.push("   발표 당사 계산기처럼 이번 발표로 바뀐 URL 을 1일차 앞쪽에 두고, 넘치는 diff 목록 뒤쪽은 다음 날로 넘깁니다.");
   lines.push(`   구글 서치콘솔 URL 검사 → 색인 생성 요청: ${GSC_INSPECT_CAP}개 이하 (같은 순서).`);
-  lines.push("8. docs/ad-experiments.md 3(c) 공변량 행 + docs/metrics-log.md 한 줄.");
+  lines.push("8. docs/ad-experiments.md 3(c) 공변량 행(날짜·커밋만, 애드센스 수치 금지) + docs/metrics-log.md 한 줄(GA4/GSC만).");
   lines.push("");
 
   if (a.candidates.length === 0) {
