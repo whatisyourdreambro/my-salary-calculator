@@ -260,7 +260,7 @@
     "/calc/sk-hynix-bonus": {
       "contentDate": "2026-11-01",
       "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B27 DATA-03): the operating-profit scenario chips use the Q3 results (보수 181.5조 with the fourth quarter at 0, 누적 연환산 242조 = 181.5조×4/3), the step-1 paragraph says 1~3분기, the footer 마지막 갱신 shows psData LAST_UPDATED 2026-11-01, and the collapsed PS FAQ answer (also in FAQPage JSON-LD) and the HowTo cite the 10/28 SK hynix newsroom cumulative operating profit. Visible content change: content date advanced from 2026-10-04 to 2026-11-01.",
+      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B27 DATA-03): the operating-profit scenario chips use the Q3 results (보수 181.5조 with the fourth quarter at 0, 누적 연환산 242조 = 181.5조×4/3), the step-1 paragraph says 1~3분기, the footer 마지막 갱신 shows psData LAST_UPDATED 2026-11-01, and the collapsed PS FAQ answer (also in FAQPage JSON-LD) and the HowTo cite the 10/28 SK hynix newsroom cumulative operating profit. Visible content change: content date advanced from 2026-10-04 to 2026-11-01. Stage-1 sweep repair (2026-11-01): the two result-card formula lines drop the leading = and the 당해 수령분 세전 line uses a hyphen-minus, so the 보수 chip state keeps the base line count above CalcResultAd (wording otherwise unchanged); date kept.",
       "dependencies": [],
       "files": [
         "src/app/calc/sk-hynix-bonus/Client.tsx",
@@ -269,7 +269,7 @@
         "src/app/calc/sk-hynix-bonus/page.tsx",
         "src/app/calc/sk-hynix-bonus/psData.ts"
       ],
-      "sha256": "dd1297c9b28101904a0bb5165dd64438f084d00a5de435e03be374e961347648"
+      "sha256": "baf091e2f876fb5ded88f07402b176b1d7ec9fc49a52076b403ec46fae7cc0c5"
     },
     "/calc/bonus-calculators": {
       "contentDate": "2026-11-01",
@@ -432,7 +432,7 @@
     "/calc/dual-income-year-end": {
       "contentDate": "2026-11-01",
       "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B23, B24, B25, B26). B24 YE-03 treats couple medical (서로를 위한 의료비) as other-dependent medical capped at 700만원 after the 3% threshold (소득세법 제59조의4②) and rewords the disclosure above the result ad; B25 P4-06 raises the default couple-medical example from 100만 to 300만원 so the first view shows a 90,000원 saving, and a tie reads 어느 쪽이든 같음; B26 STR-02-o adds the split-children condition (본인/배우자 쪽 자녀 지출일 때만 가능, 소득세법 제59조의4②③④) to the allocation line; B23 only adds the engine breakdown field. Result changes: the content date stays at the release date 2026-11-01 (the page has no revision date field).",
+      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B23, B24, B25, B26, with the stage-1 sweep repair). B24 YE-03 treats couple medical (서로를 위한 의료비) as other-dependent medical capped at 700만원 after the 3% threshold (소득세법 제59조의4②) and shortens the disclosure above the result ad; B25 P4-06 rewords the allocation line prefix to 부부 상호 and shows 어느 쪽이든 같음 when the couple-medical side does not change the total, which is the default view (the 300만원 default example was reverted to 100만원 by the sweep repair because the wider 최적 대비 cell pushed CalcResultAd down); the B26 split-children condition note was removed again by the repair (it added a line above CalcResultAd at 320-500px; the disclosure covers the per-child limitation); B23 only adds the engine breakdown field. Result changes: the content date stays at the release date 2026-11-01 (the page has no revision date field).",
       "dependencies": [
         "src/lib/dualIncomeYearEnd2026.ts",
         "src/lib/yearEndTaxCalculator.ts",
@@ -445,7 +445,7 @@
         "src/lib/taxConstants2026.ts",
         "src/lib/yearEndTaxCalculator.ts"
       ],
-      "sha256": "28516eb9c1531536debe33327959f3d0a69a4fdae2641d5ca1d108e7a3ab3a56"
+      "sha256": "aaa87db0983c65167991e54d036121d00bfdf9a4a3bc80dc388071f86410c61e"
     },
     "/calc/voluntary-retirement": {
       "contentDate": "2026-09-03",
@@ -603,7 +603,7 @@
     "/donation-tax-credit-2026": {
       "contentDate": "2026-11-01",
       "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B26 STR-02-o): the result-card basis line is corrected to (산출세액 한도 미반영), and a conditional row 산출세액(최대치) 초과 미공제분(특례·일반은 이월) appears when the credit exceeds the computed-tax ceiling (donationTaxCeiling2026; 소득세법 제61조② carryover). Fact correction and new result row: content date advanced from 2026-09-25 to 2026-11-01 (the page has no revision date field). src/lib/donationCredit.ts is now a dependency because the new row comes from it.",
+      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B26 STR-02-o, with the stage-1 sweep repair): the basis line inside the collapsed 계산 근거 자세히 보기 is corrected to (산출세액 한도 미반영), and when the credit exceeds the computed-tax ceiling (donationTaxCeiling2026; 소득세법 제61조② carryover) a red line 산출세액(최대치) 초과 미공제분(특례·일반은 이월) = N원 이상 follows the 합계 line inside that collapsed box. The sweep repair moved that line out of the result-card 한도 초과분 안내 block, which it had opened between the result and CalcResultAd. Fact correction and new detail line: content date stays at 2026-11-01 (the page has no revision date field). src/lib/donationCredit.ts is a dependency because the line comes from it.",
       "dependencies": [
         "src/lib/donationCredit.ts"
       ],
@@ -612,7 +612,7 @@
         "src/app/donation-tax-credit-2026/page.tsx",
         "src/lib/donationCredit.ts"
       ],
-      "sha256": "264954beb384a6ceb06495a7fc77d72f39e2a1f985de4e109912a6c2477b6bbe"
+      "sha256": "c41f8dcf2c304a30a5d96f3061f2348fe9f91f7dfac24e7fa32d20103ba2e4d5"
     },
     "/health-insurance-dependent": {
       "contentDate": "2026-10-17",
@@ -803,7 +803,7 @@
     "/calc/january-bonus": {
       "contentDate": "2026-11-01",
       "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "New explicit review 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B23 CALC-01): the 13월의 월급 simulator now runs on the canonical year-end engine (calculateYearEndTax through src/lib/januaryBonus2026.ts, with the four social-insurance deductions), so the default refund changes from +731,125원 to +532,183원 together with the withheld and 결정세액 rows, and the donation input becomes 고향사랑기부금 (10만원 전액). Result change: first explicit ledger entry and sitemap override at 2026-11-01 (previously STATIC_LAST_MODIFIED 2026-07-16; the page has no revision date field).",
+      "reason": "New explicit review 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B23 CALC-01): the 13월의 월급 simulator now runs on the canonical year-end engine (calculateYearEndTax through src/lib/januaryBonus2026.ts, with the four social-insurance deductions), so the default refund changes from +731,125원 to +532,183원 together with the withheld and 결정세액 rows, and the donation input becomes 고향사랑기부금 (10만원 전액). Result change: first explicit ledger entry and sitemap override at 2026-11-01 (previously STATIC_LAST_MODIFIED 2026-07-16; the page has no revision date field). Stage-1 sweep repair (2026-11-01): the result header uses 20px side padding below 360px so the canonical default refund +532,183원 fits on one line from 320px (layout only; numbers and wording unchanged); date kept.",
       "dependencies": [
         "src/lib/januaryBonus2026.ts",
         "src/lib/yearEndTaxCalculator.ts",
@@ -816,7 +816,7 @@
         "src/lib/taxConstants2026.ts",
         "src/lib/yearEndTaxCalculator.ts"
       ],
-      "sha256": "bdc8afc21506c19d781d9452db26109444fc74d0d9fbbad6cc3c0135a350b586"
+      "sha256": "6eb52fc98bb8cdfa641f56bd413d12da973da586cee975ed14468a11a0f0267e"
     },
     "/property-holding-tax-2026": {
       "contentDate": "2026-11-01",
