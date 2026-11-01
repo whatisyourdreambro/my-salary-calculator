@@ -3,7 +3,7 @@
 // SNS 공유 채널 정의 — 공유 인텐트 URL 빌더 + 라벨/브랜드 색.
 // React 무관 순수 모듈 (ShareButtons·FloatingShareBar·ShareTermButton 공용).
 // 채널 id는 GA4 trackShare의 method 값과 1:1 대응.
-import { publicShareUrl, publicShareImageUrl, SHARE_ORIGIN } from "./sharePolicy";
+import { publicShareUrl, publicShareImageUrl, safePageOgImage, SHARE_ORIGIN } from "./sharePolicy";
 
 export interface SharePayload {
   url: string;
@@ -122,6 +122,7 @@ export function openShareWindow(url: string): void {
 }
 
 export interface KakaoFeedPayload extends SharePayload {
+  /** Sent only when safePageOgImage accepts it (the page's public card); otherwise the path-only card of url. */
   imageUrl: string;
   buttonTitle?: string;
   locale?: "ko" | "en";
@@ -159,7 +160,8 @@ export function kakaoFeedImageSize(imageUrl: string): { imageWidth: number; imag
 export function tryKakaoFeedShare(p: KakaoFeedPayload): boolean {
   if (typeof window === "undefined") return false;
   const url = withUtm(p.url, "kakao");
-  const imageUrl = publicShareImageUrl(url, p.locale ?? "ko");
+  // B38: the page's public og:image when safePageOgImage accepts it; result values or other hosts get the path-only card.
+  const imageUrl = safePageOgImage(p.imageUrl) ?? publicShareImageUrl(url, p.locale ?? "ko");
   const kakao = (window as unknown as { Kakao?: KakaoSdkGlobal }).Kakao;
   try {
     if (!kakao?.isInitialized?.() || typeof kakao.Share?.sendDefault !== "function") return false;

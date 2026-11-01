@@ -133,13 +133,29 @@ describe("kakaoFeedImageSize — 우리 OG 카드에만 크기 힌트", () => {
     expect(kakaoFeedImageSize("https://preview.moneysalary.pages.dev/api/og?type=salary&amount=1")).toEqual({ imageWidth: 1200, imageHeight: 630 });
   });
 
-  it("Kakao에는 호출자가 준 개인 OG나 외부 이미지 대신 공용 카드만 전송", () => {
+  // B38 (운영자 2026-11-01 승인 8번): 페이지의 공개 og:image(빌드 시 메타)는 그대로 카드로, 결과값·외부 이미지는 공용 경로 카드로
+  it("Kakao에는 페이지의 공개 og:image 만 그대로 전송 — 개인 결과값(amount/net)이나 외부 이미지는 공용 경로 카드", () => {
     const sendDefault = vi.fn();
     vi.stubGlobal("window", { location: { host: "www.moneysalary.com" }, Kakao: { isInitialized: () => true, Share: { sendDefault } } });
-    expect(tryKakaoFeedShare({ url: `${HOME}/calc/x`, title: "t", imageUrl: `${HOME}/api/og?type=tool&name=x` })).toBe(true);
-    expect(sendDefault.mock.calls[0][0].content).toMatchObject({ imageUrl: `${HOME}/api/og?path=%2Fcalc%2Fx&lang=ko`, imageWidth: 1200, imageHeight: 630 });
-    tryKakaoFeedShare({ url: `${HOME}/calc/x`, title: "t", imageUrl: "https://example.com/a.png" });
-    const content = sendDefault.mock.calls[1][0].content;
-    expect(content).toMatchObject({ imageUrl: `${HOME}/api/og?path=%2Fcalc%2Fx&lang=ko`, imageWidth: 1200, imageHeight: 630 });
+    const pageCard = `${HOME}/api/og?type=tool&name=x`;
+    expect(tryKakaoFeedShare({ url: `${HOME}/calc/x`, title: "t", imageUrl: pageCard })).toBe(true);
+    expect(sendDefault.mock.calls[0][0].content).toMatchObject({ imageUrl: pageCard, imageWidth: 1200, imageHeight: 630 });
+    for (const imageUrl of [
+      "https://example.com/a.png",
+      `${HOME}/api/og?type=salary&amount=987654321&net=123&v=20260924`,
+      `${HOME}/api/og?type=tool&name=x&netPay=123`,
+      "http://www.moneysalary.com/api/og?type=tool&name=x",
+    ]) expect(tryKakaoFeedShare({ url: `${HOME}/calc/x`, title: "t", imageUrl })).toBe(true);
+    for (const [settings] of sendDefault.mock.calls.slice(1)) {
+      expect(settings.content).toMatchObject({ imageUrl: `${HOME}/api/og?path=%2Fcalc%2Fx&lang=ko`, imageWidth: 1200, imageHeight: 630 });
+    }
+    expect(JSON.stringify(sendDefault.mock.calls.slice(1))).not.toMatch(/987654321|example\.com|netPay|http:\/\//);
+  });
+
+  it("Kakao 기본 정적 이미지(/og-default.png)도 페이지 카드로 그대로 — 1200×630 힌트 유지", () => {
+    const sendDefault = vi.fn();
+    vi.stubGlobal("window", { location: { host: "www.moneysalary.com" }, Kakao: { isInitialized: () => true, Share: { sendDefault } } });
+    expect(tryKakaoFeedShare({ url: `${HOME}/`, title: "t", imageUrl: `${HOME}/og-default.png` })).toBe(true);
+    expect(sendDefault.mock.calls[0][0].content).toMatchObject({ imageUrl: `${HOME}/og-default.png`, imageWidth: 1200, imageHeight: 630 });
   });
 });

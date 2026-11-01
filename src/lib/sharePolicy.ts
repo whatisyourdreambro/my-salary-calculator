@@ -40,6 +40,43 @@ export interface SharePageContext {
   canonical: string | null;
   title: string;
   notFound: boolean;
+  /**
+   * The head's og:image (build-time page metadata). Only safePageOgImage() lets it leave the page (B38).
+   * Optional: the favorites action-boundary snapshot has none, and none means the path-only card.
+   */
+  ogImage?: string | null;
+}
+
+const PAGE_OG_DEFAULT = `${SHARE_ORIGIN}/og-default.png`;
+const PAGE_OG_ENDPOINT = `${SHARE_ORIGIN}/api/og`;
+// Page-level card keys only. Result keys (amount, net, netPay) and anything else are refused.
+const PAGE_OG_KEYS = new Set(["path", "title", "name", "type", "lang", "v"]);
+// Same limit as the OG renderer (ogImageCache MAX_TEXT_CHARACTERS).
+const PAGE_OG_TEXT_MAX = 120;
+
+/**
+ * B38 (owner approval 2026-11-01, item 8): a page's own og:image may become its Kakao card only when it is
+ * one of our public build-time cards: exactly the static default PNG, or /api/og with page-level keys and a
+ * title/name of at most 120 characters. Anything else (result values, unknown or repeated keys, another
+ * host/scheme/port, a fragment, whitespace or control characters) returns null, and callers keep the path-only card.
+ */
+export function safePageOgImage(value: string | null | undefined): string | null {
+  if (typeof value !== "string" || !value || value.length > 2048 || /[\s\\\u0000-\u001f\u007f]/.test(value)) return null;
+  if (value === PAGE_OG_DEFAULT) return value;
+  if (value !== PAGE_OG_ENDPOINT && !value.startsWith(`${PAGE_OG_ENDPOINT}?`)) return null;
+  try {
+    const url = new URL(value);
+    if (url.hash) return null;
+    const seen = new Set<string>();
+    for (const [key, text] of url.searchParams) {
+      if (!PAGE_OG_KEYS.has(key) || seen.has(key)) return null;
+      seen.add(key);
+      if ((key === "title" || key === "name") && Array.from(text).length > PAGE_OG_TEXT_MAX) return null;
+    }
+    return value;
+  } catch {
+    return null;
+  }
 }
 
 /** A previous route's head must not become the next route's share title. */
@@ -74,13 +111,25 @@ export function resolvePublicShare(
 ) {
   const locale = resolveShareLocale(context.pathname, overrides.locale);
   const legacy = isLegacyResultPath(context.pathname);
-  const currentUrl = publicShareUrl(context.pathname) ?? `${SHARE_ORIGIN}/`;
+  const pageUrl = publicShareUrl(context.pathname);
+  const currentUrl = pageUrl ?? `${SHARE_ORIGIN}/`;
   const resolvedUrl = (overrides.url ? publicShareUrl(overrides.url) : null) ?? currentUrl;
   const title = (overrides.title ?? (!legacy && resolvedUrl === currentUrl ? context.title.trim() : "")) || defaultShareTitle(locale);
   const description = overrides.description ?? (locale === "en" ? "Explore salary tools and practical guides." : "연봉 계산기와 생활에 필요한 가이드를 확인하세요.");
   // Caller titles/image URLs can contain approved result text. Never turn that text into a remote image request.
-  const imageUrl = publicShareImageUrl(resolvedUrl, locale);
+  // Only this page's own public og:image may replace the path-only card, and only for this page's link (B38);
+  // legacy /share paths and cross-page links keep the path-only card.
+  const imageUrl = (!legacy && pageUrl !== null && resolvedUrl === pageUrl && safePageOgImage(context.ogImage)) || publicShareImageUrl(resolvedUrl, locale);
   return { url: resolvedUrl, title, description, imageUrl, locale };
+}
+
+/**
+ * Result mode: the approved link stays a public page URL, and its card describes that same link. This page's
+ * card is used only when the link is this page; a link to another page gets that page's path-only card (B38).
+ */
+export function resolveResultShareTarget(page: { url: string; imageUrl: string; locale: ShareLocale }, input: string | undefined): { url: string; imageUrl: string } {
+  const url = approvedResultUrl(input, page.url);
+  return { url, imageUrl: url === page.url ? page.imageUrl : publicShareImageUrl(url, page.locale) };
 }
 
 /** The approval covers visible text/local images, not personal data hidden in links. */
