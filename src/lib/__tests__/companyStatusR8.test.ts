@@ -28,6 +28,8 @@
 // 2026-09-30 R8-C 리뷰(사실 렌즈 verdict=fix): '업계 1위'는 공정거래위원회 2026-01-26 심사결과(정책브리핑
 // korea.kr newsId=156741347 — 장기·단기 렌터카 모두 1위 롯데렌탈, 2위 SK렌터카)에 비춰 사실이 아니다. 테스트가 이 앞 문장을
 // 통째로 고정하지 않도록 뒤 문장(매각 사실)과 폭 서명만 단언한다. 순위 문구 교정(sk-rent·lotte-rental)은 운영자 결정 대기.
+// → 2026-10-23 정정 완료(10/9 묶음 독립 검토 C 목록): sk-rent '업계 2위 렌터카.', lotte-rental '국내 1위 …' — 폭이 줄기만 하는
+//   문구로 바꿨다(아래 SK_RENT_NEW 주석). 출처는 공개 보도(시사저널·한국공정경쟁연합회 2026-01-26).
 import { describe, expect, it } from "vitest";
 import { krCompanies_Batch14 } from "@/data/krCompanies_Batch14";
 import { krCompanies_Batch17 } from "@/data/krCompanies_Batch17";
@@ -35,7 +37,17 @@ import { krCompanies_Batch26 } from "@/data/krCompanies_Batch26";
 import { allCompanies } from "@/data/companies";
 
 const SK_RENT_OLD = "업계 1위 법인 렌터카. 모빌리티 전환 시대의 SK 모빌리티 플랫폼.";
-const SK_RENT_NEW = "업계 1위 법인 렌터카. 어피니티 인수 이후로 SK 계열에서 분리됨.";
+const SK_RENT_R8 = "업계 1위 법인 렌터카. 어피니티 인수 이후로 SK 계열에서 분리됨.";
+// 2026-10-23 순위 정정(공개 출처): 공정거래위원회 2026-01-26 기업결합 금지 결정 보도 — '국내 렌터카 시장의 1·2위 사업자인
+// 롯데렌탈, SK렌터카'(시사저널 https://www.sisajournal.com/news/articleView.html?idxno=360764), '롯데렌탈과 SK렌터카는 각각
+// 1·2위 사업자'(한국공정경쟁연합회 https://www.kfcf.or.kr/news/news/read.do?no=3422). 정책브리핑 원문(newsId=156741347)은
+// 2026-10-09 기준 '삭제되었거나 조회가 되지 않는 자료'라 위 두 공개 사본을 출처로 남긴다.
+// 광고 위 히어로라 단어를 빼기만 했다: '1위 법인'(숫자 1 + 한글 3음절) 자리에 '2위'(숫자 2 + 한글 1음절)만 남는다.
+// '2' 는 '1' 보다 304 유닛 넓지만 빠진 '법인'(한글 2음절 3,540 유닛) 보다 좁아, 새 단어마다 옛 단어 하나에 순서대로 대응하고
+// 각각 폭이 같거나 좁다(wordcheck dom 통과, 1,123폭 스윕 광고 하향 0). 글자 수도 3자 줄어 글자 간격 합도 줄어든다.
+const SK_RENT_NEW = "업계 2위 렌터카. 어피니티 인수 이후로 SK 계열에서 분리됨.";
+const LOTTE_RENT_OLD = "국내 2위 렌터카·카셰어링 기업. 롯데그룹 모빌리티 사업의 핵심으로 EV 전환 가속.";
+const LOTTE_RENT_NEW = "국내 1위 렌터카·카셰어링 기업. 롯데그룹 모빌리티 사업의 핵심으로 EV 전환 가속.";
 
 const HANGUL = /[가-힣]/;
 // 단어별 폭 서명: 한글 음절은 모두 같은 폭(1,770 유닛)이라 'H' 로 접고, 나머지 글자는 그대로 둔다.
@@ -43,26 +55,36 @@ const widthSignature = (text: string) =>
   text.split(" ").map((word) => [...word].map((ch) => (HANGUL.test(ch) ? "H" : ch)).join(""));
 
 describe("R8 fix C 회사 히어로 소개문 — SK렌터카 매각 반영", () => {
-  it("SK렌터카: 어피니티 인수·SK 계열 분리를 담은 새 문구가 그대로 노출된다", () => {
+  it("SK렌터카: 어피니티 인수·SK 계열 분리를 담은 문구가 그대로 노출되고 순위는 2위다", () => {
     const inBatch = krCompanies_Batch14.find((c) => c.id === "sk-rent");
     const merged = allCompanies.find((c) => c.id === "sk-rent");
-    // ★ 앞 문장 '업계 1위 법인 렌터카.'는 사실로 고정하지 않는다(R8-C 리뷰, 2026-09-30). 공정거래위원회 2026-01-26
-    //   SK렌터카·롯데렌탈 기업결합 심사결과(주식취득 금지)에 비춰 장기·단기(내륙·제주) 세 시장 모두 1위는 롯데렌탈, 2위가
-    //   SK렌터카다(장기 렌터카 합산 38.3% = 롯데렌탈 21.8% + SK렌터카 16.5%). 옛 문구에서 물려받은 앞 문장은 같은 폭 문구나
-    //   운영자 폭 예외를 기다리는 중이다('2위'로 바꾸면 +304 유닛 — 광고 위 폭 불일치). 그래서 여기서는 매각 사실을 담은
-    //   뒤 문장과 단어별 폭 서명만 고정한다. 앞 문장을 고칠 때도 단어별 폭 서명이 옛 문구와 같아야 한다.
     for (const description of [inBatch?.description ?? "", merged?.description ?? ""]) {
-      expect(description.endsWith("어피니티 인수 이후로 SK 계열에서 분리됨.")).toBe(true);
-      expect(widthSignature(description)).toEqual(widthSignature(SK_RENT_OLD));
+      expect(description).toBe(SK_RENT_NEW);
+      expect(description).not.toContain("1위");
     }
     expect(SK_RENT_NEW).toContain("어피니티");
     expect(SK_RENT_NEW).toContain("SK 계열에서 분리");
     expect(SK_RENT_NEW).not.toContain("SK 모빌리티 플랫폼");
   });
 
-  it("SK렌터카: 새 문구는 단어마다 옛 문구와 같은 폭 서명(띄어쓰기·숫자·문장부호·라틴 위치)이다", () => {
-    expect(widthSignature(SK_RENT_NEW)).toEqual(widthSignature(SK_RENT_OLD));
-    expect([...SK_RENT_NEW].length).toBe([...SK_RENT_OLD].length);
+  it("SK렌터카: R8 문구는 옛 문구와 같은 폭 서명이었다(기록)", () => {
+    expect(widthSignature(SK_RENT_R8)).toEqual(widthSignature(SK_RENT_OLD));
+    expect([...SK_RENT_R8].length).toBe([...SK_RENT_OLD].length);
+  });
+
+  it("SK렌터카 순위 정정: R8 문구에서 '법인' 한 단어를 빼고 '1위'를 '2위'로만 바꿨다(뒤 문장 그대로, 글자 수 감소)", () => {
+    const r8 = SK_RENT_R8.split(" ");
+    const now = SK_RENT_NEW.split(" ");
+    expect(now).toEqual([r8[0], "2위", ...r8.slice(3)]);
+    expect(r8.slice(1, 3)).toEqual(["1위", "법인"]);
+    expect([...SK_RENT_NEW].length).toBe([...SK_RENT_R8].length - 3);
+  });
+
+  it("롯데렌탈: 순위를 1위로 정정 — '2'→'1' 한 글자만 바뀌어 같은 글자 수·같은 모양이고 '1' 이 더 좁다", () => {
+    const lotte = allCompanies.find((c) => c.id === "lotte-rental");
+    expect(lotte?.description).toBe(LOTTE_RENT_NEW);
+    expect(LOTTE_RENT_NEW.replace("국내 1위", "국내 2위")).toBe(LOTTE_RENT_OLD);
+    expect([...LOTTE_RENT_NEW].length).toBe([...LOTTE_RENT_OLD].length);
   });
 
   it("SK렌터카: 이름·aliases·lastUpdated 는 그대로다", () => {
