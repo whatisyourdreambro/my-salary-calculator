@@ -233,8 +233,14 @@ describe("봉급표 3종 — 검색어 정렬 메타·첫 답변 (B20)", () => {
     // 첫 답변은 제자리 교체 — 이전 리드 대비 +2자 이내 (모바일 줄 수 증가 방지)
     expect(len(lead(blocks)), `${name} 리드`).toBeLessThanOrEqual(oldLeadLength + 2);
     if (name === "/civil-servant-pay-2027") {
-      // 계산 위젯은 첫 광고 앞 그대로 (위치 불변)
-      expect(render(Page).selectorBeforeAd).toBe(true);
+      // 계산 위젯은 첫 광고(HomeTopAd) 바로 아래 — 2026-10-05 운영자 승인 #6(A06)으로 광고 위에서 내렸다.
+      // 광고 위 영역은 헤더 블록만 남는다(위 blocks 가드). 위젯을 광고 위로 되돌리면 여기서 잡힌다.
+      const { body, selectorBeforeAd } = render(Page);
+      expect(selectorBeforeAd).toBe(false);
+      const homeTop = body.indexOf('data-test-ad="home-top"');
+      const selector = body.indexOf('data-test-selector="civil-forecast"');
+      expect(selector).toBeGreaterThan(homeTop);
+      expect(body.slice(homeTop, selector)).toMatch(/^data-test-ad="home-top"><\/div><section $/);
     }
   });
 

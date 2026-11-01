@@ -536,6 +536,11 @@ export default function SalaryCalculator() {
  {/* 다음 액션 3 CTA — 결과 컨텍스트 인식형 */}
  <NextActions annualSalary={currentResult ? annualSalary : undefined} category="salary" incomeType={incomeType} />
 
+ {/* 결과 직하 광고 — CTR 최고 구간 */}
+ <ResultAd />
+
+ {/* 비교기 가져오기 — 광고 아래(2026-09-26 승인 5번 A04·ADS-02). 입력을 고치면 사라졌다 재계산하면 다시 나타나는
+ 블록이라 광고 위에 두면 결과 광고가 약 130px 오르내리고 주 버튼이 광고 바로 위에 붙는다. 광고 위로 되돌리지 말 것. */}
  {canHandoffOffer && (
  <div className="rounded-2xl border border-canvas bg-white p-4">
  <button type="button" onClick={handleOfferHandoff} className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-bold text-white hover:bg-primary/90">
@@ -545,9 +550,6 @@ export default function SalaryCalculator() {
  {offerHandoffError && <p role="alert" className="mt-2 text-sm text-red-700">브라우저에서 조건을 전달하지 못했습니다. <Link href="/calc/offer-compare" className="underline">비교기에 직접 입력하기</Link></p>}
  </div>
  )}
-
- {/* 결과 직하 광고 — CTR 최고 구간 */}
- <ResultAd />
 
  <Link href="/work-clock" data-msy-module="salary-work-clock" className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-card p-5 text-foreground no-underline hover:border-electric/50">
  <span><span className="block font-semibold">이 월급, 오늘은 얼마나 벌었을까?</span><span className="mt-1 block text-sm text-muted-foreground">실시간 월급 시계에서 출퇴근과 휴식을 기록해 보세요.</span></span>

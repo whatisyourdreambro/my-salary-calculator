@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
@@ -65,6 +67,23 @@ describe("삼성 회사 페이지의 연봉 기준 요약", () => {
     expect(renderToStaticMarkup(createElement(SamsungSectionAnchor, {
       companyId: other.id, id: "samsung-salary-table",
     }, child))).toBe(renderToStaticMarkup(child));
+  });
+
+  // 2026-10-05 운영자 승인 #6: 9/9 에 첫 광고(CalcResultAd) 위 Quick Stats 앞에 들어간 요약을 광고 바로 아래로 내렸다.
+  it("요약 슬롯은 CompanyDetailClient 의 첫 광고(CalcResultAd) 바로 다음 — 광고 위에는 없다", () => {
+    const client = readFileSync(resolve(process.cwd(), "src/app/salary-db/[id]/CompanyDetailClient.tsx"), "utf8")
+      .replace(/\r\n/g, "\n")
+      .replace(/\{\/\*[\s\S]*?\*\/\}/g, "");
+    const ad = client.indexOf("<CalcResultAd />");
+    const slot = client.indexOf("{summary}");
+    expect(ad).toBeGreaterThan(-1);
+    expect(client.indexOf("{summary}", slot + 1)).toBe(-1);
+    expect(slot).toBeGreaterThan(ad);
+    expect(client.slice(ad + "<CalcResultAd />".length, slot).trim()).toBe("");
+    // 광고 위(같은 space-y-8 묶음의 시작 ~ 광고)는 Quick Stats 만
+    const groupStart = client.lastIndexOf('<div className="page-width relative space-y-8 pt-8">', ad);
+    expect(groupStart).toBeGreaterThan(-1);
+    expect(client.slice(groupStart, ad)).not.toContain("summary");
   });
 
   it("삼성 바로가기 도착점은 키보드 포커스와 헤더 여백을 제공한다", () => {

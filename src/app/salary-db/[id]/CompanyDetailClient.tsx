@@ -122,7 +122,6 @@ export default function CompanyDetailClient({ company, summary, nameChangeNotice
  </header>
 
  <div className="page-width relative space-y-8 pt-8">
- {summary}
  {/* Quick Stats Grid */}
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
  <StatCard
@@ -157,6 +156,11 @@ export default function CompanyDetailClient({ company, summary, nameChangeNotice
 
  {/* Quick Stats 직후 첫 광고 — 회사명 검색 의도 정점 */}
  <CalcResultAd />
+
+ {/* 회사 전용 요약(현재 삼성전자만, page.tsx 가 넘김) — 9/9 에 첫 광고 위(Quick Stats 앞)로 들어갔던 블록을 광고 바로 아래로 내렸다
+     (2026-10-05 운영자 승인 #6). space-y-8 이라 광고 아래 32px, 테두리·안쪽 여백 뒤에 링크가 있다. 광고 위로 되돌리지 말 것.
+     사명 안내(nameChangeNotice, 현재 LIG넥스원만)와는 같은 회사에 함께 나오지 않는다 — 둘 다 광고 아래. */}
+ {summary}
  {nameChangeNotice}
 
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

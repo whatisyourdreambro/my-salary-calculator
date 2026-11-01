@@ -166,7 +166,8 @@ describe("LIG 상호 변경의 공식 근거와 기존 급여 자료 구분", ()
     expect([...pages].filter(([, html]) => html.includes('data-msy-module="company-name-change"')).map(([id]) => id)).toEqual(["lig-nex1"]);
     const samsung = pages.get("samsung-electronics")!;
     expect(samsung).toContain('aria-labelledby="samsung-company-summary-title"');
-    expect(samsung.indexOf('aria-labelledby="samsung-company-summary-title"')).toBeLessThan(samsung.indexOf('data-testid="calc-result-ad-marker"'));
+    // 삼성전자 요약은 첫 광고(CalcResultAd) 바로 아래 — 2026-10-05 운영자 승인 #6(11/1 재승인 B05). 광고 위로 되돌리면 여기서 잡힌다.
+    expect(samsung.indexOf('aria-labelledby="samsung-company-summary-title"')).toBeGreaterThan(samsung.indexOf('data-testid="calc-result-ad-marker"'));
     expect(toText(samsung)).toContain("삼성전자 연봉, 기준부터 확인하세요");
   });
 });

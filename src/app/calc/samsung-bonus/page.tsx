@@ -424,17 +424,8 @@ export default function SamsungBonusCalculatorPage() {
               세후 금액과 RSU 가치는 입력 조건에 따른 추정이며,
               회사의 개인별 지급 확정액은 아닙니다.
             </p>
-            <nav aria-label="삼성 성과급 계산기 바로가기" className="mt-5 flex flex-wrap justify-center gap-2">
-              <a href="#my-calc-title" className="inline-flex min-h-11 items-center rounded-xl bg-electric px-4 py-2 text-sm font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric">
-                내 연봉으로 바로 계산
-              </a>
-              <a href="#tai-title" className="inline-flex min-h-11 items-center rounded-xl border border-electric/30 px-4 py-2 text-sm font-bold text-electric focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric">
-                월 기본급으로 TAI 계산
-              </a>
-              <a href="#opi-actual-title" className="inline-flex min-h-11 items-center rounded-xl border border-electric/30 px-4 py-2 text-sm font-bold text-electric focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric">
-                지난 OPI 지급 이력
-              </a>
-            </nav>
+            {/* 페이지 안 바로가기(9/9·9/19 추가)는 모든 광고 위에 있어 첫 광고(SamsungBonusClient 의 HomeTopAd) 아래로 옮겼다
+                (2026-10-05 운영자 승인 #6). 히어로에 바로가기 줄을 다시 넣지 말 것. */}
             <div className="mt-4 flex justify-center"><FavoritesButton /></div>
           </header>
 

@@ -151,14 +151,7 @@ export default function HyundaiBonusPage() {
               <strong>성과금 400% + 정액 1,270만 + 주식 15주 + 복지포인트 50만</strong>{" "}
               합산 가치와 예상 공제액을 비교합니다. 주식·포인트 평가액이 포함되며 개인별 현금 입금액은 아닙니다.
             </p>
-            <nav aria-label="현대차 성과급 계산기 바로가기" className="mt-5 flex flex-wrap gap-3">
-              <a href="#hyundai-bonus-input" className="inline-flex min-h-11 items-center rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
-                내 월 기준금액으로 계산
-              </a>
-              <a href="#hyundai-agreement" className="inline-flex min-h-11 items-center rounded-xl border border-primary/30 px-4 py-2 text-sm font-bold text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
-                2026·2025 합의 항목 비교
-              </a>
-            </nav>
+            {/* 9/19 에 넣은 바로가기 버튼 줄은 첫 광고(CalcResultAd) 위라 광고 아래로 옮겼다(2026-10-05 운영자 승인 #6). 여기에 다시 넣지 말 것. */}
             <div className="mt-5">
               <ShareButtons title={PAGE_TITLE_FULL} description={PAGE_DESC} />
             </div>
@@ -171,6 +164,14 @@ export default function HyundaiBonusPage() {
             <CalcResultAd />
             <BonusNextLinks slug="hyundai-bonus" />
           </div>
+
+          {/* 페이지 안 바로가기 — 9/19 히어로(첫 광고 위)에 있던 버튼을 광고·다음 단계 링크 아래로 옮겼다(2026-10-05 운영자 승인 #6).
+              '2026·2025 합의 항목 비교'(#hyundai-agreement)는 바로 아래 섹션이 그 비교라 뺐다. 광고 위로 되돌리지 말 것. */}
+          <nav aria-label="현대차 성과급 계산기 바로가기" className="mt-5 flex flex-wrap gap-3">
+            <a href="#hyundai-bonus-input" className="inline-flex min-h-11 items-center rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
+              내 월 기준금액으로 계산
+            </a>
+          </nav>
 
           <section id="hyundai-agreement" className="mt-12 scroll-mt-28 rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8">
             <h2 className="text-2xl font-black mb-4">
