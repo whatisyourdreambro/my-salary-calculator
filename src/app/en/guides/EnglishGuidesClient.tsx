@@ -8,7 +8,6 @@ import GuideListingCard from "@/components/guides/GuideListingCard";
 import { HomeTopAd, InArticleAd, GuideMidAd } from '@/components/AdPlacement';
 import { filterAndSortGuides, readGuideSearchQuery, type GuideSortOrder } from '@/lib/guideDiscovery';
 import EnglishPageShell from '@/components/english/EnglishPageShell';
-import Link from '@/components/AppLink';
 
 type SortOption = GuideSortOrder;
 
@@ -63,7 +62,7 @@ export default function EnglishGuidesClient({ guides, categoriesEn }: { guides: 
 
  return (
  <EnglishPageShell eyebrow="Guides · Working in Korea" title="English pay, tax and money guides" description="Understand a payslip, read a bonus or stock-award notice and compare financial choices. These guides distinguish official facts, personal eligibility and illustrative calculations." breadcrumbs={[{ name: "Guides", href: "/en/guides" }]}>
- <p className="text-sm leading-7 text-muted-foreground">Read <Link href="/en/about" className="text-primary underline">how we check sources and review corrections</Link> alongside each guide’s dated references and assumptions.</p>
+ {/* 맨 위 HomeTopAd 위에 있던 소개 페이지 안내 문단(2026-10-19)은 뺐다 — 광고 위에 새 문단을 두지 말 것 (B12, 운영자 승인 2026-11-01) */}
  <div className="relative max-w-xl">
  <input
  type="text"

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import PageFooterAds from "@/components/PageFooterAds";
 import AutoShareSection from "@/components/AutoShareSection";
+import TopicNextSteps from "@/components/TopicNextSteps";
 import ReportDataLinks from "./ReportDataLinks";
 
 // /insights 인덱스 전용 메타데이터.
@@ -34,6 +35,10 @@ export default function InsightsLayout({
       <ReportDataLinks maxWidth="3xl" className="mt-6" />
       {/* 공유 fallback은 광고 아래 — 광고 밀림 방지 (2026-08-16 수익 대응) */}
       <AutoShareSection contentType="report" maxWidth="3xl" className="pb-16" />
+      {/* '이어서 확인할 내용' 상자 — 반드시 맨 끝(모든 광고·공유 아래 + 기존 형제의 자동광고 CSS 경로 불변).
+          2026-10-19 에 insights/page.tsx 의 <main> 끝에 들어가 PageFooterAds 를 밀던 것을 옮김(B12, 운영자 승인 2026-11-01).
+          usePathname 으로 고르며 /insights 만 맵에 있다 — 리포트 페이지(/insights/<slug>)는 null (TopicNextSteps.tsx) */}
+      <TopicNextSteps />
     </>
   );
 }

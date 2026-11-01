@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import EnglishLocaleSync from "./LocaleSync";
 import EnglishPageExtras from "@/components/english/EnglishPageExtras";
+import EnglishAfterAdsLinks from "@/components/english/EnglishAfterAdsLinks";
 
 export const metadata: Metadata = {
  manifest: "/manifest.en.webmanifest",
@@ -45,6 +46,9 @@ export default function EnglishLayout({
  <EnglishLocaleSync />
  {children}
  <EnglishPageExtras />
+ {/* 도구·도움말·소개 페이지의 다음 단계 링크 — 반드시 맨 끝(EnglishPageExtras 광고·공유 아래, B12 운영자 승인 2026-11-01).
+ 맵에 없는 경로는 null (EnglishAfterAdsLinks.tsx) */}
+ <EnglishAfterAdsLinks />
  </div>
  );
 }
