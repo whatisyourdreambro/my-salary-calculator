@@ -79,7 +79,15 @@ export const MILITARY_SAVINGS_2026 = {
   note: "매칭 지원금은 월급이 아니라 전역 시 일괄 수령",
 } as const;
 
-/** 교육공무원(유·초·중등 교원) 봉급표 2026 발췌 — [호봉, 월 봉급액]. 별표 11 */
+/**
+ * 교육공무원(유·초·중등 교원) 봉급표 2026 발췌 — [호봉, 월 봉급액]. 별표 11
+ * teacher-pay-2026 의 광고 위 요약표·메타·리드·인용 문구가 이 발췌표를 쓴다 — 1~40호봉으로 늘리지 말 것.
+ * 1~40호봉 전체는 별도 상수 TEACHER_PAY_FULL_2026(payTablesFull2026.ts, 인사혁신처 원문 HTML 파싱)이며
+ * teacher-pay-2026 맨 아래(마지막 본문 광고 아래) 접힌 상자가 쓴다 (B35, 운영자 승인 2026-11-01).
+ * 두 상수의 겹치는 칸은 같아야 한다(civilServantNetPay.test.ts·teacherPayFullTable.test.ts 가드).
+ * 법령 원문: 공무원보수규정 [별표 11] 유치원ㆍ초등학교ㆍ중학교ㆍ고등학교 교원 등의 봉급표
+ *   https://www.law.go.kr/LSW/lsBylInfoPLinkR.do?lsNm=공무원보수규정&bylNo=0011&bylBrNo=00&bylCls=BE&bylEfYdYn=Y
+ */
 export const TEACHER_PAY_ROWS_2026: ReadonlyArray<readonly [number, number]> = [
   [9, 2495600],
   [11, 2538300],
