@@ -58,19 +58,28 @@ describe("가이드 검색 응답의 색인 범위", () => {
     expect(enMetadata.robots).not.toMatchObject({ index: false });
   });
 
-  // 2026-11-01(G1): 검색 변형은 noindex 헤더에 더해 robots 크롤에서도 뺀다 — GSC 색인 보고서에
-  // 'canonical 대체' 84건·noindex 6건으로 크롤이 이어졌다. 허브·카테고리 허브·고유 글은 계속 연다.
-  // 경로별 판정은 robotsCrawlRules.test.ts 가 맡는다.
-  it("robots는 가이드 검색 변형 두 줄만 막고 허브·카테고리·고유 글 크롤은 유지한다", async () => {
+  // 2026-11-01(G1)·11-02(통합 수정): 검색 변형은 noindex 헤더에 더해 구글 크롤에서도 뺀다 — GSC 색인
+  // 보고서에 'canonical 대체' 84건·noindex 6건으로 크롤이 이어졌다. 승인 문구('구글 크롤에서 빼기')대로
+  // 구글 그룹만이고, 네이버(Yeti)·Bing·DuckDuckBot·* 는 예전처럼 검색 URL 을 크롤해 noindex 헤더를 읽는다.
+  // 허브·카테고리 허브·고유 글은 모든 그룹에서 계속 연다. 경로별 판정은 robotsCrawlRules.test.ts 가 맡는다.
+  it("robots는 구글 그룹에서만 가이드 검색 변형 두 줄을 막고 네이버·Bing·* 의 검색 URL 크롤은 유지한다", async () => {
     const rules = robots().rules;
     const groups = Array.isArray(rules) ? rules : [rules];
-    for (const ua of ["Googlebot", "Yeti", "*"]) {
+    const expected: Array<[string, string[]]> = [
+      ["Googlebot", ["/guides?q=", "/en/guides?q="]],
+      ["Googlebot-Image", ["/guides?q=", "/en/guides?q="]],
+      ["Yeti", []],
+      ["Bingbot", []],
+      ["DuckDuckBot", []],
+      ["*", []],
+    ];
+    for (const [ua, guideLines] of expected) {
       const rule = groups.find((g) => (Array.isArray(g.userAgent) ? g.userAgent : [g.userAgent]).includes(ua));
       expect(rule, ua).toBeDefined();
       expect(rule?.allow).toContain("/");
       const disallowed = [rule?.disallow ?? []].flat();
       expect(disallowed).not.toContain("/");
-      expect(disallowed.filter((path) => path.includes("guides") || path.includes("?q"))).toEqual(["/guides?q=", "/en/guides?q="]);
+      expect(disallowed.filter((path) => path.includes("guides") || path.includes("?q")), ua).toEqual(guideLines);
     }
   });
 });

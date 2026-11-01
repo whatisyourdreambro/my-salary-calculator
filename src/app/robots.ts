@@ -37,6 +37,11 @@ export default function robots(): MetadataRoute.Robots {
  // 때마다 측정 요청을 보내 크롤 몫의 약 1/3을 쓰고, 새 페이지 발견 크롤은 1%였다.
  // 측정은 본문 렌더링에 필요 없으므로 크롤만 막는다. AdsBot·Mediapartners 그룹은
  // '/' 허용 그대로라 광고 매칭에는 영향이 없다.
+ const corePathDisallow = ['/private/', '/api/', '/widget/', '/adgk/'];
+ // ↓ 구글 크롤러(Googlebot·Googlebot-Image·Googlebot-News) 그룹에만 붙는 세 줄 (G1, 2026-11-01 근거).
+ // 운영자 승인(2026-11-01 구글 개선 1번)이 '구글 크롤에서 빼기'라서 구글 그룹에만 둔다. 네이버(유입의
+ // 대부분)·Bing·Daum·DuckDuckBot·Applebot·기타(*) 그룹 줄은 그대로다 — 승인 범위 밖이고, 네이버 Yeti 가
+ // robots 의 '?' 패턴을 어떻게 읽는지 공개 자료도 없다(2026-11-02 통합 수정).
  // /?tab= = 홈 계산기 탭 주소(헤더 메뉴·홈 도구 카드·계산기 안내 링크·PWA 바로가기가 만든다).
  // 정적 HTML 은 홈과 같고 탭은 브라우저에서만 바뀌며 canonical 도 홈이다. GSC 크롤 통계
  // (2026-11-01)의 '새 주소 발견' 크롤 표본 894개 중 170개(19%)가 이 주소였다 — 적은 발견 몫을
@@ -47,7 +52,7 @@ export default function robots(): MetadataRoute.Robots {
  // 봇 대비로 그대로 둔다. 허브·글·/guides/category/…·?category= 는 접두사가 달라 열려 있다.
  // 막힌 주소가 URL 만 색인되는지는 GSC '차단되었지만 색인됨'으로 확인한다. 세 줄 모두
  // AdsBot·Mediapartners 그룹에는 없어 광고 매칭에는 영향이 없다.
- const corePathDisallow = ['/private/', '/api/', '/widget/', '/adgk/', '/?tab=', '/guides?q=', '/en/guides?q='];
+ const googleParamDisallow = ['/?tab=', '/guides?q=', '/en/guides?q='];
 
  return {
  rules: [
@@ -66,11 +71,19 @@ export default function robots(): MetadataRoute.Robots {
  // [2026-08-10] CF Workers 일 요청 한도 대응 — Crawl-delay를 존중하는
  // 봇(Bing·Naver·Daum)은 별도 그룹으로 분리해 크롤 속도 제한.
  // Google은 Crawl-delay를 무시하므로(자체 조절) 기존 그룹 유지.
+ // [2026-11-02] 구글 전용 세 줄(googleParamDisallow) 때문에 Google 그룹과 DuckDuckBot·Applebot
+ // 그룹을 나눴다. 두 그룹의 나머지 규칙은 같고, DuckDuckBot·Applebot 줄은 이전과 같다.
  {
  userAgent: [
  'Googlebot',
  'Googlebot-Image',
  'Googlebot-News',
+ ],
+ allow: corePathAllow,
+ disallow: [...corePathDisallow, ...googleParamDisallow],
+ },
+ {
+ userAgent: [
  'DuckDuckBot',
  'Applebot',
  ],
