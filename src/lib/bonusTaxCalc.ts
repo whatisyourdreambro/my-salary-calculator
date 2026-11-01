@@ -58,7 +58,40 @@ export function estimateAnnualIncomeTax2026(
   rates: InsuranceRates = INSURANCE_RATES_2026,
   insuredGross: number = grossSalary,
 ): number {
-  if (!Number.isFinite(grossSalary) || grossSalary <= 0) return 0;
+  return estimateAnnualIncomeTaxBreakdown2026(grossSalary, rates, insuredGross).determinedTax;
+}
+
+/** estimateAnnualIncomeTax2026 의 단계별 값 — /tools/finance/bonus 상세 내역용 */
+export interface AnnualIncomeTaxBreakdown2026 {
+  /** 근로소득공제 (§47) */
+  earnedIncomeDeduction: number;
+  /** 기본 인적공제 (§50) */
+  personalDeduction: number;
+  /** 연금보험료(§51의3) + 건강·장기요양·고용보험료(§52) 공제 */
+  insuranceDeduction: number;
+  /** 과세표준 */
+  taxBase: number;
+  /** 산출세액 (§55) */
+  calculatedTax: number;
+  /** 근로소득세액공제 (§59, 총급여 기준 한도) */
+  earnedIncomeTaxCredit: number;
+  /** 결정세액 = max(0, 산출세액 − 근로소득세액공제) — estimateAnnualIncomeTax2026 반환값과 같다 */
+  determinedTax: number;
+}
+
+/**
+ * estimateAnnualIncomeTax2026 과 같은 산식의 단계별 값.
+ * @param personalDeduction 기본 인적공제 합계 (원, 기본 = 본인 150만원). 배우자·부양가족이 있으면 1명당 150만원씩 더한다.
+ */
+export function estimateAnnualIncomeTaxBreakdown2026(
+  grossSalary: number,
+  rates: InsuranceRates = INSURANCE_RATES_2026,
+  insuredGross: number = grossSalary,
+  personalDeduction: number = 1_500_000,
+): AnnualIncomeTaxBreakdown2026 {
+  if (!Number.isFinite(grossSalary) || grossSalary <= 0) {
+    return { earnedIncomeDeduction: 0, personalDeduction: 0, insuranceDeduction: 0, taxBase: 0, calculatedTax: 0, earnedIncomeTaxCredit: 0, determinedTax: 0 };
+  }
   const insured = Number.isFinite(insuredGross) ? Math.max(0, insuredGross) : grossSalary;
   const pension =
     insured > 0
@@ -67,12 +100,23 @@ export function estimateAnnualIncomeTax2026(
       : 0;
   const healthAndCare = insured * rates.HEALTH_INSURANCE * (1 + rates.LONG_TERM_CARE_RATIO);
   const employment = insured * rates.EMPLOYMENT_INSURANCE;
+  const earned = earnedIncomeDeduction(grossSalary);
+  const personal = Number.isFinite(personalDeduction) ? Math.max(0, personalDeduction) : 1_500_000;
   const taxBase = Math.max(
     0,
-    grossSalary - earnedIncomeDeduction(grossSalary) - 1_500_000 - pension - healthAndCare - employment,
+    grossSalary - earned - personal - pension - healthAndCare - employment,
   );
   const calculatedTax = calcIncomeTax(taxBase);
-  return Math.max(0, calculatedTax - earnedIncomeTaxCredit2026(calculatedTax, grossSalary));
+  const earnedIncomeTaxCredit = earnedIncomeTaxCredit2026(calculatedTax, grossSalary);
+  return {
+    earnedIncomeDeduction: earned,
+    personalDeduction: personal,
+    insuranceDeduction: pension + healthAndCare + employment,
+    taxBase,
+    calculatedTax,
+    earnedIncomeTaxCredit,
+    determinedTax: Math.max(0, calculatedTax - earnedIncomeTaxCredit),
+  };
 }
 
 export interface BonusNetResult {

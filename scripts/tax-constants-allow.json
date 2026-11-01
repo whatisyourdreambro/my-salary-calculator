@@ -34,7 +34,7 @@
       "src/config/seasonLinks.ts": "푸터 링크 라벨 '2026 4대보험 요율' — 연도 페이지 링크",
       "src/lib/searchIndex.ts": "검색 항목 '2026 4대보험 요율' — 연도 페이지 링크",
       "src/lib/simpleCalculators/enrichments.ts": "earned-income-tax-quick 산식 설명 — 2026 간이세액표 근사라 2026 요율 고정(batch1 과 같음)",
-      "src/app/calc/vacation-pay/page.tsx": "메타 설명 '2026년 세법 적용' — 이 계산기는 4대보험 약 8.5% 고정 근사라 포인터 무관(설명 연도는 세법 연도 롤오버에서)",
+      "src/app/calc/vacation-pay/page.tsx": "메타 설명 '2026년 세법 적용' — 세법은 calcBonusNet 의 2026 연말정산 엔진(estimateAnnualIncomeTax2026)이라 연도 고정, 4대보험만 현행 포인터를 따른다(2026-10-05 code7-01 에서 고정 8.5% 근사를 calcBonusNet 으로 수렴. 설명 연도는 세법 연도 롤오버에서)",
       "src/app/tools/finance/dividend-tax/": "'2026 세법 기준' 배지 — 배당소득세, 4대보험 포인터 무관(세법 연도 롤오버에서 별도)",
       "src/app/tools/finance/freelance-tax/": "'2026 세법 기준' 배지 — 종합소득세(3.3%), 4대보험 포인터 무관",
       "src/app/tools/finance/severance/": "'2026 세법' 배지·퇴직소득세 설명 — 4대보험 포인터 무관",
