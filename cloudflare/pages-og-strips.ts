@@ -1,6 +1,7 @@
 // Bounded PNG encoder using independent, precompressed scanline
 // blocks. It performs no bitmap scan, runtime font parsing or compression.
-import type { OgContent } from './pages-og';
+// Build-time only since G2/PD-02: the Worker serves the PNGs it produced.
+import type { OgContent } from './pages-og-render';
 
 type Refs = { full: number[]; prefix: number[]; suffix: number[]; pillPrefix: number[]; pillSuffix: number[] };
 export interface StripConfig {

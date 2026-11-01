@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { normalizeOgParams, OG_CLIENT_CACHE_CONTROL, OgFontCache, serveCachedOgImage, type OgEdgeCache } from "@/lib/ogImageCache";
+import { normalizeOgParams, OG_CLIENT_CACHE_CONTROL, OG_PATH_KIND_PREFIXES, OgFontCache, ogPathKind, ogShareCardParams, serveCachedOgImage, type OgEdgeCache } from "@/lib/ogImageCache";
 import { OG_URL_VERSION, salaryOgImagePath } from "@/lib/ogUrlVersion";
 
 const image = (ttl = 86400) => new Response(new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10]), {
@@ -192,6 +192,50 @@ describe("salary card URLs (OG-03/OG-09)", () => {
     // Part-time payloads can give a fractional annual amount (monthly x 12).
     expect(salaryOgImagePath(24_000_000.5)).toBe(`/api/og?type=salary&amount=24000000&v=${OG_URL_VERSION}`);
     expect(salaryOgImagePath(50_000_000, 0)).not.toContain("net=");
+  });
+});
+
+// G2/PD-02: share buttons send ?path=<page>&lang=…; such a card draws only its kind's default card.
+describe("path-only cards collapse to a few prebuilt kind keys", () => {
+  const key = (query: string) => normalizeOgParams(new URLSearchParams(query)).toString();
+
+  it("replaces the path with its kind prefix, or drops it for the default card", () => {
+    expect(key("path=/guides/연봉-협상&lang=ko")).toBe("path=%2Fguides");
+    expect(key("path=/fun-any")).toBe("path=%2Ffun");
+    expect(key("path=/insights/top100&utm_source=kakao")).toBe("path=%2Finsights");
+    expect(key("path=/salary-db/compare/a-vs-b")).toBe("path=%2Fsalary-db");
+    expect(key("path=/calc/samsung-bonus&lang=ko")).toBe("");
+    expect(key("path=/en/guides/tax&lang=en")).toBe("lang=en");
+    expect(key("path=/guides/a&lang=en")).toBe("lang=en&path=%2Fguides");
+    expect(ogPathKind("/x/fun")).toBeNull();
+    expect(OG_PATH_KIND_PREFIXES).toEqual(["/fun", "/insights", "/guides", "/salary-db"]);
+  });
+
+  it("keeps the full path whenever text, a type or a salary value can change the card", () => {
+    for (const extra of ["title=제목", "name=회사", "type=guide", "amount=50000000", "net=3000000", "netPay=3000000"]) {
+      expect(new URLSearchParams(key(`path=/guides/a&${extra}`)).get("path"), extra).toBe("/guides/a");
+    }
+    // Dropped invalid values do not count: they never reached the renderer either.
+    expect(key("path=/guides/a&type=unknown&amount=NaN")).toBe("path=%2Fguides");
+  });
+
+  it("is idempotent, so both renderers pick the same branch from the collapsed key", () => {
+    for (const path of ["/", "/fun", "/funding", "/fun/x", "/insights/a", "/guides", "/guidesx", "/salary-db/a", "/salary/1", "/en/x", ""]) {
+      for (const lang of ["ko", "en"]) {
+        const once = normalizeOgParams(new URLSearchParams({ path, lang }));
+        expect(normalizeOgParams(once).toString()).toBe(once.toString());
+        expect(ogPathKind(once.get("path") ?? "")).toBe(ogPathKind(path));
+      }
+    }
+  });
+
+  it("lists every share-card key exactly once: default plus four kinds, Korean and English", () => {
+    const keys = ogShareCardParams().map((params) => params.toString());
+    expect(keys).toHaveLength(10);
+    expect(new Set(keys).size).toBe(10);
+    for (const query of ["path=/anything&lang=ko", "path=/fun/a&lang=ko", "path=/insights/a&lang=en", "path=/guides/a&lang=ko", "path=/salary-db/a&lang=en", "path=/en/a&lang=en"]) {
+      expect(keys).toContain(key(query));
+    }
   });
 });
 

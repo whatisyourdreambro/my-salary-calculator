@@ -131,6 +131,18 @@ describe("OG route input isolation before image rendering", () => {
     expect(text.join(" ")).not.toMatch(/qa-selector|NaN|Infinity/);
   });
 
+  // G2/PD-02: a path-only key collapses to its kind prefix before rendering; the Next route
+  // must still pick the same card as for the raw page path.
+  it.each([
+    ["/fun/example", "머니샐러리 · FUN"], ["/funding", "머니샐러리 · FUN"], ["/insights/example", "머니샐러리 데이터 리포트"],
+    ["/guides/example", "머니샐러리 · 금융 가이드"], ["/salary-db/example", "머니샐러리 · 회사별 연봉"],
+    ["/calc/samsung-bonus", "내 조건으로 비교하는 급여·금융 도구"],
+  ])("renders the %s path-only card of the same kind after the key collapse", async (path, label) => {
+    const text = await renderQuery({ path, lang: "ko" });
+    expect(text).toContain(label);
+    expect(text).toContain("연봉 실수령액 계산기");
+  });
+
   it.each(numericQueries)(
     "formats bounded numeric query %j as text only", async (query, annual, net) => {
       const text = await renderQuery(query);

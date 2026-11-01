@@ -39,9 +39,11 @@ function noAdTags(body) {
   }
 }
 
+let samsungOgImage = null;
 for (const route of ['/', '/calc/samsung-bonus', '/salary/50000000', '/salary-db/samsung-electronics', '/guides', '/en', '/en/guides']) {
   const html = await read(route);
   noAdTags(html.body());
+  if (route === '/calc/samsung-bonus') samsungOgImage = /<meta\b[^>]*\bproperty="og:image"[^>]*\bcontent="([^"]*)"/.exec(html.body())?.[1] ?? null;
   assert.equal(html.response.headers.get('x-content-type-options'), 'nosniff');
   assert.match(html.response.headers.get('content-security-policy') || '', /connect-src 'self'/);
   const flight = await read(route === '/' ? '/index.txt?_rsc=local-pages-qa' : route + '.txt?_rsc=local-pages-qa', { type: 'text/x-component', headers: { RSC: '1' } });
@@ -115,14 +117,26 @@ const invalidShare = await read('/share/not-valid'); privateResponse(invalidShar
 assert.match(invalidShare.body(), /data-pages-share-invalid="true"/);
 await read('/share/' + token + '.txt', { status: 404 });
 
-for (const query of ['title=Local%20QA', 'lang=en&title=Local%20QA', 'type=salary&amount=50000000&net=3500000',
-  'type=tool&name=' + encodeURIComponent('삼성 성과급 계산기 12,345,678원'), 'type=guide&title=Local%20QA',
-  'type=fun&title=Local%20QA', 'type=company&name=Local%20QA', 'type=report&title=Local%20QA']) {
-  const result = await read('/api/og?' + query, { type: 'image/png' });
-  assert.equal(result.response.headers.get('x-og-error'), null);
+// G2/PD-02: the Worker serves prebuilt OG cards only. A page og:image and every share button's
+// path-only card are prebuilt; any other parameter set gets the stage's generic fallback.png.
+const fallbackPng = readFileSync(path.join(stage, 'dist/_msy/og/v1/fallback.png'));
+async function ogCard(query, fallback) {
+  const result = await read('/api/og' + (query ? '?' + query : ''), { type: 'image/png' });
+  assert.equal(result.response.headers.get('x-og-error'), null, query);
   assert.deepEqual(result.bytes.subarray(0, 8), Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
   assert.equal(result.bytes.readUInt32BE(16), 1200); assert.equal(result.bytes.readUInt32BE(20), 630);
+  assert.equal(result.response.headers.get('x-og-fallback'), fallback ? 'not-prebuilt' : null, query);
+  assert.equal(result.response.headers.get('cache-control'), fallback ? 'public, max-age=300, s-maxage=300' : 'public, max-age=86400, s-maxage=86400', query);
+  assert.equal(result.bytes.equals(fallbackPng), fallback, query);
 }
+assert.ok(samsungOgImage, 'The Samsung calculator must declare an og:image');
+const samsungOg = new URL(samsungOgImage.replaceAll('&amp;', '&'));
+assert.equal(samsungOg.pathname, '/api/og');
+for (const query of [samsungOg.search.slice(1), '', 'path=' + encodeURIComponent('/guides/연봉') + '&lang=ko',
+  'path=%2Fsalary-db%2Fsamsung-electronics&lang=ko', 'path=%2Fen%2Fguides&lang=en']) await ogCard(query, false);
+for (const query of ['title=Local%20QA', 'lang=en&title=Local%20QA', 'type=salary&amount=50000000&net=1230000',
+  'type=tool&name=' + encodeURIComponent('삼성 성과급 계산기 12,345,678원'), 'type=guide&title=Local%20QA',
+  'type=fun&title=Local%20QA', 'type=company&name=Local%20QA', 'type=report&title=Local%20QA']) await ogCard(query, true);
 
 // Every finite export must survive the policy layer. Redirects are inspected once,
 // never followed. HEAD uses no browser, JS, image, font or analytics subrequests.

@@ -137,6 +137,7 @@ function cohort(change = () => {}, readAfter = async () => attestation()) {
         'cache-control': item.private ? 'private, no-store' : 'public, max-age=0', 'cf-cache-status': item.private ? 'DYNAMIC' : 'MISS' });
       if (item.private) headers.set('cdn-cache-control', 'no-store');
       if (item.robots) headers.set('x-robots-tag', item.robots);
+      if (item.ogFallback) headers.set('x-og-fallback', item.ogFallback);
       if (!item.staticAsset) headers.set('x-moneysalary-build', attestation().buildId);
       const output = { status: item.status, headers, body: item.png ? png : item.staticAsset ? sitemap : html(item) }; change(item, output, calls.length);
       return new Response(output.body, { status: output.status, headers });
@@ -159,6 +160,9 @@ test('wrong build, sitemap, private-cache HIT, broken share, PNG, noindex or wro
     (item, o, n) => { if (n === 12) o.headers.set('cf-cache-status', 'HIT'); },
     (item, o) => { if (item.shareToken) o.body = '<html>wrong title</html>'; },
     (item, o) => { if (item.png) { o.body = Buffer.from(png); o.body[40] ^= 1; } },
+    // G2/PD-02: a prebuilt card served as the fallback, or an unmarked fallback, fails the release.
+    (item, o) => { if (item.kind === 'prebuilt-og') o.headers.set('x-og-fallback', 'not-prebuilt'); },
+    (item, o) => { if (item.kind === 'fallback-og') o.headers.delete('x-og-fallback'); },
     (item, o) => { if (item.kind === 'home') o.body = o.body.replace('content="index, follow"', 'content="noindex, follow"'); },
     (item, o) => { if (item.kind === 'samsung-calculator') o.body = o.body.replace(`${ORIGIN}/calc/samsung-bonus"`, `${ORIGIN}/"`); },
   ]) {

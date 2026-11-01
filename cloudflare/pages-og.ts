@@ -1,49 +1,23 @@
-// Bounded precompressed PNG strip compositor: no font parser, JSX, CSS or WASM.
+// Worker /api/og: serves build-time PNGs only (G2/PD-02). No renderer, font or strip data is loaded,
+// so an image request never inflates data or draws text. Order: colo cache -> prebuilt asset -> fallback.
 import { normalizeOgParams, OG_CLIENT_CACHE_CONTROL, type OgEdgeCache } from '../src/lib/ogImageCache';
 import { CURRENT_RATES_YEAR } from '../src/config/currentRates';
-import { renderStripPng, type OgStripData } from './pages-og-strips';
 
 export interface PagesOgEnv {
   ASSETS: { fetch(request: Request): Promise<Response> };
-  OG_STRIPS?: OgStripData;
 }
 export const OG_ROOT = '/_msy/og/v1';
-// 20261101: runtime renders no longer draw caller title/name text (SEC-08). The new key
-// also retires colo copies of older runtime text renders, which the Cache API keeps 30 days.
-export const OG_VERSION = 'pages-strips-20261101-1';
+// 20261101-2: the Worker no longer renders (G2/PD-02). The new key also retires colo copies of earlier
+// runtime renders (kept 30 days by the Cache API), so a key the build does not prebuild reaches the fallback.
+export const OG_VERSION = 'pages-prebuilt-20261101-2';
+/** Generic card for every key the build does not prebuild, and for a missing or corrupt asset. */
+export const OG_FALLBACK_CACHE_CONTROL = 'public, max-age=300, s-maxage=300';
+/** X-OG-Fallback values: an unknown parameter set is expected; an asset failure also sets X-OG-Error. */
+export const OG_FALLBACK_NOT_PREBUILT = 'not-prebuilt';
+export const OG_FALLBACK_ASSET_ERROR = 'asset-error';
+const OG_STORED_CACHE_CONTROL = 'public, max-age=2592000';
+const MAX_PNG_BYTES = 2 * 1024 * 1024;
 const HEADERS = { 'Content-Type': 'image/png', 'X-Robots-Tag': 'noindex, noimageindex, nofollow', 'Cache-Control': OG_CLIENT_CACHE_CONTROL };
-type Kind = 'salary' | 'tool' | 'guide' | 'fun' | 'company' | 'report' | 'en' | 'default';
-export interface OgContent { kind: Kind; title: string; net?: string; label?: string }
-
-/** Same normalized branch priority/defaults as the existing Next OG handler. */
-export function resolveOgContent(input: URLSearchParams): OgContent {
-  const params = normalizeOgParams(input);
-  const type = params.get('type');
-  const title = params.get('title') || '연봉 실수령액 계산기';
-  if (params.get('lang') === 'en') return { kind: 'en', title: params.get('title') || 'Korea Salary Calculator' };
-  const salary = (amount: string) => {
-    const net = params.get('net') || params.get('netPay');
-    // Normalized nonnegative integers are <=100,000,000 manwon. Avoid loading ICU
-    // on the first request just to insert the same Korean thousands separators.
-    const format = (value: string) => {
-      const digits = String(Math.round(Number(value) / 10000));
-      const groups: string[] = [];
-      for (let end = digits.length; end > 0; end -= 3) groups.unshift(digits.slice(Math.max(0, end - 3), end));
-      return groups.join(',');
-    };
-    return { kind: 'salary' as const, title: `연봉 ${format(amount)}만원`,
-      ...(net ? { net: `월 ${format(net)}만원` } : {}), label: `${CURRENT_RATES_YEAR} 연봉 리포트` };
-  };
-  if (type === 'salary') return salary(params.get('amount') || '50000000');
-  if (type === 'tool' || type === 'company') return { kind: type, title: params.get('name') || title };
-  if (type === 'guide' || type === 'fun' || type === 'report') return { kind: type, title };
-  const amount = params.get('amount');
-  if (amount) return salary(amount);
-  const path = params.get('path') || '';
-  const kind = path.startsWith('/fun') ? 'fun' : path.startsWith('/insights') ? 'report'
-    : path.startsWith('/guides') ? 'guide' : path.startsWith('/salary-db') ? 'company' : 'default';
-  return { kind, title };
-}
 
 export async function ogImageKey(params: URLSearchParams): Promise<string> {
   const bytes = new TextEncoder().encode(`${OG_VERSION}|${CURRENT_RATES_YEAR}|${normalizeOgParams(params)}`);
@@ -74,24 +48,6 @@ async function boundedBody(response: Response, max: number): Promise<Uint8Array<
 
 const CRC_TABLE = new Uint32Array(256);
 for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; CRC_TABLE[n] = c; }
-/** Request rendering reads only already-initialized immutable ESM Data modules. */
-export async function renderPagesOg(params: URLSearchParams, env: PagesOgEnv): Promise<Uint8Array<ArrayBuffer>> {
-  if (!env.OG_STRIPS) throw new Error('OG strip Data modules are required');
-  return renderStripPng(resolveOgContent(params), env.OG_STRIPS);
-}
-
-/**
- * Only build-time renders draw page text (SEC-08). The build prebuilds every og:image,
- * twitter:image and JSON-LD image URL of the static export with its exact title, so a key
- * without an asset is no real page card: it gets the default card of its kind instead of
- * caller-supplied text on the MoneySalary design. Salary amounts and path/lang stay.
- */
-export function runtimeOgParams(params: URLSearchParams): URLSearchParams {
-  const safe = new URLSearchParams(params);
-  safe.delete('title');
-  safe.delete('name');
-  return safe;
-}
 
 function edgeCache(): OgEdgeCache | undefined {
   try { return (globalThis as typeof globalThis & { caches?: { default?: OgEdgeCache } }).caches?.default; } catch { return undefined; }
@@ -100,7 +56,7 @@ function edgeCache(): OgEdgeCache | undefined {
 /** Validate trusted build/cache bytes before advertising a long-lived image. */
 export function isValidPagesPng(png: Uint8Array): boolean {
   const signature = [137,80,78,71,13,10,26,10];
-  if (png.length < 100 || png.length > 2 * 1024 * 1024 || signature.some((v, i) => png[i] !== v)) return false;
+  if (png.length < 100 || png.length > MAX_PNG_BYTES || signature.some((v, i) => png[i] !== v)) return false;
   const view = new DataView(png.buffer, png.byteOffset, png.byteLength);
   let ihdr = false, palette = false, idat = false;
   for (let at = 8, count = 0; at < png.length && count < 100; count++) {
@@ -128,43 +84,47 @@ export function isValidPagesPng(png: Uint8Array): boolean {
   return false;
 }
 
+/** A 200 image/png response whose bounded body passes isValidPagesPng, or null for any other response. */
+async function validPng(response: Response): Promise<Uint8Array<ArrayBuffer> | null> {
+  if (response.status !== 200 || response.headers.get('Content-Type')?.split(';')[0] !== 'image/png') return null;
+  const body = await boundedBody(response, MAX_PNG_BYTES);
+  return isValidPagesPng(body) ? body : null;
+}
+
 export async function handlePagesOg(request: Request, env: PagesOgEnv): Promise<Response> {
   if (request.method !== 'GET' && request.method !== 'HEAD') return new Response(null, { status: 405, headers: { Allow: 'GET, HEAD', 'Cache-Control': 'no-store' } });
+  const head = request.method === 'HEAD';
   const url = new URL(request.url);
-  const params = normalizeOgParams(url.searchParams);
-  const key = await ogImageKey(params);
+  const key = await ogImageKey(normalizeOgParams(url.searchParams));
   const cache = edgeCache();
   const cacheKey = new Request(new URL(`${OG_ROOT}/images/${key}.png`, url.origin));
   try {
     const found = await cache?.match(cacheKey);
-    if (found?.status === 200 && found.headers.get('Content-Type') === 'image/png') {
-      const body = await boundedBody(found, 2 * 1024 * 1024);
-      if (isValidPagesPng(body)) return new Response(request.method === 'HEAD' ? null : body, { headers: { ...HEADERS, 'X-OG-Cache': 'HIT' } });
-    }
+    const image = found ? await validPng(found) : null;
+    if (image) return new Response(head ? null : image, { headers: { ...HEADERS, 'X-OG-Cache': 'HIT' } });
   } catch { /* Cache unavailability does not change the image. */ }
+  // Only a 404 means the build made no card for this key; any other answer is an asset failure.
+  let failed = false;
   try {
     const built = await env.ASSETS.fetch(new Request(cacheKey, { redirect: 'manual' }));
-    let image: Uint8Array<ArrayBuffer>;
-    if (built.status === 200 && built.headers.get('Content-Type')?.split(';')[0] === 'image/png') {
-      image = await boundedBody(built, 2 * 1024 * 1024);
-      if (!isValidPagesPng(image)) throw new Error('Corrupt OG build PNG');
-    } else image = await renderPagesOg(runtimeOgParams(params), env);
-    if (image.length < 100 || image[0] !== 137 || image[1] !== 80) throw new Error('Invalid OG PNG');
-    const response = new Response(image, { headers: { ...HEADERS, 'X-OG-Cache': cache ? 'MISS' : 'UNAVAILABLE' } });
-    try { await cache?.put(cacheKey, new Response(image, { headers: { ...HEADERS, 'Cache-Control': 'public, max-age=2592000' } })); } catch { /* Best effort only. */ }
-    return request.method === 'HEAD' ? new Response(null, response) : response;
-  } catch {
-    // A missing/corrupt build asset must not produce an empty long-lived 200 image.
-    try {
-      const fallback = await env.ASSETS.fetch(new Request(new URL(`${OG_ROOT}/fallback.png`, url.origin), { redirect: 'manual' }));
-      if (fallback.status === 200 && fallback.headers.get('Content-Type')?.split(';')[0] === 'image/png') {
-        const image = await boundedBody(fallback, 2 * 1024 * 1024);
-        if (!isValidPagesPng(image)) throw new Error('Corrupt OG fallback PNG');
-        return new Response(request.method === 'HEAD' ? null : image, { headers: { ...HEADERS,
-          'Cache-Control': 'public, max-age=300, s-maxage=300', 'X-OG-Error': 'OG asset unavailable' } });
+    if (built.status === 404) await built.body?.cancel().catch(() => {});
+    else {
+      const image = await validPng(built);
+      if (image) {
+        try { await cache?.put(cacheKey, new Response(image, { headers: { ...HEADERS, 'Cache-Control': OG_STORED_CACHE_CONTROL } })); } catch { /* Best effort only. */ }
+        return new Response(head ? null : image, { headers: { ...HEADERS, 'X-OG-Cache': cache ? 'MISS' : 'UNAVAILABLE' } });
       }
-    } catch { /* Fall through to a non-cacheable error. */ }
-    return new Response(request.method === 'HEAD' ? null : 'Failed to generate the image', { status: 503,
-      headers: { 'Cache-Control': 'no-store', 'X-Robots-Tag': HEADERS['X-Robots-Tag'] } });
-  }
+      failed = true;
+      await built.body?.cancel().catch(() => {});
+    }
+  } catch { failed = true; }
+  // Never stored in the colo cache: a later build that prebuilds this key must win within 300 s.
+  try {
+    const fallback = await validPng(await env.ASSETS.fetch(new Request(new URL(`${OG_ROOT}/fallback.png`, url.origin), { redirect: 'manual' })));
+    if (fallback) return new Response(head ? null : fallback, { headers: { ...HEADERS, 'Cache-Control': OG_FALLBACK_CACHE_CONTROL,
+      'X-OG-Fallback': failed ? OG_FALLBACK_ASSET_ERROR : OG_FALLBACK_NOT_PREBUILT, ...(failed ? { 'X-OG-Error': 'OG asset unavailable' } : {}) } });
+  } catch { /* Fall through to a non-cacheable error. */ }
+  // A missing/corrupt fallback must not produce an empty long-lived 200 image.
+  return new Response(head ? null : 'OG image unavailable', { status: 503,
+    headers: { 'Cache-Control': 'no-store', 'X-Robots-Tag': HEADERS['X-Robots-Tag'] } });
 }

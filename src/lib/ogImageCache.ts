@@ -29,6 +29,22 @@ export type OgEdgeCache = {
   put(request: Request, response: Response): Promise<void>;
 };
 
+/**
+ * Path prefixes that choose the card kind when no title/name/type/amount is given, in the order both
+ * renderers test them (src/app/api/og/route.tsx and the build-time cloudflare/pages-og-render.ts):
+ * fun, report, guide, company. Any other path draws the default card.
+ */
+export const OG_PATH_KIND_PREFIXES = ["/fun", "/insights", "/guides", "/salary-db"] as const;
+export type OgPathKind = (typeof OG_PATH_KIND_PREFIXES)[number];
+
+/** The kind prefix a path selects, or null for the default card. */
+export function ogPathKind(path: string): OgPathKind | null {
+  return OG_PATH_KIND_PREFIXES.find((prefix) => path.startsWith(prefix)) ?? null;
+}
+
+/** Inputs that make a card more than its path kind's default card. */
+const PATH_KIND_OVERRIDES = ["title", "name", "type", "amount", "net", "netPay"] as const;
+
 /** Only inputs that affect the rendered image participate in the cache key. */
 export function normalizeOgParams(input: URLSearchParams): URLSearchParams {
   const output = new URLSearchParams();
@@ -49,8 +65,27 @@ export function normalizeOgParams(input: URLSearchParams): URLSearchParams {
     // shared won-level URLs collapse onto one key without changing a single pixel.
     if (Number.isFinite(value) && value <= 1_000_000_000_000) output.set(key, String(Math.round(value / WON_UNIT) * WON_UNIT));
   }
+  // G2/PD-02: a path-only card (share buttons send ?path=<page>&lang=…) draws just its kind's default
+  // card, so the path becomes that kind's prefix, or disappears for the default card. Every share card
+  // then lands on one of a few prebuilt keys (ogShareCardParams) with exactly the same pixels.
+  const path = output.get("path");
+  if (path !== null && !PATH_KIND_OVERRIDES.some((key) => output.has(key))) {
+    const kind = ogPathKind(path);
+    if (kind) output.set("path", kind);
+    else output.delete("path");
+  }
   output.sort();
   return output;
+}
+
+/**
+ * Every key a share button's path-only card can normalize to: default plus the four path kinds, in
+ * Korean and English. The build prebuilds all of them (scripts/generate-pages-og.ts), since the
+ * Worker serves prebuilt cards only (G2/PD-02).
+ */
+export function ogShareCardParams(): URLSearchParams[] {
+  return (["ko", "en"] as const).flatMap((lang) =>
+    ["/", ...OG_PATH_KIND_PREFIXES].map((path) => normalizeOgParams(new URLSearchParams({ path, lang }))));
 }
 
 function runtimeCache(): OgEdgeCache | undefined {

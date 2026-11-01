@@ -21,6 +21,8 @@ const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
 const SHA = /^[a-f0-9]{40}$/, HASH = /^[a-f0-9]{64}$/;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const bounded = value => value === null ? null : String(value).replace(/[^\x20-\x7e]/g, '?').slice(0, 512);
+/** The /calc/samsung-bonus og:image (src/app/calc/samsung-bonus/page.tsx), which every build prebuilds. */
+export const PREBUILT_OG_ROUTE = '/api/og?type=tool&name=' + encodeURIComponent('삼성전자 성과급 계산기');
 
 export function assertPagesReleaseIdentity({ pins, marker, project, deployment }, now = Date.now()) {
   assert.match(pins?.deploymentId || '', UUID); assert.match(pins?.rollbackDeploymentId || '', UUID);
@@ -51,10 +53,12 @@ export function pagesReleaseCases() {
     doc('korean-404', '/not-a-pages-release-route', { status: 404, private: true, robots: 'noindex, nofollow' }),
   ];
   // indexable: self-canonical and no noindex, checked on the response already fetched (no extra request).
+  // G2/PD-02: the Worker serves prebuilt OG cards only. The Samsung calculator's og:image comes from its
+  // prebuilt asset; a parameter set no build generates gets the generic card marked X-OG-Fallback.
   const first = [doc('home', '/', { indexable: true }), { kind: 'sitemap', route: '/sitemap.xml', status: 200, type: 'xml', staticAsset: true },
     doc('samsung-calculator', '/calc/samsung-bonus', { indexable: true }), doc('salary', '/salary/50000000'), ...privateCases,
-    { kind: 'salary-og', route: '/api/og?type=salary&amount=58321000&net=4123400', status: 200, type: 'image/png', png: true },
-    { kind: 'company-og', route: '/api/og?type=company&name=Local%20release%20QA', status: 200, type: 'image/png', png: true }];
+    { kind: 'prebuilt-og', route: PREBUILT_OG_ROUTE, status: 200, type: 'image/png', png: true, ogFallback: null },
+    { kind: 'fallback-og', route: '/api/og?type=company&name=Local%20release%20QA', status: 200, type: 'image/png', png: true, ogFallback: 'not-prebuilt' }];
   const cases = [...first.map(item => ({ ...item, pass: 1 })), ...privateCases.map(item => ({ ...item, pass: 2 }))];
   assert.equal(cases.length, 16); assert.equal(new Set(first.map(item => item.route)).size, 11);
   for (const item of cases) {
@@ -155,7 +159,8 @@ export async function runPagesResponseContracts({ buildId, sitemapHash }, {
         build: bounded(response.headers.get('x-moneysalary-build')), cache: bounded(response.headers.get('cache-control')),
         cdnCache: bounded(response.headers.get('cdn-cache-control')), cfCacheStatus: bounded(response.headers.get('cf-cache-status')),
         age: bounded(response.headers.get('age')), ray: bounded(response.headers.get('cf-ray')),
-        robots: bounded(response.headers.get('x-robots-tag')), type: bounded(response.headers.get('content-type')) });
+        robots: bounded(response.headers.get('x-robots-tag')), type: bounded(response.headers.get('content-type')),
+        ...(item.png ? { ogFallback: bounded(response.headers.get('x-og-fallback')) } : {}) });
       persist(report);
       result.checkpoint = 'status-and-production-headers';
       assert.equal(response.status, item.status); assert.equal(response.headers.get('x-moneysalary-qa'), null);
@@ -168,7 +173,11 @@ export async function runPagesResponseContracts({ buildId, sitemapHash }, {
       result.checkpoint = 'bounded-response-body';
       const bytes = Buffer.from(await bodyGuard.readPagesQaBody(response, { kind: item.png ? 'png' : 'document', maxBytes: item.png ? 2 * 1024 * 1024 : 8 * 1024 * 1024 }));
       result.bytes = bytes.length; result.sha256 = sha(bytes);
-      if (item.png) { result.checkpoint = 'png-integrity'; assert.equal(response.headers.get('x-og-error'), null); assertReleasePng(bytes); }
+      if (item.png) {
+        result.checkpoint = 'og-source';
+        assert.equal(response.headers.get('x-og-error'), null); assert.equal(response.headers.get('x-og-fallback'), item.ogFallback);
+        result.checkpoint = 'png-integrity'; assertReleasePng(bytes);
+      }
       else if (item.staticAsset) { result.checkpoint = 'sitemap-hash'; assert.equal(result.sha256, sitemapHash); }
       else {
         result.checkpoint = 'html-contract';

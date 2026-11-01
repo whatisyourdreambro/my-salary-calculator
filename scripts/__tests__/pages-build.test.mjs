@@ -5,7 +5,7 @@ import { createRequire } from 'node:module';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { artifactHash, assertEnglishNotFoundDocument, BUILD_MARKER, canonicalPathname, checkAssetLimits, checkWorkerBundle, cleanBuildEnvironment,
+import { artifactHash, assertEnglishNotFoundDocument, assertPagesWorkerBundle, BUILD_MARKER, canonicalPathname, checkAssetLimits, checkWorkerBundle, cleanBuildEnvironment,
   PRODUCTION_AD_SLOTS,
   compileRoutingConfig, copyableSource, copySources, EXCLUDED_SOURCE_PATHS, inventoryHash, packageExport,
   loadPublicBuildSettings, PUBLIC_BUILD_CONFIG, QA_ASSETS_IGNORE, readPublicBuildConfiguration, resetOwnedStage,
@@ -18,15 +18,9 @@ const qaConfig = JSON.parse(readFileSync(new URL('../../wrangler.pages.qa.jsonc'
 const routing = { headers: [{ source: '/:path*', regex: '^/.*$', keys: ['path'], headers: [{ key: 'X-MoneySalary-QA', value: 'ads-disabled' }] }], redirects: [] };
 const write = (root, file, value = '') => { const target = path.join(root, file); mkdirSync(path.dirname(target), { recursive: true }); writeFileSync(target, value); };
 const english404Html = '<!doctype html><html lang="ko"><head><title>Page not found | Moneysalary</title><meta name="robots" content="noindex, nofollow"/></head><body><div data-page-state="not-found"><div lang="en" data-english-page="true"><h1>This English page could not be found</h1><a href="/en">English home</a><a href="/en/calculators">Calculators</a><a href="/en/guides">Guides</a></div></div></body></html>';
+// G2/PD-02: the Worker is the bundled index.js only; OG cards are prebuilt static assets.
 function moduleFixture(directory, entry) {
-  for (const name of OG_WORKER_MODULES.filter(name => name.endsWith('.bin')))
-    write(directory, `_worker.js/${name}`, Buffer.from([1, 2, 255]));
-  write(directory, '_worker.js/og/inflate.mjs', 'export const synthetic = true;');
-  write(directory, '_worker.js/og/config.mjs', 'export default { version: 1 };');
-  write(directory, '_worker.js/og/index.mjs', `import pool from './pool-00.bin';
-import small from './glyphs-36.bin'; import large from './glyphs-64.bin'; import config from './config.mjs';
-export const pagesOgData = { pool, small, large, config };`);
-  if (entry !== undefined) write(directory, '_worker.js/index.js', entry);
+  write(directory, '_worker.js/index.js', entry);
 }
 function qaModuleFixture(stage, entry) {
   moduleFixture(path.join(stage, 'dist'), entry);
@@ -53,7 +47,8 @@ function exportFixture(root) {
   write(root, '.next/server/app/widget/salary.meta', JSON.stringify({ status: 200, headers: {
     'content-type': 'text/html; charset=utf-8', 'content-security-policy': "default-src 'none'", 'x-next-cache-tags': 'internal', 'cache-control': 'public, max-age=300' } }));
   write(root, '.next/server/app/sitemap.xml.meta', JSON.stringify({ status: 200, headers: { 'content-type': 'application/xml' } }));
-  moduleFixture(path.join(root, 'out'));
+  write(root, 'out/_msy/og/v1/images/synthetic.png', Buffer.from([137, 80, 78, 71]));
+  write(root, 'out/_msy/og/v1/fallback.png', Buffer.from([137, 80, 78, 71]));
 }
 function productionEnv() {
   return Object.fromEntries(PRODUCTION_AD_SLOTS.map(slot => [`NEXT_PUBLIC_ADSENSE_SLOT_${slot}`, '1234567890']));
@@ -230,7 +225,19 @@ test('native export packages HTML/TXT without mutating originals or moving ordin
   assert.equal(readFileSync(path.join(stage, 'dist/.assetsignore'), 'utf8'), QA_ASSETS_IGNORE);
   assert.equal(manifest.publicAssets.some(file => file.startsWith('/_worker.js')), false);
   assert.equal(Object.keys(manifest.routes).some(file => file.startsWith('/_worker.js')), false);
-  assert.equal(workerModuleInventory(path.join(stage, 'dist'), { requireEntry: false }).length, 43);
+  // Prebuilt OG cards are private assets for the Worker's ASSETS reads, never public files or a module.
+  for (const file of ['_msy/og/v1/images/synthetic.png', '_msy/og/v1/fallback.png']) assert.equal(existsSync(path.join(stage, 'dist', file)), true, file);
+  assert.equal(manifest.publicAssets.some(file => file.startsWith('/_msy/')), false);
+  assert.equal(existsSync(path.join(stage, 'dist/_worker.js')), false);
+});
+
+test('packager refuses an export that carries private Worker modules (G2/PD-02)', t => {
+  for (const stale of ['_worker.js/og/pool-00.bin', '_worker.js/og/index.mjs', '_worker.js/index.js']) {
+    const stage = fixture(t); exportFixture(stage);
+    write(stage, `out/${stale}`, 'stale');
+    assert.throws(() => packageExport({ stage, mode: 'qa', routingConfig: routing, buildId: 'x' }), /must not contain private Worker modules/, stale);
+    assert.equal(existsSync(path.join(stage, 'dist/_worker.js')), false);
+  }
 });
 
 test('packager fails closed without both 404 routes and on private cache headers', t => {
@@ -307,20 +314,18 @@ test('QA config/options refuse remote bindings and install mandatory outbound de
   const converted = convertV4MiniflareOptions(options);
   assert.equal(converted.workers.length, 1);
   assert.equal(converted.workers[0].dev.outboundService.handler, deny);
-  assert.equal(options.modules.filter(module => module.type === 'Data').length, 40);
+  // G2/PD-02: one ES module, no OG Data modules.
+  assert.deepEqual(options.modules.map(module => [module.type, module.path]), [['ESModule', 'index.js']]);
   write(stage, 'dist/.assetsignore', '');
   assert.throws(() => qaMiniflareOptions(stage, qaConfig, 3320, deny), /private Worker/);
 });
 
-test('native Workerd imports Data modules, hides Worker assets and blocks outbound fetch', { timeout: 30000 }, async t => {
+test('native Workerd runs the one-module Worker, hides Worker assets and blocks outbound fetch', { timeout: 30000 }, async t => {
   const stage = path.join(fixture(t), '.pages-qa');
   write(stage, 'dist/_msy/doc/synthetic.body', 'static synthetic document');
-  qaModuleFixture(stage, `import { pagesOgData } from './og/index.mjs';
-  export default { async fetch(request, env) {
+  qaModuleFixture(stage, `export default { async fetch(request, env) {
     if (new URL(request.url).pathname === '/probe') return fetch('https://no-network.invalid/blocked');
-    if (new URL(request.url).pathname === '/data') return Response.json({
-      byte: new Uint8Array(pagesOgData.pool)[2], size: pagesOgData.small.byteLength + pagesOgData.large.byteLength,
-      version: pagesOgData.config.version });
+    if (new URL(request.url).pathname === '/env') return Response.json({ strips: 'OG_STRIPS' in env, assets: typeof env.ASSETS?.fetch });
     if (new URL(request.url).pathname.startsWith('/_worker.js')) return env.ASSETS.fetch(request);
     return env.ASSETS.fetch(new Request(new URL('/_msy/doc/synthetic.body', request.url)));
   } };`);
@@ -345,9 +350,9 @@ test('native Workerd imports Data modules, hides Worker assets and blocks outbou
     const assetBody = await response.text();
     assert.equal(response.status, 200, assetBody);
     assert.equal(assetBody, 'static synthetic document');
-    const data = await mf.dispatchFetch(`${base.origin}/data`);
-    assert.deepEqual(await data.json(), { byte: 255, size: 6, version: 1 });
-    const privateModule = await mf.dispatchFetch(`${base.origin}/_worker.js/og/pool-00.bin`);
+    const env = await mf.dispatchFetch(`${base.origin}/env`);
+    assert.deepEqual(await env.json(), { strips: false, assets: 'function' });
+    const privateModule = await mf.dispatchFetch(`${base.origin}/_worker.js/index.js`);
     assert.equal(privateModule.status, 404);
     await privateModule.arrayBuffer();
     const denied = await mf.dispatchFetch(`${base.origin}/probe`);
@@ -371,9 +376,10 @@ test('marker verification rejects changed assets, source and mode using complete
   assert.equal(verifyArtifact(root, 'qa').marker.buildId, 'synthetic');
   write(stage, 'dist/robots.txt', 'changed'); assert.throws(() => verifyArtifact(root, 'qa'), /stale/);
   write(stage, 'dist/robots.txt', 'User-agent: *');
-  write(stage, 'dist/_worker.js/og/pool-00.bin', Buffer.from([1, 2, 254]));
+  write(stage, 'dist/_worker.js/index.js', '// changed');
   assert.throws(() => verifyArtifact(root, 'qa'), /stale/);
-  write(stage, 'dist/_worker.js/og/pool-00.bin', Buffer.from([1, 2, 255]));
+  write(stage, 'dist/_worker.js/index.js', '// synthetic');
+  assert.equal(verifyArtifact(root, 'qa').workerModuleCount, 1);
   write(root, 'src/fixture.txt', 'changed'); assert.throws(() => verifyArtifact(root, 'qa'), /stale/);
 });
 
@@ -446,15 +452,32 @@ test('private Worker modules have a separate byte budget and an exact allowlist'
   // Module source exceeds this synthetic asset limit, but is never an asset.
   assert.equal(checkAssetLimits(dir, { files: 1, assetBytes: 5 }).assetCount, 1);
   const summary = checkWorkerBundle(dir);
-  assert.equal(summary.workerModuleCount, 44);
+  // G2/PD-02: index.js only (previously 44 modules, ~25.1 MB with OG strip Data modules).
+  assert.deepEqual([...OG_WORKER_MODULES], []);
+  assert.deepEqual(workerModuleInventory(dir).map(file => [file.relative, file.type]), [['index.js', 'ESModule']]);
+  assert.equal(summary.workerModuleCount, 1);
   assert.equal(PAGES_WORKER_LIMIT, 25 * 1024 * 1024);
   assert.equal(summary.workerHash.length, 64);
   assert.throws(() => checkWorkerBundle(dir, { workerBytes: summary.workerBytes - 1 }), /modules exceed/);
-  write(dir, '_worker.js/unreviewed.js', '// extra');
-  assert.throws(() => checkWorkerBundle(dir), /unreviewed/);
-  rmSync(path.join(dir, '_worker.js/unreviewed.js'));
-  rmSync(path.join(dir, '_worker.js/og/pool-00.bin'));
+  for (const extra of ['_worker.js/unreviewed.js', '_worker.js/og/pool-00.bin', '_worker.js/og/index.mjs']) {
+    write(dir, extra, '// extra');
+    assert.throws(() => checkWorkerBundle(dir), /unreviewed/, extra);
+    rmSync(path.join(dir, extra));
+  }
+  rmSync(path.join(dir, '_worker.js/index.js'));
   assert.throws(() => checkWorkerBundle(dir), /incomplete/);
+});
+
+test('the Worker bundle check refuses the build-time OG renderer, its data, Next/React and external modules', () => {
+  const clean = { inputs: { 'generated/pages-worker-entry.mjs': {}, 'cloudflare/pages-entry.ts': {}, 'cloudflare/pages-og.ts': {}, 'src/lib/ogImageCache.ts': {} },
+    outputs: { 'dist/_worker.js/index.js': { imports: [] } } };
+  assert.doesNotThrow(() => assertPagesWorkerBundle(clean));
+  for (const [input, message] of [['cloudflare/pages-og-render.ts', /build-time OG renderer/], ['cloudflare/pages-og-strips.ts', /build-time OG renderer/],
+    ['vendor/og-strips/config.json', /build-time OG renderer/], ['node_modules/next/dist/server/web/spec-extension/image-response.js', /Next\/OpenNext\/React/],
+    ['node_modules/react/index.js', /Next\/OpenNext\/React/]])
+    assert.throws(() => assertPagesWorkerBundle({ ...clean, inputs: { ...clean.inputs, [input]: {} } }), message, input);
+  assert.throws(() => assertPagesWorkerBundle({ ...clean, outputs: { 'dist/_worker.js/index.js': { imports: [{ path: './og/index.mjs', kind: 'import-statement', external: true }] } } }),
+    /one self-contained module: \.\/og\/index\.mjs/);
 });
 
 test('production packaging contains no QA asset configuration or marker', t => {
@@ -464,21 +487,20 @@ test('production packaging contains no QA asset configuration or marker', t => {
   assert.doesNotMatch(readFileSync(path.join(stage, 'dist/_headers'), 'utf8'), /ads-disabled/);
 });
 
-test('bundled wrapper preserves a real external Data module import and handler context', async t => {
+test('bundled wrapper is one self-contained module that keeps the handler, env and context unchanged', async t => {
   const stage = fixture(t);
+  assert.doesNotMatch(pagesWorkerEntrySource(), /og\/index\.mjs|OG_STRIPS|pagesOgData/);
   write(stage, 'generated/entry.mjs', pagesWorkerEntrySource());
   write(stage, 'cloudflare/pages-entry.ts', `export default { marker: 'handler', async fetch(request, env, context) {
-    return Response.json({ marker: this.marker, binding: env.syntheticBinding, data: env.OG_STRIPS.config.version, context: context.value });
+    return Response.json({ marker: this.marker, binding: env.syntheticBinding, strips: 'OG_STRIPS' in env, context: context.value });
   } };`);
   const esbuild = require('esbuild');
   const bundle = await esbuild.build({ absWorkingDir: stage, entryPoints: ['generated/entry.mjs'],
-    outfile: 'dist/_worker.js/index.js', external: ['./og/index.mjs'], bundle: true, format: 'esm', write: false, metafile: true });
-  const imports = Object.values(bundle.metafile.outputs).flatMap(output => output.imports);
-  assert.deepEqual(imports.map(({ path: file, external }) => ({ file, external })), [{ file: './og/index.mjs', external: true }]);
+    outfile: 'dist/_worker.js/index.js', bundle: true, format: 'esm', write: false, metafile: true });
+  assert.deepEqual(Object.values(bundle.metafile.outputs).flatMap(output => output.imports), []);
+  assert.doesNotThrow(() => assertPagesWorkerBundle(bundle.metafile));
   // Use an entirely synthetic in-memory module; no application code is evaluated.
-  const generated = bundle.outputFiles[0].text.replace(/import \{ pagesOgData \} from "\.\/og\/index\.mjs";/,
-    'const pagesOgData = {config: {version: 7}};');
-  const handler = (await import(`data:text/javascript;base64,${Buffer.from(generated).toString('base64')}`)).default;
+  const handler = (await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`)).default;
   const result = await handler.fetch(new Request('http://127.0.0.1/synthetic'), { syntheticBinding: 'retained' }, { value: 'retained' });
-  assert.deepEqual(await result.json(), { marker: 'handler', binding: 'retained', data: 7, context: 'retained' });
+  assert.deepEqual(await result.json(), { marker: 'handler', binding: 'retained', strips: false, context: 'retained' });
 });

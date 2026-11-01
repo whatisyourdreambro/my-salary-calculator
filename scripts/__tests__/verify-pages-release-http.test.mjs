@@ -7,7 +7,7 @@ import path from 'node:path';
 import { crc32, deflateSync } from 'node:zlib';
 import { configurationHash } from '../lib/pages-release.mjs';
 import { assertIndexableDocument, assertPagesPrivateCache, assertPagesReleaseIdentity, assertReleasePng, pagesReleaseCases,
-  readPagesReleasePins, readPagesReleaseState, resolvePagesReleaseReceiptDirectory,
+  PREBUILT_OG_ROUTE, readPagesReleasePins, readPagesReleaseState, resolvePagesReleaseReceiptDirectory,
   verificationReceipt, verifyPagesReleaseHttp, writeVerificationJson } from '../verify-pages-release-http.mjs';
 
 function context() {
@@ -62,6 +62,7 @@ function fixture(change = () => {}, after = async () => {}) {
     if (!item.staticAsset) headers.set('x-moneysalary-build', state.pins.buildId);
     if (item.private) headers.set('cdn-cache-control', 'no-store, private');
     if (item.robots) headers.set('x-robots-tag', item.robots);
+    if (item.ogFallback) headers.set('x-og-fallback', item.ogFallback);
     const output = { status: item.status, headers, body: item.png ? validPng : item.staticAsset ? sitemap : htmlFor(item) };
     change(item, output, calls.length);
     return new Response(output.body, { status: output.status, headers: output.headers });
@@ -139,6 +140,33 @@ test('share metadata, English 404 DOM, and corrupted PNGs are substantive respon
   }
   assert.doesNotThrow(() => assertReleasePng(validPng));
   const bad = Buffer.from(validPng); bad[0] = 0; assert.throws(() => assertReleasePng(bad));
+});
+
+// G2/PD-02: the Worker serves prebuilt OG cards only; an unknown parameter set gets the marked generic card.
+test('OG cases: the Samsung og:image must be prebuilt and an unknown parameter set must be the marked fallback', async () => {
+  const og = pagesReleaseCases().filter(item => item.png);
+  assert.deepEqual(og.map(item => [item.kind, item.pass, item.ogFallback]), [['prebuilt-og', 1, null], ['fallback-og', 1, 'not-prebuilt']]);
+  assert.equal(og[0].route, PREBUILT_OG_ROUTE);
+  assert.equal(new URL(PREBUILT_OG_ROUTE, 'https://www.moneysalary.com').searchParams.get('name'), '삼성전자 성과급 계산기');
+  // The prebuilt case must stay the page's real og:image; a changed page needs a reviewed contract update.
+  const page = readFileSync(new URL('../../src/app/calc/samsung-bonus/page.tsx', import.meta.url), 'utf8');
+  assert.ok(page.includes('ogImage: `${SITE_URL}/api/og?type=tool&name=${encodeURIComponent("삼성전자 성과급 계산기")}`'), 'Samsung og:image changed; update PREBUILT_OG_ROUTE');
+  for (const [kind, mutate] of [
+    ['prebuilt-og', headers => headers.set('x-og-fallback', 'not-prebuilt')],
+    ['fallback-og', headers => headers.delete('x-og-fallback')],
+    ['fallback-og', headers => headers.set('x-og-fallback', 'asset-error')],
+    ['prebuilt-og', headers => headers.set('x-og-error', 'OG asset unavailable')],
+    ['fallback-og', headers => headers.set('x-og-error', 'OG asset unavailable')],
+  ]) {
+    const f = fixture((item, output) => { if (item.kind === kind) mutate(output.headers); });
+    await assert.rejects(verifyPagesReleaseHttp(f.state, f.options));
+    const failed = f.reports.at(-1).results.at(-1);
+    assert.equal(failed.kind, kind); assert.equal(failed.checkpoint, 'og-source'); assert.equal(failed.contractFailed, true);
+    assert.equal(f.calls.length, kind === 'prebuilt-og' ? 10 : 11); assert.equal(f.checks(), 1);
+  }
+  const passed = fixture(); const report = await verifyPagesReleaseHttp(passed.state, passed.options);
+  assert.deepEqual(report.results.filter(row => row.kind.endsWith('-og')).map(row => [row.kind, row.ogFallback, row.checkpoint]),
+    [['prebuilt-og', null, 'passed'], ['fallback-og', 'not-prebuilt', 'passed']]);
 });
 
 test('home and Samsung calculator must stay indexable with one self-canonical; violations stop at that request', async () => {
