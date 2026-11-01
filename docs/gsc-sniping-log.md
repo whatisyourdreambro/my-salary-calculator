@@ -264,6 +264,9 @@ Breadcrumbs/speakable(온페이지) + 허브(/calc/bonus-calculators) 신설 + 2
 - 회사 쪽 430곳은 제목·설명·companyPageModified 가 모두 그대로다(B05 는 삼성전자 회사 요약·의견 폼, B11 은 LIG 사명 안내를 광고 아래로 옮긴 배치만).
 - 같은 단계 원장이 sitemap lastmod 를 2026-11-01 로 앞당긴 쪽은 제목이 그대로인 내용 변경이라 표를 두지 않는다: /calc/samsung-bonus (B28·B37) · /calc/bonus-home-plan (B28) · /year-end-tax-2027 · /year-end-tax-preview (B30) · /tax-reform-2026 (B43, 페이지 수정일 3곳 함께) · /calc/child-deduction (B09) · /en/guides (B12) · /credit-card-deduction-2026 · /medical-tax-credit-2026 · /rent-tax-credit-2026 (B30, 첫 원장 항목). /year-end-tax · /calc/dual-income-year-end · /donation-tax-credit-2026 은 이미 2026-11-01 이다(scripts/sitemap-content-reviews.json 사유 참조).
 
+**2단계 추기 — 2026-11-02 (OF2 S1 · 언론 표기 통일, append-only 라 위 줄은 고치지 않는다)**
+- /calc/samsung-bonus 검색 설명 한 글자 교체(초과이익성과금 → 초과이익성과급, 언론 표기) — 문장·길이 그대로, B37 판정 각주용: T1 = ____
+
 ## 2026-11-01 구글 크롤 진단과 12/1 결정 체크포인트 — 구글 전용 noindex 단계 (G5 · 운영자 11/1 '구글 개선' 승인 3번, append-only)
 
 근거는 저장소 밖 로컬 메모다(커밋하지 않음): `C:\Users\ruby1\AppData\Roaming\Claude\side-session-notes\local_c1cfc0c5-3cd7-490c-9d3d-c7984a4b5c9f\gsc-indexing-report-2026-11-01.md`. 11/1 분석 세션이 Search Console 관리 화면 읽기와 비렌더링 HTTP 확인만으로 만들었고, 운영 페이지를 화면으로 그리지 않았다. 11/2~11/6 색인 요청 순서표는 그 메모 4장에 있다.

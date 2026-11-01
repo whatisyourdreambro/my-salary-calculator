@@ -21,7 +21,7 @@ describe("삼성 성과급 검색 진입 설명", () => {
     expect(metadata.title).toMatchObject({ absolute: expect.stringContaining("삼성전자 성과급 계산기 2026") });
     expect(metadata.title).toMatchObject({ absolute: expect.stringContaining("OPI·OPI2 세후, TAI") });
     // 2026-11-01 운영자 승인 8번(B37): 10/19 에 빠진 앞머리 검색어를 되살리고 OPI1·OPI2 합산 세후 범위는 유지
-    expect(String(metadata.description).startsWith("삼성전자 OPI(초과이익성과금)·TAI(목표달성장려금) 계산기.")).toBe(true);
+    expect(String(metadata.description).startsWith("삼성전자 OPI(초과이익성과급)·TAI(목표달성장려금) 계산기.")).toBe(true);
     expect(metadata.description).toContain("기존 OPI1·DS 특별경영성과급(OPI2) 합산 세후 실수령액");
     expect(metadata.description).toContain("개인 지급 확정액은 아닙니다");
     expect(metadata.alternates?.canonical).toBe("https://www.moneysalary.com/calc/samsung-bonus");

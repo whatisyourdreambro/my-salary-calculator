@@ -71,7 +71,7 @@
 | X-05 | src/app/calc/sk-hynix-bonus/psData.ts PS_HISTORY · src/data/bonusData.ts(sk-hynix) | 2022년 PS 600% → 820%, 영업이익 6.8조 → 7.0조, 2024년 영업이익 23.4조 → 23.5조(H-13·H-14). bonusData sk-hynix year 2023 행 percentOfBase 600 → 820, year 2025 행 note "영업이익 23.4조" → 23.5조. 키퍼 본문은 bonusKeeperFigures PS_HISTORY_CORRECTIONS 로만 바로잡았다 — psData 를 고치면 guideCompanyBonusKeepers 테스트가 보정 항목을 지우라고 실패시킨다. 계산기 파일이라 운영자·통합 담당 승인 후 수정 |
 | X-06 | psData PI_2026.h1.paidDate · src/app/calc/sk-hynix-bonus/page.tsx FAQ("7월 28일 급여와 함께 지급됐습니다(복수 언론 보도)") · bonusData(sk-hynix 2026 PI note) · src/data/bonusCalcHub.ts(date 2026-07-28) | 2026년 상반기 PI 의 7/28 지급은 2026년 근거가 없다(이데일리 2025-07-23 은 2025년 상반기분). 2026년 보도는 파이낸셜뉴스 2026-07-26 "오는 30일 지급 예정", 150%는 "관측"(H-04). "확정"·"복수 언론" 표현도 근거 부족 |
 | X-07 | psData AGREEMENT_2026(oldSplit·appliesFrom) · /calc/sk-hynix-bonus 계산기·FAQ | 9/16 가결안의 2025년 실적분 이연 20% 2026년 선지급(H-03a)이 반영돼 있지 않다. 옛 방식 이연(2027·2028년 현금 10%p×2)을 그대로 안내하는 곳이 있으면 함께 고칠 것 |
-| X-08 | src/app/calc/samsung-bonus/page.tsx FAQ·본문 | 특별경영성과급 재원을 "영업이익의 10.5%"로 적었으나 보도는 "노사가 합의해서 선정한 사업성과"의 10.5%(H-16). OPI 명칭 "초과이익성과금"은 노조·보도 표기 "초과이익성과급"과 다르다(키퍼 본문은 성과급으로 통일) |
+| X-08 | src/app/calc/samsung-bonus/page.tsx FAQ·본문 | 특별경영성과급 재원을 "영업이익의 10.5%"로 적었으나 보도는 "노사가 합의해서 선정한 사업성과"의 10.5%(H-16). OPI 명칭 "초과이익성과금"은 노조·보도 표기 "초과이익성과급"과 다르다(키퍼 본문은 성과급으로 통일) → **명칭 해소(2026-11-02, OF2 S1)**: 사이트 전체를 언론 표기 "초과이익성과급"(OPI2 는 "특별경영성과급")으로 바꿨다(머니투데이 2026-01-16 https://www.mt.co.kr/industry/2026/01/16/2026011615081356804 · 한국경제 2026-10-07 https://www.hankyung.com/article/2026100792131) |
 | X-09 | 원장 A(docs/guides-facts-2026-10-A.md, G0 작업 트리) F-02 | psData 의 2022년 PS 600% 를 검증 없이 받았다. H-13(820%)으로 대체해야 한다 — 이 작업 트리에서는 원장 A 파일을 고치지 않는다 |
 
 ## Y. X-05·X-09 처리 (2026-09-26 배포 통합)

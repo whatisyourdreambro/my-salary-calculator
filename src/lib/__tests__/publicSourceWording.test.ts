@@ -281,3 +281,15 @@ describe("B28 광고 위 문구 — 2026-11-01 재확인한 공개 보도·정�
     }
   });
 });
+
+// 2026-11-02(OF2 S1): OPI·OPI2 명칭은 언론 표기 — '초과이익성과급(OPI)': 머니투데이 2026-01-16
+// https://www.mt.co.kr/industry/2026/01/16/2026011615081356804 , '특별경영성과급(OPI2)': 한국경제 2026-10-07
+// https://www.hankyung.com/article/2026100792131 . 금→급 한 글자 교체라 글자 폭이 같다.
+describe("OPI·OPI2 명칭 — 언론 표기", () => {
+  it("OPI·OPI2 표기는 언론 표기(초과이익성과급·특별경영성과급)", () => {
+    for (const bad of ["초과이익성과금", "특별경영성과금"]) {
+      expect(PAGE_FILES.filter((f) => visibleText(f).includes(bad)), bad).toEqual([]);
+      expect(BONUS_GUIDES.filter((g) => guideText(g).includes(bad)).map((g) => g.slug), bad).toEqual([]);
+    }
+  });
+});

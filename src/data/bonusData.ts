@@ -159,7 +159,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
     companyId: "samsung-electronics",
     calcSlug: "samsung-bonus",
     nameKo: "삼성전자",
-    scheme: "OPI(초과이익성과금)",
+    scheme: "OPI(초과이익성과급)",
     sourceFile: "src/app/calc/samsung-bonus/Client.tsx",
     payouts: [
       {

@@ -1227,7 +1227,7 @@ function MySalaryCalculator({
                 <span className="w-1 h-8 rounded-full bg-faint-blue/40" aria-hidden />
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-faint-blue">
-                    OPI1 · 기존 OPI(초과이익성과금)
+                    OPI1 · 기존 OPI(초과이익성과급)
                   </p>
                   <p className="text-[10px] text-faint-blue">
                     연봉 × {opi1Rate}% · 가정 조정 가능
@@ -1258,7 +1258,7 @@ function MySalaryCalculator({
                       className="text-[10px] font-bold uppercase tracking-[0.15em]"
                       style={{ color: "hsl(var(--link))" }}
                     >
-                      OPI2 · 특별경영성과금
+                      OPI2 · 특별경영성과급
                     </p>
                     <p className="text-[10px] text-faint-blue">
                       영업이익 기반 · 부문(40%) + 사업부(60%)
