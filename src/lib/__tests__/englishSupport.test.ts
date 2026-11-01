@@ -83,7 +83,10 @@ describe("safe saved page records", () => {
     expect(parseFavorites({ path: "/en" })).toEqual([]);
   });
   it("does not render a save control for unresolved or private pages", () => {
-    expect(renderToStaticMarkup(createElement(FavoritesButton, { locale: "en" }))).toBe("");
+    // OPP-21: an unresolved page reserves the same box with an inert, hidden, disabled placeholder — never an actionable control.
+    const unresolved = renderToStaticMarkup(createElement(FavoritesButton, { locale: "en" }));
+    expect(unresolved).toMatch(/^<button type="button" disabled="" tabindex="-1" aria-hidden="true" data-cls-reserve="favorites" class="[^"]* invisible">/);
+    expect(unresolved).not.toContain("aria-pressed");
     expect(renderToStaticMarkup(createElement(FavoritesButton, { path: "/en/contact", locale: "en" }))).toBe("");
     expect(renderToStaticMarkup(createElement(FavoritesButton, { path: "/en/tools/loan", title: "Loan", locale: "en" }))).toContain("Save page to favorites");
   });

@@ -57,6 +57,17 @@ export function isSharePageReady(context: SharePageContext | null, pathname: str
   return !!pageUrl && !!canonicalUrl && canonicalUrl === pageUrl;
 }
 
+/**
+ * head 를 아직 한 번도 읽지 못한 상태 — SSR·하이드레이션 첫 렌더(스냅숏 null).
+ * 인라인 공유·즐겨찾기 버튼이 이 동안 같은 크기의 보이지 않는 자리만 잡는 데 쓴다(OPP-21, 화면 밀림 방지).
+ * 스냅숏이 한 번이라도 생기면(클라이언트 구독 직후) 대기가 아니다 — 경로·정본이 끝내 안 맞는 쪽에
+ * 보이지 않는 자리가 남지 않고 종전처럼 '없음'이 된다. 결과가 항상 '없음'인 경로(공유 제외·공개 URL 불가)도 대기가 아니다.
+ */
+export function isSharePageContextPending(context: SharePageContext | null, pathname: string): boolean {
+  if (context || isShareExcludedPath(pathname) || !publicShareUrl(pathname)) return false;
+  return true;
+}
+
 export function resolvePublicShare(
   context: SharePageContext,
   overrides: { url?: string; title?: string; description?: string; imageUrl?: string; locale?: ShareLocale } = {},

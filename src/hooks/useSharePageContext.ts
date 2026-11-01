@@ -2,7 +2,7 @@
 
 import { useEffect, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
-import { isSharePageReady, type SharePageContext } from "@/lib/sharePolicy";
+import { isSharePageContextPending, isSharePageReady, type SharePageContext } from "@/lib/sharePolicy";
 
 let snapshot: SharePageContext | null = null;
 const listeners = new Set<() => void>();
@@ -41,10 +41,15 @@ function subscribe(listener: () => void) {
   };
 }
 
-/** SSR and the first hydration render both omit share controls until route/head agree. */
+/**
+ * SSR and the first hydration render both omit share controls until route/head agree.
+ * pending: head 를 아직 읽지 못한 동안 true — 인라인 버튼이 같은 크기의 보이지 않는 자리만 잡는다(OPP-21).
+ * context 판정은 종전과 같다(pending 은 추가 신호일 뿐, 이를 읽지 않는 호출부는 동작 불변).
+ */
 export function useSharePageContext() {
   const pathname = usePathname() ?? "/";
   const context = useSyncExternalStore(subscribe, () => snapshot, () => null);
   useEffect(refresh, [pathname]);
-  return { pathname, context: isSharePageReady(context, pathname) ? context : null };
+  const ready = isSharePageReady(context, pathname);
+  return { pathname, context: ready ? context : null, pending: !ready && isSharePageContextPending(context, pathname) };
 }
