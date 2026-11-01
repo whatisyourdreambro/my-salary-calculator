@@ -34,6 +34,19 @@ test('runtime, devOptional, severe, unreviewed and unknown-node advisories still
   assert.deepEqual(classifyAdvisories({ vulnerabilities: {} }, lock(), '2026-11-01').blocked, []);
 });
 
+test('unreviewed dev-only advisories block at every tolerable severity (owner decision 2026-11-01, no auto-warn)', () => {
+  for (const severity of ['info', 'low', 'moderate']) {
+    const result = classifyAdvisories(audit(severity, 'GHSA-zzzz-zzzz-zzzz'), lock(), '2026-11-01');
+    assert.deepEqual(result.blocked.map(a => a.name).sort(), ['eslint', 'minimatch'], severity);
+    assert.deepEqual(result.accepted, [], severity);
+  }
+  const noEntries = classifyAdvisories(audit(), lock(), '2026-11-01', []);
+  assert.equal(noEntries.blocked.length, 2);
+  assert.deepEqual(noEntries.accepted, []);
+  const otherPackage = audit(); otherPackage.vulnerabilities.minimatch.via[0].name = 'brace-expansion';
+  assert.equal(classifyAdvisories(otherPackage, lock(), '2026-11-01').blocked.length, 2);
+});
+
 test('every reviewed entry is specific, justified and expires within 183 days of review', () => {
   assert.ok(REVIEWED_DEV_ADVISORIES.length <= 5);
   for (const entry of REVIEWED_DEV_ADVISORIES) {
