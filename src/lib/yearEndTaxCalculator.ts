@@ -7,6 +7,8 @@
 // 보장성보험 100만원 한도·출산입양 30/50/70만원·혼인 50만원·고향사랑·교육비 1명당 한도를 반영했다.
 // 2026-11-01: 표준세액공제(소득세법 §59의4⑨1, 연 13만원) 방식과 특별공제 방식의 결정세액을 비교해
 // 낮은 쪽을 쓴다 (종전에는 특별공제 방식만 계산해 저소득 1인의 결정세액이 과대했다).
+// 2026-11-01 B24 (YE-03): /year-end-tax 접힌 아코디언에 입력란이 생긴 주택청약(총급여 7천만원 이하만,
+// 조특법 §87②)과 그 밖의 부양가족 의료비(3% 초과분 연 700만원 한도, 소득세법 §59의4②1)를 조문대로 계산한다.
 
 import {
   earnedIncomeDeduction2026,
@@ -23,6 +25,7 @@ import {
   BIRTH_CREDIT_2026,
   MARRIAGE_CREDIT_2026,
   STANDARD_TAX_CREDIT_2026,
+  HOUSING_SUBSCRIPTION_DEDUCTION_2026,
 } from "@/lib/taxConstants2026";
 import { calcCardDeduction2026 } from "@/lib/cardDeduction2026";
 import { calcDonationCredit2026 } from "@/lib/donationCredit";
@@ -42,7 +45,7 @@ export interface TaxInputs {
  disabledDependents: number; // 장애인 수
  seniorDependents: number; // 70세 이상 경로자 수
 
- housingSubscription: number; // 주택청약저축 납입액
+ housingSubscription: number; // 주택청약종합저축 납입액 (조특법 §87② — 총급여 7천만원 이하, 연 300만원 한도 40%)
  /**
   * @deprecated 계산에 쓰지 않는다. 장기주택저당차입금 이자상환액 소득공제(소득세법 §52⑤)는
   * 상환기간·고정금리·비거치 여부별 한도를 가르는 입력이 없어 엔진이 다루지 않는다. 종전에는 필드만
@@ -56,6 +59,11 @@ export interface TaxInputs {
  debitCardAndCash: number; // 체크카드 및 현금영수증 사용액
  traditionalMarket: number; // 전통시장 사용액
  publicTransport: number; // 대중교통 사용액
+ /**
+  * 문화·체육 사용액 (도서·신문·공연·박물관·미술관·영화관·체육시설 — 조특법 §126의2②3, 30%). 총급여 7천만원
+  * 초과는 공제 대상이 아니다(cardDeduction2026 이 0 으로 본다). 선택 입력이라 넘기지 않는 호출부는 종전과 같다.
+  */
+ culture?: number;
 
  // 세액공제 항목
  children: number; // 기존 카드공제 한도 산정 인원. 연간 자녀세액공제·월 원천징수 인원과 별도.
@@ -78,7 +86,17 @@ export interface TaxInputs {
  irp: number; // IRP 납입액
 
  lifeInsurance: number; // 보장성 보험료 (일반, 연 100만원 한도 12%)
- medicalExpenses: number; // 의료비
+ /**
+  * 의료비 — 본인·6세 이하·65세 이상·장애인·중증질환자 등(소득세법 §59의4②2, 한도 없음).
+  * 대상을 나누지 않는 호출부(/calc/january-bonus)는 종전대로 이 칸에 합계를 넘긴다.
+  */
+ medicalExpenses: number;
+ /**
+  * 의료비 — 그 밖의 기본공제대상자(§59의4②1). 총급여 3% 문턱을 이 금액에서 먼저 빼고, 남은 금액은
+  * 연 700만원(MEDICAL_CREDIT_2026.DEPENDENT_CAP)까지만 공제 대상이다. 문턱에 못 미친 만큼은 medicalExpenses 에서 뺀다.
+  * /year-end-tax 의 '그 밖의 부양가족' 입력과 /calc/dual-income-year-end 의 부부 상호 의료비가 이 칸을 쓴다.
+  */
+ medicalExpensesGeneral?: number;
  educationExpenses: number; // 교육비 (구분 없는 합계 — 한도 미적용, 종전 동작 유지)
  /** 교육비 — 취학 전 아동·초중고생 지출 합계. 1명당 연 300만원 × educationChildSchoolCount 까지 */
  educationChildSchool?: number;
@@ -125,7 +143,7 @@ export interface TaxResult {
  cardDeduction: number;
  /** 연금계좌 세액공제 (§59의3, 연금저축 600만·합산 900만원 한도) — 두 방식 공통 */
  pensionAccountCredit: number;
- /** 의료비 세액공제 (§59의4②) — 특별세액공제라 표준세액공제 방식을 고르면 0 */
+ /** 의료비 세액공제 (§59의4②, 본인 등 + 그 밖의 부양가족 700만원 한도분 합계) — 특별세액공제라 표준세액공제 방식을 고르면 0 */
  medicalCredit: number;
  /** 고향사랑기부금 세액공제 (조특법 §58) — 두 방식 공통 */
  hometownCredit: number;
@@ -159,8 +177,13 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  inputs.healthInsurance +
  inputs.employmentInsurance;
 
+ // 주택청약종합저축 소득공제 (조특법 §87②) — 총급여 7천만원 이하 무주택 세대주(배우자 포함)만,
+ // 연 300만원 한도 40%. 종전에는 총급여 요건 없이 리터럴로 계산했다 (화면에 입력란이 없어 늘 0 이었음, 2026-11-01 B24)
  const housingSubscriptionDeduction =
- Math.min(inputs.housingSubscription, 3000000) * 0.4;
+ grossSalary > HOUSING_SUBSCRIPTION_DEDUCTION_2026.SALARY_CAP
+ ? 0
+ : Math.min(Math.max(0, inputs.housingSubscription), HOUSING_SUBSCRIPTION_DEDUCTION_2026.LIMIT) *
+ HOUSING_SUBSCRIPTION_DEDUCTION_2026.RATE;
 
  // 카드공제 — 정밀 계산기와 동일한 공유 모듈 (결제수단별 15/30/40%·
  // 자녀 한도 상향·전통시장/대중교통 추가한도. 2026-08-23 간소화판 대체)
@@ -171,6 +194,7 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  checkCash: inputs.debitCardAndCash,
  traditionalMarket: inputs.traditionalMarket,
  publicTransport: inputs.publicTransport,
+ culture: inputs.culture,
  }).finalDeduction;
 
  const totalIncomeDeduction =
@@ -220,9 +244,20 @@ export function calculateYearEndTax(inputs: TaxInputs): TaxResult {
  const insuranceCredit =
  Math.min(Math.max(0, inputs.lifeInsurance), INSURANCE_CREDIT_2026.LIMIT) *
  INSURANCE_CREDIT_2026.RATE;
- const medicalCredit =
- Math.max(0, inputs.medicalExpenses - grossSalary * MEDICAL_CREDIT_2026.THRESHOLD_RATIO) *
- MEDICAL_CREDIT_2026.RATE;
+ // 의료비 세액공제 (소득세법 §59의4②) — 총급여 3% 문턱은 그 밖의 부양가족 의료비(제1호)에서 먼저 빼고,
+ // 그 남은 금액은 연 700만원까지. 문턱에 못 미친 만큼은 본인·6세 이하·65세 이상·장애인 의료비(제2호)에서 뺀다.
+ // medicalExpensesGeneral 이 없으면 종전 식(max(0, 의료비 − 3%) × 15%)과 같다.
+ const medicalThreshold = grossSalary * MEDICAL_CREDIT_2026.THRESHOLD_RATIO;
+ const medicalGeneral = Math.max(0, inputs.medicalExpensesGeneral ?? 0);
+ const medicalGeneralBase = Math.min(
+ Math.max(0, medicalGeneral - medicalThreshold),
+ MEDICAL_CREDIT_2026.DEPENDENT_CAP
+ );
+ const medicalSpecialBase = Math.max(
+ 0,
+ Math.max(0, inputs.medicalExpenses) - Math.max(0, medicalThreshold - medicalGeneral)
+ );
+ const medicalCredit = (medicalGeneralBase + medicalSpecialBase) * MEDICAL_CREDIT_2026.RATE;
  // 교육비 세액공제 (소득세법 §59의4③) — 취학 전·초중고 1명당 300만·대학생 900만·본인 한도 없음.
  // 구분 없는 educationExpenses 는 종전대로 한도 없이 15% (/calc/dual-income-year-end 호환)
  const educationBase =

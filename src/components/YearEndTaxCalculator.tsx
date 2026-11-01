@@ -11,7 +11,20 @@ import {
  TaxInputs,
  TaxResult,
 } from "@/lib/yearEndTaxCalculator";
-import { PENSION_ACCOUNT_CREDIT_2026 } from "@/lib/taxConstants2026";
+import {
+ BIRTH_CREDIT_2026,
+ CHILD_TAX_CREDIT_2026,
+ childTaxCredit2026,
+ EDUCATION_CREDIT_2026,
+ HOUSING_SUBSCRIPTION_DEDUCTION_2026,
+ INSURANCE_CREDIT_2026,
+ MARRIAGE_CREDIT_2026,
+ MEDICAL_CREDIT_2026,
+ PENSION_ACCOUNT_CREDIT_2026,
+ RENT_CREDIT_2026,
+} from "@/lib/taxConstants2026";
+import { CARD_EXTRA_LIMIT_2026, CARD_RATES_2026, CARD_SALARY_THRESHOLD } from "@/lib/cardDeduction2026";
+import { formatManwonKorean } from "@/lib/manwonFormat";
 import NumberStepper from "./NumberStepper";
 import { ChevronDown } from "lucide-react";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
@@ -145,9 +158,84 @@ const OptimizationSlider = ({
  );
 };
 
+// ── 접힌 아코디언 2·3 안의 추가 입력 (2026-11-01 B24 YE-03·STR-10, 2026-09-26 W2-A 90f1359d3 포팅) ──────────
+// 페이지 설명이 약속한 의료비 등과 전통시장·대중교통·문화·체육·주택청약·보장성보험·교육비·월세·자녀·출산·혼인 입력.
+// 아코디언 2·3 은 기본으로 접혀 있어 새 입력은 펼친 뒤에만 그려진다 — 기본 상태의 서버 렌더는 포팅 전
+// (origin/main 3b49d42e5)과 바이트 동일하다(HomeTopAd~InArticleAd 사이 높이 불변, yearEndTax2026Engine.test.ts
+// 고정본 대조). 안내 문구의 한도·공제율은 전부 정본 상수에서 만든다(리터럴 금지).
+// 입력 컴포넌트(IncomeDeductionExtraFields·TaxCreditExtraFields)는 이 파일 맨 아래에 둔다 — 시뮬레이터의
+// 연금계좌 선택 상자가 파일의 첫 선택 상자여야 하는 계측 회귀 가드(seasonCalcMeasurement.test.ts)를 지킨다.
+
+/** 원 → "300만원" · "7,000만원" */
+const man = (won: number) => formatManwonKorean(won / 10_000);
+/** 0.4 → "40%" */
+const pct = (rate: number) => `${Number((rate * 100).toFixed(1))}%`;
+/** "2026-12-31" → "2026년 12월 31일" */
+const koreanDate = (iso: string) => {
+ const [y, m, d] = iso.split("-").map(Number);
+ return `${y}년 ${m}월 ${d}일`;
+};
+const won = (value: number | undefined) => (value ?? 0).toLocaleString('ko-KR');
+
+/**
+ * 새 입력란의 한도 안내 한 줄 — 근거: 소득세법 §59의2(자녀·출산입양, 연령은 법률 제21548호 부칙 제2조)·
+ * §59의4(보장성보험·의료비·교육비), 조특법 §87②(주택청약)·§92(혼인)·§95의2(월세)·§126의2(전통시장·대중교통·
+ * 문화·체육 — 문화·체육은 총급여 7천만원 이하만, 추가 한도 300만원을 전통시장·대중교통과 함께 쓴다).
+ * 고향사랑·정치자금 기부는 이 화면이 다루지 않는다(기부금 칸 안내대로 /donation-tax-credit-2026).
+ */
+export const YEAR_END_FIELD_TIPS = {
+ traditionalMarket: `공제율 ${pct(CARD_RATES_2026.TRADITIONAL)} · 카드 기본 한도를 넘으면 대중교통과 합산해 추가 ${man(CARD_EXTRA_LIMIT_2026.LOW_SALARY)}(총급여 ${man(CARD_SALARY_THRESHOLD)} 초과 ${man(CARD_EXTRA_LIMIT_2026.HIGH_SALARY)})까지`,
+ publicTransport: `공제율 ${pct(CARD_RATES_2026.TRANSIT)} · 추가 한도는 전통시장과 합산`,
+ culture: `공제율 ${pct(CARD_RATES_2026.CULTURE)} · 총급여 ${man(CARD_SALARY_THRESHOLD)} 이하만 · 추가 한도는 전통시장·대중교통과 합산`,
+ housingSubscription: `무주택 세대주(배우자 포함)·총급여 ${man(HOUSING_SUBSCRIPTION_DEDUCTION_2026.SALARY_CAP)} 이하 · 연 ${man(HOUSING_SUBSCRIPTION_DEDUCTION_2026.LIMIT)} 한도 납입액의 ${pct(HOUSING_SUBSCRIPTION_DEDUCTION_2026.RATE)} 소득공제`,
+ lifeInsurance: `연 ${man(INSURANCE_CREDIT_2026.LIMIT)} 한도 · ${pct(INSURANCE_CREDIT_2026.RATE)} 세액공제`,
+ children: `2026년 귀속 9세 이상·2017년생 제외 · 부양가족에 자동 포함 · 1명 ${man(childTaxCredit2026(1))} · 2명 ${man(childTaxCredit2026(2))} · 3명부터 1명당 ${man(CHILD_TAX_CREDIT_2026.THIRD_PLUS)} 추가`,
+ birth: "자녀세액공제와 별도 · 부양가족에 자동 포함",
+ marriage: `생애 1회 ${man(MARRIAGE_CREDIT_2026.AMOUNT)} · 부부 각각 (${koreanDate(MARRIAGE_CREDIT_2026.REGISTERED_UNTIL)} 신고분까지)`,
+ medicalSpecial: `총급여 ${pct(MEDICAL_CREDIT_2026.THRESHOLD_RATIO)} 초과분의 ${pct(MEDICAL_CREDIT_2026.RATE)} · 한도 없음`,
+ medicalGeneral: `총급여 ${pct(MEDICAL_CREDIT_2026.THRESHOLD_RATIO)} 초과분의 ${pct(MEDICAL_CREDIT_2026.RATE)} · 연 ${man(MEDICAL_CREDIT_2026.DEPENDENT_CAP)} 한도`,
+ educationSelf: `대학원·직업능력개발훈련 포함 · ${pct(EDUCATION_CREDIT_2026.RATE)} · 한도 없음`,
+ monthlyRent: `무주택 세대주·총급여 ${man(RENT_CREDIT_2026.SALARY_CAP)} 이하 · 연 ${man(RENT_CREDIT_2026.CAP)} 한도 · ${man(RENT_CREDIT_2026.SALARY_17_MAX)} 이하 ${pct(RENT_CREDIT_2026.RATE_HIGH)}, 초과 ${pct(RENT_CREDIT_2026.RATE_LOW)}`,
+ educationChildSchool: `1명당 연 ${man(EDUCATION_CREDIT_2026.SCHOOL_CAP)} 한도 · ${pct(EDUCATION_CREDIT_2026.RATE)}`,
+ educationUniversity: `1명당 연 ${man(EDUCATION_CREDIT_2026.UNIVERSITY_CAP)} 한도(대학원 제외) · ${pct(EDUCATION_CREDIT_2026.RATE)}`,
+} as const;
+
+/** 출산·입양 순서 선택지 — 소득세법 §59의2③ (0 = 없음) */
+const BIRTH_ORDER_OPTIONS = [
+ { value: 0, label: "없음" },
+ { value: 1, label: `첫째 (${man(BIRTH_CREDIT_2026.FIRST)})` },
+ { value: 2, label: `둘째 (${man(BIRTH_CREDIT_2026.SECOND)})` },
+ { value: 3, label: `셋째 이상 (${man(BIRTH_CREDIT_2026.THIRD_PLUS)})` },
+] as const;
+
+/**
+ * 부양가족(본인 포함)의 최소 인원 — 자녀세액공제 대상 자녀와 해당 연도 출산·입양 자녀는 둘 다 '기본공제대상자인
+ * 자녀'가 요건이라(소득세법 §59의2①③) 부양가족에 들어가 있어야 한다. 엔진도 자녀세액공제 인원이 본인을 뺀
+ * 기본공제 인원보다 많으면 거부한다. 출산·입양 자녀는 9세 미만이라 자녀세액공제 인원과 겹치지 않는다.
+ */
+export function minDependents(inputs: Pick<TaxInputs, "childTaxCreditEligibleChildren" | "birthOrders">): number {
+ return 1 + Math.max(0, inputs.childTaxCreditEligibleChildren) + (inputs.birthOrders?.length ?? 0);
+}
+
+/**
+ * 자녀세액공제 대상 자녀 수 변경 — 부양가족이 모자라면 함께 올린다. 카드 한도용 children 은 건드리지 않는다
+ * (연간 자녀세액공제 인원과 다른 기준이라 이 화면은 0 으로 둔다).
+ */
+export function withChildren(prev: TaxInputs, childTaxCreditEligibleChildren: number): TaxInputs {
+ const next = { ...prev, childTaxCreditEligibleChildren };
+ return { ...next, dependents: Math.max(prev.dependents, minDependents(next)) };
+}
+
+/** 출산·입양 순서 선택(0 = 없음) — birthOrders 로 넘기고, 부양가족이 모자라면 함께 올린다 */
+export function withBirthOrder(prev: TaxInputs, order: number): TaxInputs {
+ const next = { ...prev, birthOrders: order > 0 ? [order] : [] };
+ return { ...next, dependents: Math.max(prev.dependents, minDependents(next)) };
+}
+
 // 기본값 총급여 — 4대보험 기본값은 이 값에서 요율로 파생 (드리프트 방지)
 const DEFAULT_SALARY = 50_000_000;
-// 이 화면에는 월 원천징수 자녀 입력이 없다. 연간 자녀세액공제 인원으로 대체하지 않는다.
+// 이 화면에는 월 원천징수(간이세액표 8~20세) 자녀 입력이 없다. 아코디언 3 의 자녀세액공제 대상 인원
+// (2026년 귀속 9세 이상·2017년생 제외)은 연간 공제 인원이라 이 값으로 대체하지 않는다.
 const WITHHOLDING_CHILDREN_8_TO_20 = 0;
 
 export default function YearEndTaxCalculator() {
@@ -169,11 +257,12 @@ export default function YearEndTaxCalculator() {
  housingSubscription: 0,
  creditCard: 15000000,
  debitCardAndCash: 5000000,
- // 전통시장·대중교통은 화면에 입력란이 없어 사용자가 보거나 0으로 고칠 수 없다.
- // 종전 기본값(100만·50만)이 40% 공제로 몰래 들어가 결정세액을 5,000만 기준
- // 9만원 낮게(환급 과대) 보여줬다 — 입력란이 생기기 전까지 0 (2026-09-25 감사 CALC-05).
+ // 전통시장·대중교통은 종전에 입력란 없이 기본값(100만·50만)이 40% 공제로 몰래 들어가 결정세액을
+ // 5,000만 기준 9만원 낮게(환급 과대) 보여줬다 (2026-09-25 감사 CALC-05). 2026-11-01 B24 부터 접힌
+ // 아코디언 2 에 입력란이 있고 기본값은 0 이다 — 아래 새 항목도 전부 0 (출산·입양·혼인은 미선택).
  traditionalMarket: 0,
  publicTransport: 0,
+ culture: 0,
  children: 0,
  childTaxCreditEligibleChildren: 0,
  birthsOrAdoptions: 0,
@@ -181,7 +270,13 @@ export default function YearEndTaxCalculator() {
  irp: 0,
  lifeInsurance: 0,
  medicalExpenses: 0,
+ medicalExpensesGeneral: 0,
  educationExpenses: 0,
+ educationSelf: 0,
+ educationChildSchool: 0,
+ educationChildSchoolCount: 1,
+ educationUniversity: 0,
+ educationUniversityCount: 1,
  donation: 0,
  monthlyRent: 0,
  });
@@ -242,6 +337,10 @@ export default function YearEndTaxCalculator() {
  setInputs((prev) => ({ ...prev, [field]: value }));
  };
 
+ const handleChildrenChange = (value: number) => setInputs((prev) => withChildren(prev, value));
+ const handleBirthOrderChange = (order: number) => setInputs((prev) => withBirthOrder(prev, order));
+ const handleMarriedChange = (checked: boolean) => setInputs((prev) => ({ ...prev, marriedIn2026: checked }));
+
  return (
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
  <div className="lg:col-span-2 space-y-6">
@@ -266,7 +365,7 @@ export default function YearEndTaxCalculator() {
 
  <Accordion title="2. 소득 공제 항목" contentProps={measurement.inputProps}>
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
- <NumberStepper label="부양가족(본인포함)" value={inputs.dependents} onValueChange={(v) => handleNumberChange("dependents", v)} min={1} unit="명" />
+ <NumberStepper label="부양가족(본인포함)" value={inputs.dependents} onValueChange={(v) => handleNumberChange("dependents", v)} min={minDependents(inputs)} unit="명" />
  <NumberStepper label="만 70세 이상" value={inputs.seniorDependents} onValueChange={(v) => handleNumberChange("seniorDependents", v)} unit="명" />
  <NumberStepper label="장애인" value={inputs.disabledDependents} onValueChange={(v) => handleNumberChange("disabledDependents", v)} unit="명" />
  </div>
@@ -284,6 +383,11 @@ export default function YearEndTaxCalculator() {
  quickAmounts={[5000000, 1000000, 500000]}
  />
  </div>
+ <IncomeDeductionExtraFields
+ inputs={inputs}
+ handleInputChange={handleInputChange}
+ handleNumberChange={handleNumberChange}
+ />
  </Accordion>
 
  <Accordion title="3. 세액 공제 항목" contentProps={measurement.inputProps}>
@@ -308,6 +412,14 @@ export default function YearEndTaxCalculator() {
  quickAmounts={[100000, 50000, 10000]}
  />
  </div>
+ <TaxCreditExtraFields
+ inputs={inputs}
+ handleInputChange={handleInputChange}
+ handleNumberChange={handleNumberChange}
+ onChildrenChange={handleChildrenChange}
+ onBirthOrderChange={handleBirthOrderChange}
+ onMarriedChange={handleMarriedChange}
+ />
  </Accordion>
  </div>
 
@@ -392,5 +504,182 @@ export default function YearEndTaxCalculator() {
  </div>
  </div>
  </div>
+ );
+}
+
+interface ExtraFieldProps {
+ inputs: TaxInputs;
+ handleInputChange: (field: keyof TaxInputs, value: string) => void;
+ handleNumberChange: (field: keyof TaxInputs, value: number) => void;
+}
+
+/**
+ * 스테퍼·선택·체크박스 + 한도 안내 한 줄 (OptimizationSlider 안내와 같은 글씨). 금액 입력은 CurrencyInput 의
+ * description 으로 안내를 넘겨 aria-describedby 로 잇는다 (기부금 칸과 같은 방식).
+ */
+const WithTip = ({ tip, className, children }: { tip: string; className?: string; children: React.ReactNode }) => (
+ <div className={className}>
+ {children}
+ <p className="text-xs text-muted-foreground mt-2">{tip}</p>
+ </div>
+);
+
+/** 아코디언 2 '소득 공제 항목' 추가 입력 — 훅 없음(테스트가 요소 트리를 직접 확인한다) */
+export function IncomeDeductionExtraFields({ inputs, handleInputChange }: ExtraFieldProps) {
+ return (
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+ <CurrencyInput
+ label="전통시장"
+ description={YEAR_END_FIELD_TIPS.traditionalMarket}
+ value={won(inputs.traditionalMarket)}
+ onValueChange={(v) => handleInputChange("traditionalMarket", v)}
+ quickAmounts={[1000000, 500000, 100000]}
+ />
+ <CurrencyInput
+ label="대중교통"
+ description={YEAR_END_FIELD_TIPS.publicTransport}
+ value={won(inputs.publicTransport)}
+ onValueChange={(v) => handleInputChange("publicTransport", v)}
+ quickAmounts={[500000, 100000, 50000]}
+ />
+ <CurrencyInput
+ label="문화·체육 (도서·공연·영화·체육시설 등)"
+ description={YEAR_END_FIELD_TIPS.culture}
+ value={won(inputs.culture)}
+ onValueChange={(v) => handleInputChange("culture", v)}
+ quickAmounts={[500000, 100000, 50000]}
+ />
+ <CurrencyInput
+ label="주택청약 납입액"
+ description={YEAR_END_FIELD_TIPS.housingSubscription}
+ value={won(inputs.housingSubscription)}
+ onValueChange={(v) => handleInputChange("housingSubscription", v)}
+ quickAmounts={[1000000, 500000, 100000]}
+ />
+ </div>
+ );
+}
+
+/** 아코디언 3 '세액 공제 항목' 추가 입력 — 훅 없음(테스트가 요소 트리를 직접 확인한다) */
+export function TaxCreditExtraFields({
+ inputs,
+ handleInputChange,
+ handleNumberChange,
+ onChildrenChange,
+ onBirthOrderChange,
+ onMarriedChange,
+}: ExtraFieldProps & {
+ onChildrenChange: (value: number) => void;
+ onBirthOrderChange: (order: number) => void;
+ onMarriedChange: (checked: boolean) => void;
+}) {
+ const birthOrder = Math.min(3, Math.max(0, inputs.birthOrders?.[0] ?? 0));
+ return (
+ <>
+ <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+ <WithTip tip={YEAR_END_FIELD_TIPS.children}>
+ <NumberStepper label="자녀세액공제 대상 자녀" value={inputs.childTaxCreditEligibleChildren} onValueChange={onChildrenChange} unit="명" />
+ </WithTip>
+ <WithTip tip={YEAR_END_FIELD_TIPS.birth}>
+ <label className="block">
+ <span className="text-sm font-medium text-muted-foreground">2026년 출산·입양</span>
+ <select
+ value={birthOrder}
+ onChange={(e) => onBirthOrderChange(Number(e.target.value))}
+ className="ms-field mt-2 font-semibold"
+ >
+ {BIRTH_ORDER_OPTIONS.map((o) => (
+ <option key={o.value} value={o.value}>
+ {o.label}
+ </option>
+ ))}
+ </select>
+ </label>
+ </WithTip>
+ <WithTip tip={YEAR_END_FIELD_TIPS.marriage}>
+ <span className="text-sm font-medium text-muted-foreground">혼인세액공제</span>
+ <label className="mt-2 flex min-h-11 cursor-pointer items-center gap-3 rounded-lg bg-secondary/50 p-2 text-sm font-semibold">
+ <input
+ type="checkbox"
+ checked={inputs.marriedIn2026 === true}
+ onChange={(e) => onMarriedChange(e.target.checked)}
+ className="h-4 w-4 shrink-0 accent-primary"
+ />
+ 2026년 혼인신고
+ </label>
+ </WithTip>
+ </div>
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+ <CurrencyInput
+ label="의료비 (본인·6세 이하·65세 이상·장애인)"
+ description={YEAR_END_FIELD_TIPS.medicalSpecial}
+ value={won(inputs.medicalExpenses)}
+ onValueChange={(v) => handleInputChange("medicalExpenses", v)}
+ quickAmounts={[1000000, 500000, 100000]}
+ />
+ <CurrencyInput
+ label="의료비 (그 밖의 부양가족)"
+ description={YEAR_END_FIELD_TIPS.medicalGeneral}
+ value={won(inputs.medicalExpensesGeneral)}
+ onValueChange={(v) => handleInputChange("medicalExpensesGeneral", v)}
+ quickAmounts={[1000000, 500000, 100000]}
+ />
+ <CurrencyInput
+ label="보장성보험료"
+ description={YEAR_END_FIELD_TIPS.lifeInsurance}
+ value={won(inputs.lifeInsurance)}
+ onValueChange={(v) => handleInputChange("lifeInsurance", v)}
+ quickAmounts={[500000, 100000, 50000]}
+ />
+ <CurrencyInput
+ label="월세 (연간 합계)"
+ description={YEAR_END_FIELD_TIPS.monthlyRent}
+ value={won(inputs.monthlyRent)}
+ onValueChange={(v) => handleInputChange("monthlyRent", v)}
+ quickAmounts={[5000000, 1000000, 500000]}
+ />
+ <CurrencyInput
+ label="교육비 (본인)"
+ description={YEAR_END_FIELD_TIPS.educationSelf}
+ value={won(inputs.educationSelf)}
+ onValueChange={(v) => handleInputChange("educationSelf", v)}
+ quickAmounts={[1000000, 500000, 100000]}
+ />
+ </div>
+ <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+ <div className="sm:col-span-2">
+ <CurrencyInput
+ label="교육비 (취학 전·초중고)"
+ description={YEAR_END_FIELD_TIPS.educationChildSchool}
+ value={won(inputs.educationChildSchool)}
+ onValueChange={(v) => handleInputChange("educationChildSchool", v)}
+ quickAmounts={[1000000, 500000, 100000]}
+ />
+ </div>
+ <NumberStepper
+ label="취학 전·초중고 인원"
+ value={inputs.educationChildSchoolCount ?? 1}
+ onValueChange={(v) => handleNumberChange("educationChildSchoolCount", v)}
+ min={1}
+ unit="명"
+ />
+ <div className="sm:col-span-2">
+ <CurrencyInput
+ label="교육비 (대학생)"
+ description={YEAR_END_FIELD_TIPS.educationUniversity}
+ value={won(inputs.educationUniversity)}
+ onValueChange={(v) => handleInputChange("educationUniversity", v)}
+ quickAmounts={[1000000, 500000, 100000]}
+ />
+ </div>
+ <NumberStepper
+ label="대학생 인원"
+ value={inputs.educationUniversityCount ?? 1}
+ onValueChange={(v) => handleNumberChange("educationUniversityCount", v)}
+ min={1}
+ unit="명"
+ />
+ </div>
+ </>
  );
 }

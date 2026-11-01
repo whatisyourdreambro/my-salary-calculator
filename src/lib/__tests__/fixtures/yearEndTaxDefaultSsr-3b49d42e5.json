@@ -1,0 +1,5 @@
+{
+  "_source": "origin/main 3b49d42e5(B24 입력 확장 전) 의 src 로 2026-11-01 생성한 YearEndTaxCalculator 기본 상태 renderToStaticMarkup 출력의 sha256(base64)·바이트 수. B24 의 새 입력은 접힌 아코디언 2·3 안에만 있으므로 기본 렌더가 이 값과 바이트 동일해야 한다(/year-end-tax HomeTopAd~InArticleAd 사이 높이 불변, 홈 연말정산 탭도 같은 컴포넌트). 이후 코드로 다시 만들지 말 것 — 아코디언 1·결과 카드를 의도적으로 바꾸는 배치(운영자 승인 필요)만 새 고정본으로 교체한다",
+  "sha256": "0/MqlfMbA2WIeTx3tudGkQCQXmS/4ryZ7J48zO8ekxE=",
+  "bytes": 6909
+}

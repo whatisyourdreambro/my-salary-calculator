@@ -1,5 +1,9 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { calculateDualIncomeYearEnd2026, childAssignments2026, type DualIncomeInput } from "../dualIncomeYearEnd2026";
+import { calculateYearEndTax, deriveAnnualSocialInsurance2026, type TaxInputs } from "../yearEndTaxCalculator";
+import { MEDICAL_CREDIT_2026 } from "../taxConstants2026";
 
 const base: DualIncomeInput = {
   salaryMe: 80_000_000, salarySp: 60_000_000, children: 2, childTaxCreditEligibleChildren: 1,
@@ -78,6 +82,43 @@ describe("맞벌이 기본공제와 연간 자녀세액공제 배분", () => {
     ]);
     expect(result.allMe.total).toBe(8_857_687);
     expect(result.allSp.total).toBe(9_037_687);
+  });
+
+  it("부부 상호 의료비는 그 밖의 부양가족 의료비(3% 초과분 연 700만원 한도), 자녀 의료비는 한도 없는 칸으로 계산한다 (B24)", () => {
+    const one = (gross: number, p: Partial<TaxInputs>) => calculateYearEndTax({
+      grossSalary: gross, prepaidTax: 0, ...deriveAnnualSocialInsurance2026(gross),
+      dependents: 1, disabledDependents: 0, seniorDependents: 0, housingSubscription: 0,
+      creditCard: 0, debitCardAndCash: 0, traditionalMarket: 0, publicTransport: 0,
+      children: 0, childTaxCreditEligibleChildren: 0, birthsOrAdoptions: 0, pensionSavings: 0, irp: 0,
+      lifeInsurance: 0, medicalExpenses: 0, educationExpenses: 0, donation: 0, monthlyRent: 0, ...p,
+    }).determinedTax;
+    const couple = { ...base, children: 0, childTaxCreditEligibleChildren: 0, coupleMedical: 20_000_000 };
+    const r = calculateDualIncomeYearEnd2026(couple);
+    // 본인(8,000만) 문턱 240만: (2,000만 − 240만) 은 700만원 한도 → 105만원. 종전 합계 칸 계산은 264만원이었다.
+    expect(one(80_000_000, {}) - r.allMe.taxMe).toBe(MEDICAL_CREDIT_2026.DEPENDENT_CAP * MEDICAL_CREDIT_2026.RATE);
+    expect(r.allMe.taxMe).toBe(one(80_000_000, { medicalExpensesGeneral: 20_000_000 }));
+    expect(r.allMe.taxMe).toBeGreaterThan(one(80_000_000, { medicalExpenses: 20_000_000 }));
+    expect(r.allSp.taxSp).toBe(one(60_000_000, { medicalExpensesGeneral: 20_000_000 }));
+    // 자녀 의료비는 6세 이하가 섞일 수 있어 종전대로 한도 없는 칸 — 같은 금액이면 부부 의료비보다 공제가 크다
+    const kid = calculateDualIncomeYearEnd2026({ ...base, children: 1, childTaxCreditEligibleChildren: 0,
+      childMedical: 20_000_000, coupleMedical: 0 });
+    expect(kid.allMe.taxMe).toBe(one(80_000_000, { dependents: 2, children: 1, medicalExpenses: 20_000_000 }));
+    expect(kid.allMe.taxMe).toBeLessThan(one(80_000_000, { dependents: 2, children: 1, medicalExpensesGeneral: 20_000_000 }));
+    // 문턱 순서: 부부 의료비가 문턱에 못 미치면 모자란 만큼 자녀 의료비에서 뺀다 (종전 합계 식과 같은 값)
+    const mixed = calculateDualIncomeYearEnd2026({ ...base, children: 1, childTaxCreditEligibleChildren: 0,
+      childMedical: 3_000_000, coupleMedical: 1_000_000 });
+    expect(mixed.allMe.taxMe).toBe(one(80_000_000, { dependents: 2, children: 1, medicalExpenses: 4_000_000 }));
+  });
+
+  it("화면 고지는 부부 의료비 700만원 한도를 미적용이라고 하지 않는다 (광고 위 문단 — 글자 수는 줄기만)", () => {
+    const client = readFileSync(join(process.cwd(), "src/app/calc/dual-income-year-end/Client.tsx"), "utf8");
+    const start = client.indexOf('<p className="text-[11px] leading-relaxed text-faint-blue">');
+    const text = client.slice(client.indexOf(">", start) + 1, client.indexOf("</p>", start))
+      .split("\n").map((s) => s.trim()).filter(Boolean).join(" ");
+    expect(text).not.toContain("부양가족 의료비 공제대상 한도(연 700만원)");
+    expect(text).toContain("7세 이상 자녀 의료비 한도(연 700만원)");
+    expect(text.length).toBeLessThan(247); // B24 전 고지 247자
+    expect(client.indexOf(text.slice(0, 10))).toBeLessThan(client.indexOf("<CalcResultAd />"));
   });
 
   it("연금 상·하한에 걸리는 기존 부부의 배분 금액도 보존한다", () => {

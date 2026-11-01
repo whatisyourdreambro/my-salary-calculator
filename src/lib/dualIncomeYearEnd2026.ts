@@ -45,7 +45,13 @@ export function childAssignments2026(children: number, eligibleChildren: number)
   return assignments;
 }
 
-function personDeterminedTax(gross: number, kids: number, creditKids: number, medical: number, education: number, donation: number) {
+/**
+ * 1인분 결정세액. 의료비는 소득세법 §59의4② 두 갈래로 넘긴다 (2026-11-01 B24 YE-03):
+ * specialMedical(자녀 의료비 — 6세 이하가 섞일 수 있어 종전대로 한도 없는 제2호 칸)과
+ * generalMedical(부부 상호 의료비 — 그 밖의 기본공제대상자, 3% 초과분 연 700만원 한도인 제1호 칸).
+ */
+function personDeterminedTax(gross: number, kids: number, creditKids: number,
+  specialMedical: number, generalMedical: number, education: number, donation: number) {
   return calculateYearEndTax({
     grossSalary: gross, prepaidTax: 0, ...deriveAnnualSocialInsurance2026(gross),
     dependents: 1 + kids, disabledDependents: 0, seniorDependents: 0,
@@ -54,7 +60,8 @@ function personDeterminedTax(gross: number, kids: number, creditKids: number, me
     children: kids, // 기존 카드한도 인원; 이 시나리오의 카드 사용액은 0이다.
     childTaxCreditEligibleChildren: creditKids,
     birthsOrAdoptions: 0, pensionSavings: 0, irp: 0, lifeInsurance: 0,
-    medicalExpenses: medical, educationExpenses: education, donation, monthlyRent: 0,
+    medicalExpenses: specialMedical, medicalExpensesGeneral: generalMedical,
+    educationExpenses: education, donation, monthlyRent: 0,
   }).determinedTax;
 }
 
@@ -67,10 +74,10 @@ export function calculateDualIncomeYearEnd2026(input: DualIncomeInput) {
   const childDonation = children > 0 ? input.childDonation : 0;
   const run = (assign: DualIncomeAssignment): DualIncomeScenario => {
     const taxMe = personDeterminedTax(input.salaryMe, assign.kidsToMe, assign.creditKidsToMe,
-      (assign.childExpTo === "me" ? childMedical : 0) + (assign.coupleMedTo === "me" ? input.coupleMedical : 0),
+      assign.childExpTo === "me" ? childMedical : 0, assign.coupleMedTo === "me" ? input.coupleMedical : 0,
       assign.childExpTo === "me" ? childEducation : 0, assign.childExpTo === "me" ? childDonation : 0);
     const taxSp = personDeterminedTax(input.salarySp, children - assign.kidsToMe, eligible - assign.creditKidsToMe,
-      (assign.childExpTo === "sp" ? childMedical : 0) + (assign.coupleMedTo === "sp" ? input.coupleMedical : 0),
+      assign.childExpTo === "sp" ? childMedical : 0, assign.coupleMedTo === "sp" ? input.coupleMedical : 0,
       assign.childExpTo === "sp" ? childEducation : 0, assign.childExpTo === "sp" ? childDonation : 0);
     return { taxMe, taxSp, total: taxMe + taxSp, assign };
   };
