@@ -432,7 +432,7 @@ export default function MultiYearBonusSimulator({
       </p>
       <p className="text-[11px] text-faint-blue mb-5 leading-relaxed">
         사업부를 선택하고 연도별 영업이익만 입력하세요. <strong>OPI1(연봉×
-        {opi1Rate}%) + OPI2(특별경영성과금)</strong>을 합산해 세금까지 자동
+        {opi1Rate}%) + OPI2(특별경영성과급)</strong>을 합산해 세금까지 자동
         계산. 위 메인 시뮬의 인원·가중치·본인 연봉·OPI1 지급률을 그대로 사용.
         26~28년 200조, 29~35년 100조 미달 연도는 OPI2만 0원이 되고 OPI1은
         그대로 지급.
@@ -1029,7 +1029,7 @@ export default function MultiYearBonusSimulator({
                   className="text-[10px] font-bold uppercase tracking-[0.15em]"
                   style={{ color: "hsl(var(--link))" }}
                 >
-                  OPI2 누적 · 특별경영성과금
+                  OPI2 누적 · 특별경영성과급
                 </p>
               </div>
               <p className="text-base font-black tabular-nums text-navy dark:text-canvas-50">
@@ -1398,7 +1398,7 @@ function YearProfitRowCard({
         >
           <div className="flex items-center justify-between mb-1">
             <p className="text-[9px] font-bold uppercase tracking-widest text-faint-blue">
-              OPI2 · 특별경영성과금
+              OPI2 · 특별경영성과급
             </p>
             <p
               className={`font-black tabular-nums text-sm ${

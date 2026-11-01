@@ -48,7 +48,7 @@ const samsungWageNegotiation2026 = `
  <strong>당시의 추정: 5.0~6.5%</strong>
 </p>
 
-<h3 class="text-xl font-bold mt-8 mb-3">쟁점 2. OPI(초과이익성과금) 산정 방식</h3>
+<h3 class="text-xl font-bold mt-8 mb-3">쟁점 2. OPI(초과이익성과급) 산정 방식</h3>
 <p>
  OPI는 사업부 영업이익의 일정 비율을 기본급 대비 배수로 환산해 지급하는 삼성전자 고유 제도입니다.
  DS(반도체) 부문은 메모리 흑자 폭에 따라 OPI 한도가 결정되며, 2025년 기준 일부 사업부는 연봉의 50%(기본급 기준 1000%)에 근접했습니다.

@@ -1,4 +1,4 @@
-// 삼성전자 OPI(초과이익성과금) 실지급률 — 단일 소스 (2026-09-21 S2-0 배치, 10배 계획 L13b ②).
+// 삼성전자 OPI(초과이익성과급) 실지급률 — 단일 소스 (2026-09-21 S2-0 배치, 10배 계획 L13b ②).
 // page.tsx(FAQ·실지급률 표·분배 모델 설명)와 Client.tsx(OPI1 슬라이더 기본값·안내문),
 // MultiYearBonusSimulator(기본값)가 이 파일만 읽는다. 순수 데이터 — React·Next 의존 없음.
 //
@@ -6,11 +6,9 @@
 // 자동 파생 → src/data/opiAnnouncement.ts(홈 배너 게이트) 4필드 동시 기입 → vitest.
 // 추정치 기입 금지 — 복수 언론 보도로 확인된 값만
 // (2026-10-23 공개 출처 규칙 — 운영자 2026-10-08: 언론 보도·회사 발표·DART 만, '노조 공지'·'사내 공지' 표현 금지).
-// 화면 출처 표기(sourceNote)는 '복수 언론 보도 등'이다(B28 STR-04-B, 2026-11-01 — page.tsx 광고 위 OPI 실지급률 문단·접힌 FAQ).
-// '등'을 붙인 이유: 2026-11-01 재확인에서 서울신문·머니투데이 2026-01-16 기사는 8행 중 5행(MX 50·DS 47·경영지원·하만 39·
-// 생산기술연구소 36·VD·DA·네트워크·의료기기 12)만 싣고, 한국총괄·SR·CDO 37·EHS 34·CSS 11 은 아래 JSDoc 의 노조 홈페이지 공개
-// 공지에만 있다 — 8행 전부를 '복수 언론 보도'라고만 쓰면 출처가 넓게 잡힌다. 세 행을 둘지 뺄지는 운영자 결정 2(미기록)로 남긴다.
-// 문구는 옛 '노조 공지 기반 보도'보다 짧다(한글 8 → 7자, 단어마다 같거나 좁음). 수치(rates)는 그대로다.
+// 화면 출처 표기(sourceNote)는 '복수 언론 보도'다(page.tsx 광고 위 OPI 실지급률 문단·접힌 FAQ). 2026-11-02 재검색에서 언론 기사로
+// 확인되지 않은 두 행(한국총괄·SR·CDO 37%·EHS 34%)을 뺐고, CSS사업팀 11% 는 2026-01-28 복수 보도로 남겼다. 남은 6행이
+// 모두 둘 이상의 기사에 있어 '등'을 뗐다(광고 위 문단은 줄기만 한다).
 
 /** OPI 지급률 상한 — 연봉 대비 % (회사 제도상 상한) */
 export const OPI1_MAX_RATE = 50;
@@ -38,23 +36,20 @@ export type OpiActualYear = {
   rates: OpiActualRate[];
 };
 
-/** 2025년 실적분 OPI — 2026-01-30 지급 (복수 언론 보도 등 — 아래 세 행은 노조 홈페이지 공개 공지).
- *  서울신문 2026-01-16 https://www.seoul.co.kr/news/economy/industry/2026/01/16/20260116500182 ·
- *  머니투데이 2026-01-16 https://www.mt.co.kr/industry/2026/01/16/2026011615081356804 — DS 47%·MX 50%·VD·DA·네트워크·의료기기 12%·
- *  경영지원·하만 39%·생산기술연구소 36%, 1월 30일 지급. 한국총괄·SR·CDO 37%·EHS 34%·CSS 11% 행은 언론 기사에 없고
- *  전국삼성전자노동조합 홈페이지 공개 공지(로그인 없음, 2026-01-16)에만 있다 —
- *  https://samsunglabor.co.kr/bbs/board.php?bo_table=notice&wr_id=496 (운영자 결정 2 권장안: 공개 URL 을 밝히고 유지). */
+/** 2025년 실적분 OPI — 2026-01-30 지급 (복수 언론 보도). 서울신문·머니투데이 2026-01-16(DS 47%·MX 50%·VD·DA·네트워크·의료기기 12%·
+ *  경영지원·하만·상생협력센터·글로벌CS센터 39%·생산기술연구소 36%) https://www.seoul.co.kr/news/economy/industry/2026/01/16/20260116500182 ·
+ *  https://www.mt.co.kr/industry/2026/01/16/2026011615081356804 , 아주경제 2026-01-28(39%·36%) https://www.ajunews.com/view/20260128174051054 .
+ *  CSS사업팀 11%: 뉴스핌·지디넷코리아·뉴시스 2026-01-28 https://www.newspim.com/news/view/20260128001121 ·
+ *  https://zdnet.co.kr/view/?no=20260128115714 · https://www.newsis.com/view/NISX20260128_0003493215 */
 export const OPI_ACTUAL_2025: OpiActualYear = {
   fiscalYear: 2025,
   payDate: "2026-01-30",
   payDateLabel: "2026년 1월 30일",
-  sourceNote: "복수 언론 보도 등",
+  sourceNote: "복수 언론 보도",
   rates: [
     { id: "mx", division: "MX (스마트폰)", rate: 50, top: true },
     { id: "ds-common", division: "DS부문 공통", rate: 47, top: true },
-    { id: "kr-sr-cdo", division: "한국총괄·SR·CDO", rate: 37, top: false },
     { id: "mfg-lab", division: "생산기술연구소", rate: 36, top: false },
-    { id: "ehs", division: "EHS", rate: 34, top: false },
     {
       id: "biz-support",
       division: "경영지원·하만·상생협력·글로벌CS",

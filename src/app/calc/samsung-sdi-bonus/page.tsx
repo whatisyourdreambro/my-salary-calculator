@@ -161,7 +161,7 @@ export default function SamsungSdiBonusPage() {
             </h2>
             <div className="grid sm:grid-cols-2 gap-4 mb-6">
               <article className="rounded-xl border border-canvas-deep p-5 bg-canvas/30">
-                <h3 className="font-bold mb-2 text-lg">OPI (초과이익성과금)</h3>
+                <h3 className="font-bold mb-2 text-lg">OPI (초과이익성과급)</h3>
                 <ul className="space-y-1 text-sm leading-relaxed">
                   <li>• <strong>연봉의 0~50%</strong>, 사업부 영업이익 연동</li>
                   <li>• 연 1회 지급 (보통 1월)</li>

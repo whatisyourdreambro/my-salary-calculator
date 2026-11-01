@@ -4690,7 +4690,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-09-26",
   "views": 0,
   "lang": "ko",
-  "contentChars": 7183
+  "contentChars": 7075
  },
  {
   "slug": "sk-hynix-ps-history-2026-prospect",
@@ -5202,7 +5202,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 6624
+  "contentChars": 6542
  },
  {
   "slug": "sk-hynix-ps-forecast-2027",

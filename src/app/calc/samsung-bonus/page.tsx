@@ -20,7 +20,7 @@
 //    https://www.mt.co.kr/industry/2026/07/07/2026070717114350180
 //  - OPI 자사주 선택제(0~50%, 10% 단위, 15% 추가)·임원 의무수령 폐지: 한국경제 2026-01-12 https://www.hankyung.com/article/2026011259097
 //  - 2025년분 OPI(DS 47%·MX 50%·12%·39%·36%, 1/30 지급): 서울신문 https://www.seoul.co.kr/news/economy/industry/2026/01/16/20260116500182 ·
-//    머니투데이 https://www.mt.co.kr/industry/2026/01/16/2026011615081356804 (37%·34%·11% 행은 opiData.ts 주석 참고)
+//    머니투데이 https://www.mt.co.kr/industry/2026/01/16/2026011615081356804 · CSS사업팀 11%: 뉴스핌·지디넷코리아·뉴시스 2026-01-28(opiData.ts 주석)
 //  - 2026 상반기 TAI(메모리 100%·시스템LSI·파운드리 75%·MX 50%·DA 25% 등, 7/6 발표·7/8 지급): 뉴스핌
 //    https://www.newspim.com/news/view/20260706000905 · 지디넷코리아 https://zdnet.co.kr/view/?no=20260706154914 ·
 //    하반기 TAI 최대 수준 가능성 전망: 파이낸셜뉴스 https://www.fnnews.com/news/202607061454005430
@@ -28,9 +28,9 @@
 //  - OPI 재원 = 초과이익의 20% 한도·연봉 50% 상한: 서울신문 2026-01-16(위 URL), 대법원 2021다248299
 // 2026-11-01 이식(PKG-24): 이 머리 주석과 접힌 FAQ(가고과·나고과 답)를 먼저 반영했다.
 // 2026-11-01 이식(B28 STR-04-B, 운영자 승인 5번 — 폭 실측 뒤 게시): 광고 위 화면 문구 — 370조 소개 문단, 분배 모델 1단계 제목,
-// CL4 하위 0.9·0.8배 문단·각주, DS 영업이익 10.5% 제목·본문, 하단 안내 상자, OPI 출처 표기(sourceNote '복수 언론 보도 등').
+// CL4 하위 0.9·0.8배 문단·각주, DS 영업이익 10.5% 제목·본문, 하단 안내 상자, OPI 출처 표기(sourceNote — 2026-11-02 '복수 언론 보도'로, 언론 미확인 두 행 삭제).
 // 위 사실은 2026-11-01 에 한국경제·이투데이·데일리안·인더스트리뉴스(2026-10-07) 원문으로 다시 확인했다. 문자열은 10/9 1,123폭
-// 스윕에서 광고 하향 0이던 9820064e3 최종본이고, 두 곳만 더 줄였다: sourceNote '복수 언론 보도 등'(opiData.ts 주석),
+// 스윕에서 광고 하향 0이던 9820064e3 최종본이고, 두 곳만 더 줄였다: sourceNote '복수 언론 보도'(opiData.ts 주석),
 // CL 문단 '하위 등급 0.9배' → '하위 0.9배'(사이트 글꼴 폭 모델에서 518px 에 늘던 한 줄을 없앰 — 아래 본문이 같은 광고 위에서
 // 한 줄 줄어 상쇄되던 자리지만 문단 자체도 늘지 않게). 모델상 이 페이지의 바뀐 문단은 320~1440px 어디서도 줄이 늘지 않는다.
 // 단계 스윕에서 다시 잰다.
@@ -77,13 +77,13 @@ const PAGE_TITLE = "삼성전자 성과급 계산기 2026 — OPI·OPI2 세후, 
 // SERP 표시 한도(한글 80~90자) 안에 핵심 키워드 전진 배치
 // 반기 라벨·최고 지급률은 taiData TAI_LATEST 파생 — 오늘 출력은 종전 문자열과 동일
 // 1~2월 지급률 확정 공지 꼬리 구절(승인 6) — src/data/bonusAnnouncements.ts 가 휴면이면 종전 문자열 그대로
-// 2026-11-01 운영자 승인 8번(B37 P2UX-04): 10/19(579d60bb)에 빠졌던 앞머리 'OPI(초과이익성과금)·TAI(목표달성장려금) 계산기'를
+// 2026-11-01 운영자 승인 8번(B37 P2UX-04): 10/19(579d60bb)에 빠졌던 앞머리 'OPI(초과이익성과급)·TAI(목표달성장려금) 계산기'를
 // 되살리고, 10/19 의 OPI1·OPI2 합산 세후 추정 범위와 '개인 지급 확정액은 아닙니다'는 그대로 둔다. meta·OG·JSON-LD 에만 쓰이고
 // 화면 문장에는 나오지 않는다(bonusAnnouncements.test.ts 5번). TAI 명칭·상반기 메모리 100%: 뉴스핌 2026-07-06
-// https://www.newspim.com/news/view/20260706000905 (언론은 OPI 를 주로 '초과이익성과급'으로 쓴다 — 여기는 승인된 종전 표기 그대로).
+// https://www.newspim.com/news/view/20260706000905 (언론 표기 '초과이익성과급'으로 통일 — 한 글자 교체라 글자 폭 같음).
 const PAGE_DESC = withBonusAnnouncement(
   "samsung-bonus",
-  `삼성전자 OPI(초과이익성과금)·TAI(목표달성장려금) 계산기. 기존 OPI1·DS 특별경영성과급(OPI2) 합산 세후 실수령액과 ${TAI_LATEST.shortLabel} TAI ${TAI_LATEST_TOP.division} ${TAI_LATEST_TOP.rate}%, RSU 매도까지 추정합니다. 개인 지급 확정액은 아닙니다.`
+  `삼성전자 OPI(초과이익성과급)·TAI(목표달성장려금) 계산기. 기존 OPI1·DS 특별경영성과급(OPI2) 합산 세후 실수령액과 ${TAI_LATEST.shortLabel} TAI ${TAI_LATEST_TOP.division} ${TAI_LATEST_TOP.rate}%, RSU 매도까지 추정합니다. 개인 지급 확정액은 아닙니다.`
 );
 
 // ─────────────────────────────────────────────────────────────
@@ -109,7 +109,7 @@ const FAQ_ITEMS = [
   {
     question: "삼성전자 성과급 지급일은 언제인가요?",
     answer:
-      `보도 기준으로 OPI(초과이익성과금)는 연 1회 1월 말~2월 초(설 연휴 전)에 지급되며, ${OPI_LATEST.fiscalYear}년 실적분은 ${OPI_LATEST.payDateLabel}에 지급됐습니다. TAI(목표달성장려금)는 반기별 연 2회로 통상 7월 초와 12월 말에 지급되며, ${TAI_LATEST.periodLabel}분은 ${TAI_LATEST.payDate} 지급으로 공지됐습니다. 2026년 신설된 DS부문 특별경영성과급은 3월 정기 주총에서 지급 안건이 승인되면 2027년 3월 말~4월 초 첫 지급 예정이며, 지급할 때 지방소득세 포함 49.5%를 원천징수한 뒤 남은 금액을 지급일 주가로 자사주로 줍니다(2026년 10월 7일 언론 보도 기준). 기존 OPI는 예년대로 1월 말 따로 지급됩니다.`,
+      `보도 기준으로 OPI(초과이익성과급)는 연 1회 1월 말~2월 초(설 연휴 전)에 지급되며, ${OPI_LATEST.fiscalYear}년 실적분은 ${OPI_LATEST.payDateLabel}에 지급됐습니다. TAI(목표달성장려금)는 반기별 연 2회로 통상 7월 초와 12월 말에 지급되며, ${TAI_LATEST.periodLabel}분은 ${TAI_LATEST.payDate} 지급으로 공지됐습니다. 2026년 신설된 DS부문 특별경영성과급은 3월 정기 주총에서 지급 안건이 승인되면 2027년 3월 말~4월 초 첫 지급 예정이며, 지급할 때 지방소득세 포함 49.5%를 원천징수한 뒤 남은 금액을 지급일 주가로 자사주로 줍니다(2026년 10월 7일 언론 보도 기준). 기존 OPI는 예년대로 1월 말 따로 지급됩니다.`,
   },
   {
     question: "2026년 1월 OPI는 실제로 얼마나 지급됐나요?",
@@ -174,7 +174,7 @@ const FAQ_ITEMS = [
   {
     question: "삼성전자 성과급은 언제, 몇 번 지급되나요?",
     answer:
-      "공개 보도 기준 삼성전자는 통상 (1) 연초(1월 전후)에 전년도 실적에 따른 OPI(초과이익성과금, 옛 PS)를 한 번에 지급하고, (2) 상·하반기에 목표달성장려금(TAI, 옛 PI)을 기본급의 일정 비율로 나눠 지급하는 구조로 알려져 있습니다. 본 계산기는 연 단위 OPI 재원 분배를 중심으로 추정하므로, 반기 TAI까지 합산하려면 그만큼 더해 보세요. 정확한 지급 시기·횟수는 매년 노사 협의와 회사 공지에 따라 달라집니다.",
+      "공개 보도 기준 삼성전자는 통상 (1) 연초(1월 전후)에 전년도 실적에 따른 OPI(초과이익성과급, 옛 PS)를 한 번에 지급하고, (2) 상·하반기에 목표달성장려금(TAI, 옛 PI)을 기본급의 일정 비율로 나눠 지급하는 구조로 알려져 있습니다. 본 계산기는 연 단위 OPI 재원 분배를 중심으로 추정하므로, 반기 TAI까지 합산하려면 그만큼 더해 보세요. 정확한 지급 시기·횟수는 매년 노사 협의와 회사 공지에 따라 달라집니다.",
   },
   {
     question: "삼성전자 평균 성과급은 얼마인가요?",
@@ -244,7 +244,7 @@ export const metadata: Metadata = {
     // OPI
     "삼성 OPI",
     "OPI 계산",
-    "초과이익성과금",
+    "초과이익성과급",
     // TAI
     "삼성 TAI",
     "TAI 계산기",
@@ -347,7 +347,7 @@ export default function SamsungBonusCalculatorPage() {
             url: PAGE_PATH,
             dateModified: staticRouteLastModified(PAGE_PATH),
             featureList: [
-              "OPI(초과이익성과금) 사업부별 1인당 분배 계산",
+              "OPI(초과이익성과급) 사업부별 1인당 분배 계산",
               `TAI(목표달성장려금) ${TAI_LATEST.shortLabel} 지급률 자동 적용`,
               "본인 연봉 기준 세전·세후 실수령액",
               "CL 직급·가고과 평가 반영 다년도 누적 시뮬레이션",
@@ -538,7 +538,7 @@ export default function SamsungBonusCalculatorPage() {
               tabIndex={-1}
               className="scroll-mt-28 text-2xl font-black text-navy dark:text-canvas-50 mb-2"
             >
-              OPI(초과이익성과금) 실제 지급률 — {OPI_LATEST.fiscalYear}년 실적분
+              OPI(초과이익성과급) 실제 지급률 — {OPI_LATEST.fiscalYear}년 실적분
             </h2>
             <p className="text-sm text-muted-blue dark:text-canvas-300 mb-5 leading-relaxed">
               OPI는 <strong>연봉 대비 %</strong>(상한 {OPI1_MAX_RATE}%)로 연 1회, 통상 1월
@@ -810,7 +810,7 @@ export default function SamsungBonusCalculatorPage() {
             <div className="rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 p-6 space-y-4">
               <Step
                 num="A"
-                title="OPI1 (기존 OPI·초과이익성과금) = 연봉 × 지급률"
+                title="OPI1 (기존 OPI·초과이익성과급) = 연봉 × 지급률"
                 desc={`상한 ${OPI1_MAX_RATE}%. 사업부별 실지급률 상이(${OPI_LATEST.fiscalYear}년분: ${opiRateSummary(2)}·${OPI_LATEST_BOTTOM.division} ${OPI_LATEST_BOTTOM.rate}% 등) — 계산기에서 조정 가능. 임계값 미달 연도에도 지급.`}
                 highlight
               />
