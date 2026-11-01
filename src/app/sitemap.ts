@@ -72,11 +72,13 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  // 성과급 samsung·sk-hynix·hyundai·year-end·kia 2026-09-25: A18 세후 엔진 교체(연간 결정세액
  // 차이·세액공제 30% 기본 가정 제거). 나머지 A18 계산기는 sitemap() 의 BONUS_ENGINE_ROUTES 루프.
  // 2026-10-09: 삼성 DS 특별성과급 세부안(10/7 보도) — 지급 시기·재원(DS부문)·원천징수 문구, 공개 출처 표현 정리.
- '/calc/samsung-bonus': { lastModified: new Date('2026-10-19T00:00:00+09:00'), priority: 0.95 },
+ // 2026-11-01: 광고 위 공개 보도 표현·재원 DS 영업이익 10.5%·CL4 하위 0.9·0.8배(B28 STR-04-B), 히어로 부제·요약 10/19 이전 줄 수(B37 P2UX-04).
+ '/calc/samsung-bonus': { lastModified: new Date('2026-11-01T00:00:00+09:00'), priority: 0.95 },
  '/calc/sk-hynix-bonus': { lastModified: new Date('2026-11-01T00:00:00+09:00'), priority: 0.9 }, // 3분기 실적(10/28) 시나리오·PS FAQ (B27 DATA-03)
  '/calc/bonus-calculators': { lastModified: new Date('2026-11-01T00:00:00+09:00'), priority: 0.9 }, // 최근 소식 10/28 SK하이닉스 3분기 실적 (B27)
  // 2026-09-27 신설 — 시세 스냅숏이 매월(16일 이후) 갱신되므로 monthly. lastModified 는 스냅숏을 바꾼 배포에만 올린다.
- '/calc/bonus-home-plan': { lastModified: new Date('2026-10-19T00:00:00+09:00'), changeFrequency: 'monthly' },
+ // 2026-11-01: 스냅숏과 별개로 본문 사실 정정 — 특별경영성과급 재원 DS 영업이익 10.5%(B28 STR-04-B).
+ '/calc/bonus-home-plan': { lastModified: new Date('2026-11-01T00:00:00+09:00'), changeFrequency: 'monthly' },
  // priority 0.85 는 sitemap() 내 성과급 클러스터 루프와 같은 값 — override 가 있으면
  // 루프가 건너뛰므로 명시 (누락 시 기본 0.8 로 강등됨).
  '/calc/hyundai-bonus': { lastModified: new Date('2026-09-25'), priority: 0.85 },
@@ -84,23 +86,23 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/kia-bonus': { lastModified: new Date('2026-09-25'), priority: 0.85 },
  '/minimum-wage-2027': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 2027 장기요양 13.90% 확정 반영 실수령 참고치·FAQ (PKG-10)
  '/minimum-wage-2026': { lastModified: new Date('2026-09-12') },
- '/year-end-tax': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 표준세액공제 13만원 비교 엔진(PKG-10)·2027 연말정산 제목과 접힌 FAQ 사실 정정(PKG-20)·접힌 아코디언 추가 입력과 엔진 한도(B24)
+ '/year-end-tax': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 표준세액공제 13만원 비교 엔진(PKG-10)·2027 연말정산 제목과 접힌 FAQ 사실 정정(PKG-20)·접힌 아코디언 추가 입력과 엔진 한도(B24)·마지막 광고 아래 한도표 계산기 링크와 혼인 FAQ(B30)·출산지원금 비과세·중소기업 감면 행(B43)
  '/calc/january-bonus': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 13월의 월급 계산기를 연말정산 정본 엔진으로 (B23 CALC-01)
  '/retirement-pension-2026': { lastModified: new Date('2026-10-26T00:00:00+09:00') }, // 일반 위험자산 한도·적격 TDF 예외·공제와 환급 구분 정정
  // 2026-08-23 시즌 패키지 (연말정산 허브·미리보기·시즌 사이드바)
- '/year-end-tax-2027': { lastModified: new Date('2026-09-25') },
- '/year-end-tax-preview': { lastModified: new Date('2026-09-30') },
+ '/year-end-tax-2027': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 마지막 광고 아래 세제개편안 정부안 블록·도구 링크·날짜 FAQ (B30 SEO-07-b)
+ '/year-end-tax-preview': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 마지막 광고 아래 최근 3년 개통일 표·메뉴 경로 (B30 SEO-07-b)
  // 각 페이지의 Article·OG·표시된 수정일과 동기화. 광고/escape 편집일은 사용하지 않는다.
  '/chuseok-bonus-2026': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
- '/tax-reform-2026': { lastModified: new Date('2026-09-30') },
+ '/tax-reform-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 마지막 광고 아래 공제 폐지·재정지원 전환 항목 (B43 YE-06) — 페이지 수정일 3곳도 같은 날
  '/civil-servant-pay-2027': { lastModified: new Date('2026-10-19T00:00:00+09:00') }, // B20 리드·메타 정렬(네이버 저CTR)
  // R2 신규 8라우트 (2026-08-31)
- '/calc/dual-income-year-end': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 표준세액공제 비교 엔진(PKG-10)·문구(PKG-11·PKG-20)·부부 상호 의료비 700만원 한도(B24)·기본 예시(B25)·자녀 분할 조건(B26)
+ '/calc/dual-income-year-end': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 표준세액공제 비교 엔진(PKG-10)·문구(PKG-11·PKG-20)·부부 상호 의료비 700만원 한도(B24)·동점 문구(B25)·입력 기준 접힌 상자(B09)
  '/calc/voluntary-retirement': { lastModified: new Date('2026-09-03') },
  '/calc/dependent-check': { lastModified: new Date('2026-09-05') },
  '/calc/smb-income-tax-break': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 4대보험료 소득공제·환산 나이 판정 반영(PKG-14)
  '/calc/offer-compare': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 자녀 공제 나이 FAQ 정정(PKG-21) — 본문 '(설명 수정 2026-11-01)'와 일치
- '/calc/child-deduction': { lastModified: new Date('2026-10-26T00:00:00+09:00') },
+ '/calc/child-deduction': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 결과 광고 위 입력 안내를 짧은 요약으로 (B09 P4-05)
  '/tax-changes-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 자녀세액공제 나이 정정(PKG-21)
  '/year-end-tax-checklist': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 2027 연말정산 제목·자녀세액공제 나이 정정(PKG-20)
  '/weekly-holiday-allowance-2026': { lastModified: new Date('2026-09-12') },
@@ -109,7 +111,11 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/civil-servant-net-pay': { lastModified: new Date('2026-10-23T00:00:00+09:00'), priority: 0.8, changeFrequency: 'monthly' },
  '/tools/finance/compound': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
  '/tools/finance/bonus': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 과세표준 4대보험료 공제 반영(PKG-12)
- '/donation-tax-credit-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 산출세액 한도 미반영 정정·한도 초과 미공제분 줄 (B26 STR-02-o)
+ '/donation-tax-credit-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 산출세액 한도 미반영 정정·한도 초과 미공제분 줄 (B26 STR-02-o)·페이지 끝 날짜 FAQ (B30)
+ // 2026-11-01: 연말정산 계산기 3종 — 마지막 광고(MultiplexAd) 아래 페이지 끝 날짜 FAQ 2문항 (B30 SEO-07-b, 첫 원장 항목)
+ '/credit-card-deduction-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') },
+ '/medical-tax-credit-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 출처 조문 제59조의4 제2항 정정도 같은 날
+ '/rent-tax-credit-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') },
  '/property-holding-tax-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 종부세 농어촌특별세·1세대 1주택 세액공제·12월 상세 (R2-HOLD)
  '/health-insurance-dependent': { lastModified: new Date('2026-10-17') },
  // 2026-11-01: 6대 암검진 본인부담 0~10%·수검 기한 1회 교정(운영자 승인, PKG-22 STR-06) — 10/19 링크 검토일 대신
@@ -126,7 +132,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/en/flat-tax': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
  '/en/salary-converter': { lastModified: new Date('2026-09-09') },
  '/en/help': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
- '/en/guides': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
+ '/en/guides': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 첫 광고 위 10/19 소개 링크 문단 제거 (B12 P2UX-01)
 };
 
 // 2026-09-10: 연봉 상세의 계산 방법과 회사 상세 FAQ를 실질적으로 수정한 날.

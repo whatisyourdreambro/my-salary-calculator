@@ -255,3 +255,11 @@ Breadcrumbs/speakable(온페이지) + 허브(/calc/bonus-calculators) 신설 + 2
 
 - 두 회사 쪽의 sitemap lastmod(companyPageModified)는 그대로이고, rss-companies.xml 항목 제목(LIG 는 설명도)이 같은 함수를 따라 바뀐다.
 - 같은 단계 원장이 sitemap lastmod 를 2026-11-01 로 앞당긴 쪽은 제목이 그대로인 내용·결과 변경이라 위 표에 넣지 않는다: /calc/sk-hynix-bonus · /calc/bonus-calculators (B27) · /teacher-pay-2026 (B35) · /donation-tax-credit-2026 (B26) · /calc/january-bonus (B23, 첫 원장 항목) · /property-holding-tax-2026 (R2-HOLD, 첫 원장 항목). /year-end-tax · /calc/dual-income-year-end 는 이미 2026-11-01 이다(scripts/sitemap-content-reviews.json 사유 참조).
+
+## 2026-11-01 2차 통합 2단계 제목 변경 기록 (claude/integration-1101b · 원장 마무리, append-only)
+
+2차 통합 2단계(B 패키지 15개: B04~B13·B28·B30·B37·B38·B43)에는 head `<title>` 변경이 없다. 이전 값 = 1단계 마감 918026445, 이후 값 = 통합 브랜치 — 둘 다 정적 207쪽과 회사 430쪽의 metadata 를 tsx 로 직접 읽은 값이다(정적 4쪽 /, /calc, /earned-income-credit, /work-clock 은 두 트리에서 똑같이 읽기 실패이고, 이 단계에서 그 head 파일은 바뀌지 않았다). 수치(클릭·노출·CTR)는 적지 않는다.
+
+- 제목은 그대로이고 검색 설명만 바뀐 쪽(판정 각주용): /calc/samsung-bonus — P2UX-04 a (B37, 운영자 승인 8번). 10/19 에 빠졌던 앞머리를 되살림: 삼성전자 기존 OPI1·DS 특별경영성과급(OPI2) 합산 세후 실수령액 추정. … → 삼성전자 OPI(초과이익성과금)·TAI(목표달성장려금) 계산기. 기존 OPI1·DS 특별경영성과급(OPI2) 합산 세후 실수령액과 …(뒤 문장 범위·개인 지급 확정액 아님 문구는 그대로). 판정은 위 Round 3 규칙(T0 직전 28일 vs T0+1~T0+28, 읽는 날 T0+35)대로 하고, T0 = 운영자가 이 단계 승인 게시를 마친 시각(게시 뒤 이 줄에 기입: `T0 = ____`).
+- 회사 쪽 430곳은 제목·설명·companyPageModified 가 모두 그대로다(B05 는 삼성전자 회사 요약·의견 폼, B11 은 LIG 사명 안내를 광고 아래로 옮긴 배치만).
+- 같은 단계 원장이 sitemap lastmod 를 2026-11-01 로 앞당긴 쪽은 제목이 그대로인 내용 변경이라 표를 두지 않는다: /calc/samsung-bonus (B28·B37) · /calc/bonus-home-plan (B28) · /year-end-tax-2027 · /year-end-tax-preview (B30) · /tax-reform-2026 (B43, 페이지 수정일 3곳 함께) · /calc/child-deduction (B09) · /en/guides (B12) · /credit-card-deduction-2026 · /medical-tax-credit-2026 · /rent-tax-credit-2026 (B30, 첫 원장 항목). /year-end-tax · /calc/dual-income-year-end · /donation-tax-credit-2026 은 이미 2026-11-01 이다(scripts/sitemap-content-reviews.json 사유 참조).
