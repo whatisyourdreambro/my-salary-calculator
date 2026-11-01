@@ -63,7 +63,8 @@ export const metadata: Metadata = buildPageMetadata({
   ],
   ogType: "article",
   publishedTime: "2026-05-22",
-  modifiedTime: "2026-08-30",
+  // 2026-11-01 R2-HOLD: 결과 합계에 농어촌특별세·1세대 1주택 세액공제 반영 — sitemap override·내용 검토 원장과 같은 날
+  modifiedTime: "2026-11-01",
 });
 
 const FAQS = [
