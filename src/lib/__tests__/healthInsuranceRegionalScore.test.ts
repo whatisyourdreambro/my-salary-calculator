@@ -96,9 +96,27 @@ describe("/health-insurance-fee-2026 지역가입자 슬라이더", () => {
     expect(src).toContain("max={MAX_PROPERTY_GRADE}");
     expect(src).toContain("useState(23)");
   });
-  it("결과 광고 위 안내문은 짧은 형태 — 공제 후 재산 {구간}.", () => {
-    expect(src).toContain("별도). 공제 후 재산 {propertyGradeRangeText(regionalGrade)}. 정확한 점수는 건보공단에서 조회.");
+  it("결과 광고 위 안내문은 짧은 형태 — 공제 후 재산 {구간}. 하나만", () => {
+    expect(src).toMatch(/별도\)\. 공제 후 재산 \{propertyGradeRangeText\(regionalGrade\)\}\.\r?\n\s*<\/p>/);
     expect(src).not.toContain("재산 과표 합계에서 1억원을 뺀 금액");
+    expect(src).not.toContain("정확한 점수는 건보공단에서 조회");
+    // 정확한 금액 조회 안내는 결과 아래 각주에 그대로 있다
+    expect(src).toContain("정확한 금액은 건강보험공단(1577-1000) 또는 건보공단 홈페이지에서 조회하세요.");
+  });
+  it("안내문은 0~60등급 모두 운영 문단보다 짧다 (글자 수·폭 추정, 가장 긴 단어 포함)", () => {
+    // 운영(5ccd079e6) 문단 — 결과 광고 위, 지역가입자 토글 상태
+    const OLD = "※ 재산 점수 기준(자동차 부과는 2024년 폐지, 소득은 정률 7.19% 별도). 평균 자영업자 약 1,500~2,500점. 정확한 점수는 건보공단에서 조회.";
+    const PREFIX = "※ 재산 점수 기준(자동차 부과는 2024년 폐지, 소득은 정률 7.19% 별도). 공제 후 재산 ";
+    // 한글 1em, 공백 0.25em, 그 밖의 글자 0.55em
+    const em = (s: string) => [...s].reduce((w, c) => w + (/[가-힣]/.test(c) ? 1 : c === " " ? 0.25 : 0.55), 0);
+    const longestWord = (s: string) => Math.max(...s.split(" ").map(em));
+    for (let g = 0; g <= MAX_PROPERTY_GRADE; g++) {
+      const note = `${PREFIX}${propertyGradeRangeText(g)}.`;
+      expect(note.length, `grade ${g}`).toBeLessThan(OLD.length);
+      expect(em(note), `grade ${g}`).toBeLessThan(em(OLD) * 0.9);
+      // 끊을 수 없는 단어(keep-all)도 320px 한 줄(text-xs 약 20em)의 절반 이하
+      expect(longestWord(note), `grade ${g}`).toBeLessThanOrEqual(10);
+    }
   });
   it("기본 상태(직장가입자)는 그대로", () => {
     expect(src).toContain('useState<Type>("workplace")');

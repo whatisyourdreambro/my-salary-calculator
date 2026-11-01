@@ -120,9 +120,10 @@ export default function HealthInsuranceFeeClient() {
               aria-label="재산 등급"
               aria-valuetext={`${fmt(regionalScore)}점`}
             />
-            {/* 결과 광고(CalcResultAd) 위 — 지역가입자 토글 후에만 보이는 안내문. 구간 문구는 '공제 후 재산 {구간}.' 으로 짧게 유지 */}
+            {/* 결과 광고(CalcResultAd) 위 — 지역가입자 토글 후에만 보이는 안내문. 모든 등급에서 종전(운영) 문단보다 짧게:
+                구간 문구 '공제 후 재산 {구간}.' 하나만 두고, 정확한 금액 조회 안내는 아래 각주(건강보험공단 1577-1000)에 맡긴다 */}
             <p className="mt-2 text-xs text-faint-blue">
-              ※ 재산 점수 기준(자동차 부과는 2024년 폐지, 소득은 정률 7.19% 별도). 공제 후 재산 {propertyGradeRangeText(regionalGrade)}. 정확한 점수는 건보공단에서 조회.
+              ※ 재산 점수 기준(자동차 부과는 2024년 폐지, 소득은 정률 7.19% 별도). 공제 후 재산 {propertyGradeRangeText(regionalGrade)}.
             </p>
           </div>
         )}
