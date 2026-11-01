@@ -7,6 +7,8 @@ import Link from "@/components/AppLink";
 import { AlertTriangle } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import { yearEndToolTitle } from "@/lib/yearEndSeason";
+import { RENT_DATED_FAQS } from "@/lib/yearEndDatedFaqs";
+import YearEndDatedFaq from "@/components/YearEndDatedFaq";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";
 import { HomeTopAd, InArticleAd, CalcResultAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
@@ -112,7 +114,8 @@ export default function RentTaxCredit2026Page() {
             description: "총급여·월세액으로 2026년 귀속 월세 세액공제액(15%·17%, 연 1,000만원 한도) 자동 산출",
             url: "/rent-tax-credit-2026",
           }),
-          faqLd(FAQS.map((f) => ({ question: f.q, answer: f.a }))),
+          // FAQPage 는 한 쪽에 하나 — 기존 FAQ + 페이지 끝 날짜 박힌 FAQ(둘 다 화면에 노출, SEASON-15)
+          faqLd([...FAQS.map((f) => ({ question: f.q, answer: f.a })), ...RENT_DATED_FAQS]),
           howToLd({
             name: "월세 세액공제 계산하는 방법 (2026년 귀속)",
             description: "총급여와 월세액을 입력해 연말정산 월세 세액공제액을 1분 안에 계산",
@@ -403,6 +406,9 @@ export default function RentTaxCredit2026Page() {
             </Link>
           </div>
         </section>
+
+        {/* 날짜 박힌 FAQ (SEASON-15, 2026-09-26) — 마지막 광고(MultiplexAd)보다 아래 페이지 맨 끝. 광고 위 높이 불변 */}
+        <YearEndDatedFaq items={RENT_DATED_FAQS} headingId="rent-dated-faq" />
       </div>
     </main>
   );

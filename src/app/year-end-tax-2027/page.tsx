@@ -28,9 +28,18 @@ import {
   YEAR_END_STEPS,
   YEAR_END_CALENDAR,
   YEAR_END_NEWS,
+  YEAR_END_REFORM_2027,
+  YEAR_END_MORE_TOOLS,
 } from "@/data/yearEndTaxHub";
 import { CalendarDays, Newspaper, ArrowRight, Calculator, ClipboardCheck, BookOpen } from "lucide-react";
 import { GuideMidAd, InArticleAd, MultiplexAd, CalcResultAd } from "@/components/AdPlacement";
+import YearEndDatedFaq from "@/components/YearEndDatedFaq";
+import {
+  YEAR_END_HUB_DATED_FAQS,
+  YEAR_END_HUB_DATED_FAQ_BASIS,
+  YEAR_END_HUB_DATED_FAQ_CHECKED_LABEL,
+  YEAR_END_HUB_DATED_FAQ_CHECKED_ON,
+} from "@/lib/yearEndDatedFaqs";
 // 부활 팩 ④ (운영자 승인 2026-08-31) — CPA 오퍼 슬롯
 import { OfferSlot } from "@/components/affiliate/AffiliateSlot";
 
@@ -94,7 +103,8 @@ export default function YearEndTax2027HubPage() {
               s.entries.map((e) => ({ name: e.title, url: e.href }))
             ),
           }),
-          faqLd(FAQS),
+          // SE-04(2026-10-22): 맨 끝 날짜 박힌 FAQ 3문항을 같은 FAQPage 하나에 합친다
+          faqLd([...FAQS, ...YEAR_END_HUB_DATED_FAQS]),
           speakableLd({
             url: PAGE_PATH,
             cssSelectors: [".speakable-summary", ".faq-answer"],
@@ -256,10 +266,79 @@ export default function YearEndTax2027HubPage() {
             <MultiplexAd />
           </div>
 
+          {/* 2026 세제개편안 정부안 — 마지막 광고(Multiplex) 아래 새 블록 (SEASON-05 2026-09-26 작성, 2026-11-01 B30 이식).
+              광고 위 형제 요소는 그대로라 광고 위 높이 불변. 광고 위 뉴스 목록(YEAR_END_NEWS)의 '세제개편안 발표' 행은
+              건드리지 않는다(광고 위 목록 행 수·문구 고정). ★국회 의결 뒤 이 블록을 통과안 기준으로 다시 쓴다(yearEndTaxHub.ts). */}
+          <section className="mb-12 rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8" aria-labelledby="reform-2027-heading">
+            <p className="text-xs font-black text-electric mb-1">{YEAR_END_REFORM_2027.label}</p>
+            <h2 id="reform-2027-heading" className="text-2xl font-black text-navy mb-2">
+              2027년 귀속부터 바뀔 수 있는 것 — 2026 세제개편안
+            </h2>
+            <p className="text-sm leading-7 text-muted-blue mb-4">
+              <time dateTime={YEAR_END_REFORM_2027.announced}>2026년 8월 3일</time> 발표,{" "}
+              <time dateTime={YEAR_END_REFORM_2027.confirmed}>9월 1일</time> 국무회의에서 정부안이 확정돼 국회에
+              제출됐고, <time dateTime={YEAR_END_REFORM_2027.statusCheckedOn}>2026년 11월 1일</time> 확인 기준 아직 국회
+              의결 전입니다. 국회를 통과해야 2027년 1월 이후 소득분(2028년 초 연말정산)부터 적용되며, 올해(2026년 귀속)
+              연말정산에는 적용되지 않습니다.
+            </p>
+            <ul className="space-y-3">
+              {YEAR_END_REFORM_2027.rows.map((r) => (
+                <li key={r.item} className="text-sm leading-7 text-muted-blue">
+                  <strong className="text-navy">{r.item}</strong> — 현행 {r.now} → 정부안 {r.plan}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-3 text-xs text-faint-blue">
+              출처: 재정경제부 「2026년 세제개편안」 상세본(2026. 8. 3.)·「2026년 세제개편안 정부안 확정」(2026. 9. 1.).
+              국회 심사에서 달라질 수 있습니다. 전체 내용은{" "}
+              <Link href="/tax-reform-2026" className="font-bold text-electric hover:underline">
+                2026 세법개정안 총정리
+              </Link>
+              에서 확인하세요.
+            </p>
+          </section>
+
           <RelatedCalculators
             currentPath={PAGE_PATH}
             limit={4}
             title="함께 보면 좋은 계산기"
+          />
+
+          {/* 시즌 도구 더 보기 — 페이지 마지막 광고(MultiplexAd) 아래 (TS-08 2026-09-29 작성, 2026-11-01 B30 이식).
+              RelatedCalculators(limit 4)에 안 나오는 기부금·맞벌이·자녀·13월·IRP·중기 감면·개편안 */}
+          <section className="mt-12" aria-labelledby="more-tools-heading">
+            <h2 id="more-tools-heading" className="text-2xl font-black text-navy mb-4">
+              연말정산 시즌 도구 더 보기
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {YEAR_END_MORE_TOOLS.map((e) => {
+                const Icon = KIND_ICON[e.kind];
+                return (
+                  <Link
+                    key={e.href}
+                    href={e.href}
+                    className="group rounded-xl border border-canvas-200 bg-canvas-50 p-4 hover:border-primary transition"
+                  >
+                    <p className="font-bold text-navy text-sm mb-1 inline-flex items-center gap-1.5 group-hover:text-electric transition-colors">
+                      <Icon size={14} className="text-electric shrink-0" aria-hidden="true" />
+                      {e.title}
+                    </p>
+                    <p className="text-xs leading-5 text-muted-blue">{e.desc}</p>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* 질문형 FAQ 3문항(환급 반영 시기·분납·간소화 개통) — 페이지 맨 끝, 마지막 광고(MultiplexAd) 아래
+              (SE-04 2026-10-22 작성, 2026-11-01 B30 이식). 정밀 계산기 4쪽과 같은 블록(YearEndDatedFaq)·같은 FAQPage 에
+              합침. 광고 위 FAQS 배열에는 덧붙이지 않는다. */}
+          <YearEndDatedFaq
+            items={YEAR_END_HUB_DATED_FAQS}
+            headingId="hub-dated-faq"
+            checkedOn={YEAR_END_HUB_DATED_FAQ_CHECKED_ON}
+            checkedLabel={YEAR_END_HUB_DATED_FAQ_CHECKED_LABEL}
+            basis={YEAR_END_HUB_DATED_FAQ_BASIS}
           />
         </div>
       </main>

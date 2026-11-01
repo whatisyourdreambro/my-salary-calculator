@@ -7,6 +7,8 @@ import type { Metadata } from "next";
 import Link from "@/components/AppLink";
 import { buildPageMetadata } from "@/lib/seo";
 import { yearEndToolTitle } from "@/lib/yearEndSeason";
+import { MEDICAL_DATED_FAQS } from "@/lib/yearEndDatedFaqs";
+import YearEndDatedFaq from "@/components/YearEndDatedFaq";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";
 import { HomeTopAd, InArticleAd, CalcResultAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
@@ -104,7 +106,8 @@ export default function MedicalTaxCredit2026Page() {
               "총급여 3% 초과 의료비의 15~30% 세액공제를 실손 차감·무한도 항목 반영해 자동 산출",
             url: "/medical-tax-credit-2026",
           }),
-          faqLd(FAQS.map((f) => ({ question: f.q, answer: f.a }))),
+          // FAQPage 는 한 쪽에 하나 — 기존 FAQ + 페이지 끝 날짜 박힌 FAQ(둘 다 화면에 노출, SEASON-15)
+          faqLd([...FAQS.map((f) => ({ question: f.q, answer: f.a })), ...MEDICAL_DATED_FAQS]),
           howToLd({
             name: "2026년 귀속 의료비 세액공제 계산하는 방법",
             description:
@@ -397,11 +400,14 @@ export default function MedicalTaxCredit2026Page() {
             연말정산 미리보기 또는 회사 연말정산 담당자를 통해 확인하세요.
           </p>
           <ul className="text-xs leading-6 text-faint-blue list-disc pl-4 space-y-0.5">
-            <li>소득세법 제59조의4 제1항 (의료비 세액공제) — 국가법령정보센터(law.go.kr)</li>
+            <li>소득세법 제59조의4 제2항 (의료비 세액공제) — 국가법령정보센터(law.go.kr)</li>
             <li>국세청 국세상담센터 공식 안내 (call.nts.go.kr, 2026-08-08 조회 기준)</li>
             <li>국세청 연말정산 종합안내 (hometax.go.kr)</li>
           </ul>
         </aside>
+
+        {/* 날짜 박힌 FAQ (SEASON-15, 2026-09-26) — 마지막 광고(MultiplexAd)보다 아래 페이지 맨 끝. 광고 위 높이 불변 */}
+        <YearEndDatedFaq items={MEDICAL_DATED_FAQS} headingId="medical-dated-faq" />
       </div>
     </main>
   );

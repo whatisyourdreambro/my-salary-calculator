@@ -276,6 +276,11 @@ export default function YearEndTaxPage() {
  >
  {row.item}
  <span className="block mt-0.5 text-xs font-medium text-faint-blue">{row.basis}</span>
+ {row.calc && (
+ <Link href={row.calc.href} className="block mt-1 text-xs font-bold text-electric hover:underline">
+ {row.calc.label}
+ </Link>
+ )}
  </th>
  <td className="block sm:table-cell mt-2 sm:mt-0 sm:py-3 sm:px-4 text-muted-blue leading-relaxed">
  <span className="sm:hidden font-bold text-navy">공제율 </span>

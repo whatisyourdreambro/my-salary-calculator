@@ -30,6 +30,7 @@ import { formatManwonKorean } from "@/lib/manwonFormat";
 import {
   EDUCATION_CREDIT_2026,
   INSURANCE_RATES_2026,
+  MARRIAGE_CREDIT_2026,
   MEDICAL_CREDIT_2026,
   PENSION_ACCOUNT_CREDIT_2026,
   RENT_CREDIT_2026,
@@ -41,6 +42,20 @@ const man = (won: number) => formatManwonKorean(won / 10_000);
 const pct = (rate: number) => `${Number((rate * 100).toFixed(1))}%`;
 /** 소득세 공제율 → 지방소득세(소득세의 10%) 포함 체감 공제율 */
 const withLocal = (rate: number) => pct(rate * (1 + INSURANCE_RATES_2026.LOCAL_INCOME_TAX_RATIO));
+/** "2024-01-01" → "2024년 1월 1일" (W2-A YEAR_END_FIELD_TIPS 와 같은 형식) */
+const koreanDate = (iso: string) => {
+  const [y, m, d] = iso.split("-").map(Number);
+  return `${y}년 ${m}월 ${d}일`;
+};
+
+const MC = MARRIAGE_CREDIT_2026;
+/**
+ * 혼인세액공제 적용 혼인신고 기간 — "2024년 1월 1일부터 2026년 12월 31일까지" (정본 MARRIAGE_CREDIT_2026 에서 만든다).
+ * 끝: 조세특례제한법 제92조 제1항 "2026년 12월 31일 이전에 혼인신고". 시작: 같은 법 부칙(법률 제20617호, 2024. 12. 31.)
+ * 제14조 — 2025-01-01 시행 이후 연말정산·확정신고분부터 적용, 공제는 혼인신고한 날이 속하는 과세기간이므로 2024년
+ * 혼인신고분부터(국가법령정보센터 현행 조문·부칙 확인 2026-09-26). 허브(/year-end-tax-2027) 정부안 표의 혼인 행도 이 문자열을 쓴다.
+ */
+export const MARRIAGE_CREDIT_WINDOW = `${koreanDate(MC.REGISTERED_FROM)}부터 ${koreanDate(MC.REGISTERED_UNTIL)}까지`;
 
 const R = CARD_RATES_2026;
 const CARD_7K = man(CARD_SALARY_THRESHOLD); // "7,000만원"
@@ -58,6 +73,8 @@ export interface YearEndLimitRow {
   rate: string;
   /** 한도·요건 */
   limit: string;
+  /** 해당 항목 정밀 계산기(표 th 안 링크, 2026-09-29) — 표는 /year-end-tax 마지막 광고 아래 */
+  calc?: { href: string; label: string };
 }
 
 export const YEAR_END_LIMIT_ROWS: readonly YearEndLimitRow[] = [
@@ -66,6 +83,7 @@ export const YEAR_END_LIMIT_ROWS: readonly YearEndLimitRow[] = [
     basis: "조세특례제한법 제126조의2",
     rate: `총급여 25% 초과 사용분에 신용카드 ${pct(R.CREDIT)} · 체크카드·현금영수증 ${pct(R.CHECK_CASH)} · 전통시장·대중교통 ${pct(R.TRADITIONAL)} · 도서·공연·체육시설 등 문화체육 ${pct(R.CULTURE)}(총급여 ${CARD_7K} 이하)`,
     limit: `기본 ${man(cardBaseLimit(true, 0))}(총급여 ${CARD_7K} 초과 ${man(cardBaseLimit(false, 0))}) · 자녀 1명 ${man(cardBaseLimit(true, 1))}(${man(cardBaseLimit(false, 1))}) · 자녀 2명 이상 ${man(cardBaseLimit(true, 2))}(${man(cardBaseLimit(false, 2))})`,
+    calc: { href: "/credit-card-deduction-2026", label: "신용카드 공제 계산기 →" },
   },
   {
     item: "신용카드 추가 한도",
@@ -78,18 +96,21 @@ export const YEAR_END_LIMIT_ROWS: readonly YearEndLimitRow[] = [
     basis: "소득세법 제59조의3",
     rate: `총급여 ${man(P.SALARY_15_MAX)} 이하 ${pct(P.RATE_HIGH)} · 초과 ${pct(P.RATE_LOW)} (지방소득세 포함 ${withLocal(P.RATE_HIGH)} · ${withLocal(P.RATE_LOW)})`,
     limit: `연금저축 ${man(P.SAVINGS_CAP)} · IRP 합산 ${man(P.TOTAL_CAP)} (ISA 만기 전환액의 ${pct(P.ISA_TRANSFER_RATIO)}, 최대 ${man(P.ISA_TRANSFER_CAP)} 추가)`,
+    calc: { href: "/tools/finance/irp", label: "IRP·연금저축 계산기 →" },
   },
   {
     item: "월세 세액공제",
     basis: "조세특례제한법 제95조의2",
     rate: `총급여 ${man(RENT_CREDIT_2026.SALARY_17_MAX)} 이하 ${pct(RENT_CREDIT_2026.RATE_HIGH)} · ${man(RENT_CREDIT_2026.SALARY_CAP)} 이하 ${pct(RENT_CREDIT_2026.RATE_LOW)}`,
     limit: `월세 연 ${man(RENT_CREDIT_2026.CAP)}(최대 ${man(RENT_CREDIT_2026.CAP * RENT_CREDIT_2026.RATE_HIGH)} 공제) · 무주택 세대주, 총급여 ${man(RENT_CREDIT_2026.SALARY_CAP)} 이하`,
+    calc: { href: "/rent-tax-credit-2026", label: "월세 세액공제 계산기 →" },
   },
   {
     item: "의료비 세액공제",
     basis: "소득세법 제59조의4 제2항",
     rate: `총급여 ${pct(M.THRESHOLD_RATIO)} 초과분의 ${pct(M.RATE)} (미숙아·선천성이상아 ${pct(M.PREMATURE_RATE)} · 난임시술비 ${pct(M.INFERTILITY_RATE)})`,
     limit: `부양가족 연 ${man(M.DEPENDENT_CAP)} · 본인·6세 이하·65세 이상·장애인 등 한도 없음 · 산후조리원 출산 1회 ${man(M.POSTPARTUM_CAP)}`,
+    calc: { href: "/medical-tax-credit-2026", label: "의료비 세액공제 계산기 →" },
   },
   {
     item: "교육비 세액공제",
@@ -102,6 +123,7 @@ export const YEAR_END_LIMIT_ROWS: readonly YearEndLimitRow[] = [
     basis: "소득세법 제59조의4 제4항 · 조세특례제한법 제58조·제76조",
     rate: `특례·일반 ${man(D.GENERAL_HIGH_THRESHOLD)} 이하 ${pct(D.GENERAL_RATE_LOW)} · 초과분 ${pct(D.GENERAL_RATE_HIGH)} / 정치자금 ${man(D.FULL_CREDIT_LIMIT)}까지 100/110 · 초과분 ${pct(D.POLITICAL_RATE)}(${man(D.POLITICAL_HIGH_THRESHOLD)} 초과분 ${pct(D.POLITICAL_RATE_HIGH)}) / 고향사랑 ${man(D.FULL_CREDIT_LIMIT)}까지 100/110 · ${man(D.FULL_CREDIT_LIMIT)} 초과 ${man(D.HOMETOWN_MID_UPPER)} 이하 ${pct(D.HOMETOWN_RATE_MID)}(지방소득세 포함 ${withLocal(D.HOMETOWN_RATE_MID)}) · ${man(D.HOMETOWN_MID_UPPER)} 초과분 ${pct(D.HOMETOWN_RATE)}(특별재난지역 ${pct(D.HOMETOWN_RATE_DISASTER)})`,
     limit: `일반기부금 근로소득금액의 ${pct(D.LIMIT_GENERAL_RATIO)}(종교단체 ${pct(D.LIMIT_RELIGIOUS_RATIO)}) · 고향사랑 연 ${man(D.HOMETOWN_CAP)}까지`,
+    calc: { href: "/donation-tax-credit-2026", label: "기부금 세액공제 계산기 →" },
   },
 ];
 
@@ -135,5 +157,13 @@ export const YEAR_END_LIMIT_FAQS: readonly YearEndLimitFaq[] = [
   {
     question: "교육비 세액공제 한도는 자녀 1명당 얼마인가요?",
     answer: `교육비는 지출액의 ${pct(E.RATE)}를 세액공제하며 취학 전 아동과 초·중·고등학생은 1명당 연 ${man(E.SCHOOL_CAP)}, 대학생은 1명당 연 ${man(E.UNIVERSITY_CAP)}까지 인정됩니다(자녀의 대학원 교육비는 제외). 근로자 본인 교육비(대학원·직업능력개발훈련 수강료 포함)와 장애인 특수교육비는 한도가 없습니다. 2026년 지출분부터는 초등학교 2학년 이하(또는 9세 미만) 자녀의 예체능 학원·체육시설 수강료도 ${man(E.SCHOOL_CAP)} 한도 안에서 공제됩니다.`,
+  },
+  // SEASON-15 (2026-09-26): 혼인세액공제 마지막 해 — 조세특례제한법 §92①(2024-01-01~2026-12-31 혼인신고, 1회 50만원,
+  // 시작일은 부칙 법률 제20617호 제14조), 2026-08-03 세제개편안 상세본 '혼인세액공제 적용기한 종료(재정지출 전환)'.
+  // 기간·금액은 MARRIAGE_CREDIT_2026 에서 만든다. 페이지 끝(마지막 광고 아래, 접힌 details)에 렌더.
+  {
+    question: "혼인세액공제는 언제까지, 얼마를 받을 수 있나요?",
+    answer:
+      `${MARRIAGE_CREDIT_WINDOW} 혼인신고를 한 사람은 혼인신고를 한 해의 산출세액에서 1회(생애 1회) ${man(MC.AMOUNT)}을 공제받습니다(조세특례제한법 제92조). 부부가 각각 요건을 갖추면 1명당 ${man(MC.AMOUNT)}씩입니다. 2026년에 혼인신고를 했다면 2027년 1~2월 연말정산(2026년 귀속)이 이 공제를 받는 마지막 연말정산이며, 2026년 8월 발표된 세제개편안(정부안)은 적용기한을 연장하지 않고 재정지원으로 전환하는 내용입니다.`,
   },
 ];

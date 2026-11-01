@@ -95,6 +95,17 @@ const FAQS = [
   },
 ];
 
+// 국세청 발표 기준 미리보기 개통일 — 세 행 모두 대한민국 정책브리핑(korea.kr)의 국세청 발표 기사로 확인(2026-11-01):
+//   2023: newsId=148922048(2023-10-31, 31일 개통) · 2024: newsId=148936216(2024-11-13 발표, 15일 개통) ·
+//   2025: newsId=148954010(2025-11-05, 5일 개통). 아래 2025년 메뉴 경로: newsId=148954467(2025-11-10).
+// ★2026년 귀속 행은 국세청 보도자료(nts.go.kr 보도자료 게시판)로 개통일을 확인한 뒤에만 넣는다 — 2026-11-01 현재
+//   개통 보도자료 없음(게시판 10/29 자까지 확인). 블로그 등 비공식 날짜는 쓰지 않는다. 제목의 'N년'은 행 수에서 만든다.
+const PREVIEW_OPEN_HISTORY = [
+  { year: "2023년 귀속", opened: "2023년 10월 31일", source: "국세청 발표(대한민국 정책브리핑)" },
+  { year: "2024년 귀속", opened: "2024년 11월 15일", source: "국세청 발표(대한민국 정책브리핑)" },
+  { year: "2025년 귀속", opened: "2025년 11월 5일", source: "국세청 발표(대한민국 정책브리핑)" },
+];
+
 export default function YearEndTaxPreviewPage() {
   return (
     <>
@@ -217,6 +228,49 @@ export default function YearEndTaxPreviewPage() {
             <ShareSection contentType="guide" className="mt-8 mb-8" />
             {/* 클러스터 칩 — 광고 아래 배치 준수 */}
             <YearEndTaxCluster />
+
+            {/* 최근 개통일·메뉴 경로 — 페이지 마지막 광고(CalcResultAd)·공유·클러스터 칩 아래 맨 끝
+                (TS-06 2026-09-29 작성, 2026-11-01 B30 이식). 광고 위 형제 요소는 그대로라 광고 위 높이 불변.
+                ★2026년 귀속 행은 국세청 개통 보도자료 확인 뒤 PREVIEW_OPEN_HISTORY 에만 추가(동결기 허용 데이터 갱신). */}
+            <section className="mt-10" aria-labelledby="open-history-heading">
+              <h2 id="open-history-heading" className="text-2xl font-black text-navy mb-4">
+                {`최근 ${PREVIEW_OPEN_HISTORY.length}년 연말정산 미리보기 개통일`}
+              </h2>
+              <div className="overflow-x-auto rounded-xl border border-canvas-200 bg-white">
+                <table className="w-full text-sm">
+                  <caption className="sr-only">국세청 발표 기준 연말정산 미리보기 개통일</caption>
+                  <thead>
+                    <tr className="border-b border-canvas-200 text-left text-xs text-faint-blue">
+                      <th scope="col" className="py-2.5 px-3 font-bold">귀속 연도</th>
+                      <th scope="col" className="py-2.5 px-3 font-bold">개통일</th>
+                      <th scope="col" className="py-2.5 px-3 font-bold">근거</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {PREVIEW_OPEN_HISTORY.map((row) => (
+                      <tr key={row.year} className="border-b border-canvas-200/60 last:border-0">
+                        <td className="py-2 px-3 font-bold text-navy whitespace-nowrap">{row.year}</td>
+                        <td className="py-2 px-3 font-bold text-electric whitespace-nowrap">{row.opened}</td>
+                        <td className="py-2 px-3 text-muted-blue">{row.source}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="mt-3 text-sm leading-7 text-muted-blue">
+                2026년 귀속분 개통일은 국세청 공지 후 이 표에 추가합니다. 2025년 기준 메뉴 경로는
+                홈택스 로그인 → 장려금·연말정산·기부금 → 편리한 연말정산 → 연말정산 미리보기였습니다(대한민국
+                정책브리핑 안내). 위 이용 절차의 전자기부금은 예전 메뉴 이름입니다.
+              </p>
+              <p className="mt-3 text-sm">
+                <Link
+                  href="/guides/hometax-year-end-preview-2026"
+                  className="font-bold text-electric hover:underline"
+                >
+                  홈택스 연말정산 미리보기 100% 활용법 — 미리보기 숫자 읽는 법 →
+                </Link>
+              </p>
+            </section>
           </div>
         </div>
       </main>
