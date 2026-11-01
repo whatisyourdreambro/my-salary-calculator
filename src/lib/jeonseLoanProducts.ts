@@ -58,7 +58,10 @@ export function calcJeonseLoans(deposit: number, income: number): JeonseLoanResu
   const s = Number.isFinite(income) ? Math.max(0, income) : 0;
   return JEONSE_LOAN_PRODUCTS.map((p) => {
     const eligible = s <= p.incomeLimit;
-    const limit = eligible ? Math.min(d * p.depositRatio, p.cap, s * p.incomeMultiple) : 0;
+    // 연소득 배수 한도가 없는 상품(Infinity)은 곱하지 않는다 — 합산 연소득 0원(입력란을 비운 순간 포함)이면
+    // 0 x Infinity = NaN 이라 정책상품 카드에 NaN원 이 떴다.
+    const incomeCap = Number.isFinite(p.incomeMultiple) ? s * p.incomeMultiple : Infinity;
+    const limit = eligible ? Math.min(d * p.depositRatio, p.cap, incomeCap) : 0;
     const annualInterest = limit * (p.rate / 100);
     return {
       name: p.name,

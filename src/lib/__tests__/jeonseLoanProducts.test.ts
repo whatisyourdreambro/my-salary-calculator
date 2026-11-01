@@ -37,6 +37,19 @@ describe("정책상품 한도·소득 요건", () => {
     expect(best?.name).toBe("신혼부부 버팀목");
     expect(cheapestEligible(calcJeonseLoans(0, 60_000_000))).toBeNull();
   });
+  it("합산 연소득 0원(입력란을 비운 순간)에도 NaN 없음 — 정책상품은 보증금 비율·호당 한도로", () => {
+    const results = calcJeonseLoans(300_000_000, 0);
+    for (const x of results) {
+      expect(Number.isFinite(x.limit), x.name).toBe(true);
+      expect(Number.isFinite(x.monthlyInterest), x.name).toBe(true);
+      expect(Number.isFinite(x.annualInterest), x.name).toBe(true);
+    }
+    const r = byName(300_000_000, 0);
+    expect(r["버팀목 전세대출"].limit).toBe(120_000_000);
+    expect(r["신혼부부 버팀목"].limit).toBe(240_000_000);
+    expect(r["청년 전세 (만 19~34)"].limit).toBe(150_000_000);
+    expect(r["일반 전세대출"].limit).toBe(0); // 사이트 가정값 연소득 x 4
+  });
 });
 
 describe("정책상품 네 값 — 주택도시기금 상품 페이지 2026-11-01 재대조 (6.27 대책 한도 축소 뒤 현행)", () => {
