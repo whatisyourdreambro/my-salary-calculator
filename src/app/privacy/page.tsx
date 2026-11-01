@@ -80,9 +80,12 @@ const SECTIONS = [
  ],
  },
  {
- title: "7. 책임자 및 문의처",
+ title: "7. 개인정보 보호책임자 및 문의처",
  body: [
- "본 방침과 열람·정정·삭제 요청은 비공개 문의 페이지(/contact)의 개인정보 관련 요청으로 접수할 수 있습니다. 기존 문의나 개선 의견에 관한 요청에는 접수 번호를 적어 주세요. 처리에 필요한 범위에서 추가 확인을 요청할 수 있습니다.",
+ "• 개인정보 보호책임자 겸 고충 처리 담당: 머니샐러리 운영자(개인정보 보호 담당)",
+ "• 연락처: 이메일 moneysalary.help@gmail.com, 또는 비공개 문의 페이지(/contact)의 개인정보 관련 요청",
+ "본 방침에 관한 문의와 열람·정정·삭제·처리 정지 요청은 위 연락처로 보내 주세요. 기존 문의나 개선 의견에 관한 요청에는 접수 번호를 적어 주세요. 처리에 필요한 범위에서 추가 확인을 요청할 수 있습니다.",
+ "요청은 받은 날부터 10일 이내에 처리하며, 그 안에 처리하기 어려우면 사유와 처리 예정일을 알려 드립니다.",
  "방침 변경 시 본 페이지에 즉시 공지합니다.",
  ],
  },
@@ -100,13 +103,13 @@ export default function PrivacyPage() {
 
  <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
  <div className="mb-12">
- <p className="text-sm text-faint-blue mb-2">최종 업데이트: 2026년 10월 23일</p>
+ <p className="text-sm text-faint-blue mb-2">최종 업데이트: 2026년 11월 1일</p>
  <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-navy mb-4">
  개인정보 처리방침
  </h1>
  <p className="text-base text-muted-blue leading-relaxed">
  머니샐러리(이하 &ldquo;사이트&rdquo;)는 사용자의 개인정보를 중요시하며,
- 정보통신망 이용촉진 및 정보보호 등에 관한 법률을 준수합니다.
+ 개인정보 보호법 등 관련 법령을 준수합니다.
  </p>
  </div>
 

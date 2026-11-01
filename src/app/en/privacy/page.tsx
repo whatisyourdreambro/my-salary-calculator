@@ -37,7 +37,9 @@ const sections = [
   { title: "6. Your requests", paragraphs: [
     "You may request access to, correction or deletion of your personal information, or restriction of its processing. You can delete browser-local data through browser settings or an available in-site reset or deletion control. Deleting one saved English result does not delete Korean calculation data.",
   ] },
-  { title: "7. Operator contact and changes", paragraphs: [
+  { title: "7. Privacy officer, contact and changes", paragraphs: [
+    "Privacy officer and complaints contact: the Moneysalary operator (privacy contact). Email: moneysalary.help@gmail.com, or the private contact form with Privacy request selected.",
+    "Requests are handled within 10 days of receipt. If that is not possible, we will tell you the reason and the expected date.",
     "Use the private contact form and choose Privacy request for questions about this policy or access, correction and deletion requests. Include the receipt ID when the request concerns an earlier message or fixed page feedback. Additional information may be requested only as needed to verify and process the request.",
     "Changes to this policy will be published on the policy page. Moneysalary values your privacy and states its compliance with applicable Korean information-network and privacy requirements in its Korean policy.",
   ] },
@@ -45,7 +47,7 @@ const sections = [
 
 export default function EnglishPrivacyPage() {
   return <EnglishPageShell title="Privacy policy" description="How Moneysalary handles data when you calculate, save, share or contact the operator." breadcrumbs={[{ name: "Privacy policy", href: "/en/privacy" }]}>
-    <div className="max-w-3xl space-y-6"><p className="text-sm text-muted-foreground">English version updated <time dateTime="2026-09-09">September 9, 2026</time>. This explains the same site practices as the Korean policy.</p>
+    <div className="max-w-3xl space-y-6"><p className="text-sm text-muted-foreground">English version updated <time dateTime="2026-11-01">November 1, 2026</time>. This explains the same site practices as the Korean policy.</p>
       {sections.map(section => <section key={section.title} className="rounded-2xl border border-border bg-background p-5 sm:p-7"><h2 className="text-xl font-bold">{section.title}</h2><div className="mt-4 space-y-3 text-sm leading-7 text-muted-foreground">{section.paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}</div></section>)}
       <nav aria-label="Privacy resources" className="flex flex-wrap gap-4 text-sm"><a href="https://policies.google.com/privacy" className="inline-flex min-h-11 items-center text-primary underline">Google privacy policy</a><a href="https://www.cloudflare.com/privacypolicy/" className="inline-flex min-h-11 items-center text-primary underline">Cloudflare privacy policy</a><a href="https://partners.coupang.com" className="inline-flex min-h-11 items-center text-primary underline">Coupang Partners (Korean)</a><a href="https://adssettings.google.com" className="inline-flex min-h-11 items-center text-primary underline">Google ad settings</a></nav>
       <nav aria-label="Site policies" className="flex flex-wrap gap-4"><Link href="/en/contact?source=privacy&type=privacy" className="inline-flex min-h-11 items-center font-semibold text-primary underline">Send a private privacy request</Link><Link href="/en/about" className="inline-flex min-h-11 items-center text-primary underline">About</Link><Link href="/en/terms" className="inline-flex min-h-11 items-center text-primary underline">Terms</Link></nav>
