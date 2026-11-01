@@ -109,7 +109,16 @@ export default function IdealTypeWorldCup({ companies }: { companies: WorldcupCo
  frame();
  };
 
- if (candidates.length === 0) return null;
+ // SSR·하이드레이션 첫 렌더: 셔플 전이라 후보가 없다 — 게임 영역과 같은 높이(위아래 32px + 600px)의 빈 자리만 잡아
+ // 아래 fun/layout 공통 광고 3개가 하이드레이션 뒤 밀리지 않게 한다(OF4 A1-b, 운영자 결정). 문구 없음.
+ // ★아래 대결 화면의 py-8·min-h-[600px]·h-[600px] 을 바꾸면 이 자리도 같이 바꿀 것(worldcupBoardReserve.test.ts).
+ if (candidates.length === 0) {
+ return (
+ <div className="w-full max-w-6xl mx-auto px-4 py-8" aria-hidden="true">
+ <div className="min-h-[600px]" />
+ </div>
+ );
+ }
 
  const leftContender = currentRound[currentPairIndex];
  const rightContender = currentRound[currentPairIndex + 1];

@@ -260,11 +260,12 @@ export default function YearEndTax2027HubPage() {
             </div>
           </section>
 
-          <ShareSection contentType="guide" className="mb-12" />
           {/* 목록 하단 멀티플렉스 — 운영자 일괄 승인 2026-08-23 */}
           <div className="mb-12">
             <MultiplexAd />
           </div>
+          {/* 공유 버튼 — 마지막 광고 아래(하이드레이션 뒤에 나타나도 광고가 밀리지 않게, OF4 A1). 광고 위로 되돌리지 말 것. */}
+          <ShareSection contentType="guide" className="mb-12" />
 
           {/* 2026 세제개편안 정부안 — 마지막 광고(Multiplex) 아래 새 블록 (SEASON-05 2026-09-26 작성, 2026-11-01 B30 이식).
               광고 위 형제 요소는 그대로라 광고 위 높이 불변. 광고 위 뉴스 목록(YEAR_END_NEWS)의 '세제개편안 발표' 행은

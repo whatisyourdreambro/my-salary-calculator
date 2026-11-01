@@ -378,12 +378,13 @@ export default function SamsungNegotiation2026Page() {
  </div>
  </section>
 
- <ShareSection contentType="guide" className="mb-8" />
  <RelatedCalculators currentPath="/samsung-negotiation-2026" />
 
  <div className="mt-8">
  <HomeTopAd />
  </div>
+ {/* 공유 버튼 — 마지막 광고 아래(하이드레이션 뒤에 나타나도 광고가 밀리지 않게, OF4 A1). 광고 위로 되돌리지 말 것. */}
+ <ShareSection contentType="guide" className="mt-8" />
 
  {/* 2026 임금협약 타결 결과 요약 — 마지막 광고(HomeTopAd) 아래에만 추가(2026-09-27). 광고 위 높이 불변.
  출처·검증 메모는 파일 머리 주석. 회사 발표(뉴스룸)와 보도 기준 항목을 구분해 적는다. */}

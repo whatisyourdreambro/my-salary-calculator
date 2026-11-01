@@ -246,7 +246,9 @@ export default function TetrisPage() {
  }
 
  return (
- <main className="w-full min-h-screen bg-slate-950 text-white overflow-hidden relative font-sans tabular-nums pb-16">
+ // 게임 끝(휴대폰·태블릿: 방향 버튼, lg 이상: 보드)에서 아래 fun/layout 공통 광고 라벨까지 152px 이상 — Google 권장 150px(OF4 A2, 운영자 결정).
+ // pb-20(80px)+버튼 패딩 16px+안쪽 py-8 32px+광고 여백 24px, lg 는 pb-24(96px)+32px+24px. 줄이지 말 것.
+ <main className="w-full min-h-screen bg-slate-950 text-white overflow-hidden relative font-sans tabular-nums pb-20 lg:pb-24">
  {/* Cyberpunk Background */}
  <div className="absolute inset-0 z-0 pointer-events-none">
  <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />

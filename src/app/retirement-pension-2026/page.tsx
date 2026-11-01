@@ -398,12 +398,13 @@ export default function RetirementPension2026Page() {
  <HomeTopAd />
  </div>
 
- <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
-
  {/* 본문 끝 관련콘텐츠형 광고 — 전면 최적화 (운영자 지시 2026-09-02) */}
  <div className="mt-8">
  <MultiplexAd />
  </div>
+
+ {/* 공유 버튼 — 마지막 광고 아래(하이드레이션 뒤에 나타나도 광고가 밀리지 않게, OF4 A1). 광고 위로 되돌리지 말 것. */}
+ <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
  </div>
  </main>
  );

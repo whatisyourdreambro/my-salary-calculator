@@ -24,7 +24,9 @@ export default function WorldCupPage() {
   }));
 
   return (
-    <div className="min-h-screen pt-20 pb-20 pt-28">
+    // 카드 판 아래 끝에서 fun/layout 공통 광고 라벨까지 152px 이상 — Google 권장 150px(OF4 A2, 운영자 결정).
+    // pb-24(96px)+게임 영역 아래 py-8 32px+광고 여백 24px. 줄이지 말 것.
+    <div className="min-h-screen pt-20 pb-24 pt-28">
       {/* 헤더는 서버 렌더 — 클라 컴포넌트의 랜덤 셔플 게이트와 무관하게
           h1 이 항상 SSR HTML 에 존재 (2026-08-30 감사 수정) */}
       <div className="w-full max-w-6xl mx-auto px-4 pt-8 text-center">

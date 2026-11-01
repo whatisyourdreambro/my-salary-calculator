@@ -130,3 +130,39 @@ describe("/report 빈 화면 광고 없음 — 렌더 결과", () => {
     expect(html.indexOf('data-test-ad="guide-mid"')).toBeLessThan(mainEnd);
   });
 });
+
+// OF4 A3 (2026-11-02): 빈 화면은 수동 유닛이 없어도 자동광고가 붙을 수 있었다. 404·오류 화면처럼
+// data-page-state="error" 를 달아 루트 layout 의 NotFoundAdPause 가 광고 요청을 보류하게 한다
+// (Google 게시자 정책: 콘텐츠 없는 화면 광고 금지). 리포트 화면에는 표시가 없어 대체되면 요청이 다시 열린다.
+describe("/report 빈 화면 자동광고 보류 표시", () => {
+  it("저장 리포트가 없는 빈 화면의 main 에 data-page-state=error 가 한 번 있다", () => {
+    const html = renderPage(null);
+    expect(html).toContain("저장된 리포트가 없습니다");
+    expect(count(html, 'data-page-state="error"')).toBe(1);
+    expect(html).toContain('<main data-page-state="error" class=');
+  });
+
+  it("저장 결과를 읽지 못한 안내 화면(같은 빈 화면 분기)에도 같은 표시가 있다", () => {
+    const html = renderPage(JSON.stringify({ salary: { monthlyNet: 4000000 }, lastUpdated }));
+    expect(html).toContain('role="alert"');
+    expect(count(html, 'data-page-state="error"')).toBe(1);
+    expect(html).toContain('<main data-page-state="error" class=');
+  });
+
+  it("리포트 화면에는 data-page-state 표시가 없다", () => {
+    const html = renderPage(JSON.stringify(valid));
+    expect(html).toContain("종합 금융 리포트");
+    expect(html).not.toContain("data-page-state");
+  });
+
+  it("소스: 표시는 빈 화면 분기의 main 에만 있고 NotFoundAdPause 가 보류하는 값과 같다", () => {
+    const { emptyStart, emptyMainEnd, dataMainStart, dataMainEnd } = sections();
+    expect(count(source, 'data-page-state="error"')).toBe(1);
+    const at = source.indexOf('data-page-state="error"');
+    expect(at).toBeGreaterThan(emptyStart);
+    expect(at).toBeLessThan(emptyMainEnd);
+    expect(source.slice(dataMainStart, dataMainEnd)).not.toContain("data-page-state");
+    const pause = readFileSync(join(process.cwd(), "src/components/NotFoundAdPause.tsx"), "utf8");
+    expect(pause).toContain(`[data-page-state="error"]`);
+  });
+});
