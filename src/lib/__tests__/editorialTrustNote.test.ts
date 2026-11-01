@@ -148,9 +148,10 @@ function expectNoteIsLast(html: string) {
   throw new Error("상자의 닫는 태그를 찾지 못함");
 }
 
-/** 자동광고가 저장하는 선택자는 태그+class 경로(querySelectorAll)다. 같은 렌더 안의 다른 section 의 class 가 전부 상자에도 있으면
- *  그 section 의 선택자가 상자에도 맞아, 순번이 하나 더 생긴다. 상자 class 가 다른 section 의 class 를 통째로 포함하지 않게 한다
- *  (렌더 전체의 section 과 비교 — 형제만 보는 것보다 엄격). */
+/** 추가 확인: 상자 class 가 렌더 안 다른 section 의 전체 class 목록을 통째로 포함하지 않게 한다(렌더 전체의 section 과 비교).
+ *  주의: 실제 자동광고 저장 선택자는 숫자로 끝나는 class·변형 class 를 뺀다(scripts/verify-autoads-paths.mjs keepClass). 그래서
+ *  이 검사를 통과해도 상자가 앞 section 의 저장 선택자(예: …>SECTION)에 맞을 수 있다. 그래도 상자는 마지막 형제라 기존 일치 요소의
+ *  순번은 바뀌지 않고 끝에 하나가 더해질 뿐이다 — 배치 안전은 expectNoteIsLast 와 아래 소스 검사(마지막 형제)가 지킨다. */
 function expectNoSectionSelectorMatchesNote(html: string) {
   const sections = [...html.matchAll(/<section\b([^>]*)>/g)].map((m) => ({
     attrs: m[1],

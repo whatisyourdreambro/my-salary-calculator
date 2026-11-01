@@ -6,8 +6,11 @@
 //   자동광고 CSS 경로도 바뀌지 않는다(CalcNewsNote·SalaryTableNextStepsFromPath 와 같은 선례).
 //   layout 이 children 뒤에 광고를 그리는 경로(계산기·실수령액 표·회사 페이지)는 page 가 아니라 그 layout 맨 끝의
 //   EditorialTrustNoteFromPath 로 그린다.
-// - 놓는 곳의 className 은 같은 페이지 다른 section 의 class 조합을 그대로 포함하지 않게 고른다 — 자동광고가 저장한
-//   선택자(태그+class, querySelectorAll)가 이 상자를 기존 section 의 다음 순번으로 잡지 않게(editorialTrustNote.test.ts 검사).
+// - 자동광고 저장 선택자는 숫자로 끝나는 class(mt-12·pb-16 등)와 변형 class(sm:… 등)를 빼고 만든다
+//   (scripts/verify-autoads-paths.mjs keepClass — scripts/autoads-placements.snapshot.json 의 저장 선택자에도 그런 class 가 없다).
+//   그래서 여백 class 로는 이 상자가 앞 section 의 저장 선택자(예: …>SECTION)에 맞는 것을 막지 못한다. 맞더라도 마지막 형제라
+//   기존 일치 요소의 순번(occurrenceIndex)은 그대로이고 끝에 하나가 더해질 뿐이다 — 안전은 위 '마지막 형제' 규칙이 지킨다.
+//   editorialTrustNote.test.ts 의 class 검사는 전체 class 목록 기준의 추가 확인일 뿐이다.
 // - 훅이 없어 서버 page 와 클라이언트 래퍼 양쪽에서 쓴다. 경로에 내용이 없으면 null(DOM 무변경).
 // - 링크는 이미 있는 주소만: /about 의 '정보를 확인하고 수정하는 기준'(#editorial-method)과 푸터에도 있는 /contact.
 //   새 쿼리 주소(?type= 등)를 만들지 않는다 — 크롤 낭비 줄이기(G1)와 같은 방향.
