@@ -110,11 +110,13 @@ export default function PropertyHoldingTaxClient() {
               <span>{fmt(result.totalRegional)}원</span>
             </div>
             {/* 12월 고지 = 종부세(1세대 1주택 세액공제 뒤) + 농어촌특별세 20%. 광고 위 줄이라 라벨은 종전 12자
-                라벨(종부세 정식 명칭 + 월 괄호)보다 짧은 11자 — 항목별 내역·나이·보유기간 입력은 맨 아래 상세로 잇는다 */}
+                라벨(종부세 정식 명칭 + 공백·괄호 월 표기)을 7자로 줄였다: 줄어든 폭(약 2.8em)이 값이 1.2배가 되며
+                늘 수 있는 최대 폭(숫자 1자리 + 쉼표, 약 0.9em)보다 커서 어떤 입력에서도 이 줄이 종전보다 넓지 않다.
+                12월 표기·항목별 내역·나이·보유기간 입력은 맨 아래 상세(마지막 광고 아래)로 잇는다 */}
             <div className="flex justify-between text-muted-blue dark:text-canvas-300 pt-2">
               <span>
                 <a href="#holding-tax-detail" className="underline decoration-dotted underline-offset-2 hover:text-electric">
-                  12월 종부세·농특세
+                  종부세·농특세
                 </a>
               </span>
               <span>{result.totalNational > 0 ? fmt(result.totalNational) + "원" : "—"}</span>

@@ -268,10 +268,21 @@ describe("화면 — 2주택 이상은 합계 입력 안내, 기본(1주택) 문
 describe("R2-HOLD 광고 안전 — 결과 광고 위 줄 수 불변, 상세는 마지막 광고 아래", () => {
   const client = readFileSync(resolve(process.cwd(), "src/app/property-holding-tax-2026/PropertyHoldingTaxClient.tsx"), "utf8");
   const page = readFileSync(resolve(process.cwd(), "src/app/property-holding-tax-2026/page.tsx"), "utf8");
-  it("12월 줄 라벨은 종전 '종합부동산세 (12월)'보다 짧고, 위 계산기에는 나이·보유기간 입력이 없다", () => {
-    expect(client).not.toContain("종합부동산세 (12월)");
-    expect(client).toContain("12월 종부세·농특세");
-    expect([..."12월 종부세·농특세"].length).toBeLessThan([..."종합부동산세 (12월)"].length);
+  it("12월 줄 라벨은 종전 '종합부동산세 (12월)'보다 넉넉히 짧고(값이 1.2배로 늘어도 줄 폭이 종전 이하), 위 계산기에는 나이·보유기간 입력이 없다", () => {
+    const BASE = "종합부동산세 (12월)";
+    const HEAD = "종부세·농특세";
+    expect(client).not.toContain(BASE);
+    expect(client).toMatch(/>\s*종부세·농특세\s*<\/a>/);
+    // 값(종부세 → 종부세 + 농특세 20%)은 1.2배라 많아야 숫자 1자리 + 쉼표 1개(비한글 2자)가 는다.
+    // 라벨은 한글 1자(월)와 비한글 4자(공백·괄호 2·숫자 2 → 가운뎃점 1)가 줄어 어느 글자 종류로도 종전보다 좁다.
+    const hangul = (s: string) => [...s].filter((c) => /[가-힣]/.test(c)).length;
+    const other = (s: string) => [...s].length - hangul(s);
+    expect(hangul(HEAD)).toBeLessThan(hangul(BASE));
+    expect(other(HEAD) + 2).toBeLessThan(other(BASE));
+    for (const v of [99_999, 833_334, 999_999, 8_333_334, 9_999_999, 83_333_334]) {
+      const digits = (n: number) => Math.round(n).toLocaleString("ko-KR").length;
+      expect(digits(v * 1.2) - digits(v), String(v)).toBeLessThanOrEqual(2);
+    }
     expect(client).toContain('href="#holding-tax-detail"');
     expect(client).not.toMatch(/<select\b/);
     expect(client).not.toContain("setHoldingTaxInputs({ age");

@@ -1,6 +1,6 @@
 // /property-holding-tax-2026 화면 렌더 가드 (2026-11-01 R2-HOLD)
-// 1) 위 계산기(HomeTopAd~CalcResultAd 사이): 결과 줄 수 4개 그대로, 12월 줄 = 종부세(세액공제 뒤) + 농어촌특별세,
-//    총액도 농특세 포함. 나이·보유기간 입력은 없다.
+// 1) 위 계산기(HomeTopAd~CalcResultAd 사이): 결과 줄 수 4개 그대로, 종부세·농특세 줄 = 종부세(세액공제 뒤) +
+//    농어촌특별세, 총액도 농특세 포함. 나이·보유기간 입력은 없다.
 // 2) 맨 아래 상세(마지막 광고 MultiplexAd 아래): 산출세액·세액공제(80% 한도)·납부할 종부세·농특세·총액 내역.
 // 3) page.tsx: 상세는 모든 광고 뒤, 결과와 CalcResultAd 사이는 비어 있다.
 // 입력 공유 스토어는 서버 렌더에서 항상 기본값이므로, 여기서는 스토어를 목으로 바꿔 입력별 화면을 그린다.
@@ -58,28 +58,28 @@ afterEach(() => {
 });
 
 describe("위 계산기 — 결과 광고 위 블록", () => {
-  it("기본값(10억·1세대 1주택): 결과 줄 4개, 12월 줄은 —, 총액 1,404,000원 그대로", async () => {
+  it("기본값(10억·1세대 1주택): 결과 줄 4개, 종부세·농특세 줄은 —, 총액 1,404,000원 그대로", async () => {
     const { client } = await renderWith({});
     expect(resultRows(client)).toBe(4);
     expect(text(client)).toContain("연 보유세 총액 1,404,000원");
-    expect(text(client)).toContain("12월 종부세·농특세 —");
+    expect(text(client)).toContain("종부세·농특세 —");
     expect(client).not.toContain("<select");
     expect(client).not.toContain("농어촌특별세");
   });
-  it("공시 15억·1세대 1주택·세액공제 없음: 12월 줄 1,080,000원(종부세 900,000 + 농특세 180,000), 총액 3,564,000원", async () => {
+  it("공시 15억·1세대 1주택·세액공제 없음: 종부세·농특세 줄 1,080,000원(종부세 900,000 + 농특세 180,000), 총액 3,564,000원", async () => {
     const { client } = await renderWith({ publishedValue: 1_500_000_000 });
-    expect(text(client)).toContain("12월 종부세·농특세 1,080,000원");
+    expect(text(client)).toContain("종부세·농특세 1,080,000원");
     expect(text(client)).toContain("연 보유세 총액 3,564,000원");
   });
-  it("상세에서 고른 70세·15년은 위 총액에도 반영(공제 80% 한도): 12월 줄 216,000원, 총액 2,700,000원", async () => {
+  it("상세에서 고른 70세·15년은 위 총액에도 반영(공제 80% 한도): 종부세·농특세 줄 216,000원, 총액 2,700,000원", async () => {
     const { client } = await renderWith({ publishedValue: 1_500_000_000, age: 70, holdingYears: 15 });
-    expect(text(client)).toContain("12월 종부세·농특세 216,000원");
+    expect(text(client)).toContain("종부세·농특세 216,000원");
     expect(text(client)).toContain("연 보유세 총액 2,700,000원");
     expect(resultRows(client)).toBe(4);
   });
-  it("3주택 합계 10억(기본 입력 + 슬라이더 3): 12월 줄 360,000원 — 종전 300,000원과 자릿수 같음", async () => {
+  it("3주택 합계 10억(기본 입력 + 슬라이더 3): 종부세·농특세 줄 360,000원 — 종전 300,000원과 자릿수 같음", async () => {
     const { client } = await renderWith({ numHomes: 3 });
-    expect(text(client)).toContain("12월 종부세·농특세 360,000원");
+    expect(text(client)).toContain("종부세·농특세 360,000원");
     expect(text(client)).toContain("연 보유세 총액 1,512,000원");
   });
 });
