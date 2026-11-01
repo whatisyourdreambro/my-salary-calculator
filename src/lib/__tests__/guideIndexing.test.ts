@@ -58,7 +58,10 @@ describe("가이드 검색 응답의 색인 범위", () => {
     expect(enMetadata.robots).not.toMatchObject({ index: false });
   });
 
-  it("Google·네이버의 robots 크롤 접근을 유지해 검색 URL의 noindex를 읽을 수 있다", async () => {
+  // 2026-11-01(G1): 검색 변형은 noindex 헤더에 더해 robots 크롤에서도 뺀다 — GSC 색인 보고서에
+  // 'canonical 대체' 84건·noindex 6건으로 크롤이 이어졌다. 허브·카테고리 허브·고유 글은 계속 연다.
+  // 경로별 판정은 robotsCrawlRules.test.ts 가 맡는다.
+  it("robots는 가이드 검색 변형 두 줄만 막고 허브·카테고리·고유 글 크롤은 유지한다", async () => {
     const rules = robots().rules;
     const groups = Array.isArray(rules) ? rules : [rules];
     for (const ua of ["Googlebot", "Yeti", "*"]) {
@@ -66,7 +69,8 @@ describe("가이드 검색 응답의 색인 범위", () => {
       expect(rule, ua).toBeDefined();
       expect(rule?.allow).toContain("/");
       const disallowed = [rule?.disallow ?? []].flat();
-      expect(disallowed.some((path) => path === "/" || path.includes("guides") || path.includes("?q"))).toBe(false);
+      expect(disallowed).not.toContain("/");
+      expect(disallowed.filter((path) => path.includes("guides") || path.includes("?q"))).toEqual(["/guides?q=", "/en/guides?q="]);
     }
   });
 });

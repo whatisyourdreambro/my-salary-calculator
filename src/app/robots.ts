@@ -37,7 +37,17 @@ export default function robots(): MetadataRoute.Robots {
  // 때마다 측정 요청을 보내 크롤 몫의 약 1/3을 쓰고, 새 페이지 발견 크롤은 1%였다.
  // 측정은 본문 렌더링에 필요 없으므로 크롤만 막는다. AdsBot·Mediapartners 그룹은
  // '/' 허용 그대로라 광고 매칭에는 영향이 없다.
- const corePathDisallow = ['/private/', '/api/', '/widget/', '/adgk/'];
+ // /?tab= = 홈 계산기 탭 주소(헤더 메뉴·홈 도구 카드·계산기 안내 링크·PWA 바로가기가 만든다).
+ // 정적 HTML 은 홈과 같고 탭은 브라우저에서만 바뀌며 canonical 도 홈이다. GSC 크롤 통계
+ // (2026-11-01)의 '새 주소 발견' 크롤 표본 894개 중 170개(19%)가 이 주소였다 — 적은 발견 몫을
+ // 홈 사본에 썼다. ?tab= 을 읽는 경로는 홈뿐이라 '/*?tab=' 대신 홈 접두사만 막는다.
+ // /guides?q=·/en/guides?q= = 가이드 내부 검색(글 태그·카테고리 링크, rel=nofollow). 응답은 이미
+ // canonical 허브 + X-Robots-Tag 'noindex, follow' 인데 GSC 색인 보고서(10/20 크롤분)에
+ // 'canonical 대체' 84건·noindex 6건으로 남았다. 크롤만 막고 noindex 헤더는 규칙을 따르지 않는
+ // 봇 대비로 그대로 둔다. 허브·글·/guides/category/…·?category= 는 접두사가 달라 열려 있다.
+ // 막힌 주소가 URL 만 색인되는지는 GSC '차단되었지만 색인됨'으로 확인한다. 세 줄 모두
+ // AdsBot·Mediapartners 그룹에는 없어 광고 매칭에는 영향이 없다.
+ const corePathDisallow = ['/private/', '/api/', '/widget/', '/adgk/', '/?tab=', '/guides?q=', '/en/guides?q='];
 
  return {
  rules: [
