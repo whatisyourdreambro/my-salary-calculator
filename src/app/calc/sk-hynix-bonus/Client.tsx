@@ -393,16 +393,18 @@ export default function SkHynixBonusClient() {
           내 성과급 계산 결과
         </h2>
 
+        {/* 산식 줄은 '= ' 머리 없이 — 2026-11-01 B27 보수 칩 181.5조(옛 150조보다 두 글자 김)를 누르면 PS 산식 줄이
+            320~323px 에서 두 줄이 돼 CalcResultAd 가 17px 내려갔다(11/1 통합 스윕 실측). 머리 두 글자를 빼면 종전보다 짧다. */}
         <div className="grid sm:grid-cols-2 gap-3 mb-5">
           <ResultCard
             label="PS 산정 총액"
             value={fmtEok(calc.psPersonalWon)}
-            sub={`= 영업이익 ${opiTrillion}조 × 10% ÷ ${EMPLOYEES.toLocaleString()}명 × (연봉/1억)`}
+            sub={`영업이익 ${opiTrillion}조 × 10% ÷ ${EMPLOYEES.toLocaleString()}명 × (연봉/1억)`}
           />
           <ResultCard
             label="연간 PI 합계"
             value={fmtEok(calc.piAnnualWon)}
-            sub={`= 기본급 × (${piHalf1}% + ${piHalf2}%) — 현금 지급`}
+            sub={`기본급 × (${piHalf1}% + ${piHalf2}%) — 현금 지급`}
           />
         </div>
 
@@ -464,8 +466,10 @@ export default function SkHynixBonusClient() {
           <p className="text-2xl sm:text-3xl font-black tabular-nums">
             {fmtEok(calc.taxCurrent.net)}
           </p>
+          {/* 빼기는 '-'(U+002D) — 보수 칩 181.5조의 세전·공제 금액(옛 150조와 같은 자릿수, 비례 숫자 폭 1~2px 넓음)이 '−'(U+2212)로는
+              363px 에서 두 줄이 돼 CalcResultAd 가 16px 내려갔다(11/1 통합 스윕 실측). '-' 가 약 3px 좁아 종전 이하. */}
           <p className="text-xs text-faint mt-1">
-            세전 {fmtEok(calc.currentYearGross)} − 공제{" "}
+            세전 {fmtEok(calc.currentYearGross)} - 공제{" "}
             {fmtEok(calc.taxCurrent.totalDeductions)} (실효세율{" "}
             <strong>{calc.taxCurrent.effectiveRate}%</strong>)
           </p>
