@@ -50,8 +50,8 @@
     },
     "/calc": {
       "contentDate": "2026-10-05",
-      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "475512fe4 (October 5) corrected featured calculator descriptions. 126f5d3fd changes only the ReactElement type. Child calculator and news routes are not this index. Recommendation destination selection in the shared registry does not revise the index article. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B12 P2UX-01): calc/layout.tsx renders TopicNextSteps after CalcNewsNote at the end of every calculator layout, below the calc ad block; TopicNextSteps returns null on /calc (no map key), so the hub visible content is unchanged and the 2026-10-05 date is retained.",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "475512fe4 (October 5) corrected featured calculator descriptions. 126f5d3fd changes only the ReactElement type. Child calculator and news routes are not this index. Recommendation destination selection in the shared registry does not revise the index article. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B12 P2UX-01): calc/layout.tsx renders TopicNextSteps after CalcNewsNote at the end of every calculator layout, below the calc ad block; TopicNextSteps returns null on /calc (no map key), so the hub visible content is unchanged and the 2026-10-05 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G4 appends EditorialTrustNoteFromPath at the end of calc/layout.tsx, after the calc ad block, share fallback and next-step boxes; it renders nothing on /calc itself (only on the Samsung and SK hynix bonus calculators). No visible hub change, so the 2026-10-05 date is retained.",
       "dependencies": [
         "src/lib/calculatorJourneys.ts",
         "src/lib/simpleCalculators/index.ts"
@@ -63,7 +63,7 @@
         "src/lib/calculatorJourneys.ts",
         "src/lib/simpleCalculators/index.ts"
       ],
-      "sha256": "751618c69d1d5f7901d6c88e36f8b3bd243b9693b81534e1a86f3e1e5197e6f7"
+      "sha256": "d962803b4983ca0d29c13f5fb01014d236487709f97873d9d183eaf713f169a9"
     },
     "/money-check": {
       "contentDate": "2026-10-19",
@@ -83,8 +83,8 @@
     },
     "/": {
       "contentDate": "2026-10-19",
-      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "Reviewed October 23 against deployed commit 3f100889. Added explicit saved-condition reuse and storage metadata, with no salary rate, tax calculation or home article correction. Retain the October 19 editorial date; this review covers the changed NextActions measurement and SalaryCalculator dependencies. Reviewed October 23 at e2961ffb: the SalaryCalculator diff removes newly generated private result tokens and remote amount-image URLs, and explains explicit result-text approval. It does not change salary rates, calculations or the home financial article. Retain the October 19 editorial content date for this sharing/privacy workflow change; old result readers remain supported. Reviewed October 25 against e424ac77 plus this candidate: insurance NextActions now opens the existing fee calculator and names the FIRE destination accurately. This is a navigation correction; retain the home article date. Rehashed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-22 P4-07): the home freelancer next-step card in NextActions now links to /health-insurance-fee-2026 instead of /health-insurance-2026. Link target only, no salary, tax or home article change, so the 2026-10-19 date is retained. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B05, B07). B05 STR-05 (10/5 approval #6, re-approved 2026-11-01) moves the work-clock section from between the hero and HomeTopAd to directly below that ad, drops the third hero jump button (실시간 월급 시계; the header menu item stays) and moves the salary result offer-comparison handoff block below ResultAd; B07 IVT-03 moves the stale-result notice from a box above the result card into the card title (edit-after-calculation state only; the SSR HTML is unchanged). Layout and state copy only, no salary, tax or home article change, so the 2026-10-19 date is retained.",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "Reviewed October 23 against deployed commit 3f100889. Added explicit saved-condition reuse and storage metadata, with no salary rate, tax calculation or home article correction. Retain the October 19 editorial date; this review covers the changed NextActions measurement and SalaryCalculator dependencies. Reviewed October 23 at e2961ffb: the SalaryCalculator diff removes newly generated private result tokens and remote amount-image URLs, and explains explicit result-text approval. It does not change salary rates, calculations or the home financial article. Retain the October 19 editorial content date for this sharing/privacy workflow change; old result readers remain supported. Reviewed October 25 against e424ac77 plus this candidate: insurance NextActions now opens the existing fee calculator and names the FIRE destination accurately. This is a navigation correction; retain the home article date. Rehashed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-22 P4-07): the home freelancer next-step card in NextActions now links to /health-insurance-fee-2026 instead of /health-insurance-2026. Link target only, no salary, tax or home article change, so the 2026-10-19 date is retained. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B05, B07). B05 STR-05 (10/5 approval #6, re-approved 2026-11-01) moves the work-clock section from between the hero and HomeTopAd to directly below that ad, drops the third hero jump button (실시간 월급 시계; the header menu item stays) and moves the salary result offer-comparison handoff block below ResultAd; B07 IVT-03 moves the stale-result notice from a box above the result card into the card title (edit-after-calculation state only; the SSR HTML is unchanged). Layout and state copy only, no salary, tax or home article change, so the 2026-10-19 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 takes the home WebApplication JSON-LD dateModified from staticRouteLastModified('/'), the same 2026-10-19 sitemap date (it was 2026-07-16), and G4 appends the who-made-this trust note (official-source check date 2026-09-25 = TAX_TABLE_EFFECTIVE_DATE) as the last sibling after the last ad, HomeSeoSection and share. JSON-LD and a note below every ad only, no salary, tax or home article change, so the 2026-10-19 date is retained.",
       "dependencies": [
         "src/components/NextActions.tsx",
         "src/components/SalaryCalculator.tsx"
@@ -95,7 +95,7 @@
         "src/components/NextActions.tsx",
         "src/components/SalaryCalculator.tsx"
       ],
-      "sha256": "0779da37c28e5e6e2cf82eea6488cb86bac35585a8b31c7c270b9003692a1b09"
+      "sha256": "4d7be89259a9d2ff14a0f8791b531216d75690ed53de196c516b2e41aed1c448"
     },
     "/home-loan": {
       "contentDate": "2026-09-19",
@@ -230,8 +230,8 @@
     },
     "/calc/samsung-bonus": {
       "contentDate": "2026-11-01",
-      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "Reviewed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B05, B06, B12, B28, B37). B28 STR-04-B (owner approval 2026-11-01 item 5) ports the held 10/9 public-press wording above the ads: the division scenario intro (기존 OPI 포함 세전; 370조원 is a company-wide or DS부문 forecast depending on the outlet), the distribution-model step 1 title OPI2 재원 = DS 영업이익 × 10.5%, the CL paragraph with the lower 0.9·0.8배 grades (10/7 reports) and the note that the multi-year simulator models only 가·나·일반, the 재원 heading and paragraph, the bottom info box, the simulator note and the OPI source label 복수 언론 보도 등. B37 P2UX-04 b returns the hero subtitle (2026 OPI·TAI 예상 금액) and the first summary sentence to the pre-10/19 line count; P2UX-04 a restores the OPI·TAI calculator head of the search description (head only). B05 STR-05 moves the hero jump links below the first ad and drops the redundant 내 연봉으로 바로 계산 link, B06 adds pt-2 under the personal-result CalcResultAd and B12 P2UX-01 moves the TopicNextSteps box from the page main to the end of calc/layout; those three are layout only. Visible text change: content date advanced from 2026-10-19 to 2026-11-01, matching article:modified_time, the JSON-LD dateModified and the visible 페이지 수정일 that B28 set.",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "Reviewed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B05, B06, B12, B28, B37). B28 STR-04-B (owner approval 2026-11-01 item 5) ports the held 10/9 public-press wording above the ads: the division scenario intro (기존 OPI 포함 세전; 370조원 is a company-wide or DS부문 forecast depending on the outlet), the distribution-model step 1 title OPI2 재원 = DS 영업이익 × 10.5%, the CL paragraph with the lower 0.9·0.8배 grades (10/7 reports) and the note that the multi-year simulator models only 가·나·일반, the 재원 heading and paragraph, the bottom info box, the simulator note and the OPI source label 복수 언론 보도 등. B37 P2UX-04 b returns the hero subtitle (2026 OPI·TAI 예상 금액) and the first summary sentence to the pre-10/19 line count; P2UX-04 a restores the OPI·TAI calculator head of the search description (head only). B05 STR-05 moves the hero jump links below the first ad and drops the redundant 내 연봉으로 바로 계산 link, B06 adds pt-2 under the personal-result CalcResultAd and B12 P2UX-01 moves the TopicNextSteps box from the page main to the end of calc/layout; those three are layout only. Visible text change: content date advanced from 2026-10-19 to 2026-11-01, matching article:modified_time, the JSON-LD dateModified and the visible 페이지 수정일 that B28 set. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 replaces the SoftwareApplication JSON-LD dateModified string with staticRouteLastModified(PAGE_PATH), still 2026-11-01 and equal to the visible page revision date; the G4 trust note (공개 자료 label, check date 2026-11-01) arrives through calc/layout.tsx, which this entry does not hash. JSON-LD source only, so the 2026-11-01 date is retained.",
       "dependencies": [
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
@@ -255,7 +255,7 @@
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
       ],
-      "sha256": "aa2ed38d94a78d5fb7444e79ff9c8f58ba48246eb6715f7e3859b3eda4152e51"
+      "sha256": "f60cbec395f3111c8f94d1818e03d3f3eb9218d6f81f3e2b8b4a911fcd9ddd5a"
     },
     "/calc/sk-hynix-bonus": {
       "contentDate": "2026-11-01",
@@ -299,25 +299,25 @@
     },
     "/calc/hyundai-bonus": {
       "contentDate": "2026-09-25",
-      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "78f10ee20 (September 25) changes the bonus-tax engine. Later dormant announcement configuration leaves current text unchanged; 4c83c9b88 only removes a redundant memo dependency. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B05 STR-05, 10/5 approval #6 re-approved 2026-11-01): the hero jump links moved below CalcResultAd and BonusNextLinks, and the redundant agreement-comparison button was dropped because that section follows directly. Layout only, no calculation or article change, so the 2026-09-25 date is retained.",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "78f10ee20 (September 25) changes the bonus-tax engine. Later dormant announcement configuration leaves current text unchanged; 4c83c9b88 only removes a redundant memo dependency. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B05 STR-05, 10/5 approval #6 re-approved 2026-11-01): the hero jump links moved below CalcResultAd and BonusNextLinks, and the redundant agreement-comparison button was dropped because that section follows directly. Layout only, no calculation or article change, so the 2026-09-25 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 changes the SoftwareApplication JSON-LD dateModified from 2026-09-19 to staticRouteLastModified(PAGE_PATH) = 2026-09-25, the sitemap and A18 engine date. The visible check-date text is unchanged; JSON-LD only, so the 2026-09-25 date is retained.",
       "dependencies": [],
       "files": [
         "src/app/calc/hyundai-bonus/Client.tsx",
         "src/app/calc/hyundai-bonus/page.tsx"
       ],
-      "sha256": "c153d9990f8c3aafc0767b5c3fdabc44d176c9803e60a7cfc340a347a192a7e6"
+      "sha256": "80e6bbf9f1f7bb2d053667d1b1dcdfa845d10049405094f158338d757ee0c814"
     },
     "/calc/year-end-bonus": {
       "contentDate": "2026-09-25",
-      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
-      "reason": "Existing explicit editorial baseline 2026-09-25 retained after route-owned history review; no later substantive change was identified in the reviewed scope.",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "Existing explicit editorial baseline 2026-09-25 retained after route-owned history review; no later substantive change was identified in the reviewed scope. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 changes the SoftwareApplication JSON-LD dateModified from 2026-09-09 to staticRouteLastModified = 2026-09-25, matching the sitemap and the visible check date. JSON-LD only, so the 2026-09-25 date is retained.",
       "dependencies": [],
       "files": [
         "src/app/calc/year-end-bonus/Client.tsx",
         "src/app/calc/year-end-bonus/page.tsx"
       ],
-      "sha256": "d0599a8340a47e1bf46d6b4e181644dbcc245497d243720b1e756660cb8b025b"
+      "sha256": "13285ba66204e832ee8fc831a9b5091643f5c2f2e5472f8d23ac27ae659ff3ae"
     },
     "/calc/kia-bonus": {
       "contentDate": "2026-09-25",
@@ -332,13 +332,13 @@
     },
     "/minimum-wage-2027": {
       "contentDate": "2026-11-01",
-      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "Reviewed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-10 DATA-01 and the integration Article date fix): the net-pay reference uses the confirmed 2027 long-term-care ratio 13.90%, the note under the table is shortened and the collapsed FAQ states the confirmed ratio. Content date advanced from 2026-09-30 to 2026-11-01, matching modifiedTime, Article dateModified and the visible updated date. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B06 STR-05, 10/5 approval #5 re-approved 2026-11-01): mt-8 on the CTA cards under CalcResultAd so the first tap target sits 32px below the ad. Spacing only, so the 2026-11-01 date is retained.",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "Reviewed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-10 DATA-01 and the integration Article date fix): the net-pay reference uses the confirmed 2027 long-term-care ratio 13.90%, the note under the table is shortened and the collapsed FAQ states the confirmed ratio. Content date advanced from 2026-09-30 to 2026-11-01, matching modifiedTime, Article dateModified and the visible updated date. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B06 STR-05, 10/5 approval #5 re-approved 2026-11-01): mt-8 on the CTA cards under CalcResultAd so the first tap target sits 32px below the ad. Spacing only, so the 2026-11-01 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G4 appends the trust note (check date 2026-11-01 = PublishedMeta updatedDate) after the last HomeTopAd. No visible date or figure change, so the 2026-11-01 date is retained.",
       "dependencies": [],
       "files": [
         "src/app/minimum-wage-2027/page.tsx"
       ],
-      "sha256": "723144609d7042179c364162464050be12c14853d1408eb28d38292f796d01dd"
+      "sha256": "3fbdfb5d043e457582d5e2869fa5b90eb7800143217dee0cea9dced354cca8a7"
     },
     "/minimum-wage-2026": {
       "contentDate": "2026-09-12",
@@ -352,8 +352,8 @@
     },
     "/year-end-tax": {
       "contentDate": "2026-11-01",
-      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "Reviewed 2026-11-01 for the stage-1 and stage-2 releases (origin/main 9c82ac01 plus B24 in stage 1; B06, B30, B43 in stage 2). Stage 1, B24 YE-03 and STR-10: inputs inside the collapsed accordions (주택청약, 전통시장, 대중교통, 문화·체육, 자녀세액공제 대상 자녀, 출산·입양, 혼인, 의료비 구분, 보험료, 월세, 교육비), and the engine applies the 주택청약 총급여 7천만원 requirement (조특법 제87조②) and the 700만원 cap on other-dependent medical; the default first view is byte-identical. Stage 2, all below the last ad: B30 SEO-07-b adds calculator links to 5 rows of the limits table and a 6th limits FAQ (혼인세액공제 for marriages registered 2024-01-01 to 2026-12-31; FAQPage now has 10 entries), and B43 YE-06 adds 2 limits-table rows (기업 출산지원금 비과세; 중소기업 취업자 소득세 감면 with a /calc/smb-income-tax-break link), an intro sentence, per-row mobile labels and an extended source note; B06 STR-05 wraps the loan OfferSlot under InArticleAd in div.mt-8 (spacing only). Result and content changes: the content date stays at the release date 2026-11-01 (the page has no revision date field). The calculator component, the engine, taxConstants2026.ts and now src/lib/yearEndLimits2026.ts (limits rows, limits FAQ and source note) are dependencies, so later edits to them require a content review of this route.",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "Reviewed 2026-11-01 for the stage-1 and stage-2 releases (origin/main 9c82ac01 plus B24 in stage 1; B06, B30, B43 in stage 2). Stage 1, B24 YE-03 and STR-10: inputs inside the collapsed accordions (주택청약, 전통시장, 대중교통, 문화·체육, 자녀세액공제 대상 자녀, 출산·입양, 혼인, 의료비 구분, 보험료, 월세, 교육비), and the engine applies the 주택청약 총급여 7천만원 requirement (조특법 제87조②) and the 700만원 cap on other-dependent medical; the default first view is byte-identical. Stage 2, all below the last ad: B30 SEO-07-b adds calculator links to 5 rows of the limits table and a 6th limits FAQ (혼인세액공제 for marriages registered 2024-01-01 to 2026-12-31; FAQPage now has 10 entries), and B43 YE-06 adds 2 limits-table rows (기업 출산지원금 비과세; 중소기업 취업자 소득세 감면 with a /calc/smb-income-tax-break link), an intro sentence, per-row mobile labels and an extended source note; B06 STR-05 wraps the loan OfferSlot under InArticleAd in div.mt-8 (spacing only). Result and content changes: the content date stays at the release date 2026-11-01 (the page has no revision date field). The calculator component, the engine, taxConstants2026.ts and now src/lib/yearEndLimits2026.ts (limits rows, limits FAQ and source note) are dependencies, so later edits to them require a content review of this route. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G4 appends the trust note (official-source check date 2026-11-01, equal to this content date and the latest YEAR_END_LIMITS_SOURCE_NOTE date) as the last sibling after the last ad (CoupangBanner), share and the limits table. No limit, FAQ, engine or calculator change, so the 2026-11-01 date is retained.",
       "dependencies": [
         "src/components/YearEndTaxCalculator.tsx",
         "src/lib/yearEndTaxCalculator.ts",
@@ -367,7 +367,7 @@
         "src/lib/yearEndLimits2026.ts",
         "src/lib/yearEndTaxCalculator.ts"
       ],
-      "sha256": "f4f064d3d835f90bc6c46e3f49b3e3f1c5c45ac54fdc05751efd3d2dcf975d65"
+      "sha256": "25f39909948aa57bd9578bc61bdc44b00ad73693909f3dc4b8280db3c5f5e79a"
     },
     "/year-end-tax-2027": {
       "contentDate": "2026-11-01",
@@ -388,13 +388,13 @@
     },
     "/year-end-tax-preview": {
       "contentDate": "2026-11-01",
-      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "Reviewed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B04, B06, B30). B30 SEO-07-b adds a final section below CalcResultAd, the share buttons and the cluster chips: the NTS opening dates of the last three years (2023-10-31, 2024-11-15, 2025-11-05, from the NTS announcements on 대한민국 정책브리핑), the 2025 홈택스 menu path and a guide link. B04 IVT-02 moves the share block from directly above CalcResultAd to directly after it, and B06 STR-05 wraps the loan OfferSlot under InArticleAd in div.mt-8 (layout only). New visible content: content date advanced from 2026-09-30 to 2026-11-01 (the page has no revision date field).",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "Reviewed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B04, B06, B30). B30 SEO-07-b adds a final section below CalcResultAd, the share buttons and the cluster chips: the NTS opening dates of the last three years (2023-10-31, 2024-11-15, 2025-11-05, from the NTS announcements on 대한민국 정책브리핑), the 2025 홈택스 menu path and a guide link. B04 IVT-02 moves the share block from directly above CalcResultAd to directly after it, and B06 STR-05 wraps the loan OfferSlot under InArticleAd in div.mt-8 (layout only). New visible content: content date advanced from 2026-09-30 to 2026-11-01 (the page has no revision date field). Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G4 appends the trust note (check date 2026-11-01, this content date; source: the NTS announcement on korea.kr) after CalcResultAd, share, chips and the opening-date table. No fact change, so the 2026-11-01 date is retained.",
       "dependencies": [],
       "files": [
         "src/app/year-end-tax-preview/page.tsx"
       ],
-      "sha256": "74e124c0159abde8022988267e6dc5cbeec90ea77b64f008ded1dd989aa94962"
+      "sha256": "13ea8910476e19c4875291942162736282634e37279e0d8204b95164df0c1b4e"
     },
     "/chuseok-bonus-2026": {
       "contentDate": "2026-10-19",
@@ -549,13 +549,13 @@
     },
     "/civil-servant-pay-2026": {
       "contentDate": "2026-10-04",
-      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
-      "reason": "352451886 (October 4) replaces an inappropriate private-employee reference with the civil-pension-specific calculator and explanation.",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "352451886 (October 4) replaces an inappropriate private-employee reference with the civil-pension-specific calculator and explanation. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 adds license: CITATION_POLICY_URL (/insights#citation-policy, the existing citation policy) to this pay-scale Dataset JSON-LD. JSON-LD only, no visible change, so the 2026-10-04 date is retained.",
       "dependencies": [],
       "files": [
         "src/app/civil-servant-pay-2026/page.tsx"
       ],
-      "sha256": "87b9bd163b08a0e2985bd578df44cbd7bdcd09135eb190e6f4cc62446bcf0c06"
+      "sha256": "1dc350a5c8ca078f08f1d2a4242029ce9b0582b9bf6571a662c09c9a025eaede"
     },
     "/calc/civil-servant-net-pay": {
       "contentDate": "2026-10-23",
@@ -629,19 +629,19 @@
     },
     "/health-insurance-dependent": {
       "contentDate": "2026-10-17",
-      "reviewedAtCommit": "5ccd079e6ff58f48b5896abeae13e0a71c949058",
-      "reason": "126f5d3fd (October 17) corrects the input/result and title/lead to state partial eligibility criteria and the need for separate official confirmation. Rehashed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-22): SEO-03 restores 자격·소득 2,000만원·재산과표 5.4억 in the title, STR-02-g describes the linked calculator as the regional property-score estimate, and NEW-v07b-seo-meta-dates-1 completes the lead sentence (shorter overall, sweep-gated). Wording and metadata only, so the 2026-10-17 date is retained.",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "126f5d3fd (October 17) corrects the input/result and title/lead to state partial eligibility criteria and the need for separate official confirmation. Rehashed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-22): SEO-03 restores 자격·소득 2,000만원·재산과표 5.4억 in the title, STR-02-g describes the linked calculator as the regional property-score estimate, and NEW-v07b-seo-meta-dates-1 completes the lead sentence (shorter overall, sweep-gated). Wording and metadata only, so the 2026-10-17 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G4 appends the trust note (check month 2026-08 from the page's own 2026년 8월 조회 기준 source line) after the CoupangBanner, share and related tools. No rule or wording change above it, so the 2026-10-17 date is retained.",
       "dependencies": [],
       "files": [
         "src/app/health-insurance-dependent/Client.tsx",
         "src/app/health-insurance-dependent/page.tsx"
       ],
-      "sha256": "a4b24c62d7bc8e8070e72449e5fffc299414ed43a464c000503326e61a7231e9"
+      "sha256": "fbd122501b0d6186a9b742f1a4fc724b31b05e424ba1e613bfd6cec86a2be701"
     },
     "/social-insurance-rates-2027": {
       "contentDate": "2026-11-01",
-      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "Reviewed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-10 DATA-01): the 2027 long-term-care ratio is the confirmed 13.90% of the health premium (decided 2026-10-30, MOHW) in taxConstants2027 and in the LTC card, hero line, FAQ and simulation totals; only industrial-accident and employment insurance stay unconfirmed. Substantive rate correction: content date advanced from 2026-10-04 to 2026-11-01, matching modifiedTime and the visible updated date. Rehashed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B17, B24): B17 changes only a taxConstants2027.ts comment (employment-insurance decree pre-announcement status and the ministry URL; the 0.9% rate stays provisional), and B24 adds HOUSING_SUBSCRIPTION_DEDUCTION_2026 and a MEDICAL_CREDIT_2026 comment to taxConstants2026.ts, neither used by this page. No visible change, so the 2026-11-01 date is retained.",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "Reviewed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-10 DATA-01): the 2027 long-term-care ratio is the confirmed 13.90% of the health premium (decided 2026-10-30, MOHW) in taxConstants2027 and in the LTC card, hero line, FAQ and simulation totals; only industrial-accident and employment insurance stay unconfirmed. Substantive rate correction: content date advanced from 2026-10-04 to 2026-11-01, matching modifiedTime and the visible updated date. Rehashed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B17, B24): B17 changes only a taxConstants2027.ts comment (employment-insurance decree pre-announcement status and the ministry URL; the 0.9% rate stays provisional), and B24 adds HOUSING_SUBSCRIPTION_DEDUCTION_2026 and a MEDICAL_CREDIT_2026 comment to taxConstants2026.ts, neither used by this page. No visible change, so the 2026-11-01 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G4 appends the trust note (check date 2026-11-01 = PublishedMeta updatedDate) after the last MultiplexAd. No rate or wording change above it, so the 2026-11-01 date is retained.",
       "dependencies": [
         "src/lib/insuranceRateExample.ts",
         "src/lib/pensionHike.ts",
@@ -655,23 +655,23 @@
         "src/lib/taxConstants2026.ts",
         "src/lib/taxConstants2027.ts"
       ],
-      "sha256": "86913314d883c2cb01d3eea40fd2dc5ea6b02c94802dec498fe16ac93a242c50"
+      "sha256": "a3f7d684e8023e6b8198039979a8938764501f51ce074d7d70c2370171d62ac4"
     },
     "/military-pay-2026": {
       "contentDate": "2026-09-27",
-      "reviewedAtCommit": "579d60bbf2ad3d02dc11b2287910a58ba5bba32a",
-      "reason": "69ddc736a (September 27) adds the contextual civil-net-pay reference below existing content.",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "69ddc736a (September 27) adds the contextual civil-net-pay reference below existing content. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 adds license: CITATION_POLICY_URL (/insights#citation-policy, the existing citation policy) to this pay-scale Dataset JSON-LD. JSON-LD only, no visible change, so the 2026-09-27 date is retained.",
       "dependencies": [],
       "files": [
         "src/app/military-pay-2026/SavingsCalc.tsx",
         "src/app/military-pay-2026/page.tsx"
       ],
-      "sha256": "cf2a5f4d16c770d7131ee3210b387a8bf8fb92091e70e9894015316d00cd18aa"
+      "sha256": "8d86832e1737eff753ccf58e6a62fae881d35e21a658a450652b86d29d157f99"
     },
     "/teacher-pay-2026": {
       "contentDate": "2026-11-01",
-      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B35 NEW-v12-search-console-2): a closed details box 1~40호봉 전체 보기 after the FAQ, below the last in-content ad (the Coupang slot), shows all 40 rows of the 2026 teacher pay table (TEACHER_PAY_FULL_2026) with a source note, and the Dataset JSON-LD description changed. MODIFIED (modifiedTime, Article modifiedDate, visible 최종 갱신) is 2026-11-01. Content date advanced from 2026-10-04 to 2026-11-01. src/lib/civilServantPay.ts and src/lib/payTablesFull2026.ts are now dependencies because the excerpt and the full table render from them. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B06 STR-05, 10/5 approval #5 re-approved 2026-11-01): mt-8 on the CTA cards under InArticleAd so the first tap target sits 32px below the ad. Spacing only, so the 2026-11-01 date is retained.",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B35 NEW-v12-search-console-2): a closed details box 1~40호봉 전체 보기 after the FAQ, below the last in-content ad (the Coupang slot), shows all 40 rows of the 2026 teacher pay table (TEACHER_PAY_FULL_2026) with a source note, and the Dataset JSON-LD description changed. MODIFIED (modifiedTime, Article modifiedDate, visible 최종 갱신) is 2026-11-01. Content date advanced from 2026-10-04 to 2026-11-01. src/lib/civilServantPay.ts and src/lib/payTablesFull2026.ts are now dependencies because the excerpt and the full table render from them. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B06 STR-05, 10/5 approval #5 re-approved 2026-11-01): mt-8 on the CTA cards under InArticleAd so the first tap target sits 32px below the ad. Spacing only, so the 2026-11-01 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 adds license: CITATION_POLICY_URL (/insights#citation-policy, the existing citation policy) to this pay-scale Dataset JSON-LD. JSON-LD only, no visible change, so the 2026-11-01 date is retained.",
       "dependencies": [
         "src/lib/civilServantPay.ts",
         "src/lib/payTablesFull2026.ts"
@@ -681,27 +681,27 @@
         "src/lib/civilServantPay.ts",
         "src/lib/payTablesFull2026.ts"
       ],
-      "sha256": "c40de717f100f85bd220af042d09317f2433bc18971ebfa08e914ee42e9d33ca"
+      "sha256": "fd0ac44cfc9faa4bd10b7f6537f10ec0708d6d195165c5373d54bd2225a7afae"
     },
     "/police-pay-2026": {
       "contentDate": "2026-10-04",
-      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "352451886 (October 4) corrects the destination and label to the police-specific civil-net-pay model. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B06 STR-05, 10/5 approval #5 re-approved 2026-11-01): mt-8 on the CTA cards under InArticleAd so the first tap target sits 32px below the ad. B11 P3G-04 restores the PoliceFireRankTable row height in a shared component that this entry does not hash. Spacing only, so the 2026-10-04 date is retained.",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "352451886 (October 4) corrects the destination and label to the police-specific civil-net-pay model. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B06 STR-05, 10/5 approval #5 re-approved 2026-11-01): mt-8 on the CTA cards under InArticleAd so the first tap target sits 32px below the ad. B11 P3G-04 restores the PoliceFireRankTable row height in a shared component that this entry does not hash. Spacing only, so the 2026-10-04 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 adds license: CITATION_POLICY_URL (/insights#citation-policy, the existing citation policy) to this pay-scale Dataset JSON-LD. JSON-LD only, no visible change, so the 2026-10-04 date is retained.",
       "dependencies": [],
       "files": [
         "src/app/police-pay-2026/page.tsx"
       ],
-      "sha256": "b0e049de418c3e2139185b571f511f125ec8ee531fa7e6fbc69f63e16dc39a59"
+      "sha256": "d7acbccaadef8bd74021e1a7099bc91fe5c6abb27176ddffdaf9d9628b4ecc96"
     },
     "/firefighter-pay-2026": {
       "contentDate": "2026-10-04",
-      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "352451886 (October 4) corrects the destination and label to the firefighter-specific civil-net-pay model. Rehashed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-22 CTR-4): the head title and description include the query 소방관 월급; prefix, H1, lead and pay figures are unchanged. Head metadata only, so the 2026-10-04 date is retained. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B06 STR-05, 10/5 approval #5 re-approved 2026-11-01): mt-8 on the CTA cards under InArticleAd so the first tap target sits 32px below the ad. B11 P3G-04 restores the PoliceFireRankTable row height in a shared component that this entry does not hash. Spacing only, so the 2026-10-04 date is retained.",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "352451886 (October 4) corrects the destination and label to the firefighter-specific civil-net-pay model. Rehashed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-22 CTR-4): the head title and description include the query 소방관 월급; prefix, H1, lead and pay figures are unchanged. Head metadata only, so the 2026-10-04 date is retained. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B06 STR-05, 10/5 approval #5 re-approved 2026-11-01): mt-8 on the CTA cards under InArticleAd so the first tap target sits 32px below the ad. B11 P3G-04 restores the PoliceFireRankTable row height in a shared component that this entry does not hash. Spacing only, so the 2026-10-04 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 adds license: CITATION_POLICY_URL (/insights#citation-policy, the existing citation policy) to this pay-scale Dataset JSON-LD. JSON-LD only, no visible change, so the 2026-10-04 date is retained.",
       "dependencies": [],
       "files": [
         "src/app/firefighter-pay-2026/page.tsx"
       ],
-      "sha256": "40e00d215f532b2057fef30269c9fa41d7e86e4645f1f55f94ab4ef41e82d784"
+      "sha256": "43e0d0a2de800d8cb390c98b3136c67a45736d1deb90de54affeb4b9e5edbcde"
     },
     "/embed": {
       "contentDate": "2026-10-04",
@@ -835,8 +835,8 @@
     },
     "/property-holding-tax-2026": {
       "contentDate": "2026-11-01",
-      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "New explicit review 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus R2-HOLD): the result total and the 12월 row now include 농어촌특별세 (20% of the payable 종부세) and the 1세대 1주택 고령자·장기보유 credits (combined 80% cap), the row label reads 종부세·농특세, a 12월 종부세 상세 section with age and holding-period selects sits below the last ad, and FAQ answers 1 and 3 plus the HowTo JSON-LD changed. Result change: first explicit ledger entry and sitemap override at 2026-11-01 (previously STATIC_LAST_MODIFIED 2026-07-16), with modifiedTime moved from 2026-08-30 to 2026-11-01.",
+      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
+      "reason": "New explicit review 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus R2-HOLD): the result total and the 12월 row now include 농어촌특별세 (20% of the payable 종부세) and the 1세대 1주택 고령자·장기보유 credits (combined 80% cap), the row label reads 종부세·농특세, a 12월 종부세 상세 section with age and holding-period selects sits below the last ad, and FAQ answers 1 and 3 plus the HowTo JSON-LD changed. Result change: first explicit ledger entry and sitemap override at 2026-11-01 (previously STATIC_LAST_MODIFIED 2026-07-16), with modifiedTime moved from 2026-08-30 to 2026-11-01. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G4 appends the trust note (check date 2026-11-01 = metadata modifiedTime) after the last MultiplexAd and the 12월 종부세 detail. Calculator, detail and FAQ unchanged, so the 2026-11-01 date is retained.",
       "dependencies": [
         "src/lib/propertyHoldingTax2026.ts"
       ],
@@ -847,7 +847,7 @@
         "src/app/property-holding-tax-2026/page.tsx",
         "src/lib/propertyHoldingTax2026.ts"
       ],
-      "sha256": "5a0dec418fcff6925fc889fc5fa23d6484282d830a332471cd23818b77a16dd1"
+      "sha256": "53825fa966185c7e8eb810394aec8f237ff844e0bfcaeecc287d185c663b673e"
     },
     "/credit-card-deduction-2026": {
       "contentDate": "2026-11-01",
