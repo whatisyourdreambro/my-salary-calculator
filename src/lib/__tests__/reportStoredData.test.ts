@@ -32,8 +32,10 @@ function renderSaved(raw: string | null) {
   state.values = [null, null, ""]; state.index = 0; state.effects = [];
   const storage = { getItem: vi.fn(() => raw), setItem: vi.fn(), removeItem: vi.fn() };
   vi.stubGlobal("localStorage", storage);
-  const shell = ReportPage() as ReactElement<{ children: ReactElement[] }>;
-  const Report = shell.props.children[0].type as () => ReactElement;
+  const shell = ReportPage() as ReactElement<{ children: ReactElement | ReactElement[] }>;
+  // Suspense 자식은 <Report /> 하나(IVT-10: 페이지 끝 광고는 Report 의 데이터 화면 안으로 이동) — 배열이어도 첫 자식.
+  const child = shell.props.children;
+  const Report = (Array.isArray(child) ? child[0] : child).type as () => ReactElement;
   Report();
   const effect = state.effects[0]; state.effects = []; effect();
   state.index = 0;
