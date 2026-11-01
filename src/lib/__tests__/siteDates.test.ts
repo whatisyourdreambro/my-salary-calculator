@@ -1,8 +1,9 @@
 // src/lib/__tests__/siteDates.test.ts
 //
 // 신선도 기준일 단일 소스 회귀 가드 (2026-09-05, naver-onpage-2 · L18' 위생 하위 항목).
-//  - webApplicationLd dateModified 는 sitemap STATIC_LAST_MODIFIED 와 같은 상수에서 파생
 //  - 상수 값은 손으로만 올린다(today() 승격 금지) — 값 고정 스냅샷
+//  - 홈 WebApplication dateModified 는 G3(2026-11-01)부터 STATIC_LAST_MODIFIED 가 아니라 넘겨받은 날짜
+//    (홈 page.tsx 가 sitemap staticRouteLastModified("/") 를 넘긴다 — structuredDataTrust.test.ts 가 사이트맵과 대조)
 import { describe, expect, it } from "vitest";
 
 import {
@@ -18,9 +19,10 @@ describe("siteDates 단일 소스", () => {
     expect(STATIC_LAST_MODIFIED.toISOString()).toBe(new Date("2026-07-16").toISOString());
   });
 
-  it("webApplicationLd dateModified 는 STATIC_LAST_MODIFIED 와 일치한다 (datePublished 불변)", () => {
-    const ld = webApplicationLd() as { datePublished?: string; dateModified?: string };
-    expect(ld.dateModified).toBe(STATIC_LAST_MODIFIED_ISO);
+  it("webApplicationLd dateModified 는 넘겨받은 날짜를 한국 시각 ISO 로 싣는다 (datePublished 불변, 기본값 없음)", () => {
+    const ld = webApplicationLd({ dateModified: new Date("2026-10-19T00:00:00+09:00") }) as { datePublished?: string; dateModified?: string };
+    expect(ld.dateModified).toBe("2026-10-19T00:00:00+09:00");
+    expect(ld.dateModified).not.toBe(STATIC_LAST_MODIFIED_ISO);
     expect(ld.datePublished).toBe("2024-12-01");
   });
 

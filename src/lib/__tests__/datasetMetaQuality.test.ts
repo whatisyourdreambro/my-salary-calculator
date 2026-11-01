@@ -6,7 +6,9 @@
 //    소방·경찰 봉급표 description 은 Google Dataset 최소 50자 이상.
 //  - A23(PROD-14): 회사 페이지·실수령액 표 Dataset 은 인용 정책 URL 을 license 로 싣는다.
 //    DART 원자료 파생 lite·랭킹 Dataset 에는 license 를 넣지 않는다(META-11 범위 밖).
-import { readFileSync } from "node:fs";
+//  - G3(2026-11-01 운영자 승인 '구글 개선' 4번): 봉급표 5쪽 Dataset 도 같은 license(공무원보수규정 별표를 사이트가 정리한 표).
+//    /calc/bonus-home-plan(한국부동산원 R-ONE 통계 — 제공 기관 이용 조건)은 lite·랭킹처럼 넣지 않는다(citationPolicy.ts).
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { listedCohort, listedDatasetDescription } from "@/lib/salary-data/dartLite";
@@ -71,6 +73,8 @@ describe("Dataset license (A23)", () => {
     ...["2026", "2027"].flatMap((y) =>
       ["annual", "hourly", "monthly", "weekly"].map((k) => `table/${y}/${k}/page.tsx`)
     ),
+    // G3 (2026-11-01) — 봉급표 5쪽
+    ...["civil-servant", "police", "firefighter", "military", "teacher"].map((p) => `${p}-pay-2026/page.tsx`),
   ];
   it.each(licensed)("%s Dataset 에 license: CITATION_POLICY_URL", (file) => {
     const src = read(file);
@@ -83,7 +87,38 @@ describe("Dataset license (A23)", () => {
     "salary-db/listed/[stockCode]/page.tsx",
     "salary-db/listed/MetricRankingView.tsx",
     "salary-db/listed/industry/[industryId]/page.tsx",
-  ])("%s (DART 원자료 파생) 에는 license 를 넣지 않는다", (file) => {
+    // G3 (2026-11-01): 한국부동산원 R-ONE 통계 — citation 이 원 출처를 가리키고 사이트 정책을 license 로 붙이지 않는다
+    "calc/bonus-home-plan/page.tsx",
+  ])("%s (외부 기관 원자료 파생) 에는 license 를 넣지 않는다", (file) => {
     expect(read(file)).not.toMatch(/license:/);
+  });
+
+  it("사이트의 모든 datasetLd 호출은 license 를 싣거나 위 제외 목록에 있다 (새 Dataset 이 조용히 빠지지 않게, G3)", () => {
+    const excluded = new Set([
+      "salary-db/listed/[stockCode]/page.tsx",
+      "salary-db/listed/MetricRankingView.tsx",
+      "salary-db/listed/industry/[industryId]/page.tsx",
+      "calc/bonus-home-plan/page.tsx",
+    ]);
+    const files: string[] = [];
+    const walk = (dir: string, rel = "") => {
+      for (const name of readdirSync(dir)) {
+        const abs = join(dir, name);
+        const r = rel ? `${rel}/${name}` : name;
+        if (statSync(abs).isDirectory()) {
+          if (name !== "__tests__") walk(abs, r);
+        } else if (/\.tsx?$/.test(name) && !/\.test\./.test(name) && read(r).includes("datasetLd({")) files.push(r);
+      }
+    };
+    walk(APP);
+    expect(files.length).toBeGreaterThanOrEqual(20);
+    for (const file of files) {
+      const src = read(file);
+      const blocks = src.split("datasetLd({").slice(1).map((rest) => rest.slice(0, rest.indexOf("})")));
+      for (const block of blocks) {
+        if (excluded.has(file)) expect(block, file).not.toMatch(/license:/);
+        else expect(block, file).toMatch(/license: CITATION_POLICY_URL\b/);
+      }
+    }
   });
 });

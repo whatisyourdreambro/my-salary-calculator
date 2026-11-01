@@ -62,6 +62,56 @@ export function pageRevisionFields(source, filename = 'page.tsx') {
   return fields;
 }
 
+// Page-level app JSON-LD dates: softwareApplicationLd/webApplicationLd dateModified, also as a sibling of a
+// spread call ({ ...softwareApplicationLd({...}), dateModified: X }). Unlike Dataset dateModified (the data
+// date) they describe the page, so they follow the sitemap lastmod. G3 (2026-11-01): a call to
+// staticRouteLastModified(route) is the single source; `route` is its resolved argument. Otherwise `value` is
+// the resolved string literal, or null when the expression cannot be judged statically (e.g. an imported constant).
+const APP_LD_BUILDERS = new Set(['softwareApplicationLd', 'webApplicationLd']);
+export function appLdDateFields(source, filename = 'page.tsx') {
+  const ast = ts.createSourceFile(filename, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const constants = new Map();
+  function collect(node) {
+    if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.initializer) constants.set(node.name.text, node.initializer);
+    ts.forEachChild(node, collect);
+  }
+  collect(ast);
+  function literal(node, seen = new Set()) {
+    if (!node) return null;
+    if (ts.isStringLiteralLike(node)) return node.text;
+    if (ts.isIdentifier(node) && !seen.has(node.text)) return literal(constants.get(node.text), new Set([...seen, node.text]));
+    return null;
+  }
+  const builderCall = (node) => node && ts.isCallExpression(node) && ts.isIdentifier(node.expression) && APP_LD_BUILDERS.has(node.expression.text)
+    ? node.expression.text : null;
+  const fields = [];
+  function field(builder, property) {
+    const init = property.initializer;
+    if (ts.isCallExpression(init) && ts.isIdentifier(init.expression) && init.expression.text === 'staticRouteLastModified') {
+      fields.push({ builder, route: literal(init.arguments[0]), value: null });
+    } else {
+      fields.push({ builder, route: null, value: literal(init) });
+    }
+  }
+  const dateProperty = (object) => object.properties.find((p) => ts.isPropertyAssignment(p) &&
+    (ts.isIdentifier(p.name) || ts.isStringLiteral(p.name)) && p.name.text === 'dateModified');
+  function visit(node) {
+    const builder = builderCall(node);
+    if (builder && node.arguments[0] && ts.isObjectLiteralExpression(node.arguments[0])) {
+      const property = dateProperty(node.arguments[0]);
+      if (property) field(builder, property);
+    }
+    if (ts.isObjectLiteralExpression(node)) {
+      const spread = node.properties.find((p) => ts.isSpreadAssignment(p) && builderCall(p.expression));
+      const property = spread && dateProperty(node);
+      if (property) field(builderCall(spread.expression), property);
+    }
+    ts.forEachChild(node, visit);
+  }
+  visit(ast);
+  return fields;
+}
+
 // A link-only review may move the sitemap lastmod while the visible revision date stays
 // at the last substantive revision (about-page date policy). Such an exception is valid
 // only while the sitemap still carries that link-review day, and the visible date may

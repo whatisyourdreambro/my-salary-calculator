@@ -158,11 +158,9 @@ const BONUS_ENGINE_ROUTES = [
 ];
 
 
-export default function sitemap(): MetadataRoute.Sitemap {
- const baseUrl = "https://www.moneysalary.com";
-
- // 1. Static Pages
- const staticRoutes = [
+// 1. Static Pages — 모듈 스코프 (G3, 2026-11-01: 아래 staticRouteLastModified 가 정적 라우트만 받도록 검증에 쓴다.
+//    목록·순서는 종전 sitemap() 안 staticRoutes 그대로)
+const STATIC_ROUTES: readonly string[] = [
  '/',
  '/money-check',
  '/work-clock',
@@ -380,12 +378,45 @@ export default function sitemap(): MetadataRoute.Sitemap {
  '/teacher-pay-2026',
  '/police-pay-2026',
  '/firefighter-pay-2026',
- ];
+];
+// /en 정적 경로(EN_INDEXABLE_STATIC_PATHS)의 하한 — 종전 sitemap() /en 루프 안 인라인 값 그대로.
+const EN_STATIC_REVIEW_DATE = new Date('2026-09-09');
+const STATIC_ROUTE_SET: ReadonlySet<string> = new Set([...STATIC_ROUTES, ...EN_INDEXABLE_STATIC_PATHS]);
 
- // lastModified 기준일 STATIC_LAST_MODIFIED — src/config/siteDates.ts 단일 소스
- // (2026-09-05 호이스팅: webApplicationLd dateModified 와 공유. 갱신 규칙·이력은 그 파일 참조).
+/**
+ * 정적 라우트(STATIC_ROUTES·EN_INDEXABLE_STATIC_PATHS) 한 곳의 lastModified — sitemap 출력과 그 페이지
+ * JSON-LD dateModified(홈 WebApplication·계산기 SoftwareApplication)가 함께 쓰는 단일 소스
+ * (G3, 2026-11-01 운영자 승인 '구글 개선' 4번: 운영 홈 JSON-LD 7/16·삼성 성과급 10/9 가 사이트맵 10/19 와 어긋났다).
+ * = max(수기 ROUTE_OVERRIDES, A18 성과급 엔진일(BONUS_ENGINE_ROUTES), /en 정적 하한) — 셋 다 없으면 STATIC_LAST_MODIFIED —
+ *   를 다시 콘텐츠 개정일(pageContentRevision)과 max. 종전 sitemap() 정적 URL 계산과 같은 규칙·같은 값이다.
+ * 상수만 읽는다 — 빌드 시각·today() 와 무관(날짜 승격 없음). 그 밖의 경로(동적 템플릿, 회사·표·리포트 블록처럼 사이트맵이
+ * 다른 규칙으로 날짜를 정하는 정적 page 포함)는 받지 않고 던진다 — 다른 날짜를 조용히 돌려주지 않게.
+ * ⚠️ 이 파일은 사이트맵 데이터를 import 한다 — 서버 컴포넌트(page.tsx)에서만 쓰고 'use client' 파일에서 import 금지.
+ */
+export function staticRouteLastModified(route: string): Date {
+ if (!STATIC_ROUTE_SET.has(route)) {
+   throw new Error(`staticRouteLastModified: 사이트맵 정적 라우트가 아님 — ${route}`);
+ }
+ const overrides = [
+   ROUTE_OVERRIDES[route]?.lastModified,
+   BONUS_ENGINE_ROUTES.includes(route) ? BONUS_ENGINE_REVIEW_DATE : undefined,
+   EN_INDEXABLE_STATIC_PATHS.includes(route) ? EN_STATIC_REVIEW_DATE : undefined,
+ ].filter((date): date is Date => date !== undefined);
+ const base = overrides.length ? latestContentDate(...overrides) : STATIC_LAST_MODIFIED;
+ const revised = pageContentRevision(route);
+ return revised ? latestContentDate(base, revised) : base;
+}
+
+
+export default function sitemap(): MetadataRoute.Sitemap {
+ const baseUrl = "https://www.moneysalary.com";
+ const staticRoutes = STATIC_ROUTES;
+
+ // lastModified 기준일 STATIC_LAST_MODIFIED — src/config/siteDates.ts 단일 소스(갱신 규칙·이력은 그 파일 참조).
  // 개별 오버라이드가 없는 정적·동적 URL에 적용한다. 회사 상세는 데이터 수정일과
  // FAQ 본문 수정일 중 최신값을 사용한다. 매 배포 today 금지 원칙은 그대로다.
+ // 정적 URL 의 날짜는 모듈 스코프 staticRouteLastModified() 한 곳에서 정한다 — 홈·성과급 계산기
+ // JSON-LD dateModified 도 같은 함수를 불러 두 신호가 어긋나지 않는다 (G3, 2026-11-01).
 
  // 수기 오버라이드(모듈 스코프 ROUTE_OVERRIDES, 아래 참조)의 로컬 사본 — 성과급
  // 클러스터 priority 루프가 사본만 채워 export 본은 수기 목록 그대로 유지된다
@@ -402,10 +433,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  routeOverrides[route] = { priority: 0.85 };
  }
  }
- // A18 성과급 엔진 교체일 — 위 priority 는 그대로 두고 lastModified 만 얹는다(사본에만 적용).
- for (const route of BONUS_ENGINE_ROUTES) {
- routeOverrides[route] = { ...routeOverrides[route], lastModified: latestContentDate(routeOverrides[route]?.lastModified, BONUS_ENGINE_REVIEW_DATE) };
- }
+ // A18 성과급 엔진 교체일(BONUS_ENGINE_ROUTES)·/en 정적 하한은 staticRouteLastModified() 가 max 에 넣는다
+ // (종전 이 자리 루프가 사본 lastModified 에 얹던 것과 같은 값 — G3 에서 함수 한 곳으로 옮김).
 
  // /en 정적 4종 hreflang — 실존 KO 짝만 명시(과잉 적용 금지: seo.ts hreflang 사고 이력).
  // /en·/en/guides 는 KO 카운터파트 존재, flat-tax·salary-converter 는 EN 전용(self).
@@ -425,14 +454,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
        : { en: `${baseUrl}${path}`, 'x-default': `${baseUrl}${path}` };
      if (koPath) EN_STATIC_ALTERNATES[koPath] = EN_STATIC_ALTERNATES[path];
    }
-   routeOverrides[path] = { ...routeOverrides[path], lastModified: latestContentDate(routeOverrides[path]?.lastModified, new Date('2026-09-09')) };
  }
  EN_STATIC_ALTERNATES['/'] = EN_STATIC_ALTERNATES['/en'];
  EN_STATIC_ALTERNATES['/guides'] = EN_STATIC_ALTERNATES['/en/guides'];
 
  const staticUrls = [...new Set([...staticRoutes, ...EN_INDEXABLE_STATIC_PATHS])].map((route) => ({
  url: `${baseUrl}${route}`,
- lastModified: routeOverrides[route]?.lastModified ?? STATIC_LAST_MODIFIED,
+ lastModified: staticRouteLastModified(route),
  changeFrequency:
  routeOverrides[route]?.changeFrequency ?? ('weekly' as ChangeFrequency),
  priority: route === '/' ? 1.0 : routeOverrides[route]?.priority ?? 0.8,

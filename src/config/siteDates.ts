@@ -1,14 +1,15 @@
 // src/config/siteDates.ts
 //
-// 사이트 신선도(freshness) 기준일 단일 소스 — sitemap lastmod · WebApplication JSON-LD
-// dateModified · 회사 lastUpdated 파생 규칙이 전부 여기서 파생된다.
+// 사이트 신선도(freshness) 기준일 단일 소스 — sitemap lastmod · 회사 lastUpdated 파생 규칙이
+// 전부 여기서 파생된다.
 //
 // 유지보수 규칙 (L18' 위생 조건 "dateModified 는 실제 갱신 커밋일만"):
 //  - 매 배포마다 new Date() 로 today 를 찍으면 Google freshness 신호가 무의미해져
 //    순위 변동성이 커진다. 마지막 "실질 콘텐츠 갱신" 날짜를 고정해 두고 진짜 갱신
 //    배포 때만 손으로 올린다.
-//  - sitemap.ts 와 structuredData.ts(webApplicationLd) 가 같은 상수를 써야 두 신호가
-//    어긋나지 않는다 — scripts/verify-sitemap.ts 가 불일치 시 [WARN](비차단).
+//  - 정적 페이지의 JSON-LD dateModified(홈 WebApplication·계산기 SoftwareApplication)는
+//    src/app/sitemap.ts staticRouteLastModified() 가 그 페이지 lastmod 와 같은 값을 준다
+//    (G3, 2026-11-01 — 종전 홈 JSON-LD 는 이 파일 STATIC_LAST_MODIFIED 7/16 이라 홈 lastmod 10/19 와 어긋났다).
 //
 // ⚠️ 이 모듈은 클라이언트 번들에도 실릴 수 있다(structuredData 경유) — 상수만 두고
 //    회사 데이터·DART 배열 import 금지.
@@ -28,8 +29,19 @@ export function latestContentDate(...dates: Array<Date | undefined>): Date {
   return new Date(Math.max(...times));
 }
 
-/** STATIC_LAST_MODIFIED 의 ISO 날짜(YYYY-MM-DD) — JSON-LD dateModified 용 */
+/** STATIC_LAST_MODIFIED 의 ISO 날짜(YYYY-MM-DD) — 값 고정 스냅샷 테스트용 (JSON-LD 는 staticRouteLastModified 를 쓴다) */
 export const STATIC_LAST_MODIFIED_ISO = STATIC_LAST_MODIFIED.toISOString().slice(0, 10);
+
+/**
+ * JSON-LD 날짜 표기 — 같은 순간을 한국 시각(+09:00) ISO 8601 로 쓴다 (G3, 2026-11-01).
+ * sitemap <lastmod> 는 Next 가 UTC(toISOString)로 쓰지만 가리키는 순간은 같다. 한국 자정 기준 날짜가
+ * '전날 15:00Z' 로 읽히지 않아 화면에 보이는 수정일과 같은 날로 읽힌다. 예: 2026-11-01T00:00:00+09:00.
+ */
+export function toKstIsoDateTime(date: Date): string {
+  const time = date.getTime();
+  if (!Number.isFinite(time)) throw new Error('Invalid content date');
+  return `${new Date(time + 9 * 60 * 60 * 1000).toISOString().slice(0, 19)}+09:00`;
+}
 
 /**
  * 회사 상세(/salary-db/[id]) FAQ 본문을 실제로 고친 날 — 회사 페이지 수정일

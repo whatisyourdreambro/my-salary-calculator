@@ -5,12 +5,25 @@
 // 각 함수는 <script type="application/ld+json"> 안에 들어갈
 // JavaScript 객체를 반환. JsonLd 컴포넌트로 주입.
 
-import { STATIC_LAST_MODIFIED_ISO } from "@/config/siteDates";
+import { toKstIsoDateTime } from "@/config/siteDates";
 
 const SITE_URL = "https://www.moneysalary.com";
 const SITE_NAME = "머니샐러리";
 const ORGANIZATION_NAME = "머니샐러리";
 const ORGANIZATION_LOGO = `${SITE_URL}/logo-full.png`;
+
+// 사이트 운영 주체의 공식 채널·문의처 — 공개된 사실만 싣는다 (G3, 2026-11-01 운영자 승인 '구글 개선' 4번).
+//  - 네이버 블로그: 운영자가 직접 쓰는 공식 블로그. 2026-11-01 RSS 로 확인 — 블로그 이름 '머니샐러리 | 월급의 모든 계산',
+//    사이트 로고, 소개 글에 '머니샐러리 운영자가 직접 쓰는'·사이트 주소.
+//  - 문의: /contact 비공개 문의 폼(운영 200 확인)과 개인정보 처리방침 7항에 공개된 문의 이메일(운영 화면 확인).
+// 주소를 바꾸거나 채널을 더할 때는 공개 여부부터 확인한다(전화번호·주소·사람 이름은 공개 사실이 아니라 싣지 않는다).
+const ORGANIZATION_SAME_AS = ["https://blog.naver.com/www_moneysalary_com"] as const;
+const ORGANIZATION_CONTACT_POINT = {
+ "@type": "ContactPoint",
+ contactType: "customer support",
+ url: `${SITE_URL}/contact`,
+ email: "moneysalary.help@gmail.com",
+} as const;
 
 // ─────────────────────────────────────────────────────────────
 // Organization — 사이트 운영 주체 정보 (전역 1회)
@@ -24,7 +37,8 @@ export function organizationLd() {
  name: ORGANIZATION_NAME,
  url: SITE_URL,
  logo: ORGANIZATION_LOGO,
- sameAs: [],
+ sameAs: [...ORGANIZATION_SAME_AS],
+ contactPoint: { ...ORGANIZATION_CONTACT_POINT },
  };
 }
 
@@ -46,8 +60,10 @@ export function webSiteLd() {
 
 // ─────────────────────────────────────────────────────────────
 // WebApplication — 메인 페이지/계산기 허브
+// dateModified 는 필수 — 홈 page.tsx 가 staticRouteLastModified("/")(사이트맵 홈 lastmod 와 같은 값)를 넘긴다.
+// 종전엔 STATIC_LAST_MODIFIED(7/16)를 기본값으로 써서 홈 lastmod(10/19)와 어긋났다 (G3, 2026-11-01).
 // ─────────────────────────────────────────────────────────────
-export function webApplicationLd() {
+export function webApplicationLd(opts: { dateModified: Date }) {
  return {
  "@context": "https://schema.org",
  "@type": "WebApplication",
@@ -60,9 +76,9 @@ export function webApplicationLd() {
  inLanguage: "ko",
  alternateName: "연봉 계산기",
  datePublished: "2024-12-01",
- // sitemap STATIC_LAST_MODIFIED 와 단일 상수 공유(src/config/siteDates.ts, 2026-09-05) —
- // 실질 콘텐츠 갱신 배포 때만 그 상수를 올린다(매 배포 today 금지). verify-sitemap 이 불일치 WARN.
- dateModified: STATIC_LAST_MODIFIED_ISO,
+ // 사이트맵 홈 lastmod 와 같은 Date(src/app/sitemap.ts staticRouteLastModified) — 한국 시각 ISO 로 표기.
+ // 날짜는 ROUTE_OVERRIDES 등 상수를 손으로 올릴 때만 바뀐다(매 배포 today 금지). verify-sitemap 이 불일치 WARN.
+ dateModified: toKstIsoDateTime(opts.dateModified),
  offers: {
  "@type": "Offer",
  price: "0",
@@ -87,9 +103,11 @@ export function softwareApplicationLd(tool: {
  featureList?: string[];
  inLanguage?: "ko" | "en";
  datePublished?: string;
- dateModified?: string;
+ /** 문자열은 그대로 싣는다. Date(정적 페이지는 staticRouteLastModified(경로) — 사이트맵 lastmod 와 같은 값)는 한국 시각 ISO 로 (G3) */
+ dateModified?: string | Date;
 }) {
  const absUrl = tool.url.startsWith("http") ? tool.url : `${SITE_URL}${tool.url}`;
+ const dateModified = tool.dateModified instanceof Date ? toKstIsoDateTime(tool.dateModified) : tool.dateModified;
  return {
  "@context": "https://schema.org",
  "@type": "SoftwareApplication",
@@ -107,7 +125,7 @@ export function softwareApplicationLd(tool: {
  },
  ...(tool.featureList?.length ? { featureList: tool.featureList } : {}),
  ...(tool.datePublished ? { datePublished: tool.datePublished } : {}),
- ...(tool.dateModified ? { dateModified: tool.dateModified } : {}),
+ ...(dateModified ? { dateModified } : {}),
  };
 }
 
