@@ -110,12 +110,14 @@ describe("③④ /calc/samsung-bonus", () => {
     expect(item!.title + item!.points.join("") + item!.source).not.toMatch(INTERNAL);
     expect(Object.keys(CALC_NEWS_NOTES)).toEqual(["/calc/samsung-bonus"]);
     expect(calcNewsNoteFor("/calc/sk-hynix-bonus")).toBeNull();
-    const layout = read("src/app/calc/layout.tsx");
+    // 주석을 뺀 소스로 본다 — 형제 사이의 JSX 주석이 아래 '맨 끝' 판정을 흐리지 않게
+    const layout = code("src/app/calc/layout.tsx");
     const at = (s: string) => layout.indexOf(s);
     expect(at("<CalcNewsNote />")).toBeGreaterThan(at("<HomeTopAd />"));
     expect(at("<CalcNewsNote />")).toBeGreaterThan(at("<FloatingShareBar />"));
-    // 맨 끝: CalcNewsNote 뒤에는 닫는 fragment 만 온다(뒤에 다른 형제를 두면 이 줄을 같이 고칠 것)
-    expect(layout.slice(at("<CalcNewsNote />")).replace(/\s+/g, "")).toMatch(/^<CalcNewsNote\/>(<CalcAfterAdsLink\/>)?<\/>/);
+    // 맨 끝: CalcNewsNote 뒤에는 광고 아래 링크 상자(TopicNextSteps — B12, 2026-11-01)와 닫는 fragment 만 온다
+    // (뒤에 다른 형제를 두면 이 줄을 같이 고칠 것)
+    expect(layout.slice(at("<CalcNewsNote />")).replace(/\s+/g, "")).toMatch(/^<CalcNewsNote\/>(?:<CalcAfterAdsLink\/>|<TopicNextSteps\/>)*<\/>/);
   });
 
   it("보도 요약 상자의 계산기 값(370조원·연봉 8천만원·OPI 50%)은 모델 산출값과 같다", () => {

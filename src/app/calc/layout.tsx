@@ -3,6 +3,7 @@ import CoupangBanner from "@/components/CoupangBanner";
 import AutoShareSection from "@/components/AutoShareSection";
 import FloatingShareBar from "@/components/FloatingShareBar";
 import CalcNewsNote from "@/components/CalcNewsNote";
+import TopicNextSteps from "@/components/TopicNextSteps";
 
 export default function CalcLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -23,6 +24,10 @@ export default function CalcLayout({ children }: { children: React.ReactNode }) 
       {/* 계산기별 보도 요약(2026-10-09 삼성 DS 특별성과급 세부안) — 반드시 맨 끝(모든 광고 아래 + 기존 형제의 자동광고 CSS 경로 불변).
           맵에 없는 경로는 null (CalcNewsNote.tsx) */}
       <CalcNewsNote />
+      {/* '이어서 확인할 내용' 상자 — 보도 요약 뒤 맨 끝(B12, 운영자 승인 2026-11-01). 2026-10-19 에 /calc/2026-year·
+          bonus-home-plan·samsung-bonus page.tsx 의 <main> 끝에 들어가 위 광고 블록을 밀던 것을 옮겼다.
+          path 없이 usePathname 으로 고르고, src/lib/topicNextSteps.ts 맵에 없는 계산기 경로는 null (TopicNextSteps.tsx) */}
+      <TopicNextSteps />
     </>
   );
 }

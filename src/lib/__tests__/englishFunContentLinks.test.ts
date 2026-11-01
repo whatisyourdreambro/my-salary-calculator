@@ -22,6 +22,7 @@ vi.mock('@/hooks/useCalculatorMeasurement', () => ({ useCalculatorMeasurement: (
 vi.mock('@/app/guides/[slug]/GuidePageClient', () => ({ default: () => null }));
 
 import FunLayout from '@/app/fun/layout';
+import EnglishLayout from '@/app/en/layout';
 import EnglishHubPage from '@/components/english/EnglishHubPage';
 import EnglishToolPage from '@/app/en/tools/[slug]/page';
 import EnglishGuidePage from '@/app/en/guides/[slug]/page';
@@ -42,6 +43,9 @@ import { ENGLISH_RELATED_GUIDES, getEnglishRelatedGuides } from '@/lib/englishRe
 function render(node: ReactNode) {
   return '<!doctype html><html><body><main id="main-content">' + renderToStaticMarkup(createElement('div', null, node)) + '</main></body></html>';
 }
+// English routes are exported inside en/layout. Its last child (EnglishAfterAdsLinks, B12 2026-11-01) carries the
+// tool, help and about next-step links below the EnglishPageExtras ads, so the page markup alone is incomplete.
+const english = (node: ReactNode) => createElement(EnglishLayout, null, node);
 function links(html: string): string[] {
   const parsed = analyzeHtml(html) as { links: { href: string; inContent: boolean; rel: string; module: string }[] };
   return parsed.links.filter(link => link.inContent && !/\bnofollow\b/i.test(link.rel) && link.module !== 'seasonal-links')
@@ -56,15 +60,15 @@ describe('English editorial content links in actual server markup', () => {
   beforeAll(async () => {
     for (const id of Object.keys(ENGLISH_HUBS) as EnglishHubId[]) {
       location.pathname = ENGLISH_HUBS[id].path;
-      pages.set(location.pathname, render(createElement(EnglishHubPage, { id })));
+      pages.set(location.pathname, render(english(createElement(EnglishHubPage, { id }))));
     }
     for (const { slug } of ENGLISH_TOOLS) {
       location.pathname = `/en/tools/${slug}`;
-      pages.set(location.pathname, render(await EnglishToolPage({ params: Promise.resolve({ slug }) })));
+      pages.set(location.pathname, render(english(await EnglishToolPage({ params: Promise.resolve({ slug }) }))));
     }
     for (const { slug } of enGuides) {
       location.pathname = `/en/guides/${slug}`;
-      pages.set(location.pathname, render(await EnglishGuidePage({ params: Promise.resolve({ slug }) })));
+      pages.set(location.pathname, render(english(await EnglishGuidePage({ params: Promise.resolve({ slug }) }))));
       location.pathname = `/guides/${slug}`;
       pages.set(location.pathname, render(await KoreanGuidePage({ params: Promise.resolve({ slug }) })));
     }
@@ -78,7 +82,7 @@ describe('English editorial content links in actual server markup', () => {
       pages.set(route, route === '/en/guides'
         ? '<!doctype html><html><body><main><!--$?--><template id="B:0"></template><!--/$--></main><div hidden id="S:0">'
           + renderToStaticMarkup(createElement(Page)) + '</div></body></html>'
-        : render(createElement(Page)));
+        : render(english(createElement(Page))));
     }
   });
 
@@ -114,7 +118,10 @@ describe('English editorial content links in actual server markup', () => {
     expect(links(pages.get('/en/guides')!)).toEqual([]);
     expect(incoming(pages, '/en/terms')).toEqual(expect.arrayContaining(['/en', '/en/help', '/en/about']));
     expect(incoming(pages, '/en/privacy')).toEqual(expect.arrayContaining(['/en', '/en/help', '/en/about']));
-    expect(pages.get('/en/guides')).toContain('how we check sources and review corrections');
+    // B12 (2026-11-01) removed the about-page sentence that sat above the /en/guides top HomeTopAd;
+    // the same link text remains in the /en landing answer.
+    expect(pages.get('/en/guides')).not.toContain('how we check sources and review corrections');
+    expect(pages.get('/en')).toContain('how we check sources and review corrections');
     expect(pages.get('/en')).toContain('terms on attribution and permitted use');
     for (const { tools } of Object.values(ENGLISH_TOOL_READING)) expect(tools.every(item => item.href.startsWith('/en/tools/'))).toBe(true);
   });

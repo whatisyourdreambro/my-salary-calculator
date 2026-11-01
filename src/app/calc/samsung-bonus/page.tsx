@@ -29,7 +29,6 @@
 // 2026-11-01 이식(PKG-24): 이 머리 주석과 접힌 FAQ(가고과·나고과 답)만 먼저 반영했다. 광고 위 화면 문구
 // (재원 표현 DS 영업이익·CL4 하위 0.9·0.8배 문단·370조 소개·OPI 출처 표기 sourceNote)는 폭 실측 뒤로 보류(STR-04-B).
 
-import TopicNextSteps from '@/components/TopicNextSteps';
 import type { Metadata } from "next";
 import { bonusCalcCountKo } from "@/config/site";
 import { buildPageMetadata } from "@/lib/seo";
@@ -1229,7 +1228,6 @@ export default function SamsungBonusCalculatorPage() {
 
           <RelatedCalculators currentPath={PAGE_PATH} />
         </div>
-        <TopicNextSteps path="/calc/samsung-bonus" />
       </main>
     </>
   );
