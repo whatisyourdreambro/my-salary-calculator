@@ -9,7 +9,7 @@
 // 흐름: scripts/gen-season-key.ts(prebuild) → src/config/seasonKey.generated.ts 의 SEASON_KEY
 //       → 3소비자(seasonLinks.ts·SeasonalLinks.tsx·HeaderSearch.tsx)가 그 상수로 세트를 고른다.
 //       클라이언트 컴포넌트가 서버와 같은 세트를 렌더해야 하므로 `new Date()` 를 모듈 스코프에서
-//       평가하지 않고 빌드 상수만 쓴다(경계일 이후 첫 배포에 반영 — 배포는 거의 매일).
+//       평가하지 않고 빌드 상수만 쓴다(경계일 이후 첫 '승인 후 게시'에 반영 — 게시는 운영자 클릭 때만).
 // 알람: verify:site 의 `gen-season-key --check` 가 커밋된 값 ≠ 오늘 키면 WARNING(비차단),
 //       주간 health-check 가 프로덕션 /table/2026/annual 의 data-season-key 를 오늘 키와 대조.
 //

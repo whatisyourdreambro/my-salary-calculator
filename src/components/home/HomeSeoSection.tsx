@@ -12,7 +12,7 @@ import { pickPropertyTaxPeriodKey, type PropertyTaxPeriodKey } from "@/lib/prope
 
 // 목적별 계산기 칩의 보유세 라벨 — 납부기간 게이트(propertyTaxPeriod.ts, 지방세법 제115조·종부세 12/1~15)로
 // 빌드 시점(KST)에 고른다 (MI-05, 2026-09-29). 종전 '9월 재산세 2기분 납부 (9/16~30)' 고정 칩은 10/1 부터
-// 지난 기한을 광고했다. 10/1·11/25·12/16 예약 재빌드가 자동 전환한다. OFFSEASON 문구는 푸터 라벨과 같다.
+// 지난 기한을 광고했다. 11/25·12/16 이후 첫 '승인 후 게시' 빌드에서 바뀐다(자동 재빌드 없음). OFFSEASON 문구는 푸터 라벨과 같다.
 export const HOME_PROPERTY_TAX_CHIP_LABELS: Readonly<Record<PropertyTaxPeriodKey, string>> = {
   JULY: "7월 재산세 1기분 납부 (7/16~31)",
   SEPT: "9월 재산세 2기분 납부 (9/16~30)",

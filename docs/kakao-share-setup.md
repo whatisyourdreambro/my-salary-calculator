@@ -38,7 +38,7 @@
    - 변수 이름: `NEXT_PUBLIC_KAKAO_JS_KEY`
    - 값: 2단계에서 복사한 JavaScript 키
    - **Production 과 Preview 양쪽 모두** 등록 (광고 슬롯 ID들과 같은 방식)
-3. **Deployments 탭 → 최신 배포의 ⋯ 메뉴 → Retry deployment** (재배포해야 키가 반영됩니다)
+3. 키는 저장소 `.env.production` 의 `NEXT_PUBLIC_KAKAO_JS_KEY` 줄에서 읽힌다 — 그 줄을 바꾼 커밋을 main 에 합침 → CI 초록 → 운영자 Actions 'Pages · 승인 후 게시'. Deployments 탭의 Retry deployment 로는 게시되지 않는다(진행 중인 승인 실행이 없으면 빌드가 멈춘다). 단, 위 1~2 처럼 Cloudflare 변수에 같은 이름을 등록해 두면 빌드는 파일 값 대신 그 값을 쓴다(README — 유효한 환경 값이 우선). 그때는 파일만 바꿔서는 반영되지 않는다.
 
 ## 확인 방법
 재배포 완료 후 아무 계산기 페이지에서 노란 카카오 버튼을 누르면:
