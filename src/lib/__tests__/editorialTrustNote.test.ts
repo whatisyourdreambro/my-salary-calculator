@@ -235,11 +235,21 @@ describe("내용: 작성자·확인 방법·대조일·링크", () => {
     const html = renderNote("/salary-db/samsung-electronics");
     expect(html).not.toContain("<time");
     expect(html).not.toContain("대조일");
+    // 공시는 '공시가 있는 회사는' 조건부 — 공시 평균급여 카드가 없는 회사 페이지에서도 참인 문장(2026-11-02 통합 수정)
     expect(html).toContain(
-      '<dd>공식 자료와 대조: 사업보고서 등 공시 원문(공시 평균급여), 국세청 근로소득 간이세액표(실수령액)<span class="mt-1 block">직급별 연봉은 공개 자료를 종합한 자체 추정치입니다.</span></dd>',
+      '<dd>공식 자료와 대조: 공시가 있는 회사는 사업보고서 등 공시 원문(공시 평균급여), 실수령액은 국세청 근로소득 간이세액표<span class="mt-1 block">직급별 연봉은 공개 자료를 종합한 자체 추정치입니다.</span></dd>',
     );
     // 날짜가 없는 상자도 같은 틀: 작성·확인 방법 2줄
     expect(html.match(/<dt /g)).toHaveLength(2);
+  });
+
+  it("회사 상자의 공시 문구는 조건부 — 공시 평균급여 카드가 없는 회사 페이지에서도 참이다", () => {
+    // 회사 페이지의 공시 평균급여 카드(CompanyDisclosedSalary)는 disclosed 가 있을 때만 그린다. 그런 카드가 없는 회사가 있는 한
+    // 공시 부분은 무조건형으로 쓰면 안 된다. 실수령액(간이세액표) 부분은 모든 회사 페이지에 해당한다.
+    const companies = companyRepository.getAll();
+    expect(companies.filter((company) => !company.disclosed).length).toBeGreaterThan(0);
+    expect(EDITORIAL_TRUST_COMPANY.sources.startsWith("공시가 있는 회사는 ")).toBe(true);
+    expect(EDITORIAL_TRUST_COMPANY.sources).toContain("실수령액은 국세청 근로소득 간이세액표");
   });
 
   it("피부양자 판정기는 화면 출처의 조회 월까지만 쓴다", () => {

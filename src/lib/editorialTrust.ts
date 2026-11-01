@@ -103,9 +103,12 @@ export const EDITORIAL_TRUST_TABLE_2027: EditorialTrustNoteContent = {
 };
 
 /** /salary-db/[id] 회사 페이지 — 회사마다 공시·데이터 날짜가 달라 하나의 대조일이 없다(상단 업데이트 배지가 회사별 데이터일).
- *  문구는 /about '회사 연봉 데이터는 어떻게 산출하나요?'와 같은 구분(공시 인용값 vs 자체 추정치). */
+ *  문구는 /about '회사 연봉 데이터는 어떻게 산출하나요?'와 같은 구분(공시 인용값 vs 자체 추정치).
+ *  공시 부분은 '공시가 있는 회사는'으로 조건을 단다(2026-11-02 통합 수정) — 430개사 중 140곳은 공시 평균급여 카드가 없고
+ *  (CompanyDisclosedSalary 는 disclosed 가 있을 때만 그린다), 보도 인용 2곳(meritz-fire·deloitte-anjin)은 DART 값도 없다.
+ *  layout 은 params 가 없고 회사 데이터를 클라이언트에 싣지 않으므로 회사별로 문구를 가르지 않고 모든 회사에 맞는 한 문장을 쓴다. */
 export const EDITORIAL_TRUST_COMPANY: EditorialTrustNoteContent = {
-  sources: "사업보고서 등 공시 원문(공시 평균급여), 국세청 근로소득 간이세액표(실수령액)",
+  sources: "공시가 있는 회사는 사업보고서 등 공시 원문(공시 평균급여), 실수령액은 국세청 근로소득 간이세액표",
   official: true,
   note: "직급별 연봉은 공개 자료를 종합한 자체 추정치입니다.",
 };
