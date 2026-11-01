@@ -48,6 +48,7 @@ describe("AdSense connection hints", () => {
   });
 
   it("stays a server component that reads the build flags on the server", () => {
-    expect(read("src/components/AdConnectionHints.tsx")).not.toMatch(/^\s*["']use client["']/);
+    // Multiline: a directive may follow the header comment, as in many repo client files.
+    expect(read("src/components/AdConnectionHints.tsx")).not.toMatch(/^\s*["']use client["']/m);
   });
 });
