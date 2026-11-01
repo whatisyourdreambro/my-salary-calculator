@@ -4,7 +4,7 @@ import opinionDomainSuffixes from "@/data/opinionDomainSuffixes";
  * This catches the listed expressions and bounded spelling evasions, not every
  * harmful meaning. Keep the original accepted text separate from the scan copy.
  */
-export const CONTENT_POLICY_VERSION = "ko-input-v4";
+export const CONTENT_POLICY_VERSION = "ko-input-v5";
 export type ContentIssue = "CONTENT_NOT_ALLOWED" | "PERSONAL_DATA_NOT_ALLOWED" | "INVALID_TEXT";
 
 const LEADING = [..."ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ"];
@@ -95,6 +95,9 @@ function hasBlockedKorean(jamo: string, edges: Set<number>): boolean {
   }
   return false;
 }
+// 시 meaning "when" before a common 발- word (계산 시 발생, 신청 시 발급, 즉시발송). Mask only 시
+// and its spaces: the 발- word stays in the scan copy, so 시발병신 is still caught as 병신.
+const WHEN_BEFORE_BAL_WORD = /시\s*(?=발(?:생|급|표|송|행|견|전|령|효|주|간|명|달|언|의|탁|병|매|목|사|족|각|굴|휘))/g;
 const SEPARATOR = "[\\s\\p{P}\\p{S}]{0,2}";
 const TOKEN_START = "(?:^|[^\\p{L}\\p{N}\\p{M}])";
 const TOKEN_END = "(?=$|[^\\p{L}\\p{N}\\p{M}])";
@@ -113,7 +116,7 @@ export function contentIssue(text: string, mode: "contact" | "opinion" = "contac
     if (normalized.length > 4000 || UNSAFE_FORMAT.test(normalized)) return "INVALID_TEXT";
     const visible = normalized.replace(INVISIBLE, "");
     // Only mask the harmless word span, never the whole sentence containing it.
-    const scan = visible.replace(/시\s?발\s?(?:점|역|열차)|질병\s?신[고청]/g, " ");
+    const scan = visible.replace(/시\s?발\s?(?:점|역|열차)|질병\s?신[고청]/g, " ").replace(WHEN_BEFORE_BAL_WORD, " ");
     const { jamo, edges } = foldedUnits(scan);
     if (hasBlockedKorean(jamo, edges) || KOREAN_INITIALS_BLOCKED.test(jamo) || ENGLISH_BLOCKED.test(scan)) return "CONTENT_NOT_ALLOWED";
     if (mode === "opinion" && (
