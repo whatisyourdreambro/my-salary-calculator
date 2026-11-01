@@ -108,7 +108,8 @@ export function assertProductionPackage(marker) {
   assert.equal(marker?.mode, 'production'); assert.equal(marker.adsDisabled, false);
   assert.match(marker.buildId || '', /^[A-Za-z0-9_-]{1,128}$/);
   for (const key of ['sourceHash', 'outputHash', 'workerHash']) assert.match(marker[key] || '', HASH);
-  assert.equal(marker.workerModuleCount, 44, 'Review a changed Pages module inventory before automatic publication');
+  // G2/PD-02: the Worker is the bundled index.js only; OG cards are prebuilt static assets.
+  assert.equal(marker.workerModuleCount, 1, 'Review a changed Pages module inventory before automatic publication');
   assert.ok(marker.workerBytes > 0 && marker.workerBytes <= 25 * 1024 * 1024);
   assert.equal(marker.compatibilityDate, '2025-09-08');
   assert.equal(marker.publicConfig?.path, '.env.production');

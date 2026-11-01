@@ -1,24 +1,27 @@
-// Build-only: expands reviewed raster assets and renders the finite exported OG URLs.
-// This does not execute exported HTML or import the application/Next renderer.
+// Build-only: expands reviewed raster assets and renders the finite set of prebuilt OG cards.
+// This does not execute exported HTML or import the application/Next renderer. The Worker draws
+// nothing (G2/PD-02): it serves these PNGs, and fallback.png for every other parameter set.
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync, copyFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
-import { gunzipSync, gzipSync, inflateSync, deflateSync, crc32 } from 'node:zlib';
+import { gunzipSync, inflateSync, deflateSync, crc32 } from 'node:zlib';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { OG_ROOT, ogImageKey, renderPagesOg, isValidPagesPng, type PagesOgEnv } from '../cloudflare/pages-og';
+import { OG_ROOT, ogImageKey, isValidPagesPng } from '../cloudflare/pages-og';
+import { renderPagesOg } from '../cloudflare/pages-og-render';
 import type { OgStripData } from '../cloudflare/pages-og-strips';
-import { normalizeOgParams } from '../src/lib/ogImageCache';
+import { normalizeOgParams, ogShareCardParams } from '../src/lib/ogImageCache';
 import { readStaticExportHead, readStaticExportJsonLd } from './lib/static-export-head';
-import { OG_POOL_CHUNK_BYTES, OG_POOL_MODULES, OG_RAW_MODULE_BYTES } from './lib/pages-export.mjs';
 
 type FileInfo = { bytes: number; sha256: string; gzipBytes: number; gzipSha256: string };
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+/** Reviewed expanded sizes; vendor/og-strips/manifest.json pins the same files with hashes. */
+export const OG_STRIP_BYTES = Object.freeze({ 'pool.bin': 38907807, 'glyphs-36.bin': 4923628, 'glyphs-64.bin': 8059908 });
 const hash = (data: Uint8Array) => createHash('sha256').update(data).digest('hex');
 function decodeHtml(value: string) {
   return value.replace(/&(?:amp|quot|apos|lt|gt);|&#(?:x[0-9a-f]+|\d+);/gi, entity => {
     if (entity.startsWith('&#')) {
       const point = entity[2].toLowerCase() === 'x' ? Number.parseInt(entity.slice(3, -1), 16) : Number(entity.slice(2, -1));
-      return point > 0 && point <= 0x10ffff ? String.fromCodePoint(point) : '\ufffd';
+      return point > 0 && point <= 0x10ffff ? String.fromCodePoint(point) : '�';
     }
     return ({ '&amp;': '&', '&quot;': '"', '&apos;': "'", '&lt;': '<', '&gt;': '>' } as Record<string, string>)[entity.toLowerCase()];
   });
@@ -28,7 +31,7 @@ export function collectExportedOgParams(out: string): URLSearchParams[] {
   const values = new Map<string, URLSearchParams>();
   const add = (params: URLSearchParams) => { const normalized = normalizeOgParams(params); values.set(normalized.toString(), normalized); };
   // JSON-LD images (Article.image of guides, season pages and reports) are real page cards
-  // too. The runtime draws no caller text (SEC-08), so every exported /api/og URL in
+  // too. The Worker draws no card at all (G2/PD-02), so every exported /api/og URL in
   // structured data is prebuilt with its exact title, like og:image and twitter:image.
   const addJsonLd = (node: unknown): void => {
     if (Array.isArray(node)) { node.forEach(addJsonLd); return; }
@@ -62,11 +65,15 @@ export function collectExportedOgParams(out: string): URLSearchParams[] {
   return [...values.values()];
 }
 
-export async function generatePagesOg(outDir: string) {
-  if (!outDir?.trim()) throw new Error('An explicit --out <stage/out> directory is required');
-  const out = resolve(outDir);
-  if (!existsSync(out)) throw new Error('OG generation requires the existing export directory');
-  const root = join(out, OG_ROOT.slice(1));
+/** Exported page cards plus every share-button card key (G2/PD-02), without duplicates. */
+export function prebuiltOgParams(out: string): URLSearchParams[] {
+  const values = new Map(collectExportedOgParams(out).map(params => [params.toString(), params] as const));
+  for (const params of ogShareCardParams()) values.set(params.toString(), params);
+  return [...values.values()];
+}
+
+/** Hash-verified strip data for the build-time renderer. Nothing loaded here reaches the Worker. */
+export function loadOgStrips(): { strips: OgStripData; rawBytes: number; fontSha256: string } {
   const vendor = join(REPO, 'vendor/og-strips');
   const manifest = JSON.parse(readFileSync(join(vendor, 'manifest.json'), 'utf8')) as {
     version: number; files: Record<string, FileInfo>;
@@ -75,57 +82,44 @@ export async function generatePagesOg(outDir: string) {
   if (manifest.version !== 1 || Object.keys(manifest.files).sort().join(',') !== 'config.json,glyphs-36.bin,glyphs-64.bin,pool.bin') throw new Error('Unexpected OG strip manifest');
   if (hash(readFileSync(join(REPO, 'vendor/og-font/NotoSansKR.ttf'))) !== provenance.fontSha256 ||
       hash(readFileSync(join(REPO, 'vendor/og-font/OFL.txt'))) !== provenance.licenseSha256) throw new Error('OG font/license integrity mismatch');
-  mkdirSync(join(root, 'images'), { recursive: true });
-  const modules = join(out, '_worker.js', 'og');
-  mkdirSync(modules, { recursive: true });
-  if (readdirSync(root).some(name => name.endsWith('.bin'))) throw new Error('Stale bitmap output: use a fresh owned export directory');
   let rawBytes = 0;
   const dataFiles = new Map<string, Buffer>();
   for (const [name, info] of Object.entries(manifest.files)) {
-    if (info.bytes > 48 * 1024 * 1024) throw new Error('Unexpected OG module size');
+    if (info.bytes > 48 * 1024 * 1024) throw new Error('Unexpected OG data size');
     const packed = readFileSync(join(vendor, name + '.gz'));
     if (packed.length !== info.gzipBytes || hash(packed) !== info.gzipSha256) throw new Error(`OG archive mismatch: ${name}`);
     const data = gunzipSync(packed, { maxOutputLength: info.bytes });
     if (data.length !== info.bytes || hash(data) !== info.sha256) throw new Error(`OG bitmap mismatch: ${name}`);
+    if (name.endsWith('.bin') && data.length !== OG_STRIP_BYTES[name as keyof typeof OG_STRIP_BYTES]) throw new Error('Unreviewed OG binary size');
     dataFiles.set(name, data); rawBytes += data.length;
-    if (name.endsWith('.bin')) {
-      if (data.length !== OG_RAW_MODULE_BYTES[name as keyof typeof OG_RAW_MODULE_BYTES]) throw new Error('Unreviewed OG binary size');
-      // Preserve the existing, hash-verified gzip for glyph tables. Recompressing
-      // these with Node's zlib is larger than the pinned Python-generated files.
-      if (name !== 'pool.bin') writeFileSync(join(modules, name), packed);
-    }
   }
-  if (rawBytes > 52 * 1024 * 1024) throw new Error('OG expanded data exceeds the reviewed startup memory budget');
-  const config = JSON.parse(dataFiles.get('config.json')!.toString('utf8'));
-  writeFileSync(join(modules, 'config.mjs'), `// Generated from reviewed OG strip data; no runtime JSON parse.\nexport default ${JSON.stringify(config)};\n`);
-  const poolData = dataFiles.get('pool.bin')!;
-  let packedPoolBytes = 0;
-  for (let index = 0; index < OG_POOL_MODULES.length; index++) {
-    const chunk = poolData.subarray(index * OG_POOL_CHUNK_BYTES, (index + 1) * OG_POOL_CHUNK_BYTES);
-    const packed = gzipSync(chunk, { level: 9 });
-    if (!gunzipSync(packed, { maxOutputLength: chunk.length }).equals(chunk)) throw new Error('OG pool chunk round-trip mismatch');
-    writeFileSync(join(out, '_worker.js', OG_POOL_MODULES[index]), packed); packedPoolBytes += packed.length;
-  }
-  copyFileSync(join(REPO, 'cloudflare/pages-og-inflate.mjs'), join(modules, 'inflate.mjs'));
-  const poolImports = OG_POOL_MODULES.map((name: string, index: number) => `import pool${index} from './${name.slice(3)}';`).join('\n');
-  const poolVariables = OG_POOL_MODULES.map((_: string, index: number) => `pool${index}`).join(',');
-  writeFileSync(join(modules, 'index.mjs'), `// Bounded expansion happens once at isolate startup, never per request.\nimport { inflateOgChunks } from './inflate.mjs';\n${poolImports}\nimport small from './glyphs-36.bin';\nimport large from './glyphs-64.bin';\nimport config from './config.mjs';\nconst pool = inflateOgChunks(${poolData.length}, [${poolVariables}]);\nconst glyphs36 = inflateOgChunks(${dataFiles.get('glyphs-36.bin')!.length}, [small], 8 * 1024 * 1024);\nconst glyphs64 = inflateOgChunks(${dataFiles.get('glyphs-64.bin')!.length}, [large], 8 * 1024 * 1024);\nexport const pagesOgData = Object.freeze({pool, glyphs36, glyphs64, config});\n`);
-  copyFileSync(join(REPO, 'vendor/og-font/OFL.txt'), join(root, 'OFL.txt'));
+  if (rawBytes > 52 * 1024 * 1024) throw new Error('OG expanded data exceeds the reviewed build memory budget');
   const exactBuffer = (name: string) => { const buffer = dataFiles.get(name)!; return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength) as ArrayBuffer; };
-  const strips: OgStripData = { pool: exactBuffer('pool.bin'), glyphs36: exactBuffer('glyphs-36.bin'), glyphs64: exactBuffer('glyphs-64.bin'), config };
-  const env: PagesOgEnv = { OG_STRIPS: strips, ASSETS: { fetch: async () => { throw new Error('Build OG renderer may not fetch'); } } };
-  const params = collectExportedOgParams(out);
+  const config = JSON.parse(dataFiles.get('config.json')!.toString('utf8'));
+  return { strips: { pool: exactBuffer('pool.bin'), glyphs36: exactBuffer('glyphs-36.bin'), glyphs64: exactBuffer('glyphs-64.bin'), config },
+    rawBytes, fontSha256: provenance.fontSha256 };
+}
+
+export async function generatePagesOg(outDir: string) {
+  if (!outDir?.trim()) throw new Error('An explicit --out <stage/out> directory is required');
+  const out = resolve(outDir);
+  if (!existsSync(out)) throw new Error('OG generation requires the existing export directory');
+  const root = join(out, OG_ROOT.slice(1));
+  const { strips, rawBytes, fontSha256 } = loadOgStrips();
+  mkdirSync(join(root, 'images'), { recursive: true });
+  if (readdirSync(root).some(name => name.endsWith('.bin'))) throw new Error('Stale bitmap output: use a fresh owned export directory');
+  copyFileSync(join(REPO, 'vendor/og-font/OFL.txt'), join(root, 'OFL.txt'));
+  const params = prebuiltOgParams(out);
   let pngBytes = 0;
   for (const query of params) {
-    const png = optimizeBuildPng(await renderPagesOg(query, env));
+    const png = optimizeBuildPng(renderPagesOg(query, strips));
     writeFileSync(join(root, 'images', await ogImageKey(query) + '.png'), png); pngBytes += png.length;
   }
-  // Deliberately generic only when an unexpected missing/corrupt asset prevents a
-  // personalized render; the runtime advertises this with short TTL + X-OG-Error.
-  writeFileSync(join(root, 'fallback.png'), optimizeBuildPng(await renderPagesOg(new URLSearchParams('lang=en&title=MoneySalary'), env)));
-  const report = { version: 2, root: OG_ROOT, runtimeModules: '_worker.js/og/index.mjs', bitmapAtlasRuntimeFiles: 0, rawBytes,
-    compressedStartupData: true, poolChunkBytes: OG_POOL_CHUNK_BYTES, poolChunks: OG_POOL_MODULES.length, packedPoolBytes,
-    preRenderedImages: params.length, pngBytes, fontSha256: provenance.fontSha256 };
+  // The generic card for every key the build does not prebuild (unknown parameter sets, old titles)
+  // and for a missing/corrupt asset; the Worker labels it X-OG-Fallback with the short 300 s TTL.
+  writeFileSync(join(root, 'fallback.png'), optimizeBuildPng(renderPagesOg(new URLSearchParams('lang=en&title=MoneySalary'), strips)));
+  const report = { version: 3, root: OG_ROOT, runtimeRender: false, workerModules: 0, rawBytes,
+    preRenderedImages: params.length, shareCardKeys: ogShareCardParams().length, pngBytes, fontSha256 };
   writeFileSync(join(root, 'build-manifest.json'), JSON.stringify(report, null, 2) + '\n');
   return report;
 }

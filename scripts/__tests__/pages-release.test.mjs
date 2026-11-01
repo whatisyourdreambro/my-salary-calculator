@@ -16,7 +16,7 @@ import { createReleaseApi, assertConfiglessDirectory, localWranglerOAuth, create
 const COMMIT = 'a'.repeat(40), OLD = 'b'.repeat(40);
 const ID = '11111111-2222-3333-4444-555555555555', OLD_ID = '99999999-2222-3333-4444-555555555555';
 const marker = {mode:'production',adsDisabled:false,buildId:'build-test',sourceHash:'c'.repeat(64),outputHash:'d'.repeat(64),
-  workerHash:'e'.repeat(64),workerModuleCount:44,workerBytes:25126231,compatibilityDate:'2025-09-08',
+  workerHash:'e'.repeat(64),workerModuleCount:1,workerBytes:1038336,compatibilityDate:'2025-09-08',
   publicConfig:{path:'.env.production',effectiveHash:'f'.repeat(64)}};
 const environment = () => ({GITHUB_ACTIONS:'true',GITHUB_EVENT_NAME:'push',GITHUB_REF:'refs/heads/main',
   GITHUB_REPOSITORY:'whatisyourdreambro/my-salary-calculator',PAGES_AUTO_DEPLOY_ENABLED:'true',GITHUB_RUN_ATTEMPT:'1',GITHUB_SHA:COMMIT});
@@ -55,7 +55,8 @@ test('only first main push with explicit enablement and clean exact checkout can
 
 test('QA packages, missing ordinary-ad config and changed module limit are refused',()=>{
   assert.doesNotThrow(()=>assertProductionPackage(marker));
-  for(const change of [{mode:'qa'},{adsDisabled:true},{workerModuleCount:6},{workerBytes:26*1024*1024},{publicConfig:{}},{sourceHash:''}])
+  // G2/PD-02: one Worker module; the former 44-module OG strip package must be reviewed, never auto-published.
+  for(const change of [{mode:'qa'},{adsDisabled:true},{workerModuleCount:6},{workerModuleCount:44},{workerBytes:26*1024*1024},{publicConfig:{}},{sourceHash:''}])
     assert.throws(()=>assertProductionPackage({...marker,...change}));
 });
 

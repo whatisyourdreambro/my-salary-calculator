@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { approvedResultUrl, defaultShareTitle, isSharePageReady, publicShareImageUrl, publicShareUrl, resolvePublicShare, resolveResultShareTarget, resolveShareLocale, safePageOgImage, SHARE_ORIGIN, shareAnalyticsPath } from "../sharePolicy";
+import { normalizeOgParams, ogShareCardParams } from "../ogImageCache";
 
 const context = { pathname: "/guides/example", canonical: `${SHARE_ORIGIN}/guides/example`, title: "Public guide", notFound: false };
 
@@ -69,6 +70,19 @@ describe("public share context and payload boundaries", () => {
     expect(page.title).toBe("Approved salary 987654321");
     expect(page.imageUrl).toBe(`${SHARE_ORIGIN}/api/og?path=%2Fguides%2Fexample&lang=ko`);
     expect(publicShareImageUrl(`${SHARE_ORIGIN}/share/private?salary=987654321#private`, "en")).toBe(`${SHARE_ORIGIN}/api/og?path=%2F&lang=en`);
+  });
+  // G2/PD-02: the Worker serves prebuilt cards only, so every path-only card must normalize to a prebuilt key.
+  it("every path-only share card lands on one of the prebuilt share-card keys", () => {
+    const keys = new Set(ogShareCardParams().map((params) => params.toString()));
+    for (const path of ["/", "/guides/example", "/fun/quiz", "/insights/top100", "/salary-db/samsung-electronics", "/salary/50000000",
+      "/calc/samsung-bonus", "/glossary/실수령액", "/en", "/en/guides/example", "/share/private?salary=987654321", "/contact"]) {
+      for (const locale of ["ko", "en"] as const) {
+        const image = new URL(publicShareImageUrl(`${SHARE_ORIGIN}${path}`, locale));
+        expect(keys.has(normalizeOgParams(image.searchParams).toString()), `${locale} ${path}`).toBe(true);
+      }
+      const page = resolvePublicShare({ ...context, pathname: path.split("?")[0], canonical: `${SHARE_ORIGIN}${path.split("?")[0]}` });
+      if (page.imageUrl.includes("path=")) expect(keys.has(normalizeOgParams(new URL(page.imageUrl).searchParams).toString()), path).toBe(true);
+    }
   });
 });
 

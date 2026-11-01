@@ -21,13 +21,9 @@ export const PAGES_FUNCTION_EXCLUDES = Object.freeze(['/_next/static/*',
   '/manifest.webmanifest', '/manifest.en.webmanifest', '/security.txt', '/.well-known/security.txt',
   '/b112e39a5933ca97201c83a7c5d7d91e.txt']);
 export const QA_ASSETS_IGNORE = '/_worker.js/\n/_routes.json\n';
-export const OG_POOL_CHUNK_BYTES = 1024 * 1024;
-export const OG_RAW_MODULE_BYTES = Object.freeze({ 'pool.bin': 38907807,
-  'glyphs-36.bin': 4923628, 'glyphs-64.bin': 8059908 });
-export const OG_POOL_MODULES = Object.freeze(Array.from({ length: Math.ceil(OG_RAW_MODULE_BYTES['pool.bin'] / OG_POOL_CHUNK_BYTES) },
-  (_, index) => `og/pool-${String(index).padStart(2, '0')}.bin`));
-export const OG_WORKER_MODULES = Object.freeze(['og/config.mjs', 'og/inflate.mjs', 'og/glyphs-36.bin', 'og/glyphs-64.bin',
-  'og/index.mjs', ...OG_POOL_MODULES]);
+// G2/PD-02 (2026-11-01): OG cards are prebuilt static assets, so the Worker carries no OG Data modules
+// and is the bundled index.js only (formerly 44 modules, ~25.1 MB with the 52 MB startup inflation).
+export const OG_WORKER_MODULES = Object.freeze([]);
 export const STAGE_MARKER = '.moneysalary-pages-stage.json';
 export const BUILD_MARKER = 'moneysalary-pages-build.json';
 export const EXCLUDED_SOURCE_PATHS = Object.freeze([
@@ -304,11 +300,11 @@ export function packageExport({ stage, mode, routingConfig, buildId }) {
   const dist = path.join(stage, 'dist');
   if (existsSync(dist)) throw new Error('Pages dist already exists; rebuild in a fresh owned stage');
   const inputs = listFiles(out);
-  // The generator emits private module inputs, not public downloadable assets.
-  // Only the packager writes the final entry after injecting the route manifest.
   if (!inputs.some(x => x.relative === 'index.html') || !inputs.some(x => x.relative === '404.html'))
     throw new Error('Native export must contain index.html and 404.html');
-  workerModuleInventory(out, { requireEntry: false });
+  // The export carries no private Worker modules (G2/PD-02). Only the packager writes the
+  // final entry after injecting the route manifest.
+  if (inputs.some(x => isWorkerFile(x.relative))) throw new Error('Native export must not contain private Worker modules');
   // The stage renders its one finite English recovery page explicitly. Never
   // substitute Next's error-shell HTML: it can contain the text only in Flight.
   const english404 = inputs.find(x => x.relative === 'en/page-unavailable.html');
@@ -371,7 +367,7 @@ export function packageExport({ stage, mode, routingConfig, buildId }) {
   const oldHeaders = existsSync(path.join(stage, 'public/_headers')) ? readFileSync(path.join(stage, 'public/_headers'), 'utf8') : '';
   writeFileSync(path.join(dist, '_headers'), `${oldHeaders}\n${mode === 'qa' ? '/*\n  X-MoneySalary-QA: ads-disabled\n' : ''}`);
   // Pages upload excludes its private Worker directory automatically. Miniflare
-  // needs this equivalent local-only rule, particularly for Data modules >25MiB.
+  // needs this equivalent local-only rule so the Worker source is never an asset.
   if (mode === 'qa') writeFileSync(path.join(dist, '.assetsignore'), QA_ASSETS_IGNORE);
   return { manifest, documentCount: nativeHtmlCount, ...checkAssetLimits(dist) };
 }
@@ -385,15 +381,31 @@ export function checkAssetLimits(dist, limits = PAGES_LIMITS) {
   return { assetCount: assets.length, assetBytes: assets.reduce((sum, x) => sum + x.size, 0), maxAssetBytes: Math.max(0, ...assets.map(x => x.size)) };
 }
 
-export function workerModuleInventory(dist, { requireEntry = true } = {}) {
+export function workerModuleInventory(dist) {
   const directory = path.join(dist, '_worker.js');
   if (!existsSync(directory) || lstatSync(directory).isSymbolicLink() || !lstatSync(directory).isDirectory())
     throw new Error('Pages Worker must be the reviewed private module directory');
   const files = listFiles(directory);
-  const expected = [...(requireEntry ? ['index.js'] : []), ...OG_WORKER_MODULES].sort();
+  const expected = ['index.js', ...OG_WORKER_MODULES].sort();
   if (JSON.stringify(files.map(file => file.relative).sort()) !== JSON.stringify(expected))
     throw new Error('Pages Worker module inventory is incomplete or contains unreviewed files');
   return files.map(file => ({ ...file, type: file.relative.endsWith('.bin') ? 'Data' : 'ESModule' }));
+}
+
+// The request path must stay small and render nothing: no Next/OpenNext/React runtime, and since
+// G2/PD-02 no build-time OG renderer or strip data (a lazy import would also exceed the Free 10 ms CPU).
+const FORBIDDEN_WORKER_INPUTS = Object.freeze([
+  [/(?:^|\/)node_modules\/(?:next|@opennextjs|react|react-dom)(?:\/|$)/, 'Next/OpenNext/React runtime'],
+  [/(?:^|\/)cloudflare\/pages-og-(?:render|strips)\.ts$|(?:^|\/)vendor\/og-/, 'the build-time OG renderer or its data'],
+]);
+
+/** Fail-closed check of the esbuild metafile: one self-contained module without forbidden inputs. */
+export function assertPagesWorkerBundle(metafile) {
+  for (const file of Object.keys(metafile?.inputs || {}))
+    for (const [pattern, label] of FORBIDDEN_WORKER_INPUTS)
+      if (pattern.test(file)) throw new Error(`Pages Worker must not contain ${label}: ${file}`);
+  const imports = Object.values(metafile?.outputs || {}).flatMap(output => output.imports || []);
+  if (imports.length) throw new Error(`Pages Worker must be one self-contained module: ${imports[0].path}`);
 }
 
 export function checkWorkerBundle(dist, { workerBytes = PAGES_WORKER_LIMIT } = {}) {

@@ -5,8 +5,8 @@ import { createRequire } from 'node:module';
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { artifactHash, BUILD_MARKER, checkAssetLimits, checkWorkerBundle, cleanBuildEnvironment, compileRoutingConfig,
-  copySources, EXCLUDED_SOURCE_PATHS, inventoryHash, packageExport, QA_ASSETS_IGNORE, resetOwnedStage, sha256,
+import { artifactHash, assertPagesWorkerBundle, BUILD_MARKER, checkAssetLimits, checkWorkerBundle, cleanBuildEnvironment,
+  compileRoutingConfig, copySources, EXCLUDED_SOURCE_PATHS, inventoryHash, packageExport, QA_ASSETS_IGNORE, resetOwnedStage, sha256,
   readPublicBuildConfiguration, sourceInventory, stagePath, verifyArtifact, workerModuleInventory,
   createNativeReleaseAttestation, workerHeadroomWarning } from './lib/pages-export.mjs';
 
@@ -49,8 +49,8 @@ export function qaMiniflareOptions(stage, config, port, denyOutbound) {
     throw new Error('QA asset rules must keep the private Worker directory out of ASSETS');
   return { name: config.name, host: '127.0.0.1', port, cf: false,
     compatibilityDate: config.compatibility_date, compatibilityFlags: config.compatibility_flags,
-    // Match Pages' private _worker.js directory. Relative virtual module paths
-    // avoid Windows drive-letter specifiers; Data modules are genuine imports.
+    // Match Pages' private _worker.js directory (index.js only since G2/PD-02). Relative
+    // virtual module paths avoid Windows drive-letter specifiers.
     modulesRoot: '/', modules: workerModuleInventory(path.join(stage, 'dist')).map(file => ({
       type: file.type, path: file.relative, contents: readFileSync(file.file, file.type === 'Data' ? undefined : 'utf8'),
     })),
@@ -62,13 +62,9 @@ export function qaMiniflareOptions(stage, config, port, denyOutbound) {
 }
 
 export function pagesWorkerEntrySource() {
-  // This import remains external so the Pages upload carries genuine Data
-  // modules. Source application code has no dependency on generated files.
-  return `import handler from '../cloudflare/pages-entry.ts';\n`
-    + `import { pagesOgData } from './og/index.mjs';\n`
-    + `export default { ...handler, fetch(request, env, context) {\n`
-    + `  return handler.fetch.call(handler, request, { ...env, OG_STRIPS: pagesOgData }, context);\n`
-    + `} };\n`;
+  // G2/PD-02: OG cards are prebuilt assets, so nothing is injected into env and the Worker
+  // bundles into one self-contained index.js. Source code has no dependency on generated files.
+  return `export { default } from '../cloudflare/pages-entry.ts';\n`;
 }
 
 function run(script, args, cwd, env) {
@@ -139,8 +135,8 @@ async function build(mode, nativeContext) {
   await run(stageRequire.resolve('next/dist/bin/next'), ['build'], stage, env);
   restoreDynamicSources(stage);
   await run(stageRequire.resolve('tsx/cli'), ['scripts/generate-pages-data.ts', '--out', path.join(stage, 'out')], stage, env);
-  // OG generation is a mandatory deterministic build-time step; omission must
-  // not silently publish a Worker whose image handler cannot find its assets.
+  // OG generation is a mandatory deterministic build-time step; omission must not silently
+  // publish a Worker whose image handler cannot find its prebuilt cards or fallback.
   const ogGenerator = path.join(stage, 'scripts/generate-pages-og.ts');
   if (!existsSync(ogGenerator)) throw new Error('Missing static Pages OG generator');
   await run(stageRequire.resolve('tsx/cli'), [ogGenerator, '--out', path.join(stage, 'out')], stage, env);
@@ -166,13 +162,12 @@ async function build(mode, nativeContext) {
   const esbuild = stageRequire('esbuild');
   writeFileSync(path.join(stage, 'generated/pages-worker-entry.mjs'), pagesWorkerEntrySource());
   const bundle = await esbuild.build({ absWorkingDir: stage, entryPoints: ['generated/pages-worker-entry.mjs'],
-    outfile: 'dist/_worker.js/index.js', external: ['./og/index.mjs'],
+    outfile: 'dist/_worker.js/index.js',
     bundle: true, format: 'esm', platform: 'browser', target: 'es2022',
     minify: true, sourcemap: false, metafile: true, logLevel: 'warning',
     define: { __MSY_PAGES_MANIFEST__: JSON.stringify(packaged.manifest),
       'process.env.NODE_ENV': '"production"', 'process.env.NEXT_PUBLIC_ADS_DISABLED': JSON.stringify(mode === 'qa' ? '1' : '0') } });
-  const forbiddenRuntime = Object.keys(bundle.metafile.inputs).filter(file => /(?:^|\/)node_modules\/(?:next|@opennextjs|react|react-dom)(?:\/|$)/.test(file));
-  if (forbiddenRuntime.length) throw new Error(`Pages Worker must not contain Next/OpenNext/React runtime: ${forbiddenRuntime[0]}`);
+  assertPagesWorkerBundle(bundle.metafile);
   const worker = checkWorkerBundle(path.join(stage, 'dist'));
   const headroomWarning = workerHeadroomWarning(worker.workerBytes);
   if (headroomWarning) console.warn(`::warning title=Pages Worker size::${headroomWarning}`);
