@@ -2,26 +2,22 @@
 
 import nextBundleAnalyzer from "@next/bundle-analyzer";
 import { fileURLToPath } from "node:url";
-import { googleMeasurementImageOrigins } from "./scripts/lib/google-measurement-origins.mjs";
 
 const withBundleAnalyzer = nextBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
-// CSP — AdSense + 쿠팡 파트너스 + Cloudflare Insights 만 허용 (메모리 수익 정책 준수).
-// 카카오 Adfit(*.adfit.kakao.com, t1.daumcdn.net) 은 실제 사용 코드가 없어 2026-05-24
-// 제거. 운영자 명시 지시 시에만 재추가.
-// 카카오 공유 SDK(t1.kakaocdn.net script / sharer.kakao.com form / kapi.kakao.com)는
-// 운영자가 JS 키를 발급·제공(2026-08-16)하여 허용 — 광고 아닌 공유 전용.
-// fundingchoicesmessages.google.com — AdSense CMP(EEA 동의 메시지). 운영자가 콘솔에서
-// CMP 게시 시 이 도메인의 스크립트·iframe 이 로드됨 — CMP 게시 전에 반드시 이 CSP 가
-// 먼저 배포돼 있어야 유럽 방문자 화면에서 동의창이 차단되지 않는다 (2026-08-23).
-// 2026-08-24 점검(운영자 승인): 쿠팡 배너 이미지 CDN(*.coupangcdn.com)·AdSense 무결성
-// 픽셀(*.adtrafficquality.google)을 img-src에, 구글 앵커 프레임(www.google.com)을
-// frame-src에 추가 — CSP 적용 환경에서 광고 리소스가 차단되던 누락분.
+// CSP — Google AdSense supports only a strict nonce CSP, says more restrictive
+// policies (such as host allowlists) may break without notice and allows a more
+// permissive policy instead: https://support.google.com/adsense/answer/16283098 .
+// Every document is a static export served by the Free-plan Pages Function, so
+// per-response nonces are not used. Production therefore does not enumerate
+// third-party hosts (AdSense, GA4, Funding Choices, Coupang, Kakao share, Cloudflare
+// Insights): any HTTPS source is allowed, while framing, plugins, <base> and form
+// targets stay locked (owner approval 2026-11-01).
+// Kakao share form target (sharer.kakao.com) was approved by the operator 2026-08-16.
 const qaServicesDisabled = process.env.NEXT_PUBLIC_ADS_DISABLED === "1";
-// The live Google tag diagnostic reported blocked measurement connections and
-// regional Google images. Only production receives these sources; QA stays local.
+// QA keeps its closed, local-only policy (byte-identical; see measurement-csp test).
 const ContentSecurityPolicy = (qaServicesDisabled ? `
   default-src 'self';
   script-src 'self' 'unsafe-eval' 'unsafe-inline' blob:;
@@ -36,18 +32,13 @@ const ContentSecurityPolicy = (qaServicesDisabled ? `
   base-uri 'self';
   form-action 'self';
 ` : `
-  default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://static.cloudflareinsights.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://t1.kakaocdn.net https://fundingchoicesmessages.google.com;
-  frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.googletagmanager.com https://www.google.com https://ep2.adtrafficquality.google https://fundingchoicesmessages.google.com;
-  frame-ancestors 'self';
-  style-src 'self' 'unsafe-inline';
-  img-src 'self' data: blob: https://*.googleusercontent.com https://www.google-analytics.com https://www.googletagmanager.com ${googleMeasurementImageOrigins.join(" ")} https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.coupang.com https://ads-partners.coupang.com https://link.coupang.com https://*.coupangcdn.com https://*.adtrafficquality.google;
-  media-src 'none';
-  connect-src 'self' https://open.er-api.com https://api.frankfurter.dev https://www.google-analytics.com https://*.google-analytics.com https://analytics.google.com https://www.google.com https://www.googletagmanager.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://*.googlesyndication.com https://*.doubleclick.net https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://*.cloudflareinsights.com https://kapi.kakao.com;
-  font-src 'self' data:;
+  default-src 'self' https: data: blob:;
+  script-src 'self' 'unsafe-inline' 'unsafe-eval' https: blob:;
+  style-src 'self' 'unsafe-inline' https:;
   object-src 'none';
   base-uri 'self';
   form-action 'self' https://sharer.kakao.com;
+  frame-ancestors 'self';
 `)
   .replace(/\s{2,}/g, " ")
   .trim();
