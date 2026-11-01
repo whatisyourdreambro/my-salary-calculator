@@ -183,9 +183,15 @@ export default function DualIncomeYearEndClient() {
             className="w-full rounded-xl px-4 py-4 text-lg font-black bg-canvas-50 dark:bg-canvas-800 border border-canvas-200 dark:border-canvas-700 text-navy dark:text-canvas-50 focus:outline-none focus:ring-2 focus:ring-electric/50">
             {Array.from({ length: children + 1 }, (_, count) => <option key={count} value={count}>{count}명</option>)}
           </select>
-          <p id="di-child-credit-help" className="mt-2 text-xs leading-relaxed text-faint-blue">
-            기본공제 대상 중 9세 이상이며, 2017년생은 제외합니다. 해당 과세기간 중 요건 나이에 해당되는 날이 있는지 확인하세요. 소득·부양 요건과 사망 등 판정 시점 예외는 별도로 확인합니다.
-          </p>
+          {/* 입력 기준은 접힌 상자로 (2026-11-01 B09 P4-05) — 결과 직하 CalcResultAd 위 높이. 닫히면 요약 한 줄이고,
+              요약 칸은 min-h-11(44px) 안에 위아래 여백(py-3.5)을 넣어 종전 문단 자리(mt-2 + 2줄 이상 = 47px 이상)보다
+              언제나 낮다. 선택 상자의 aria-describedby 는 접혀 있어도 이 문단 전체를 읽는다. */}
+          <details className="text-xs text-faint-blue">
+            <summary className="min-h-11 cursor-pointer py-3.5">입력 기준 보기</summary>
+            <p id="di-child-credit-help" className="leading-relaxed">
+              기본공제 대상 중 9세 이상이며, 2017년생은 제외합니다. 해당 과세기간 중 요건 나이에 해당되는 날이 있는지 확인하세요. 소득·부양 요건과 사망 등 판정 시점 예외는 별도로 확인합니다.
+            </p>
+          </details>
         </div>
 
         {moneyFields.slice(2).map(
@@ -218,10 +224,14 @@ export default function DualIncomeYearEndClient() {
                     원
                   </span>
                 </div>
+                {/* 기부금 입력 기준도 같은 접힌 상자 (2026-11-01 B09 P4-05) — 자녀 1명 이상일 때만 보이는 칸 */}
                 {f.key === "childDonation" && (
-                  <p id="di-child-donation-help" className="mt-2 text-xs leading-relaxed text-faint-blue">
-                    자녀 명의 일반·특례 기부금만 입력하며, 정치자금·고향사랑 기부금은 제외하세요. 이 화면은 유형별 소득 한도·이월액을 자동 반영하지 않아 배우자별 공제대상 금액이 달라질 수 있습니다. <AppLink href="/donation-tax-credit-2026" className="underline underline-offset-2">유형별 계산기</AppLink>에 본인과 배우자의 총급여를 각각 넣어 한도를 확인하고, 세액공제액을 이 칸에 입력하지 마세요.
-                  </p>
+                  <details className="text-xs text-faint-blue">
+                    <summary className="min-h-11 cursor-pointer py-3.5">입력 기준 보기</summary>
+                    <p id="di-child-donation-help" className="leading-relaxed">
+                      자녀 명의 일반·특례 기부금만 입력하며, 정치자금·고향사랑 기부금은 제외하세요. 이 화면은 유형별 소득 한도·이월액을 자동 반영하지 않아 배우자별 공제대상 금액이 달라질 수 있습니다. <AppLink href="/donation-tax-credit-2026" className="underline underline-offset-2">유형별 계산기</AppLink>에 본인과 배우자의 총급여를 각각 넣어 한도를 확인하고, 세액공제액을 이 칸에 입력하지 마세요.
+                    </p>
+                  </details>
                 )}
               </div>
             )

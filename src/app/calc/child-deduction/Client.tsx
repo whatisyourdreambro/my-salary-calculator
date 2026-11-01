@@ -33,7 +33,10 @@ export default function ChildDeductionClient() {
             <Counter label="기본공제 대상 전체" value={input.basicDeductionChildren} onChange={(value) => update("basicDeductionChildren", value)} />
             <Counter label="그중 연간 자녀세액공제 대상" value={input.childTaxCreditEligibleChildren} max={input.basicDeductionChildren} onChange={(value) => update("childTaxCreditEligibleChildren", value)} />
           </div>
-          <p className="mt-3 text-xs text-muted-blue dark:text-canvas-300">2026년 귀속 연간 자녀세액공제는 기본공제 대상 중 9세 이상이며, 2017년생은 제외합니다. 해당 과세기간 중 요건 나이에 해당되는 날이 있는지 확인하세요. 기본공제의 소득·부양 요건과 사망 등 판정 시점 예외는 별도로 확인합니다. 두 번째 인원은 첫 번째 인원에 포함됩니다.</p>
+          {/* 결과 직하 CalcResultAd 위 안내 — 10/26 이전 줄 수(320px 추정 3줄, 종전 6줄)로 되돌린 짧은 요약 (2026-11-01 B09 P4-05).
+              연령 판정 시점(해당 과세기간 중 요건 나이에 해당되는 날)·사망 등 예외·근거 법령은 page.tsx 의 광고 아래
+              본문·자주 묻는 질문 둘째 답에 그대로 있다. 나이 기준 표기는 법률 제21548호 부칙 제2조 그대로. */}
+          <p className="mt-3 text-xs text-muted-blue dark:text-canvas-300">연간 자녀세액공제 대상에는 2026년 귀속 9세 이상(2017년생 제외)인 인원만 넣으세요. 두 번째 인원은 첫 번째에 포함됩니다.</p>
         </fieldset>
 
         <fieldset aria-describedby="child-birth-help">
