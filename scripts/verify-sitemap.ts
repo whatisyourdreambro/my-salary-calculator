@@ -10,15 +10,14 @@ import { readdirSync, statSync, existsSync, readFileSync, writeFileSync } from "
 import { join } from "node:path";
 import { createRequire } from "node:module";
 import { pathToFileURL } from "node:url";
-import sitemap, { ROUTE_OVERRIDES } from "@/app/sitemap";
-import { assessContentReview, expectedPageRevisionDay, isFutureSitemapDate, koreanDay, pageRevisionFields } from "./lib/sitemap-freshness.mjs";
+import sitemap, { ROUTE_OVERRIDES, staticRouteLastModified } from "@/app/sitemap";
+import { appLdDateFields, assessContentReview, expectedPageRevisionDay, isFutureSitemapDate, koreanDay, pageRevisionFields } from "./lib/sitemap-freshness.mjs";
 import {
   PAGE_ACCURACY_REVIEW_PATHS,
   PAGE_LINK_REVIEW_DATE,
   PAGE_LINK_REVIEW_PATHS,
   PAGE_VISIBLE_REVISION_DATES,
 } from "@/config/pageContentRevisions";
-import { STATIC_LAST_MODIFIED_ISO } from "@/config/siteDates";
 import { webApplicationLd } from "@/lib/structuredData";
 import { koGuides, enGuides } from "@/lib/guidesContent";
 import { getGuideModifiedDate } from "@/lib/guideDates";
@@ -110,18 +109,45 @@ function checkPageRevisionDates(entries: Awaited<ReturnType<typeof sitemap>>): n
   return failed;
 }
 
-// WebApplication JSON-LD dateModified ↔ sitemap STATIC_LAST_MODIFIED 정합 게이트 (2026-09-05,
-// L18' 위생 하위 항목) — layout.tsx 가 전 라우트 <head> 에 주입하는 webApplicationLd() 의
-// dateModified 가 sitemap 기준일과 어긋나면 두 신선도 신호가 모순된다. 둘 다
-// src/config/siteDates.ts 단일 상수에서 파생되므로 평소엔 0건 — 누군가 structuredData.ts 에
-// 날짜를 다시 하드코딩하면 여기서 잡힌다. 비차단(WARN) — exit 코드 불변.
-function checkWebApplicationDate(): number {
-  const ld = webApplicationLd() as { dateModified?: string };
-  if (ld.dateModified === STATIC_LAST_MODIFIED_ISO) return 0;
-  console.warn(
-    `[WARN] webApplicationLd dateModified(${ld.dateModified ?? "없음"}) ≠ sitemap STATIC_LAST_MODIFIED(${STATIC_LAST_MODIFIED_ISO}) — src/config/siteDates.ts 단일 상수로 맞추세요.`
-  );
-  return 1;
+// 페이지 JSON-LD 앱 날짜 ↔ sitemap lastmod 정합 게이트 (G3, 2026-11-01 — 종전 2026-09-05 WebApplication 게이트 대체).
+// 종전 게이트는 홈 WebApplication 날짜를 STATIC_LAST_MODIFIED(7/16)와만 비교해, 홈 lastmod(ROUTE_OVERRIDES 10/19)와
+// 어긋난 채 통과했다. 이제 정적 page.tsx 의 softwareApplicationLd/webApplicationLd dateModified 를 그 페이지 sitemap
+// lastmod 와 비교한다: staticRouteLastModified(경로) 호출(단일 소스)은 인자가 자기 경로여야 하고, 문자열은 한국 날짜가
+// 같아야 한다. 홈은 staticRouteLastModified("/") 호출이 있어야 하고 빌더 출력 순간이 홈 lastmod 와 같아야 한다.
+// Dataset dateModified(데이터 기준일)는 대상이 아니다. 비차단(WARN) — exit 코드 불변(차단 가드는 vitest structuredDataTrust).
+function checkAppJsonLdDates(entries: Awaited<ReturnType<typeof sitemap>>): number {
+  let warned = 0;
+  const unresolved: string[] = [];
+  for (const entry of entries) {
+    const route = new URL(entry.url).pathname;
+    const file = join(APP_DIR, route === "/" ? "" : decodeURIComponent(route.slice(1)), "page.tsx");
+    if (!existsSync(file)) continue;
+    const sitemapDay = koreanDay(entry.lastModified!);
+    const fields = appLdDateFields(readFileSync(file, "utf8"), file) as Array<{ builder: string; route: string | null; value: string | null }>;
+    for (const field of fields) {
+      if (field.route !== null) {
+        if (field.route !== route) {
+          console.warn(`[WARN] JSON-LD 앱 날짜가 다른 경로의 lastmod 를 씀: ${route} ${field.builder} staticRouteLastModified(${field.route})`);
+          warned++;
+        }
+      } else if (field.value === null) {
+        unresolved.push(route);
+      } else if (koreanDay(field.value.length === 10 ? `${field.value}T00:00:00+09:00` : field.value) !== sitemapDay) {
+        console.warn(`[WARN] JSON-LD 앱 날짜 ≠ sitemap: ${route} ${field.builder} dateModified=${field.value} sitemap=${sitemapDay} — staticRouteLastModified("${route}") 로 바꾸세요.`);
+        warned++;
+      }
+    }
+    if (route === "/") {
+      const ld = webApplicationLd({ dateModified: staticRouteLastModified("/") }) as { dateModified?: string };
+      const tied = fields.some((field) => field.builder === "webApplicationLd" && field.route === "/");
+      if (!tied || new Date(ld.dateModified ?? NaN).getTime() !== new Date(entry.lastModified!).getTime()) {
+        console.warn(`[WARN] 홈 WebApplication dateModified(${ld.dateModified ?? "없음"}) 가 홈 sitemap lastmod 와 다르거나 staticRouteLastModified("/") 를 쓰지 않음`);
+        warned++;
+      }
+    }
+  }
+  if (unresolved.length) console.log(`[verify-sitemap] JSON-LD 앱 날짜 정적 판정 불가(가져온 상수 등, vitest 가 개별 확인): ${unresolved.join(", ")}`);
+  return warned;
 }
 
 // ── URL 원장 게이트 (2026-09-25 B7, RT-07(a)) ─────────────────────────────────────────
@@ -298,7 +324,7 @@ async function main() {
   const staleOverrides = checkOverrideFreshness(entries);
   const invalidDates = checkValidDates(entries);
   const pageDateMismatch = checkPageRevisionDates(entries);
-  const webAppDateMismatch = checkWebApplicationDate();
+  const appLdDateMismatch = checkAppJsonLdDates(entries);
 
   // 실제 동적 URL 출력도 확인한다. 수정일만 바뀐 글이 발행일로 되돌아가거나
   // 중복/누락되는 회귀를 정적 라우트 목록 검사와 별개로 차단한다.
@@ -329,7 +355,7 @@ async function main() {
   );
 
   console.log(
-    `[verify-sitemap] 정적 라우트 ${routes.length}곳 / sitemap URL ${sitePaths.size}건 / 미등재 ${fail}곳 / 가이드 날짜·등재 불일치 ${guideDateMismatch}건 / URL 원장 FAIL ${ledgerFail}건 / 유효하지 않은 날짜 ${invalidDates}건 / 페이지 수정일 불일치 ${pageDateMismatch}건 / override 신선도 경고 ${staleOverrides}건 / WebApplication 날짜 불일치 ${webAppDateMismatch}건`
+    `[verify-sitemap] 정적 라우트 ${routes.length}곳 / sitemap URL ${sitePaths.size}건 / 미등재 ${fail}곳 / 가이드 날짜·등재 불일치 ${guideDateMismatch}건 / URL 원장 FAIL ${ledgerFail}건 / 유효하지 않은 날짜 ${invalidDates}건 / 페이지 수정일 불일치 ${pageDateMismatch}건 / override 신선도 경고 ${staleOverrides}건 / JSON-LD 앱 날짜 불일치 ${appLdDateMismatch}건`
   );
   if (fail || guideDateMismatch) {
     console.error(

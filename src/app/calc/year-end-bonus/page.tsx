@@ -13,6 +13,8 @@ import {
   faqLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
+// SoftwareApplication dateModified = 사이트맵 lastmod (같은 함수, G3 2026-11-01) — 서버 컴포넌트 전용 import
+import { staticRouteLastModified } from "@/app/sitemap";
 import FavoritesButton from "@/components/FavoritesButton";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
@@ -85,7 +87,7 @@ export default function YearEndBonusPage() {
             description:
               "가상 연봉·성과급 조합을 2026년 기본세율과 간이 공제 가정으로 비교하는 세후 금액 추정 계산기입니다.",
             url: "/calc/year-end-bonus",
-            dateModified: "2026-09-09",
+            dateModified: staticRouteLastModified("/calc/year-end-bonus"),
           }),
           autoBreadcrumbLd("/calc/year-end-bonus", {
             leafName: "성과급 세금 계산기",

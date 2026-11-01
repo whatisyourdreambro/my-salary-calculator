@@ -11,6 +11,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, articleLd, datasetLd, speakableLd } from "@/lib/structuredData";
+import { CITATION_POLICY_URL } from "@/lib/citationPolicy";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd, SidebarAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -95,6 +96,8 @@ export default function PolicePay2026Page() {
             datePublished: "2026-08-30",
             dateModified: "2026-08-30",
             keywords: ["경찰 봉급표", "순경 월급", "경찰 월급", "경찰공무원"],
+            // 사이트 인용 정책 URL — 페이지 인용 복사 상자('출처 표기 시 자유 인용')와 같은 정책 (G3, 2026-11-01)
+            license: CITATION_POLICY_URL,
           }),
           speakableLd({ url: "/police-pay-2026", cssSelectors: [".faq-answer"] }),
         ]}

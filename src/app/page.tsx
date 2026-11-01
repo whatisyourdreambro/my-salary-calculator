@@ -5,6 +5,8 @@
 import type { Metadata } from "next";
 import JsonLd from "@/components/JsonLd";
 import { faqLd, howToLd, webApplicationLd } from "@/lib/structuredData";
+// JSON-LD dateModified = 사이트맵 홈 lastmod (같은 함수, G3 2026-11-01) — 서버 컴포넌트 전용 import
+import { staticRouteLastModified } from "@/app/sitemap";
 import { HOME_FAQ_ITEMS, HOME_HOWTO_DATA } from "@/lib/homeContent";
 import HomeClient from "./HomeClient";
 import HomeSeoSection from "@/components/home/HomeSeoSection";
@@ -35,7 +37,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
-      <JsonLd data={[webApplicationLd(), faqLd(HOME_FAQ_ITEMS), howToLd(HOME_HOWTO_DATA)]} />
+      <JsonLd data={[webApplicationLd({ dateModified: staticRouteLastModified("/") }), faqLd(HOME_FAQ_ITEMS), howToLd(HOME_HOWTO_DATA)]} />
       {/* Server-render the discovery links in place; keep the calculator interactive. */}
       <HomeClient
         featuredGuides={<FeaturedGuides />}

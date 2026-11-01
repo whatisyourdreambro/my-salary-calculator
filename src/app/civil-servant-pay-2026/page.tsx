@@ -26,6 +26,7 @@ import {
   datasetLd,
   speakableLd,
 } from "@/lib/structuredData";
+import { CITATION_POLICY_URL } from "@/lib/citationPolicy";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd, SidebarAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -135,6 +136,8 @@ export default function CivilServantPay2026Page() {
               "경찰 월급",
               "소방 월급",
             ],
+            // 사이트 인용 정책 URL (G3, 2026-11-01 운영자 승인 '구글 개선' 4번 — GSC Dataset 'license' 누락 경고)
+            license: CITATION_POLICY_URL,
           }),
           speakableLd({
             url: "/civil-servant-pay-2026",

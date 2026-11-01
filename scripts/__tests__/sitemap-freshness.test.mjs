@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { koreanDay, contentSnapshot, assessContentReview, isFutureSitemapDate, pageRevisionFields, expectedPageRevisionDay } from '../lib/sitemap-freshness.mjs';
+import { koreanDay, contentSnapshot, assessContentReview, isFutureSitemapDate, pageRevisionFields, expectedPageRevisionDay, appLdDateFields } from '../lib/sitemap-freshness.mjs';
 
 function fixture(t) {
   const root = mkdtempSync(path.join(tmpdir(), 'sitemap-review-'));
@@ -65,6 +65,23 @@ test('a visible revision date may trail only the link-review sitemap day and nev
     assert.match(result.issues.join(), /invalid visible revision date/, String(bad));
   }
   assert.throws(() => at('not a date', undefined), /Invalid content date/);
+});
+test('app JSON-LD date scan: single-source calls, literals, spread siblings; Dataset and Article dates ignored (G3)', () => {
+  const source = [
+    'const PAGE_PATH="/calc/x"; const DAY="2026-09-19";',
+    'webApplicationLd({ dateModified: staticRouteLastModified("/") });',
+    'softwareApplicationLd({ name: "a", url: PAGE_PATH, dateModified: staticRouteLastModified(PAGE_PATH) });',
+    'softwareApplicationLd({ name: "b", dateModified: DAY });',
+    'const ld = { ...softwareApplicationLd({ name: "c" }), dateModified: IMPORTED_DATE };',
+    'softwareApplicationLd({ name: "d" });',
+    'datasetLd({ dateModified: "2026-09-25" }); articleLd({ modifiedDate: "2026-10-04" });',
+  ].join('\n');
+  assert.deepEqual(appLdDateFields(source), [
+    { builder: 'webApplicationLd', route: '/', value: null },
+    { builder: 'softwareApplicationLd', route: '/calc/x', value: null },
+    { builder: 'softwareApplicationLd', route: null, value: '2026-09-19' },
+    { builder: 'softwareApplicationLd', route: null, value: null },
+  ]);
 });
 test('unknown dynamic date expressions require review instead of silently passing', () => {
   assert.deepEqual(pageRevisionFields('const metadata={modifiedTime: externalDate()}; <PublishedMeta updatedDate={outside}/>;'), [

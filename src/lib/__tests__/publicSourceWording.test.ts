@@ -26,6 +26,8 @@ import { koGuides } from "@/lib/guidesContent";
 import { guideSupplements } from "@/lib/guides/supplements";
 import { OPI_ACTUAL, OPI_LATEST } from "@/app/calc/samsung-bonus/opiData";
 import { FIXED_RERATE, getThreshold } from "@/app/calc/samsung-bonus/model";
+import { staticRouteLastModified } from "@/app/sitemap";
+import { koreanDay } from "../../../scripts/lib/sitemap-freshness.mjs";
 
 const ROOT = process.cwd();
 /** 금지 표현 — 붙여 쓴 꼴도 잡는다 */
@@ -227,10 +229,14 @@ describe("B28 광고 위 문구 — 2026-11-01 재확인한 공개 보도·정�
     expect(client).not.toContain("등급 분포는 공개되지 않아");
   });
 
+  // G3(2026-11-01): 구조화 데이터 날짜는 문자열 대신 사이트맵 lastmod 와 같은 함수(staticRouteLastModified)에서 온다.
+  // 그 한국 날짜가 메타·하단 '페이지 수정일'과 같아야 한다 — 사이트맵 날짜를 올리면 화면 날짜도 함께 검토하게 된다.
   it("/calc/samsung-bonus 날짜 세 곳(메타·구조화 데이터·하단 '페이지 수정일')이 같다", () => {
     const src = readFileSync(resolve(ROOT, "src/app/calc/samsung-bonus/page.tsx"), "utf8");
     const meta = src.match(/"article:modified_time": "(\d{4}-\d{2}-\d{2})"/)?.[1];
-    const ld = src.match(/dateModified: "(\d{4}-\d{2}-\d{2})"/)?.[1];
+    expect(src).toContain("dateModified: staticRouteLastModified(PAGE_PATH),");
+    expect(src).toContain('const PAGE_PATH = "/calc/samsung-bonus";');
+    const ld = koreanDay(staticRouteLastModified("/calc/samsung-bonus"));
     const shown = src.match(/페이지 수정일: <time dateTime="(\d{4}-\d{2}-\d{2})">(\d{4}-\d{2}-\d{2})<\/time>/);
     expect(meta).toBeDefined();
     expect([ld, shown?.[1], shown?.[2]]).toEqual([meta, meta, meta]);

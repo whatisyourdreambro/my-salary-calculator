@@ -48,6 +48,8 @@ import {
   speakableLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
+// SoftwareApplication dateModified = 사이트맵 lastmod (같은 함수, G3 2026-11-01) — 서버 컴포넌트 전용 import
+import { staticRouteLastModified } from "@/app/sitemap";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, Display2Ad, GuideMidAd } from "@/components/AdPlacement";
@@ -343,7 +345,7 @@ export default function SamsungBonusCalculatorPage() {
             name: "삼성전자 성과급 계산기",
             description: PAGE_DESC,
             url: PAGE_PATH,
-            dateModified: "2026-11-01",
+            dateModified: staticRouteLastModified(PAGE_PATH),
             featureList: [
               "OPI(초과이익성과금) 사업부별 1인당 분배 계산",
               `TAI(목표달성장려금) ${TAI_LATEST.shortLabel} 지급률 자동 적용`,

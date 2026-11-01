@@ -17,6 +17,8 @@ import {
   howToLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
+// SoftwareApplication dateModified = 사이트맵 lastmod (같은 함수, G3 2026-11-01) — 서버 컴포넌트 전용 import
+import { staticRouteLastModified } from "@/app/sitemap";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import BonusClusterLinks from "@/components/BonusClusterLinks";
 import { GuideMidAd, CalcResultAd } from "@/components/AdPlacement";
@@ -124,7 +126,7 @@ export default function HyundaiBonusPage() {
             name: PAGE_TITLE,
             description: PAGE_DESC,
             url: `${SITE_URL}${PAGE_PATH}`,
-            dateModified: "2026-09-19",
+            dateModified: staticRouteLastModified(PAGE_PATH),
           }),
           faqLd(FAQ_ITEMS),
           howToLd({
