@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import type { ReactNode } from "react";
-import { ArrowRight, Calculator, BookOpen, Clock3 } from "lucide-react";
+import { ArrowRight, Calculator, BookOpen } from "lucide-react";
 import Link from "@/components/AppLink";
 import HeroBadge from "@/components/HeroBadge";
 import DeferredHomeCalculator from "@/components/home/DeferredHomeCalculator";
@@ -57,7 +57,6 @@ export default function HomeClient({ featuredGuides, socialProof, guideCategorie
             <nav aria-label="계산 시작" className="mt-7 flex flex-col flex-wrap gap-3 min-[420px]:flex-row">
               <a href="#calculator-section" className="ms-button ms-button-primary justify-center"><Calculator className="h-[18px] w-[18px]" aria-hidden="true" />내 연봉 실수령액 계산</a>
               <Link href="/salary-db" className="ms-button ms-button-secondary justify-center">회사별 연봉 비교<ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
-              <a href="#home-work-clock" className="ms-button ms-button-secondary justify-center"><Clock3 className="h-[18px] w-[18px]" aria-hidden="true" />실시간 월급 시계</a>
             </nav>
             <p className="mt-4 text-sm leading-6 text-muted-foreground">실제 급여와 차이가 날 수 있는 참고용 계산입니다. <Link href="/about" className="font-medium text-link underline underline-offset-4">계산·데이터 기준</Link></p>
           </div>
@@ -70,10 +69,11 @@ export default function HomeClient({ featuredGuides, socialProof, guideCategorie
       </div>
     </section>
 
-    <HomeWorkClockSection />
-
-    {/* Keep the existing ad sequence outside the clock's interactive controls. */}
+    {/* 첫 광고는 히어로 바로 아래(9/19 이전 자리). 월급 시계 섹션과 히어로의 세 번째 버튼(#home-work-clock 바로가기)은
+        9/19 에 이 광고 위로 들어갔던 UI 라 광고 아래로 내렸다(2026-10-05 운영자 승인 #6, A03·ADS-01). 광고 위로 되돌리지 말 것.
+        섹션 위 여백(28~36px)이 있어 광고 아래 첫 탭 대상은 32px 보다 멀다. */}
     <div className="page-width"><HomeTopAd /></div>
+    <HomeWorkClockSection />
     {socialProof}
     <div className="bg-background py-8"><SeasonalBanner /></div>
 

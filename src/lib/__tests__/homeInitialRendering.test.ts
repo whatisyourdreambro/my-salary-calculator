@@ -53,16 +53,24 @@ describe("Korean home initial rendering", () => {
     expect(html).not.toContain("opacity:0");
   });
 
-  it("offers the in-page work clock before the first ad without mounting its timer during SSR", () => {
+  // 2026-10-05 운영자 승인 #6(A03·ADS-01): 9/19 에 첫 광고(HomeTopAd) 위로 들어간 월급 시계 섹션과 히어로 세 번째 버튼을
+  // 광고 아래로 내렸다. 광고 위(히어로)에는 시계 바로가기·섹션이 없고, 섹션은 HomeTopAd 바로 다음에 온다.
+  it("offers the in-page work clock right after the first ad without mounting its timer during SSR", () => {
     const html = renderHome();
-    expect(html).toContain('href="#home-work-clock"');
     expect(html).toContain('id="home-work-clock"');
     expect(html).toContain("실시간 월급 시계와 나의 근무 달력");
     expect(html).toContain("여기서 월급 시계 열기");
     expect(html).toContain("메인과 전체 화면에서 같은 기록을 사용하며");
+    const ad = html.indexOf('data-slot-position="home-top"');
     const start = html.indexOf('id="home-work-clock"');
-    const end = html.indexOf('data-slot-position="home-top"');
-    expect(start).toBeLessThan(end);
+    expect(ad).toBeGreaterThan(-1);
+    expect(start).toBeGreaterThan(ad);
+    const aboveFirstAd = html.slice(0, ad);
+    expect(aboveFirstAd).not.toContain("home-work-clock");
+    expect(aboveFirstAd).not.toContain("실시간 월급 시계");
+    // 광고와 시계 섹션 사이에 다른 요소가 끼지 않는다(광고 닫는 태그 + 섹션 여는 태그만)
+    expect(html.slice(ad, start)).toMatch(/^data-slot-position="home-top"><\/aside><\/div><section $/);
+    const end = html.indexOf("</section>", start);
     const clockSection = html.slice(start, end);
     expect(clockSection).toContain('href="/work-clock"');
     expect(clockSection).toContain('aria-controls="home-work-clock-content"');

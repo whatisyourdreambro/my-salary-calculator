@@ -287,12 +287,6 @@ export default async function CompanyDetailPage({
  <Display2Ad />
  </div>
 
- {company.id === "samsung-electronics" && (
- <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
- <PrivateFeedback target="samsung_company" />
- </div>
- )}
-
  {/* 본문 자동 생성 — 업종 평균 비교 + 신/시니어 비교 + DSR 시뮬 */}
  <CompanyNarrative company={company} />
 
@@ -300,6 +294,14 @@ export default async function CompanyDetailPage({
  <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 my-6">
  <InArticleAd />
  </div>
+
+ {/* 삼성전자 비공개 의견 폼 — Display2Ad 와 InArticleAd 사이(본문 하나 위가 InArticleAd)에 있던 것을 InArticleAd 바로 아래로 내렸다
+     (2026-10-05 운영자 승인 #6, A06 삼성전자 피드백). my-10 여백이라 광고 아래 첫 버튼은 32px 보다 멀다. 광고 위로 되돌리지 말 것. */}
+ {company.id === "samsung-electronics" && (
+ <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+ <PrivateFeedback target="samsung_company" />
+ </div>
+ )}
 
  <CompanyInsights company={company} />
 

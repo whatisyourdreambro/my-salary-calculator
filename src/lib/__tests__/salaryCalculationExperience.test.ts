@@ -142,6 +142,17 @@ describe("salary result user action lifecycle (offline hook/element fixture)", (
     expect(cardNodes.findIndex((node) => node.props["data-salary-result-summary"] !== undefined)).toBeLessThan(cardNodes.findIndex((node) => node.type === InArticleAd));
   });
 
+  // 2026-10-05 운영자 승인 #6(A04·ADS-02, 11/1 재승인 B05): 비교기 가져오기 블록은 결과 광고(ResultAd) 아래.
+  // 입력을 고치면 사라지고 재계산하면 다시 나타나는 블록이라 광고 위에 두면 결과 광고가 그 높이만큼 오르내린다.
+  it("keeps the offer-comparison handoff block below the result ad", () => {
+    const all = nodes(click(render(), "결과 확인하기"));
+    const adIndex = all.findIndex((node) => node.type === ResultAd);
+    const handoffIndex = all.findIndex((node) => node.type === "button" && textOf(node).includes("비교기에 가져오기"));
+    expect(adIndex).toBeGreaterThan(all.findIndex((node) => node.type === NextActions));
+    expect(handoffIndex).toBeGreaterThan(adIndex);
+    expect(all.filter((node) => node.type === ResultAd)).toHaveLength(1);
+  });
+
   it("new salary result sharing keeps personal values in approved text, never in destination or OG URLs", () => {
     let tree = changeIncome(render(), "98,765,432"); tree = click(tree, "결과 확인하기");
     const panel = nodes(tree).find(node => node.type === ResultSharePanel)!;

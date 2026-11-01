@@ -186,9 +186,12 @@ export default function CivilServantPay2027Page() {
           </p>
         </div>
 
-        <CivilPayForecastSelector />
-
         <HomeTopAd />
+
+        {/* 급수·호봉 선택기 — 9/9 에 첫 광고(HomeTopAd) 위로 들어갔던 위젯을 광고 바로 아래로 내렸다
+            (2026-10-05 운영자 승인 #6, A06·ADS-06). 광고 위로 되돌리지 말 것. 섹션 테두리·안쪽 여백·제목 아래에 select 가 있어
+            광고 아래 첫 탭 대상은 32px 보다 멀다. */}
+        <CivilPayForecastSelector />
 
         {/* 확정 일정 타임라인 */}
         <section className="mt-10 mb-12 max-w-3xl mx-auto">

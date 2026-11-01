@@ -613,6 +613,17 @@ export default function SamsungBonusClient() {
         />
       </section>
 
+      {/* 페이지 안 바로가기 — 히어로(모든 광고 위)에 있던 줄을 첫 광고(위 HomeTopAd) 아래로 옮겼다(2026-10-05 운영자 승인 #6).
+          '내 연봉으로 바로 계산'(#my-calc-title)은 바로 아래 섹션이 그 계산기라 뺐다. 이 줄을 광고 위·히어로로 되돌리지 말 것. */}
+      <nav aria-label="삼성 성과급 계산기 바로가기" className="flex flex-wrap justify-center gap-2">
+        <a href="#tai-title" className="inline-flex min-h-11 items-center rounded-xl border border-electric/30 px-4 py-2 text-sm font-bold text-electric focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric">
+          월 기본급으로 TAI 계산
+        </a>
+        <a href="#opi-actual-title" className="inline-flex min-h-11 items-center rounded-xl border border-electric/30 px-4 py-2 text-sm font-bold text-electric focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric">
+          지난 OPI 지급 이력
+        </a>
+      </nav>
+
       {/* 내 연봉으로 계산 */}
       <MySalaryCalculator
         poolInputsValid={poolInputsValid}
