@@ -188,10 +188,20 @@ describe("B34 승인 예외(2026-11-01 승인 목록 8번) — 코트라 제목�
     const plain = { ...companyMetadataInput(kotra), titleName: undefined, titleFigures: undefined };
     expect(description).toBe(buildCompanyMetadata(plain).description);
     expect(description.startsWith("KOTRA 연봉 자체 추정치:")).toBe(true);
-    // keywords 는 '코트라 연봉' 하나만 더한다
-    const keywords = String(metadata.keywords).split(", ");
-    const plainKeywords = String(buildCompanyMetadata(plain).keywords).split(", ");
-    expect(keywords).toEqual([...plainKeywords, "코트라 연봉"]);
+    // keywords 는 '코트라 연봉' 하나만 더한다 — 검색 전용 별칭(companySearchAliases, RL-03 2026-11-02)을 뺀 입력끼리 비교
+    type MetaInput = Parameters<typeof buildCompanyMetadata>[0];
+    const keywordsOf = (input: MetaInput) =>
+      String(buildCompanyMetadata({ ...input, searchAliases: undefined }).keywords).split(", ");
+    const plainKeywords = keywordsOf(plain);
+    expect(keywordsOf(companyMetadataInput(kotra))).toEqual([...plainKeywords, "코트라 연봉"]);
+    // 검색 전용 별칭은 그 뒤 꼬리에만 — '코트라 연봉' 은 이미 있어 한 번만 남는다(companyAliases.test 가 목록을 고정)
+    expect(String(metadata.keywords).split(", ")).toEqual([
+      ...plainKeywords,
+      "코트라 연봉",
+      "코트라 초봉",
+      "대한무역투자진흥공사 연봉",
+      "대한무역투자진흥공사 초봉",
+    ]);
   });
 
   it("lig-nex1: 제목은 현재 상장명(구 사명)·수치 없음, 적용 후 description 은 변경일 머리 문장 + 150자 안, 적용 전 description 은 고정본 그대로", () => {

@@ -5,6 +5,7 @@
 // 영문↔한글 표기 차이, 줄임말 등. Search Console 키워드 데이터 기반.
 // CompanyRepository가 회사 객체에 aliases로 주입하며, 검색 매칭·메타 키워드·
 // JSON-LD alternateName·본문 노출에 함께 쓰인다.
+// 화면에 내지 않을 표기는 파일 아래 companySearchAliases(검색 전용)에 둔다.
 
 /** 회사 id → 검색 별칭 목록 */
 export const companyAliases: Record<string, string[]> = {
@@ -129,4 +130,50 @@ export const companyAliases: Record<string, string[]> = {
   "korea-southern-power": ["남부발전"],
   "korea-western-power": ["서부발전"],
   "korea-midland-power": ["중부발전"],
+};
+
+/**
+ * 회사 id → 검색 전용 별칭 (NAVER-05 — 2026-09-26 배관, 2026-11-02 RL-03 재착지).
+ * 사이트 검색(/salary-db)·메타 keywords 꼬리·JSON-LD alternateName 전용 — 화면에는 절대 렌더하지 않는다.
+ * (위 companyAliases 는 CompanyNarrative 본문 문장(Display2Ad 와 InArticleAd 사이)과 지역 페이지 대표 기업
+ *  매칭에도 쓰이지만 이 목록은 아니다 — 본문 문장이 길어지면 InArticleAd 가 밀린다.) CompanyRepository 가
+ *  회사 객체에 searchAliases 로 주입한다.
+ * 규칙: 실제 공식명·통칭만(키워드 나열 금지) · 회사 id 는 CompanyRepository 실존 · 중복 키 금지
+ * (2026-08-16 etri 사건) · 회사명(name.ko·name.en)·위 companyAliases·다른 회사 이름과 같은 표기 금지 ·
+ * 키는 항상 따옴표로 쓴다 — scripts/dart-etl.mjs 별칭 정규식이 따옴표 친 키만 읽는다(companyAliases.test 가드).
+ * 항목을 바꾼 회사 id 는 회사 판독 비교에서 별칭 공변량으로 빠진다(docs/analytics-measurement.md L10' 절 ②).
+ */
+export const companySearchAliases: Record<string, string[]> = {
+  // ── W3-F (2026-09-26 준비, 2026-11-02 재착지): 운영자 네이버 검색어 보고 기반 — 회사명과 다른 공식명·통칭만 ──
+  // KOTRA 국문 공식 명칭(대한무역투자진흥공사법)과 한글 통칭. 제목의 '코트라'(titleName, B34)와 같은 표기를 검색·keywords·
+  // alternateName 쪽에도 싣는다. 화면 별칭(aliases)은 계속 두지 않는다 — 본문 문단이 생기면 InArticleAd 위 줄이 는다.
+  "kotra": ["코트라", "대한무역투자진흥공사"],
+  // 삼정KPMG 의 법인명
+  "kpmg-korea": ["삼정회계법인"],
+
+  // ── R6-09 사명 변경 (2026-09-27 준비, 2026-11-02 재착지): 사이트 회사명은 그대로 두고 새 사명·옛 사명으로도 찾게 한다 ──
+  // 공식 공시·회사 발표로 확인한 실제 사명만 (10월 확인, 2026-11-02 주요 보도로 다시 확인):
+  // LIG넥스원 → 2026-03-31 제24기 정기주총에서 엘아이지디펜스앤에어로스페이스로 변경, 약칭 LIG D&A (뉴시스 2026-04-03).
+  //   새 상장명 LIG디펜스앤에어로스페이스와 국문 법인명은 이미 위 화면 별칭이라 겹치지 않게 약칭만 둔다.
+  "lig-nex1": ["LIG D&A"],
+  // HDC현대산업개발 → 2026-03-26 제8기 정기주총에서 아이파크현대산업개발(IPARK현대산업개발)로 변경
+  //   (KIND 2025 사업보고서 정관 변경 안건, DART 공시 회사명 IPARK현대산업개발, 한국경제·뉴데일리 보도)
+  "hdc-hyundai": ["IPARK현대산업개발", "아이파크현대산업개발"],
+  // 엔씨소프트 → 2026-03-26 제29기 정기주총에서 주식회사 엔씨로 변경 (회사 발표 about.ncsoft.com, SBS Biz 보도)
+  "ncsoft": ["엔씨"],
+  // 한글과컴퓨터 → 2026-07-02 주주총회에서 한컴으로 변경, 7/24 종목명 변경 완료 (디지털데일리 2026-07-24 보도)
+  "hancom": ["한컴"],
+  // 두산에너빌리티의 옛 사명 — 2022-03-29 정기주총에서 두산중공업에서 변경 (KIND 두산에너빌리티 사업보고서)
+  "doosan-enerbility": ["두산중공업"],
+
+  // ── B3 (2026-10-06 준비, 2026-11-02 재착지): GSC 3개월 쿼리에 회사명 대신 이 표기로 들어온 검색어 ──
+  // (모두 노출 1~2회라 근거가 약하다 — 표기 매칭만. 근거와 관찰 칸은 docs/gsc-sniping-log.md 의 RL-03 절)
+  // GC녹십자 — GC 브랜드 이전부터 쓰던 회사명·통칭
+  "gc-greencross": ["녹십자"],
+  // HD현대오일뱅크 — 2023년 HD 사명 변경 전 이름
+  "hd-hyundai-oilbank": ["현대오일뱅크"],
+  // 한국전자기술연구원 — 영문 약칭(영문명 Korea Electronics Technology Institute)
+  "keti": ["KETI"],
+  // 롯데칠성음료 — 통칭(줄임 이름)
+  "lotte-chilsung": ["롯데칠성"],
 };

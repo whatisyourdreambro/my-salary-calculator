@@ -18,6 +18,8 @@ export interface CompanyIndexItem {
  nameEn: string;
  /** 검색 표기 변형 (옛 사명·줄임말 등) */
  aliases?: string[];
+ /** 검색 전용 별칭 (NAVER-05) — 검색 매칭에만 쓰고 화면에는 렌더하지 않는다 */
+ searchAliases?: string[];
  industry: string;
  tier: "conglomerate" | "unicorn" | "startup" | "foreign" | "public";
  logo: string;
@@ -80,7 +82,7 @@ export default function SalaryDbClient({ companies }: { companies: CompanyIndexI
  const [tierFilter, setTierFilter] = useState<CompanyIndexItem["tier"] | "all">("all");
  const [sortByEntry, setSortByEntry] = useState(false);
 
- // CompanyRepository.search 와 동일 기준(한글명/영문명/업종/별칭 부분 일치)
+ // CompanyRepository.search 와 동일 기준(한글명/영문명/업종/별칭·검색 전용 별칭 부분 일치)
  // + tier 필터 + 신입 연봉 정렬. 데이터는 이미 경량 인덱스로 내려와 있어 추가 페이로드 0.
  const filteredCompanies = useMemo(() => {
  const lowerQuery = searchTerm.toLowerCase().trim();
@@ -91,7 +93,8 @@ export default function SalaryDbClient({ companies }: { companies: CompanyIndexI
  c.nameKo.toLowerCase().includes(lowerQuery) ||
  c.nameEn.toLowerCase().includes(lowerQuery) ||
  c.industry.toLowerCase().includes(lowerQuery) ||
- (c.aliases?.some((a) => a.toLowerCase().includes(lowerQuery)) ?? false)
+ (c.aliases?.some((a) => a.toLowerCase().includes(lowerQuery)) ?? false) ||
+ (c.searchAliases?.some((a) => a.toLowerCase().includes(lowerQuery)) ?? false)
  );
  if (tierFilter !== "all") list = list.filter((c) => c.tier === tierFilter);
  // 정렬 기준: 신입 영끌(entryTotal) — 상세·랭킹 페이지의 기준과 통일.

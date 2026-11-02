@@ -315,6 +315,8 @@ export function buildCompanyMetadata(company: {
  juniorSalary?: number;
  leadSalary?: number;
  aliases?: string[];
+ /** 검색 전용 별칭(NAVER-05) — keywords 꼬리에만(화면 비노출, 제목·description 무관). 없으면 keywords 종전과 같다 */
+ searchAliases?: string[];
  /** 직급별 상세 연봉표(careerLevels) 보유 여부 — 삼성전자·SK하이닉스 등 */
  hasCareerLevels?: boolean;
  /** 데이터 갱신일 (YYYY-MM-DD) — L10' 적용 전 description 의 'N월 업데이트' 라벨에만 쓴다 */
@@ -375,6 +377,12 @@ export function buildCompanyMetadata(company: {
 
  // 별칭(옛 사명·표기 변형)을 "{별칭} 연봉/초봉" 키워드로 확장
  const aliasKeywords = (company.aliases ?? []).flatMap((alias) => [
+ `${alias} 연봉`,
+ `${alias} 초봉`,
+ ]);
+ // 검색 전용 별칭(NAVER-05)도 같은 "{별칭} 연봉/초봉" 형식 — keywords 맨 끝(titleName 키워드 뒤)에만 잇는다.
+ // 종전 keywords 가 그대로 앞부분으로 남고, 이미 있는 표기는 buildPageMetadata 의 중복 제거가 한 번만 남긴다.
+ const searchAliasKeywords = (company.searchAliases ?? []).flatMap((alias) => [
  `${alias} 연봉`,
  `${alias} 초봉`,
  ]);
@@ -477,6 +485,8 @@ export function buildCompanyMetadata(company: {
  ...aliasKeywords,
  // 제목 검색 표기(titleName, 승인 예외 회사만) — 다른 회사 keywords 는 그대로
  ...(company.titleName ? [`${company.titleName} 연봉`] : []),
+ // 검색 전용 별칭 꼬리(NAVER-05, 화면 비노출) — companySearchAliases 목록에 있는 회사만
+ ...searchAliasKeywords,
  ],
  ogImage: `${SITE_URL}/api/og?type=company&name=${encodeURIComponent(company.name)}`,
  });

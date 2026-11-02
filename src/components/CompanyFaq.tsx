@@ -20,6 +20,8 @@ const FAQ_LINK_MAP: Array<{ phrase: string; href: string }> = [
   { phrase: "연봉 실수령액 계산기", href: "/" },
   { phrase: "DSR 계산기", href: "/tools/real-estate/dsr" },
   { phrase: "퇴직금 계산기", href: "/tools/finance/severance" },
+  // 연봉 협상 답변의 가이드 언급 — 정본 경로(next.config redirect 목적지, CompanyNarrative 와 같은 링크)
+  { phrase: "연봉 협상의 비밀", href: "/guides/salary-negotiation-secret" },
 ];
 
 const FAQ_LINK_PATTERN = new RegExp(

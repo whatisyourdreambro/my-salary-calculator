@@ -355,3 +355,25 @@ Breadcrumbs/speakable(온페이지) + 허브(/calc/bonus-calculators) 신설 + 2
 
 - 같은 설명이 관련 가이드 카드(line-clamp)로 뜨는 /guides 허브·카테고리·관련 글 3편·계산기 '함께 볼 가이드'의 카드 글도 바뀐다(스윕 대상).
 - 날짜 칩·sitemap lastmod 는 이 묶음에서 바꾸지 않았다(원장 단계 몫). 수정일이 없는 4편(삼성메디슨·신혼부부·SK PS 전망·가상자산)은 새 수정 칩이 GuideMidAd 위 UI 가 되므로 날짜를 올리지 않는다.
+
+## RL-03 — 회사 검색 전용 별칭 11곳 (2026-11-02 재착지 준비 · R1 게시 예정, append-only)
+
+- 무엇: `src/data/companyAliases.ts` `companySearchAliases`(검색 전용 통로, 화면 비노출)에 11곳 — W3-F `kotra`(코트라·대한무역투자진흥공사)·`kpmg-korea`(삼정회계법인), R6-09 사명 변경 `lig-nex1`(LIG D&A)·`hdc-hyundai`(IPARK현대산업개발·아이파크현대산업개발)·`ncsoft`(엔씨)·`hancom`(한컴)·`doosan-enerbility`(두산중공업), B3 `gc-greencross`(녹십자)·`hd-hyundai-oilbank`(현대오일뱅크)·`keti`(KETI)·`lotte-chilsung`(롯데칠성). 10월 커밋(e89acb6·6d4ec03c·c7566555·76682c79·b87746e3)은 배포되지 않았고, 운영자 2026-11-01 승인 7번 재착지 분류 RL-03 으로 브랜치 `claude/fxr-p2-1102` 에 다시 실었다.
+- 바뀌는 것: 해당 회사 상세의 meta keywords 꼬리('{별칭} 연봉, {별칭} 초봉')·Organization JSON-LD alternateName·/salary-db 검색 데이터뿐. `<title>`·description·H1·본문(CompanyNarrative)·광고 위치·sitemap lastmod 는 그대로라 위 제목 변경 표들에는 넣지 않는다(`companyAliases.test`·`companySearchAliases.test` 가 고정). lig-nex1 은 새 상장명·국문 법인명이 이미 화면 별칭(10/23)이라 약칭만 둔다 — 10월 원안의 LIG디펜스앤에어로스페이스 표기는 뺐다.
+- 근거: W3-F 는 운영자 네이버 검색어 보고(9월), R6-09 는 공시·회사 발표(2026-11-02 주요 보도로 다시 확인), B3 는 GSC 3개월 쿼리 — '녹십자 연봉' 51위 · '현대오일뱅크 연봉' 55위 · 'keti 연봉' 계열 3쿼리 31~43위 · '롯데칠성 연봉' 23위, 모두 노출 1~2회라 **근거가 약하다**.
+- 공변량: 11곳은 R1 게시일부터 '별칭이 바뀐 회사' — `docs/analytics-measurement.md` L10' 절 ② 의 11/2 추가 줄.
+- 기록 칸(T0 = 운영자가 R1 승인 게시를 마친 시각. 노출이 적은 곳이 많아 T0+28 에는 판정이 아니라 관찰만 적는다):
+
+| 대상 | 근거 | 액션(검색 전용 별칭) | T0 | T0+28 노출/클릭(관찰) |
+|---|---|---|---|---|
+| kotra (KOTRA) | 네이버 '코트라 연봉' — 제목 표기는 B34(11/1) | [코트라, 대한무역투자진흥공사] | | |
+| kpmg-korea (삼정KPMG) | 네이버 검색어 보고 — 법인명 | [삼정회계법인] | | |
+| lig-nex1 (LIG넥스원) | 2026-03-31 상호 변경 약칭 | [LIG D&A] | | |
+| hdc-hyundai (HDC현대산업개발) | 2026-03-26 상호 변경 | [IPARK현대산업개발, 아이파크현대산업개발] | | |
+| ncsoft (엔씨소프트) | 2026-03-26 상호 변경 | [엔씨] | | |
+| hancom (한글과컴퓨터) | 2026-07 상호·종목명 변경 | [한컴] | | |
+| doosan-enerbility (두산에너빌리티) | 2022-03 옛 사명 | [두산중공업] | | |
+| gc-greencross (GC녹십자) | '녹십자 연봉' 51위 | [녹십자] | | |
+| hd-hyundai-oilbank (HD현대오일뱅크) | '현대오일뱅크 연봉' 55위 | [현대오일뱅크] | | |
+| keti (한국전자기술연구원) | 'keti 연봉' 계열 3쿼리 31~43위 | [KETI] | | |
+| lotte-chilsung (롯데칠성음료) | '롯데칠성 연봉' 23위 | [롯데칠성] | | |

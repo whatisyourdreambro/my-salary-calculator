@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import type { CompanyProfile } from "@/types/company";
-import { companyRepository } from "@/lib/salary-data/CompanyRepository";
+import { companyRepository, companyAlternateNames } from "@/lib/salary-data/CompanyRepository";
 import { permanentRedirect } from "next/navigation";
 import CompanyDetailClient from "./CompanyDetailClient";
 import SamsungCompanySummary, { SamsungSectionAnchor } from "./SamsungCompanySummary";
@@ -120,7 +120,8 @@ export default async function CompanyDetailPage({
  autoBreadcrumbLd(`/salary-db/${company.id}`, { leafName: company.name.ko }),
  companyOrganizationLd({
  name: company.name.ko,
- alternateName: company.aliases,
+ // 화면 별칭 + 검색 전용 별칭(NAVER-05, 화면 비노출). 둘 다 없으면 undefined — 종전과 같다
+ alternateName: companyAlternateNames(company),
  }),
  faqLd(faqItems),
  datasetLd({
