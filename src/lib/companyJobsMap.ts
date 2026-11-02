@@ -14,11 +14,12 @@
 
 import { industriesData, type IndustryProfile } from "@/data/industriesData";
 import { getJobById } from "@/data/jobsData";
+import { isHoldingCompanyKsic } from "./companyJobsResolve";
 import type { CompanyJobLink, CompanyJobsHub, CompanyJobsMap } from "./companyJobsResolve";
 
 // 2026-09-11: 타입·resolveHub 는 데이터 import 가 없는 companyJobsResolve.ts 로 이전(클라이언트 번들 분리).
 // 서버 빌더(buildCompanyJobsMap)만 여기 남는다. 기존 import 경로 호환을 위해 재export 한다.
-export { resolveHub } from "./companyJobsResolve";
+export { resolveHub, isHoldingCompanyKsic } from "./companyJobsResolve";
 export type { CompanyJobLink, CompanyJobsHub, CompanyJobsMap } from "./companyJobsResolve";
 
 /** 허브당 직업 링크 상한 — RelatedCompanies 등 기존 추천망과 경쟁 최소화 */
@@ -33,6 +34,8 @@ export interface CompanyJobsCompanyInput {
 export interface CompanyJobsListedInput {
   stockCode: string;
   industryId: string;
+  /** DART KSIC 원문 — 지주회사면 업종 허브에서 뺀다 (isHoldingCompanyKsic) */
+  ksicCode?: string;
 }
 
 function hubByIndustryId(industryId: string | undefined): IndustryProfile | undefined {
@@ -82,6 +85,7 @@ export function buildCompanyJobsMap(
   }
 
   for (const l of listed) {
+    if (isHoldingCompanyKsic(l.ksicCode)) continue;
     const profile = hubByIndustryId(l.industryId);
     if (!profile) continue;
     const h = hubFor(profile);

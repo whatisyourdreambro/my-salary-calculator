@@ -71,6 +71,8 @@ export interface DartLiteCompany {
   rceptNo: string;
   industryId: string;
   industryKo: string;
+  /** DART KSIC 업종 코드 원문 — 지주회사(64992·649) 판별용 (2026-09-29 MISSED-lite-1) */
+  ksicCode?: string;
   /** 상장 전수(모수 listedTotal) 중 평균연봉 순위 */
   listedRank: number;
   listedTotal: number;
@@ -171,6 +173,7 @@ function toLite(d: DartDisclosedEntry): DartLiteCompany {
     rceptNo: d.rceptNo,
     industryId,
     industryKo: getIndustryMeta(industryId).ko,
+    ...(d.ksicCode ? { ksicCode: d.ksicCode } : {}),
     listedRank: listedRankByCorp.get(d.corpCode) ?? 0,
     listedTotal: listedEligible.length,
     industryRank: ir?.rank ?? 0,
