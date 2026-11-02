@@ -223,8 +223,6 @@ export const guideSupplements: Record<string, string> = {
   "samsung-wage-negotiation-2026": samsungWageNegotiation2026Supplement,
   "nurse-salary": nurseSalarySupplement,
   "sk-hynix-wage-2026": skHynixWage2026Supplement,
-  // 삼성전자 가이드 4편 — DS 특별성과급 세부안(2026-10-07 보도)·3분기 잠정실적 (supplements-samsung-ds-2026-10.ts)
-  ...guideSupplementsSamsungDs202610,
 };
 
 // ── 일시적 2주택 처분 기한 개정(소득세법 시행령 대통령령 제36737호, 2026-10-01 시행) 보강 — 본문은 supplements-two-home-law.ts.
@@ -241,4 +239,12 @@ import { guideSupplements202610 } from "./supplements-2026-10";
 for (const [slug, html] of Object.entries(guideSupplements202610)) {
   if (slug in guideSupplements) throw new Error(`[guideSupplements] 보강 슬러그 중복: ${slug}`);
   guideSupplements[slug] = html;
+}
+
+// ── 2026-10-09 삼성 DS 특별성과급 세부안(10/7 언론 보도)·3분기 잠정실적 보강 5편 — 본문은 supplements-samsung-ds-2026-10.ts.
+//    10/13 보강과 슬러그가 세 편 겹친다(samsung-opi-forecast-2027 의 재원 기준, samsung-bonus-treasury-stock-15-trillion-2026·
+//    samsung-vs-sk-hynix-stock-bonus-2026 의 증권거래세 0.20%). 맵 안 spread 로 두면 앞 항목을 덮거나 위 중복 검사에서 로드가 실패하므로,
+//    다른 배치를 모두 합친 뒤 맨 끝에서 기존 보강 다음에 이어 붙인다(둘 다 마지막 광고 아래 — 기존 보강, 그다음 10월 8일 기준 확인 사항).
+for (const [slug, html] of Object.entries(guideSupplementsSamsungDs202610)) {
+  guideSupplements[slug] = (guideSupplements[slug] ?? "") + html;
 }
