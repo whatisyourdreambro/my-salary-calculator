@@ -3003,8 +3003,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "coupang-fulfillment-night-pay-2026",
-  "title": "쿠팡 풀필먼트 야간 알바 — 시급 17,000원 + 주휴수당 월 354만원",
-  "description": "쿠팡 풀필먼트 야간(22~6시) 시급 약 15,750~17,250원. 주 40시간 + 주휴수당 시 월 약 354만원, 실수령 305~315만원. 산재보험 자동 가입 + 종소세 신고 의무.",
+  "title": "쿠팡 풀필먼트 야간 알바 — 시급 17,000원 + 주휴수당 월 336만원",
+  "description": "쿠팡 풀필먼트 야간(22~6시) 시급 약 15,750~17,250원. 주 40시간 + 주휴수당 시 월 약 336만원, 실수령 291~296만원. 산재보험 자동 가입 + 종소세 신고 없음.",
   "category": "연봉",
   "tags": [
    "쿠팡",
@@ -3019,7 +3019,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1859
+  "contentChars": 1797
  },
  {
   "slug": "newlywed-asset-tax-saving-2026",
