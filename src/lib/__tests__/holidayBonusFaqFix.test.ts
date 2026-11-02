@@ -17,7 +17,19 @@ describe("명절 상여 FAQ 정정 (SE-07(1))", () => {
   it("없는 법률명 '근로소득법'과 근거 없는 현물 선물 비과세 문장이 없다", () => {
     expect(page).not.toContain("근로소득법");
     expect(page).not.toContain("일정 부분 비과세");
-    expect(page).toContain("비과세 근로소득은 소득세법 제12조에 열거된 급여뿐이고 명절 상여는 그 목록에 없어");
+    // 2026-11-02 RL-05 재확인: 조세특례제한법에도 비과세 특례가 있어 '제12조에 열거된 급여뿐' 단정 대신 '제12조 등 법에 열거된 항목뿐'
+    expect(page).toContain("비과세 근로소득은 소득세법 제12조 등 법에 열거된 항목뿐이고 명절 상여는 그 목록에 없어");
+    expect(page).not.toContain("제12조에 열거된 급여뿐");
+  });
+  it("소액부징수는 지급 건 기준 — 여러 날 일당을 한 번에 받으면 합친 세액으로 판단 (국세청 안내, 2026-11-02 재확인)", () => {
+    expect(page).toContain("일당 약 18만7천원 이하는 실제 원천징수가 없습니다(여러 날 일당을 한꺼번에 받으면 합친 세액으로 판단)");
+    // 일당 18만원: 하루치 810원(부징수), 5일치를 한 번에 받으면 4,050원(징수)
+    const batch = (wage: number, days: number) => {
+      const tax = Math.max(0, wage - 150_000) * 0.06 * 0.45 * days;
+      return tax < 1_000 ? 0 : Math.round(tax);
+    };
+    expect(batch(180_000, 1)).toBe(0);
+    expect(batch(180_000, 5)).toBe(4_050);
   });
   it("일용직 답: 15만원 공제·6%·55%·2.7%·1천원 부징수·약 18만7천원", () => {
     expect(page).not.toContain("일당 18만원까지 비과세");
