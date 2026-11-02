@@ -118,13 +118,14 @@ export const EDITORIAL_TRUST_COMPANY: EditorialTrustNoteContent = {
 };
 
 /** 공시 평균급여 카드가 언론 보도 인용(출처 링크가 DART·알리오 원문이 아님)이고 dartCompanyStatsById 항목이 없어 화면에
- *  견줄 DART 값이 없는 회사. meritz-fire 는 DART 주입값이 있지만 수기 카드가 우선이고 DART 두 산정 방식의 괴리 플래그로
- *  통계에서 빠져 화면에 나오지 않는다. deloitte-anjin(회계법인)은 상장사식 DART '직원 등 현황' 공시가 없다.
+ *  견줄 DART 값이 없는 회사. deloitte-anjin(회계법인)은 상장사식 DART '직원 등 현황' 공시가 없다.
+ *  meritz-fire 는 2026-11-02 카드 출처가 DART 2025 사업보고서 원문 합 계 행으로 바뀌어 이 집합에서 빠졌다 — 출처 링크가
+ *  DART 원문이라 EDITORIAL_TRUST_COMPANY 의 '공시 원문' 문장이 맞다(운영자 승인 15번, 카드 값 1억4,397만원 그대로).
  *  layout 은 params 가 없고 이 모듈은 클라이언트 번들에 실리므로 회사 데이터를 import 하지 않고 id 만 둔다 —
  *  서버 데이터로 다시 계산한 집합과 같은지는 editorialTrustNote.test.ts 가 고정한다(데이터가 바뀌면 그 테스트가 알려 준다). */
-export const EDITORIAL_TRUST_PRESS_ONLY_COMPANY_IDS: ReadonlySet<string> = new Set(["deloitte-anjin", "meritz-fire"]);
+export const EDITORIAL_TRUST_PRESS_ONLY_COMPANY_IDS: ReadonlySet<string> = new Set(["deloitte-anjin"]);
 
-/** 위 회사들의 상자 — 공시 평균급여가 공시를 인용한 언론 보도 값이라 성과급 계산기와 같이 official=false('공개 자료와 대조').
+/** 위 회사의 상자 — 공시 평균급여가 공시를 인용한 언론 보도 값이라 성과급 계산기와 같이 official=false('공개 자료와 대조').
  *  카드 문구('공식 공시(또는 이를 인용한 언론 보도)에 기반한 값')와 같은 구분이다. */
 export const EDITORIAL_TRUST_COMPANY_PRESS: EditorialTrustNoteContent = {
   sources: "공시를 인용한 언론 보도(공시 평균급여), 실수령액은 국세청 근로소득 간이세액표",

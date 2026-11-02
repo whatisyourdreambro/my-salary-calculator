@@ -3203,7 +3203,7 @@ export const dartDisclosed: DartDisclosedEntry[] = [
   "employeeCount": 3027,
   "rceptNo": "20260331003916",
   "ksicCode": "65121",
-  "reportedAvgManwonRaw": 13167,
+  "reportedAvgManwonRaw": 14397,
   "divergencePct": 35.9,
   "flags": [
    "V4-divergence"

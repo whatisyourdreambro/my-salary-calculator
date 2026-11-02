@@ -528,13 +528,13 @@
     },
     "/year-end-tax-checklist": {
       "contentDate": "2026-11-01",
-      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
-      "reason": "Reviewed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-20): SEO-07-a 2027 연말정산 (2026년 귀속) title with the H1 filing year 2027, and STR-03 corrects the child tax credit item from 만 8세 이상 to the 2026 attribution rule (9+, 2017 births excluded). Fact correction: content date advanced from 2026-09-30 to 2026-11-01, matching modifiedTime and the visible updated date. Rehashed 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF4 A1 moves the main-column share box from between HomeTopAd and MultiplexAd to directly below MultiplexAd; the desktop-only sticky aside is unchanged. Layout only, no text change, so the 2026-11-01 date is retained.",
+      "reviewedAtCommit": "5ccd079e6ff58f48b5896abeae13e0a71c949058",
+      "reason": "Reviewed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-20): SEO-07-a 2027 연말정산 (2026년 귀속) title with the H1 filing year 2027, and STR-03 corrects the child tax credit item from 만 8세 이상 to the 2026 attribution rule (9+, 2017 births excluded). Fact correction: content date advanced from 2026-09-30 to 2026-11-01, matching modifiedTime and the visible updated date.",
       "dependencies": [],
       "files": [
         "src/app/year-end-tax-checklist/page.tsx"
       ],
-      "sha256": "58aa375260c818dbf5b24d751b7afbc829cba3e76073f4a594f46e6c8e2c3315"
+      "sha256": "3001662e6e36af953a6da57f22bf15faa22d491a574004095f08c53ab6b14fad"
     },
     "/weekly-holiday-allowance-2026": {
       "contentDate": "2026-09-12",
@@ -641,7 +641,7 @@
     "/social-insurance-rates-2027": {
       "contentDate": "2026-11-01",
       "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
-      "reason": "Reviewed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-10 DATA-01): the 2027 long-term-care ratio is the confirmed 13.90% of the health premium (decided 2026-10-30, MOHW) in taxConstants2027 and in the LTC card, hero line, FAQ and simulation totals; only industrial-accident and employment insurance stay unconfirmed. Substantive rate correction: content date advanced from 2026-10-04 to 2026-11-01, matching modifiedTime and the visible updated date. Rehashed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B17, B24): B17 changes only a taxConstants2027.ts comment (employment-insurance decree pre-announcement status and the ministry URL; the 0.9% rate stays provisional), and B24 adds HOUSING_SUBSCRIPTION_DEDUCTION_2026 and a MEDICAL_CREDIT_2026 comment to taxConstants2026.ts, neither used by this page. No visible change, so the 2026-11-01 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G4 appends the trust note (check date 2026-11-01 = PublishedMeta updatedDate) after the last MultiplexAd. No rate or wording change above it, so the 2026-11-01 date is retained. Rehashed 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF4 A1 moves the share box from between HomeTopAd and MultiplexAd to directly below MultiplexAd, before the G4 trust note, which stays the last child. Layout only, no text change, so the 2026-11-01 date is retained.",
+      "reason": "Reviewed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-10 DATA-01): the 2027 long-term-care ratio is the confirmed 13.90% of the health premium (decided 2026-10-30, MOHW) in taxConstants2027 and in the LTC card, hero line, FAQ and simulation totals; only industrial-accident and employment insurance stay unconfirmed. Substantive rate correction: content date advanced from 2026-10-04 to 2026-11-01, matching modifiedTime and the visible updated date. Rehashed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B17, B24): B17 changes only a taxConstants2027.ts comment (employment-insurance decree pre-announcement status and the ministry URL; the 0.9% rate stays provisional), and B24 adds HOUSING_SUBSCRIPTION_DEDUCTION_2026 and a MEDICAL_CREDIT_2026 comment to taxConstants2026.ts, neither used by this page. No visible change, so the 2026-11-01 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G4 appends the trust note (check date 2026-11-01 = PublishedMeta updatedDate) after the last MultiplexAd. No rate or wording change above it, so the 2026-11-01 date is retained.",
       "dependencies": [
         "src/lib/insuranceRateExample.ts",
         "src/lib/pensionHike.ts",
@@ -655,7 +655,7 @@
         "src/lib/taxConstants2026.ts",
         "src/lib/taxConstants2027.ts"
       ],
-      "sha256": "e1ed6af25f5ee9ff36a864456096aafbd7f5d6884b2616f59eec31332595ba2a"
+      "sha256": "a3f7d684e8023e6b8198039979a8938764501f51ce074d7d70c2370171d62ac4"
     },
     "/military-pay-2026": {
       "contentDate": "2026-09-27",
@@ -792,13 +792,13 @@
     },
     "/retirement-pension-2026": {
       "contentDate": "2026-10-26",
-      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
-      "reason": "October 26 bounded corrections distinguish the general 70% risk-asset cap from the qualifying TDF exception and estimated tax credit from actual refund. Reviewed against 20f1bbbf plus explicit body/CTA and one tax-credit FAQ corrections: salary-only total-wage terminology, neutral tax deferral, and removal of the 30-year refund projection. Four adjacent common-mistake items replace unsupported return, universal liquidity, transfer-benefit and pension-sufficiency claims with reader checks; the risk-limit item is unchanged. The existing October 26 review date and February 1 publication date are preserved; this is not full financial certification or deployment completion. Rehashed 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF4 A1 moves the share box from between HomeTopAd and MultiplexAd to directly below MultiplexAd. Layout only, no text change, so the 2026-10-26 date is retained.",
+      "reviewedAtCommit": "20f1bbbf1dfd029945547dd39549df7ee62c306f",
+      "reason": "October 26 bounded corrections distinguish the general 70% risk-asset cap from the qualifying TDF exception and estimated tax credit from actual refund. Reviewed against 20f1bbbf plus explicit body/CTA and one tax-credit FAQ corrections: salary-only total-wage terminology, neutral tax deferral, and removal of the 30-year refund projection. Four adjacent common-mistake items replace unsupported return, universal liquidity, transfer-benefit and pension-sufficiency claims with reader checks; the risk-limit item is unchanged. The existing October 26 review date and February 1 publication date are preserved; this is not full financial certification or deployment completion.",
       "dependencies": [],
       "files": [
         "src/app/retirement-pension-2026/page.tsx"
       ],
-      "sha256": "317c4581416863e0aed851c3483051837620de20be75eab4294418c5d941ebb8"
+      "sha256": "72414af3f5918039309455d897d11385638f1a4500fd0651be6b495436827402"
     },
     "/health-checkup-2026": {
       "contentDate": "2026-11-01",

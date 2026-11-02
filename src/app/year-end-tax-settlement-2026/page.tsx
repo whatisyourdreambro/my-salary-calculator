@@ -307,12 +307,11 @@ export default function YearEndTaxSettlement2026Page() {
  <HomeTopAd />
  </div>
 
+ <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
  {/* 본문 끝 멀티플렉스(관련 콘텐츠형) — 전면 최적화 (운영자 지시 2026-09-02) */}
  <div className="mt-10">
  <MultiplexAd />
  </div>
- {/* 공유 버튼 — 마지막 광고 아래(하이드레이션 뒤에 나타나도 광고가 밀리지 않게, OF4 A1). 광고 위로 되돌리지 말 것. */}
- <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
  </div>
    <TopicNextSteps path="/year-end-tax-settlement-2026" />
  </main>

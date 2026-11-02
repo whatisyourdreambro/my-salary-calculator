@@ -165,11 +165,10 @@ export default function TipsPage() {
  responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
  />
 
- {/* 본문 끝 관련콘텐츠형 광고 — 15선 목록·쿠팡 배너 아래, 전면 최적화 (운영자 지시 2026-09-02) */}
- <MultiplexAd />
-
- {/* 공유 버튼 — 마지막 광고 아래(하이드레이션 뒤에 나타나도 광고가 밀리지 않게, OF4 A1). 광고 위로 되돌리지 말 것. */}
  <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
+
+ {/* 본문 끝 관련콘텐츠형 광고 — 15선 목록·쿠팡 배너·공유 섹션 아래(광고 연속 배치 회피), 전면 최적화 (운영자 지시 2026-09-02) */}
+ <MultiplexAd />
  </div>
    <TopicNextSteps path="/tips" />
  </main>
