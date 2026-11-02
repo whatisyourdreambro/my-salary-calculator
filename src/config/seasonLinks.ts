@@ -174,9 +174,11 @@ export const SEASON_TOP_JAN: SeasonLink[] = [
     href: "/year-end-tax",
     header: { name: "연말정산 환급금 계산기", description: "간소화 자료 기준 예상 환급·추가납부액", badge: "SEASON" },
   },
+  // SE-07(3) JAN 세트(2라운드 WP-10, 1/2 JAN 수동 전환 커밋과 같은 날): 1월엔 카드 사용 기간(12/31)이 끝나 '막판 점검'이
+  // 맞지 않는다 — 간소화 자료로 공제액을 확인하는 설명으로. 헤더 항목·순서·배지 불변(드롭다운은 기본 닫힘).
   {
     href: "/credit-card-deduction-2026",
-    header: { name: "신용카드 소득공제 계산기", description: "결제수단별 공제율·한도 막판 점검", badge: "SEASON" },
+    header: { name: "신용카드 소득공제 계산기", description: "간소화 자료로 결제수단별 공제액 확인", badge: "SEASON" },
   },
   {
     href: "/table/2027/annual",
@@ -193,6 +195,12 @@ export const SEASON_TOP_JAN: SeasonLink[] = [
   {
     href: "/property-holding-tax-2026",
     footer: { name: "재산세·보유세 계산기", order: 5 },
+  },
+  // SE-07(3): 설 상여금(1월 중순부터 설 연휴 전까지 검색 수요) — 헤더·푸터 링크가 0이던 계산기를 푸터 전용으로
+  // (재산세 항목과 같은 방식, 헤더 12개 상한 그대로). 푸터는 모든 광고 아래.
+  {
+    href: "/calc/holiday-bonus",
+    footer: { name: "설 상여금 세금 계산기", order: 29 },
   },
 ];
 
