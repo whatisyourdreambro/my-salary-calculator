@@ -69,8 +69,36 @@ const minimumWageImpactSupplement = `
 <p><em>출처: 고용노동부 2027년 적용 최저임금 고시(2026-08-05) · 최저임금위원회. 수치는 사이트 정본 상수(config/minimumWage.ts)에서 가져옵니다.</em></p>
 `;
 
-/** 슬러그 → 보강 HTML (2026-10 guidesb 배치). supplements.ts 가 guideSupplements 에 합친다. */
+// ── financial-income-tax (GB-15) — 세율 구간·적용 기한·ETF 제외 여부는 조문 원문 확인 전이라 싣지 않는다(판정 기본안) ──
+const financialIncomeTaxSupplement = `
+<h2>2026년부터 달라진 배당 과세 — 고배당기업 배당 분리과세</h2>
+<p>2026년 1월 1일 시행된 조세특례제한법 제104조의27(고배당기업 주식 배당소득 과세특례)로, 요건을 갖춘 고배당 상장사에서 받은 배당은 금융소득 종합과세에 합산하지 않고 분리과세하는 특례를 받을 수 있습니다. 예금 이자, 일반 배당, 해외 배당은 지금도 본문의 연 2,000만원 기준 종합과세 규칙을 따릅니다.</p>
+<h2>배당 분리과세 자주 묻는 질문</h2>
+<ul>
+<li><strong>Q. 배당이 2,000만원을 넘으면 무조건 종합과세인가요?</strong> — 원칙은 종합과세지만, 2026년부터 요건을 갖춘 고배당기업 배당은 분리과세 특례를 받을 수 있습니다.</li>
+<li><strong>Q. 내가 받은 배당이 특례 대상인지 어떻게 확인하나요?</strong> — 대상 기업은 정기주주총회에서 배당을 결의한 다음 날까지 특례요건 충족 사실을 담은 기업가치 제고계획을 한국거래소에 공시해야 합니다(금융위원회 2026-02-24). 해당 회사의 공시를 확인하세요.</li>
+</ul>
+<p>세후 배당은 <a href="/calc/dividend-tax-quick">배당 세금 계산기</a>로, 개편 배경은 <a href="/tax-reform-2026">2026 세법개정안 정리</a>에서 확인하세요.</p>
+<p><em>출처: 조세특례제한법 제104조의27 · 금융위원회 2026-02-24 보도자료(배당소득 과세특례 대상기업의 기업가치 제고계획 공시 안내).</em></p>
+`;
+
+// ── gap-investment-risk (GB-17) — 지정 종료일·조기 해제 여부는 확인하지 못해 적지 않는다 ──
+const gapInvestmentRiskSupplement = `
+<h2>2026년 기준 확인 사항 — 토지거래허가구역과 2년 실거주 의무</h2>
+<p>본문 표의 대출 규제 외에 갭투자를 가장 직접 막는 장치는 토지거래허가구역입니다. 2025년 10월 15일 주택시장 안정화 대책으로 서울 전역과 경기 12곳(과천, 광명, 성남 분당·수정·중원, 수원 영통·장안·팔달, 안양 동안, 용인 수지, 의왕, 하남)이 규제지역과 함께 토지거래허가구역으로 지정됐습니다.</p>
+<ul>
+<li><strong>허가 대상</strong> — 지정 기간 중 계약하는 아파트(아파트가 포함된 연립·다세대 포함) 거래는 관할 관청의 허가를 받아야 합니다(2025년 10월 20일 계약분부터).</li>
+<li><strong>2년 실거주 의무</strong> — 허가를 받아 산 주택은 매수자가 2년 동안 직접 살아야 하므로, 세입자 보증금을 끼고 사는 갭투자는 할 수 없습니다.</li>
+<li><strong>확인할 곳</strong> — 지정 기간, 대상 주택 유형, 해제·재지정 여부는 매수 전에 국토교통부·해당 지자체 공고와 토지이음(eum.go.kr)에서 확인하세요.</li>
+</ul>
+<p>대출 여력은 <a href="/calc/ltv-quick">LTV 계산기</a>와 <a href="/home-loan">주택담보대출 계산기</a>로 먼저 확인해 보세요.</p>
+<p><em>출처: 국토교통부 「주택시장 안정화 대책」(2025-10-15 보도자료) · 경향신문 2025-10-15 대책 Q&amp;A(2년 실거주 의무, 10월 20일 계약분부터).</em></p>
+`;
+
+/** 슬러그 → 보강 HTML (2026-10 guidesb 배치, 알파벳 순). supplements.ts 가 guideSupplements 에 합친다. */
 export const guideSupplements202610: Record<string, string> = {
+  "financial-income-tax": financialIncomeTaxSupplement,
+  "gap-investment-risk": gapInvestmentRiskSupplement,
   "minimum-wage-impact-2026": minimumWageImpactSupplement,
   "unemployment-insurance-2026": unemploymentInsurance2026Supplement,
 };

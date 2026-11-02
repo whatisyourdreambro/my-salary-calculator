@@ -187,6 +187,10 @@ const SUPPLEMENT_PINS: Array<[string, string[], number]> = [
     [`시급 ${MINIMUM_WAGE_2027.hourly.toLocaleString("en-US")}원으로 확정`, 'href="/minimum-wage-2027"', 'href="/weekly-holiday-allowance-2026"'],
     0,
   ],
+  // GB-15 고배당기업 배당 분리과세 특례(조특법 §104의27, 2026-01-01) — 세율 표는 조문 확인 전이라 없음
+  ["financial-income-tax", ["조세특례제한법 제104조의27", 'href="/calc/dividend-tax-quick"'], 2],
+  // GB-17 10·15 대책 토지거래허가구역 + 2년 실거주 의무 (본문 FAQ 3개는 그대로)
+  ["gap-investment-risk", ["서울 전역과 경기 12곳", "2년 실거주 의무", 'href="/calc/ltv-quick"'], 3],
 ];
 
 describe("(3) guidesb 보강 섹션(광고 아래) 등록·FAQ", () => {
