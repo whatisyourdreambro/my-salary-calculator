@@ -200,6 +200,14 @@ describe("2026-09-29 보강 섹션 — 정본 보간·FAQ", () => {
   it("부가세 보강: 소규모 법인(직전 공급가액 1억5천만원 미만)은 예정고지", () => {
     expect(guideSupplements["vat-filing-2026"]).toContain("(직전 과세기간 공급가액 1억5천만원 미만 법인은 예정고지)");
   });
+  // 2026-11-03 재착지 리뷰: 국세청 반기 신청 안내(cntntsId=7784) — 상반기분을 신청하면 하반기분도 신청한 것으로 본다
+  // (계산기 FAQ src/app/earned-income-credit/faq.ts 와 같은 사실). 3월에 다시 신청해야 하는 것처럼 읽히는 문장으로 되돌리지 않는다.
+  it("근로장려금 보강: 상반기분 신청자는 3월 하반기분을 따로 신청하지 않는다", () => {
+    const html = guideSupplements["earned-income-credit-2026"];
+    expect(html).toContain("12월 30일까지 먼저 지급되고, 나머지는 다음 해 6월 30일까지 정산됩니다");
+    expect(html).toContain("(3월 하반기분은 따로 신청하지 않아도 신청한 것으로 봅니다)");
+    expect(html).not.toContain("3월 하반기분 신청 뒤");
+  });
   // 통합(2026-09-29): page.tsx 는 본문 + 보강을 합쳐 FAQPage 를 뽑는다(extractGuideFaqs). 보강 FAQ 는 광고 아래에 보이는
   // 문항이라 FAQPage 에 들어가도 가시 내용과 1:1 이다 — 막아야 할 것은 헤더 자체가 아니라 본문·보강 사이의 같은 질문 중복이다.
   // (guidesb 배치가 financial-income-tax·real-estate-tax-comprehensive·unemployment-insurance-2026·year-end-tax-2026 보강에
