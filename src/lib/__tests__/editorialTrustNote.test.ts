@@ -295,6 +295,14 @@ describe("내용: 작성자·확인 방법·대조일·링크", () => {
     }
   });
 
+  it("meritz-fire 는 카드 출처가 DART 원문 합계 행이 되어(2026-11-02, 운영자 승인 15번) 일반 회사 상자 — '공식 자료와 대조: … 공시 원문'", () => {
+    const meritz = companyRepository.getById("meritz-fire")!;
+    expect(isOfficialDisclosureUrl(meritz.disclosed?.sourceUrl)).toBe(true);
+    expect(EDITORIAL_TRUST_PRESS_ONLY_COMPANY_IDS.has("meritz-fire")).toBe(false);
+    expect(editorialTrustNoteFor("/salary-db/meritz-fire")).toBe(EDITORIAL_TRUST_COMPANY);
+    expect(renderNote("/salary-db/meritz-fire")).toContain("<dd>공식 자료와 대조: 공시가 있는 회사는 사업보고서 등 공시 원문(공시 평균급여)");
+  });
+
   it("피부양자 판정기는 화면 출처의 조회 월까지만 쓴다", () => {
     expect(renderNote("/health-insurance-dependent")).toContain('<time dateTime="2026-08">2026.08</time>');
   });

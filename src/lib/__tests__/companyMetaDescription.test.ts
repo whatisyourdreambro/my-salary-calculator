@@ -81,9 +81,11 @@ const pre = preGateSnapshot as {
  *  korea-investment: '증권업 평균연봉 전체 1위 수준' -> '4위 수준'(DART 2025 증권업 24곳 중 4위, 2026-10). */
 const CARD_NOTE_CHANGED_AFTER_FIXTURE: readonly string[] = ["korea-investment"];
 /** 고정본 뒤 수기 공시 카드의 헤드라인·출처·note 를 원문 값으로 바로잡은 회사 — 적용 전 카드 바이트 대조에서만 뺀다
- *  (적용 후 '출처 줄 글자 수 ≤ 종전' 검사는 그대로 받는다). 고친 값은 companyFixes1030.test.ts 가 고정한다.
- *  db-insurance: 보도 인용 1억3,700만원 -> DART 2025 사업보고서 원문 1억370만원(A5, 2026-10). */
-const DISCLOSED_VALUE_CORRECTED_AFTER_FIXTURE: readonly string[] = ["db-insurance"];
+ *  (적용 후 '출처 줄 글자 수 ≤ 종전' 검사는 그대로 받는다). 고친 값은 companyFixes1030.test.ts(db-insurance)·
+ *  companyFixes1102.test.ts(meritz-fire)가 고정한다. 고정본 bd68d860 은 재생성하지 않는다.
+ *  db-insurance: 보도 인용 1억3,700만원 -> DART 2025 사업보고서 원문 1억370만원(A5, 2026-10).
+ *  meritz-fire: 세계일보 인용 -> DART 2025 사업보고서 원문 합계 행, 값 1억4,397만원 동일, 출처·note 교체(운영자 승인 15번, 2026-11-02). */
+const DISCLOSED_VALUE_CORRECTED_AFTER_FIXTURE: readonly string[] = ["db-insurance", "meritz-fire"];
 /** 고정본 뒤 연봉 FAQ(평균·신입 초봉 두 문항) 문장이 바뀐 회사 — bd68d860 고정본 연봉 FAQ 바이트 대조(적용 전)에서만 뺀다.
  *  적용 후 검사는 현재 데이터로 게이트 전후를 비교하므로 그대로 받는다. */
 const SALARY_FAQ_CHANGED_AFTER_FIXTURE: readonly string[] = [...DISCLOSED_VALUE_CORRECTED_AFTER_FIXTURE];
