@@ -908,7 +908,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-03-28",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2300
+  "contentChars": 2297
  },
  {
   "slug": "inheritance-tax-strategy",
@@ -3720,7 +3720,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 710
+  "contentChars": 701
  },
  {
   "slug": "tax-free-meal-commute-2026",

@@ -905,8 +905,8 @@
     },
     "/social-insurance-rates-2026": {
       "contentDate": "2026-11-02",
-      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
-      "reason": "New explicit review 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF1 T1 corrects the 고용보험 card above InArticleAd to the employer share 1.15~1.75% (회사 규모별) and the total 2.1~2.7% (Enforcement Decree of the Employment Insurance and Industrial Accident Compensation Insurance Premium Collection Act, article 12, in force 2025-12-23), and OF1 C5 rounds the 산재보험 average to 평균 1.5% (the 2026 average rate 1.47% was kept, MOEL 2025-12-31). Substantive rate correction: content date set to 2026-11-02 (the sitemap carried STATIC_LAST_MODIFIED 2026-07-16), with the page modifiedTime and the visible PublishedMeta 최종 갱신 moved from 2026-05-12 to 2026-11-02 in the preceding commit (2026.11.02 prints narrower than 2026.05.12). src/lib/insuranceRateExample.ts renders the worked example on this page, so it is a dependency.",
+      "reviewedAtCommit": "db40dd81edfdf12834cb3e3abab4b2cdc6698a29",
+      "reason": "New explicit review 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF1 T1 corrects the 고용보험 card above InArticleAd to the employer share 1.15~1.75% (회사 규모별) and the total 2.1~2.7% (Enforcement Decree of the Employment Insurance and Industrial Accident Compensation Insurance Premium Collection Act, article 12, in force 2025-12-23), and OF1 C5 rounds the 산재보험 average to 평균 1.5% (the 2026 average rate 1.47% was kept, MOEL 2025-12-31). Substantive rate correction: content date set to 2026-11-02 (the sitemap carried STATIC_LAST_MODIFIED 2026-07-16), with the page modifiedTime and the visible PublishedMeta 최종 갱신 moved from 2026-05-12 to 2026-11-02 in the preceding commit (2026.11.02 prints narrower than 2026.05.12). src/lib/insuranceRateExample.ts renders the worked example on this page, so it is a dependency. Rehashed 2026-11-02 for the next batch after stage 2 (claude/ff-fixes-1102 from origin/main db40dd81, final facts skeptic FF-1): the 고용보험 card label under the total reads 총 요율(반올림) through a per-row totalLabel, because 2.1~2.7% is the rounded 2.05~2.65%; the other four cards keep 총 요율 and the rates 2.1~2.7%, 0.9% and 1.15~1.75% (회사 규모별) are unchanged. Label clarification only; the content date, modifiedTime and the visible PublishedMeta date are already 2026-11-02, so nothing moves.",
       "dependencies": [
         "src/lib/insuranceRateExample.ts"
       ],
@@ -914,7 +914,7 @@
         "src/app/social-insurance-rates-2026/page.tsx",
         "src/lib/insuranceRateExample.ts"
       ],
-      "sha256": "a013b79c2a32cde2eb49164eb231ca9b9ffab564baa7f88e122948fb4d348bba"
+      "sha256": "7ed77b4d4daaeca579eae42f81858f20a9fa0a0f1c250624f0071f2d111ca385"
     },
     "/calc/jeonse-loan": {
       "contentDate": "2026-11-02",
@@ -929,6 +929,17 @@
         "src/lib/jeonseLoanProducts.ts"
       ],
       "sha256": "0c8f3bcf557c54709933a587da80c264be3cb244621a8fbcd65fb78b1d4c79e2"
+    },
+    "/income-tax-2026": {
+      "contentDate": "2026-11-02",
+      "reviewedAtCommit": "db40dd81edfdf12834cb3e3abab4b2cdc6698a29",
+      "reason": "New explicit review 2026-11-02 for the next batch after stage 2 (claude/ff-fixes-1102 from origin/main db40dd81, final facts skeptic FF-2): the 절세 핵심 5가지 line on the SMB employee income-tax reduction (below CalcResultAd, above InArticleAd) changes from 만 34세 이하 또는 60세 이상, 청년·고령자 등 5년간 70~90% 감면 to 청년 5년 90%, 60세 이상·장애인·경력단절자 3년 70% (Restriction of Special Taxation Act article 30(1), in force 2026-09-18: 3 years and 70%, youth 5 years and 90%; disabled persons and career-break workers are eligible). Substantive fact correction: content date set to 2026-11-02 (the sitemap carried STATIC_LAST_MODIFIED 2026-07-16). The page has no visible, OG or JSON-LD revision date, so the date decision changes no text above an ad. IncomeTaxClient.tsx imports no shared engine, so there are no dependencies.",
+      "dependencies": [],
+      "files": [
+        "src/app/income-tax-2026/IncomeTaxClient.tsx",
+        "src/app/income-tax-2026/page.tsx"
+      ],
+      "sha256": "8fcbd14b789584b2bf3e8324618512e143c28ca13e9f969205b95da41a25c447"
     }
   }
 }

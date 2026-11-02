@@ -1082,7 +1082,7 @@ const careerGapRehire = `
 <ol class="space-y-2 mt-4">
 <li><strong>① 고용촉진지원금</strong>: 매월 30~80만원 × 6~12개월</li>
 <li><strong>② 출산 후 재취업 우대</strong>: 만 18세 미만 자녀 양육 여성 우대</li>
-<li><strong>③ 중소기업 취업자 감면</strong>: 만 34세 이하 또는 60세 이상 5년간 70~90% 감면</li>
+<li><strong>③ 중소기업 취업자 감면</strong>: 경력단절자 3년 70%(청년 5년 90%)</li>
 <li><strong>④ 직업훈련 지원</strong>: 내일배움카드 최대 500만원</li>
 </ol>
 
