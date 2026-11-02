@@ -5,6 +5,8 @@
 // note(2024 사업보고서 합계 1억3,876만원), 확인 방법 상자(보도 인용뿐인 회사 집합에서 빠짐), 메타 동결(DISCLOSED_CORRECTION_HOLD_IDS).
 // GuideMidAd 위 카드는 짧아지기만 한다 — 글자 종류(한글·숫자·라틴·그 밖)마다 종전 이하(cfa4c670c db-insurance 와 같은 규칙).
 // 짧아져도 GuideMidAd 가 올라갈 수 있어 배포 전 격리 QA 서버·가드 러너의 1,123폭 실측 스윕 대상이다.
+// 두 번째 describe: 임베드 위젯(dartInjection)도 같은 원문 합계 행으로 맞춘 별도 커밋(삼성전자 fa8131c1f 방식, 날짜 불변) —
+// 운영자가 카드만 원하면 그 커밋과 그 describe 만 뺀다(첫 describe 는 위젯 값에 기대지 않는다).
 import { readFileSync } from "node:fs";
 import { createElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -184,5 +186,42 @@ describe("메리츠화재 공시 카드 — 세계일보 인용 -> DART 2025 사
     );
     expect(editorialTrustNoteFor("/salary-db/meritz-fire")).toBe(EDITORIAL_TRUST_COMPANY);
     expect([...EDITORIAL_TRUST_PRESS_ONLY_COMPANY_IDS]).toEqual(["deloitte-anjin"]);
+  });
+});
+
+describe("메리츠화재 DART 주입값(임베드 위젯) — 원문 합계 행 1인평균 143,965천원 (삼성전자 fa8131c1f 와 같은 방식, 날짜 불변)", () => {
+  it("dartInjection·dartDisclosed 공시 기준값이 원문 합계 행이고, 위젯이 회사 카드 값의 100만원 반올림을 보인다", async () => {
+    const { dartInjection, DART_INJECTION_DATE } = await import("@/data/dart/dartInjection");
+    const { dartDisclosed, DART_DATA_DATE } = await import("@/data/dart/dartDisclosed");
+    const { dartCompanyStatsById } = await import("@/lib/salary-data/dartReport");
+    const inj = dartInjection["meritz-fire"];
+    expect(inj).toEqual({ a: 14400, y: "2025", e: 3027, r: RCPT_2025 });
+    const d = dartDisclosed.find((x) => x.corpCode === "00117744")!;
+    // 14,396.5만원 -> Math.round 14,397 (종전: 성별 행 1인평균의 연말 인원 가중 13,167 — 원문에 없는 값)
+    expect(d.reportedAvgManwonRaw).toBe(14397);
+    expect(inj.a).toBe(Math.round(d.reportedAvgManwonRaw! / 100) * 100);
+    // 급여총액÷인원 산정치(293,287,645천원 ÷ 3,027명)·괴리·V4 플래그는 그대로 — 통계·랭킹·상장사 페이지 제외도 그대로
+    expect(d.avgSalaryManwonRaw).toBe(9689);
+    expect(Math.round(293_287_645 / 3_027 / 10)).toBe(9689);
+    expect(d.avgSalaryManwon).toBe(9700);
+    expect(d.divergencePct).toBe(35.9);
+    expect(d.flags).toEqual(["V4-divergence"]);
+    expect(dartCompanyStatsById.has("meritz-fire")).toBe(false);
+    // 회사 카드(수기 14,397)와 위젯(100만원 반올림)이 같은 원문 값을 가리킨다
+    expect(inj.a).toBe(Math.round(company("meritz-fire").disclosed!.avgSalaryManwon / 100) * 100);
+    // 손으로 맞춘 값이 emit 결과와 바이트 동일해 keepPrevDate 가 종전 날짜를 유지한다 — 다른 회사 페이지 날짜 불변
+    expect(DART_INJECTION_DATE).toBe("2026-09-24");
+    expect(DART_DATA_DATE).toBe("2026-08-23");
+    const { GET } = await import("@/app/widget/company/route");
+    const html = await (await GET(new Request("https://pages-data.invalid/widget/company?id=meritz-fire"))).text();
+    expect(html).toContain("1억 4,400만원");
+    expect(html).not.toContain("1억 3,200만원");
+    expect(html).toContain("1인평균급여액 기준");
+  });
+
+  it("ETL 은 같은 접수번호일 때만 원문 합계 행 값을 쓴다(다음 해 보고서는 자동 해제)", () => {
+    const etl = readFileSync("scripts/dart-etl.mjs", "utf8");
+    expect(etl).toContain('"00117744": { rceptNo: "20260331003916", manwon: 14396.5 }');
+    expect(etl).toContain("filingTotal && filingTotal.rceptNo === list[0].rcept_no");
   });
 });
