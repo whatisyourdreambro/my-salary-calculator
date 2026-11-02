@@ -155,6 +155,10 @@ export default async function ListedCompanyPage({ params: pendingParams }: Props
             // 페이지 수정일(월 실수령 재계산 등) — 보이는 '데이터 기준일'은 DART_LITE_DATE 그대로
             dateModified: DART_LITE_PAGE_MODIFIED,
             keywords: [`${c.nameKo} 연봉`, "공시 평균연봉", "DART"],
+            // 근거 원문 — 화면 '데이터 출처·산정 기준'의 'DART 원문 공시 보기' 링크와 같은 URL (CL-07, 2026-09-29).
+            // 출처명은 회사 페이지 disclosedCitation 과 같게. license 는 넣지 않는다(DART 원자료 파생, datasetMetaQuality).
+            citation: { name: "금융감독원 DART 사업보고서", url: dartUrl },
+            isBasedOn: dartUrl,
           }),
         ]}
       />
