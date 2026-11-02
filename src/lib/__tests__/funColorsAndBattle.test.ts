@@ -55,4 +55,12 @@ describe("/fun/rank 분포 차트 ME 선 (code27-02)", () => {
     expect(src).toContain('<XAxis dataKey="salary" type="number" domain={[minX, maxX]} hide />');
     expect(src).toContain("<ReferenceLine x={markerX} ");
   });
+  it("ME 선은 흰 카드에서도 보이는 글자색, 위쪽 라벨은 SVG 안에 들어갈 여백 (P4 검토 보정)", () => {
+    const src = readSrc("src/components/charts/RankChart.tsx");
+    // 흰 선(#fff)은 라이트 테마 흰 카드(duotone-card) 위에서 안 보였다
+    expect(src).not.toMatch(/<ReferenceLine[^>]*stroke="#fff"/);
+    expect(src).toContain('<ReferenceLine x={markerX} stroke="currentColor"');
+    // 기본 위 여백 5px 이면 position top 라벨의 기준선이 y=0 에 놓여 SVG 밖으로 잘린다
+    expect(src).toContain("<AreaChart data={data} margin={{ top: 24, right: 16, bottom: 5, left: 16 }}>");
+  });
 });
