@@ -3720,7 +3720,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 710
+  "contentChars": 701
  },
  {
   "slug": "tax-free-meal-commute-2026",
