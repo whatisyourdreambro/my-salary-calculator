@@ -104,6 +104,8 @@ describe("companyMetadataInput — 회사 페이지 <title> 불변 이동", () =
         juniorSalary: total("junior"),
         leadSalary: total("lead"),
         aliases: c.aliases,
+        // 검색 전용 별칭(RL-03, 2026-11-02) — companySearchAliases 목록에 있는 회사만 키가 생긴다(keywords 꼬리 전용)
+        ...(c.searchAliases ? { searchAliases: c.searchAliases } : {}),
         hasCareerLevels: !!c.careerLevels?.length,
         lastUpdated: c.lastUpdated,
         // L10'(2026-09-25 준비) — description 후미 전용, title 산식과 무관

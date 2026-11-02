@@ -10,9 +10,15 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { companyAliases, companySearchAliases } from "@/data/companyAliases";
-import { companyRepository } from "@/lib/salary-data/CompanyRepository";
+import { companyAlternateNames, companyRepository } from "@/lib/salary-data/CompanyRepository";
+import { companyMetadataInput } from "@/lib/companyPageMetadata";
+import { buildCompanyMetadata } from "@/lib/seo";
+import CompanyNarrative from "@/components/CompanyNarrative";
+import type { CompanyProfile } from "@/types/company";
 
 const SRC = fs.readFileSync(path.join(process.cwd(), "src/data/companyAliases.ts"), "utf8");
 
@@ -125,6 +131,115 @@ describe("검색 전용 별칭 규칙", () => {
       const list = companySearchAliases[c.id];
       if (list && list.length > 0) expect(c.searchAliases, c.id).toEqual(list);
       else expect("searchAliases" in c, c.id).toBe(false);
+    }
+  });
+});
+
+// ── RL-03 재착지 데이터 (2026-11-02) — 10월 W3-F(6d4ec03c·c7566555)·R6-09(76682c79)·B3(b87746e3) 11곳 ──
+const W3F: Record<string, string[]> = {
+  kotra: ["코트라", "대한무역투자진흥공사"],
+  "kpmg-korea": ["삼정회계법인"],
+};
+/** 사명 변경 — lig-nex1 은 새 상장명·국문 법인명이 이미 화면 별칭이라 약칭 'LIG D&A' 만 (10월 원안에서 한 표기 뺌) */
+const R609_RENAMED: Record<string, string[]> = {
+  "lig-nex1": ["LIG D&A"],
+  "hdc-hyundai": ["IPARK현대산업개발", "아이파크현대산업개발"],
+  ncsoft: ["엔씨"],
+  hancom: ["한컴"],
+  "doosan-enerbility": ["두산중공업"],
+};
+const B3_VARIANTS: Record<string, string[]> = {
+  "gc-greencross": ["녹십자"],
+  "hd-hyundai-oilbank": ["현대오일뱅크"],
+  keti: ["KETI"],
+  "lotte-chilsung": ["롯데칠성"],
+};
+const RELANDED: Record<string, string[]> = { ...W3F, ...R609_RENAMED, ...B3_VARIANTS };
+/** 사이트 회사명(name.ko = H1) — 새 사명은 검색 쪽에만 싣고 회사명은 바꾸지 않는다 */
+const NAME_KO: Record<string, string> = {
+  kotra: "KOTRA",
+  "kpmg-korea": "삼정KPMG",
+  "lig-nex1": "LIG넥스원",
+  "hdc-hyundai": "HDC현대산업개발",
+  ncsoft: "엔씨소프트",
+  hancom: "한글과컴퓨터",
+  "doosan-enerbility": "두산에너빌리티",
+  "gc-greencross": "GC녹십자",
+  "hd-hyundai-oilbank": "HD현대오일뱅크",
+  keti: "한국전자기술연구원",
+  "lotte-chilsung": "롯데칠성음료",
+};
+const narrativeOf = (c: CompanyProfile) => renderToStaticMarkup(createElement(CompanyNarrative, { company: c }));
+
+describe("RL-03 재착지 목록 — W3-F 2곳 + R6-09 사명 변경 5곳 + B3 4곳 (화면 비노출)", () => {
+  it("목록이 정확히 이 11곳·이 값이다 (별칭 공변량 id 집합 — docs/analytics-measurement.md L10' 절 ②)", () => {
+    expect(companySearchAliases).toEqual(RELANDED);
+    expect(Object.keys(companySearchAliases)).toHaveLength(11);
+  });
+
+  it("회사명(name.ko·H1)은 그대로다", () => {
+    expect(Object.keys(NAME_KO).sort()).toEqual(Object.keys(RELANDED).sort());
+    for (const [id, ko] of Object.entries(NAME_KO)) expect(companyRepository.getById(id)!.name.ko, id).toBe(ko);
+  });
+
+  it("lig-nex1: 화면 별칭(새 상장명·국문 법인명)은 그대로, 검색 전용은 약칭 LIG D&A 하나 — alternateName 은 셋", () => {
+    const lig = companyRepository.getById("lig-nex1")!;
+    expect(lig.aliases).toEqual(["LIG디펜스앤에어로스페이스", "엘아이지디펜스앤에어로스페이스 주식회사"]);
+    expect(lig.searchAliases).toEqual(["LIG D&A"]);
+    expect(companyAlternateNames(lig)).toEqual([
+      "LIG디펜스앤에어로스페이스",
+      "엘아이지디펜스앤에어로스페이스 주식회사",
+      "LIG D&A",
+    ]);
+    // 화면 별칭 문장은 종전 그대로(두 표기만) — 약칭은 본문에 나오지 않는다
+    const html = narrativeOf(lig);
+    expect(html).toContain("이름·표기로도 검색됩니다");
+    expect(html).not.toContain("D&amp;A");
+    expect(html).not.toContain("D&A");
+  });
+
+  it("kotra: 화면 별칭은 여전히 없고(B34 가드 유지), alternateName·keywords 꼬리에 코트라·대한무역투자진흥공사", () => {
+    const kotra = companyRepository.getById("kotra")!;
+    expect(kotra.aliases).toBeUndefined();
+    expect(kotra.titleName).toBe("코트라");
+    expect(companyAlternateNames(kotra)).toEqual(["코트라", "대한무역투자진흥공사"]);
+    const keywords = String(buildCompanyMetadata(companyMetadataInput(kotra)).keywords);
+    expect(
+      keywords.endsWith(", 코트라 연봉, 코트라 초봉, 대한무역투자진흥공사 연봉, 대한무역투자진흥공사 초봉")
+    ).toBe(true);
+    // 제목 표기(titleName) 키워드 '코트라 연봉' 과 겹쳐도 한 번만
+    expect(keywords.split("코트라 연봉").length - 1).toBe(1);
+  });
+
+  it("사이트 검색(CompanyRepository.search — /salary-db 목록 필터와 같은 기준)이 그 표기로 해당 회사를 찾는다", () => {
+    for (const [id, list] of Object.entries(RELANDED)) {
+      for (const a of list) {
+        expect(companyRepository.search(a).map((c) => c.id), `${id}: ${a}`).toContain(id);
+        expect(companyRepository.search(a.toLowerCase()).map((c) => c.id), `${id}: ${a}`).toContain(id);
+      }
+    }
+    // 10월 검색 시나리오 — 부분 표기·대소문자 무시
+    expect(companyRepository.search("lig d&a").map((c) => c.id)).toContain("lig-nex1");
+    expect(companyRepository.search("코트라").map((c) => c.id)).toEqual(["kotra"]);
+    expect(companyRepository.search("삼정회계").map((c) => c.id)).toEqual(["kpmg-korea"]);
+  });
+
+  it("keywords 꼬리·JSON-LD alternateName 에만 들어가고, 제목·description·CompanyNarrative 본문은 그대로다", () => {
+    for (const [id, list] of Object.entries(RELANDED)) {
+      const c = companyRepository.getById(id)!;
+      const alt = companyAlternateNames(c) ?? [];
+      for (const a of list) expect(alt, id).toContain(a);
+      const withAliases = buildCompanyMetadata(companyMetadataInput(c));
+      const without = buildCompanyMetadata(companyMetadataInput({ ...c, searchAliases: undefined }));
+      const keywords = String(withAliases.keywords);
+      expect(keywords.startsWith(`${String(without.keywords)}, `), `${id}: ${keywords}`).toBe(true);
+      for (const a of list) expect(keywords, id).toContain(`${a} 연봉, ${a} 초봉`);
+      expect(withAliases.title, id).toEqual(without.title);
+      expect(withAliases.description, id).toEqual(without.description);
+      expect(withAliases.openGraph, id).toEqual(without.openGraph);
+      expect(narrativeOf(c), id).toBe(narrativeOf({ ...c, searchAliases: undefined }));
+      // 화면 별칭 문장은 화면 별칭이 있는 회사(lig-nex1)에만 — 검색 전용 별칭이 문장을 만들지 않는다
+      expect(narrativeOf(c).includes("이름·표기로도 검색됩니다"), id).toBe(Boolean(c.aliases?.length));
     }
   });
 });
