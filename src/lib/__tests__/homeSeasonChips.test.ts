@@ -31,6 +31,18 @@ describe("홈 보유세 칩 (MI-05)", () => {
     expect(missing).toEqual([]);
   });
 
+  it("시즌 1순위 허브 칩: OCT·DEC·JAN 은 연말정산 2027 허브, 라벨은 기본 서브셋 안", async () => {
+    const { homeSeasonHubChips } = await import("@/components/home/HomeSeoSection");
+    for (const key of ["OCT", "DEC", "JAN"] as const) {
+      const chips = homeSeasonHubChips(key);
+      expect(chips).toHaveLength(1);
+      expect(chips[0].href).toBe("/year-end-tax-2027");
+    }
+    const src = readFileSync("src/components/home/HomeSeoSection.tsx", "utf8");
+    expect(src).toContain("...homeSeasonHubChips(),");
+    expect(src).toContain(".filter((chip, i, all) => all.findIndex((c) => c.href === chip.href) === i)");
+  });
+
   it("고정 9월 칩 리터럴이 칩 목록에 남아 있지 않다", () => {
     const src = readFileSync("src/components/home/HomeSeoSection.tsx", "utf8");
     expect(src).not.toContain('{ label: "9월 재산세 2기분 납부 (9/16~30)", href: "/property-holding-tax-2026" }');
