@@ -74,9 +74,11 @@ describe('sitemap editorial date integrity', () => {
   // B36 (owner approval 8, 2026-11-01): the October 19 change on these pages only added the
   // TopicNextSteps link box. The sitemap keeps that link-review lastmod; visible, OG and Article
   // dates return to the last substantive revision (about-page date policy).
+  // 2026-11-03 R1 re-land ledger: /chuseok-bonus-2026 left the list after a substantive revision
+  // (collapsed FAQ[0] source = 2026 KEF survey, RL-05); all of its dates are 2026-11-03.
   it('link boxes keep the sitemap link-review date without advancing visible, OG or Article dates', () => {
     const routes = Object.keys(PAGE_VISIBLE_REVISION_DATES).sort();
-    expect(routes).toEqual(['/basic-pension-2026', '/chuseok-bonus-2026', '/civil-servant-pay-2027', '/health-insurance-2026']);
+    expect(routes).toEqual(['/basic-pension-2026', '/civil-servant-pay-2027', '/health-insurance-2026']);
     const fixture = `globalThis.fetch=()=>{throw new Error('Network forbidden')};
       const rows=require('./src/app/sitemap.ts').default();
       const paths=${JSON.stringify(routes)};

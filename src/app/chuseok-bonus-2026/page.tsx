@@ -17,6 +17,8 @@
 //   연간 결정세액 차이 방식·추가 세액공제 기본 0% 로 바꿔 결과가 달라졌다(기본값 연봉 4,200만·상여 100만:
 //   804,651원 -> 769,810원) — 계산 기준 변경이라 위 9/27 메모의 8/16 유지는 이 변경을 놓친 것이다.
 //   sitemap 은 10/19 링크 검토일 유지(PAGE_VISIBLE_REVISION_DATES).
+// 2026-11-03 (R1 재착지 원장, RL-05): 접힌 FAQ 첫 답의 출처를 2026 경총 추석 조사로 바꾼 실질 수정이라 화면·OG·Article
+//   수정일과 sitemap 을 모두 11/3 으로 옮기고 PAGE_VISIBLE_REVISION_DATES 예외를 뺐다(같은 10글자, 광고 위 날짜 숫자는 더 좁음).
 
 import TopicNextSteps from '@/components/TopicNextSteps';
 import type { Metadata } from "next";
@@ -52,7 +54,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/chuseok-bonus-2026",
   ogType: "article",
   publishedTime: "2026-08-16",
-  modifiedTime: "2026-09-25",
+  modifiedTime: "2026-11-03",
   // ⚠ "세금 계산"·"명절 상여금" 일반형 금지 — 기존 가이드·계산기 잠식 방지
   keywords: [
     "추석 상여금 평균",
@@ -127,7 +129,7 @@ export default function ChuseokBonus2026Page() {
             slug: "chuseok-bonus-2026",
             url: "/chuseok-bonus-2026",
             publishedDate: "2026-08-16",
-            modifiedDate: "2026-09-25",
+            modifiedDate: "2026-11-03",
           }),
           speakableLd({
             url: "/chuseok-bonus-2026",
@@ -146,7 +148,7 @@ export default function ChuseokBonus2026Page() {
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
             2026 추석 상여금 <span className="text-electric">평균·지급 의무·떡값</span>
           </h1>
-          <PublishedMeta publishedDate="2026-08-16" updatedDate="2026-09-25" className="mb-2" />
+          <PublishedMeta publishedDate="2026-08-16" updatedDate="2026-11-03" className="mb-2" />
           <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
             남들은 얼마나 받는지, 우리 회사는 안 줘도 되는 건지, 떡값과 선물엔 세금이
             붙는지 — 추석 전후로 궁금한 돈 문제를 조사 통계와 법 기준으로 정리했습니다.
