@@ -5,6 +5,7 @@
 // 영문↔한글 표기 차이, 줄임말 등. Search Console 키워드 데이터 기반.
 // CompanyRepository가 회사 객체에 aliases로 주입하며, 검색 매칭·메타 키워드·
 // JSON-LD alternateName·본문 노출에 함께 쓰인다.
+// 화면에 내지 않을 표기는 파일 아래 companySearchAliases(검색 전용)에 둔다.
 
 /** 회사 id → 검색 별칭 목록 */
 export const companyAliases: Record<string, string[]> = {
@@ -130,3 +131,16 @@ export const companyAliases: Record<string, string[]> = {
   "korea-western-power": ["서부발전"],
   "korea-midland-power": ["중부발전"],
 };
+
+/**
+ * 회사 id → 검색 전용 별칭 (NAVER-05 — 2026-09-26 배관, 2026-11-02 RL-03 재착지).
+ * 사이트 검색(/salary-db)·메타 keywords 꼬리·JSON-LD alternateName 전용 — 화면에는 절대 렌더하지 않는다.
+ * (위 companyAliases 는 CompanyNarrative 본문 문장(Display2Ad 와 InArticleAd 사이)과 지역 페이지 대표 기업
+ *  매칭에도 쓰이지만 이 목록은 아니다 — 본문 문장이 길어지면 InArticleAd 가 밀린다.) CompanyRepository 가
+ *  회사 객체에 searchAliases 로 주입한다.
+ * 규칙: 실제 공식명·통칭만(키워드 나열 금지) · 회사 id 는 CompanyRepository 실존 · 중복 키 금지
+ * (2026-08-16 etri 사건) · 회사명(name.ko·name.en)·위 companyAliases·다른 회사 이름과 같은 표기 금지 ·
+ * 키는 항상 따옴표로 쓴다 — scripts/dart-etl.mjs 별칭 정규식이 따옴표 친 키만 읽는다(companyAliases.test 가드).
+ * 항목을 바꾼 회사 id 는 회사 판독 비교에서 별칭 공변량으로 빠진다(docs/analytics-measurement.md L10' 절 ②).
+ */
+export const companySearchAliases: Record<string, string[]> = {};

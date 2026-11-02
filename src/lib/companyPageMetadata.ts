@@ -10,6 +10,7 @@
 // companyMetaDescription.test.ts 가 전 회사 <title> 을 고정 스냅샷과 대조한다.
 // 운영자 승인 예외(2026-11-01 승인 목록 8번, B34): titleName·titleFigures(kotra)와 nameChange 의
 // 현재 상장명·변경일(lig-nex1)만 제목·description 을 바꾼다 — 해당 회사에만 키가 생겨 다른 회사 입력은 그대로.
+// searchAliases(검색 전용 별칭, NAVER-05)는 keywords 꼬리에만 쓰인다 — 제목·description 과 무관(companySearchAliases.test).
 
 import type { Metadata } from "next";
 import type { CompanyProfile } from "@/types/company";
@@ -39,6 +40,8 @@ export function companyMetadataInput(company: CompanyProfile): CompanyMetadataIn
     juniorSalary: juniorTotal,
     leadSalary: leadTotal,
     aliases: company.aliases,
+    // 검색 전용 별칭(NAVER-05) — keywords 꼬리에만, 목록에 있는 회사만 키가 생긴다
+    ...(company.searchAliases ? { searchAliases: company.searchAliases } : {}),
     hasCareerLevels: !!company.careerLevels?.length,
     lastUpdated: company.lastUpdated,
     // L10' 대상 회사만 — 날짜 게이트(10/1 KST)는 buildCompanyMetadata 가 건다

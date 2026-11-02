@@ -83,6 +83,12 @@ export interface CompanyProfile {
  /** 검색 표기 변형(옛 사명·영문/한글 차이·줄임말 등). data/companyAliases.ts에서 주입됨 */
  aliases?: string[];
  /**
+  * 검색 전용 별칭(NAVER-05) — data/companyAliases.ts companySearchAliases 에서 주입(목록에 없으면 키 없음).
+  * 사이트 검색 매칭·메타 keywords 꼬리·JSON-LD alternateName 에만 쓰고 화면에는 렌더하지 않는다
+  * (CompanyNarrative 의 별칭 문장과 지역 페이지 대표 기업 매칭은 aliases 만). 추가해도 광고 위 높이 불변.
+  */
+ searchAliases?: string[];
+ /**
   * <title>(og·twitter 제목·rss-companies item 제목 포함)의 회사명 자리에만 쓰는 검색 표기 — 없으면 name.ko.
   * 회사명과 다르면 제목이 '{titleName} 연봉 2026 ({name.ko}) — …' 가 된다. H1·본문·description·keywords 의
   * 회사명은 그대로(keywords 에는 '{titleName} 연봉' 한 개만 더한다). 회사 <title> 불변 원칙의 운영자 승인 예외만 적는다.

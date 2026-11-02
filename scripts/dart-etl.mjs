@@ -203,7 +203,8 @@ function extractExistingCompanies() {
   const aRe = /"([a-z0-9-]+)":\s*\[([^\]]*)\]/g;
   let am;
   while ((am = aRe.exec(aliasSrc))) {
-    aliasMap[am[1]] = [...am[2].matchAll(/"([^"]+)"/g)].map((x) => x[1]);
+    // 같은 id 가 companyAliases·companySearchAliases(검색 전용) 두 목록에 다 있을 수 있다 — 덮어쓰지 않고 합친다
+    aliasMap[am[1]] = [...(aliasMap[am[1]] ?? []), ...[...am[2].matchAll(/"([^"]+)"/g)].map((x) => x[1])];
   }
   // 중복 id 제거 (dedupeCompanies와 동일: 첫 번째 유지)
   const seen = new Set();
