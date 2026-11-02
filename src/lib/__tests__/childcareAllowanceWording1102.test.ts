@@ -8,7 +8,9 @@
 // - 접힌 FAQ 3곳(닫힌 details, 기본 화면 높이 0)은 '보육수당 비과세 자녀 1인당 월 20만원'.
 // - /year-end-tax 광고 위(접힌 FAQ 4 포함)에는 '출산지원금' 설명을 넣지 않는다(yearEndLimits2026.test.ts) —
 //   출산지원금 전액 비과세 설명은 마지막 광고 아래 한도표(yearEndLimits2026.ts)에 이미 있다.
-// - 같은 문장의 '자녀학자금'(enrichments.ts earned-income-tax-quick)은 이번 범위 밖 — 따로 검증한 뒤 고친다.
+// - 같은 문장의 '자녀학자금'(enrichments.ts earned-income-tax-quick)은 2026-11-02 FF-4 에서 따로 검증해 지웠다(글자 삭제만):
+//   회사가 주는 자녀 학자금은 과세 근로소득이다(소득세법 시행령 제38조①2). 간이세액표(시행령 별표 2) 비고 5 는 근로소득인 학자금을
+//   빼고 월 원천징수를 계산할 '수 있다'고만 정해 선택일 뿐이고 연말정산에서는 합산된다 — 비과세 항목 사이에 두면 비과세로 읽힌다.
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -36,7 +38,13 @@ describe("출산지원금 전액 비과세와 보육수당 월 20만원 한도 �
     expect(readSrc(FILES.hub)).toContain('{ date: "2026-01", text: "보육수당 비과세 한도 자녀 1인당 월 20만원 적용" },');
     expect(readSrc(FILES.settlement)).toContain('title: "보육수당 비과세 월 20만원",');
     expect(readSrc(FILES.settlement)).toContain('body: "자녀 1인당 월 20만원까지 비과세. 급여명세서에서 적용 여부 확인.",');
-    expect(readSrc(FILES.quick)).toContain("비과세 식대(월 20만원), 자녀학자금, 보육수당(월 20만원) 등은 원천징수 대상에서 제외됩니다.");
+    expect(readSrc(FILES.quick)).toContain("비과세 식대(월 20만원), 보육수당(월 20만원) 등은 원천징수 대상에서 제외됩니다.");
+  });
+
+  it("근로소득세 간편 계산 설명에 과세 근로소득인 자녀학자금을 비과세 항목과 묶지 않는다 (FF-4)", () => {
+    expect(readSrc(FILES.quick)).not.toContain("자녀학자금");
+    // 대신 같은 자리에 출산지원금을 넣지 않는다 — 광고 위에 조건 없는 출산지원금 비과세 문장이 생긴다(T2 가 피한 것).
+    expect(readSrc(FILES.quick)).not.toContain("출산지원금");
   });
 
   it("접힌 FAQ 3곳은 '보육수당 비과세 자녀 1인당 월 20만원'이고 출산지원금 설명은 넣지 않는다", () => {
