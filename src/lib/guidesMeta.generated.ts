@@ -908,7 +908,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-03-28",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2300
+  "contentChars": 2297
  },
  {
   "slug": "inheritance-tax-strategy",
