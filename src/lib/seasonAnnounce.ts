@@ -5,7 +5,7 @@
 // 어떤 페이지·라우트도 이 모듈을 import 하지 않는다(빌드 산출물 무변화 — 운영 보조 도구).
 //
 // 무엇을 하나
-//  - 동결기(11/1~1/31) 공식 발표 이벤트 E0~E12 마다 "어느 URL 이 바뀔 수 있고, 그 URL 의 sitemap lastmod 를
+//  - 동결기(11/1~1/31) 공식 발표 이벤트 E0~E12(+E1b·E1c) 마다 "어느 URL 이 바뀔 수 있고, 그 URL 의 sitemap lastmod 를
 //    무엇으로 올리며, 어느 피드에 실리는지"를 한 표로 둔다. 이벤트 행은 R4 시즌 달력 행 id(C-xx)와
 //    R3 W4-A 동결 런북 슬롯 이름만 가리킨다 — 바꿀 상수·문구·절차 본문은 그 원문에 있고 여기서 복사하지 않는다.
 //    진행형 상태 문구 점검은 staleStatusScan(scripts/stale-status-scan.ts)의 몫이라 여기에는 상태 단어가 없다.
@@ -33,9 +33,16 @@
 // 사이트맵 diff·[indexnow] 에 나오지 않는다. 발표일에는 'diff 밖 수동 요청' 목록(manualOnly·manualRequest)으로
 // 따로 내보내고, '손잡이 누락' 경고(eventUnchanged)에는 넣지 않는다.
 
+// E1b·E1c (10월 574e2e29 WP A4, 2026-11-02 RL-05 재반영): 장기요양(E1) 옆에 빠져 있던 4대보험 2027 발표 2건 —
+//   E1b 고용보험 실업급여 요율 시행령 공포(2026-09-22 입법예고: 1천분의 18→20, 2027-01-01 시행안),
+//   E1c 산재보험료율 고시(12월 말 — 2025년은 12/12 심의·12/31 발표).
+//   당일 반영은 social-insurance-rates-2027/page.tsx 의 갱신 슬롯 주석과 taxConstants2027.ts 의
+//   provisional→confirmed 절차(currentRates.test 가드)를 따른다(10월의 발표일 키트는 쓰지 않는다).
 export const EVENT_IDS = [
-  "E0", "E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9", "E10", "E11", "E12",
+  "E0", "E1", "E1b", "E1c", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9", "E10", "E11", "E12",
 ] as const;
+/** 오류 문구용 — 이벤트 id 목록 한 줄 */
+export const EVENT_IDS_LABEL = "E0~E12·E1b·E1c";
 export type EventId = (typeof EVENT_IDS)[number];
 
 /** R4 시즌 달력 행 id (C-01 ~ C-12) */
@@ -210,7 +217,7 @@ export function schemaErrors(input: unknown): string[] {
     else seen.add(url);
     if (!isStr(r.cluster) || !clusterIds.has(r.cluster)) errors.push(`${at}: cluster 가 clusters 에 없음`);
     if (!Array.isArray(r.events) || !r.events.every((e) => includes(EVENT_IDS, e))) {
-      errors.push(`${at}: events 는 E0~E12 배열이어야 함`);
+      errors.push(`${at}: events 는 ${EVENT_IDS_LABEL} 배열이어야 함`);
     } else if (new Set(r.events).size !== r.events.length) errors.push(`${at}: events 중복`);
     if (!isStr(r.peak) || !PEAK_RE.test(r.peak)) errors.push(`${at}: peak 는 YYYY-MM 또는 YYYY-MM~YYYY-MM`);
     const h = r.lastmodHandle;
@@ -660,9 +667,9 @@ export function requestPlan(
   };
 }
 
-/** CLI 인자 'E3' · 'e3' → EventId (아니면 null) */
+/** CLI 인자 'E3' · 'e3' · 'E1B' → EventId (대소문자 무시, 아니면 null) */
 export function toEventId(raw: string | undefined): EventId | null {
   if (!raw) return null;
   const up = raw.trim().toUpperCase();
-  return includes(EVENT_IDS, up) ? up : null;
+  return EVENT_IDS.find((id) => id.toUpperCase() === up) ?? null;
 }
