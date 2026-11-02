@@ -78,6 +78,7 @@ const INSURANCE_RATES = [
  {
  name: "고용보험",
  totalRate: "2.1~2.7%",
+ totalLabel: "총 요율(반올림)",
  selfRate: "0.9%",
  companyRate: "1.15~1.75% (회사 규모별)",
  base: "보수월액",
@@ -147,7 +148,7 @@ export default function SocialInsuranceRates2026Page() {
  </div>
  <div className="text-right">
  <p className="text-2xl font-black text-electric">{insurance.totalRate}</p>
- <p className="text-xs text-faint-blue">총 요율</p>
+ <p className="text-xs text-faint-blue">{insurance.totalLabel ?? "총 요율"}</p>
  </div>
  </div>
  <div className="grid grid-cols-2 gap-3 mt-4">
