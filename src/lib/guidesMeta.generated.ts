@@ -388,7 +388,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "us-treasury-bond",
   "title": "미국 국채 투자: 안전자산의 매력 🇺🇸",
-  "description": "금리 인하 시기, 채권으로 시세차익과 이자 두 마리 토끼 잡기.",
+  "description": "금리 변동 시기, 채권으로 시세차익과 이자 두 마리 토끼 잡기.",
   "category": "투자",
   "tags": [
    "채권",
@@ -879,7 +879,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "crypto-tax-2026",
   "title": "가상자산 과세 2026: 코인 양도세 22% 시행 D-?, 절세 타이밍",
-  "description": "비트코인·이더리움·알트코인 양도세 22% 시행 일정, 250만원 기본공제, 절세 매도 타이밍과 해외거래소 신고 의무.",
+  "description": "비트코인·이더리움·알트코인 소득세 22% 시행 일정, 250만원 기본공제, 절세 매도 타이밍과 해외거래소 신고 의무.",
   "category": "세금",
   "tags": [
    "가상자산",
