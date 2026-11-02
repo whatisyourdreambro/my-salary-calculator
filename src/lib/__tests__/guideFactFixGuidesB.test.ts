@@ -191,6 +191,10 @@ const SUPPLEMENT_PINS: Array<[string, string[], number]> = [
   ["financial-income-tax", ["조세특례제한법 제104조의27", 'href="/calc/dividend-tax-quick"'], 2],
   // GB-17 10·15 대책 토지거래허가구역 + 2년 실거주 의무 (본문 FAQ 3개는 그대로)
   ["gap-investment-risk", ["서울 전역과 경기 12곳", "2년 실거주 의무", 'href="/calc/ltv-quick"'], 3],
+  // GB-33 비과세 근로소득 한도·요건 표(국세청 cntntsId=7867, 소득세법 시행령 §12·§17) — 출산지원금 행 포함
+  ["social-insurance-reduction", ["직전 연도 총급여 3,700만원 이하", "자녀 1명당 월 20만원", "<td>출산지원금</td><td>전액</td>"], 0],
+  // GB-32 연말정산 기둥 글 가시 FAQ 4개(FAQPage) + 2027 허브·13가지 조건 글 링크
+  ["year-end-tax-2026", ['href="/year-end-tax-2027"', 'href="/guides/year-end-tax-13-tips-2026"'], 4],
 ];
 
 describe("(3) guidesb 보강 섹션(광고 아래) 등록·FAQ", () => {

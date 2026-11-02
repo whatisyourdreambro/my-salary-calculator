@@ -95,10 +95,44 @@ const gapInvestmentRiskSupplement = `
 <p><em>출처: 국토교통부 「주택시장 안정화 대책」(2025-10-15 보도자료) · 경향신문 2025-10-15 대책 Q&amp;A(2년 실거주 의무, 10월 20일 계약분부터).</em></p>
 `;
 
+// ── social-insurance-reduction (GB-33) — 본문 비과세 항목의 법정 한도·요건 (본문 정정은 GB-02) ──
+const socialInsuranceReductionSupplement = `
+<h2>2026년 비과세 근로소득 한도 한눈에</h2>
+<p>본문 항목 가운데 한도와 요건이 법령에 정해진 것만 모았습니다. 비과세 급여는 소득세뿐 아니라 국민연금·건강보험·고용보험 보험료를 매기는 보수에서도 빠집니다.</p>
+<table class="w-full text-sm">
+<thead><tr><th>항목</th><th>비과세 한도</th><th>요건</th></tr></thead>
+<tbody>
+<tr><td>식사대</td><td>월 20만원</td><td>회사가 식사를 따로 제공하지 않을 때(2023년 1월부터 20만원)</td></tr>
+<tr><td>자가운전보조금</td><td>월 20만원</td><td>본인 명의(임차 포함) 차량을 직접 운전해 업무에 쓰고, 출장여비 대신 회사 기준에 따라 받는 금액</td></tr>
+<tr><td>연구보조비</td><td>월 20만원</td><td>교원, 정부출연연구기관 연구원, 중소·벤처기업 연구소 연구원 등</td></tr>
+<tr><td>생산직 연장·야간·휴일근로수당</td><td>연 240만원</td><td>월정액급여 260만원 이하이고 직전 연도 총급여 3,700만원 이하인 생산직</td></tr>
+<tr><td>출산·보육수당</td><td>자녀 1명당 월 20만원</td><td>6세 이하 자녀(2026년부터 자녀별 한도)</td></tr>
+<tr><td>출산지원금</td><td>전액</td><td>자녀 출생일 이후 2년 이내에 회사에서 받는 최대 2회분</td></tr>
+</tbody>
+</table>
+<p>내 연봉의 4대보험료와 실수령액은 <a href="/">연봉 계산기</a>에서, 요율 전체는 <a href="/social-insurance-rates-2026">2026 4대보험 요율표</a>에서 확인하세요.</p>
+<p><em>출처: 국세청 「비과세 근로소득」 안내 · 소득세법 시행령 제12조·제17조 · 정책브리핑(식대 20만원, 2023-01-01 시행) · 재정경제부 2026년 달라지는 제도(보육수당 자녀별 한도).</em></p>
+`;
+
+// ── year-end-tax-2026 (GB-32) — 연말정산 기둥 글의 가시 FAQ(FAQPage)와 2027 허브 링크. 수치는 본문·현행 법령과 같다 ──
+const yearEndTax2026Supplement = `
+<h2>2026년 귀속 연말정산 자주 묻는 질문</h2>
+<ul>
+<li><strong>Q. 2026년 귀속 연말정산은 언제 하나요?</strong> — 2026년 1~12월 소득을 2027년 1~2월에 회사에서 정산하고, 환급이나 추가 납부는 보통 2~3월 급여에 반영됩니다. 간소화 자료는 매년 1월 중순부터 조회할 수 있습니다.</li>
+<li><strong>Q. 연금저축·IRP는 얼마까지 넣어야 공제를 다 받나요?</strong> — 연금저축 600만원, IRP를 합쳐 900만원까지가 세액공제 대상입니다. 총급여 5,500만원 이하는 15%(지방소득세 포함 16.5%), 초과는 12%(13.2%)이며 12월 31일까지 입금한 금액만 인정됩니다.</li>
+<li><strong>Q. 월세 세액공제는 누가 얼마나 받나요?</strong> — 총급여 8,000만원 이하 무주택 세대주(요건을 갖춘 세대원 포함)가 월세 연 1,000만원 한도로 15%, 총급여 5,500만원 이하는 17%를 공제받습니다.</li>
+<li><strong>Q. 작년에 놓친 공제도 돌려받을 수 있나요?</strong> — 법정 신고기한으로부터 5년 안이면 홈택스 경정청구로 신청할 수 있고 가산세는 없습니다.</li>
+</ul>
+<p>공제 항목별 조건은 <a href="/guides/year-end-tax-13-tips-2026">연말정산 공제 조건 13가지</a>, 올해 일정과 준비물은 <a href="/year-end-tax-2027">2027 연말정산(2026년 귀속) 총정리</a>에서 이어서 확인하세요.</p>
+<p><em>출처: 소득세법 제59조의3(연금계좌) · 조세특례제한법 제95조의2(월세) · 국세기본법 제45조의2(경정청구).</em></p>
+`;
+
 /** 슬러그 → 보강 HTML (2026-10 guidesb 배치, 알파벳 순). supplements.ts 가 guideSupplements 에 합친다. */
 export const guideSupplements202610: Record<string, string> = {
   "financial-income-tax": financialIncomeTaxSupplement,
   "gap-investment-risk": gapInvestmentRiskSupplement,
   "minimum-wage-impact-2026": minimumWageImpactSupplement,
+  "social-insurance-reduction": socialInsuranceReductionSupplement,
   "unemployment-insurance-2026": unemploymentInsurance2026Supplement,
+  "year-end-tax-2026": yearEndTax2026Supplement,
 };
