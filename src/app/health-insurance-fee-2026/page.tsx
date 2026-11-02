@@ -188,6 +188,11 @@ export default function HealthInsuranceFee2026Page() {
               <p className="text-sm font-bold text-navy dark:text-canvas-50 mb-1">종합소득세 계산기</p>
               <p className="text-xs text-muted-blue dark:text-canvas-300">8단계 누진세율 산출</p>
             </Link>
+            {/* LT-05 A (i) — 마지막 광고(GuideMidAd) 아래 카드 그리드에 1개 (10월 bc95e36b 재반영, 2026-11-02 RL-05) */}
+            <Link href="/health-checkup-2026" className="block p-4 rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 hover:border-electric transition-colors">
+              <p className="text-sm font-bold text-navy dark:text-canvas-50 mb-1">건강검진 2026</p>
+              <p className="text-xs text-muted-blue dark:text-canvas-300">대상·항목·비용·예약</p>
+            </Link>
           </div>
         </section>
       </div>

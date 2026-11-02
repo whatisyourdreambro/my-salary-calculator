@@ -227,6 +227,25 @@ export const guideSupplements: Record<string, string> = {
   ...guideSupplementsSamsungDs202610,
 };
 
+// ── LT-05 A (h)(g) — 약한 롱테일 가이드 2편에 같은 주제 링크 1줄씩(항목당 200B 안팎, 수치 없음). 10월 bc95e36b 의 보강 2항목 재반영
+//    (2026-11-02, RL-05). (h) 공기업 연봉 순위 → 발전 공기업 5사 비교(한 방향만), (g) 기초연금 2026 → 기초연금 계산기(헤더가 이미 덮지만 글 맨 아래 UX).
+//    다른 배치가 고치는 맵 줄과 겹치지 않도록 맵 바로 뒤에서 합친다. 같은 슬러그가 두 번 등록되면 로드 시 바로 실패한다.
+//    (슬러그 키에 템플릿을 바로 붙이지 않는다 — guideSpec 의 본문 소스 탐색기가 "슬러그": 백틱 꼴을 가이드 본문으로 읽는다.)
+const publicCompanyRankingSupplement = `
+<p>발전 공기업 다섯 곳의 연봉만 따로 비교한 글은 <a href="/guides/power-company-salary-2026">발전 공기업 5사 연봉 비교</a>에 있습니다.</p>
+`;
+const basicPension65Supplement = `
+<p>소득인정액과 감액 조건을 넣어 내 기초연금을 계산하려면 <a href="/basic-pension-2026">기초연금 계산기 2026</a>을 이용하세요.</p>
+`;
+const guideSupplementsLt05a: Record<string, string> = {
+  "public-company-salary-ranking-2026": publicCompanyRankingSupplement,
+  "basic-pension-65-2026": basicPension65Supplement,
+};
+for (const [slug, html] of Object.entries(guideSupplementsLt05a)) {
+  if (slug in guideSupplements) throw new Error(`[guideSupplements] 보강 슬러그 중복: ${slug}`);
+  guideSupplements[slug] = html;
+}
+
 // ── 일시적 2주택 처분 기한 개정(소득세법 시행령 대통령령 제36737호, 2026-10-01 시행) 보강 — 본문은 supplements-two-home-law.ts.
 //    다른 배치가 고치는 맵·import 줄과 겹치지 않도록 파일 끝에서 합친다(ESM import 는 끌어올려진다). 같은 슬러그가 두 번 등록되면 로드 시 바로 실패한다.
 import { guideSupplementsTwoHomeLaw } from "./supplements-two-home-law";
