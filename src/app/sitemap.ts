@@ -124,6 +124,8 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/social-insurance-rates-2027': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 2027 장기요양 13.90% 확정(PKG-10)
  // 2026-11-02: 고용보험 회사 부담 1.15~1.75%·총 2.1~2.7%, 산재 평균 1.5% 정정(OF1 T1·C5, 첫 원장 항목) — 페이지 수정일 2곳도 같은 날
  '/social-insurance-rates-2026': { lastModified: new Date('2026-11-02T00:00:00+09:00') },
+ // 2026-11-02: 중소기업 취업자 감면 기간 정정(청년 5년 90%, 60세 이상·장애인·경력단절자 3년 70% — FF-2, 첫 원장 항목). 화면·OG·JSON-LD 날짜 필드 없음
+ '/income-tax-2026': { lastModified: new Date('2026-11-02T00:00:00+09:00') },
  // 봉급표 버티컬 4종 (2026-08-30)
  '/military-pay-2026': { lastModified: new Date('2026-09-27') },
  '/teacher-pay-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 1~40호봉 전체 표(접힌 상자, 마지막 본문 광고 아래 — B35)
