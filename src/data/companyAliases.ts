@@ -167,7 +167,7 @@ export const companySearchAliases: Record<string, string[]> = {
   "doosan-enerbility": ["두산중공업"],
 
   // ── B3 (2026-10-06 준비, 2026-11-02 재착지): GSC 3개월 쿼리에 회사명 대신 이 표기로 들어온 검색어 ──
-  // (모두 노출 1~2회라 근거가 약하다 — 표기 매칭만. 근거와 관찰 칸은 docs/gsc-sniping-log.md 의 B3 절)
+  // (모두 노출 1~2회라 근거가 약하다 — 표기 매칭만. 근거와 관찰 칸은 docs/gsc-sniping-log.md 의 RL-03 절)
   // GC녹십자 — GC 브랜드 이전부터 쓰던 회사명·통칭
   "gc-greencross": ["녹십자"],
   // HD현대오일뱅크 — 2023년 HD 사명 변경 전 이름
