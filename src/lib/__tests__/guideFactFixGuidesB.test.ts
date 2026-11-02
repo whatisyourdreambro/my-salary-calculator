@@ -9,6 +9,10 @@
 // (2) 사실 고정: 정정한 수치가 옛 값으로 되돌아가지 않게 글별로 핀을 둔다(공식 출처는 각 커밋 메시지).
 import { describe, expect, it } from "vitest";
 import { koGuides } from "@/lib/guidesContent";
+import { UNEMPLOYMENT_BENEFIT_2026, unemploymentDailyLowerBound } from "@/config/unemploymentBenefit";
+import { MINIMUM_WAGE_2027 } from "@/config/minimumWage";
+import { guideSupplements } from "@/lib/guides/supplements";
+import { extractGuideFaqs } from "@/lib/guideFaq";
 
 const H2_OPEN_RE = /<h2[\s>]/gi;
 
@@ -161,6 +165,124 @@ const FACT_PINS: Array<[string, string[], string[]]> = [
   ["mbti-work-style", ["href=\"/\">연봉 계산기"], ["href=\"/calc\">연봉 계산기"]],
   ["semiconductor-cycle-2026", ["href=\"/calc/portfolio-allocation\""], ["href=\"/dashboard\""]],
 ];
+
+/**
+ * (3) 광고 아래 보강 섹션(supplements-2026-10.ts) — [슬러그, 있어야 할 문자열[], FAQPage 항목 수(본문+보강)].
+ * FAQ 수 0 은 '자주 묻는 질문' 이 없거나 2개 미만이라 FAQPage 를 내보내지 않는다는 뜻.
+ */
+// 2026-10-05 재기반: 10/4 배포(352451886)가 본문에서 같은 사실을 먼저 고친 moved-below 보강 4편(GB-01 individual-vs-corporate-tax,
+// GB-22 personal-loan-vs-debt-consolidation, GB-13 us-treasury-bond, GB-09 samsung-special-bonus-q3-preview-2027)과
+// retirement-planning-30s 의 국민연금 평균액 줄은 뺐다 — 아래 REVERTED_BODY_PINS(보강이 가리키는 옛 본문 문구) 가드가 그 본문 문구가
+// 사라졌음을 잡아 중복을 드러냈다. 해당 본문 정정은 위 FACT_PINS(10/4 문구)가 고정한다.
+const SUPPLEMENT_PINS: Array<[string, string[], number]> = [
+  // GB-06 구직급여 상·하한(정본 상수)·고용24·실업크레딧 + 계산기 링크
+  [
+    "unemployment-insurance-2026",
+    [
+      `${UNEMPLOYMENT_BENEFIT_2026.DAILY_UPPER.toLocaleString("en-US")}원 (2025년 이직자 66,000원)`,
+      `${unemploymentDailyLowerBound().toLocaleString("en-US")}원 (최저시급 × 80% × 8시간)`,
+      'href="/unemployment-benefit"',
+      "구직급여 수급자가(재산·소득 요건 충족 시) 신청하면",
+      // 스윕 수정(moved-below, GB-05·MISSED-gb-1) — 본문 리드·금액 문단·함정 2줄·자기계발 li 는 프로덕션 문구
+      "일급 한도 6만·최저 약 90만은 옛 기준",
+      "금액과 관계없이 실업인정 때 신고해야 합니다",
+      "과정과 대상에 따라 달라 자부담이 생길 수 있습니다",
+    ],
+    2,
+  ],
+  // GB-08 2027 최저임금 확정 비교표(정본 상수) + 2027 페이지·주휴수당 링크
+  [
+    "minimum-wage-impact-2026",
+    [`시급 ${MINIMUM_WAGE_2027.hourly.toLocaleString("en-US")}원으로 확정`, 'href="/minimum-wage-2027"', 'href="/weekly-holiday-allowance-2026"'],
+    0,
+  ],
+  // GB-15 고배당기업 배당 분리과세 특례(조특법 §104의27, 2026-01-01) — 세율 표는 조문 확인 전이라 없음
+  ["financial-income-tax", ["조세특례제한법 제104조의27", 'href="/calc/dividend-tax-quick"'], 2],
+  // GB-17 10·15 대책 토지거래허가구역 + 2년 실거주 의무 + 무주택자 실거주 유예(국토부 2026-05-12) — 출처는 공식(정책브리핑)만 (본문 FAQ 3개는 그대로)
+  //   2026-11-02 재확인: 9/17 발표·10/1 시행 — 유예 신청 2027-12-31 까지, 갱신계약 1회(최대 2년)도 유예(정책브리핑 148972092)
+  ["gap-investment-risk", ["서울 전역과 경기 12곳", "2년 실거주 의무", 'href="/calc/ltv-quick"', "2026년 5월 12일부터 계속 무주택인 사람", "정책브리핑 2025-10-15", "1회 갱신분(최대 2년)", "2027년 12월 31일 신청분까지"], 3],
+  // GB-33 비과세 근로소득 한도·요건 표(국세청 cntntsId=7867, 소득세법 시행령 §12·§17) — 출산지원금 행 포함
+  //   + 사업주 고용보험 1.15~1.75% 구성(고용보험료징수법 시행령 §12). 2026-11-02 재착지: 본문이 48dabb2dc(회사 1.15~1.75%)·FF-3
+  //   497310359(월정액 260만원)로 이미 고쳐져 '본문의 … 아니라' 정정 문장은 빼고 10월 끝판의 구성 설명 한 문장만 둔다(아래 (3-2) 가드).
+  ["social-insurance-reduction", ["직전 연도 총급여 3,700만원 이하", "자녀 1명당 월 20만원", "<td>출산지원금</td><td>전액</td>", "고용보험 회사 부담 1.15~1.75%는 실업급여 0.9%에"], 0],
+  // GB-32 연말정산 기둥 글 가시 FAQ 4개(FAQPage) + 2027 허브·13가지 조건 글 링크
+  ["year-end-tax-2026", ['href="/year-end-tax-2027"', 'href="/guides/year-end-tax-13-tips-2026"'], 4],
+  // ── 2026-09-29 광고 위치 스윕 수정 — 광고 위 같은 폭을 못 만든 정정(moved-below). FAQ 헤더 없음(본문 FAQPage 항목 수 그대로) ──
+  // GB-23·MISSED-gb-2 휴직 = 직장가입자 유지·납입고지 유예, 지역 자동차 보험료 폐지(2024-02)
+  ["career-break-financial-plan", ["납입고지 유예를 신청할 수 있습니다", "2024년 2월분부터 폐지", "예금 원금은 재산에 들어가지 않습니다"], 0],
+  // GB-03 분납 기한 7월 31일(성실신고확인 대상 8월 31일)·납부지연가산세 하루 0.022%
+  ["comprehensive-income-tax-2026", ["5월 31일 기한이면 7월 31일까지", "하루 0.022%(연 약 8.0%)"], 0],
+  // GB-04 2027-01-01 이후 양도·대여분·2026-12-31 시가와 취득가액 중 큰 금액
+  //   2026-11-02 재확인: 유예·폐지 개정안 발의(SBS Biz 2026-10-15) — '추가 유예 없음' 단정 대신 국회 심사 중(아래 (3-2) 가드)
+  ["crypto-tax-2026", ["2027년 1월 1일 이후 양도·대여하는 가상자산부터", "2026년 12월 31일 시가와 실제 취득가액 중 큰 금액", "연말 국회 세법 심사 결과에 따라 시작일이 바뀔 수 있습니다"], 0],
+  // GB-12 4,000만·500만은 2024년 개정안, 2026 개편안은 생산적금융 ISA·일반 ISA 한도 유지
+  ["isa-account-guide", ["2024년 세법개정안의 수치", "일반 ISA 납입 한도(연 2,000만원·총 1억원)를 그대로", "생산적금융 ISA"], 0],
+  // GB-03·MISSED-gb-4·6a 노란우산 600만원(2025 납입분)·간이과세 1억 400만원·개인 예정고지
+  ["n-job-tax-2026", ["연 600만원까지 소득공제됩니다", "1억 400만원 미만", "4월·10월에는 세무서가 고지한 예정고지 세액"], 0],
+  // GB-21 온투업 이자 14% + 지방세 1.4% = 15.4%, 실 수익률 재계산
+  ["p2p-investment-risk", ["소득세 14%와 지방소득세 1.4%를 더해 15.4%", "약 -3.5%~+2.5%"], 0],
+  // GB-24 월 50만 → 약 6.1억, 10억은 월 약 82만원 · 국민연금 평균액은 공식 통계 아님
+  ["retirement-planning-30s", ["월 50만원은 약 6.1억원", "월 약 82만원이 필요합니다"], 0],
+  // GB-09 코스피 증권거래세 0.05% + 농특세 0.15% = 0.20% (2026-01-02 시행) — 본문 FAQ 6개는 그대로
+  ["samsung-bonus-treasury-stock-15-trillion-2026", ["더해 0.20%가 붙습니다", "본문 매도 시 세금 항목과 세금 FAQ의 0.15%"], 6],
+  ["samsung-vs-sk-hynix-stock-bonus-2026", ["더해 0.20%가 붙습니다", "본문 매도 이후 항목의 0.15%"], 6],
+  ["sk-hynix-ps-cash-vs-stock-scenarios-2026", ["더해 0.20%가 붙습니다", "정리 문단·세금 FAQ의 0.15%"], 6],
+  // MISSED-gb-7 HBM4 개발 완료·양산 체제 구축(2025-09)
+  ["sk-hynix-stock-2026", ["2025년 9월 세계 최초로 HBM4 개발을 마치고 양산 체제를 구축"], 0],
+  // GB-26 환급은 결정세액을 넘지 않는다 · 50만·100만원은 예시
+  ["tax-refund-mistakes-2026", ["원래 내야 할 세금(결정세액)보다 클 수 없습니다", "예시일 뿐 평균 통계가 아니며"], 0],
+];
+
+/** 스윕 수정 가드 — 광고 위 본문에 되돌린 프로덕션 문구가 그대로 있어야 보강 문장(본문의 …은 옛 기준)이 맞는다 */
+const REVERTED_BODY_PINS: Array<[string, string[]]> = [
+  ["comprehensive-income-tax-2026", ["2회 분할, 8월 31일까지", "연 9.125% (일할 계산)"]],
+  ["isa-account-guide", ["납입 한도를 연 4,000만원·총 2억원으로"]],
+  ["n-job-tax-2026", ["연 500만원까지 소득공제"]],
+  ["p2p-investment-risk", ["실 세율 27.5%."]],
+  ["samsung-bonus-treasury-stock-15-trillion-2026", ["농특세 포함 0.15%", "증권거래세 0.15%가 붙습니다"]],
+  ["samsung-vs-sk-hynix-stock-bonus-2026", ["농특세 포함 0.15%"]],
+  ["sk-hynix-ps-cash-vs-stock-scenarios-2026", ["농특세 포함 0.15%", "거래세 0.15% 외에", "증권거래세 0.15%, 배당은"]],
+  ["sk-hynix-stock-2026", ["2026년 하반기 양산을 목표로"]],
+  ["unemployment-insurance-2026", ["일급 한도 6만", "최저 약 90만", "매 4주 4회 이상", "월 50만 초과 부정 수급", "수강료 100% 지원"]],
+];
+
+describe("(3-1) 스윕 수정 — 보강이 가리키는 본문 문구", () => {
+  for (const [slug, must] of REVERTED_BODY_PINS) {
+    it(`${slug}`, () => {
+      const html = body(slug);
+      for (const s of must) expect(html, `본문에 있어야 함(보강이 옛 기준이라고 가리키는 문구): ${s}`).toContain(s);
+    });
+  }
+});
+
+// 2026-11-02 재착지 조정: 10월 사슬 뒤 본문이 먼저 고쳐진 글은 보강이 '본문의 …' 정정 문장을 쓰지 않고,
+// 게시 전 재확인에서 바뀐 사실(가상자산 과세 유예 개정안 발의)은 단정 문장을 빼고 현행 법과 심사 중이라는 사실만 둔다.
+describe("(3-2) 재착지 조정 — 본문이 이미 고쳐진 글·게시 전 재확인", () => {
+  it("social-insurance-reduction: 본문은 회사 1.15~1.75%·월정액 260만원(48dabb2dc·FF-3), 보강은 구성 설명만", () => {
+    const b = body("social-insurance-reduction");
+    expect(b).toContain("(회사 1.15~1.75%)");
+    expect(b).toContain("월정액 260만원 이하 생산직");
+    const html = guideSupplements["social-insurance-reduction"];
+    expect(html).not.toContain("본문의 월급 210만원");
+    expect(html).not.toContain("본문 4대보험 목록의 고용보험 회사 부담");
+  });
+  it("crypto-tax-2026: 국회 심사 중인 유예 개정안이 있어 '추가 유예는 없습니다'를 단정하지 않는다(세법 의결일에 결과로 다시 쓴다)", () => {
+    const html = guideSupplements["crypto-tax-2026"];
+    expect(html).not.toContain("추가 유예는 없습니다");
+    expect(html).toContain("현행 소득세법상 2027년 1월 1일");
+  });
+});
+
+describe("(3) guidesb 보강 섹션(광고 아래) 등록·FAQ", () => {
+  for (const [slug, must, faqCount] of SUPPLEMENT_PINS) {
+    it(`${slug}`, () => {
+      const html = guideSupplements[slug];
+      expect(html, `보강 없음: ${slug}`).toBeTruthy();
+      for (const s of must) expect(html, `있어야 함: ${s}`).toContain(s);
+      expect(extractGuideFaqs(body(slug) + html)).toHaveLength(faqCount);
+    });
+  }
+});
 
 describe("(2) guidesb 사실 정정 고정", () => {
   for (const [slug, must, mustNot] of FACT_PINS) {

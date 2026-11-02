@@ -340,3 +340,18 @@ Breadcrumbs/speakable(온페이지) + 허브(/calc/bonus-calculators) 신설 + 2
 - 회사 쪽 430곳은 제목·설명·companyPageModified 가 모두 그대로다. 일시적 2주택 글(OF3 C2, 운영자 결정)은 화면 핵심 요약과 카드 설명만 바뀌고 제목·검색 설명(guideMetaDescriptions)은 그대로다. 삼성 OPI 가이드 3편(OF2 S1·S2)도 제목·검색 설명이 그대로다.
 - 같은 묶음의 원장이 sitemap lastmod 를 2026-11-02 로 옮긴 쪽: /year-end-tax-2027 (OF1 T2) · /calc/smb-income-tax-break (OF1 T3) · /embed (OF3 C4) · /social-insurance-rates-2026 (OF1 T1·C5, 첫 원장 항목 — 화면 최종 갱신 2026.05.12 → 2026.11.02) · /calc/jeonse-loan (OF3 C3, 첫 원장 항목). /calc/samsung-bonus · /calc/bonus-calculators · /year-end-tax · /tax-reform-2026 은 내용이 바뀌었지만 날짜를 유지했고(광고 위 화면 수정일 폭, G4 확인일 고정 — scripts/sitemap-content-reviews.json 사유 참조), /year-end-tax-settlement-2026 · /calc/earned-income-tax-quick · /calc/bmi-quick 은 날짜를 옮기지 않았다(화면 수정일 2026.11.02 가 2026.10.19 보다 넓음, 간이 계산기는 날짜 손잡이 없음).
 - 2026-11-02 추기(A1 범위·메리츠화재): OF4 A1(공유 상자를 마지막 광고 아래로)은 광고가 붙지 않는 5곳(/about · /hub/[id] · /region/[slug] · /samsung-negotiation-2026 · /year-end-tax-2027)에만 남겼다 — 나머지 10곳(/hub · /industry/[slug] · /job/[slug] · /retirement-pension-2026 · /social-insurance-rates-2027 · /tax-rates-2026 · /tips · /year-end-tax-2026 · /year-end-tax-checklist · /year-end-tax-settlement-2026)은 옮기면 9월에 기각·재제안 금지된 광고 연속 배치(HomeTop 직후 Multiplex, 쿠팡 배너·GuideMid 바로 다음 광고)가 다시 생겨 운영(2cab06bc) 배치 그대로 두고 결정 K 때 함께 정한다(이 10곳은 제목·검색 설명·sitemap 수정일 변화 없음, 원장 3곳은 2cab06bc 값 그대로). 메리츠화재 회사 카드(/salary-db/meritz-fire)는 출처를 보도 인용에서 DART 2025 사업보고서 원문(합계 행 1인평균)으로 바꿨고 값 1억 4,397만원·제목·검색 설명·수정일은 그대로이며, 임베드 위젯(/widget/company, noindex)의 공시 평균연봉도 같은 원문 값(100만원 반올림 1억 4,400만원)으로 맞췄다.
+## 2026-11-02 10월 미배포분 재착지 P1(RL-01·RL-02) 제목·설명 변경 기록 (claude/fxr-p1-1102, append-only)
+
+운영자 2026-11-01 승인 7번(10월 미배포분 소규모 재착지)의 R1 묶음 가운데 RL-02(같은 폭 사실 정정)에 head `<title>` 변경이 1곳, 검색 설명 변경이 5곳, 화면 TL;DR·카드 설명만 바뀌는 곳이 1곳 있다. RL-01(가이드 39편 광고 아래 보강)은 제목·설명을 바꾸지 않는다. 이전 값 = 2단계 후보 d2fcc8720, 이후 값 = claude/fxr-p1-1102. 모두 사실 정정이고, 광고 위 줄 수는 게시 전 가드 스윕(1,123폭)으로 잰다. 수치(클릭·노출·CTR)는 적지 않는다 — 판정은 위 Round 3 규칙대로, T0 = 운영자가 R1 게시를 마친 시각(게시 뒤 이 줄에 기입: `T0 = ____`).
+
+| 날짜 | 경로 | 항목 ID (패키지) | 바뀐 것: 이전 → 이후 |
+|---|---|---|---|
+| 2026-11-02 | /guides/coupang-fulfillment-night-pay-2026 | GA-19 (P1·RL-02, 10월 d6b91aaf2) | 제목: 쿠팡 풀필먼트 야간 알바 — 시급 17,000원 + 주휴수당 월 354만원 → … 주휴수당 월 336만원 (주휴수당을 야간가산 없는 기본 시급 11,333원으로 다시 계산, 숫자만). 검색 설명: … 주 40시간 + 주휴수당 시 월 약 354만원, 실수령 305~315만원. 산재보험 자동 가입 + 종소세 신고 의무. → … 월 약 336만원, 실수령 291~296만원. 산재보험 자동 가입 + 종소세 신고 없음. |
+| 2026-11-02 | /guides/samsung-medison-salary-2026 | GA-10 (P1·RL-02, 10월 ade708cd5) | 검색 설명: … 비상장사의 공시 공백을 짚고, … → … 비상장사의 공시 평균을 짚고, … (제목 그대로) |
+| 2026-11-02 | /guides/newlywed-tax-benefits-2026 | GA-24 (P1·RL-02, 10월 938e9fd2b) | 검색 설명: … 증여세 한시 한도 1.5억 … → … 증여세 공제 한도 1.5억 … (제목 그대로) |
+| 2026-11-02 | /guides/sk-hynix-ps-forecast-2027 | GA-16 (P1·RL-02, 10월 798ba9cb9) | 검색 설명: … 자사주 전환 검토 변수까지 … → … 자사주 지급 가결 결과까지 … (제목 그대로) |
+| 2026-11-02 | /guides/crypto-tax-2026 | GB-31 ⑥ (P1·RL-02, 10월 1045fdb4a) | 검색 설명: … 알트코인 양도세 22% 시행 일정 … → … 알트코인 소득세 22% 시행 일정 … (제목의 '코인 양도세 22% 시행 D-?'는 별도 승인 몫이라 그대로) |
+| 2026-11-02 | /guides/us-treasury-bond | GB-31 ② (P1·RL-02, 10월 1045fdb4a) | 화면 TL;DR·카드 설명·Article 설명: 금리 인하 시기, … → 금리 변동 시기, … (검색 설명은 guideMetaDescriptions 의 별도 문구라 그대로, 제목 그대로) |
+
+- 같은 설명이 관련 가이드 카드(line-clamp)로 뜨는 /guides 허브·카테고리·관련 글 3편·계산기 '함께 볼 가이드'의 카드 글도 바뀐다(스윕 대상).
+- 날짜 칩·sitemap lastmod 는 이 묶음에서 바꾸지 않았다(원장 단계 몫). 수정일이 없는 4편(삼성메디슨·신혼부부·SK PS 전망·가상자산)은 새 수정 칩이 GuideMidAd 위 UI 가 되므로 날짜를 올리지 않는다.
