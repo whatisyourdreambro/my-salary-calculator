@@ -348,7 +348,7 @@ export const hotKeywordsGuides = [
 
 <h2>💸 중소기업 취업 청년 소득세 감면 — 5년간 최대 90%</h2>
 <ul>
-<li><strong>대상:</strong> 만 15~34세 (군 복무 기간 차감, 최대 39세), 중소기업 취업자</li>
+<li><strong>대상:</strong> 만 15~34세 (군 복무 기간 차감, 최대 40세), 중소기업 취업자</li>
 <li><strong>감면율:</strong> 소득세의 90%, 연간 200만원 한도</li>
 <li><strong>신청:</strong> 취업한 중소기업에 '소득세 감면 신청서' 제출</li>
 <li><strong>중요:</strong> 이직 시 새 직장에 재신청 필수. 5년 한도는 누적 적용</li>

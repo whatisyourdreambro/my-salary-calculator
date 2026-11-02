@@ -76,3 +76,22 @@ describe("계산기 밖 감면 설명 — 청년 5년 90%, 60세 이상·장애�
     expect(getGuideContentDate(careerGap!)).toBe(careerGap!.publishedDate);
   });
 });
+
+// FF-2 추가(사실 재검증의 src 전수 grep): 청년 = 근로계약 체결일 현재 15~34세, 군 복무 기간(최대 6년)을 빼고 나이를 센다
+// (국세청 중소기업 취업자 소득세 감면 안내) → 가장 많은 나이는 만 40세. 사이트의 qnaData 도 이미 최대 만 40세다.
+// 같은 글자 수 숫자만 바꾼다(39→40, 정적 글꼴 모델로 0.19px 좁음). '최대 만 40세'는 345~372px 등에서 줄이 늘어 쓰지 않는다.
+describe("청년 지원 정책 가이드 — 중소기업 취업 청년 감면 대상 최대 40세 (FF-2 추가)", () => {
+  const youth = koGuides.find((g) => g.slug === "youth-benefits-2026");
+
+  it("최대 39세 → 최대 40세, 광고 분할·읽기 시간·날짜 칩 그대로", () => {
+    expect(youth).toBeDefined();
+    const html = youth!.content;
+    expect(html).toContain("<li><strong>대상:</strong> 만 15~34세 (군 복무 기간 차감, 최대 40세), 중소기업 취업자</li>");
+    expect(html).not.toContain("최대 39세");
+    // 본문 길이 그대로(3,003자 — 4,000자 미만 2분할, 읽기 4분)·히어로 수정 칩 없음.
+    expect(html.length).toBeLessThan(4000);
+    expect(Math.ceil(html.length / 1000)).toBe(4);
+    expect(youth!.modifiedDate).toBeUndefined();
+    expect(getGuideContentDate(youth!)).toBe(youth!.publishedDate);
+  });
+});
