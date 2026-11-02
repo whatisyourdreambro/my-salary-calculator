@@ -6,6 +6,9 @@
 // - /social-insurance-rates-2026 고용보험 카드는 InArticleAd 위다. 총 요율 정확값 2.05~2.65%는 숫자가 1자 늘어
 //   320~330px 에서 카드 머리줄이 줄바꿈될 수 있어(정적 글꼴 모델), 반올림한 2.1~2.7%(종전보다 좁음)로 쓴다.
 //   회사 부담 칸은 같은 글자 수에 더 좁은 숫자만 바뀐다.
+//   2026-11-02 FF-1: 반올림 값임을 그 카드의 작은 글씨 이름표에만 '총 요율(반올림)'로 적는다(행별 totalLabel, 다른 네 카드는
+//   종전 '총 요율'). 이름표는 text-xs 라 24px 숫자(2.1~2.7%)보다 좁아 오른쪽 칸 폭·카드 머리줄이 그대로다(정적 글꼴 모델 —
+//   실측 스윕이 최종 판정). 정확값 2.05~2.65%·'약 2.1~2.7%'는 숫자 칸이 넓어져 쓰지 않는다.
 // - /guides/social-insurance-reduction 2026년 요율 상자(GuideMidAd 위 첫 조각)도 숫자만 바뀐다(본문 2,300자 그대로).
 //   이 글은 modifiedDate 가 없어 정정일 표(guideContentRevisions)에 넣으면 히어로에 '수정' 칩이 새로 생겨
 //   광고 위 UI 가 늘어난다 — 날짜를 달려면 실측 스윕을 먼저 하고 이 테스트를 함께 고칠 것.
@@ -23,6 +26,17 @@ describe("고용보험 회사 부담 1.15~1.75% (시행령 제12조①·법 제1
     expect(rates2026).toContain('companyRate: "1.15~1.75% (회사 규모별)"');
     expect(rates2026).not.toContain("1.95~2.7%");
     expect(rates2026).not.toContain("1.05~1.65%");
+  });
+
+  it("반올림 표시는 고용보험 카드 이름표에만 — 총 요율(반올림), 다른 카드는 총 요율 (FF-1)", () => {
+    expect(rates2026).toContain('{insurance.totalLabel ?? "총 요율"}');
+    expect(rates2026).not.toContain('<p className="text-xs text-faint-blue">총 요율</p>');
+    expect(rates2026.match(/totalLabel:/g)).toHaveLength(1);
+    const lf = rates2026.replace(/\r\n/g, "\n");
+    const row = lf.slice(lf.indexOf('name: "고용보험"'));
+    expect(row.slice(0, row.indexOf("}"))).toContain('totalRate: "2.1~2.7%",\n totalLabel: "총 요율(반올림)",');
+    expect(rates2026).not.toContain("2.05~2.65%");
+    expect(rates2026).not.toContain("약 2.1~2.7%");
   });
 
   it("4대보험 절약 가이드 2026년 요율 상자 — 회사 1.15~1.75%, 정정일 칩은 만들지 않는다", () => {
