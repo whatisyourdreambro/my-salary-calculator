@@ -238,6 +238,11 @@ export default function HomeSeoSection() {
                 <p className="mt-3 text-[14.5px] leading-[1.75] text-muted-foreground font-medium">
                   {item.answer}
                 </p>
+                {item.linkHref && (
+                  <Link href={item.linkHref} className="mt-2 inline-block text-[14.5px] text-link underline underline-offset-4">
+                    {item.linkLabel}
+                  </Link>
+                )}
               </details>
             ))}
           </div>

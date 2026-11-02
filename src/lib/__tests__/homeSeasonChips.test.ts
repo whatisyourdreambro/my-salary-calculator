@@ -43,6 +43,19 @@ describe("홈 보유세 칩 (MI-05)", () => {
     expect(src).toContain(".filter((chip, i, all) => all.findIndex((c) => c.href === chip.href) === i)");
   });
 
+  it("MI-24 홈 FAQ 는 평문 경로 대신 사람이 읽는 문장 + 답변 아래 별도 링크", async () => {
+    const { HOME_FAQ_ITEMS } = await import("@/lib/homeContent");
+    const { renderToStaticMarkup } = await import("react-dom/server");
+    const { createElement } = await import("react");
+    const HomeSeoSection = (await import("@/components/home/HomeSeoSection")).default;
+    const item = HOME_FAQ_ITEMS.find((i) => i.question.startsWith("연봉 3000만원 실수령액"))!;
+    expect(item.answer).toContain("자세한 내역은 연봉 3,000만원 실수령액 페이지에서 확인하세요.");
+    expect(JSON.stringify(HOME_FAQ_ITEMS)).not.toContain("/salary/30000000 페이지");
+    const body = renderToStaticMarkup(createElement(HomeSeoSection));
+    expect(body).toContain(item.answer);
+    expect(body).toMatch(/<a [^>]*href="\/salary\/30000000"[^>]*>연봉 3,000만원 실수령액 보기 →<\/a>/);
+  });
+
   it("고정 9월 칩 리터럴이 칩 목록에 남아 있지 않다", () => {
     const src = readFileSync("src/components/home/HomeSeoSection.tsx", "utf8");
     expect(src).not.toContain('{ label: "9월 재산세 2기분 납부 (9/16~30)", href: "/property-holding-tax-2026" }');
