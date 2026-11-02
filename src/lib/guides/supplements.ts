@@ -234,3 +234,11 @@ for (const [slug, html] of Object.entries(guideSupplementsTwoHomeLaw)) {
   if (slug in guideSupplements) throw new Error(`[guideSupplements] 보강 슬러그 중복: ${slug}`);
   guideSupplements[slug] = html;
 }
+
+// ── 2026-10 사실 정정 배치(guidesb) 보강 — 본문은 supplements-2026-10.ts. 다른 배치가 고치는 맵·import 줄과 겹치지 않도록
+//    파일 끝에서 합친다(ESM import 는 끌어올려진다). 같은 슬러그가 두 번 등록되면 로드 시 바로 실패한다.
+import { guideSupplements202610 } from "./supplements-2026-10";
+for (const [slug, html] of Object.entries(guideSupplements202610)) {
+  if (slug in guideSupplements) throw new Error(`[guideSupplements] 보강 슬러그 중복: ${slug}`);
+  guideSupplements[slug] = html;
+}

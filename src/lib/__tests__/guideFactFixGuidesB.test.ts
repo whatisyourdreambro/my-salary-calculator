@@ -10,6 +10,9 @@
 import { describe, expect, it } from "vitest";
 import { koGuides } from "@/lib/guidesContent";
 import { UNEMPLOYMENT_BENEFIT_2026, unemploymentDailyLowerBound } from "@/config/unemploymentBenefit";
+import { MINIMUM_WAGE_2027 } from "@/config/minimumWage";
+import { guideSupplements } from "@/lib/guides/supplements";
+import { extractGuideFaqs } from "@/lib/guideFaq";
 
 const H2_OPEN_RE = /<h2[\s>]/gi;
 
@@ -162,6 +165,40 @@ const FACT_PINS: Array<[string, string[], string[]]> = [
   ["mbti-work-style", ["href=\"/\">연봉 계산기"], ["href=\"/calc\">연봉 계산기"]],
   ["semiconductor-cycle-2026", ["href=\"/calc/portfolio-allocation\""], ["href=\"/dashboard\""]],
 ];
+
+/**
+ * (3) 광고 아래 보강 섹션(supplements-2026-10.ts) — [슬러그, 있어야 할 문자열[], FAQPage 항목 수(본문+보강)].
+ * FAQ 수 0 은 '자주 묻는 질문' 이 없거나 2개 미만이라 FAQPage 를 내보내지 않는다는 뜻.
+ */
+const SUPPLEMENT_PINS: Array<[string, string[], number]> = [
+  // GB-06 구직급여 상·하한(정본 상수)·고용24·실업크레딧 + 계산기 링크
+  [
+    "unemployment-insurance-2026",
+    [
+      `${UNEMPLOYMENT_BENEFIT_2026.DAILY_UPPER.toLocaleString("en-US")}원 (2025년 이직자 66,000원)`,
+      `${unemploymentDailyLowerBound().toLocaleString("en-US")}원 (최저시급 × 80% × 8시간)`,
+      'href="/unemployment-benefit"',
+    ],
+    2,
+  ],
+  // GB-08 2027 최저임금 확정 비교표(정본 상수) + 2027 페이지·주휴수당 링크
+  [
+    "minimum-wage-impact-2026",
+    [`시급 ${MINIMUM_WAGE_2027.hourly.toLocaleString("en-US")}원으로 확정`, 'href="/minimum-wage-2027"', 'href="/weekly-holiday-allowance-2026"'],
+    0,
+  ],
+];
+
+describe("(3) guidesb 보강 섹션(광고 아래) 등록·FAQ", () => {
+  for (const [slug, must, faqCount] of SUPPLEMENT_PINS) {
+    it(`${slug}`, () => {
+      const html = guideSupplements[slug];
+      expect(html, `보강 없음: ${slug}`).toBeTruthy();
+      for (const s of must) expect(html, `있어야 함: ${s}`).toContain(s);
+      expect(extractGuideFaqs(body(slug) + html)).toHaveLength(faqCount);
+    });
+  }
+});
 
 describe("(2) guidesb 사실 정정 고정", () => {
   for (const [slug, must, mustNot] of FACT_PINS) {
