@@ -65,7 +65,7 @@ export function buildCompanyFaq(company: CompanyProfile | undefined) {
  },
  {
  question: `${koName} 연봉 협상은 어떻게 준비해야 하나요?`,
- answer: `${koName} 수준의 회사에서는 1) 동종사 ${koName} 시니어 평균(${seniorLabel}) 자료, 2) 본인 직무의 시장 평균, 3) 본인 성과 수치 3가지를 준비하는 것이 일반적입니다. 자세한 가이드는 머니샐러리 "연봉 협상의 비밀" 글에서 확인 가능합니다.`,
+ answer: `${koName} 수준의 회사에서는 1) 본 페이지의 ${koName} 시니어 평균(${seniorLabel})과 동종사 연봉 자료, 2) 본인 직무의 시장 평균, 3) 본인 성과 수치 3가지를 준비하는 것이 일반적입니다. 자세한 가이드는 머니샐러리 "연봉 협상의 비밀" 글에서 확인 가능합니다.`,
  },
  {
  question: `${koName} 퇴직 시 받을 수 있는 퇴직금은?`,
