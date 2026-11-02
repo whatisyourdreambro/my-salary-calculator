@@ -22,7 +22,7 @@ const UB_LOWER_30 = Math.floor((unemploymentDailyLowerBound() * 30) / 10000);
 
 const unemploymentInsurance2026Supplement = `
 <h2>2026년 기준 확인 사항 — 구직급여 상·하한과 신청 창구</h2>
-<p>본문의 금액과 절차를 공식 자료로 다시 확인했습니다(2026년 9월 29일). 하루 구직급여는 퇴직 전 평균임금의 60%이며 아래 상한과 하한 사이에서 정해집니다.</p>
+<p>본문의 금액과 절차를 공식 자료로 다시 확인했습니다(2026년 9월 29일). 본문 리드와 금액 문단의 일급 한도 6만·최저 약 90만은 옛 기준이고, 2026년 이직자는 아래 표가 기준입니다. 하루 구직급여는 퇴직 전 평균임금의 60%이며 아래 상한과 하한 사이에서 정해집니다.</p>
 <table class="w-full text-sm">
 <thead><tr><th>구분</th><th>2026년 이직자</th><th>30일 환산</th></tr></thead>
 <tbody>
@@ -34,6 +34,8 @@ const unemploymentInsurance2026Supplement = `
 <li><strong>재취업활동</strong> — 실업인정일마다 정해진 횟수 이상의 재취업활동을 증명해야 합니다. 내 차수의 요건은 고용24 실업인정 화면에서 확인하세요.</li>
 <li><strong>신청 창구</strong> — 워크넷과 고용보험 누리집은 2024년 9월 고용24(work24.go.kr)로 통합됐습니다. 구직 등록, 수급자격 신청, 실업인정 모두 고용24에서 합니다.</li>
 <li><strong>국민연금 실업크레딧</strong> — 구직급여 수급자가(재산·소득 요건 충족 시) 신청하면 연금보험료의 75%를 지원받아 가입기간을 이어 갈 수 있습니다(인정소득은 실직 전 3개월 평균소득의 50%, 최대 70만원, 생애 최대 12개월). 수급자격 신청이나 실업인정 때 고용센터·국민연금공단 지사에 신청합니다.</li>
+<li><strong>일한 날 신고</strong> — 수급 기간에 아르바이트 등으로 일했다면 금액과 관계없이 실업인정 때 신고해야 합니다. 신고하지 않으면 부정수급으로 받은 돈을 반환하고 추가징수될 수 있습니다.</li>
+<li><strong>내일배움카드</strong> — 훈련비 지원 비율은 과정과 대상에 따라 달라 자부담이 생길 수 있습니다. 수강 전에 고용24에서 과정별 지원액을 확인하세요.</li>
 </ul>
 <h2>실업급여 금액 관련 자주 묻는 질문</h2>
 <ul>
@@ -41,7 +43,7 @@ const unemploymentInsurance2026Supplement = `
 <li><strong>Q. 월급이 적어도 받는 최소 금액이 있나요?</strong> — 네. 이직 당시 최저시급의 80%에 1일 소정근로시간(최대 8시간)을 곱한 하한보다 적지 않습니다. 8시간 근무자는 2026년 하루 ${UB_LOWER}원입니다.</li>
 </ul>
 <p>내 평균임금과 가입기간으로 받을 금액은 <a href="/unemployment-benefit">실업급여 계산기</a>에서 바로 계산할 수 있습니다.</p>
-<p><em>출처: 고용노동부 보도자료 2025-12-16(구직급여 상한액 ${UB_UPPER}원) · 고용보험법 제45조·제46조 · 한국고용정보원 고용24 안내 · 정책브리핑 2024-07-08(국민연금 실업크레딧) · 정부24 실업크레딧 지원 안내(국민연금공단 접수).</em></p>
+<p><em>출처: 고용노동부 보도자료 2025-12-16(구직급여 상한액 ${UB_UPPER}원) · 고용보험법 제45조·제46조 · 한국고용정보원 고용24 안내 · 정책브리핑 2024-07-08(국민연금 실업크레딧) · 정부24 실업크레딧 지원 안내(국민연금공단 접수) · 고용보험법 제47조(취업 신고)·제62조(반환명령·추가징수) · 고용24 국민내일배움카드 안내.</em></p>
 `;
 
 // ── minimum-wage-impact-2026 (GB-08) ──
@@ -110,8 +112,9 @@ const socialInsuranceReductionSupplement = `
 <tr><td>출산지원금</td><td>전액</td><td>자녀 출생일 이후 2년 이내에 회사에서 받는 최대 2회분</td></tr>
 </tbody>
 </table>
+<p>고용보험 회사 부담 1.15~1.75%는 실업급여 0.9%에 고용안정·직업능력개발 0.25~0.85%(기업 규모별)를 더한 값입니다.</p>
 <p>내 연봉의 4대보험료와 실수령액은 <a href="/">연봉 계산기</a>에서, 요율 전체는 <a href="/social-insurance-rates-2026">2026 4대보험 요율표</a>에서 확인하세요.</p>
-<p><em>출처: 국세청 「비과세 근로소득」 안내 · 소득세법 시행령 제12조·제17조 · 정책브리핑(식대 20만원, 2023-01-01 시행) · 재정경제부 2026년 달라지는 제도(보육수당 자녀별 한도).</em></p>
+<p><em>출처: 국세청 「비과세 근로소득」 안내 · 소득세법 시행령 제12조·제17조 · 정책브리핑(식대 20만원, 2023-01-01 시행) · 재정경제부 2026년 달라지는 제도(보육수당 자녀별 한도) · 고용보험료징수법 시행령 제12조(사업주 고용안정·직업능력개발 보험료율).</em></p>
 `;
 
 // ── year-end-tax-2026 (GB-32) — 연말정산 기둥 글의 가시 FAQ(FAQPage)와 2027 허브 링크. 수치는 본문·현행 법령과 같다 ──
@@ -127,12 +130,117 @@ const yearEndTax2026Supplement = `
 <p><em>출처: 소득세법 제59조의3(연금계좌) · 조세특례제한법 제95조의2(월세) · 국세기본법 제45조의2(경정청구).</em></p>
 `;
 
+// ── 2026-09-29 광고 위치 스윕(1,123폭) 수정분 — 광고 위에서 같은 폭을 못 만든 정정(moved-below) ──
+// 본문 해당 줄은 프로덕션 문구로 되돌렸고(숫자 글리프 폭 차이로 광고가 움직였다), 정정 내용을 여기 마지막 광고 아래에 둔다.
+// FAQ 헤더는 넣지 않는다(본문 FAQPage 항목 수 불변). 수치 출처는 각 원 정정 커밋 메시지의 공식 출처와 같다.
+
+// ── career-break-financial-plan (GB-23·MISSED-gb-2) ──
+const careerBreakFinancialPlanSupplement = `
+<h2>휴직과 퇴사의 4대보험 차이</h2>
+<ul>
+<li><strong>건강보험</strong> — 휴직 중에는 직장가입자 자격이 유지되고 회사를 통해 보험료 납입고지 유예를 신청할 수 있습니다. 퇴사하면 지역가입자가 되어 소득·재산으로 보험료를 매깁니다. 지역 보험료의 자동차 부과는 2024년 2월분부터 폐지됐고, 예금 원금은 재산에 들어가지 않습니다.</li>
+<li><strong>고용보험</strong> — 휴직 중에도 자격이 유지되며, 실업급여는 퇴사한 뒤에만 신청할 수 있습니다.</li>
+</ul>
+<p><em>출처: 보건복지부·정책브리핑(2024년 2월분부터 자동차 보험료 폐지·재산 기본공제 1억원) · 국민건강보험법 시행규칙 별지 제30호서식(휴직자등 직장가입자 보험료 납입고지 유예신청서).</em></p>
+`;
+
+// ── comprehensive-income-tax-2026 (GB-03) ──
+const comprehensiveIncomeTax2026Supplement = `
+<h2>분납 기한과 납부지연 가산세 확인</h2>
+<ul>
+<li><strong>분납 기한</strong> — 납부할 세액이 1,000만원을 넘으면 납부기한이 지난 뒤 2개월 안에 나눠 낼 수 있습니다. 5월 31일 기한이면 7월 31일까지이고, 본문의 8월 31일은 6월 30일까지 신고하는 성실신고확인 대상자의 기한입니다.</li>
+<li><strong>납부지연 가산세</strong> — 미납 세액에 하루 0.022%(연 약 8.0%)가 붙습니다. 본문의 연 9.125%는 하루 0.025%이던 개정 전 기준입니다.</li>
+</ul>
+<p><em>출처: 소득세법 제70조의2·제77조 · 국세기본법 시행령 제27조의4(1일 10만분의 22).</em></p>
+`;
+
+// ── crypto-tax-2026 (GB-04) — 본문은 같은 폭 문구로 고쳤고 날짜·취득가 기준만 여기 ──
+const cryptoTax2026Supplement = `
+<h2>가상자산 과세 시작일과 시행 전 보유분 취득가액</h2>
+<ul>
+<li><strong>시작일</strong> — 현행 소득세법상 2027년 1월 1일 이후 양도·대여하는 가상자산부터 과세합니다. 2026년 정부 세제개편안에도 추가 유예는 없습니다.</li>
+<li><strong>시행 전 보유분</strong> — 2026년 12월 31일 시가와 실제 취득가액 중 큰 금액을 취득가액으로 봅니다. 그래서 세금만 보고 시행 전에 미리 팔 이유는 크지 않습니다.</li>
+</ul>
+<p><em>출처: 국세청 「거주자의 가상자산소득 과세 개요」 · 재정경제부 「2026년 세제개편안」 요약.</em></p>
+`;
+
+// ── isa-account-guide (GB-12) ──
+const isaAccountGuideSupplement = `
+<h2>2026년 세제개편안의 ISA 내용 정정</h2>
+<p>본문 주의사항에 적힌 납입 한도 연 4,000만원·총 2억원, 비과세 한도 500만원(서민형 1,000만원)은 2024년 세법개정안의 수치로, 국회를 통과하지 못했습니다. 2026년 8월 발표된 정부 세제개편안(재정경제부)은 일반 ISA 납입 한도(연 2,000만원·총 1억원)를 그대로 두고, 국내 상장주식·주식형 펀드 등 국내 투자분의 이자·배당을 비과세하는 생산적금융 ISA를 새로 만드는 내용입니다. 이 역시 국회 통과 전의 정부안입니다.</p>
+<p><em>출처: 재정경제부 「한눈에 보는 정책: 2026년 세제개편안」 · 2026-08-03 보도.</em></p>
+`;
+
+// ── n-job-tax-2026 (GB-03·MISSED-gb-4·MISSED-gb-6a) ──
+const nJobTax2026Supplement = `
+<h2>노란우산공제 한도와 간이과세 기준 확인</h2>
+<ul>
+<li><strong>노란우산공제</strong> — 2025년 납입분부터 사업소득금액 4,000만원 이하는 연 600만원까지 소득공제됩니다. 본문의 연 500만원은 개정 전 한도입니다.</li>
+<li><strong>간이과세 기준</strong> — 직전 연도 공급대가(매출)가 1억 400만원 미만이면 간이과세를 적용받을 수 있습니다(일부 업종 제외).</li>
+<li><strong>부가세 일정</strong> — 개인 일반과세자는 1월·7월에 확정신고하고, 4월·10월에는 세무서가 고지한 예정고지 세액을 냅니다.</li>
+</ul>
+<p><em>출처: 정책브리핑(노란우산 소득공제 확대, 2025-01-01 납입분부터) · 국세청 1인 미디어 창작자 세무 안내(간이과세 기준) · 부가가치세법 제48조.</em></p>
+`;
+
+// ── p2p-investment-risk (GB-21) ──
+const p2pInvestmentRiskSupplement = `
+<h2>온투업 P2P 이자 세금 — 15.4% 원천징수</h2>
+<p>온라인투자연계금융업자(온투업 등록 플랫폼)를 통해 받는 이자는 소득세 14%와 지방소득세 1.4%를 더해 15.4%가 원천징수됩니다. 본문 위험 4의 실 세율 27.5%는 이 글이 권하는 온투업 플랫폼 투자에는 맞지 않습니다. 이자·배당 등 금융소득이 연 2,000만원을 넘으면 넘는 부분은 종합과세됩니다.</p>
+<p>15.4%로 본문 표를 다시 계산하면 광고 수익률 10%에서 수수료 1~2%, 세금 약 1.5%, 부도 손실 5~10%를 뺀 실 수익률은 약 -3.5%~+2.5%입니다.</p>
+<p><em>출처: 소득세법 제129조 제1항 제1호 나목 단서(온라인투자연계금융업자를 통해 받는 이자소득 100분의 14).</em></p>
+`;
+
+// ── retirement-planning-30s (GB-24) ──
+const retirementPlanning30sSupplement = `
+<h2>숫자 다시 확인 — 10억 목표의 월 적립액</h2>
+<ul>
+<li><strong>월 50만원이면 얼마</strong> — 연 7%(월복리)로 30년(360개월) 쌓으면 월 50만원은 약 6.1억원, 월 80만원은 약 9.8억원입니다. 60세에 10억원을 모으려면 월 약 82만원이 필요합니다.</li>
+</ul>
+<p><em>출처: 산술 계산(월복리 7%/12, 360개월 적립 미래가치).</em></p>
+`;
+
+// ── 반도체 성과급 뉴스 4편 (GB-09) — 2026-01-02 이후 코스피 증권거래세 0.05% + 농특세 0.15% ──
+const securitiesTax2026Supplement = (where: string): string => `
+<h2>2026년 증권거래세 확인</h2>
+<p>2026년 1월 2일부터 코스피 상장주식을 팔 때 증권거래세 0.05%와 농어촌특별세 0.15%를 더해 0.20%가 붙습니다. ${where}의 0.15%는 2025년 세율이므로, 앞으로 주식을 팔 때는 0.20%로 계산하세요.</p>
+<p><em>출처: 증권거래세법 시행령 제5조(유가증권시장 1만분의 5, 2026-01-02 시행) · 농어촌특별세법 제5조.</em></p>
+`;
+
+// ── sk-hynix-stock-2026 (MISSED-gb-7) ──
+const skHynixStock2026Supplement = `
+<h2>HBM4 양산 체제 — 2025년 9월 구축</h2>
+<p>SK하이닉스는 2025년 9월 세계 최초로 HBM4 개발을 마치고 양산 체제를 구축했다고 발표했습니다. 본문 구조적 강점 1의 2026년 하반기 양산 목표 문장은 이 발표 전의 전망입니다.</p>
+<p><em>출처: SK하이닉스 뉴스룸 「세계 최초 HBM4 개발 완료하고 양산 체제 구축」(2025-09).</em></p>
+`;
+
+// ── tax-refund-mistakes-2026 (GB-26) ──
+const taxRefundMistakes2026Supplement = `
+<h2>환급액은 결정세액을 넘지 않습니다</h2>
+<p>공제를 더 챙겨 늘어나는 환급액은 그해 원래 내야 할 세금(결정세액)보다 클 수 없습니다. 본문 결론의 50만·100만원은 예시일 뿐 평균 통계가 아니며, 실제 환급액은 소득과 공제 항목에 따라 사람마다 다릅니다.</p>
+<p><em>출처: 소득세법 제137조(근로소득세액의 연말정산).</em></p>
+`;
+
+// 2026-10-05 재기반: individual-vs-corporate-tax(GB-01)·personal-loan-vs-debt-consolidation(GB-22)·us-treasury-bond(GB-13)·
+// samsung-special-bonus-q3-preview-2027(GB-09) 보강은 10/4 배포(352451886)가 본문에서 같은 사실을 먼저 고쳐 뺐다
+// (보강이 가리키던 본문 문장이 사라짐). retirement-planning-30s 는 국민연금 평균액 줄만 같은 이유로 뺐다.
 /** 슬러그 → 보강 HTML (2026-10 guidesb 배치, 알파벳 순). supplements.ts 가 guideSupplements 에 합친다. */
 export const guideSupplements202610: Record<string, string> = {
+  "career-break-financial-plan": careerBreakFinancialPlanSupplement,
+  "comprehensive-income-tax-2026": comprehensiveIncomeTax2026Supplement,
+  "crypto-tax-2026": cryptoTax2026Supplement,
   "financial-income-tax": financialIncomeTaxSupplement,
   "gap-investment-risk": gapInvestmentRiskSupplement,
+  "isa-account-guide": isaAccountGuideSupplement,
   "minimum-wage-impact-2026": minimumWageImpactSupplement,
+  "n-job-tax-2026": nJobTax2026Supplement,
+  "p2p-investment-risk": p2pInvestmentRiskSupplement,
+  "retirement-planning-30s": retirementPlanning30sSupplement,
+  "samsung-bonus-treasury-stock-15-trillion-2026": securitiesTax2026Supplement("본문 매도 시 세금 항목과 세금 FAQ"),
+  "samsung-vs-sk-hynix-stock-bonus-2026": securitiesTax2026Supplement("본문 매도 이후 항목"),
+  "sk-hynix-ps-cash-vs-stock-scenarios-2026": securitiesTax2026Supplement("본문 지급 이후 주가 차익 항목·정리 문단·세금 FAQ"),
+  "sk-hynix-stock-2026": skHynixStock2026Supplement,
   "social-insurance-reduction": socialInsuranceReductionSupplement,
+  "tax-refund-mistakes-2026": taxRefundMistakes2026Supplement,
   "unemployment-insurance-2026": unemploymentInsurance2026Supplement,
   "year-end-tax-2026": yearEndTax2026Supplement,
 };
