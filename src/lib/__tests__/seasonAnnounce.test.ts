@@ -241,8 +241,8 @@ describe("등록부 구조", () => {
 
 // ── (2) 이벤트 표 ────────────────────────────────────────────────────────────────
 
-describe("이벤트 표 (E0~E12 → C-xx · W4-A 슬롯, id 만)", () => {
-  it("E0~E12 이 모두 있고 필드는 이름·예상 시점·id 목록뿐", () => {
+describe("이벤트 표 (E0~E12·E1b·E1c → C-xx · W4-A 슬롯, id 만)", () => {
+  it("E0~E12·E1b·E1c 가 모두 있고 필드는 이름·예상 시점·id 목록뿐", () => {
     expect(Object.keys(REG.events).sort()).toEqual([...EVENT_IDS].sort());
     for (const id of EVENT_IDS) {
       const e = REG.events[id];
@@ -288,7 +288,16 @@ describe("이벤트 표 (E0~E12 → C-xx · W4-A 슬롯, id 만)", () => {
   it("이벤트마다 걸린 행이 이벤트 성격과 맞다", () => {
     const urlsOf = (id: (typeof EVENT_IDS)[number]) => REG.rows.filter((r) => r.events.includes(id)).map((r) => r.url);
     expect(urlsOf("E1")).toEqual(expect.arrayContaining(["/social-insurance-rates-2027", "/table/2027/annual"]));
-    expect(urlsOf("E5")).toEqual(["/home-loan"]);
+    // E5 금통위 — /home-loan + 기준금리 수치가 박힌 3곳(10월 574e2e29 WP A6, 2026-11-02 RL-05 재반영)
+    expect(urlsOf("E5")).toEqual([
+      "/home-loan",
+      "/savings-interest-2026",
+      "/guides/mortgage-refinance-guide-2026",
+      "/guides/rule-of-72",
+    ]);
+    // E1b 고용보험 시행령·E1c 산재 고시 (10월 574e2e29 WP A4, 2026-11-02 RL-05 재반영)
+    expect(urlsOf("E1b")).toEqual(expect.arrayContaining(["/social-insurance-rates-2027", "/table/2027/annual", "/table/2027/hourly"]));
+    expect(urlsOf("E1c")).toEqual(["/social-insurance-rates-2027"]);
     expect(urlsOf("E7")).toEqual(expect.arrayContaining(["/civil-servant-pay-2027", "/teacher-pay-2027", "/military-pay-2026"]));
     expect(urlsOf("E8")).toEqual(expect.arrayContaining(["/minimum-wage-2027", "/unemployment-benefit", "/weekly-holiday-allowance-2026"]));
     expect(urlsOf("E10")).toEqual(expect.arrayContaining(["/calc/samsung-bonus", "/calc/bonus-calculators"]));
@@ -300,6 +309,33 @@ describe("이벤트 표 (E0~E12 → C-xx · W4-A 슬롯, id 만)", () => {
     expect(toEventId(" E12 ")).toBe("E12");
     expect(toEventId("E13")).toBeNull();
     expect(toEventId(undefined)).toBeNull();
+    expect(toEventId("e1b")).toBe("E1b");
+    expect(toEventId("E1C")).toBe("E1c");
+    expect(toEventId("E1d")).toBeNull();
+  });
+
+  it("감시 창은 실제 공지일 기준 (2026-10-05 WP A2·A5·A9 — OPI 1/12·TAI 12/18·SK PS 1/20부터)", () => {
+    // 2026 OPI 1/16 공지·1/30 지급, 2025 하반기 TAI 12/22 공지·12/24 지급, 2026 SK하이닉스 PS 2/5 지급
+    expect(REG.events.E10.expected).toContain("1/12");
+    expect(REG.events.E10.expected).not.toBe("1월 말");
+    expect(REG.events.E4.expected).toContain("12/18");
+    expect(REG.events.E4.expected).not.toContain("12월 초");
+    expect(REG.events.E11.expected).toContain("1/20~2/6");
+    expect(REG.events.E1b.w4a).toEqual(["P-2"]);
+  });
+
+  it("2026-11-02 재반영(RL-05) — E1 결정 표기, E1b 입법예고, 10월 수동 푸시 달력·키트·노조 공지 문구는 싣지 않음", () => {
+    // E1: 2026-10-30 장기요양위원회 결정(건강보험료의 13.90%) — taxConstants2027 의 장기요양 confirmed 와 같은 사실
+    expect(REG.events.E1.expected).toContain("2026-10-30");
+    expect(REG.events.E1.expected).toContain("13.90%");
+    // E1b: 2026-09-22 입법예고(고용노동부공고 제2026-450호, 실업급여 1천분의 18→20) — 공포 전
+    expect(REG.events.E1b.expected).toContain("9/22 입법예고");
+    expect(REG.events.E1c.expected).toContain("12/31");
+    // 게시는 운영자 버튼(Pages 승인 게시)이라 10월의 수동 '메인 푸시'·퍼지 달력은 옮기지 않는다
+    expect(REG.events.E2.name).toBe("12/1 DEC 시즌 세트(자동)");
+    expect(REG.events.E8.expected).toBe("1/1~1/2");
+    const text = JSON.stringify(REG);
+    for (const banned of ["메인 푸시", "퍼지", "kit.mjs", "season-engine", "노조"]) expect(text, banned).not.toContain(banned);
   });
 });
 

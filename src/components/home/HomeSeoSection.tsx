@@ -9,6 +9,8 @@ import { JOB_COUNT, companyCountKo } from "@/config/site";
 // 본문의 연도·요율은 현행 요율 포인터 — 1/1 전환 시 계산과 함께 바뀐다 (2026-09-25 N3)
 import { CURRENT_RATES_YEAR, CURRENT_RATE_LABELS } from "@/config/currentRates";
 import { pickPropertyTaxPeriodKey, type PropertyTaxPeriodKey } from "@/lib/propertyTaxPeriod";
+import { SEASON_TOP_BY_KEY } from "@/config/seasonLinks";
+import { SEASON_KEY } from "@/config/seasonKey.generated";
 
 // 목적별 계산기 칩의 보유세 라벨 — 납부기간 게이트(propertyTaxPeriod.ts, 지방세법 제115조·종부세 12/1~15)로
 // 빌드 시점(KST)에 고른다 (MI-05, 2026-09-29). 종전 '9월 재산세 2기분 납부 (9/16~30)' 고정 칩은 10/1 부터
@@ -23,6 +25,13 @@ export const HOME_PROPERTY_TAX_CHIP_LABELS: Readonly<Record<PropertyTaxPeriodKey
 /** 빌드 시점 보유세 칩 (정적 프리렌더라 모듈 평가 시각 = 빌드 시각) */
 export function homePropertyTaxChip(now: Date = new Date()): { label: string; href: string } {
   return { label: HOME_PROPERTY_TAX_CHIP_LABELS[pickPropertyTaxPeriodKey(now)], href: "/property-holding-tax-2026" };
+}
+
+/** 시즌 1순위 허브 칩 (MI-05) — 빌드 시점 시즌 키의 상단 1순위(OCT·DEC·JAN = 연말정산 2027 허브 계열).
+ *  홈 SSR HTML 에 연말정산 시즌 허브 링크가 없었다(SeasonalBanner 는 ssr:false). */
+export function homeSeasonHubChips(key = SEASON_KEY): { label: string; href: string }[] {
+  const top = SEASON_TOP_BY_KEY[key]?.[0];
+  return top?.header ? [{ label: top.header.name, href: top.href }] : [];
 }
 
 export default function HomeSeoSection() {
@@ -106,6 +115,8 @@ export default function HomeSeoSection() {
               { label: "2027 최저임금 10,700원 확정", href: "/minimum-wage-2027" },
               // 보유세 납부기간 칩 — 빌드 시점 게이트 (MI-05)
               homePropertyTaxChip(),
+              // 시즌 1순위 허브 칩 (MI-05) — 아래 href 중복 제거로 고정 칩과 겹치면 빠진다
+              ...homeSeasonHubChips(),
               { label: "연봉 실수령액표 2026", href: "/table/2026/annual" },
               { label: "퇴직금 간편 계산", href: "/calc/severance-pay-quick" },
               { label: "실업급여 계산기", href: "/calc/unemployment-benefit" },
@@ -124,7 +135,9 @@ export default function HomeSeoSection() {
               { label: "사장님·프리랜서 허브", href: "/hub/business" },
               { label: "생활·건강·가족 허브", href: "/hub/daily-life" },
               { label: "계산기 전체 보기 →", href: "/calc" },
-            ].map(({ label, href }) => (
+            ]
+              .filter((chip, i, all) => all.findIndex((c) => c.href === chip.href) === i)
+              .map(({ label, href }) => (
               <Link
                 key={href}
                 href={href}
@@ -225,6 +238,11 @@ export default function HomeSeoSection() {
                 <p className="mt-3 text-[14.5px] leading-[1.75] text-muted-foreground font-medium">
                   {item.answer}
                 </p>
+                {item.linkHref && (
+                  <Link href={item.linkHref} className="mt-2 inline-block text-[14.5px] text-link underline underline-offset-4">
+                    {item.linkLabel}
+                  </Link>
+                )}
               </details>
             ))}
           </div>

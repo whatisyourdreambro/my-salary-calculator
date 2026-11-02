@@ -233,11 +233,27 @@ describe("푸터 시즌 섹션", () => {
     const restFooter = Object.fromEntries(SEASON_REST.filter((l) => l.footer).map((l) => [l.href, l.footer!.order]));
     for (const [href, order] of Object.entries(legacy)) expect(restFooter[href], href).toBe(order);
     // 상단 블록의 푸터 order(0 추석·5 재산세·6 연말정산 허브·3 삼성)도 불변
+    // SE-07(3) (2라운드 WP-10): JAN 의 설 상여금 계산기 푸터 전용 항목은 SEASON_REST 최댓값(28) 다음 29
     for (const key of KEYS) {
       for (const l of SEASON_TOP_BY_KEY[key].filter((x) => x.footer)) {
-        expect([0, 3, 5, 6], `${key} ${l.href}`).toContain(l.footer!.order);
+        const allowed = key === "JAN" && l.href === "/calc/holiday-bonus" ? [29] : [0, 3, 5, 6];
+        expect(allowed, `${key} ${l.href}`).toContain(l.footer!.order);
       }
     }
+  });
+
+  it("JAN 세트(SE-07(3)) — 푸터 29개(설 상여금 계산기 푸터 전용 추가)·헤더 12개 그대로·카드 설명은 간소화 자료 기준", () => {
+    const links = buildSeasonLinks("JAN");
+    const footer = footerOf(links);
+    expect(footer).toHaveLength(29);
+    expect(footer).toContain("/calc/holiday-bonus");
+    expect(headerOf(links)).toHaveLength(12);
+    expect(headerOf(links)).not.toContain("/calc/holiday-bonus");
+    const orders = links.filter((l) => l.footer).map((l) => l.footer!.order);
+    expect(new Set(orders).size).toBe(orders.length);
+    const card = SEASON_TOP_BY_KEY.JAN.find((l) => l.href === "/credit-card-deduction-2026")!;
+    expect(card.header!.description).toBe("간소화 자료로 결제수단별 공제액 확인");
+    expect(JSON.stringify(SEASON_TOP_BY_KEY.JAN)).not.toContain("막판");
   });
 
   it("헤더에서 내려온 신설 푸터(19+)는 10건이고 order 가 겹치지 않는다", () => {

@@ -36,6 +36,8 @@ export default function Footer() {
         // 고수익 시즌 진입로 — 연말정산(10~2월)·성과급 세금(12~1월) 전역 크롤 경로 (전면 최적화, 운영자 지시 2026-09-02)
         { name: "연말정산 계산기", href: "/year-end-tax" },
         { name: "성과급 세금 계산기", href: "/tools/finance/bonus" },
+        // 봉급표 시즌(12~1월 2027 봉급표 D-Day) 대비 전역 SSR 진입로 — 9/27 신설 계산기 (MI-20, 2026-09-29)
+        { name: "공무원 월급 실수령액", href: "/calc/civil-servant-net-pay" },
       ];
 
   // KR 시즌 링크는 src/config/seasonLinks 단일 소스에서 파생 — 헤더 시즌 드롭다운과 공유
