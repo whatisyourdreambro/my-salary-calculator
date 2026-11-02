@@ -317,9 +317,11 @@ function CompareCard({
 }) {
   return (
     <div
-      className="rounded-2xl p-5 transition-all hover:-translate-y-0.5 hover:shadow-md"
+      // 강조 아닌 카드는 다크 테마에서 글자(text-navy → canvas-50)만 밝아지고 배경은 #fff 로 남아 안 보였다 —
+      // 배경도 테마 클래스로 (2026-10-05 감사 code18-08)
+      className={`rounded-2xl p-5 transition-all hover:-translate-y-0.5 hover:shadow-md${highlight ? "" : " bg-white dark:bg-canvas-900"}`}
       style={{
-        backgroundColor: highlight ? `${tint}10` : "#fff",
+        backgroundColor: highlight ? `${tint}10` : undefined,
         border: `1.5px solid ${tint}${highlight ? "55" : "33"}`,
       }}
     >

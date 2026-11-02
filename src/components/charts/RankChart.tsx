@@ -6,6 +6,7 @@
 import {
   AreaChart,
   Area,
+  XAxis,
   Tooltip,
   ResponsiveContainer,
   ReferenceLine,
@@ -23,9 +24,16 @@ export default function RankChart({
   data: RankChartDatum[];
   salary: number;
 }) {
+  // 숫자 X축(연봉, 화면에는 숨김)이 있어야 ReferenceLine x={연봉} 이 그려지고 툴팁 라벨이 금액이 된다.
+  // 종전에는 XAxis 가 없어 recharts 가 인덱스(0~90) 축을 썼다 — 'ME' 선이 안 그려지고 툴팁이 '0만원'
+  // (2026-10-05 감사 code27-02). 범위 밖 연봉은 양 끝에 붙여 그린다.
+  const minX = data.length > 0 ? data[0].salary : 0;
+  const maxX = data.length > 0 ? data[data.length - 1].salary : 0;
+  const markerX = Math.min(Math.max(salary, minX), maxX);
   return (
     <ResponsiveContainer width="100%" height="100%">
       <AreaChart data={data}>
+        <XAxis dataKey="salary" type="number" domain={[minX, maxX]} hide />
         <defs>
           <linearGradient id="colorDensity" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="#a855f7" stopOpacity={0.4} />
@@ -46,7 +54,7 @@ export default function RankChart({
           fillOpacity={1}
           fill="url(#colorDensity)"
         />
-        <ReferenceLine x={salary} stroke="#fff" strokeDasharray="3 3" label={{ position: 'top', value: 'ME', fill: 'white', fontWeight: 'bold' }} />
+        <ReferenceLine x={markerX} stroke="#fff" strokeDasharray="3 3" label={{ position: 'top', value: 'ME', fill: 'white', fontWeight: 'bold' }} />
       </AreaChart>
     </ResponsiveContainer>
   );
