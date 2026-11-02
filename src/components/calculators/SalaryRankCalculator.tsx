@@ -245,9 +245,9 @@ export default function SalaryRankCalculator() {
                     <div>
                       <p className="text-muted-blue text-xs font-bold uppercase mb-2">자체 참고표 비교</p>
                       <p className="text-navy font-medium leading-relaxed">
-                        <span className="text-primary font-bold">{selectedLabel}</span>{" "}
+                        <span className="text-white font-bold">{selectedLabel}</span>{" "}
                         참고표에서{" "}
-                        <span className="text-primary font-bold">{100 - result.percentile}%</span>
+                        <span className="text-white font-bold">{100 - result.percentile}%</span>
                         구간보다 높게 분류됩니다.
                       </p>
                     </div>

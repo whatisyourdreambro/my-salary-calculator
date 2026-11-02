@@ -1,4 +1,5 @@
 import { CompanyProfile, JobLevel, SalaryComponent } from "@/types/company";
+import { josa } from "@/lib/josa";
 
 export interface ComparisonResult {
  companyA: CompanyProfile;
@@ -55,19 +56,27 @@ export class CompanyComparator {
  const scoreWL_A = Math.min((companyA.workLife.vacation.usageRate + (100 - companyA.workLife.weeklyHours.real)) / 2, 100); // Rough heuristic
  const scoreWL_B = Math.min((companyB.workLife.vacation.usageRate + (100 - companyB.workLife.weeklyHours.real)) / 2, 100);
 
+ // 성장 점수는 별도 데이터가 없어 문화 점수와 같은 값이다 — 레이더에 '성장' 축을 따로 그리면 문화 축과 늘 같은 값이
+ // 두 번 나와 독립 지표처럼 보였다(2026-10-05 감사 code61-03). 레이더에서는 뺀다(metrics.growthScore 는 호환용으로 남김).
  const scoreGrowthA = companyA.culture.score * 10;
  const scoreGrowthB = companyB.culture.score * 10;
 
  // 3. Generate Verdict
+ // 2026-10-05 감사 code61-02: B 가 연봉·시급 모두 앞설 때도 A 처럼 압승 판정(종전에는 고른 칸에 따라 중립 문구),
+ // 조사 '가'·'를' 은 회사명 받침에 맞춰 josa() 로(쿠팡가 → 쿠팡이).
+ const nameA = companyA.name.ko;
+ const nameB = companyB.name.ko;
  let verdict = "";
  if (totalCompA > totalCompB && hourlyA > hourlyB) {
- verdict = `${companyA.name.ko}의 압승입니다. 연봉과 시급 모두 더 높습니다.`;
+ verdict = `${nameA}의 압승입니다. 연봉과 시급 모두 더 높습니다.`;
+ } else if (totalCompB > totalCompA && hourlyB > hourlyA) {
+ verdict = `${nameB}의 압승입니다. 연봉과 시급 모두 더 높습니다.`;
  } else if (totalCompA > totalCompB && hourlyA < hourlyB) {
- verdict = `${companyA.name.ko}가 돈은 더 주지만, ${companyB.name.ko}가 '가성비(시급)'는 더 좋습니다. 워라밸을 중시한다면 ${companyB.name.ko}를 고려하세요.`;
+ verdict = `${josa(nameA, "이/가")} 돈은 더 주지만, ${josa(nameB, "이/가")} '가성비(시급)'는 더 좋습니다. 워라밸을 중시한다면 ${josa(nameB, "을/를")} 고려하세요.`;
  } else if (totalCompA < totalCompB && hourlyA > hourlyB) {
- verdict = `${companyB.name.ko}가 연봉은 높지만, 근무강도가 셉니다. 실속은 ${companyA.name.ko}가 챙길 수 있습니다.`;
+ verdict = `${josa(nameB, "이/가")} 연봉은 높지만, 근무강도가 셉니다. 실속은 ${josa(nameA, "이/가")} 챙길 수 있습니다.`;
  } else {
- verdict = "총보상·실질 시급 결과를 각 항목에서 비교하세요. 워라밸·성장·복지 점수는 별도 참고 지표입니다.";
+ verdict = "총보상·실질 시급 결과를 각 항목에서 비교하세요. 워라밸·문화·복지 점수는 별도 참고 지표입니다.";
  }
 
  return {
@@ -98,7 +107,6 @@ export class CompanyComparator {
  radarData: [
  { subject: "연봉 (Money)", A: Math.round(scoreMoneyA), B: Math.round(scoreMoneyB), fullMark: 100 },
  { subject: "워라밸 (Balance)", A: Math.round(scoreWL_A), B: Math.round(scoreWL_B), fullMark: 100 },
- { subject: "성장 (Growth)", A: Math.round(scoreGrowthA), B: Math.round(scoreGrowthB), fullMark: 100 },
  { subject: "문화 (Culture)", A: Math.round(companyA.culture.score * 10), B: Math.round(companyB.culture.score * 10), fullMark: 100 },
  { subject: "복지 (Benefits)", A: Math.min(companyA.benefits.length * 20, 100), B: Math.min(companyB.benefits.length * 20, 100), fullMark: 100 }, // Simple count heuristic
  ],

@@ -110,7 +110,8 @@ export default function BoxingGame({
  {/* Health Bars */}
  <div className="relative z-10 flex justify-between items-center mb-16 px-8 pt-8">
  <div className="flex-1">
- <div className="flex justify-between text-[rgba(255,255,255,0.8)] font-black text-xl mb-2 uppercase tracking-tighter">
+ {/* 흰 카드(bg-white) 위라 흰 글자는 안 보였다 — 테마 글자색으로 (2026-10-05 감사 code22-08) */}
+ <div className="flex justify-between text-navy font-black text-xl mb-2 uppercase tracking-tighter">
  <span>{companyA.name.ko}</span>
  <span>{hpA}%</span>
  </div>
