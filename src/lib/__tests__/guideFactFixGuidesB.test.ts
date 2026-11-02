@@ -178,6 +178,7 @@ const SUPPLEMENT_PINS: Array<[string, string[], number]> = [
       `${UNEMPLOYMENT_BENEFIT_2026.DAILY_UPPER.toLocaleString("en-US")}원 (2025년 이직자 66,000원)`,
       `${unemploymentDailyLowerBound().toLocaleString("en-US")}원 (최저시급 × 80% × 8시간)`,
       'href="/unemployment-benefit"',
+      "구직급여 수급자가(재산·소득 요건 충족 시) 신청하면",
     ],
     2,
   ],
