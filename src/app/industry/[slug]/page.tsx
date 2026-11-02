@@ -318,13 +318,16 @@ export default async function IndustryPage({ params: pendingParams }: Props) {
 
           <CoupangBanner responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }} />
 
-          {/* 본문 끝 멀티플렉스(관련 콘텐츠형) — 쿠팡 배너 아래 이탈 지점, 기존 광고 밀림 없음 — 전면 최적화 (운영자 지시 2026-09-02) */}
+          <ShareSection
+            heading="이 업계 연봉, 동료에게도 알려주세요"
+            contentType="page"
+            className="mt-8"
+          />
+
+          {/* 본문 끝 멀티플렉스(관련 콘텐츠형) — 쿠팡·공유 섹션 아래 이탈 지점, 기존 광고 밀림 없음 — 전면 최적화 (운영자 지시 2026-09-02) */}
           <div className="mt-8">
             <MultiplexAd />
           </div>
-
-          {/* 공유 버튼 — 마지막 광고 아래(하이드레이션 뒤에 나타나도 광고가 밀리지 않게, OF4 A1). 광고 위로 되돌리지 말 것. */}
-          <ShareSection heading="이 업계 연봉, 동료에게도 알려주세요" contentType="page" className="mt-8" />
         </div>
       </div>
     </>
