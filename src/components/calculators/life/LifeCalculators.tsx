@@ -55,7 +55,7 @@ export function DutchPayCalculator() {
  {result !== null && (
  <div className="mt-6 p-6 bg-electric rounded-xl border border-canvas text-center">
  <p className="text-muted-blue mb-2">1인당 부담금 (10원 단위 올림)</p>
- <p className="text-5xl font-black text-primary">{result.toLocaleString('ko-KR')}원</p>
+ <p className="text-5xl font-black text-white">{result.toLocaleString('ko-KR')}원</p>
  </div>
  )}
  </div>
@@ -127,7 +127,7 @@ export function FuelCostCalculator() {
  {result !== null && (
  <div className="mt-6 p-6 bg-electric rounded-xl border border-canvas text-center">
  <p className="text-muted-blue mb-2">예상 유류비</p>
- <p className="text-5xl font-black text-primary">{result.toLocaleString('ko-KR')}원</p>
+ <p className="text-5xl font-black text-white">{result.toLocaleString('ko-KR')}원</p>
  </div>
  )}
  </div>
@@ -201,7 +201,7 @@ export function UnitConverter() {
  {result && (
  <div className="mt-6 p-6 bg-electric rounded-xl border border-canvas text-center">
  <p className="text-muted-blue mb-2">변환 결과</p>
- <p className="text-3xl font-black text-primary">{result}</p>
+ <p className="text-3xl font-black text-white">{result}</p>
  </div>
  )}
  </div>

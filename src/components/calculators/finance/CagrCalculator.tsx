@@ -23,7 +23,7 @@ export default function CagrCalculator() {
  return (
  <div className="w-full max-w-2xl mx-auto bg-white border border-canvas rounded-2xl p-6 md:p-8 shadow-xl">
  <h2 className="text-2xl font-bold text-navy mb-6 flex items-center gap-2">
- <TrendingUp className="w-6 h-6 text-[rgba(255,255,255,0.8)]" />
+ <TrendingUp className="w-6 h-6 text-primary" />
  CAGR (연평균 성장률) 계산기
  </h2>
 
@@ -63,7 +63,7 @@ export default function CagrCalculator() {
 
  <div className="mt-6 p-6 bg-canvas rounded-xl border border-canvas text-center">
  <div className="text-muted-blue mb-2">연평균 성장률 (CAGR)</div>
- <div className="text-4xl font-black text-[rgba(255,255,255,0.8)]">
+ <div className="text-4xl font-black text-primary">
  {cagr === null ? "—" : `${cagr.toFixed(2)}%`}
  </div>
  </div>
