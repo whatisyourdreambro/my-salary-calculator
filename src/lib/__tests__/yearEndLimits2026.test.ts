@@ -61,7 +61,7 @@ const row = (item: string) => {
 };
 
 describe("공제 한도표 — 2026년 귀속 현행법 수치", () => {
-  it("공제 7개 + 표 끝 비과세·감면 2개(YE-06, B43) 항목을 싣는다", () => {
+  it("공제 7개 + 국민성장펀드(2026-11-13) + 표 끝 비과세·감면 2개(YE-06, B43) 항목을 싣는다", () => {
     expect(YEAR_END_LIMIT_ROWS.map((r) => r.item)).toEqual([
       "신용카드 등 소득공제",
       "신용카드 추가 한도",
@@ -70,6 +70,7 @@ describe("공제 한도표 — 2026년 귀속 현행법 수치", () => {
       "의료비 세액공제",
       "교육비 세액공제",
       "기부금 세액공제",
+      "국민성장펀드 소득공제",
       "기업 출산지원금 비과세",
       "중소기업 취업자 소득세 감면",
     ]);
@@ -172,9 +173,29 @@ describe("공제 한도표 — 2026년 귀속 현행법 수치", () => {
   it("출처 문구 — 조문·기준일·2027 개편안 미반영을 밝힌다", () => {
     expect(YEAR_END_LIMITS_SOURCE_NOTE).toContain("소득세법 제12조·제59조의3·제59조의4");
     expect(YEAR_END_LIMITS_SOURCE_NOTE).toContain("같은 법 시행령 제17조의2");
-    expect(YEAR_END_LIMITS_SOURCE_NOTE).toContain("조세특례제한법 제30조·제58조·제76조·제95조의2·제126조의2");
+    expect(YEAR_END_LIMITS_SOURCE_NOTE).toContain("조세특례제한법 제30조·제58조·제76조·제91조의28·제95조의2·제126조의2");
     expect(YEAR_END_LIMITS_SOURCE_NOTE).toContain("2027년 귀속부터");
-    expect(YEAR_END_LIMITS_SOURCE_NOTE).toContain("기준일 2026-09-25(출산지원금·중소기업 감면 행은 2026-11-01)");
+    expect(YEAR_END_LIMITS_SOURCE_NOTE).toContain("기준일 2026-09-25(출산지원금·중소기업 감면 행은 2026-11-01, 국민성장펀드 행은 2026-11-13)");
+  });
+
+  // 조세특례제한법 제91조의28 제2항 공제액 표(본조신설 2026. 5. 12.)·제132조의2 종합한도 2,500만원,
+  // 국세청 2026-10-23 안내(정책브리핑 newsId=148974171) — 2026-11-13 국가법령정보센터 현행 조문 확인
+  it("국민성장펀드 소득공제 — 3,000만원 이하 40%, 구간 20%·10%, 최대 1,800만원, 3년 이상·종합한도·추징", () => {
+    const r = row("국민성장펀드 소득공제");
+    expect(r.basis).toBe("조세특례제한법 제91조의28");
+    expect(r.rateLabel).toBe("공제액");
+    expect(r.limitLabel).toBe("요건");
+    expect(r.rate).toBe(
+      "투자금액 3,000만원 이하 40% · 3,000만원 초과 5,000만원 이하 1,200만원 + 초과분의 20% · 5,000만원 초과 7,000만원 이하 1,600만원 + 초과분의 10% · 7,000만원 초과 1,800만원",
+    );
+    // 구간 경계에서 끊김이 없다: 3,000만원 × 40% = 1,200만원, 1,200 + 2,000 × 20% = 1,600만원, 1,600 + 2,000 × 10% = 1,800만원
+    expect(3_000 * 0.4).toBe(1_200);
+    expect(1_200 + 2_000 * 0.2).toBe(1_600);
+    expect(1_600 + 2_000 * 0.1).toBe(1_800);
+    expect(r.limit).toContain("3년 이상 투자");
+    expect(r.limit).toContain("소득공제 종합한도(연 2,500만원)");
+    expect(r.limit).toContain("추징");
+    expect(r.limit).toContain("위 계산기는 이 공제를 반영하지 않습니다");
   });
 });
 
