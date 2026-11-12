@@ -3,6 +3,7 @@
 // 모든 /tools/* 페이지 하단에 광고 + RelatedCalculators + 쿠팡 일괄 노출.
 
 import TopicNextSteps from '@/components/TopicNextSteps';
+import ToolExplainerSection from "@/components/ToolExplainerSection";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
@@ -29,6 +30,8 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
       <AutoShareSection contentType="tool" maxWidth="5xl" className="pb-16" />
       <FloatingShareBar />
       <TopicNextSteps />
+      {/* lens-meta-F10 (2026-11-13): /tools/math 설명 글 — 레이아웃 마지막 광고(HomeTopAd) 아래, 등록 경로에서만 렌더 */}
+      <ToolExplainerSection />
     </>
   );
 }

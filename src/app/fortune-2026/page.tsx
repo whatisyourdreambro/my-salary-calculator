@@ -5,6 +5,7 @@ import Link from "@/components/AppLink";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, RefreshCw, ScrollText } from "lucide-react";
 import PageFooterAds from "@/components/PageFooterAds";
+import ToolExplainerSection from "@/components/ToolExplainerSection";
 import { GuideMidAd } from "@/components/AdPlacement";
 const FORTUNES = {
  "재물운": [
@@ -162,6 +163,8 @@ export default function FinancialFortunePage() {
  </p>
  </div>
  <PageFooterAds maxWidth="3xl" />
+ {/* lens-meta-F10 (2026-11-13): 설명 글은 마지막 광고(PageFooterAds) 아래 */}
+ <ToolExplainerSection path="/fortune-2026" />
  </main>
  );
 }
