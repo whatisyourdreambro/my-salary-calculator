@@ -177,7 +177,8 @@ export default async function SalaryAmountPage({ params: pendingParams }: Props)
 
  const breadcrumbItems = [
  { name: "홈", path: "/" },
- { name: "연봉별 실수령액", path: "/" },
+ // lens-links-F09: 가운데 단계는 이름 그대로 연봉 실수령액 표로(홈 URL 중복 제거, /monthly 와 같은 방식). 보이는 글자는 같다.
+ { name: "연봉별 실수령액", path: "/table/2026/annual" },
  { name: `연봉 ${formattedAmount}`, path: `/salary/${params.amount}` },
  ];
 

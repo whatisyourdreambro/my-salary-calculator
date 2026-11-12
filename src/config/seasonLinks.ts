@@ -263,7 +263,8 @@ export const SEASON_REST: SeasonLink[] = [
   { href: "/calc/samsung-bonus", footer: { name: "삼성 성과급 계산기", order: 3 } },
   { href: "/calc/sk-hynix-bonus", footer: { name: "SK하이닉스 성과급 계산기", order: 4 } },
   { href: "/calc/january-bonus", footer: { name: "13월의 월급", order: 8 } },
-  { href: "/calc/year-end-bonus", footer: { name: "성과급 세금", order: 9 } },
+  // lens-links-F09: /tools/finance/bonus(성과급 세금 계산기)와 라벨이 겹치지 않게 crossLink 카드 제목과 같은 이름으로.
+  { href: "/calc/year-end-bonus", footer: { name: "연말 성과급 계산기", order: 9 } },
   // 2026-08-15 Phase 3 신설 — 1월 검색 폭증 봉급표 + 중도퇴사 연말정산
   { href: "/civil-servant-pay-2026", footer: { name: "공무원 봉급표 2026", order: 11 } },
   { href: "/year-end-tax-mid-resign", footer: { name: "중도퇴사 연말정산", order: 12 } },
