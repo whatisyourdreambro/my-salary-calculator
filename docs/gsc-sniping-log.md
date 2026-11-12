@@ -377,3 +377,15 @@ Breadcrumbs/speakable(온페이지) + 허브(/calc/bonus-calculators) 신설 + 2
 | hd-hyundai-oilbank (HD현대오일뱅크) | '현대오일뱅크 연봉' 55위 | [현대오일뱅크] | | |
 | keti (한국전자기술연구원) | 'keti 연봉' 계열 3쿼리 31~43위 | [KETI] | | |
 | lotte-chilsung (롯데칠성음료) | '롯데칠성 연봉' 23위 | [롯데칠성] | | |
+
+## R1 게시(claude/next-1117) 뒤 가이드 알림 — 광고 아래 보강 30편 (2026-11-13, lens-crawl-F01·lens-meta-F01, append-only)
+
+- 무엇: R1 재착지가 마지막 광고 아래 보강을 더하거나 바꾼 가이드 가운데 수정 칩이 없는 26편과, 이미 운영 중인 보강의 마지막 실질 수정일이 사이트맵에 반영되지 않았던 4편(sk-hynix-wage-2026 9/27 · samsung-opi-tai-complete-2026 10/8 · samsung-wage-negotiation-2026 11/1 · samsung-special-bonus-q3-preview-2027 11/1).
+- 어떻게 알리나: 화면·OG·Article 날짜는 그대로 두고 사이트맵 lastmod 만 보강을 고친 날로 올린다(`src/lib/guideSitemapDates.ts`, 운영자 승인 2026-11-13). 26편은 R1 원장일 RELAND_R1_PUSH(2026-11-03). 그래서 이 30편은 게시 8단계 IndexNow 가 한 번 자동으로 알린다 — 네이버 수동 수집 요청은 하지 않는다. rss.xml 도 같은 날짜와 보강 포함 전문을 싣는다(lens-crawl-F02).
+- 수동 요청이 필요한 경우: IndexNow 단계가 실패하고 공유 경로(api.indexnow.org)도 200·202 가 아니었을 때만, 아래 순서로 하루 10개 이하(사실 정정이 큰 글 먼저): unemployment-insurance-2026 · gap-investment-risk · social-insurance-reduction · parental-leave-complete-guide · financial-income-tax · unemployment-benefits-complete · p2p-investment-risk · crypto-tax-2026 · earned-income-credit-2026 · n-job-tax-2026 · vat-filing-2026 · national-pension-strategy-2026 · side-hustle-tax-2026 · parental-leave-6plus6-2026 · sk-hynix-ps-cash-vs-stock-scenarios-2026 · rent-deposit-protection · hl-mando-salary-2026 · samsung-bonus-treasury-stock-15-trillion-2026 · samsung-vs-sk-hynix-stock-bonus-2026 · samsung-medison-salary-2026 · samsung-opi-forecast-2027 · sk-hynix-ps-forecast-2027 · sk-hynix-stock-2026 · tax-refund-mistakes-2026 · newlywed-tax-benefits-2026 · four-major-insurance-complete (모두 /guides/ 아래).
+- 요청하지 않는 것: 링크 한 줄만 받은 보강 5편(etf-beginner · retirement-planning · health-insurance-2026-guide · basic-pension-65-2026 · public-company-salary-ranking-2026)과 FAQ 한 문장만 바뀐 회사 상세 430곳(10월 결정: lastmod 를 옮기지 않음).
+- 기록 칸(T0 = 운영자가 R1 승인 게시를 마친 시각):
+
+| T0 | IndexNow 요약(보낸 URL 수 · 공유/네이버 HTTP) | 수동 요청 여부 | 메모 |
+|---|---|---|---|
+| | | | |
