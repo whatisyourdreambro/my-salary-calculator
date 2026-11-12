@@ -2,7 +2,8 @@
 //
 // 검증된 가이드 본문·보강 정정일. 상세 화면, OG, Article, 사이트맵에 같은 날짜를 쓴다.
 // 상세 렌더에만 파생 날짜를 전달하고 정본 guide.modifiedDate는 변경하지 않는다.
-// 목록·관련 글 정렬(guideDiscovery), RSS 순서는 getGuideModifiedDate를 그대로 사용한다.
+// 목록·관련 글 정렬(guideDiscovery)만 getGuideModifiedDate를 그대로 사용한다. rss.xml 은 사이트맵 lastmod 와 같은
+// getGuideSitemapDate(이 날짜 + 광고 아래 보강의 사이트맵 전용 날짜, guideSitemapDates.ts)를 쓴다(lens-crawl-F02, 2026-11-13).
 // 표: 일시적 2주택 처분 기한 개정 4편(guideContentRevisions.twoHomeLaw.ts) + 2026-11-01 사실 정정 묶음
 //   (guideContentRevisions.factFix1101.ts) + R1 재착지 11편(guideContentRevisions.relandR1.ts, 이미 수정 칩이 있는 글만).
 //   같은 글이 둘 이상에 있으면 늦은 날짜(mergeLatest).

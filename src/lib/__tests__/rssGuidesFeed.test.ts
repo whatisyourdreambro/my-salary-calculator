@@ -9,7 +9,9 @@ import { describe, expect, it } from "vitest";
 import { GET } from "@/app/rss.xml/route";
 import { koGuides } from "@/lib/guidesContent";
 import { reportsRegistry } from "@/data/reportsRegistry";
-import { getGuideModifiedDate } from "@/lib/guideDates";
+import { getGuideSitemapDate } from "@/lib/guideSitemapDates";
+import { GUIDE_CONTENT_REVISED } from "@/lib/guideContentRevisions";
+import { guideSupplements } from "@/lib/guides/supplements";
 import { absolutizeUrl, cdata, contentEncoded, feedHtml, FULL_TEXT_GUIDE_COUNT } from "@/lib/rssFullText";
 
 const BASE = "https://www.moneysalary.com";
@@ -73,27 +75,28 @@ describe("rss.xml — 최신 가이드 N편 본문 전문", () => {
     expect(items.length).toBe(koGuides.length + reportsRegistry.length);
   });
 
-  it("전문 대상 = (modifiedDate ?? publishedDate) 내림차순 최신 N편", async () => {
+  // 날짜 = 사이트맵 lastmod 와 같은 getGuideSitemapDate (lens-crawl-F02·lens-meta-F01, 2026-11-13)
+  it("전문 대상 = 내용 수정일(사이트맵 lastmod) 내림차순 최신 N편", async () => {
     const items = parseItems(await loadFeed());
     const withText = items.filter((i) => i.encoded.length).map((i) => bySlug.get(guideSlug(i.guid)!)!);
     const withoutText = koGuides.filter((g) => !withText.includes(g));
-    const oldestWithText = Math.min(...withText.map((g) => Date.parse(getGuideModifiedDate(g))));
-    const newestWithout = Math.max(...withoutText.map((g) => Date.parse(getGuideModifiedDate(g))));
+    const oldestWithText = Math.min(...withText.map((g) => Date.parse(getGuideSitemapDate(g))));
+    const newestWithout = Math.max(...withoutText.map((g) => Date.parse(getGuideSitemapDate(g))));
     expect(oldestWithText).toBeGreaterThanOrEqual(newestWithout);
     // 가장 최근 수정 가이드는 반드시 포함
-    const newest = Math.max(...koGuides.map((g) => Date.parse(getGuideModifiedDate(g))));
-    for (const g of koGuides.filter((x) => Date.parse(getGuideModifiedDate(x)) === newest).slice(0, N)) {
+    const newest = Math.max(...koGuides.map((g) => Date.parse(getGuideSitemapDate(g))));
+    for (const g of koGuides.filter((x) => Date.parse(getGuideSitemapDate(x)) === newest).slice(0, N)) {
       expect(withText, g.slug).toContain(g);
     }
   });
 
-  it("본문 = 가이드 content 를 절대 URL 로 바꾼 것 — 상대 href/src 없음", async () => {
+  it("본문 = 가이드 content + 광고 아래 보강을 절대 URL 로 바꾼 것 — 상대 href/src 없음", async () => {
     const items = parseItems(await loadFeed());
     let rewritten = 0;
     for (const item of items.filter((i) => i.encoded.length)) {
       const guide = bySlug.get(guideSlug(item.guid)!)!;
       const html = decodeCdata(item.encoded[0]);
-      expect(html).toBe(feedHtml(guide.content, item.guid));
+      expect(html).toBe(feedHtml(guide.content + (guideSupplements[guide.slug] ?? ""), item.guid));
       expect(html, item.guid).not.toMatch(/\s(?:href|src)\s*=\s*["'](?![a-z][a-z0-9+.-]*:)/i);
       expect(html).not.toMatch(/<(?:script|iframe|style|object|embed|form)\b/i);
       expect(html).not.toMatch(/<[^>]*\son[a-z]+\s*=/i);
@@ -101,6 +104,16 @@ describe("rss.xml — 최신 가이드 N편 본문 전문", () => {
       rewritten += (guide.content.match(/\shref="\//g) ?? []).length;
     }
     expect(rewritten).toBeGreaterThan(0); // 실제로 상대 링크가 있던 본문을 검사했는지
+  });
+
+  it("본문 정정일 표(GUIDE_CONTENT_REVISED)의 글은 pubDate = 사이트맵 날짜 — 상세 화면 날짜보다 이르지 않다", async () => {
+    const items = parseItems(await loadFeed());
+    for (const slug of Object.keys(GUIDE_CONTENT_REVISED)) {
+      const guide = bySlug.get(slug)!;
+      const item = items.find((i) => i.guid === `${BASE}/guides/${slug}`);
+      expect(item, slug).toBeDefined();
+      expect(item!.pubDate, slug).toBe(new Date(getGuideSitemapDate(guide)).toUTCString());
+    }
   });
 
   it("피드 정합 — CDATA 균형 · 이스케이프 · 여닫는 item 수 · 0.65MB 미만", async () => {
