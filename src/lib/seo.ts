@@ -65,6 +65,22 @@ export const RSS_FEED_ALTERNATES: NonNullable<
 };
 
 /**
+ * 2026-11-13 lens-meta-F05: 설명 문장을 max 자 안에서 자를 때 문장 끝(. ! ?)에서 끊는다.
+ * 전체가 max 이하면 그대로(공백만 정리), 앞 절반 안에 문장 끝이 없으면 낱말 경계에서 자르고 '…'.
+ * 가이드 카테고리 허브·주제 허브 메타 설명 전용 — /calc 설명(seoText.ts)은 calcDescriptionFreeze 가 고정하므로 쓰지 않는다.
+ */
+export function clampToSentence(text: string, max: number): string {
+ const t = text.replace(/\s+/g, " ").trim();
+ if (t.length <= max) return t;
+ const cut = t.slice(0, max);
+ const ends = [...cut.matchAll(/[.!?](?=\s)/g)];
+ const last = ends.length ? ends[ends.length - 1].index ?? -1 : -1;
+ if (last + 1 > max * 0.5) return cut.slice(0, last + 1);
+ const space = cut.slice(0, max - 1).lastIndexOf(" ");
+ return (space > max * 0.6 ? cut.slice(0, space) : cut.slice(0, max - 1)).trimEnd() + "…";
+}
+
+/**
  * 표준 페이지 메타데이터 생성.
  * 모든 page.tsx의 generateMetadata 또는 export const metadata에서 사용.
  */

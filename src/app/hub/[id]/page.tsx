@@ -7,7 +7,7 @@ import { permanentRedirect } from "next/navigation";
 import Link from "@/components/AppLink";
 import { ArrowRight } from "lucide-react";
 import { getHubById, getAllHubIds, hubs } from "@/lib/hubs";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildPageMetadata, clampToSentence } from "@/lib/seo";
 import { autoBreadcrumbLd } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -37,8 +37,8 @@ export async function generateMetadata({
   if (!hub) return { title: "Not Found" };
 
   const intro = hub.intro[0];
-  const description =
-    intro.length > 158 ? `${intro.slice(0, 155)}…` : intro;
+  // lens-meta-F05: 158자를 넘으면 문장 끝에서 자른다(/hub/fire 만 해당, 나머지는 그대로).
+  const description = clampToSentence(intro, 158);
 
   return buildPageMetadata({
     title: hub.title,
