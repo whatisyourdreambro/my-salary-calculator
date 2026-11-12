@@ -337,6 +337,15 @@ describe("이벤트 표 (E0~E12·E1b·E1c → C-xx · W4-A 슬롯, id 만)", () 
     const text = JSON.stringify(REG);
     for (const banned of ["메인 푸시", "퍼지", "kit.mjs", "season-engine", "노조"]) expect(text, banned).not.toContain(banned);
   });
+
+  // 2026-11-13(lens-crawl 검증 missed-2): event 체크리스트를 찍는 CLI 도 옛 배포 절차·QA UA 없는 운영 curl 을 내지 않는다.
+  it("season-announce.ts 출력 문구 — '메인 푸시'·cf-purge 없음, curl -A 는 MoneySalary-QA UA", () => {
+    const cli = read("scripts/season-announce.ts");
+    for (const banned of ["메인 푸시", "cf-purge"]) expect(cli, banned).not.toContain(banned);
+    const agents = [...cli.matchAll(/curl[^\n]*?-A\s+"([^"]*)"/g)].map((m) => m[1]);
+    expect(agents.length).toBeGreaterThan(0);
+    for (const ua of agents) expect(ua, ua).toContain("MoneySalary-QA");
+  });
 });
 
 // ── (3)(4) announceList ──────────────────────────────────────────────────────────
