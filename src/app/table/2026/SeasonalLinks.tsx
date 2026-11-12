@@ -74,7 +74,8 @@ export const SEASONAL_LINKS_SEP: SeasonalLinkSet = {
 // 라우트 6종 전부 src/app 에 실존 확인. ★국세청 미리보기 오픈일 미확인 → 날짜·오픈일
 // 카피 금지. 성과급(TAI H2 등)은 데이터 게이트와 함께 L13b 에서 별도.
 export const SEASONAL_LINKS_OCT: SeasonalLinkSet = {
-  heading: "연말정산 미리 준비 — 10월 시즌 체크리스트",
+  // 2026-11-13: OCT 세트는 11/30 까지 걸리므로 11월로(lens-season-F11). 사이트 글꼴에서 숫자 1 이 0 보다 좁아 줄이 늘지 않음.
+  heading: "연말정산 미리 준비 — 11월 시즌 체크리스트",
   links: [
     {
       href: "/year-end-tax-preview",
