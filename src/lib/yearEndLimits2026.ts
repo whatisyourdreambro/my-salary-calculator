@@ -200,7 +200,7 @@ export const YEAR_END_LIMIT_FAQS: readonly YearEndLimitFaq[] = [
   },
   {
     question: "월세 세액공제는 누가, 얼마까지 받을 수 있나요?",
-    answer: `12월 31일 현재 무주택 세대의 세대주(세대주가 주택 관련 공제를 받지 않으면 세대원도 가능)이면서 총급여 ${man(RENT_CREDIT_2026.SALARY_CAP)} 이하(종합소득금액 7,000만원 초과자 제외)인 근로자가 국민주택규모 이하이거나 기준시가 4억원 이하인 주택에 낸 월세가 대상입니다. 월세는 연 ${man(RENT_CREDIT_2026.CAP)}까지 인정되고 총급여 ${man(RENT_CREDIT_2026.SALARY_17_MAX)} 이하는 ${pct(RENT_CREDIT_2026.RATE_HIGH)}, 초과는 ${pct(RENT_CREDIT_2026.RATE_LOW)}를 공제해 최대 ${man(RENT_CREDIT_2026.CAP * RENT_CREDIT_2026.RATE_HIGH)}을 돌려받습니다. 2026년부터는 세대주와 주소를 달리하는 배우자도 부부 합산 연 ${man(RENT_CREDIT_2026.CAP)} 한도 안에서 따로 공제받을 수 있습니다.`,
+    answer: `12월 31일 현재 무주택 세대의 세대주(세대주가 주택 관련 공제를 받지 않으면 세대원도 가능)이면서 총급여 ${man(RENT_CREDIT_2026.SALARY_CAP)} 이하(종합소득금액 7,000만원 초과자 제외)인 근로자가 국민주택규모 이하(기본공제 대상 자녀·손자녀가 3명 이상이면 100㎡ 이하)이거나 기준시가 4억원 이하인 주택에 낸 월세가 대상입니다. 월세는 연 ${man(RENT_CREDIT_2026.CAP)}까지 인정되고 총급여 ${man(RENT_CREDIT_2026.SALARY_17_MAX)} 이하는 ${pct(RENT_CREDIT_2026.RATE_HIGH)}, 초과는 ${pct(RENT_CREDIT_2026.RATE_LOW)}를 공제해 최대 ${man(RENT_CREDIT_2026.CAP * RENT_CREDIT_2026.RATE_HIGH)}을 돌려받습니다. 2026년부터는 세대주와 주소를 달리하는 배우자도 부부 합산 연 ${man(RENT_CREDIT_2026.CAP)} 한도 안에서 따로 공제받을 수 있습니다.`,
   },
   {
     question: "의료비 세액공제는 얼마 이상 써야 받을 수 있나요?",
