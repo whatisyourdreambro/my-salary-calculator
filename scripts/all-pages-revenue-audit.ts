@@ -137,7 +137,7 @@ async function main(){
         try{const u=new URL(l.href,production+p);if(!['http:','https:'].includes(u.protocol)||![production,base].includes(u.origin))continue;const t=normalizePath(u.pathname);if(u.search)u.searchParams.forEach((_,k)=>queryKeys.add(k));if(t!==p){linkTargets.add(t);add(t,'internal-link');}}catch{rec.issues.push('invalid-link-url');}
       }
       rec.internalLinkTargets=[...linkTargets];rec.queryKeys=[...queryKeys];rec.checks.links='targets-inventoried';
-      rec.adMarkup={sponsoredLabel:raw.includes('Sponsored'),slotAttributes:[...new Set([...raw.matchAll(/data-ad-slot="([^"]+)"/g)].map(x=>x[1]))],policy:'external-request-blocked; no fill claim; no env files copied'};
+      rec.adMarkup={sponsoredLabel:/>(광고|Advertisements)<\/span>/.test(raw),slotAttributes:[...new Set([...raw.matchAll(/data-ad-slot="([^"]+)"/g)].map(x=>x[1]))],policy:'external-request-blocked; no fill claim; no env files copied'};
     }catch(error){rec.issues.push('fetch-error');rec.error=String(error);}
     const edgeBlocked=rec.httpStatus===500&&templates.find(t=>t.route===rec.template)?.runtime==='edge';
     rec.status=edgeBlocked?'blocked-local-edge-runtime':rec.issues.length?'fail':'pass';
