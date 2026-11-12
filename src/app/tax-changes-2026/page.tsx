@@ -20,7 +20,7 @@ export const metadata: Metadata = buildPageMetadata({
  path: "/tax-changes-2026",
  ogType: "article",
  publishedTime: "2026-01-01",
- modifiedTime: "2026-11-01",
+ modifiedTime: "2026-11-13",
  keywords: [
  "2026 세법",
  "세법 개정",
@@ -35,7 +35,7 @@ const FAQ_ITEMS = [
  {
  question: "2026년 새 변경사항과 기존 공제는 어떻게 구분하나요?",
  answer:
- "2026년부터 보육수당 비과세 한도가 자녀 1명당 월 20만원으로 바뀌고 자녀 수에 따른 신용카드 공제 기본 한도가 늘어납니다. 자녀세액공제 나이 기준도 2026년 4월 21일 법 개정(법률 제21548호) 부칙에 따라 2026년 귀속 9세 이상(2017년생 제외)으로 올라 2016년 이전 출생 자녀만 대상입니다. 혼인세액공제는 2024~2026년 혼인신고분에 계속 적용되는 생애 1회 제도입니다. 6세 이하 자녀에게 100만원 소득공제가 새로 생긴 것은 아닙니다.",
+ "2026년부터 보육수당 비과세 한도가 자녀 1명당 월 20만원으로 바뀌고 자녀 수에 따른 신용카드 공제 기본 한도가 늘어납니다. 자녀세액공제 나이 기준도 2026년 4월 21일 법 개정(법률 제21548호) 부칙에 따라 2026년 귀속 9세 이상(2017년생 제외)으로 올라 2016년 이전 출생 자녀만 대상입니다. 혼인세액공제는 2024~2026년 혼인신고분에 계속 적용되는 생애 1회 제도입니다. 6세 이하 자녀에게 100만원 소득공제가 새로 생긴 것은 아닙니다. 이 밖에 2026년 귀속부터 교육비 세액공제의 자녀 소득요건 폐지와 9세 미만 또는 초등 2학년 이하 예체능 학원비 공제, 고향사랑기부금 10만원 초과 20만원 이하 구간 40% 공제, 세대주와 다른 시·군·구에 사는 배우자의 월세 공제와 3자녀 이상 가구의 주택 면적 기준 완화(100㎡), 국민참여형 국민성장펀드 소득공제가 적용됩니다(국세청 2026년 10월 안내).",
  },
  {
  question: "결혼세액공제는 어떻게 신청하나요?",
@@ -176,7 +176,7 @@ export default function TaxChanges2026Page() {
  <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
  2026 세법 <span className="text-electric">변경사항</span>
  </h1>
- <PublishedMeta publishedDate="2026-01-01" updatedDate="2026-11-01" className="mb-2" />
+ <PublishedMeta publishedDate="2026-01-01" updatedDate="2026-11-13" className="mb-2" />
  <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
  2026년 새로 바뀐 항목과 계속 적용되는 공제를 구분했습니다.
  자녀·혼인 공제, 회사 보육수당과 주요 세금의 적용 시점을 확인하세요.
