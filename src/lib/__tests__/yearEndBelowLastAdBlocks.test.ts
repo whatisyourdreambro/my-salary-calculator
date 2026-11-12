@@ -57,7 +57,8 @@ describe("/year-end-tax-preview — 최근 개통일 표는 마지막 광고 아
     expect(html.indexOf('data-test="share"')).toBeLessThan(section);
     const guideLink = html.indexOf('href="/guides/hometax-year-end-preview-2026"');
     expect(guideLink).toBeGreaterThan(lastAd);
-    expect(html.indexOf("편리한 연말정산")).toBeGreaterThan(lastAd);
+    // 2026-11-13: 광고 위 절차 2단계도 2026 경로(편리한 연말정산)로 바뀌었으므로 마지막 등장만 본다(F02)
+    expect(html.lastIndexOf("편리한 연말정산")).toBeGreaterThan(lastAd);
     // 광고 위에는 이 표·링크가 없다
     expect(html.slice(0, lastAd)).not.toContain("open-history");
     expect(html.slice(0, lastAd)).not.toContain("/guides/hometax-year-end-preview-2026");

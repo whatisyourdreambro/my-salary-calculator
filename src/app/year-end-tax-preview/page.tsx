@@ -45,7 +45,7 @@ const STEPS = [
   },
   {
     title: "연말정산 미리보기 메뉴 진입",
-    body: "예년 기준 '장려금·연말정산·전자기부금 → 연말정산 미리보기' 경로로 들어갑니다. (오픈 후 메뉴 위치가 바뀌면 본 문서를 갱신합니다)",
+    body: "'장려금·연말정산·기부금 → 편리한 연말정산 → 연말정산 미리보기' 경로로 들어갑니다(2026년 국세청 안내 기준).",
   },
   {
     title: "1~9월 신용카드 자료 확인",
@@ -135,10 +135,10 @@ export default function YearEndTaxPreviewPage() {
               </h1>
               <p className="speakable-summary text-sm sm:text-[15px] leading-7 text-muted-blue">
                 &lsquo;연말정산 미리보기&rsquo;는 국세청이 수집한 1~9월 신용카드 사용액으로
-                올해 예상 세액을 미리 보여주는 홈택스 서비스입니다. 예년 기준{" "}
-                <strong className="text-navy">10월 말~11월 중순 오픈</strong>하며, 12월
-                31일 지출 마감 전에 절세 전략을 세울 수 있는 마지막 안내판입니다. 오픈
-                공지가 나오면 본 문서에 확정 일정을 반영합니다.
+                올해 예상 세액을 미리 보여주는 홈택스 서비스입니다. 2026년 귀속분 운영 기간은{" "}
+                <strong className="text-navy">10월 28일~12월 18일</strong>이며, 12월
+                31일 지출 마감 전에 절세 전략을 세울 수 있는 마지막 안내판입니다. 국세청
+                10월 23일 안내 기준.
               </p>
             </header>
 
@@ -148,7 +148,7 @@ export default function YearEndTaxPreviewPage() {
             <section className="my-8 rounded-2xl border border-electric/30 bg-electric/5 p-6" aria-labelledby="cta-heading">
               <h2 id="cta-heading" className="text-lg font-black text-navy mb-2 inline-flex items-center gap-2">
                 <Calculator size={18} className="text-electric" aria-hidden="true" />
-                오픈을 기다릴 필요 없습니다
+                지금 바로 계산해 보세요
               </h2>
               <p className="text-sm leading-7 text-muted-blue mb-4">
                 총급여와 지금까지의 지출만 있으면 머니샐러리 연말정산 계산기로 예상
@@ -266,7 +266,7 @@ export default function YearEndTaxPreviewPage() {
                 정책브리핑 2026년 10월 23일). 메뉴 경로는 홈택스 로그인 → 장려금·연말정산·기부금 → 편리한
                 연말정산 → 연말정산 미리보기입니다. 1~9월 카드 사용금액이 채워져 있고, 10~12월 예상 지출과
                 공제 항목을 넣으면 예상세액과 최근 3년 추이를 볼 수 있습니다. 12월 18일은 서비스 종료일이고
-                공제 대상 지출·납입 마감은 12월 31일입니다. 위 이용 절차의 전자기부금은 예전 메뉴 이름입니다.
+                공제 대상 지출·납입 마감은 12월 31일입니다.
               </p>
               <p className="mt-3 text-sm">
                 <Link

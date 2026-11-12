@@ -34,7 +34,6 @@ const shape = (s: string) =>
 const SAME_WIDTH: [string, string, string][] = [
   ["src/app/tax-reform-2026/page.tsx", "실거주 14억·비거주 9억 차등화", "실거주 14억·비거주 9억 철회됨"],
   ["src/app/tax-reform-2026/page.tsx", "'실거주 여부'가 종부세의 핵심 기준이 됩니다.", "'비거주 축소'는 국무회의 확정 시점에 철회됨."],
-  ["src/app/year-end-tax-preview/page.tsx", "10월 말~11월 초에 오픈", "10월 말~11월 중순 오픈"],
   ["src/data/yearEndTaxHub.ts", "예년 기준 10월 말 오픈) 전에도", "예년 기준 10월 말 이후) 전에도"],
   ["src/app/health-insurance-fee-2026/page.tsx", "재산세 과세표준 5.4억 이하 필요.", "재산세 과세표준 5.4억 이하 원칙."],
   ["src/app/health-insurance-fee-2026/page.tsx", "본인+회사분 모두 본인 부담.", "본인+회사분 절반 본인 부담."],
