@@ -109,6 +109,51 @@ function checkPageRevisionDates(entries: Awaited<ReturnType<typeof sitemap>>): n
   return failed;
 }
 
+// 위 게이트가 보지 않는 나머지 정적 page.tsx (lens-crawl-F05·lens-meta-F03, 2026-11-13):
+// 페이지가 밝힌 수정일(OG modifiedTime·Article modifiedDate·PublishedMeta updatedDate)이 사이트맵 날짜보다 늦으면 FAIL.
+// 더 이른 페이지 날짜는 허용한다(공유 엔진·링크 검토로 사이트맵만 앞선 7곳 — 같음을 요구하지 않는다). 정적 판정이
+// 안 되는 값(null)은 건너뛴다.
+// PAGE_DATE_ALIGN_PENDING = 이 게이트가 생긴 날 이미 어긋나 있던 4곳. 고치는 방법은 ROUTE_OVERRIDES 행 + 콘텐츠 검토 원장
+// (scripts/sitemap-content-reviews.json) 항목이라 원장 담당(통합 단계)이 넣는다 — 그 전까지는 WARN, 그 라우트에
+// ROUTE_OVERRIDES 키가 생기면 이 목록에서 지우라는 FAIL(목록이 스스로 비워지게).
+const PAGE_DATE_ALIGN_PENDING: ReadonlySet<string> = new Set([
+  "/samsung-negotiation-2026", // 페이지 2026-09-27
+  "/savings-interest-2026", // 페이지 2026-09-27
+  "/tax-rates-2026", // 페이지 2026-09-26
+  "/year-end-tax-mid-resign", // 페이지 2026-08-15(발행일)
+]);
+function checkPageDatesNotAfterSitemap(entries: Awaited<ReturnType<typeof sitemap>>): { failed: number; warned: number } {
+  let failed = 0;
+  let warned = 0;
+  const covered = new Set([...Object.keys(ROUTE_OVERRIDES), ...PAGE_LINK_REVIEW_PATHS, ...PAGE_ACCURACY_REVIEW_PATHS, ...Object.keys(PAGE_VISIBLE_REVISION_DATES)]);
+  for (const route of PAGE_DATE_ALIGN_PENDING) {
+    if (ROUTE_OVERRIDES[route]) {
+      console.error(`[FAIL] ${route} 에 ROUTE_OVERRIDES 행이 생김 — verify-sitemap.ts PAGE_DATE_ALIGN_PENDING 에서 지우세요`);
+      failed++;
+    }
+  }
+  for (const entry of entries) {
+    const route = new URL(entry.url).pathname;
+    if (covered.has(route)) continue;
+    const file = join(APP_DIR, route === "/" ? "" : decodeURIComponent(route.slice(1)), "page.tsx");
+    if (!existsSync(file)) continue;
+    const sitemapDay = koreanDay(entry.lastModified!);
+    for (const field of pageRevisionFields(readFileSync(file, "utf8"), file) as Array<{ name: string; value: string | null }>) {
+      if (field.value === null) continue;
+      const day = koreanDay(field.value.length === 10 ? `${field.value}T00:00:00+09:00` : field.value);
+      if (day <= sitemapDay) continue;
+      if (PAGE_DATE_ALIGN_PENDING.has(route)) {
+        console.warn(`[WARN] 페이지 수정일이 사이트맵보다 늦음(원장 정렬 대기): ${route} ${field.name}=${day} sitemap=${sitemapDay}`);
+        warned++;
+      } else {
+        console.error(`[FAIL] 페이지 수정일이 사이트맵보다 늦음: ${route} ${field.name}=${day} sitemap=${sitemapDay} — ROUTE_OVERRIDES 행과 콘텐츠 검토 원장 항목으로 사이트맵 날짜를 올리세요`);
+        failed++;
+      }
+    }
+  }
+  return { failed, warned };
+}
+
 // 페이지 JSON-LD 앱 날짜 ↔ sitemap lastmod 정합 게이트 (G3, 2026-11-01 — 종전 2026-09-05 WebApplication 게이트 대체).
 // 종전 게이트는 홈 WebApplication 날짜를 STATIC_LAST_MODIFIED(7/16)와만 비교해, 홈 lastmod(ROUTE_OVERRIDES 10/19)와
 // 어긋난 채 통과했다. 이제 정적 page.tsx 의 softwareApplicationLd/webApplicationLd dateModified 를 그 페이지 sitemap
@@ -323,7 +368,8 @@ async function main() {
 
   const staleOverrides = checkOverrideFreshness(entries);
   const invalidDates = checkValidDates(entries);
-  const pageDateMismatch = checkPageRevisionDates(entries);
+  const pageDateAhead = checkPageDatesNotAfterSitemap(entries);
+  const pageDateMismatch = checkPageRevisionDates(entries) + pageDateAhead.failed;
   const appLdDateMismatch = checkAppJsonLdDates(entries);
 
   // 실제 동적 URL 출력도 확인한다. 수정일만 바뀐 글이 발행일로 되돌아가거나
@@ -356,7 +402,7 @@ async function main() {
   );
 
   console.log(
-    `[verify-sitemap] 정적 라우트 ${routes.length}곳 / sitemap URL ${sitePaths.size}건 / 미등재 ${fail}곳 / 가이드 날짜·등재 불일치 ${guideDateMismatch}건 / URL 원장 FAIL ${ledgerFail}건 / 유효하지 않은 날짜 ${invalidDates}건 / 페이지 수정일 불일치 ${pageDateMismatch}건 / override 신선도 경고 ${staleOverrides}건 / JSON-LD 앱 날짜 불일치 ${appLdDateMismatch}건`
+    `[verify-sitemap] 정적 라우트 ${routes.length}곳 / sitemap URL ${sitePaths.size}건 / 미등재 ${fail}곳 / 가이드 날짜·등재 불일치 ${guideDateMismatch}건 / URL 원장 FAIL ${ledgerFail}건 / 유효하지 않은 날짜 ${invalidDates}건 / 페이지 수정일 불일치 ${pageDateMismatch}건(원장 정렬 대기 경고 ${pageDateAhead.warned}건) / override 신선도 경고 ${staleOverrides}건 / JSON-LD 앱 날짜 불일치 ${appLdDateMismatch}건`
   );
   if (fail || guideDateMismatch) {
     console.error(
