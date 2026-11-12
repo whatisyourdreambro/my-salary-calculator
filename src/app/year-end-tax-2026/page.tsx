@@ -21,7 +21,7 @@ export const metadata: Metadata = buildPageMetadata({
  path: "/year-end-tax-2026",
  ogType: "article",
  publishedTime: "2026-04-15",
- modifiedTime: "2026-05-23",
+ modifiedTime: "2026-05-12",
  keywords: [
  "2026 종합소득세",
  "5월 종소세",
