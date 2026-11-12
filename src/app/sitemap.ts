@@ -14,7 +14,7 @@ import { reportsRegistry } from '@/data/reportsRegistry';
 import { STATIC_LAST_MODIFIED, latestContentDate } from '@/config/siteDates';
 import { companyPageModified } from '@/lib/pageModified';
 import { getGuideModifiedDate } from '@/lib/guideDates';
-import { getGuideContentDate } from '@/lib/guideContentRevisions';
+import { getGuideSitemapDate } from '@/lib/guideSitemapDates';
 import { EN_INDEXABLE_STATIC_PATHS } from '@/lib/englishRoutes';
 import { englishPolicyCounterpart } from '@/lib/englishSite';
 import { pageContentRevision } from '@/config/pageContentRevisions';
@@ -490,7 +490,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // 본문 정정일(guideContentRevisions)과 modifiedDate 중 늦은 날. 10/6(28d72f5b0)에는 히어로 칩 없는 별도 필드였지만
  // 10/19(579d60bb)부터 상세 히어로 '수정' 칩·OG modifiedTime·Article dateModified·이 lastmod 가 모두 같은 날짜를 쓴다
  // (guides/[slug]/page.tsx·seo.ts buildGuideMetadata). 칩 유지는 2026-11-01 운영자 승인 8번(B37 P2UX-04 c).
- lastModified: getGuideContentDate(guide), // Editorial calendar date; do not turn it into a future UTC midnight.
+ // 예외(lens-meta-F01, 운영자 승인 2026-11-13): 마지막 광고 아래 보강만 바뀐 글은 이 lastmod 만 보강을 고친 날로 올린다
+ // (getGuideSitemapDate — src/lib/guideSitemapDates.ts 표). 그런 글은 화면·OG·Article 날짜보다 사이트맵 날짜가 늦을 수 있다.
+ lastModified: getGuideSitemapDate(guide), // Editorial calendar date; do not turn it into a future UTC midnight.
  changeFrequency: 'monthly' as ChangeFrequency,
  priority: 0.7,
  ...(hasEn
