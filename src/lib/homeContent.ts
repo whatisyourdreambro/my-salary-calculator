@@ -27,6 +27,9 @@ export const HOME_META_DESCRIPTION =
 export interface HomeFaqItem {
   question: string;
   answer: string;
+  /** 답변 아래 별도 줄 링크 (화면 전용 — 답변 문자열·JSON-LD 는 그대로, MI-24 2026-09-29) */
+  linkHref?: string;
+  linkLabel?: string;
 }
 
 export const HOME_FAQ_ITEMS: HomeFaqItem[] = [
@@ -53,7 +56,9 @@ export const HOME_FAQ_ITEMS: HomeFaqItem[] = [
   {
     question: "연봉 3000만원 실수령액은 얼마인가요?",
     answer:
-      `연봉 3,000만원의 ${CURRENT_RATES_YEAR}년 예상 월 실수령액은 약 ${EXAMPLE_NET[30000000]}만원입니다 (${SALARY_MODEL_2026.defaultConditions} 기준). 자세한 내역은 /salary/30000000 페이지에서 확인하세요.`,
+      `연봉 3,000만원의 ${CURRENT_RATES_YEAR}년 예상 월 실수령액은 약 ${EXAMPLE_NET[30000000]}만원입니다 (${SALARY_MODEL_2026.defaultConditions} 기준). 자세한 내역은 연봉 3,000만원 실수령액 페이지에서 확인하세요.`,
+    linkHref: "/salary/30000000",
+    linkLabel: "연봉 3,000만원 실수령액 보기 →",
   },
 ];
 

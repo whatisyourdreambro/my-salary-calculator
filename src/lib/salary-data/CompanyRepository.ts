@@ -1,6 +1,6 @@
 import type { CompanyProfile } from "@/types/company";
 import { allCompanies } from "@/data/companies";
-import { companyAliases } from "@/data/companyAliases";
+import { companyAliases, companySearchAliases } from "@/data/companyAliases";
 import { normalizeIndustry } from "./industryTaxonomy";
 import { dartInjection, DART_INJECTION_DATE } from "@/data/dart/dartInjection";
 import { TAX_TABLE_EFFECTIVE_DATE } from "@/config/siteDates";
@@ -66,7 +66,7 @@ function latestDate(...candidates: (string | undefined)[]): string | undefined {
  return best;
 }
 
-/** 회사 객체에 검색 별칭(aliases)·표준 업종 id(industryId)·DART 공시를 주입하고,
+/** 회사 객체에 검색 별칭(aliases·검색 전용 searchAliases)·표준 업종 id(industryId)·DART 공시를 주입하고,
  *  lastUpdated 를 "페이지 내용이 실제로 바뀐 마지막 날"로 파생한다:
  *  max(데이터 파일 lastUpdated, DART 주입일(주입사만), 실수령액 표 재계산일 TAX_TABLE_EFFECTIVE_DATE).
  *  — 실수령액 열(CompanySalaryTable)은 세법 상수 갱신 커밋으로 전 회사가 함께 바뀌므로
@@ -74,6 +74,9 @@ function latestDate(...candidates: (string | undefined)[]): string | undefined {
  *    (2026-09-05, naver-onpage-6). max() 라 멱등이며 today() 승격은 절대 금지. */
 function enrich(company: CompanyProfile): CompanyProfile {
  const aliases = companyAliases[company.id];
+ // 검색 전용 별칭(NAVER-05) — 검색 매칭·메타 keywords·JSON-LD alternateName 에만 쓴다. 화면 문장
+ // (CompanyNarrative)은 aliases 만 읽는다. 빈 목록이면 키 자체를 넣지 않는다(회사 객체·출력 불변).
+ const searchAliases = companySearchAliases[company.id];
  const dartDisclosed = company.disclosed ? undefined : buildDartDisclosed(company.id);
  const lastUpdated =
  latestDate(
@@ -85,6 +88,7 @@ function enrich(company: CompanyProfile): CompanyProfile {
  return {
  ...company,
  ...(aliases ? { aliases } : {}),
+ ...(searchAliases && searchAliases.length > 0 ? { searchAliases } : {}),
  ...(dartDisclosed ? { disclosed: dartDisclosed } : {}),
  lastUpdated,
  industryId: normalizeIndustry(company.industry),
@@ -111,7 +115,8 @@ export const companyRepository = {
  c.name.ko.toLowerCase().includes(lowerQuery) ||
  c.name.en.toLowerCase().includes(lowerQuery) ||
  c.industry.toLowerCase().includes(lowerQuery) ||
- (c.aliases?.some((a) => a.toLowerCase().includes(lowerQuery)) ?? false)
+ (c.aliases?.some((a) => a.toLowerCase().includes(lowerQuery)) ?? false) ||
+ (c.searchAliases?.some((a) => a.toLowerCase().includes(lowerQuery)) ?? false)
  );
  },
 
@@ -125,3 +130,13 @@ export const companyRepository = {
  return Array.from(new Set(enrichedCompanies.map((c) => c.industryId ?? "etc")));
  },
 };
+
+/** 회사 페이지 Organization JSON-LD alternateName — 별칭(aliases) + 검색 전용 별칭(searchAliases).
+ *  검색 전용 별칭이 없으면 aliases 를 그대로(없으면 undefined) 돌려준다 — 종전 출력과 바이트 동일. */
+export function companyAlternateNames(
+ company: Pick<CompanyProfile, "aliases" | "searchAliases">
+): string[] | undefined {
+ const { aliases, searchAliases } = company;
+ if (!searchAliases || searchAliases.length === 0) return aliases;
+ return Array.from(new Set([...(aliases ?? []), ...searchAliases]));
+}

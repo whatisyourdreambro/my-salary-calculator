@@ -4,13 +4,15 @@
 // 상세 렌더에만 파생 날짜를 전달하고 정본 guide.modifiedDate는 변경하지 않는다.
 // 목록·관련 글 정렬(guideDiscovery), RSS 순서는 getGuideModifiedDate를 그대로 사용한다.
 // 표: 일시적 2주택 처분 기한 개정 4편(guideContentRevisions.twoHomeLaw.ts) + 2026-11-01 사실 정정 묶음
-//   (guideContentRevisions.factFix1101.ts). 같은 글이 둘 이상에 있으면 늦은 날짜(mergeLatest).
+//   (guideContentRevisions.factFix1101.ts) + R1 재착지 11편(guideContentRevisions.relandR1.ts, 이미 수정 칩이 있는 글만).
+//   같은 글이 둘 이상에 있으면 늦은 날짜(mergeLatest).
 // ★ 10/15 날짜 정정 묶음(71aec38e2 계열)이 이 파일을 새로 만들며 들어오면 add/add 충돌이 난다 — 그쪽 파일을 그대로 쓰고
 //   mergeLatest(...) 인자에 GUIDE_CONTENT_REVISED_TWO_HOME_LAW·GUIDE_CONTENT_REVISED_FACT_FIX_1101 을 더하면 된다
 //   (sitemap.ts·verify-sitemap.ts·page.tsx 줄은 그쪽과 같다).
 // modifiedDate 보다 이르면 무시된다(max). 서버 전용(클라이언트 번들에 싣지 않는다).
 import { getGuideModifiedDate } from "./guideDates";
 import { GUIDE_CONTENT_REVISED_FACT_FIX_1101 } from "./guideContentRevisions.factFix1101";
+import { GUIDE_CONTENT_REVISED_RELAND_R1 } from "./guideContentRevisions.relandR1";
 import { GUIDE_CONTENT_REVISED_TWO_HOME_LAW } from "./guideContentRevisions.twoHomeLaw";
 
 /** 여러 정정일 표를 합친다 — 같은 글이 둘 이상에 있으면 늦은 날짜 */
@@ -27,6 +29,7 @@ function mergeLatest(...tables: Readonly<Record<string, string>>[]): Record<stri
 export const GUIDE_CONTENT_REVISED: Readonly<Record<string, string>> = mergeLatest(
   GUIDE_CONTENT_REVISED_TWO_HOME_LAW,
   GUIDE_CONTENT_REVISED_FACT_FIX_1101,
+  GUIDE_CONTENT_REVISED_RELAND_R1,
 );
 
 /** 가이드의 마지막 내용 수정일 = max(modifiedDate ?? publishedDate, 본문 정정일) */

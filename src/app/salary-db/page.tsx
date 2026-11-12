@@ -17,6 +17,8 @@ export default function SalaryDBPage() {
  nameKo: c.name.ko,
  nameEn: c.name.en,
  ...(c.aliases ? { aliases: c.aliases } : {}),
+ // 검색 전용 별칭(NAVER-05) — 검색 매칭에만, 카드에 렌더하지 않는다. 없으면 키 없음(페이로드 불변)
+ ...(c.searchAliases ? { searchAliases: c.searchAliases } : {}),
  industry: c.industry,
  tier: c.tier,
  logo: c.logo,

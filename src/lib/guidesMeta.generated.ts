@@ -388,7 +388,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "us-treasury-bond",
   "title": "미국 국채 투자: 안전자산의 매력 🇺🇸",
-  "description": "금리 인하 시기, 채권으로 시세차익과 이자 두 마리 토끼 잡기.",
+  "description": "금리 변동 시기, 채권으로 시세차익과 이자 두 마리 토끼 잡기.",
   "category": "투자",
   "tags": [
    "채권",
@@ -879,7 +879,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "crypto-tax-2026",
   "title": "가상자산 과세 2026: 코인 양도세 22% 시행 D-?, 절세 타이밍",
-  "description": "비트코인·이더리움·알트코인 양도세 22% 시행 일정, 250만원 기본공제, 절세 매도 타이밍과 해외거래소 신고 의무.",
+  "description": "비트코인·이더리움·알트코인 소득세 22% 시행 일정, 250만원 기본공제, 절세 매도 타이밍과 해외거래소 신고 의무.",
   "category": "세금",
   "tags": [
    "가상자산",
@@ -2183,7 +2183,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "newlywed-tax-benefits-2026",
   "title": "2026 신혼부부 세금 혜택 + 청약 + 증여세 한도 완벽 가이드",
-  "description": "2026년 신혼부부 결혼 후 받을 수 있는 세금 혜택·청약 가점·증여세 한시 한도 1.5억·전세대출·맞벌이 절세까지 결혼 1년 안에 챙길 핵심 13가지 정리.",
+  "description": "2026년 신혼부부 결혼 후 받을 수 있는 세금 혜택·청약 가점·증여세 공제 한도 1.5억·전세대출·맞벌이 절세까지 결혼 1년 안에 챙길 핵심 13가지 정리.",
   "category": "세금",
   "tags": [
    "신혼부부",
@@ -3003,8 +3003,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "coupang-fulfillment-night-pay-2026",
-  "title": "쿠팡 풀필먼트 야간 알바 — 시급 17,000원 + 주휴수당 월 354만원",
-  "description": "쿠팡 풀필먼트 야간(22~6시) 시급 약 15,750~17,250원. 주 40시간 + 주휴수당 시 월 약 354만원, 실수령 305~315만원. 산재보험 자동 가입 + 종소세 신고 의무.",
+  "title": "쿠팡 풀필먼트 야간 알바 — 시급 17,000원 + 주휴수당 월 336만원",
+  "description": "쿠팡 풀필먼트 야간(22~6시) 시급 약 15,750~17,250원. 주 40시간 + 주휴수당 시 월 약 336만원, 실수령 291~296만원. 산재보험 자동 가입 + 종소세 신고 없음.",
   "category": "연봉",
   "tags": [
    "쿠팡",
@@ -3019,7 +3019,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1859
+  "contentChars": 1797
  },
  {
   "slug": "newlywed-asset-tax-saving-2026",
@@ -5207,7 +5207,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "sk-hynix-ps-forecast-2027",
   "title": "SK하이닉스 PS 전망 — 영업이익 10%의 수학",
-  "description": "SK하이닉스 PS는 '영업이익의 10%를 상한 없이 나누는' 공개 공식으로 움직인다. 2,964% 지급의 구조, 2026년 상반기 실적이 만드는 재원의 수학, 자사주 전환 검토 변수까지 — 전망은 보도 기반이며 확정이 아님.",
+  "description": "SK하이닉스 PS는 '영업이익의 10%를 상한 없이 나누는' 공개 공식으로 움직인다. 2,964% 지급의 구조, 2026년 상반기 실적이 만드는 재원의 수학, 자사주 지급 가결 결과까지 — 전망은 보도 기반이며 확정이 아님.",
   "category": "연봉",
   "tags": [
    "SK하이닉스",
@@ -5245,7 +5245,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "samsung-medison-salary-2026",
   "title": "삼성메디슨 연봉 총정리 — 삼성 의료기기 계열의 보상",
-  "description": "삼성메디슨 연봉은 왜 사이트마다 5,042만원부터 1억200만원까지 다를까. 비상장사의 공시 공백을 짚고, 2025년 역대 최대 매출 6,650억원·수출 비중 88%라는 실적 근거와 함께 보상 수준을 가늠하는 법을 정리했다.",
+  "description": "삼성메디슨 연봉은 왜 사이트마다 5,042만원부터 1억200만원까지 다를까. 비상장사의 공시 평균을 짚고, 2025년 역대 최대 매출 6,650억원·수출 비중 88%라는 실적 근거와 함께 보상 수준을 가늠하는 법을 정리했다.",
   "category": "연봉",
   "tags": [
    "삼성메디슨",

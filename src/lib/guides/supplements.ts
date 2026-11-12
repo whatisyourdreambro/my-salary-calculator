@@ -29,6 +29,9 @@ import {
 import { AGREEMENT_2026, H1_2026_PROFIT_TRIL, PS_HISTORY } from "@/app/calc/sk-hynix-bonus/psData";
 import { FIXED_BU_RATIO, FIXED_RERATE, FIXED_SA_RATIO, getThreshold } from "@/app/calc/samsung-bonus/model";
 import { SAMSUNG_OPI2_TRANCHES, SAMSUNG_WAGE_2026 } from "@/lib/bonusHome/compEngines";
+import { UNEMPLOYMENT_BENEFIT_2026, unemploymentDailyLowerBound } from "@/config/unemploymentBenefit";
+import { PENSION_BASE_2026 } from "@/lib/taxConstants2026";
+import { dartInjection, type DartInjectionEntry } from "@/data/dart/dartInjection";
 
 /** 원 단위 천 단위 구분 — en-US 그룹핑은 ko-KR 과 동일하고 ICU 유무에 좌우되지 않는다 */
 const won = (n: number): string => n.toLocaleString("en-US");
@@ -215,17 +218,228 @@ const skHynixWage2026Supplement = `
 <p>연도별 PS·PI 이력은 <a href="/guides/sk-hynix-ps-history-2026-prospect">SK하이닉스 PS 연도별 지급률과 2026 지급 방식</a>에, 새 지급 방식의 세후 금액은 <a href="/calc/sk-hynix-bonus">SK하이닉스 성과급 계산기</a>에 정리돼 있습니다. 계산기 결과는 입력한 영업이익을 가정한 시나리오이며 전망이 아닙니다.</p>
 `;
 
+// ── 2026-09-29 가이드 사실 정정 묶음(guides-a) ──
+// 본문(광고 위)은 같은 폭으로만 고칠 수 있어, 폭을 맞추지 못한 정정과 새 내부 링크를 여기(마지막 광고 아래)에 둔다.
+// 모든 가이드 페이지에 map 이 직렬화되므로 항목마다 2~4문장으로 짧게 쓴다. 수치는 정본 상수·DART 주입값에서 끼워 넣고,
+// 나머지는 커밋 메시지에 적은 공식 출처(국세청·고용노동부·국민연금공단·생활법령·law.go.kr)로 확인한 값만 쓴다.
+
+/** 만원 단위 → '1억2,400만원' 표기 (1억 미만은 '9,800만원') */
+function manwonKo(m: number): string {
+  const eok = Math.floor(m / 10_000);
+  const rest = m % 10_000;
+  if (eok === 0) return `${won(rest)}만원`;
+  return rest === 0 ? `${eok}억원` : `${eok}억${won(rest)}만원`;
+}
+function dart(id: string): DartInjectionEntry {
+  const d = dartInjection[id];
+  if (!d || d.y !== "2025") throw new Error(`[guideSupplements] dartInjection 에 ${id} 2025 사업연도 값이 없습니다`);
+  return d;
+}
+
+const UB_UPPER = won(UNEMPLOYMENT_BENEFIT_2026.DAILY_UPPER);
+const UB_LOWER = won(unemploymentDailyLowerBound());
+const NPS_MIN = won(PENSION_BASE_2026.MIN_MONTHLY);
+const NPS_MAX = won(PENSION_BASE_2026.MAX_MONTHLY);
+
+const coupangNightPaySupplement = `
+<h2>야간 알바 세금 — 일용근로소득 기준</h2>
+<p>같은 센터에서 3개월 미만 일하는 일용근로자는 (일당 − 15만원) × 6%에서 55%를 뺀 금액만 원천징수되고, 원천징수로 납세가 끝나 5월 종합소득세 신고 대상이 아닙니다. 하루치씩 받을 때는 세액이 1천원 미만(일당 18만7천원 이하)이면 0원이지만, 주급·월급으로 몰아 받으면 여러 날 세액을 합쳐 1천원 이상이면 원천징수됩니다. 3.3%는 배송 위탁 같은 사업소득에 붙는 세율이며, 같은 곳에서 3개월 이상 계속 일하면 일반 근로소득으로 연말정산합니다.</p>
+<p><em>출처: 국세청 일용근로소득 원천징수 안내, 국세청 해석 법인46013-343</em></p>
+`;
+
+const earnedIncomeCreditSupplement = `
+<h2>근로장려금 반기 지급 일정과 계산</h2>
+<p>9월 1~15일에 반기(상반기분)를 신청했다면 연간 산정액의 35%가 12월 30일까지 먼저 지급되고, 나머지는 다음 해 6월 30일까지 정산됩니다(3월 하반기분은 따로 신청하지 않아도 신청한 것으로 봅니다). 반기 신청은 본인·배우자 소득이 근로소득뿐인 가구만 할 수 있고, 상용근로자로 월평균 근로소득이 500만원 이상이면(배우자 포함) 근로장려금 대상이 아닙니다. 가구 유형과 총소득으로 예상액을 보려면 <a href="/earned-income-credit">근로장려금 계산기</a>를 이용하세요.</p>
+<p><em>출처: 국세청 근로·자녀장려금 신청자격·심사 및 지급 안내(2025년 귀속), 국세청 반기 신청 안내(2026년 귀속)</em></p>
+`;
+
+const etfBeginnerSupplement = `
+<h2>ETF 세금과 적립 다음 단계</h2>
+<p>국내 상장 해외 ETF와 해외 직구 ETF의 세금 차이는 <a href="/guides/domestic-vs-overseas-etf-tax-2026">국내 상장 해외 ETF 세금</a>, 적립식 구성은 <a href="/guides/etf-portfolio-2026">ETF 적립식 포트폴리오</a>, 장기 적립 결과는 <a href="/tools/finance/compound">복리 계산기</a>에서 이어서 보세요.</p>
+`;
+
+const firstHomeSupplement = `
+<h2>정책대출 조건 다시 보기</h2>
+<table class="w-full text-sm">
+<thead><tr><th>상품</th><th>한도</th><th>금리</th><th>소득·주택 조건</th></tr></thead>
+<tbody>
+<tr><td>디딤돌 대출</td><td>2억(생애최초 2.4억, 신혼·2자녀 3.2억)</td><td>연 2.85~4.15%</td><td>부부 6천만원 이하(생애최초·2자녀 7천, 신혼 8.5천), 주택 5억(신혼·2자녀 6억) 이하</td></tr>
+<tr><td>보금자리론</td><td>3.6억(생애최초 4.2억)</td><td>주택금융공사 고시 고정금리</td><td>부부 7천만원 이하(신혼 8.5천), 주택 6억 이하</td></tr>
+</tbody>
+</table>
+<p>시중 주담대 LTV는 비규제지역 70%, 서울 전역·경기 12곳 등 규제지역 40%입니다. 위 본문 표의 금리·주택가격과 'LTV 60%'는 이전 기준이니 이 표로 확인하세요. 본문의 DSR 예시는 원리금균등상환 기준입니다.</p>
+<p><em>출처: 마이홈포털 내집마련 디딤돌대출, 한국주택금융공사 보금자리론, 금융위원회 2025-10-15 주택시장 안정화 대책</em></p>
+`;
+
+const fourMajorInsuranceSupplement = `
+<h2>4대보험 상한·하한과 계산 도구</h2>
+<p>국민연금 기준소득월액은 ${NPS_MIN}~${NPS_MAX}원(2026년 7월~2027년 6월)입니다. 항목별 요율은 <a href="/social-insurance-rates-2026">4대보험 요율표</a>, 성과급을 포함한 상한·하한은 <a href="/guides/four-insurance-ceiling-summary-2026">4대보험 상한·하한 정리</a>, 노후 수령액은 <a href="/national-pension-estimate-2026">국민연금 예상액</a>에서 확인하세요.</p>
+`;
+
+const healthInsuranceGuideSupplement = `
+<h2>건강보험료 계산과 본인부담상한 상세</h2>
+<p>내 보수로 보험료를 계산하려면 <a href="/health-insurance-fee-2026">건강보험료 계산기</a>, 본인부담상한제 환급 신청 절차는 <a href="/guides/out-of-pocket-limit-2026">본인부담상한제 환급 상세</a>를 보세요.</p>
+`;
+
+const HL_MANDO = dart("hl-mando");
+const hlMandoSupplement = `
+<h2>FY2025 공시 기준 HL만도 연봉</h2>
+<p>2026년 3월 제출된 DART 사업보고서(2025.12) 기준 HL만도의 1인 평균 급여는 ${manwonKo(HL_MANDO.a)}(직원 ${won(HL_MANDO.e)}명${HL_MANDO.t ? `, 평균 근속 ${HL_MANDO.t}년` : ""})으로 위 FY2024 값(1억700만원)보다 올랐습니다. <a href="/salary-db/hl-mando">HL만도 연봉 상세</a>에도 같은 공시값이 반영돼 있습니다.</p>
+<p><em>출처: DART HL만도 사업보고서(2025.12) 직원 등 현황, 접수번호 ${HL_MANDO.r}</em></p>
+`;
+
+const DEFENSE_FY2025: ReadonlyArray<readonly [id: string, name: string]> = [
+  ["hanwha-aerospace", "한화에어로스페이스"],
+  ["hyundai-rotem", "현대로템"],
+  ["kai", "KAI"],
+  ["lig-nex1", "LIG넥스원"],
+];
+const defenseRows = DEFENSE_FY2025.map(([id, name]) => ({ id, name, d: dart(id) }));
+const kaiSalarySupplement = `
+<h2>FY2025 사업보고서 기준 방산 4사 평균연봉</h2>
+<table class="w-full text-sm">
+<thead><tr><th>기업</th><th>평균연봉</th><th>직원 수</th></tr></thead>
+<tbody>
+${defenseRows.map((r) => `<tr><td><a href="/salary-db/${r.id}">${r.name}</a></td><td>${manwonKo(r.d.a)}</td><td>${won(r.d.e)}명</td></tr>`).join("\n")}
+</tbody>
+</table>
+<p><em>출처: 각사 DART 사업보고서(2025.12) 직원 등 현황 — 접수번호 ${defenseRows.map((r) => r.d.r).join("·")}. 1인 평균 급여, 100만원 단위 반올림.</em></p>
+`;
+
+const nationalPensionSupplement = `
+<h2>임의가입 최저 보험료 (2026년 4월~)</h2>
+<p>임의가입자 보험료는 기준소득월액 하한(${NPS_MIN}원)이 아니라 중위수 기준소득월액 이상으로 정해집니다. 2026년 4월부터 2027년 3월까지 중위수는 1,013,000원이라 최저 보험료는 월 96,230원(전액 본인 부담)이고, 위 본문의 '약 39,000원'은 임의가입자에게 적용되지 않습니다. 가입기간별 예상 수령액은 <a href="/national-pension-estimate-2026">국민연금 예상액</a>에서 볼 수 있습니다.</p>
+<p><em>출처: 국민연금공단 임의가입 안내(2026년 4월 기준 중위수 소득·연금보험료)</em></p>
+`;
+
+const newlywedTaxSupplement = `
+<h2>2026년 혼인신고 부부가 추가로 볼 것</h2>
+<ul>
+<li>혼인 세액공제 50만원 — 2024~2026년 혼인신고 시 1인 1회(부부 각각). <a href="/guides/newlywed-deduction-first-year-2026">신혼부부 첫 연말정산</a>에서 확인하세요.</li>
+<li>혼인·출산 증여재산 공제는 합쳐서 평생 1억원 한도이고, 직계존속에게 받은 증여만 해당합니다(상속세 및 증여세법 제53조의2).</li>
+</ul>
+`;
+
+const parentalLeave66Supplement = `
+<h2>대상 자녀와 분할 사용 기준</h2>
+<p>6+6 특례는 생후 18개월 이내 자녀를 둔 부모가 대상이고, 육아휴직 자체는 만 8세 이하 또는 초등학교 2학년 이하 자녀까지 쓸 수 있습니다(위 본문의 '만 18세'는 잘못된 표기). 육아휴직은 3회에 한해 나눠 쓸 수 있고, 2025년 2월 23일부터 부모가 각각 3개월 이상 쓰면 1년 6개월까지 늘어납니다.</p>
+<p><em>출처: 남녀고용평등법 제19조·제19조의4, 고용노동부 2025년 육아지원제도 개편 안내</em></p>
+`;
+
+const parentalLeaveGuideSupplement = `
+<h2>육아휴직 급여 계산과 부모 동시 사용</h2>
+<p>2025년 개편 기준(1~3개월 월 250만원·4~6개월 200만원·7개월 이후 160만원 상한, 사후지급금 폐지)으로 내 통상임금에 맞춘 월별 급여는 <a href="/parental-leave">육아휴직 급여 계산기</a>에서, 생후 18개월 이내 자녀를 둔 부모가 함께 쓰는 경우는 <a href="/guides/parental-leave-6plus6-2026">6+6 부모 육아휴직 가이드</a>에서 확인하세요.</p>
+<p>위 본문의 일반 급여(통상임금 80%·상한 150만원), 복직 후 25% 사후 지급, 근로시간 단축(만 8세 이하·첫 5시간) 설명은 2025년 개편 전 옛 제도입니다(단축 첫 5시간 100%는 2024년 6월까지). 지금은 1~6개월 통상임금 100%·7개월부터 80%를 휴직 중 매월 모두 받고, 근로시간 단축은 만 12세(초6) 이하 자녀까지, 매주 최초 10시간 단축분은 통상임금 100%(상한 250만원, 나머지 단축분 80%는 상한 160만원)입니다. 육아휴직 18개월은 부모가 각각 3개월 이상 쓰는 경우 등에 한해 1년에 6개월이 더해지는 기간입니다(남녀고용평등법 제19조 제2항, 2025년 2월 23일 시행).</p>
+<p><em>출처: 고용노동부 2025년 육아지원제도 개편 안내, 고용노동부 2025년 12월 16일 고용보험법 시행령 개정(2026년 1월 1일 시행), 남녀고용평등법 제19조·제19조의2</em></p>
+`;
+
+if (!SAMSUNG_WAGE_2026.ratifiedDate) throw new Error("[guideSupplements] SAMSUNG_WAGE_2026.ratifiedDate 가 없습니다");
+const performancePaySupplement = `
+<h2>2026년 9월 기준 확인 사항</h2>
+<ul>
+<li>SK하이닉스 2025년분 PS는 기본급의 ${SKH_PS_2025_RATE}%(2026년 2월 5일 지급)였고, 2026년분부터 당해 현금 ${SKH_SPLIT.cashNowPct}%+자사주 ${SKH_SPLIT.stockNowPct}%, 1·2년 뒤 자사주 ${SKH_SPLIT.stockYear1Pct}%씩 나눠 지급합니다(9월 16일 가결, 보도 기준).</li>
+<li>삼성전자 2026년 임금 인상률은 평균 ${SAMSUNG_WAGE_2026.totalPct}%입니다(5월 27일 가결, 보도 기준).</li>
+<li>삼성 DS부문 특별경영성과급은 DS부문 영업이익의 10.5%가 재원이고, 2026~2028년은 DS 영업이익이 연 200조원 이상일 때 세후 전액 자사주로 지급됩니다(보도 기준).</li>
+</ul>
+<p>회사별 세후 계산은 <a href="/calc/bonus-calculators">회사별 성과급 계산기 모음</a>, 연도별 지급 이력은 <a href="/insights/bonus-payout-history-2026">기업별 성과급 지급 이력</a>에서 확인하세요.</p>
+`;
+
+const rentDepositSupplement = `
+<h2>최우선변제와 임대차 신고 기준</h2>
+<p>소액임차인 최우선변제는 확정일자가 아니라 전입신고와 점유(대항요건)만 있으면 됩니다. 서울은 보증금 1억6,500만원 이하 임차인이 5,500만원까지 먼저 돌려받고(2023년 2월 21일 이후 기준), 확정일자는 순위에 따른 우선변제에 필요합니다. 임대차 신고제는 2021년 6월 1일 시행됐습니다.</p>
+<p><em>출처: 주택임대차보호법 시행령 제10조·제11조, 생활법령 소액임차인 보호</em></p>
+`;
+
+const retirementPlanningSupplement = `
+<h2>3층 연금을 숫자로 확인하기</h2>
+<p>국민연금은 <a href="/national-pension-estimate-2026">국민연금 예상액</a>, 퇴직연금은 <a href="/retirement-pension-2026">퇴직연금 DB·DC</a>, 개인연금 절세는 <a href="/tools/finance/irp">IRP 절세 계산기</a>로 따로 계산한 뒤 <a href="/fire-calculator">FIRE 목표 자산</a>에서 합쳐 보세요.</p>
+`;
+
+const SAMSUNG_MEDISON = dart("samsung-medison");
+const samsungMedisonSupplement = `
+<h2>DART 공시 평균 급여 (2025년 사업보고서)</h2>
+<p>삼성메디슨은 비상장사지만 DART에 사업보고서를 냅니다. 2025년 사업보고서 기준 1인 평균 급여는 ${manwonKo(SAMSUNG_MEDISON.a)}(직원 ${won(SAMSUNG_MEDISON.e)}명)이고 초봉은 공시되지 않습니다. 위 포털 수치는 이 공시와 별개의 추정치입니다.</p>
+<p><em>출처: DART 삼성메디슨 사업보고서(2025.12) 직원 등 현황, 접수번호 ${SAMSUNG_MEDISON.r}</em></p>
+`;
+
+/** 삼성 OPI 2027·SK PS 2027 전망 글 공통 — 본문의 '영업이익의 12% 수준 재원'은 12%→10.5% 폭 차이로 광고 위에서 고치지 못했다.
+ *  재원 표현은 위 samsung-wage-negotiation-2026 주석의 2026-11-01 통일 규칙('DS부문 영업이익의 10.5%', 10/9 공개 출처 정리 4b717914c)을 따른다 */
+const specialBonusPoolSupplement = `
+<h2>삼성 특별경영성과급 재원 기준</h2>
+<p>2026년 5월 삼성전자 임금협약 보도(지디넷·아시아경제·연합인포맥스)와 10월 7일 세부안 보도(한국경제·이투데이)는 DS부문 특별경영성과급 재원을 위 본문의 '영업이익의 12% 수준'이 아니라 DS부문 영업이익의 10.5%로, 지급 조건을 2026~2028년 매년 DS 영업이익 200조원 이상으로 전합니다(보도 기준).</p>
+`;
+
+const sideHustleSupplement = `
+<h2>신고 예시 다시 계산</h2>
+<p>연봉 5,000만원(본인 1인)의 과세표준은 근로소득공제·인적공제·4대보험 공제 뒤 약 3,100만원대라, 부업 순이익 700만원을 더해도 과세표준 5,000만원 이하인 15% 구간에 머뭅니다. 추가 세금은 700만원 × 15% = 약 105만원에 지방소득세 10.5만원 정도로, 위 예시의 24%·168만원보다 적습니다. 내 조건은 <a href="/income-tax-2026">종합소득세 계산기</a>로 확인하세요.</p>
+<p><em>출처: 소득세법 제47조(근로소득공제)·제55조(세율)</em></p>
+`;
+
+const unemploymentBenefitsSupplement = `
+<h2>실업급여 자주 묻는 질문</h2>
+<ul>
+<li><strong>Q. 2026년 실업급여 하루 최대·최소 금액은?</strong> — 2026년 이직자 기준 1일 상한은 ${UB_UPPER}원, 하한은 최저시급 ${MW_HOURLY}원의 80% × 8시간 = ${UB_LOWER}원입니다. 퇴직 전 3개월 평균임금의 60%가 그 사이면 그 금액을 받습니다(고용보험법 제45·46조).</li>
+<li><strong>Q. 50세 이상이면 며칠 받나요?</strong> — 50세 이상·장애인은 가입기간 1년 미만 120일, 1~3년 180일, 3~5년 210일, 5~10년 240일, 10년 이상 270일입니다(고용보험법 별표 1). 1년 이상 구간마다 50세 미만보다 30일 깁니다.</li>
+</ul>
+<p>조기재취업수당은 소정급여일수를 절반 이상 남기고 재취업해 12개월 이상 계속 고용(65세 이상은 6개월)돼야 받을 수 있고, 워크넷은 고용24로 통합됐습니다. 내 평균임금·나이·가입기간으로 계산하려면 <a href="/unemployment-benefit">실업급여 계산기</a>, 권고사직과 자진퇴사 비교는 <a href="/guides/voluntary-vs-recommended-resignation-2026">권고사직 vs 자진퇴사</a>를 이용하세요.</p>
+<p><em>출처: 고용보험법 제45·46·50조 별표 1, 고용노동부 구직급여 상한액 고시, 생활법령 조기재취업수당</em></p>
+`;
+
+const vatFilingSupplement = `
+<h2>개인사업자 신고 주기와 승용차 매입세액</h2>
+<p>개인 일반과세자는 1월·7월에 확정신고하고, 4월·10월에는 직전 과세기간 납부세액의 50%를 고지받아 냅니다(예정고지). 예정신고는 원칙적으로 법인이 합니다(직전 과세기간 공급가액 1억5천만원 미만 법인은 예정고지). 업무용이라도 개별소비세가 붙는 8인승 이하 승용차(경차 제외)의 구입·유지 매입세액은 공제되지 않고, 화물차·경차·9인승 이상은 공제됩니다.</p>
+<p><em>출처: 부가가치세법 제39조 제1항 제5호, 제48조 제3항, 같은 법 시행령 제90조, 국세청 국세상담센터 예정신고 안내</em></p>
+`;
+
 /**
  * 슬러그 → 보강 HTML. 항목이 없는 가이드는 GuideSupplement 가 아무것도 렌더하지 않는다.
  * 새 항목을 넣을 때도 같은 규칙: 레이아웃 푸터 광고(PageFooterAds) 아래에서만 렌더, 본문 정본 무접촉, 수치는 검증 로그에 기록.
  */
 export const guideSupplements: Record<string, string> = {
   "samsung-wage-negotiation-2026": samsungWageNegotiation2026Supplement,
+  "coupang-fulfillment-night-pay-2026": coupangNightPaySupplement,
+  "earned-income-credit-2026": earnedIncomeCreditSupplement,
+  "etf-beginner": etfBeginnerSupplement,
+  "first-home-2026-strategy": firstHomeSupplement,
+  "four-major-insurance-complete": fourMajorInsuranceSupplement,
+  "health-insurance-2026-guide": healthInsuranceGuideSupplement,
+  "hl-mando-salary-2026": hlMandoSupplement,
+  "kai-salary-2026": kaiSalarySupplement,
+  "national-pension-strategy-2026": nationalPensionSupplement,
+  "newlywed-tax-benefits-2026": newlywedTaxSupplement,
   "nurse-salary": nurseSalarySupplement,
+  "parental-leave-6plus6-2026": parentalLeave66Supplement,
+  "parental-leave-complete-guide": parentalLeaveGuideSupplement,
+  "performance-pay-complete-2026": performancePaySupplement,
+  "rent-deposit-protection": rentDepositSupplement,
+  "retirement-planning": retirementPlanningSupplement,
+  "samsung-medison-salary-2026": samsungMedisonSupplement,
+  "samsung-opi-forecast-2027": specialBonusPoolSupplement,
+  "side-hustle-tax-2026": sideHustleSupplement,
+  "sk-hynix-ps-forecast-2027": specialBonusPoolSupplement,
   "sk-hynix-wage-2026": skHynixWage2026Supplement,
-  // 삼성전자 가이드 4편 — DS 특별성과급 세부안(2026-10-07 보도)·3분기 잠정실적 (supplements-samsung-ds-2026-10.ts)
-  ...guideSupplementsSamsungDs202610,
+  "unemployment-benefits-complete": unemploymentBenefitsSupplement,
+  "vat-filing-2026": vatFilingSupplement,
 };
+
+// ── LT-05 A (h)(g) — 약한 롱테일 가이드 2편에 같은 주제 링크 1줄씩(항목당 200B 안팎, 수치 없음). 10월 bc95e36b 의 보강 2항목 재반영
+//    (2026-11-02, RL-05). (h) 공기업 연봉 순위 → 발전 공기업 5사 비교(한 방향만), (g) 기초연금 2026 → 기초연금 계산기(헤더가 이미 덮지만 글 맨 아래 UX).
+//    다른 배치가 고치는 맵 줄과 겹치지 않도록 맵 바로 뒤에서 합친다. 같은 슬러그가 두 번 등록되면 로드 시 바로 실패한다.
+//    (슬러그 키에 템플릿을 바로 붙이지 않는다 — guideSpec 의 본문 소스 탐색기가 "슬러그": 백틱 꼴을 가이드 본문으로 읽는다.)
+const publicCompanyRankingSupplement = `
+<p>발전 공기업 다섯 곳의 연봉만 따로 비교한 글은 <a href="/guides/power-company-salary-2026">발전 공기업 5사 연봉 비교</a>에 있습니다.</p>
+`;
+const basicPension65Supplement = `
+<p>소득인정액과 감액 조건을 넣어 내 기초연금을 계산하려면 <a href="/basic-pension-2026">기초연금 계산기 2026</a>을 이용하세요.</p>
+`;
+const guideSupplementsLt05a: Record<string, string> = {
+  "public-company-salary-ranking-2026": publicCompanyRankingSupplement,
+  "basic-pension-65-2026": basicPension65Supplement,
+};
+for (const [slug, html] of Object.entries(guideSupplementsLt05a)) {
+  if (slug in guideSupplements) throw new Error(`[guideSupplements] 보강 슬러그 중복: ${slug}`);
+  guideSupplements[slug] = html;
+}
 
 // ── 일시적 2주택 처분 기한 개정(소득세법 시행령 대통령령 제36737호, 2026-10-01 시행) 보강 — 본문은 supplements-two-home-law.ts.
 //    다른 배치가 고치는 맵·import 줄과 겹치지 않도록 파일 끝에서 합친다(ESM import 는 끌어올려진다). 같은 슬러그가 두 번 등록되면 로드 시 바로 실패한다.
@@ -233,4 +447,20 @@ import { guideSupplementsTwoHomeLaw } from "./supplements-two-home-law";
 for (const [slug, html] of Object.entries(guideSupplementsTwoHomeLaw)) {
   if (slug in guideSupplements) throw new Error(`[guideSupplements] 보강 슬러그 중복: ${slug}`);
   guideSupplements[slug] = html;
+}
+
+// ── 2026-10 사실 정정 배치(guidesb) 보강 — 본문은 supplements-2026-10.ts. 다른 배치가 고치는 맵·import 줄과 겹치지 않도록
+//    파일 끝에서 합친다(ESM import 는 끌어올려진다). 같은 슬러그가 두 번 등록되면 로드 시 바로 실패한다.
+import { guideSupplements202610 } from "./supplements-2026-10";
+for (const [slug, html] of Object.entries(guideSupplements202610)) {
+  if (slug in guideSupplements) throw new Error(`[guideSupplements] 보강 슬러그 중복: ${slug}`);
+  guideSupplements[slug] = html;
+}
+
+// ── 2026-10-09 삼성 DS 특별성과급 세부안(10/7 언론 보도)·3분기 잠정실적 보강 5편 — 본문은 supplements-samsung-ds-2026-10.ts.
+//    10/13 보강과 슬러그가 세 편 겹친다(samsung-opi-forecast-2027 의 재원 기준, samsung-bonus-treasury-stock-15-trillion-2026·
+//    samsung-vs-sk-hynix-stock-bonus-2026 의 증권거래세 0.20%). 맵 안 spread 로 두면 앞 항목을 덮거나 위 중복 검사에서 로드가 실패하므로,
+//    다른 배치를 모두 합친 뒤 맨 끝에서 기존 보강 다음에 이어 붙인다(둘 다 마지막 광고 아래 — 기존 보강, 그다음 10월 8일 기준 확인 사항).
+for (const [slug, html] of Object.entries(guideSupplementsSamsungDs202610)) {
+  guideSupplements[slug] = (guideSupplements[slug] ?? "") + html;
 }

@@ -23,6 +23,7 @@ import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import sitemap, { ROUTE_OVERRIDES } from "@/app/sitemap";
 import {
+  EVENT_IDS_LABEL,
   GSC_INSPECT_CAP,
   NAVER_REQUEST_CAP,
   SITE_ORIGIN,
@@ -44,7 +45,7 @@ const RSS_TABLES_MODULE = join("src", "lib", "rssTablesFeed.ts");
 const USAGE = [
   "사용: npx tsx scripts/season-announce.ts <명령> [--registry <경로>]",
   "  check                              등록부 ↔ 사이트맵·ROUTE_OVERRIDES 대조 (오류 시 exit 1)",
-  "  event <E0~E12>                     발표일 체크리스트·수집 요청 후보·lastmod 할 일",
+  "  event <E0~E12·E1b·E1c>             발표일 체크리스트·수집 요청 후보·lastmod 할 일",
   "  diff <prev.xml> <next.xml> [--event E3]",
   "                                     바뀐 lastmod 목록(= [indexnow] 목록)과 수집 요청 순서",
   "                                     파일 대신 build → .next/server/app/sitemap.xml.body",
@@ -134,7 +135,7 @@ async function cmdCheck(registry: SeasonRegistry, root: string): Promise<number>
 async function cmdEvent(registry: SeasonRegistry, raw: string | undefined, root: string): Promise<number> {
   const id = toEventId(raw);
   if (!id) {
-    console.error(`${TAG} 이벤트 id 가 필요합니다 (E0~E12): ${raw ?? "(없음)"}\n${USAGE}`);
+    console.error(`${TAG} 이벤트 id 가 필요합니다 (${EVENT_IDS_LABEL}): ${raw ?? "(없음)"}\n${USAGE}`);
     return 2;
   }
   const a = announceList(registry, id);
@@ -225,7 +226,7 @@ function cmdDiff(registry: SeasonRegistry, args: string[], root: string): number
   const evIdx = args.indexOf("--event");
   const eventId = evIdx >= 0 ? toEventId(args[evIdx + 1]) : null;
   if (evIdx >= 0 && !eventId) {
-    console.error(`${TAG} --event 값이 E0~E12 가 아님: ${args[evIdx + 1] ?? "(없음)"}`);
+    console.error(`${TAG} --event 값이 ${EVENT_IDS_LABEL} 가 아님: ${args[evIdx + 1] ?? "(없음)"}`);
     return 2;
   }
   const d = diffSitemaps(readSitemapArg(prevArg, root), readSitemapArg(nextArg, root));

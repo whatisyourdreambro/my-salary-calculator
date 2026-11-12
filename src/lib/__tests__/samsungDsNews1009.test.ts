@@ -79,7 +79,9 @@ describe("② 가이드 5편 광고 아래 보강(4편 + 삼성·SK 주식 성�
     expect(Object.keys(guideSupplementsSamsungDs202610).sort()).toEqual([...SLUGS].sort());
     for (const s of SLUGS) {
       expect(koGuides.some((g) => g.slug === s), s).toBe(true);
-      expect(guideSupplements[s], s).toBe(guideSupplementsSamsungDs202610[s]);
+      // 10/13 보강과 겹치는 3편(samsung-opi-forecast-2027·samsung-bonus-treasury-stock-15-trillion-2026·samsung-vs-sk-hynix-stock-bonus-2026)은
+      // 기존 보강 뒤에 이어 붙는다 — 10/9 보강이 항상 끝에 온전히 있어야 한다
+      expect((guideSupplements[s] ?? "").endsWith(guideSupplementsSamsungDs202610[s]), s).toBe(true);
       expect(guideSupplements[s], s).toContain(`/guides/${SAMSUNG_DS_NEWS_SLUG}`);
       expect(guideSupplements[s], s).not.toMatch(INTERNAL);
       expect(guideSupplements[s], s).not.toMatch(/자주 묻는 질문/);

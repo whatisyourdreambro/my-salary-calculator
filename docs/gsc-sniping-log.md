@@ -340,3 +340,40 @@ Breadcrumbs/speakable(온페이지) + 허브(/calc/bonus-calculators) 신설 + 2
 - 회사 쪽 430곳은 제목·설명·companyPageModified 가 모두 그대로다. 일시적 2주택 글(OF3 C2, 운영자 결정)은 화면 핵심 요약과 카드 설명만 바뀌고 제목·검색 설명(guideMetaDescriptions)은 그대로다. 삼성 OPI 가이드 3편(OF2 S1·S2)도 제목·검색 설명이 그대로다.
 - 같은 묶음의 원장이 sitemap lastmod 를 2026-11-02 로 옮긴 쪽: /year-end-tax-2027 (OF1 T2) · /calc/smb-income-tax-break (OF1 T3) · /embed (OF3 C4) · /social-insurance-rates-2026 (OF1 T1·C5, 첫 원장 항목 — 화면 최종 갱신 2026.05.12 → 2026.11.02) · /calc/jeonse-loan (OF3 C3, 첫 원장 항목). /calc/samsung-bonus · /calc/bonus-calculators · /year-end-tax · /tax-reform-2026 은 내용이 바뀌었지만 날짜를 유지했고(광고 위 화면 수정일 폭, G4 확인일 고정 — scripts/sitemap-content-reviews.json 사유 참조), /year-end-tax-settlement-2026 · /calc/earned-income-tax-quick · /calc/bmi-quick 은 날짜를 옮기지 않았다(화면 수정일 2026.11.02 가 2026.10.19 보다 넓음, 간이 계산기는 날짜 손잡이 없음).
 - 2026-11-02 추기(A1 범위·메리츠화재): OF4 A1(공유 상자를 마지막 광고 아래로)은 광고가 붙지 않는 5곳(/about · /hub/[id] · /region/[slug] · /samsung-negotiation-2026 · /year-end-tax-2027)에만 남겼다 — 나머지 10곳(/hub · /industry/[slug] · /job/[slug] · /retirement-pension-2026 · /social-insurance-rates-2027 · /tax-rates-2026 · /tips · /year-end-tax-2026 · /year-end-tax-checklist · /year-end-tax-settlement-2026)은 옮기면 9월에 기각·재제안 금지된 광고 연속 배치(HomeTop 직후 Multiplex, 쿠팡 배너·GuideMid 바로 다음 광고)가 다시 생겨 운영(2cab06bc) 배치 그대로 두고 결정 K 때 함께 정한다(이 10곳은 제목·검색 설명·sitemap 수정일 변화 없음, 원장 3곳은 2cab06bc 값 그대로). 메리츠화재 회사 카드(/salary-db/meritz-fire)는 출처를 보도 인용에서 DART 2025 사업보고서 원문(합계 행 1인평균)으로 바꿨고 값 1억 4,397만원·제목·검색 설명·수정일은 그대로이며, 임베드 위젯(/widget/company, noindex)의 공시 평균연봉도 같은 원문 값(100만원 반올림 1억 4,400만원)으로 맞췄다.
+## 2026-11-02 10월 미배포분 재착지 P1(RL-01·RL-02) 제목·설명 변경 기록 (claude/fxr-p1-1102, append-only)
+
+운영자 2026-11-01 승인 7번(10월 미배포분 소규모 재착지)의 R1 묶음 가운데 RL-02(같은 폭 사실 정정)에 head `<title>` 변경이 1곳, 검색 설명 변경이 5곳, 화면 TL;DR·카드 설명만 바뀌는 곳이 1곳 있다. RL-01(가이드 39편 광고 아래 보강)은 제목·설명을 바꾸지 않는다. 이전 값 = 2단계 후보 d2fcc8720, 이후 값 = claude/fxr-p1-1102. 모두 사실 정정이고, 광고 위 줄 수는 게시 전 가드 스윕(1,123폭)으로 잰다. 수치(클릭·노출·CTR)는 적지 않는다 — 판정은 위 Round 3 규칙대로, T0 = 운영자가 R1 게시를 마친 시각(게시 뒤 이 줄에 기입: `T0 = ____`).
+
+| 날짜 | 경로 | 항목 ID (패키지) | 바뀐 것: 이전 → 이후 |
+|---|---|---|---|
+| 2026-11-02 | /guides/coupang-fulfillment-night-pay-2026 | GA-19 (P1·RL-02, 10월 d6b91aaf2) | 제목: 쿠팡 풀필먼트 야간 알바 — 시급 17,000원 + 주휴수당 월 354만원 → … 주휴수당 월 336만원 (주휴수당을 야간가산 없는 기본 시급 11,333원으로 다시 계산, 숫자만). 검색 설명: … 주 40시간 + 주휴수당 시 월 약 354만원, 실수령 305~315만원. 산재보험 자동 가입 + 종소세 신고 의무. → … 월 약 336만원, 실수령 291~296만원. 산재보험 자동 가입 + 종소세 신고 없음. |
+| 2026-11-02 | /guides/samsung-medison-salary-2026 | GA-10 (P1·RL-02, 10월 ade708cd5) | 검색 설명: … 비상장사의 공시 공백을 짚고, … → … 비상장사의 공시 평균을 짚고, … (제목 그대로) |
+| 2026-11-02 | /guides/newlywed-tax-benefits-2026 | GA-24 (P1·RL-02, 10월 938e9fd2b) | 검색 설명: … 증여세 한시 한도 1.5억 … → … 증여세 공제 한도 1.5억 … (제목 그대로) |
+| 2026-11-02 | /guides/sk-hynix-ps-forecast-2027 | GA-16 (P1·RL-02, 10월 798ba9cb9) | 검색 설명: … 자사주 전환 검토 변수까지 … → … 자사주 지급 가결 결과까지 … (제목 그대로) |
+| 2026-11-02 | /guides/crypto-tax-2026 | GB-31 ⑥ (P1·RL-02, 10월 1045fdb4a) | 검색 설명: … 알트코인 양도세 22% 시행 일정 … → … 알트코인 소득세 22% 시행 일정 … (제목의 '코인 양도세 22% 시행 D-?'는 별도 승인 몫이라 그대로) |
+| 2026-11-02 | /guides/us-treasury-bond | GB-31 ② (P1·RL-02, 10월 1045fdb4a) | 화면 TL;DR·카드 설명·Article 설명: 금리 인하 시기, … → 금리 변동 시기, … (검색 설명은 guideMetaDescriptions 의 별도 문구라 그대로, 제목 그대로) |
+
+- 같은 설명이 관련 가이드 카드(line-clamp)로 뜨는 /guides 허브·카테고리·관련 글 3편·계산기 '함께 볼 가이드'의 카드 글도 바뀐다(스윕 대상).
+- 날짜 칩·sitemap lastmod 는 이 묶음에서 바꾸지 않았다(원장 단계 몫). 수정일이 없는 4편(삼성메디슨·신혼부부·SK PS 전망·가상자산)은 새 수정 칩이 GuideMidAd 위 UI 가 되므로 날짜를 올리지 않는다.
+
+## RL-03 — 회사 검색 전용 별칭 11곳 (2026-11-02 재착지 준비 · R1 게시 예정, append-only)
+
+- 무엇: `src/data/companyAliases.ts` `companySearchAliases`(검색 전용 통로, 화면 비노출)에 11곳 — W3-F `kotra`(코트라·대한무역투자진흥공사)·`kpmg-korea`(삼정회계법인), R6-09 사명 변경 `lig-nex1`(LIG D&A)·`hdc-hyundai`(IPARK현대산업개발·아이파크현대산업개발)·`ncsoft`(엔씨)·`hancom`(한컴)·`doosan-enerbility`(두산중공업), B3 `gc-greencross`(녹십자)·`hd-hyundai-oilbank`(현대오일뱅크)·`keti`(KETI)·`lotte-chilsung`(롯데칠성). 10월 커밋(e89acb6·6d4ec03c·c7566555·76682c79·b87746e3)은 배포되지 않았고, 운영자 2026-11-01 승인 7번 재착지 분류 RL-03 으로 브랜치 `claude/fxr-p2-1102` 에 다시 실었다.
+- 바뀌는 것: 해당 회사 상세의 meta keywords 꼬리('{별칭} 연봉, {별칭} 초봉')·Organization JSON-LD alternateName·/salary-db 검색 데이터뿐. `<title>`·description·H1·본문(CompanyNarrative)·광고 위치·sitemap lastmod 는 그대로라 위 제목 변경 표들에는 넣지 않는다(`companyAliases.test`·`companySearchAliases.test` 가 고정). lig-nex1 은 새 상장명·국문 법인명이 이미 화면 별칭(10/23)이라 약칭만 둔다 — 10월 원안의 LIG디펜스앤에어로스페이스 표기는 뺐다.
+- 근거: W3-F 는 운영자 네이버 검색어 보고(9월), R6-09 는 공시·회사 발표(2026-11-02 주요 보도로 다시 확인), B3 는 GSC 3개월 쿼리 — '녹십자 연봉' 51위 · '현대오일뱅크 연봉' 55위 · 'keti 연봉' 계열 3쿼리 31~43위 · '롯데칠성 연봉' 23위, 모두 노출 1~2회라 **근거가 약하다**.
+- 공변량: 11곳은 R1 게시일부터 '별칭이 바뀐 회사' — `docs/analytics-measurement.md` L10' 절 ② 의 11/2 추가 줄.
+- 기록 칸(T0 = 운영자가 R1 승인 게시를 마친 시각. 노출이 적은 곳이 많아 T0+28 에는 판정이 아니라 관찰만 적는다):
+
+| 대상 | 근거 | 액션(검색 전용 별칭) | T0 | T0+28 노출/클릭(관찰) |
+|---|---|---|---|---|
+| kotra (KOTRA) | 네이버 '코트라 연봉' — 제목 표기는 B34(11/1) | [코트라, 대한무역투자진흥공사] | | |
+| kpmg-korea (삼정KPMG) | 네이버 검색어 보고 — 법인명 | [삼정회계법인] | | |
+| lig-nex1 (LIG넥스원) | 2026-03-31 상호 변경 약칭 | [LIG D&A] | | |
+| hdc-hyundai (HDC현대산업개발) | 2026-03-26 상호 변경 | [IPARK현대산업개발, 아이파크현대산업개발] | | |
+| ncsoft (엔씨소프트) | 2026-03-26 상호 변경 | [엔씨] | | |
+| hancom (한글과컴퓨터) | 2026-07 상호·종목명 변경 | [한컴] | | |
+| doosan-enerbility (두산에너빌리티) | 2022-03 옛 사명 | [두산중공업] | | |
+| gc-greencross (GC녹십자) | '녹십자 연봉' 51위 | [녹십자] | | |
+| hd-hyundai-oilbank (HD현대오일뱅크) | '현대오일뱅크 연봉' 55위 | [현대오일뱅크] | | |
+| keti (한국전자기술연구원) | 'keti 연봉' 계열 3쿼리 31~43위 | [KETI] | | |
+| lotte-chilsung (롯데칠성음료) | '롯데칠성 연봉' 23위 | [롯데칠성] | | |

@@ -20,16 +20,17 @@ export const PAGE_LINK_REVIEW_PATHS: ReadonlySet<string> = new Set([
 // pages whose only October 19 change was the TopicNextSteps link box. src/app/about/page.tsx:221:
 // 가이드의 발행일은 보존하고, 본문·계산 기준·출처를 실질적으로 바꾼 경우 수정일을 별도로 표시합니다.
 // 날짜만 바꾸어 새 정보처럼 보이게 하지 않습니다. A calculation-basis change counts even when it
-// arrives through a shared engine the page renders: /chuseok-bonus-2026 is 2026-09-25, when A18
+// arrives through a shared engine the page renders: /chuseok-bonus-2026 was listed at 2026-09-25, when A18
 // (78f10ee20) changed calcBonusNet and so its mini calculator results, not its 8/16 article text.
 // The sitemap lastmod keeps PAGE_LINK_REVIEW_DATE (links are a real change for crawlers).
 // verify:sitemap accepts a listed date only while the sitemap still carries that link-review day
 // and never a visible date later than it; a substantive revision removes the route.
 // B36, owner approval 8 (2026-11-01). Not listed: /health-checkup-2026 (real 11/1 STR-06 revision),
 // and /year-end-tax-settlement-2026 and /tips, whose body facts were corrected after their older
-// displayed dates, so those dates are not their last real revision.
+// displayed dates, so those dates are not their last real revision. Removed: /chuseok-bonus-2026
+// (2026-11-03 R1 re-land ledger: its collapsed FAQ[0] source became the 2026 KEF survey, a substantive
+// revision, so the visible, OG, Article and sitemap dates are all 2026-11-03).
 export const PAGE_VISIBLE_REVISION_DATES: Readonly<Record<string, string>> = {
-  '/chuseok-bonus-2026': '2026-09-25',
   '/health-insurance-2026': '2026-10-04',
   '/basic-pension-2026': '2026-08-15',
   '/civil-servant-pay-2027': '2026-09-25',

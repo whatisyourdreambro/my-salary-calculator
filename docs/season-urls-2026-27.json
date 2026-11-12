@@ -1,7 +1,7 @@
 {
-  "$comment": "R6-04 시즌 URL 등록부 (2026-10 ~ 2027-02). 규칙·검증은 src/lib/seasonAnnounce.ts 머리 주석, 실행은 npx tsx scripts/season-announce.ts check | event E3 | diff <prev.xml> <next.xml>. 이벤트 행의 calendar 는 R4 시즌 달력 행 id(C-xx), w4a 는 R3 W4-A 동결 런북 슬롯 이름만 적는다(본문은 원문을 볼 것). 어떤 페이지도 이 파일을 import 하지 않는다.",
+  "$comment": "R6-04 시즌 URL 등록부 (2026-10 ~ 2027-02). 규칙·검증은 src/lib/seasonAnnounce.ts 머리 주석, 실행은 npx tsx scripts/season-announce.ts check | event E3 | diff <prev.xml> <next.xml>. 이벤트 행의 calendar 는 R4 시즌 달력 행 id(C-xx), w4a 는 R3 W4-A 동결 런북 슬롯 이름만 적는다(본문은 원문을 볼 것). 어떤 페이지도 이 파일을 import 하지 않는다. 2026-11-02 RL-05(10월 574e2e29 의 등록부 부분만 재반영): E4·E10·E11 감시 창을 지난해 실제 공지·지급일로 정정(삼성 TAI 2025-12-22 공지·12-24 지급, 삼성 OPI 2026-01-16 공지·01-30 지급, SK하이닉스 PS 2026-02-05 지급 — 저장소 bonusData·opiData·psData 와 같은 언론 보도 기준), E1 은 2026-10-30 장기요양위원회 결정(건강보험료의 13.90%, 보건복지부)으로 표기, E1b(고용보험 실업급여 요율 시행령 공포 — 2026-09-22 입법예고 고용노동부공고 제2026-450호)·E1c(산재보험료율 고시 — 2025년은 12/12 심의·12/31 발표) 추가, E5 에 기준금리 수치가 박힌 3곳 추가.",
   "version": 1,
-  "asOf": "2026-09-27",
+  "asOf": "2026-11-02",
   "base": "adb120cc",
   "statuses": {
     "live": "adb120cc 사이트맵에 있음",
@@ -21,17 +21,19 @@
   },
   "events": {
     "E0": { "name": "홈택스 연말정산 미리보기 개통", "expected": "10/27부터 매일 감시", "calendar": [], "w4a": ["F-E"] },
-    "E1": { "name": "2027 장기요양보험료율 결정", "expected": "10~12월", "calendar": ["C-01"], "w4a": ["P-1"] },
+    "E1": { "name": "2027 장기요양보험료율 결정", "expected": "2026-10-30 결정(13.90%) — 코드 반영 11/1", "calendar": ["C-01"], "w4a": ["P-1"] },
+    "E1b": { "name": "2027 고용보험 실업급여 요율 시행령 공포", "expected": "11~12월 공포 시(9/22 입법예고 1천분의 18→20)", "calendar": [], "w4a": ["P-2"] },
+    "E1c": { "name": "2027 산재보험료율 고시", "expected": "12월 말 고시(2025: 12/12 심의·12/31 발표)", "calendar": [], "w4a": [] },
     "E2": { "name": "12/1 DEC 시즌 세트(자동)", "expected": "12/1", "calendar": [], "w4a": ["12/1 DEC 시즌 자동"] },
     "E3": { "name": "국회 2027 예산·세법 의결", "expected": "12/2 법정 기한 — 실제 의결일", "calendar": ["C-02", "C-03"], "w4a": ["F-E"] },
-    "E4": { "name": "삼성 TAI 하반기", "expected": "12월 초", "calendar": [], "w4a": ["TAI 12월"] },
+    "E4": { "name": "삼성 TAI 하반기", "expected": "12/18~12/24 감시(2025: 12/22 공지·12/24 지급)", "calendar": [], "w4a": ["TAI 12월"] },
     "E5": { "name": "한국은행 금통위 기준금리 결정", "expected": "금통위 개최일", "calendar": [], "w4a": [] },
     "E6": { "name": "기획재정부 '2027 달라지는 것'", "expected": "12월 말", "calendar": [], "w4a": ["F-E"] },
     "E7": { "name": "2027 봉급표 D-Day(공무원보수규정 개정 공포)", "expected": "12/20부터 매일 감시", "calendar": ["C-04"], "w4a": ["공무원 확정 12월 말"] },
     "E8": { "name": "1/1 연도 전환", "expected": "1/1~1/2", "calendar": ["C-05", "C-06", "C-07"], "w4a": ["P-2", "P-3", "P-4", "P-5", "P-6", "F-D", "최저임금 1/1", "1/2 JAN 수동"] },
     "E9": { "name": "연말정산 간소화 서비스 개통", "expected": "1월 중순", "calendar": ["C-08"], "w4a": ["F-E"] },
-    "E10": { "name": "삼성 OPI 발표", "expected": "1월 말", "calendar": [], "w4a": ["OPI 1월 말"] },
-    "E11": { "name": "기타 성과급 발표(PS·타결·찬반투표)", "expected": "1~2월", "calendar": [], "w4a": [] },
+    "E10": { "name": "삼성 OPI 발표", "expected": "1/12~1/30 감시(2026: 1/16 공지·1/30 지급)", "calendar": [], "w4a": ["OPI 1월 말"] },
+    "E11": { "name": "기타 성과급 발표(PS·타결·찬반투표)", "expected": "1~2월 · SK PS 1/20~2/6 감시(2026: 2/5 지급)", "calendar": [], "w4a": [] },
     "E12": { "name": "2월 환급·설 연휴", "expected": "설 2/6~2/9, 2월 말", "calendar": ["C-09", "C-10"], "w4a": [] }
   },
   "calendarNotMapped": {
@@ -107,12 +109,12 @@
     { "url": "/guides/irp-pension-year-end-2026", "cluster": "year-end", "events": ["E3"], "peak": "2026-11~2026-12", "lastmodHandle": { "kind": "guide-modified", "ref": "irp-pension-year-end-2026" }, "feeds": ["rss"], "status": "live" },
     { "url": "/guides/isa-account-guide", "cluster": "year-end", "events": ["E3"], "peak": "2026-12~2027-01", "lastmodHandle": { "kind": "guide-modified", "ref": "isa-account-guide" }, "feeds": ["rss"], "status": "live" },
 
-    { "url": "/minimum-wage-2027", "cluster": "rollover", "events": ["E1", "E8"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/minimum-wage-2027" }, "feeds": ["rss-tables"], "status": "live" },
-    { "url": "/social-insurance-rates-2027", "cluster": "rollover", "events": ["E1", "E6", "E8"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/social-insurance-rates-2027" }, "feeds": ["rss-tables"], "status": "live" },
-    { "url": "/table/2027/annual", "cluster": "rollover", "events": ["E1", "E8"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/table/2027/annual" }, "feeds": ["rss-tables"], "status": "live" },
-    { "url": "/table/2027/monthly", "cluster": "rollover", "events": ["E1", "E8"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/table/2027/monthly" }, "feeds": ["rss-tables"], "status": "live" },
-    { "url": "/table/2027/weekly", "cluster": "rollover", "events": ["E1", "E8"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/table/2027/weekly" }, "feeds": ["rss-tables"], "status": "live" },
-    { "url": "/table/2027/hourly", "cluster": "rollover", "events": ["E1", "E8"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/table/2027/hourly" }, "feeds": ["rss-tables"], "status": "live" },
+    { "url": "/minimum-wage-2027", "cluster": "rollover", "events": ["E1", "E1b", "E8"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/minimum-wage-2027" }, "feeds": ["rss-tables"], "status": "live" },
+    { "url": "/social-insurance-rates-2027", "cluster": "rollover", "events": ["E1", "E1b", "E1c", "E6", "E8"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/social-insurance-rates-2027" }, "feeds": ["rss-tables"], "status": "live" },
+    { "url": "/table/2027/annual", "cluster": "rollover", "events": ["E1", "E1b", "E8"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/table/2027/annual" }, "feeds": ["rss-tables"], "status": "live" },
+    { "url": "/table/2027/monthly", "cluster": "rollover", "events": ["E1", "E1b", "E8"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/table/2027/monthly" }, "feeds": ["rss-tables"], "status": "live" },
+    { "url": "/table/2027/weekly", "cluster": "rollover", "events": ["E1", "E1b", "E8"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/table/2027/weekly" }, "feeds": ["rss-tables"], "status": "live" },
+    { "url": "/table/2027/hourly", "cluster": "rollover", "events": ["E1", "E1b", "E8"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/table/2027/hourly" }, "feeds": ["rss-tables"], "status": "live" },
     { "url": "/calc/pension-hike-2027", "cluster": "rollover", "events": ["E8"], "peak": "2026-12~2027-01", "lastmodHandle": { "kind": "add-on-event", "ref": "/calc/pension-hike-2027" }, "feeds": ["rss-tables"], "status": "live" },
     { "url": "/unemployment-benefit", "cluster": "rollover", "events": ["E8"], "peak": "2027-01", "lastmodHandle": { "kind": "add-on-event", "ref": "/unemployment-benefit" }, "feeds": ["rss-tables"], "status": "live" },
     { "url": "/calc/unemployment-benefit", "cluster": "rollover", "events": ["E8"], "peak": "2027-01", "lastmodHandle": { "kind": "calc-publishedAt", "ref": "unemployment-benefit" }, "feeds": [], "status": "live" },
@@ -141,6 +143,9 @@
     { "url": "/calc/holiday-bonus", "cluster": "holiday", "events": ["E12"], "peak": "2027-01~2027-02", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": ["rss-tables"], "status": "live" },
     { "url": "/chuseok-bonus-2026", "cluster": "holiday", "events": [], "peak": "2026-09", "lastmodHandle": { "kind": "route-override", "ref": "/chuseok-bonus-2026" }, "feeds": ["rss-tables"], "status": "live" },
 
-    { "url": "/home-loan", "cluster": "loan", "events": ["E5"], "peak": "2026-11~2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/home-loan" }, "feeds": ["rss-tables"], "status": "live" }
+    { "url": "/home-loan", "cluster": "loan", "events": ["E5"], "peak": "2026-11~2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/home-loan" }, "feeds": ["rss-tables"], "status": "live" },
+    { "url": "/savings-interest-2026", "cluster": "loan", "events": ["E5"], "peak": "2026-11~2027-01", "lastmodHandle": { "kind": "add-on-event", "ref": "/savings-interest-2026" }, "feeds": [], "status": "live" },
+    { "url": "/guides/mortgage-refinance-guide-2026", "cluster": "loan", "events": ["E5"], "peak": "2026-11~2027-01", "lastmodHandle": { "kind": "guide-modified", "ref": "mortgage-refinance-guide-2026" }, "feeds": ["rss"], "status": "live" },
+    { "url": "/guides/rule-of-72", "cluster": "loan", "events": ["E5"], "peak": "2026-11~2027-01", "lastmodHandle": { "kind": "guide-modified", "ref": "rule-of-72" }, "feeds": ["rss"], "status": "live" }
   ]
 }

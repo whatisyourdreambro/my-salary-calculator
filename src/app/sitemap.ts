@@ -84,6 +84,9 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/hyundai-bonus': { lastModified: new Date('2026-09-25'), priority: 0.85 },
  '/calc/year-end-bonus': { lastModified: new Date('2026-09-25') },
  '/calc/kia-bonus': { lastModified: new Date('2026-09-25'), priority: 0.85 },
+ // 2026-11-03: 접힌 FAQ 일용직 세금(1일 15만원 공제·2.7%·소액부징수)·비과세 근거 정정(R1 재착지 RL-05, 첫 원장 항목).
+ // 화면·OG·Article 날짜 필드 없음. priority 는 기본 0.8 그대로(0.85 성과급 루프 제외 대상).
+ '/calc/holiday-bonus': { lastModified: new Date('2026-11-03T00:00:00+09:00') },
  '/minimum-wage-2027': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 2027 장기요양 13.90% 확정 반영 실수령 참고치·FAQ (PKG-10)
  '/minimum-wage-2026': { lastModified: new Date('2026-09-12') },
  '/year-end-tax': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 표준세액공제 13만원 비교 엔진(PKG-10)·2027 연말정산 제목과 접힌 FAQ 사실 정정(PKG-20)·접힌 아코디언 추가 입력과 엔진 한도(B24)·마지막 광고 아래 한도표 계산기 링크와 혼인 FAQ(B30)·출산지원금 비과세·중소기업 감면 행(B43)
@@ -93,7 +96,8 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/year-end-tax-2027': { lastModified: new Date('2026-11-02T00:00:00+09:00') }, // 보육수당 비과세 소식 줄 정정(OF1 T2) — 11/1 마지막 광고 아래 세제개편안 정부안 블록·도구 링크·날짜 FAQ (B30 SEO-07-b)
  '/year-end-tax-preview': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 마지막 광고 아래 최근 3년 개통일 표·메뉴 경로 (B30 SEO-07-b)
  // 각 페이지의 Article·OG·표시된 수정일과 동기화. 광고/escape 편집일은 사용하지 않는다.
- '/chuseok-bonus-2026': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
+ // 2026-11-03: 접힌 FAQ 첫 답에 2026 경총 추석 조사(R1 재착지 RL-05) — 화면·OG·Article 수정일도 같은 날(10/19 링크 검토일 예외 해제)
+ '/chuseok-bonus-2026': { lastModified: new Date('2026-11-03T00:00:00+09:00') },
  '/tax-reform-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 마지막 광고 아래 공제 폐지·재정지원 전환 항목 (B43 YE-06) — 페이지 수정일 3곳도 같은 날
  '/civil-servant-pay-2027': { lastModified: new Date('2026-10-19T00:00:00+09:00') }, // B20 리드·메타 정렬(네이버 저CTR)
  // R2 신규 8라우트 (2026-08-31)

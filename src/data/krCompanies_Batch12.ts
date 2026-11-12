@@ -543,8 +543,9 @@ export const krCompanies_Batch12: CompanyProfile[] = [
     id: "kotra",
     name: { ko: "KOTRA", en: "Korea Trade-Investment Promotion Agency" },
     // 제목 승인 예외(운영자 2026-11-01 승인 목록 8번, B34) — <title> 만 '코트라 연봉 2026 (KOTRA) — 신입 초봉·직급별 연봉표'.
-    // H1·본문·description·회사명은 그대로. 검색 별칭(코트라·대한무역투자진흥공사)은 넣지 않는다 — aliases 는
-    // CompanyNarrative 본문 문단으로도 렌더돼 InArticleAd·HomeTopAd 위 줄이 늘어난다.
+    // H1·본문·description·회사명은 그대로. 화면 별칭(aliases)에는 코트라·대한무역투자진흥공사를 넣지 않는다 — aliases 는
+    // CompanyNarrative 본문 문단으로도 렌더돼 InArticleAd·HomeTopAd 위 줄이 늘어난다. 두 표기는 화면에 안 나오는
+    // 검색 전용 별칭(src/data/companyAliases.ts companySearchAliases, 2026-11-02 RL-03)에만 둔다.
     // 수치를 빼는 이유: 아래 신입 추정(5,300만+800만)이 알리오 2025년 결산 신입사원 초임 3,817만원(38,173천원 =
     // 기본급 37,573+급여성 복리후생비 600, 성과급 없음)보다 높다. 같은 공시의 일반정규직 1인당 평균보수는 1억 940만원
     // (109,401천원, 평균근속 158개월). 기준일 2025-12-31, 2026-04-10 제출, 2026-11-01 원문 표 확인 —

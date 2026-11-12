@@ -397,9 +397,9 @@
       "sha256": "13ea8910476e19c4875291942162736282634e37279e0d8204b95164df0c1b4e"
     },
     "/chuseok-bonus-2026": {
-      "contentDate": "2026-10-19",
-      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "1895f456e only changes seasonal wording (before/around Chuseok), which did not warrant a new article date. This release adds explanatory bonus/tax next steps on October 19, with visible/OG/Article dates synchronized. Rehashed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B36 P2UX-03, owner approval 2026-11-01): the visible, OG and Article revision dates return to 2026-09-25, the last substantive revision (A18 78f10ee20 changed the mini calculator results through calcBonusNet); the October 19 change only added the TopicNextSteps link box, so the sitemap keeps the 2026-10-19 link-review date (PAGE_VISIBLE_REVISION_DATES).",
+      "contentDate": "2026-11-03",
+      "reviewedAtCommit": "d2fcc8720fa79ba4c538137239c6f73cbd412f2e",
+      "reason": "Reviewed 2026-11-03 for the R1 re-land integration (claude/reland-r1-1102 from origin/main d2fcc872 plus P3 RL-05, owner approval 7 of 2026-11-01): the collapsed FAQ[0] answer, which is also the FAQPage JSON-LD text, replaces the stale promise to update the page after the 2026 survey with the 2026 KEF Chuseok survey (601 firms with 5 or more employees, published 2026-09-17: 61.0% plan to pay, 66.7% at 300 or more employees and 60.3% below, down 2.0%p; Hankyung 2026-09-17), re-landing the FAQ part of October 4f253e73. Substantive source update: content date advanced from 2026-10-19 to 2026-11-03 and the route leaves PAGE_VISIBLE_REVISION_DATES; the visible PublishedMeta date, OG modifiedTime and Article dateModified move from 2026-09-25 to 2026-11-03 (same 10 characters above HomeTopAd, narrower digits).",
       "dependencies": [
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
@@ -410,7 +410,7 @@
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
       ],
-      "sha256": "3edd9a4b61ff5b8f0be1d71eda168693e01ce4fb799b92a111926de42c4ce2e3"
+      "sha256": "7bf108a2f7f1403fb1f7195f0f6ab324f5cb283ba3325921ca4f9067106bad37"
     },
     "/tax-reform-2026": {
       "contentDate": "2026-11-01",
@@ -940,6 +940,20 @@
         "src/app/income-tax-2026/page.tsx"
       ],
       "sha256": "8fcbd14b789584b2bf3e8324618512e143c28ca13e9f969205b95da41a25c447"
+    },
+    "/calc/holiday-bonus": {
+      "contentDate": "2026-11-03",
+      "reviewedAtCommit": "d2fcc8720fa79ba4c538137239c6f73cbd412f2e",
+      "reason": "New explicit review 2026-11-03 for the R1 re-land integration (claude/reland-r1-1102 from origin/main d2fcc872 plus P3 RL-05, owner approval 7 of 2026-11-01): two collapsed FAQ answers, which are also the FAQPage JSON-LD text, correct the tax facts, re-landing October e1d8535c and the 11/2 precision follow-up 58bf35c0. Daily workers deduct 150,000 won a day (Income Tax Act article 47(2)), 6% less the 55% credit leaves 2.7% plus 0.27% local tax, withholding under 1,000 won is not collected (about 187,000 won a day, judged per payment) and separate taxation ends it; non-taxable earned income is only what the law enumerates (article 12 and others) and a holiday bonus is not on that list. Fact correction: the sitemap date moves from the shared BONUS_ENGINE_REVIEW_DATE 2026-09-25 to 2026-11-03 through a new ROUTE_OVERRIDES key. The page has no visible, OG or Article revision date and its SoftwareApplication JSON-LD has no dateModified, so no text above an ad changes; priority stays 0.8 (the route is excluded from the 0.85 bonus loop). The calculator renders the shared calcBonusNet engine, listed as a dependency.",
+      "dependencies": [
+        "src/lib/bonusTaxCalc.ts"
+      ],
+      "files": [
+        "src/app/calc/holiday-bonus/Client.tsx",
+        "src/app/calc/holiday-bonus/page.tsx",
+        "src/lib/bonusTaxCalc.ts"
+      ],
+      "sha256": "71d7af1d13568c6d0c3b5bd14b967df93d1d0014124a53116337b92fab774fcc"
     }
   }
 }

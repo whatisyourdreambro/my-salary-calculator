@@ -58,7 +58,7 @@ export function DDayCalculator() {
  {result && (
  <div className="mt-6 p-6 bg-electric rounded-xl border border-canvas text-center">
  <p className="text-muted-blue mb-2">결과</p>
- <p className="text-5xl font-black text-primary">{result}</p>
+ <p className="text-5xl font-black text-white">{result}</p>
  </div>
  )}
  </div>
@@ -197,7 +197,7 @@ export function WorkDayCalculator() {
  {result !== null && (
  <div className="mt-6 p-6 bg-electric rounded-xl border border-canvas text-center">
  <p className="text-muted-blue mb-2">{workdayResultLabel(result)}</p>
- <p className="text-5xl font-black text-primary">{result.workdays}일</p>
+ <p className="text-5xl font-black text-white">{result.workdays}일</p>
  </div>
  )}
  </div>

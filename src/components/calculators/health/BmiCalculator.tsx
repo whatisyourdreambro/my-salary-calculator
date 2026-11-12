@@ -19,7 +19,7 @@ export default function BmiCalculator() {
 
  if (bmi < 18.5) {
  status = "저체중";
- color = "text-[rgba(255,255,255,0.8)]";
+ color = "text-sky-600 dark:text-sky-400";
  } else if (bmi < 23) {
  status = "정상";
  color = "text-navy";
