@@ -200,8 +200,8 @@ export default function YearEndTaxSettlement2026Page() {
  에서 확인하세요.
  </p>
  <p className="text-xs text-faint-blue leading-relaxed mt-3">
- 💡 국세청 홈택스의 &lsquo;연말정산 미리보기&rsquo; 서비스는 예년 기준 10월
- 말~11월에 열립니다. 그 전에는 아래 계산기로 예상 환급금을 먼저
+ 💡 국세청 홈택스 &lsquo;연말정산 미리보기&rsquo; 운영 기간은 10월
+ 28일~12월 18일입니다. 아래 계산기로도 예상 환급금을
  확인해보세요.
  </p>
  </div>
