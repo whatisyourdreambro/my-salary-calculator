@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
+import { allowsOrdinaryAdvertising } from './lib/csp-semantics.mjs';
 
 const ADS_URL = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2873403048341290';
 const GA_ID = 'G-EZ8GT7RPEZ';
@@ -305,7 +306,7 @@ export function verifyProductionWorker({ root = path.resolve(path.dirname(fileUR
   const headers = (routesManifest.headers ?? []).flatMap(rule => rule.headers ?? []);
   insist(!headers.some(header => header.key.toLowerCase() === 'x-moneysalary-qa'), 'QA response header in production artifact');
   const csps = headers.filter(header => header.key.toLowerCase() === 'content-security-policy').map(header => header.value);
-  insist(csps.some(csp => /script-src[^;]*https:\/\/pagead2\.googlesyndication\.com/.test(csp) && /script-src[^;]*https:\/\/www\.googletagmanager\.com/.test(csp) && /frame-src[^;]*https:\/\/googleads\.g\.doubleclick\.net/.test(csp)), 'production ad/measurement CSP is absent');
+  insist(csps.some(allowsOrdinaryAdvertising), 'production ad/measurement CSP is absent');
   const buildId = file('.next/BUILD_ID').toString('utf8').trim();
   insist(buildId.length > 0 && file('.open-next/assets/BUILD_ID').toString('utf8').trim() === buildId, 'Next/assets BUILD_ID mismatch');
   const staticCache = verifyStaticCache(root);
