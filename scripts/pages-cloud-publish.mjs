@@ -162,7 +162,10 @@ export async function waitForCloudReleaseCi(commit, api, { attempts = 61, interv
 }
 
 export async function promoteApprovedCloudRelease(commit, { env, event, api, saveState, savePromotion,
-  now = () => new Date(), ciOptions } = {}) {
+  now = () => new Date(), ciOptions, readback = {} } = {}) {
+  const { attempts: readbackAttempts = 5, intervalMs: readbackIntervalMs = 2_000, sleep: readbackSleep = wait } = readback;
+  assert(Number.isInteger(readbackAttempts) && readbackAttempts >= 1 && readbackAttempts <= 5, 'Invalid readback budget');
+  assert(Number.isFinite(readbackIntervalMs) && readbackIntervalMs >= 0 && readbackIntervalMs <= 5_000, 'Invalid readback interval');
   const identity = assertCloudPublishContext(commit, env, event);
   saveState({ schemaVersion: 1, commit, ...identity, phase: 'checking-ci', promoted: false });
   const ci = await waitForCloudReleaseCi(commit, api, ciOptions);
@@ -178,7 +181,16 @@ export async function promoteApprovedCloudRelease(commit, { env, event, api, sav
   saveState({ schemaVersion: 1, commit, ...identity, ci, previousCommit, phase: 'promotion-requested', promoted: false });
   // One mutation only. A lost response is an unknown outcome, never an automatic retry.
   assert.equal(await api.promote(commit), commit, 'GitHub did not confirm the approved commit');
-  assert.equal(await api.readProduction(), commit, 'Deployment branch readback differs');
+  // GitHub confirmed the write above. A ref read made straight after a write can still answer with the
+  // previous commit for a moment: run 43252743020 (2026-11-13) stopped in this phase although the branch
+  // had moved, which ended the approval run and failed the native build. Only the READ is repeated, and
+  // only while it still shows the previous commit, within a small fixed bound. The write is never repeated,
+  // and any other value fails at once.
+  let observed = await api.readProduction();
+  for (let index = 1; observed === previousCommit && index < readbackAttempts; index++) {
+    await readbackSleep(readbackIntervalMs); observed = await api.readProduction();
+  }
+  assert.equal(observed, commit, 'Deployment branch readback differs');
   assert.equal(await api.readMain(), commit, 'Main changed during promotion');
   const receipt = { schemaVersion: 1, commit, branch: CLOUD_RELEASE_BRANCH, previousCommit, ...identity,
     ci, promotedAt: now().toISOString(), promoted: true };

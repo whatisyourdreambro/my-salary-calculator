@@ -33,7 +33,7 @@ function fixture(changes = {}) {
   };
   const deps = { env: env(), event: event(), api,
     saveState: s => states.push(structuredClone(s)), savePromotion: s => receipts.push(structuredClone(s)),
-    now: () => new Date('2026-10-18T00:00:00.000Z'), ciOptions: { attempts: 1 } };
+    now: () => new Date('2026-10-18T00:00:00.000Z'), ciOptions: { attempts: 1 }, readback: { sleep: async () => {} } };
   return { api, calls, states, receipts, deps, publish: () => promoteApprovedCloudRelease(COMMIT, deps) };
 }
 
@@ -171,6 +171,33 @@ test('lost mutation response, incorrect confirmation and readback failures never
     } });
     await assert.rejects(f.publish); assert.equal(mutations, 1); assert.equal(f.receipts.length, 0);
     assert.equal(f.states.at(-1).phase, 'promotion-requested');
+  }
+});
+
+test('a briefly stale deployment-branch read after the confirmed write is read again; the write is never repeated', async () => {
+  // GitHub can answer a ref read with the previous commit right after a write (publish run 43252743020, 2026-11-13).
+  for (const stale of [1, 4]) {
+    let mutations = 0, readsAfter = 0, sleeps = 0;
+    const f = fixture({ promote: async () => { mutations++; return COMMIT; },
+      readProduction: async () => mutations === 0 || readsAfter++ < stale ? OLD : COMMIT });
+    f.deps.readback = { intervalMs: 1000, sleep: async ms => { assert.equal(ms, 1000); sleeps++; } };
+    const receipt = await f.publish();
+    assert.equal(receipt.promoted, true); assert.equal(mutations, 1); assert.equal(sleeps, stale);
+    assert.equal(f.receipts.length, 1); assert.equal(f.states.at(-1).phase, 'promoted-awaiting-native-deployment');
+  }
+  // Still the previous commit after the whole budget, or some third commit: fail without another write or a receipt.
+  for (const [value, expectedSleeps] of [[OLD, 4], [OTHER, 0]]) {
+    let mutations = 0, sleeps = 0;
+    const f = fixture({ promote: async () => { mutations++; return COMMIT; },
+      readProduction: async () => mutations === 0 ? OLD : value });
+    f.deps.readback = { sleep: async () => { sleeps++; } };
+    await assert.rejects(f.publish); assert.equal(mutations, 1); assert.equal(sleeps, expectedSleeps);
+    assert.equal(f.receipts.length, 0); assert.equal(f.states.at(-1).phase, 'promotion-requested');
+  }
+  // The read budget is fixed and small.
+  for (const readback of [{ attempts: 0 }, { attempts: 6 }, { attempts: 1.5 }, { intervalMs: -1 }, { intervalMs: 5001 }, { intervalMs: Number.NaN }]) {
+    const f = fixture(); f.deps.readback = readback;
+    await assert.rejects(f.publish); assert(!f.calls.some(c => Array.isArray(c) && c[0] === 'promote'));
   }
 });
 
