@@ -151,6 +151,7 @@ async function build(mode, nativeContext) {
   } finally { process.env = previousEnv; }
   const buildId = readFileSync(path.join(stage, '.next/BUILD_ID'), 'utf8').trim();
   const packaged = packageExport({ stage, mode, routingConfig: routing, buildId });
+  for (const message of packaged.documentSizeWarnings) console.warn(`::warning title=HTML document size::${message}`);
   if (nativeContext) {
     packaged.manifest.nativeRelease = createNativeReleaseAttestation({ context: nativeContext, mode, buildId,
       sourceHash: copied.sourceHash, lockHash: sha256(readFileSync(path.join(stage, 'package-lock.json'))),

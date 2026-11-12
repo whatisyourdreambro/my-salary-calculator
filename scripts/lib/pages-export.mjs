@@ -10,6 +10,18 @@ export const PAGES_LIMITS = Object.freeze({ files: 20000, assetBytes: 25 * 1024 
 export const PAGES_WORKER_LIMIT = 25 * 1024 * 1024;
 // Below this margin the build still passes but prints a CI warning (audit PD-03, 2026-11-01).
 export const PAGES_WORKER_WARN_HEADROOM = 1024 * 1024;
+// Googlebot indexes only the first 2 MB of an HTML document, measured uncompressed (Google Search Central,
+// Googlebot page). Warn well before that and fail just below it (audit lens-meta-F06, 2026-11-13; largest today
+// is /salary-db at about 1.70 MB).
+export const HTML_DOCUMENT_LIMITS = Object.freeze({ warnBytes: 1_800_000, maxBytes: 1_950_000 });
+
+/** null, { level: 'warn', message } or { level: 'fail', message } for one exported 200 HTML document. */
+export function htmlDocumentSizeIssue(pathname, bytes, limits = HTML_DOCUMENT_LIMITS) {
+  if (bytes < limits.warnBytes) return null;
+  const level = bytes > limits.maxBytes ? 'fail' : 'warn';
+  const limit = level === 'fail' ? limits.maxBytes : limits.warnBytes;
+  return { level, message: `${pathname} HTML is ${bytes} bytes (${level === 'fail' ? 'over the' : 'at or over the'} ${limit}-byte ${level} limit); Googlebot indexes only the first 2 MB of uncompressed HTML, so trim the document before adding content.` };
+}
 // Exact static files served by Pages without invoking the Function (headers come from public/_headers).
 // Public verification HTML stays in the Function: it is stored as /_msy/doc/*.body to avoid Pages'
 // automatic .html -> clean-URL redirect, so excluding it would serve the 404 page. No /.well-known/*
@@ -315,6 +327,7 @@ export function packageExport({ stage, mode, routingConfig, buildId }) {
   const nativeHtmlCount = html.filter(x => !publicPaths.has(x.relative)).length;
   const privateFiles = new Set(html.map(x => x.relative));
   const routes = Object.create(null);
+  const documentSizeWarnings = [];
   const routeStatus = pathname => pathname === '/404' || pathname === '/en/page-unavailable' ? 404 : 200;
   mkdirSync(dist, { recursive: true });
   for (const entry of html) {
@@ -334,6 +347,11 @@ export function packageExport({ stage, mode, routingConfig, buildId }) {
     const status = pathname === '/en/page-unavailable' ? 404 : meta.status || routeStatus(pathname);
     if (![200, 404].includes(status)) throw new Error(`Unexpected static document status: ${status}`);
     if (status === 404) Object.assign(headers, { 'cache-control': 'private, no-store', 'x-robots-tag': 'noindex, nofollow' });
+    if (status === 200) {
+      const sizeIssue = htmlDocumentSizeIssue(pathname, statSync(entry.file).size);
+      if (sizeIssue?.level === 'fail') throw new Error(sizeIssue.message);
+      if (sizeIssue) documentSizeWarnings.push(sizeIssue.message);
+    }
     routes[pathname] = { asset, rscAsset, status, contentType: headers['content-type'], headers };
     mkdirSync(path.dirname(path.join(dist, asset)), { recursive: true });
     copyFileSync(entry.file, path.join(dist, asset));
@@ -369,7 +387,7 @@ export function packageExport({ stage, mode, routingConfig, buildId }) {
   // Pages upload excludes its private Worker directory automatically. Miniflare
   // needs this equivalent local-only rule so the Worker source is never an asset.
   if (mode === 'qa') writeFileSync(path.join(dist, '.assetsignore'), QA_ASSETS_IGNORE);
-  return { manifest, documentCount: nativeHtmlCount, ...checkAssetLimits(dist) };
+  return { manifest, documentCount: nativeHtmlCount, documentSizeWarnings, ...checkAssetLimits(dist) };
 }
 
 export function checkAssetLimits(dist, limits = PAGES_LIMITS) {
