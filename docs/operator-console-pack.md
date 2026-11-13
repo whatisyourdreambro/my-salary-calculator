@@ -256,3 +256,17 @@ CI 대기 시간 연장(게시 작업이 CI 끝까지 기다리게 하는 코드
 13. 2월 SK하이닉스 PS 확정: `psData.ts`(원장 `/calc/sk-hynix-bonus` 갱신).
 14. 3/11(목) 0시 이후: 연말정산 귀속연도 2027(`src/lib/yearEndSeason.ts`) + JAN 세트 만료(`seasonKey.ts` `SEASON_EXPIRES_KST`) → 다음 세트.
 15. 3/31(수)까지: 보안 예외 GHSA-g3hv-75wg-m249 재검토(`scripts/lib/framework-security-policy.mjs`). 4/1 09:00 KST(00:00 UTC)부터 다시 막힌다.
+
+## 게시 빌드용 GitHub 읽기 전용 토큰 (운영자 작업, 2026-11-13 승인)
+
+왜: Cloudflare 가 게시 빌드를 할 때 GitHub 에 '승인 버튼·CI 초록이 맞는지' 12~14번 묻는다. 지금은 이름 없이(익명) 묻는데, 익명 질문은 Cloudflare 빌드 서버 전체가 함께 쓰는 시간당 60번 한도라 자주 바닥나 게시가 실패했다(#16·#19·#23·#26). 읽기 전용 토큰을 넣으면 이 사이트 몫의 한도(시간당 5,000번)로 묻는다. 토큰은 읽기만 하며 사이트·코드·광고를 바꿀 수 없다.
+
+1. 토큰 만들기(GitHub, 5분): GitHub 오른쪽 위 프로필 사진 → Settings → 왼쪽 맨 아래 Developer settings → Personal access tokens → Fine-grained tokens → Generate new token.
+   - Token name: `moneysalary-pages-build-read` · Expiration: Custom → 오늘부터 1년 뒤 날짜.
+   - Resource owner: whatisyourdreambro · Repository access: **Only select repositories** → `whatisyourdreambro/my-salary-calculator` 하나만.
+   - Permissions → Repository permissions: **Actions = Read-only**, **Contents = Read-only**, **Metadata = Read-only**(자동). 다른 권한은 모두 No access 그대로.
+   - Generate token → 화면에 한 번만 보이는 `github_pat_…` 값을 복사한다. 이 값을 채팅·메모·저장소 어디에도 붙여 넣지 않는다(Claude 에게도 보내지 않는다).
+2. Cloudflare 에 넣기(3분): Cloudflare 대시보드 → Workers & Pages → 사이트 Pages 프로젝트 → Settings → Environment variables(또는 Variables and Secrets) → **Production** → Add → 이름 `MSY_GITHUB_READ_TOKEN`, 값 = 복사한 토큰, 종류 **Encrypt(Secret)** → Save. Preview 쪽에는 넣지 않는다.
+3. 잘 되는지 보는 법: 다음 게시(Actions 'Pages · 승인 후 게시')가 끝난 뒤 Cloudflare → 그 Pages 프로젝트 → Deployments → 맨 위 배포 → 빌드 로그 끝의 한 줄에서 `"githubAuth":{"tokenProvided":true,"tokenUsed":true,"tokenRejected":false}` 이면 정상이다. `tokenProvided:true` 인데 `tokenUsed:false` 면 값이 잘못 복사된 것(공백·줄바꿈 포함 등) — 2번을 다시 한다. `tokenRejected:true` 면 GitHub 가 토큰을 거절한 것(만료·권한·저장소 선택 오류) — 1번부터 새로 만든다. 어느 경우에도 그 게시는 예전처럼 익명으로 계속 진행된다.
+4. 만료되면: 1년 뒤 토큰이 만료돼도 게시는 멈추지 않는다 — 빌드가 거절을 알아채고 그 자리에서 예전 익명 방식으로 돌아간다(다만 한도 바닥 실패가 다시 생길 수 있다). GitHub 가 만료 전에 메일을 보내면 1번으로 새 토큰을 만들고 2번에서 같은 이름의 값을 바꾼 뒤 옛 토큰은 GitHub 에서 Delete 한다.
+5. 하지 않는 것: GitHub 저장소 Secrets 나 Actions 에 넣지 않는다(게시 작업은 Cloudflare 자격증명·배포 훅을 쓰지 않는 규칙 그대로). 쓰기 권한·다른 저장소 권한을 주지 않는다.
