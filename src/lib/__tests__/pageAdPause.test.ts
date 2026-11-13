@@ -77,4 +77,13 @@ describe("page state advertising pause", () => {
     const writes = app.loadSdk();
     app.change(null); expect(writes).toEqual([]); app.cleanup();
   });
+  // 실제 404 → 사이트 안 링크 이동: 경로가 바뀌면 effect 가 정리되고 새로 실행된다. 보류 표시가 effect 클로저가 아니라
+  // window(문서 단위)에 있어야 새 실행이 해제(0)를 쓴다 — 정리된 옛 관찰자의 콜백은 무시되므로 기댈 수 없다.
+  it("resumes from a fresh effect run after a pathname change, exactly once (the pause flag lives on window)", () => {
+    const app = runtime("not-found");
+    const writes = app.loadSdk();
+    app.cleanup(); app.change(null); expect(writes).toEqual([]);
+    const cleanup = observePageAdPause(); expect(writes).toEqual([0]);
+    app.change(null); expect(writes).toEqual([0]); cleanup();
+  });
 });
