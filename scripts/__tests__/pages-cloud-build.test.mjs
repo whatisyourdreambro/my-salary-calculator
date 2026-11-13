@@ -7,7 +7,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { assertCloudBuildContext, publicGithubBuildClient, verifyCloudBuildApproval, orchestrateCloudBuild,
   CLOUD_BUILD_REPOSITORY, CLOUD_BUILD_BRANCH, installationEnvironment, trustedNpmCli, nativeBuildDiagnostic,
-  matchesCloudRepositoryOrigin } from '../pages-cloud-build.mjs';
+  matchesCloudRepositoryOrigin, readGithubReadToken, GITHUB_READ_TOKEN_VARIABLE } from '../pages-cloud-build.mjs';
 import { createNativeReleaseAttestation } from '../lib/pages-export.mjs';
 import { NATIVE_RELEASE_PATH, validateNativeRelease } from '../../cloudflare/pages-native-release.mjs';
 import { createPagesHandler } from '../../cloudflare/pages-router.mjs';
@@ -50,6 +50,10 @@ test('native npm environment retains public ads while excluding inherited secret
   const output = installationEnvironment(directory, { PATH: 'fixture-path', CF_API_TOKEN: 'synthetic', GITHUB_TOKEN: 'synthetic',
     FEEDBACK_RATE_LIMIT_SECRET: 'synthetic', NODE_OPTIONS: '--require unknown', npm_config_registry: 'https://invalid.test' });
   for (const key of ['CF_API_TOKEN', 'GITHUB_TOKEN', 'FEEDBACK_RATE_LIMIT_SECRET', 'NODE_OPTIONS']) assert.equal(output[key], undefined);
+  // The optional GitHub read token never reaches npm or the application build.
+  const withToken = installationEnvironment(directory, { PATH: 'fixture-path', [GITHUB_READ_TOKEN_VARIABLE]: 'github_pat_' + 'S'.repeat(82) });
+  assert.equal(Object.hasOwn(withToken, GITHUB_READ_TOKEN_VARIABLE), false);
+  assert.equal(Object.values(withToken).some(value => String(value).includes('S'.repeat(82))), false);
   assert.equal(output.NEXT_PUBLIC_ADS_DISABLED, '0'); assert.equal(output.MSY_QA_MODE, '0');
   assert.equal(output.NEXT_PUBLIC_ADSENSE_SLOT_HOME_TOP, '1234567890');
   assert.equal(output.npm_config_registry, 'https://registry.npmjs.org/');
@@ -171,7 +175,7 @@ test('public gate links one owner dispatch to exact main CI verify and productio
     await assert.rejects(verifyCloudBuildApproval(COMMIT, gateFixture(change).get));
 });
 
-test('GitHub gate is bounded fixed-origin GET with no Authorization, redirects or publisher calls', async t => {
+test('without a token the GitHub gate is bounded fixed-origin GET with no Authorization, redirects or publisher calls', async t => {
   const originalTimeout = AbortSignal.timeout;
   t.mock.method(AbortSignal, 'timeout', milliseconds => {
     assert.equal(milliseconds, 15000); return originalTimeout.call(AbortSignal, milliseconds);
@@ -544,10 +548,154 @@ test('a rate-limited approval request that clears within the caps lets the build
   }
 });
 
-test('the native build gives the GitHub gate client its 18-minute deadline', () => {
+test('the native build gives the GitHub gate client its 18-minute deadline and the optional token', () => {
   const source = readFileSync(new URL('../pages-cloud-build.mjs', import.meta.url), 'utf8');
   assert.match(source, /^const MAX_BUILD_MS = 18 \* 60 \* 1000;$/m);
-  assert.match(source, /const get = publicGithubBuildClient\(globalThis\.fetch, \{ deadline: Date\.now\(\) \+ MAX_BUILD_MS \}\);/);
+  assert.match(source, /const get = publicGithubBuildClient\(globalThis\.fetch, \{ deadline: Date\.now\(\) \+ MAX_BUILD_MS, token \}\);/);
+  // The token is taken out of the copied environment and process.env before any git, npm or build child starts.
+  const main = source.slice(source.indexOf('export async function main('));
+  const removal = main.indexOf('delete env[GITHUB_READ_TOKEN_VARIABLE];');
+  assert.ok(removal > 0 && main.includes('if (input === process.env) delete process.env[GITHUB_READ_TOKEN_VARIABLE];'));
+  for (const later of ['readLocal()', 'installationEnvironment(ROOT, env)', 'spawn(', 'pagesBuild(']) assert.ok(main.indexOf(later) > removal, later);
+  // The token is never printed: only the boolean auth state joins the result and the failure diagnostic.
+  for (const line of source.split('\n').filter(text => /console\.(log|error)/.test(text)))
+    assert.doesNotMatch(line, /token|authorization/i);
+});
+
+// A synthetic token of the fine-grained shape; it never leaves these tests.
+const syntheticToken = 'github_pat_' + 'T0k3n'.repeat(16) + 'xy';
+const bearer = 'Bearer ' + syntheticToken;
+// Records the Authorization header of every request and answers the scripted statuses in order.
+function tokenClient(script, options = {}) {
+  const sent = [], sleeps = [];
+  const get = publicGithubBuildClient(async (url, init) => {
+    sent.push(new Headers(init.headers).get('authorization'));
+    const step = script[sent.length - 1];
+    return step.status === 200 ? Response.json({ ok: true })
+      : new Response(privateDiagnostic, { status: step.status, headers: step.headers });
+  }, { sleep: async milliseconds => { sleeps.push(milliseconds); }, now: () => syntheticNow, ...options });
+  return { get, sent, sleeps };
+}
+const assertNoToken = value => {
+  const text = JSON.stringify(value) + String(value);
+  for (const fragment of [syntheticToken, 'T0k3n', 'Bearer', 'github_pat_']) assert.equal(text.includes(fragment), false, fragment);
+};
+
+test('a well-formed read token is sent as a Bearer header on every gate request', async () => {
+  assert.equal(readGithubReadToken({ [GITHUB_READ_TOKEN_VARIABLE]: syntheticToken }), syntheticToken);
+  const client = tokenClient([{ status: 200 }, { status: 200 }], { token: syntheticToken });
+  assert.deepEqual(await client.get(gateResource, 'main-ref'), { ok: true });
+  assert.deepEqual(await client.get(gateResource, 'production-ref'), { ok: true });
+  assert.deepEqual(client.sent, [bearer, bearer]);
+  assert.deepEqual(client.get.authState(), { tokenProvided: true, tokenUsed: true, tokenRejected: false });
+  assertNoToken(client.get.authState());
+});
+
+test('no token or a malformed token keeps every request anonymous, exactly as before', async () => {
+  for (const token of [undefined, null, '']) {
+    const client = tokenClient([{ status: 200 }], { token });
+    assert.deepEqual(await client.get(gateResource, 'main-ref'), { ok: true });
+    assert.deepEqual(client.sent, [null]);
+    assert.deepEqual(client.get.authState(), { tokenProvided: false, tokenUsed: false, tokenRejected: false });
+  }
+  const malformed = ['short', ' ' + syntheticToken, syntheticToken + '\n', syntheticToken + ' ', 'github_pat_ab cd'.repeat(3),
+    'ghp_' + 'a'.repeat(20) + '-x', 'x'.repeat(256), 'tok\u0000en'.repeat(5), 42, {}, ['github_pat_' + 'a'.repeat(40)]];
+  for (const token of malformed) {
+    assert.equal(readGithubReadToken({ [GITHUB_READ_TOKEN_VARIABLE]: token }), undefined);
+    const client = tokenClient([{ status: 200 }], { token });
+    assert.deepEqual(await client.get(gateResource, 'main-ref'), { ok: true });
+    assert.deepEqual(client.sent, [null]);
+    assert.deepEqual(client.get.authState(), { tokenProvided: true, tokenUsed: false, tokenRejected: false });
+  }
+  assert.equal(readGithubReadToken({}), undefined); assert.equal(readGithubReadToken(undefined), undefined);
+  assert.equal(readGithubReadToken({ get [GITHUB_READ_TOKEN_VARIABLE]() { throw new Error(privateDiagnostic); } }), undefined);
+});
+
+test('a rejected token (401, or 403 that is not a rate limit) repeats that request once anonymously and stays anonymous', async () => {
+  for (const rejection of [{ status: 401 }, { status: 401, headers: { 'x-ratelimit-remaining': '4999' } },
+    { status: 403 }, { status: 403, headers: { 'x-ratelimit-limit': '5000', 'x-ratelimit-remaining': '4990' } }]) {
+    const client = tokenClient([rejection, { status: 200 }, { status: 200 }], { token: syntheticToken });
+    assert.deepEqual(await client.get(gateResource, 'main-ref'), { ok: true });
+    assert.deepEqual(await client.get(gateResource, 'production-ref'), { ok: true });
+    assert.deepEqual(client.sent, [bearer, null, null]); assert.deepEqual(client.sleeps, []);
+    assert.deepEqual(client.get.authState(), { tokenProvided: true, tokenUsed: true, tokenRejected: true });
+  }
+  // When the anonymous repeat also fails, the original anonymous failure contract applies, with booleans only.
+  const failed = tokenClient([{ status: 401 }, { status: 404 }], { token: syntheticToken });
+  await assert.rejects(failed.get(gateResource, 'main-ref'), error => {
+    const diagnostic = nativeBuildDiagnostic(error);
+    assert.deepEqual(diagnostic.approval, { requestCategory: 'main-ref', reason: 'http-status', httpStatus: 404 });
+    assert.deepEqual(diagnostic.githubAuth, { tokenProvided: true, tokenUsed: true, tokenRejected: true });
+    assertNoToken(diagnostic); assertNoToken(error); assertNoToken(error.message); return true;
+  });
+  assert.deepEqual(failed.sent, [bearer, null]);
+  // The anonymous repeat is not a second chance for the token: a later 401 fails like any anonymous 401.
+  const later = tokenClient([{ status: 401 }, { status: 401 }], { token: syntheticToken });
+  await assert.rejects(later.get(gateResource, 'main-ref'));
+  assert.deepEqual(later.sent, [bearer, null]);
+  // Other statuses are not token rejections and keep the existing no-retry contract.
+  for (const status of [404, 500, 302]) {
+    const client = tokenClient([{ status }], { token: syntheticToken });
+    await assert.rejects(client.get(gateResource, 'main-ref'));
+    assert.deepEqual(client.sent, [bearer]);
+    assert.equal(client.get.authState().tokenRejected, false);
+  }
+});
+
+test('rate-limit answers to an authenticated request wait and retry with the token, within the same caps', async () => {
+  const quota = { 'x-ratelimit-limit': '5000', 'x-ratelimit-remaining': '0', 'x-ratelimit-reset': String(syntheticNow / 1000 + 30) };
+  for (const limited of [{ status: 429, headers: { 'retry-after': '30' } }, { status: 403, headers: { 'retry-after': '30' } },
+    { status: 403, headers: quota }]) {
+    const client = tokenClient([limited, { status: 200 }], { token: syntheticToken });
+    assert.deepEqual(await client.get(gateResource, 'main-ref'), { ok: true });
+    assert.deepEqual(client.sent, [bearer, bearer]);
+    assert.equal(client.sleeps.length, 1); assert.ok(client.sleeps[0] >= 30_000 && client.sleeps[0] <= 31_000);
+    assert.deepEqual(client.get.authState(), { tokenProvided: true, tokenUsed: true, tokenRejected: false });
+  }
+  // Two waits, then the documented failure: the token is kept and the diagnostic holds booleans only.
+  const exhausted = tokenClient([{ status: 429, headers: { 'retry-after': '1' } }, { status: 429, headers: { 'retry-after': '1' } },
+    { status: 429, headers: { 'retry-after': '1' } }], { token: syntheticToken });
+  await assert.rejects(exhausted.get(gateResource, 'ci-runs'), error => {
+    const diagnostic = nativeBuildDiagnostic(error);
+    assert.deepEqual(diagnostic.approval, { requestCategory: 'ci-runs', reason: 'http-status', httpStatus: 429,
+      responseMetadata: { retryAfterSeconds: 1 } });
+    assert.deepEqual(diagnostic.githubAuth, { tokenProvided: true, tokenUsed: true, tokenRejected: false });
+    assertNoToken(diagnostic); return true;
+  });
+  assert.deepEqual(exhausted.sent, [bearer, bearer, bearer]); assert.deepEqual(exhausted.sleeps, [1000, 1000]);
+  // The anonymous repeat after a rejection still counts toward the 24-request bound.
+  const bound = tokenClient([...Array(23).fill({ status: 200 }), { status: 401 }], { token: syntheticToken });
+  for (let i = 0; i < 23; i++) await bound.get(gateResource, 'main-ref');
+  await assert.rejects(bound.get(gateResource, 'main-ref'), /request bound exceeded/);
+  assert.equal(bound.sent.length, 24);
+});
+
+test('a full gated build with a token, or with a rejected token, completes and never leaks the token', async () => {
+  for (const rejectFirst of [false, true]) {
+    const gate = gateFixture(), sent = [];
+    const get = publicGithubBuildClient(async (url, init) => {
+      sent.push(new Headers(init.headers).get('authorization'));
+      if (rejectFirst && sent.length === 1) return new Response(privateDiagnostic, { status: 401 });
+      return Response.json(await gate.get(new URL(url).pathname + new URL(url).search));
+    }, { token: syntheticToken });
+    const result = await orchestrateCloudBuild({ env, readLocal: async () => local, get,
+      install: async () => {}, build: async () => {},
+      verify: async () => ({ marker: { buildId: 'synthetic-build' }, manifest: { nativeRelease: release() } }) });
+    assert.deepEqual(result, { completed: true, commit: COMMIT, buildId: 'synthetic-build', approvalRunId: 20 });
+    assert.deepEqual(sent, rejectFirst ? [bearer, ...Array(12).fill(null)] : Array(12).fill(bearer));
+    assertNoToken(result); assertNoToken(get.authState());
+  }
+  // A contract mismatch after a token was used carries the phase, category and auth booleans only.
+  const gate = gateFixture({ main: 'b'.repeat(40) });
+  const get = publicGithubBuildClient(async url => Response.json(await gate.get(new URL(url).pathname + new URL(url).search)),
+    { token: syntheticToken });
+  await assert.rejects(orchestrateCloudBuild({ env, readLocal: async () => local, get,
+    install: async () => assert.fail('No install'), build: async () => {}, verify: async () => ({}) }), error => {
+    const diagnostic = nativeBuildDiagnostic(error);
+    assert.equal(diagnostic.phase, 'approval-before');
+    assert.deepEqual(diagnostic.approval, { requestCategory: 'main-ref', reason: 'contract-mismatch' });
+    assertNoToken(diagnostic); assertNoToken(error); return true;
+  });
 });
 
 test('forged diagnostic properties and non-status values never enter native diagnostics', async () => {
