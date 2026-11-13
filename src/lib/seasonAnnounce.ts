@@ -13,7 +13,7 @@
 //    구글 URL 검사 3개 이하, rss-tables 피드 메타 동기화 대상, lastmod 손잡이 할 일, diff 밖 수동 요청 후보.
 //  - diffSitemaps: 배포 전·후 사이트맵의 (loc, lastmod) 쌍 차이. scripts/indexnow-diff.mjs 와 같은 규칙
 //    (같은 호스트만, XML 엔티티 복원, lastmod 는 날짜 값으로 비교, 오류 페이지·잘린 XML 은 판독 실패)이라
-//    결과가 CF 빌드 로그 [indexnow] 제출 목록과 같다 — 운영자 수집 요청 목록 = [indexnow] 목록.
+//    결과가 게시 실행(Actions) 요약의 IndexNow 줄(IndexNow 제출 목록)과 같다 — 운영자 수집 요청 목록 = [indexnow] 목록.
 //    두 구현의 일치는 src/lib/__tests__/seasonAnnounce.test.ts 가 같은 입력으로 대조한다.
 //
 // lastmod 손잡이 종류 (row.lastmodHandle.kind)

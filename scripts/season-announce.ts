@@ -11,7 +11,7 @@
 //       그 이벤트의 한국어 Day-0 체크리스트, 수집 요청 후보(10개 이하)·구글 검사 후보(3개 이하),
 //       diff 밖 수동 요청 후보(날짜 손잡이 없는 URL), lastmod 손잡이 할 일, 피드 메타 동기화 알림.
 //   npx tsx scripts/season-announce.ts diff <prev.xml> <next.xml> [--event E3]
-//       배포 전·후 사이트맵의 (loc, lastmod) 차이 = CF 빌드 로그 [indexnow] 제출 목록.
+//       배포 전·후 사이트맵의 (loc, lastmod) 차이 = 게시 실행(Actions) 요약의 IndexNow 줄(IndexNow 제출 목록).
 //       --event 를 주면 그 이벤트 후보 중 diff 에 없는 URL 을 둘로 나눈다:
 //       날짜 손잡이가 없는 URL = 'diff 밖 수동 요청', 손잡이가 있는 URL = '손잡이 누락' 확인 목록.
 //       파일 자리에 build 를 쓰면 이 트리의 빌드 산출물(.next/server/app/sitemap.xml.body)을 읽는다.
@@ -156,7 +156,7 @@ async function cmdEvent(registry: SeasonRegistry, raw: string | undefined, root:
   lines.push("5. 운영 사이트맵을 prev.xml 로 저장 → '메인 푸시' → cf-purge 성공 확인 → 다시 next.xml 로 저장.");
   lines.push(`   curl -s -A "Mozilla/5.0" ${SITE_ORIGIN}/sitemap.xml -o prev.xml (기본 UA 는 403)`);
   lines.push(`6. npx tsx scripts/season-announce.ts diff prev.xml next.xml --event ${id}`);
-  lines.push("   → 목록 수가 CF 빌드 로그 '[indexnow] diff: 신규 · 변경 · 삭제' 와 같은지 확인.");
+  lines.push("   → 목록 수가 게시 실행(Actions) 요약의 IndexNow 줄(신규 · 변경 · 삭제)과 같은지 확인.");
   lines.push(
     `7. 네이버 서치어드바이저 → 요청 → 웹 페이지 수집 요청: diff 목록 + 아래 'diff 밖 수동 요청' 목록(내용이 바뀐 것만), 하루 ${NAVER_REQUEST_CAP}개 이하.`,
   );

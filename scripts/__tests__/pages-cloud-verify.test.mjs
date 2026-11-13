@@ -10,7 +10,8 @@ import { pagesReleaseCases } from '../verify-pages-release-http.mjs';
 import { ATTESTATION_PATH, articleContract, assertCloudVerificationContext, assertAttestationMatches,
   validateAttestation, assertPromotion, readNativeAttestation, waitForNativeAttestation,
   captureCloudSitemap, verifyNativePublicRelease, cloudIndexNowPlan, submitCloudIndexNowOnce,
-  verifyCloudArticle, assertCloudRemoteRef, cloudFailureDiagnostic } from '../pages-cloud-verify.mjs';
+  verifyCloudArticle, assertCloudRemoteRef, cloudFailureDiagnostic, cloudIndexNowSummary,
+  cloudIndexNowStepSummary } from '../pages-cloud-verify.mjs';
 
 const COMMIT = 'a'.repeat(40), ORIGIN = 'https://www.moneysalary.com';
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -220,6 +221,47 @@ test('IndexNow sends at most two fixed POSTs, retains ambiguous failure and refu
     const empty = await submitCloudIndexNowOnce({ ...manifest, plan: { submit: false, urls: [] } }, { receiptFile: path.join(dir, 'empty.json'), fetchFn: () => assert.fail('No empty notification') });
     assert.equal(empty.state, 'completed'); assert.deepEqual(empty.results, []);
   } finally { assert.equal(path.dirname(realpathSync(dir)), realpathSync(os.tmpdir())); assert.ok(path.basename(dir).startsWith('msy-native-notify-')); rmSync(dir, { recursive: true }); }
+});
+
+test('IndexNow summary lists counts, first paths and each endpoint status, never the key (lens-crawl-F04)', async () => {
+  const dir = mkdtempSync(path.join(os.tmpdir(), 'msy-native-notify-'));
+  try {
+    const key = 'e'.repeat(32), file = path.join(dir, 'receipt.json');
+    const urls = Array.from({ length: 25 }, (_, i) => ORIGIN + '/guides/item-' + i);
+    const manifest = { commit: COMMIT, sha256: 'b'.repeat(64),
+      plan: { submit: true, reason: '변경분', urls, counts: { added: 1, changed: 23, removed: 1, build: 9, prod: 9 } } };
+    await assert.rejects(submitCloudIndexNowOnce(manifest, { receiptFile: file, key,
+      fetchFn: async url => url.includes('naver') ? Promise.reject(new Error('private transport detail ' + key)) : new Response('', { status: 202 }) }));
+    const summary = cloudIndexNowSummary(manifest, JSON.parse(readFileSync(file)));
+    assert.deepEqual(summary, { stage: 'indexnow-summary', submit: true, counts: { added: 1, changed: 23, removed: 1 }, urlCount: 25,
+      firstPaths: urls.slice(0, 20).map(url => new URL(url).pathname), state: 'needs-review',
+      endpoints: [{ name: 'indexnow', status: 202, ok: true }, { name: 'naver', status: null, ok: false }] });
+    const text = JSON.stringify(summary) + cloudIndexNowStepSummary(summary);
+    for (const secret of [key, 'private transport detail']) assert.equal(text.includes(secret), false);
+    assert.match(cloudIndexNowStepSummary(summary), /공유\(api\.indexnow\.org\): HTTP 202/);
+    assert.match(cloudIndexNowStepSummary(summary), /네이버 직접: 응답 없음 \(실패\)/);
+    assert.match(cloudIndexNowStepSummary(summary), /6b/);
+    // The receipt contract stays: one failed endpoint keeps the step red (needs-review).
+    const empty = { commit: COMMIT, sha256: 'c'.repeat(64), plan: { submit: false, reason: '변경 없음', urls: [], counts: { added: 0, changed: 0, removed: 0 } } };
+    const receipt = await submitCloudIndexNowOnce(empty, { receiptFile: path.join(dir, 'empty.json'), fetchFn: () => assert.fail('No empty notification') });
+    assert.deepEqual(cloudIndexNowSummary(empty, receipt), { stage: 'indexnow-summary', submit: false,
+      counts: { added: 0, changed: 0, removed: 0 }, urlCount: 0, firstPaths: [], state: 'completed', endpoints: [] });
+    // Submission threw before any receipt existed: still a summary, marked no-receipt.
+    const missing = cloudIndexNowSummary(manifest, null);
+    assert.equal(missing.state, 'no-receipt'); assert.deepEqual(missing.endpoints, []); assert.equal(missing.urlCount, 25);
+    assert.match(cloudIndexNowStepSummary(missing), /전송 없음/);
+    // Forged receipt fields are reduced to fixed names, bounded statuses and booleans.
+    const forged = cloudIndexNowSummary(manifest, { state: key, results: [{ name: key, status: key, ok: 'yes', error: key }] });
+    assert.deepEqual(forged.endpoints, [{ name: 'unknown', status: null, ok: false }]); assert.equal(forged.state, 'no-receipt');
+    assert.equal(JSON.stringify(forged).includes(key), false);
+  } finally { assert.equal(path.dirname(realpathSync(dir)), realpathSync(os.tmpdir())); assert.ok(path.basename(dir).startsWith('msy-native-notify-')); rmSync(dir, { recursive: true }); }
+});
+
+test('the IndexNow CLI step reports in a finally block and keeps the needs-review exit', () => {
+  const source = readFileSync(new URL('../pages-cloud-verify.mjs', import.meta.url), 'utf8');
+  assert.match(source, /try \{ await submitCloudIndexNowOnce\(manifest, \{ receiptFile, key \}\); \}\s*finally \{ reportCloudIndexNow\(manifest, receiptFile, env\); \}/);
+  assert.match(source, /log: \(\) => \{\}/);
+  assert.match(source, /writeVerificationJson\(receiptFile, receipt\); assert\.equal\(receipt\.state, 'completed'\);/);
 });
 
 test('article inputs are one approved slug with either a bounded marker or a distinct internal retirement target', () => {
