@@ -262,7 +262,7 @@ CI 대기 시간 연장(게시 작업이 CI 끝까지 기다리게 하는 코드
 왜: Cloudflare 가 게시 빌드를 할 때 GitHub 에 '승인 버튼·CI 초록이 맞는지' 12~14번 묻는다. 지금은 이름 없이(익명) 묻는데, 익명 질문은 Cloudflare 빌드 서버 전체가 함께 쓰는 시간당 60번 한도라 바닥나면 게시가 실패한다(#23 은 기록으로 확인 — `docs/release-retry.md`, #16·#19·#26 은 같은 원인으로 추정). 읽기 전용 토큰을 넣으면 운영자 GitHub 계정 몫의 한도(시간당 5,000번)로 묻는다. 토큰은 읽기만 하며 사이트·코드·광고를 바꿀 수 없다.
 
 1. 토큰 만들기(GitHub, 5분): GitHub 오른쪽 위 프로필 사진 → Settings → 왼쪽 맨 아래 Developer settings → Personal access tokens → Fine-grained tokens → Generate new token.
-   - Token name: `moneysalary-pages-build-read` · Expiration: Custom → 오늘부터 1년 뒤 날짜.
+   - Token name: `moneysalary-pages-build-read` · Expiration: Custom → 오늘부터 1년 뒤 날짜(GitHub 문서 기준 기한은 366일까지 — 더 먼 날짜는 고르지 않는다).
    - Resource owner: whatisyourdreambro · Repository access: **Only select repositories** → `whatisyourdreambro/my-salary-calculator` 하나만.
    - Permissions → Repository permissions: **Actions = Read-only**, **Contents = Read-only**, **Metadata = Read-only**(자동). 다른 권한은 모두 No access 그대로.
    - Generate token → 화면에 한 번만 보이는 `github_pat_…` 값을 복사한다. 이 값을 채팅·메모·저장소 어디에도 붙여 넣지 않는다(Claude 에게도 보내지 않는다).
@@ -272,7 +272,7 @@ CI 대기 시간 연장(게시 작업이 CI 끝까지 기다리게 하는 코드
    - `"tokenProvided":false` — 변수가 빌드에 전달되지 않았다. 이름 철자(`MSY_GITHUB_READ_TOKEN`)와 Production 칸, Save 를 확인하고 2번을 다시 한다.
    - `"tokenProvided":true` 인데 `"tokenUsed":false` — 값이 잘못 복사됐다(공백·줄바꿈·따옴표가 섞임 등). 2번을 다시 한다.
    - `"tokenRejected":true` — GitHub 가 토큰을 거절했다(만료·권한·저장소 선택 오류). 1번부터 새로 만든다.
-   - `githubAuth` 줄이 없다 — 이 기능이 아직 게시되지 않은 빌드이거나, 빌드가 GitHub 에 묻기 전에 멈춘 것이다. 다음 게시에서 다시 본다.
-   - 정상이 아닌 어느 경우에도 그 게시는 멈추지 않고 예전처럼 익명으로 계속 진행된다.
+   - `githubAuth` 줄이 없다 — 이 기능이 아직 게시되지 않은 빌드이거나, 빌드가 토큰과 무관한 다른 이유로 멈춘 것이다. 다음 게시에서 다시 본다.
+   - 위의 토큰 문제 세 가지(전달 안 됨·잘못 복사·거절)에서는 게시가 멈추지 않는다 — 그 게시는 예전처럼 익명으로 계속 진행된다.
 4. 만료되면: 1년 뒤 토큰이 만료돼도 게시는 멈추지 않는다 — 빌드가 거절을 알아채고 그 자리에서 예전 익명 방식으로 돌아간다(다만 한도 바닥 실패가 다시 생길 수 있다). 만료일을 달력에 적어 두고, 그 전에(GitHub 가 만료 안내 메일을 보내면 그때) 1번으로 새 토큰을 만들고 2번에서 같은 이름의 값을 바꾼 뒤 옛 토큰은 GitHub 에서 Delete 한다.
 5. 하지 않는 것: GitHub 저장소 Secrets 나 Actions 에 넣지 않는다(게시 작업은 Cloudflare 자격증명·배포 훅을 쓰지 않는 규칙 그대로). 쓰기 권한·다른 저장소 권한을 주지 않는다.
