@@ -59,8 +59,8 @@
 | A28 T0+7 뒤 | GSC **찾을 수 없음(404) → 수정 결과 확인**(사이트맵 범위 102행 = 용어집·QnA, 오늘은 200) | CRAWL-10 | '-N' 꼬리 143개 404 는 그대로 둔다(리다이렉트 불필요). `-manwon` 31개는 이미 308 |
 | 10/2 (C15 ② 분류 뒤) | 네이버 수집 오류 목록을 HTML / OG·API 로 나눈 뒤, **실패한 수익 HTML 쪽만** 수집 요청(예: `/salary-db/kakao-ent`·`/salary-db/mckinsey-korea`) | CRAWL-10 | OG·API 는 요청하지 않는다 |
 | **10/5 세션 4 칸** | ① RSS 2종 **상태 확인**(8/15 등록 — 제출 아님) ② **C15 ⑤ 중복 제목 그룹 분류**: 사이트 진단 '제목 중복'(559) 상세에서 그룹 제목·개수를 적는다 — `/guides?q` 변형 비중, `/?tab=` 홈 변형(rank·freelancer·severance·future·exchange), utm 공유 링크(`?utm_source=copy\|kakao&utm_medium=share`), 아펙스 호스트. 결과표는 아래 ③ **/home-loan 네이버 웹 탭 순위** — '주담대 금리 계산기'·'주택담보대출 계산기'·'대출한도 계산' 각각 우리 순위(10위 안이면 10/6~10/7 제목·설명 1회 교정 배포, 모두 밖이면 건너뜀) ④ 저CTR 검색어 10개 SERP 캡처(AI 브리핑 유무·인용 도메인·웹 탭 순위·파비콘): 2027년 공무원 봉급표 · 2027 공무원 봉급표 · 2027년 공무원 인상률 · 주담대 금리 계산기 · 현대차 성과급 · 코트라 연봉 · lig넥스원 연봉 · 삼성전자 연봉 · 직업군인 연봉 · 교사 호봉표 | NAVER-08(b)·NAVER-06·NAVER-02(d) | ②가 여전히 `?q` 변형 위주면 가이드 태그 링크 `#q=` 전환(W3-E, `claude/r3-w3e-20260926`)을 10/12 에 배포, 아니면 보류하고 다른 계열부터 본다. `nosourceinfo` 로봇 태그는 절대 넣지 않는다(AI 브리핑 인용 자격 유지) |
-| **10/12~10/13 (10분)** | 시즌 URL 약 18개(연말정산 허브·공제 4종·연말정산 계산기·시즌 가이드 등 — 목록은 세션 직전 Claude 가 사이트맵·시즌 링크 세트에서 뽑아 둔다)의 네이버 색인 상태 확인(`site:` 검색 또는 서치어드바이저) → **색인 안 된 URL 만** 수집 요청 | SEASON-13 | 시즌 배포(10/14~10/31)와 동결기 상수 교체 때마다 바뀐 URL 만 수집 요청 + CF 빌드 로그 `[indexnow]` 확인 + 시즌 HTML 의 `CF-Cache-Status: HIT` 표본 확인, 단계 재빌드 뒤 Purge |
-| 가이드 배포일마다 (10분) | 재작성된 대표 글(배치당 약 12~14개) **네이버 웹 페이지 수집 요청** + 상위 10개 GSC URL 검사 → CF 빌드 로그 `[indexnow]` 가 lastmod 바뀐 URL 만 보냈는지 확인 → 배포 시각을 `docs/ad-experiments.md` 3절 (c) 공변량 표에(URL 채널 `/guides`) | GUIDES-12 | 308 통합된 옛 주소는 요청하지 않는다. D+28 판독은 `docs/gsc-sniping-log.md` 새 Round |
+| **10/12~10/13 (10분)** | 시즌 URL 약 18개(연말정산 허브·공제 4종·연말정산 계산기·시즌 가이드 등 — 목록은 세션 직전 Claude 가 사이트맵·시즌 링크 세트에서 뽑아 둔다)의 네이버 색인 상태 확인(`site:` 검색 또는 서치어드바이저) → **색인 안 된 URL 만** 수집 요청 | SEASON-13 | 시즌 배포(10/14~10/31)와 동결기 상수 교체 때마다 바뀐 URL 만 수집 요청 + 게시 실행(Actions) 요약의 IndexNow 줄 확인 + 시즌 HTML 의 `CF-Cache-Status: HIT` 표본 확인, 단계 재빌드 뒤 Purge |
+| 가이드 배포일마다 (10분) | 재작성된 대표 글(배치당 약 12~14개) **네이버 웹 페이지 수집 요청** + 상위 10개 GSC URL 검사 → 게시 실행(Actions) 요약의 IndexNow 줄이 lastmod 바뀐 URL 만 보냈는지 확인 → 배포 시각을 `docs/ad-experiments.md` 3절 (c) 공변량 표에(URL 채널 `/guides`) | GUIDES-12 | 308 통합된 옛 주소는 요청하지 않는다. D+28 판독은 `docs/gsc-sniping-log.md` 새 Round |
 
 **10/5 C15 ⑤ 중복 제목 그룹 기록표**
 
@@ -224,10 +224,11 @@ README 기준 지금 게시 경로는 GitHub Actions 'Pages · 승인 후 게시
 2. GitHub 커밋 옆 ci 검사(verify)가 초록이 될 때까지 기다린다(약 40~46분). 초록 전에는 누르지 않는다.
 3. 운영자: Actions → Pages · 승인 후 게시 → Run workflow → Branch main → approved_commit 에 main 최신 커밋 40자리 → Run.
 4. 7~20분 뒤 초록이면 끝(publish 작업 완료). 끝날 때까지 main 에 아무것도 합치지 않는다. 확인은 `/.well-known/moneysalary-release.json` 의 commit 이 그 40자리인지 — 비렌더링 GET(`scripts/lib/qa-production-http.cjs` fetchProductionQaDocument, 또는 `curl -sS -A "Mozilla/5.0 MoneySalary-QA/1.0" --max-redirs 0`, 캐시 무력화 쿼리(?cb) 없이). 브라우저로 운영 페이지를 열어 확인하지 않는다(AGENTS.md).
-5. 빨강이면 운영자는 run 번호만 알려 주고, 에이전트가 갈래를 정한다(먼저 6번에 해당하는지 본다).
+5. 빨강이면 운영자는 run 번호만 알려 주고, 에이전트가 갈래를 정한다(먼저 6번·6b번에 해당하는지 본다).
    - **5a — 게시 전 실패**: 빨강이 'Verify exact approved CI and promote the existing deployment branch' 단계이거나 그 앞 단계(npm ci·'Capture the publication delta…')이고 아직 승격 전이다(대개 CI 가 아직 안 끝났거나 빨강). 에이전트 확인: `codex/pages-production` 끝 커밋이 그 40자리가 아니고, 실행 아티팩트 `pages-cloud-release-<run id>`(실행 주소 `/actions/runs/` 뒤 숫자 — 화면의 #번호가 아니다)에 promotion-state.json 이 없거나 그 phase 가 claimed 또는 checking-ci. 이때는 ci 초록을 확인한 뒤 같은 40자리로 Run workflow 를 다시 누르면 된다.
-   - **5b — 승격 뒤 실패**: 그 밖의 빨강 — 이미 승격됐거나(`codex/pages-production` 끝이 그 40자리) 승격 여부가 불명확한 경우(phase promotion-requested), 또는 'Verify the native Pages deployment…' 같은 뒤 단계 — 는 같은 커밋을 다시 게시할 수 없다(Re-run·Cloudflare Retry deployment 도 실패). 6번에 해당하지 않으면 에이전트가 `docs/release-retry.md` 에 "<실패 run 번호> 재시도 <날짜>" 한 줄을 더한 커밋을 main 에 합치고 2번부터 다시 한다.
+   - **5b — 승격 뒤 실패**: 그 밖의 빨강 — 이미 승격됐거나(`codex/pages-production` 끝이 그 40자리) 승격 여부가 불명확한 경우(phase promotion-requested), 또는 'Verify the native Pages deployment…' 같은 뒤 단계 — 는 같은 커밋을 다시 게시할 수 없다(Re-run·Cloudflare Retry deployment 도 실패). 6번·6b번에 해당하지 않으면 에이전트가 `docs/release-retry.md` 에 "<실패 run 번호> 재시도 <날짜>" 한 줄을 더한 커밋을 main 에 합치고 2번부터 다시 한다.
 6. 'Verify the native Pages deployment…' 단계만 빨강인데 `/.well-known/moneysalary-release.json`(비렌더링 GET, UA 에 MoneySalary-QA/1.0)의 commit 이 새 커밋이면 사이트는 반영된 것이다. 재시도하지 말고 바뀐 URL 만 네이버 수집 요청(10개 이하 — 이 경우 IndexNow 단계는 돌지 않았다).
+   - **6b — IndexNow 단계만 빨강(lens-crawl-F04, 2026-11-13)**: 'Submit the verified publication delta once' 단계만 빨강이고 그 앞 Verify 단계가 초록이면 게시와 검증은 끝난 것이다. 다시 게시하지 않고 재시도 커밋도 만들지 않는다(다음 게시의 사이트맵 차이는 비어 있어 알림이 다시 나가지 않는다). 실행 요약(Summary)의 'IndexNow 알림' 줄을 본다. 공유(api.indexnow.org)가 HTTP 200 또는 202 이면 네이버와 빙에는 공유 경로로 전달됐고 네이버 직접 전송만 실패한 것이라 더 할 일이 없다. 공유도 실패했으면 요약(또는 아티팩트 `indexnow.json` 의 plan.urls)의 URL 을 네이버 웹 페이지 수집 요청으로 하루 10개 이하 올린다.
 
 CI 대기 시간 연장(게시 작업이 CI 끝까지 기다리게 하는 코드 변경)은 이번 범위가 아니다 — 'CI 초록 뒤에 누른다'가 규칙이다. HTML 캐시 규칙이 꺼져 있으면 게시 뒤 Purge 는 필요 없다.
 
@@ -256,3 +257,23 @@ CI 대기 시간 연장(게시 작업이 CI 끝까지 기다리게 하는 코드
 13. 2월 SK하이닉스 PS 확정: `psData.ts`(원장 `/calc/sk-hynix-bonus` 갱신).
 14. 3/11(목) 0시 이후: 연말정산 귀속연도 2027(`src/lib/yearEndSeason.ts`) + JAN 세트 만료(`seasonKey.ts` `SEASON_EXPIRES_KST`) → 다음 세트.
 15. 3/31(수)까지: 보안 예외 GHSA-g3hv-75wg-m249 재검토(`scripts/lib/framework-security-policy.mjs`). 4/1 09:00 KST(00:00 UTC)부터 다시 막힌다.
+
+## 게시 빌드용 GitHub 읽기 전용 토큰 (운영자 작업, 2026-11-13 승인)
+
+왜: Cloudflare 가 게시 빌드를 할 때 GitHub 에 '승인 버튼·CI 초록이 맞는지' 12~14번 묻는다. 지금은 이름 없이(익명) 묻는데, 익명 질문은 Cloudflare 빌드 서버 전체가 함께 쓰는 시간당 60번 한도라 바닥나면 게시가 실패한다(#23 은 기록으로 확인 — `docs/release-retry.md`, #16·#19·#26 은 같은 원인으로 추정). 읽기 전용 토큰을 넣으면 운영자 GitHub 계정 몫의 한도(시간당 5,000번)로 묻는다. 토큰은 읽기만 하며 사이트·코드·광고를 바꿀 수 없다.
+
+1. 토큰 만들기(GitHub, 5분): GitHub 오른쪽 위 프로필 사진 → Settings → 왼쪽 맨 아래 Developer settings → Personal access tokens → Fine-grained tokens → Generate new token.
+   - Token name: `moneysalary-pages-build-read` · Expiration: Custom → 오늘부터 1년 뒤 날짜(GitHub 문서 기준 기한은 366일까지 — 더 먼 날짜는 고르지 않는다).
+   - Resource owner: whatisyourdreambro · Repository access: **Only select repositories** → `whatisyourdreambro/my-salary-calculator` 하나만.
+   - Permissions → Repository permissions: **Actions = Read-only**, **Contents = Read-only**, **Metadata = Read-only**(자동). 다른 권한은 모두 No access 그대로.
+   - Generate token → 화면에 한 번만 보이는 `github_pat_…` 값을 복사한다. 이 값을 채팅·메모·저장소 어디에도 붙여 넣지 않는다(Claude 에게도 보내지 않는다).
+2. Cloudflare 에 넣기(3분): Cloudflare 대시보드 → Workers & Pages → 사이트 Pages 프로젝트 → Settings → Environment variables(또는 Variables and Secrets) → **Production** → Add → 이름 `MSY_GITHUB_READ_TOKEN`, 값 = 복사한 토큰, 종류 **Encrypt(Secret)** → Save. Preview 쪽에는 넣지 않는다.
+3. 잘 되는지 보는 법: 토큰을 넣은 뒤의 첫 게시(Actions 'Pages · 승인 후 게시')가 끝나면 Cloudflare → 그 Pages 프로젝트 → Deployments → 맨 위 배포 → 빌드 로그에서 `githubAuth` 를 찾는다(Ctrl+F). 빌드 명령이 끝날 때 찍히는 한 줄이고, 그 뒤로 Cloudflare 의 업로드 줄이 이어진다. 빌드 로그만 보고 배포 주소(`….pages.dev`) 링크는 열지 않는다(AGENTS.md).
+   - `"githubAuth":{"tokenProvided":true,"tokenUsed":true,"tokenRejected":false}` — 정상이다.
+   - `"tokenProvided":false` — 변수가 빌드에 전달되지 않았다. 이름 철자(`MSY_GITHUB_READ_TOKEN`)와 Production 칸, Save 를 확인하고 2번을 다시 한다.
+   - `"tokenProvided":true` 인데 `"tokenUsed":false` — 값이 잘못 복사됐다(공백·줄바꿈·따옴표가 섞임 등). 2번을 다시 한다.
+   - `"tokenRejected":true` — GitHub 가 토큰을 거절했다(만료·권한·저장소 선택 오류). 1번부터 새로 만든다.
+   - `githubAuth` 줄이 없다 — 이 기능이 아직 게시되지 않은 빌드이거나, 빌드가 토큰과 무관한 다른 이유로 멈춘 것이다. 다음 게시에서 다시 본다.
+   - 위의 토큰 문제 세 가지(전달 안 됨·잘못 복사·거절)에서는 게시가 멈추지 않는다 — 그 게시는 예전처럼 익명으로 계속 진행된다.
+4. 만료되면: 1년 뒤 토큰이 만료돼도 게시는 멈추지 않는다 — 빌드가 거절을 알아채고 그 자리에서 예전 익명 방식으로 돌아간다(다만 한도 바닥 실패가 다시 생길 수 있다). 만료일을 달력에 적어 두고, 그 전에(GitHub 가 만료 안내 메일을 보내면 그때) 1번으로 새 토큰을 만들고 2번에서 같은 이름의 값을 바꾼 뒤 옛 토큰은 GitHub 에서 Delete 한다.
+5. 하지 않는 것: GitHub 저장소 Secrets 나 Actions 에 넣지 않는다(게시 작업은 Cloudflare 자격증명·배포 훅을 쓰지 않는 규칙 그대로). 쓰기 권한·다른 저장소 권한을 주지 않는다.

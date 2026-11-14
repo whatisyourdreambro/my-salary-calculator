@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import { createHash, randomUUID } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { existsSync, lstatSync, readFileSync, readdirSync, realpathSync, writeFileSync } from 'node:fs';
+import { appendFileSync, existsSync, lstatSync, readFileSync, readdirSync, realpathSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import guard from './lib/qa-production-http.cjs';
@@ -212,6 +212,46 @@ export async function submitCloudIndexNowOnce(manifest, { receiptFile, key, fetc
   writeVerificationJson(receiptFile, receipt); assert.equal(receipt.state, 'completed'); return receipt;
 }
 
+// lens-crawl-F04 (2026-11-13): one sanitized line per publish so the owner sees what IndexNow received
+// without unzipping the artifact. Counts, the first 20 paths and each endpoint's HTTP status; never the key,
+// never a transport error message. Reporting never changes the step result (needs-review still exits 1).
+export function cloudIndexNowSummary(manifest, receipt) {
+  const plan = manifest?.plan ?? {}, urls = Array.isArray(plan.urls) ? plan.urls : [];
+  const firstPaths = [];
+  for (const url of urls.slice(0, 20)) { try { firstPaths.push(new URL(url).pathname); } catch { firstPaths.push('(invalid)'); } }
+  const counts = plan.counts && typeof plan.counts === 'object'
+    ? Object.fromEntries(['added', 'changed', 'removed'].map(key => [key, Number.isSafeInteger(plan.counts[key]) ? plan.counts[key] : null]))
+    : null;
+  const endpoints = (Array.isArray(receipt?.results) ? receipt.results : []).map(({ name, status, ok }) => ({
+    name: ['indexnow', 'naver'].includes(name) ? name : 'unknown',
+    status: Number.isInteger(status) && status >= 100 && status <= 599 ? status : null, ok: ok === true }));
+  return { stage: 'indexnow-summary', submit: plan.submit === true, counts, urlCount: urls.length, firstPaths,
+    state: ['completed', 'needs-review', 'claimed'].includes(receipt?.state) ? receipt.state : 'no-receipt', endpoints };
+}
+export function cloudIndexNowStepSummary(summary) {
+  const name = { indexnow: '공유(api.indexnow.org)', naver: '네이버 직접', unknown: '알 수 없음' };
+  // The URL count is the planned list: with no-receipt or claimed nothing may have been sent, so it is not called sent.
+  const states = { completed: '완료', 'needs-review': '확인 필요', claimed: '전송 중 중단', 'no-receipt': '전송 전 중단' };
+  const state = Object.hasOwn(states, summary.state) ? `${states[summary.state]}(${summary.state})` : '알 수 없음';
+  const status = row => (row.status === null ? '응답 없음' : 'HTTP ' + row.status) + (row.ok ? '' : ' (실패)');
+  const counts = summary.counts ? `신규 ${summary.counts.added ?? '?'} · 변경 ${summary.counts.changed ?? '?'} · 삭제 ${summary.counts.removed ?? '?'}` : '계획 없음';
+  return ['### IndexNow 알림', '',
+    `- 상태: ${state} · 알림 대상 URL ${summary.urlCount}개 (${counts})`,
+    ...(summary.endpoints.length ? summary.endpoints.map(row => `- ${name[row.name]}: ${status(row)}`) : ['- 전송 없음(바뀐 URL 없음 또는 전송 전 중단)']),
+    ...(summary.firstPaths.length ? ['- 처음 ' + summary.firstPaths.length + '개 경로: ' + summary.firstPaths.map(p => '`' + p + '`').join(' ')] : []),
+    '- 이 단계만 빨강이고 앞 Verify 단계가 초록이면 게시는 끝났다. 다시 게시하지 않는다(docs/operator-console-pack.md 6b).', ''].join('\n');
+}
+export function reportCloudIndexNow(manifest, receiptFile, env) {
+  try {
+    let receipt = null;
+    try { if (existsSync(receiptFile)) receipt = readJson(receiptFile); } catch { receipt = null; }
+    const summary = cloudIndexNowSummary(manifest, receipt);
+    console.log(JSON.stringify(summary));
+    const target = env.GITHUB_STEP_SUMMARY;
+    if (typeof target === 'string' && target.length > 0 && path.isAbsolute(target)) appendFileSync(target, cloudIndexNowStepSummary(summary) + '\n');
+  } catch { /* Reporting never changes the step result. */ }
+}
+
 export async function assertCloudRemoteRef(commit, api, promoted) {
   assert.equal(await api.readMain(), commit);
   if (promoted) assert.equal(await api.readProduction(), commit);
@@ -250,7 +290,10 @@ export async function main(args = process.argv.slice(2), env = process.env) {
   const files = readdirSync(path.join(ROOT, 'public')).filter(name => /^[a-f0-9]{32}\.txt$/.test(name)); assert.equal(files.length, 1);
   const key = files[0].slice(0, -4); assert.equal(readFileSync(path.join(ROOT, 'public', files[0]), 'utf8').trim(), key);
   claim(file('indexnow.json'), manifest); cliStage = 'indexnow-one-time-submission';
-  await submitCloudIndexNowOnce(manifest, { receiptFile: file('indexnow-submission.json'), key });
+  const receiptFile = file('indexnow-submission.json');
+  // The summary is printed also when the submission throws (verifier correction 4).
+  try { await submitCloudIndexNowOnce(manifest, { receiptFile, key }); }
+  finally { reportCloudIndexNow(manifest, receiptFile, env); }
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

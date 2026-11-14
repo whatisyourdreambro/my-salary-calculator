@@ -1,5 +1,7 @@
 // Cloudflare Git build only. No upload command, OAuth, Cloudflare API or browser.
-// GitHub's public API independently checks the exact source and active owner approval.
+// GitHub's public API independently checks the exact source and active owner approval. An optional
+// read-only GitHub token (MSY_GITHUB_READ_TOKEN, owner decision 2026-11-13) only raises the API quota;
+// without it, with a malformed value or after GitHub rejects it, every request is anonymous as before.
 import assert from 'node:assert/strict';
 import { execFileSync, spawn } from 'node:child_process';
 import { existsSync, lstatSync, mkdirSync, realpathSync, writeFileSync } from 'node:fs';
@@ -25,6 +27,13 @@ const PHASES = new Set(['arguments', 'node-version', 'git-head', 'git-status', '
 // out of diagnostics. Only errors created here can carry an allowed phase.
 const failurePhases = new WeakMap();
 const approvalDiagnostics = new WeakMap();
+// Booleans only: whether a token was provided, sent, and rejected. Never the token or its length.
+const githubAuthDiagnostics = new WeakMap();
+function recordGithubAuth(error, state) {
+  if (error === null || (typeof error !== 'object' && typeof error !== 'function') || !state) return;
+  githubAuthDiagnostics.set(error, { tokenProvided: state.tokenProvided === true,
+    tokenUsed: state.tokenUsed === true, tokenRejected: state.tokenRejected === true });
+}
 const APPROVAL_CATEGORIES = new Set(['main-ref', 'production-ref', 'ci-workflow', 'ci-runs',
   'ci-jobs', 'publisher-workflow', 'active-approvals']);
 const APPROVAL_REASONS = new Set(['transport', 'http-status', 'missing-body', 'body-read',
@@ -64,6 +73,7 @@ function phaseFailure(phase, previous) {
   const error = new Error('Native Pages build checkpoint failed; details withheld');
   // Copy only internally registered diagnostics, never properties from a thrown value.
   if (approvalDiagnostics.has(previous)) approvalDiagnostics.set(error, approvalDiagnostics.get(previous));
+  if (githubAuthDiagnostics.has(previous)) githubAuthDiagnostics.set(error, githubAuthDiagnostics.get(previous));
   failurePhases.set(error, PHASES.has(phase) ? phase : 'unclassified'); return error;
 }
 function checkpoint(phase, operation) {
@@ -75,12 +85,13 @@ async function asyncCheckpoint(phase, operation) {
   catch (error) { throw failurePhases.has(error) ? error : phaseFailure(phase, error); }
 }
 export function nativeBuildDiagnostic(error) {
-  const approval = approvalDiagnostics.get(error);
+  const approval = approvalDiagnostics.get(error), githubAuth = githubAuthDiagnostics.get(error);
   return { schemaVersion: 1, event: 'native-build-failed', phase: failurePhases.get(error) || 'unclassified',
     outputApproved: false, detailsWithheld: true,
     ...(approval ? { approval: { ...approval,
       ...(approval.responseMetadata ? { responseMetadata: { ...approval.responseMetadata } } : {}),
-    } } : {}) };
+    } } : {}),
+    ...(githubAuth ? { githubAuth: { ...githubAuth } } : {}) };
 }
 
 export function matchesCloudRepositoryOrigin(origin) {
@@ -117,27 +128,57 @@ export function assertCloudBuildContext(env, local) {
   return env.CF_PAGES_COMMIT_SHA;
 }
 
-// Anonymous GitHub REST quota is 60 requests/hour per IP; an exhausted quota or a secondary limit answers
-// 403/429 with x-ratelimit-remaining 0 (wait until x-ratelimit-reset, epoch seconds) or retry-after (seconds).
+// Optional read-only token for the GitHub gate. Cloudflare Pages passes project environment variables to the
+// build; the owner stores this one encrypted (docs/operator-console-pack.md). Bounded length and a fixed
+// character set (GitHub tokens use letters, digits and underscores); anything else is ignored, never echoed.
+export const GITHUB_READ_TOKEN_VARIABLE = 'MSY_GITHUB_READ_TOKEN';
+const GITHUB_READ_TOKEN = /^[A-Za-z0-9_]{20,255}$/;
+export function readGithubReadToken(env) {
+  let value;
+  try { value = env?.[GITHUB_READ_TOKEN_VARIABLE]; } catch { return undefined; }
+  return typeof value === 'string' && GITHUB_READ_TOKEN.test(value) ? value : undefined;
+}
+
+// Anonymous GitHub REST quota is 60 requests/hour per IP (shared by every build on Cloudflare's build
+// addresses); an authenticated token has its own 5,000 requests/hour. An exhausted quota or a secondary limit
+// answers 403/429 with x-ratelimit-remaining 0 (wait until x-ratelimit-reset, epoch seconds) or retry-after (seconds).
 // https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api
 // Only those documented waits are retried: twice per request, at most 120 s each and 240 s per client,
 // while the build deadline keeps 60 s spare and the request bound still has a call left.
+// With a token: a 401, or a 403 that is not such a rate-limit answer, means the token is bad, expired or lacks
+// access. That one request is repeated once anonymously and the client stays anonymous for the rest of the
+// build, so a bad or expired token costs one extra request (it counts toward the bound) and otherwise leaves the
+// anonymous design unchanged. A rate-limit answer to a valid token is waited out like an anonymous one and is
+// not repeated anonymously. The token is only ever placed in the Authorization header; diagnostics carry the
+// booleans of authState() and nothing else.
 export function publicGithubBuildClient(fetchFn = globalThis.fetch,
-  { sleep = ms => new Promise(resolve => setTimeout(resolve, ms)), now = Date.now, deadline = Infinity } = {}) {
+  { sleep = ms => new Promise(resolve => setTimeout(resolve, ms)), now = Date.now, deadline = Infinity, token } = {}) {
   let calls = 0, waited = 0;
-  return async (resource, requestCategory) => {
+  let activeToken = typeof token === 'string' && GITHUB_READ_TOKEN.test(token) ? token : undefined;
+  const auth = { tokenProvided: token !== undefined && token !== null && token !== '',
+    tokenUsed: false, tokenRejected: false };
+  const fail = error => { if (auth.tokenProvided) recordGithubAuth(error, auth); return error; };
+  const get = async (resource, requestCategory) => {
     assert.ok(resource.startsWith(PREFIX) && !/[\r\n#\\]|\.\./.test(resource));
     for (let attempt = 0; ; attempt++) {
       // Retries count toward the same request bound.
       assert.ok(++calls <= 24, 'Public GitHub build gate request bound exceeded');
+      const authenticated = activeToken !== undefined;
+      const headers = { accept: 'application/vnd.github+json',
+        'x-github-api-version': '2022-11-28', 'user-agent': 'MoneySalary-native-build-gate/1.0' };
+      if (authenticated) { headers.authorization = `Bearer ${activeToken}`; auth.tokenUsed = true; }
       let response;
       try { response = await fetchFn(`https://api.github.com${resource}`, { method: 'GET', redirect: 'manual',
-        signal: AbortSignal.timeout(15000), headers: { accept: 'application/vnd.github+json',
-          'x-github-api-version': '2022-11-28', 'user-agent': 'MoneySalary-native-build-gate/1.0' } }); }
-      catch { throw approvalFailure(requestCategory, 'transport'); }
+        signal: AbortSignal.timeout(15000), headers }); }
+      catch { throw fail(approvalFailure(requestCategory, 'transport')); }
       if (response.status !== 200) {
         // The failure body stays unread. A 403 without rate-limit headers never retries.
         const metadata = readApprovalResponseMetadata(response);
+        const rateLimited = Number.isSafeInteger(metadata?.retryAfterSeconds) || metadata?.rateLimitRemaining === 0;
+        if (authenticated && (response.status === 401 || (response.status === 403 && !rateLimited))) {
+          // Rejected token: forget it and repeat this request once anonymously (same request bound).
+          activeToken = undefined; auth.tokenRejected = true; attempt = -1; continue;
+        }
         const delay = attempt < 2 && [403, 429].includes(response.status) && metadata
           ? (Number.isSafeInteger(metadata.retryAfterSeconds) ? metadata.retryAfterSeconds * 1000
             : metadata.rateLimitRemaining === 0 && Number.isSafeInteger(metadata.rateLimitResetEpochSeconds)
@@ -145,12 +186,12 @@ export function publicGithubBuildClient(fetchFn = globalThis.fetch,
           : null;
         if (delay !== null && delay <= 120_000 && waited + delay <= 240_000 && now() + delay + 60_000 <= deadline
           && calls < 24) { waited += delay; await sleep(delay); continue; }
-        throw approvalFailure(requestCategory, 'http-status', response.status, metadata);
+        throw fail(approvalFailure(requestCategory, 'http-status', response.status, metadata));
       }
       let reader;
       try { reader = response.body?.getReader(); }
-      catch { throw approvalFailure(requestCategory, 'body-read', response.status); }
-      if (!reader) throw approvalFailure(requestCategory, 'missing-body', response.status);
+      catch { throw fail(approvalFailure(requestCategory, 'body-read', response.status)); }
+      if (!reader) throw fail(approvalFailure(requestCategory, 'missing-body', response.status));
       const chunks = []; let length = 0;
       try {
         for (;;) { const { done, value } = await reader.read(); if (done) break;
@@ -160,14 +201,16 @@ export function publicGithubBuildClient(fetchFn = globalThis.fetch,
         try { return JSON.parse(Buffer.concat(chunks).toString('utf8')); }
         catch { throw approvalFailure(requestCategory, 'invalid-json', response.status); }
       } catch (error) {
-        throw approvalDiagnostics.has(error) ? error : approvalFailure(requestCategory, 'body-read', response.status);
+        throw fail(approvalDiagnostics.has(error) ? error : approvalFailure(requestCategory, 'body-read', response.status));
       } finally { await reader.cancel().catch(() => {}); reader.releaseLock(); }
     }
   };
+  get.authState = () => ({ ...auth });
+  return get;
 }
 
 // Workflow ids (path and active state checked) behind each verified identity, so the
-// after-build check can reuse them: 12 instead of 14 anonymous requests per build.
+// after-build check can reuse them: 12 instead of 14 GitHub requests per build.
 const verifiedWorkflowIds = new WeakMap();
 
 export async function verifyCloudBuildApproval(commit, get, known) {
@@ -274,6 +317,13 @@ export async function main(args = process.argv.slice(2), input = process.env) {
   // Save the provider identity before removing private environment bindings from
   // all installation/build children. The provider has a separate 20-minute cap.
   const env = { ...input };
+  // The optional GitHub read token stays in this process only: it is removed from the copied environment
+  // (cleanBuildEnvironment is an allowlist as well) and from process.env, so git, npm and the application
+  // build never inherit it. The raw value goes to the gate client, which validates it itself: a malformed value
+  // is never sent and reports tokenProvided true with tokenUsed false (the owner runbook reads that as a copy mistake).
+  const token = env[GITHUB_READ_TOKEN_VARIABLE];
+  delete env[GITHUB_READ_TOKEN_VARIABLE];
+  if (input === process.env) delete process.env[GITHUB_READ_TOKEN_VARIABLE];
   const git = args => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', timeout: 15000,
     windowsHide: true, stdio: ['ignore', 'pipe', 'ignore'] });
   const readLocal = async () => ({ head: checkpoint('git-head', () => git(['rev-parse', 'HEAD']).trim()),
@@ -282,7 +332,7 @@ export async function main(args = process.argv.slice(2), input = process.env) {
   assertCloudBuildContext(env, await readLocal());
   const childEnv = installationEnvironment(ROOT, env);
   // A rate-limit wait starts only while the 18-minute budget keeps 60 s spare after it.
-  const get = publicGithubBuildClient(globalThis.fetch, { deadline: Date.now() + MAX_BUILD_MS });
+  const get = publicGithubBuildClient(globalThis.fetch, { deadline: Date.now() + MAX_BUILD_MS, token });
   const timer = setTimeout(() => { console.error(JSON.stringify(nativeBuildDiagnostic(phaseFailure('time-budget')))); process.exit(1); }, MAX_BUILD_MS);
   try {
     const result = await orchestrateCloudBuild({ env, readLocal, get,
@@ -299,8 +349,9 @@ export async function main(args = process.argv.slice(2), input = process.env) {
       },
       verify: async () => verifyArtifact(ROOT, 'production', childEnv),
     });
-    console.log(JSON.stringify(result)); return result;
-  } finally { clearTimeout(timer); }
+    console.log(JSON.stringify({ ...result, githubAuth: get.authState() })); return result;
+  } catch (error) { recordGithubAuth(error, get.authState()); throw error; }
+  finally { clearTimeout(timer); }
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url))
