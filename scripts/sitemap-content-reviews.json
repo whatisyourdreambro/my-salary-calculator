@@ -781,14 +781,14 @@
     },
     "/en/guides": {
       "contentDate": "2026-11-01",
-      "reviewedAtCommit": "cc22294422ed4918902cc9255601a30cc601830c",
-      "reason": "Reviewed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B12 P2UX-01, owner approval 2026-11-01): the 10/19 paragraph above the search box and the first HomeTopAd (the link to /en/about on how sources are checked and corrections reviewed), the only change behind the 2026-10-19 date, is removed so that no added text sits above that ad; the guide list is unchanged. Visible link change of the same kind: content date advanced from 2026-10-19 to 2026-11-01 (the page has no visible date fields). Rehashed 2026-11-14 for the n1 publish branch claude/next-1117 (package META, lens-meta-F12): the unused Suspense wrapper is removed so the heading and body are in the first HTML inside main; rendered text is identical, so the 2026-11-01 date is retained.",
+      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
+      "reason": "Reviewed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B12 P2UX-01, owner approval 2026-11-01): the 10/19 paragraph above the search box and the first HomeTopAd (the link to /en/about on how sources are checked and corrections reviewed), the only change behind the 2026-10-19 date, is removed so that no added text sits above that ad; the guide list is unchanged. Visible link change of the same kind: content date advanced from 2026-10-19 to 2026-11-01 (the page has no visible date fields).",
       "dependencies": [],
       "files": [
         "src/app/en/guides/EnglishGuidesClient.tsx",
         "src/app/en/guides/page.tsx"
       ],
-      "sha256": "d20cdc1f19981d865465b5568f931b36ea0c7867348a8355219c71658ee27038"
+      "sha256": "b37752ade54f18519010479e2dfe3f4ebb944f63966cc28225559fbf046eba1f"
     },
     "/retirement-pension-2026": {
       "contentDate": "2026-10-26",
