@@ -116,12 +116,8 @@ function checkPageRevisionDates(entries: Awaited<ReturnType<typeof sitemap>>): n
 // PAGE_DATE_ALIGN_PENDING = 이 게이트가 생긴 날 이미 어긋나 있던 4곳. 고치는 방법은 ROUTE_OVERRIDES 행 + 콘텐츠 검토 원장
 // (scripts/sitemap-content-reviews.json) 항목이라 원장 담당(통합 단계)이 넣는다 — 그 전까지는 WARN, 그 라우트에
 // ROUTE_OVERRIDES 키가 생기면 이 목록에서 지우라는 FAIL(목록이 스스로 비워지게).
-const PAGE_DATE_ALIGN_PENDING: ReadonlySet<string> = new Set([
-  "/samsung-negotiation-2026", // 페이지 2026-09-27
-  "/savings-interest-2026", // 페이지 2026-09-27
-  "/tax-rates-2026", // 페이지 2026-09-26
-  "/year-end-tax-mid-resign", // 페이지 2026-08-15(발행일)
-]);
+// 2026-11-14 통합(claude/next-1117): 4곳 모두 ROUTE_OVERRIDES 행과 원장 항목이 생겨 비웠다. 새로 넣지 말 것 — 어긋난 페이지는 바로 FAIL.
+const PAGE_DATE_ALIGN_PENDING: ReadonlySet<string> = new Set<string>([]);
 function checkPageDatesNotAfterSitemap(entries: Awaited<ReturnType<typeof sitemap>>): { failed: number; warned: number } {
   let failed = 0;
   let warned = 0;

@@ -89,12 +89,15 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/holiday-bonus': { lastModified: new Date('2026-11-03T00:00:00+09:00') },
  '/minimum-wage-2027': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 2027 장기요양 13.90% 확정 반영 실수령 참고치·FAQ (PKG-10)
  '/minimum-wage-2026': { lastModified: new Date('2026-09-12') },
- '/year-end-tax': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 표준세액공제 13만원 비교 엔진(PKG-10)·2027 연말정산 제목과 접힌 FAQ 사실 정정(PKG-20)·접힌 아코디언 추가 입력과 엔진 한도(B24)·마지막 광고 아래 한도표 계산기 링크와 혼인 FAQ(B30)·출산지원금 비과세·중소기업 감면 행(B43)
+ // 2026-11-13: 마지막 광고 아래 한도표 국민성장펀드 행·접힌 FAQ 월세 100㎡·성장펀드 문장(n1 SEASON lens-season-F08·F09) — 신뢰 노트 확인일도 같은 날
+ '/year-end-tax': { lastModified: new Date('2026-11-13T00:00:00+09:00') }, // 표준세액공제 13만원 비교 엔진(PKG-10)·2027 연말정산 제목과 접힌 FAQ 사실 정정(PKG-20)·접힌 아코디언 추가 입력과 엔진 한도(B24)·마지막 광고 아래 한도표 계산기 링크와 혼인 FAQ(B30)·출산지원금 비과세·중소기업 감면 행(B43)
  '/calc/january-bonus': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 13월의 월급 계산기를 연말정산 정본 엔진으로 (B23 CALC-01)
  '/retirement-pension-2026': { lastModified: new Date('2026-10-26T00:00:00+09:00') }, // 일반 위험자산 한도·적격 TDF 예외·공제와 환급 구분 정정
  // 2026-08-23 시즌 패키지 (연말정산 허브·미리보기·시즌 사이드바)
- '/year-end-tax-2027': { lastModified: new Date('2026-11-02T00:00:00+09:00') }, // 보육수당 비과세 소식 줄 정정(OF1 T2) — 11/1 마지막 광고 아래 세제개편안 정부안 블록·도구 링크·날짜 FAQ (B30 SEO-07-b)
- '/year-end-tax-preview': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 마지막 광고 아래 최근 3년 개통일 표·메뉴 경로 (B30 SEO-07-b)
+ // 2026-11-13: 미리보기 단계 카드·시즌 캘린더 첫 행을 국세청 운영 기간 10/28~12/18 로(n1 SEASON lens-season-F03)
+ '/year-end-tax-2027': { lastModified: new Date('2026-11-13T00:00:00+09:00') }, // 보육수당 비과세 소식 줄 정정(OF1 T2) — 11/1 마지막 광고 아래 세제개편안 정부안 블록·도구 링크·날짜 FAQ (B30 SEO-07-b)
+ // 2026-11-13: 2026년 귀속 운영 기간·메뉴 경로(히어로·절차·개통일 표·접힌 FAQ, n1 SEASON lens-season-F01·F02) — 신뢰 노트 확인일도 같은 날
+ '/year-end-tax-preview': { lastModified: new Date('2026-11-13T00:00:00+09:00') }, // 마지막 광고 아래 최근 3년 개통일 표·메뉴 경로 (B30 SEO-07-b)
  // 각 페이지의 Article·OG·표시된 수정일과 동기화. 광고/escape 편집일은 사용하지 않는다.
  // 2026-11-03: 접힌 FAQ 첫 답에 2026 경총 추석 조사(R1 재착지 RL-05) — 화면·OG·Article 수정일도 같은 날(10/19 링크 검토일 예외 해제)
  '/chuseok-bonus-2026': { lastModified: new Date('2026-11-03T00:00:00+09:00') },
@@ -108,7 +111,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/offer-compare': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 자녀 공제 나이 FAQ 정정(PKG-21) — 본문 '(설명 수정 2026-11-01)'와 일치
  '/calc/child-deduction': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 결과 광고 위 입력 안내를 짧은 요약으로 (B09 P4-05)
  '/calc/jeonse-loan': { lastModified: new Date('2026-11-02T00:00:00+09:00') }, // 결과 카드 배지 최저 비용 → 최저 금리, 금리 순 판정(OF3 C3, 첫 원장 항목)
- '/tax-changes-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 자녀세액공제 나이 정정(PKG-21)
+ '/tax-changes-2026': { lastModified: new Date('2026-11-13T00:00:00+09:00') }, // 접힌 FAQ 2026 귀속 변경 4가지(n1 SEASON lens-season-F10) — 페이지 수정일 2곳도 같은 날. 11/1 자녀세액공제 나이 정정(PKG-21)
  '/year-end-tax-checklist': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 2027 연말정산 제목·자녀세액공제 나이 정정(PKG-20)
  '/weekly-holiday-allowance-2026': { lastModified: new Date('2026-09-12') },
  '/civil-servant-pay-2026': { lastModified: new Date('2026-10-04') },
@@ -118,9 +121,9 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/tools/finance/bonus': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 과세표준 4대보험료 공제 반영(PKG-12)
  '/donation-tax-credit-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 산출세액 한도 미반영 정정·한도 초과 미공제분 줄 (B26 STR-02-o)·페이지 끝 날짜 FAQ (B30)
  // 2026-11-01: 연말정산 계산기 3종 — 마지막 광고(MultiplexAd) 아래 페이지 끝 날짜 FAQ 2문항 (B30 SEO-07-b, 첫 원장 항목)
- '/credit-card-deduction-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') },
+ '/credit-card-deduction-2026': { lastModified: new Date('2026-11-13T00:00:00+09:00') }, // 2026-11-13 접힌 FAQ 한도 자녀 요건(n1 SEASON)
  '/medical-tax-credit-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 출처 조문 제59조의4 제2항 정정도 같은 날
- '/rent-tax-credit-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') },
+ '/rent-tax-credit-2026': { lastModified: new Date('2026-11-13T00:00:00+09:00') }, // 2026-11-13 접힌 FAQ·HowTo 3자녀 100㎡·주말부부 요건(n1 SEASON lens-season-F09)
  '/property-holding-tax-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 종부세 농어촌특별세·1세대 1주택 세액공제·12월 상세 (R2-HOLD)
  '/health-insurance-dependent': { lastModified: new Date('2026-10-17') },
  // 2026-11-01: 6대 암검진 본인부담 0~10%·수검 기한 1회 교정(운영자 승인, PKG-22 STR-06) — 10/19 링크 검토일 대신
@@ -142,6 +145,21 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/en/salary-converter': { lastModified: new Date('2026-09-09') },
  '/en/help': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
  '/en/guides': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 첫 광고 위 10/19 소개 링크 문단 제거 (B12 P2UX-01)
+ // 페이지가 이미 밝힌 수정일로 사이트맵 정렬(n1 CRAWL lens-crawl-F05·lens-meta-F03) — 7/16 기본값이 페이지 날짜보다 이르던 4곳.
+ // 날짜는 각 페이지 OG modifiedTime·Article·PublishedMeta 와 같다(통합일·게시일 아님).
+ '/samsung-negotiation-2026': { lastModified: new Date('2026-09-27T00:00:00+09:00') },
+ '/savings-interest-2026': { lastModified: new Date('2026-09-27T00:00:00+09:00') },
+ '/tax-rates-2026': { lastModified: new Date('2026-09-26T00:00:00+09:00') },
+ '/year-end-tax-mid-resign': { lastModified: new Date('2026-08-15T00:00:00+09:00') }, // 발행일
+ // 2026-11-13: 근로장려금 기한 후 신청 6월 2일 ~ 12월 1일·FAQ 마감 정정(n1 SEASON lens-season-F07, 첫 원장 항목). 화면 날짜 필드 없음
+ '/earned-income-credit': { lastModified: new Date('2026-11-13T00:00:00+09:00') },
+ // 2026-11-13: 마지막 광고 아래 계산 기준 설명 글(n1 META lens-meta-F10, 첫 원장 항목). 화면 날짜 필드 없음
+ '/global': { lastModified: new Date('2026-11-13T00:00:00+09:00') },
+ '/mbti-salary': { lastModified: new Date('2026-11-13T00:00:00+09:00') },
+ '/lotto': { lastModified: new Date('2026-11-13T00:00:00+09:00') },
+ '/fortune-2026': { lastModified: new Date('2026-11-13T00:00:00+09:00') },
+ '/tools/math': { lastModified: new Date('2026-11-13T00:00:00+09:00') }, // tools/layout.tsx 의 마지막 광고 아래
+ '/company/simulator': { lastModified: new Date('2026-11-13T00:00:00+09:00') }, // company/layout.tsx 의 마지막 광고 아래
 };
 
 // 2026-09-10: 연봉 상세의 계산 방법과 회사 상세 FAQ를 실질적으로 수정한 날.

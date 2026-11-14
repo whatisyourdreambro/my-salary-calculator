@@ -95,7 +95,7 @@
     { "url": "/year-end-tax-2027", "cluster": "year-end", "events": ["E3", "E6"], "peak": "2026-12~2027-02", "lastmodHandle": { "kind": "route-override", "ref": "/year-end-tax-2027" }, "feeds": ["rss-tables"], "status": "live" },
     { "url": "/year-end-tax-checklist", "cluster": "year-end", "events": ["E0", "E9"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/year-end-tax-checklist" }, "feeds": [], "status": "live" },
     { "url": "/year-end-tax-settlement-2026", "cluster": "year-end", "events": ["E9", "E12"], "peak": "2027-01~2027-02", "lastmodHandle": { "kind": "add-on-event", "ref": "/year-end-tax-settlement-2026" }, "feeds": [], "status": "live" },
-    { "url": "/year-end-tax-mid-resign", "cluster": "year-end", "events": ["E9", "E12"], "peak": "2027-01~2027-05", "lastmodHandle": { "kind": "add-on-event", "ref": "/year-end-tax-mid-resign" }, "feeds": [], "status": "live" },
+    { "url": "/year-end-tax-mid-resign", "cluster": "year-end", "events": ["E9", "E12"], "peak": "2027-01~2027-05", "lastmodHandle": { "kind": "route-override", "ref": "/year-end-tax-mid-resign" }, "feeds": [], "status": "live" },
     { "url": "/credit-card-deduction-2026", "cluster": "year-end", "events": ["E3", "E9"], "peak": "2026-11~2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/credit-card-deduction-2026" }, "feeds": [], "status": "live" },
     { "url": "/medical-tax-credit-2026", "cluster": "year-end", "events": ["E3", "E9"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/medical-tax-credit-2026" }, "feeds": [], "status": "live" },
     { "url": "/rent-tax-credit-2026", "cluster": "year-end", "events": ["E3", "E9"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/rent-tax-credit-2026" }, "feeds": [], "status": "live" },
@@ -121,9 +121,9 @@
     { "url": "/weekly-holiday-allowance-2026", "cluster": "rollover", "events": ["E8"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/weekly-holiday-allowance-2026" }, "feeds": [], "status": "live" },
     { "url": "/basic-pension-2026", "cluster": "rollover", "events": ["E8"], "peak": "2027-01", "lastmodHandle": { "kind": "add-on-event", "ref": "/basic-pension-2026" }, "feeds": [], "status": "live" },
     { "url": "/tax-changes-2026", "cluster": "rollover", "events": ["E6", "E8"], "peak": "2026-12~2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/tax-changes-2026" }, "feeds": [], "status": "live" },
-    { "url": "/tax-rates-2026", "cluster": "rollover", "events": ["E3", "E8"], "peak": "2026-12~2027-01", "lastmodHandle": { "kind": "add-on-event", "ref": "/tax-rates-2026" }, "feeds": [], "status": "live" },
+    { "url": "/tax-rates-2026", "cluster": "rollover", "events": ["E3", "E8"], "peak": "2026-12~2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/tax-rates-2026" }, "feeds": [], "status": "live" },
     { "url": "/property-holding-tax-2026", "cluster": "rollover", "events": ["E3"], "peak": "2026-11~2026-12", "lastmodHandle": { "kind": "route-override", "ref": "/property-holding-tax-2026" }, "feeds": [], "status": "live" },
-    { "url": "/earned-income-credit", "cluster": "rollover", "events": ["E3", "E12"], "peak": "2027-02~2027-03", "lastmodHandle": { "kind": "add-on-event", "ref": "/earned-income-credit" }, "feeds": ["rss-tables"], "status": "live" },
+    { "url": "/earned-income-credit", "cluster": "rollover", "events": ["E3", "E12"], "peak": "2027-02~2027-03", "lastmodHandle": { "kind": "route-override", "ref": "/earned-income-credit" }, "feeds": ["rss-tables"], "status": "live" },
     { "url": "/auto-tax-2026", "cluster": "rollover", "events": ["E9"], "peak": "2027-01", "lastmodHandle": { "kind": "add-on-event", "ref": "/auto-tax-2026" }, "feeds": [], "status": "live" },
     { "url": "/minimum-wage-2026", "cluster": "rollover", "events": ["E8"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/minimum-wage-2026" }, "feeds": ["rss-tables"], "status": "live" },
     { "url": "/social-insurance-rates-2026", "cluster": "rollover", "events": ["E1", "E8"], "peak": "2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/social-insurance-rates-2026" }, "feeds": ["rss-tables"], "status": "live" },
@@ -144,7 +144,7 @@
     { "url": "/chuseok-bonus-2026", "cluster": "holiday", "events": [], "peak": "2026-09", "lastmodHandle": { "kind": "route-override", "ref": "/chuseok-bonus-2026" }, "feeds": ["rss-tables"], "status": "live" },
 
     { "url": "/home-loan", "cluster": "loan", "events": ["E5"], "peak": "2026-11~2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/home-loan" }, "feeds": ["rss-tables"], "status": "live" },
-    { "url": "/savings-interest-2026", "cluster": "loan", "events": ["E5"], "peak": "2026-11~2027-01", "lastmodHandle": { "kind": "add-on-event", "ref": "/savings-interest-2026" }, "feeds": [], "status": "live" },
+    { "url": "/savings-interest-2026", "cluster": "loan", "events": ["E5"], "peak": "2026-11~2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/savings-interest-2026" }, "feeds": [], "status": "live" },
     { "url": "/guides/mortgage-refinance-guide-2026", "cluster": "loan", "events": ["E5"], "peak": "2026-11~2027-01", "lastmodHandle": { "kind": "guide-modified", "ref": "mortgage-refinance-guide-2026" }, "feeds": ["rss"], "status": "live" },
     { "url": "/guides/rule-of-72", "cluster": "loan", "events": ["E5"], "peak": "2026-11~2027-01", "lastmodHandle": { "kind": "guide-modified", "ref": "rule-of-72" }, "feeds": ["rss"], "status": "live" }
   ]
