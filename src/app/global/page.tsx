@@ -4,6 +4,7 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "@/components/AppLink";
 import PageFooterAds from "@/components/PageFooterAds";
+import ToolExplainerSection from "@/components/ToolExplainerSection";
 import { GuideMidAd } from "@/components/AdPlacement";
 import { ArrowLeft, Globe } from "lucide-react";
 import {
@@ -150,6 +151,8 @@ export default function GlobalTaxPage() {
         </div>
       </div>
       <PageFooterAds maxWidth="4xl" />
+      {/* lens-meta-F10 (2026-11-13): 설명 글은 마지막 광고(PageFooterAds) 아래 */}
+      <ToolExplainerSection path="/global" />
     </div>
   );
 }

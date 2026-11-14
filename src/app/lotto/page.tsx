@@ -7,6 +7,7 @@ import {
  type GenerationStrategy,
 } from "@/lib/lottoGenerator";
 import PageFooterAds from "@/components/PageFooterAds";
+import ToolExplainerSection from "@/components/ToolExplainerSection";
 import { CalcResultAd } from "@/components/AdPlacement";
 import { Settings, Sparkles, Loader, Clover, RefreshCw } from "lucide-react";
 // 숫자 범위에 따라 색상 클래스를 반환하는 헬퍼 함수
@@ -386,6 +387,8 @@ export default function LottoPage() {
  </div>
  </div>
  <PageFooterAds maxWidth="4xl" />
+ {/* lens-meta-F10 (2026-11-13): 설명 글은 마지막 광고(PageFooterAds) 아래 */}
+ <ToolExplainerSection path="/lotto" />
  </main>
  );
 }

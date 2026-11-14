@@ -13,7 +13,7 @@ import Link from "@/components/AppLink";
 import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { GuideMidAd } from "@/components/AdPlacement";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildPageMetadata, clampToSentence } from "@/lib/seo";
 import { breadcrumbLd, itemListLd } from "@/lib/structuredData";
 import { GUIDE_CATEGORY_HUBS } from "@/lib/guideCategories";
 import { koGuideCards as allKoGuideCards } from "@/lib/guidesData";
@@ -44,7 +44,8 @@ export async function generateMetadata({ params: pendingParams }: Props): Promis
   const count = koGuideCards.filter((g) => g.category === hub.categoryId).length;
   return buildPageMetadata({
     title: `${hub.title} ${count}편 — 머니샐러리 가이드`,
-    description: `${hub.intro.slice(0, 120)}`,
+    // lens-meta-F05: 120자에서 문장 중간을 자르지 않는다(소개 글은 96~132자라 모두 통째로 들어간다).
+    description: clampToSentence(hub.intro, 155),
     path: `/guides/category/${hub.slug}`,
     keywords: [`${hub.categoryId} 가이드`, hub.title, "머니샐러리"],
   });

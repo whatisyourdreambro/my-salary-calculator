@@ -10,7 +10,8 @@ import { artifactHash, assertEnglishNotFoundDocument, assertPagesWorkerBundle, B
   compileRoutingConfig, copyableSource, copySources, EXCLUDED_SOURCE_PATHS, inventoryHash, packageExport,
   loadPublicBuildSettings, PUBLIC_BUILD_CONFIG, QA_ASSETS_IGNORE, readPublicBuildConfiguration, resetOwnedStage,
   sha256, SOURCE_ITEMS, sourceInventory, stagePath, verifyArtifact, workerModuleInventory,
-  OG_WORKER_MODULES, PAGES_WORKER_LIMIT, PAGES_WORKER_WARN_HEADROOM, PAGES_FUNCTION_EXCLUDES, workerHeadroomWarning } from '../lib/pages-export.mjs';
+  OG_WORKER_MODULES, PAGES_WORKER_LIMIT, PAGES_WORKER_WARN_HEADROOM, PAGES_FUNCTION_EXCLUDES, workerHeadroomWarning,
+  HTML_DOCUMENT_LIMITS, htmlDocumentSizeIssue } from '../lib/pages-export.mjs';
 import { pagesWorkerEntrySource, parseArgs, qaMiniflareOptions, validateQaConfig } from '../pages-build.mjs';
 
 const require = createRequire(import.meta.url);
@@ -198,6 +199,7 @@ test('native export packages HTML/TXT without mutating originals or moving ordin
   const result = packageExport({ stage, mode: 'qa', routingConfig: routing, buildId: 'synthetic-build' });
   const { manifest } = result;
   assert.equal(result.documentCount, 4);
+  assert.deepEqual(result.documentSizeWarnings, []);
   assert.match(manifest.routes['/'].asset, /^\/_msy\/doc\/[a-f0-9]{64}\.body$/);
   assert.match(manifest.routes['/'].rscAsset, /\.txt$/);
   assert.ok(manifest.routes['/guides/%EC%97%B0%EB%B4%89']);
@@ -443,6 +445,19 @@ test('Worker headroom warning is visible below 1 MiB and silent above it', () =>
   assert.equal(workerHeadroomWarning(PAGES_WORKER_LIMIT - PAGES_WORKER_WARN_HEADROOM), null);
   assert.match(workerHeadroomWarning(PAGES_WORKER_LIMIT - PAGES_WORKER_WARN_HEADROOM + 1), /only 1048575 bytes of headroom/);
   assert.match(workerHeadroomWarning(PAGES_WORKER_LIMIT - 1000), /only 1000 bytes of headroom/);
+});
+
+test('HTML document size guard warns at 1.8 MB and fails above 1.95 MB (Googlebot 2 MB, lens-meta-F06)', () => {
+  assert.deepEqual(HTML_DOCUMENT_LIMITS, { warnBytes: 1_800_000, maxBytes: 1_950_000 });
+  assert.equal(htmlDocumentSizeIssue('/salary-db', 1_799_999), null);
+  const warn = htmlDocumentSizeIssue('/salary-db', 1_800_000);
+  assert.equal(warn.level, 'warn');
+  assert.ok(warn.message.startsWith('/salary-db HTML is 1800000 bytes'));
+  assert.match(warn.message, /first 2 MB of uncompressed HTML/);
+  assert.equal(htmlDocumentSizeIssue('/salary-db', 1_950_000).level, 'warn');
+  const fail = htmlDocumentSizeIssue('/table/2026/annual', 1_950_001);
+  assert.equal(fail.level, 'fail');
+  assert.ok(fail.message.startsWith('/table/2026/annual HTML is 1950001 bytes'));
 });
 
 test('private Worker modules have a separate byte budget and an exact allowlist', t => {

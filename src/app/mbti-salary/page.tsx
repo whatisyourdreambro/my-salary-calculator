@@ -5,6 +5,7 @@ import { useState, useRef, useEffect, ElementType } from "react";
 import dynamic from "next/dynamic";
 import { questions, getResultType, SalaryMBTIType } from "@/lib/salaryMBTI";
 import PageFooterAds from "@/components/PageFooterAds";
+import ToolExplainerSection from "@/components/ToolExplainerSection";
 import { GuideMidAd } from "@/components/AdPlacement";
 import Link from "@/components/AppLink";
 import {
@@ -332,6 +333,8 @@ export default function MbtiSalaryPage() {
  )}
  </div>
  <PageFooterAds maxWidth="3xl" />
+ {/* lens-meta-F10 (2026-11-13): 설명 글은 마지막 광고(PageFooterAds) 아래 */}
+ <ToolExplainerSection path="/mbti-salary" />
  </main>
  );
 }

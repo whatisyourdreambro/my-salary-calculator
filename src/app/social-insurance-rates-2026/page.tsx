@@ -274,6 +274,16 @@ export default function SocialInsuranceRates2026Page() {
  </div>
 
  <ShareSection heading="도움이 됐다면 공유해 주세요" contentType="page" className="mt-10" />
+
+ {/* 2026-11-13 lens-links missed(운영자 질문 2 승인): 2027 요율표로 가는 본문 링크가 없었다. 마지막 광고(HomeTopAd) 아래.
+ fd42ccb4d(RL-44, 1/1)의 시제 없는 링크 문장만 먼저 — 날짜가 걸린 '2027년에는 무엇이 바뀌나요' 목록은 RL-44 에 남는다. */}
+ <p className="mt-10 text-sm text-muted-blue leading-relaxed">
+ 2027년 요율 전체는{" "}
+ <Link href="/social-insurance-rates-2027" className="font-bold text-electric hover:underline">2027 4대보험 요율표</Link>
+ 에서, 연금 인상으로 월급에서 얼마가 더 빠지는지는{" "}
+ <Link href="/calc/pension-hike-2027" className="font-bold text-electric hover:underline">국민연금 인상 계산기</Link>
+ 에서 확인할 수 있습니다.
+ </p>
  </div>
  </main>
  );
