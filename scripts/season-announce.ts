@@ -153,8 +153,9 @@ async function cmdEvent(registry: SeasonRegistry, raw: string | undefined, root:
   lines.push("2. 아래 'lastmod 손잡이'에서 화면 내용이 실제로 바뀐 URL 만 날짜를 올립니다.");
   lines.push("3. 진행형 상태 문구 점검: npx tsx scripts/stale-status-scan.ts --press");
   lines.push("4. 게이트: tsc · vitest · verify:tax·site·sitemap · ad-audit --diff 0/0 · adpos (광고 위 문구는 폭 맞춤).");
-  lines.push("5. 운영 사이트맵을 prev.xml 로 저장 → '메인 푸시' → cf-purge 성공 확인 → 다시 next.xml 로 저장.");
-  lines.push(`   curl -s -A "Mozilla/5.0" ${SITE_ORIGIN}/sitemap.xml -o prev.xml (기본 UA 는 403)`);
+  // 2026-11-13(lens-crawl 검증 missed-2): 게시는 운영자 Pages 승인 버튼, 운영 GET 은 MoneySalary-QA UA·리다이렉트 0 (AGENTS.md).
+  lines.push("5. 게시 전에 운영 사이트맵을 prev.xml 로 저장 → main 합침 → CI 초록 → 운영자 Pages · 승인 후 게시 → /.well-known/moneysalary-release.json 의 커밋 확인 → next.xml 로 저장.");
+  lines.push(`   curl -sS -A "Mozilla/5.0 MoneySalary-QA/1.0" --max-redirs 0 ${SITE_ORIGIN}/sitemap.xml -o prev.xml`);
   lines.push(`6. npx tsx scripts/season-announce.ts diff prev.xml next.xml --event ${id}`);
   lines.push("   → 목록 수가 CF 빌드 로그 '[indexnow] diff: 신규 · 변경 · 삭제' 와 같은지 확인.");
   lines.push(

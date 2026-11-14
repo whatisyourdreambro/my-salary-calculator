@@ -9,11 +9,11 @@ export const dynamic = 'force-static';
 //   별도 그룹으로 명시 Allow 처리 (AdSense 광고 매칭 안정성)
 // - /_next/ 차단 시 Googlebot이 JS·CSS 가져오지 못해 렌더링 실패 → 본문 색인 실패
 //   (과거 incident — 절대 다시 차단하지 말 것)
-// - /api/og 는 OG 이미지 생성 API. 과거 Allow였으나 Googlebot이 페이지로 색인해
-//   GSC "색인된 페이지" 자리를 OG URL이 가득 채우는 사고 발생(2026-05-24).
-//   이제는 Disallow + route 응답 헤더 X-Robots-Tag: noindex 로 이중 차단.
-//   SNS·OG 크롤러(Facebook·Twitterbot·Kakao 등)는 robots.txt를 무시하고
-//   og:image meta 를 직접 가져가므로 SNS 미리보기는 정상 동작함.
+// - /api/og 는 OG 이미지(공유 카드) 경로. 2026-05-24 Googlebot 이 이 URL 을 페이지로 색인해 GSC "색인된 페이지"
+//   자리를 채운 사고 뒤 응답 헤더 X-Robots-Tag(noindex, noimageindex, nofollow — cloudflare/pages-og.ts)를 달았다.
+//   2026-09-06 부터는 크롤은 모든 그룹에 허용(아래 corePathAllow 의 '/api/og')이고, 색인 거부는 그 응답 헤더만 맡는다
+//   ('Disallow + 헤더' 이중 차단이 아니다 — 2026-11-13 lens-crawl-F08 정정). 헤더를 뗄지는 운영자 결정 대기(lens-crawl-F03).
+//   SNS·OG 크롤러(Facebook·Twitterbot·Kakao 등)는 og:image meta 를 직접 가져가므로 SNS 미리보기는 정상 동작함.
 
 export default function robots(): MetadataRoute.Robots {
  const baseUrl = "https://www.moneysalary.com";
@@ -108,14 +108,14 @@ export default function robots(): MetadataRoute.Robots {
  // 방문자를 보내주는 유입 통로. 학습 크롤러(GPTBot 등)도 콘텐츠가
  // 공개 세법 정보라 차단 실익이 없음 → 별도 차단 그룹을 두지 않고
  // 아래 기본 그룹(User-agent: *)에 흡수되어 일반 검색봇처럼 허용.
- // ★ 각주(실측 2026-09-24, 9/25 재확인): 서빙 중인 robots.txt(1,265B)는 이 파일
- // 출력뿐이다 — 9/05 에 앞에 주입돼 있던 Cloudflare 관리 AI 차단 블록(9종
- // Disallow + Content-Signal ai-train=no)은 더 이상 없다. 대신 CF 엣지가 UA 로
- // 응답을 가른다(/salary-db/samsung-electronics 에 각 봇 UA 로 요청):
- // GPTBot·ClaudeBot → 403(학습 크롤러), OAI-SearchBot·ChatGPT-User·PerplexityBot
- // → 200(검색·에이전트), Googlebot·bingbot·Yeti·Daum → 200. middleware.ts
- // ALLOWED_BOTS 는 GPTBot·ClaudeBot 을 통과시키므로 이 403 은 코드가 아니라 CF
- // 대시보드 AI 봇 설정(학습 차단) 몫이다. 이 파일의 그룹·crawl-delay 는 그대로
+ // ★ 각주(2026-11-13 갱신, lens-crawl-F08): 운영 robots.txt(2026-11-01·11-12 실측 4,009B)는 이 파일이 만들지 않은
+ // Cloudflare 관리 블록('# BEGIN Cloudflare Managed content' ~ '# END Cloudflare Managed Content')으로 시작한다 —
+ // 'User-agent: *' 그룹(Content-Signal: search=yes,ai-train=no,use=reference, Allow: /) 다음에 학습·기타 크롤러
+ // (GPTBot·ClaudeBot·Google-Extended·GoogleOther·Amazonbot·Applebot-Extended·CCBot·Bytespider·Baiduspider 등)의
+ // Disallow: / 그룹이 오고, 그 뒤에 이 파일 출력이 붙는다. CF 대시보드 설정이며 9/24~25 실측(1,265B)에는 없었고
+ // 11/1 에 다시 있었다. 표준 파서는 두 '*' 그룹을 합친다. Googlebot·Yeti·Daum·Bingbot·AdsBot·Mediapartners 는 각자
+ // 그룹을 따르므로 검색·광고 크롤에는 영향이 없다. 게시 뒤 robots.txt 를 대조할 때는 '# END Cloudflare Managed Content'
+ // 아래만 빌드 산출물과 비교한다. 이 파일은 AI 전용 그룹을 두지 않는다 — 그룹·crawl-delay 는 그대로
  // 둔다(AI 전용 그룹·Bingbot crawl-delay 변경은 기각 목록 — 100x 계획 §9·§10-4).
 
  // ─── 3. SEO 분석 봇 차단: 서버 자원 낭비 + 경쟁사 정찰 방지 ──
@@ -147,10 +147,8 @@ export default function robots(): MetadataRoute.Robots {
 
  // ─── 4. 기타 모든 봇 기본값 ────────────────────────────────
  // 위에 명시되지 않은 봇은 이 규칙을 따름 (일반 검색 봇과 동일 정책)
- // Crawl-delay는 best-effort — 무시하는 봇(GPTBot·Amazonbot 등)은
- // 엣지 캐시(s-maxage)가 Worker 도달을 흡수 (next.config.mjs).
- // ※ 실측 2026-09-05: 프리렌더 HTML에는 그 s-maxage가 미적용(DYNAMIC) —
- //    L08a CF Cache Rule 적용 전까지는 Worker 직행. 크롤 개방은 그 이후.
+ // Crawl-delay는 best-effort — 무시하는 봇은 그대로 요청한다.
+ // ※ 2026-11-13: 예전 메모의 엣지 HTML 캐시(s-maxage·CF Cache Rule)는 11/1 부터 꺼져 있다 — 그 흡수를 전제하지 않는다.
  {
  userAgent: '*',
  allow: corePathAllow,

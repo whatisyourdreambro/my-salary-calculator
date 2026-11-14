@@ -99,4 +99,25 @@ describe('sitemap editorial date integrity', () => {
       }
     }
   }, 35_000);
+  // lens-crawl 검증 missed-1 (2026-11-13): 7/16 뒤에 처음 만든 정적 라우트 6곳·가이드 카테고리 허브 7곳은
+  // 첫 커밋일 하한을 lastmod 로 낸다(페이지가 생기기 전 날짜 7/16 금지). 원장 항목 없이 sitemap.ts 상수만 쓴다.
+  it('static routes first published after 2026-07-16 never carry a lastmod older than their first commit', () => {
+    const fixture = `globalThis.fetch=()=>{throw new Error('Network forbidden')};
+      const rows=require('./src/app/sitemap.ts').default();
+      const pick=p=>rows.filter(r=>new URL(r.url).pathname===p||new URL(r.url).pathname.startsWith(p+'/')&&p==='/guides/category').map(r=>[new URL(r.url).pathname,new Date(r.lastModified).toISOString()]);
+      console.log(JSON.stringify([...['/calc/ordinary-wage','/calc/annual-leave-days','/tools/finance','/tools/real-estate','/tools/life','/tools/finance/dividend-tax'].flatMap(p=>rows.filter(r=>new URL(r.url).pathname===p).map(r=>[p,new Date(r.lastModified).toISOString()])), ...pick('/guides/category')]));`;
+    const rows = JSON.parse(execFileSync(process.execPath, ['--import', 'tsx', '-e', fixture], {
+      cwd: process.cwd(), encoding: 'utf8', timeout: 30_000, maxBuffer: 1024 * 1024,
+    })) as Array<[string, string]>;
+    const aug30 = '2026-08-29T15:00:00.000Z';
+    const sep1 = '2026-08-31T15:00:00.000Z';
+    const aug23 = '2026-08-22T15:00:00.000Z';
+    expect(rows.slice(0, 6)).toEqual([
+      ['/calc/ordinary-wage', aug30], ['/calc/annual-leave-days', aug30],
+      ['/tools/finance', sep1], ['/tools/real-estate', sep1], ['/tools/life', sep1], ['/tools/finance/dividend-tax', sep1],
+    ]);
+    const hubs = rows.slice(6);
+    expect(hubs).toHaveLength(7);
+    for (const [path, date] of hubs) expect(date, path).toBe(aug23);
+  }, 35_000);
 });

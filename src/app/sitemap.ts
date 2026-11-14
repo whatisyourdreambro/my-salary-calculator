@@ -14,7 +14,7 @@ import { reportsRegistry } from '@/data/reportsRegistry';
 import { STATIC_LAST_MODIFIED, latestContentDate } from '@/config/siteDates';
 import { companyPageModified } from '@/lib/pageModified';
 import { getGuideModifiedDate } from '@/lib/guideDates';
-import { getGuideContentDate } from '@/lib/guideContentRevisions';
+import { getGuideSitemapDate } from '@/lib/guideSitemapDates';
 import { EN_INDEXABLE_STATIC_PATHS } from '@/lib/englishRoutes';
 import { englishPolicyCounterpart } from '@/lib/englishSite';
 import { pageContentRevision } from '@/config/pageContentRevisions';
@@ -391,6 +391,19 @@ const STATIC_ROUTES: readonly string[] = [
 // /en 정적 경로(EN_INDEXABLE_STATIC_PATHS)의 하한 — 종전 sitemap() /en 루프 안 인라인 값 그대로.
 const EN_STATIC_REVIEW_DATE = new Date('2026-09-09');
 const STATIC_ROUTE_SET: ReadonlySet<string> = new Set([...STATIC_ROUTES, ...EN_INDEXABLE_STATIC_PATHS]);
+// 첫 공개일 하한 (lens-crawl 검증 missed-1, 2026-11-13) — STATIC_LAST_MODIFIED(7/16)보다 늦게 처음 만든 정적 라우트가
+// 날짜 손잡이 없이 7/16 을 내던 것(페이지가 생기기 전 날짜)을 막는다. 편집 검토가 아니라 첫 커밋일(git log --diff-filter=A)이라
+// 원장(sitemap-content-reviews.json) 항목이 필요 없다. 실질 수정일은 종전대로 ROUTE_OVERRIDES·pageContentRevision 이 더 늦게 올린다.
+const STATIC_ROUTE_FIRST_PUBLISHED: Readonly<Record<string, Date>> = {
+ '/calc/ordinary-wage': new Date('2026-08-30T00:00:00+09:00'), // 6d85e5566
+ '/calc/annual-leave-days': new Date('2026-08-30T00:00:00+09:00'), // 6d85e5566
+ '/tools/finance': new Date('2026-09-01T00:00:00+09:00'), // ca56b7f9c
+ '/tools/real-estate': new Date('2026-09-01T00:00:00+09:00'), // ca56b7f9c
+ '/tools/life': new Date('2026-09-01T00:00:00+09:00'), // ca56b7f9c
+ '/tools/finance/dividend-tax': new Date('2026-09-01T00:00:00+09:00'), // cc96feb90
+};
+// 가이드 카테고리 허브 7종(/guides/category/[slug]) 첫 공개일 — 2a3be4df7 (G9).
+const GUIDE_CATEGORY_HUB_FIRST_PUBLISHED = new Date('2026-08-23T00:00:00+09:00');
 
 /**
  * 정적 라우트(STATIC_ROUTES·EN_INDEXABLE_STATIC_PATHS) 한 곳의 lastModified — sitemap 출력과 그 페이지
@@ -411,7 +424,9 @@ export function staticRouteLastModified(route: string): Date {
    BONUS_ENGINE_ROUTES.includes(route) ? BONUS_ENGINE_REVIEW_DATE : undefined,
    EN_INDEXABLE_STATIC_PATHS.includes(route) ? EN_STATIC_REVIEW_DATE : undefined,
  ].filter((date): date is Date => date !== undefined);
- const base = overrides.length ? latestContentDate(...overrides) : STATIC_LAST_MODIFIED;
+ const base = overrides.length
+   ? latestContentDate(...overrides)
+   : latestContentDate(STATIC_LAST_MODIFIED, STATIC_ROUTE_FIRST_PUBLISHED[route]);
  const revised = pageContentRevision(route);
  return revised ? latestContentDate(base, revised) : base;
 }
@@ -490,7 +505,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // 본문 정정일(guideContentRevisions)과 modifiedDate 중 늦은 날. 10/6(28d72f5b0)에는 히어로 칩 없는 별도 필드였지만
  // 10/19(579d60bb)부터 상세 히어로 '수정' 칩·OG modifiedTime·Article dateModified·이 lastmod 가 모두 같은 날짜를 쓴다
  // (guides/[slug]/page.tsx·seo.ts buildGuideMetadata). 칩 유지는 2026-11-01 운영자 승인 8번(B37 P2UX-04 c).
- lastModified: getGuideContentDate(guide), // Editorial calendar date; do not turn it into a future UTC midnight.
+ // 예외(lens-meta-F01, 운영자 승인 2026-11-13): 마지막 광고 아래 보강만 바뀐 글은 이 lastmod 만 보강을 고친 날로 올린다
+ // (getGuideSitemapDate — src/lib/guideSitemapDates.ts 표). 그런 글은 화면·OG·Article 날짜보다 사이트맵 날짜가 늦을 수 있다.
+ lastModified: getGuideSitemapDate(guide), // Editorial calendar date; do not turn it into a future UTC midnight.
  changeFrequency: 'monthly' as ChangeFrequency,
  priority: 0.7,
  ...(hasEn
@@ -513,7 +530,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  (GUIDE_CATEGORY_HUBS as Array<{ slug: string }>).forEach((h) => {
  guideUrls.push({
  url: `${baseUrl}/guides/category/${h.slug}`,
- lastModified: STATIC_LAST_MODIFIED,
+ lastModified: latestContentDate(STATIC_LAST_MODIFIED, GUIDE_CATEGORY_HUB_FIRST_PUBLISHED),
  changeFrequency: 'weekly',
  priority: 0.7,
  });

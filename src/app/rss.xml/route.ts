@@ -7,7 +7,9 @@ import { koGuides } from "@/lib/guidesContent";
 // /insights 데이터 리포트 3편 합류 (2026-09-05) — guid는 /insights/<slug> 라 /guides 와 충돌 없음.
 // pubDate=updatedDate(갱신 시 피드 상단 재노출). 10/5 서치어드바이저 rss.xml 제출 전 선행.
 import { reportsRegistry } from "@/data/reportsRegistry";
-import { getGuideModifiedDate } from "@/lib/guideDates";
+// 가이드 pubDate = 사이트맵 lastmod 와 같은 날짜(lens-crawl-F02·lens-meta-F01, 2026-11-13). 전문 = 본문 + 광고 아래 보강.
+import { getGuideSitemapDate } from "@/lib/guideSitemapDates";
+import { guideSupplements } from "@/lib/guides/supplements";
 import { contentEncoded, FULL_TEXT_GUIDE_COUNT } from "@/lib/rssFullText";
 
 // Next 15 no longer caches GET handlers by default; keep this build-time feed static.
@@ -54,19 +56,22 @@ const escapeXml = (unsafe: string) => {
 
 /** 가이드 + 리포트를 날짜 내림차순으로 병합 (guid 중복 없음 — 경로 prefix 상이) */
 function buildFeedItems(baseUrl: string): FeedItem[] {
- // 수정일(없으면 발행일) 내림차순 — sort 는 안정 정렬이라 같은 날짜는 koGuides 순서를 유지하고,
- // 아래 병합 정렬 뒤에도 가이드끼리의 순서가 같다(= 피드의 첫 50개 가이드 item 이 전문 대상).
+ // 사이트맵 lastmod 와 같은 날짜(getGuideSitemapDate = 본문 정정일·광고 아래 보강일까지 반영한 내용 수정일) 내림차순 —
+ // sort 는 안정 정렬이라 같은 날짜는 koGuides 순서를 유지하고, 아래 병합 정렬 뒤에도 가이드끼리의 순서가 같다
+ // (= 피드의 첫 FULL_TEXT_GUIDE_COUNT 개 가이드 item 이 전문 대상). 10/19 579d60bbf 가 상세 화면 날짜만 옮기고
+ // 피드는 getGuideModifiedDate 에 남겨 둔 어긋남을 고쳤다(lens-crawl-F02).
  const guideItems: FeedItem[] = koGuides
  .map((guide) => ({
  title: guide.title,
  url: `${baseUrl}/guides/${guide.slug}`,
  description: guide.description,
- date: getGuideModifiedDate(guide),
+ date: getGuideSitemapDate(guide),
  categories: [
  ...(guide.category ? [guide.category] : []),
  ...(guide.tags ?? []).slice(0, 5),
  ],
- fullText: guide.content,
+ // 상세 화면과 같은 이어 붙임(guides/[slug]/page.tsx) — 본문 + 마지막 광고 아래 보강
+ fullText: guide.content + (guideSupplements[guide.slug] ?? ""),
  }))
  .sort(byDateDesc)
  .map((item, index) => (index < FULL_TEXT_GUIDE_COUNT ? item : { ...item, fullText: undefined }));
@@ -87,7 +92,7 @@ function generateRssFeed() {
  "연봉·세금·재테크 가이드. 적용 연도와 조건은 각 글에서 확인하세요. 직장인의 돈 공부, 머니샐러리에서 시작하세요.";
  const lastBuildDate = new Date().toUTCString();
 
- // 가이드도 실제 수정일(없으면 발행일)로 재노출. 원문 발행일과 guid는 보존한다.
+ // 가이드도 실제 내용 수정일(사이트맵 lastmod 와 같은 날, 없으면 발행일)로 재노출. 원문 발행일과 guid는 보존한다.
  // 정렬 첫 항목 = 가이드·리포트 최신 갱신일 중 max → 채널 pubDate
  const items = buildFeedItems(baseUrl);
 
