@@ -822,8 +822,8 @@ describe.skipIf(REGEN.size > 0)("(6) metaDescription 은 META-07 맵(40편)·검
     expect([...meta07].filter((s) => !bySlug.get(s)?.metaDescription)).toEqual([]);
     // 검색어 복원 맵(code51-01, 2026-10-06) — 10/4 에 TL;DR 이 바뀐 11편. 화면 TL;DR 은 10/4 문구, 검색 설명만 9/27 검색어.
     // + 2026-11-01 STR-07(G2 2단계 T2 대안) temp-two-home-3year-rule-2026 — 검색 설명에 조정 두 채 2년 기한·적용 시점 = 12편.
+    //   (temp-two-home) 화면 TL;DR 은 2026-11-02 OF3 C2(운영자 결정)로 운영 문구보다 짧은 '2·3년 내' 문구 — 검색 설명과는 여전히 다르다.
     // + 2026-11-13 lens-meta-F02: 화면 TL;DR 이 지난 상태로 남은 4편(삼성·SK 임금협상, 삼성 특별성과급 프리뷰, 청년 지원) = 16편.
-    //   화면 TL;DR 은 2026-11-02 OF3 C2(운영자 결정)로 운영 문구보다 짧은 '2·3년 내' 문구 — 검색 설명과는 여전히 다르다.
     const kwStart = src.indexOf("const guideKeywordMetaDescriptions");
     expect(kwStart, "guidesContent.ts 의 검색어 복원 맵을 찾지 못함").toBeGreaterThan(-1);
     const kwBlock = src.slice(kwStart, src.indexOf("\n};", kwStart));
