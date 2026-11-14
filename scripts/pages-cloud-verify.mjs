@@ -230,15 +230,18 @@ export function cloudIndexNowSummary(manifest, receipt) {
 }
 export function cloudIndexNowStepSummary(summary) {
   const name = { indexnow: '공유(api.indexnow.org)', naver: '네이버 직접', unknown: '알 수 없음' };
+  // The URL count is the planned list: with no-receipt or claimed nothing may have been sent, so it is not called sent.
+  const states = { completed: '완료', 'needs-review': '확인 필요', claimed: '전송 중 중단', 'no-receipt': '전송 전 중단' };
+  const state = Object.hasOwn(states, summary.state) ? `${states[summary.state]}(${summary.state})` : '알 수 없음';
   const status = row => (row.status === null ? '응답 없음' : 'HTTP ' + row.status) + (row.ok ? '' : ' (실패)');
   const counts = summary.counts ? `신규 ${summary.counts.added ?? '?'} · 변경 ${summary.counts.changed ?? '?'} · 삭제 ${summary.counts.removed ?? '?'}` : '계획 없음';
   return ['### IndexNow 알림', '',
-    `- 상태: ${summary.state} · 보낸 URL ${summary.urlCount}개 (${counts})`,
+    `- 상태: ${state} · 알림 대상 URL ${summary.urlCount}개 (${counts})`,
     ...(summary.endpoints.length ? summary.endpoints.map(row => `- ${name[row.name]}: ${status(row)}`) : ['- 전송 없음(바뀐 URL 없음 또는 전송 전 중단)']),
     ...(summary.firstPaths.length ? ['- 처음 ' + summary.firstPaths.length + '개 경로: ' + summary.firstPaths.map(p => '`' + p + '`').join(' ')] : []),
     '- 이 단계만 빨강이고 앞 Verify 단계가 초록이면 게시는 끝났다. 다시 게시하지 않는다(docs/operator-console-pack.md 6b).', ''].join('\n');
 }
-function reportCloudIndexNow(manifest, receiptFile, env) {
+export function reportCloudIndexNow(manifest, receiptFile, env) {
   try {
     let receipt = null;
     try { if (existsSync(receiptFile)) receipt = readJson(receiptFile); } catch { receipt = null; }

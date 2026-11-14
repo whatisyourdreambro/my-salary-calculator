@@ -317,7 +317,8 @@ export async function main(args = process.argv.slice(2), input = process.env) {
   const env = { ...input };
   // The optional GitHub read token stays in this process only: it is removed from the copied environment
   // (cleanBuildEnvironment is an allowlist as well) and from process.env, so git, npm and the application
-  // build never inherit it.
+  // build never inherit it. The raw value goes to the gate client, which validates it itself: a malformed value
+  // is never sent and reports tokenProvided true with tokenUsed false (the owner runbook reads that as a copy mistake).
   const token = env[GITHUB_READ_TOKEN_VARIABLE];
   delete env[GITHUB_READ_TOKEN_VARIABLE];
   if (input === process.env) delete process.env[GITHUB_READ_TOKEN_VARIABLE];

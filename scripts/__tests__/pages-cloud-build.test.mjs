@@ -591,6 +591,17 @@ test('a well-formed read token is sent as a Bearer header on every gate request'
   assertNoToken(client.get.authState());
 });
 
+test('the owner runbook quotes the exact auth text the build prints and names the variable', async () => {
+  // Step 3 of the owner section tells a non-developer to look for this text in the Cloudflare build log.
+  const runbook = readFileSync(new URL('../../docs/operator-console-pack.md', import.meta.url), 'utf8');
+  const client = tokenClient([{ status: 200 }], { token: syntheticToken });
+  await client.get(gateResource, 'main-ref');
+  assert.equal(JSON.stringify(client.get.authState()), '{"tokenProvided":true,"tokenUsed":true,"tokenRejected":false}');
+  assert.ok(runbook.includes('`"githubAuth":' + JSON.stringify(client.get.authState()) + '`'));
+  for (const text of ['`' + GITHUB_READ_TOKEN_VARIABLE + '`', '`"tokenProvided":false`', '`"tokenUsed":false`', '`"tokenRejected":true`'])
+    assert.ok(runbook.includes(text), text);
+});
+
 test('no token or a malformed token keeps every request anonymous, exactly as before', async () => {
   for (const token of [undefined, null, '']) {
     const client = tokenClient([{ status: 200 }], { token });

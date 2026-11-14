@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { mkdtempSync, readFileSync, realpathSync, rmSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, readdirSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { crc32, deflateSync } from 'node:zlib';
@@ -11,7 +11,7 @@ import { ATTESTATION_PATH, articleContract, assertCloudVerificationContext, asse
   validateAttestation, assertPromotion, readNativeAttestation, waitForNativeAttestation,
   captureCloudSitemap, verifyNativePublicRelease, cloudIndexNowPlan, submitCloudIndexNowOnce,
   verifyCloudArticle, assertCloudRemoteRef, cloudFailureDiagnostic, cloudIndexNowSummary,
-  cloudIndexNowStepSummary } from '../pages-cloud-verify.mjs';
+  cloudIndexNowStepSummary, reportCloudIndexNow } from '../pages-cloud-verify.mjs';
 
 const COMMIT = 'a'.repeat(40), ORIGIN = 'https://www.moneysalary.com';
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -255,6 +255,43 @@ test('IndexNow summary lists counts, first paths and each endpoint status, never
     assert.deepEqual(forged.endpoints, [{ name: 'unknown', status: null, ok: false }]); assert.equal(forged.state, 'no-receipt');
     assert.equal(JSON.stringify(forged).includes(key), false);
   } finally { assert.equal(path.dirname(realpathSync(dir)), realpathSync(os.tmpdir())); assert.ok(path.basename(dir).startsWith('msy-native-notify-')); rmSync(dir, { recursive: true }); }
+});
+
+test('the IndexNow report prints one sanitized line, appends the step summary and never throws', t => {
+  const dir = realpathSync(mkdtempSync(path.join(os.tmpdir(), 'msy-native-notify-')));
+  try {
+    const lines = [], logged = t.mock.method(console, 'log', line => { lines.push(line); });
+    const key = 'e'.repeat(32), receiptFile = path.join(dir, 'receipt.json'), target = path.join(dir, 'step-summary.md');
+    const manifest = { commit: COMMIT, sha256: 'b'.repeat(64),
+      plan: { submit: true, reason: '변경분', urls: [ORIGIN + '/guides/item-1'], counts: { added: 0, changed: 1, removed: 0, build: 9, prod: 9 } } };
+    writeFileSync(receiptFile, JSON.stringify({ state: 'needs-review', key,
+      results: [{ name: 'indexnow', status: 202, ok: true }, { name: 'naver', status: 503, ok: false, error: key }] }));
+    writeFileSync(target, 'earlier step\n');
+    reportCloudIndexNow(manifest, receiptFile, { GITHUB_STEP_SUMMARY: target });
+    assert.equal(lines.length, 1);
+    assert.deepEqual(JSON.parse(lines[0]), cloudIndexNowSummary(manifest, JSON.parse(readFileSync(receiptFile, 'utf8'))));
+    const text = readFileSync(target, 'utf8');
+    assert.ok(text.startsWith('earlier step\n### IndexNow 알림\n'));
+    assert.match(text, /상태: 확인 필요\(needs-review\) · 알림 대상 URL 1개 \(신규 0 · 변경 1 · 삭제 0\)\n/);
+    assert.match(text, /공유\(api\.indexnow\.org\): HTTP 202\n/); assert.match(text, /네이버 직접: HTTP 503 \(실패\)\n/);
+    assert.match(text, /`\/guides\/item-1`/); assert.equal((lines[0] + text).includes(key), false);
+    // No receipt, no summary variable, a relative or unwritable target, no environment: one line each, nothing thrown or written.
+    const absent = path.join(dir, 'absent.json');
+    for (const env of [{}, { GITHUB_STEP_SUMMARY: '' }, { GITHUB_STEP_SUMMARY: 'relative-step-summary.md' },
+      { GITHUB_STEP_SUMMARY: path.join(dir, 'missing', 'summary.md') }, undefined]) reportCloudIndexNow(manifest, absent, env);
+    assert.equal(lines.length, 6); assert.equal(JSON.parse(lines[5]).state, 'no-receipt');
+    assert.equal(existsSync('relative-step-summary.md'), false);
+    assert.deepEqual(readdirSync(dir).sort(), ['receipt.json', 'step-summary.md']);
+    assert.equal(readFileSync(target, 'utf8'), text);
+    // A summary of an unsent plan never says the URLs were sent.
+    const unsent = cloudIndexNowStepSummary(cloudIndexNowSummary(manifest, null));
+    assert.match(unsent, /상태: 전송 전 중단\(no-receipt\) · 알림 대상 URL 1개/); assert.doesNotMatch(unsent, /보낸 URL/);
+    assert.match(cloudIndexNowStepSummary({ ...cloudIndexNowSummary(manifest, null), state: key }), /상태: 알 수 없음 ·/);
+    // A closed output stream is swallowed as well.
+    logged.mock.mockImplementation(() => { throw new Error('closed stream ' + key); });
+    reportCloudIndexNow(manifest, receiptFile, { GITHUB_STEP_SUMMARY: target });
+    assert.equal(readFileSync(target, 'utf8'), text);
+  } finally { assert.equal(path.dirname(dir), realpathSync(os.tmpdir())); assert.ok(path.basename(dir).startsWith('msy-native-notify-')); rmSync(dir, { recursive: true }); }
 });
 
 test('the IndexNow CLI step reports in a finally block and keeps the needs-review exit', () => {
