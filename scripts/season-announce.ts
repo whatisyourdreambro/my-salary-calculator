@@ -155,7 +155,7 @@ async function cmdEvent(registry: SeasonRegistry, raw: string | undefined, root:
   lines.push("4. 게이트: tsc · vitest · verify:tax·site·sitemap · ad-audit --diff 0/0 · adpos (광고 위 문구는 폭 맞춤).");
   lines.push("5. 운영 사이트맵을 prev.xml 로 저장 → main 병합·CI 초록 → 운영자 Pages · 승인 후 게시 → 게시 확인 뒤 next.xml 로 저장.");
   lines.push(
-    `   curl -sS --max-redirs 0 -A 'Mozilla/5.0 MoneySalary-QA/1.0' ${SITE_ORIGIN}/sitemap.xml -o prev.xml (비렌더링 GET, AGENTS.md)`,
+    `   curl -sS --max-redirs 0 -A "Mozilla/5.0 MoneySalary-QA/1.0" ${SITE_ORIGIN}/sitemap.xml -o prev.xml (비렌더링 GET, AGENTS.md)`,
   );
   lines.push(`6. npx tsx scripts/season-announce.ts diff prev.xml next.xml --event ${id}`);
   lines.push("   → 목록 수가 CF 빌드 로그 '[indexnow] diff: 신규 · 변경 · 삭제' 와 같은지 확인.");
