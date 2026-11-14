@@ -54,13 +54,13 @@ export const EDITORIAL_TRUST_PAGES: Readonly<Record<string, EditorialTrustNoteCo
   "/year-end-tax": {
     sources: "소득세법·조세특례제한법(국가법령정보센터), 국세청 연말정산 안내",
     official: true,
-    checkedOn: "2026-11-01",
+    checkedOn: "2026-11-13",
   },
-  // 내용 검토 원장 contentDate — B30 이 개통일을 대한민국 정책브리핑의 국세청 발표로 확인한 날(이 페이지는 화면 날짜 필드 없음).
+  // 내용 검토 원장 contentDate — 2026년 귀속 운영 기간(10/28~12/18)을 정책브리핑의 국세청 안내로 확인한 날(이 페이지는 화면 날짜 필드 없음).
   "/year-end-tax-preview": {
     sources: "국세청 발표(대한민국 정책브리핑)",
     official: true,
-    checkedOn: "2026-11-01",
+    checkedOn: "2026-11-13",
   },
   // PublishedMeta updatedDate — 2027 장기요양 13.90%(2026-10-30 장기요양위원회 의결) 반영.
   "/social-insurance-rates-2027": {

@@ -5169,7 +5169,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "hometax-year-end-preview-2026",
   "title": "홈택스 연말정산 미리보기 100% 활용법",
-  "description": "홈택스 연말정산 미리보기 개통 시기(예년 10월 말~11월 중순 패턴)부터 1~9월 카드 사용액 기반 예상세액 계산, 10~12월 시뮬레이션, 부족분을 채우는 연말 액션까지 단계별 활용법 정리.",
+  "description": "홈택스 연말정산 미리보기 운영 기간(10월 28일~12월 18일)부터 1~9월 카드 사용액 기반 예상세액 계산, 10~12월 시뮬레이션, 부족분을 채우는 연말 액션까지 단계별 활용법 정리.",
   "category": "세금",
   "tags": [
    "연말정산",
@@ -5183,7 +5183,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5930
+  "contentChars": 5911
  },
  {
   "slug": "samsung-opi-forecast-2027",

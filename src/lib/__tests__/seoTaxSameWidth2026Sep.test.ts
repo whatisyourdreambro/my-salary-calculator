@@ -34,8 +34,8 @@ const shape = (s: string) =>
 const SAME_WIDTH: [string, string, string][] = [
   ["src/app/tax-reform-2026/page.tsx", "실거주 14억·비거주 9억 차등화", "실거주 14억·비거주 9억 철회됨"],
   ["src/app/tax-reform-2026/page.tsx", "'실거주 여부'가 종부세의 핵심 기준이 됩니다.", "'비거주 축소'는 국무회의 확정 시점에 철회됨."],
-  ["src/app/year-end-tax-preview/page.tsx", "10월 말~11월 초에 오픈", "10월 말~11월 중순 오픈"],
-  ["src/data/yearEndTaxHub.ts", "예년 기준 10월 말 오픈) 전에도", "예년 기준 10월 말 이후) 전에도"],
+  // 2026-11-13: 국세청 10/23 안내로 개통 확정 — 같은 어절 구성으로 다시 교체(lens-season-F03)
+  ["src/data/yearEndTaxHub.ts", "예년 기준 10월 말 이후) 전에도", "올해 기준 10월 말 개통) 기간에"],
   ["src/app/health-insurance-fee-2026/page.tsx", "재산세 과세표준 5.4억 이하 필요.", "재산세 과세표준 5.4억 이하 원칙."],
   ["src/app/health-insurance-fee-2026/page.tsx", "본인+회사분 모두 본인 부담.", "본인+회사분 절반 본인 부담."],
   ["src/app/tools/finance/stock-tax/page.tsx", "매년 5월 종합소득세 신고 필요.", "매년 5월 양도소득세 신고 필요."],
@@ -78,13 +78,15 @@ describe("사실 정정 고정 — 10/2~3 묶음", () => {
     expect(src).toContain("철회돼 현행 12억원 유지");
     expect(src).toContain("현행 150%가 유지됩니다");
   });
-  it("연말정산 미리보기 — 오픈 시기 10월 말~11월 중순, 접힌 FAQ 에 최근 3년 개통일", () => {
+  it("연말정산 미리보기 — 2026년 귀속 운영 기간(국세청 10/23 안내), 접힌 FAQ 에 최근 3년 개통일", () => {
     const src = readSrc("src/app/year-end-tax-preview/page.tsx");
     expect(src).toContain("최근 3년은 2023년 10월 31일, 2024년 11월 15일, 2025년 11월 5일에 열렸습니다(국세청 발표)");
+    expect(src).toContain("2026년 귀속분은 2026년 10월 28일(수)에 열렸고 12월 18일(금)까지 운영됩니다");
+    expect(src).not.toContain("10월 말~11월 중순 오픈");
   });
-  it("연말정산 허브 — 가이드 제목 100%·오픈 시기", () => {
+  it("연말정산 허브 — 가이드 제목 100%·개통 시기", () => {
     const preview = YEAR_END_STEPS.find((s) => s.id === "preview")!;
-    expect(preview.desc).toContain("예년 기준 10월 말 이후");
+    expect(preview.desc).toContain("올해 기준 10월 말 개통");
     expect(preview.entries.map((e) => e.title)).toContain("미리보기 100% 활용 가이드");
   });
   it("최저임금 2027 — 건강보험 2027 동결 확정(접힌 FAQ)·요율 CTA 는 2027 요율표", () => {

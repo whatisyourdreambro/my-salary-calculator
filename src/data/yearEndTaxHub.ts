@@ -30,9 +30,9 @@ export interface YearEndStep {
 export const YEAR_END_STEPS: YearEndStep[] = [
   {
     id: "preview",
-    period: "지금 ~ 11월",
+    period: "지금 ~ 12월",
     title: "미리보기로 환급 전망 파악",
-    desc: "홈택스 미리보기(예년 기준 10월 말 이후) 전에도 예상 환급액을 계산해 남은 기간의 절세 전략을 세울 수 있습니다.",
+    desc: "홈택스 미리보기(올해 기준 10월 말 개통) 기간에 예상 환급액을 계산해 남은 기간의 절세 전략을 세울 수 있습니다.",
     entries: [
       { href: "/year-end-tax", title: "연말정산 계산기", desc: "예상 환급·추가납부 즉시 계산 + 절세 시뮬레이터", kind: "calculator" },
       { href: "/year-end-tax-preview", title: "홈택스 미리보기 이용법", desc: "오픈 시점·이용 절차·확인 포인트", kind: "guide" },
@@ -95,7 +95,8 @@ export interface YearEndCalendarRow {
 
 /** 시즌 캘린더 — 확정 일정은 국세청 발표 기준, 미확정은 "예년 기준" 명시 */
 export const YEAR_END_CALENDAR: YearEndCalendarRow[] = [
-  { period: "10월 말~11월 (예년 기준)", event: "홈택스 '연말정산 미리보기' 오픈", note: "1~9월 카드 사용액 기반 예상 세액 확인 — 남은 기간 전략 수립" },
+  // 2026-11-13: 국세청 2026-10-23 안내(정책브리핑 newsId=148974171) 이용 기간 10.28.~12.18. 확정 반영
+  { period: "10월 28일~12월 18일", event: "홈택스 '연말정산 미리보기' 운영", note: "1~9월 카드 사용액 기반 예상 세액 확인 — 남은 기간 전략 수립" },
   { period: "12월 31일", event: "공제 대상 지출 마감", note: "연금저축·IRP·기부금·카드 사용액 등 올해 귀속 공제의 기준일" },
   { period: "1월 중순 (예년 기준 1/15 전후)", event: "간소화 서비스 오픈", note: "국세청이 수집한 공제 자료 일괄 확인" },
   { period: "1월 말~2월 초", event: "회사 서류 제출", note: "회사별 마감일 상이 — 누락 영수증(월세·안경 등)은 직접 제출" },
