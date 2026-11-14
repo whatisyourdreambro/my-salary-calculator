@@ -10,8 +10,10 @@ export default function ToolExplainerSection({ path }: { path?: string }) {
   const pathname = usePathname();
   const explainer = getToolExplainer(path ?? pathname ?? '');
   if (!explainer) return null;
+  // relative: /mbti-salary·/lotto 의 main 에는 화면 전체를 덮는 장식 층(absolute inset-0 z-0)이 있다. 위치 지정이 없는
+  // 블록은 그 층 아래에 그려져 글자 위에 장식이 얹히고(/mbti-salary 는 글자 선택도 막힌다) — 배치·높이는 그대로 두고 그리는 순서만 올린다.
   return (
-    <section className="mx-auto my-10 max-w-3xl px-4 sm:px-6" aria-label={explainer.heading}>
+    <section className="relative mx-auto my-10 max-w-3xl px-4 sm:px-6" aria-label={explainer.heading}>
       <h2 className="text-lg font-bold text-foreground">{explainer.heading}</h2>
       {explainer.paragraphs.map((text) => (
         <p key={text} className="mt-3 text-sm leading-7 text-muted-foreground">{text}</p>
