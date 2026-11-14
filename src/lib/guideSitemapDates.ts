@@ -5,13 +5,25 @@
 //   사이트맵 lastmod 만 그 보강을 실제로 고친 날로 올린다. 화면 날짜(히어로 칩·'마지막 내용 수정' 상자)·OG modifiedTime·
 //   Article dateModified 는 getGuideContentDate 그대로다 — 칩이 새로 생기면 GuideMidAd 위 UI 가 늘고, 칩 숫자가 바뀌면
 //   광고 위 폭 실측이 필요해서다(광고 위 UI 추가 금지). 11/1 '네 곳 같은 날짜' 규칙의 유일한 예외가 이 표다.
+// ★ 칩 숫자 규칙(2026-11-15, ads-01·ads-05): 이미 떠 있는 '수정' 날짜의 숫자를 바꾸는 것은 광고 위 변경이다.
+//   실측: R1 원장(d48f17877)이 칩 있는 가이드 11편의 날짜를 2026.10.03 → 2026.11.03 으로 바꾸자, 그 가운데 10편에서 화면 폭
+//   440~445px 일 때 제목 아래 광고가 모두 24px 내려갔다. 히어로 날짜 줄은 줄바꿈되는 flex 줄이고, 날짜가 2~3px 좁아지자 44px
+//   공유 버튼이 첫 줄로 올라와 그 줄이 20px → 44px 가 되었기 때문이다(2026-11-14·15 광고 없는 QA 빌드 가드 스윕,
+//   기록 docs/ad-experiments.md 2026-11-15 절). 그래서:
+//   ① 갱신이 광고 아래에만 있으면 칩이 있든 없든 화면 날짜는 건드리지 않고 이 표에 행을 더하는 것이 기본이다.
+//   ② 화면 날짜를 올리려면(guideContentRevisions.*.ts 표) 게시 전에 화면 폭 320~460px 를 1px 단위로, 수화 후와 첫 화면(수화 전)
+//     둘 다 가드 스윕으로 재서 광고 아래 이동이 0 이어야 한다. 한 곳이라도 내려가면 그 글도 이 표가 기본이다.
+//     글꼴 폭 계산('같은 글자 수에 더 좁은 숫자')은 실측을 대신하지 못한다.
 // 왜: IndexNow(게시 8단계 cloudIndexNowPlan)는 사이트맵 (loc, lastmod) 차이만 알린다. 날짜가 그대로면 보강한 글이
 //   네이버·빙에 알려지지 않는다(lens-crawl-F01 의 같은 틈). rss.xml 도 이 날짜를 쓴다(피드 전문 = 본문 + 보강).
-// 행 규칙: 값은 그 보강을 실제로 고친 날(KST, YYYY-MM-DD). 미래 날짜·게시일 선반영 금지. 링크 한 줄만 바뀐 보강은 넣지 않는다
+// 행 규칙: 값은 그 보강(또는 화면 날짜를 올리지 못한 광고 위 같은 폭 정정)을 실제로 고친 날(KST, YYYY-MM-DD). 미래 날짜·게시일
+//   선반영 금지. 링크 한 줄만 바뀐 보강은 넣지 않는다
 //   (etf-beginner·basic-pension-65-2026·health-insurance-2026-guide·retirement-planning·public-company-salary-ranking-2026).
-//   getGuideContentDate 보다 이르거나 같으면 효과가 없다(max). 뒤 묶음(RL-08·RL-15·RL-21·RL-23 등)이 칩 없는 가이드의 보강을
-//   바꾸면 그 묶음의 원장일로 행을 더한다. 서버 전용(클라이언트 번들에 싣지 않는다).
-// 테스트: src/lib/__tests__/guideSitemapDates.test.ts
+//   getGuideContentDate 보다 이르거나 같으면 효과가 없다(max). 뒤 묶음(RL-08·RL-15·RL-21·RL-23 등)이 가이드의 보강을 바꾸면
+//   칩이 없는 글이든 있는 글이든 그 묶음의 원장일로 행을 더한다(위 ★ ①). 광고 아래 보강이 없는 행은 테스트의 이름 붙인 예외
+//   목록(NO_SUPPLEMENT_ROWS)에 이유와 함께 있어야 한다. 서버 전용(클라이언트 번들에 싣지 않는다).
+// 테스트: src/lib/__tests__/guideSitemapDates.test.ts · relandR1Ledger.test.ts(R1 10편의 두 날짜) ·
+//   guideRevisionDates.test.ts(R1 10편의 실제 화면·OG·Article 출력)
 import { RELAND_R1_PUSH } from "@/config/relandR1Push";
 import { getGuideContentDate } from "./guideContentRevisions";
 
@@ -44,6 +56,24 @@ export const GUIDE_SITEMAP_ONLY_REVISED: Readonly<Record<string, string>> = {
   "samsung-opi-forecast-2027": RELAND_R1_PUSH,
   "samsung-bonus-treasury-stock-15-trillion-2026": RELAND_R1_PUSH,
   "samsung-vs-sk-hynix-stock-bonus-2026": RELAND_R1_PUSH,
+  // ── R1 재착지에서 내용이 바뀐 '수정 칩 있는' 가이드 10편(원장일 RELAND_R1_PUSH) — 화면 날짜는 2026.10.03 그대로 (2026-11-15, ads-01) ──
+  // R1 원장(d48f17877)은 이 10편을 본문 정정일 표(guideContentRevisions.relandR1.ts)에 넣어 칩을 2026.11.03 으로 바꿨고, 그 숫자
+  // 변화가 화면 폭 440~445px 에서 제목 아래 광고를 24px 내렸다(머리 주석 ★). 운영자 상시 규칙(광고를 내리지 않는다)에 따라
+  // 화면·OG·Article 날짜는 운영 값 2026-10-03 으로 두고, 사이트맵 lastmod·rss.xml pubDate 만 R1 내용을 실제로 고친 날로 유지한다.
+  // 8편: 바뀐 것은 마지막 광고 아래 보강뿐이다 — lens-meta-F01(운영자 결정 2026-11-13) 그대로.
+  "career-break-financial-plan": RELAND_R1_PUSH, // 휴직·퇴사 4대보험 차이(자동차 보험료 폐지 2024-02, 납입고지 유예)
+  "comprehensive-income-tax-2026": RELAND_R1_PUSH, // 분납 기한·납부지연 가산세 하루 0.022%
+  "first-home-2026-strategy": RELAND_R1_PUSH, // 디딤돌·보금자리론 조건표, 규제지역 LTV 40%
+  "isa-account-guide": RELAND_R1_PUSH, // 2026 세제개편안 ISA 내용 정정(생산적금융 ISA)
+  "minimum-wage-impact-2026": RELAND_R1_PUSH, // 2027 최저임금 10,700원 확정 표
+  "performance-pay-complete-2026": RELAND_R1_PUSH, // SK하이닉스 PS 지급 방식·삼성 인상률·DS 특별경영성과급(보도 기준)
+  "retirement-planning-30s": RELAND_R1_PUSH, // 10억 목표 월 적립액 재계산
+  "year-end-tax-2026": RELAND_R1_PUSH, // 2026년 귀속 연말정산 FAQ 4문항
+  // 2편: 광고 위 같은 폭 사실 정정(R1 RL-02)도 받았다. 이 2편도 화면 날짜는 2026.10.03 그대로다 — 광고를 내린 것은 정정 문장이
+  // 아니라 날짜 숫자였고, 그 이동은 운영자에게 물은 적이 없다(광고 위 사실 정정 질문 1 의 대상 목록에 없던 글). 화면 날짜를
+  // 올리려면 운영자 결정과 머리 주석 ★ ② 의 스윕이 먼저다.
+  "kai-salary-2026": RELAND_R1_PUSH, // 본문 FY2025 공시 문장(같은 폭) + 광고 아래 방산 4사 DART 평균연봉 표
+  "us-treasury-bond": RELAND_R1_PUSH, // TL;DR·카드·Article 설명 '금리 인하 시기' → '금리 변동 시기'(같은 폭) — 광고 아래 보강은 없다
   // ── 이미 운영 중인 보강의 마지막 실질 수정일(git 기록으로 확인) ──
   // 9/27 db933b147: SK하이닉스 9/16 가결 결과 보강(H2 '2026년 9월 27일 기준'). 그 뒤 끼워 넣는 psData 값 변화 없음.
   "sk-hynix-wage-2026": "2026-09-27",
