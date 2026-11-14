@@ -13,7 +13,7 @@ import { canRequestLiveAds } from "@/lib/liveAds";
 import { hasRequestedInPageView, markRequestedInPageView } from "@/lib/adPageViewLedger";
 
 const CLIENT_ID = "ca-pub-2873403048341290";
-// 라벨("광고 (Sponsored)") 높이 — 컨테이너 예약 높이에 포함해 <ins> 지연 마운트 때 아래 콘텐츠가 ~20px 밀리지 않게 한다 (2026-09-11).
+// 라벨("광고" / 영문 "Advertisements" — AdSense 정책 허용 문구, 2026-11-13) 높이 — 컨테이너 예약 높이에 포함해 <ins> 지연 마운트 때 아래 콘텐츠가 ~20px 밀리지 않게 한다 (2026-09-11).
 const AD_LABEL_HEIGHT = 20;
 const containerBaseStyle: React.CSSProperties = {
   width: "100%",
@@ -184,7 +184,7 @@ function AdSlot({
   }, [visible, slot, slotKind, allowed, liveEnabled, spent]);
 
   // 미충족(unfilled) 광고 감지 → 컨테이너째 접기.
-  // 이전에는 unfilled 여도 "광고 (Sponsored)" 라벨 + minHeight 공백이 남아 UX·정책 양쪽 손해.
+  // 이전에는 unfilled 여도 "광고" 라벨 + minHeight 공백이 남아 UX·정책 양쪽 손해.
   // + 채움 결과 계측(2026-09-05, 운영자 승인): data-ad-status 가 filled/unfilled 로 전이될 때
   //   슬롯당 1회 ad_filled / ad_unfilled 이벤트를 보낸다. ad_request_attempt 는 push 시점 "요청 수"라
   //   실노출·채움률을 답하지 못했고, 실험 판정 기준 'unfilled 급증 없음'이 AdSense CSV(운영자 제공)에만
@@ -266,7 +266,7 @@ function AdSlot({
           width: "100%",
         }}
       >
-        {pathname === "/en" || pathname.startsWith("/en/") ? "Advertisement" : "광고 (Sponsored)"}
+        {pathname === "/en" || pathname.startsWith("/en/") ? "Advertisements" : "광고"}
       </span>
       {liveEnabled && visible && (
         <ins

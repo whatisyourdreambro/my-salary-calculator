@@ -18,7 +18,7 @@ import { CheckCircle, Calculator, Zap, Sparkles, ArrowRight } from "lucide-react
 import ResultSharePanel from "@/components/ResultSharePanel";
 import { useCalculatorMeasurement } from "@/hooks/useCalculatorMeasurement";
 import { isValidCalculationNumber } from "@/lib/calculationMeasurement";
-import { trackEvent, trackSavedSalaryRecalculate } from "@/lib/analytics";
+import { trackSavedSalaryRecalculate } from "@/lib/analytics";
 import { canHandoffCurrentSalaryResult, writeOfferComparisonHandoff } from "@/lib/offerComparisonHandoff";
 import { validateSalarySharePayload } from "@/lib/salarySharePayload";
 import { isCurrentSalaryResult, mergeSalarySnapshot, parseSavedHomeInputs } from "@/lib/salaryResultSnapshot";
@@ -295,14 +295,6 @@ export default function SalaryCalculator() {
  calcType: "salary",
  valid: currentResult,
  resultKey: result,
- onSuccess: () => {
- // Preserve configured Ads conversion, once on a real successful result, with no money values.
- const adsId = process.env.NEXT_PUBLIC_ADS_ID;
- const label = process.env.NEXT_PUBLIC_CONVERSION_LABEL_CALCULATION;
- if (adsId && label && typeof window.gtag === "function") {
- trackEvent("conversion", { send_to: `${adsId}/${label}` });
- }
- },
  });
 
  const salaryAmountInvalid = !isValidCalculationNumber(salaryInput, Number.MIN_VALUE) || !validateSalarySharePayload(incomeType === "regular"

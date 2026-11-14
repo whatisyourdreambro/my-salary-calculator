@@ -207,7 +207,8 @@ describe("env 미설정 — 아무것도 렌더하지 않음", () => {
     const html = renderToStaticMarkup(createElement(actual.CompanyTopAd));
     expect(count(html, 'class="ad-container ad-slot-company-top"')).toBe(1);
     expect(html).toContain("min-height:300px");
-    expect(html).toContain("광고 (Sponsored)");
+    expect(html).toMatch(/>광고<\/span>/);
+    expect(html).not.toContain("Sponsored");
   });
 });
 

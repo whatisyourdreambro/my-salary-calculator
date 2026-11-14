@@ -21,14 +21,22 @@ type AdsQueue = unknown[] & { pauseAdRequests?: number };
 
 /** Also handles error-boundary replacement without a pathname change. */
 export function observePageAdPause() {
-  const w = window as unknown as { adsbygoogle?: AdsQueue };
+  const w = window as unknown as { adsbygoogle?: AdsQueue; __MSY_AD_PAUSE_SET__?: boolean };
   let active = true;
   const refresh = () => {
     if (!active) return;
     const queue: AdsQueue = (w.adsbygoogle = w.adsbygoogle || []);
     const suppressed = Boolean(document.querySelector('[data-page-state="not-found"], [data-page-state="error"]'));
-    if (suppressed || !canRequestLiveAds()) queue.pauseAdRequests = 1;
-    else if (queue.pauseAdRequests === 1) queue.pauseAdRequests = 0;
+    // ★ adsbygoogle.js 가 로드되면 window.adsbygoogle 는 SDK 객체로 바뀌고 pauseAdRequests 는 쓰기 전용(setter)이라
+    //   다시 읽으면 undefined 다. 보류 여부는 SDK 에서 읽지 말고 window 의 문서 단위 표시로 기억한다
+    //   (effect 클로저는 경로 변경 때 새로 만들어지고, 모듈 변수는 테스트 간에 샌다).
+    if (suppressed || !canRequestLiveAds()) {
+      queue.pauseAdRequests = 1;
+      w.__MSY_AD_PAUSE_SET__ = true;
+    } else if (w.__MSY_AD_PAUSE_SET__ === true || queue.pauseAdRequests === 1) {
+      queue.pauseAdRequests = 0;
+      w.__MSY_AD_PAUSE_SET__ = false;
+    }
   };
   refresh();
   const observer = new MutationObserver(refresh);
