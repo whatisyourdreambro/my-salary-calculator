@@ -147,8 +147,10 @@ export function readGithubReadToken(env) {
 // while the build deadline keeps 60 s spare and the request bound still has a call left.
 // With a token: a 401, or a 403 that is not such a rate-limit answer, means the token is bad, expired or lacks
 // access. That one request is repeated once anonymously and the client stays anonymous for the rest of the
-// build, so a token can never make the gate stricter than the anonymous design. The token is only ever placed
-// in the Authorization header; diagnostics carry the booleans of authState() and nothing else.
+// build, so a bad or expired token costs one extra request (it counts toward the bound) and otherwise leaves the
+// anonymous design unchanged. A rate-limit answer to a valid token is waited out like an anonymous one and is
+// not repeated anonymously. The token is only ever placed in the Authorization header; diagnostics carry the
+// booleans of authState() and nothing else.
 export function publicGithubBuildClient(fetchFn = globalThis.fetch,
   { sleep = ms => new Promise(resolve => setTimeout(resolve, ms)), now = Date.now, deadline = Infinity, token } = {}) {
   let calls = 0, waited = 0;
