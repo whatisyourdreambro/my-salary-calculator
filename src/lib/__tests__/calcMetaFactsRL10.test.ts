@@ -4,6 +4,7 @@
 import { describe, expect, it } from "vitest";
 import { allCalculators } from "@/lib/simpleCalculators";
 import { calculatorSeoDescription } from "@/lib/simpleCalculators/seoText";
+import { hubs } from "@/lib/hubs";
 
 const calc = (slug: string) => {
   const c = allCalculators.find((x) => x.slug === slug);
@@ -48,5 +49,15 @@ describe("F7 등록면허세 계산기 설명(H1 아래·meta 앞부분) — 매
     const meta = calculatorSeoDescription(c);
     expect(meta).not.toContain("추가되는");
     expect(meta).not.toContain("주택 매매·증여 시");
+  });
+});
+
+describe("F7 /hub/tax-saving 등록면허세 카드 — '추가 세금' 오기 정정, 종전보다 넓지 않게", () => {
+  it("카드 문구", () => {
+    const link = hubs.find((h) => h.id === "tax-saving")!.sections.flatMap((s) => s.links).find((l) => l.href === "/calc/registration-tax-quick")!;
+    expect(link.desc).toBe("저당·전세권 등기 세금");
+    notWider(link.desc, "매매·증여 시 추가 세금");
+    const elsewhere = hubs.flatMap((h) => h.sections.flatMap((s) => s.links)).filter((l) => l.href === "/calc/registration-tax-quick");
+    for (const l of elsewhere) expect(l.desc).not.toContain("추가");
   });
 });
