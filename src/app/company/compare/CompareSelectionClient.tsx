@@ -6,6 +6,9 @@ import { companies } from "@/lib/companyData";
 import { ArrowRight, Swords } from "lucide-react";
 import { motion } from "framer-motion";
 
+// 자리표시는 select 의 비활성 '기업 선택' 옵션 하나뿐이다. 그 위에 겹쳐 그리던 '선택해주세요' 절대 위치 덧칠은
+// 브라우저에 따라 두 글자가 겹치거나 두 번 보여 지웠다 (2026-11-15 app-data-pages-b01-F03 — absolute inset-0 라 상자 높이 변화 0).
+
 export default function CompareSelectionPage() {
  const router = useRouter();
  const [selectedA, setSelectedA] = useState<string | null>(null);
@@ -49,9 +52,6 @@ export default function CompareSelectionPage() {
  </option>
  ))}
  </select>
- <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
- {!selectedA && <span className="text-muted-foreground/50">선택해주세요</span>}
- </div>
  </div>
  {selectedA && (
  <motion.div
@@ -92,9 +92,6 @@ export default function CompareSelectionPage() {
  </option>
  ))}
  </select>
- <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
- {!selectedB && <span className="text-muted-foreground/50">선택해주세요</span>}
- </div>
  </div>
  {selectedB && (
  <motion.div

@@ -3,8 +3,8 @@
 // 임베드 위젯 목록 단일 소스 (2026-08-23 다중 위젯화 — 위젯 2호 연말정산 추가).
 // 스니펫의 크레딧 <a> 링크가 백링크 본체 — 크레딧 앵커를 제거하지 말 것.
 // 위젯 실물(/widget/*)은 noindex, 이 페이지(/embed)가 색인 대상.
-// 연봉·성과급 위젯의 연도 표기는 위젯 계산과 같은 현행 요율 포인터(src/config/currentRates.ts)에서 —
-// 연말정산 위젯은 2026 귀속 고정이라 리터럴 그대로 둔다 (2026-09-25 N3).
+// 연봉·성과급·퇴직금 위젯의 연도 표기는 위젯 계산과 같은 현행 요율 포인터(src/config/currentRates.ts)에서 —
+// 연말정산 위젯은 2026 귀속 고정이라 리터럴 그대로 둔다 (2026-09-25 N3, 퇴직금은 2026-11-15 추가).
 
 import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 
@@ -79,10 +79,10 @@ export const EMBED_WIDGETS: EmbedWidgetDef[] = [
     height: 460,
     snippet: `<iframe src="https://www.moneysalary.com/widget/severance" width="100%" height="460"
   style="border:1px solid #e2e8f0;border-radius:12px;max-width:480px;"
-  title="2026 퇴직금 계산기" loading="lazy"></iframe>
+  title="${CURRENT_RATES_YEAR} 퇴직금 계산기" loading="lazy"></iframe>
 <p style="margin:8px 0 0;font-size:13px;">
   <a href="https://www.moneysalary.com/?tab=severance&utm_source=embed&utm_medium=widget"
-     target="_blank" rel="noopener noreferrer">2026 퇴직금 계산기 by 머니샐러리</a>
+     target="_blank" rel="noopener noreferrer">${CURRENT_RATES_YEAR} 퇴직금 계산기 by 머니샐러리</a>
 </p>`,
     basis:
       "퇴직 전 3개월 평균임금 30일분 × 근속연수로 세전 퇴직금을 추정하고, 퇴직소득세(근속연수공제·환산급여)를 공제한 값입니다. 입사·퇴사일 기준 일할 계산은 본편에서 지원합니다.",

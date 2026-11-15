@@ -169,10 +169,10 @@ export default async function RegionDetailPage({
             </div>
           </div>
 
-          {/* 전체 평균 + 실수령액 링크 */}
+          {/* 전체 평균(자체 집계 추정치) + 실수령액 링크 — 라벨 전체→추정은 같은 글자 수·같은 폭 (2026-11-15 app-data-pages-b03-F07) */}
           <div className="bg-gradient-to-r from-electric/10 to-primary/10 dark:from-electric/20 dark:to-primary/20 border border-electric/20 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <p className="text-sm text-muted-blue dark:text-canvas-300 mb-1">2026년 전체 평균 연봉</p>
+              <p className="text-sm text-muted-blue dark:text-canvas-300 mb-1">2026년 추정 평균 연봉</p>
               <p className="text-5xl font-black text-electric">
                 {region.salary.overall.toLocaleString("ko-KR")}
                 <span className="text-2xl font-bold text-muted-blue dark:text-canvas-300 ml-1">만원</span>

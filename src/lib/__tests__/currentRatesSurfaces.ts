@@ -88,8 +88,22 @@ export const RATE_YEAR_SURFACES: RateYearSurface[] = [
     ],
   },
   {
-    id: "/embed 연봉·성과급 스니펫",
-    load: async () => JSON.stringify((await import("@/app/embed/widgets")).EMBED_WIDGETS.filter((w) => w.id === "salary" || w.id === "bonus")),
+    // 2026-11-15 app-data-pages-b05-F03: 퇴직금 위젯 제목도 포인터 파생(오늘 렌더 결과는 종전 리터럴과 같다)
+    id: "/widget/severance",
+    load: async () => (await (await import("@/app/widget/severance/route")).GET()).text(),
+    expected: (y) => [
+      `<title>${y} 퇴직금 계산기 — 머니샐러리</title>`,
+      `<p class="title">🏦 ${y} <span>퇴직금</span> 계산기</p>`,
+    ],
+  },
+  {
+    id: "/embed 연봉·성과급·퇴직금 스니펫",
+    load: async () =>
+      JSON.stringify(
+        (await import("@/app/embed/widgets")).EMBED_WIDGETS.filter(
+          (w) => w.id === "salary" || w.id === "bonus" || w.id === "severance",
+        ),
+      ),
     expected: (y) => [
       `title=\\"${y} 연봉 실수령액 계산기\\"`,
       `>${y} 연봉 실수령액 계산기 by 머니샐러리</a>`,
@@ -97,6 +111,8 @@ export const RATE_YEAR_SURFACES: RateYearSurface[] = [
       `title=\\"${y} 성과급 실수령액 계산기\\"`,
       `>${y} 성과급 계산기 by 머니샐러리</a>`,
       `${y}년 세법 한계세율 기준 — 성과급이`,
+      `title=\\"${y} 퇴직금 계산기\\"`,
+      `>${y} 퇴직금 계산기 by 머니샐러리</a>`,
     ],
   },
   {

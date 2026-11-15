@@ -17,6 +17,18 @@ import {
 const formatMoney = (val: number) =>
  `${(val / 10000).toLocaleString("ko-KR")}만원`;
 
+/**
+ * Y축 눈금 — 값은 원 단위. 1억 이상은 억(1.5억·2.25억), 그 아래는 천만(5천만·6.3천만).
+ * 종전 '15천만'·'22.5천만'은 430개 회사 전부(총보상 1억 이상)에 나오던 어색한 표기
+ * (2026-11-15 app-data-pages-b03-F10). 차트 상자 높이(300px 고정)와 무관한 눈금 글자만 바뀐다.
+ * companyContentBuilder 의 formatSalaryKorean 은 회사 데이터를 이 클라 청크로 끌어오므로 쓰지 않는다.
+ */
+export function formatRoadmapTick(val: number): string {
+ if (val >= 1e8) return `${+(val / 1e8).toFixed(2)}억`;
+ if (val === 0) return "0";
+ return `${+(val / 1e7).toFixed(1)}천만`;
+}
+
 export type SalaryRoadmapDatum = {
  level: string;
  base: number;
@@ -39,8 +51,8 @@ export default function SalaryRoadmapChart({
  </defs>
  <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.1} />
  <XAxis dataKey="level" />
- {/* 값은 원 단위 — 천만으로 나눴으므로 라벨도 '천만' (예: 6.3천만 = 6,300만원) */}
- <YAxis tickFormatter={(val) => `${val / 10000000}천만`} />
+ {/* 값은 원 단위 — 1억 이상은 억, 그 아래는 천만 (예: 2.25억 = 2억 2,500만원, 6.3천만 = 6,300만원) */}
+ <YAxis tickFormatter={formatRoadmapTick} />
  <Tooltip
  formatter={(value: number) => formatMoney(value)}
  contentStyle={{

@@ -59,10 +59,8 @@
 /b112e39a5933ca97201c83a7c5d7d91e.txt
   Cache-Control: public, max-age=86400
 
-# 이전 Pages 배포의 크롤러 메타 파일 규칙(2026-09-25 B2).
-# OpenNext에서는 이 경로들이 Worker의 prerender cache를 거쳐 응답하므로 route/Next 헤더가 적용된다.
+# 크롤러 메타 파일(2026-09-25 B2). dist/_routes.json exclude 로 함수를 우회하므로 아래 규칙이 실제 응답 헤더다.
 # public/에 robots·sitemap·RSS 사본을 만들면 앱 라우트를 가리므로 복사하지 말 것.
-# 아래 규칙은 이전 Pages 구성과의 호환 자료이며 Workers의 HTML/API 라우팅 규칙이 아니다.
 /robots.txt
   Cache-Control: public, max-age=3600
 

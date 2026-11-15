@@ -16,10 +16,33 @@ import { HomeTopAd, InArticleAd, GuideMidAd, CalcResultAd } from "@/components/A
 
 const TOP_N = 30;
 
+// 시니어 기준 총보상 = base + 평균 인센티브(avgAmount, 없거나 0이면 0 —
+// 전 소비처(CompanySalaryTable·CompanyNarrative 등)와 동일 표준: target% 추정 합산 금지)
+// 국내 기업만 — 글로벌 기업(isGlobal)은 국내 순위 왜곡 방지 위해 제외.
+// 모듈 스코프 1회 계산 — 표와 검색 설명(metadata.description)이 같은 순위를 쓴다
+// (2026-11-15 app-data-pages-b04-F01: 설명이 표 밖 회사 삼성전자 264위·네이버 53위·카카오 163위를 들고 있었다).
+const RANKED = companyRepository
+  .getAll()
+  .filter((c) => !c.isGlobal)
+  .map((c) => {
+    const senior = c.salary.senior;
+    const incentive = senior.incentive.avgAmount || 0;
+    return {
+      id: c.id,
+      nameKo: c.name.ko,
+      industry: c.industry,
+      tier: c.tier,
+      logo: c.logo,
+      base: senior.base,
+      total: senior.base + incentive,
+    };
+  })
+  .sort((a, b) => b.total - a.total)
+  .slice(0, TOP_N);
+
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 대기업 연봉 순위 TOP 30 — 시니어 기준 총보상 랭킹",
-  description:
-    "삼성전자, SK하이닉스, 네이버, 카카오 등 국내 주요 기업의 시니어 직급 총보상(기본급+평균 인센티브)을 2026년 기준으로 비교한 연봉 순위표. 회사별 상세 연봉 페이지로 바로 이동하세요.",
+  description: `${RANKED.slice(0, 3).map((c) => c.nameKo).join("·")} 등 국내 주요 기업 ${TOP_N}곳의 시니어 직급 총보상(기본급+평균 인센티브)을 2026년 기준으로 비교한 연봉 순위표. 회사별 상세 연봉 페이지로 바로 이동하세요.`,
   path: "/salary-db/ranking",
   keywords: [
     "대기업 연봉 순위",
@@ -27,7 +50,6 @@ export const metadata: Metadata = buildPageMetadata({
     "회사별 연봉 비교",
     "2026 연봉 순위",
     "기업 연봉 랭킹",
-    "삼성전자 연봉",
     "SK하이닉스 연봉",
   ],
 });
@@ -46,31 +68,9 @@ const tierLabel: Record<string, string> = {
 };
 
 export default function CompanyRankingPage() {
-  // 시니어 기준 총보상 = base + 평균 인센티브(avgAmount, 없거나 0이면 0 —
-  // 전 소비처(CompanySalaryTable·CompanyNarrative 등)와 동일 표준: target% 추정 합산 금지)
-  // 국내 기업만 — 글로벌 기업(isGlobal)은 국내 순위 왜곡 방지 위해 제외
-  const ranked = companyRepository
-    .getAll()
-    .filter((c) => !c.isGlobal)
-    .map((c) => {
-      const senior = c.salary.senior;
-      const incentive = senior.incentive.avgAmount || 0;
-      return {
-        id: c.id,
-        nameKo: c.name.ko,
-        industry: c.industry,
-        tier: c.tier,
-        logo: c.logo,
-        base: senior.base,
-        total: senior.base + incentive,
-      };
-    })
-    .sort((a, b) => b.total - a.total)
-    .slice(0, TOP_N);
-
   const listLd = itemListLd({
     name: "2026 대기업 연봉 순위 TOP 30",
-    items: ranked.map((c, i) => ({
+    items: RANKED.map((c, i) => ({
       name: c.nameKo,
       url: `/salary-db/${c.id}`,
       position: i + 1,
@@ -145,7 +145,7 @@ export default function CompanyRankingPage() {
               </tr>
             </thead>
             <tbody>
-              {ranked.map((c, i) => (
+              {RANKED.map((c, i) => (
                 <tr
                   key={c.id}
                   className="border-b border-canvas-100 last:border-0 hover:bg-canvas/50 transition-colors"
