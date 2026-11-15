@@ -288,6 +288,8 @@ export default function BonusCalculatorPage() {
             return (
               <button
                 key={p.label}
+                type="button"
+                aria-pressed={active}
                 onClick={() => {
                   setSalaryFmt(p.salary.toLocaleString("ko-KR"));
                   setBonusFmt(p.bonus.toLocaleString("ko-KR"));
@@ -409,13 +411,15 @@ export default function BonusCalculatorPage() {
                 </select>
               </div>
               <div>
-                <label className="text-xs font-bold uppercase tracking-widest block mb-2" style={{ color: "#526176" }}>
+                <label id="bonus-spouse-label" className="text-xs font-bold uppercase tracking-widest block mb-2" style={{ color: "#526176" }}>
                   배우자 공제
                 </label>
-                <div className="flex gap-2">
+                <div className="flex gap-2" role="group" aria-labelledby="bonus-spouse-label">
                   {[{ v: false, label: "없음" }, { v: true, label: "있음" }].map((opt) => (
                     <button
                       key={String(opt.v)}
+                      type="button"
+                      aria-pressed={hasSpouse === opt.v}
                       onClick={() => setHasSpouse(opt.v)}
                       className="flex-1 py-3.5 rounded-xl text-xs font-bold transition-all"
                       style={{
@@ -804,10 +808,12 @@ function BonusComparison({
       </div>
 
       {/* 탭 */}
-      <div className="flex gap-1 p-1 rounded-2xl mb-4" style={{ backgroundColor: "#EDF1F5" }}>
+      <div className="flex gap-1 p-1 rounded-2xl mb-4" style={{ backgroundColor: "#EDF1F5" }} role="group" aria-label="비교 기준">
         {COMPARE_PRESETS.map((g, i) => (
           <button
             key={g.group}
+            type="button"
+            aria-pressed={activeGroup === i}
             onClick={() => setActiveGroup(i)}
             className="flex-1 py-2.5 rounded-xl text-xs font-bold transition-all"
             style={{

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
-import { Home, Search, Calculator, BookOpen, Building2, Receipt, Briefcase, Gift } from "lucide-react";
+import { Home, Trophy, Calculator, BookOpen, Building2, Receipt, Briefcase, Gift } from "lucide-react";
 
 // 404 전용 메타 (2026-09-25 B1) — 종전에는 metadata 가 없어 루트 layout 의 홈 <title> 과
 // robots 'index, follow' 를 그대로 물려받아, Next 가 자동 주입하는 noindex 와 상충하는 robots 메타가 둘 나갔다.
@@ -12,14 +12,15 @@ export const metadata: Metadata = {
 };
 
 const SUGGESTED_LINKS = [
-  { href: "/", label: "연봉 계산기", icon: Home, description: "2026 실수령액 즉시 계산" },
+  { href: "/", label: "연봉 계산기", icon: Home, description: "세후 실수령액 즉시 계산" },
   { href: "/calc", label: "계산기 모음", icon: Calculator, description: "세금·대출·투자·부동산" },
   { href: "/guides", label: "금융 가이드", icon: BookOpen, description: "직장인 절세·재테크" },
-  { href: "/salary-db", label: "회사별 연봉", icon: Building2, description: "기업 평균 연봉 비교" },
+  { href: "/salary-db", label: "회사별 연봉", icon: Building2, description: "회사 이름으로 연봉 찾기" },
   { href: "/calc/january-bonus", label: "13월의 월급", icon: Gift, description: "연말정산 환급 미리보기" },
   { href: "/calc/year-end-bonus", label: "성과급 세금", icon: Receipt, description: "직급별 보너스 실수령액" },
   { href: "/tools/finance/severance", label: "퇴직금 계산", icon: Briefcase, description: "환산급여 방식 예상 세액" },
-  { href: "/fire-calculator", label: "FIRE 계산기", icon: Search, description: "조기은퇴 자산 시뮬" },
+  // 11~2월 성과급 성수기 대표 착지 — 종전 /fire-calculator 자리(2026-11-15). 카드 수 8개 그대로(404 는 광고 요청 보류 화면)
+  { href: "/calc/samsung-bonus", label: "삼성전자 성과급", icon: Trophy, description: "OPI·TAI 세후 계산" },
 ];
 
 export default function NotFound() {

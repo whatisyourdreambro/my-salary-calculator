@@ -819,7 +819,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  ];
 
  // 데이터 리포트 (/insights) — 분기 발행, reportsRegistry가 단일 소스.
- // lastModified는 리포트별 실제 갱신일(updatedDate) — freshness 신호 정직 유지.
+ // lastModified는 리포트별 실제 갱신일(sitemapDate ?? updatedDate) — freshness 신호 정직 유지.
+ // sitemapDate = 화면 '최종 갱신' 칩(광고 위)을 아직 못 올린 리포트의 실제 수정일(2026-11-15 app-data-pages-b02-F01).
  const reportUrls: MetadataRoute.Sitemap = [
  {
  url: `${baseUrl}/insights`,
@@ -828,7 +829,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  priority: 0.8,
  },
  ...reportsRegistry.map((report) => {
- const parsed = new Date(report.updatedDate);
+ const parsed = new Date(report.sitemapDate ?? report.updatedDate);
  return {
  url: `${baseUrl}/insights/${report.slug}`,
  lastModified: Number.isNaN(parsed.getTime()) ? STATIC_LAST_MODIFIED : parsed,

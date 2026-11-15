@@ -195,6 +195,17 @@ export function payoutStatus(p: BonusPayout): BonusPayoutStatus {
   return "paid";
 }
 
+/**
+ * Rows whose note reads as a tentative agreement although the deal was ratified and paid (Hyundai vote 2025-09-15,
+ * 52.9% in favour — 헤럴드경제 2025-09-15; Kia vote 2025-09-30, 73.1% in favour — 마이데일리·뉴스토마토 2025-09-30; press).
+ * The on-screen note (table ③, above MultiplexAd) stays as it is; only the dataset status is corrected.
+ * 키 = `${calcSlug}:${year}:${scheme}` (app-data-pages-b02-F03, 2026-11-15)
+ */
+const BONUS_STATUS_OVERRIDE: Readonly<Record<string, BonusPayoutStatus>> = {
+  "hyundai-bonus:2025:임단협 격려금(정액)": "paid",
+  "kia-bonus:2025:임단협 격려금(정액)": "paid",
+};
+
 export interface BonusDatasetRow {
   company: string;
   companyId: string;
@@ -256,7 +267,7 @@ export function buildBonusRows(): BonusDatasetRow[] {
         percentOfBase: pay.percentOfBase ?? null,
         percentOfSalary: pay.percentOfSalary ?? null,
         fixedAmountManwon: pay.fixedAmountManwon ?? null,
-        status: payoutStatus(pay),
+        status: BONUS_STATUS_OVERRIDE[`${p.calcSlug}:${pay.year}:${pay.scheme}`] ?? payoutStatus(pay),
         grade: /사업보고서|공시/.test(pay.source) ? "공시" : "보도",
         source: pay.source,
         note: pay.note ?? "",

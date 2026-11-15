@@ -45,9 +45,9 @@ export default function InstallmentPage() {
  <CalcResultAd />
 
  {/* 프리셋 버튼 — mt-8: 위 광고 바깥 여백(24px)과 병합돼 광고 아래 32px(2026-10-05 운영자 승인 #5, 광고 아래만) */}
- <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-2 mb-8">
+ <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-2 mb-8" role="group" aria-label="자주 쓰는 조건">
  {presets.map(p => (
- <button key={p.label} onClick={() => { setMonths(p.months); setAnnualRate(p.rate); }}
+ <button key={p.label} type="button" aria-pressed={months === p.months && annualRate === p.rate} onClick={() => { setMonths(p.months); setAnnualRate(p.rate); }}
  className={`p-3 rounded-xl border text-xs font-bold transition-all ${months === p.months && annualRate === p.rate ? "bg-primary text-white border-primary" : "bg-white border-canvas text-muted-blue hover:border-primary"}`}>
  <p>{p.label}</p>
  <p className="font-normal mt-0.5 opacity-70">{p.months}개월 / {p.rate}%</p>

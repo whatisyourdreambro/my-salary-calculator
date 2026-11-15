@@ -85,7 +85,8 @@ function buildFeedItems(baseUrl: string): FeedItem[] {
  title: report.title,
  url: `${baseUrl}/insights/${report.slug}`,
  description: report.description,
- date: report.updatedDate,
+ // 사이트맵 lastmod 와 같은 날(sitemapDate ?? updatedDate) — 화면 칩을 아직 못 올린 리포트의 실제 수정일(app-data-pages-b02-F01)
+ date: report.sitemapDate ?? report.updatedDate,
  categories: [REPORT_CATEGORY, ...report.keywords.slice(0, 4)],
  }));
  return [...guideItems, ...reportItems].sort(byDateDesc);

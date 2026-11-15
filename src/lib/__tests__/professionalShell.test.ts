@@ -16,6 +16,11 @@ import Header from "@/components/Header";
 import HeroBadge from "@/components/HeroBadge";
 import EnLandingClient from "@/app/en/EnLandingClient";
 import { navConfig, type DropdownItem } from "@/components/header/navConfig";
+// 1/1 요율 전환 가드(infra-b02-F01, 2026-11-15) — 테스트는 currentRates 를 import 해도 된다(컴포넌트는 금지: HeroBadge 는
+// HomeClient 클라이언트 그래프, structuredData 는 클라이언트 모듈 7곳이 import). 포인터가 2027 이 되면 배지·JSON-LD 리터럴을
+// 같은 통합에서 바꾸기 전까지 아래 두 단언이 실패한다(런북 docs/next-upgrade-plan-2026-09-11.md P-6 ①).
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
+import { webApplicationLd } from "@/lib/structuredData";
 
 describe("Professional shell and home contracts", () => {
   it.each(["/", "/en"])("keeps all five footer link groups available in server HTML on %s", (pathname) => {
@@ -81,8 +86,12 @@ describe("Professional shell and home contracts", () => {
 
   it("keeps the Korean hero context deterministic instead of making seasonal or speed claims", () => {
     const html = renderToStaticMarkup(createElement(HeroBadge));
-    expect(html).toContain("2026 계산 기준");
+    expect(html).toContain(`${CURRENT_RATES_YEAR} 계산 기준`);
     expect(html).not.toMatch(/5초|100\+|즉시 반영|시즌/);
+  });
+
+  it("names the current rate year in the home WebApplication JSON-LD", () => {
+    expect(webApplicationLd({ dateModified: new Date("2026-11-15T00:00:00+09:00") }).description).toContain(`${CURRENT_RATES_YEAR}년 최신 세법 기준`);
   });
 
   it("offers the checklist in both Korean menus with a current-page indicator and keeps English navigation local", () => {

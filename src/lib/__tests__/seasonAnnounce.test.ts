@@ -299,13 +299,22 @@ describe("이벤트 표 (E0~E12·E1b·E1c → C-xx · W4-A 슬롯, id 만)", () 
       "/year-end-tax-checklist",
       "/year-end-tax-settlement-2026",
     ]);
-    // E5 금통위 — /home-loan + 기준금리 수치가 박힌 3곳(10월 574e2e29 WP A6, 2026-11-02 RL-05 재반영)
+    // E5 금통위 — /home-loan + 기준금리 수치가 박힌 6곳(10월 574e2e29 WP A6, 2026-11-02 RL-05 재반영; 2026-11-15 simple-calc-b03-F01 —
+    // 2026-08-27 결정 연 3.00% 를 적은 간이 계산기 3종: 전월세 전환율 상한 FAQ·전세 vs 월세 FAQ·저축 일시 중단 유의사항)
     expect(urlsOf("E5")).toEqual([
       "/home-loan",
       "/savings-interest-2026",
       "/guides/mortgage-refinance-guide-2026",
       "/guides/rule-of-72",
+      "/calc/deposit-equivalent",
+      "/calc/jeonse-vs-monthly-cost",
+      "/calc/savings-contribution-pause",
     ]);
+    // 저축 일시 중단은 define() 이 publishedAt 을 2026-09-10 으로 덮어써 날짜 손잡이가 없다 — 발표일 수동 요청 목록으로
+    const e5 = (url: string) => REG.rows.find((r) => r.url === url && r.events.includes("E5"))!;
+    expect(isHandleless(e5("/calc/savings-contribution-pause").lastmodHandle)).toBe(true);
+    expect(isHandleless(e5("/calc/deposit-equivalent").lastmodHandle)).toBe(false);
+    expect(isHandleless(e5("/calc/jeonse-vs-monthly-cost").lastmodHandle)).toBe(false);
     // E1b 고용보험 시행령·E1c 산재 고시 (10월 574e2e29 WP A4, 2026-11-02 RL-05 재반영)
     expect(urlsOf("E1b")).toEqual(expect.arrayContaining(["/social-insurance-rates-2027", "/table/2027/annual", "/table/2027/hourly"]));
     expect(urlsOf("E1c")).toEqual(["/social-insurance-rates-2027"]);

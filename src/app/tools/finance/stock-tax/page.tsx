@@ -55,28 +55,28 @@ export default function StockTaxPage() {
  </div>
 
  <div className="bg-white border border-canvas rounded-2xl p-8 mb-6 shadow-sm space-y-6">
- <div className="grid grid-cols-2 gap-3 mb-2">
- <button onClick={() => setIsOverseas(true)} className={`py-3 rounded-xl text-sm font-black border transition-all ${isOverseas ? "bg-primary text-white border-primary" : "border-canvas text-muted-blue hover:border-primary"}`}>해외주식</button>
- <button onClick={() => setIsOverseas(false)} className={`py-3 rounded-xl text-sm font-black border transition-all ${!isOverseas ? "bg-primary text-white border-primary" : "border-canvas text-muted-blue hover:border-primary"}`}>국내 대주주</button>
+ <div className="grid grid-cols-2 gap-3 mb-2" role="group" aria-label="과세 대상 주식">
+ <button type="button" aria-pressed={isOverseas} onClick={() => setIsOverseas(true)} className={`py-3 rounded-xl text-sm font-black border transition-all ${isOverseas ? "bg-primary text-white border-primary" : "border-canvas text-muted-blue hover:border-primary"}`}>해외주식</button>
+ <button type="button" aria-pressed={!isOverseas} onClick={() => setIsOverseas(false)} className={`py-3 rounded-xl text-sm font-black border transition-all ${!isOverseas ? "bg-primary text-white border-primary" : "border-canvas text-muted-blue hover:border-primary"}`}>국내 대주주</button>
  </div>
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label htmlFor="stock-tax-profit" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">매매 차익 (원)</label>
- <NumberInput id="stock-tax-profit" type="number" inputMode="numeric" value={profit} onChange={e => setProfit(Number(e.target.value))}
+ <NumberInput id="stock-tax-profit" allowNegative={false} type="number" inputMode="numeric" value={profit} onChange={e => setProfit(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  <div>
  <label htmlFor="stock-tax-loss" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">손실 차감 (결손 통산)</label>
- <NumberInput id="stock-tax-loss" type="number" inputMode="numeric" value={loss} onChange={e => setLoss(Number(e.target.value))}
+ <NumberInput id="stock-tax-loss" allowNegative={false} type="number" inputMode="numeric" value={loss} onChange={e => setLoss(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  </div>
  {!isOverseas && (
  <div>
- <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-3">보유 기간</label>
- <div className="grid grid-cols-2 gap-3">
- <button onClick={() => setHoldPeriod("short")} className={`py-3 rounded-xl text-sm font-bold border transition-all ${holdPeriod === "short" ? "bg-primary text-white border-primary" : "border-canvas text-muted-blue"}`}>1년 미만 (30%)</button>
- <button onClick={() => setHoldPeriod("long")} className={`py-3 rounded-xl text-sm font-bold border transition-all ${holdPeriod === "long" ? "bg-primary text-white border-primary" : "border-canvas text-muted-blue"}`}>1년 이상 (20%)</button>
+ <label id="stock-tax-hold-label" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-3">보유 기간</label>
+ <div className="grid grid-cols-2 gap-3" role="group" aria-labelledby="stock-tax-hold-label">
+ <button type="button" aria-pressed={holdPeriod === "short"} onClick={() => setHoldPeriod("short")} className={`py-3 rounded-xl text-sm font-bold border transition-all ${holdPeriod === "short" ? "bg-primary text-white border-primary" : "border-canvas text-muted-blue"}`}>1년 미만 (30%)</button>
+ <button type="button" aria-pressed={holdPeriod === "long"} onClick={() => setHoldPeriod("long")} className={`py-3 rounded-xl text-sm font-bold border transition-all ${holdPeriod === "long" ? "bg-primary text-white border-primary" : "border-canvas text-muted-blue"}`}>1년 이상 (20%)</button>
  </div>
  </div>
  )}

@@ -67,9 +67,9 @@ export default function SubscriptionCalcClient() {
  <div className="space-y-3">
  <input aria-label="서비스명" value={newName} onChange={e => setNewName(e.target.value)} placeholder="서비스명" className="w-full border border-canvas rounded-xl px-3 py-2.5 text-sm focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  <NumberInput aria-label="금액 (원)" value={newAmount} onChange={e => setNewAmount(e.target.value)} type="number" inputMode="numeric" placeholder="금액 (원)" className="w-full border border-canvas rounded-xl px-3 py-2.5 text-sm focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
- <div className="grid grid-cols-2 gap-2">
- <button onClick={() => setNewPeriod("monthly")} className={`py-2 rounded-xl text-xs font-bold border transition-all ${newPeriod === "monthly" ? "bg-primary text-white border-primary" : "border-canvas text-muted-blue"}`}>월간</button>
- <button onClick={() => setNewPeriod("yearly")} className={`py-2 rounded-xl text-xs font-bold border transition-all ${newPeriod === "yearly" ? "bg-primary text-white border-primary" : "border-canvas text-muted-blue"}`}>연간</button>
+ <div className="grid grid-cols-2 gap-2" role="group" aria-label="결제 주기">
+ <button type="button" aria-pressed={newPeriod === "monthly"} onClick={() => setNewPeriod("monthly")} className={`py-2 rounded-xl text-xs font-bold border transition-all ${newPeriod === "monthly" ? "bg-primary text-white border-primary" : "border-canvas text-muted-blue"}`}>월간</button>
+ <button type="button" aria-pressed={newPeriod === "yearly"} onClick={() => setNewPeriod("yearly")} className={`py-2 rounded-xl text-xs font-bold border transition-all ${newPeriod === "yearly" ? "bg-primary text-white border-primary" : "border-canvas text-muted-blue"}`}>연간</button>
  </div>
  <button onClick={addCustom} className="w-full py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-colors">추가하기</button>
  </div>

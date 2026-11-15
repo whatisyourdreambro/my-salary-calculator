@@ -29,6 +29,7 @@ export default function IRPCalculatorClient() {
  <label htmlFor={`${fieldId}-salary`} className="block text-xs font-bold text-faint-blue mb-2 uppercase tracking-widest">연간 총급여 (원)</label>
  <NumberInput
  id={`${fieldId}-salary`}
+ allowNegative={false}
  type="number"
  value={salary}
  onChange={e => setSalary(Number(e.target.value))}
@@ -43,6 +44,7 @@ export default function IRPCalculatorClient() {
  <label htmlFor={`${fieldId}-irp`} className="block text-xs font-bold text-faint-blue mb-2 uppercase tracking-widest">IRP 공제 대상 납입액 (900만원 한도)</label>
  <NumberInput
  id={`${fieldId}-irp`}
+ allowNegative={false}
  type="number"
  value={irpAmount}
  max={9000000}
@@ -54,6 +56,7 @@ export default function IRPCalculatorClient() {
  <label htmlFor={`${fieldId}-pension`} className="block text-xs font-bold text-faint-blue mb-2 uppercase tracking-widest">연금저축 공제 대상 납입액 (600만원 한도)</label>
  <NumberInput
  id={`${fieldId}-pension`}
+ allowNegative={false}
  type="number"
  value={pensionAmount}
  max={6000000}

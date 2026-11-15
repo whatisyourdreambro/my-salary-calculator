@@ -62,7 +62,7 @@
     { "url": "/calc/samsung-bonus", "cluster": "bonus", "events": ["E4", "E10"], "peak": "2027-01", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": ["rss-tables"], "status": "live" },
     { "url": "/calc/sk-hynix-bonus", "cluster": "bonus", "events": ["E11"], "peak": "2027-01~2027-02", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": ["rss-tables"], "status": "live" },
     { "url": "/calc/bonus-calculators", "cluster": "bonus", "events": ["E4", "E10", "E11"], "peak": "2027-01~2027-02", "lastmodHandle": { "kind": "route-override", "ref": "/calc/bonus-calculators" }, "feeds": ["rss-tables"], "status": "live" },
-    { "url": "/insights/bonus-payout-history-2026", "cluster": "bonus", "events": ["E4", "E10", "E11"], "peak": "2027-01~2027-02", "lastmodHandle": { "kind": "data-checked", "ref": "reportsRegistry bonus-payout-history-2026 updatedDate" }, "feeds": ["rss"], "status": "live" },
+    { "url": "/insights/bonus-payout-history-2026", "cluster": "bonus", "events": ["E4", "E10", "E11"], "peak": "2027-01~2027-02", "lastmodHandle": { "kind": "data-checked", "ref": "reportsRegistry bonus-payout-history-2026 sitemapDate ?? updatedDate (사이트맵·RSS — 화면 칩은 updatedDate)" }, "feeds": ["rss"], "status": "live" },
     { "url": "/calc/year-end-bonus", "cluster": "bonus", "events": ["E4", "E10", "E11"], "peak": "2026-12~2027-02", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": ["rss-tables"], "status": "live" },
     { "url": "/calc/year-end-bonus-tax", "cluster": "bonus", "events": ["E4", "E10", "E11"], "peak": "2026-12~2027-02", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": [], "status": "live" },
     { "url": "/calc/incentive-tax", "cluster": "bonus", "events": ["E4", "E10", "E11"], "peak": "2026-12~2027-02", "lastmodHandle": { "kind": "bonus-engine", "ref": "BONUS_ENGINE_REVIEW_DATE" }, "feeds": [], "status": "live" },
@@ -146,6 +146,9 @@
     { "url": "/home-loan", "cluster": "loan", "events": ["E5"], "peak": "2026-11~2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/home-loan" }, "feeds": ["rss-tables"], "status": "live" },
     { "url": "/savings-interest-2026", "cluster": "loan", "events": ["E5"], "peak": "2026-11~2027-01", "lastmodHandle": { "kind": "route-override", "ref": "/savings-interest-2026" }, "feeds": [], "status": "live" },
     { "url": "/guides/mortgage-refinance-guide-2026", "cluster": "loan", "events": ["E5"], "peak": "2026-11~2027-01", "lastmodHandle": { "kind": "guide-modified", "ref": "mortgage-refinance-guide-2026" }, "feeds": ["rss"], "status": "live" },
-    { "url": "/guides/rule-of-72", "cluster": "loan", "events": ["E5"], "peak": "2026-11~2027-01", "lastmodHandle": { "kind": "guide-modified", "ref": "rule-of-72" }, "feeds": ["rss"], "status": "live" }
+    { "url": "/guides/rule-of-72", "cluster": "loan", "events": ["E5"], "peak": "2026-11~2027-01", "lastmodHandle": { "kind": "guide-modified", "ref": "rule-of-72" }, "feeds": ["rss"], "status": "live" },
+    { "url": "/calc/deposit-equivalent", "cluster": "loan", "events": ["E5"], "peak": "2026-11~2027-01", "lastmodHandle": { "kind": "calc-publishedAt", "ref": "deposit-equivalent" }, "feeds": [], "status": "live" },
+    { "url": "/calc/jeonse-vs-monthly-cost", "cluster": "loan", "events": ["E5"], "peak": "2026-11~2027-01", "lastmodHandle": { "kind": "calc-publishedAt", "ref": "jeonse-vs-monthly-cost" }, "feeds": [], "status": "live" },
+    { "url": "/calc/savings-contribution-pause", "cluster": "loan", "events": ["E5"], "peak": "2026-11~2027-01", "lastmodHandle": { "kind": "add-on-event", "ref": "expandedFinance define() — publishedAt 2026-09-10 고정, 날짜 손잡이 없음" }, "feeds": [], "status": "live" }
   ]
 }

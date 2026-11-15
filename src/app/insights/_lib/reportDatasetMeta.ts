@@ -29,6 +29,8 @@ export interface ReportDatasetMeta {
   label: string;
   /** /embed#<anchor> — 이 데이터의 위젯 버전 (src/app/embed/widgets.ts anchor) */
   embedAnchor: string;
+  /** Label for the /embed link: a matching data widget, or a related calculator widget */
+  embedLabel: string;
 }
 
 /** 데이터 다운로드를 제공하는 리포트 3편 (reportsRegistry 슬러그와 일치해야 함) */
@@ -37,16 +39,22 @@ export const REPORT_DATASETS: ReportDatasetMeta[] = [
     slug: "listed-avg-salary-top100-2026",
     label: "공시 평균연봉 TOP 100 표",
     embedAnchor: "company",
+    embedLabel: "이 데이터의 위젯 버전 붙이기",
   },
   {
     slug: "bonus-payout-history-2026",
-    label: "성과급 실지급 내역 표",
+    // 10/4 재작성(352451886)이 리포트에서 '실지급' 주장을 모두 뺐다(지급 상태는 원문 note 기준 분류) — 라벨도 H1 '지급률 기록' 과 같게
+    label: "성과급 지급률 기록 표",
     embedAnchor: "bonus",
+    // /embed#bonus 는 이 표가 아니라 성과급 세후 계산기 위젯 (src/app/embed/widgets.ts)
+    embedLabel: "관련 위젯(성과급 세후 계산기) 붙이기",
   },
   {
     slug: "entry-salary-by-industry-2026",
     label: "업종별 신입 초봉 순위 표",
     embedAnchor: "salary",
+    // /embed#salary 는 연봉 실수령액 계산기 위젯
+    embedLabel: "관련 위젯(연봉 실수령액 계산기) 붙이기",
   },
 ];
 

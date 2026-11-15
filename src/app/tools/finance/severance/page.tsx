@@ -95,10 +95,12 @@ export default function SeveranceCalculatorPage() {
  </div>
 
  {/* Mode Toggle */}
- <div className="flex gap-2 mb-8 mt-8 p-1 bg-canvas-dark rounded-xl">
+ <div className="flex gap-2 mb-8 mt-8 p-1 bg-canvas-dark rounded-xl" role="group" aria-label="계산 방식">
  {[{ v: "calculate", l: "법정 퇴직금 자동계산" }, { v: "custom", l: "퇴직금 직접 입력" }].map(m => (
  <button
  key={m.v}
+ type="button"
+ aria-pressed={mode === m.v}
  onClick={() => setMode(m.v as "custom" | "calculate")}
  className={`flex-1 py-3 rounded-lg text-sm font-black transition-all ${mode === m.v ? "bg-white shadow text-primary" : "text-faint-blue"}`}
  >
@@ -112,7 +114,7 @@ export default function SeveranceCalculatorPage() {
  <>
  <div>
  <label htmlFor="severance-monthly-salary" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">3개월 평균 월 급여 (세전)</label>
- <NumberInput id="severance-monthly-salary" type="number" inputMode="numeric" value={monthlySalary} onChange={e => setMonthlySalary(Number(e.target.value))}
+ <NumberInput id="severance-monthly-salary" allowNegative={false} type="number" inputMode="numeric" value={monthlySalary} onChange={e => setMonthlySalary(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 text-xl font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  <p className="text-xs text-faint-blue mt-1.5">{fmt(monthlySalary)}원/월 · 연봉 {fmt(monthlySalary * 12)}원</p>
  </div>
@@ -135,12 +137,12 @@ export default function SeveranceCalculatorPage() {
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label htmlFor="severance-annual-bonus" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">연간 상여금</label>
- <NumberInput id="severance-annual-bonus" type="number" inputMode="numeric" min={0} value={annualBonus} onChange={e => setAnnualBonus(Number(e.target.value))}
+ <NumberInput id="severance-annual-bonus" allowNegative={false} type="number" inputMode="numeric" min={0} value={annualBonus} onChange={e => setAnnualBonus(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  <div>
  <label htmlFor="severance-annual-leave-pay" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">연차수당</label>
- <NumberInput id="severance-annual-leave-pay" type="number" inputMode="numeric" min={0} value={annualLeavePay} onChange={e => setAnnualLeavePay(Number(e.target.value))}
+ <NumberInput id="severance-annual-leave-pay" allowNegative={false} type="number" inputMode="numeric" min={0} value={annualLeavePay} onChange={e => setAnnualLeavePay(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  </div>
@@ -150,12 +152,12 @@ export default function SeveranceCalculatorPage() {
  ) : (
  <div>
  <label htmlFor="severance-custom-amount" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">수령 예정 퇴직금 (세전)</label>
- <NumberInput id="severance-custom-amount" type="number" inputMode="numeric" value={customSeverance} onChange={e => setCustomSeverance(Number(e.target.value))}
+ <NumberInput id="severance-custom-amount" allowNegative={false} type="number" inputMode="numeric" value={customSeverance} onChange={e => setCustomSeverance(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 text-xl font-black text-primary focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  <div className="mt-4 grid grid-cols-2 gap-4">
  <div>
  <label htmlFor="severance-tax-work-years" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">근속 년수 (세율 계산용)</label>
- <NumberInput id="severance-tax-work-years" type="number" inputMode="numeric" min={1} value={workYears} onChange={e => setWorkYears(Number(e.target.value))}
+ <NumberInput id="severance-tax-work-years" allowNegative={false} type="number" inputMode="numeric" min={1} value={workYears} onChange={e => setWorkYears(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  </div>
