@@ -652,6 +652,9 @@ const LOAN: CalculatorDef[] = [
  { name: "years", label: "기간", defaultValue: 10, suffix: "년" },
  ],
  compute: ({ amount, rate, years }) => {
+ // 기간 0년은 계산 불가(NaN) — 종전에는 총 이자 -1억원 같은 음수가 정상 결과로 보였다(2026-11-15 감사 simple-calc-b01-F02).
+ // 화면은 0 입력 안내를 높이 고정 결과 칸 안에 보여 주고 공유는 막는다. 0.5년(6개월) 같은 소수 기간은 그대로 계산.
+ if (years <= 0) return { primary: { label: "월 상환액", value: NaN, suffix: "원" } };
  const n = years * 12;
  const monthly = annuityPayment(amount, monthlyRate(rate), n);
  const total = monthly * n;
@@ -677,6 +680,8 @@ const LOAN: CalculatorDef[] = [
  { name: "years", label: "기간", defaultValue: 30, suffix: "년" },
  ],
  compute: ({ amount, rate, years }) => {
+ // 기간 0년 가드 — 위 대출 월 상환액과 같은 이유(simple-calc-b01-F02).
+ if (years <= 0) return { primary: { label: "총 이자", value: NaN, suffix: "원" } };
  const n = years * 12;
  const monthly = annuityPayment(amount, monthlyRate(rate), n);
  const total = monthly * n;
