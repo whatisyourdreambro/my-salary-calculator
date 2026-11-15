@@ -11,6 +11,14 @@
 //
 // code6-08 정정: DB(최종 평균임금 × 근속)는 마지막 해 연봉을 현재 연봉 × (1+상승률)^(근속−1) 로 본다.
 // DC 적립 루프는 0년차(현재 연봉)부터 근속−1 년차까지 적립하므로, 종전 ^근속 은 DB 에만 한 해치 인상을 더 얹었다.
+//
+// 2026-11-15 감사 calc-04-F18·lib-b09-M01 정정:
+// - DC 부담금은 그 해 임금에 대한 것이고(근로자퇴직급여 보장법 제20조 ① 연간 임금총액의 1/12) 연 1회 이상 정해진
+//   날에 낸다(같은 조 ③). 그 해 말에 낸 돈은 그 해 수익을 받지 못한다. 종전 루프는 마지막 해 부담금까지 1년치 수익을
+//   얹어 DC 를 정확히 (1+수익률)배 부풀렸고, 수익률이 상승률보다 조금 낮으면 DB 가 이기는데도 DC 가 이긴다고 보여 줬다.
+//   이제 상승률 = 수익률이면 DC = DB(교과서 결과).
+// - 근속은 1~60년으로 묶는다(옆 칸 연봉을 잘못 넣어 6천만 년이 되면 탭이 멈췄다). 소수 근속(10.5년)의 마지막 해는
+//   비례 납입(0.5년치)만 넣는다 — 종전엔 한 해치를 통째로 넣어 DC 가 약 4% 높았다.
 
 import { calculateSeveranceTax } from "@/lib/severanceCalculator";
 
@@ -58,7 +66,7 @@ export function deferredRetirementAnnuityTax(lumpSumTax: number): number {
 
 export function compareSeveranceVsPension(input: SeveranceVsPensionInput): SeveranceVsPensionResult {
   const salary = Number.isFinite(input.salary) ? Math.max(0, input.salary) : 0;
-  const years = Number.isFinite(input.years) ? Math.max(1, input.years) : 1;
+  const years = Number.isFinite(input.years) ? Math.min(60, Math.max(1, input.years)) : 1;
   const growth = Number.isFinite(input.growth) ? input.growth : 0;
   const dcRet = Number.isFinite(input.dcReturn) ? input.dcReturn : 0;
 
@@ -67,11 +75,13 @@ export function compareSeveranceVsPension(input: SeveranceVsPensionInput): Sever
   const finalMonthlyPay = monthlyPay * Math.pow(1 + growth, Math.max(0, years - 1));
   const dbAmount = finalMonthlyPay * years;
 
-  // DC형 = 매년 그 해 연봉의 1/12 을 적립하고 남은 기간 운용 수익
+  // DC형 = 매년 그 해 연봉의 1/12 을 그 해 말에 적립하고 퇴직까지 남은 기간 운용 수익
+  // (소수 근속의 마지막 해는 비례 납입 part, 퇴직 때 낸 마지막 부담금은 수익 0)
   let dcAmount = 0;
   for (let y = 0; y < years; y++) {
+    const part = Math.min(1, years - y);
     const yearContribution = (salary * Math.pow(1 + growth, y)) / 12;
-    dcAmount += yearContribution * Math.pow(1 + dcRet, years - y);
+    dcAmount += yearContribution * part * Math.pow(1 + dcRet, years - y - part);
   }
 
   const dbTax = retirementIncomeTaxWithLocal(dbAmount, years);
