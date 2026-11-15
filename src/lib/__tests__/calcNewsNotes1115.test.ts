@@ -51,6 +51,32 @@ describe("삼성바이오로직스 보도 요약 (서울경제TV·아시아경�
   });
 });
 
+describe("SK하이닉스 보도·발표 요약 (머니투데이·MTN 2026-09-16, 뉴스룸 2026-10-28)", () => {
+  const route = "/calc/sk-hynix-bonus";
+  it("재원·가결·지급 방식은 매체·날짜를 붙인 보도 문장, 3분기 실적은 회사 뉴스룸 발표", () => {
+    const item = calcNewsNoteFor(route)!;
+    expect(item.points[0]).toMatch(/^머니투데이 2026년 9월 16일 보도에 따르면/);
+    for (const s of ["영업이익의 10%", "상한이 없으며", "찬성 57.08%"]) expect(item.points[0]).toContain(s);
+    expect(item.points[1]).toMatch(/^MTN 2026년 9월 16일 보도에 따르면/);
+    for (const s of ["2027년 초 지급되는 PS부터", "현금 50%·주식 50%", "10%p 단위"]) expect(item.points[1]).toContain(s);
+    expect(item.points[2]).toMatch(/^SK하이닉스 뉴스룸 2026년 10월 28일 발표에 따르면/);
+    expect(item.points[2]).toContain("83조 3,338억원");
+    expect(item.points[2]).toContain("영업이익 시나리오는 가정입니다");
+    expect(text(route)).not.toMatch(PROMISE);
+    expect(text(route)).not.toMatch(INTERNAL);
+    expect(item.title).toContain("2026년 11월 15일 기준");
+  });
+
+  it("링크는 공개된 SK하이닉스 PS 전망 가이드(사이트맵 경로)", async () => {
+    const item = CALC_NEWS_NOTES[route];
+    expect(item.href).toBe("/guides/sk-hynix-ps-forecast-2027");
+    const { guideCards } = await import("@/lib/guidesMeta.generated");
+    expect(guideCards.some((g) => g.slug === "sk-hynix-ps-forecast-2027")).toBe(true);
+    const { isReleaseHeldBack } = await import("@/lib/guideReleaseHoldback");
+    expect(isReleaseHeldBack("sk-hynix-ps-forecast-2027")).toBe(false);
+  });
+});
+
 describe("새 항목 공통", () => {
   const added = ["/calc/s-oil-bonus", "/calc/samsung-biologics-bonus"];
   it.each(added)("%s: 공개 출처 표현, 회사 공식 발표가 아님을 밝히고, 링크는 실제 회사 연봉 페이지", (route) => {
