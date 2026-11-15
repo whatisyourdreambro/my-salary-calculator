@@ -128,7 +128,8 @@ describe("③④ /calc/samsung-bonus", () => {
     expect(item!.points.join(" ")).toMatch(/49\.5%.*원천징수.*연말정산/);
     expect(item!.href).toBe(`/guides/${SAMSUNG_DS_NEWS_SLUG}`);
     expect(item!.title + item!.points.join("") + item!.source).not.toMatch(INTERNAL);
-    expect(Object.keys(CALC_NEWS_NOTES)).toEqual(["/calc/samsung-bonus"]);
+    // 2026-11-15 SEASONA: 같은 상자에 다른 계산기의 보도 요약이 더해졌다(calcNewsNotes1115.test.ts) — 삼성 항목이 첫 키인 것만 여기서 본다
+    expect(Object.keys(CALC_NEWS_NOTES)).toEqual(["/calc/samsung-bonus", "/calc/s-oil-bonus", "/calc/samsung-biologics-bonus"]);
     expect(calcNewsNoteFor("/calc/sk-hynix-bonus")).toBeNull();
     // 주석을 뺀 소스로 본다 — 형제 사이의 JSX 주석이 아래 '맨 끝' 판정을 흐리지 않게
     const layout = code("src/app/calc/layout.tsx");
