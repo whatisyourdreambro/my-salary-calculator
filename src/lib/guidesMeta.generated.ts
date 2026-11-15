@@ -3283,7 +3283,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "lease-right-transfer-tax-2026",
   "title": "전세권·임차권 양도세 — 권리금 차익도 신고 의무",
-  "description": "전세권 매매 시 권리금 차익에 양도세 6~45%. 보유 3년 미만은 단기 세율 45%. 등기 전세권은 임대인 동의 없이 양도 가능.",
+  "description": "전세권 매매 시 권리금 차익에 양도세 6~45%. 2년 미만은 단기 세율 40~50%. 등기 전세권은 임대인 동의 없이 양도 가능.",
   "category": "부동산",
   "tags": [
    "전세권",
@@ -3296,7 +3296,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 808
+  "contentChars": 807
  },
  {
   "slug": "farmland-forest-capital-gains-2026",

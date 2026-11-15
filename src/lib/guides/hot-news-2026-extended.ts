@@ -348,7 +348,7 @@ const leaseRightTax = `
 <p>전세권자가 전세권을 매매할 때 발생하는 차익(매도가 - 매수가)에 양도세. 일반세율 6~45% + 지방세 10%.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 사례</h2>
-<p>전세권 5억(보증금)에 권리금 3,000만원 추가해 매수 → 3년 후 권리금 5,000만원에 매도. 차익 2,000만원에 양도세 발생. 보유 3년이라 단기 세율 45% 적용 가능.</p>
+<p>전세권 5억(보증금)에 권리금 3,000만원 추가해 매수 → 3년 후 권리금 5,000만원에 매도. 차익 2,000만원에 양도세 발생. 보유 3년이라 기본 세율 6~45% 적용.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 임차권 양도 — 임대인 동의</h2>
 <p>전세권은 등기되어 있어 임대인 동의 없이도 양도 가능. 단 일반 임차권(미등기)은 임대인 동의 없으면 양도 불가.</p>
@@ -1378,7 +1378,7 @@ export const hotNewsExtended: Guide[] = [
   { slug: "parcel-vs-occupancy-right-tax-2026", title: "분양권 vs 입주권 양도세 — 단기 양도세 70%·60% 점검", description: "분양권의 1년 기준 70%·60% 세율과 승계취득 입주권의 보유기간·공제 차이를 확인합니다.", category: "부동산", tags: ["분양권", "입주권", "양도세", "재개발", "2026"], level: "고급", publishedDate: "2026-05-23", modifiedDate: "2026-10-03", views: 0, content: parcelRightVsOccupancyRight, lang: "ko" },
   { slug: "temp-two-home-3year-rule-2026", title: "일시적 2주택 3년 룰 — 조정 두 채는 2년 기한 주의", description: "신규 취득 후 2·3년 내 종전 주택 매도 시 1주택자 비과세 12억. 초과 시 다주택자 분류, 양도세 폭탄.", category: "부동산", tags: ["일시적2주택", "양도세", "비과세", "이사", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: tempTwoHomeRule, lang: "ko" },
   { slug: "redevelopment-tax-3-step-2026", title: "재건축·재개발 양도세 3단계 — 사업시행·관리처분·준공 시점별", description: "사업시행 전 일반 양도세, 관리처분~준공 입주권 보유기간 합산, 준공 후 새 주택 양도세 + 청산금 차익 별도.", category: "부동산", tags: ["재건축", "재개발", "양도세", "입주권", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: redevelopmentTax, lang: "ko" },
-  { slug: "lease-right-transfer-tax-2026", title: "전세권·임차권 양도세 — 권리금 차익도 신고 의무", description: "전세권 매매 시 권리금 차익에 양도세 6~45%. 보유 3년 미만은 단기 세율 45%. 등기 전세권은 임대인 동의 없이 양도 가능.", category: "부동산", tags: ["전세권", "임차권", "양도세", "권리금", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: leaseRightTax, lang: "ko" },
+  { slug: "lease-right-transfer-tax-2026", title: "전세권·임차권 양도세 — 권리금 차익도 신고 의무", description: "전세권 매매 시 권리금 차익에 양도세 6~45%. 2년 미만은 단기 세율 40~50%. 등기 전세권은 임대인 동의 없이 양도 가능.", category: "부동산", tags: ["전세권", "임차권", "양도세", "권리금", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: leaseRightTax, lang: "ko" },
   { slug: "farmland-forest-capital-gains-2026", title: "농지·임야 양도세 — 자경 8년 100% 감면 vs 비사업용 10%p 가산", description: "자경 농지 8년+ 거주 + 직접 경작 시 양도세 100% 감면(연 1억 한도). 비사업용 토지는 10%p 가산세 추가.", category: "부동산", tags: ["농지", "임야", "양도세", "자경", "2026"], level: "고급", modifiedDate: "2026-10-03", publishedDate: "2026-05-23", views: 0, content: farmlandForestTax, lang: "ko" },
   { slug: "commercial-office-capital-gains-2026", title: "상가·오피스텔 양도세 — 7억→12억 매도 1.46억 부담", description: "상가·오피스텔은 비과세 12억 한도 없음. 차익 5억, 장기보유공제 20% 시 약 1.46억 세금. 임대사업자 등록으로 우대 가능.", category: "부동산", tags: ["상가", "오피스텔", "양도세", "임대사업", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: commercialOfficeTax, lang: "ko" },
   { slug: "burdened-gift-strategy-2026", title: "부담부증여 — 시가 10억 + 대출 6억 증여 시 증여세 절반 이하", description: "자녀에게 부동산 + 대출 동시 이전. 증여 부분 4억만 증여세, 채무 인수 6억은 부모 양도세. 단순 증여 2.4억 → 6,000만원으로 절감.", category: "부동산", tags: ["부담부증여", "증여세", "양도세", "절세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: burdenedGift, lang: "ko" },
