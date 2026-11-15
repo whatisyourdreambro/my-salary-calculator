@@ -503,7 +503,7 @@ export default function CivilServantPay2026Page() {
               />
             </div>
             <p className="text-xs text-faint-blue leading-6 mt-4">
-              ※ 봉급표 금액은 수당을 뺀 기본급이며 군무원도 같은 표를 적용받습니다. 출처:{" "}
+              ※ 봉급표 금액은 수당을 뺀 기본급이며 일반군무원도 같은 표를 적용받습니다(별표 1). 출처:{" "}
               <a
                 href={LAW_ANNEX_3_URL}
                 target="_blank"
