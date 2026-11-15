@@ -183,6 +183,8 @@ const TAX: CalculatorDef[] = [
  category: "tax",
  categoryLabel: "세금",
  keywords: ["근로소득세", "원천징수"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — N2-simple-calc-01 사실 정정을 실제로 고친 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [
  { name: "monthly", label: "월 급여", defaultValue: 4000000, suffix: "원" },
  { name: "dependents", label: "부양가족 수", defaultValue: 1, suffix: "명" },
@@ -339,6 +341,8 @@ const TAX: CalculatorDef[] = [
  category: "tax",
  categoryLabel: "세금",
  keywords: ["부가세", "VAT"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — N2-simple-calc-01 사실 정정을 실제로 고친 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [{ name: "supply", label: "공급가액", defaultValue: 1000000, suffix: "원" }],
  compute: ({ supply }) => {
  const vat = supply * 0.1;
@@ -495,6 +499,8 @@ const SALARY: CalculatorDef[] = [
  category: "salary",
  categoryLabel: "연봉",
  keywords: ["주휴수당", "주휴수당 계산"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — N2-simple-calc-01 사실 정정을 실제로 고친 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [{ name: "hourly", label: "시급", defaultValue: MINIMUM_WAGE_2026.hourly, suffix: "원" }],
  compute: ({ hourly }) => {
  const weekly = hourly * 8;
@@ -574,6 +580,8 @@ const SALARY: CalculatorDef[] = [
  category: "salary",
  categoryLabel: "연봉",
  keywords: ["연차수당", "연차 계산"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — N2-simple-calc-01 사실 정정을 실제로 고친 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [
  { name: "monthly", label: "월급", defaultValue: 3000000, suffix: "원" },
  { name: "days", label: "남은 연차일수", defaultValue: 5, suffix: "일" },
@@ -767,6 +775,8 @@ const LOAN: CalculatorDef[] = [
  category: "loan",
  categoryLabel: "대출",
  keywords: ["연봉 대출 한도", "내 연봉 대출"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — N2-simple-calc-01 사실 정정을 실제로 고친 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [
  { name: "yearly", label: "연봉", defaultValue: 50000000, suffix: "원" },
  { name: "rate", label: "예상 금리", defaultValue: 4, suffix: "%" },
@@ -865,6 +875,8 @@ const INVESTMENT: CalculatorDef[] = [
  category: "investment",
  categoryLabel: "투자",
  keywords: ["복리 계산", "복리"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — N2-simple-calc-01 사실 정정을 실제로 고친 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [
  { name: "principal", label: "초기 원금", defaultValue: 10000000, suffix: "원" },
  { name: "monthly", label: "월 적립금", defaultValue: 500000, suffix: "원" },

@@ -203,3 +203,25 @@ describe("simple-calc-b04-F12 복리 계산 설명 — 근거 없는 워런 버�
     notWider("흔히 '세계 8대 불가사의'로 불리며,", "워런 버핏도 '복리는 세계 8대 불가사의'라 칭했으며,", "compound explanation");
   });
 });
+
+// lens-meta-M01: 간이 계산기는 화면에 날짜가 없고 사이트맵 lastmod 는 CalculatorDef.publishedAt 하나만 읽는다(sitemap.ts).
+// N2-simple-calc-01 이 사실을 고친 계산기는 실제로 고친 날(2026-11-15 KST)을 단다. 기간 0년 가드만 들어간 두 대출 계산기는 제외.
+describe("N2-simple-calc-01 날짜 손잡이 — 고친 계산기의 publishedAt", () => {
+  it("실제 수정일 2026-11-15, 미래 날짜 아님", () => {
+    for (const slug of [
+      "earned-income-tax-quick",
+      "holiday-allowance-quick",
+      "annual-leave-pay-quick",
+      "property-tax-quick",
+      "loan-affordability",
+      "vat-quick",
+      "compound-interest-quick",
+      "mortgage-monthly-quick",
+    ]) {
+      const c = calc(slug);
+      expect(c.publishedAt, slug).toBe("2026-11-15");
+      expect(new Date(`${c.publishedAt}T00:00:00+09:00`).getTime(), slug).toBeLessThanOrEqual(Date.now());
+    }
+    for (const slug of ["loan-monthly-payment", "loan-total-interest"]) expect(calc(slug).publishedAt, slug).toBeUndefined();
+  });
+});
