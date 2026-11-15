@@ -39,12 +39,17 @@ export default function LoanChart({ schedule, formatMoney }: LoanChartProps) {
  <CartesianGrid strokeDasharray="3 3" stroke="#DDE4EC" vertical={false} />
  <XAxis dataKey="month" hide />
  <YAxis hide />
+ {/* 툴팁 상자는 globals.css 가 카드색(라이트 흰색)으로 칠한다 — 종전 글자색 #EDF1F5 는 흰 상자 위 1.14:1 로
+ '{n}개월차' 가 안 보였다(축이 숨겨져 있어 유일한 월 표시). 글자색은 상자에서 물려받는다
+ (2026-11-15 N2-components-05, components-b01-M01). name 은 툴팁 값 줄 이름(범례 없음). */}
  <Tooltip
- contentStyle={{ backgroundColor: "#0A1829", border: "1px solid #294460", borderRadius: "0.75rem", color: "#EDF1F5" }}
+ contentStyle={{ borderRadius: "0.75rem" }}
+ itemStyle={{ color: "inherit" }}
  formatter={(value: number) => formatMoney(value)}
  labelFormatter={(label) => `${label}개월차`}
  />
  <Area
+ name="잔액"
  type="monotone"
  dataKey="balance"
  stroke="#0145F2"

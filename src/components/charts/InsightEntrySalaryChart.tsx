@@ -49,17 +49,15 @@ export function InsightEntrySalaryChart({ data }: { data: IndustryChartDatum[] }
           width={104}
           interval={0}
         />
+        {/* 툴팁 상자는 globals.css 가 카드색(라이트 흰색)으로 칠한다 — 흰 글자(#fff)는 업종 라벨을 지웠다.
+            글자색은 상자에서 물려받는다 (2026-11-15 N2-components-05, components-b01-M01) */}
         <Tooltip
           formatter={(value) => [
             `평균 ${Number(value).toLocaleString("ko-KR")}만원`,
             "신입 초봉(영끌)",
           ]}
-          contentStyle={{
-            backgroundColor: "rgba(30,30,30,0.85)",
-            border: "1px solid rgba(255,255,255,0.3)",
-            borderRadius: 8,
-            color: "#fff",
-          }}
+          contentStyle={{ borderRadius: 8 }}
+          itemStyle={{ color: "inherit" }}
         />
         <Bar dataKey="avgManwon" fill="#0145F2" radius={[0, 6, 6, 0]} barSize={16} />
       </BarChart>

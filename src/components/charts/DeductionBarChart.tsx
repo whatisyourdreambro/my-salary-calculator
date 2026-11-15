@@ -28,8 +28,11 @@ interface CustomBarLabelProps {
 
 const CustomBarLabel = (props: CustomBarLabelProps) => {
  const { x, y, width, value } = props as Required<CustomBarLabelProps>;
+ // recharts-label 클래스로 globals.css 의 차트 글자색(--content-muted)을 받는다 — fill 은 CSS 없을 때의 대체값.
+ // 종전 #7A9AB5 그대로는 밝은 패널 위 2.79:1 (2026-11-15 N2-components-05, components-b01-F02). 크기·굵기 그대로.
  return (
  <text
+ className="recharts-label"
  x={x + width / 2}
  y={y}
  fill="#7A9AB5"
@@ -61,11 +64,11 @@ export default function DeductionBarChart({ data }: { data: ChartDatum[] }) {
  backgroundColor: "#fff",
  borderColor: "#e2e8f0",
  borderRadius: "14px",
- color: "#3D5E78",
  fontSize: "13px",
  fontWeight: 600,
  boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
  }}
+ itemStyle={{ color: "inherit" }}
  formatter={(value: number) => [`${value}%`, "비중"]}
  />
  <Bar dataKey="value" radius={[6, 6, 0, 0]}>

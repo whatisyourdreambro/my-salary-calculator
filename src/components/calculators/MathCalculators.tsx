@@ -97,7 +97,7 @@ function PercentCalculator() {
  <span className="text-muted-blue">% 는?</span>
  </div>
  <div className="mt-4 p-3 bg-primary/10 border border-electric/30 rounded-xl text-center">
- <span className="text-2xl font-black text-indigo-400">{res1.toLocaleString('ko-KR')}</span>
+ <span className="text-2xl font-black text-link">{res1.toLocaleString('ko-KR')}</span>
  </div>
  </div>
  </div>
@@ -131,7 +131,7 @@ function PercentCalculator() {
  <span className="text-muted-blue">의 몇 %?</span>
  </div>
  <div className="mt-4 p-3 bg-primary/10 border border-electric/30 rounded-xl text-center">
- <span className="text-2xl font-black text-indigo-400">{res2.toFixed(2)}%</span>
+ <span className="text-2xl font-black text-link">{res2.toFixed(2)}%</span>
  </div>
  </div>
  </div>

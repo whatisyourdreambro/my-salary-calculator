@@ -159,7 +159,7 @@ export default function ComparisonResultContent({ slug }: ComparisonResultConten
  <Legend />
  <Tooltip
  contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: 'none', borderRadius: '12px' }}
- itemStyle={{ color: '#fff' }}
+ itemStyle={{ color: 'inherit' }}
  />
  </RadarChart>
  </ResponsiveContainer>

@@ -43,9 +43,11 @@ export default function RankChart({
             <stop offset="95%" stopColor="#a855f7" stopOpacity={0} />
           </linearGradient>
         </defs>
+        {/* 툴팁 상자는 globals.css 가 카드색(라이트 흰색)으로 칠한다 — 흰 글자(#fff)는 '{n}만원' 라벨을 지웠고
+            #e879f9 값 줄은 2.46:1 이었다. 글자색은 상자에서 물려받는다 (2026-11-15 N2-components-05, components-b01-M01) */}
         <Tooltip
-          contentStyle={{ backgroundColor: '#18181b', borderColor: '#3f3f46', borderRadius: '1rem', color: '#fff' }}
-          itemStyle={{ color: '#e879f9' }}
+          contentStyle={{ backgroundColor: '#18181b', borderColor: '#3f3f46', borderRadius: '1rem' }}
+          itemStyle={{ color: 'inherit' }}
           formatter={(value: number) => [`${value.toFixed(1)}%`, '가상 곡선값']}
           labelFormatter={(label) => `${(label / 10000).toLocaleString('ko-KR')}만원`}
         />
