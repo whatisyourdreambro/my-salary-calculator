@@ -17,6 +17,7 @@ import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Info, Briefcase } from "lucide-react";
 import SeveranceClient from "./Client";
 import { staticRouteLastModified } from "@/app/sitemap";
+import { compareSeveranceVsPension } from "@/lib/severanceVsPension";
 
 const FAQ_ITEMS = [
   {
@@ -46,11 +47,17 @@ const FAQ_ITEMS = [
   },
 ];
 
+// 검색 설명의 예시 금액 (2026-11-15 SEASONA, 감사 calc ideas[5]) — 계산기 기본값(Client.tsx: 연봉 60,000,000원·근속 10년·
+// 연봉 상승률 3%·DC 운용 수익률 4%)을 화면과 같은 엔진 compareSeveranceVsPension 으로 빌드 때 계산한다(SEV 묶음의 DC 적립 정정 반영).
+const SEVERANCE_VS_PENSION_EXAMPLE = { salary: 60_000_000, years: 10, growth: 0.03, dcReturn: 0.04 } as const;
+const example = compareSeveranceVsPension(SEVERANCE_VS_PENSION_EXAMPLE);
+const manwon = (won: number) => Math.round(won / 10_000).toLocaleString("ko-KR");
+
 export const metadata: Metadata = buildToolMetadata({
   name: "퇴직금 vs 퇴직연금 비교",
   tagline: "DB·DC·IRP — 어느 방식이 가장 많이 받나?",
   description:
-    "퇴직금(법정), 퇴직연금 DB형·DC형, IRP 일시 수령·연금 수령의 실수령액과 세금을 비교 계산합니다. 근속연수·연봉 상승률·운용 수익률에 따라 최적 선택이 달라집니다.",
+    `연봉 6,000만원·근속 10년·연봉 상승률 3%·DC 수익률 4%라면 DB형 퇴직금은 세전 약 ${manwon(example.dbAmount)}만원, DC형 적립금은 약 ${manwon(example.dcAmount)}만원입니다. DB·DC·IRP 일시 수령과 연금 수령의 세금·실수령액을 비교 계산합니다.`,
   path: "/calc/severance-vs-pension",
   keywords: [
     "퇴직금 계산기",

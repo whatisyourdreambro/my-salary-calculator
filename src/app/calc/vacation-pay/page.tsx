@@ -10,6 +10,7 @@ import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Sparkles, Info } from "lucide-react";
 import VacationPayClient from "./Client";
 import { staticRouteLastModified } from "@/app/sitemap";
+import { calcVacationPay } from "@/lib/vacationPay";
 
 const FAQ_ITEMS = [
   {
@@ -39,11 +40,17 @@ const FAQ_ITEMS = [
   },
 ];
 
+// 검색 설명의 예시 금액 (2026-11-15 SEASONA, 감사 calc ideas[5]) — 계산기 기본값(Client.tsx: 연봉 48,000,000원·미사용 10일)을
+// 화면과 같은 엔진 calcVacationPay 로 빌드 때 계산한다. 엔진·요율이 바뀌면 설명 숫자도 같이 바뀌어 화면 결과와 어긋나지 않는다.
+const VACATION_PAY_EXAMPLE = { salary: 48_000_000, days: 10 } as const;
+const example = calcVacationPay(VACATION_PAY_EXAMPLE.salary, VACATION_PAY_EXAMPLE.days);
+const manwon = (won: number) => Math.round(won / 10_000).toLocaleString("ko-KR");
+
 export const metadata: Metadata = buildToolMetadata({
   name: "연차수당 계산기",
   tagline: "미사용 연차 수당 — 통상임금·세금 자동 계산",
   description:
-    "사용하지 않은 연차 일수와 연봉만 입력하면 통상임금 기반 연차수당과 세후 실수령액을 즉시 계산합니다. 2026년 세법 적용.",
+    `연봉 4,800만원·미사용 연차 10일이면 연차수당은 세전 약 ${manwon(example.grossPay)}만원, 세후 약 ${manwon(example.net)}만원입니다. 연봉과 남은 연차 일수로 통상임금 기반 연차수당과 세후 실수령액을 계산합니다. 2026년 세법 적용.`,
   path: "/calc/vacation-pay",
   keywords: ["연차수당 계산기", "연차수당", "미사용 연차", "통상임금 계산", "연차수당 세금"],
 });
