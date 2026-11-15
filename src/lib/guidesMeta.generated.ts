@@ -4635,8 +4635,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "energy-voucher-2026",
-  "title": "에너지바우처 — 4인 가구 30만원 + 여름/겨울 냉난방",
-  "description": "저소득층 7~9월·11~3월 사용. 1인 14만·2인 19만·3인 26만·4인+ 30만+. 전기·가스·등유·연탄 결제.",
+  "title": "에너지바우처 — 4인 가구 70만원 + 여름/겨울 냉난방",
+  "description": "기초수급 7~9월·10~5월 사용. 1인 30만·2인 41만·3인 53만·4인+ 70만. 전기·가스·등유·연탄 결제.",
   "category": "기초",
   "tags": [
    "에너지바우처",
@@ -4650,7 +4650,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 733
+  "contentChars": 722
  },
  {
   "slug": "bonus-vs-incentive-vs-allowance-2026",
