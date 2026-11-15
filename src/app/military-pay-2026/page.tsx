@@ -5,6 +5,9 @@
 //
 // ★ 갱신 체크포인트: 매년 12월 말 국무회의 의결 시 병·간부 봉급 갱신 (civilServantPay
 //   기존 슬롯에 편입). 장병내일준비적금 매칭 구조는 예산사업이라 연중 1회 추가 확인.
+// ★ 2027 초급간부 처우 섹션(Budget2027Section, #budget-2027 · 데이터 src/lib/militaryBudget2027.ts, RL-13 2026-11-15):
+//   본문 컬럼 맨 끝(역링크 뒤, 마지막 광고 아래). 국회 의결 다음 날 상태 줄·수치를 의결 결과로, 보수규정 개정 공포 뒤
+//   각 행 status '정부안'→'확정'·출처 재대조, 병 봉급 2027 확정 시 '보수규정 개정 전' 줄 교체.
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -25,6 +28,7 @@ import {
 } from "@/lib/civilServantPay";
 import CitationCopyButton from "@/components/CitationCopyButton";
 import SavingsCalc from "./SavingsCalc";
+import Budget2027Section from "./Budget2027Section";
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
 
@@ -319,6 +323,8 @@ export default function MilitaryPay2026Page() {
               </Link>
               에서 호봉별로 바로 계산할 수 있습니다.
             </p>
+
+            <Budget2027Section />
           </div>
 
           {/* Desktop sticky sidebar — civil-servant 동일 조합 */}
