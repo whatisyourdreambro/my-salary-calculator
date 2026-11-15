@@ -130,11 +130,13 @@ export default function ParentalLeaveContent() {
 
      {/* 6+6 부모 육아휴직 여부 */}
      <div>
-      <label className="block text-sm font-medium text-foreground mb-2">
+      <label id="pl-mode-label" className="block text-sm font-medium text-foreground mb-2">
        부모 모두 육아휴직 사용 여부
       </label>
-      <div className="grid grid-cols-2 gap-3">
+      <div role="group" aria-labelledby="pl-mode-label" className="grid grid-cols-2 gap-3">
        <button
+        type="button"
+        aria-pressed={useParents}
         onClick={() => setUseParents(true)}
         className={`py-3 rounded-xl text-sm font-medium border transition-all ${
          useParents
@@ -146,6 +148,8 @@ export default function ParentalLeaveContent() {
         6+6 (부모 모두 사용)
        </button>
        <button
+        type="button"
+        aria-pressed={!useParents}
         onClick={() => setUseParents(false)}
         className={`py-3 rounded-xl text-sm font-medium border transition-all ${
          !useParents
