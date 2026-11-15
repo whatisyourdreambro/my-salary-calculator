@@ -427,9 +427,9 @@ export default function UnemploymentBenefitContent() {
        external: true,
       },
       {
-       title: "워크넷 구직 등록",
+       title: "고용24 구직 등록",
        desc: "구직활동 증빙용 이력서 등록",
-       href: "https://www.work.go.kr",
+       href: "https://www.work24.go.kr",
        external: true,
       },
       {

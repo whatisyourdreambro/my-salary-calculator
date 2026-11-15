@@ -66,3 +66,12 @@ describe("/unemployment-benefit STEP 4 실업인정 횟수", () => {
 });
 
 // [표지 08e] /unemployment-benefit 관련 링크 고용24 구직 등록
+// 광고 위(GuideMidAd 바로 위 관련 링크). 제목 14px 굵기 500 에서 91.53px -> 96.65px(+5.12px) 이지만 카드 글 칸은
+// 320px 화면에서 약 190px 이상이라 줄바꿈 없음 — 사실 정정(워크넷 PC 서비스 2024-09-23 종료).
+describe("/unemployment-benefit 관련 링크", () => {
+  it("구직 등록 카드는 고용24 로 가고 워크넷·work.go.kr 이 없다", () => {
+    expect(unemployment).toContain('title: "고용24 구직 등록", desc: "구직활동 증빙용 이력서 등록", href: "https://www.work24.go.kr",');
+    expect(unemployment).not.toContain("워크넷");
+    expect(unemployment).not.toContain('work.go.kr"');
+  });
+});
