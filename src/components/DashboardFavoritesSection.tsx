@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 import Link from "@/components/AppLink";
 import { Star, Trash2, ExternalLink } from "lucide-react";
 import {
-  FAVORITES_KEY,
   loadFavorites,
   saveFavorites,
   type FavoriteItem,
@@ -24,8 +23,7 @@ export default function DashboardFavoritesSection() {
 
   const removeFavorite = (path: string) => {
     const next = favorites.filter((f) => f.path !== path);
-    saveFavorites(next);
-    setFavorites(next);
+    if (saveFavorites(next)) setFavorites(next);
   };
 
   if (favorites.length === 0) return null;
@@ -40,10 +38,9 @@ export default function DashboardFavoritesSection() {
         <button
           type="button"
           onClick={() => {
-            if (typeof window !== "undefined") {
-              window.localStorage.removeItem(FAVORITES_KEY);
-              setFavorites([]);
-            }
+            // 한 번 눌러 전부 지워지지 않게 확인하고, saveFavorites 로 저장해 머리글 배지·별 단추도 같은 탭에서 바로 갱신
+            if (!window.confirm(`즐겨찾기 ${favorites.length}개를 모두 삭제할까요?`)) return;
+            if (saveFavorites([])) setFavorites([]);
           }}
           className="text-xs text-faint-blue hover:text-red-500 transition-colors"
         >
