@@ -116,6 +116,34 @@ describe("rss.xml — 최신 가이드 N편 본문 전문", () => {
     }
   });
 
+  // 2026-11-15 (feeds-01): 가이드 item 설명 = 검색 설명(metaDescription)이 있으면 그것, 없으면 화면 TL;DR(description).
+  // 상세 쪽 meta description(guides/[slug]/page.tsx 의 metaDescription ?? description)과 같은 문장이다.
+  it("가이드 item 설명은 상세 쪽 검색 설명과 같다 — metaDescription 이 있으면 그것 (feeds-01)", async () => {
+    const items = parseItems(await loadFeed());
+    const unescape = (s: string) =>
+      s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&amp;/g, "&");
+    let withMeta = 0;
+    for (const item of items) {
+      const slug = guideSlug(item.guid);
+      if (!slug) continue;
+      const guide = bySlug.get(slug)!;
+      const description = unescape(item.body.match(/<description>([^<]*)<\/description>/)?.[1] ?? "");
+      expect(description, slug).toBe(guide.metaDescription ?? guide.description);
+      if (guide.metaDescription) withMeta += 1;
+    }
+    expect(withMeta).toBeGreaterThan(40);
+    // 임협 타결 뒤 상태를 검색 설명에만 적은 lens-meta-F02 글 — 피드에도 그 문장이 실린다
+    for (const [slug, phrase] of [
+      ["samsung-wage-negotiation-2026", "5월 27일 조합원 투표"],
+      ["sk-hynix-wage-2026", "9월 16일 총투표 가결"],
+      ["samsung-special-bonus-q3-preview-2027", "DS부문 영업이익의 10.5%"],
+    ] as const) {
+      const item = items.find((i) => i.guid === `${BASE}/guides/${slug}`);
+      expect(item, slug).toBeDefined();
+      expect(item!.body, slug).toContain(phrase);
+    }
+  });
+
   it("피드 정합 — CDATA 균형 · 이스케이프 · 여닫는 item 수 · 0.65MB 미만", async () => {
     const xml = await loadFeed();
     expect(xml.startsWith('<?xml version="1.0" encoding="UTF-8" ?>')).toBe(true);

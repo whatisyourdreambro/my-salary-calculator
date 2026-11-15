@@ -64,7 +64,10 @@ function buildFeedItems(baseUrl: string): FeedItem[] {
  .map((guide) => ({
  title: guide.title,
  url: `${baseUrl}/guides/${guide.slug}`,
- description: guide.description,
+ // 검색 설명(metaDescription, META-07·lens-meta-F02)이 있으면 그것 — 상세 쪽 meta·OG description 과 같은 문장이다
+ // (guides/[slug]/page.tsx). 화면 TL;DR(description)은 임협 타결 전 상태를 말하는 글이 있어, 사이트맵 날짜로
+ // 피드 위로 올라올 때 옛 문구가 함께 올라오지 않게 한다(feeds-01, 2026-11-15).
+ description: guide.metaDescription ?? guide.description,
  date: getGuideSitemapDate(guide),
  categories: [
  ...(guide.category ? [guide.category] : []),
