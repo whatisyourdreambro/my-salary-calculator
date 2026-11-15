@@ -169,3 +169,16 @@ describe("simple-calc-b04-F01 (2)(3) 주휴수당 계산 유의사항·본문 �
     expect(24 / 5).toBe((24 / 40) * 8);
   });
 });
+
+describe("simple-calc-b04-F08 (2)(3) 내 연봉 가능 대출액 유의사항·본문 — 수도권·규제지역 주담대 스트레스 금리 3% (광고 위, 더 좁게)", () => {
+  it("유의사항 1·본문 3단락, 출처는 정확히 2개", () => {
+    const c = calc("loan-affordability");
+    expect(c.caveats?.[0]).toContain("스트레스 금리 1.50%(수도권·규제지역 주담대 3%)");
+    expect(c.caveats?.[0]).not.toContain("2025년 7월 이후 은행 심사 한도");
+    expect(c.details).toContain("1.50%(수도권·규제지역 주담대 3%, 지방 주담대 0.75%)");
+    expect(c.details).not.toContain("1.50%(지방 주택담보대출은 0.75%)");
+    expect(c.sources).toHaveLength(2);
+    // 실측 폭(wght 400): 유의사항 70.51em → 68.40em, 본문 문장 106.34em → 103.57em. 한글 수는 둘 다 줄었다.
+    expect(kinds(c.caveats?.[0] ?? "").hangul).toBeLessThan(64);
+  });
+});
