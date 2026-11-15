@@ -15,7 +15,7 @@
 
 "use client";
 
-import { useState, useRef, useId, useEffect, useLayoutEffect } from "react";
+import { memo, useState, useRef, useId, useEffect, useLayoutEffect } from "react";
 import Link from "@/components/AppLink";
 import { ChevronDown, ChevronRight, Sparkles, Flame, Calendar, Star } from "lucide-react";
 import type { DropdownItem, Badge } from "./navConfig";
@@ -59,7 +59,7 @@ function Caret() {
   );
 }
 
-export default function DesktopDropdown({ item, pathname, locale = "ko", deferPanel = false }: DesktopDropdownProps) {
+function DesktopDropdown({ item, pathname, locale = "ko", deferPanel = false }: DesktopDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const closeTimerRef = useRef<NodeJS.Timeout | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -252,3 +252,7 @@ export default function DesktopDropdown({ item, pathname, locale = "ko", deferPa
     </div>
   );
 }
+
+// 2026-11-15 N2-perf-01: props(item 은 모듈 상수 navConfig/navConfigEn 항목, pathname·locale·deferPanel 은 원시값)가
+// 그대로면 Header 의 스크롤·모바일 메뉴 리렌더 때 패널 7개를 다시 그리지 않는다. Header 에서 인라인 함수·객체 prop 을 넘기면 무력화된다.
+export default memo(DesktopDropdown);
