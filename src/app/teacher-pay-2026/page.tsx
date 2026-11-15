@@ -35,6 +35,16 @@ import {
   TEACHER_START_HOBONG,
 } from "@/lib/civilServantPay";
 import { TEACHER_PAY_FULL_2026 } from "@/lib/payTablesFull2026";
+import {
+  CIVIL_FAMILY_ALLOWANCE_2026,
+  CIVIL_HOLIDAY_BONUS_RATE_2026,
+  CIVIL_JEONGGEUN_ADDON_2026,
+  CIVIL_JEONGGEUN_ADDON_EXTRA_2026,
+  CIVIL_JEONGGEUN_RATE_2026,
+  CIVIL_MEAL_ALLOWANCE_2026,
+  CIVIL_TEACHER_ALLOWANCE_2026,
+  PAY_PAGE_ALLOWANCE_SOURCE_2026,
+} from "@/lib/civilServantAllowances2026";
 import CitationCopyButton from "@/components/CitationCopyButton";
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
@@ -60,7 +70,7 @@ const LAST_ROW = TEACHER_PAY_ROWS_2026.reduce((top, row) => (row[0] > top[0] ? r
 // 이전(2026-08-30~09-24) title: "2026 교사 호봉표 — 초등·중등 교원 월급, 9호봉 249만원부터"
 const PAGE_TITLE = `2026 교사 호봉표·교원 봉급표 — ${FIRST_ROW[0]}호봉 월 ${Math.floor(FIRST_ROW[1] / 10000)}만원부터`;
 const PAGE_DESCRIPTION = `2026년 교사 호봉표(유·초·중등 교원 봉급표) 인사혁신처 공표 수치. 신규 교사 통상 ${FIRST_ROW[0]}호봉 월 ${fmt(FIRST_ROW[1])}원, ${LAST_ROW[0]}호봉 ${fmt(LAST_ROW[1])}원과 담임수당 ${TEACHER_ALLOWANCE_2026.homeroom / 10000}만원 등 수당, 실수령 계산 흐름을 정리했습니다.`;
-const MODIFIED = "2026-11-01";
+const MODIFIED = "2026-11-15";
 
 export const metadata: Metadata = buildPageMetadata({
   title: PAGE_TITLE,
@@ -87,7 +97,7 @@ const FAQ_ITEMS = [
   {
     question: "신규 교사 첫 월급은 얼마인가요?",
     answer:
-      "교대·사범대(4년제) 졸업 후 임용되면 통상 9호봉으로 시작합니다(2급 정교사 기산호봉 8호봉 + 사범계 가산 1호봉). 2026년 9호봉 월 봉급은 2,495,600원이며, 여기에 정액급식비(월 16만원)·교직수당·담임수당(맡을 경우 월 20만원) 등이 더해진 뒤 소득세·기여금이 공제됩니다. 군 경력이나 기간제 경력이 있으면 호봉이 가산됩니다.",
+      `교대·사범대(4년제) 졸업 후 임용되면 통상 9호봉으로 시작합니다(2급 정교사 기산호봉 8호봉 + 사범계 가산 1호봉). 2026년 9호봉 월 봉급은 2,495,600원이며, 여기에 정액급식비(월 16만원)·교직수당(월 ${CIVIL_TEACHER_ALLOWANCE_2026.teaching / 10000}만원)·담임수당(맡을 경우 월 20만원) 등이 더해진 뒤 소득세·기여금이 공제됩니다. 군 경력이나 기간제 경력이 있으면 호봉이 가산됩니다.`,
   },
   {
     question: "호봉표 금액이 실수령액인가요?",
@@ -109,6 +119,36 @@ const FAQ_ITEMS = [
     answer:
       "아닙니다. 유치원·초등학교·중학교·고등학교 교원은 모두 공무원보수규정 별표 11의 동일한 봉급표를 적용받습니다. 차이는 시작 호봉(학력·경력 기산)과 수당에서 생깁니다.",
   },
+];
+
+// 공유 설명(광고 아래) — 30호봉(약 21년 차) 행
+const ROW_30 = teacherRow(30);
+
+// 2026 교원 수당 한눈에 (RL-12 T14b, 10월 b2cdf929d·9277c4d4e PT-07 재구현) — 본문 칼럼 맨 끝(마지막 광고 아래) 표.
+// 숫자는 전부 정본 상수 civilServantAllowances2026.ts(공무원수당 등에 관한 규정, 법제처 현행 본문 2026-11-15 재대조)에서 가져온다.
+const JEONGGEUN_MIN_PCT = CIVIL_JEONGGEUN_RATE_2026[0].pct;
+const JEONGGEUN_MAX_PCT = CIVIL_JEONGGEUN_RATE_2026[CIVIL_JEONGGEUN_RATE_2026.length - 1].pct;
+const ADDON_MIN = CIVIL_JEONGGEUN_ADDON_2026[0].amount;
+const ADDON_MAX = CIVIL_JEONGGEUN_ADDON_2026[CIVIL_JEONGGEUN_ADDON_2026.length - 1].amount;
+const TEACHER_ALLOWANCE_ROWS: { name: string; amount: string; note: string }[] = [
+  { name: "교직수당", amount: `월 ${fmt(CIVIL_TEACHER_ALLOWANCE_2026.teaching)}원`, note: "모든 교사 정액 (별표 11 특수업무수당)" },
+  { name: "담임수당", amount: `월 ${fmt(CIVIL_TEACHER_ALLOWANCE_2026.homeroom)}원`, note: "학급 담임을 맡을 때 (교직수당 가산금)" },
+  // 겸임: 별표 11 다목 교직수당 '그 사유가 둘 이상에 해당할 때에는 각각의 해당 가산금을 함께 지급할 수 있다' (2026-11-15 확인)
+  { name: "보직교사수당", amount: `월 ${fmt(CIVIL_TEACHER_ALLOWANCE_2026.headTeacher)}원`, note: "부장 등 보직교사, 담임과 함께 받을 수 있음" },
+  { name: "정액급식비", amount: `월 ${fmt(CIVIL_MEAL_ALLOWANCE_2026)}원`, note: "공무원 공통" },
+  { name: "정근수당", amount: `월봉급액의 ${JEONGGEUN_MIN_PCT}~${JEONGGEUN_MAX_PCT}%`, note: "1월·7월, 근무연수별 (2년 미만 최저)" },
+  {
+    name: "정근수당 가산금",
+    amount: `월 ${fmt(ADDON_MIN)}~${fmt(ADDON_MAX)}원`,
+    note: `근무연수별 (20년 이상은 월 ${CIVIL_JEONGGEUN_ADDON_EXTRA_2026.from20 / 10000}만~${CIVIL_JEONGGEUN_ADDON_EXTRA_2026.from25 / 10000}만원 추가 가산)`,
+  },
+  { name: "명절휴가비", amount: `월봉급액의 ${Math.round(CIVIL_HOLIDAY_BONUS_RATE_2026 * 100)}%`, note: "설·추석 각각" },
+  {
+    name: "가족수당",
+    amount: `배우자 월 ${fmt(CIVIL_FAMILY_ALLOWANCE_2026.spouse)}원`,
+    note: `자녀 첫째 ${fmt(CIVIL_FAMILY_ALLOWANCE_2026.firstChild)}원·둘째 ${fmt(CIVIL_FAMILY_ALLOWANCE_2026.secondChild)}원·셋째 이후 ${fmt(CIVIL_FAMILY_ALLOWANCE_2026.thirdPlusChild)}원 (별표 5)`,
+  },
+  { name: "직급보조비", amount: "해당 없음", note: "별표 15 지급 직위에 교사는 없음 (장학사·교감부터)" },
 ];
 
 export default function TeacherPay2026Page() {
@@ -230,17 +270,17 @@ export default function TeacherPay2026Page() {
                   <strong>정액급식비</strong> — 월 160,000원 · <strong>명절휴가비</strong> — 설·추석 각 월봉급의 60%
                 </li>
                 <li>
-                  <strong>교직수당·정근수당</strong> 등 — 경력·직무에 따라 추가
+                  <strong>교직수당·정근수당</strong> 등 — 매월 정액·연수별 지급
                 </li>
               </ul>
               <p className="text-sm leading-7 text-muted-blue mt-4">
                 9호봉 신규 교사가 담임을 맡으면 봉급 2,495,600원 + 담임수당 20만원 + 정액급식비
                 16만원만으로도 세전 285만원을 넘습니다. 세후 실수령이 궁금하다면{" "}
-                <Link href="/calc/civil-servant-net-pay#teacher" className="text-electric font-bold hover:underline">
+                <Link href="/calc/civil-servant-net-pay#teacher" data-msy-module="pay-full-next" className="text-electric font-bold hover:underline">
                   교사 실수령액 계산기
                 </Link>
                 에서 공제 내역을 확인하세요. 초등교사 커리어별 연봉 흐름은{" "}
-                <Link href="/job/elementary-teacher" className="text-electric font-bold hover:underline">
+                <Link href="/job/elementary-teacher" data-msy-module="pay-full-next" className="text-electric font-bold hover:underline">
                   초등교사 연봉 페이지
                 </Link>
                 , 중·고교는{" "}
@@ -265,6 +305,7 @@ export default function TeacherPay2026Page() {
               </Link>
               <Link
                 href="/job/elementary-teacher"
+                data-msy-module="pay-full-next"
                 className="block p-6 bg-white border border-canvas-200 rounded-3xl text-navy hover:border-electric transition-colors"
               >
                 <FileText className="w-8 h-8 text-electric mb-3" />
@@ -360,7 +401,11 @@ export default function TeacherPay2026Page() {
                   >
                     공무원보수규정 [별표 11]
                   </a>{" "}
-                  · 인사혁신처 2026년 공무원 봉급표
+                  · 인사혁신처 2026년 공무원 봉급표. 일반직 9급~1급 전 호봉은{" "}
+                  <Link href="/civil-servant-pay-2026#general-full-table" data-msy-module="pay-full-next" className="text-electric font-bold hover:underline">
+                    2026 공무원 봉급표 전체
+                  </Link>
+                  에서 볼 수 있습니다.
                 </p>
               </div>
             </details>
@@ -370,7 +415,7 @@ export default function TeacherPay2026Page() {
             {/* 인용 복사 — R2 B4 (운영자 승인 2026-08-31): 데이터 변수 기반 빌드타임 생성 */}
             <div className="mt-8">
               <CitationCopyButton
-                quote={`2026년 교사(유·초·중등 교원) 월 봉급은 ${TEACHER_PAY_ROWS_2026[0][0]}호봉 ${TEACHER_PAY_ROWS_2026[0][1].toLocaleString("ko-KR")}원부터 ${TEACHER_PAY_ROWS_2026[TEACHER_PAY_ROWS_2026.length - 1][0]}호봉 ${TEACHER_PAY_ROWS_2026[TEACHER_PAY_ROWS_2026.length - 1][1].toLocaleString("ko-KR")}원까지이며, 담임수당은 월 ${TEACHER_ALLOWANCE_2026.homeroom.toLocaleString("ko-KR")}원이다 — 봉급: 공무원보수규정 별표 11, 담임수당: 공무원수당 등에 관한 규정 별표 11 기준.`}
+                quote={`2026년 교사(유·초·중등 교원) 월 봉급은 신규 교사 통상 시작인 ${FIRST_ROW[0]}호봉 ${FIRST_ROW[1].toLocaleString("ko-KR")}원, 최고 ${LAST_ROW[0]}호봉 ${LAST_ROW[1].toLocaleString("ko-KR")}원이며, 담임수당은 월 ${TEACHER_ALLOWANCE_2026.homeroom.toLocaleString("ko-KR")}원이다 — 봉급: 공무원보수규정 별표 11, 담임수당: 공무원수당 등에 관한 규정 별표 11 기준.`}
                 path="/teacher-pay-2026"
                 quoteId="teacher-pay-range"
                 sourceLabel="교사 호봉표"
@@ -380,7 +425,7 @@ export default function TeacherPay2026Page() {
             <div className="mt-8">
               <ShareButtons
                 title="2026 교사 호봉표 — 유·초·중등 교원 월급"
-                description="9호봉 249만원부터 30호봉 482만원까지, 담임·보직수당 구조 총정리"
+                description={`신규 ${FIRST_ROW[0]}호봉 ${Math.floor(FIRST_ROW[1] / 10000)}만원·${ROW_30[0]}호봉 ${Math.floor(ROW_30[1] / 10000)}만원, 담임·보직수당 구조 총정리`}
               />
             </div>
             {/* 세후 월급 계산기 역링크 — 광고 아래 마지막 줄 (2026-09-27) */}
@@ -391,6 +436,38 @@ export default function TeacherPay2026Page() {
               </Link>
               에서 호봉별로 바로 계산할 수 있습니다.
             </p>
+
+            {/* 2026 교원 수당 한눈에 (RL-12 T14b, 운영자 승인 2026-11-13 질문 2) — 본문 칼럼 맨 끝, 마지막 광고 아래·사이드바 앞 */}
+            <section id="teacher-allowances" className="mt-10 mb-12 p-6 sm:p-8 bg-white rounded-3xl border border-canvas-200">
+              <h2 className="text-xl font-black text-navy mb-2">2026 교원 수당 한눈에</h2>
+              <p className="text-xs text-faint-blue mb-5">
+                호봉표(기본급) 위에 더해지는 주요 수당 · 유치원·초·중·고 교원 공통
+              </p>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm min-w-[320px]">
+                  <thead>
+                    <tr className="border-b-2 border-canvas-200 text-navy">
+                      <th className="py-3 px-2 text-left font-black">수당</th>
+                      <th className="py-3 px-2 text-right font-black">금액</th>
+                      <th className="py-3 px-2 text-left font-black pl-6">대상·지급</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {TEACHER_ALLOWANCE_ROWS.map((row) => (
+                      <tr key={row.name} className="border-b border-canvas-100">
+                        <td className="py-2.5 px-2 font-bold text-navy">{row.name}</td>
+                        <td className="py-2.5 px-2 text-right text-muted-blue tabular-nums">{row.amount}</td>
+                        <td className="py-2.5 px-2 pl-6 text-xs text-faint-blue">{row.note}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="text-xs text-faint-blue mt-4">
+                출처: {PAY_PAGE_ALLOWANCE_SOURCE_2026.regulation}({PAY_PAGE_ALLOWANCE_SOURCE_2026.decree},{" "}
+                {PAY_PAGE_ALLOWANCE_SOURCE_2026.effectiveOn} 시행) 별표 2·5·11·15 · 확인일 {PAY_PAGE_ALLOWANCE_SOURCE_2026.checkedOn}
+              </p>
+            </section>
           </div>
 
           <aside

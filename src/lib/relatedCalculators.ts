@@ -120,6 +120,19 @@ export const CATEGORY_RECOMMENDATIONS: Record<string, RelatedItem[]> = {
  { path: "/calc/daily-calorie-quick", title: "일일 권장 칼로리", description: "BMR × 활동지수", icon: "Zap" },
  { path: "/tools/health/bmi", title: "BMI 상세 계산기", description: "성인 비만도 기준표", icon: "Heart" },
  ],
+ // 2026-11-15 RL-09 (10월 dfcb3db24 PT-09 재착지) — 공무원 봉급 묶음. 교사·경찰·소방·군인 봉급표 4쪽이 salary 폴백
+ // (홈·삼성 성과급·주휴수당·통상임금)을 추천하던 문맥 불일치 해소. 2027 봉급표·실수령 계산기를 앞에 둬 각 페이지에
+ // 새 내부 링크가 생기게 한다. 2027 은 국회 의결·보수규정 개정 전이라 '예산안 기준 예상'으로만 쓴다
+ // (1월 확정 봉급표가 나오면 설명을 확정 문구로 바꿀 것).
+ publicPay: [
+ { path: "/civil-servant-pay-2027", title: "2027 공무원 봉급표", description: "예산안 기준 예상 월급·확정 일정", icon: "TrendingUp" },
+ { path: "/calc/civil-servant-net-pay", title: "공무원 월급 실수령액 계산기", description: "기여금·건보·소득세 뺀 세후 월급", icon: "Calculator" },
+ { path: "/teacher-pay-2026", title: "교사 호봉표 2026", description: "유·초·중등 교원 호봉별 월급", icon: "Users" },
+ { path: "/police-pay-2026", title: "경찰 봉급표 2026", description: "순경~경감 계급·호봉별 월급", icon: "Briefcase" },
+ { path: "/firefighter-pay-2026", title: "소방 봉급표 2026", description: "소방사~소방경 계급별 월급", icon: "Flame" },
+ { path: "/military-pay-2026", title: "군인 월급 2026", description: "병 봉급표·장병내일준비적금", icon: "PiggyBank" },
+ { path: "/civil-servant-pay-2026", title: "공무원 봉급표 2026", description: "일반직 9~5급 호봉별 월급", icon: "Building2" },
+ ],
  family: [
  { path: "/hub/daily-life", title: "생활·건강·가족 허브", description: "결혼·육아 비용 계산 모음", icon: "Users" },
  { path: "/calc/baby-yearly-cost", title: "자녀 양육비 1년차", description: "출산·기저귀·분유 합산", icon: "Heart" },
@@ -263,6 +276,11 @@ const PATH_RECOMMENDATIONS: Record<string, string[]> = {
  "/social-insurance-rates-2027": ["tax", "salary"],
  // 2026-09-27 — 공무원 월급 실수령액 계산기 (카테고리 배열은 그대로, 경로 매핑만 추가)
  "/calc/civil-servant-net-pay": ["salary", "tax"],
+ // 2026-11-15 RL-09 (dfcb3db24 PT-09) — 봉급표 4쪽은 공무원 봉급 묶음 우선 (limit 4 그대로, /civil-servant-pay-2026·2027 은 매핑 없음)
+ "/teacher-pay-2026": ["publicPay", "salary"],
+ "/police-pay-2026": ["publicPay", "salary"],
+ "/firefighter-pay-2026": ["publicPay", "salary"],
+ "/military-pay-2026": ["publicPay", "salary"],
 };
 
 /**

@@ -5,6 +5,10 @@
 //   국무회의 의결 직후 발표한다(2026년분은 2025-12-30 의결). 발표 즉시
 //   봉급표(GENERAL_PAY_ROWS·POLICE_FIRE_ROWS)·인상률·수당 수치·연도 표기를 갱신할 것.
 //   출처: 인사혁신처 mpm.go.kr(2026 봉급표 원문·보도자료 cntId=4187), 법제처 공무원수당규정
+// 일반직 9급~1급 전 호봉 전체표 (RL-12, 2026-11-15 — 10월 917e628f7 재구현, 운영자 2026-11-13 질문 2 승인):
+//   본문 칼럼 끝 MultiplexAd·세후 계산기 역링크 다음 기본 접힘 상자(#general-full-table, open 금지). 쿠팡 배너와 MultiplexAd
+//   사이에는 넣지 않는다. 광고 위 요약표(9~5급 1~10호봉)·메타·리드·광고 컴포넌트 순서는 그대로. 데이터는
+//   payTablesFull2026.ts(인사혁신처 원문 파싱, 법제처 별표 3 재대조 2026-11-15). 가드: src/lib/__tests__/payTablesFull2026.test.ts
 
 import type { Metadata } from "next";
 import Link from "@/components/AppLink";
@@ -31,6 +35,19 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd, SidebarAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
+import PayStepTable from "@/components/PayStepTable";
+import {
+  GENERAL_GRADES_FULL,
+  GENERAL_PAY_FULL_2026,
+  PAY_FULL_2026_CHECKED,
+  pickPayColumns,
+} from "@/lib/payTablesFull2026";
+
+// 맨 아래 접힌 상자 전용 — 9급~5급·4급~1급 두 표로 나눠 모바일 가로 스크롤을 줄인다
+const FULL_LOWER_GRADES = pickPayColumns(GENERAL_PAY_FULL_2026, 0, 5);
+const FULL_UPPER_GRADES = pickPayColumns(GENERAL_PAY_FULL_2026, 5, 9);
+// 공무원보수규정 [별표 3] 일반직공무원과 일반직에 준하는 특정직 및 별정직 공무원 등의 봉급표 — 법제처 별표 링크(현행)
+const LAW_ANNEX_3_URL = `https://www.law.go.kr/LSW/lsBylInfoPLinkR.do?lsNm=${encodeURIComponent("공무원보수규정")}&bylNo=0003&bylBrNo=00&bylCls=BE&bylEfYdYn=Y`;
 
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 공무원 봉급표 — 9급~5급 호봉별 월급·3.5% 인상 확정",
@@ -39,7 +56,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/civil-servant-pay-2026",
   ogType: "article",
   publishedTime: "2026-08-15",
-  modifiedTime: "2026-10-04",
+  modifiedTime: "2026-11-15",
   keywords: [
     "공무원 봉급표 2026",
     "2026 공무원 봉급표",
@@ -88,7 +105,7 @@ const FAQ_ITEMS = [
   {
     question: "공무원 수당에는 어떤 것이 있나요?",
     answer:
-      "2026년 확정 기준으로 정액급식비 월 160,000원(기존 14만원에서 인상), 명절휴가비 설·추석 각각 월봉급액의 60%, 직급보조비 월 175,000원(8·9급)~750,000원(1급), 정근수당 연 2회(1월·7월) 근무연수에 따라 월봉급액의 0~50%가 대표적입니다. 이외 직무·가족 수당 등이 직렬과 개인 상황에 따라 추가됩니다. (출처: 법제처 공무원수당 등에 관한 규정)",
+      "2026년 확정 기준으로 정액급식비 월 160,000원(기존 14만원에서 인상), 명절휴가비 설·추석 각각 월봉급액의 60%, 직급보조비 월 175,000원(8·9급)~750,000원(1급), 정근수당 연 2회(1월·7월) 근무연수에 따라 월봉급액의 10~50%(재직 2년 미만 10%)가 대표적입니다. 이외 직무·가족 수당 등이 직렬과 개인 상황에 따라 추가됩니다. (출처: 법제처 공무원수당 등에 관한 규정)",
   },
   {
     question: "군무원 봉급표는 따로 있나요?",
@@ -119,15 +136,15 @@ export default function CivilServantPay2026Page() {
             slug: "civil-servant-pay-2026",
             url: "/civil-servant-pay-2026",
             publishedDate: "2026-08-15",
-            modifiedDate: "2026-10-04",
+            modifiedDate: "2026-11-15",
           }),
           datasetLd({
-            name: "2026년 공무원 봉급표 데이터 (9급~5급 1~10호봉)",
+            name: "2026년 공무원 봉급표 데이터 (일반직 9급~1급 전 호봉)",
             description:
-              "인사혁신처 2026년 공무원 보수규정 기준 일반직 9·8·7·6·5급 1~10호봉 월 봉급액과 경찰(순경)·소방(소방사) 초임 봉급 데이터셋. 2025-12-30 국무회의 의결, 2026-01-01 시행분.",
+              "인사혁신처 2026년 공무원 보수규정 기준 일반직 9급~1급 전 호봉 월 봉급액(별표 3, 9~5급 1~10호봉 요약표 포함)과 경찰(순경)·소방(소방사) 초임 봉급 데이터셋. 2025-12-30 국무회의 의결, 2026-01-01 시행분.",
             url: "/civil-servant-pay-2026",
             datePublished: "2026-08-15",
-            dateModified: "2026-09-09",
+            dateModified: "2026-11-15",
             keywords: [
               "공무원 봉급표",
               "2026 공무원 월급",
@@ -156,7 +173,7 @@ export default function CivilServantPay2026Page() {
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
             2026 공무원 봉급표 <span className="text-electric">9급~5급 월급</span>
           </h1>
-          <PublishedMeta publishedDate="2026-08-15" updatedDate="2026-10-04" className="mb-2" />
+          <PublishedMeta publishedDate="2026-08-15" updatedDate="2026-11-15" className="mb-2" />
           <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
             전체 3.5% 인상(2017년 이후 최고), 7~9급 저연차는 추가 3.1%를 더해 최대 6.6%
             인상됐습니다. 9급 초임은 수당 포함 연 3,428만원(월평균 약 286만원)입니다.
@@ -256,6 +273,7 @@ export default function CivilServantPay2026Page() {
             (출처: 인사혁신처 보도자료, 2025-12-30) 내년이 궁금하다면{" "}
             <Link
               href="/civil-servant-pay-2027"
+              data-msy-module="pay-full-next"
               className="text-electric font-bold hover:underline"
             >
               2027 공무원 봉급표 — 전망과 확정 일정
@@ -277,7 +295,7 @@ export default function CivilServantPay2026Page() {
               <strong>직급보조비</strong> — 직급별 정액 지급 (아래 표, 2026년 현행 유지)
             </li>
             <li>
-              <strong>정근수당</strong> — 연 2회(1월·7월), 근무연수에 따라 월봉급액의 0~50%
+              <strong>정근수당</strong> — 연 2회(1월·7월), 근무연수별 월봉급액의 10~50%
             </li>
           </ul>
           <div className="not-prose mt-4 p-5 bg-white rounded-2xl border border-canvas-200">
@@ -451,6 +469,69 @@ export default function CivilServantPay2026Page() {
           </Link>
           에서 호봉별로 바로 계산할 수 있습니다.
         </p>
+
+        {/* 일반직 9급~1급 전 호봉 전체표 — 본문 칼럼 마지막 광고(위 MultiplexAd)·역링크 다음, 기본 접힘(open 금지)
+            (RL-12, 운영자 승인 2026-11-13 질문 2). 쿠팡 배너와 MultiplexAd 사이·광고 위에는 넣지 않는다.
+            데이터: GENERAL_PAY_FULL_2026 (payTablesFull2026.ts). 출처: 공무원보수규정 [별표 3] · 인사혁신처 2026년 공무원 봉급표 */}
+        <details
+          id="general-full-table"
+          className="group scroll-mt-24 mt-10 mb-12 bg-white rounded-3xl border border-canvas-200"
+        >
+          <summary className="flex items-center justify-between gap-3 cursor-pointer p-5 sm:px-8 sm:py-6 text-base font-black text-navy">
+            9급~1급 전 호봉 보기
+            <ArrowRight className="w-4 h-4 shrink-0 text-electric transition-transform group-open:rotate-90" />
+          </summary>
+          <div className="px-5 pb-6 sm:px-8 sm:pb-8">
+            <p className="text-xs text-faint-blue leading-6 mb-5">
+              2026 일반직 공무원 봉급표 전체 · 단위: 원(월 봉급액) · 인사혁신처 표기 9급·1등급~4급·6등급 포함 ·
+              &lsquo;–&rsquo;는 해당 급수에 없는 호봉
+            </p>
+            <div className="space-y-8">
+              <PayStepTable
+                caption="9급~5급 (1~32호봉)"
+                columns={GENERAL_GRADES_FULL.slice(0, 5)}
+                rows={FULL_LOWER_GRADES}
+                regionLabel="일반직 봉급표 9급~5급 전체 (가로 스크롤)"
+                minWidthClass="min-w-[520px]"
+              />
+              <PayStepTable
+                caption="4급~1급 (1~28호봉)"
+                columns={GENERAL_GRADES_FULL.slice(5, 9)}
+                rows={FULL_UPPER_GRADES}
+                regionLabel="일반직 봉급표 4급~1급 전체 (가로 스크롤)"
+                minWidthClass="min-w-[440px]"
+              />
+            </div>
+            <p className="text-xs text-faint-blue leading-6 mt-4">
+              ※ 봉급표 금액은 수당을 뺀 기본급이며 일반군무원도 같은 표를 적용받습니다(별표 1). 출처:{" "}
+              <a
+                href={LAW_ANNEX_3_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-electric font-bold hover:underline"
+              >
+                공무원보수규정 [별표 3]
+              </a>{" "}
+              · 인사혁신처 2026년 공무원 봉급표(확인일 {PAY_FULL_2026_CHECKED}). 직렬별 전체표는{" "}
+              <Link href="/teacher-pay-2026#teacher-full-table" data-msy-module="pay-full-next" className="text-electric font-bold hover:underline">
+                교원
+              </Link>
+              ·
+              <Link href="/police-pay-2026#police-full-table" data-msy-module="pay-full-next" className="text-electric font-bold hover:underline">
+                경찰
+              </Link>
+              ·
+              <Link href="/firefighter-pay-2026#fire-full-table" data-msy-module="pay-full-next" className="text-electric font-bold hover:underline">
+                소방
+              </Link>{" "}
+              봉급표에서, 내년 인상률(정부 예산안 기준·확정 전)은{" "}
+              <Link href="/civil-servant-pay-2027" data-msy-module="pay-full-next" className="text-electric font-bold hover:underline">
+                2027 공무원 봉급표 예상
+              </Link>
+              에서 확인하세요.
+            </p>
+          </div>
+        </details>
           </div>
 
           {/* Desktop sticky sidebar — 광고 + 쿠팡 (salary/[amount] 동일 조합) */}
