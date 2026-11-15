@@ -40,6 +40,9 @@ const destinations: Record<string, Omit<TopicLink, 'href'>> = {
   '/year-end-tax-checklist': { title: '연말정산 체크리스트', description: '12월 31일 전에 챙길 공제 항목을 신용카드·연금저축·기부금·월세 등 분야별로 점검하세요.' },
   '/social-insurance-rates-2027': { title: '2027 4대보험 요율표', description: '국민연금 10.0%(근로자 5.0%) 등 2027년 요율로 월급에서 빠지는 보험료를 확인하세요.' },
   '/table/2027/monthly': { title: '2027 월급 실수령액 표', description: '2027년 국민연금 요율 인상을 반영한 월급 구간별 세후 수령액을 미리 확인하세요.' },
+  // 2026-11-15 SEASONA(감사 app-tools-fun ideas[3]) — 일반 성과급 세금 계산기에서 회사별 계산기로.
+  '/calc/samsung-bonus': { title: '삼성전자 성과급 계산기', description: 'OPI·TAI 지급률을 넣어 삼성전자 성과급의 세전·세후 예상액을 계산하세요.' },
+  '/calc/sk-hynix-bonus': { title: 'SK하이닉스 성과급 계산기', description: '영업이익과 연봉을 넣어 PS·PI 성과급의 세전·세후 예상액을 계산하세요.' },
 };
 
 export const TOPIC_NEXT_STEPS: Record<string, readonly string[]> = {
@@ -75,7 +78,9 @@ export const TOPIC_NEXT_STEPS: Record<string, readonly string[]> = {
   '/hub/tax-saving': ['/year-end-tax-2027', '/social-insurance-rates-2027', '/table/2027/monthly'],
   '/public-institutions': ['/civil-servant-pay-2027', '/insights', '/hub/career'],
   '/tools/finance/compound': ['/tools/finance', '/tools/math', '/hub/fire'],
-  '/tools/finance/bonus': ['/tools/finance', '/calc/bonus-home-plan'],
+  // 2026-11-15 SEASONA(감사 app-tools-fun ideas[3]): tools/layout 의 HomeTopAd 뒤 상자 — 회사별 성과급 계산기로. 상한 4장이라
+  // 상위 허브 /tools/finance 카드는 뺐다(같은 허브는 다른 도구 행 3곳(복리·퇴직금·퍼센트)이 계속 링크한다).
+  '/tools/finance/bonus': ['/calc/bonus-calculators', '/calc/samsung-bonus', '/calc/sk-hynix-bonus', '/calc/bonus-home-plan'],
   '/tools/finance/severance': ['/tools/finance', '/hub/career'],
   '/tools/life/dutch-pay': ['/tools/life', '/tips'],
   '/tools/life/fuel-cost': ['/tools/life', '/tips'],

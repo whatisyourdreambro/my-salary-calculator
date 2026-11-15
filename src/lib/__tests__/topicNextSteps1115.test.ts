@@ -106,3 +106,19 @@ describe("연말정산 시즌 목적지 (SEASONA lib ideas[3])", () => {
     expect(PAGE_LINK_REVIEW_PATHS.has("/hub/tax-saving")).toBe(true);
   });
 });
+
+describe("일반 성과급 세금 계산기 → 회사별 계산기 (SEASONA app-tools-fun ideas[3])", () => {
+  it("/tools/finance/bonus 행은 회사별 모음·삼성전자·SK하이닉스·내 집 마련 4장(상한)", () => {
+    const targets = ["/calc/bonus-calculators", "/calc/samsung-bonus", "/calc/sk-hynix-bonus", "/calc/bonus-home-plan"];
+    expect(TOPIC_NEXT_STEPS["/tools/finance/bonus"]).toEqual(targets);
+    expect(getTopicNextSteps("/tools/finance/bonus")).toHaveLength(4);
+    for (const href of targets) expect(pageExists(href), href).toBe(true);
+  });
+
+  it("tools/layout 의 상자는 모든 레이아웃 광고(InArticleAd·쿠팡·HomeTopAd) 뒤, 도구 쪽 본문 광고는 레이아웃 위", () => {
+    const layout = code("src/app/tools/layout.tsx");
+    const box = layout.indexOf("<TopicNextSteps />");
+    for (const ad of ["<InArticleAd />", "<CoupangBanner", "<HomeTopAd />"]) expect(box, ad).toBeGreaterThan(layout.indexOf(ad));
+    expect(layout.indexOf("{children}")).toBeLessThan(layout.indexOf("<InArticleAd />"));
+  });
+});
