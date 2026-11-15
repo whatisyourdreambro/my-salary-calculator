@@ -361,7 +361,11 @@ export default function TeacherPay2026Page() {
                   >
                     공무원보수규정 [별표 11]
                   </a>{" "}
-                  · 인사혁신처 2026년 공무원 봉급표
+                  · 인사혁신처 2026년 공무원 봉급표. 일반직 9급~1급 전 호봉은{" "}
+                  <Link href="/civil-servant-pay-2026#general-full-table" className="text-electric font-bold hover:underline">
+                    2026 공무원 봉급표 전체
+                  </Link>
+                  에서 볼 수 있습니다.
                 </p>
               </div>
             </details>
