@@ -170,3 +170,27 @@ describe("CS-23 연봉→시급·주급 설명문(meta 스니펫) — compute �
     expect(c.space).toBe(d.space);
   });
 });
+
+describe("CS-05 등록면허세 설명문(meta 스니펫) — 등기 원인별 표준세율, 취득 원인 등기는 취득세에 통합 (질문 1 후보: 광고 위 줄 수는 실측 스윕)", () => {
+  it("주택 유상 매매 0.8% 오기가 없고 보존·상속 0.8%·무상 1.5%·유상 2%(주택은 취득세율의 50%)·저당권 0.2%", () => {
+    const e = calc("registration-tax-quick").explanation ?? "";
+    for (const s of ["소유권 보존·상속 0.8%", "무상 이전 1.5%", "유상 이전 2%(주택은 취득세율의 50%)", "저당권 설정 0.2%", "취득세에 통합되어 따로 내지 않고", "20%가 지방교육세"]) expect(e).toContain(s);
+    expect(e).not.toContain("주택 유상 매매는 취득가액의 0.8%");
+    expect(e).not.toContain("증여(무상 취득)는 1.5%");
+  });
+  it("meta 스니펫(155자) 안에 취득 원인 등기는 따로 내지 않는다는 문장이 들어가고 세율 나열은 스니펫 밖이다", () => {
+    const meta = calculatorSeoDescription(calc("registration-tax-quick"));
+    expect(meta).toContain("매매·증여·상속처럼 취득을 원인으로 한 등기는 취득세에 통합되어 따로 내지 않고");
+    expect(meta).not.toContain("유상 이전 2%");
+    expect(meta).not.toContain("주택 유상 매매");
+  });
+  it("설명문 전체 글자 폭 추정은 종전보다 좁다(한글 157->150) — 그래도 줄바꿈 위치가 달라 몇 폭에서 한 줄 늘 수 있어 질문 1 로 실측한다", () => {
+    const was = "등록면허세는 부동산 등기·등록을 할 때 내는 지방세로, 소유권 이전의 원인에 따라 세율이 다릅니다. 주택 유상 매매는 취득가액의 0.8%, 증여(무상 취득)는 1.5%, 상속은 0.8%가 기본이며 등록면허세액의 20%가 지방교육세로 함께 붙습니다. 유상 매매로 주택을 취득할 때는 취득세에 등록분이 통합돼 부과되므로, 이 계산기는 등기 원인별 등록분을 따로 확인하거나 취득세 통합 고지 내역을 검산할 때 쓰는 값입니다.";
+    const a = kinds(calc("registration-tax-quick").explanation ?? "");
+    const b = kinds(was);
+    expect(a.hangul).toBe(b.hangul - 7);
+    expect(a.digit).toBe(b.digit + 3);
+    // 좁은 글자(공백·가운뎃점·%·마침표 등)는 6개 늘었다 — 한글 7자(약 6.6em)가 빠진 것보다 작다(약 +1.6em, 숫자 +3 은 약 +1.7em)
+    expect(a.space + a.other).toBe(b.space + b.other + 6);
+  });
+});
