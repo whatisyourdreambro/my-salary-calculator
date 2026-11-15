@@ -138,13 +138,13 @@ const EventCard = ({ event, index, updateEvent, removeEvent, simulationYears }: 
  <EventIcon className="w-5 h-5 text-primary" />
  <h3 className="font-bold">이벤트 {index + 1}</h3>
  </div>
- <button onClick={() => removeEvent(index)} className="text-muted-foreground hover:text-destructive p-1 rounded-full hover:bg-destructive/10"><X size={16} /></button>
+ <button type="button" aria-label={`이벤트 ${index + 1} 삭제`} onClick={() => removeEvent(index)} className="text-muted-foreground hover:text-destructive p-1 rounded-full hover:bg-destructive/10"><X size={16} /></button>
  </div>
  <div className="grid grid-cols-2 gap-2">
- <select value={event.year} onChange={(e) => updateEvent(index, "year", Number(e.target.value))} className={inputStyle}>
+ <select aria-label={`이벤트 ${index + 1} 연차`} value={event.year} onChange={(e) => updateEvent(index, "year", Number(e.target.value))} className={inputStyle}>
  {Array.from({ length: simulationYears }, (_, i) => <option key={i} value={i}>{i + 1}년차</option>)}
  </select>
- <select value={event.type} onChange={(e) => updateEvent(index, "type", e.target.value)} className={inputStyle}>
+ <select aria-label={`이벤트 ${index + 1} 종류`} value={event.type} onChange={(e) => updateEvent(index, "type", e.target.value)} className={inputStyle}>
  {Object.keys(eventIcons).map(type => <option key={type} value={type}>{eventTypeNames[type as CareerEventType]}</option>)}
  </select>
  </div>
