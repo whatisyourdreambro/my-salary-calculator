@@ -115,6 +115,9 @@ export default function FinancialKnowledgeArchive() {
  className="border rounded-2xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-lg bg-card"
  >
  <button
+ type="button"
+ aria-expanded={activeIndex === index}
+ aria-controls={`fka-panel-${index}`}
  onClick={() => handleClick(index)}
  className="w-full flex justify-between items-center p-5 text-left"
  >
@@ -130,6 +133,7 @@ export default function FinancialKnowledgeArchive() {
  </div>
  </div>
  <svg
+ aria-hidden="true"
  xmlns="http://www.w3.org/2000/svg"
  fill="none"
  viewBox="0 0 24 24"
@@ -147,6 +151,8 @@ export default function FinancialKnowledgeArchive() {
  </svg>
  </button>
  <div
+ id={`fka-panel-${index}`}
+ inert={activeIndex !== index}
  className={`grid transition-all duration-500 ease-in-out ${
  activeIndex === index
  ? "grid-rows-[1fr] opacity-100"

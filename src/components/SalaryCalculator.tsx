@@ -424,6 +424,8 @@ export default function SalaryCalculator() {
  {(["regular", "freelancer", "part_time"] as const).map((type) => (
  <button
  key={type}
+ type="button"
+ aria-pressed={incomeType === type}
  onClick={() => { setIncomeType(type); setInputOrigin("user"); }}
  className={cn(
  "flex-1 py-2.5 rounded-xl text-sm font-bold transition-all",
@@ -456,19 +458,19 @@ export default function SalaryCalculator() {
 
  <div className="grid grid-cols-2 gap-3 bg-canvas rounded-2xl p-4">
  <div>
- <p className="text-xs font-bold text-faint-blue mb-2">부양가족 수 (본인 포함)</p>
- <div className="flex items-center gap-2">
- <button onClick={() => { setDependents(Math.max(1, dependents - 1)); setInputOrigin("user"); }} className="w-8 h-8 rounded-full bg-white border border-canvas text-muted-blue font-bold flex items-center justify-center hover:bg-canvas-dark transition-colors">−</button>
- <span className="font-bold text-navy text-base w-6 text-center">{dependents}</span>
- <button onClick={() => { setDependents(Math.min(10, dependents + 1)); setInputOrigin("user"); }} className="w-8 h-8 rounded-full bg-primary text-white font-bold flex items-center justify-center hover:bg-primary/90 transition-colors">+</button>
+ <p id="home-dependents-label" className="text-xs font-bold text-faint-blue mb-2">부양가족 수 (본인 포함)</p>
+ <div role="group" aria-labelledby="home-dependents-label" className="flex items-center gap-2">
+ <button type="button" aria-label="부양가족 수 줄이기" onClick={() => { setDependents(Math.max(1, dependents - 1)); setInputOrigin("user"); }} className="w-8 h-8 rounded-full bg-white border border-canvas text-muted-blue font-bold flex items-center justify-center hover:bg-canvas-dark transition-colors">−</button>
+ <span aria-live="polite" className="font-bold text-navy text-base w-6 text-center">{dependents}</span>
+ <button type="button" aria-label="부양가족 수 늘리기" onClick={() => { setDependents(Math.min(10, dependents + 1)); setInputOrigin("user"); }} className="w-8 h-8 rounded-full bg-primary text-white font-bold flex items-center justify-center hover:bg-primary/90 transition-colors">+</button>
  </div>
  </div>
  <div>
- <p className="text-xs font-bold text-faint-blue mb-2">8세~20세 자녀</p>
- <div className="flex items-center gap-2">
- <button onClick={() => { setChildren(Math.max(0, children - 1)); setInputOrigin("user"); }} className="w-8 h-8 rounded-full bg-white border border-canvas text-muted-blue font-bold flex items-center justify-center hover:bg-canvas-dark transition-colors">−</button>
- <span className="font-bold text-navy text-base w-6 text-center">{children}</span>
- <button onClick={() => { setChildren(Math.min(10, children + 1)); setInputOrigin("user"); }} className="w-8 h-8 rounded-full bg-primary text-white font-bold flex items-center justify-center hover:bg-primary/90 transition-colors">+</button>
+ <p id="home-children-label" className="text-xs font-bold text-faint-blue mb-2">8세~20세 자녀</p>
+ <div role="group" aria-labelledby="home-children-label" className="flex items-center gap-2">
+ <button type="button" aria-label="8세~20세 자녀 수 줄이기" onClick={() => { setChildren(Math.max(0, children - 1)); setInputOrigin("user"); }} className="w-8 h-8 rounded-full bg-white border border-canvas text-muted-blue font-bold flex items-center justify-center hover:bg-canvas-dark transition-colors">−</button>
+ <span aria-live="polite" className="font-bold text-navy text-base w-6 text-center">{children}</span>
+ <button type="button" aria-label="8세~20세 자녀 수 늘리기" onClick={() => { setChildren(Math.min(10, children + 1)); setInputOrigin("user"); }} className="w-8 h-8 rounded-full bg-primary text-white font-bold flex items-center justify-center hover:bg-primary/90 transition-colors">+</button>
  </div>
  </div>
  </div>
