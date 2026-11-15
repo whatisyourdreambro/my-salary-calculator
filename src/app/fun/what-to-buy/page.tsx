@@ -18,9 +18,10 @@ export default function WhatToBuyPage() {
  } | null>(null);
  const [isSearching, setIsSearching] = useState(false);
 
+ // 가격 오름차순 유지 — search() 는 살 수 있는 항목 중 마지막(가장 비싼 것)을 고른다
  const ITEMS = [
- { name: "치킨", price: 20000, desc: "오늘 저녁은 치킨이닭!" },
  { name: "커피", price: 5000, desc: "스타벅스 아메리카노" },
+ { name: "치킨", price: 20000, desc: "오늘 저녁은 치킨이닭!" },
  { name: "넷플릭스 1년 구독", price: 150000, desc: "1년간의 여가 보장" },
  { name: "아이패드", price: 1000000, desc: "생산성 향상을 위한 투자" },
  { name: "맥북 프로", price: 3000000, desc: "전문가를 위한 궁극의 머신" },
