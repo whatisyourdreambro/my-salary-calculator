@@ -20,11 +20,13 @@ interface WealthChartProps {
  monthlyNetSalary: number;
 }
 
-const formatKRW = (value: number) => {
- if (value >= 100000000) {
- return `${(value / 100000000).toFixed(1)}억`;
- }
- return `${(value / 10000).toLocaleString('ko-KR')}만`;
+// 1억 미만은 만원 단위 정수로 — 종전 (value / 10000).toLocaleString() 은 소수 셋째 자리까지 남겨
+// '월 19.322만원씩'·'2,142.928만' 처럼 읽혔다 (2026-11-15 N2-components-03, components-b05-F01).
+// 문턱은 반올림한 만원 값으로 본다 — 99,995,000~99,999,999원이 '10,000만' 이 아니라 '1.0억' 이 되게.
+export const formatKRW = (value: number) => {
+ const man = Math.round(value / 10000);
+ if (man >= 10000) return `${(value / 100000000).toFixed(1)}억`;
+ return `${man.toLocaleString('ko-KR')}만`;
 };
 
 interface MungGoalMarkerProps {
