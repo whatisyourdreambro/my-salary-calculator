@@ -257,7 +257,7 @@ export default function HyundaiMobisBonusClient() {
         <div className="grid sm:grid-cols-2 gap-3 mb-5">
           <ResultCard label="정률 성과금" value={fmtManwon(calc.percentBonusWon)} sub={`= 월 기본급 ${monthlyBasicManwon}만 × ${customMode ? bonusPctOverride : scenario.bonusPercent}%`} />
           <ResultCard label="정액 격려금" value={fmtManwon(calc.fixedBonusWon)} sub="임단협 합의 명시 정액" />
-          <ResultCard label="주식(우리사주) 가치" value={fmtManwon(calc.shareValueWon)} sub={`${customMode ? sharesOverride : scenario.freeShares}주 × ${(stockPrice / 10000).toFixed(0)}만원`} />
+          <ResultCard label="주식(우리사주) 가치" value={fmtManwon(calc.shareValueWon)} sub={`${customMode ? sharesOverride : scenario.freeShares}주 × ${(stockPrice / 10000).toFixed(1).replace(/\.0$/, "")}만원`} />
           <ResultCard label="상품권" value={fmtManwon(calc.voucherWon)} sub={calc.voucherWon > 0 ? "재래시장상품권" : "해당 시나리오 상품권 없음"} />
         </div>
 

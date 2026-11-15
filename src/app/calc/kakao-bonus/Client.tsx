@@ -154,7 +154,7 @@ export default function KakaoBonusClient() {
           </label>
         </div>
         <p className="mt-3 text-xs text-faint">
-          RSU 가치 = {rsuShares}주 × {(stockPrice / 10000).toFixed(0)}만원 ={" "}
+          RSU 가치 = {rsuShares}주 × {(stockPrice / 10000).toFixed(1).replace(/\.0$/, "")}만원 ={" "}
           <strong className="text-primary">{fmtManwon(calc.rsuValueWon)}</strong>
           {" "}(2026 평균 1인당 약 670만원, 직급·평가에 따라 편차)
         </p>
@@ -224,7 +224,7 @@ export default function KakaoBonusClient() {
 
         <div className="grid sm:grid-cols-3 gap-3 mb-5">
           <ResultCard label="정기 PI" value={fmtManwon(calc.piWon)} sub={`= 연봉 × ${piPercent}%`} />
-          <ResultCard label="RSU 가치" value={fmtManwon(calc.rsuValueWon)} sub={`${rsuShares}주 × ${(stockPrice / 10000).toFixed(0)}만`} />
+          <ResultCard label="RSU 가치" value={fmtManwon(calc.rsuValueWon)} sub={`${rsuShares}주 × ${(stockPrice / 10000).toFixed(1).replace(/\.0$/, "")}만`} />
           <ResultCard label="격려금" value={fmtManwon(calc.encouragementWon)} sub={includeEncouragement ? "2026 노사합의" : "포함 안 함"} />
         </div>
 

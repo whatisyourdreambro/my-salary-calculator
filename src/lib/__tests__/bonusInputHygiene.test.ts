@@ -73,3 +73,23 @@ describe("성과급 계산기 11종 입력 위생 (N2-calc-04)", () => {
     expect(src.match(/aria-pressed=/g)?.length).toBe(2);
   });
 });
+
+// 주가 표시(calc-02-F17): 만원 단위를 정수로 반올림하면 '47주 × 12만원' 옆에 573만원(121,900원 기준)이 찍혀
+// 곱셈이 맞지 않았다. 소수 첫째 자리까지(끝 .0 은 지움) — 기본 주가(12만·28만·5만)와 빠른 값 버튼 글자는 그대로.
+describe("주식 가치 카드의 주가 표시 (calc-02-F17)", () => {
+  const fmt = (stockPrice: number) => (stockPrice / 10000).toFixed(1).replace(/\.0$/, "");
+  it("기아·모비스·카카오 가치 식은 소수 첫째 자리, 빠른 값 버튼 라벨은 정수 그대로", () => {
+    for (const slug of ["kia-bonus", "hyundai-mobis-bonus", "kakao-bonus"]) {
+      const src = read(slug);
+      expect(src, slug).not.toContain("(stockPrice / 10000).toFixed(0)");
+      expect(src, slug).toContain(String.raw`(stockPrice / 10000).toFixed(1).replace(/\.0$/, "")`);
+      expect(src, slug).toContain("{(p / 10000).toFixed(0)}만");
+    }
+    expect(read("kakao-bonus").match(/\(stockPrice \/ 10000\)\.toFixed\(1\)/g)?.length).toBe(2);
+  });
+  it("기본 주가는 같은 글자, 반올림이 곱셈을 틀리게 하던 값은 소수로", () => {
+    expect([fmt(120_000), fmt(280_000), fmt(50_000)]).toEqual(["12", "28", "5"]);
+    expect(fmt(121_900)).toBe("12.2");
+    expect(fmt(99_999)).toBe("10");
+  });
+});
