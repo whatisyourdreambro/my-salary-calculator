@@ -20,3 +20,18 @@ describe("simple-calc-b02-F03 — RL-10 이 설명을 209 ÷ 48 기준으로 옮
     }
   });
 });
+
+describe("simple-calc-b02-F01 — 2027년 최저임금은 계약 시점이 아니라 2027-01-01 이후 일한 기간에 적용 (최저임금법 제6조·제10조)", () => {
+  it("연봉→시급 FAQ '2027년 최저임금과 비교하려면'은 일한 기간으로 나눠 비교하라고 한다", () => {
+    const c = getCalculatorBySlug("yearly-to-hourly");
+    const item = (c?.faqs ?? []).find((f) => f.q === "2027년 최저임금과 비교하려면 어떻게 하나요?");
+    expect(item).toBeDefined();
+    const a = item?.a ?? "";
+    expect(a).not.toContain("계약 시작 시점이 2026년이면");
+    expect(a).toContain("2027년 1월 1일 이후 일한 기간은 10,700원");
+    expect(a).toContain("2026년에 일한 기간은 10,320원");
+    // 최저임금위원회 결정현황(2026-11-15 확인): 2027년 시급 10,700원·월 2,236,300원(209시간)·결정 고시 2026-08-05
+    expect(a).toContain("시급 10,700원, 월 환산액 2,236,300원(209시간 기준)으로 2026년 8월 5일 고시");
+    expect(10_700 * 209).toBe(2_236_300);
+  });
+});
