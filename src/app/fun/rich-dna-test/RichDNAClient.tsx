@@ -20,7 +20,7 @@ const questions = [
  {
  question: "시장이 50% 폭락했을 때, 당신의 행동은?",
  answers: [
- { text: "'지금이 기회다' 오히려 빚을 내서 추가 매수한다", type: "buffett" },
+ { text: "'지금이 기회다' 여유 현금으로 추가 매수한다", type: "buffett" },
  { text: "두렵지만, 나의 선택을 믿고 묵묵히 버틴다", type: "musk" },
  { text: "일단 현금화하고, 시장이 안정될 때까지 기다린다", type: "rockefeller" },
  { text: "남들이 주목하지 않는 다른 나라, 다른 자산에서 기회를 찾는다", type: "templeton" },
