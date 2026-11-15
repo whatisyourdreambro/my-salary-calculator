@@ -35,3 +35,24 @@ describe("simple-calc-b02-F01 — 2027년 최저임금은 계약 시점이 아�
     expect(10_700 * 209).toBe(2_236_300);
   });
 });
+
+// 감사 아이디어 ideas[0] (시즌: 2027 주휴수당·최저 주급 검색 12~1월) — 기존 닫힌 FAQ 답 끝에만 덧붙인다(닫힌 높이 불변).
+describe("2027 최저임금 숫자 — 주휴수당·주급 접힌 FAQ (최저임금위원회 결정현황 2027: 시급 10,700원·월 2,236,300원, 고시 2026-08-05)", () => {
+  it("주휴수당 FAQ: 85,600원·372,717원은 이 계산기 compute 값", () => {
+    const c = getCalculatorBySlug("holiday-allowance-quick");
+    const a = (c?.faqs ?? []).find((f) => f.q === "주휴수당을 포함한 2026년 최저 월급은 얼마인가요?")?.a ?? "";
+    expect(a).toContain("2027년 1월 1일부터는 2026년 8월 5일 고시된 시급 10,700원이 적용되어");
+    expect(a).toContain("주 1회 주휴수당은 85,600원, 월 환산분은 372,717원");
+    const r = c!.compute({ hourly: 10_700 });
+    expect(r.primary.value).toBe(85_600);
+    expect(r.secondary?.[0]?.value).toBe(372_717);
+  });
+  it("주급 FAQ: 2,236,300원 → 주급 513,600원·일급 102,720원은 이 계산기 compute 값", () => {
+    const c = getCalculatorBySlug("weekly-pay");
+    const a = (c?.faqs ?? []).find((f) => f.q === "2026년 최저임금 월급을 넣으면 주급은 얼마인가요?")?.a ?? "";
+    expect(a).toContain("주급 513,600원, 주 5일 기준 일급 102,720원");
+    const r = c!.compute({ monthly: 2_236_300 });
+    expect(r.primary.value).toBe(513_600);
+    expect(r.secondary?.[0]?.value).toBe(102_720);
+  });
+});
