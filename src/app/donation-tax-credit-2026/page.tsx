@@ -13,7 +13,12 @@ import Link from "@/components/AppLink";
 import { AlertTriangle } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
 import { yearEndToolTitle } from "@/lib/yearEndSeason";
-import { DONATION_DATED_FAQS } from "@/lib/yearEndDatedFaqs";
+import {
+  DONATION_DATED_FAQS,
+  DONATION_DATED_FAQ_BASIS,
+  DONATION_DATED_FAQ_CHECKED_LABEL,
+  DONATION_DATED_FAQ_CHECKED_ON,
+} from "@/lib/yearEndDatedFaqs";
 import YearEndDatedFaq from "@/components/YearEndDatedFaq";
 import JsonLd from "@/components/JsonLd";
 import { autoBreadcrumbLd, faqLd, softwareApplicationLd, howToLd } from "@/lib/structuredData";
@@ -408,7 +413,12 @@ export default function DonationTaxCredit2026Page() {
         </section>
 
         {/* 날짜 박힌 FAQ (SEASON-15, 2026-09-26) — 마지막 광고(MultiplexAd)보다 아래 페이지 맨 끝. 광고 위 높이 불변 */}
-        <YearEndDatedFaq items={DONATION_DATED_FAQS} headingId="donation-dated-faq" />
+        {/* 2026-11-15 SEASONB: 12/31 문항을 더하며 이 쪽 두 문항의 조문을 다시 확인 — 확인일·근거는 이 쪽만 따로 표기(다른 세 쪽은 기본값) */}
+        <YearEndDatedFaq items={DONATION_DATED_FAQS} headingId="donation-dated-faq"
+          checkedOn={DONATION_DATED_FAQ_CHECKED_ON}
+          checkedLabel={DONATION_DATED_FAQ_CHECKED_LABEL}
+          basis={DONATION_DATED_FAQ_BASIS}
+        />
       </div>
     </main>
   );

@@ -63,6 +63,15 @@ export const RENT_DATED_FAQS: readonly YearEndDatedFaqItem[] = [
   },
 ];
 
+// 기부금 쪽(/donation-tax-credit-2026) 블록만 다시 확인한 날 — 2026-11-15 SEASONB(app-pages ideas[7])에서 12/31 문항을 더하며
+// 아래 두 문항의 조문을 모두 다시 읽었다: 조세특례제한법 [법률 제21467호, 시행 2026. 9. 18.] 제58조 제1항(지출한 해당 과세연도,
+// 제2호 40%)·제2항(산출세액 한도)·부칙 <법률 제21223호> 제13조(시행 이후 기부분), 고향사랑 기부금에 관한 법률 [시행 2025. 1. 1.]
+// 제4조 제1항(주민이 아닌 사람에게서만 모금·접수)·제8조 제3항(연간 상한 2천만원). 다른 세 쪽은 위 YEAR_END_DATED_FAQ_CHECKED_ON 그대로.
+// 카드 쪽 2027 변경 문항은 세법 표결 뒤(RL-21) 몫이라 여기 넣지 않는다.
+export const DONATION_DATED_FAQ_CHECKED_ON = "2026-11-15";
+export const DONATION_DATED_FAQ_CHECKED_LABEL = "2026년 11월 15일";
+export const DONATION_DATED_FAQ_BASIS = "국가법령정보센터 현행 조문으로";
+
 const D = DONATION_CREDIT_2026;
 const HOMETOWN_EXAMPLE = D.HOMETOWN_MID_UPPER; // 20만원
 const hometownIncomeTax = D.FULL_CREDIT_LIMIT * D.FULL_CREDIT_RATIO + (HOMETOWN_EXAMPLE - D.FULL_CREDIT_LIMIT) * D.HOMETOWN_RATE_MID;
@@ -70,6 +79,10 @@ export const DONATION_DATED_FAQS: readonly YearEndDatedFaqItem[] = [
   {
     question: `2026년에 고향사랑기부금 ${man(HOMETOWN_EXAMPLE)}을 내면 2027년 연말정산에서 얼마를 돌려받나요?`,
     answer: `2026년 1월 1일 이후 기부분부터 ${man(D.FULL_CREDIT_LIMIT)} 초과 ${man(D.HOMETOWN_MID_UPPER)} 이하 구간에 ${pct(D.HOMETOWN_RATE_MID)} 세액공제가 적용됩니다(조세특례제한법 제58조 제1항 제2호, 2025년 12월 23일 개정). ${man(HOMETOWN_EXAMPLE)}을 기부하면 ${man(D.FULL_CREDIT_LIMIT)}까지는 110분의 100, 나머지는 ${pct(D.HOMETOWN_RATE_MID)}를 소득세에서 공제해 소득세 공제액이 약 ${won(hometownIncomeTax)}이고, 지방소득세(소득세의 10%)까지 합치면 약 ${won(hometownIncomeTax * LOCAL)}입니다. 지방소득세를 포함한 체감 공제율은 ${man(D.FULL_CREDIT_LIMIT)}까지 100%, 그다음 ${man(D.HOMETOWN_MID_UPPER)}까지 ${pct(D.HOMETOWN_RATE_MID * LOCAL)}, 그 초과분 ${pct(D.HOMETOWN_RATE * LOCAL)}입니다. 공제액은 그해 산출세액을 넘을 수 없습니다(같은 조 제2항).`,
+  },
+  {
+    question: "고향사랑기부금을 2027년 연말정산에 넣으려면 언제까지 기부해야 하나요?",
+    answer: `2026년 12월 31일까지 기부한 금액이 2027년 1~2월 연말정산(${YEAR_END_ATTRIBUTION_LABEL})에 들어갑니다. 고향사랑 기부금 세액공제는 기부금을 지출한 과세연도의 소득세에서 공제하므로(조세특례제한법 제58조 제1항), 2027년 1월 1일 이후 기부분은 2028년 초 연말정산 몫입니다. 본인이 주민으로 있는 지방자치단체에는 기부할 수 없고(고향사랑 기부금에 관한 법률 제4조 제1항), 1명당 연간 ${man(D.HOMETOWN_CAP)}까지 기부할 수 있습니다(같은 법 제8조 제3항).`,
   },
 ];
 
