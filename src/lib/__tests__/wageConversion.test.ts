@@ -228,14 +228,16 @@ describe("SI-04 — 시급↔월급 환산 209시간 통일", () => {
     expect(h?.formula).toContain("연봉 = 월급 × 12");
   });
 
-  it("explanation 은 메타 동결(~2026-10-09) 동안 cdf3176 이전 문구 — 209 ÷ 48 ≈ 4.354 설명은 FAQ 가 맡는다 (2026-09-12 리뷰)", () => {
+  it("explanation(메타 스니펫)도 compute 와 같은 209 ÷ 48 ≈ 4.354 기준 — 달력상 4.345주(365 ÷ 7 ÷ 12)는 FAQ 가 설명한다 (CS-23, 2026-11-15 RL-10 재착지)", () => {
     // yearly-to-hourly·weekly-pay 의 description 은 60자 미만이라 explanation 앞부분이 meta description 에 이어 붙는다
     // (seoText.ts). 동결 기간의 byte 단위 일치는 calcDescriptionFreeze.test.ts 가 202쪽 전부를 스냅샷과 대조한다.
     for (const slug of ["yearly-to-hourly", "weekly-pay"]) {
       const def = getCalculatorBySlug(slug);
       expect(def?.description.length, slug).toBeLessThan(60);
-      expect(def?.explanation, slug).toContain("4.345주(연 52주 ÷ 12개월)");
-      expect(def?.explanation, slug).not.toContain("4.354");
+      expect(def?.explanation, slug).toContain("월 209시간");
+      expect(def?.explanation, slug).toContain("4.354");
+      expect(def?.explanation, slug).not.toContain("4.345주(연 52주 ÷ 12개월)");
+      expect(def?.explanation, slug).not.toContain("평균 4.354주");
       const faq = (def?.faqs ?? []).map((f) => f.a).join("\n");
       expect(faq, slug).toContain("209 ÷ 48 ≈ 4.354");
       expect(faq, slug).toContain("365 ÷ 7 ÷ 12");

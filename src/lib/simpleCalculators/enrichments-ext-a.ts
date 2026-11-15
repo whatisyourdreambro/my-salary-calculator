@@ -238,12 +238,12 @@ export const enrichmentsExtA: Record<string, Enrichment> = {
 
   // ═══════ 연봉·근로 ════════════════════════════════════════════
   "yearly-to-hourly": {
-    // TODO(2026-10-10): 이 explanation 은 /calc 메타 description 의 재료다 — seoText.calculatorSeoDescription 은 description 이
-    // 60자 미만이면 '제목 — description. explanation' 을 155자로 잘라 쓰므로 문장 앞부분이 그대로 검색 스니펫이 된다.
-    // 메타 동결(~2026-10-09) 기간에는 cdf3176 이전 문구(4.345주)를 byte 단위로 유지하고, 209 ÷ 48 ≈ 4.354 설명은 formula·FAQ 가
-    // 맡는다. 동결 해제일에 title·description 과 함께 209 기준으로 옮길 것 (2026-09-12 리뷰 지적; calcDescriptionFreeze.test.ts 가 고정).
+    // 이 explanation 은 /calc 메타 description 의 재료다 — seoText.calculatorSeoDescription 은 description 이 60자 미만이면
+    // '제목 — description. explanation' 을 155자로 잘라 쓰므로 문장 앞부분이 그대로 검색 스니펫이 된다.
+    // CS-23(2026-09-30 작성·10월 승인, 2026-11-15 RL-10 재착지): 옛 4.345주(연 52주 ÷ 12개월) 문구를 compute 와 같은 209 ÷ 48 ≈ 4.354 로 옮겼다
+    // (종전 TODO(2026-10-10) 이행). 한 달은 평균 4.354주라고 쓰지 않는다 — 달력상 평균은 4.345주(FAQ 가 설명).
     explanation:
-      "연봉을 시급으로 환산하면 내 시간당 가치를 가늠하고 이직·부업 단가와 비교할 수 있습니다. 연봉을 12로 나눠 월급을, 월급을 4.345주(연 52주 ÷ 12개월)로 나눠 주급을, 주급을 주 근무시간으로 나눠 시급을 구합니다. 주 40시간을 입력하면 주휴시간이 빠진 명목 시급이 되고, 209시간 기준 월급제와 비교하려면 주휴 포함 시간을 고려해야 합니다.",
+      "연봉을 시급으로 환산하면 내 시간당 가치를 가늠하고 이직·부업 단가와 비교할 수 있습니다. 연봉을 12로 나눠 월급을, 월급을 4.354주(월 209시간 ÷ 48)로 나눠 주급을, 주급을 주 근무시간으로 나눠 시급을 구합니다. 주 40시간을 입력하면 주휴시간이 빠진 명목 시급이 되고, 209시간 기준 월급제와 비교하려면 주휴 포함 시간을 고려해야 합니다.",
     formula:
       "월급 = 연봉 / 12\n주급 = 월급 / (209 ÷ 48 ≈ 4.354)\n시급 = 주급 / 주 근무시간",
     faqs: [
@@ -286,12 +286,12 @@ export const enrichmentsExtA: Record<string, Enrichment> = {
   },
 
   "weekly-pay": {
-    // TODO(2026-10-10): 이 explanation 은 /calc 메타 description 의 재료다 — seoText.calculatorSeoDescription 은 description 이
-    // 60자 미만이면 '제목 — description. explanation' 을 155자로 잘라 쓰므로 문장 앞부분이 그대로 검색 스니펫이 된다.
-    // 메타 동결(~2026-10-09) 기간에는 cdf3176 이전 문구(4.345주)를 byte 단위로 유지하고, 209 ÷ 48 ≈ 4.354 설명은 formula·FAQ 가
-    // 맡는다. 동결 해제일에 title·description 과 함께 209 기준으로 옮길 것 (2026-09-12 리뷰 지적; calcDescriptionFreeze.test.ts 가 고정).
+    // 이 explanation 은 /calc 메타 description 의 재료다 — seoText.calculatorSeoDescription 은 description 이 60자 미만이면
+    // '제목 — description. explanation' 을 155자로 잘라 쓰므로 문장 앞부분이 그대로 검색 스니펫이 된다.
+    // CS-23(2026-09-30 작성·10월 승인, 2026-11-15 RL-10 재착지): 옛 4.345주(연 52주 ÷ 12개월) 문구를 compute 와 같은 209 ÷ 48 ≈ 4.354 로 옮겼다
+    // (종전 TODO(2026-10-10) 이행). 한 달은 평균 4.354주라고 쓰지 않는다 — 달력상 평균은 4.345주(FAQ 가 설명).
     explanation:
-      "주급은 월급을 한 주 단위로 환산한 금액으로, 한 달은 평균 4.345주(연 52주 ÷ 12개월)이므로 월급을 4.345로 나눕니다. 다시 주 5일 근무 기준으로 5로 나누면 하루치 일급이 나옵니다. 주급제 아르바이트나 단기 근로의 임금을 가늠하거나, 결근·중도 입퇴사 시 일할 계산의 기준값을 잡을 때 유용합니다.",
+      "주급은 월급을 한 주 단위로 환산한 금액으로, 월 209시간을 주휴 포함 48시간으로 나눈 약 4.354로 월급을 나눕니다. 다시 주 5일 근무 기준으로 5로 나누면 하루치 일급이 나옵니다. 주급제 아르바이트나 단기 근로의 임금을 가늠하거나, 결근·중도 입퇴사 시 일할 계산의 기준값을 잡을 때 유용합니다.",
     formula:
       "주급 = 월급 / (209 ÷ 48 ≈ 4.354)\n일급 = 주급 / 5 (주 5일 기준)",
     faqs: [

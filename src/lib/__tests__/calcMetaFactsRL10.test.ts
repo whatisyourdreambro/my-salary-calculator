@@ -134,3 +134,39 @@ describe("CS-23 재산세 설명문(meta 스니펫) 납기 — 지방세법 제1
     expect(a.space + a.other).toBeLessThanOrEqual(b.space + b.other);
   });
 });
+
+describe("CS-23 연봉→시급·주급 설명문(meta 스니펫) — compute 와 같은 209 ÷ 48 ≈ 4.354 (최저임금법 시행령 제5조, 월 209시간)", () => {
+  it("209시간 기준 4.354 — 한 달은 평균 4.354주라고 쓰지 않는다", () => {
+    const y = calc("yearly-to-hourly").explanation ?? "";
+    const w = calc("weekly-pay").explanation ?? "";
+    expect(y).toContain("4.354주(월 209시간 ÷ 48)");
+    expect(w).toContain("월 209시간을 주휴 포함 48시간으로 나눈 약 4.354로 월급을 나눕니다.");
+    for (const e of [y, w]) {
+      expect(e).not.toContain("4.345주(연 52주 ÷ 12개월)");
+      expect(e).not.toContain("평균 4.354주");
+    }
+  });
+  it("209 ÷ 48 은 4.354 로 반올림된다 (compute 의 MONTHLY_HOURS ÷ 48)", () => {
+    expect(Math.round((209 / 48) * 1000) / 1000).toBe(4.354);
+    expect(calc("weekly-pay").compute({ monthly: 3_000_000 }).primary.value).toBe(Math.round(3_000_000 / (209 / 48)));
+  });
+  it("광고(GuideMidAd) 위 바뀐 문장이 종전보다 좁다 — 한글이 늘어도 숫자·괄호·나눗셈 기호가 더 많이 빠진다", () => {
+    const yWas = "월급을 4.345주(연 52주 ÷ 12개월)로 나눠 주급을,";
+    const yNow = "월급을 4.354주(월 209시간 ÷ 48)로 나눠 주급을,";
+    const a = kinds(yNow);
+    const b = kinds(yWas);
+    // 한글 1자(약 1em)가 빠지고 숫자 1자(약 0.6em)가 늘었다
+    expect(a.hangul).toBe(b.hangul - 1);
+    expect(a.digit).toBe(b.digit + 1);
+    expect(a.space + a.other).toBe(b.space + b.other);
+    const wWas = "한 달은 평균 4.345주(연 52주 ÷ 12개월)이므로 월급을 4.345로 나눕니다.";
+    const wNow = "월 209시간을 주휴 포함 48시간으로 나눈 약 4.354로 월급을 나눕니다.";
+    const c = kinds(wNow);
+    const d = kinds(wWas);
+    // 한글 +2(약 2em) 대신 숫자 -3·괄호 2·나눗셈 기호·마침표 1 이 빠진다(약 -3em)
+    expect(c.hangul).toBe(d.hangul + 2);
+    expect(c.digit).toBe(d.digit - 3);
+    expect(c.other).toBe(d.other - 4);
+    expect(c.space).toBe(d.space);
+  });
+});

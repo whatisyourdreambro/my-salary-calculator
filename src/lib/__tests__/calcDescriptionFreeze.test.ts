@@ -23,7 +23,7 @@ const correctiveSlugs = [
   "currency-converter", "unit-converter-length", "education-cost-cumulative", "alimony-quick",
 ];
 // RL-10 (2026-11-15) — 각 슬러그는 description 1필드만 바꾼다.
-const rl10CorrectiveSlugs = ["registration-tax-quick", "employee-cost-quick", "property-tax-quick"];
+const rl10CorrectiveSlugs = ["registration-tax-quick", "employee-cost-quick", "property-tax-quick", "yearly-to-hourly", "weekly-pay"];
 
 describe("/calc 메타 동결 — 01ce9fe 스냅샷과 일치 (~2026-10-09)", () => {
   it("스냅샷과 레지스트리가 같은 202개 슬러그", () => {
@@ -64,7 +64,11 @@ describe("/calc 메타 동결 — 01ce9fe 스냅샷과 일치 (~2026-10-09)", ()
     for (const slug of ["yearly-to-hourly", "weekly-pay"]) {
       const calc = allCalculators.find((c) => c.slug === slug)!;
       expect(calc.description.length, slug).toBeLessThan(SEO_DESCRIPTION_MIN);
+      // 01ce9fe baseline 은 옛 4.345주 문구 그대로 두고, RL-10(CS-23, 2026-11-15)이 corrective fixture 로 209 기준 메타를 덮어쓴다.
       expect(snapshot[slug].description, slug).toContain("4.345주(연 52주 ÷ 12개월)");
+      expect(corrective[slug]?.description, slug).toContain("월 209시간");
+      expect(corrective[slug]?.description, slug).not.toContain("4.345주(연 52주 ÷ 12개월)");
+      expect(calculatorSeoDescription(calc), slug).not.toContain("4.345주(연 52주 ÷ 12개월)");
       // 잘려 들어가는 앞부분 — 여기를 고치면 메타가 바뀐다
       expect(calculatorSeoDescription(calc), slug).toContain((calc.explanation ?? "").slice(0, 40));
     }
