@@ -26,6 +26,17 @@ describe("퍼센트 계산기 카드별 독립 (code26-02)", () => {
   it("비중 = 일부 / 전체", () => {
     expect(percentResults({ whole: "", percent: "" }, { part: 25, whole: 200 }, { from: "", to: "" }).res2).toBe(12.5);
   });
+  it("증감율 — 변경값 0 은 미입력이 아니라 -100% (2026-11-15 lib-b07-F01, 종전 0.00%)", () => {
+    const emptyRatio = { whole: "" as const, percent: "" as const };
+    const emptyShare = { part: "" as const, whole: "" as const };
+    expect(percentResults(emptyRatio, emptyShare, { from: 100, to: 0 }).res3).toBe(-100);
+    expect(percentResults(emptyRatio, emptyShare, { from: -50, to: 0 }).res3).toBe(-100);
+    // 기존값 0 은 나눌 수 없어 계속 0(계산 안 함), 한쪽 빈칸도 0
+    expect(percentResults(emptyRatio, emptyShare, { from: 0, to: 50 }).res3).toBe(0);
+    expect(percentResults(emptyRatio, emptyShare, { from: "", to: 0 }).res3).toBe(0);
+    expect(percentResults(emptyRatio, emptyShare, { from: 100, to: "" }).res3).toBe(0);
+    expect(changeColorClass(-100)).toBe("text-rose-600 dark:text-rose-400");
+  });
   it("toNum — 빈칸은 미입력", () => {
     expect(toNum("")).toBe("");
     expect(toNum("12.5")).toBe(12.5);
