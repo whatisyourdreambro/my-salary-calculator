@@ -416,7 +416,7 @@ const childGift50m = `
 <li>· <strong>미성년 자녀</strong>: 10년 2,000만원 비과세</li>
 <li>· <strong>성인 자녀</strong>: 10년 5,000만원 비과세</li>
 <li>· <strong>10년 누적</strong>: 그 이전 증여분과 합산</li>
-<li>· <strong>증여세 신고</strong>: 비과세라도 신고 의무 (증여일 다음달 말일까지)</li>
+<li>· <strong>증여세 신고</strong>: 비과세라도 신고 권장 (증여월 말일부터 3개월)</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 평생 비과세 증여 시뮬</h2>
