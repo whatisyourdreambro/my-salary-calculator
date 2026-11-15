@@ -47,6 +47,9 @@ const R1_SITEMAP_ONLY_SLUGS = [
 // 운영(326b54383, 내용 d2fcc8720)이 이 10편에 보여 주는 날짜와, R1 이 그 내용을 실제로 고친 날(사이트맵·RSS 전용)
 const R1_PRODUCTION_SCREEN_DATE = "2026-10-03";
 const R1_LEDGER_DAY = "2026-11-03";
+// R1 뒤 묶음이 다시 고쳐 사이트맵·RSS 날짜만 그 묶음의 실제 수정일로 늦춘 글(화면 날짜는 위 운영 값 그대로) — relandR1Ledger.test.ts 와 같은 표.
+// RL-08(2026-11-15): first-home-2026-strategy 광고 위 매수 가능액 공식 두 줄 같은 폭 이하 정정.
+const R1_LATER_SITEMAP_DAY: Readonly<Record<string, string>> = { "first-home-2026-strategy": "2026-11-15" };
 
 describe("검증된 가이드 보강일의 상세 화면·검색 메타 정합성", () => {
   it("실제 sitemap 함수도 정정일 표의 글마다 같은 내용 수정일을 출력한다", () => {
@@ -118,7 +121,9 @@ describe("R1 사이트맵 전용 10편 — 상세 화면·OG·Article 날짜는 
     const article = [...html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>(.*?)<\/script>/g)]
       .flatMap((match) => JSON.parse(match[1])).find((schema) => schema["@type"] === "Article");
     expect(article).toMatchObject({ datePublished: `${guide.publishedDate}T00:00:00.000Z`, dateModified: `${R1_PRODUCTION_SCREEN_DATE}T00:00:00.000Z` });
-    // R1 원장일은 사이트맵 lastmod·rss.xml pubDate 에만 쓴다
-    expect(getGuideSitemapDate(guide)).toBe(R1_LEDGER_DAY);
+    // R1 원장일(뒤 묶음이 다시 고친 글은 그 묶음의 수정일)은 사이트맵 lastmod·rss.xml pubDate 에만 쓴다
+    const sitemapDay = R1_LATER_SITEMAP_DAY[slug] ?? R1_LEDGER_DAY;
+    expect(visibleDates).not.toContain(sitemapDay);
+    expect(getGuideSitemapDate(guide)).toBe(sitemapDay);
   });
 });

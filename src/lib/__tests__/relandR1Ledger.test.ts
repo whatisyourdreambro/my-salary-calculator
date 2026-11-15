@@ -44,6 +44,11 @@ const SITEMAP_ONLY_SLUGS = [
 const PRODUCTION_SCREEN_DATE = "2026-10-03";
 // R1 이 이 글들의 내용을 실제로 고친 날(원장일). 사이트맵 lastmod·rss.xml pubDate 는 이 날이다 — 더 늦은 날이나 게시일로 옮기지 않는다.
 const R1_LEDGER_DAY = "2026-11-03";
+// R1 뒤 묶음이 같은 글을 다시 고쳐 사이트맵 전용 행을 그 묶음의 실제 수정일로 늦춘 글 — 화면 날짜(칩)는 위 운영 값 그대로다.
+// RL-08(2026-11-15): first-home-2026-strategy 광고 위 매수 가능액 공식 두 줄 같은 폭 이하 정정(guideSitemapDates.ts RL08_EDIT_DAY).
+const LATER_BATCH_SITEMAP_DAY: Readonly<Record<string, string>> = {
+  "first-home-2026-strategy": "2026-11-15",
+};
 
 describe("R1 재착지 가이드 정정일 — 화면 날짜까지 올리는 글은 쿠팡 야간 가이드 1편", () => {
   it("표는 1편, 값은 R1 원장 기준일이고 미래가 아니다", () => {
@@ -87,12 +92,14 @@ describe("R1 재착지 '수정 칩 있는' 10편 — 화면 날짜는 운영 값
     }
   });
 
-  it("10편은 사이트맵 전용 행이 R1 기준일이고, 사이트맵·RSS 날짜(getGuideSitemapDate)는 2026-11-03 이다", () => {
+  it("10편은 사이트맵 전용 행이 R1 기준일이고, 사이트맵·RSS 날짜(getGuideSitemapDate)는 2026-11-03 이다 — 뒤 묶음이 다시 고친 글은 그날", () => {
     for (const slug of SITEMAP_ONLY_SLUGS) {
       const guide = koGuides.find((g) => g.slug === slug);
       expect(guide, slug).toBeDefined();
-      expect(GUIDE_SITEMAP_ONLY_REVISED[slug], slug).toBe(RELAND_R1_PUSH);
-      expect(getGuideSitemapDate(guide!), slug).toBe(R1_LEDGER_DAY);
+      const later = LATER_BATCH_SITEMAP_DAY[slug];
+      expect(GUIDE_SITEMAP_ONLY_REVISED[slug], slug).toBe(later ?? RELAND_R1_PUSH);
+      expect(getGuideSitemapDate(guide!), slug).toBe(later ?? R1_LEDGER_DAY);
+      if (later) expect(later > R1_LEDGER_DAY, slug).toBe(true);
     }
   });
 });
