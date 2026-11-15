@@ -158,7 +158,9 @@ const TAX: CalculatorDef[] = [
  {
  slug: "registration-tax-quick",
  title: "등록면허세 계산",
- description: "주택 매매·증여 시 취득세에 추가되는 등록면허세 계산",
+ // F7·code55-01(10월 승인, 2026-11-15 RL-10 재착지): 매매·증여 등기는 취득세에 통합돼 등록면허세를 따로 내지 않는다(지방세법 제23조 1호).
+ // 종전 '주택 매매·증여 시 취득세에 추가되는' 오기 정정 — H1 아래 문구(CalcResultAd 위)라 한글 22→21·공백 6·가운뎃점 1 로 같거나 짧게.
+ description: "저당권·전세권 설정 등 등기에 붙는 등록면허세 계산",
  category: "tax",
  categoryLabel: "세금",
  keywords: ["등록면허세", "등록세"],
