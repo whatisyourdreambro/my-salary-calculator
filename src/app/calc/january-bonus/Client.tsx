@@ -168,7 +168,7 @@ export default function JanuaryBonusClient() {
             {fmt(Math.abs(result.refund))}원
           </div>
           <p className="text-sm font-bold mt-2 mb-1" style={{ color: "rgba(255,255,255,0.85)" }}>
-            {isRefund ? "1~2월 월급에 환급금 합산 예상" : "1~2월 월급에서 추가 차감 예상"}
+            {isRefund ? "2~3월 월급에 환급금 합산 예상" : "2~3월 월급에서 추가 차감 예상"}
           </p>
           {result.isWithheldEstimated && (
             <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.7)" }}>
