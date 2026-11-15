@@ -12,6 +12,7 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { TrendingUp, Info } from "lucide-react";
 import PensionHikeClient from "./Client";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 const FAQ_ITEMS = [
   {
@@ -63,6 +64,7 @@ export default function PensionHike2027Page() {
             name: "국민연금 인상 계산기",
             description: "2027년 연금 요율 인상으로 월급에서 더 빠지는 금액을 자동 계산합니다.",
             url: "/calc/pension-hike-2027",
+            dateModified: staticRouteLastModified("/calc/pension-hike-2027"),
           }),
           autoBreadcrumbLd("/calc/pension-hike-2027", { leafName: "국민연금 인상 계산기" }),
           faqLd(FAQ_ITEMS),

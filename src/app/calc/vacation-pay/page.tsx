@@ -9,6 +9,7 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Sparkles, Info } from "lucide-react";
 import VacationPayClient from "./Client";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 const FAQ_ITEMS = [
   {
@@ -52,7 +53,7 @@ export default function VacationPayPage() {
     <>
       <JsonLd
         data={[
-          softwareApplicationLd({ name: "연차수당 계산기", description: "미사용 연차 수당과 세후 실수령액을 자동 계산합니다.", url: "/calc/vacation-pay" }),
+          softwareApplicationLd({ name: "연차수당 계산기", description: "미사용 연차 수당과 세후 실수령액을 자동 계산합니다.", url: "/calc/vacation-pay", dateModified: staticRouteLastModified("/calc/vacation-pay") }),
           autoBreadcrumbLd("/calc/vacation-pay", { leafName: "연차수당 계산기" }),
           faqLd(FAQ_ITEMS),
         ]}

@@ -21,6 +21,7 @@ import { SAMSUNG_OP_HISTORY, SK_OP_HISTORY } from "@/lib/bonusHome/opActuals";
 import { LOAN_RULE_SOURCES, LOAN_RULES_AS_OF } from "@/lib/bonusHome/loanRules";
 import { SAMSUNG_WAGE_2026, skPs } from "@/lib/bonusHome/compEngines";
 import BonusHomePlanClient from "./Client";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 const PATH = "/calc/bonus-home-plan";
 const NAME = "성과급 내 집 마련 계산기";
@@ -80,6 +81,7 @@ export default function BonusHomePlanPage() {
             name: NAME,
             description: "삼성전자 DS·SK하이닉스 성과급 5년 누적(시나리오 가정)과 한국부동산원 아파트 중위가격·DSR 한도로 구매 가능 연도를 계산합니다.",
             url: PATH,
+            dateModified: staticRouteLastModified(PATH),
           }),
           autoBreadcrumbLd(PATH, { leafName: NAME }),
           faqLd(FAQ_ITEMS),

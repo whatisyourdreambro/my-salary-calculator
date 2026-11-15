@@ -11,6 +11,7 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Scale, Info } from "lucide-react";
 import OrdinaryWageClient from "./Client";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 const FAQ_ITEMS = [
   {
@@ -58,6 +59,7 @@ export default function OrdinaryWagePage() {
             name: "통상임금 계산기",
             description: "시간급 통상임금과 연장·야간·휴일·연차수당 파급액을 자동 계산합니다.",
             url: "/calc/ordinary-wage",
+            dateModified: staticRouteLastModified("/calc/ordinary-wage"),
           }),
           autoBreadcrumbLd("/calc/ordinary-wage", { leafName: "통상임금 계산기" }),
           faqLd(FAQ_ITEMS),

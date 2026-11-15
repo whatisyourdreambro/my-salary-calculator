@@ -25,6 +25,7 @@ import {
   CIVIL_TEACHER_ALLOWANCE_2026,
 } from "@/lib/civilServantAllowances2026";
 import { RAISE_2027_BUDGET } from "@/lib/civilServantPay";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 const PATH = "/calc/civil-servant-net-pay";
 const NAME = "공무원 월급 실수령액 계산기";
@@ -121,6 +122,7 @@ export default function CivilServantNetPayPage() {
               "교사 교직수당·담임, 경찰·소방 위험근무수당, 시간외근무수당",
               "2027 정부안 인상률 미리보기",
             ],
+            dateModified: staticRouteLastModified("/calc/civil-servant-net-pay"),
           }),
           autoBreadcrumbLd(PATH, { leafName: NAME }),
           faqLd(FAQ_ITEMS),

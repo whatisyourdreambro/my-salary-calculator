@@ -25,6 +25,7 @@ import { Monitor, AlertTriangle, Info } from "lucide-react";
 import SamsungDisplayBonusClient from "./Client";
 import ShareButtons from "@/components/ShareButtons";
 import FavoritesButton from "@/components/FavoritesButton";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 const SITE_URL = "https://www.moneysalary.com";
 const SITE_NAME = "머니샐러리";
@@ -115,7 +116,7 @@ export default function SamsungDisplayBonusPage() {
       <JsonLd
         data={[
           autoBreadcrumbLd(PAGE_PATH, { leafName: "삼성디스플레이 성과급" }),
-          softwareApplicationLd({ name: PAGE_TITLE, description: PAGE_DESC, url: `${SITE_URL}${PAGE_PATH}` }),
+          softwareApplicationLd({ name: PAGE_TITLE, description: PAGE_DESC, url: `${SITE_URL}${PAGE_PATH}`, dateModified: staticRouteLastModified(PAGE_PATH) }),
           faqLd(FAQ_ITEMS),
           howToLd({
             name: "삼성디스플레이 성과급 계산하는 방법",

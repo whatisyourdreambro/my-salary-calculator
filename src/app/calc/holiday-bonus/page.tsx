@@ -14,6 +14,7 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Sparkles, Info } from "lucide-react";
 import HolidayBonusClient from "./Client";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 const FAQ_ITEMS = [
   {
@@ -91,6 +92,7 @@ export default function HolidayBonusPage() {
             name: "명절 상여금 세금 계산기",
             description: "설·추석 명절 보너스 실수령액과 세금을 자동 계산합니다.",
             url: "/calc/holiday-bonus",
+            dateModified: staticRouteLastModified("/calc/holiday-bonus"),
           }),
           autoBreadcrumbLd("/calc/holiday-bonus", { leafName: "명절 상여금 세금 계산기" }),
           faqLd(FAQ_ITEMS),

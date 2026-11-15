@@ -16,6 +16,7 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Info, Briefcase } from "lucide-react";
 import SeveranceClient from "./Client";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 const FAQ_ITEMS = [
   {
@@ -71,6 +72,7 @@ export default function SeveranceVsPensionPage() {
             name: "퇴직금 vs 퇴직연금 비교",
             description: "DB·DC·IRP 일시·연금 수령의 실수령액과 세금을 비교 계산합니다.",
             url: "/calc/severance-vs-pension",
+            dateModified: staticRouteLastModified("/calc/severance-vs-pension"),
           }),
           autoBreadcrumbLd("/calc/severance-vs-pension", {
             leafName: "퇴직금 vs 퇴직연금 비교",

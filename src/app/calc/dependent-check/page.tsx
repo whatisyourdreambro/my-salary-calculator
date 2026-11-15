@@ -15,6 +15,7 @@ import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Users, Info } from "lucide-react";
 import DependentCheckClient from "./Client";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 const FAQ_ITEMS = [
   {
@@ -76,6 +77,7 @@ export default function DependentCheckPage() {
             name: "부양가족 인적공제 판정기",
             description: "관계·나이·소득·동거 여부로 연말정산 기본공제 가능 여부와 추가공제를 즉시 판정합니다.",
             url: "/calc/dependent-check",
+            dateModified: staticRouteLastModified("/calc/dependent-check"),
           }),
           autoBreadcrumbLd("/calc/dependent-check", { leafName: "부양가족 인적공제 판정기" }),
           faqLd(FAQ_ITEMS),
