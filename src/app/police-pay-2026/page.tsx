@@ -59,7 +59,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/police-pay-2026",
   ogType: "article",
   publishedTime: "2026-08-30",
-  modifiedTime: "2026-10-04",
+  modifiedTime: "2026-11-15",
   keywords: [
     "경찰 봉급표 2026",
     "경찰 월급",
@@ -149,7 +149,7 @@ export default function PolicePay2026Page() {
             slug: "police-pay-2026",
             url: "/police-pay-2026",
             publishedDate: "2026-08-30",
-            modifiedDate: "2026-10-04",
+            modifiedDate: "2026-11-15",
           }),
           datasetLd({
             name: "2026년 경찰공무원 봉급표 데이터 (순경~치안정감 전 호봉)",
@@ -175,7 +175,7 @@ export default function PolicePay2026Page() {
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-navy mb-4">
             2026 경찰 봉급표 <span className="text-electric">순경~경감 월급</span>
           </h1>
-          <PublishedMeta publishedDate="2026-08-30" updatedDate="2026-10-04" className="mb-2" />
+          <PublishedMeta publishedDate="2026-08-30" updatedDate="2026-11-15" className="mb-2" />
           <p className="text-base sm:text-lg text-muted-blue leading-relaxed max-w-2xl mx-auto">
             순경 1호봉 월 2,133,000원(저연차 6.6% 인상 반영)부터 경감까지 — 계급×호봉 봉급표
             원문 수치와 위험근무수당·실수령 계산 흐름을 정리했습니다.
