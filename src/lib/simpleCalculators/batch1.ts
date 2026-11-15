@@ -3,13 +3,9 @@
 
 import type { CalculatorDef } from "./types";
 import { calculateSeveranceTax } from "@/lib/severanceCalculator";
-import {
- INSURANCE_RATES_2026,
- PENSION_BASE_2026,
- calcIncomeTax2026,
- earnedIncomeDeduction2026,
- earnedIncomeTaxCredit2026,
-} from "@/lib/taxConstants2026";
+import { calcIncomeTax2026 } from "@/lib/taxConstants2026";
+// 근로소득세 간편 계산 — 홈 연봉 계산기와 같은 2026 간이세액표(별표2) 엔진 (2026-11-15 simple-calc-b01-F01)
+import { withholdingIncomeTax2026 } from "@/lib/withholdingTaxTable2026";
 import { MINIMUM_WAGE_2026, MONTHLY_HOURS } from "@/config/minimumWage";
 // 이자율 0%(무이자 할부·0% 프로모션·수익률 0 가정)에서도 정의된 값을 내는
 // 연금·복리 공식 정본. 인라인 P·i/(1-(1+i)^-n) 은 i=0 에서 NaN 이 된다.
@@ -187,53 +183,30 @@ const TAX: CalculatorDef[] = [
  category: "tax",
  categoryLabel: "세금",
  keywords: ["근로소득세", "원천징수"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — N2-simple-calc-01 사실 정정을 실제로 고친 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [
  { name: "monthly", label: "월 급여", defaultValue: 4000000, suffix: "원" },
  { name: "dependents", label: "부양가족 수", defaultValue: 1, suffix: "명" },
  ],
  compute: ({ monthly, dependents }) => {
- // 간이세액표 근사 — 근로소득공제·인적공제·연금보험료공제·특별공제 근사 반영 후
- // 2026 누진세율(정본) − 근로소득세액공제(정본) 적용. 상수·산식은 taxConstants2026 정본 사용.
- const yearly = monthly * 12;
+ // 2026-11-15 simple-calc-b01-F01: 종전에는 근로소득공제·인적공제·연금·특별공제를 자체 근사로 다시 계산해
+ // 별표2 표 금액과 최대 23% 어긋났다(300만원·2인 43,537원 vs 표 56,850원). 이제 소득세법 시행령 별표2
+ // <개정 2026. 2. 27.>(2026-03-01 지급분부터)를 재현하는 withholdingIncomeTax2026(7,117칸 대조 테스트)을 그대로 쓴다.
+ // 8~20세 자녀 감액(비고 3)과 80%/120% 선택은 입력이 없어 반영하지 않는다(자녀 0명 = 표 금액 그대로).
  const fam = Math.max(1, Math.round(dependents)); // 본인 포함 공제대상 가족 수
- const earnedDeduction = earnedIncomeDeduction2026(yearly);
- const personal = fam * 1500000; // 인적공제 1인 150만
- // 연금보험료공제 — 4.75%, 기준소득월액 상한(월 659만) 연 환산 클램프.
- // ★ 2026 요율 고정(현행 포인터 아님, 2026-09-25 N3): 이 계산기는 2026 간이세액표의 근사라
- //   1/1 연금 요율 전환과 무관하다 — 간이세액표(소득세법 시행령 별표2) 개정 때 표와 함께 갱신.
- const pensionDeduction =
- Math.min(yearly, PENSION_BASE_2026.MAX_MONTHLY * 12) *
- INSURANCE_RATES_2026.NATIONAL_PENSION;
- // 특별공제 근사 (간이세액표 산정 기준 근사):
- // 1인 310만·2인 360만·3인 이상 500만 기본 + 총급여 구간별 가산율
- const famBase = fam <= 1 ? 3100000 : fam === 2 ? 3600000 : 5000000;
- let famRate = 0;
- if (yearly <= 30000000) famRate = fam >= 3 ? 0.07 : 0.04;
- else if (yearly <= 45000000) famRate = fam >= 3 ? 0.05 : 0.025;
- else if (yearly <= 70000000) famRate = fam >= 3 ? 0.03 : 0.02;
- else famRate = fam >= 3 ? 0.02 : 0.01;
- const specialDeduction = famBase + yearly * famRate;
- const taxBase = Math.max(
- 0,
- yearly - earnedDeduction - personal - pensionDeduction - specialDeduction
- );
- const calculated = calcIncomeTax2026(taxBase);
- const finalTax = Math.max(
- 0,
- calculated - earnedIncomeTaxCredit2026(calculated, yearly)
- );
- const monthlyTax = Math.floor(finalTax / 12);
+ const monthlyTax = withholdingIncomeTax2026(monthly, fam, 0);
+ const local = Math.round(monthlyTax * 0.1);
  return {
  primary: { label: "월 원천징수 추정", value: monthlyTax, suffix: "원" },
  secondary: [
- // 라벨에 기간을 명시 — 종전에는 "지방소득세 (10%)" 한 줄만 월 단위라
- // 바로 위 "연 결정세액"의 10%로 오독됐다(실제로는 0.83%로 보임).
- { label: "월 지방소득세 (소득세의 10%)", value: Math.round(monthlyTax * 0.1), suffix: "원" },
- { label: "연 결정세액 추정", value: Math.round(finalTax), suffix: "원" },
- { label: "연 지방소득세 추정", value: Math.round(finalTax * 0.1), suffix: "원" },
- { label: "연 과세표준 추정", value: Math.round(taxBase), suffix: "원" },
+ // 라벨에 기간을 명시 — 월 지방소득세가 연 금액의 10%로 오독되지 않게 한다. 라벨은 종전과 같거나 짧게(결과 칸, CalcResultAd 위).
+ { label: "월 지방소득세 (소득세의 10%)", value: local, suffix: "원" },
+ { label: "연 원천징수 합계", value: monthlyTax * 12, suffix: "원" },
+ { label: "연 지방소득세 합계", value: local * 12, suffix: "원" },
+ { label: "월 세금 합계", value: monthlyTax + local, suffix: "원" },
  ],
- note: "간이세액표 근사 — 실제 원천징수는 회사 신고 방식에 따라 상이. 비과세 항목·공제 신청 내역에 따라 달라질 수 있습니다.",
+ note: "2026년 근로소득 간이세액표(100%) 금액. 8~20세 자녀 감액·80%/120% 선택은 반영하지 않습니다.",
  };
  },
  },
@@ -244,6 +217,8 @@ const TAX: CalculatorDef[] = [
  category: "tax",
  categoryLabel: "세금",
  keywords: ["퇴직소득세", "퇴직금 세금"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — 접힌 FAQ 에 1억원·20년 예시를 실제로 더한 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [
  { name: "severance", label: "퇴직금", defaultValue: 50000000, suffix: "원" },
  { name: "years", label: "근속연수", defaultValue: 10, suffix: "년" },
@@ -309,6 +284,8 @@ const TAX: CalculatorDef[] = [
  category: "tax",
  categoryLabel: "세금",
  keywords: ["주식 양도세", "해외주식 세금"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — 접힌 FAQ 에 연말 결제일 기준 문장을 실제로 더한 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [
  { name: "buy", label: "매수가 합계", defaultValue: 10000000, suffix: "원" },
  { name: "sell", label: "매도가 합계", defaultValue: 15000000, suffix: "원" },
@@ -368,6 +345,8 @@ const TAX: CalculatorDef[] = [
  category: "tax",
  categoryLabel: "세금",
  keywords: ["부가세", "VAT"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — N2-simple-calc-01 사실 정정을 실제로 고친 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [{ name: "supply", label: "공급가액", defaultValue: 1000000, suffix: "원" }],
  compute: ({ supply }) => {
  const vat = supply * 0.1;
@@ -524,6 +503,8 @@ const SALARY: CalculatorDef[] = [
  category: "salary",
  categoryLabel: "연봉",
  keywords: ["주휴수당", "주휴수당 계산"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — N2-simple-calc-01 사실 정정을 실제로 고친 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [{ name: "hourly", label: "시급", defaultValue: MINIMUM_WAGE_2026.hourly, suffix: "원" }],
  compute: ({ hourly }) => {
  const weekly = hourly * 8;
@@ -603,6 +584,8 @@ const SALARY: CalculatorDef[] = [
  category: "salary",
  categoryLabel: "연봉",
  keywords: ["연차수당", "연차 계산"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — N2-simple-calc-01 사실 정정을 실제로 고친 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [
  { name: "monthly", label: "월급", defaultValue: 3000000, suffix: "원" },
  { name: "days", label: "남은 연차일수", defaultValue: 5, suffix: "일" },
@@ -652,6 +635,9 @@ const LOAN: CalculatorDef[] = [
  { name: "years", label: "기간", defaultValue: 10, suffix: "년" },
  ],
  compute: ({ amount, rate, years }) => {
+ // 기간 0년은 계산 불가(NaN) — 종전에는 총 이자 -1억원 같은 음수가 정상 결과로 보였다(2026-11-15 감사 simple-calc-b01-F02).
+ // 화면은 0 입력 안내를 높이 고정 결과 칸 안에 보여 주고 공유는 막는다. 0.5년(6개월) 같은 소수 기간은 그대로 계산.
+ if (years <= 0) return { primary: { label: "월 상환액", value: NaN, suffix: "원" } };
  const n = years * 12;
  const monthly = annuityPayment(amount, monthlyRate(rate), n);
  const total = monthly * n;
@@ -677,6 +663,8 @@ const LOAN: CalculatorDef[] = [
  { name: "years", label: "기간", defaultValue: 30, suffix: "년" },
  ],
  compute: ({ amount, rate, years }) => {
+ // 기간 0년 가드 — 위 대출 월 상환액과 같은 이유(simple-calc-b01-F02).
+ if (years <= 0) return { primary: { label: "총 이자", value: NaN, suffix: "원" } };
  const n = years * 12;
  const monthly = annuityPayment(amount, monthlyRate(rate), n);
  const total = monthly * n;
@@ -791,6 +779,8 @@ const LOAN: CalculatorDef[] = [
  category: "loan",
  categoryLabel: "대출",
  keywords: ["연봉 대출 한도", "내 연봉 대출"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — N2-simple-calc-01 사실 정정을 실제로 고친 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [
  { name: "yearly", label: "연봉", defaultValue: 50000000, suffix: "원" },
  { name: "rate", label: "예상 금리", defaultValue: 4, suffix: "%" },
@@ -889,6 +879,8 @@ const INVESTMENT: CalculatorDef[] = [
  category: "investment",
  categoryLabel: "투자",
  keywords: ["복리 계산", "복리"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — N2-simple-calc-01 사실 정정을 실제로 고친 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [
  { name: "principal", label: "초기 원금", defaultValue: 10000000, suffix: "원" },
  { name: "monthly", label: "월 적립금", defaultValue: 500000, suffix: "원" },

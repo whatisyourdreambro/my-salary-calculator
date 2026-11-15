@@ -173,6 +173,23 @@ describe("enrichment-file sources gate (content agents)", () => {
     );
     expect(dead).toEqual([]);
   });
+
+  // 2026-11-15 simple-calc-b04-F13: enrichments.ts 의 unemployment-benefit 항목 전체가 batch2.ts 정의에 가려져
+  // (mergeEnrichment 는 calc.x ?? enrichment.x) 한 글자도 렌더되지 않는 죽은 데이터였다 — 여기를 고쳐도 화면이 안 바뀐다.
+  it("no enrichment field is shadowed by a batch definition", () => {
+    const fields = ["explanation", "formula", "faqs", "caveats", "relatedSlugs", "sources", "details"] as const;
+    const violations: string[] = [];
+    for (const [file, map] of ENRICHMENT_FILES) {
+      for (const [slug, enrichment] of Object.entries(map)) {
+        for (const field of fields) {
+          if (enrichment[field] !== undefined && rawBySlug.get(slug)?.[field] !== undefined) {
+            violations.push(`${slug}.${field} (${file})`);
+          }
+        }
+      }
+    }
+    expect(violations).toEqual([]);
+  });
 });
 
 describe("explanation body limits (all 202)", () => {

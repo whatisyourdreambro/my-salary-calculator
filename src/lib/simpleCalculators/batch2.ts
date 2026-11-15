@@ -15,6 +15,8 @@ const REAL_ESTATE: CalculatorDef[] = [
  category: "real-estate",
  categoryLabel: "부동산",
  keywords: ["주담대", "주택담보대출 월"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — N2-simple-calc-01 사실 정정(보금자리론 11/9 공시)을 실제로 고친 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [
  { name: "amount", label: "대출액", defaultValue: 300000000, suffix: "원" },
  { name: "rate", label: "금리", defaultValue: 4, suffix: "%" },
