@@ -40,7 +40,9 @@ const CHECKLIST = "/year-end-tax-checklist";
 
 describe("DEC 헤더 시즌 메뉴 (SEASON_TOP_DEC)", () => {
   it("IRP·연금저축 계산기가 체크리스트 자리(5번째)에 SEASON 배지로 들어가고 항목 수는 그대로다", () => {
-    expect(SEASON_TOP_DEC).toHaveLength(8);
+    // 2026-11-15 SEASONA(lib ideas[4]): 끝에 푸터 전용 2건(미리보기·성과급 내 집 마련)이 붙어 10 — 헤더 항목 7·순서는 그대로
+    expect(SEASON_TOP_DEC).toHaveLength(10);
+    expect(SEASON_TOP_DEC.slice(8).every((l) => !l.header && l.footer)).toBe(true);
     expect(SEASON_TOP_DEC.filter((l) => l.header)).toHaveLength(7);
     expect(SEASON_TOP_DEC[4].href).toBe(IRP);
     expect(SEASON_TOP_DEC[4].header?.badge).toBe("SEASON");

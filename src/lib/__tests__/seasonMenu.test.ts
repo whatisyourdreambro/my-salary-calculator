@@ -234,18 +234,22 @@ describe("푸터 시즌 섹션", () => {
     for (const [href, order] of Object.entries(legacy)) expect(restFooter[href], href).toBe(order);
     // 상단 블록의 푸터 order(0 추석·5 재산세·6 연말정산 허브·3 삼성)도 불변
     // SE-07(3) (2라운드 WP-10): JAN 의 설 상여금 계산기 푸터 전용 항목은 SEASON_REST 최댓값(28) 다음 29
+    // 2026-11-15 SEASONA(lib ideas[4]): OCT·DEC 미리보기 30, DEC·JAN 성과급 내 집 마련 31 — 기존 order 는 재번호 없음
+    const SEASONA_FOOTER: Record<string, number> = { "/year-end-tax-preview": 30, "/calc/bonus-home-plan": 31 };
     for (const key of KEYS) {
       for (const l of SEASON_TOP_BY_KEY[key].filter((x) => x.footer)) {
-        const allowed = key === "JAN" && l.href === "/calc/holiday-bonus" ? [29] : [0, 3, 5, 6];
+        const allowed = key === "JAN" && l.href === "/calc/holiday-bonus" ? [29]
+          : l.href in SEASONA_FOOTER ? [SEASONA_FOOTER[l.href]] : [0, 3, 5, 6];
         expect(allowed, `${key} ${l.href}`).toContain(l.footer!.order);
       }
     }
   });
 
-  it("JAN 세트(SE-07(3)) — 푸터 29개(설 상여금 계산기 푸터 전용 추가)·헤더 12개 그대로·카드 설명은 간소화 자료 기준", () => {
+  it("JAN 세트(SE-07(3)) — 푸터 30개(설 상여금 계산기 29 + 2026-11-15 SEASONA 성과급 내 집 마련)·헤더 12개 그대로·카드 설명은 간소화 자료 기준", () => {
     const links = buildSeasonLinks("JAN");
     const footer = footerOf(links);
-    expect(footer).toHaveLength(29);
+    expect(footer).toHaveLength(30);
+    expect(footer).toContain("/calc/bonus-home-plan");
     expect(footer).toContain("/calc/holiday-bonus");
     expect(headerOf(links)).toHaveLength(12);
     expect(headerOf(links)).not.toContain("/calc/holiday-bonus");
