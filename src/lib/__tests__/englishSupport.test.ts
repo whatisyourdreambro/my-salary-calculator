@@ -42,6 +42,14 @@ describe("English support parity", () => {
     expect(html).toContain('/en/contact');
     expect(html).not.toMatch(/href="\/(?:contact|dashboard|privacy|terms|about)(?:["?])/);
   });
+  // N2-app-pages-16 (app-pages-b07-F05, 2026-11-15): the site never joined iLikeClick (offers.json keeps only an
+  // inactive placeholder), so the affiliate disclosure names LinkPrice alone. The sentence sits above the English
+  // footer ads (EnglishPageExtras), so it may only get shorter; the guarded sweep measures it.
+  it("names only the affiliate network the site uses in the English terms", () => {
+    const html = renderToStaticMarkup(createElement(Terms));
+    expect(html).toContain("such as LinkPrice, and may receive commissions for qualifying visits or signups.");
+    expect(html).not.toContain("iLikeClick");
+  });
   it("uses the shared five-section footer, with English routes except the explicit Korean switch", () => {
     const html = renderToStaticMarkup(createElement(Footer));
     expect(html).toContain('<footer lang="en"');

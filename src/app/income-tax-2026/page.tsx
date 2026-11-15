@@ -170,7 +170,7 @@ export default function IncomeTax2026Page() {
             <li><strong>1인 사업자</strong>: 개인사업자 등록자 (부가세 신고와 별도)</li>
             <li><strong>임대소득자</strong>: 주택임대 연 2,000만원 초과 시 (이하면 분리과세 선택 가능)</li>
             <li><strong>금융소득 종합과세 대상</strong>: 이자·배당 합계 2,000만원 초과</li>
-            <li><strong>기타소득자</strong>: 강연료·원고료 등 연 300만원 초과</li>
+            <li><strong>기타소득자</strong>: 강연료 등 소득금액 300만원 초과</li>
             <li><strong>근로소득만 있는 직장인</strong>: 회사 연말정산으로 종결 — 별도 신고 불필요</li>
           </ul>
           <p>
@@ -187,7 +187,7 @@ export default function IncomeTax2026Page() {
             <li><strong>인적공제 최대화</strong>: 부양가족 1인당 150만원 (연소득 100만원 이하 가족)</li>
             <li><strong>연금저축·IRP 세액공제</strong>: 최대 900만원 납입 시 13.2~16.5% 세액공제 (= 약 119~149만원 환급)</li>
             <li><strong>중소기업 취업자 감면</strong>: 청년 5년 90%, 60세 이상·장애인·경력단절자 3년 70%</li>
-            <li><strong>장기보유 부동산 우대세율</strong>: 10년 이상 보유 1주택 양도 시 80%까지 장기보유공제</li>
+            <li><strong>1주택 장기보유특별공제</strong>: 10년 보유·거주 시 양도세 공제 최대 80%</li>
           </ol>
         </section>
 

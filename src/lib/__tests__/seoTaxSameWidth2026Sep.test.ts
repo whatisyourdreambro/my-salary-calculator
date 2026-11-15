@@ -40,7 +40,8 @@ const SAME_WIDTH: [string, string, string][] = [
   ["src/app/health-insurance-fee-2026/page.tsx", "본인+회사분 모두 본인 부담.", "본인+회사분 절반 본인 부담."],
   ["src/app/tools/finance/stock-tax/page.tsx", "매년 5월 종합소득세 신고 필요.", "매년 5월 양도소득세 신고 필요."],
   ["src/app/year-end-tax-settlement-2026/page.tsx", "지정기부금 15% 세액공제. 종교단체도 가능.", "일반기부금 15% 세액공제. 종교단체도 가능."],
-  ["src/app/year-end-tax-settlement-2026/page.tsx", "본인·자녀 학원비, 교복비 등 일부 공제 가능.", "유아·초등 예체능, 교복비 등 일부 공제 가능."],
+  // 교육비 점검 카드 행(TS-23 '유아·초등 예체능, 교복비 등 일부 공제 가능.')은 2026-11-15 N2-app-pages-09 에서 뺐다 —
+  // 같은 어절 구성이 아니라 더 짧은 문구로 정정했고, 광고 위치는 통합 단계 1px 스윕으로 확인한다. 아래 사실 정정 고정 참고.
   ["src/app/year-end-tax-checklist/page.tsx", "지정기부금 영수증 (15% 세액공제, 1천만 초과 30%)", "일반기부금 영수증 (15% 세액공제, 1천만 초과 30%)"],
   ["src/app/rent-tax-credit-2026/page.tsx", "기획재정부 2026년 8월 3일 세제개편안", "재정경제부 2026년 8월 3일 세제개편안"],
   ["src/app/credit-card-deduction-2026/page.tsx", "· 기획재정부 2026년", "· 재정경제부 2026년"],
@@ -108,10 +109,28 @@ describe("사실 정정 고정 — 10/2~3 묶음", () => {
     expect(src).not.toContain("5년 이내 기한 후 신고는 가능");
     expect(src).not.toContain("법정·지정 기부금");
   });
-  it("12월 점검 카드 교육비 — 본인 학원비 삭제, 초등은 예체능만(초등 학원비 전반 아님)", () => {
+  // 2026-11-15 N2-app-pages-09(app-pages-b08-F01): 초등은 1~2학년(9세 미만)만 — 정책브리핑 2026-01-06
+  // '초등학교 1~2학년 자녀(만 9세 미만)'. '유아·초등 예체능 … 일부 공제'는 3~6학년까지 읽혀 정정.
+  it("12월 점검 카드 교육비 — 본인 학원비 삭제, 초등은 1~2학년 예체능만(초등 학원비 전반 아님)", () => {
     const src = readSrc("src/app/year-end-tax-settlement-2026/page.tsx");
     expect(src).not.toContain("본인·자녀 학원비");
     expect(src).not.toContain("유아·초등 학원비");
+    expect(src).toContain('body: "유아·초1~2 예체능, 교복비도 공제 가능."');
+    expect(src).not.toContain("유아·초등 예체능");
+  });
+  it("12월 점검 카드 교육비 — 새 문구는 옛 문구보다 한글 음절·어절이 적다(광고 위 폭 증가 없음, 실측은 스윕)", () => {
+    const before = "유아·초등 예체능, 교복비 등 일부 공제 가능.";
+    const after = "유아·초1~2 예체능, 교복비도 공제 가능.";
+    const hangul = (s: string) => [...s].filter((c) => /[가-힣]/.test(c)).length;
+    expect(hangul(after)).toBeLessThan(hangul(before));
+    expect(after.split(" ").length).toBeLessThan(before.split(" ").length);
+    expect([...after].length).toBeLessThan([...before].length);
+  });
+  // 2026-11-15 N2-app-pages-09(app-pages-b08-F02): 접힌 FAQ(닫힌 details, GuideMidAd 아래)는 두 갈래 요건을 모두 적는다.
+  it("12월 가이드 접힌 FAQ — 예체능 학원비는 9세 미만 또는 초등 2학년 이하", () => {
+    const src = readSrc("src/app/year-end-tax-settlement-2026/page.tsx");
+    expect(src).toContain("교육비 세액공제 확대(자녀 소득요건 폐지, 9세 미만 또는 초등 2학년 이하 예체능 학원비 포함)");
+    expect(src).not.toContain("9세 미만 예체능 학원비 포함");
   });
   it("IRP 계산기 FAQ — 이연퇴직소득 70%·60%·50%, 적격 TDF 100%", () => {
     const src = readSrc("src/app/tools/finance/irp/page.tsx");

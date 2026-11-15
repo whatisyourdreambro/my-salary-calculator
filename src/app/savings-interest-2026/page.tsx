@@ -20,7 +20,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/savings-interest-2026",
   ogType: "article",
   publishedTime: "2026-06-11",
-  modifiedTime: "2026-09-27",
+  modifiedTime: "2026-11-15",
   keywords: [
     "적금 이자 계산기",
     "예금 이자 계산기",
@@ -51,8 +51,8 @@ export const metadata: Metadata = buildPageMetadata({
 // 인더스트리뉴스 https://www.intn.co.kr/news/articleView.html?idxno=2047657 (2025-12-02 국회 본회의 세법 개정, 조세특례제한법 제89조의3).
 // 광고 위 목록(GuideMidAd ↔ InArticleAd) 두 줄은 폭 맞춤: '청년도약계좌'→'청년미래적금'(같은 6음절),
 // 기여금 항목 줄은 옛 줄과 같은 1px 폭 구간(+0.03px) — 1줄↔2줄 전환 폭이 같다. 320~1440px 1px 간격 + 1536·1920 전 폭 확인.
-// 청년형 장기집합투자증권저축 설명도 접힌 FAQ 에서만 조세특례제한법 제91조의20 에 맞췄다
-// (광고 위 목록의 조합 예탁금·장기집합투자증권저축 줄은 이번 배치 범위 밖 — 폭 맞춤 후보 없음, 보고로 넘김).
+// 청년형 장기집합투자증권저축은 접힌 FAQ 가 먼저 조세특례제한법 제91조의20 에 맞췄고, 2026-11-15(N2-app-pages-13) 광고 위 목록도 정정:
+// 장기펀드 '40% 소득공제 (가입 종료)'(SBS Biz 2025-12-19 일몰 보도), 조합 예탁금 '3천만원 조건부 비과세' — 두 줄 모두 옛 줄보다 좁다(글꼴 폭 계산).
 // ISA 는 2026-10-04 배포(352451886)가 광고 위 목록 줄·접힌 FAQ·계산기 체크박스 문구를 먼저 고쳤다(의무가입기간 3년,
 // 서민형·농어민형 400만원, 지방세 포함 9.9%, 체크박스는 세율 0% 가정). 10/5 재기반에서 그 문구를 정본으로 유지.
 const FAQS = [
@@ -200,8 +200,8 @@ export default function SavingsInterest2026Page() {
             <li><strong>ISA (개인종합자산관리계좌)</strong>: 연 납입 한도 2천만원·의무가입기간 3년, 순이익 200만원(서민형·농어민형 400만원) 비과세</li>
             <li><strong>청년미래적금</strong> (만 19~34세): 월 50만원·3년, 기여금 월 최대 6만원, 비과세</li>
             <li><strong>농어가목돈마련저축</strong>: 농어업인 비과세</li>
-            <li><strong>조합 예탁금</strong> (농협·신협·새마을금고): 1인 3천만원 한도 비과세</li>
-            <li><strong>장기집합투자증권저축</strong>: 펀드 형식 비과세 (소득 조건)</li>
+            <li><strong>조합 예탁금</strong> (농협·신협·새마을금고): 3천만원 조건부 비과세</li>
+            <li><strong>장기집합투자증권저축</strong>: 40% 소득공제 (가입 종료)</li>
           </ul>
 
           <h2 className="text-xl font-black text-navy dark:text-canvas-50 mt-10">
