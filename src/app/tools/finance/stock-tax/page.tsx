@@ -62,12 +62,12 @@ export default function StockTaxPage() {
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label htmlFor="stock-tax-profit" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">매매 차익 (원)</label>
- <NumberInput id="stock-tax-profit" type="number" inputMode="numeric" value={profit} onChange={e => setProfit(Number(e.target.value))}
+ <NumberInput id="stock-tax-profit" allowNegative={false} type="number" inputMode="numeric" value={profit} onChange={e => setProfit(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  <div>
  <label htmlFor="stock-tax-loss" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">손실 차감 (결손 통산)</label>
- <NumberInput id="stock-tax-loss" type="number" inputMode="numeric" value={loss} onChange={e => setLoss(Number(e.target.value))}
+ <NumberInput id="stock-tax-loss" allowNegative={false} type="number" inputMode="numeric" value={loss} onChange={e => setLoss(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  </div>

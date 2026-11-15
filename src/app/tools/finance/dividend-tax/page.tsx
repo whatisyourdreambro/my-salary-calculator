@@ -62,6 +62,7 @@ export default function DividendTaxPage() {
               </label>
               <NumberInput
                 id="dividend-tax-dividend"
+                allowNegative={false}
                 type="number"
                 inputMode="numeric"
                 value={dividend}
@@ -75,6 +76,7 @@ export default function DividendTaxPage() {
               </label>
               <NumberInput
                 id="dividend-tax-interest"
+                allowNegative={false}
                 type="number"
                 inputMode="numeric"
                 value={interest}
@@ -89,6 +91,7 @@ export default function DividendTaxPage() {
             </label>
             <NumberInput
               id="dividend-tax-other-base"
+              allowNegative={false}
               type="number"
               inputMode="numeric"
               value={otherBase}
