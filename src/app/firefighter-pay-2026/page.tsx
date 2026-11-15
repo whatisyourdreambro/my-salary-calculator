@@ -124,7 +124,8 @@ const FIRE_DUTY_ROWS: { name: string; amount: string; note: string }[] = [
   {
     name: "화재진화·구조구급 출동가산금",
     amount: `1일 상한 ${fmt(CIVIL_DISPATCH_DAILY_CAP_2026)}원`,
-    note: `출동 때 ${fmt(CIVIL_DISPATCH_PER_CASE_2026)}원씩 가산 — 2026년 상한 3만원에서 4만원으로 인상`,
+    // 별표 11 바목 11) (4)(나)·(다): 구조·구급은 1일 누적 3회 초과 출동 1회당, 화재진화는 출동일수마다 4,000원, 합계 1일 40,000원 한도
+    note: `구조·구급은 하루 3회를 넘는 출동 1회당, 화재진화는 출동한 날마다 ${fmt(CIVIL_DISPATCH_PER_CASE_2026)}원 — 2026년 상한 3만원에서 4만원으로 인상`,
   },
   {
     name: "위험근무수당",

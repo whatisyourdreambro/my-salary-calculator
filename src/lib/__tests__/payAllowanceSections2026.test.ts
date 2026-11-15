@@ -149,6 +149,9 @@ describe("경찰·소방 봉급표 (PT-08)", () => {
     const sec = section(fire, "fire-allowances");
     expect(sec.indexOf("화재진화·구조구급 출동가산금")).toBeLessThan(sec.indexOf(">계급별 직급보조비</h3>"));
     expect(sec).toContain("긴급구조통제단 운영을 상시 맡는 소방청 소속 공무원");
+    // 별표 11 바목 11) (4)(나)·(다): 구조·구급은 1일 3회 초과분만 1회당, 화재진화는 출동일마다 4,000원 (리뷰 2026-11-15)
+    expect(sec).toContain("구조·구급은 하루 3회를 넘는 출동 1회당, 화재진화는 출동한 날마다 4,000원");
+    expect(sec).not.toContain("출동 때 4,000원씩");
     for (const [rank, amount] of [["소방령", "250,000"], ["소방정", "400,000"], ["소방준감", "500,000"], ["소방감", "650,000"], ["소방정감", "750,000"]]) {
       expect(sec, rank).toContain(`${rank}</td><td class="py-2.5 px-2 text-right text-muted-blue tabular-nums">월 ${amount}원`);
     }
