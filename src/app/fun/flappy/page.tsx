@@ -217,8 +217,8 @@ export default function FlappyGamePage() {
 
  {/* Start Screen */}
  {gameState === "start" && (
- <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-white p-8 text-center">
- <Trophy className="w-16 h-16 text-yellow-300 mb-4" />
+ <div className="absolute inset-0 bg-electric/60 flex flex-col items-center justify-center text-white p-8 text-center">
+ <Trophy className="w-16 h-16 text-primary mb-4" />
  <h2 className="text-2xl font-bold mb-2">준비되셨나요?</h2>
  <p className="text-faint-blue mb-8">화면을 터치하거나 스페이스바를 눌러 점프하세요.</p>
  <button
@@ -233,8 +233,8 @@ export default function FlappyGamePage() {
 
  {/* Game Over Screen */}
  {gameState === "gameover" && (
- <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-white p-8 text-center backdrop-blur-sm">
- <h2 className="text-4xl font-black text-white mb-2">GAME OVER</h2>
+ <div className="absolute inset-0 bg-electric/80 flex flex-col items-center justify-center text-white p-8 text-center backdrop-blur-sm">
+ <h2 className="text-4xl font-black text-primary mb-2">GAME OVER</h2>
  <div className="bg-electric p-6 rounded-xl border border-canvas mb-6 w-full">
  <div className="flex justify-between items-center mb-2">
  <span className="text-faint-blue">이번 기록</span>
@@ -242,7 +242,7 @@ export default function FlappyGamePage() {
  </div>
  <div className="flex justify-between items-center">
  <span className="text-faint-blue">최고 기록</span>
- <span className="text-2xl font-bold text-yellow-300">{highScore}</span>
+ <span className="text-2xl font-bold text-primary">{highScore}</span>
  </div>
  </div>
 
