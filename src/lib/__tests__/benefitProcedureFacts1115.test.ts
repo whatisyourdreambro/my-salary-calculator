@@ -57,5 +57,12 @@ describe("/unemployment-benefit STEP 3 대기기간(고용보험법 제49조)", 
 });
 
 // [표지 08d] /unemployment-benefit STEP 4 실업인정 재취업활동 횟수
+// 광고 위. 12px 사이트 글꼴 326.45px -> 317.24px(-9.21px), 칸 폭 142~592px 에서 줄 수가 늘지 않는다(모델).
+describe("/unemployment-benefit STEP 4 실업인정 횟수", () => {
+  it("2~4차 1회, 5차부터 2회로 적고 옛 '4주마다 구직활동 2회'가 없다", () => {
+    expect(unemployment).toContain('desc: "4주마다 재취업활동 1회(5차부터 2회) 이상 증명. 인정 후 급여 지급."');
+    expect(unemployment).not.toContain("4주마다 구직활동 2회");
+  });
+});
 
 // [표지 08e] /unemployment-benefit 관련 링크 고용24 구직 등록

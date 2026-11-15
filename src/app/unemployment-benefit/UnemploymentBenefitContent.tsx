@@ -359,7 +359,7 @@ export default function UnemploymentBenefitContent() {
       {
        step: "STEP 4",
        title: "구직활동 및 실업인정",
-       desc: "4주마다 구직활동 2회 이상 증명. 온라인 신고 가능. 인정 후 급여 지급.",
+       desc: "4주마다 재취업활동 1회(5차부터 2회) 이상 증명. 인정 후 급여 지급.",
       },
      ].map((item, i) => (
       <div key={i} className="flex gap-4 items-start">
