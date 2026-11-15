@@ -44,3 +44,84 @@ describe("도구 계산기 금액 칸 — 음수 입력 차단 (F01)", () => {
     expect(normalizeNumberDraft("-1", { allowNegative: true, allowDecimal: true })).toBe("-1");
   });
 });
+
+/** JSX 여는 태그 하나 — { } 안의 '>'(화살표 함수 '=>' 등)는 태그 끝으로 보지 않는다 */
+function openTagAt(src: string, at: number): string {
+  let depth = 0;
+  for (let i = at; i < src.length; i += 1) {
+    const ch = src[i];
+    if (ch === "{") depth += 1;
+    else if (ch === "}") depth -= 1;
+    else if (ch === ">" && depth === 0) return src.slice(at, i + 1);
+  }
+  return src.slice(at);
+}
+
+/** 소스의 <button ...> 여는 태그 중 needle(onClick 본문 등)이 든 것 */
+function buttonsWith(src: string, needle: string): string[] {
+  return [...src.matchAll(/<button\b/g)].map((m) => openTagAt(src, m.index!)).filter((tag) => tag.includes(needle));
+}
+
+describe("도구 계산기 토글 — 선택 상태와 묶음 이름 (F04, 속성만)", () => {
+  const cases: Array<{ rel: string; toggles: Array<[string, string]>; labelledBy: string[]; groupLabels: string[] }> = [
+    {
+      rel: "finance/bonus/page.tsx",
+      toggles: [["setHasSpouse(opt.v)", "aria-pressed={hasSpouse === opt.v}"], ["setActiveGroup(i)", "aria-pressed={activeGroup === i}"], ["setSalaryFmt(p.salary", "aria-pressed={active}"]],
+      labelledBy: ["bonus-spouse-label"],
+      groupLabels: ["비교 기준"],
+    },
+    {
+      rel: "finance/stock-tax/page.tsx",
+      toggles: [["setIsOverseas(true)", "aria-pressed={isOverseas}"], ["setIsOverseas(false)", "aria-pressed={!isOverseas}"], ['setHoldPeriod("short")', 'aria-pressed={holdPeriod === "short"}'], ['setHoldPeriod("long")', 'aria-pressed={holdPeriod === "long"}']],
+      labelledBy: ["stock-tax-hold-label"],
+      groupLabels: ["과세 대상 주식"],
+    },
+    {
+      rel: "finance/severance/page.tsx",
+      toggles: [["setMode(m.v", "aria-pressed={mode === m.v}"]],
+      labelledBy: [],
+      groupLabels: ["계산 방식"],
+    },
+    {
+      rel: "real-estate/acquisition-tax/page.tsx",
+      toggles: [["setPropType(t.v", "aria-pressed={propType === t.v}"], ["setIsFirst(t.v)", "aria-pressed={isFirst === t.v}"], ["setIsOver85(t.v)", "aria-pressed={isOver85 === t.v}"]],
+      labelledBy: ["acq-type-label", "acq-holding-label", "acq-area-label"],
+      groupLabels: [],
+    },
+    {
+      rel: "life/subscription/SubscriptionCalcClient.tsx",
+      toggles: [['setNewPeriod("monthly")', 'aria-pressed={newPeriod === "monthly"}'], ['setNewPeriod("yearly")', 'aria-pressed={newPeriod === "yearly"}']],
+      labelledBy: [],
+      groupLabels: ["결제 주기"],
+    },
+    {
+      rel: "finance/installment/page.tsx",
+      toggles: [["setMonths(p.months)", "aria-pressed={months === p.months && annualRate === p.rate}"]],
+      labelledBy: [],
+      groupLabels: ["자주 쓰는 조건"],
+    },
+  ];
+
+  it.each(cases)("$rel", ({ rel, toggles, labelledBy, groupLabels }) => {
+    const src = read(rel);
+    for (const [needle, pressed] of toggles) {
+      const tags = buttonsWith(src, needle);
+      expect(tags, needle).toHaveLength(1);
+      expect(tags[0]).toContain('type="button"');
+      expect(tags[0]).toContain(pressed);
+    }
+    for (const id of labelledBy) {
+      // 기존 <label> 에 id 를 붙이고(요소 교체 없음), 기존 버튼 묶음 div 가 그 id 를 가리킨다
+      expect(src).toMatch(new RegExp(`<label id="${id}" className=`));
+      expect(src).toMatch(new RegExp(`<div className="[^"]*" role="group" aria-labelledby="${id}">`));
+    }
+    for (const name of groupLabels) {
+      expect(src).toMatch(new RegExp(`role="group" aria-label="${name}"`));
+    }
+  });
+
+  it("구독 계산기 프리셋(추가 전용) 버튼에는 aria-pressed 를 달지 않는다", () => {
+    const src = read("life/subscription/SubscriptionCalcClient.tsx");
+    expect(src.match(/aria-pressed=/g)).toHaveLength(2);
+  });
+});

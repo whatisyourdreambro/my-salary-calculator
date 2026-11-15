@@ -33,10 +33,10 @@ export default function AcquisitionTaxPage() {
  </div>
  <div className="grid grid-cols-2 gap-4">
  <div>
- <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-3">주택 유형</label>
- <div className="grid grid-cols-3 gap-2">
+ <label id="acq-type-label" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-3">주택 유형</label>
+ <div className="grid grid-cols-3 gap-2" role="group" aria-labelledby="acq-type-label">
  {[{v:"apt",l:"아파트"},{v:"single",l:"단독주택"},{v:"land",l:"토지"}].map(t => (
- <button key={t.v} onClick={() => setPropType(t.v as "apt" | "single" | "land")}
+ <button key={t.v} type="button" aria-pressed={propType === t.v} onClick={() => setPropType(t.v as "apt" | "single" | "land")}
  className={`py-2.5 rounded-xl text-xs font-bold border transition-all ${propType === t.v ? "bg-primary text-white border-primary" : "border-canvas text-muted-blue hover:border-primary"}`}>
  {t.l}
  </button>
@@ -44,10 +44,10 @@ export default function AcquisitionTaxPage() {
  </div>
  </div>
  <div>
- <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-3">주택 보유 현황</label>
- <div className="grid grid-cols-2 gap-2">
+ <label id="acq-holding-label" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-3">주택 보유 현황</label>
+ <div className="grid grid-cols-2 gap-2" role="group" aria-labelledby="acq-holding-label">
  {[{v:true,l:"일반세율 가정"},{v:false,l:"8% 중과 가정"}].map(t => (
- <button key={String(t.v)} onClick={() => setIsFirst(t.v)}
+ <button key={String(t.v)} type="button" aria-pressed={isFirst === t.v} onClick={() => setIsFirst(t.v)}
  className={`py-2.5 rounded-xl text-xs font-bold border transition-all ${isFirst === t.v ? "bg-primary text-white border-primary" : "border-canvas text-muted-blue hover:border-primary"}`}>
  {t.l}
  </button>
@@ -57,10 +57,10 @@ export default function AcquisitionTaxPage() {
  </div>
  {propType !== "land" && (
  <div>
- <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-3">전용면적 (농어촌특별세 기준)</label>
- <div className="grid grid-cols-2 gap-2">
+ <label id="acq-area-label" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-3">전용면적 (농어촌특별세 기준)</label>
+ <div className="grid grid-cols-2 gap-2" role="group" aria-labelledby="acq-area-label">
  {[{v:false,l:"85㎡ 이하 (농특세 면제)"},{v:true,l:"85㎡ 초과 (농특세 0.2%)"}].map(t => (
- <button key={String(t.v)} onClick={() => setIsOver85(t.v)}
+ <button key={String(t.v)} type="button" aria-pressed={isOver85 === t.v} onClick={() => setIsOver85(t.v)}
  className={`py-2.5 rounded-xl text-xs font-bold border transition-all ${isOver85 === t.v ? "bg-primary text-white border-primary" : "border-canvas text-muted-blue hover:border-primary"}`}>
  {t.l}
  </button>

@@ -95,10 +95,12 @@ export default function SeveranceCalculatorPage() {
  </div>
 
  {/* Mode Toggle */}
- <div className="flex gap-2 mb-8 mt-8 p-1 bg-canvas-dark rounded-xl">
+ <div className="flex gap-2 mb-8 mt-8 p-1 bg-canvas-dark rounded-xl" role="group" aria-label="계산 방식">
  {[{ v: "calculate", l: "법정 퇴직금 자동계산" }, { v: "custom", l: "퇴직금 직접 입력" }].map(m => (
  <button
  key={m.v}
+ type="button"
+ aria-pressed={mode === m.v}
  onClick={() => setMode(m.v as "custom" | "calculate")}
  className={`flex-1 py-3 rounded-lg text-sm font-black transition-all ${mode === m.v ? "bg-white shadow text-primary" : "text-faint-blue"}`}
  >
