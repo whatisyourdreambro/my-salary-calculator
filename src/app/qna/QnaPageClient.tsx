@@ -154,6 +154,8 @@ export default function QnaPageClient({ items }: { items: QnaListItem[] }) {
                     >
                       <button
                         onClick={() => toggleAccordion(item.slug)}
+                        aria-expanded={isActive}
+                        aria-controls={`qna-panel-${item.slug}`}
                         className="w-full flex justify-between items-center p-6 sm:p-8 text-left"
                       >
                         <div className="flex items-start gap-5 pr-4">
@@ -185,8 +187,11 @@ export default function QnaPageClient({ items }: { items: QnaListItem[] }) {
                         />
                       </button>
 
-                      {/* 답변은 항상 DOM에 렌더하고 CSS로만 접는다 — FAQPage 구조화 데이터와 실콘텐츠 일치 */}
+                      {/* 답변은 항상 DOM에 렌더하고 CSS로만 접는다 — FAQPage 구조화 데이터와 실콘텐츠 일치.
+                          접힌 답은 inert 로 탭 순서·보조기기에서 뺀다(DOM 은 그대로, 클래스·배치 불변 — N2-app-pages-04). */}
                       <div
+                        id={`qna-panel-${item.slug}`}
+                        inert={!isActive}
                         className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
                           isActive ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
                         }`}
