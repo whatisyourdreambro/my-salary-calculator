@@ -35,6 +35,7 @@ import {
   TEACHER_START_HOBONG,
 } from "@/lib/civilServantPay";
 import { TEACHER_PAY_FULL_2026 } from "@/lib/payTablesFull2026";
+import { CIVIL_TEACHER_ALLOWANCE_2026 } from "@/lib/civilServantAllowances2026";
 import CitationCopyButton from "@/components/CitationCopyButton";
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
@@ -87,7 +88,7 @@ const FAQ_ITEMS = [
   {
     question: "신규 교사 첫 월급은 얼마인가요?",
     answer:
-      "교대·사범대(4년제) 졸업 후 임용되면 통상 9호봉으로 시작합니다(2급 정교사 기산호봉 8호봉 + 사범계 가산 1호봉). 2026년 9호봉 월 봉급은 2,495,600원이며, 여기에 정액급식비(월 16만원)·교직수당·담임수당(맡을 경우 월 20만원) 등이 더해진 뒤 소득세·기여금이 공제됩니다. 군 경력이나 기간제 경력이 있으면 호봉이 가산됩니다.",
+      `교대·사범대(4년제) 졸업 후 임용되면 통상 9호봉으로 시작합니다(2급 정교사 기산호봉 8호봉 + 사범계 가산 1호봉). 2026년 9호봉 월 봉급은 2,495,600원이며, 여기에 정액급식비(월 16만원)·교직수당(월 ${CIVIL_TEACHER_ALLOWANCE_2026.teaching / 10000}만원)·담임수당(맡을 경우 월 20만원) 등이 더해진 뒤 소득세·기여금이 공제됩니다. 군 경력이나 기간제 경력이 있으면 호봉이 가산됩니다.`,
   },
   {
     question: "호봉표 금액이 실수령액인가요?",
