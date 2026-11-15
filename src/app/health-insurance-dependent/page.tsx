@@ -373,6 +373,59 @@ export default function HealthInsuranceDependentPage() {
           responsive={{ mobile: "mobile-banner", desktop: "leaderboard" }}
         />
 
+        {/* 자격 상실 안내를 받은 뒤 확인할 4가지 — 마지막 광고(CoupangBanner) 아래 새 블록(운영자 결정 2번, 2026-11-15 SEASONB).
+            조문은 국가법령정보센터 현행 조문으로 2026-11-15 확인: 국민건강보험법 [법률 제21522호] 제69조 제2항·제78조 제1항·
+            제87조 제3항·제110조 제1항, 같은 법 시행령 [대통령령 제36675호] 제41조의2 제1항·제77조 제1항,
+            같은 법 시행규칙 [보건복지부령 제1202호] 제2조 제3항 제9호·제62조. 상실일 날짜(12월 1일 등)는 조문이 정하지 않아 적지 않는다. */}
+        <section className="my-10" aria-labelledby="dependent-loss-steps">
+          <h2
+            id="dependent-loss-steps"
+            className="text-lg font-black text-navy dark:text-canvas-50 mb-1"
+          >
+            자격 상실 안내를 받았다면 — 확인할 4가지
+          </h2>
+          <p className="text-xs leading-6 text-faint-blue mb-4">
+            <time dateTime="2026-11-15">2026년 11월 15일</time> 국민건강보험법·시행령·시행규칙
+            현행 조문으로 확인한 내용입니다.
+          </p>
+          <ol className="space-y-3 list-decimal list-inside text-sm leading-7 text-muted-blue dark:text-canvas-300">
+            <li>
+              <strong className="text-navy dark:text-canvas-50">상실일</strong> — 소득·재산요건을
+              넘는 것으로 공단이 확인하면 그 확인한 날의 다음 날 피부양자 자격을 잃고 지역가입자가
+              됩니다(시행규칙 제2조 제3항 제9호). 안내문에 적힌 상실일부터 확인하세요.
+            </li>
+            <li>
+              <strong className="text-navy dark:text-canvas-50">보험료가 붙는 달</strong> — 지역보험료는
+              자격을 얻은 날이 속한 달의 다음 달분부터, 1일에 얻었다면 그 달분부터 부과되고(법
+              제69조 제2항), 매달 보험료는 다음 달 10일까지 냅니다(법 제78조 제1항). 재산분 예상액은{" "}
+              <Link href="/health-insurance-fee-2026" className="font-bold text-electric hover:underline">
+                건강보험료 계산기
+              </Link>
+              의 지역가입자 모드로 볼 수 있습니다(소득분은 별도).
+            </li>
+            <li>
+              <strong className="text-navy dark:text-canvas-50">소득이 끊겼거나 줄었다면</strong> —
+              폐업 등으로 판정에 쓴 소득이 줄었다면 그 사유를 증명하는 서류(폐업사실증명 등)를 붙여
+              공단에 소득 조정을 신청할 수 있습니다(시행령 제41조의2). 처분 자체에 이의가 있으면 처분이
+              있음을 안 날부터 90일 이내에 문서로 이의신청합니다(법 제87조 제3항).
+            </li>
+            <li>
+              <strong className="text-navy dark:text-canvas-50">최근 퇴직했다면</strong> — 퇴직 전 18개월
+              동안 직장가입 기간이 통산 1년 이상이면, 지역가입자가 된 뒤 처음 받은 지역보험료 고지서의
+              납부기한에서 2개월이 지나기 전까지 임의계속가입을 신청할 수 있고, 퇴직 다음 날부터 최대
+              36개월 직장가입자 자격을 유지합니다(법 제110조, 시행규칙 제62조, 시행령 제77조). 대상
+              여부는 공단(1577-1000)에 확인하고, 조건 비교는{" "}
+              <Link
+                href="/guides/health-insurance-continue-after-retire-2026"
+                className="font-bold text-electric hover:underline"
+              >
+                퇴직 후 임의계속가입 가이드
+              </Link>
+              를 참고하세요.
+            </li>
+          </ol>
+        </section>
+
         {/* RelatedCalculators 자동 추천 (dead-end 차단) */}
         <RelatedCalculators
           currentPath="/health-insurance-dependent"

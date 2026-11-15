@@ -356,6 +356,18 @@ export default function NationalPensionEstimate2026Page() {
         <div className="my-10">
           <MultiplexAd />
         </div>
+
+        {/* 2027 보험료율 안내 한 줄 — 마지막 광고(MultiplexAd) 아래 맨 끝(운영자 결정 2번, 2026-11-15 SEASONB ideas[5]).
+            근거: 국민연금법 부칙 <법률 제20903호, 2025. 4. 2.> 제4조 — 사업장가입자 기여금·부담금 2027년 각각 1만분의 500,
+            지역·임의·임의계속가입자 1천분의 100 (국가법령정보센터 현행 조문 2026-11-15 확인). */}
+        <p className="my-8 text-sm leading-7 text-muted-blue dark:text-canvas-300">
+          2027년 1월부터 국민연금 보험료율은 9.5%에서 10%(직장가입자 본인 4.75% → 5%)로 오릅니다(국민연금법
+          부칙 제4조, 법률 제20903호). 월급별 공제액은{" "}
+          <Link href="/social-insurance-rates-2027" className="font-bold text-electric hover:underline">
+            2027 4대보험 요율표
+          </Link>
+          에서 확인하세요.
+        </p>
       </div>
     </main>
   );

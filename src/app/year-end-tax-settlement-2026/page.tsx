@@ -53,6 +53,44 @@ const TIPS = [
  { icon: "📚", title: "교육비 점검", body: "유아·초1~2 예체능, 교복비도 공제 가능." },
 ];
 
+/**
+ * 12월 할 일 날짜표 (2026-11-15 SEASONB, app-pages ideas[4]) — 마지막 광고(MultiplexAd) 아래, TopicNextSteps 앞에만 렌더.
+ * 날짜는 발표·조문으로 확인한 것만: 미리보기 10/28~12/18(국세청 2026-10-23 안내, korea.kr newsId=148974171),
+ * 간소화 '2027년 1월 개통 예정'(같은 안내 — 개통일은 아직 발표 전이라 적지 않음), 연금계좌 600·900만원(소득세법 제59조의3),
+ * 회사 제출·정산(소득세법 제140조 제1항 2월분 근로소득 받기 전 제출, 제137조 제1항 2월분 지급 때 정산).
+ * 2026-12-18 금요일, 2026-12-31 목요일. 1월 1일 이후에는 지난 항목이 되므로 RL-44(1/1) 또는 3월 귀속 전환 때 함께 걷는다.
+ */
+const DECEMBER_TODO: { when: string; what: string; href?: string; link?: string }[] = [
+ {
+ when: "12월 18일(금)까지",
+ what: "홈택스 연말정산 미리보기로 예상 세액 확인 — 운영 기간 10월 28일~12월 18일(국세청 2026년 10월 23일 안내)",
+ href: "/year-end-tax-preview",
+ link: "미리보기 이용법",
+ },
+ {
+ when: "12월 31일(목)까지",
+ what: "연금저축·IRP 납입분까지 올해 세액공제 대상 — 연금저축 600만원, IRP 합산 900만원 한도(소득세법 제59조의3). 금융회사마다 연말 입금 마감 시각이 다르니 미리 확인",
+ href: "/tools/finance/irp",
+ link: "IRP·연금저축 세액공제 계산",
+ },
+ {
+ when: "12월 31일(목)까지",
+ what: "신용카드 사용액·의료비·기부금도 이날까지 쓰고 낸 금액이 2026년 귀속분",
+ },
+ {
+ when: "2027년 1월",
+ what: "연말정산 간소화 서비스 개통 예정(국세청 2026년 10월 23일 안내) — 개통일은 국세청 공지로 확인",
+ href: "/year-end-tax-checklist",
+ link: "제출 서류 체크리스트",
+ },
+ {
+ when: "2027년 2월분 급여 전",
+ what: "회사에 공제신고서와 증빙 제출, 환급·추가 납부는 2월분 급여에서 정산(소득세법 제137조·제140조) — 회사 마감일은 회사 공지",
+ href: "/year-end-tax",
+ link: "환급액 계산기",
+ },
+];
+
 const FAQ_ITEMS = [
  {
  question: "성과급 받으면 세금 폭탄이라는데 사실인가요?",
@@ -312,6 +350,36 @@ export default function YearEndTaxSettlement2026Page() {
  <div className="mt-10">
  <MultiplexAd />
  </div>
+
+ {/* 12월 할 일 날짜표 — 마지막 광고(MultiplexAd) 아래 새 블록(운영자 결정 2번, 2026-11-15 SEASONB ideas[4]) */}
+ <section className="mt-10" aria-labelledby="december-todo">
+ <h2 id="december-todo" className="text-xl font-black text-navy mb-2">
+ 12월에 할 일 — 날짜순
+ </h2>
+ <p className="text-xs text-faint-blue leading-relaxed mb-4">
+ <time dateTime="2026-11-15">2026년 11월 15일</time> 기준. 날짜는 국세청 안내와
+ 소득세법 조문으로 확인했고, 아직 발표되지 않은 날짜는 적지 않았습니다.
+ </p>
+ <ol className="space-y-3">
+ {DECEMBER_TODO.map((item) => (
+ <li
+ key={item.what}
+ className="p-4 bg-white rounded-2xl border border-canvas-200"
+ >
+ <p className="text-xs font-bold text-electric mb-1">{item.when}</p>
+ <p className="text-sm text-muted-blue leading-relaxed">{item.what}</p>
+ {item.href ? (
+ <Link
+ href={item.href}
+ className="inline-block mt-2 text-xs font-bold text-electric hover:underline"
+ >
+ {item.link} →
+ </Link>
+ ) : null}
+ </li>
+ ))}
+ </ol>
+ </section>
  </div>
    <TopicNextSteps path="/year-end-tax-settlement-2026" />
  </main>
