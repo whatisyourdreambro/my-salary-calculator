@@ -184,8 +184,19 @@ describe("simple-calc-b04-F08 (2)(3) 내 연봉 가능 대출액 유의사항·�
     expect(c.details).toContain("1.50%(수도권·규제지역 주담대 3%, 지방 주담대 0.75%)");
     expect(c.details).not.toContain("1.50%(지방 주택담보대출은 0.75%)");
     expect(c.sources).toHaveLength(2);
-    // 실측 폭(wght 400): 유의사항 70.51em → 68.40em, 본문 문장 106.34em → 103.57em. 한글 수는 둘 다 줄었다.
+    // 실측 폭(wght 400): 유의사항 70.51em → 68.40em. 한글 수는 줄었다.
     expect(kinds(c.caveats?.[0] ?? "").hangul).toBeLessThan(64);
+    // 리뷰(2026-11-15): 본문 3단락은 전체 폭이 좁아져도 keep-all 줄바꿈에서 폭 약 19.6~20.3em(뷰포트 약 384~394px — 390·393px 폰)과
+    // 약 28.8~30.8em 에서 한 줄 늘었다. 스트레스 금리를 앞으로 옮기고 한도를 산정하므로 를 얹으므로 로 줄여 전 구간에서 줄 수가 종전 이하.
+    const p3 = (c.details ?? "").split("\n\n")[2] ?? "";
+    expect(p3).toContain("실제 금리에 스트레스 금리 1.50%(수도권·규제지역 주담대 3%, 지방 주담대 0.75%)를 얹으므로, 예상 금리 칸에 그 값을 더해야 은행 계산에 가까워집니다.");
+    // 기호(·%())가 3개 늘고 한글·공백이 줄어 글자 종류별 비교 대신 보수적 폭 추정으로 견준다(실측 169.32em → 160.00em).
+    const wasP3 =
+      "40%는 금융위원회가 2021년 10월 가계부채 관리 강화방안에서 정한 차주단위 DSR 규제비율로 은행권 40%, 제2금융권은 2022년 1월부터 50%가 적용됩니다. 여기에 2025년 7월 1일부터 시행된 3단계 스트레스 DSR은 변동·혼합·주기형 대출의 DSR을 계산할 때 실제 금리에 1.50%(지방 주택담보대출은 0.75%)의 스트레스 금리를 얹어 한도를 산정하므로, 예상 금리 칸에 스트레스 금리를 더한 값을 넣어야 은행 계산에 가까워집니다.";
+    const est = (t: string) => { const k = kinds(t); return k.hangul * 0.92 + k.digit * 0.62 + k.space * 0.27 + k.other * 0.9; };
+    expect(est(p3)).toBeLessThan(est(wasP3));
+    expect(kinds(p3).hangul).toBeLessThan(kinds(wasP3).hangul);
+    expect(kinds(p3).space).toBeLessThan(kinds(wasP3).space);
   });
 });
 
