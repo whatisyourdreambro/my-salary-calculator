@@ -652,12 +652,12 @@ const childSupport100 = `
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 아동수당</h2>
 <ul class="space-y-2 mt-4">
 <li>· 대상: 만 0~8세 모든 아동 (출생~만 9세 생일 전월)</li>
-<li>· 금액: 월 10만원</li>
+<li>· 금액: 월 10만~12만원</li>
 <li>· 지급일: 매월 25일</li>
 <li>· 소득 무관 보편 지급</li>
 </ul>
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 추가 — 0~1세 부모급여</h2>
-<p>만 0세: 월 100만원 / 만 1세: 월 50만원 (육아휴직 못 받는 가구 한정). 아동수당 10만원과 중복 수령 가능.</p>
+<p>만 0세: 월 100만원 / 만 1세: 월 50만원 (어린이집 등 이용 시 차감). 아동수당 10만원과 중복 수령 가능.</p>
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/parental-leave" class="text-primary underline">육아휴직 급여 계산기</a></li></ul></div>
 `;
 

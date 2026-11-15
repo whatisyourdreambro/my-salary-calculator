@@ -4523,7 +4523,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 705
+  "contentChars": 708
  },
  {
   "slug": "basic-pension-65-2026",
