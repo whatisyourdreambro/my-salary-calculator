@@ -158,6 +158,8 @@ describe("화면 비노출", () => {
         "src/app/salary-db/page.tsx",
         "src/lib/companyPageMetadata.ts",
         "src/lib/salary-data/CompanyRepository.ts",
+        // 2026-11-15 SEASONA(lib ideas[6]): 헤더 검색 인덱스의 숨은 검색어(keywords) — 검색 경로, 드롭다운에는 그리지 않는다
+        "src/lib/searchIndex.ts",
         "src/lib/seo.ts",
         "src/types/company.ts",
       ].sort()
