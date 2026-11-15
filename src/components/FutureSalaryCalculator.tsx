@@ -288,7 +288,7 @@ export default function FutureSalaryCalculator() {
  <tr key={item.year} className="border-t border-border">
  <td className="p-2 font-semibold">{item.year}년</td>
  <td className="p-2 text-right text-primary font-bold">{formatNumber(item.salary)} 원</td>
- <td className="p-2 text-right text-primary/80">+ {formatNumber(item.increaseAmount)} 원</td>
+ <td className="p-2 text-right text-primary/80">{item.increaseAmount < 0 ? "- " : "+ "}{formatNumber(Math.abs(item.increaseAmount))} 원</td>
  </tr>
  ))}
  </tbody>

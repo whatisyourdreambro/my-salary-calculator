@@ -38,3 +38,15 @@ describe("미래 연봉 탭 접근성 이름·상태 (2026-11-15 감사 componen
     expect(s).toContain('<button type="button" aria-label={`이벤트 ${index + 1} 삭제`} onClick={() => removeEvent(index)}');
   });
 });
+
+describe("상승액 칸 부호 (2026-11-15 감사 components-b03-M01, N2-components-07)", () => {
+  it("연봉이 내려간 해는 '+ -7,881,250 원' 이 아니라 '- 7,881,250 원'", () => {
+    // 기본값(50,000,000원·5%)에 4년차 이직을 현재 연봉으로 둔 경우 — 그해 상승액이 음수
+    const rows = calculateFutureSalary(50_000_000, 10, 5, [{ yearIndex: 3, type: "job_change", value: 50_000_000 }], null);
+    expect(rows[3].increaseAmount).toBe(-7_881_250);
+    expect(calculateFutureSalary(50_000_000, 2, -3, [], null)[0].increaseAmount).toBe(-1_500_000);
+    const src = readFileSync(resolve(process.cwd(), "src/components/FutureSalaryCalculator.tsx"), "utf8");
+    expect(src).toContain('{item.increaseAmount < 0 ? "- " : "+ "}{formatNumber(Math.abs(item.increaseAmount))} 원');
+    expect(src).not.toContain("+ {formatNumber(item.increaseAmount)}");
+  });
+});
