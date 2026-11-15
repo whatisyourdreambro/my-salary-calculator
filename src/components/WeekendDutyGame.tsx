@@ -502,10 +502,10 @@ export default function WeekendDutyGame() {
       <AnimatePresence>
         {toast && (
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 30 }}
-            className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 border border-white/20 text-white px-6 py-3 rounded-full text-sm font-bold shadow-2xl z-[100] whitespace-nowrap"
+            initial={{ opacity: 0, y: 30, x: "-50%" }}
+            animate={{ opacity: 1, y: 0, x: "-50%" }}
+            exit={{ opacity: 0, y: 30, x: "-50%" }}
+            className="fixed bottom-8 left-1/2 bg-gray-900 border border-white/20 text-white px-6 py-3 rounded-full text-sm font-bold shadow-2xl z-[100] whitespace-nowrap"
           >
             {toast}
           </motion.div>
