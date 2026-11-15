@@ -49,11 +49,13 @@ describe("widget input validation", () => {
 
   // audit1115 app-data-pages-b05-M01: the old 1,000만원 grid interpolated across the zero-tax kink and
   // showed 12 / 19 / 13만원 for these short tenures (verifier final_fix pairs, wage 만원, years, tax 만원).
+  // 500 x 20 is the NTS worked example (퇴직급여 1억원, 근속 20년: 산출세액 1,120,000원 + 지방소득세 112,000원 = 123만원).
   it.each([
     [250, 1, 2],
     [400, 1, 6],
     [300, 2, 7],
     [350, 5, 24],
+    [500, 20, 123],
   ])("shows the exact severance tax for %i만원 x %i years (%i만원)", async (wage, years, taxMan) => {
     const severance = await calculator(getSeverance, { wage: String(wage), years: String(years) });
     expect(severance("detail").innerHTML).toContain(`/ ${taxMan}<small>만원</small>`);
@@ -77,7 +79,7 @@ describe("widget input validation", () => {
 
   it("keeps the severance breakpoint table within a few won of the engine everywhere", async () => {
     const html = await (await getSeverance()).text();
-    const TAX: number[][] = JSON.parse(html.match(/var TAX = (\[.*?\]);\n/s)![1]);
+    const TAX: number[][] = JSON.parse(html.match(/var TAX = (\[[\s\S]*?\]);\n/)![1]);
     expect(TAX).toHaveLength(40);
     // the old uniform grid made the document 43.8KB; the breakpoint table keeps it small
     expect(html.length).toBeLessThan(30_000);
