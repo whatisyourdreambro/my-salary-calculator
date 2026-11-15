@@ -22,6 +22,8 @@ const MODULES: Record<string, string[]> = {
   "src/components/YearEndTaxCluster.tsx": ["year-end-cluster"],
   "src/components/SiblingHubsNav.tsx": ["sibling-hubs"],
   "src/components/ListedSalaryBandTable.tsx": ["listed-band"],
+  // 2026-11-15 N2-perf-02 — RelatedCalculators 서버 컴포넌트 전환: onClick 직접 계측 → section 모듈 속성 위임(같은 position 값)
+  "src/components/RelatedCalculators.tsx": ["related-calc"],
   // 2026-09-11 S1-0/S1-2: 계산기 결과 핀·성과급 22쪽 결과 직하(광고 아래) 링크
   "src/components/SimpleCalculatorView.tsx": ["calc-next-pins"],
   "src/components/BonusNextLinks.tsx": ["bonus-next-links"],
@@ -103,7 +105,6 @@ const CHILD_LINK_WRAPPERS = new Set(["src/app/salary-db/[id]/SamsungCompanySumma
 
 /** 이미 onClick 으로 guide_cta_click 을 직접 보내는 모듈 — 속성을 주면 2중 집계 */
 const SELF_TRACKED = [
-  "src/components/RelatedCalculators.tsx",
   "src/components/NextActions.tsx",
   "src/components/RelatedGuides.tsx",
   "src/app/calc/samsung-bonus/shared.tsx",

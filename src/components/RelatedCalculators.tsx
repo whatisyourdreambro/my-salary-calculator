@@ -2,12 +2,13 @@
 //
 // 페이지 하단 cross-link 추천 카드.
 // 결과창 직하 또는 페이지 끝에 배치하여 평균 세션 페이지뷰 증가.
-
-"use client";
+//
+// 2026-11-15 N2-perf-02 (lens-perf-F10): 서버 컴포넌트(훅·onClick 없음). 이 컴포넌트를 그리는 서버 파일 90여 곳에서
+// 이 컴포넌트·추천 목록·아이콘 JS 를 내려보내지 않는다. 클릭 계측은 section 의 모듈 속성(related-calc)을
+// 루트 InternalLinkTracker 가 위임으로 잡아 예전 onClick 과 같은 guide_cta_click(slug=href, position=related-calc,
+// dest_tpl) 을 보낸다. 경로는 호출부가 currentPath 로 넘긴다 — 경로를 모르는 레이아웃은 RelatedCalculatorsAuto.
 
 import Link from "@/components/AppLink";
-import { usePathname } from "next/navigation";
-import { destTemplate, trackGuideCTAClick } from "@/lib/analytics";
 import {
  ArrowRight,
  Calculator,
@@ -53,8 +54,8 @@ const ICON_MAP: Record<string, React.ElementType> = {
 };
 
 interface RelatedCalculatorsProps {
- /** 명시적 경로 (지정 시 auto 무시) */
- currentPath?: string;
+ /** 현재 페이지 경로 (필수 — 경로를 모르는 레이아웃은 RelatedCalculatorsAuto 사용) */
+ currentPath: string;
  /** 표시할 개수 (기본 4) */
  limit?: number;
  /** 섹션 제목 (기본: "이런 계산기도 함께 보세요") */
@@ -77,14 +78,12 @@ export default function RelatedCalculators({
  calcCategory,
  exclude,
 }: RelatedCalculatorsProps) {
- const pathname = usePathname();
- const resolvedPath = currentPath || pathname || "/";
- const items = getRelatedCalculators(resolvedPath, limit, calcCategory, exclude);
+ const items = getRelatedCalculators(currentPath, limit, calcCategory, exclude);
 
  if (items.length === 0) return null;
 
  return (
- <section className={`my-12 ${className}`}>
+ <section data-msy-module="related-calc" className={`my-12 ${className}`}>
  <h2 className="text-lg font-black text-navy mb-4 px-1">
  {title}
  </h2>
@@ -95,7 +94,6 @@ export default function RelatedCalculators({
  <Link
  key={item.path}
  href={item.path}
- onClick={() => trackGuideCTAClick(item.path, "related-calc", undefined, destTemplate(item.path))}
  className="group flex flex-col gap-2 p-4 rounded-2xl bg-white border border-canvas-200 hover:border-electric hover:bg-electric-5 transition-all"
  >
  <div className="w-10 h-10 rounded-xl bg-canvas flex items-center justify-center group-hover:bg-electric-10 transition-colors">

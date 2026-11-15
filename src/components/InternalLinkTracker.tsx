@@ -10,8 +10,9 @@
 //
 // - 새 이벤트명을 만들지 않는다: 9/7 등록 예정인 'position' 측정기준으로 바로 분해되고
 //   GA4 이벤트 종류·측정기준 한도도 소모하지 않는다.
-// - RelatedCalculators/NextActions/RelatedGuides/samsung-bonus 는 이미 onClick 으로
-//   guide_cta_click 을 보내므로 data-msy-module 을 주지 않아 2중 집계가 없다.
+// - NextActions/RelatedGuides/samsung-bonus 는 이미 onClick 으로 guide_cta_click 을 보내므로
+//   data-msy-module 을 주지 않아 2중 집계가 없다. RelatedCalculators 는 2026-11-15(N2-perf-02)부터
+//   서버 컴포넌트라 onClick 대신 모듈 속성 related-calc 로 여기서 위임 계측한다(같은 position 값).
 // - 광고 iframe 내부 클릭은 cross-origin 이라 document 위임에 잡히지 않는다(ad_unit_click 무관).
 // - 외부 링크(http…)·앵커(#)·쿠팡/제휴 링크는 href^='/' 필터로 제외된다.
 import { useEffect } from "react";

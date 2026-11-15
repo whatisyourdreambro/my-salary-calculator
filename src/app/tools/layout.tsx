@@ -4,7 +4,8 @@
 
 import TopicNextSteps from '@/components/TopicNextSteps';
 import ToolExplainerSection from "@/components/ToolExplainerSection";
-import RelatedCalculators from "@/components/RelatedCalculators";
+// 2026-11-15 N2-perf-02: 경로를 모르는 레이아웃이라 usePathname 래퍼를 같은 이름으로 가져온다 — 아래 광고 사이 JSX 한 줄은 그대로
+import RelatedCalculators from "@/components/RelatedCalculatorsAuto";
 import { HomeTopAd, InArticleAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import AutoShareSection from "@/components/AutoShareSection";
