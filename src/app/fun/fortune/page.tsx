@@ -29,12 +29,12 @@ const TIMES = [
 
 // Mock Data for Deterministic Generation
 const SAJU_TITLES = [
- "비상하는 붉은 말", "고요한 숲의 현자", "거침없는 개척자", "지혜로운 전략가",
+ "온화한 붉은 양", "고요한 숲의 현자", "거침없는 개척자", "지혜로운 전략가",
  "황금 들판의 수확자", "새벽을 여는 선구자", "깊은 바다의 잠룡", "태양을 품은 해바라기"
 ];
 
 const TOTAL_LUCK_TEXTS = [
- "2026년 병오년은 당신에게 있어 '도약'의 해입니다. 그동안 준비해온 것들이 빛을 발하며, 주변의 인정을 받게 됩니다. 특히 상반기보다는 하반기에 운의 흐름이 더욱 강력해지니, 조급해하지 말고 꾸준히 정진하세요.",
+ "2027년 정미년은 당신에게 있어 '도약'의 해입니다. 그동안 준비해온 것들이 빛을 발하며, 주변의 인정을 받게 됩니다. 특히 상반기보다는 하반기에 운의 흐름이 더욱 강력해지니, 조급해하지 말고 꾸준히 정진하세요.",
  "올해는 '변화'의 바람이 강하게 부는 시기입니다. 익숙한 곳을 떠나 새로운 도전을 하게 될 수도 있습니다. 두려워하지 마세요. 이 변화는 당신을 더 높은 곳으로 이끌어줄 발판이 될 것입니다.",
  "안정과 평화가 깃드는 한 해입니다. 큰 굴곡 없이 평온한 나날이 이어지며, 내실을 다지기에 최적의 시기입니다. 새로운 일을 벌이기보다는 기존의 것을 지키고 가꾸는 데 집중하는 것이 좋습니다.",
  "귀인의 도움으로 어려움을 극복하는 형국입니다. 혼자 해결하려 끙끙대지 말고 주변에 손을 내미세요. 뜻밖의 인연이 당신에게 큰 행운을 가져다줄 것입니다.",
@@ -137,10 +137,10 @@ export default function FortunePage() {
  <Scroll className="w-10 h-10 text-primary" />
  </div>
  <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-red-400 to-red-700 tracking-tight">
- 2026 병오년<br />신년운세
+ 2027 정미년<br />신년운세
  </h1>
  <p className="text-gray-400 text-lg">
- 붉은 말의 해, 재미로 보는 한 해 운세를 미리 확인하세요.
+ 붉은 양의 해, 재미로 보는 한 해 운세를 미리 확인하세요.
  </p>
  </div>
 
@@ -307,7 +307,8 @@ export default function FortunePage() {
 
  <div className="relative z-10">
  <div className="text-center border-b-2 border-canvas pb-8 mb-8">
- <p className="text-stone-600 font-sans mb-2">2026 병오년(丙午年)</p>
+ {/* 연도 머리글: 한자(丁未年)는 사이트 서브셋 글꼴에 없어 싣지 않는다 — 검색 설명(layout)에만 (2026-11-15) */}
+ <p className="text-stone-600 font-sans mb-2">2027 정미년</p>
  <h2 className="text-3xl md:text-4xl font-black mb-4 font-sans text-primary">
  {resultData.title}
  </h2>
@@ -386,7 +387,7 @@ export default function FortunePage() {
 
  <div className="flex flex-col items-center gap-2">
  <p className="text-sm font-bold text-gray-400">결과 공유하기</p>
- <ResultSharePanel resultKey={JSON.stringify([name, gender, year, month, day, time, calendar, resultData])} title={`[2026 병오년 신년운세] ${name}님의 운세: ${resultData.title} (${resultData.score}점)`} />
+ <ResultSharePanel resultKey={JSON.stringify([name, gender, year, month, day, time, calendar, resultData])} title={`[2027 정미년 신년운세] ${name}님의 운세: ${resultData.title} (${resultData.score}점)`} />
  </div>
 
  {/* 자매 콘텐츠 상호 링크 */}
