@@ -212,9 +212,19 @@ const BIRTH_ORDER_OPTIONS = [
  * 부양가족(본인 포함)의 최소 인원 — 자녀세액공제 대상 자녀와 해당 연도 출산·입양 자녀는 둘 다 '기본공제대상자인
  * 자녀'가 요건이라(소득세법 §59의2①③) 부양가족에 들어가 있어야 한다. 엔진도 자녀세액공제 인원이 본인을 뺀
  * 기본공제 인원보다 많으면 거부한다. 출산·입양 자녀는 9세 미만이라 자녀세액공제 인원과 겹치지 않는다.
+ * 경로우대(만 70세 이상)·장애인 추가공제(소득세법 §51①)도 이미 기본공제대상자로 센 사람에게만 붙고 본인도 그중
+ * 하나일 수 있어, 부양가족은 두 인원 각각 이상이어야 한다(합계가 아니다). 종전에는 두 칸이 부양가족을 넘어도 엔진이
+ * 1명당 100만·200만원을 그대로 더해 환급을 부풀렸다 (2026-11-15 N2-components-02, components-b06-F01).
  */
-export function minDependents(inputs: Pick<TaxInputs, "childTaxCreditEligibleChildren" | "birthOrders">): number {
- return 1 + Math.max(0, inputs.childTaxCreditEligibleChildren) + (inputs.birthOrders?.length ?? 0);
+export function minDependents(
+ inputs: Pick<TaxInputs, "childTaxCreditEligibleChildren" | "birthOrders"> &
+ Partial<Pick<TaxInputs, "seniorDependents" | "disabledDependents">>
+): number {
+ return Math.max(
+ 1 + Math.max(0, inputs.childTaxCreditEligibleChildren) + (inputs.birthOrders?.length ?? 0),
+ Math.max(0, inputs.seniorDependents ?? 0),
+ Math.max(0, inputs.disabledDependents ?? 0)
+ );
 }
 
 /**
@@ -229,6 +239,18 @@ export function withChildren(prev: TaxInputs, childTaxCreditEligibleChildren: nu
 /** 출산·입양 순서 선택(0 = 없음) — birthOrders 로 넘기고, 부양가족이 모자라면 함께 올린다 */
 export function withBirthOrder(prev: TaxInputs, order: number): TaxInputs {
  const next = { ...prev, birthOrders: order > 0 ? [order] : [] };
+ return { ...next, dependents: Math.max(prev.dependents, minDependents(next)) };
+}
+
+/** 만 70세 이상 인원 변경 — 부양가족이 모자라면 함께 올린다 (경로우대는 기본공제대상자에게만, 소득세법 §51①) */
+export function withSenior(prev: TaxInputs, seniorDependents: number): TaxInputs {
+ const next = { ...prev, seniorDependents };
+ return { ...next, dependents: Math.max(prev.dependents, minDependents(next)) };
+}
+
+/** 장애인 인원 변경 — 부양가족이 모자라면 함께 올린다 (장애인 추가공제는 기본공제대상자에게만, 소득세법 §51①) */
+export function withDisabled(prev: TaxInputs, disabledDependents: number): TaxInputs {
+ const next = { ...prev, disabledDependents };
  return { ...next, dependents: Math.max(prev.dependents, minDependents(next)) };
 }
 
@@ -339,6 +361,8 @@ export default function YearEndTaxCalculator() {
 
  const handleChildrenChange = (value: number) => setInputs((prev) => withChildren(prev, value));
  const handleBirthOrderChange = (order: number) => setInputs((prev) => withBirthOrder(prev, order));
+ const handleSeniorChange = (v: number) => setInputs((prev) => withSenior(prev, v));
+ const handleDisabledChange = (v: number) => setInputs((prev) => withDisabled(prev, v));
  const handleMarriedChange = (checked: boolean) => setInputs((prev) => ({ ...prev, marriedIn2026: checked }));
 
  return (
@@ -366,8 +390,8 @@ export default function YearEndTaxCalculator() {
  <Accordion title="2. 소득 공제 항목" contentProps={measurement.inputProps}>
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
  <NumberStepper label="부양가족(본인포함)" value={inputs.dependents} onValueChange={(v) => handleNumberChange("dependents", v)} min={minDependents(inputs)} unit="명" />
- <NumberStepper label="만 70세 이상" value={inputs.seniorDependents} onValueChange={(v) => handleNumberChange("seniorDependents", v)} unit="명" />
- <NumberStepper label="장애인" value={inputs.disabledDependents} onValueChange={(v) => handleNumberChange("disabledDependents", v)} unit="명" />
+ <NumberStepper label="만 70세 이상" value={inputs.seniorDependents} onValueChange={handleSeniorChange} unit="명" />
+ <NumberStepper label="장애인" value={inputs.disabledDependents} onValueChange={handleDisabledChange} unit="명" />
  </div>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
  <CurrencyInput

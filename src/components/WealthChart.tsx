@@ -20,11 +20,13 @@ interface WealthChartProps {
  monthlyNetSalary: number;
 }
 
-const formatKRW = (value: number) => {
- if (value >= 100000000) {
- return `${(value / 100000000).toFixed(1)}억`;
- }
- return `${(value / 10000).toLocaleString('ko-KR')}만`;
+// 1억 미만은 만원 단위 정수로 — 종전 (value / 10000).toLocaleString() 은 소수 셋째 자리까지 남겨
+// '월 19.322만원씩'·'2,142.928만' 처럼 읽혔다 (2026-11-15 N2-components-03, components-b05-F01).
+// 문턱은 반올림한 만원 값으로 본다 — 99,995,000~99,999,999원이 '10,000만' 이 아니라 '1.0억' 이 되게.
+export const formatKRW = (value: number) => {
+ const man = Math.round(value / 10000);
+ if (man >= 10000) return `${(value / 100000000).toFixed(1)}억`;
+ return `${man.toLocaleString('ko-KR')}만`;
 };
 
 interface MungGoalMarkerProps {
@@ -163,7 +165,7 @@ export default function WealthChart({ monthlyNetSalary }: WealthChartProps) {
  if (active && payload && payload.length) {
  return (
  <div className="bg-white p-4 border border-canvas shadow-xl rounded-xl">
- <p className="font-bold text-navy mb-2">{label}년 후 (나이: {payload[0].payload.age}세)</p>
+ <p className="font-bold text-navy mb-2">{label}년 후</p>
  <div className="space-y-1">
  <p className="text-sm text-electric flex justify-between gap-4">
  <span>단순 저축:</span> 
@@ -231,9 +233,12 @@ export default function WealthChart({ monthlyNetSalary }: WealthChartProps) {
  <div className="text-2xl">💡</div>
  <div>
  <h4 className="font-bold text-primary text-sm">Mung&apos;s Wealth Tip</h4>
+ {/* 나이는 묻지 않으므로(계산은 30세 출발 가정) '{n}세에' 대신 차트 기준선과 같은 '{n}년 뒤' — 낱말마다 종전 이하
+ ('{나이}세에'→'{n}년', '목표액'→'뒤', '거대해집니다!'→'커집니다!'; 낱말 수가 같아 keep-all 줄바꿈에서도 줄이 늘 수 없다.
+ 목표액은 위 '목표: …원' 배지가 말한다; 2026-11-15 N2-components-03, components-b05-M01) */}
  <p className="text-primary text-xs mt-1 leading-relaxed">
- {fireYear 
- ? `현재 저축과 수익률을 유지하면 ${fireYear.age}세에 목표액 ${formatKRW(fireGoal)}원을 달성합니다. 복리의 힘은 시간이 지날수록 거대해집니다!`
+ {fireYear
+ ? `현재 저축과 수익률을 유지하면 ${fireYear.year}년 뒤 ${formatKRW(fireGoal)}원을 달성합니다. 복리의 힘은 시간이 지날수록 커집니다!`
  : `목표액에 도달하기 위해 저축률을 높이거나 투자 수익률을 개선해보세요. 일찍 시작할수록 유리합니다.`}
  </p>
  </div>

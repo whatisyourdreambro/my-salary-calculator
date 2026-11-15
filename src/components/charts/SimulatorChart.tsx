@@ -19,9 +19,12 @@ export default function SimulatorChart({ data }: { data: ChartDatum[] }) {
  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
  <XAxis dataKey="name" stroke="rgba(255,255,255,0.5)" tick={{ fontSize: 14, fontWeight: 'bold' }} />
  <YAxis hide />
+ {/* 툴팁 상자는 globals.css 가 카드색으로 칠한다 — 값 줄은 상자 글자색을 물려받는다 (다크 테마 '#000' 방지,
+ 2026-11-15 N2-components-05, components-b01-F01) */}
  <Tooltip
  cursor={{ fill: 'rgba(255,255,255,0.05)' }}
- contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: 'none', borderRadius: '12px' }}
+ contentStyle={{ border: 'none', borderRadius: '12px' }}
+ itemStyle={{ color: 'inherit' }}
  formatter={(value: number) => [`${value.toLocaleString('ko-KR')}원`, '월 실수령액']}
  />
  <Bar dataKey="net" radius={[10, 10, 0, 0]} barSize={80}>

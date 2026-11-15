@@ -25,9 +25,12 @@ export default function GlobalChart({ data }: { data: GlobalChartDatum[] }) {
           tick={{ fontSize: 12, fontWeight: "bold" }}
           width={110}
         />
+        {/* 툴팁 상자는 globals.css 가 카드색으로 칠한다 — 값 줄은 상자 글자색을 물려받아야 다크 테마에서도 읽힌다
+            (recharts 기본 '#000' 은 다크 카드 위 1.25:1; 2026-11-15 N2-components-05, components-b01-F01) */}
         <Tooltip
           cursor={{ fill: "rgba(255,255,255,0.05)" }}
-          contentStyle={{ backgroundColor: "rgba(0,0,0,0.8)", border: "none", borderRadius: "12px" }}
+          contentStyle={{ border: "none", borderRadius: "12px" }}
+          itemStyle={{ color: "inherit" }}
           formatter={(value: number) => [`${Math.round(value).toLocaleString("ko-KR")}원`, "실수령액"]}
         />
         <Bar dataKey="net" radius={[0, 10, 10, 0]} barSize={40}>
