@@ -13,8 +13,10 @@
 //   /chuseok-bonus-2026, scripts/sitemap-content-reviews.json 그 두 항목의 contentDate, src/app/chuseok-bonus-2026/page.tsx 수정일 3곳.
 //   테스트가 고정한 리터럴: relandR1Ledger.test.ts 와 guideRevisionDates.test.ts 의 R1_LEDGER_DAY(위 10편의 사이트맵 날짜).
 // 정본 modifiedDate 는 올리지 않는다 — 목록·관련 글 순서 불변(광고 위 카드 불변, 이유는 src/config/guideFactFixPush.ts 머리 주석).
-// 규칙: 게시일에 날짜를 옮길 때는 이 값과 위 리터럴을 함께 옮긴다. 미래 날짜를 남기지 않는다(verify-sitemap 미래 lastmod 게이트,
-//   guideSpec 미래 날짜 금지).
+// 규칙: 이 값은 R1 원장일(R1 내용을 실제로 고친 묶음의 날, KST)에 머문다 — 게시일로 옮기지 않는다(게시일·미래 날짜 금지,
+//   verify-sitemap 미래 lastmod 게이트·guideSpec 미래 날짜 금지). 위 리터럴 목록은 원장일 자체가 틀린 것으로 드러나 바로잡을 때
+//   한 번에 함께 고치라고 적어 둔 것이다(final-03·rf-02, 2026-11-15). 뒤 묶음이 같은 글을 다시 고치면 이 상수는 그대로 두고
+//   그 글의 행만 그 묶음의 실제 수정일로 늦춘다(예: guideSitemapDates.ts 의 samsung-opi-forecast-2027 → 2026-11-15, facts-01).
 
 /** R1 재착지(RL-01·RL-02 가이드 보강·정정, RL-05 설·추석 접힌 FAQ) 원장 기준일 */
 export const RELAND_R1_PUSH = "2026-11-03";
