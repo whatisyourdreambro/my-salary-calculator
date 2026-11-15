@@ -154,7 +154,7 @@ export default function FinancialFortunePage() {
  href="/fun/fortune"
  className="mt-2 w-full py-4 border border-canvas rounded-xl text-electric font-bold hover:bg-canvas transition-colors flex items-center justify-center gap-2"
  >
- <ScrollText size={18} /> 생년월일시로 보는 2026 신년운세 전체보기
+ <ScrollText size={18} /> 생년월일시로 보는 2027 신년운세 전체보기
  </Link>
 
  {/* Disclaimer */}

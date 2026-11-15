@@ -228,7 +228,7 @@ const LEAF_LABELS: Record<string, string> = {
  "/fun/escape-plan": "노비 탈출 계산기",
  "/fun/financial-mbti": "금융 MBTI 테스트",
  "/fun/flappy": "플래피 샐러리맨",
- "/fun/fortune": "2026년 신년운세",
+ "/fun/fortune": "2027년 신년운세",
  "/fun/iq-test": "멘사급 IQ 테스트",
  "/fun/lunch-roulette": "직장인 점심 메뉴 룰렛",
  "/fun/meme-coin": "밈코인 모의투자 시뮬레이션",
@@ -592,6 +592,8 @@ export function datasetLd(opts: {
  license?: string;
  /** 시간 범위 — schema.org temporalCoverage (예: "2025", "2024/2026") */
  temporalCoverage?: string;
+ /** 측정 변수 이름 — schema.org variableMeasured (Text[]). 화면에 실제로 있는 값만 (2026-11-15 SEASONC) */
+ variableMeasured?: string[];
 }) {
  const toIso = (d: string) => {
  const parsed = new Date(d);
@@ -624,6 +626,7 @@ export function datasetLd(opts: {
  : {}),
  ...(opts.license ? { license: opts.license } : {}),
  ...(opts.temporalCoverage ? { temporalCoverage: opts.temporalCoverage } : {}),
+ ...(opts.variableMeasured && opts.variableMeasured.length > 0 ? { variableMeasured: opts.variableMeasured } : {}),
  isAccessibleForFree: true,
  inLanguage: "ko-KR",
  creator: {

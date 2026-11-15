@@ -32,7 +32,7 @@ import { GuideMidAd } from '@/components/AdPlacement';
 
 export const metadata: Metadata = buildPageMetadata({
  title: '직장인 심심풀이 테스트·게임 20여 종 무료 모음 | 머니샐러리 FUN',
- description: '부자 DNA·IQ 테스트, 연봉 순위, 소비 성향, 2026 신년운세, 점심 메뉴 룰렛, 주말 당직 룰렛, 테트리스까지 — 직장인을 위한 무료 테스트·게임 20여 종을 한곳에 모았습니다.',
+ description: '부자 DNA·IQ 테스트, 연봉 순위, 소비 성향, 2027 신년운세, 점심 메뉴 룰렛, 주말 당직 룰렛, 테트리스까지 — 직장인을 위한 무료 테스트·게임 20여 종을 한곳에 모았습니다.',
  path: '/fun',
  keywords: ['직장인 심리테스트', '직장인 게임', '연봉 테스트', '무료 심심풀이'],
 });
@@ -156,7 +156,7 @@ export default function FunLabPage() {
  <Star className="w-6 h-6 text-electric" /> 운세
  </h2>
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 auto-rows-fr">
- <FunCard icon={ScrollText} title="2026 신년운세" description="병오년 붉은 말의 해, 생년월일로 보는 나의 한 해 운세." href="/fun/fortune" color="text-primary" />
+ <FunCard icon={ScrollText} title="2027 신년운세" description="정미년 붉은 양의 해, 생년월일로 보는 나의 한 해 운세." href="/fun/fortune" color="text-primary" />
  <FunCard icon={Star} title="직장인 재물운·연봉운" description="출생 연도와 월로 정해진 문구를 골라보는 재미용 2026 운세." href="/fortune-2026" color="text-primary" />
  </div>
  </div>

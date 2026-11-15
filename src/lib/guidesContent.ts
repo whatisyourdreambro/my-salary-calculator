@@ -44,6 +44,9 @@ import { legacyRewrite8 } from "@/lib/guides/legacy-rewrite-8";
 import { legacyRewrite9 } from "@/lib/guides/legacy-rewrite-9";
 import { legacyRewrite10 } from "@/lib/guides/legacy-rewrite-10";
 import { trendBriefGuides } from "@/lib/guides/trend-briefs";
+// 검색 전용 설명(META-07 2차)의 최저임금·구직급여 금액은 정본 상수에서 (verify:tax 감시 리터럴을 이 파일에 쓰지 않는다)
+import { MINIMUM_WAGE_2026, MINIMUM_WAGE_2027 } from "@/config/minimumWage";
+import { UNEMPLOYMENT_BENEFIT_2026, unemploymentDailyLowerBound } from "@/config/unemploymentBenefit";
 
 // 레거시 rawGuides 50편의 고유 본문 (2026-08-15 재작성 — 전편 출처 검증).
 // (구 generateExpertContent 템플릿 본문을 대체 — 템플릿은 2026-08 점검에서 제거됨)
@@ -372,6 +375,13 @@ const allRawGuides = [
  ...trendBriefGuides,
 ];
 
+// META-07 2차(2026-11-15 SEASONC) 금액이 든 검색 설명 — 정본 상수에서 만든다. 맵 값에 템플릿 리터럴을 직접 두면
+// guideSpec 의 원본 소스 탐색기가 슬러그 뒤 백틱을 본문 레코드로 오인한다(legacy-rewrite 레코드와 같은 꼴).
+const wonKo = (n: number) => n.toLocaleString("ko-KR");
+const META_MINIMUM_WAGE_2026 = `2026년 최저임금은 시급 ${wonKo(MINIMUM_WAGE_2026.hourly)}원, 주휴 포함 월 ${wonKo(MINIMUM_WAGE_2026.monthly)}원입니다. 2027년은 시급 ${wonKo(MINIMUM_WAGE_2027.hourly)}원(월 ${wonKo(MINIMUM_WAGE_2027.monthly)}원)으로 고시됐습니다. 산입범위·수습 감액·미달 시 대응을 정리했습니다.`;
+const META_MINIMUM_WAGE_IMPACT_2026 = `내 월급이 최저임금 미달인지는 월급을 209시간으로 나눠 2026년 시급 ${wonKo(MINIMUM_WAGE_2026.hourly)}원과 비교하면 됩니다. 2027년 1월부터는 ${wonKo(MINIMUM_WAGE_2027.hourly)}원이 기준이며, 미달 시 차액 청구 방법을 정리했습니다.`;
+const META_UNEMPLOYMENT_2026 = `2026년 이직자의 실업급여는 평균임금의 60%로 하루 상한 ${wonKo(UNEMPLOYMENT_BENEFIT_2026.DAILY_UPPER)}원, 하한 ${wonKo(unemploymentDailyLowerBound())}원입니다. 가입기간·나이별 120~270일 수급 기간과 자발적 퇴사 인정 사유, 고용24 신청 절차를 정리했습니다.`;
+
 // 검색 결과(meta description) 전용 설명 — META-07 (2026-09-25 감사).
 // 설명이 50자 미만이던 39편만 80~120자로 보강한다: 검색 구절로 시작, 구체 수치 1개, 이모지 없음.
 // ★화면의 TL;DR·카드·RSS 는 기존 description 을 그대로 쓴다 — 본문 광고(GuideMidAd) 위 높이를
@@ -419,6 +429,24 @@ const guideMetaDescriptions: Record<string, string> = {
  "kospi-leader-stock-strategy": "삼성전자·SK하이닉스 적립식 vs 일시매수 — 월급의 5~10%를 자동이체로 적립하고 두 종목 합산 비중이 금융자산의 30%를 넘으면 추가 매수를 멈추는 원칙을 정리했습니다.",
  // W3-A 연말정산 기둥 글 메타 개명(2026-09-26 배포분) — 수치는 legacy-rewrite-3 본문과 같은 값만 사용
  "year-end-tax-2026": "2026년 귀속 연말정산(2027년 1~2월) 공제 총정리. 연금계좌 900만원·월세 1,000만원·카드 300만원(자녀 수별 상향) 등 항목별 한도와 환급 우선순위, 경정청구 5년까지 정리했습니다.",
+ // META-07 2차 (2026-11-15 SEASONC, lib ideas[2]) — 설명이 70자 미만이던 옛 글 중 시즌 글 14편(최저임금·퇴직금·4대보험·
+ // 연말정산·성과급 순). 답으로 시작, 수치는 오늘 본문(보강 포함)에 있는 값만 쓰고 공식 출처로 재확인(최저임금 고시 2026-08-05,
+ // 구직급여 상한 고용노동부 2025-12-16, 소득세법 제59조의3·제59조의4, 근로기준법 제56조, 근로자퇴직급여 보장법 제8·9조).
+ // 화면 카드·TL;DR·RSS 는 description 그대로 — 이 값은 guides/[slug] generateMetadata 에서만 쓰인다(광고 위 높이 불변).
+ "minimum-wage-2026": META_MINIMUM_WAGE_2026,
+ "minimum-wage-impact-2026": META_MINIMUM_WAGE_IMPACT_2026,
+ "severance-pay-guide": "퇴직금은 1일 평균임금 × 30일 × (재직일수 ÷ 365)로 계산하고 퇴직일부터 14일 안에 받아야 합니다. DB·DC·IRP 차이와 퇴직소득세 예시, IRP 연금 수령 시 30% 감면을 정리했습니다.",
+ "salary-guide-2026": "연봉 1억원의 2026년 월 실수령액은 약 653만원입니다(1인 가구, 비과세 식대 월 20만원). 4대보험·소득세 공제 구조와 연봉 3,000만~1억 5,000만원 구간별 실수령액표를 정리했습니다.",
+ "social-insurance-reduction": "4대보험료는 비과세 급여를 뺀 보수에 매겨져 식대 월 20만원, 자가운전보조금 월 20만원 같은 비과세 항목이 보험료를 줄입니다. 근로자 부담 약 9.7% 구조와 합법적 방법 7가지를 정리했습니다.",
+ "unemployment-insurance-2026": META_UNEMPLOYMENT_2026,
+ "tax-refund-mistakes-2026": "연말정산에서 자주 놓치는 공제는 산후조리원비(출산 1회 200만원), 안경·렌즈(1인 연 50만원), 교복비(연 50만원), 월세 세액공제 등입니다. 놓친 공제는 5년 안에 경정청구로 되찾을 수 있습니다.",
+ "isa-vs-pension-savings": "연금저축은 연 600만원, IRP를 더하면 연 900만원까지 13.2~16.5% 세액공제를 받고 ISA는 한도 안의 이자·배당이 비과세입니다. 세 계좌의 한도·의무 보유·인출 조건과 연봉별 조합을 비교했습니다.",
+ "child-education-tax-strategy": "자녀 교육비 세액공제는 15%로 취학 전·초중고 1인당 연 300만원 한도이고 교복비 50만원, 체험학습비 30만원도 들어갑니다. 초중고 학원비가 원칙적으로 빠지는 점과 학자금 마련 5단계를 정리했습니다.",
+ "semiconductor-performance-bonus-tax": "OPI·PS·PI·TAI 성과급은 모두 근로소득(상여)이라 연봉과 합산해 6~45% 누진세율로 과세되고 별도 우대세율은 없습니다. 연금저축·IRP 900만원 세액공제 등 절세법 4가지를 정리했습니다.",
+ "bonus-split-payout-1000-saving-2026": "성과급 1억원을 2년에 나눠 받아도 세금이 자동으로 줄지는 않습니다. 소득 귀속연도와 두 해의 과세표준에 따라 달라지므로 연봉 8,000만원 예시로 일시·분할 비교법과 협상 때 확인할 조건을 정리했습니다.",
+ "retention-bonus-3year-split-2026": "리텐션 보너스 1억원을 3년에 나눠 받을 때 세금이 얼마나 줄지는 매년 급여·공제와 귀속연도에 달려 한계세율로 단정할 수 없습니다. 같은 총액으로 비교하는 법과 근속·반환 조건 확인 항목을 정리했습니다.",
+ "stock-option-with-bonus-2026": "일반 스톡옵션 행사이익은 근로소득이라 같은 해 성과급과 합산 과세되고, 벤처기업 적격 스톡옵션은 요건을 채우면 행사 때 과세하지 않고 매도 때 양도소득세로 냅니다. 적격 요건과 과세 시점을 비교했습니다.",
+ "overtime-pay-calculation": "5인 이상 사업장의 연장·야간근로와 8시간 이내 휴일근로는 통상임금의 50%, 휴일 8시간 초과분은 100%를 더해 받습니다. 포괄임금제여도 법정 수당보다 적으면 차액 청구가 가능하며 통상시급 계산법을 정리했습니다.",
 };
 
 // 검색어 복원 검색 전용 설명 — code51-01 (2026-10-06).

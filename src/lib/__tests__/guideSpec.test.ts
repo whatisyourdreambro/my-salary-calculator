@@ -810,14 +810,15 @@ describe.skipIf(REGEN.size > 0)("(5) 키퍼 표 — 2026 요율·상한은 정�
 // (6) 검색 전용 설명(metaDescription)의 출처 — guidesContent 의 META-07 맵(39편 + W3-A 기둥 글 year-end-tax-2026
 //     메타 개명 1편 = 40편)과 KEEPERS 뿐이다. guideFactCorrections 의 META-07 은 키퍼가 늘 때마다 개수가 바뀌어
 //     '39편 이상'만 본다. 키퍼가 아닌 글에 metaDescription 이 새로 붙는 실수는 KEEPERS 를 가진 이 파일에서 정확히 막는다.
-describe.skipIf(REGEN.size > 0)("(6) metaDescription 은 META-07 맵(40편)·검색어 복원 맵(19편)과 KEEPERS 에만", () => {
-  it("META-07 맵은 40편(39 + year-end-tax-2026) 그대로이고, 맵 밖에서 metaDescription 을 가진 글은 모두 키퍼다", () => {
+describe.skipIf(REGEN.size > 0)("(6) metaDescription 은 META-07 맵(54편)·검색어 복원 맵(19편)과 KEEPERS 에만", () => {
+  it("META-07 맵은 54편(39 + year-end-tax-2026 + 2026-11-15 시즌 14편)이고, 맵 밖에서 metaDescription 을 가진 글은 모두 키퍼다", () => {
     const src = read("src/lib/guidesContent.ts");
     const start = src.indexOf("const guideMetaDescriptions");
     expect(start, "guidesContent.ts 의 META-07 맵을 찾지 못함").toBeGreaterThan(-1);
     const block = src.slice(start, src.indexOf("\n};", start));
     const meta07 = new Set([...block.matchAll(/^\s*"([a-z0-9-]+)"\s*:/gm)].map((m) => m[1]));
-    expect(meta07.size).toBe(40);
+    // 2026-11-15 SEASONC(lib ideas[2]): 설명이 70자 미만이던 옛 시즌 글 14편 추가 = 54편 (guideMetaSeason1115.test.ts 가 목록 고정)
+    expect(meta07.size).toBe(54);
     expect(meta07.has("year-end-tax-2026"), "W3-A 연말정산 기둥 글 메타 개명").toBe(true);
     expect([...meta07].filter((s) => !bySlug.get(s)?.metaDescription)).toEqual([]);
     // 검색어 복원 맵(code51-01, 2026-10-06) — 10/4 에 TL;DR 이 바뀐 11편. 화면 TL;DR 은 10/4 문구, 검색 설명만 9/27 검색어.
