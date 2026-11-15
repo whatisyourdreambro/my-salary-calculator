@@ -8,6 +8,7 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { calcVacationPay } from "@/lib/vacationPay";
 import { calcBonusNet } from "@/lib/bonusTaxCalc";
+import { normalizeNumberDraft, numberDraftValue } from "@/lib/numberInput";
 
 const readSrc = (rel: string) => readFileSync(resolve(process.cwd(), rel), "utf8");
 
@@ -62,5 +63,33 @@ describe("문구 — 연봉÷240 표기 제거, 광고 위 문구 폭 유지", (
   it("접힌 FAQ — 연차수당 평균임금 산입 3/12, 퇴직 시 발생분 제외", () => {
     expect(page).toContain("그 금액의 3/12이 퇴직금 평균임금 산정에 들어가므로");
     expect(page).not.toContain("퇴직 직전 3개월 외 시점에 받은 연차수당은 평균임금에 포함되지 않습니다");
+  });
+});
+
+// 2026-11-15 감사 calc-04-F06: 일수 칸이 inputMode numeric 이라 NumberInput 이 점을 버려 반차 7.5일이 75일이 됐다
+// (연봉 4,800만원이면 세전 1,148,325원이 맞는데 75일 11,483,254원이 나왔다). iOS 숫자 키패드에는 점 키도 없었다.
+describe("연차 일수 칸 — 반차(소수) 입력", () => {
+  const client = readSrc("src/app/calc/vacation-pay/Client.tsx");
+  it("일수 칸은 decimal · 음수 금지 · 점 보존", () => {
+    const tag = client.slice(client.indexOf('id="vp-days"') - 20, client.indexOf('aria-label="미사용 연차 일수"'));
+    expect(tag).toContain('inputMode="decimal"');
+    expect(tag).toContain("allowNegative={false}");
+    expect(tag).toContain('replace(/[^0-9.]/g, "")');
+    expect(tag).not.toContain('inputMode="numeric"');
+  });
+  it("NumberInput 정규화: 7.5·7. 은 남고, 두 번째 점과 음수는 거른다", () => {
+    const opts = { allowDecimal: true, allowNegative: false };
+    expect(normalizeNumberDraft("7.", opts)).toBe("7.");
+    expect(normalizeNumberDraft("7.5", opts)).toBe("7.5");
+    expect(numberDraftValue("7.5")).toBe("7.5");
+    expect(normalizeNumberDraft("7.5.", opts)).toBeNull();
+    expect(normalizeNumberDraft("-3", opts)).toBeNull();
+    // 종전 설정(numeric → allowDecimal false)은 점을 거부해 다음 키 5 가 붙어 75 가 됐다
+    expect(normalizeNumberDraft("7.", { allowDecimal: false, allowNegative: false })).toBeNull();
+  });
+  it("7.5일은 10일의 3/4 — 계산부는 소수 일수를 그대로 받는다", () => {
+    const half = calcVacationPay(48_000_000, 7.5);
+    expect(half.grossPay).toBe(1_148_325);
+    expect(half.grossPay).toBeLessThan(calcVacationPay(48_000_000, 10).grossPay);
   });
 });

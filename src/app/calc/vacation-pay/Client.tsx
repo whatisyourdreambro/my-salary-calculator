@@ -39,8 +39,9 @@ export default function VacationPayClient() {
         <div>
           <label htmlFor="vp-days" className="text-xs font-bold uppercase tracking-widest block mb-2 text-faint-blue">미사용 연차 일수</label>
           <div className="relative">
-            <NumberInput id="vp-days" type="text" inputMode="numeric" value={days}
-              onChange={(e) => setDays(e.target.value.replace(/[^0-9]/g, ""))}
+            {/* 반차(0.5일)도 받는다 — 종전 numeric 은 점을 버려 7.5 가 75일이 됐다 (2026-11-15 감사 calc-04-F06). 두 번째 점·음수는 NumberInput 이 거른다 */}
+            <NumberInput id="vp-days" type="text" inputMode="decimal" allowNegative={false} value={days}
+              onChange={(e) => setDays(e.target.value.replace(/[^0-9.]/g, ""))}
               className="w-full rounded-xl px-4 py-4 text-2xl font-black focus:outline-none transition pr-10"
               style={{ backgroundColor: "hsl(var(--accent))", border: "2px solid hsl(var(--input))", color: "hsl(var(--link))" }}
               aria-label="미사용 연차 일수" />
