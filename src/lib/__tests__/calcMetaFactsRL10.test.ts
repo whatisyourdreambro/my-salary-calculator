@@ -115,3 +115,22 @@ describe("CS-21 직원 인건비 — 2026년 회사부담 약 11.44% (국민연�
     expect(Math.round(rate * 10000) / 100).toBe(11.44);
   });
 });
+
+describe("CS-23 재산세 설명문(meta 스니펫) 납기 — 지방세법 제115조: 주택 1/2씩 7·9월, 건축물 7월, 토지 9월", () => {
+  const was = "주택은 7월·9월 두 차례, 토지·건물은 7월/9월에 분납됩니다.";
+  const now = "주택은 7월·9월 반씩, 건물은 7월, 토지는 9월 부과됩니다.";
+  it("토지·건물 7월/9월 분납 오기가 없고 납기별로 적는다", () => {
+    const e = calc("property-tax-quick").explanation ?? "";
+    expect(e).toContain(now);
+    expect(e).not.toContain("7월/9월에 분납");
+    expect(e).toContain("매년 6월 1일 기준"); // 과세기준일(제114조)
+    expect(calculatorSeoDescription(calc("property-tax-quick"))).toContain(now);
+  });
+  it("광고(GuideMidAd) 위 문장이 종전보다 넓지 않다 — 10월 문구의 절반씩 대신 반씩", () => {
+    const a = kinds(now);
+    const b = kinds(was);
+    expect(a.hangul).toBeLessThan(b.hangul);
+    expect(a.digit).toBeLessThanOrEqual(b.digit);
+    expect(a.space + a.other).toBeLessThanOrEqual(b.space + b.other);
+  });
+});
