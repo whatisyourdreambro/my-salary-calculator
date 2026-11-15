@@ -231,7 +231,7 @@ export default function TeacherPay2026Page() {
                   <strong>정액급식비</strong> — 월 160,000원 · <strong>명절휴가비</strong> — 설·추석 각 월봉급의 60%
                 </li>
                 <li>
-                  <strong>교직수당·정근수당</strong> 등 — 경력·직무에 따라 추가
+                  <strong>교직수당·정근수당</strong> 등 — 매월 정액·연수별 지급
                 </li>
               </ul>
               <p className="text-sm leading-7 text-muted-blue mt-4">

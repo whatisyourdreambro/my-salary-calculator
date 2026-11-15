@@ -61,4 +61,10 @@ describe("교사 호봉표 교직수당 (MISSED-pay-1·2)", () => {
     const src = read("src/app/teacher-pay-2026/page.tsx");
     expect(src).toContain("·교직수당(월 ${CIVIL_TEACHER_ALLOWANCE_2026.teaching / 10000}만원)·담임수당");
   });
+
+  it("광고 위 수당 목록은 교직수당을 '경력·직무에 따라'로 쓰지 않는다 (한글 9·가운뎃점 1·공백 2 같은 구성)", () => {
+    const src = read("src/app/teacher-pay-2026/page.tsx");
+    expect(src).toContain("<strong>교직수당·정근수당</strong> 등 — 매월 정액·연수별 지급");
+    expect(src).not.toContain("경력·직무에 따라 추가");
+  });
 });
