@@ -354,7 +354,7 @@ export default function UnemploymentBenefitContent() {
       {
        step: "STEP 3",
        title: "취업특강 수강",
-       desc: "1회 필수 수강. 온라인 또는 오프라인 모두 가능. 수강 후 대기기간 7일.",
+       desc: "1회 필수 수강. 온·오프라인 가능. 대기기간 7일은 실업 신고일부터.",
       },
       {
        step: "STEP 4",

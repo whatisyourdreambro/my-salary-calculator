@@ -46,6 +46,15 @@ describe("/parental-leave 육아휴직 급여 신청 기간(고용보험법 제7
 });
 
 // [표지 08c] /unemployment-benefit STEP 3 대기기간 기산일
+// 광고 위(CalcResultAd 아래, CoupangBanner·GuideMidAd 위). 패키지 원안 '1회 필수 수강(온라인·오프라인). 대기기간 7일은 실업
+// 신고일부터.' 은 keep-all 줄 수 모델에서 칸 폭 144~150px(320~326px 화면)에 한 줄 늘어나 쓰지 않았다. 이 문구는 12px 사이트 글꼴
+// 323.80px -> 307.44px 이고 칸 폭 144~592px 전 구간에서 줄 수가 늘지 않는다(모델).
+describe("/unemployment-benefit STEP 3 대기기간(고용보험법 제49조)", () => {
+  it("대기기간 7일은 실업 신고일부터 세고 '수강 후 대기기간'이 없다", () => {
+    expect(unemployment).toContain('desc: "1회 필수 수강. 온·오프라인 가능. 대기기간 7일은 실업 신고일부터."');
+    expect(unemployment).not.toContain("수강 후 대기기간");
+  });
+});
 
 // [표지 08d] /unemployment-benefit STEP 4 실업인정 재취업활동 횟수
 
