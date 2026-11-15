@@ -123,6 +123,8 @@ export default function LgDisplayBonusClient() {
               경영성과급 % (월 기본급 대비)
             </span>
             <NumberInput
+              allowNegative={false}
+              aria-label="경영성과급 % (월 기본급 대비)"
               type="number"
               value={bonusPctOverride}
               onChange={(e) => setBonusPctOverride(Number(e.target.value) || 0)}
@@ -140,6 +142,7 @@ export default function LgDisplayBonusClient() {
         <label className="block">
           <span className="text-sm font-bold">월 기본급 (만원)</span>
           <NumberInput
+            allowNegative={false}
             type="number"
             value={monthlyBasicManwon}
             onChange={(e) =>
@@ -176,6 +179,7 @@ export default function LgDisplayBonusClient() {
         <label className="block">
           <span className="text-sm font-bold">연 기본 연봉 (만원)</span>
           <NumberInput
+            allowNegative={false}
             type="number"
             value={annualSalaryManwon}
             onChange={(e) =>
@@ -217,10 +221,10 @@ export default function LgDisplayBonusClient() {
         {showAdvanced && (
           <div className="mt-4 space-y-4">
             <div>
-              <label className="block text-sm font-bold mb-2">
+              <label htmlFor="ms-lg-display-bonus-credit" className="block text-sm font-bold mb-2">
                 추가 세액공제: <span className="text-primary">{creditRate}%</span>
               </label>
-              <input
+              <input id="ms-lg-display-bonus-credit"
                 type="range"
                 min={0}
                 max={50}

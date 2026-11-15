@@ -134,6 +134,8 @@ export default function HyundaiBonusClient() {
           <div className="mt-3 space-y-3 p-4 rounded-xl bg-canvas/30">
             <Row label="성과금 % (월 기준금액 대비)">
               <NumberInput
+                allowNegative={false}
+                aria-label="성과금 % (월 기준금액 대비)"
                 type="number"
                 value={bonusPctOverride}
                 onChange={(e) => setBonusPctOverride(Number(e.target.value) || 0)}
@@ -144,6 +146,8 @@ export default function HyundaiBonusClient() {
             </Row>
             <Row label="정액 (원)">
               <NumberInput
+                allowNegative={false}
+                aria-label="정액 (원)"
                 type="number"
                 value={fixedOverride}
                 onChange={(e) => setFixedOverride(Number(e.target.value) || 0)}
@@ -153,6 +157,8 @@ export default function HyundaiBonusClient() {
             </Row>
             <Row label="무상주 (주)">
               <NumberInput
+                allowNegative={false}
+                aria-label="무상주 (주)"
                 type="number"
                 value={sharesOverride}
                 onChange={(e) => setSharesOverride(Number(e.target.value) || 0)}
@@ -171,6 +177,7 @@ export default function HyundaiBonusClient() {
         <label className="block">
           <span className="text-sm font-bold">회사 지급 안내의 월 기준금액 (만원)</span>
           <NumberInput
+            allowNegative={false}
             type="number"
             value={monthlyBasicManwon}
             onChange={(e) => setMonthlyBasicManwon(Number(e.target.value) || 0)}
@@ -208,6 +215,7 @@ export default function HyundaiBonusClient() {
         <label className="block">
           <span className="text-sm font-bold">현대차 보통주 1주 가격 가정 (원)</span>
           <NumberInput
+            allowNegative={false}
             type="number"
             value={stockPrice}
             onChange={(e) => setStockPrice(Number(e.target.value) || 0)}
@@ -248,10 +256,10 @@ export default function HyundaiBonusClient() {
         {showAdvanced && (
           <div {...measurement.inputProps} id="hyundai-tax-assumptions" className="mt-4 space-y-4">
             <div>
-              <label className="block text-sm font-bold mb-2">
+              <label htmlFor="ms-hyundai-bonus-credit" className="block text-sm font-bold mb-2">
                 추가 세액공제: <span className="text-primary">{creditRate}%</span>
               </label>
-              <input
+              <input id="ms-hyundai-bonus-credit"
                 type="range"
                 min={0}
                 max={50}

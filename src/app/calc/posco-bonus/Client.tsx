@@ -44,6 +44,7 @@ export default function PoscoBonusClient() {
               key={s.id}
               type="button"
               onClick={() => { setScenarioId(s.id); setCustomMode(false); }}
+              aria-pressed={scenarioId === s.id && !customMode}
               className={`p-3 rounded-xl border-2 text-left transition ${
                 scenarioId === s.id && !customMode
                   ? "border-primary bg-primary/10"
@@ -58,6 +59,7 @@ export default function PoscoBonusClient() {
         <button
           type="button"
           onClick={() => setCustomMode(!customMode)}
+          aria-pressed={customMode}
           className={`mt-3 w-full p-3 rounded-xl border-2 text-sm font-bold transition ${
             customMode ? "border-primary bg-primary/10" : "border-canvas-deep hover:border-primary/40"
           }`}
@@ -68,6 +70,8 @@ export default function PoscoBonusClient() {
           <div className="mt-3 p-4 rounded-xl bg-canvas/30 flex items-center gap-2">
             <span className="text-sm font-bold w-32">성과급 (월 기본급 대비)</span>
             <NumberInput
+              allowNegative={false}
+              aria-label="성과급 지급률 (월 기본급 대비 %)"
               type="number"
               value={customPercent}
               onChange={(e) => setCustomPercent(Number(e.target.value) || 0)}
@@ -84,6 +88,7 @@ export default function PoscoBonusClient() {
         <label className="block">
           <span className="text-sm font-bold">월 기본급(통상임금) (만원)</span>
           <NumberInput
+            allowNegative={false}
             type="number"
             value={monthlyBasicManwon}
             onChange={(e) => setMonthlyBasicManwon(Number(e.target.value) || 0)}
@@ -110,6 +115,7 @@ export default function PoscoBonusClient() {
         <button
           type="button"
           onClick={() => setShowAdvanced(!showAdvanced)}
+          aria-expanded={showAdvanced}
           className="flex items-center gap-2 font-bold text-base"
         >
           <Settings className="w-4 h-4" />
@@ -121,7 +127,7 @@ export default function PoscoBonusClient() {
               <label className="block text-sm font-bold mb-2">
                 추가 세액공제: <span className="text-primary">{creditRate}%</span>
               </label>
-              <input type="range" min={0} max={50} step={5} value={creditRate}
+              <input type="range" aria-label="추가 세액공제 가정 (%)" min={0} max={50} step={5} value={creditRate}
                 onChange={(e) => setCreditRate(Number(e.target.value))}
                 className="w-full accent-primary" />
             </div>

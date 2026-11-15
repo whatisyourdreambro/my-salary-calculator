@@ -146,6 +146,8 @@ export default function KepcoBonusClient() {
                 지급률 % (월 기본급 대비)
               </span>
               <NumberInput
+                allowNegative={false}
+                aria-label="지급률 % (월 기본급 대비)"
                 type="number"
                 value={pctOverride}
                 onChange={(e) => setPctOverride(Number(e.target.value) || 0)}
@@ -164,6 +166,7 @@ export default function KepcoBonusClient() {
         <label className="block">
           <span className="text-sm font-bold">월 기본급 (만원)</span>
           <NumberInput
+            allowNegative={false}
             type="number"
             value={monthlyBasicManwon}
             onChange={(e) => setMonthlyBasicManwon(Number(e.target.value) || 0)}
@@ -196,6 +199,7 @@ export default function KepcoBonusClient() {
         <label className="block">
           <span className="text-sm font-bold">본인 연 총보수 (만원)</span>
           <NumberInput
+            allowNegative={false}
             type="number"
             value={annualManwon}
             onChange={(e) => setAnnualManwon(Number(e.target.value) || 0)}
@@ -235,10 +239,10 @@ export default function KepcoBonusClient() {
         {showAdvanced && (
           <div className="mt-4 space-y-4">
             <div>
-              <label className="block text-sm font-bold mb-2">
+              <label htmlFor="ms-kepco-bonus-credit" className="block text-sm font-bold mb-2">
                 추가 세액공제: <span className="text-primary">{creditRate}%</span>
               </label>
-              <input
+              <input id="ms-kepco-bonus-credit"
                 type="range"
                 min={0}
                 max={50}

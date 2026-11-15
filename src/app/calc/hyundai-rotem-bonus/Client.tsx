@@ -117,6 +117,8 @@ export default function HyundaiRotemBonusClient() {
           <div className="mt-3 space-y-3 p-4 rounded-xl bg-canvas/30">
             <Row label="성과금 % (월 기본급 대비)">
               <NumberInput
+                allowNegative={false}
+                aria-label="성과금 % (월 기본급 대비)"
                 type="number"
                 value={bonusPctOverride}
                 onChange={(e) => setBonusPctOverride(Number(e.target.value) || 0)}
@@ -127,6 +129,8 @@ export default function HyundaiRotemBonusClient() {
             </Row>
             <Row label="정액 (원)">
               <NumberInput
+                allowNegative={false}
+                aria-label="정액 (원)"
                 type="number"
                 value={fixedOverride}
                 onChange={(e) => setFixedOverride(Number(e.target.value) || 0)}
@@ -143,6 +147,7 @@ export default function HyundaiRotemBonusClient() {
         <label className="block">
           <span className="text-sm font-bold">월 기본급 (만원)</span>
           <NumberInput
+            allowNegative={false}
             type="number"
             value={monthlyBasicManwon}
             onChange={(e) => setMonthlyBasicManwon(Number(e.target.value) || 0)}
@@ -183,10 +188,10 @@ export default function HyundaiRotemBonusClient() {
         {showAdvanced && (
           <div {...measurement.inputProps} className="mt-4 space-y-4">
             <div>
-              <label className="block text-sm font-bold mb-2">
+              <label htmlFor="ms-hyundai-rotem-bonus-credit" className="block text-sm font-bold mb-2">
                 추가 세액공제: <span className="text-primary">{creditRate}%</span>
               </label>
-              <input
+              <input id="ms-hyundai-rotem-bonus-credit"
                 type="range"
                 min={0}
                 max={50}
@@ -207,6 +212,8 @@ export default function HyundaiRotemBonusClient() {
             </label>
             <Row label="연봉 직접 입력 (만원)">
               <NumberInput
+                allowNegative={false}
+                aria-label="연봉 직접 입력 (만원)"
                 type="number"
                 value={annualOverrideManwon}
                 onChange={(e) => setAnnualOverrideManwon(Number(e.target.value) || 0)}

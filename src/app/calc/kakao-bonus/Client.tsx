@@ -44,6 +44,7 @@ export default function KakaoBonusClient() {
         <label className="block">
           <span className="text-sm font-bold">연 기본 연봉 (만원)</span>
           <NumberInput
+            allowNegative={false}
             type="number"
             value={salaryManwon}
             onChange={(e) => setSalaryManwon(Number(e.target.value) || 0)}
@@ -106,6 +107,7 @@ export default function KakaoBonusClient() {
           <label className="block">
             <span className="text-sm font-bold">RSU 부여 주식 수 (주)</span>
             <NumberInput
+              allowNegative={false}
               type="number"
               value={rsuShares}
               onChange={(e) => setRsuShares(Number(e.target.value) || 0)}
@@ -129,6 +131,7 @@ export default function KakaoBonusClient() {
           <label className="block">
             <span className="text-sm font-bold">카카오 주가 (원)</span>
             <NumberInput
+              allowNegative={false}
               type="number"
               value={stockPrice}
               onChange={(e) => setStockPrice(Number(e.target.value) || 0)}
@@ -187,10 +190,10 @@ export default function KakaoBonusClient() {
         {showAdvanced && (
           <div className="mt-4 space-y-4">
             <div>
-              <label className="block text-sm font-bold mb-2">
+              <label htmlFor="ms-kakao-bonus-credit" className="block text-sm font-bold mb-2">
                 추가 세액공제: <span className="text-primary">{creditRate}%</span>
               </label>
-              <input
+              <input id="ms-kakao-bonus-credit"
                 type="range"
                 min={0}
                 max={50}
