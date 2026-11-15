@@ -11,6 +11,7 @@ import { CURRENT_RATES_YEAR, CURRENT_RATE_LABELS } from "@/config/currentRates";
 import { pickPropertyTaxPeriodKey, type PropertyTaxPeriodKey } from "@/lib/propertyTaxPeriod";
 import { SEASON_TOP_BY_KEY } from "@/config/seasonLinks";
 import { SEASON_KEY } from "@/config/seasonKey.generated";
+import type { SeasonKey } from "@/lib/seasonKey";
 
 // 목적별 계산기 칩의 보유세 라벨 — 납부기간 게이트(propertyTaxPeriod.ts, 지방세법 제115조·종부세 12/1~15)로
 // 빌드 시점(KST)에 고른다 (MI-05, 2026-09-29). 종전 '9월 재산세 2기분 납부 (9/16~30)' 고정 칩은 10/1 부터
@@ -32,6 +33,27 @@ export function homePropertyTaxChip(now: Date = new Date()): { label: string; hr
 export function homeSeasonHubChips(key = SEASON_KEY): { label: string; href: string }[] {
   const top = SEASON_TOP_BY_KEY[key]?.[0];
   return top?.header ? [{ label: top.header.name, href: top.href }] : [];
+}
+
+/** 12~1월 피크 시즌 칩 (2026-11-15 SEASONA, 감사 components ideas[4]) — 빌드 시점 시즌 키가 DEC·JAN 일 때만 더한다.
+ *  이 칩 목록은 홈 마지막 광고(HomeClient 끝 MultiplexAd) 아래라 광고 위치와 무관하다. OCT·SEP 빌드(지금)는 빈 배열이라
+ *  다음 게시의 홈 HTML 은 그대로이고, 12/1 이후 첫 '승인 후 게시' 빌드부터 보인다. 라벨은 수치 없이 쪽 이름만(봉급표 확정 여부와 무관),
+ *  글자는 기본 한국어·라틴 서브셋 안(homeSeasonChips.test). 목적지는 모두 사이트맵의 기존 정적 URL. */
+export const HOME_SEASON_EXTRA_CHIPS: Readonly<Partial<Record<SeasonKey, readonly { label: string; href: string }[]>>> = {
+  DEC: [
+    { label: "연말 보너스 세금 계산기", href: "/calc/year-end-bonus-tax" },
+    { label: "회사별 성과급 계산기", href: "/calc/bonus-calculators" },
+    { label: "2027 공무원 봉급표", href: "/civil-servant-pay-2027" },
+  ],
+  JAN: [
+    { label: "13월의 월급 시뮬레이터", href: "/calc/january-bonus" },
+    { label: "회사별 성과급 계산기", href: "/calc/bonus-calculators" },
+    { label: "2027 공무원 봉급표", href: "/civil-servant-pay-2027" },
+  ],
+};
+
+export function homeSeasonExtraChips(key: SeasonKey = SEASON_KEY): { label: string; href: string }[] {
+  return [...(HOME_SEASON_EXTRA_CHIPS[key] ?? [])];
 }
 
 export default function HomeSeoSection() {
@@ -117,6 +139,8 @@ export default function HomeSeoSection() {
               homePropertyTaxChip(),
               // 시즌 1순위 허브 칩 (MI-05) — 아래 href 중복 제거로 고정 칩과 겹치면 빠진다
               ...homeSeasonHubChips(),
+              // 12~1월 피크 시즌 칩 (SEASONA) — DEC·JAN 빌드에서만, 아래 href 중복 제거 그대로
+              ...homeSeasonExtraChips(),
               { label: "연봉 실수령액표 2026", href: "/table/2026/annual" },
               { label: "퇴직금 간편 계산", href: "/calc/severance-pay-quick" },
               { label: "실업급여 계산기", href: "/calc/unemployment-benefit" },
