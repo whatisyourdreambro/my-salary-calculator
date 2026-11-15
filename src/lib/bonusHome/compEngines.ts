@@ -110,7 +110,8 @@ export const SK_PI_DEFAULT_PCT: Record<ScenarioId, number> = {
 };
 /** PS 신 체계 지급 비율(%) — psData AGREEMENT_2026.newSplit (현금 50 · 주식 30 · 이연 주식 10 · 10) */
 const SPLIT = AGREEMENT_2026.newSplit;
-/** 2025년분 PS(2026-02 지급)는 구 체계 — 현금 80% 당해 + 이연 현금 10%p × 2년 (psData oldSplit) */
+/** 2025년분 PS: 80% 2026-02 지급 + 이연 20%는 2026-09-16 가결안으로 2026년 안 조기 지급(보도) — 이자분은 넣지 않음.
+ *  비율은 psData oldSplit(80 + 10 + 10) — 2027·2028년 현금으로 더하지 않는다(2026-11-15 N2-calc-14, calc-01-F01). */
 const OLD_SPLIT = AGREEMENT_2026.oldSplit;
 const PS_2025_ROW = PS_HISTORY.find((r) => r.year === 2025);
 /** 2025년분 PS 지급률(기본급 대비 %) — psData PS_HISTORY 2,964% (2026-02-05 지급 보도) */
@@ -277,10 +278,8 @@ function computeSk(inputs: CompInputs): CompResult {
       ps(year - 1) * (SPLIT.stockNowPct / 100) +
       ps(year - 2) * (SPLIT.stockYear1Pct / 100) * growth(inputs, 1) +
       ps(year - 3) * (SPLIT.stockYear2Pct / 100) * growth(inputs, 2);
-    // 구 체계 2025년분 이연 현금 10%p — 2027·2028년
-    const oldDeferred =
-      year === 2027 ? ps2025 * (OLD_SPLIT.cashYear1Pct / 100) : year === 2028 ? ps2025 * (OLD_SPLIT.cashYear2Pct / 100) : 0;
-    return { cash: cash + oldDeferred, stock };
+    // 2025년분 PS 이연 20%(구 체계 10%p × 2)는 9/16 가결안으로 2026년에 조기 지급 — 2027·2028년 현금에 더하지 않는다
+    return { cash, stock };
   };
   const years: YearComp[] = [];
   for (const year of PAYOUT_YEARS) {
@@ -314,9 +313,10 @@ function computeSk(inputs: CompInputs): CompResult {
     // 세전 가치 — 받는 해 세율을 알 수 없어 세전으로 적는다
     if (stock > 0) afterHorizon.push({ year, label: "PS 이연 자사주(세전)", value: stock });
   }
-  // 2026년에 받은 성과급(DSR 소득용) — 2025년분 PS 당해 80%(2026-02) + 2025 하반기 PI(1월) + 2026 상반기 PI(7월, 150% 보도)
+  // 2026년에 받은 성과급(DSR 소득용) — 2025년분 PS 100%(2월 80% + 9/16 가결안 조기 지급 이연 20%)
+  //   + 2025 하반기 PI(1월) + 2026 상반기 PI(7월, 150% 보도)
   const bonus2026 =
-    ps2025 * (OLD_SPLIT.cashNowPct / 100) +
+    ps2025 * ((OLD_SPLIT.cashNowPct + OLD_SPLIT.cashYear1Pct + OLD_SPLIT.cashYear2Pct) / 100) +
     (salary2025 / BASIC_RATIO) * (SK_PI_2025_HALF_PCT / 100) +
     (salaryOf(inputs, 2026) / BASIC_RATIO) * (PI_2026.h1.rate / 100);
   return finish(inputs, years, afterHorizon, bonus2026);
