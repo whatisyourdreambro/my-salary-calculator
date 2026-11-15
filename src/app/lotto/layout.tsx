@@ -7,7 +7,7 @@ import { autoBreadcrumbLd } from "@/lib/structuredData";
 export const metadata: Metadata = buildPageMetadata({
   title: "로또 번호 생성기 — 통계 기반 행운 번호 자동 추천",
   description:
-    "홀짝·고저 균형, 합계 범위 등 통계 패턴을 반영해 로또 번호를 자동 생성합니다. 여러 게임 세트를 한 번에 뽑아 나만의 행운 번호를 확인해 보세요.",
+    "홀짝 균형·고저 균형 조건을 골라 로또 번호를 자동 생성합니다. 여러 게임 세트를 한 번에 뽑고 세트별 합계·홀짝·고저 분석을 함께 확인해 보세요.",
   path: "/lotto",
   keywords: [
     "로또 번호 생성기",

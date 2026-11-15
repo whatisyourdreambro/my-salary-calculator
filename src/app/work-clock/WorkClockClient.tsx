@@ -92,7 +92,7 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
   const [employment, setEmployment] = useState(false);
   const [clearConfirmation, setClearConfirmation] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [undo, setUndo] = useState<{ state: WorkClockState; goal: string; extras: WorkClockExtras; save: boolean } | null>(null);
+  const [undo, setUndo] = useState<{ state: WorkClockState; goal: string; extras: WorkClockExtras; save: boolean; weeklyHours: string } | null>(null);
 
   useEffect(() => {
     const initialNow = Date.now();
@@ -101,6 +101,8 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
     if (saved) {
       setProfile(saved.profile);
       setDraft(draftFrom(saved.profile));
+      // 주휴수당 '4주 평균 주 소정근로' 기본값도 저장된 근무 설정을 따른다(applyProfile 과 같은 식, 2026-11-15 b04-M02).
+      setWeeklyHours(String(Math.min(40, saved.profile.dailyHours * saved.profile.workDaysPerWeek)));
       setSessions(saved.sessions);
       setSaveEnabled(true);
       setRecovered(saved.sessions.some((session) => session.endAt === null));
@@ -292,7 +294,7 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
     });
   }
 
-  function captureUndo() { setUndo({ state: { version: 1, profile, sessions }, goal: goalAmount, extras, save: saveEnabled }); }
+  function captureUndo() { setUndo({ state: { version: 1, profile, sessions }, goal: goalAmount, extras, save: saveEnabled, weeklyHours }); }
 
   function removeSession(id: string) {
     captureUndo();
@@ -307,6 +309,7 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
     setSessions([]);
     setProfile(DEFAULT_PAY_PROFILE);
     setDraft(draftFrom(DEFAULT_PAY_PROFILE));
+    setWeeklyHours(String(Math.min(40, DEFAULT_PAY_PROFILE.dailyHours * DEFAULT_PAY_PROFILE.workDaysPerWeek)));
     setGoalAmount("5000");
     setRecovered(false);
     setUnreadableSaved(false);
@@ -324,6 +327,8 @@ export default function WorkClockClient({ mode = "full" }: { mode?: "full" | "ho
     if (!undo) return;
     setProfile(undo.state.profile);
     setDraft(draftFrom(undo.state.profile));
+    // 삭제 직전 값 그대로(설정에서 나온 기본값이든 직접 고친 값이든) — 기록 1건 삭제 취소가 직접 입력을 덮지 않게.
+    setWeeklyHours(undo.weeklyHours);
     setSessions(undo.state.sessions);
     setGoalAmount(undo.goal);
     setExtras(undo.extras);

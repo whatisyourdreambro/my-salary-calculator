@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, useId } from "react";
 import PageFooterAds from "@/components/PageFooterAds";
 import { CalcResultAd, GuideMidAd } from "@/components/AdPlacement";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -216,6 +216,7 @@ const CurrencyInput = ({
  quickAmounts?: number[];
  icon?: React.ElementType;
 }) => {
+ const id = useId();
  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
  const rawValue = e.target.value.replace(/,/g, "");
  if (!isNaN(Number(rawValue))) {
@@ -225,12 +226,13 @@ const CurrencyInput = ({
 
  return (
  <div className="space-y-4 group">
- <label className="text-xs font-bold text-faint-blue uppercase tracking-widest flex items-center gap-2">
+ <label htmlFor={id} className="text-xs font-bold text-faint-blue uppercase tracking-widest flex items-center gap-2">
  {Icon && <Icon className="w-4 h-4 text-primary" />}
  {label}
  </label>
  <div className="relative">
  <NumberInput
+ id={id}
  type="text"
  value={value}
  onChange={handleChange}
@@ -554,8 +556,9 @@ export default function FireCalculatorPage() {
 
  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
  <div className="space-y-4 group">
- <label className="text-xs font-bold text-faint-blue uppercase tracking-widest">현재 나이</label>
+ <label htmlFor="fire-age" className="text-xs font-bold text-faint-blue uppercase tracking-widest">현재 나이</label>
  <NumberInput
+ id="fire-age"
  type="number"
  value={inputs.currentAge}
  onChange={(e) => handleInputChange("currentAge", e.target.value)}
@@ -639,8 +642,9 @@ export default function FireCalculatorPage() {
 
  <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pt-10 border-t border-canvas ">
  <div className="space-y-4">
- <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block">소득 상승률 (%)</label>
+ <label htmlFor="fire-growth" className="text-xs font-bold text-faint-blue uppercase tracking-widest block">소득 상승률 (%)</label>
  <NumberInput
+ id="fire-growth"
  type="number"
  value={inputs.salaryGrowthRate}
  onChange={(e) => handleInputChange("salaryGrowthRate", e.target.value)}
@@ -648,8 +652,9 @@ export default function FireCalculatorPage() {
  />
  </div>
  <div className="space-y-1">
- <label className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-3">은퇴 후 추가 소득 (월)</label>
+ <label htmlFor="fire-pension" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-3">은퇴 후 추가 소득 (월)</label>
  <NumberInput
+ id="fire-pension"
  type="text"
  value={inputs.retirementIncome}
  onChange={(e) => {
@@ -660,7 +665,7 @@ export default function FireCalculatorPage() {
  />
  </div>
  <div className="space-y-4">
- <label className="text-xs font-bold text-faint-blue uppercase tracking-widest flex items-center gap-2">
+ <label htmlFor="fire-withdrawal" className="text-xs font-bold text-faint-blue uppercase tracking-widest flex items-center gap-2">
  4% 룰 (인출률)
  <div className="group relative">
  <Info className="w-3 h-3 text-faint-blue cursor-help" />
@@ -671,6 +676,7 @@ export default function FireCalculatorPage() {
  </label>
  <div className="flex items-center gap-2">
  <NumberInput
+ id="fire-withdrawal"
  type="number"
  value={inputs.withdrawalRate}
  onChange={(e) => handleInputChange("withdrawalRate", e.target.value)}
@@ -716,6 +722,7 @@ export default function FireCalculatorPage() {
  <div className="flex items-center gap-2 bg-white p-3 rounded-xl border border-canvas shadow-inner">
  <input data-number-format="calendar"
  type="number"
+ aria-label="이벤트 시점 (몇 년 후)"
  value={event.year}
  onChange={(e) => updateLifeEvent(index, "year", Number(e.target.value))}
  className="w-12 text-center bg-transparent font-bold outline-none text-foreground border-none p-0"
@@ -725,6 +732,7 @@ export default function FireCalculatorPage() {
 
  <input
  type="text"
+ aria-label="이벤트명"
  placeholder="이벤트명 (예: 결혼)"
  value={event.description}
  onChange={(e) => updateLifeEvent(index, "description", e.target.value)}
@@ -732,6 +740,7 @@ export default function FireCalculatorPage() {
  />
 
  <select
+ aria-label="이벤트 종류"
  value={event.type}
  onChange={(e) => updateLifeEvent(index, "type", e.target.value)}
  className="p-2 bg-transparent font-bold text-sm text-faint-blue focus:text-foreground outline-none cursor-pointer"
@@ -743,6 +752,7 @@ export default function FireCalculatorPage() {
  <div className="flex items-center gap-2 ml-auto">
  <NumberInput
  type="text"
+ aria-label="이벤트 금액 (원)"
  value={formatNumber(parseNumber(event.amount))}
  onChange={(e) => updateLifeEvent(index, "amount", e.target.value.replace(/[^0-9]/g, ""))}
  className="w-32 text-right bg-transparent border-b border-canvas focus:border-primary outline-none font-bold text-xl font-sans text-foreground"
@@ -750,7 +760,7 @@ export default function FireCalculatorPage() {
  <span className="text-sm text-faint-blue">원</span>
  </div>
 
- <button onClick={() => removeLifeEvent(index)} className="p-3 text-faint-blue hover:text-electric hover:bg-canvas-deeper rounded-full transition-all">
+ <button onClick={() => removeLifeEvent(index)} aria-label="이벤트 삭제" className="p-3 text-faint-blue hover:text-electric hover:bg-canvas-deeper rounded-full transition-all">
  <Trash2 size={18} />
  </button>
  </motion.div>

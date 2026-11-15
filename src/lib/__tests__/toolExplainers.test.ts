@@ -22,12 +22,14 @@ const PAGES: Record<string, { file: string; adTags: string[] }> = {
   "/fortune-2026": { file: "src/app/fortune-2026/page.tsx", adTags: ["<PageFooterAds", "<GuideMidAd"] },
   "/tools/math": { file: "src/app/tools/layout.tsx", adTags: ["<HomeTopAd", "<InArticleAd", "<CoupangBanner"] },
   "/company/simulator": { file: "src/app/company/layout.tsx", adTags: ["<PageFooterAds"] },
+  // 2026-11-15 app-tools-fun-b04-F05: 계산기에 없는 세대생략 할증(상증법 제57조)을 마지막 광고 아래에서 알린다.
+  "/tools/real-estate/gift-tax": { file: "src/app/tools/layout.tsx", adTags: ["<HomeTopAd", "<InArticleAd", "<CoupangBanner"] },
 };
 
 const visibleText = (html: string) => html.replace(/<[^>]+>/g, "").replace(/&#x27;/g, "'").replace(/&amp;/g, "&");
 
 describe("lens-meta-F10 도구 설명 글", () => {
-  it("대상은 6곳뿐이다", () => {
+  it("대상은 7곳뿐이다(11/13 6곳 + 11/15 증여세 계산기)", () => {
     expect(Object.keys(TOOL_EXPLAINERS).sort()).toEqual(Object.keys(PAGES).sort());
   });
 
@@ -61,6 +63,49 @@ describe("lens-meta-F10 도구 설명 글", () => {
     }
     currentPath = "/company/simulator";
     expect(renderToStaticMarkup(createElement(ToolExplainerSection))).toContain("중소기업·대기업 실수령액");
+    currentPath = "/tools/real-estate/gift-tax";
+    expect(renderToStaticMarkup(createElement(ToolExplainerSection))).toContain("증여세 계산 방식과 계산에 없는 항목");
+    for (const other of ["/tools/real-estate/acquisition-tax", "/tools/real-estate", "/tools/real-estate/ltv"]) {
+      currentPath = other;
+      expect(renderToStaticMarkup(createElement(ToolExplainerSection)), other).toBe("");
+    }
+  });
+
+  // 상속세 및 증여세법(시행 2026. 1. 2., law.go.kr 2026-11-15 확인) 제26조 세율·제57조 할증·제69조 신고세액공제로
+  // 설명 글의 예시 금액을 다시 계산한다. 할증은 계산기(calcGiftTax)에 없으므로 '들어 있지 않다'고 적어야 한다.
+  it("증여세 설명은 세대생략 할증(제57조, 30%·40%)과 예시 금액을 법 조문대로 적는다", () => {
+    const [p1, p2] = getToolExplainer("/tools/real-estate/gift-tax")!.paragraphs;
+    expect(p2).toContain("제57조");
+    expect(p2).toContain("30%");
+    expect(p2).toContain("20억원을 넘으면 40%");
+    expect(p2).toContain("이 계산기 결과에는 들어 있지 않습니다");
+    for (const fact of ["배우자는 6억원", "성년 5천만원·미성년 2천만원", "기타 친족은 1천만원", "1억원을 더 뺍니다", "10~50% 다섯 단계", "산출세액의 3%"]) {
+      expect(p1).toContain(fact);
+    }
+    const brackets: [number, number, number][] = [
+      [100_000_000, 0.1, 0],
+      [500_000_000, 0.2, 10_000_000],
+      [1_000_000_000, 0.3, 90_000_000],
+      [3_000_000_000, 0.4, 240_000_000],
+      [Infinity, 0.5, 1_040_000_000],
+    ];
+    const statutoryTax = (base: number) => {
+      let lower = 0;
+      for (const [upper, rate, fixed] of brackets) {
+        if (base <= upper) return fixed + (base - lower) * rate;
+        lower = upper;
+      }
+      return NaN;
+    };
+    const base = 300_000_000 - 50_000_000; // 성년 손자녀가 조부모에게서 3억원(직계존속 공제 5천만원)
+    const tax = statutoryTax(base);
+    const withoutSurcharge = tax - Math.round(tax * 0.03);
+    const withSurcharge = tax * 1.3 - Math.round(tax * 1.3 * 0.03);
+    expect(withoutSurcharge).toBe(38_800_000);
+    expect(withSurcharge).toBe(50_440_000);
+    expect(p2).toContain("계산기는 3,880만원을 보여 주지만 할증을 더한 납부세액은 5,044만원입니다");
+    const page = readFileSync("src/app/tools/real-estate/gift-tax/page.tsx", "utf8");
+    expect(page, "계산기에 할증 단계가 생기면 설명 글을 고친다").not.toMatch(/1\.3\b|0\.3\s*\*\s*tax|할증/);
   });
 
   it("로또 확률은 45개 중 6개 조합 수와 같다", () => {

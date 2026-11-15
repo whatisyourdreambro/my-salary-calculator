@@ -17,11 +17,11 @@ const getNumberColorClass = (number: number): string => {
  if (number >= 11 && number <= 20)
  return "bg-primary text-white shadow-inner shadow-black/20";
  if (number >= 21 && number <= 30)
- return "bg-canvas-deeper text-white shadow-inner shadow-black/20";
+ return "bg-slate-500 text-white shadow-inner shadow-black/20";
  if (number >= 31 && number <= 40)
  return "bg-gray-600 text-white shadow-inner shadow-black/20";
  if (number >= 41 && number <= 45)
- return "bg-primary/50 text-white shadow-inner shadow-black/20";
+ return "bg-slate-700 text-white shadow-inner shadow-black/20";
  return "bg-canvas-deeper text-navy shadow-inner shadow-black/20";
 };
 
@@ -239,8 +239,9 @@ export default function LottoPage() {
  {showAdvanced && (
  <div className="space-y-4 p-4 bg-secondary/30 rounded-xl animate-in slide-in-from-top-2">
  <div>
- <label className="block text-xs font-bold mb-1 text-muted-foreground">포함할 숫자 (최대 5개)</label>
+ <label htmlFor="lotto-include" className="block text-xs font-bold mb-1 text-muted-foreground">포함할 숫자 (최대 5개)</label>
  <input
+ id="lotto-include"
  type="text"
  value={includeInput}
  onChange={(e) => setIncludeInput(e.target.value)}
@@ -249,8 +250,9 @@ export default function LottoPage() {
  />
  </div>
  <div>
- <label className="block text-xs font-bold mb-1 text-muted-foreground">제외할 숫자</label>
+ <label htmlFor="lotto-exclude" className="block text-xs font-bold mb-1 text-muted-foreground">제외할 숫자</label>
  <input
+ id="lotto-exclude"
  type="text"
  value={excludeInput}
  onChange={(e) => setExcludeInput(e.target.value)}

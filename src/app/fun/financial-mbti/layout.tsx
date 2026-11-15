@@ -4,7 +4,7 @@ import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "금융 MBTI 테스트 - 나의 투자 성향 분석",
- description: "16가지 유형으로 알아보는 나의 금융 DNA — 워렌 버핏형, 욜로족, 짠돌이형 중 나는 어디? 3분 만에 끝내는 무료 투자 성향 테스트. 결과는 친구와 SNS로 공유 가능합니다.",
+ description: "4가지 질문으로 알아보는 16가지 투자 취향 캐릭터 — 퀀트 전략가, 장기 적립식 투자자, 테마 투자 선구자 중 나는 어디? 1분이면 끝나는 재미용 테스트로, 공식 MBTI 검사나 투자성향 진단이 아닙니다. 결과는 SNS로 공유할 수 있습니다.",
  path: "/fun/financial-mbti",
  keywords: ["금융MBTI", "투자성향테스트", "부자테스트", "MBTI검사", "재테크성향", "심리테스트"],
 });
