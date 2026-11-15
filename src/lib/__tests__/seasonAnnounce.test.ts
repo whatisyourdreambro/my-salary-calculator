@@ -290,6 +290,15 @@ describe("이벤트 표 (E0~E12·E1b·E1c → C-xx · W4-A 슬롯, id 만)", () 
   it("이벤트마다 걸린 행이 이벤트 성격과 맞다", () => {
     const urlsOf = (id: (typeof EVENT_IDS)[number]) => REG.rows.filter((r) => r.events.includes(id)).map((r) => r.url);
     expect(urlsOf("E1")).toEqual(expect.arrayContaining(["/social-insurance-rates-2027", "/table/2027/annual"]));
+    // E0 미리보기 개통 — /year-end-tax-2027·/year-end-tax-settlement-2026 은 11/13 SEASON 묶음이 운영 기간(10/28~12/18)으로
+    // 고쳤는데 E0 행이 없어 2026-11-15 에 더했다(dates-01). 후보일 뿐이고 실제 요청은 배포 뒤 diff 가 정한다.
+    expect(urlsOf("E0")).toEqual([
+      "/year-end-tax",
+      "/year-end-tax-preview",
+      "/year-end-tax-2027",
+      "/year-end-tax-checklist",
+      "/year-end-tax-settlement-2026",
+    ]);
     // E5 금통위 — /home-loan + 기준금리 수치가 박힌 3곳(10월 574e2e29 WP A6, 2026-11-02 RL-05 재반영)
     expect(urlsOf("E5")).toEqual([
       "/home-loan",
