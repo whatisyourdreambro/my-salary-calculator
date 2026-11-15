@@ -2,10 +2,12 @@
 // - 404 는 홈 <title>·robots 'index, follow' 를 물려받지 않는다 (Next 자동 noindex 와 상충 방지).
 // - 광고 요청 보류 인라인 스크립트는 바이트 그대로 (게시자 정책 — 콘텐츠 없는 화면 광고 금지).
 // - 클라이언트 컴포넌트 import 금지 (Edge 라우트 매니페스트에서 빠져 500 — 2026-09-11).
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { metadata } from "@/app/not-found";
+import nextConfig from "../../../next.config.mjs";
 
 const SRC = readFileSync(resolve(process.cwd(), "src/app/not-found.tsx"), "utf8");
 
@@ -35,5 +37,30 @@ describe("not-found metadata", () => {
     expect(SRC).toContain('{ href: "/", label: "연봉 계산기", icon: Home, description: "세후 실수령액 즉시 계산" }');
     const block = SRC.slice(SRC.indexOf("const SUGGESTED_LINKS"), SRC.indexOf("export default function NotFound"));
     expect(block).not.toMatch(/description: "[^"]*20\d\d/);
+  });
+
+  // 2026-11-15 infra ideas[6]: 성과급 성수기 대표 착지(/calc/samsung-bonus)를 /fire-calculator 자리에 — 카드 수는 그대로 8개.
+  // 404 는 광고 요청을 보류하는 화면이라 움직일 광고가 없다. 링크는 실제 정적 페이지이고 리다이렉트 출발지가 아니어야 한다.
+  it("추천 카드 8개는 실제 페이지(리다이렉트 아님)이고 성수기 성과급 계산기를 포함한다", async () => {
+    const block = SRC.slice(SRC.indexOf("const SUGGESTED_LINKS"), SRC.indexOf("export default function NotFound"));
+    const hrefs = [...block.matchAll(/\{ href: "([^"]+)"/g)].map((m) => m[1]);
+    expect(hrefs).toHaveLength(8);
+    expect(new Set(hrefs).size).toBe(8);
+    expect(hrefs).toContain("/calc/samsung-bonus");
+    expect(hrefs).not.toContain("/fire-calculator");
+    expect(SRC).toContain('{ href: "/salary-db", label: "회사별 연봉", icon: Building2, description: "회사 이름으로 연봉 찾기" }');
+    type Key = { name: string | number };
+    const { pathToRegexp } = createRequire(import.meta.url)("next/dist/compiled/path-to-regexp") as {
+      pathToRegexp: (path: string, keys: Key[], options: { strict: boolean; sensitive: boolean; delimiter: string }) => RegExp;
+    };
+    const cfg = nextConfig as unknown as { redirects?: () => Promise<Array<{ source: string }>> };
+    const rules = cfg.redirects ? await cfg.redirects() : [];
+    expect(rules.length).toBeGreaterThan(100);
+    for (const href of hrefs) {
+      expect(existsSync(resolve(process.cwd(), "src/app", `.${href}`, "page.tsx")), href).toBe(true);
+      for (const r of rules) {
+        expect(pathToRegexp(r.source, [], { strict: false, sensitive: false, delimiter: "/" }).test(href), `${href} <- ${r.source}`).toBe(false);
+      }
+    }
   });
 });
