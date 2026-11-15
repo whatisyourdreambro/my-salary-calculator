@@ -48,6 +48,8 @@ describe("bounded input moderation", () => {
     "계약 체결 시 발효되는 조항", "주문 시 발주 확인", "책 출간 시 발간 비용", "특허 출원 시 발명자 보상", "성장 시 발달 단계",
     "회의 시 발언 내용", "법안 제출 시 발의 요건", "승진 시 발탁 기준", "업무상 재해 시 발병 신고", "출시 시 발매일",
     "운동 시 발목 부상", "훈련 시 발사 횟수", "법인 설립 시 발족식", "감사 시 발각된 오류", "조사 시 발굴된 자료", "필요 시 발휘되는 역량",
+    // 2026-11-15 lib-b02-F01: 발동·발권·발부·발췌는 시 뒤에 공백이 있을 때만 허용(붙여 쓴 시발동생·시발권은 아래에서 계속 차단)
+    "퇴사 시 발동되는 조항", "출장 시 발권한 항공권", "세금계산서 요청 시 발부되나요", "인용 시 발췌 범위", "해지 시 발동",
   ])("allows 시 (when) before a common 발- word: %#", value => {
     expect(contentIssue(value)).toBeNull();
     expect(contentIssue(value, "opinion")).toBeNull();
@@ -55,6 +57,8 @@ describe("bounded input moderation", () => {
   it.each([
     "시발", "씨발", "ㅅㅂ", "시 발", "시.발", "시발!", "아 시발", "시발아", "시발놈", "시발 계산기",
     "시발 생각", "시발 발생", "시 발 생", "시발병신", "씨 발생", "씨발생", "시 발로 차",
+    // 2026-11-15 lib-b02-F01: 공백 없이 붙은 시발동·시발권·시발부와, 목록에 넣지 않은 열·진 뒤도 계속 차단
+    "시발동생", "시발권", "시발부", "시발진짜", "시발열받네",
   ])("still blocks 시발 and 씨발 unless 시 comes right before a listed 발- word: %#", value => {
     expect(contentIssue(value)).toBe("CONTENT_NOT_ALLOWED");
     expect(contentIssue(value, "opinion")).toBe("CONTENT_NOT_ALLOWED");

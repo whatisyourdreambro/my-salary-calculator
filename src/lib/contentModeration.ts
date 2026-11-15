@@ -4,7 +4,7 @@ import opinionDomainSuffixes from "@/data/opinionDomainSuffixes";
  * This catches the listed expressions and bounded spelling evasions, not every
  * harmful meaning. Keep the original accepted text separate from the scan copy.
  */
-export const CONTENT_POLICY_VERSION = "ko-input-v5";
+export const CONTENT_POLICY_VERSION = "ko-input-v6";
 export type ContentIssue = "CONTENT_NOT_ALLOWED" | "PERSONAL_DATA_NOT_ALLOWED" | "INVALID_TEXT";
 
 const LEADING = [..."ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ"];
@@ -97,7 +97,9 @@ function hasBlockedKorean(jamo: string, edges: Set<number>): boolean {
 }
 // 시 meaning "when" before a common 발- word (계산 시 발생, 신청 시 발급, 즉시발송). Mask only 시
 // and its spaces: the 발- word stays in the scan copy, so 시발병신 is still caught as 병신.
-const WHEN_BEFORE_BAL_WORD = /시\s*(?=발(?:생|급|표|송|행|견|전|령|효|주|간|명|달|언|의|탁|병|매|목|사|족|각|굴|휘))/g;
+// 발동·발권·발부·발췌는 시 뒤에 공백이 있을 때만 가린다(시발동생·시발권 계속 차단) — 2026-11-15 lib-b02-F01.
+// 열·진·원·판은 넣지 않는다(시발열받네·시발진짜가 빠져나간다).
+const WHEN_BEFORE_BAL_WORD = /시\s*(?=발(?:생|급|표|송|행|견|전|령|효|주|간|명|달|언|의|탁|병|매|목|사|족|각|굴|휘))|시\s+(?=발(?:동|권|부|췌))/g;
 const SEPARATOR = "[\\s\\p{P}\\p{S}]{0,2}";
 const TOKEN_START = "(?:^|[^\\p{L}\\p{N}\\p{M}])";
 const TOKEN_END = "(?=$|[^\\p{L}\\p{N}\\p{M}])";
