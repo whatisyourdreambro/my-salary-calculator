@@ -74,8 +74,29 @@ describe("/savings-interest-2026 청년미래적금(청년도약계좌 신규 �
     expect(src).not.toContain("연 2천만원 한도 비과세, 200만원 초과분");
   });
 
-  it("modifiedTime 은 이번 정정일(2026-09-27)", () => {
-    expect(src).toContain('modifiedTime: "2026-09-27"');
+  // 2026-11-15 N2-app-pages-13(app-pages-b06-F03): 광고 위 목록(GuideMidAd ↔ InArticleAd)의 두 줄도 접힌 FAQ 와 맞춘다.
+  // 청년형 장기펀드는 비과세가 아니라 납입액 40% 소득공제이고 2025-12-31 로 신규 가입 종료(SBS Biz 2025-12-19 일몰 보도),
+  // 조합 예탁금 비과세는 2026년부터 소득 요건(총급여 7천만원·종합소득 6천만원 이하 또는 농·어·임업인 조합원)이 붙는다.
+  // 두 줄 모두 옛 줄보다 좁다(사이트 글꼴 advance 폭으로 계산: 조합 예탁금 줄 352.3 → 342.3px, 장기펀드 줄 300.5 → 289.2px).
+  // 패키지 문구 '3천만원 비과세 (소득 요건)'은 옛 줄보다 넓어(368.6px) li 폭 352.5~368.5px(뷰포트 약 414~430px)에서
+  // 한 줄이 늘어나므로 쓰지 않는다.
+  it("광고 위 목록 — 장기펀드는 40% 소득공제(가입 종료), 조합 예탁금은 조건부 비과세", () => {
+    expect(src).toContain("<li><strong>장기집합투자증권저축</strong>: 40% 소득공제 (가입 종료)</li>");
+    expect(src).toContain("<li><strong>조합 예탁금</strong> (농협·신협·새마을금고): 3천만원 조건부 비과세</li>");
+    expect(src).not.toContain("펀드 형식 비과세");
+    expect(src).not.toContain("1인 3천만원 한도 비과세");
+    expect(src).not.toContain("3천만원 비과세 (소득 요건)");
+    // 옛 줄 대비 폭 하한 가드: 한글 음절 수가 같거나 적고 글자 수가 적다
+    const hangul = (s: string) => [...s].filter((c) => /[가-힣]/.test(c)).length;
+    expect(hangul("3천만원 조건부 비과세")).toBe(hangul("1인 3천만원 한도 비과세"));
+    expect([..."3천만원 조건부 비과세"].length).toBeLessThan([..."1인 3천만원 한도 비과세"].length);
+    expect(hangul("40% 소득공제 (가입 종료)")).toBeLessThan(hangul("펀드 형식 비과세 (소득 조건)"));
+  });
+
+  // 2026-09-27 정정일 고정 → 2026-11-15 목록 정정으로 실제 수정일 갱신(옛 기대값 교체).
+  // 사이트맵 ROUTE_OVERRIDES·콘텐츠 검토 원장은 통합 단계(N2-app-pages-19)가 같은 날로 맞춘다.
+  it("modifiedTime 은 마지막 정정일(2026-11-15)", () => {
+    expect(src).toContain('modifiedTime: "2026-11-15"');
   });
 });
 
