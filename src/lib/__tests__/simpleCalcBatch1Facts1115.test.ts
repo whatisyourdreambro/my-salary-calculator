@@ -225,3 +225,13 @@ describe("N2-simple-calc-01 날짜 손잡이 — 고친 계산기의 publishedAt
     for (const slug of ["loan-monthly-payment", "loan-total-interest"]) expect(calc(slug).publishedAt, slug).toBeUndefined();
   });
 });
+
+// 감사 아이디어 ideas[2] — 같은 별표2 엔진을 쓰는 홈 연봉 계산기(비과세·8~20세 자녀 입력)로 잇는 문장. 기존 닫힌 FAQ 답 끝에만.
+describe("근로소득세 간편 계산 접힌 FAQ — 비과세·자녀 입력은 홈 연봉 실수령액 계산기로", () => {
+  it("FAQ2 답 끝 한 문장 (출산지원금·자녀학자금 문구는 넣지 않는다 — childcareAllowanceWording1102)", () => {
+    const a = calc("earned-income-tax-quick").faqs?.[1]?.a ?? "";
+    expect(a).toContain("비과세 수당과 8세 이상 20세 이하 자녀 수까지 넣어 같은 간이세액표로 원천징수액을 보려면 사이트 홈의 연봉 실수령액 계산기를 이용하세요.");
+    expect(a).not.toContain("출산지원금");
+    expect(a).not.toContain("자녀학자금");
+  });
+});
