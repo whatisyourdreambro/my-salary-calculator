@@ -131,9 +131,9 @@ const AGE_RECOMMEND = [
  },
  {
  age: "50대",
- strategy: "DC→DB 전환 검토 + IRP 안전",
+ strategy: "DC 안정 강화 + IRP 안전",
  detail:
- "위험자산 30%+. DB 옵션 있다면 전환 검토. IRP는 안정성 우선 TDF로 일임도 옵션.",
+ "위험자산 30%+. 안전자산 비중 점진 확대. IRP는 안정성 우선 TDF로 일임도 옵션.",
  color: "#EF4444",
  },
 ];
