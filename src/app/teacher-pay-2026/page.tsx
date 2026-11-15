@@ -276,11 +276,11 @@ export default function TeacherPay2026Page() {
               <p className="text-sm leading-7 text-muted-blue mt-4">
                 9호봉 신규 교사가 담임을 맡으면 봉급 2,495,600원 + 담임수당 20만원 + 정액급식비
                 16만원만으로도 세전 285만원을 넘습니다. 세후 실수령이 궁금하다면{" "}
-                <Link href="/calc/civil-servant-net-pay#teacher" className="text-electric font-bold hover:underline">
+                <Link href="/calc/civil-servant-net-pay#teacher" data-msy-module="pay-full-next" className="text-electric font-bold hover:underline">
                   교사 실수령액 계산기
                 </Link>
                 에서 공제 내역을 확인하세요. 초등교사 커리어별 연봉 흐름은{" "}
-                <Link href="/job/elementary-teacher" className="text-electric font-bold hover:underline">
+                <Link href="/job/elementary-teacher" data-msy-module="pay-full-next" className="text-electric font-bold hover:underline">
                   초등교사 연봉 페이지
                 </Link>
                 , 중·고교는{" "}
@@ -305,6 +305,7 @@ export default function TeacherPay2026Page() {
               </Link>
               <Link
                 href="/job/elementary-teacher"
+                data-msy-module="pay-full-next"
                 className="block p-6 bg-white border border-canvas-200 rounded-3xl text-navy hover:border-electric transition-colors"
               >
                 <FileText className="w-8 h-8 text-electric mb-3" />
@@ -401,7 +402,7 @@ export default function TeacherPay2026Page() {
                     공무원보수규정 [별표 11]
                   </a>{" "}
                   · 인사혁신처 2026년 공무원 봉급표. 일반직 9급~1급 전 호봉은{" "}
-                  <Link href="/civil-servant-pay-2026#general-full-table" className="text-electric font-bold hover:underline">
+                  <Link href="/civil-servant-pay-2026#general-full-table" data-msy-module="pay-full-next" className="text-electric font-bold hover:underline">
                     2026 공무원 봉급표 전체
                   </Link>
                   에서 볼 수 있습니다.

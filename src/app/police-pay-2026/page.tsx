@@ -240,11 +240,11 @@ export default function PolicePay2026Page() {
               <p className="text-sm leading-7 text-muted-blue mt-4">
                 수당까지 합친 순경 초임의 세전 보수는 일반직 9급 초임(연 3,428만원)보다 높은
                 편입니다. 세후 실수령은{" "}
-                <Link href="/calc/civil-servant-net-pay#police" className="text-electric font-bold hover:underline">
+                <Link href="/calc/civil-servant-net-pay#police" data-msy-module="pay-full-next" className="text-electric font-bold hover:underline">
                   경찰공무원 실수령액 계산기
                 </Link>
                 에서, 경찰 커리어별 연봉 흐름은{" "}
-                <Link href="/job/police-officer" className="text-electric font-bold hover:underline">
+                <Link href="/job/police-officer" data-msy-module="pay-full-next" className="text-electric font-bold hover:underline">
                   경찰공무원 연봉 페이지
                 </Link>
                 에서 확인하세요.
@@ -265,6 +265,7 @@ export default function PolicePay2026Page() {
               </Link>
               <Link
                 href="/job/police-officer"
+                data-msy-module="pay-full-next"
                 className="block p-6 bg-white border border-canvas-200 rounded-3xl text-navy hover:border-electric transition-colors"
               >
                 <FileText className="w-8 h-8 text-electric mb-3" />
@@ -348,11 +349,11 @@ export default function PolicePay2026Page() {
                     공무원보수규정 [별표 10]
                   </a>{" "}
                   · 인사혁신처 2026년 공무원 봉급표(확인일 {PAY_FULL_2026_CHECKED}). 같은 표를 소방 계급으로 보려면{" "}
-                  <Link href="/firefighter-pay-2026#fire-full-table" className="text-electric font-bold hover:underline">
+                  <Link href="/firefighter-pay-2026#fire-full-table" data-msy-module="pay-full-next" className="text-electric font-bold hover:underline">
                     소방 봉급표 전체
                   </Link>
                   , 내년 인상률(정부 예산안 기준·확정 전)은{" "}
-                  <Link href="/civil-servant-pay-2027" className="text-electric font-bold hover:underline">
+                  <Link href="/civil-servant-pay-2027" data-msy-module="pay-full-next" className="text-electric font-bold hover:underline">
                     2027 공무원 봉급표 예상
                   </Link>
                   에서 확인하세요.

@@ -31,6 +31,9 @@ const MODULES: Record<string, string[]> = {
   "src/components/CalcNewsNote.tsx": ["calc-news-note"],
   // 2026-11-01 G4 '만든 사람과 확인 방법' — 핵심 페이지·layout 맨 끝(모든 광고 아래), /about·/contact 링크 2개
   "src/components/EditorialTrustNote.tsx": ["editorial-trust-note"],
+  // 2026-11-15 RL-12 T14f (10월 c5ef14c80 W3-I RPM-08) — 봉급표 2026 4쪽의 기존 교차 링크·전체표 각주 링크에 링크 단위로 단다.
+  // 한 모듈이 4개 페이지 파일에 걸쳐 여기에는 대표 1파일만 등재(id 1종으로 셈) — 나머지 3파일은 아래 PAY_FULL_NEXT_FILES 블록이 확인.
+  "src/app/civil-servant-pay-2026/page.tsx": ["pay-full-next"],
   "src/app/job/[slug]/page.tsx": [
     "job-related-calc",
     "job-companies",
@@ -249,5 +252,48 @@ describe("내부 링크 모듈 계측", () => {
     expect(fnIdx).toBeGreaterThan(-1);
     expect(analytics.slice(fnIdx, fnIdx + 200)).toContain("trackGuideCTAClick(href, moduleId, undefined, destTemplate(href))");
     expect(analytics).not.toContain("internal_link_click");
+  });
+});
+
+// 2026-11-15 RL-12 T14f — 여러 파일에 걸친 모듈 pay-full-next (봉급표 2026 4쪽). 위 MODULES 에는 대표 1파일만 두고
+// 여기서 4파일 전부를 확인한다: 이 id 는 이 4파일에만, 각 파일은 이 id 만, 속성은 내부 링크(<Link>)에만, 없는 2027 직렬 라우트 링크 0.
+const PAY_FULL_NEXT_FILES: Record<string, number> = {
+  "src/app/civil-servant-pay-2026/page.tsx": 5,
+  "src/app/police-pay-2026/page.tsx": 5,
+  "src/app/firefighter-pay-2026/page.tsx": 5,
+  "src/app/teacher-pay-2026/page.tsx": 4,
+};
+const pageExists = (route: string) => {
+  try {
+    read(`src/app${route}/page.tsx`);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+describe("봉급표 공유 모듈 pay-full-next (RL-12 T14f)", () => {
+  it("4파일에만 있고, 각 파일의 모듈 id 는 pay-full-next 하나, 링크 수는 선언값", () => {
+    for (const [file, count] of Object.entries(PAY_FULL_NEXT_FILES)) {
+      const ids = [...read(file).matchAll(ATTR_RE)].map((m) => m[1]);
+      expect(ids, file).toEqual(Array.from({ length: count }, () => "pay-full-next"));
+    }
+    for (const file of Object.keys(MODULES)) {
+      if (file in PAY_FULL_NEXT_FILES) continue;
+      expect(read(file), `${file} 에 pay-full-next`).not.toContain('data-msy-module="pay-full-next"');
+    }
+  });
+
+  it("속성은 있는 내부 라우트로 가는 <Link> 에만 붙고, 그 안에 광고·쿠팡 컴포넌트가 없다", () => {
+    for (const file of Object.keys(PAY_FULL_NEXT_FILES)) {
+      for (const element of taggedElementSources(read(file))) {
+        expect(element.startsWith("<Link"), `${file}: ${element.slice(0, 60)}`).toBe(true);
+        expect(element, file).not.toMatch(AD_COMPONENT_RE);
+        const href = /href="(\/[^"#]*)/.exec(element)?.[1];
+        expect(href, `${file}: 내부 href`).toBeTruthy();
+        expect(href, file).not.toMatch(/^\/(?:teacher|police|firefighter)-pay-2027/);
+        expect(pageExists(href!) || pageExists(href!.replace(/\/[^/]+$/, "/[slug]")), href).toBe(true);
+      }
+    }
   });
 });

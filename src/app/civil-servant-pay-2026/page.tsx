@@ -273,6 +273,7 @@ export default function CivilServantPay2026Page() {
             (출처: 인사혁신처 보도자료, 2025-12-30) 내년이 궁금하다면{" "}
             <Link
               href="/civil-servant-pay-2027"
+              data-msy-module="pay-full-next"
               className="text-electric font-bold hover:underline"
             >
               2027 공무원 봉급표 — 전망과 확정 일정
@@ -512,19 +513,19 @@ export default function CivilServantPay2026Page() {
                 공무원보수규정 [별표 3]
               </a>{" "}
               · 인사혁신처 2026년 공무원 봉급표(확인일 {PAY_FULL_2026_CHECKED}). 직렬별 전체표는{" "}
-              <Link href="/teacher-pay-2026#teacher-full-table" className="text-electric font-bold hover:underline">
+              <Link href="/teacher-pay-2026#teacher-full-table" data-msy-module="pay-full-next" className="text-electric font-bold hover:underline">
                 교원
               </Link>
               ·
-              <Link href="/police-pay-2026#police-full-table" className="text-electric font-bold hover:underline">
+              <Link href="/police-pay-2026#police-full-table" data-msy-module="pay-full-next" className="text-electric font-bold hover:underline">
                 경찰
               </Link>
               ·
-              <Link href="/firefighter-pay-2026#fire-full-table" className="text-electric font-bold hover:underline">
+              <Link href="/firefighter-pay-2026#fire-full-table" data-msy-module="pay-full-next" className="text-electric font-bold hover:underline">
                 소방
               </Link>{" "}
               봉급표에서, 내년 인상률(정부 예산안 기준·확정 전)은{" "}
-              <Link href="/civil-servant-pay-2027" className="text-electric font-bold hover:underline">
+              <Link href="/civil-servant-pay-2027" data-msy-module="pay-full-next" className="text-electric font-bold hover:underline">
                 2027 공무원 봉급표 예상
               </Link>
               에서 확인하세요.
