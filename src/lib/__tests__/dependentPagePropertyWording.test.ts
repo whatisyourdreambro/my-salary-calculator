@@ -50,3 +50,15 @@ describe("/health-insurance-dependent — HomeTopAd 위 리드 문장", () => {
     expect([...after].length).toBe([...before].length - 2);
   });
 });
+
+// N2-app-pages-07 (2026-11-15 감사 app-pages-b03-F03): 국민건강보험법 시행규칙 별표 1 제10호 — 형제자매는 나이·장애 예외에
+// 더해 미혼(이혼·사별한 경우 포함)이고 부모가 없거나 부모에게 보수·소득이 없는 경우 등 부양요건을 따로 충족해야 한다.
+// 접힌 FAQ(InArticleAd 아래 닫힌 details, FAQPage JSON-LD 같은 배열)에 조건을 적었다 — 닫힌 높이 불변.
+describe("/health-insurance-dependent — 형제자매 미혼 요건(접힌 FAQ)", () => {
+  const flat = readFileSync(resolve(process.cwd(), "src/app/health-insurance-dependent/page.tsx"), "utf8").replace(/\s+/g, " ");
+  it("형제자매 FAQ 답이 미혼(이혼·사별 포함)·별표 1 부양요건을 적는다", () => {
+    expect(flat).toContain(
+      "또한 형제자매는 미혼(이혼·사별 포함)이어야 하고, 부모가 없거나 부모에게 보수·소득이 없는 경우 등 시행규칙 별표 1의 부양요건을 따로 충족해야 합니다.",
+    );
+  });
+});
