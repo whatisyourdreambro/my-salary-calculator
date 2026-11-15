@@ -70,7 +70,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-15",
   "views": 85000,
   "lang": "ko",
-  "contentChars": 5048
+  "contentChars": 5044
  },
  {
   "slug": "severance-pay-guide",
