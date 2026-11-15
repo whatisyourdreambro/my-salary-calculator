@@ -8,6 +8,7 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd } from "@/components/AdPlacement";
 import { Info, Home } from "lucide-react";
 import HousingSubscriptionClient from "./Client";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 const FAQ_ITEMS = [
   {
@@ -51,7 +52,7 @@ export default function HousingSubscriptionPage() {
     <>
       <JsonLd
         data={[
-          softwareApplicationLd({ name: "청약저축 소득공제 계산기", description: "주택청약 납입액 소득공제 절세 효과를 자동 계산합니다.", url: "/calc/housing-subscription" }),
+          softwareApplicationLd({ name: "청약저축 소득공제 계산기", description: "주택청약 납입액 소득공제 절세 효과를 자동 계산합니다.", url: "/calc/housing-subscription", dateModified: staticRouteLastModified("/calc/housing-subscription") }),
           autoBreadcrumbLd("/calc/housing-subscription", { leafName: "청약저축 소득공제 계산기" }),
           faqLd(FAQ_ITEMS),
         ]}

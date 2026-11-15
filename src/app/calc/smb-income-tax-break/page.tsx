@@ -15,6 +15,7 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { BadgePercent, Info } from "lucide-react";
 import SmbTaxBreakClient from "./Client";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 const FAQ_ITEMS = [
   {
@@ -74,6 +75,7 @@ export default function SmbIncomeTaxBreakPage() {
             description:
               "조특법 30조 감면세액과 근로소득세액공제 연동 축소를 반영한 연간·감면기간 절감액을 자동 계산합니다.",
             url: "/calc/smb-income-tax-break",
+            dateModified: staticRouteLastModified("/calc/smb-income-tax-break"),
           }),
           autoBreadcrumbLd("/calc/smb-income-tax-break", {
             leafName: "중소기업 취업자 소득세 감면 계산기",

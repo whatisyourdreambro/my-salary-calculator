@@ -72,6 +72,7 @@ import EnglishLayout from "@/app/en/layout";
 import { salaryTableFromPath } from "@/components/SalaryTableNextStepsFromPath";
 import { englishToolSlugFromPath } from "@/components/english/EnglishAfterAdsLinks";
 import { getTopicNextSteps } from "@/lib/topicNextSteps";
+import { calcNewsNoteFor } from "@/components/CalcNewsNote";
 import { ENGLISH_TOOLS } from "@/lib/englishTools";
 
 const BODY = 'data-test="page-body"';
@@ -151,12 +152,21 @@ describe("표 8종: 급여 단위·연도 비교 상자는 표 layout 맨 끝", 
   });
 });
 
-describe("계산기 3종: 이어서 확인할 내용 상자는 calc/layout 광고 블록·보도 요약 뒤 맨 끝", () => {
-  it.each(["/calc/2026-year", "/calc/bonus-home-plan", "/calc/samsung-bonus"])("%s", (path) => {
+// 2026-11-15 SEASONA: 계산기 행 7곳(시즌·퇴직 6 + SK하이닉스)이 더해졌다 — 같은 순서 규칙으로 함께 본다.
+const CALC_TOPIC_PATHS = [
+  "/calc/2026-year", "/calc/bonus-home-plan", "/calc/samsung-bonus",
+  "/calc/sk-hynix-bonus", "/calc/year-end-bonus-tax", "/calc/year-end-bonus", "/calc/voluntary-retirement",
+  "/calc/vacation-pay", "/calc/severance-vs-pension", "/calc/smb-income-tax-break",
+];
+/** G4 '만든 사람과 확인 방법' 상자를 그리는 계산기(src/lib/editorialTrust.ts) */
+const TRUST_CALCS = new Set(["/calc/samsung-bonus", "/calc/sk-hynix-bonus"]);
+
+describe("계산기 10종: 이어서 확인할 내용 상자는 calc/layout 광고 블록·보도 요약 뒤 맨 끝", () => {
+  it.each(CALC_TOPIC_PATHS)("%s", (path) => {
     const html = renderAt(path, CalcLayout);
-    const news = path === "/calc/samsung-bonus" ? ['data-msy-module="calc-news-note"'] : [];
-    // G4: 삼성전자 성과급만 '만든 사람과 확인 방법' 상자가 이 상자 뒤 맨 끝에 온다(나머지 두 계산기는 이 상자가 맨 끝)
-    const trust = path === "/calc/samsung-bonus" ? [TRUST_NOTE] : [];
+    const news = calcNewsNoteFor(path) ? ['data-msy-module="calc-news-note"'] : [];
+    // G4: 삼성전자·SK하이닉스 성과급만 '만든 사람과 확인 방법' 상자가 이 상자 뒤 맨 끝에 온다(나머지 계산기는 이 상자가 맨 끝)
+    const trust = TRUST_CALCS.has(path) ? [TRUST_NOTE] : [];
     expectInOrder(html, [BODY, 'data-placement="article"', 'data-placement="affiliate"', 'data-placement="home"', SHARE, ...news, TOPIC_BOX, ...trust]);
     expectLastElement(html, trust.length ? TRUST_NOTE : TOPIC_BOX, "section");
     if (!trust.length) expect(html).not.toContain(TRUST_NOTE);
@@ -165,7 +175,8 @@ describe("계산기 3종: 이어서 확인할 내용 상자는 calc/layout 광�
     expect(hrefs(sliceBox(html, TOPIC_BOX, TRUST_NOTE))).toEqual(expected);
   });
 
-  it.each(["/calc", "/calc/sk-hynix-bonus", "/calc/bmi-quick", "/calc/samsung-bonus/extra"])("%s: 맵에 없는 경로는 상자 없음", (path) => {
+  // 2026-11-15 SEASONA: /calc/sk-hynix-bonus 는 행이 생겨 위 목록으로 옮겼고, 맵에 없는 회사 계산기 예로 /calc/kia-bonus 를 둔다
+  it.each(["/calc", "/calc/kia-bonus", "/calc/bmi-quick", "/calc/samsung-bonus/extra"])("%s: 맵에 없는 경로는 상자 없음", (path) => {
     expect(renderAt(path, CalcLayout)).not.toContain(TOPIC_BOX);
   });
 });

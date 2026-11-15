@@ -30,6 +30,8 @@ export interface SearchEntry {
  description?: string;
  /** 검색 매칭 우선순위 (1이 가장 높음) */
  priority?: number;
+ /** 숨은 검색어 — 화면(드롭다운)에는 그리지 않고 매칭에만 쓴다. 회사 별칭·통칭(삼전·하닉·현차 등, 2026-11-15 SEASONA lib ideas[6]) */
+ keywords?: string;
 }
 
 const seasonPages: SearchEntry[] = [
@@ -242,12 +244,23 @@ const qnaEntries: SearchEntry[] = qnaData.map((q) => ({
  description: q.answer.conclusion.slice(0, 60),
 }));
 
-const companyEntries: SearchEntry[] = companyRepository.getAll().map((c) => ({
+// 회사 별칭(aliases)·검색 전용 별칭(searchAliases)을 숨은 검색어로 싣는다 (2026-11-15 SEASONA, 감사 lib ideas[6]) —
+// '삼전'·'하닉'·'현차'처럼 이름에 없는 통칭으로 찾으면 종전엔 0건이었다. 두 목록은 CompanyRepository 가 이미 회사 객체에
+// 주입해 이 청크에 실려 있던 데이터라 새 import 는 없다. 드롭다운에는 제목·설명만 그린다(HeaderSearch.tsx).
+const companyKeywords = (c: { aliases?: string[]; searchAliases?: string[] }): string | undefined => {
+ const words = [...new Set([...(c.aliases ?? []), ...(c.searchAliases ?? [])])];
+ return words.length ? words.join(" ") : undefined;
+};
+const companyEntries: SearchEntry[] = companyRepository.getAll().map((c) => {
+ const keywords = companyKeywords(c);
+ return {
  title: c.name.ko,
  href: `/salary-db/${c.id}`,
  category: "회사" as const,
  description: c.industry,
-}));
+ ...(keywords ? { keywords } : {}),
+ };
+});
 
 export const searchIndex: SearchEntry[] = [
  ...toolPages,
@@ -262,7 +275,7 @@ export const searchIndex: SearchEntry[] = [
 ];
 
 /**
- * 쿼리로 검색. 제목 prefix > 제목 includes > description includes 순위.
+ * 쿼리로 검색. 제목 prefix > 제목 includes > description·숨은 검색어(keywords) includes 순위.
  * 최대 limit 개 반환.
  */
 export function searchEntries(query: string, limit = 8): SearchEntry[] {
@@ -273,10 +286,11 @@ export function searchEntries(query: string, limit = 8): SearchEntry[] {
  .map((entry) => {
  const title = entry.title.toLowerCase();
  const desc = entry.description?.toLowerCase() ?? "";
+ const keywords = entry.keywords?.toLowerCase() ?? "";
  let score = 0;
  if (title.startsWith(q)) score = 100;
  else if (title.includes(q)) score = 60;
- else if (desc.includes(q)) score = 20;
+ else if (desc.includes(q) || keywords.includes(q)) score = 20;
  return { entry, score };
  })
  .filter((m) => m.score > 0)

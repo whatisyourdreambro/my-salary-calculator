@@ -15,6 +15,7 @@ import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Users, Info } from "lucide-react";
 import DualIncomeYearEndClient from "./Client";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 const FAQ_ITEMS = [
   {
@@ -73,6 +74,7 @@ export default function DualIncomeYearEndPage() {
             description:
               "맞벌이 부부의 자녀 기본공제·의료비·교육비·기부금 귀속 시나리오별 부부 합산 결정세액을 비교해 최적 배분을 제시합니다.",
             url: "/calc/dual-income-year-end",
+            dateModified: staticRouteLastModified("/calc/dual-income-year-end"),
           }),
           autoBreadcrumbLd("/calc/dual-income-year-end", {
             leafName: "맞벌이 연말정산 몰아주기 계산기",

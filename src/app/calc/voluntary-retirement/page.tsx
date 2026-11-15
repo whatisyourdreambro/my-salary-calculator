@@ -17,6 +17,7 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Briefcase, Info, ArrowRight } from "lucide-react";
 import VoluntaryRetirementClient from "./Client";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 const FAQ_ITEMS = [
   {
@@ -77,6 +78,7 @@ export default function VoluntaryRetirementPage() {
             description:
               "희망퇴직 위로금과 법정퇴직금을 합산한 퇴직소득세·세후 실수령액, 위로금만의 한계 세부담을 자동 계산합니다.",
             url: "/calc/voluntary-retirement",
+            dateModified: staticRouteLastModified("/calc/voluntary-retirement"),
           }),
           autoBreadcrumbLd("/calc/voluntary-retirement", { leafName: "희망퇴직 위로금 실수령 계산기" }),
           faqLd(FAQ_ITEMS),

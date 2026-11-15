@@ -10,6 +10,7 @@ import YearEndTaxCluster from "@/components/YearEndTaxCluster";
 import { GuideMidAd } from "@/components/AdPlacement";
 import { Info, Heart } from "lucide-react";
 import ChildDeductionClient from "./Client";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 const FAQ_ITEMS = [
   {
@@ -55,7 +56,7 @@ export default function ChildDeductionPage() {
     <>
       <JsonLd
         data={[
-          softwareApplicationLd({ name: "자녀 인적공제·세액공제 계산기", description: "자녀 수와 연령에 따른 공제·세액공제 자동 계산", url: "/calc/child-deduction" }),
+          softwareApplicationLd({ name: "자녀 인적공제·세액공제 계산기", description: "자녀 수와 연령에 따른 공제·세액공제 자동 계산", url: "/calc/child-deduction", dateModified: staticRouteLastModified("/calc/child-deduction") }),
           autoBreadcrumbLd("/calc/child-deduction", { leafName: "자녀 인적공제·세액공제 계산기" }),
           faqLd(FAQ_ITEMS),
         ]}

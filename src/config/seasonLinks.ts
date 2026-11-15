@@ -78,6 +78,8 @@ export const SEASON_TOP_OCT: SeasonLink[] = [
   {
     href: "/year-end-tax-preview",
     header: { name: "홈택스 연말정산 미리보기", description: "예상 세액 먼저 확인 — 절차·확인 포인트", badge: "NEW" },
+    // 2026-11-15 SEASONA(감사 lib ideas[4]): 푸터(모든 광고 아래) 전역 링크 — 종전엔 기본 닫힌 헤더 드롭다운에서만 닿았다.
+    footer: { name: "연말정산 미리보기", order: 30 },
   },
   {
     href: "/credit-card-deduction-2026",
@@ -153,6 +155,11 @@ export const SEASON_TOP_DEC: SeasonLink[] = [
     href: "/property-holding-tax-2026",
     footer: { name: "재산세·보유세 계산기", order: 5 },
   },
+  // 2026-11-15 SEASONA(감사 lib ideas[4]): 푸터 전용(헤더 미노출 — 12개 상한 그대로). 푸터는 모든 광고 아래.
+  //  - 미리보기: 국세청 2026년 귀속분 운영 10/28~12/18 — 12월 마감 점검 기간에도 이용법 쪽으로 닿게 한다(쪽이 기간을 밝힌다).
+  //  - 성과급 내 집 마련: 사이트 전역 링크가 없던 계산기 — 12~1월 성과급 시즌(DEC·JAN)에만.
+  { href: "/year-end-tax-preview", footer: { name: "연말정산 미리보기", order: 30 } },
+  { href: "/calc/bonus-home-plan", footer: { name: "성과급 내 집 마련 계산기", order: 31 } },
 ];
 
 // 1월 연말정산 간소화·OPI 세트 — 1/2 교체용 사전 제작 (2026-09-05, L18' 시점 앞당김).
@@ -202,6 +209,8 @@ export const SEASON_TOP_JAN: SeasonLink[] = [
     href: "/calc/holiday-bonus",
     footer: { name: "설 상여금 세금 계산기", order: 29 },
   },
+  // 2026-11-15 SEASONA(감사 lib ideas[4]): 성과급 내 집 마련 계산기 푸터 전용 — DEC 와 같은 이름·order.
+  { href: "/calc/bonus-home-plan", footer: { name: "성과급 내 집 마련 계산기", order: 31 } },
 ];
 
 // ── 활성 세트 선택 (S1-1, 2026-09-11) — 사람이 한 줄 바꾸지 않는다 ─────────────

@@ -11,6 +11,7 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { CalendarDays, Info } from "lucide-react";
 import AnnualLeaveDaysClient from "./Client";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 /** 정적 HTML 의 기준일 — 빌드 시각의 KST 날짜 (클라이언트가 마운트 뒤 방문일로 바꾼다) */
 function buildDayKst(): string {
@@ -63,6 +64,7 @@ export default function AnnualLeaveDaysPage() {
             name: "연차 개수 계산기",
             description: "입사일 기준 연차 발생 개수를 연도별로 자동 계산합니다.",
             url: "/calc/annual-leave-days",
+            dateModified: staticRouteLastModified("/calc/annual-leave-days"),
           }),
           autoBreadcrumbLd("/calc/annual-leave-days", { leafName: "연차 개수 계산기" }),
           faqLd(FAQ_ITEMS),

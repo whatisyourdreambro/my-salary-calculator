@@ -25,6 +25,7 @@ import { Search, AlertTriangle, Info } from "lucide-react";
 import NaverBonusClient from "./Client";
 import ShareButtons from "@/components/ShareButtons";
 import FavoritesButton from "@/components/FavoritesButton";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 const SITE_URL = "https://www.moneysalary.com";
 const SITE_NAME = "머니샐러리";
@@ -114,6 +115,7 @@ export default function NaverBonusPage() {
             name: PAGE_TITLE,
             description: PAGE_DESC,
             url: `${SITE_URL}${PAGE_PATH}`,
+            dateModified: staticRouteLastModified(PAGE_PATH),
           }),
           faqLd(FAQ_ITEMS),
           howToLd({

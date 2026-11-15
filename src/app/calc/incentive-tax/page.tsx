@@ -15,6 +15,7 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Sparkles, Info, AlertTriangle } from "lucide-react";
 import IncentiveClient from "./Client";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 const FAQ_ITEMS = [
   {
@@ -70,6 +71,7 @@ export default function IncentiveTaxPage() {
             description:
               "인센티브·스톡옵션의 합산과세와 분리과세 세금을 비교 계산합니다.",
             url: "/calc/incentive-tax",
+            dateModified: staticRouteLastModified("/calc/incentive-tax"),
           }),
           autoBreadcrumbLd("/calc/incentive-tax", {
             leafName: "인센티브 분리과세 계산기",

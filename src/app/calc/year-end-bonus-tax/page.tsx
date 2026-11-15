@@ -16,6 +16,7 @@ import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { CURRENT_RATES_YEAR, INSURANCE_RATES_BY_YEAR, rateLabels } from "@/config/currentRates";
 import { Info, Calendar } from "lucide-react";
 import YearEndBonusTaxClient from "./Client";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 // 2027 요율 문구는 연도 정본(taxConstants2027.ts)에서 파생 — 요율 리터럴을 두지 않는다(verify:tax).
 // 계산기 두 카드는 현행 포인터(2026) 요율로 계산하므로, 포인터가 2026 인 동안만 접힌 FAQ 에 그 차이를 밝힌다.
@@ -79,6 +80,7 @@ export default function YearEndBonusTaxPage() {
             name: "연말 보너스 세금 계산기",
             description: "귀속연도(올해·다음해)에 따른 보너스 세금·실수령액 차이를 비교 계산합니다.",
             url: "/calc/year-end-bonus-tax",
+            dateModified: staticRouteLastModified("/calc/year-end-bonus-tax"),
           }),
           autoBreadcrumbLd("/calc/year-end-bonus-tax", {
             leafName: "연말 보너스 세금 계산기",

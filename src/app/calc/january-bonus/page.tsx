@@ -19,6 +19,7 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Info, Gift } from "lucide-react";
 import JanuaryBonusClient from "./Client";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 const FAQ_ITEMS = [
   {
@@ -76,6 +77,7 @@ export default function JanuaryBonusPage() {
             name: "13월의 월급 시뮬레이터",
             description: "연말정산 환급/추징 예상액을 카드·IRP·의료비 입력으로 미리 계산합니다.",
             url: "/calc/january-bonus",
+            dateModified: staticRouteLastModified("/calc/january-bonus"),
           }),
           autoBreadcrumbLd("/calc/january-bonus", {
             leafName: "13월의 월급 시뮬레이터",

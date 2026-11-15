@@ -8,6 +8,7 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd } from "@/components/AdPlacement";
 import { Info, Home } from "lucide-react";
 import JeonseLoanClient from "./Client";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 const FAQ_ITEMS = [
   {
@@ -51,7 +52,7 @@ export default function JeonseLoanPage() {
     <>
       <JsonLd
         data={[
-          softwareApplicationLd({ name: "전세대출 한도·이자 계산기", description: "전세대출 한도와 월 이자, 정책상품 우대 금리를 비교 계산합니다.", url: "/calc/jeonse-loan" }),
+          softwareApplicationLd({ name: "전세대출 한도·이자 계산기", description: "전세대출 한도와 월 이자, 정책상품 우대 금리를 비교 계산합니다.", url: "/calc/jeonse-loan", dateModified: staticRouteLastModified("/calc/jeonse-loan") }),
           autoBreadcrumbLd("/calc/jeonse-loan", { leafName: "전세대출 한도·이자 계산기" }),
           faqLd(FAQ_ITEMS),
         ]}

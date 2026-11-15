@@ -10,6 +10,7 @@ import { GuideMidAd } from "@/components/AdPlacement";
 import RelatedCalculators from "@/components/RelatedCalculators";
 // 요율 안내 문장은 이 페이지 계산기(SalaryCalculator — 현행 요율 포인터)와 같은 포인터에서 (2026-09-25 N3)
 import { CURRENT_RATES_YEAR, CURRENT_RATE_LABELS } from "@/config/currentRates";
+import { staticRouteLastModified } from "@/app/sitemap";
 
 export const metadata: Metadata = buildPageMetadata({
  title: "2026 연봉 계산기 PRO - 최신 세법·티어 카드·자산 시뮬",
@@ -35,6 +36,7 @@ export default function Calc2026Page() {
  description:
  "2026년 변경 국민연금/건강보험 요율 자동 적용. 실수령액 + 연봉 티어 카드 + 미래 자산 시뮬레이션까지 한 페이지에서 무료로 확인하세요.",
  url: "/calc/2026-year",
+ dateModified: staticRouteLastModified("/calc/2026-year"),
  }),
  autoBreadcrumbLd("/calc/2026-year", { leafName: "2026 연봉 계산기 PRO" }),
  ]}
