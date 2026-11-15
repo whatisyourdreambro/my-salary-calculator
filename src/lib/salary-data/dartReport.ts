@@ -98,7 +98,7 @@ export const dartTop100: DartRankRow[] = [...rankEligible]
  * 10% 기준 전환으로 TOP100 에 새로 든 회사(하이트진로·에이비엘바이오·LG유플러스·삼성물산 등)는
  * 카드에 배지 줄이 새로 생겨 GuideMidAd 위 높이가 늘어난다. 종전 기준(30% 플래그만)에서도
  * TOP100 이던 corp 에만 카드 배지를 단다 — 리포트 표 자체는 새 기준 그대로.
- * ★2026-10-06 이후: 이 가드를 제거해 신규 진입사에도 배지를 단다 (회사 page.tsx 한 곳).
+ * ★운영자 결정(2026-10-05): 10/6 가드 제거는 하지 않음 — 제거하면 신규 진입 4개사(하이트진로·에이비엘바이오·LG유플러스·삼성물산) 회사 카드에 배지 줄이 생겨 GuideMidAd 가 내려가므로, 운영자 승인과 가드된 실측 스윕 뒤에만 제거한다 (회사 page.tsx 한 곳).
  */
 export const dartTop100CardBadgeCorps: ReadonlySet<string> = new Set(
   [...eligible]
