@@ -126,6 +126,12 @@ describe("사실 정정 고정 — 10/2~3 묶음", () => {
     expect(after.split(" ").length).toBeLessThan(before.split(" ").length);
     expect([...after].length).toBeLessThan([...before].length);
   });
+  // 2026-11-15 N2-app-pages-09(app-pages-b08-F02): 접힌 FAQ(닫힌 details, GuideMidAd 아래)는 두 갈래 요건을 모두 적는다.
+  it("12월 가이드 접힌 FAQ — 예체능 학원비는 9세 미만 또는 초등 2학년 이하", () => {
+    const src = readSrc("src/app/year-end-tax-settlement-2026/page.tsx");
+    expect(src).toContain("교육비 세액공제 확대(자녀 소득요건 폐지, 9세 미만 또는 초등 2학년 이하 예체능 학원비 포함)");
+    expect(src).not.toContain("9세 미만 예체능 학원비 포함");
+  });
   it("IRP 계산기 FAQ — 이연퇴직소득 70%·60%·50%, 적격 TDF 100%", () => {
     const src = readSrc("src/app/tools/finance/irp/page.tsx");
     expect(src).toContain("퇴직소득세의 70%(연금 수령 11~20년차는 60%, 21년차부터는 50%)");
