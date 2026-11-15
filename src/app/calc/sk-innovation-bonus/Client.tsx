@@ -157,7 +157,7 @@ export default function SkInnovationBonusClient() {
             <div className="text-[10px] font-bold text-faint">직접 입력</div>
             <div className="font-bold text-sm mt-0.5">🎛️ 커스텀 지급률 (0~800%)</div>
             <div className="text-xs text-faint mt-1 leading-relaxed">
-              FY2025 실적분(2026년) 미확정 — 예상치를 직접 넣어 시뮬레이션
+              FY2025 실적분(2026년) 미공개 — 예상치를 직접 넣어 시뮬레이션
             </div>
           </button>
         </div>
