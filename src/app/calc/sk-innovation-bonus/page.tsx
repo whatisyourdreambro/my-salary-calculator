@@ -226,7 +226,7 @@ export default function SkInnovationBonusPage() {
             <GuideMidAd />
           </div>
 
-          {/* FY2025 미확정 안내 */}
+          {/* FY2025 실적분 지급·지급률 미공개 안내 */}
           <section
             className="mt-8 rounded-2xl border border-canvas-deep bg-white p-6 sm:p-8"
             aria-labelledby="fy2025-heading"
@@ -236,16 +236,16 @@ export default function SkInnovationBonusPage() {
               className="text-xl sm:text-2xl font-black mb-3 flex items-center gap-2"
             >
               <Info className="w-5 h-5 text-primary" />
-              FY2025 실적분(2026년 지급)은 아직 미확정입니다
+              FY2025 실적분은 2026년 초 지급됐습니다
             </h2>
             <p className="text-sm leading-relaxed text-navy">
-              FY2025 실적 기준 성과급 지급률은 <strong>보도가 확인되지 않았습니다</strong>.
-              통상 SK이노베이션 성과급은 연초(2월 전후) 임단협 합의로 확정·보도됩니다.
+              FY2025 실적분은 2026년 초 전년보다 적게 지급됐고 SK온은 미지급입니다(SBS Biz
+              2026-02-22). 지급률은 보도되지 않았습니다.
               참고로 2026년 2분기 영업이익 3조 4,873억원 <strong>흑자전환</strong> 보도(CBC뉴스,
               2026-07)가 있어 차기 지급에 대한 관심이 높습니다.
             </p>
             <p className="text-sm leading-relaxed text-navy mt-3">
-              확정 지급률이 발표되면 즉시 이 페이지에 반영하겠습니다. 그 전에는 위
+              지급률이 보도되면 이 페이지에 반영하겠습니다. 그 전에는 위
               계산기의 <strong className="text-primary">직접 입력(0~800%) 모드</strong>로 예상
               시나리오를 시뮬레이션해 보세요.
             </p>
