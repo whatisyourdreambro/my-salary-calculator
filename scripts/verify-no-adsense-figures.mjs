@@ -39,7 +39,7 @@ export const RULES = [
   ['rpm', re(String.raw`\b(?:RPM|eCPM)\b[^\n]{0,24}?[$₩]\s?${N}`)],
   ['cpc', re(String.raw`(?:\bCPC\b|클릭당\s?(?:수익|단가))[^\n]{0,16}?[$₩]\s?${N}`)],
   ['active-view', re(String.raw`(?:Active\s?View|\bAV\b|평균\s?가시(?:시간)?)[^\n]{0,16}?${N}\s?(?:%|초)`)],
-  ['impressions-per-pv', re(String.raw`(?:노출|${UNIT})\s?/\s?PV[^\n]{0,12}?${DEC}|\*\*${DEC}\*\*\s?/PV|${DEC}\s?/PV\b|페이지뷰당\s?${DEC}`)],
+  ['impressions-per-pv', re(String.raw`(?:노출|${UNIT})\s?/\s?PV[^\n]{0,12}?${DEC}|\*\*${DEC}\*\*\s?/PV|${DEC}\s?/PV\b|페이지뷰당\s?${DEC}|PV\s?당\s?${DEC}`)],
   ['coverage', re(String.raw`(?=[^\n]*${UNIT})[^\n]*(?:(?:커버리지|coverage|채움률?)[^\n]{0,12}?\d+(?:\.\d+)?\s?%|(?:미매칭|매칭|광고\s?요청|요청)\s?${BIG}|요청\s?/\s?PV[^\n]{0,12}?${DEC})`)],
   ['revenue-usd', re(String.raw`${REV}[^\n]{0,40}?[$₩]\s?${N}|[$₩]\s?${N}[^\n]{0,40}?${REV}`)],
   ['revenue-krw', re(String.raw`(?:월|일)\s?수익\s?${N}\s?(?:~\s?${N})?\s?만\s?원|수익의\s?\*{0,2}${N}(?:~${N})?%`)],
