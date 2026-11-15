@@ -159,8 +159,14 @@ describe("simple-calc-b04-F01 (2)(3) 주휴수당 계산 유의사항·본문 �
   it("유의사항 1·본문 마지막 단락", () => {
     const c = calc("holiday-allowance-quick");
     const was = "하루 8시간 근무를 전제로 시급에 8을 곱하므로, 주 4일 6시간 근무처럼 1일 소정근로시간이 다르면 그 시간에 맞춰 직접 환산해야 합니다.";
-    expect(c.caveats?.[0]).toBe("하루 8시간 근무를 전제로 시급에 8을 곱하므로, 주 40시간 미만 근무라면 주 소정근로시간÷40×8시간분으로 직접 환산해야 합니다.");
-    // 한글·공백은 줄고 숫자·기호가 늘어 글자 종류별 비교 대신 실측 폭: 53.11em → 51.27em (wght 400)
+    // 리뷰(2026-11-15): 검증 문구의 소정근로시간÷40×8시간분으로 는 띄어쓰기 없는 한 덩어리(약 13em)라 keep-all 줄바꿈에서
+    // 폭 약 18.3~21em(뷰포트 약 380~420px, 390·393·412px 폰 포함) 유의사항이 3줄 → 4줄로 늘어 아래 광고를 밀 수 있었다.
+    // 같은 값(÷40×8 = ÷5)을 본문과 같은 말로 써 10~42em 전 구간에서 줄 수가 종전보다 많아지지 않게 했다(53.11em → 48.87em).
+    expect(c.caveats?.[0]).toBe("하루 8시간 근무를 전제로 시급에 8을 곱하므로, 주 40시간 미만 근무라면 주 소정근로시간의 5분의 1로 직접 환산해야 합니다.");
+    expect(c.caveats?.[0]).not.toContain("÷40×8");
+    // 한글 52→47·공백 19→17, 숫자만 5→6 — 보수적 폭 추정(한글 0.92em·숫자 0.62em·공백 0.27em·그 밖 0.9em)으로도 더 좁다
+    const est = (t: string) => { const k = kinds(t); return k.hangul * 0.92 + k.digit * 0.62 + k.space * 0.27 + k.other * 0.9; };
+    expect(est(c.caveats?.[0] ?? "")).toBeLessThan(est(was));
     expect(kinds(c.caveats?.[0] ?? "").hangul).toBeLessThan(kinds(was).hangul);
     expect(c.details).toContain("주 소정근로시간의 5분의 1로 다시 계산해야");
     expect(c.details).not.toContain("1주 평균 1일 소정근로시간");
