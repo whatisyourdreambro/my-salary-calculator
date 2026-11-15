@@ -44,9 +44,7 @@ const ContentSecurityPolicy = (qaServicesDisabled ? `
   .trim();
 
 // /widget/* 임베드 위젯 전용 CSP — 외부 블로그 iframe 허용(frame-ancestors *).
-// 정본은 라우트 핸들러(src/app/widget/salary/route.ts)가 직접 세팅하는 응답 헤더다
-// (next-on-pages가 headers()를 정적 라우트에 안 내보내는 실측 2026-08-16).
-// 이 값은 dev 패리티용 — 핸들러와 반드시 동일 값 유지 (다르면 CSP 중복 시 교집합 강제).
+// 네이티브 Pages: pages-router.mjs 가 이 headers() 값을 먼저 넣고, 정적 내보내기에 기록된 라우트 핸들러 헤더(src/app/widget/shared.ts WIDGET_HEADERS)가 같은 키를 덮어쓴다 — 두 값은 반드시 동일하게 유지.
 const widgetCsp =
   "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; frame-ancestors *; base-uri 'none'; form-action 'none'";
 
@@ -1270,7 +1268,7 @@ const nextConfig = {
         // 배포 시에만 바뀌고(개인화는 전부 클라이언트 localStorage) Pages가 배포
         // 시 캐시를 퍼지하므로 1시간 엣지 캐시는 안전. max-age=0으로 브라우저는
         // 항상 재검증(엣지에서 즉시 응답).
-        // ★ 프리렌더 HTML/route 응답에는 미적용(next-on-pages) — 308 redirect 응답에만 관측, 실측 2026-09-05. 엣지 캐시는 CF Cache Rule(L08a)로만 — 아래 s-maxage 규칙 전부 동일(삭제 금지: 308·로컬 dev 경로는 여전히 사용).
+        // ★ 네이티브 Pages(2026-10-17~): scripts/pages-build.mjs 가 이 headers()·redirects() 를 매니페스트로 옮기고 cloudflare/pages-router.mjs 가 함수를 거치는 모든 응답(문서·308·API)에 적용한다 — 값 변경은 곧 운영 응답 헤더 변경이다. CDN 이 s-maxage 로 캐시하는지는 CF Cache Rule 설정에 달렸다.
         source: "/((?!api(?:/|$)).*)",
         headers: [
           {
@@ -1299,7 +1297,7 @@ const nextConfig = {
       // headers()는 매칭되는 모든 규칙을 적용하되 같은 키는 나중 규칙이 이기므로,
       // 아래 규칙들은 반드시 전역 규칙(/:path*) 뒤에 있어야 s-maxage=1을 오버라이드한다.
       // (보안 헤더는 전역 규칙에서 그대로 상속됨 — Cache-Control 키만 교체)
-      // ★ 프리렌더 HTML/route 응답에는 미적용(next-on-pages) — 308 redirect 응답에만 관측, 실측 2026-09-05. 엣지 캐시는 CF Cache Rule(L08a)로만 (/salary/*가 캐시되는 것은 CF 대시보드 규칙 14400 기인).
+      // ★ 위 전역 규칙 주석과 같음 — 네이티브 Pages 라우터가 문서 응답에도 적용한다.
       {
         source: "/salary/:amount*",
         headers: [
@@ -1330,7 +1328,7 @@ const nextConfig = {
       // [2026-08-10] 요청 한도 대응 — 배포 시에만 변하는 고트래픽 정적 콘텐츠
       // 라우트군을 기존 3종과 동일한 6시간 엣지 캐시로 확대. 크롤러·프리페치·
       // 재방문 요청을 CDN에서 흡수해 Worker 호출을 줄인다.
-      // ★ 프리렌더 HTML/route 응답에는 미적용(next-on-pages) — 308 redirect 응답에만 관측, 실측 2026-09-05. 엣지 캐시는 CF Cache Rule(L08a)로만.
+      // ★ 위 전역 규칙 주석과 같음 — 네이티브 Pages 라우터가 문서 응답에도 적용한다.
       ...[
         // 홈(+/?tab= 쿼리 변형 6종 — CF 캐시 키는 쿼리 포함이라 변형별 캐시)
         "/",
@@ -1397,7 +1395,7 @@ const nextConfig = {
       })),
       // 크롤러가 고빈도로 가져가는 메타 파일·생성 이미지 라우트 — 내용이 사실상
       // 고정이므로 길게 캐시해 Worker 호출을 차단.
-      // ★ 프리렌더 HTML/route 응답에는 미적용(next-on-pages) — 308 redirect 응답에만 관측, 실측 2026-09-05. 엣지 캐시는 CF Cache Rule(L08a)로만 (sitemap.xml·rss 2종 DYNAMIC 실측, robots.txt만 CF 규칙으로 14400 캐시).
+      // ★ 아래 4개 경로는 dist/_routes.json exclude 로 함수를 우회한다.
       // ★ 2026-09-25(B2): sitemap.xml·rss 2종·robots.txt 는 _routes.json exclude 로 Worker 를 우회한다 —
       //    이 4줄은 더 이상 닿지 않고, 실제 Cache-Control 은 public/_headers 가 준다(값 변경은 그쪽에서).
       ...[
