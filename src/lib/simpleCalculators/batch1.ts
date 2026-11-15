@@ -107,6 +107,8 @@ const TAX: CalculatorDef[] = [
  category: "tax",
  categoryLabel: "세금",
  keywords: ["재산세", "주택 재산세"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — RL-10 사실 정정을 실제로 고친 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [
  { name: "value", label: "공시가격", defaultValue: 500000000, suffix: "원" },
  ],
@@ -164,6 +166,8 @@ const TAX: CalculatorDef[] = [
  category: "tax",
  categoryLabel: "세금",
  keywords: ["등록면허세", "등록세"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — RL-10 사실 정정을 실제로 고친 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [
  { name: "price", label: "취득가액", defaultValue: 500000000, suffix: "원" },
  { name: "rate", label: "등록세율", defaultValue: 0.8, suffix: "%", hint: "보존·상속 0.8%, 저당 0.2%" },
@@ -457,6 +461,8 @@ const SALARY: CalculatorDef[] = [
  category: "salary",
  categoryLabel: "연봉",
  keywords: ["연봉 시급 환산", "연봉 시급"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — RL-10 사실 정정을 실제로 고친 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [
  { name: "yearly", label: "연봉", defaultValue: 50000000, suffix: "원" },
  { name: "weekHours", label: "주 근무시간", defaultValue: 40, suffix: "시간", min: 1 },
@@ -481,6 +487,8 @@ const SALARY: CalculatorDef[] = [
  category: "salary",
  categoryLabel: "연봉",
  keywords: ["주급 계산", "주급"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — RL-10 사실 정정을 실제로 고친 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [{ name: "monthly", label: "월급", defaultValue: 3000000, suffix: "원" }],
  compute: ({ monthly }) => {
  const weekly = monthly / (MONTHLY_HOURS / 48); // 월 209시간 ÷ 주 48시간 ≈ 4.354주

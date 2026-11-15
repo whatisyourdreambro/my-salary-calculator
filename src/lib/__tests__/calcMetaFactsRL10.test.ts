@@ -28,6 +28,18 @@ const notWider = (now: string, was: string) => {
   for (const k of ["hangul", "digit", "space", "other"] as const) expect(a[k], `${now} ${k}`).toBeLessThanOrEqual(b[k]);
 };
 
+// lens-meta-M01: 간이 계산기는 화면에 날짜가 없고 사이트맵 lastmod 는 CalculatorDef.publishedAt 하나만 읽는다(sitemap.ts).
+// RL-10 이 사실을 고친 다섯 계산기는 실제로 고친 날(2026-11-15 KST)을 단다 — /calc 의 신규(2026-09-10) 필터에는 들지 않는다.
+describe("RL-10 날짜 손잡이 — 고친 다섯 계산기의 publishedAt", () => {
+  it("실제 수정일 2026-11-15, 미래 날짜 아님", () => {
+    for (const slug of ["registration-tax-quick", "employee-cost-quick", "property-tax-quick", "yearly-to-hourly", "weekly-pay"]) {
+      const c = calc(slug);
+      expect(c.publishedAt, slug).toBe("2026-11-15");
+      expect(new Date(`${c.publishedAt}T00:00:00+09:00`).getTime(), slug).toBeLessThanOrEqual(Date.now());
+    }
+  });
+});
+
 describe("CS-04 등록면허세 힌트·공식 (지방세법 제28조 제1항 제1호: 보존·상속 1천분의 8, 무상 15, 저당권 2)", () => {
   it("'주택 매매 0.8%' 오기가 없고 보존·상속·저당 세율을 쓴다", () => {
     const c = calc("registration-tax-quick");
