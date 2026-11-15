@@ -73,7 +73,7 @@ const FAQ_ITEMS = [
 const HOW_TO_STEPS = [
   {
     name: "주택 위치 확인",
-    text: "매수 주택이 규제지역(강남3구 등) vs 비규제. 공시는 분기별 갱신.",
+    text: "매수 주택이 규제지역(서울 25구 등) vs 비규제. 지정은 수시 갱신.",
   },
   {
     name: "본인 자격 확인",
@@ -166,7 +166,7 @@ export default function LtvPage() {
           </h2>
           <ul className="space-y-1 text-muted-blue leading-relaxed">
             <li>
-              • <strong>규제지역 1주택 매수</strong>: LTV 50% (강남3구·용산 등)
+              • <strong>규제지역 1주택 매수</strong>: LTV 40% (서울·경기 15곳)
             </li>
             <li>
               • <strong>비규제지역 1주택 매수</strong>: LTV 70% (대부분 지역)
