@@ -232,9 +232,10 @@ export default function CompanyCareerLevels({ company }: Props) {
                 급여, <strong>영끌(평균)</strong>은 base + 평균 OPI(연봉의 25~50%)
                 + TAI(월 기본급의 100% × 2회) 합산 추정치.
               </li>
+              {/* DS OPI 2023년분 0%·2024년분 14%·2025년분 47% — 뉴시스 2025-01-17 https://www.newsis.com/view/NISX20250117_0003036286 · 아시아경제 2026-01-16 https://www.asiae.co.kr/en/article/2026011615432590212 */}
               <li>
                 반도체 사이클·사업부 흑/적자에 따라 OPI는 ±30% 변동 — 다운사이클
-                시 OPI 0% 지급 사례 있음(DS 사업부 2023·2024).
+                시 OPI 0% 지급 사례 있음(DS 사업부 2023년분).
               </li>
               <li>
                 실제 연봉은 사업부·직무·고과·성과·연차별 호봉에 따라 ±15% 차이
