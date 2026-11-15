@@ -170,7 +170,7 @@ export default function IncomeTax2026Page() {
             <li><strong>1인 사업자</strong>: 개인사업자 등록자 (부가세 신고와 별도)</li>
             <li><strong>임대소득자</strong>: 주택임대 연 2,000만원 초과 시 (이하면 분리과세 선택 가능)</li>
             <li><strong>금융소득 종합과세 대상</strong>: 이자·배당 합계 2,000만원 초과</li>
-            <li><strong>기타소득자</strong>: 강연료·원고료 등 연 300만원 초과</li>
+            <li><strong>기타소득자</strong>: 강연료 등 소득금액 300만원 초과</li>
             <li><strong>근로소득만 있는 직장인</strong>: 회사 연말정산으로 종결 — 별도 신고 불필요</li>
           </ul>
           <p>
