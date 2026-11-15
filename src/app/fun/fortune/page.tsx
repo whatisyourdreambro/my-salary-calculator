@@ -139,12 +139,12 @@ export default function FortunePage() {
  <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-red-400 to-red-700 tracking-tight">
  2026 병오년<br />신년운세
  </h1>
- <p className="text-faint-blue text-lg">
+ <p className="text-gray-400 text-lg">
  붉은 말의 해, 재미로 보는 한 해 운세를 미리 확인하세요.
  </p>
  </div>
 
- <div className="bg-white/80 backdrop-blur-md border border-canvas rounded-3xl p-8 shadow-2xl space-y-6">
+ <div className="bg-white backdrop-blur-md border border-canvas rounded-3xl p-8 shadow-2xl space-y-6">
  {/* Name Input */}
  <div className="space-y-2">
  <label htmlFor="fortune-name" className="flex items-center gap-2 text-sm font-medium text-faint-blue">
@@ -170,7 +170,7 @@ export default function FortunePage() {
  key={g}
  onClick={() => setGender(g)}
  aria-pressed={gender === g}
- className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${gender === g ? "bg-canvas-deeper text-white shadow-md" : "text-faint-blue hover:text-muted-blue"
+ className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${gender === g ? "bg-red-700 text-white shadow-md" : "text-faint-blue hover:text-muted-blue"
  }`}
  >
  {g === "male" ? "남성" : "여성"}
@@ -186,7 +186,7 @@ export default function FortunePage() {
  key={c}
  onClick={() => setCalendar(c)}
  aria-pressed={calendar === c}
- className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${calendar === c ? "bg-canvas-deeper text-white shadow-md" : "text-faint-blue hover:text-muted-blue"
+ className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${calendar === c ? "bg-red-700 text-white shadow-md" : "text-faint-blue hover:text-muted-blue"
  }`}
  >
  {c === "solar" ? "양력" : "음력"}
@@ -279,8 +279,8 @@ export default function FortunePage() {
  <span className="text-4xl">🔮</span>
  </div>
  </div>
- <h2 className="text-2xl font-bold mb-4 text-navy">재미용 운세 문구를 준비하고 있습니다...</h2>
- <p className="text-faint-blue animate-pulse">
+ <h2 className="text-2xl font-bold mb-4 text-[#e5e5e5]">재미용 운세 문구를 준비하고 있습니다...</h2>
+ <p className="text-gray-400 animate-pulse">
  {year}년 {month}월 {day}일의 기운을 읽는 중
  </p>
 
@@ -296,7 +296,7 @@ export default function FortunePage() {
  className="space-y-8"
  >
  {/* Result Paper */}
- <div className="bg-[#f5f5f0] text-primary rounded-sm p-8 shadow-2xl relative overflow-hidden min-h-[600px] border-l-8 border-canvas">
+ <div data-share-color-scope className="bg-[#f5f5f0] text-primary rounded-sm p-8 shadow-2xl relative overflow-hidden min-h-[600px] border-l-8 border-canvas">
  {/* 한지 느낌 오버레이 (외부 텍스처 제거 — CSS 그라데이션 대체) */}
  <div className="absolute inset-0 opacity-40 pointer-events-none bg-[linear-gradient(135deg,rgba(0,0,0,0.03)_0%,transparent_40%,rgba(0,0,0,0.04)_100%)]" />
 
@@ -307,12 +307,12 @@ export default function FortunePage() {
 
  <div className="relative z-10">
  <div className="text-center border-b-2 border-canvas pb-8 mb-8">
- <p className="text-faint-blue font-sans mb-2">2026 병오년(丙午年)</p>
+ <p className="text-stone-600 font-sans mb-2">2026 병오년(丙午年)</p>
  <h2 className="text-3xl md:text-4xl font-black mb-4 font-sans text-primary">
  {resultData.title}
  </h2>
  <div className="inline-flex items-center gap-2 px-4 py-1
- rounded-full text-sm text-muted-blue">
+ rounded-full text-sm text-stone-600">
  <span>{name}님 ({gender === 'male' ? '남' : '여'})</span>
  <span>|</span>
  <span>{year}.{month}.{day} ({calendar === 'solar' ? '양' : '음'})</span>
@@ -334,7 +334,7 @@ export default function FortunePage() {
  <h3 className="flex items-center gap-2 text-lg font-bold text-primary mb-3 font-sans">
  💰 재물운
  </h3>
- <p className="text-muted-blue text-justify text-sm leading-relaxed">
+ <p className="text-stone-600 text-justify text-sm leading-relaxed">
  {resultData.wealthLuck}
  </p>
  </section>
@@ -342,7 +342,7 @@ export default function FortunePage() {
  <h3 className="flex items-center gap-2 text-lg font-bold text-primary mb-3 font-sans">
  💼 직장/사업운
  </h3>
- <p className="text-muted-blue text-justify text-sm leading-relaxed">
+ <p className="text-stone-600 text-justify text-sm leading-relaxed">
  {resultData.careerLuck}
  </p>
  </section>
@@ -353,15 +353,15 @@ export default function FortunePage() {
  <h4 className="font-bold text-center text-primary mb-4">행운의 아이템</h4>
  <div className="flex justify-around text-center">
  <div>
- <p className="text-xs text-faint-blue mb-1">행운의 색</p>
+ <p className="text-xs text-stone-600 mb-1">행운의 색</p>
  <p className="font-bold text-primary">{resultData.luckyColor}</p>
  </div>
  <div>
- <p className="text-xs text-faint-blue mb-1">행운의 숫자</p>
+ <p className="text-xs text-stone-600 mb-1">행운의 숫자</p>
  <p className="font-bold text-electric">{resultData.luckyNumber}</p>
  </div>
  <div>
- <p className="text-xs text-faint-blue mb-1">총점</p>
+ <p className="text-xs text-stone-600 mb-1">총점</p>
  <p className="font-bold text-primary text-xl">{resultData.score}점</p>
  </div>
  </div>
@@ -385,7 +385,7 @@ export default function FortunePage() {
  </button>
 
  <div className="flex flex-col items-center gap-2">
- <p className="text-sm font-bold text-faint-blue">결과 공유하기</p>
+ <p className="text-sm font-bold text-gray-400">결과 공유하기</p>
  <ResultSharePanel resultKey={JSON.stringify([name, gender, year, month, day, time, calendar, resultData])} title={`[2026 병오년 신년운세] ${name}님의 운세: ${resultData.title} (${resultData.score}점)`} />
  </div>
 
@@ -398,7 +398,7 @@ export default function FortunePage() {
  </Link>
 
  {/* 재미 목적 면책 문구 (fortune-2026과 동일 기준) */}
- <p className="text-center text-xs text-faint-blue leading-relaxed">
+ <p className="text-center text-xs text-gray-400 leading-relaxed">
  입력값을 일정한 규칙으로 조합해 미리 정한 문구와 점수를 고르는 재미용 콘텐츠입니다. 사주 명식 계산·음양력 날짜 변환이나 실제 미래 예측은 제공하지 않으며, 투자·금융 결정에 활용하지 마세요.
  </p>
  </div>
