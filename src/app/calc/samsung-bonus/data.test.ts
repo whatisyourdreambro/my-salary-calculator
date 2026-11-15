@@ -7,7 +7,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { ANNUAL_OP_2026_PRELIM, DEFAULT_PROFIT_TRILLION, initialProfitTrillion } from "./annualOp";
+import { ANNUAL_OP_2026_PRELIM, DEFAULT_PROFIT_TRILLION, defaultProfitFrom, initialProfitTrillion } from "./annualOp";
 import { OPI1_DEFAULT_RATE, OPI1_MAX_RATE, OPI_ACTUAL, OPI_ACTUAL_2025, OPI_LATEST, OPI_LATEST_TOP, opiRateSummary } from "./opiData";
 import {
   TAI_H2_ANNOUNCED_DATE,
@@ -73,20 +73,40 @@ describe("taiData — H1 동결값 · H2 null 슬롯 · 라벨 파생", () => {
 });
 
 describe("annualOp — 잠정실적 트리거 (1/8)", () => {
-  it("발표 전 announced=false·전 필드 null, 발표 후 전 필드 non-null", () => {
+  it("발표 전 announced=false·전 필드 null, 발표 후 잠정 4필드 non-null", () => {
     const a = ANNUAL_OP_2026_PRELIM;
     if (a.announced) {
       expect(a.profitTrillion).toBeGreaterThan(0);
       expect(a.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
       expect(a.source).toMatch(/^https?:\/\//);
-      expect(initialProfitTrillion()).toBe(a.profitTrillion);
+      // 2026-11-15 N2-calc-02 (calc-03-F07): 잠정실적은 전사 연결 합계 — 'DS부문 영업이익' 칸 기본값은
+      // DS부문 확정치(dsProfitTrillion, 1월 말)가 있을 때만 바뀌고, 그 전에는 350 그대로다.
+      if (a.dsProfitTrillion != null) {
+        expect(a.dsProfitTrillion).toBeGreaterThan(0);
+        expect(initialProfitTrillion()).toBe(a.dsProfitTrillion);
+      } else {
+        expect(initialProfitTrillion()).toBe(DEFAULT_PROFIT_TRILLION);
+      }
     } else {
       expect(a.profitTrillion).toBeNull();
       expect(a.date).toBeNull();
       expect(a.source).toBeNull();
+      expect(a.dsProfitTrillion).toBeNull();
       expect(initialProfitTrillion()).toBe(DEFAULT_PROFIT_TRILLION);
     }
     expect(DEFAULT_PROFIT_TRILLION).toBe(350);
+  });
+
+  it("전사 잠정치는 DS부문 칸으로 가지 않는다 — 발표 전 350, 잠정치만 350, DS부문 확정치가 있으면 그 값", () => {
+    expect(defaultProfitFrom({ announced: false, dsProfitTrillion: null })).toBe(350);
+    expect(defaultProfitFrom({ announced: false, dsProfitTrillion: 300 })).toBe(350);
+    const prelimOnly = { announced: true, profitTrillion: 370, date: "2027-01-08", source: "https://example.com/prelim", dsProfitTrillion: null };
+    expect(defaultProfitFrom(prelimOnly)).toBe(350);
+    expect(defaultProfitFrom({ ...prelimOnly, dsProfitTrillion: 0 })).toBe(350);
+    expect(defaultProfitFrom({ ...prelimOnly, dsProfitTrillion: -5 })).toBe(350);
+    expect(defaultProfitFrom({ ...prelimOnly, dsProfitTrillion: 340 })).toBe(340);
+    // 계산기 초기값은 이 순수 함수와 같은 규칙
+    expect(initialProfitTrillion()).toBe(defaultProfitFrom(ANNUAL_OP_2026_PRELIM));
   });
 });
 

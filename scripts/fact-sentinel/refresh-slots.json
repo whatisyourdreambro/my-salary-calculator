@@ -80,7 +80,17 @@
       "window": { "from": "01-06", "to": "01-10" },
       "files": ["src/app/calc/samsung-bonus/annualOp.ts"],
       "pages": ["/calc/samsung-bonus"],
-      "docRefs": [{ "ref": "docs/growth-playbook-2026.md:63", "anchor": "연간 잠정실적 D0(1월 8일 전후)" }]
+      "docRefs": [{ "ref": "docs/growth-playbook-2026.md:63", "anchor": "연간 잠정실적 D0(1월 8일 전후)" }],
+      "note": "잠정실적은 전사 연결 합계 — announced·profitTrillion·date·source 4필드만 채우고 dsProfitTrillion 은 null(계산기 DS부문 기본값 350 유지)."
+    },
+    {
+      "id": "samsung-ds-op",
+      "title": "삼성 DS부문 연간 영업이익(1월 말 확정실적) → annualOp.ts dsProfitTrillion",
+      "window": { "from": "01-28", "to": "02-05" },
+      "files": ["src/app/calc/samsung-bonus/annualOp.ts"],
+      "pages": ["/calc/samsung-bonus"],
+      "docRefs": [{ "ref": "docs/growth-playbook-2026.md:63", "anchor": "DS부문 확정실적(1월 말" }],
+      "note": "뉴스룸 확정실적·보도의 DS부문 연간 영업이익(조원). 계산기 기본 영업이익이 바뀌므로 /calc/samsung-bonus 스윕·원장 갱신."
     },
     {
       "id": "samsung-opi",
