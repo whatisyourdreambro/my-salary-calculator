@@ -259,36 +259,36 @@ export default function TetrisPage() {
 
  {/* Left Panel: Stats & Info */}
  <div className="w-full lg:w-64 flex flex-col gap-4 order-2 lg:order-1">
- <div className="bg-electric/80 backdrop-blur-md border border-canvas p-6 rounded-2xl shadow-xl">
+ <div className="bg-slate-900/80 backdrop-blur-md border border-canvas p-6 rounded-2xl shadow-xl">
  <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/80 mb-6 tracking-tighter">
  SALARYMAN<br />BLOCKS
  </h1>
 
  <div className="space-y-4">
- <div className="bg-electric/50 p-4 rounded-xl border border-canvas/50">
- <p className="text-xs text-faint-blue uppercase tracking-wider mb-1">Score</p>
- <p className="text-3xl font-bold text-primary">{score.toLocaleString('ko-KR')}</p>
+ <div className="bg-slate-800/50 p-4 rounded-xl border border-canvas/50">
+ <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Score</p>
+ <p className="text-3xl font-bold text-white">{score.toLocaleString('ko-KR')}</p>
  </div>
- <div className="bg-electric/50 p-4 rounded-xl border border-canvas/50">
- <p className="text-xs text-faint-blue uppercase tracking-wider mb-1">Level</p>
- <p className="text-2xl font-bold text-primary">{level}</p>
+ <div className="bg-slate-800/50 p-4 rounded-xl border border-canvas/50">
+ <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Level</p>
+ <p className="text-2xl font-bold text-white">{level}</p>
  {/* 다음 레벨까지 남은 줄 — 레벨업 기준(10줄)을 화면에 드러낸다 */}
- <p className="text-[10px] text-faint-blue mt-1">
+ <p className="text-[10px] text-slate-400 mt-1">
  다음까지 {10 - (totalLines % 10)}줄
  </p>
  </div>
- <div className="bg-electric/50 p-4 rounded-xl border border-canvas/50 flex items-center gap-3">
+ <div className="bg-slate-800/50 p-4 rounded-xl border border-canvas/50 flex items-center gap-3">
  <Trophy className="w-5 h-5 text-primary" />
  <div>
- <p className="text-xs text-faint-blue uppercase tracking-wider">Best</p>
- <p className="text-xl font-bold text-primary">{highScore.toLocaleString('ko-KR')}</p>
+ <p className="text-xs text-slate-400 uppercase tracking-wider">Best</p>
+ <p className="text-xl font-bold text-white">{highScore.toLocaleString('ko-KR')}</p>
  </div>
  </div>
  </div>
  </div>
 
  {/* Desktop Controls Hint */}
- <div className="hidden lg:block bg-electric/50 p-4 rounded-xl border border-canvas text-xs text-faint-blue space-y-2">
+ <div className="hidden lg:block bg-slate-800/50 p-4 rounded-xl border border-canvas text-xs text-slate-400 space-y-2">
  <p className="flex justify-between"><span>Move</span> <span>⬅️ ➡️</span></p>
  <p className="flex justify-between"><span>Rotate</span> <span>⬆️ / Space</span></p>
  <p className="flex justify-between"><span>Drop</span> <span>⬇️</span></p>
@@ -300,14 +300,14 @@ export default function TetrisPage() {
  <div className="relative bg-electric border-4 border-canvas rounded-lg shadow-2xl overflow-hidden">
  {/* Grid */}
  <div
- className="grid grid-cols-10 grid-rows-20 gap-[1px] bg-electric/50"
+ className="grid grid-cols-10 grid-rows-20 gap-[1px] bg-slate-800"
  style={{ width: '300px', height: '600px' }}
  >
  {displayGrid.map((row, r) =>
  row.map((cell, c) => (
  <div
  key={`${r}-${c}`}
- className={`w-full h-full transition-colors duration-75 ${cell.type ? TETROMINOS[cell.type].color : 'bg-electric/90'
+ className={`w-full h-full transition-colors duration-75 ${cell.type ? TETROMINOS[cell.type].color : 'bg-slate-900'
  } ${cell.locked ? 'brightness-90' : ''}`}
  />
  ))
@@ -371,7 +371,7 @@ export default function TetrisPage() {
  <div className="w-full max-w-[300px] lg:hidden order-3 grid grid-cols-3 gap-4 p-4">
  <div className="col-start-2">
  <button
- className="w-full aspect-square bg-electric/80 border border-canvas rounded-2xl flex items-center justify-center active:bg-primary/20 active:border-primary transition-all"
+ className="w-full aspect-square bg-slate-900/80 border border-canvas rounded-2xl flex items-center justify-center active:bg-primary/20 active:border-primary transition-all"
  type="button"
  aria-label="블록 회전"
  onClick={() => rotate()}
@@ -381,7 +381,7 @@ export default function TetrisPage() {
  </div>
  <div className="col-start-1 row-start-2">
  <button
- className="w-full aspect-square bg-electric/80 border border-canvas rounded-2xl flex items-center justify-center active:bg-primary/20 active:border-primary transition-all"
+ className="w-full aspect-square bg-slate-900/80 border border-canvas rounded-2xl flex items-center justify-center active:bg-primary/20 active:border-primary transition-all"
  type="button"
  aria-label="블록 왼쪽 이동"
  onClick={() => move(-1, 0)}
@@ -391,7 +391,7 @@ export default function TetrisPage() {
  </div>
  <div className="col-start-2 row-start-2">
  <button
- className="w-full aspect-square bg-electric/80 border border-canvas rounded-2xl flex items-center justify-center active:bg-primary/20 active:border-primary transition-all"
+ className="w-full aspect-square bg-slate-900/80 border border-canvas rounded-2xl flex items-center justify-center active:bg-primary/20 active:border-primary transition-all"
  type="button"
  aria-label="블록 한 칸 내리기"
  onClick={() => move(0, 1)}
@@ -401,7 +401,7 @@ export default function TetrisPage() {
  </div>
  <div className="col-start-3 row-start-2">
  <button
- className="w-full aspect-square bg-electric/80 border border-canvas rounded-2xl flex items-center justify-center active:bg-primary/20 active:border-primary transition-all"
+ className="w-full aspect-square bg-slate-900/80 border border-canvas rounded-2xl flex items-center justify-center active:bg-primary/20 active:border-primary transition-all"
  type="button"
  aria-label="블록 오른쪽 이동"
  onClick={() => move(1, 0)}
