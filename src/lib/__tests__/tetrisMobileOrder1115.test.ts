@@ -30,3 +30,40 @@ describe("/fun/tetris readable colours", () => {
     expect(src.match(/aspect-square bg-slate-900\/80 border border-canvas/g)).toHaveLength(4);
   });
 });
+
+// 휴대폰·태블릿(lg 미만)은 보드 -> 방향 버튼 -> 점수판. 예전에는 점수판(약 443px)이 보드와 버튼 사이에 있어
+// 버튼을 화면에 올리면 보드가 밀려 나갔다. 세 블록 높이 합은 그대로라 아래 공통 광고 위치는 변하지 않는다.
+// 방향 버튼 클래스 'lg:hidden order-3' 은 gameControlAdDistance.test.ts 가 찾는 표지라 그대로 둔다.
+describe("/fun/tetris phone order: board, d-pad, score panel", () => {
+  const classOf = (marker: RegExp) => {
+    const m = marker.exec(src);
+    expect(m, String(marker)).not.toBeNull();
+    return m![1].split(/\s+/);
+  };
+  const orderBelowLg = (classes: string[]) => Number(classes.find((c) => /^order-\d+$/.test(c))!.split("-")[1]);
+  const orderLg = (classes: string[]) => Number(classes.find((c) => /^lg:order-\d+$/.test(c))?.split("-")[1] ?? NaN);
+
+  const stats = classOf(/<div className="(w-full lg:w-64 flex flex-col gap-4[^"]*)"/);
+  const board = classOf(/<div className="(relative order-1 lg:order-2)"/);
+  const dpad = classOf(/<div className="([^"]*\blg:hidden order-3\b[^"]*)"/);
+
+  it("keeps the class markers the guards read", () => {
+    expect(stats).toEqual(expect.arrayContaining(["order-4", "lg:order-1"]));
+    expect(board).toEqual(expect.arrayContaining(["order-1", "lg:order-2"]));
+    expect(dpad).toEqual(expect.arrayContaining(["lg:hidden", "order-3"]));
+  });
+
+  it("puts the d-pad right under the board below lg and the score panel last", () => {
+    expect(orderBelowLg(board)).toBeLessThan(orderBelowLg(dpad));
+    expect(orderBelowLg(dpad)).toBeLessThan(orderBelowLg(stats));
+  });
+
+  it("keeps the desktop order: score panel left, board right", () => {
+    expect(orderLg(stats)).toBeLessThan(orderLg(board));
+  });
+
+  it("keeps the OF4 A2 bottom padding", () => {
+    expect(src).toMatch(/<main className="[^"]*\bpb-20 lg:pb-24\b[^"]*"/);
+    expect(src).toContain('<div className="relative z-10 max-w-5xl mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8');
+  });
+});

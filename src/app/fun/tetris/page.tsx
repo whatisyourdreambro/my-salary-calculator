@@ -246,8 +246,9 @@ export default function TetrisPage() {
  }
 
  return (
+ // 휴대폰·태블릿은 보드(order-1) -> 방향 버튼(order-3) -> 점수판(order-4) 순서, lg 이상은 점수판 | 보드 가로 배치(방향 버튼 숨김).
  // 게임 끝(휴대폰·태블릿: 방향 버튼, lg 이상: 보드)에서 아래 fun/layout 공통 광고 라벨까지 152px 이상 — Google 권장 150px(OF4 A2, 운영자 결정).
- // pb-20(80px)+버튼 패딩 16px+안쪽 py-8 32px+광고 여백 24px, lg 는 pb-24(96px)+32px+24px. 줄이지 말 것.
+ // 휴대폰은 버튼 패딩 16px+gap-8 32px+점수판 높이+안쪽 py-8 32px+pb-20(80px)+광고 여백 24px, lg 는 pb-24(96px)+32px+24px. 줄이지 말 것.
  <main className="w-full min-h-screen bg-slate-950 text-white overflow-hidden relative font-sans tabular-nums pb-20 lg:pb-24">
  {/* Cyberpunk Background */}
  <div className="absolute inset-0 z-0 pointer-events-none">
@@ -258,7 +259,7 @@ export default function TetrisPage() {
  <div className="relative z-10 max-w-5xl mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8 items-center lg:items-start justify-center h-full">
 
  {/* Left Panel: Stats & Info */}
- <div className="w-full lg:w-64 flex flex-col gap-4 order-2 lg:order-1">
+ <div className="w-full lg:w-64 flex flex-col gap-4 order-4 lg:order-1">
  <div className="bg-slate-900/80 backdrop-blur-md border border-canvas p-6 rounded-2xl shadow-xl">
  <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/80 mb-6 tracking-tighter">
  SALARYMAN<br />BLOCKS
