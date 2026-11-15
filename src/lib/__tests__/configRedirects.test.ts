@@ -4,6 +4,7 @@ import { createRequire } from "node:module";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import nextConfig from "../../../next.config.mjs";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 
 const require = createRequire(import.meta.url);
 type Key = { name: string | number };
@@ -82,9 +83,20 @@ describe("next.config redirects — B8 legacy URLs", () => {
     "bucketplace-vs-sk-cc": "/salary-db/ohou",
   };
 
+  // 연도 없는 옛 주소는 현행 요율 연도의 표로 간다 — 1/1 포인터 전환(CURRENT_RATES_YEAR 2027) 때 next.config.mjs 의
+  // 목적지 7개를 같은 통합에서 2027 로 바꾸기 전까지 이 표와 아래 YEAR_FREE 단언이 실패한다(infra-b01-F02, 2026-11-15 —
+  // verify:tax switch_scan 은 next.config.mjs 를 보지 않는다. 런북 docs/next-upgrade-plan-2026-09-11.md 전환 당일 2-1).
   const PARENTS: Record<string, string> = {
-    "/salary": "/table/2026/annual",
-    "/monthly": "/table/2026/monthly",
+    "/salary": `/table/${CURRENT_RATES_YEAR}/annual`,
+    "/monthly": `/table/${CURRENT_RATES_YEAR}/monthly`,
+  };
+
+  const YEAR_FREE: Record<string, string> = {
+    "/table/annual": `/table/${CURRENT_RATES_YEAR}/annual`,
+    "/table/monthly": `/table/${CURRENT_RATES_YEAR}/monthly`,
+    "/table/weekly": `/table/${CURRENT_RATES_YEAR}/weekly`,
+    "/table/hourly": `/table/${CURRENT_RATES_YEAR}/hourly`,
+    "/guides/minimum-wage": `/minimum-wage-${CURRENT_RATES_YEAR}`,
   };
 
   it("sends the two legacy company ids to their canonical pages before the generic /company rule", async () => {
@@ -135,6 +147,16 @@ describe("next.config redirects — B8 legacy URLs", () => {
     }
     for (const p of ["/salary/50000000", "/salary/5000-manwon", "/monthly/3000000", "/salaryx", "/monthlyx"]) {
       expect(matchOf(list, p), p).toBeNull();
+    }
+  });
+
+  it("year-free legacy URLs point at the current rate year", async () => {
+    const list = await rules();
+    for (const [from, to] of Object.entries(YEAR_FREE)) {
+      const hit = matchOf(list, from);
+      expect(hit?.rule.destination, from).toBe(to);
+      expect(hit?.rule.permanent, from).toBe(true);
+      expect(existsSync(new URL(`../../app${to}/page.tsx`, import.meta.url)), to).toBe(true);
     }
   });
 
