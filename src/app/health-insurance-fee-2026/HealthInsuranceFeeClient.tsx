@@ -12,6 +12,20 @@ function fmt(n: number): string {
   return Math.round(n).toLocaleString("ko-KR");
 }
 
+// 직장가입자 보수월액보험료 월 상·하한의 근로자 몫 — 보건복지부고시 제2025-222호(2026-01-01 시행) 합계 상한 9,183,480원·하한 20,160원의 절반.
+// 같은 값: src/lib/guides/bonusNetFigures2026.ts HEALTH_PREMIUM_LIMITS_2026 (클라이언트에서는 import 하지 않는다 — bonusTaxCalc 번들 유입).
+// 2027 고시 때 함께 갱신. (N2-app-pages-03, 2026-11-15 감사 app-pages-b03-F04 — nhis.or.kr 고시 전문 SEQ=39 로 재확인)
+const EMPLOYEE_HEALTH_FEE_CAP_2026 = 9_183_480 / 2;
+const EMPLOYEE_HEALTH_FEE_FLOOR_2026 = 20_160 / 2;
+
+/** 직장가입자 근로자 몫 월 건강보험료(원) — 보수월액 × 3.595% 에 고시 상·하한을 적용. 보수 0 이하는 0. */
+export function employeeHealthFee2026(monthlyWage: number): number {
+  const rawHealthFee = monthlyWage * 0.03595;
+  return monthlyWage > 0
+    ? Math.min(EMPLOYEE_HEALTH_FEE_CAP_2026, Math.max(EMPLOYEE_HEALTH_FEE_FLOOR_2026, rawHealthFee))
+    : 0;
+}
+
 type Type = "workplace" | "regional";
 
 export default function HealthInsuranceFeeClient() {
@@ -24,7 +38,7 @@ export default function HealthInsuranceFeeClient() {
 
   const result = useMemo(() => {
     if (type === "workplace") {
-      const healthFee = monthlyWage * 0.03595;
+      const healthFee = employeeHealthFee2026(monthlyWage);
       const longTermCare = healthFee * 0.1314;
       const totalSelf = healthFee + longTermCare;
       const totalCompany = totalSelf; // 회사도 동일 분담
