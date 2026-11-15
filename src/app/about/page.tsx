@@ -26,7 +26,7 @@ const DATA_SOURCES = [
  },
  {
  name: "국민연금공단",
- url: "https://www.nps.or.kr/jsppage/info/easy/easy_04_01.jsp",
+ url: "https://www.nps.or.kr/pnsinfo/ntpsklg/getOHAF0095M0.do",
  description: `국민연금 보험료율 (${CURRENT_RATE_LABELS.pension})`,
  },
  {
