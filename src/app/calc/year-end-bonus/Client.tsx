@@ -98,7 +98,7 @@ export default function YearEndBonusClient({ scenarios }: { scenarios: Scenario[
             {selected.rank} 예시 · 예상 세후 금액
           </p>
           <div
-            className="text-5xl sm:text-6xl font-black tracking-tight text-white"
+            className="text-[length:clamp(1.75rem,10vw,3rem)] leading-none sm:text-6xl font-black tracking-tight text-white"
             style={{ letterSpacing: "-0.04em" }}
           >
             {fmt(result.netBonus)}원
