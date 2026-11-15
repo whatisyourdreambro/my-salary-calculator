@@ -119,7 +119,7 @@ export default function AutoTaxClient() {
             aria-label="차령 (보유 연수)"
           />
           <p className="mt-2 text-xs text-faint-blue">
-            경감률: {result.depRate}% {years < 3 ? "(3년차부터 경감 시작)" : `(매년 5%씩 차감, 최대 50%)`}
+            경감률: {result.depRate}% {isElectric ? "(전기차는 경감 없음)" : years < 3 ? "(3년차부터 경감 시작)" : `(매년 5%씩 차감, 최대 50%)`}
           </p>
         </div>
 
