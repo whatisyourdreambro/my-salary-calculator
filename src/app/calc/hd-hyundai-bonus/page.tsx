@@ -217,7 +217,7 @@ export default function HdHyundaiBonusPage() {
                 <strong className="block mb-1 text-amber-900">⚠️ 추정 시뮬레이터입니다</strong>
                 <span className="text-amber-800">
                   2025 실 지급 보도 + 2026 노조 요구안 기반 추정. 실제 지급은
-                  직군·근속·평가에 따라 ±10% 차이 가능. 2026년 최종 합의 미확정.
+                  직군·근속·평가에 따라 ±10% 차이 가능. 2026년분 지급률 미확정.
                 </span>
               </span>
             </p>
