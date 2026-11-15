@@ -175,7 +175,7 @@ export default function LtvPage() {
               • <strong>생애최초 주택구입</strong>: 비수도권 80% / 수도권·규제지역 70% + 주담대 최대 6억 한도 (6·27 대책)
             </li>
             <li>
-              • <strong>다주택자 추가 매수</strong>: 규제 0% / 비규제 50%
+              • <strong>다주택자 추가 매수</strong>: 수도권 0%, 지방 60%
             </li>
             <li>
               • <strong>오피스텔 (주거용)</strong>: 주택과 동일 (자격 입증 시)

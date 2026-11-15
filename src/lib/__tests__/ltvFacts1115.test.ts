@@ -36,6 +36,13 @@ describe("LTV 계산기 — 다주택·스트레스 DSR·전세 낀 매수 (2026
     expect(src).not.toContain("LTV 0~50%");
   });
 
+  // 레이아웃 InArticleAd 위 '2026 LTV 한도' 목록 한 줄 — 옛 문구보다 좁은 쉼표 표기(글꼴 폭 -0.31em, 400·700 모두).
+  // 규제지역은 모두 수도권이라 '수도권 0%' 가 6·27 의 '수도권·규제지역' 과 같은 범위다.
+  it("광고 위 한도 목록: 다주택자 추가 매수 수도권 0%, 지방 60%", () => {
+    expect(src).toContain("<strong>다주택자 추가 매수</strong>: 수도권 0%, 지방 60%");
+    expect(src).not.toContain("비규제 50%");
+  });
+
   it("LTV·DSR FAQ: 스트레스 금리 3%p(수도권·규제지역 변동금리)를 밝힌다", () => {
     const a = faqAnswer("LTV와 DSR 중 어느 게 한도가 되나요?");
     expect(a).toContain("스트레스 금리");
