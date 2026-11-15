@@ -154,3 +154,18 @@ describe("simple-calc-b01-F01 — 근로소득세 간편 계산 = 2026 별표2 �
     expect(c.explanation?.startsWith("근로소득세는 매월 급여에서 원천징수되는 세금으로, 간이세액표(국세청 고시) 기준")).toBe(true);
   });
 });
+
+describe("simple-calc-b04-F01 (2)(3) 주휴수당 계산 유의사항·본문 — 주 40시간 미만은 주 소정근로시간 기준 (광고 위, 더 좁게)", () => {
+  it("유의사항 1·본문 마지막 단락", () => {
+    const c = calc("holiday-allowance-quick");
+    const was = "하루 8시간 근무를 전제로 시급에 8을 곱하므로, 주 4일 6시간 근무처럼 1일 소정근로시간이 다르면 그 시간에 맞춰 직접 환산해야 합니다.";
+    expect(c.caveats?.[0]).toBe("하루 8시간 근무를 전제로 시급에 8을 곱하므로, 주 40시간 미만 근무라면 주 소정근로시간÷40×8시간분으로 직접 환산해야 합니다.");
+    // 한글·공백은 줄고 숫자·기호가 늘어 글자 종류별 비교 대신 실측 폭: 53.11em → 51.27em (wght 400)
+    expect(kinds(c.caveats?.[0] ?? "").hangul).toBeLessThan(kinds(was).hangul);
+    expect(c.details).toContain("주 소정근로시간의 5분의 1로 다시 계산해야");
+    expect(c.details).not.toContain("1주 평균 1일 소정근로시간");
+    notWider("주 소정근로시간의 5분의 1로 다시 계산해야", "1주 평균 1일 소정근로시간으로 다시 계산해야", "holiday details");
+    // 4.8시간 예: 주 24시간 ÷ 5 = 24 ÷ 40 × 8
+    expect(24 / 5).toBe((24 / 40) * 8);
+  });
+});
