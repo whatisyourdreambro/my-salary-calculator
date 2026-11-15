@@ -33,7 +33,9 @@ describe("국민연금 인상 계산기 FAQ — 연도별 요율·월 보험료 
     for (const [base, years] of [[3_000_000, [2026, 2027, 2030, 2033]], [5_000_000, [2026, 2027, 2030, 2033]]] as const) {
       for (const y of years) expect(answers[1], `${base} ${y}`).toContain(won(employee(base, y)));
     }
-    expect(answers[1]).toContain(`2026년 ${won(employee(6_590_000, 2026))}, 2027년 상반기 ${won(employee(6_590_000, 2027))}`);
+    // 상한 659만원은 2026-07-01~2027-06-30 적용(NPS 안내) — 2026년 값은 하반기 몫이다 (2026-11-15 리뷰)
+    expect(answers[1]).toContain(`상한 659만원(2026년 7월~2027년 6월)이면 2026년 하반기 ${won(employee(6_590_000, 2026))}, 2027년 상반기 ${won(employee(6_590_000, 2027))}`);
+    expect(answers[0]).toContain("사업장가입자 근로자 몫");
     // 2026·2027 값은 계산기 엔진(같은 기준소득월액·상한)과도 같다
     const capped = calculatePensionHike("6,590,000")!;
     expect(won(capped.p2026)).toBe("313,025원");
