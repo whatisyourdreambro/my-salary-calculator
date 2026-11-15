@@ -455,26 +455,32 @@ export function isHandleless(handle: LastmodHandle): boolean {
   return handle.kind === "bonus-engine" || (handle.kind === "add-on-event" && !handle.ref.startsWith("/"));
 }
 
+/**
+ * 손잡이에 넣을 날짜 — 그 URL 의 화면 내용을 실제로 고친 날(KST 달력일). 게시일·배포일·미래 날짜가 아니다
+ * (게시는 운영자 버튼이라 날짜를 미리 알 수 없고, 사이트맵·원장·화면 날짜는 내용이 바뀐 날을 말한다 — tooling-01, 2026-11-15).
+ */
+export const EDIT_DAY = "실제 수정일(KST) — 게시일·미래 날짜 금지";
+
 /** 손잡이 종류별 할 일 한 줄 (한국어) */
 export function lastmodAction(handle: LastmodHandle): string {
   const { kind, ref } = handle;
   switch (kind) {
     case "route-override":
-      return `src/app/sitemap.ts ROUTE_OVERRIDES['${ref}'].lastModified → 반영 배포일`;
+      return `src/app/sitemap.ts ROUTE_OVERRIDES['${ref}'].lastModified → ${EDIT_DAY}`;
     case "add-on-event":
       return ref.startsWith("/")
-        ? `손잡이 없음 — src/app/sitemap.ts ROUTE_OVERRIDES 에 '${ref}': { lastModified: 반영 배포일 } 한 줄 추가`
+        ? `손잡이 없음 — src/app/sitemap.ts ROUTE_OVERRIDES 에 '${ref}': { lastModified } 한 줄 추가 → ${EDIT_DAY}`
         : `손잡이 없음 — ${ref}. 날짜만으로 올릴 수 없어 diff·[indexnow] 에 안 나옴 — 내용이 바뀌었으면 'diff 밖 수동 요청'으로 수집 요청`;
     case "guide-modified":
-      return `가이드 '${ref}' modifiedDate → 반영 배포일, 그다음 npx tsx scripts/gen-guides-meta.ts`;
+      return `가이드 '${ref}' — 광고 아래 보강이 바뀌었으면 src/lib/guideSitemapDates.ts 사이트맵 전용 행 → ${EDIT_DAY}. modifiedDate(화면 '수정' 칩)를 올리는 것은 광고 위 변경이라 1px 가드 스윕 뒤에만(그 파일 머리 주석), 그때 npx tsx scripts/gen-guides-meta.ts`;
     case "calc-publishedAt":
-      return `간이 계산기 '${ref}' publishedAt(없으면 추가) → 반영 배포일`;
+      return `간이 계산기 '${ref}' publishedAt(없으면 추가) → ${EDIT_DAY}`;
     case "bonus-engine":
       return `공유 날짜 ${ref} — 한 URL 만 올릴 수 없음(올리면 성과급 엔진 루프 전체가 [indexnow] 대상). 날짜는 그대로 두고, 내용이 바뀌었으면 'diff 밖 수동 요청'으로 수집 요청`;
     case "data-checked":
       return `${ref} 에서 파생 — 그 확인일이 바뀌는 반영일 때만 자동으로 올라감(아니면 diff 의 'lastmod 그대로' 목록에 남는다)`;
     case "company-lastUpdated":
-      return `회사 데이터·FAQ 수정일(companyPageModified) → 반영 배포일`;
+      return `회사 데이터·FAQ 수정일(companyPageModified) → ${EDIT_DAY}`;
   }
 }
 

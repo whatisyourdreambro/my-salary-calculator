@@ -10,7 +10,8 @@
 //   이미 떠 있는 '수정' 날짜의 숫자를 바꾸는 것은 광고 위 변경이다 — 아래 10편 검사가 실패하면 기대값을 고치기 전에
 //   guideSitemapDates.ts 머리 주석 ★ 의 스윕 규칙(320~460px 1px 단위, 수화 후·첫 화면, 광고 아래 이동 0)을 먼저 확인한다.
 // - 같은 기준일을 리터럴로 쓰는 곳(sitemap.ts ROUTE_OVERRIDES 두 줄, 원장 두 항목, 추석 페이지 수정일 3곳)이 상수와 같다 —
-//   게시일에 날짜를 옮길 때 한 곳만 옮기는 실수를 막는다(src/config/relandR1Push.ts 머리 주석).
+//   원장일 자체를 바로잡을 때 한 곳만 고치는 실수를 막는다. 이 날짜는 게시일로 옮기지 않는다 — 실제 수정일(KST)에 머물고,
+//   뒤 묶음이 다시 고친 글은 그 글의 행만 늦춘다(src/config/relandR1Push.ts 머리 주석, final-03·rf-02).
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";

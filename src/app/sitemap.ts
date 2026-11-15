@@ -525,6 +525,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  // (guides/[slug]/page.tsx·seo.ts buildGuideMetadata). 칩 유지는 2026-11-01 운영자 승인 8번(B37 P2UX-04 c).
  // 예외(lens-meta-F01, 운영자 승인 2026-11-13): 마지막 광고 아래 보강만 바뀐 글은 이 lastmod 만 보강을 고친 날로 올린다
  // (getGuideSitemapDate — src/lib/guideSitemapDates.ts 표). 그런 글은 화면·OG·Article 날짜보다 사이트맵 날짜가 늦을 수 있다.
+ // 같은 표에는 광고 위 같은 폭 정정을 받았지만 이미 떠 있는 '수정' 칩 숫자를 바꾸면 광고가 내려가 화면 날짜를 올리지 못한
+ // 글의 행도 있다(2026-11-15 ads-01 — 규칙과 실측은 그 파일 머리 주석 ★).
  lastModified: getGuideSitemapDate(guide), // Editorial calendar date; do not turn it into a future UTC midnight.
  changeFrequency: 'monthly' as ChangeFrequency,
  priority: 0.7,

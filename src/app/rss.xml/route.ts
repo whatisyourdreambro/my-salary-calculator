@@ -8,6 +8,8 @@ import { koGuides } from "@/lib/guidesContent";
 // pubDate=updatedDate(갱신 시 피드 상단 재노출). 10/5 서치어드바이저 rss.xml 제출 전 선행.
 import { reportsRegistry } from "@/data/reportsRegistry";
 // 가이드 pubDate = 사이트맵 lastmod 와 같은 날짜(lens-crawl-F02·lens-meta-F01, 2026-11-13). 전문 = 본문 + 광고 아래 보강.
+// 사이트맵 전용 날짜 표(guideSitemapDates.ts)의 행은 광고 아래 보강을 고친 날이거나, 화면 날짜를 올리지 못한 광고 위 같은 폭
+// 정정을 한 날이다(2026-11-15 ads-01 — 그 파일 머리 주석).
 import { getGuideSitemapDate } from "@/lib/guideSitemapDates";
 import { guideSupplements } from "@/lib/guides/supplements";
 import { contentEncoded, FULL_TEXT_GUIDE_COUNT } from "@/lib/rssFullText";
@@ -56,7 +58,8 @@ const escapeXml = (unsafe: string) => {
 
 /** 가이드 + 리포트를 날짜 내림차순으로 병합 (guid 중복 없음 — 경로 prefix 상이) */
 function buildFeedItems(baseUrl: string): FeedItem[] {
- // 사이트맵 lastmod 와 같은 날짜(getGuideSitemapDate = 본문 정정일·광고 아래 보강일까지 반영한 내용 수정일) 내림차순 —
+ // 사이트맵 lastmod 와 같은 날짜(getGuideSitemapDate = 본문 정정일·광고 아래 보강일·화면 날짜를 올리지 못한 광고 위 정정일까지
+ // 반영한 내용 수정일) 내림차순 —
  // sort 는 안정 정렬이라 같은 날짜는 koGuides 순서를 유지하고, 아래 병합 정렬 뒤에도 가이드끼리의 순서가 같다
  // (= 피드의 첫 FULL_TEXT_GUIDE_COUNT 개 가이드 item 이 전문 대상). 10/19 579d60bbf 가 상세 화면 날짜만 옮기고
  // 피드는 getGuideModifiedDate 에 남겨 둔 어긋남을 고쳤다(lens-crawl-F02).
@@ -64,7 +67,10 @@ function buildFeedItems(baseUrl: string): FeedItem[] {
  .map((guide) => ({
  title: guide.title,
  url: `${baseUrl}/guides/${guide.slug}`,
- description: guide.description,
+ // 검색 설명(metaDescription, META-07·lens-meta-F02)이 있으면 그것 — 상세 쪽 meta·OG description 과 같은 문장이다
+ // (guides/[slug]/page.tsx). 화면 TL;DR(description)은 임협 타결 전 상태를 말하는 글이 있어, 사이트맵 날짜로
+ // 피드 위로 올라올 때 옛 문구가 함께 올라오지 않게 한다(feeds-01, 2026-11-15).
+ description: guide.metaDescription ?? guide.description,
  date: getGuideSitemapDate(guide),
  categories: [
  ...(guide.category ? [guide.category] : []),

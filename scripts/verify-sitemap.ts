@@ -373,8 +373,8 @@ async function main() {
   let guideDateMismatch = 0;
   for (const [prefix, guides] of [["/guides", koGuides], ["/en/guides", enGuides]] as const) {
     for (const guide of guides) {
-      // 한국어 가이드는 본문 정정일(guideContentRevisions)과 광고 아래 보강의 사이트맵 전용 날짜(guideSitemapDates,
-      // lens-meta-F01)까지 max — sitemap.ts guideUrls 와 같은 규칙
+      // 한국어 가이드는 본문 정정일(guideContentRevisions)과 사이트맵 전용 날짜(guideSitemapDates — 광고 아래 보강을 고친 날,
+      // 또는 화면 날짜를 올리지 못한 광고 위 같은 폭 정정을 한 날, lens-meta-F01·ads-01)까지 max — sitemap.ts guideUrls 와 같은 규칙
       const expected = prefix === "/guides" ? getGuideSitemapDate(guide) : getGuideModifiedDate(guide);
       const dates = [guide.publishedDate, expected];
       const validDates = dates.every((date) => /^\d{4}-\d{2}-\d{2}$/.test(date) &&

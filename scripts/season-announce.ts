@@ -55,12 +55,15 @@ function loadRegistry(path: string): SeasonRegistry {
   return parseRegistry(JSON.parse(readFileSync(path, "utf8")));
 }
 
-/** sitemap() 항목 → 경로별 lastmod(YYYY-MM-DD) */
+/** Date → KST 달력일(YYYY-MM-DD). ROUTE_OVERRIDES 의 +09:00 자정이 UTC 로 하루 앞당겨 찍히지 않게 한다(tooling-01, 2026-11-15). */
+const kstDay = (d: Date) => new Date(d.getTime() + 9 * 3_600_000).toISOString().slice(0, 10);
+
+/** sitemap() 항목 → 경로별 lastmod(YYYY-MM-DD, KST 달력일) */
 function sitemapLastmods(): Map<string, string> {
   const out = new Map<string, string>();
   for (const e of sitemap()) {
     const lm = e.lastModified;
-    const iso = lm instanceof Date ? lm.toISOString() : typeof lm === "string" ? lm : "";
+    const iso = lm instanceof Date ? kstDay(lm) : typeof lm === "string" ? lm : "";
     out.set(toPath(e.url), iso.slice(0, 10));
   }
   return out;
@@ -101,7 +104,7 @@ async function cmdCheck(registry: SeasonRegistry, root: string): Promise<number>
   const overrideKeys = Object.keys(ROUTE_OVERRIDES);
   const overrideDays = new Map<string, string>();
   for (const [key, o] of Object.entries(ROUTE_OVERRIDES)) {
-    if (o.lastModified) overrideDays.set(key, o.lastModified.toISOString().slice(0, 10));
+    if (o.lastModified) overrideDays.set(key, kstDay(o.lastModified));
   }
   const rssTables = await loadRssTables(root);
   const errors = validateRegistry(registry, lastmods.keys(), overrideKeys, {
@@ -150,7 +153,7 @@ async function cmdEvent(registry: SeasonRegistry, raw: string | undefined, root:
   lines.push("");
   lines.push("## Day-0 순서");
   lines.push("1. 1차 출처(공식 원문) URL 을 확인한 뒤 반영 묶음을 적용합니다. 상수·데이터·문자열만, 새 URL 0개.");
-  lines.push("2. 아래 'lastmod 손잡이'에서 화면 내용이 실제로 바뀐 URL 만 날짜를 올립니다.");
+  lines.push("2. 아래 'lastmod 손잡이'에서 화면 내용이 실제로 바뀐 URL 만 날짜를 올립니다. 날짜는 그 내용을 고친 날(KST)이고, 게시일·미래 날짜가 아닙니다.");
   lines.push("3. 진행형 상태 문구 점검: npx tsx scripts/stale-status-scan.ts --press");
   lines.push("4. 게이트: tsc · vitest · verify:tax·site·sitemap · ad-audit --diff 0/0 · adpos (광고 위 문구는 폭 맞춤).");
   // 2026-11-13(lens-crawl 검증 missed-2): 게시는 운영자 Pages 승인 버튼, 운영 GET 은 MoneySalary-QA UA·리다이렉트 0 (AGENTS.md).
