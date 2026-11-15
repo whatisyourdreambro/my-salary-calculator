@@ -67,8 +67,10 @@ describe("사이트맵·URL 원장", () => {
     const src = fs.readFileSync(path.join(APP_DIR, "sitemap.ts"), "utf8");
     expect(src.match(/'\/calc\/bonus-home-plan',/g)?.length).toBe(1);
     // October 19 adds explanatory next steps; November 1 corrects the special-bonus pool sentence
-    // (DS 영업이익 10.5%, B28 STR-04-B, stage-2 ledger advance); monthly snapshot cadence remains.
-    expect(src).toMatch(/'\/calc\/bonus-home-plan': \{ lastModified: new Date\('2026-11-01T00:00:00\+09:00'\), changeFrequency: 'monthly' \}/);
+    // (DS 영업이익 10.5%, B28 STR-04-B, stage-2 ledger advance); November 15 corrects the SK하이닉스 2025 PS
+    // deferral and refreshes the market snapshot (N2-calc-14, integration ledger for claude/next-1120);
+    // monthly snapshot cadence remains.
+    expect(src).toMatch(/'\/calc\/bonus-home-plan': \{ lastModified: new Date\('2026-11-15T00:00:00\+09:00'\), changeFrequency: 'monthly' \}/);
     const ledger = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "scripts/url-ledger.snapshot.json"), "utf8"));
     expect(ledger.sitemap).toContain(HREF);
   });
