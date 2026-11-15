@@ -380,9 +380,9 @@ const commercialOfficeTax = `
 <p>상가 7억 매수 → 12억 매도, 보유 10년:</p>
 <ul class="space-y-2 mt-4">
 <li>· 차익 5억</li>
-<li>· 장기보유공제 30% (보유 10년)</li>
-<li>· 과세표준 3.5억</li>
-<li>· 양도세 약 1억 1,400만원 + 지방세 1,140만원 = <strong>약 1.25억</strong></li>
+<li>· 장기보유공제 20% (보유 10년)</li>
+<li>· 과세표준 3.975억</li>
+<li>· 양도세 1억 3,306만원 + 지방세 1,331만원 = <strong>약 1.46억</strong></li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 절세 — 임대 부동산 등록</h2>
@@ -1380,7 +1380,7 @@ export const hotNewsExtended: Guide[] = [
   { slug: "redevelopment-tax-3-step-2026", title: "재건축·재개발 양도세 3단계 — 사업시행·관리처분·준공 시점별", description: "사업시행 전 일반 양도세, 관리처분~준공 입주권 보유기간 합산, 준공 후 새 주택 양도세 + 청산금 차익 별도.", category: "부동산", tags: ["재건축", "재개발", "양도세", "입주권", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: redevelopmentTax, lang: "ko" },
   { slug: "lease-right-transfer-tax-2026", title: "전세권·임차권 양도세 — 권리금 차익도 신고 의무", description: "전세권 매매 시 권리금 차익에 양도세 6~45%. 보유 3년 미만은 단기 세율 45%. 등기 전세권은 임대인 동의 없이 양도 가능.", category: "부동산", tags: ["전세권", "임차권", "양도세", "권리금", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: leaseRightTax, lang: "ko" },
   { slug: "farmland-forest-capital-gains-2026", title: "농지·임야 양도세 — 자경 8년 100% 감면 vs 비사업용 10%p 가산", description: "자경 농지 8년+ 거주 + 직접 경작 시 양도세 100% 감면(연 1억 한도). 비사업용 토지는 10%p 가산세 추가.", category: "부동산", tags: ["농지", "임야", "양도세", "자경", "2026"], level: "고급", modifiedDate: "2026-10-03", publishedDate: "2026-05-23", views: 0, content: farmlandForestTax, lang: "ko" },
-  { slug: "commercial-office-capital-gains-2026", title: "상가·오피스텔 양도세 — 7억→12억 매도 시 1.25억 부담", description: "상가·오피스텔은 비과세 12억 한도 없음. 차익 5억 + 장기보유공제 30% 시 약 1.25억 세금. 임대사업자 등록으로 우대 가능.", category: "부동산", tags: ["상가", "오피스텔", "양도세", "임대사업", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: commercialOfficeTax, lang: "ko" },
+  { slug: "commercial-office-capital-gains-2026", title: "상가·오피스텔 양도세 — 7억→12억 매도 1.46억 부담", description: "상가·오피스텔은 비과세 12억 한도 없음. 차익 5억, 장기보유공제 20% 시 약 1.46억 세금. 임대사업자 등록으로 우대 가능.", category: "부동산", tags: ["상가", "오피스텔", "양도세", "임대사업", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: commercialOfficeTax, lang: "ko" },
   { slug: "burdened-gift-strategy-2026", title: "부담부증여 — 시가 10억 + 대출 6억 증여 시 증여세 절반 이하", description: "자녀에게 부동산 + 대출 동시 이전. 증여 부분 4억만 증여세, 채무 인수 6억은 부모 양도세. 단순 증여 2.4억 → 6,000만원으로 절감.", category: "부동산", tags: ["부담부증여", "증여세", "양도세", "절세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: burdenedGift, lang: "ko" },
   { slug: "child-gift-10year-rule-2026", title: "자녀 증여 10년 룰 — 평생 1.4억 비과세 자산 이전", description: "미성년 10년 2,000만원, 성인 5,000만원 비과세. 자녀 0세부터 시작하면 40년 1.4억 비과세. 운용수익도 자녀 자산.", category: "부동산", tags: ["자녀증여", "증여세", "10년룰", "자산이전", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: childGift50m, lang: "ko" },
   { slug: "rental-report-obligation-2026", title: "주택임대 신고 의무 — 미신고 시 5년 추징 + 가산세 2~3배", description: "1주택 기준시가 12억 초과 또는 2주택+ 임대료 발생 시 신고 의무. 무신고 20% + 납부지연 일 0.022%. 5월 종소세 신고 시 임대 포함.", category: "부동산", tags: ["임대신고", "임대소득", "가산세", "종소세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: rentalReportObligation, lang: "ko" },

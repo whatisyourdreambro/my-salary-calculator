@@ -3319,8 +3319,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "commercial-office-capital-gains-2026",
-  "title": "상가·오피스텔 양도세 — 7억→12억 매도 시 1.25억 부담",
-  "description": "상가·오피스텔은 비과세 12억 한도 없음. 차익 5억 + 장기보유공제 30% 시 약 1.25억 세금. 임대사업자 등록으로 우대 가능.",
+  "title": "상가·오피스텔 양도세 — 7억→12억 매도 1.46억 부담",
+  "description": "상가·오피스텔은 비과세 12억 한도 없음. 차익 5억, 장기보유공제 20% 시 약 1.46억 세금. 임대사업자 등록으로 우대 가능.",
   "category": "부동산",
   "tags": [
    "상가",
