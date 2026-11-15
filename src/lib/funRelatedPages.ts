@@ -62,11 +62,21 @@ export const FUN_CONTEXT_LINKS: Partial<Record<FunPageSlug, { href: string; titl
   'lunch-roulette': { href: '/fun', title: '함께 할 다른 활동', description: '메뉴를 정했다면 동료와 함께 할 추첨·퀴즈·미니게임도 둘러보세요.' },
 };
 
+// Activities that take a salary input get one real salary-data page as the last card (2026-11-15 SEASONC,
+// app-tools-fun ideas[6]). The cards render in FunRelatedPages, after the fun/layout ads and sharing (below the last ad).
+// One per activity, an existing indexable page that is not a redirect; the game list itself is unchanged.
+export const FUN_SALARY_LINKS: Partial<Record<FunPageSlug, { href: string; title: string; description: string }>> = {
+  'salary-slip': { href: '/table/2026/annual', title: '2026 연봉 실수령액 표', description: '가상 명세서 다음에는 2026년 세율·4대보험 요율로 계산한 연봉 구간별 세후 월급을 확인하세요.' },
+  reincarnation: { href: '/table/2026/annual', title: '2026 연봉 실수령액 표', description: '게임에 넣은 연봉의 세후 월급을 2026년 기준 연봉 구간 표로 확인하세요.' },
+  'salary-battle': { href: '/salary-db', title: '회사별 연봉 정보', description: '배틀에 고른 회사의 연봉·복지 자료와 공시 평균연봉을 회사별 연봉 DB에서 자세히 살펴보세요.' },
+};
+
 export function getFunRelatedPages(pathname: string | null) {
   const slug = /^\/fun\/([a-z-]+)\/?$/.exec(pathname ?? '')?.[1];
   if (!slug || !Object.hasOwn(FUN_RELATED_PAGES, slug)) return [];
   const activity = slug as FunPageSlug;
   const peers = FUN_RELATED_PAGES[activity].map(target => ({ href: `/fun/${target}`, ...FUN_PAGES[target] }));
   const context = FUN_CONTEXT_LINKS[activity];
-  return context ? [...peers, context] : peers;
+  const salary = FUN_SALARY_LINKS[activity];
+  return [...peers, ...(context ? [context] : []), ...(salary ? [salary] : [])];
 }

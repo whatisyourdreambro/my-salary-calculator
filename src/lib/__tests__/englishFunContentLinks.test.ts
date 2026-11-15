@@ -32,7 +32,7 @@ import EnglishLandingPage from '@/app/en/page';
 import EnglishHelpPage from '@/app/en/help/page';
 import EnglishAboutPage from '@/app/en/about/page';
 import FlatTaxPage from '@/app/en/flat-tax/page';
-import { FUN_PAGES, FUN_RELATED_PAGES, FUN_CONTEXT_LINKS, getFunRelatedPages } from '@/lib/funRelatedPages';
+import { FUN_PAGES, FUN_RELATED_PAGES, FUN_CONTEXT_LINKS, FUN_SALARY_LINKS, getFunRelatedPages } from '@/lib/funRelatedPages';
 import { ENGLISH_TOOLS } from '@/lib/englishTools';
 import { ENGLISH_HUBS, type EnglishHubId } from '@/lib/englishHubs';
 import { EN_ALL_PAGE_PATHS } from '@/lib/englishRoutes';
@@ -181,11 +181,28 @@ describe('Fun recommendations preserve the advertising and sharing sequence', ()
   it('adds at most one real contextual destination per activity and gives the hub three distinct body referrals', () => {
     for (const [slug, link] of Object.entries(FUN_CONTEXT_LINKS)) {
       expect(existsSync(`src/app${link.href}/page.tsx`)).toBe(true);
-      expect(getFunRelatedPages(`/fun/${slug}`).filter(item => !item.href.startsWith('/fun/'))).toEqual([link]);
+      // 2026-11-15 SEASONC: salary-input activities also end with one salary-data page (FUN_SALARY_LINKS, next test) — exact list.
+      const salary = FUN_SALARY_LINKS[slug as keyof typeof FUN_SALARY_LINKS];
+      expect(getFunRelatedPages(`/fun/${slug}`).filter(item => !item.href.startsWith('/fun/'))).toEqual(salary ? [link, salary] : [link]);
     }
     expect(incoming(rendered, '/fun')).toHaveLength(3);
     for (const target of ['/fortune-2026', '/lotto', '/mbti-salary', '/work-clock'])
       expect(incoming(rendered, target).length, target).toBeGreaterThanOrEqual(2);
+  });
+  it('salary-input activities end with exactly one real salary-data page, after the game and context cards (SEASONC 2026-11-15)', () => {
+    expect(Object.keys(FUN_SALARY_LINKS).sort()).toEqual(['reincarnation', 'salary-battle', 'salary-slip']);
+    for (const [slug, link] of Object.entries(FUN_SALARY_LINKS)) {
+      expect(existsSync(`src/app${link.href}/page.tsx`), link.href).toBe(true);
+      expect(link.href.startsWith('/fun')).toBe(false);
+      const items = getFunRelatedPages(`/fun/${slug}`);
+      expect(items.at(-1)).toEqual(link);
+      expect(items.filter(item => item.href === link.href)).toHaveLength(1);
+      // Rendered strictly after the ads and sharing (the sequence test above covers every activity); here the link is in that markup.
+      expect(links(rendered.get(`/fun/${slug}`)!)).toContain(link.href);
+    }
+    for (const slug of Object.keys(FUN_PAGES).filter(slug => !Object.hasOwn(FUN_SALARY_LINKS, slug))) {
+      expect(getFunRelatedPages(`/fun/${slug}`).map(item => item.href), slug).not.toContain('/table/2026/annual');
+    }
   });
   it.each(['/fun', '/fun/unknown', '/fun/flappy/nested', '/en/fun', null])('does not create a catch-all recommendation for %s', pathname => {
     expect(getFunRelatedPages(pathname)).toEqual([]);
