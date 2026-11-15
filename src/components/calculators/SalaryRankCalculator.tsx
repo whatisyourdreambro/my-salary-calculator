@@ -15,9 +15,9 @@ export default function SalaryRankCalculator() {
   const [result, setResult] = useState<ReturnType<typeof calculateSalaryRank> | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
   const [calculatedInputKey, setCalculatedInputKey] = useState<string | null>(null);
+  // 결과 카드·저장 이미지의 나이대는 계산한 그 나이대 — 계산 뒤 다른 나이대를 눌러도 옛 백분위에 새 나이대가 붙지 않게
+  const [calculatedLabel, setCalculatedLabel] = useState("");
   const cardRef = useRef<HTMLDivElement>(null);
-
-  const selectedLabel = AGE_GROUPS.find((g) => g.key === ageGroup)?.label ?? "";
 
   const handleCalculate = () => {
     const salaryVal = Number(salary.replace(/[^0-9]/g, ""));
@@ -27,6 +27,7 @@ export default function SalaryRankCalculator() {
     setTimeout(() => {
       const rank = calculateSalaryRank(ageGroup, salaryVal);
       setResult(rank);
+      setCalculatedLabel(AGE_GROUPS.find((g) => g.key === ageGroup)?.label ?? "");
       setCalculatedInputKey(JSON.stringify([salary, ageGroup]));
       setIsCalculating(false);
     }, 2000);
@@ -245,7 +246,7 @@ export default function SalaryRankCalculator() {
                     <div>
                       <p className="text-muted-blue text-xs font-bold uppercase mb-2">자체 참고표 비교</p>
                       <p className="text-navy font-medium leading-relaxed">
-                        <span className="text-white font-bold">{selectedLabel}</span>{" "}
+                        <span className="text-white font-bold">{calculatedLabel}</span>{" "}
                         참고표에서{" "}
                         <span className="text-white font-bold">{100 - result.percentile}%</span>
                         구간보다 높게 분류됩니다.
@@ -302,7 +303,7 @@ export default function SalaryRankCalculator() {
                     연봉 참고 티어 공유하기
                   </p>
                   <ResultSharePanel resultKey={JSON.stringify([salary, ageGroup, result])} resultIsCurrent={calculatedInputKey === JSON.stringify([salary, ageGroup])}
-                    title={`${selectedLabel} 자체 참고표 기준 상위 ${result.percentile}% · 머니샐러리 참고 티어`}
+                    title={`${calculatedLabel} 자체 참고표 기준 상위 ${result.percentile}% · 머니샐러리 참고 티어`}
                     description="사용자 입력을 자체 참고표와 비교한 결과입니다. 공식 전국 순위·소득 인증이 아니며, 공식 통계 기준연도와 원자료는 확인되지 않았습니다."
                     getShareImage={getShareImage}
                   />
