@@ -17,8 +17,10 @@ export function percentResults(
   const res1 = ratio.whole && ratio.percent ? (Number(ratio.percent) / 100) * Number(ratio.whole) : 0;
   // 2. 일부값은 전체값의 몇 %?
   const res2 = share.part && share.whole ? (Number(share.part) / Number(share.whole)) * 100 : 0;
-  // 3. 기존값에서 변경값으로 증감율
-  const res3 = change.from && change.to ? ((Number(change.to) - Number(change.from)) / Number(change.from)) * 100 : 0;
+  // 3. 기존값에서 변경값으로 증감율 — 변경값 0 도 입력값이다(100 → 0 = -100%, 2026-11-15 lib-b07-F01). 기존값 0 은 나눌 수 없어 0.
+  const from = Number(change.from);
+  const to = Number(change.to);
+  const res3 = change.from !== "" && change.to !== "" && from !== 0 && Number.isFinite(from) && Number.isFinite(to) ? ((to - from) / from) * 100 : 0;
   return { res1, res2, res3 };
 }
 

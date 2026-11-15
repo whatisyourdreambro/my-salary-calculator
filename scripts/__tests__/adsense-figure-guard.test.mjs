@@ -33,6 +33,8 @@ test("synthetic AdSense statistics are caught", () => {
     ["cpc", "C" + "PC " + D + "0.0" + zero(2) + " 로 낮음"],
     ["active-view", "Active" + " View " + "00.0%" + " 로 하락"],
     ["impressions-per-pv", "자동 인페이지 " + "노출/PV " + "0.0 → 0.0"],
+    // 'PV 당 <소수>' 꼴 (2026-11-15 lib-b01-F01 — src 주석 한 줄이 이 꼴이라 가드를 빠져나갔다)
+    ["impressions-per-pv", "자동 인페이지 노출은 " + "PV 당 " + "0.0~0.0"],
     ["coverage", "멀티" + "플렉스 " + "커버리지 " + "00.0%"],
     ["revenue-usd", "앵커 " + "수익 " + D + "00.00"],
     ["revenue-krw", "네이버가 " + "수익의 " + "00%"],
