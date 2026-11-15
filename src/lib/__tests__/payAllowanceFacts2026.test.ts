@@ -44,6 +44,12 @@ describe("정근수당 지급률 (PT-02)", () => {
     expect(src).toContain("근무연수에 따라 월봉급액의 10~50%(재직 2년 미만 10%)가 대표적입니다.");
     expect(src).not.toContain("월봉급액의 0~50%가");
   });
+
+  it("공무원 봉급표 광고 위 수당 목록도 10~50% — '근무연수에 따라'를 '근무연수별'로 줄여 이전보다 짧게", () => {
+    const src = read("src/app/civil-servant-pay-2026/page.tsx");
+    expect(src).toContain("<strong>정근수당</strong> — 연 2회(1월·7월), 근무연수별 월봉급액의 10~50%");
+    expect(src).not.toMatch(/[^0-9]0~50%/);
+  });
 });
 
 describe("교사 호봉표 교직수당 (MISSED-pay-1·2)", () => {

@@ -277,7 +277,7 @@ export default function CivilServantPay2026Page() {
               <strong>직급보조비</strong> — 직급별 정액 지급 (아래 표, 2026년 현행 유지)
             </li>
             <li>
-              <strong>정근수당</strong> — 연 2회(1월·7월), 근무연수에 따라 월봉급액의 0~50%
+              <strong>정근수당</strong> — 연 2회(1월·7월), 근무연수별 월봉급액의 10~50%
             </li>
           </ul>
           <div className="not-prose mt-4 p-5 bg-white rounded-2xl border border-canvas-200">
