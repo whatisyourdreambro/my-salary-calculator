@@ -132,6 +132,11 @@ describe("행 내용 — 추정 금지 규칙 표기", () => {
     // SK하이닉스 2026 신체계 부결은 2025 실적분 행 note 에 실려야 한다 (별도 행 없음)
     expect(rows.some((r) => r.calcSlug === "sk-hynix-bonus" || /SK하이닉스/.test(r.company))).toBe(true);
     expect(rows.some((r) => /부결/.test(r.note))).toBe(true);
+    // 2026-11-15 app-data-pages-b02-F03: 현대차(2025-09-15 가결 52.9%)·기아(2025-09-30 가결 73.1%) 2025 정액 격려금은
+    // note 가 '잠정합의' 로 읽히지만 가결·지급됐다 — 데이터셋 status 만 paid (화면 note 는 그대로)
+    const st = (slug: string, scheme: string) => rows.find((r) => r.calcSlug === slug && r.year === 2025 && r.scheme === scheme)?.status;
+    expect(st("hyundai-bonus", "임단협 격려금(정액)")).toBe("paid");
+    expect(st("kia-bonus", "임단협 격려금(정액)")).toBe("paid");
   });
 
   it("entry: 전 행 estimateIncluded=true·grade=추정 (raw 추정표 내보내기 금지)", () => {
