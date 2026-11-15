@@ -282,6 +282,8 @@ const TAX: CalculatorDef[] = [
  category: "tax",
  categoryLabel: "세금",
  keywords: ["주식 양도세", "해외주식 세금"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — 접힌 FAQ 에 연말 결제일 기준 문장을 실제로 더한 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [
  { name: "buy", label: "매수가 합계", defaultValue: 10000000, suffix: "원" },
  { name: "sell", label: "매도가 합계", defaultValue: 15000000, suffix: "원" },

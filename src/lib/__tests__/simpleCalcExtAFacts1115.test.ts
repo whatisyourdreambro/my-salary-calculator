@@ -56,3 +56,15 @@ describe("2027 최저임금 숫자 — 주휴수당·주급 접힌 FAQ (최저�
     expect(r.secondary?.[0]?.value).toBe(102_720);
   });
 });
+
+// 감사 아이디어 ideas[3] (시즌: 해외주식 양도세 절세 검색 12월) — 기존 닫힌 FAQ 답 끝에만. 규칙(시행령)을 밝히고 날짜를 약속하지 않는다.
+describe("주식 양도세 간편 계산 접힌 FAQ — 양도 시기는 대금 청산일(결제일), 연내 결제 마감일은 증권사 안내", () => {
+  it("손익통산 FAQ 끝 두 문장, 날짜 고정 없음", () => {
+    const c = getCalculatorBySlug("stock-capital-gains-quick");
+    const a = (c?.faqs ?? []).find((f) => f.q === "손해 본 종목이 있으면 세금이 줄어드나요?")?.a ?? "";
+    expect(a).toContain("대금을 청산한 날(결제일)이 기준이어서(소득세법 시행령 제162조)");
+    expect(a).toContain("증권사가 안내하는 시장별 연내 결제 마감일 전에 매도하세요.");
+    expect(a).not.toMatch(/12월 \d+일/);
+    expect(c?.publishedAt).toBe("2026-11-15");
+  });
+});
