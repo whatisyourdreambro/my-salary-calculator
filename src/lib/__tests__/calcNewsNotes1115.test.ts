@@ -28,6 +28,9 @@ describe("S-OIL 보도 요약 (SBS Biz 2026-11-02)", () => {
   it("2026년 실적분 지급률은 날짜를 박아 '보도 없음'으로만 쓰고, 시나리오가 전망치가 아님을 밝힌다", () => {
     expect(text(route)).toContain("2026년 11월 15일 기준 지급률 보도는 없습니다");
     expect(text(route)).toContain("2026년 실적분 전망치가 아닙니다");
+    // 2026-11-15 리뷰: 2025 실적분 지급률이 보도 미확인이라 세 값을 '최근 3개 연도'라 하지 않고 실적 연도를 적는다
+    expect(text(route)).toContain("2024·2023·2022년 실적분 지급률 보도값");
+    expect(text(route)).not.toMatch(/최근 ?3개/);
     expect(text(route)).not.toMatch(PROMISE);
   });
 });
