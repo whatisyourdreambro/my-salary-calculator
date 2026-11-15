@@ -36,6 +36,10 @@ const destinations: Record<string, Omit<TopicLink, 'href'>> = {
   '/calc/voluntary-retirement': { title: '희망퇴직 위로금 실수령 계산기', description: '위로금과 법정퇴직금을 합산한 퇴직소득세와 세후 실수령액을 계산하세요.' },
   '/year-end-tax': { title: '연말정산 환급금 계산기', description: '총급여와 카드·연금계좌·기부금을 넣어 예상 환급액이나 추가 납부액을 계산하세요.' },
   '/calc/dependent-check': { title: '부양가족 인적공제 판정기', description: '부모님·형제자매가 기본공제 150만원 대상인지 나이·소득·동거 기준으로 확인하세요.' },
+  // 2026-11-15 SEASONA(감사 lib ideas[3]) — 이번 연말정산 시즌 목적지.
+  '/year-end-tax-checklist': { title: '연말정산 체크리스트', description: '12월 31일 전에 챙길 공제 항목을 신용카드·연금저축·기부금·월세 등 분야별로 점검하세요.' },
+  '/social-insurance-rates-2027': { title: '2027 4대보험 요율표', description: '국민연금 10.0%(근로자 5.0%) 등 2027년 요율로 월급에서 빠지는 보험료를 확인하세요.' },
+  '/table/2027/monthly': { title: '2027 월급 실수령액 표', description: '2027년 국민연금 요율 인상을 반영한 월급 구간별 세후 수령액을 미리 확인하세요.' },
 };
 
 export const TOPIC_NEXT_STEPS: Record<string, readonly string[]> = {
@@ -51,7 +55,9 @@ export const TOPIC_NEXT_STEPS: Record<string, readonly string[]> = {
   '/basic-pension-2026': ['/health-checkup-2026', '/health-insurance-2026', '/hub/fire'],
   '/health-checkup-2026': ['/basic-pension-2026', '/health-insurance-2026'],
   '/health-insurance-2026': ['/health-checkup-2026', '/basic-pension-2026', '/year-end-tax-settlement-2026'],
-  '/year-end-tax-settlement-2026': ['/chuseok-bonus-2026', '/money-check', '/tips'],
+  // 2026-11-15 SEASONA(감사 lib ideas[3]): 11~2월에 첫 카드가 끝난 추석 시즌으로 가던 것을 이번 연말정산 쪽으로 — 상자는 이 쪽의
+  // 마지막 광고(MultiplexAd) 뒤라 광고 위 변화 없음. 화면 수정일(PublishedMeta 2026-10-19, 광고 위)은 그대로 둔다.
+  '/year-end-tax-settlement-2026': ['/year-end-tax-2027', '/year-end-tax-checklist', '/money-check'],
   '/chuseok-bonus-2026': ['/calc/bonus-home-plan', '/year-end-tax-settlement-2026', '/tips'],
   '/calc/samsung-bonus': ['/calc/bonus-home-plan', '/year-end-tax-settlement-2026'],
   // 2026-11-15 SEASONA(감사 components ideas[6]): SK하이닉스 성과급 계산기 — calc/layout 의 모든 광고 뒤. 목적지 제목·설명은 위 SEASONA 묶음 것을 쓴다.
@@ -65,6 +71,8 @@ export const TOPIC_NEXT_STEPS: Record<string, readonly string[]> = {
   '/calc/severance-vs-pension': ['/tools/finance/severance', '/tools/finance/irp', '/calc/voluntary-retirement'],
   '/calc/smb-income-tax-break': ['/year-end-tax-2027', '/year-end-tax', '/calc/dependent-check'],
   '/civil-servant-pay-2027': ['/public-institutions', '/hub/career'],
+  // 2026-11-15 SEASONA(감사 lib ideas[3]): 절세 허브 — hub/[id] 쪽의 마지막 광고(MultiplexAd) 뒤 상자. 허브 본문 목록에 없는 시즌 쪽만.
+  '/hub/tax-saving': ['/year-end-tax-2027', '/social-insurance-rates-2027', '/table/2027/monthly'],
   '/public-institutions': ['/civil-servant-pay-2027', '/insights', '/hub/career'],
   '/tools/finance/compound': ['/tools/finance', '/tools/math', '/hub/fire'],
   '/tools/finance/bonus': ['/tools/finance', '/calc/bonus-home-plan'],

@@ -73,3 +73,36 @@ describe("SK하이닉스 성과급 계산기 (SEASONA components ideas[6])", () 
     expect(getTopicNextSteps("/calc/sk-hynix-bonus").every((c) => c.title && c.description.length > 20)).toBe(true);
   });
 });
+
+describe("연말정산 시즌 목적지 (SEASONA lib ideas[3])", () => {
+  it("/year-end-tax-settlement-2026 첫 카드는 끝난 추석 시즌이 아니라 연말정산 2027 총정리", () => {
+    expect(TOPIC_NEXT_STEPS["/year-end-tax-settlement-2026"]).toEqual(["/year-end-tax-2027", "/year-end-tax-checklist", "/money-check"]);
+    expect(TOPIC_NEXT_STEPS["/year-end-tax-settlement-2026"]).not.toContain("/chuseok-bonus-2026");
+  });
+
+  it.each([
+    ["src/app/year-end-tax-settlement-2026/page.tsx", "<TopicNextSteps path=\"/year-end-tax-settlement-2026\" />"],
+    ["src/app/hub/[id]/page.tsx", "<TopicNextSteps path={`/hub/${hub.id}`} />"],
+  ])("%s: 상자는 그 쪽의 모든 광고 컴포넌트 뒤", (file, tag) => {
+    const src = code(file);
+    const box = src.indexOf(tag);
+    expect(box, tag).toBeGreaterThan(-1);
+    for (const ad of ["<InArticleAd />", "<HomeTopAd />", "<CalcResultAd />", "<GuideMidAd />", "<MultiplexAd />", "<CoupangBanner"]) {
+      const at = src.lastIndexOf(ad);
+      if (at >= 0) expect(box, `${file} ${ad}`).toBeGreaterThan(at);
+    }
+  });
+
+  it("/hub/tax-saving 행 — 허브 본문 목록에 없는 시즌 쪽 3곳", async () => {
+    const targets = ["/year-end-tax-2027", "/social-insurance-rates-2027", "/table/2027/monthly"];
+    expect(TOPIC_NEXT_STEPS["/hub/tax-saving"]).toEqual(targets);
+    const { hubs } = await import("@/lib/hubs");
+    const hub = hubs.find((h) => h.id === "tax-saving")!;
+    const listed = new Set(hub.sections.flatMap((sec) => sec.links.map((l) => l.href)));
+    for (const href of targets) {
+      expect(pageExists(href), href).toBe(true);
+      expect(listed.has(href), href).toBe(false);
+    }
+    expect(PAGE_LINK_REVIEW_PATHS.has("/hub/tax-saving")).toBe(true);
+  });
+});
