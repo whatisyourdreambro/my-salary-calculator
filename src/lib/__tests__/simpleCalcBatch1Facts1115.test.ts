@@ -194,3 +194,12 @@ describe("simple-calc-b04-F09 (2) 주택담보대출 월 상환액 유의사항�
     notWider(c.sources?.[0]?.title ?? "", "한국주택금융공사 — 보금자리론 금리안내(2026년 9월 1일 공시)", "source title");
   });
 });
+
+describe("simple-calc-b04-F12 복리 계산 설명 — 근거 없는 워런 버핏 인용 삭제 (광고 위, 더 짧게, 메타 불변)", () => {
+  it("설명문", () => {
+    const c = calc("compound-interest-quick");
+    expect(c.explanation).not.toContain("워런 버핏");
+    expect(c.explanation).toContain("흔히 '세계 8대 불가사의'로 불리며, 연 7% 복리로 10년이면 원금 2배");
+    notWider("흔히 '세계 8대 불가사의'로 불리며,", "워런 버핏도 '복리는 세계 8대 불가사의'라 칭했으며,", "compound explanation");
+  });
+});
