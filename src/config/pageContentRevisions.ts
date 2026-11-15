@@ -43,9 +43,16 @@ export const PAGE_ACCURACY_REVIEW_PATHS: ReadonlySet<string> = new Set([
   '/calc/pension-hike-2027', '/tools/finance/irp',
 ]);
 
+// 2026-11-15 (DATAB fd8c50245, app-data-pages-b03-F07): the hero label of every region detail page
+// reads 2026년 추정 평균 연봉 instead of 2026년 전체 평균 연봉 — a visible correction, because the
+// region figures are self-compiled estimates. The /region hub row is dated in ROUTE_OVERRIDES instead.
+// If the sweep reverts fd8c50245, remove this date with it.
+export const REGION_ESTIMATE_LABEL_DATE = new Date('2026-11-15T00:00:00+09:00');
+
 export function pageContentRevision(path: string): Date | undefined {
   if (PAGE_ACCURACY_REVIEW_PATHS.has(path)) return PAGE_ACCURACY_REVIEW_DATE;
   if (PAGE_LINK_REVIEW_PATHS.has(path)) return PAGE_LINK_REVIEW_DATE;
+  if (/^\/region\/[^/]+$/.test(path)) return REGION_ESTIMATE_LABEL_DATE;
   // Industry and region net-pay descriptions were substantively corrected by
   // commit 579d60bb on this day. Job/calculator recommendation changes alone do
   // not advance their content date.

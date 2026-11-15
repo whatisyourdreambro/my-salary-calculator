@@ -17,7 +17,8 @@ describe('sitemap editorial date integrity', () => {
     })) as Array<{path: string; date: string}>;
     const day = (date: string) => new Date(new Date(date).getTime() + 9 * 3600000).toISOString().slice(0, 10);
     expect(rows.map(row => [row.path, day(row.date)])).toEqual([
-      ['/calc/pension-hike-2027', '2026-10-23'], ['/tools/finance/irp', '2026-10-23'],
+      // 2026-11-15: 접힌 FAQ 첫 두 답에 2026~2033 연도별 요율·월 보험료 예시(SEASONA calc ideas[1]) — ROUTE_OVERRIDES 행이 10/23 정확도 검토일보다 늦다.
+      ['/calc/pension-hike-2027', '2026-11-15'], ['/tools/finance/irp', '2026-10-23'],
       ['/', '2026-10-19'], ['/calc/civil-servant-net-pay', '2026-10-23'],
       // 2026-11-01: 2027 장기요양 13.90% 확정 반영(PKG-10 DATA-01) — 요율표만 앞당긴다(홈·공무원 계산기는 그대로).
       ['/social-insurance-rates-2027', '2026-11-01'],
@@ -56,11 +57,15 @@ describe('sitemap editorial date integrity', () => {
       const sitemap=sitemapRows();
       const industry=require('./src/data/industriesData.ts').industriesData[0].id;
       const region=require('./src/data/regionsData.ts').regionsData[0].id;
-      const changed=[...PAGE_LINK_REVIEW_PATHS,'/industry/'+industry,'/region/'+region];
-      console.log(JSON.stringify({changed:changed.map(path=>({path,date:pageContentRevision(path)?.toISOString(),override:ROUTE_OVERRIDES[path]?.lastModified?.toISOString(),matches:sitemap.filter(row=>new URL(row.url).pathname===path).map(row=>row.lastModified.toISOString())})),untouched:['/job/nurse','/calc/loan-balance-after-payments','/en/calculators','/en/salary-converter','/fun','/guides/tax-guide','/en/guides/tax-deduction'].map(path=>[path,!!pageContentRevision(path)])}));`;
+      const changed=[...PAGE_LINK_REVIEW_PATHS,'/industry/'+industry];
+      const regionPath='/region/'+region;
+      console.log(JSON.stringify({changed:changed.map(path=>({path,date:pageContentRevision(path)?.toISOString(),override:ROUTE_OVERRIDES[path]?.lastModified?.toISOString(),matches:sitemap.filter(row=>new URL(row.url).pathname===path).map(row=>row.lastModified.toISOString())})),region:{path:regionPath,date:pageContentRevision(regionPath)?.toISOString(),matches:sitemap.filter(row=>new URL(row.url).pathname===regionPath).map(row=>row.lastModified.toISOString())},untouched:['/job/nurse','/calc/loan-balance-after-payments','/en/calculators','/en/salary-converter','/fun','/guides/tax-guide','/en/guides/tax-deduction','/region'].map(path=>[path,!!pageContentRevision(path)])}));`;
     const result = JSON.parse(execFileSync(process.execPath, ['--import', 'tsx', '-e', fixture], {
       cwd: process.cwd(), encoding: 'utf8', timeout: 30_000, maxBuffer: 1024 * 1024,
-    })) as { changed: Array<{path: string; date: string; override?: string; matches: string[]}>; untouched: Array<[string, boolean]> };
+    })) as { changed: Array<{path: string; date: string; override?: string; matches: string[]}>; region: {path: string; date: string; matches: string[]}; untouched: Array<[string, boolean]> };
+    // 2026-11-15 (DATAB fd8c50245): 지역 상세 히어로 라벨 전체 -> 추정 정정 — 지역 상세는 10/19 대신 그 날짜.
+    expect(result.region.date, result.region.path).toBe('2026-11-14T15:00:00.000Z');
+    expect(result.region.matches, result.region.path).toEqual(['2026-11-14T15:00:00.000Z']);
     for (const row of result.changed) {
       expect(row.date, row.path).toBe('2026-10-18T15:00:00.000Z');
       // A later page revision recorded in ROUTE_OVERRIDES wins (latestContentDate); verify:sitemap

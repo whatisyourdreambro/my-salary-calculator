@@ -83,7 +83,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  // priority 0.85 는 sitemap() 내 성과급 클러스터 루프와 같은 값 — override 가 있으면
  // 루프가 건너뛰므로 명시 (누락 시 기본 0.8 로 강등됨).
  '/calc/hyundai-bonus': { lastModified: new Date('2026-09-25'), priority: 0.85 },
- '/calc/year-end-bonus': { lastModified: new Date('2026-09-25') },
+ '/calc/year-end-bonus': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 2026-11-15 마지막 광고 아래 '이어서 확인할 내용' 상자·JSON-LD dateModified(SEASONA calc ideas[6]·[0]). 9/25 A18 엔진
  '/calc/kia-bonus': { lastModified: new Date('2026-09-25'), priority: 0.85 },
  // 2026-11-03: 접힌 FAQ 일용직 세금(1일 15만원 공제·2.7%·소액부징수)·비과세 근거 정정(R1 재착지 RL-05, 첫 원장 항목).
  // 화면·OG·Article 날짜 필드 없음. priority 는 기본 0.8 그대로(0.85 성과급 루프 제외 대상).
@@ -106,9 +106,10 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/civil-servant-pay-2027': { lastModified: new Date('2026-10-19T00:00:00+09:00') }, // B20 리드·메타 정렬(네이버 저CTR)
  // R2 신규 8라우트 (2026-08-31)
  '/calc/dual-income-year-end': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 표준세액공제 비교 엔진(PKG-10)·문구(PKG-11·PKG-20)·부부 상호 의료비 700만원 한도(B24)·동점 문구(B25)·입력 기준 접힌 상자(B09)
- '/calc/voluntary-retirement': { lastModified: new Date('2026-09-03') },
+ '/calc/voluntary-retirement': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 2026-11-15 마지막 광고 아래 '이어서 확인할 내용' 상자·JSON-LD dateModified(SEASONA calc ideas[6]·[0])
  '/calc/dependent-check': { lastModified: new Date('2026-09-05') },
- '/calc/smb-income-tax-break': { lastModified: new Date('2026-11-02T00:00:00+09:00') }, // 경력단절여성 → 경력단절자(2025-03-14 조특법 개정, OF1 T3) — 11/1 4대보험료 소득공제·환산 나이 판정 반영(PKG-14)
+ // 2026-11-15: 마지막 광고 아래 '이어서 확인할 내용' 상자·JSON-LD dateModified(SEASONA calc ideas[6]·[0])
+ '/calc/smb-income-tax-break': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 11/2 경력단절여성 → 경력단절자(2025-03-14 조특법 개정, OF1 T3) — 11/1 4대보험료 소득공제·환산 나이 판정 반영(PKG-14)
  '/calc/offer-compare': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 자녀 공제 나이 FAQ 정정(PKG-21) — 본문 '(설명 수정 2026-11-01)'와 일치
  '/calc/child-deduction': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 결과 광고 위 입력 안내를 짧은 요약으로 (B09 P4-05)
  '/calc/jeonse-loan': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 2026-11-15 접힌 FAQ 전세보증보험 보증료 HUG 연 0.097~0.211%(N2-calc-03). 11/2 결과 카드 배지 최저 금리(OF3 C3, 첫 원장 항목)
@@ -119,14 +120,15 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  // 공무원 월급 실수령액 계산기 (2026-09-27 신설 — 운영자 승인 동결 예외)
  '/calc/civil-servant-net-pay': { lastModified: new Date('2026-10-23T00:00:00+09:00'), priority: 0.8, changeFrequency: 'monthly' },
  '/tools/finance/compound': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
- '/tools/finance/bonus': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 과세표준 4대보험료 공제 반영(PKG-12)
- '/donation-tax-credit-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 산출세액 한도 미반영 정정·한도 초과 미공제분 줄 (B26 STR-02-o)·페이지 끝 날짜 FAQ (B30)
+ '/tools/finance/bonus': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 2026-11-15 마지막 광고 아래 상자를 회사별 성과급 계산기로(SEASONA app-tools-fun ideas[3]). 11/1 과세표준 4대보험료 공제 반영(PKG-12)
+ // 2026-11-15: 마지막 광고 아래 날짜 FAQ 에 고향사랑기부 12월 31일 문항·블록 확인일(SEASONB ideas[7])
+ '/donation-tax-credit-2026': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 11/1 산출세액 한도 미반영 정정·한도 초과 미공제분 줄 (B26 STR-02-o)·페이지 끝 날짜 FAQ (B30)
  // 2026-11-01: 연말정산 계산기 3종 — 마지막 광고(MultiplexAd) 아래 페이지 끝 날짜 FAQ 2문항 (B30 SEO-07-b, 첫 원장 항목)
  '/credit-card-deduction-2026': { lastModified: new Date('2026-11-13T00:00:00+09:00') }, // 2026-11-13 접힌 FAQ 한도 자녀 요건(n1 SEASON)
  '/medical-tax-credit-2026': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 2026-11-15 FAQ 근거 조문 제2항 정정(N2-app-pages-02). 11/1 출처 조문 제59조의4 제2항 정정
  '/rent-tax-credit-2026': { lastModified: new Date('2026-11-13T00:00:00+09:00') }, // 2026-11-13 접힌 FAQ·HowTo 3자녀 100㎡·주말부부 요건(n1 SEASON lens-season-F09)
  '/property-holding-tax-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 종부세 농어촌특별세·1세대 1주택 세액공제·12월 상세 (R2-HOLD)
- '/health-insurance-dependent': { lastModified: new Date('2026-10-17') },
+ '/health-insurance-dependent': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 2026-11-15 마지막 광고 아래 자격 상실 안내 4가지 블록(SEASONB ideas[0]). 화면 날짜 필드 없음
  // 2026-11-01: 6대 암검진 본인부담 0~10%·수검 기한 1회 교정(운영자 승인, PKG-22 STR-06) — 10/19 링크 검토일 대신
  '/health-checkup-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') },
  '/social-insurance-rates-2027': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 2027 장기요양 13.90% 확정(PKG-10)
@@ -155,7 +157,8 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/tax-rates-2026': { lastModified: new Date('2026-09-26T00:00:00+09:00') },
  '/year-end-tax-mid-resign': { lastModified: new Date('2026-08-15T00:00:00+09:00') }, // 발행일
  // 2026-11-13: 근로장려금 기한 후 신청 6월 2일 ~ 12월 1일·FAQ 마감 정정(n1 SEASON lens-season-F07, 첫 원장 항목). 화면 날짜 필드 없음
- '/earned-income-credit': { lastModified: new Date('2026-11-13T00:00:00+09:00') },
+ // 2026-11-15: 반기·정기 신청 FAQ 답에 2026년 소득분 신청 시기 2027년 3월 1~15일·5월 1~31일(SEASONB ideas[2])
+ '/earned-income-credit': { lastModified: new Date('2026-11-15T00:00:00+09:00') },
  // 2026-11-13: 마지막 광고 아래 계산 기준 설명 글(n1 META lens-meta-F10, 첫 원장 항목). 화면 날짜 필드 없음
  '/global': { lastModified: new Date('2026-11-13T00:00:00+09:00') },
  '/mbti-salary': { lastModified: new Date('2026-11-13T00:00:00+09:00') },
@@ -174,8 +177,25 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/terms': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 제7조 제휴망 이름 정정(N2-app-pages-05) — 화면 최종 업데이트 2026년 11월 15일과 같은 날
  '/parental-leave': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 육아휴직 급여 신청 기간 정정(N2-app-pages-08, 고용보험법 제70조)
  '/unemployment-benefit': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 대기기간·실업인정 횟수·고용24 정정(N2-app-pages-08)
- '/tools/real-estate/ltv': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 규제지역 LTV 40%·10·15 대책 접힌 FAQ(RL-08 재착지) — N2-app-tools-fun-01 이 더 늦게 고치면 그 날로
+ // 규제지역 LTV 40%·10·15 대책 접힌 FAQ(RL-08 재착지)와 다주택자 수도권 0%·지방 60%·스트레스 DSR·6개월 전입·주거용 40~80%(N2-app-tools-fun-01) — 마지막 LTV 문구를 고친 날 2026-11-15
+ '/tools/real-estate/ltv': { lastModified: new Date('2026-11-15T00:00:00+09:00') },
  '/tools/real-estate/gift-tax': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 마지막 광고 아래 계산 방식 설명 글·세대생략 할증 제57조(N2-app-tools-fun-06)
+ // 2026-11-15 2차 통합(claude/next-1120) 첫 원장 항목 — 날짜는 각 묶음 커밋의 실제 수정일(KST), 통합일·게시일 아님. 아래 페이지는 화면·OG·Article 날짜 필드 없음.
+ // 성과급 루프 0.85 대상(-bonus)은 행이 생기면 루프가 건너뛰므로 priority 0.85 를 그대로 적는다(위 83~84줄 주석).
+ '/calc/pension-hike-2027': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 접힌 FAQ 첫 두 답에 2026~2033 연도별 요율·월 보험료 예시(SEASONA calc ideas[1]) — 10/23 정확도 검토일보다 늦다
+ '/calc/s-oil-bonus': { lastModified: new Date('2026-11-15T00:00:00+09:00'), priority: 0.85 }, // 마지막 광고 아래 날짜 박힌 3분기 실적 보도 요약(SEASONA calc ideas[4])
+ '/calc/samsung-biologics-bonus': { lastModified: new Date('2026-11-15T00:00:00+09:00'), priority: 0.85 }, // 마지막 광고 아래 날짜 박힌 교섭·부분파업 보도 요약(SEASONA calc ideas[4])
+ '/calc/vacation-pay': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 마지막 광고 아래 '이어서 확인할 내용' 상자·검색 설명 예시 금액(SEASONA calc ideas[6]·[5])
+ '/hub/tax-saving': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 마지막 광고 아래 '이어서 확인할 내용' 상자(SEASONA lib ideas[3])·등록면허세 카드 설명(CALCMETA RL-10)
+ '/fun/fortune': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 신년운세를 2027 정미년으로 — 제목·H1·결과 문구(SEASONC app-tools-fun ideas[0])
+ '/auto-tax-2026': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 접힌 연납 FAQ 답에 2027년 1월 연납(개정이 없으면)·마지막 광고 아래 연납 가이드 카드(SEASONB ideas[1])
+ // 허브 6곳(N2-infra-02, infra-b03-F01) — 화면 문구를 마지막으로 바꾼 운영 커밋의 날. sitemap() 의 허브 행이 이 키를 읽는다(자식 행은 그대로).
+ '/salary-db': { lastModified: new Date('2026-10-17T00:00:00+09:00') }, // 10/17 2e0a99484(126f5d3fd) 형제 허브 카드 '공시기업 공시 연봉', 10/04 352451886 회사 카드 '인센티브 목표'
+ '/salary-db/ranking': { lastModified: new Date('2026-10-17T00:00:00+09:00') }, // '공시기업 업종 28종'(10/17), 9/25 659e1b438 '급여총액÷인원 산정' — 11/15 DATAB 는 검색 설명만
+ '/salary-db/listed': { lastModified: new Date('2026-10-17T00:00:00+09:00') }, // H1·빵부스러기·본문 '공시기업'(2e0a99484), 10/06 83b4634e5 상장 여부 문장, 11/01 fd6521d12 head 메타만이라 날짜 미반영
+ '/job': { lastModified: new Date('2026-10-05T00:00:00+09:00') }, // 475512fe4 히어로 리드·메타
+ '/industry': { lastModified: new Date('2026-10-05T00:00:00+09:00') }, // 475512fe4 히어로 리드·메타
+ '/region': { lastModified: new Date('2026-10-17T00:00:00+09:00') }, // 2e0a99484 히어로 리드, 10/04 352451886 '비교 기준 가정' 통계 라벨·분석 문단
 };
 
 // 2026-09-10: 연봉 상세의 계산 방법과 회사 상세 FAQ를 실질적으로 수정한 날.
@@ -654,13 +674,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const companyUrls: MetadataRoute.Sitemap = [
  {
  url: `${baseUrl}/salary-db`,
- lastModified: STATIC_LAST_MODIFIED,
+ // 허브 화면 문구 수정일 — ROUTE_OVERRIDES 행(N2-infra-02). 행이 없으면 전역 기준일.
+ lastModified: routeOverrides['/salary-db']?.lastModified ?? STATIC_LAST_MODIFIED,
  changeFrequency: 'weekly',
  priority: 0.9,
  },
  {
  url: `${baseUrl}/salary-db/ranking`,
- lastModified: STATIC_LAST_MODIFIED,
+ lastModified: routeOverrides['/salary-db/ranking']?.lastModified ?? STATIC_LAST_MODIFIED,
  changeFrequency: 'weekly',
  priority: 0.8,
  },
@@ -712,7 +733,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const dartLitePageDate = new Date(DART_LITE_PAGE_MODIFIED);
  companyUrls.push({
  url: `${baseUrl}/salary-db/listed`,
- lastModified: dartLiteDate,
+ // DART 데이터 기준일과 허브 화면 문구 수정일(ROUTE_OVERRIDES, N2-infra-02) 중 늦은 날 — 나중 DART 갱신이 이긴다.
+ lastModified: latestContentDate(dartLiteDate, routeOverrides['/salary-db/listed']?.lastModified),
  changeFrequency: 'monthly',
  priority: 0.7,
  });
@@ -774,7 +796,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const jobUrls: MetadataRoute.Sitemap = [
  {
  url: `${baseUrl}/job`,
- lastModified: STATIC_LAST_MODIFIED,
+ lastModified: routeOverrides['/job']?.lastModified ?? STATIC_LAST_MODIFIED, // 허브 행만(N2-infra-02) — 직업 상세는 그대로
  changeFrequency: 'weekly',
  priority: 0.9,
  },
@@ -790,7 +812,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const industryUrls: MetadataRoute.Sitemap = [
  {
  url: `${baseUrl}/industry`,
- lastModified: STATIC_LAST_MODIFIED,
+ lastModified: routeOverrides['/industry']?.lastModified ?? STATIC_LAST_MODIFIED, // 허브 행만(N2-infra-02) — 업계 상세는 그대로
  changeFrequency: 'weekly',
  priority: 0.9,
  },
@@ -806,7 +828,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
  const regionUrls: MetadataRoute.Sitemap = [
  {
  url: `${baseUrl}/region`,
- lastModified: STATIC_LAST_MODIFIED,
+ lastModified: routeOverrides['/region']?.lastModified ?? STATIC_LAST_MODIFIED, // 허브 행만(N2-infra-02) — 지역 상세는 pageContentRevision
  changeFrequency: 'weekly',
  priority: 0.9,
  },
