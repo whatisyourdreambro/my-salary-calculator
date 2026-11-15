@@ -39,6 +39,14 @@ export const metadata: Metadata = buildPageMetadata({
  ],
 });
 
+// 2026-11-15 N2-app-pages-11(app-pages-b04-F02): 본문 첫 문단의 시장 평균 출처 정정.
+// 종전 '통계청 발표(2025) 기준 대졸 신입 평균 연봉 약 4,200만원'은 통계청 발표에 없는 수치였다.
+// 한국경영자총협회(경총) 2025-01-12 '우리나라 대졸 초임 분석 및 한·일 대졸 초임 비교' — 2023년 기준
+// 대졸 정규직 초임 평균 3,675만원(300인 이상 5,001만원). 보도: https://www.hankyung.com/article/202501120596Y ,
+// https://www.inews24.com/view/1803165 (2026-11-15 재확인). 6,500~8,500만원 / 3,675만원 = 1.8~2.3배 -> '약 2배'.
+// 경총 2026-02-01 한·일·대만 비교(2024년 기준)는 구매력평가 달러 값만 보도돼 원화 평균은 2023년 기준이 최신이다.
+// 문단은 GuideMidAd(첫 광고) 위라 옛 문구보다 좁은 문구로만 바꿨다(줄 수는 통합 단계 1px 스윕이 확인).
+// 화면·OG·Article 날짜(2026-05-22)는 광고 위라 그대로 두고 사이트맵 행도 넣지 않는다(날짜 없는 정정).
 function totalEntry(c: CompanyProfile): number {
  return c.salary.entry.base + (c.salary.entry.incentive.avgAmount || 0);
 }
@@ -142,10 +150,10 @@ export default function NewEmployeeSalary2026Page() {
  {/* 본문 — SEO 텍스트 */}
  <section className="mb-12 max-w-3xl mx-auto prose prose-slate">
  <p className="text-sm leading-7 text-muted-blue">
- 신입 초봉은 첫 직장 선택의 결정적 변수입니다. 통계청 발표(2025) 기준 국내
- 대졸 신입 평균 연봉은 약 4,200만원이지만, 5대 그룹(삼성·SK·현대차·LG·롯데) 신입
+ 신입 초봉은 첫 직장 선택의 결정적 변수입니다. 경총 분석(2023년 기준) 국내
+ 대졸 정규직 초임은 약 3,675만원이지만, 5대 그룹(삼성·SK·현대차·LG·롯데) 신입
  영끌은 6,500~8,500만원, IT 톱티어(네카라쿠배·토스·당근)는 6,500~7,500만원으로
- 시장 평균의 1.5~2배 수준입니다. 본 페이지는 회사 {companyCountKo}의 신입 영끌(기본급 +
+ 시장 평균의 약 2배 수준입니다. 본 페이지는 회사 {companyCountKo}의 신입 영끌(기본급 +
  성과급 평균) 데이터를 자동 정렬해 한눈에 볼 수 있는 인덱스를 제공합니다.
  </p>
  <p className="text-sm leading-7 text-muted-blue mt-4">
