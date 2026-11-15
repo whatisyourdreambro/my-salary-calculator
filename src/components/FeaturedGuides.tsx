@@ -16,7 +16,7 @@ import { TREND_BRIEF_TAG } from "@/lib/trendBriefs/types";
 const PRIORITY_SLUGS_BY_SEASON: Record<string, string[]> = {
  // 임금협상 시즌 (3~5월)
  negotiation: ["samsung-wage-negotiation-2026", "sk-hynix-wage-2026"],
- // 성과급 지급 시즌 (6~8월 TAI·12~2월 OPI/PS)
+ // 성과급 시즌 (6~2월: 6~8월 TAI·9~11월 OPI/PS 전망·12~2월 OPI/PS 지급)
  bonus: ["samsung-opi-tai-complete-2026", "sk-hynix-ps-history-2026-prospect"],
 };
 
@@ -24,10 +24,13 @@ const PRIORITY_SLUGS_BY_SEASON: Record<string, string[]> = {
 // (guideReleaseHoldback.ts). 최신순 후보가 모두 이 목록에서 나온다.
 const koGuideCards = withoutHeldBackGuides(allKoGuideCards);
 
+// 9~11월도 성과급 쪽이다 — 종전 월 목록은 9~11월을 임금협상(3~5월)으로 보내, 타결된(삼성 5/27·SK하이닉스 9/16 가결)
+// 협상 가이드를 홈 '시즌 이슈' 첫 두 칸에 올렸다 (2026-11-15 N2-components-04, components-b03-F01).
+// 2027-03 전에: 협상 갈래가 2026 협상 가이드를 다시 올리므로 2027 가이드로 바꾸거나 갈래를 없앤다.
 function getSeasonSlugs(): string[] {
  const month = new Date().getMonth() + 1;
- if ([6, 7, 8, 12, 1, 2].includes(month)) return PRIORITY_SLUGS_BY_SEASON.bonus;
- return PRIORITY_SLUGS_BY_SEASON.negotiation;
+ if ([3, 4, 5].includes(month)) return PRIORITY_SLUGS_BY_SEASON.negotiation;
+ return PRIORITY_SLUGS_BY_SEASON.bonus;
 }
 
 export default function FeaturedGuides() {
