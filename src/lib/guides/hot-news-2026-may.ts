@@ -1273,7 +1273,7 @@ const rentalBusinessPropTax = `
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 등록 임대주택 종부세 합산 배제 요건</h2>
 <ul class="space-y-2 mt-4">
-<li>· <strong>임대 기간</strong>: 8년 장기 또는 10년 단기 등록 (현재는 10년 장기만 신규)</li>
+<li>· <strong>임대 기간</strong>: 10년 장기 또는 6년 단기 등록 (6년 단기는 아파트 제외)</li>
 <li>· <strong>임대료 상한</strong>: 연 5% 이내 인상</li>
 <li>· <strong>면적</strong>: 전용 85㎡ 이하 (수도권 외 100㎡)</li>
 <li>· <strong>공시가</strong>: 6억 이하 (수도권 외 3억)</li>
@@ -1285,9 +1285,9 @@ const rentalBusinessPropTax = `
 3주택 보유자(본채 + 임대 2채), 총 공시가 18억 가정:
 </p>
 <ul class="space-y-2 mt-4">
-<li>· <strong>등록 전</strong>: 18억 전체 종부세 부담 → 약 1,800만원/년</li>
+<li>· <strong>등록 전</strong>: 18억 전체 종부세 산출 → 318만원/년</li>
 <li>· <strong>임대 2채 등록 후</strong>: 본채 공시가 8억만 종부세 → 약 0원 (1주택자 12억 공제)</li>
-<li>· <strong>연 절감: 약 1,800만원</strong></li>
+<li>· <strong>연 절감: 산출 318만원</strong></li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 추가 혜택</h2>
@@ -1762,9 +1762,9 @@ export const hotNewsMay2026: Guide[] = [
   },
   {
     slug: "rental-business-prop-tax-exclusion-2026",
-    title: "부동산 임대업 등록 종부세 합산 배제 — 다주택자 연 1,800만원 절세",
+    title: "부동산 임대업 등록 종부세 합산 배제 — 다주택자 연 수백만 원 절세",
     description:
-      "임대 8년·10년 장기 등록 + 임대료 5% 상한 + 전용 85㎡ 이하 + 공시가 6억 이하. 3주택자 종부세 1,800만원 → 본채만 0원으로 절감. 양도세·재산세 우대도 동시.",
+      "임대 8년·10년 장기 등록 + 임대료 5% 상한 + 전용 85㎡ 이하 + 공시가 6억 이하. 3주택자 종부세 318만원 → 본채만 0원으로 절감. 양도세·재산세 우대도 동시.",
     category: "부동산",
     tags: ["임대사업자", "종합부동산세", "다주택자", "장기임대", "절세", "2026"],
     level: "고급",

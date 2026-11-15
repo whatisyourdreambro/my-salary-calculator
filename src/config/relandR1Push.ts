@@ -8,7 +8,8 @@
 //   - src/lib/guideSitemapDates.ts — 사이트맵 lastmod·rss.xml pubDate 만 올리는 가이드 36편: '수정' 칩이 없는 광고 아래 보강 26편과
 //     이미 '수정' 칩(2026.10.03)이 있는 10편. 이 10편은 R1 원장(d48f17877)이 위 표에 넣었다가, 칩 숫자가 2026.11.03 으로 바뀌자
 //     화면 폭 440~445px 에서 제목 아래 광고가 24px 내려가(가드 스윕 실측) 2026-11-15 에 옮겼다. 화면·OG·Article 날짜는 운영 값
-//     2026-10-03 그대로다(실측과 규칙은 두 파일 머리 주석).
+//     2026-10-03 그대로다(실측과 규칙은 두 파일 머리 주석). 그 가운데 first-home-2026-strategy·side-hustle-tax-2026 은
+//     RL-08 재착지가 2026-11-15 에 광고 위 문장을 다시 고쳐 행 값이 RL08_EDIT_DAY 다(이 상수를 쓰지 않는다).
 // 같은 날짜를 리터럴로 쓰는 곳(정적 판정 때문에 상수를 못 씀): src/app/sitemap.ts ROUTE_OVERRIDES 의 /calc/holiday-bonus·
 //   /chuseok-bonus-2026, scripts/sitemap-content-reviews.json 그 두 항목의 contentDate, src/app/chuseok-bonus-2026/page.tsx 수정일 3곳.
 //   테스트가 고정한 리터럴: relandR1Ledger.test.ts 와 guideRevisionDates.test.ts 의 R1_LEDGER_DAY(위 10편의 사이트맵 날짜).

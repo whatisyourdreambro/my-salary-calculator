@@ -27,6 +27,9 @@
 import { RELAND_R1_PUSH } from "@/config/relandR1Push";
 import { getGuideContentDate } from "./guideContentRevisions";
 
+/** RL-08 재착지(부동산 세금·복지 가이드 사실 정정) 가이드 문장·보강을 실제로 고친 날(KST) — 게시일이 아니다. */
+export const RL08_EDIT_DAY = "2026-11-15";
+
 export const GUIDE_SITEMAP_ONLY_REVISED: Readonly<Record<string, string>> = {
   // ── R1 재착지(RL-01·RL-02 광고 아래 보강 추가 23편, 원장일 RELAND_R1_PUSH) ──
   "financial-income-tax": RELAND_R1_PUSH,
@@ -41,7 +44,8 @@ export const GUIDE_SITEMAP_ONLY_REVISED: Readonly<Record<string, string>> = {
   "vat-filing-2026": RELAND_R1_PUSH,
   "sk-hynix-stock-2026": RELAND_R1_PUSH,
   "newlywed-tax-benefits-2026": RELAND_R1_PUSH,
-  "side-hustle-tax-2026": RELAND_R1_PUSH,
+  // RL-08 재착지(2026-11-15): 광고 위 IRP 문장 같은 폭 이하 정정(과세표준 → 세액공제). 칩 없는 글이라 화면 날짜는 그대로, 사이트맵만 그날로.
+  "side-hustle-tax-2026": RL08_EDIT_DAY,
   "unemployment-benefits-complete": RELAND_R1_PUSH,
   "parental-leave-complete-guide": RELAND_R1_PUSH,
   "earned-income-credit-2026": RELAND_R1_PUSH,
@@ -65,7 +69,9 @@ export const GUIDE_SITEMAP_ONLY_REVISED: Readonly<Record<string, string>> = {
   // 8편: 바뀐 것은 마지막 광고 아래 보강뿐이다 — lens-meta-F01(운영자 결정 2026-11-13) 그대로.
   "career-break-financial-plan": RELAND_R1_PUSH, // 휴직·퇴사 4대보험 차이(자동차 보험료 폐지 2024-02, 납입고지 유예)
   "comprehensive-income-tax-2026": RELAND_R1_PUSH, // 분납 기한·납부지연 가산세 하루 0.022%
-  "first-home-2026-strategy": RELAND_R1_PUSH, // 디딤돌·보금자리론 조건표, 규제지역 LTV 40%
+  // first-home 은 R1 보강(디딤돌·보금자리론 조건표, 규제지역 LTV 40%) 뒤 RL-08(2026-11-15)에 광고 위 매수 가능액 공식 두 줄을
+  // 같은 폭 이하로 정정했다 — 칩(2026.10.03)은 그대로 두고 사이트맵 날짜만 그날로 늦춘다(relandR1Ledger.test.ts 가 함께 고정).
+  "first-home-2026-strategy": RL08_EDIT_DAY,
   "isa-account-guide": RELAND_R1_PUSH, // 2026 세제개편안 ISA 내용 정정(생산적금융 ISA)
   "minimum-wage-impact-2026": RELAND_R1_PUSH, // 2027 최저임금 10,700원 확정 표
   "performance-pay-complete-2026": RELAND_R1_PUSH, // SK하이닉스 PS 지급 방식·삼성 인상률·DS 특별경영성과급(보도 기준)
@@ -85,6 +91,14 @@ export const GUIDE_SITEMAP_ONLY_REVISED: Readonly<Record<string, string>> = {
   "samsung-opi-tai-complete-2026": "2026-10-08",
   // 11/1 80dcc3138: '재원 기준' 줄 추가(DS부문 영업이익의 10.5%). 칩 날짜(10/3)는 그대로.
   "samsung-special-bonus-q3-preview-2027": "2026-11-01",
+  // ── RL-08 재착지(10월 8b46a5e36·25bc65494 등, 2026-11-15): 광고 위 같은 폭 이하 사실 정정 + 마지막 광고 아래 새 보강(supplements-2026-11.ts) ──
+  // 아동수당: 칩 없는 글 — 금액 줄 월 10만~12만원·부모급여 조건 정정, 지역별 금액 보강. 칩을 새로 만들지 않는다(GuideMidAd 위 UI).
+  "child-support-100-2026": RL08_EDIT_DAY,
+  // 에너지바우처: 칩(2026.10.03) 있는 글 — 금액·기간·대상·신청 기간 정정, 공식 원 단위 보강. 칩 숫자는 바꾸지 않는다(머리 주석 ★).
+  "energy-voucher-2026": RL08_EDIT_DAY,
+  // 같은 묶음에서 광고 위 문장만 고친 칩 없는·보강 없는 5편(commercial-office-capital-gains-2026·lease-right-transfer-tax-2026·
+  // child-gift-10year-rule-2026·rental-business-prop-tax-exclusion-2026·minimum-wage-2026)은 행을 두지 않는다 — 테스트의
+  // NO_SUPPLEMENT_ROWS 규칙(칩 없는 글에 보강도 없이 사이트맵 날짜만 올리는 행 금지). 날짜를 올릴지는 통합 단계의 결정이다.
 };
 
 /** 사이트맵 lastmod·rss.xml pubDate 용 가이드 날짜 = max(getGuideContentDate, 사이트맵 전용 행). 화면·OG·Article 에는 쓰지 않는다. */

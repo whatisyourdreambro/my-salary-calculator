@@ -652,12 +652,12 @@ const childSupport100 = `
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 아동수당</h2>
 <ul class="space-y-2 mt-4">
 <li>· 대상: 만 0~8세 모든 아동 (출생~만 9세 생일 전월)</li>
-<li>· 금액: 월 10만원</li>
+<li>· 금액: 월 10만~12만원</li>
 <li>· 지급일: 매월 25일</li>
 <li>· 소득 무관 보편 지급</li>
 </ul>
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 추가 — 0~1세 부모급여</h2>
-<p>만 0세: 월 100만원 / 만 1세: 월 50만원 (육아휴직 못 받는 가구 한정). 아동수당 10만원과 중복 수령 가능.</p>
+<p>만 0세: 월 100만원 / 만 1세: 월 50만원 (어린이집 등 이용 시 차감). 아동수당 10만원과 중복 수령 가능.</p>
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/parental-leave" class="text-primary underline">육아휴직 급여 계산기</a></li></ul></div>
 `;
 
@@ -748,16 +748,16 @@ const lowIncomeSupport = `
 `;
 
 const energyVoucher = `
-<p class="lead">에너지바우처 — 저소득층 여름·겨울 냉난방비 지원. 1인 가구 약 14만원, 4인 가구 약 30만원. 신청·사용 기간은 여름·겨울 구분에 따라 확인해야 합니다. 2026년 지원금 확대.</p>
+<p class="lead">에너지바우처 — 저소득층 여름·겨울 냉난방비 지원. 1인 약 30만원, 4인 이상 약 70만원. 신청·사용 기간은 여름·겨울 구분에 따라 확인해야 합니다. 2026년 다자녀 추가.</p>
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 자격·금액</h2>
 <ul class="space-y-2 mt-4">
-<li>· 기초생활수급자·차상위·한부모 가정</li>
-<li>· 여름(7~9월) + 겨울(11~3월) 사용</li>
-<li>· 1인 약 14만원·2인 19만원·3인 26만원·4인+ 30만원+</li>
+<li>· 기초수급 가구 중 노인·영유아 등</li>
+<li>· 여름 7~9월 + 겨울 10~5월 사용</li>
+<li>· 1인 약 30만·2인 41만·3인 53만·4인+ 70만원</li>
 <li>· 전기·가스·등유·연탄 결제 가능</li>
 </ul>
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 신청</h2>
-<p>매년 6~7월 주소지 주민센터 또는 복지로 신청. 자동 갱신 가능 가구는 별도 신청 불필요.</p>
+<p>6~12월 주소지 주민센터 또는 복지로 신청. 자동 갱신 가능 가구는 별도 신청 불필요.</p>
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/earned-income-credit" class="text-primary underline">근로장려금 계산기</a></li></ul></div>
 `;
 
@@ -815,5 +815,5 @@ export const hotNewsDeepDive: Guide[] = [
   { slug: "elder-care-insurance-2026", title: "장기요양보험 — 부모 등급 받으면 월 50~200만원 서비스", description: "만 65+ 또는 노인성 질환. 등급별 시설·재가 서비스 본인부담 15~20%. 의료비 공제까지.", category: "기초", tags: ["장기요양보험", "요양시설", "재가서비스", "노인", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: elderCare, lang: "ko" },
   { slug: "veteran-benefit-2026", title: "국가유공자·보훈대상자 — 양도세 100% 감면 + 자녀 대학 무료", description: "양도세 100% 감면(5억 한도) + 취득세 50% + 의료비 본인부담 0 + 자녀 대학 등록금 + 보훈수당.", category: "기초", tags: ["국가유공자", "보훈", "양도세감면", "대학학자금", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: veteranBenefit, lang: "ko" },
   { slug: "low-income-support-4benefits-2026", title: "기초생활보장 4종 — 4인 가구 생계 195만원/월 + 의료 무료", description: "생계·의료·주거·교육 4종 급여. 4인 가구 생계 195만원, 의료 본인부담 0~5%. 주민센터 또는 복지로 신청.", category: "기초", tags: ["기초생활보장", "저소득층", "생계급여", "의료급여", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: lowIncomeSupport, lang: "ko" },
-  { slug: "energy-voucher-2026", title: "에너지바우처 — 4인 가구 30만원 + 여름/겨울 냉난방", description: "저소득층 7~9월·11~3월 사용. 1인 14만·2인 19만·3인 26만·4인+ 30만+. 전기·가스·등유·연탄 결제.", category: "기초", tags: ["에너지바우처", "냉난방비", "저소득층", "복지", "2026"], level: "초급", modifiedDate: "2026-10-03", publishedDate: "2026-05-23", views: 0, content: energyVoucher, lang: "ko" },
+  { slug: "energy-voucher-2026", title: "에너지바우처 — 4인 가구 70만원 + 여름/겨울 냉난방", description: "기초수급 7~9월·10~5월 사용. 1인 30만·2인 41만·3인 53만·4인+ 70만. 전기·가스·등유·연탄 결제.", category: "기초", tags: ["에너지바우처", "냉난방비", "저소득층", "복지", "2026"], level: "초급", modifiedDate: "2026-10-03", publishedDate: "2026-05-23", views: 0, content: energyVoucher, lang: "ko" },
 ];

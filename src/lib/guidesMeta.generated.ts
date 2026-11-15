@@ -70,7 +70,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-15",
   "views": 85000,
   "lang": "ko",
-  "contentChars": 5048
+  "contentChars": 5044
  },
  {
   "slug": "severance-pay-guide",
@@ -1277,7 +1277,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-25",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2721
+  "contentChars": 2714
  },
  {
   "slug": "loan-types-comparison-2026",
@@ -2216,7 +2216,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-13",
   "views": 0,
   "lang": "ko",
-  "contentChars": 4587
+  "contentChars": 4579
  },
  {
   "slug": "unemployment-benefits-complete",
@@ -2965,8 +2965,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "rental-business-prop-tax-exclusion-2026",
-  "title": "부동산 임대업 등록 종부세 합산 배제 — 다주택자 연 1,800만원 절세",
-  "description": "임대 8년·10년 장기 등록 + 임대료 5% 상한 + 전용 85㎡ 이하 + 공시가 6억 이하. 3주택자 종부세 1,800만원 → 본채만 0원으로 절감. 양도세·재산세 우대도 동시.",
+  "title": "부동산 임대업 등록 종부세 합산 배제 — 다주택자 연 수백만 원 절세",
+  "description": "임대 8년·10년 장기 등록 + 임대료 5% 상한 + 전용 85㎡ 이하 + 공시가 6억 이하. 3주택자 종부세 318만원 → 본채만 0원으로 절감. 양도세·재산세 우대도 동시.",
   "category": "부동산",
   "tags": [
    "임대사업자",
@@ -2980,7 +2980,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1789
+  "contentChars": 1783
  },
  {
   "slug": "parental-leave-6plus6-2026",
@@ -3283,7 +3283,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "lease-right-transfer-tax-2026",
   "title": "전세권·임차권 양도세 — 권리금 차익도 신고 의무",
-  "description": "전세권 매매 시 권리금 차익에 양도세 6~45%. 보유 3년 미만은 단기 세율 45%. 등기 전세권은 임대인 동의 없이 양도 가능.",
+  "description": "전세권 매매 시 권리금 차익에 양도세 6~45%. 2년 미만은 단기 세율 40~50%. 등기 전세권은 임대인 동의 없이 양도 가능.",
   "category": "부동산",
   "tags": [
    "전세권",
@@ -3296,7 +3296,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 808
+  "contentChars": 807
  },
  {
   "slug": "farmland-forest-capital-gains-2026",
@@ -3319,8 +3319,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "commercial-office-capital-gains-2026",
-  "title": "상가·오피스텔 양도세 — 7억→12억 매도 시 1.25억 부담",
-  "description": "상가·오피스텔은 비과세 12억 한도 없음. 차익 5억 + 장기보유공제 30% 시 약 1.25억 세금. 임대사업자 등록으로 우대 가능.",
+  "title": "상가·오피스텔 양도세 — 7억→12억 매도 1.46억 부담",
+  "description": "상가·오피스텔은 비과세 12억 한도 없음. 차익 5억, 장기보유공제 20% 시 약 1.46억 세금. 임대사업자 등록으로 우대 가능.",
   "category": "부동산",
   "tags": [
    "상가",
@@ -4523,7 +4523,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 705
+  "contentChars": 708
  },
  {
   "slug": "basic-pension-65-2026",
@@ -4635,8 +4635,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "energy-voucher-2026",
-  "title": "에너지바우처 — 4인 가구 30만원 + 여름/겨울 냉난방",
-  "description": "저소득층 7~9월·11~3월 사용. 1인 14만·2인 19만·3인 26만·4인+ 30만+. 전기·가스·등유·연탄 결제.",
+  "title": "에너지바우처 — 4인 가구 70만원 + 여름/겨울 냉난방",
+  "description": "기초수급 7~9월·10~5월 사용. 1인 30만·2인 41만·3인 53만·4인+ 70만. 전기·가스·등유·연탄 결제.",
   "category": "기초",
   "tags": [
    "에너지바우처",
@@ -4650,7 +4650,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 733
+  "contentChars": 722
  },
  {
   "slug": "bonus-vs-incentive-vs-allowance-2026",

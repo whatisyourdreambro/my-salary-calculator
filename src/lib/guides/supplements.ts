@@ -457,6 +457,15 @@ for (const [slug, html] of Object.entries(guideSupplements202610)) {
   guideSupplements[slug] = html;
 }
 
+// ── 2026-11 사실 정정 배치(RL-08 재착지: 아동수당 지역별 금액·에너지바우처 공식 기준) 보강 — 본문은 supplements-2026-11.ts.
+//    위 2026-10 배치와 같은 방식(파일 끝에서 합침, 슬러그 중복 시 로드 실패). 아래 삼성 DS 이어 붙이기보다 앞에 둔다 — 그 블록은
+//    다른 배치를 모두 합친 뒤 맨 끝이라는 전제를 지킨다.
+import { guideSupplements202611 } from "./supplements-2026-11";
+for (const [slug, html] of Object.entries(guideSupplements202611)) {
+  if (slug in guideSupplements) throw new Error(`[guideSupplements] 보강 슬러그 중복: ${slug}`);
+  guideSupplements[slug] = html;
+}
+
 // ── 2026-10-09 삼성 DS 특별성과급 세부안(10/7 언론 보도)·3분기 잠정실적 보강 5편 — 본문은 supplements-samsung-ds-2026-10.ts.
 //    10/13 보강과 슬러그가 세 편 겹친다(samsung-opi-forecast-2027 의 재원 기준, samsung-bonus-treasury-stock-15-trillion-2026·
 //    samsung-vs-sk-hynix-stock-bonus-2026 의 증권거래세 0.20%). 맵 안 spread 로 두면 앞 항목을 덮거나 위 중복 검사에서 로드가 실패하므로,

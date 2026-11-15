@@ -402,8 +402,8 @@ export const companyRealEstateGuides = [
 <div class="bg-secondary/30 p-6 rounded-xl mt-6 border border-primary/10">
 <p><strong>매수 가능액 = 종잣돈 + 주택담보대출 + 신용대출(보조)</strong></p>
 <ul>
-<li>종잣돈 1억 + 주담대 3억(LTV 60%) = 4억 매수 가능</li>
-<li>+ 신용대출 5,000만 = 4.5억 매수 가능</li>
+<li>종잣돈 1억 + 주담대 3억(5억×60%) = 4억 확보</li>
+<li>+ 신용대출 5,000만 = 4.5억 확보</li>
 <li>+ 부모 증여(자녀 5천 비과세) = 5억 매수 가능</li>
 </ul>
 </div>
