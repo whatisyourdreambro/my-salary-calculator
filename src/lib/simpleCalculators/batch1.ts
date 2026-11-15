@@ -217,6 +217,8 @@ const TAX: CalculatorDef[] = [
  category: "tax",
  categoryLabel: "세금",
  keywords: ["퇴직소득세", "퇴직금 세금"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — 접힌 FAQ 에 1억원·20년 예시를 실제로 더한 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [
  { name: "severance", label: "퇴직금", defaultValue: 50000000, suffix: "원" },
  { name: "years", label: "근속연수", defaultValue: 10, suffix: "년" },

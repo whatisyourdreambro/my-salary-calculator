@@ -68,3 +68,17 @@ describe("주식 양도세 간편 계산 접힌 FAQ — 양도 시기는 대금 
     expect(c?.publishedAt).toBe("2026-11-15");
   });
 });
+
+// 감사 아이디어 ideas[4] (퇴직금 1억 퇴직소득세 롱테일) — 기존 닫힌 FAQ 답 끝에 이 계산기 compute 로 다시 계산한 예시만 덧붙인다.
+describe("퇴직소득세 간편 계산 접힌 FAQ — 퇴직금 1억원·근속 20년 예시 = compute", () => {
+  it("숫자 5개가 compute 값과 같다", () => {
+    const c = getCalculatorBySlug("retirement-income-tax-quick");
+    const a = (c?.faqs ?? []).find((f) => f.q === "퇴직금 5천만원을 받으면 퇴직소득세는 얼마인가요?")?.a ?? "";
+    expect(a).toContain("퇴직금 100,000,000원, 근속연수 20년이면 근속연수공제 40,000,000원, 환산급여 36,000,000원, 환산급여공제 24,800,000원으로 과세표준 11,200,000원이 6% 구간에 들어가 예상 퇴직소득세는 1,120,000원입니다.");
+    const r = c?.compute({ severance: 100_000_000, years: 20 });
+    expect(r?.primary.value).toBe(1_120_000);
+    expect((r?.secondary ?? []).map((x) => x.value)).toEqual([40_000_000, 36_000_000, 24_800_000]);
+    expect(36_000_000 - 24_800_000).toBe(11_200_000);
+    expect(c?.publishedAt).toBe("2026-11-15");
+  });
+});
