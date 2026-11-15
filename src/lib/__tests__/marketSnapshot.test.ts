@@ -79,6 +79,46 @@ describe("2026-08 고정값 — 옮겨 적은 표(천원)와 같다", () => {
   });
 });
 
+// 2026-11-15 N2-calc-14 갱신분: R-ONE 2026년 9월(중위·평균, 천원) + ECOS 2026년 9월 주담대 신규취급 4.88%.
+// 2026-11-15 공개 표본 모드로 조회(R-ONE 10월분은 그날 아직 없음). 스크립트 출력과 대조해 옮겨 적었다.
+describe("2026-09 고정값 — 옮겨 적은 표(천원)와 같다", () => {
+  const MEDIAN_2026_09_THOUSAND: Record<string, number> = {
+    "suwon-yeongtong": 720_000,
+    "hwaseong-dongtan": 870_000,
+    "hwaseong-byeongjeom": 399_000,
+    "yongin-giheung": 635_000,
+    "yongin-cheoin": 347_000,
+    pyeongtaek: 244_500,
+    icheon: 174_500,
+    cheongju: 185_000,
+    cheonan: 195_500,
+    asan: 192_000,
+    "seongnam-bundang": 1_750_000,
+  };
+  const MEAN_2026_09_THOUSAND_1DP: Record<string, number> = {
+    "suwon-yeongtong": 878_956.4,
+    "hwaseong-dongtan": 942_126.0,
+    "hwaseong-byeongjeom": 451_796.6,
+    "yongin-giheung": 672_739.1,
+    "yongin-cheoin": 344_025.8,
+    pyeongtaek: 274_282.8,
+    icheon: 211_105.9,
+    cheongju: 243_444.1,
+    cheonan: 237_245.7,
+    asan: 202_963.0,
+    "seongnam-bundang": 1_785_204.1,
+  };
+  it.runIf(snapshot.rone.month === "202609")("중위·평균·전국·ECOS 2026년 9월 4.88%", () => {
+    for (const [id, v] of Object.entries(MEDIAN_2026_09_THOUSAND)) expect(snapshot.rone.regions[id].median, id).toBe(v * 1000);
+    for (const [id, v] of Object.entries(MEAN_2026_09_THOUSAND_1DP)) {
+      expect(Math.round(snapshot.rone.regions[id].mean / 100) / 10, id).toBeCloseTo(v, 1);
+    }
+    expect(snapshot.rone.nationalMedian).toBe(329_000_000);
+    expect(snapshot.ecos).toMatchObject({ month: "202609", ratePct: 4.88 });
+    expect(snapshot.fetchedAt).toBe("2026-11-15");
+  });
+});
+
 describe("갱신 규칙", () => {
   it("기준월 후보는 이번 달(KST) −1 ~ −3개월", () => {
     expect(monthCandidates(new Date("2026-09-27T03:00:00Z"))).toEqual(["202608", "202607", "202606"]);
