@@ -19,6 +19,16 @@ import PublishedMeta from "@/components/PublishedMeta";
 import { breadcrumbLd, faqLd, articleLd, datasetLd, speakableLd } from "@/lib/structuredData";
 import { CITATION_POLICY_URL } from "@/lib/citationPolicy";
 import RelatedCalculators from "@/components/RelatedCalculators";
+import {
+  CIVIL_DISPATCH_DAILY_CAP_2026,
+  CIVIL_DISPATCH_PER_CASE_2026,
+  CIVIL_HAZARD_ALLOWANCE_2026,
+  CIVIL_MEAL_ALLOWANCE_2026,
+  CIVIL_POSITION_ALLOWANCE_2026,
+  CIVIL_POSITION_ALLOWANCE_POLICE_FIRE_UPPER_2026,
+  CIVIL_SPECIAL_DUTY_CROWD_DISASTER_2026,
+  PAY_PAGE_ALLOWANCE_SOURCE_2026,
+} from "@/lib/civilServantAllowances2026";
 import { InArticleAd, HomeTopAd, CalcResultAd, GuideMidAd, SidebarAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareButtons from "@/components/ShareButtons";
@@ -87,6 +97,39 @@ const FAQ_ITEMS = [
     answer:
       "같은 5호봉 기준 순경 2,281,100원 → 경장 2,427,500원 → 경사 2,710,600원 → 경위 2,879,500원 → 경감 3,178,700원으로, 한 계급 승진마다 월 15만~30만원가량 오릅니다. 승진 시 호봉도 일부 이어지므로 실제 인상 폭은 더 큽니다.",
   },
+];
+
+// 2026 경찰 수당 한눈에 (RL-12 T14b, 10월 b2cdf929d PT-08 재구현) — 본문 칼럼 맨 끝(마지막 광고 아래) 표. 숫자는 전부 정본 상수.
+// 소방 페이지와 같은 틀을 복제하지 않도록 경찰은 '계급별 직급보조비 → 현장 수당' 순서, 112 출동 중심 문장으로 쓴다.
+const PF = CIVIL_POSITION_ALLOWANCE_2026.policeFire;
+const PF_UPPER = CIVIL_POSITION_ALLOWANCE_POLICE_FIRE_UPPER_2026;
+const POLICE_POSITION_ROWS: { name: string; amount: string }[] = [
+  { name: "순경·경장", amount: `월 ${fmt(PF[0])}원` },
+  { name: "경사", amount: `월 ${fmt(PF[2])}원` },
+  { name: "경위·경감", amount: `월 ${fmt(PF[3])}원` },
+  { name: "경정", amount: `월 ${fmt(PF_UPPER[0])}원` },
+  { name: "총경", amount: `월 ${fmt(PF_UPPER[1])}원` },
+  { name: "경무관", amount: `월 ${fmt(PF_UPPER[2])}원` },
+  { name: "치안감", amount: `월 ${fmt(PF_UPPER[3])}원` },
+  { name: "치안정감", amount: `월 ${fmt(PF_UPPER[4])}원` },
+];
+const POLICE_DUTY_ROWS: { name: string; amount: string; note: string }[] = [
+  {
+    name: "위험근무수당",
+    amount: `월 ${fmt(CIVIL_HAZARD_ALLOWANCE_2026.gap + CIVIL_HAZARD_ALLOWANCE_2026.surcharge)}원`,
+    note: `갑종 월 ${fmt(CIVIL_HAZARD_ALLOWANCE_2026.gap)}원 + 현장 가산금 ${fmt(CIVIL_HAZARD_ALLOWANCE_2026.surcharge)}원(별표 9 비고 해당 직무). 직무에 따라 을종 월 ${fmt(CIVIL_HAZARD_ALLOWANCE_2026.eul)}원·병종 월 ${fmt(CIVIL_HAZARD_ALLOWANCE_2026.byeong)}원`,
+  },
+  {
+    name: "112신고 출동수당",
+    amount: `1일 상한 ${fmt(CIVIL_DISPATCH_DAILY_CAP_2026)}원`,
+    note: `긴급 출동 1건당 ${fmt(CIVIL_DISPATCH_PER_CASE_2026)}원 — 2026년 상한 3만원에서 4만원으로 인상`,
+  },
+  {
+    name: "특수업무수당",
+    amount: `월 ${fmt(CIVIL_SPECIAL_DUTY_CROWD_DISASTER_2026)}원 이하`,
+    note: "2026년 신설 — 인파 사고 등 재난·안전관리 업무를 상시 맡는 경찰청 경비부서 경찰",
+  },
+  { name: "정액급식비", amount: `월 ${fmt(CIVIL_MEAL_ALLOWANCE_2026)}원`, note: "공무원 공통" },
 ];
 
 export default function PolicePay2026Page() {
@@ -343,6 +386,59 @@ export default function PolicePay2026Page() {
               </Link>
               에서 호봉별로 바로 계산할 수 있습니다.
             </p>
+
+            {/* 2026 경찰 수당 한눈에 (RL-12 T14b, 운영자 승인 2026-11-13 질문 2) — 본문 칼럼 맨 끝, 마지막 광고 아래·사이드바 앞 */}
+            <section id="police-allowances" className="mt-10 mb-12 p-6 sm:p-8 bg-white rounded-3xl border border-canvas-200">
+              <h2 className="text-xl font-black text-navy mb-2">2026 경찰 수당 한눈에 — 계급별 직급보조비와 현장 수당</h2>
+              <p className="text-sm leading-7 text-muted-blue mb-5">
+                지구대·파출소 교대근무와 112 신고 출동이 잦은 경찰은 봉급 외에 계급별 직급보조비와 위험근무·출동
+                수당을 받습니다. 직급보조비는 계급이 오를수록 커집니다.
+              </p>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm min-w-[320px]">
+                  <thead>
+                    <tr className="border-b-2 border-canvas-200 text-navy">
+                      <th className="py-3 px-2 text-left font-black">계급</th>
+                      <th className="py-3 px-2 text-right font-black">직급보조비</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {POLICE_POSITION_ROWS.map((row) => (
+                      <tr key={row.name} className="border-b border-canvas-100">
+                        <td className="py-2.5 px-2 font-bold text-navy">{row.name}</td>
+                        <td className="py-2.5 px-2 text-right text-muted-blue tabular-nums">{row.amount}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <h3 className="text-lg font-black text-navy mt-8 mb-3">현장 수당</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm min-w-[320px]">
+                  <thead>
+                    <tr className="border-b-2 border-canvas-200 text-navy">
+                      <th className="py-3 px-2 text-left font-black">수당</th>
+                      <th className="py-3 px-2 text-right font-black">금액</th>
+                      <th className="py-3 px-2 text-left font-black pl-6">대상·비고</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {POLICE_DUTY_ROWS.map((row) => (
+                      <tr key={row.name} className="border-b border-canvas-100">
+                        <td className="py-2.5 px-2 font-bold text-navy">{row.name}</td>
+                        <td className="py-2.5 px-2 text-right text-muted-blue tabular-nums">{row.amount}</td>
+                        <td className="py-2.5 px-2 pl-6 text-xs text-faint-blue">{row.note}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="text-xs text-faint-blue mt-4">
+                출처: {PAY_PAGE_ALLOWANCE_SOURCE_2026.regulation}({PAY_PAGE_ALLOWANCE_SOURCE_2026.decree},{" "}
+                {PAY_PAGE_ALLOWANCE_SOURCE_2026.effectiveOn} 시행) 별표 8·9·11·15 · 인사혁신처 2025-12-30 수당 개정 발표 · 확인일{" "}
+                {PAY_PAGE_ALLOWANCE_SOURCE_2026.checkedOn}
+              </p>
+            </section>
           </div>
 
           <aside
