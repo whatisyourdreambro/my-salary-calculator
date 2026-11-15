@@ -158,6 +158,8 @@ export default function FutureSalaryCalculator() {
  <div className="flex justify-center mb-8">
  <div className="flex bg-secondary rounded-lg p-1">
  <button
+ type="button"
+ aria-pressed={mode === "predict"}
  onClick={() => setMode("predict")}
  className={`flex-1 px-4 py-2 rounded-md text-sm font-semibold transition-all ${
  mode === "predict" ? "bg-background shadow-sm text-primary" : "text-muted-foreground hover:bg-secondary/60"
@@ -166,6 +168,8 @@ export default function FutureSalaryCalculator() {
  미래 연봉 예측
  </button>
  <button
+ type="button"
+ aria-pressed={mode === "goal"}
  onClick={() => setMode("goal")}
  className={`flex-1 px-4 py-2 rounded-md text-sm font-semibold transition-all ${
  mode === "goal" ? "bg-background shadow-sm text-primary" : "text-muted-foreground hover:bg-secondary/60"
@@ -191,16 +195,16 @@ export default function FutureSalaryCalculator() {
  <h3 className="text-lg font-bold mb-4">예측 조건</h3>
  <div className="grid grid-cols-2 gap-4 mb-4">
  <div>
- <label className="text-sm font-medium text-muted-foreground">직군</label>
- <select value={jobCategory} onChange={(e) => setJobCategory(e.target.value)} className={inputStyle}>
+ <label htmlFor="future-job" className="text-sm font-medium text-muted-foreground">직군</label>
+ <select id="future-job" value={jobCategory} onChange={(e) => setJobCategory(e.target.value)} className={inputStyle}>
  <option value="it_dev">IT/개발</option>
  <option value="marketing">마케팅/영업</option>
  <option value="professional">전문직</option>
  </select>
  </div>
  <div>
- <label className="text-sm font-medium text-muted-foreground">경력</label>
- <select value={experienceLevel} onChange={(e) => setExperienceLevel(e.target.value)} className={inputStyle}>
+ <label htmlFor="future-exp" className="text-sm font-medium text-muted-foreground">경력</label>
+ <select id="future-exp" value={experienceLevel} onChange={(e) => setExperienceLevel(e.target.value)} className={inputStyle}>
  <option value="1-2">1~2년</option>
  <option value="3-6">3~6년</option>
  <option value="7-10">7~10년</option>
@@ -209,28 +213,28 @@ export default function FutureSalaryCalculator() {
  </div>
  </div>
  <div>
- <label className="text-sm font-medium text-muted-foreground">기본 연봉 상승률 (%)</label>
- <NumberInput type="number" inputMode="numeric" value={baseRate} onChange={(e) => setBaseRate(Number(e.target.value))} className={inputStyle} />
+ <label htmlFor="future-rate" className="text-sm font-medium text-muted-foreground">기본 연봉 상승률 (%)</label>
+ <NumberInput id="future-rate" type="number" inputMode="numeric" value={baseRate} onChange={(e) => setBaseRate(Number(e.target.value))} className={inputStyle} />
  </div>
  <h3 className="text-lg font-bold mt-4 mb-2">커리어 이벤트</h3>
  <div className="space-y-3 max-h-40 overflow-y-auto pr-2">
  {events.map((event, index) => (
  <div key={index} className="p-3 bg-secondary/50 rounded-lg space-y-2">
  <div className="flex justify-between items-center">
- <select value={event.yearIndex} onChange={(e) => updateEvent(index, "yearIndex", Number(e.target.value))} className={`${inputStyle} !mt-0 !p-2`}>
+ <select aria-label={`이벤트 ${index + 1} 연차`} value={event.yearIndex} onChange={(e) => updateEvent(index, "yearIndex", Number(e.target.value))} className={`${inputStyle} !mt-0 !p-2`}>
  {Array.from({ length: years }, (_, i) => <option key={i} value={i}>{i + 1}년차</option>)}
  </select>
- <button onClick={() => removeEvent(index)} className="text-muted-foreground hover:text-destructive p-1">
- <X size={16} />
+ <button type="button" aria-label={`이벤트 ${index + 1} 삭제`} onClick={() => removeEvent(index)} className="text-muted-foreground hover:text-destructive p-1">
+ <X size={16} aria-hidden="true" />
  </button>
  </div>
  <div className="flex gap-2">
- <select value={event.type} onChange={(e) => updateEvent(index, "type", e.target.value)} className={`${inputStyle} !mt-0 !p-2 w-1/2`}>
+ <select aria-label={`이벤트 ${index + 1} 유형`} value={event.type} onChange={(e) => updateEvent(index, "type", e.target.value)} className={`${inputStyle} !mt-0 !p-2 w-1/2`}>
  <option value="promotion">승진</option>
  <option value="job_change">이직</option>
  </select>
  <div className="w-1/2 relative">
- <NumberInput type="number" inputMode="numeric" value={event.value} onChange={(e) => updateEvent(index, "value", e.target.value)} className={`${inputStyle} !mt-0 !p-2 h-full pr-8`} />
+ <NumberInput aria-label={`이벤트 ${index + 1} ${event.type === "promotion" ? "인상률(%)" : "이직 연봉(원)"}`} type="number" inputMode="numeric" value={event.value} onChange={(e) => updateEvent(index, "value", e.target.value)} className={`${inputStyle} !mt-0 !p-2 h-full pr-8`} />
  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">{event.type === "promotion" ? "%" : "원"}</span>
  </div>
  </div>
@@ -284,7 +288,7 @@ export default function FutureSalaryCalculator() {
  <tr key={item.year} className="border-t border-border">
  <td className="p-2 font-semibold">{item.year}년</td>
  <td className="p-2 text-right text-primary font-bold">{formatNumber(item.salary)} 원</td>
- <td className="p-2 text-right text-primary/80">+ {formatNumber(item.increaseAmount)} 원</td>
+ <td className="p-2 text-right text-primary/80">{item.increaseAmount < 0 ? "- " : "+ "}{formatNumber(Math.abs(item.increaseAmount))} 원</td>
  </tr>
  ))}
  </tbody>

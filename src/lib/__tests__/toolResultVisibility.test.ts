@@ -84,7 +84,13 @@ describe("파랑 위 파랑 결과값 제거 (code26-01)", () => {
   });
   it("연봉 티어 카드(bg-electric) 결과 문장의 강조 두 칸", () => {
     const src = readSrc("src/components/calculators/SalaryRankCalculator.tsx");
-    expect(src).toContain('<span className="text-white font-bold">{selectedLabel}</span>');
+    expect(src).toContain('<span className="text-white font-bold">{calculatedLabel}</span>');
     expect(src).toContain('<span className="text-white font-bold">{100 - result.percentile}%</span>');
+  });
+  it("연봉 티어 카드·공유 제목의 나이대는 계산 시점 값 (2026-11-15 감사 components-b01-F03)", () => {
+    const src = readSrc("src/components/calculators/SalaryRankCalculator.tsx").replace(/\r\n/g, "\n");
+    expect(src).toMatch(/setResult\(rank\);\s*setCalculatedLabel\(AGE_GROUPS\.find\(\(g\) => g\.key === ageGroup\)\?\.label \?\? ""\);/);
+    expect(src).toContain("title={`${calculatedLabel} 자체 참고표 기준 상위 ${result.percentile}%");
+    expect(src).not.toContain("selectedLabel");
   });
 });

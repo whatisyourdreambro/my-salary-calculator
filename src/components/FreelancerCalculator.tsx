@@ -113,6 +113,8 @@ export default function FreelancerCalculator() {
  <h2 className="text-lg font-bold mb-4">소득 정보 입력</h2>
  <div className="flex bg-secondary rounded-lg p-1 mb-4">
  <button
+ type="button"
+ aria-pressed={taxType === "freelancer"}
  onClick={() => setTaxType("freelancer")}
  className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all ${
  taxType === "freelancer"
@@ -123,6 +125,8 @@ export default function FreelancerCalculator() {
  프리랜서 (3.3%)
  </button>
  <button
+ type="button"
+ aria-pressed={taxType === "part_time"}
  onClick={() => setTaxType("part_time")}
  className={`flex-1 p-2 rounded-md text-sm font-semibold transition-all ${
  taxType === "part_time"

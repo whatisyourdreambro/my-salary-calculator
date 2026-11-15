@@ -16,6 +16,7 @@ import { Sparkles, RefreshCw } from "lucide-react";
 import {
  RadialBarChart,
  RadialBar,
+ PolarAngleAxis,
  ResponsiveContainer,
  PieChart,
  Pie,
@@ -49,6 +50,8 @@ const HealthScoreGauge = ({ score, rating }: { score: number; rating: string; })
  <div className="relative h-48 w-48 mx-auto">
  <ResponsiveContainer width="100%" height="100%">
  <RadialBarChart innerRadius="70%" outerRadius="100%" data={[{ value: score }]} startAngle={180} endAngle={-180} barSize={20}>
+ {/* 0~100점 각도 축 — 없으면 recharts 가 [0, 점수] 를 축으로 잡아 어떤 점수든 고리가 꽉 찼다(2026-11-15 감사 components-b04-F03) */}
+ <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} tickLine={false} axisLine={false} />
  <RadialBar background dataKey="value" cornerRadius={10} fill={scoreFillColor} />
  </RadialBarChart>
  </ResponsiveContainer>
