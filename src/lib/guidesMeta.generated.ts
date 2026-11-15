@@ -1277,7 +1277,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-04-25",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2721
+  "contentChars": 2714
  },
  {
   "slug": "loan-types-comparison-2026",
