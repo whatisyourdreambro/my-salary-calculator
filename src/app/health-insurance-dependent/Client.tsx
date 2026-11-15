@@ -204,8 +204,8 @@ export default function HealthInsuranceDependentClient() {
               ))}
             </div>
             <p className="mt-2 text-xs text-amber-800 dark:text-amber-200 leading-5">
-              형제자매는 위 예외에 해당하더라도 재산세 과세표준 1억 8,000만원 이하 요건이 별도로
-              적용됩니다 (일반 대상자의 5억 4,000만원보다 엄격).
+              형제자매는 위 예외에 해당하더라도 미혼(이혼·사별 포함)이어야 하고, 재산세 과세표준
+              1억 8,000만원 이하 요건이 별도로 적용됩니다.
             </p>
           </fieldset>
         )}

@@ -209,6 +209,7 @@ export default function EarnedIncomeCreditContent() {
      <div className="relative">
       <NumberInput id="ms-earned-income-credit-field-0"
        type="number"
+       allowNegative={false}
        value={incomeInput}
        onChange={(e) => setIncomeInput(e.target.value)}
        min={0}
@@ -232,6 +233,7 @@ export default function EarnedIncomeCreditContent() {
      <div className="relative">
       <NumberInput id="ms-earned-income-credit-field-1"
        type="number"
+       allowNegative={false}
        value={propertyInput}
        onChange={(e) => setPropertyInput(e.target.value)}
        min={0}
@@ -249,7 +251,9 @@ export default function EarnedIncomeCreditContent() {
     <div className={`rounded-xl p-5 space-y-3 ${
      status === "eligible" && finalBenefit > 0
       ? "bg-green-50 border border-green-200"
-      : "bg-red-50 border border-red-200"
+      : status === "eligible" && income === 0
+       ? "bg-canvas border border-canvas-200"
+       : "bg-red-50 border border-red-200"
     }`}>
      {status === "over-property" && (
       <div className="flex items-center gap-2 text-red-600 font-semibold">

@@ -354,12 +354,12 @@ export default function UnemploymentBenefitContent() {
       {
        step: "STEP 3",
        title: "취업특강 수강",
-       desc: "1회 필수 수강. 온라인 또는 오프라인 모두 가능. 수강 후 대기기간 7일.",
+       desc: "1회 필수 수강. 온·오프라인 가능. 대기기간 7일은 실업 신고일부터.",
       },
       {
        step: "STEP 4",
        title: "구직활동 및 실업인정",
-       desc: "4주마다 구직활동 2회 이상 증명. 온라인 신고 가능. 인정 후 급여 지급.",
+       desc: "4주마다 재취업활동 1회(5차부터 2회) 이상 증명. 인정 후 급여 지급.",
       },
      ].map((item, i) => (
       <div key={i} className="flex gap-4 items-start">
@@ -427,9 +427,9 @@ export default function UnemploymentBenefitContent() {
        external: true,
       },
       {
-       title: "워크넷 구직 등록",
+       title: "고용24 구직 등록",
        desc: "구직활동 증빙용 이력서 등록",
-       href: "https://www.work.go.kr",
+       href: "https://www.work24.go.kr",
        external: true,
       },
       {

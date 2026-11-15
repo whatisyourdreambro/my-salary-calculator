@@ -232,14 +232,14 @@ export default function AutoTax2026Page() {
           </h2>
           <div className="grid grid-cols-2 gap-3">
             <Link
-              href="/tools/real-estate/acquisition-tax"
+              href="/calc/car-total-ownership"
               className="block p-4 rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 hover:border-electric transition-colors"
             >
               <p className="text-sm font-bold text-navy dark:text-canvas-50 mb-1">
-                자동차 취득세 계산기
+                차량 총보유비 계산기
               </p>
               <p className="text-xs text-muted-blue dark:text-canvas-300">
-                차량 구입 시 취득세 7% 산출
+                보험·세금·정비·연료비 월평균 비교
               </p>
             </Link>
             <Link
@@ -261,7 +261,7 @@ export default function AutoTax2026Page() {
                 자동차 할부 계산기
               </p>
               <p className="text-xs text-muted-blue dark:text-canvas-300">
-                원리금 균등·체증 시뮬레이션
+                연봉별 차량 월 할부금 비교
               </p>
             </Link>
             <Link

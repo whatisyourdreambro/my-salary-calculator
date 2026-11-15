@@ -50,7 +50,7 @@ import ChuseokBonusClient from "./Client";
 export const metadata: Metadata = buildPageMetadata({
   title: "2026 추석 상여금 — 평균 지급액·지급 의무·떡값 세금 총정리",
   description:
-    "2026 추석 상여금, 남들은 얼마나 받을까? 기업 규모별 평균(300인 이상 105.9만원·중소 59.1만원), 상여금 지급 의무가 생기는 3가지 경우, 떡값·상품권·선물 과세 기준, 연휴(9/24~26) 근무 수당 150%까지 — 추석 돈 문제 전부 정리.",
+    "2026 추석 상여금 지급 계획 61.0%(경총 2026 조사)와 사람인 2025 기업 규모별 평균(300인 이상 105.9만원·100인 미만 59.1만원), 상여금 지급 의무가 생기는 3가지 경우, 떡값·상품권·선물 과세 기준, 연휴(9/24~26) 근무 수당 150%까지 정리.",
   path: "/chuseok-bonus-2026",
   ogType: "article",
   publishedTime: "2026-08-16",
@@ -353,7 +353,7 @@ export default function ChuseokBonus2026Page() {
         <div className="mt-8 max-w-3xl mx-auto">
           <ShareButtons
             title="2026 추석 상여금 — 평균 지급액·지급 의무·떡값 세금"
-            description="300인 이상 평균 105.9만원. 우리 회사는 안 줘도 되는 걸까? 통계와 법 기준 총정리"
+            description="300인 이상 평균 105.9만원(사람인 2025). 우리 회사는 안 줘도 되는 걸까? 통계와 법 기준 총정리"
           />
         </div>
 

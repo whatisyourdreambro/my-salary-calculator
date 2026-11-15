@@ -10,6 +10,19 @@ import { describe, expect, it } from "vitest";
 /** 띄어쓰기 단위 글자 수 목록 — 광고 위 제자리 교체의 단어별 폭 확인용 (한글 advance 균일) */
 const syllables = (s: string) => s.split(" ").map((w) => [...w].length);
 
+// N2-app-pages-07 (2026-11-15 감사 app-pages-b03-F03): 형제자매를 고른 뒤에만 보이는 안내문(CalcResultAd 위)에 미혼 요건.
+// 괄호 비교 구절 '(일반 대상자의 5억 4,000만원보다 엄격)' 을 빼서 12px 사이트 글꼴 664.61px -> 625.54px 로 더 짧다.
+// 형제자매 선택 상태 가드 스윕에서 CalcResultAd 가 한 폭이라도 내려가면 이 커밋(문구 + 이 단언)만 되돌린다.
+describe("/health-insurance-dependent — 형제자매 선택 안내문 미혼 요건(광고 위, 더 짧게)", () => {
+  const client = readFileSync(resolve(process.cwd(), "src/app/health-insurance-dependent/Client.tsx"), "utf8").replace(/\s+/g, " ");
+  it("미혼(이혼·사별 포함) 요건과 1억 8,000만원 재산요건을 적고 옛 비교 구절이 없다", () => {
+    expect(client).toContain(
+      "형제자매는 위 예외에 해당하더라도 미혼(이혼·사별 포함)이어야 하고, 재산세 과세표준 1억 8,000만원 이하 요건이 별도로 적용됩니다.",
+    );
+    expect(client).not.toContain("5억 4,000만원보다 엄격");
+  });
+});
+
 describe("/health-insurance-dependent — 연결 계산기는 재산분만 계산한다는 표기", () => {
   const src = readFileSync(resolve(process.cwd(), "src/app/health-insurance-dependent/page.tsx"), "utf8");
 
@@ -48,5 +61,17 @@ describe("/health-insurance-dependent — HomeTopAd 위 리드 문장", () => {
     expect(flat).toContain(after);
     expect(flat).not.toContain(before);
     expect([...after].length).toBe([...before].length - 2);
+  });
+});
+
+// N2-app-pages-07 (2026-11-15 감사 app-pages-b03-F03): 국민건강보험법 시행규칙 별표 1 제10호 — 형제자매는 나이·장애 예외에
+// 더해 미혼(이혼·사별한 경우 포함)이고 부모가 없거나 부모에게 보수·소득이 없는 경우 등 부양요건을 따로 충족해야 한다.
+// 접힌 FAQ(InArticleAd 아래 닫힌 details, FAQPage JSON-LD 같은 배열)에 조건을 적었다 — 닫힌 높이 불변.
+describe("/health-insurance-dependent — 형제자매 미혼 요건(접힌 FAQ)", () => {
+  const flat = readFileSync(resolve(process.cwd(), "src/app/health-insurance-dependent/page.tsx"), "utf8").replace(/\s+/g, " ");
+  it("형제자매 FAQ 답이 미혼(이혼·사별 포함)·별표 1 부양요건을 적는다", () => {
+    expect(flat).toContain(
+      "또한 형제자매는 미혼(이혼·사별 포함)이어야 하고, 부모가 없거나 부모에게 보수·소득이 없는 경우 등 시행규칙 별표 1의 부양요건을 따로 충족해야 합니다.",
+    );
   });
 });

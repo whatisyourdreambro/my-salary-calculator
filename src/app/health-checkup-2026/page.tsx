@@ -69,7 +69,7 @@ const TARGETS = [
 const COSTS = [
  { item: "일반건강검진", cost: "전액 공단 부담 (자기부담금 0원)" },
  { item: "5대 암검진 (위·대장·간·유방·자궁경부)", cost: "위·간·유방: 10%, 대장·자궁경부는 0원, 보험료 하위 50%는 0원" },
- { item: "폐암 검진", cost: "공단 90% + 본인 10% (1만원대)" },
+ { item: "폐암 검진", cost: "본인 10%(하위 50% 0원)" },
  { item: "추가 검사 (선택)", cost: "본인 100% (혈액·복부초음파·내시경 비수면 등 2~20만원)" },
 ];
 
@@ -97,7 +97,7 @@ const FAQ_ITEMS = [
  {
  question: "검진 예약은 어디서 하나요?",
  answer:
- "공단 홈페이지에서 '건강검진 기관 찾기'로 본인 지역 검진기관 조회 → 직접 전화/온라인 예약. 직장 단체검진은 회사 인사팀이 일괄 예약하는 경우 多. 인기 검진기관·시즌(5~7월, 11~12월)은 한 달 전 예약 권장.",
+ "공단 홈페이지에서 '건강검진 기관 찾기'로 본인 지역 검진기관 조회 → 직접 전화/온라인 예약. 직장 단체검진은 회사 인사팀이 일괄 예약하는 경우가 많습니다. 인기 검진기관·시즌(5~7월, 11~12월)은 한 달 전 예약 권장.",
  },
  {
  question: "암검진 본인 부담금 1만원대는 정확한 금액이?",
@@ -254,7 +254,7 @@ export default function HealthCheckup2026Page() {
  >
  <Calendar className="w-8 h-8 opacity-70 mb-3" />
  <h3 className="text-lg font-black mb-2">건강보험 정산 2026</h3>
- <p className="text-sm opacity-90">7월 추가 부과 대응</p>
+ <p className="text-sm opacity-90">4월 추가 부과 대응</p>
  </Link>
  <Link
  href="/social-insurance-rates-2026"
