@@ -362,15 +362,18 @@ export function calculateDCseverance(
  // 됐다 — 재직 5일 차이로 적립금이 855만원 점프하고, 1.1년 근속이 2회 납입으로
  // 잡혀 실제의 약 2배가 표시됐다(2026-09-06 전수검사). 정수 연차는 그대로 굴리고
  // 잔여 기간은 비례 납입 + 비례 수익으로 처리한다.
+ // 2026-11-15 감사 lib-b09-M01: 연말 납입이면 그 해 낸 부담금은 그 해 수익을 받지 않는다 — 종전
+ // (적립금 + 부담금) × (1+수익률) 은 방금 낸 돈까지 1년 굴려 적립금을 정확히 (1+수익률)배 부풀렸다
+ // (1년 · 5% 에 5,250,000원, 정답 5,000,000원). 기존 적립금만 굴리고 부담금은 기간 끝에 더한다.
  const fullYears = Math.floor(yearsOfService);
  for (let i = 0; i < fullYears; i++) {
- totalAccumulation = (totalAccumulation + annualContribution) * rate;
+ totalAccumulation = totalAccumulation * rate + annualContribution;
  }
  const fraction = yearsOfService - fullYears;
  if (fraction > 0) {
  totalAccumulation =
- (totalAccumulation + annualContribution * fraction) *
- (1 + (returnRate / 100) * fraction);
+ totalAccumulation * (1 + (returnRate / 100) * fraction) +
+ annualContribution * fraction;
  }
 
  return {

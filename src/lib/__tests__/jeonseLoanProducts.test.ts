@@ -116,3 +116,24 @@ describe("금리 줄 — 정책상품은 '최저 연 x%' (종전 '금리 연 x%'
     expect(shape("최저 연 1.9%")).toEqual(shape("금리 연 2.4%"));
   });
 });
+
+// 2026-11-15 감사 calc-02-F14: 접힌 FAQ·FAQ JSON-LD 의 HUG 보증료가 2025-03-31 개편 전 표(0.122~0.154%)였다.
+// 보도에 따르면 HUG 전세보증금반환보증 보증료는 2025-03-31 부터 연 0.115~0.154% -> 연 0.097~0.211%(보증금·주택유형별)
+// (파이낸셜뉴스 2025-03-26 https://www.fnnews.com/news/202503261512583954). HUG 2026-09-09 공지(전세반환보증 개편,
+// 10/30 신청분)는 보증료율을 바꾸지 않았다. FAQ 는 마지막 광고(calc/layout InArticleAd) 위라 펼친 상태 폭도 종전 이하로.
+describe("전세보증보험 FAQ — HUG 보증료 2025-03-31 개편 반영", () => {
+  const page = readFileSync(resolve(process.cwd(), "src/app/calc/jeonse-loan/page.tsx"), "utf8");
+  it("0.097~0.211% 로 고치고 옛 0.122~0.154% 는 없다", () => {
+    expect(page).toContain("보증료(HUG 연 0.097~0.211%)를 지불해야 하지만");
+    expect(page).not.toContain("0.122~0.154%");
+  });
+  it("펼친 FAQ 문구가 종전보다 넓지 않다 (사이트 서브셋 글꼴 14px 실측 308.8px -> 288.3px)", () => {
+    const before = "보증료(보증금의 0.122~0.154%/년)를 지불해야 하지만";
+    const after = "보증료(HUG 연 0.097~0.211%)를 지불해야 하지만";
+    const hangul = (t: string) => [...t].filter((c) => /[가-힣]/.test(c)).length;
+    const other = (t: string) => [...t].filter((c) => !/[가-힣]/.test(c)).length;
+    // 한글 4자(약 4em) 줄고, 한글 외 글자는 3자(HUG + 공백 − /, 약 2.1em) 늘어난다 — 전체 폭은 줄어든다
+    expect(hangul(before) - hangul(after)).toBe(4);
+    expect(other(after) - other(before)).toBe(3);
+  });
+});

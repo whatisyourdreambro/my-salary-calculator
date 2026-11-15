@@ -136,9 +136,11 @@ export default function SeveranceVsPensionPage() {
                   </tr>
                   <tr>
                     <td className="px-4 py-3 font-bold">세금</td>
-                    <td className="px-4 py-3">퇴직소득세 6~28%</td>
-                    <td className="px-4 py-3">퇴직소득세 6~28%</td>
-                    <td className="px-4 py-3">퇴직소득세 6~28%</td>
+                    {/* 2026-11-15 감사 calc-04-F05: 종전 '퇴직소득세 6~28%' 는 법정 세율(환산과세표준에 6~45%, 소득세법 제55조)도
+                        실제 결과도 아니었다 — 이 계산기 기본값 실효세율 2.6%. 칸 글자 폭 14px 110.2px -> 107.7px, 줄바꿈 없는 덩어리 6~28% 46.1px -> 0~10% 43.7px */}
+                    <td className="px-4 py-3">실효세율 0~10%대</td>
+                    <td className="px-4 py-3">실효세율 0~10%대</td>
+                    <td className="px-4 py-3">실효세율 0~10%대</td>
                     {/* 연금 수령 세금 = 퇴직소득세의 70%(1~10년차)·60%·50% → 30~50% 감소. 이 칸이 IRP 열의 최소 폭을 정하므로
                         종전 3.3~5.5% 처럼 줄바꿈 없는 숫자·기호만으로 같은 폭을 유지한다 ('30% 감면' 은 줄바꿈돼 표 머리줄이 +20px, 2026-10-06 실측) */}
                     <td className="px-4 py-3 text-emerald-500">-30~50%</td>
@@ -152,7 +154,7 @@ export default function SeveranceVsPensionPage() {
             </h2>
             <p className="text-muted-blue dark:text-canvas-300 leading-relaxed">
               퇴직소득세는 <strong>환산급여 방식</strong>으로 계산됩니다. 일반 근로소득세와 달리 근속연수
-              공제, 환산급여 공제 등이 단계별로 적용되어 일반적으로 6~28%의 분리과세율이 적용됩니다.
+              공제, 환산급여 공제 등이 단계별로 적용되어 실효세율은 대개 0~10%대입니다.
             </p>
             <ol className="space-y-2 text-muted-blue dark:text-canvas-300">
               <li>

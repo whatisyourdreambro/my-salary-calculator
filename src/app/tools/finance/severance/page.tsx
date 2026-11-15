@@ -5,7 +5,9 @@ import { motion } from "framer-motion";
 import { Briefcase, Info } from "lucide-react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import NumberInput from "@/components/NumberInput";
-// 2026 퇴직소득세 계산 (환산급여 방식)
+import { calcLegalSeveranceResult, DEFAULT_END_DATE, DEFAULT_START_DATE } from "./legalSeverance";
+// 2026 퇴직소득세 계산 (환산급여 방식) — '퇴직금 직접 입력' 모드 전용
+// ('법정 퇴직금 자동계산' 모드는 정본 calculateSeverancePay 의 세액을 그대로 쓴다 — legalSeverance.ts)
 function calcSeveranceTax(severancePay: number, workYears: number): {
  tax: number; localTax: number; totalTax: number; netPay: number;
  annualizedPay: number; taxableIncome: number; effectiveRate: number;
@@ -56,31 +58,30 @@ function calcSeveranceTax(severancePay: number, workYears: number): {
  return { tax, localTax, totalTax, netPay, annualizedPay, taxableIncome, effectiveRate };
 }
 
-// 법정 퇴직금 계산
-function calcLegalSeverance(monthlySalary: number, workYears: number, workMonths: number = 0): number {
- const totalMonths = workYears * 12 + workMonths;
- if (totalMonths < 12) return 0;
- return Math.round(monthlySalary * (totalMonths / 12));
-}
-
 const fmt = (n: number) => Math.round(n).toLocaleString("ko-KR");
 
 export default function SeveranceCalculatorPage() {
  const [mode, setMode] = useState<"custom" | "calculate">("calculate");
  const [monthlySalary, setMonthlySalary] = useState(4_000_000);
+ const [startDate, setStartDate] = useState(DEFAULT_START_DATE);
+ const [endDate, setEndDate] = useState(DEFAULT_END_DATE);
+ const [annualBonus, setAnnualBonus] = useState(0);
+ const [annualLeavePay, setAnnualLeavePay] = useState(0);
+ // 근속 년수는 '퇴직금 직접 입력' 모드의 세율 계산에만 쓴다(자동계산 모드는 입·퇴사일)
  const [workYears, setWorkYears] = useState(5);
- const [workMonths, setWorkMonths] = useState(0);
  const [customSeverance, setCustomSeverance] = useState(20_000_000);
 
- const legalSeverance = useMemo(
- () => calcLegalSeverance(monthlySalary, workYears, workMonths),
- [monthlySalary, workYears, workMonths]
+ // 법정 퇴직금 = 정본 엔진(홈 퇴직금 탭과 같은 식) — 상여금·연차수당 3/12 반영, 세액까지 정본 값
+ const legal = useMemo(
+ () => calcLegalSeveranceResult({ startDate, endDate, monthlySalary, annualBonus, annualLeavePay }),
+ [startDate, endDate, monthlySalary, annualBonus, annualLeavePay]
  );
- const severancePay = mode === "calculate" ? legalSeverance : customSeverance;
- const r = useMemo(
- () => calcSeveranceTax(severancePay, workYears + workMonths / 12),
- [severancePay, workYears, workMonths]
+ const custom = useMemo(
+ () => calcSeveranceTax(customSeverance, workYears),
+ [customSeverance, workYears]
  );
+ const severancePay = mode === "calculate" ? legal.severancePay : customSeverance;
+ const r = mode === "calculate" ? legal : custom;
 
  return (
  <main className="min-h-screen bg-white pb-24 pt-28 px-4 font-sans">
@@ -115,22 +116,35 @@ export default function SeveranceCalculatorPage() {
  className="w-full border border-canvas rounded-xl px-4 py-3.5 text-xl font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  <p className="text-xs text-faint-blue mt-1.5">{fmt(monthlySalary)}원/월 · 연봉 {fmt(monthlySalary * 12)}원</p>
  </div>
+ {/* 날짜 칸은 좌우 여백 px-3 — 360px 폭 안드로이드(드롭다운 화살표 포함)에서도 '2021. 10. 1.'이 잘리지 않게 */}
  <div className="grid grid-cols-2 gap-4">
  <div>
- <label htmlFor="severance-work-years" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">근속 년수</label>
- <NumberInput id="severance-work-years" type="number" inputMode="numeric" min={0} value={workYears} onChange={e => setWorkYears(Number(e.target.value))}
+ <label htmlFor="severance-start-date" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">입사일</label>
+ <input id="severance-start-date" type="date" value={startDate} onChange={e => setStartDate(e.target.value)}
+ className="w-full border border-canvas rounded-xl px-3 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
+ </div>
+ <div>
+ <label htmlFor="severance-end-date" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">퇴사일</label>
+ <input id="severance-end-date" type="date" value={endDate} onChange={e => setEndDate(e.target.value)}
+ className="w-full border border-canvas rounded-xl px-3 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
+ </div>
+ </div>
+ {/* 종전 '법정 퇴직금' 미리보기 상자 자리 — 입력 2칸 + 산식 한 줄로 바꿔 광고(CalcResultAd) 위 높이를 늘리지 않는다.
+ 금액은 아래 결과 카드 '세전 퇴직금' 행에 그대로 나온다. */}
+ <div>
+ <div className="grid grid-cols-2 gap-4">
+ <div>
+ <label htmlFor="severance-annual-bonus" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">연간 상여금</label>
+ <NumberInput id="severance-annual-bonus" type="number" inputMode="numeric" min={0} value={annualBonus} onChange={e => setAnnualBonus(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  <div>
- <label htmlFor="severance-work-months" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">추가 개월 수</label>
- <NumberInput id="severance-work-months" type="number" inputMode="numeric" min={0} max={11} value={workMonths} onChange={e => setWorkMonths(Number(e.target.value))}
+ <label htmlFor="severance-annual-leave-pay" className="text-xs font-bold text-faint-blue uppercase tracking-widest block mb-2">연차수당</label>
+ <NumberInput id="severance-annual-leave-pay" type="number" inputMode="numeric" min={0} value={annualLeavePay} onChange={e => setAnnualLeavePay(Number(e.target.value))}
  className="w-full border border-canvas rounded-xl px-4 py-3.5 font-black text-navy focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
  </div>
  </div>
- <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl">
- <p className="text-xs font-bold text-faint-blue uppercase tracking-widest mb-1">법정 퇴직금</p>
- <p className="text-3xl font-black text-primary">{fmt(legalSeverance)}원</p>
- <p className="text-xs text-faint-blue mt-1">월급여 × 총 근속 개월수 / 12</p>
+ <p className="text-xs text-faint-blue mt-1.5">1일 평균임금 × 30일 × 재직일수 ÷ 365</p>
  </div>
  </>
  ) : (

@@ -108,7 +108,7 @@ export default function SeveranceClient() {
           gross={result.dbAmount}
           tax={result.dbAnnuityTax}
           net={result.dbAnnuityNet}
-          accent="#10B981"
+          accent="#047857"
           highlight
         />
         <ResultCard
@@ -117,7 +117,7 @@ export default function SeveranceClient() {
           gross={result.dcAmount}
           tax={result.dcAnnuityTax}
           net={result.dcAnnuityNet}
-          accent="#10B981"
+          accent="#047857"
           highlight
         />
       </div>
@@ -141,6 +141,8 @@ export default function SeveranceClient() {
   );
 }
 
+// 글자 대비 (2026-11-15 감사 calc-04-F10): 종전 #10B981 위 흰 글자 2.5:1, 70%·60% 흰 글자 1.9·1.7:1, #7A9AB5·#94A3B8 3.0·2.6:1.
+// 색만 바꿈(크기·간격 그대로): 강조 카드 #047857 위 흰 5.5:1·90% 흰 4.8:1, 흰 카드 #475569 7.6:1·#64748B 4.8:1.
 function ResultCard({
   label,
   subLabel,
@@ -170,13 +172,13 @@ function ResultCard({
     >
       <p
         className="text-xs font-black uppercase tracking-widest mb-1"
-        style={{ color: highlight ? "rgba(255,255,255,0.7)" : "#7A9AB5" }}
+        style={{ color: highlight ? "rgba(255,255,255,0.9)" : "#475569" }}
       >
         {label}
       </p>
       <p
         className="text-[10px] mb-3"
-        style={{ color: highlight ? "rgba(255,255,255,0.6)" : "#94A3B8" }}
+        style={{ color: highlight ? "rgba(255,255,255,0.9)" : "#64748B" }}
       >
         {subLabel}
       </p>
@@ -186,7 +188,7 @@ function ResultCard({
       <div
         className="text-xs flex justify-between mt-3 pt-2"
         style={{
-          color: highlight ? "rgba(255,255,255,0.7)" : "#7A9AB5",
+          color: highlight ? "rgba(255,255,255,0.9)" : "#475569",
           borderTop: highlight ? "1px solid rgba(255,255,255,0.2)" : "1px solid #EDF1F5",
         }}
       >
