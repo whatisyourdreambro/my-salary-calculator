@@ -6,6 +6,7 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import MetricRankingView, { fmtManwon } from "../MetricRankingView";
+import { josa } from "@/lib/josa";
 import {
   topEmployeesRows,
   LISTED_ALL_TOTAL,
@@ -50,7 +51,8 @@ export default function TopEmployeesPage() {
         faqItems: [
           {
             question: "직원 수가 가장 많은 공시기업은 어디인가요?",
-            answer: `${DART_RANKING_YEAR} 공시 기준 ${top1.nameKo}로, 직원 ${top1.employeeCount.toLocaleString("ko-KR")}명입니다 (평균연봉 ${fmtManwon(top1.avgSalaryManwon)}).`,
+            // 조사는 회사명 받침으로 — 오늘 1위(삼성전자)는 '로' 그대로, 데이터가 바뀌어도 맞게 (2026-11-15 app-data-pages-b03-F08)
+            answer: `${DART_RANKING_YEAR} 공시 기준 ${josa(top1.nameKo, "으로/로")}, 직원 ${top1.employeeCount.toLocaleString("ko-KR")}명입니다 (평균연봉 ${fmtManwon(top1.avgSalaryManwon)}).`,
           },
           {
             question: "직원 수는 어떤 기준인가요?",

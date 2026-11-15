@@ -112,8 +112,10 @@ function buildSalaryFaq(amount: number, monthlyNet: number, totalDeduction: numb
  const amountLabel = isEok
  ? formatSalaryKorean(amount)
  : `${Math.round(amount / 10000).toLocaleString("ko-KR")}만원`;
- const netManwon = (monthlyNet / 10000).toFixed(0);
- const deductionManwon = (totalDeduction / 10000).toFixed(0);
+ // 천 단위 쉼표 — 제목·설명의 "약 1,133만원" 과 같게 (2026-11-15 app-data-pages-b04-F05: 연봉 약 1.71억부터 FAQ 만 "1133만원").
+ // 접힌 FAQ 답과 FAQPage JSON-LD 에만 쓰인다. 광고 위 speakable 요약 줄은 가드 스윕 몫이라 그대로 둔다.
+ const netManwon = Math.round(monthlyNet / 10000).toLocaleString("ko-KR");
+ const deductionManwon = Math.round(totalDeduction / 10000).toLocaleString("ko-KR");
  const repaymentReference = formatManwonKorean(Math.round((amount * 0.4) / 10000));
  // 질문은 접힌 FAQ 의 <summary> 로 화면에 보인다 — 억 표기는 "12,000만원" 보다 한 글자쯤 길어
  // 356~378px·426~440px 폭에서 질문이 한 줄 늘고 아래 GuideMidAd 가 20px 밀렸다(폰트 실측).
@@ -332,7 +334,8 @@ export default async function SalaryAmountPage({ params: pendingParams }: Props)
  무음 차단되고 있었다 — 415개 URL의 데스크톱 쿠팡 인벤토리가 0이던
  문제. 본문 1개 + 사이드바 1개 구성으로 정리 (docs/ad-experiments.md) */}
 
- {/* 인근 연봉 리포트 */}
+ {/* 인근 연봉 리포트 — 마지막 본문 광고(GuideMidAd) 아래. 1억 이상은 제목·H1 과 같은 억 표기
+ (2026-11-15 app-data-pages-b04-F06: 종전 '연봉 14,000만원'), 1억 미만 라벨은 바이트 단위로 같다 */}
  {neighbors.length > 0 && (
  <div className="pt-8 border-t border-canvas px-2 sm:px-6">
  <h2 className="text-sm font-black text-faint-blue uppercase tracking-widest mb-4 text-center">
@@ -345,7 +348,7 @@ export default async function SalaryAmountPage({ params: pendingParams }: Props)
  href={`/salary/${s}`}
  className="p-4 bg-white border border-canvas rounded-2xl text-xs font-bold text-muted-blue flex justify-between items-center hover:border-primary hover:text-primary transition-colors shadow-sm"
  >
- 연봉 {Math.round(s / 10000).toLocaleString("ko-KR")}만원
+ 연봉 {formatSalaryKorean(s)}
  <ChevronRight size={14} className="text-faint-blue" />
  </Link>
  ))}

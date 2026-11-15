@@ -17,6 +17,7 @@ import JsonLd from "@/components/JsonLd";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbLd, faqLd, itemListLd, datasetLd } from "@/lib/structuredData";
+import { josa } from "@/lib/josa";
 import {
   industryRankings,
   getIndustryRanking,
@@ -143,7 +144,8 @@ export default async function IndustryRankingPage({ params: pendingParams }: Pro
     },
     {
       question: `${r.industryKo}에서 평균연봉이 가장 높은 공시기업은 어디인가요?`,
-      answer: `${top1.nameKo}로, ${DART_RANKING_YEAR} 공시 평균연봉 ${fmtManwon(
+      // 조사는 회사명 받침으로 (2026-11-15 app-data-pages-b03-F08 — 종전 '한국씨티은행로'·'SK텔레콤로'·'HMM로')
+      answer: `${josa(top1.nameKo, "으로/로")}, ${DART_RANKING_YEAR} 공시 평균연봉 ${fmtManwon(
         top1.avgSalaryManwon
       )}(직원 ${top1.employeeCount.toLocaleString("ko-KR")}명)입니다.`,
     },
