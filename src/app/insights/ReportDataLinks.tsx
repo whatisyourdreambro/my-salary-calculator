@@ -64,7 +64,7 @@ export default function ReportDataLinks({
         </p>
         <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <Code2 className="w-4 h-4 text-electric shrink-0" aria-hidden />
-          <span>이 데이터의 위젯 버전 붙이기</span>
+          <span>{meta.embedLabel}</span>
           <a
             href={`/embed#${meta.embedAnchor}`}
             className="text-electric font-bold underline underline-offset-2"

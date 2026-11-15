@@ -8,6 +8,8 @@
 // 4. JSON 봉투 — license 가 사이트 인용 정책 URL, temporalCoverage·citation 채움.
 // 5. middleware matcher — 데이터 경로가 제외돼 curl UA 도 통과.
 
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { GET as listedCsv } from "@/app/insights/listed-avg-salary-top100-2026/data.csv/route";
 import { GET as listedJson } from "@/app/insights/listed-avg-salary-top100-2026/data.json/route";
@@ -156,6 +158,22 @@ describe("메타 정합", () => {
     const registered = new Set(reportsRegistry.map((r) => r.slug));
     for (const d of REPORT_DATASETS) expect(registered.has(d.slug)).toBe(true);
     expect(REPORT_DATASETS).toHaveLength(3);
+  });
+
+  // 2026-11-15 app-data-pages-b02-F05: /embed 링크 문구는 실제 위젯을 말한다(데이터 위젯은 TOP100 회사 카드뿐),
+  // 성과급 표 라벨은 리포트 H1 '지급률 기록' 과 같게 — '실지급' 은 10/4 재작성에서 리포트 전체가 뺀 표현
+  it("데이터 상자 문구: 슬러그마다 embedLabel, 데이터 위젯이 아닌 두 리포트는 '관련 위젯(…)', 라벨에 '실지급' 없음", () => {
+    const by = Object.fromEntries(REPORT_DATASETS.map((d) => [d.slug, d]));
+    for (const d of REPORT_DATASETS) {
+      expect(d.embedLabel.length, d.slug).toBeGreaterThan(0);
+      expect(d.label, d.slug).not.toContain("실지급");
+    }
+    expect(by["listed-avg-salary-top100-2026"].embedLabel).toBe("이 데이터의 위젯 버전 붙이기");
+    expect(by["bonus-payout-history-2026"]).toMatchObject({ label: "성과급 지급률 기록 표", embedAnchor: "bonus", embedLabel: "관련 위젯(성과급 세후 계산기) 붙이기" });
+    expect(by["entry-salary-by-industry-2026"]).toMatchObject({ embedAnchor: "salary", embedLabel: "관련 위젯(연봉 실수령액 계산기) 붙이기" });
+    const box = readFileSync(join(process.cwd(), "src/app/insights/ReportDataLinks.tsx"), "utf8");
+    expect(box).toContain("<span>{meta.embedLabel}</span>");
+    expect(box).not.toContain("이 데이터의 위젯 버전 붙이기");
   });
 
   it("toCsv — 쉼표·따옴표·줄바꿈 셀 이스케이프, BOM·CRLF", () => {
