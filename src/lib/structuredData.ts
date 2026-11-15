@@ -592,6 +592,8 @@ export function datasetLd(opts: {
  license?: string;
  /** 시간 범위 — schema.org temporalCoverage (예: "2025", "2024/2026") */
  temporalCoverage?: string;
+ /** 측정 변수 이름 — schema.org variableMeasured (Text[]). 화면에 실제로 있는 값만 (2026-11-15 SEASONC) */
+ variableMeasured?: string[];
 }) {
  const toIso = (d: string) => {
  const parsed = new Date(d);
@@ -624,6 +626,7 @@ export function datasetLd(opts: {
  : {}),
  ...(opts.license ? { license: opts.license } : {}),
  ...(opts.temporalCoverage ? { temporalCoverage: opts.temporalCoverage } : {}),
+ ...(opts.variableMeasured && opts.variableMeasured.length > 0 ? { variableMeasured: opts.variableMeasured } : {}),
  isAccessibleForFree: true,
  inLanguage: "ko-KR",
  creator: {

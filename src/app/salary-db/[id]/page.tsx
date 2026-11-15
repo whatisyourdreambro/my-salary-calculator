@@ -47,6 +47,8 @@ import {
  faqLd,
 } from "@/lib/structuredData";
 import { CITATION_POLICY_URL } from "@/lib/citationPolicy";
+// Dataset temporalCoverage·variableMeasured (2026-11-15 SEASONC — JSON-LD 만, 화면 불변)
+import { companyDatasetCoverage, companyDatasetVariables } from "@/lib/companyDatasetMeta";
 
 export const dynamic = "force-static";
 
@@ -138,6 +140,8 @@ export default async function CompanyDetailPage({
  license: CITATION_POLICY_URL,
  // 공시 출처가 실재하는 회사만 citation/isBasedOn (DART·알리오 원문 링크 → 권위 근거를 기계에 전달)
  ...(citation ? { citation, isBasedOn: citation.url } : {}),
+ temporalCoverage: companyDatasetCoverage(company.disclosed),
+ variableMeasured: companyDatasetVariables(Boolean(company.disclosed)),
  }),
  ]}
  />
