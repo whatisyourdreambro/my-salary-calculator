@@ -140,7 +140,7 @@ const SUPPLEMENT_PINS: Readonly<Record<string, readonly [hash: string, day: stri
   "retirement-planning-30s": ["c8f0117f1e097b74", "2026-11-03"],
   "samsung-bonus-treasury-stock-15-trillion-2026": ["c6aa5025c4aa4220", "2026-11-03"],
   "samsung-medison-salary-2026": ["ecd2a15f74d1abae", "2026-11-03"],
-  "samsung-opi-forecast-2027": ["11a7f6bcb6c13f94", "2026-11-15"],
+  "samsung-opi-forecast-2027": ["5128bbd4399d5582", "2026-11-15"],
   "samsung-opi-tai-complete-2026": ["995857fcfc051ca8", "2026-10-08"],
   "samsung-special-bonus-q3-preview-2027": ["e5079e168aa2522c", "2026-11-01"],
   "samsung-vs-sk-hynix-stock-bonus-2026": ["d11f97fa9b843691", "2026-11-03"],

@@ -96,6 +96,9 @@ describe("② 가이드 5편 광고 아래 보강(4편 + 삼성·SK 주식 성�
     expect(opi).not.toContain("발표됩니다");
     expect(opi).toContain("10월 8일 잠정치 107조 4,000억원");
     expect(opi).toContain("10월 29일 삼성전자 실적 발표에서 107조 4,405억원으로 공시됐습니다");
+    // 10월 29일 발표를 적은 절의 제목도 10월 29일 기준이다(10월 8일 기준이라고 말하지 않는다)
+    expect(opi).toContain("<h2>2026년 10월 29일 기준 확인 사항</h2>");
+    expect(opi).not.toContain("10월 8일 기준");
     expect(GUIDE_SITEMAP_ONLY_REVISED["samsung-opi-forecast-2027"]).toBe("2026-11-15");
     // 같은 맵의 다른 4편에는 10월 29일 이후를 미래형으로 적은 문장이 없다
     for (const [slug, html] of Object.entries(guideSupplementsSamsungDs202610)) {
