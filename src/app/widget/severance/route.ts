@@ -10,7 +10,10 @@
 // 끝나는 꺾임점을 가로질러 직선 보간해 단기 근속 세금을 3~4배로 보였다(월 250만×1년: 12만원
 // 표시, 엔진 2.2만원). 세액은 퇴직금의 볼록 꺾은선(환산급여공제율은 줄고 세율은 오르는 구간표)이라
 // 꺾임점만 1원 폭까지 찾아 두면 보간값이 엔진과 몇 원 안에서 같다.
+// 제목의 연도는 연봉·성과급 위젯과 같은 현행 요율 포인터를 따른다 — 퇴직소득세 산식에는 연도 의존이
+// 없어 1/1 포인터 전환 때 제목만 함께 바뀐다 (2026-11-15 app-data-pages-b05-F03).
 import { calculateSeveranceTax } from "@/lib/severanceCalculator";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import { WIDGET_HEADERS, widgetShell } from "../shared";
 
 export const dynamic = "force-static";
@@ -70,8 +73,8 @@ function buildTaxTable(): number[][] {
 function buildHtml(): string {
   const taxJson = JSON.stringify(buildTaxTable());
   return widgetShell({
-    title: "2026 퇴직금 계산기 — 머니샐러리",
-    bodyHtml: `  <p class="title">🏦 2026 <span>퇴직금</span> 계산기</p>
+    title: `${CURRENT_RATES_YEAR} 퇴직금 계산기 — 머니샐러리`,
+    bodyHtml: `  <p class="title">🏦 ${CURRENT_RATES_YEAR} <span>퇴직금</span> 계산기</p>
   <div class="row">
     <label for="wage">월평균임금</label>
     <input id="wage" type="text" data-number-input="grouped" role="spinbutton" inputmode="decimal" min="100" max="3000" step="10" value="350">
