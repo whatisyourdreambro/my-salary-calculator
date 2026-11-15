@@ -17,11 +17,11 @@ const getNumberColorClass = (number: number): string => {
  if (number >= 11 && number <= 20)
  return "bg-primary text-white shadow-inner shadow-black/20";
  if (number >= 21 && number <= 30)
- return "bg-canvas-deeper text-white shadow-inner shadow-black/20";
+ return "bg-slate-500 text-white shadow-inner shadow-black/20";
  if (number >= 31 && number <= 40)
  return "bg-gray-600 text-white shadow-inner shadow-black/20";
  if (number >= 41 && number <= 45)
- return "bg-primary/50 text-white shadow-inner shadow-black/20";
+ return "bg-slate-700 text-white shadow-inner shadow-black/20";
  return "bg-canvas-deeper text-navy shadow-inner shadow-black/20";
 };
 
