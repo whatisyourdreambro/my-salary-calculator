@@ -69,7 +69,7 @@ const DECEMBER_TODO: { when: string; what: string; href?: string; link?: string 
  },
  {
  when: "12월 31일(목)까지",
- what: "연금저축·IRP 납입분까지 올해 세액공제 대상 — 연금저축 600만원, IRP 합산 900만원 한도(소득세법 제59조의3)",
+ what: "연금저축·IRP 납입분까지 올해 세액공제 대상 — 연금저축 600만원, IRP 합산 900만원 한도(소득세법 제59조의3). 금융회사마다 연말 입금 마감 시각이 다르니 미리 확인",
  href: "/tools/finance/irp",
  link: "IRP·연금저축 세액공제 계산",
  },
