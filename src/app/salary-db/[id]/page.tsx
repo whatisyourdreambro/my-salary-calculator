@@ -189,8 +189,8 @@ export default async function CompanyDetailPage({
  <CompanyDisclosedSalary
  company={company}
  dartRank={(() => {
- // 카드 배지는 종전 기준에서도 TOP100 이던 corp 만 (10/5까지 광고 위 줄 추가 금지 —
- // dartTop100CardBadgeCorps 주석 참조, 10/6 이후 가드 제거)
+ // 카드 배지는 종전 기준에서도 TOP100 이던 corp 만 (광고 위 줄 추가 금지 — 운영자 10/5 결정으로 유지,
+ // 해제는 운영자 승인 필요 — dartTop100CardBadgeCorps 주석 참조)
  const row = dartTop100.find(
  (r) => r.companyId === company.id && dartTop100CardBadgeCorps.has(r.corpCode)
  );
