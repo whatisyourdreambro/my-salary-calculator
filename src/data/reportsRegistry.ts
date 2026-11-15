@@ -45,6 +45,12 @@ export interface ReportMeta {
   publishedDate: string;
   /** ISO YYYY-MM-DD — 데이터 갱신 시 함께 갱신 (sitemap lastModified로 사용) */
   updatedDate: string;
+  /**
+   * ISO YYYY-MM-DD: real content-edit date for the sitemap lastmod and RSS only. On-screen PublishedMeta and JSON-LD keep
+   * using updatedDate. Fold this into updatedDate at the next measured publish and delete it.
+   * (화면 '최종 갱신' 칩은 광고 위라 숫자를 바꾸면 스윕이 필요하다 — 그 전까지 사이트맵·RSS 만 실제 수정일로. 2026-11-15 app-data-pages-b02-F01)
+   */
+  sitemapDate?: string;
   keywords: string[];
   /**
    * 검색 결과 제목 전용(메타 title·Dataset·Article JSON-LD). 없으면 title 을 쓴다.
@@ -63,6 +69,7 @@ export const reportsRegistry: ReportMeta[] = [
     description: `삼성전자 TAI·OPI, SK하이닉스 PS, 현대차 임단협 성과급 등 국내 대기업 ${bonusCompanyCount}개사의 성과급 지급률 기록 ${bonusPayoutCount}건을 기존 보도·공시 출처에서 집계. 지급 상태는 원문 note 기준 분류이며 실제 지급을 재검증한 값이 아닙니다. 월 기본급 대비·연봉 대비·정액 세 기준을 분리해 왜곡 없이 비교. 출처 표기 시 자유 인용.`,
     publishedDate: "2026-08-23",
     updatedDate: "2026-09-03",
+    sitemapDate: "2026-10-08", // SK hynix rows 9/20, 9/26 and 9/27, body 10/4, 13 source cells 10/8. The on-screen date sits above an ad, so it changes at a measured publish.
     keywords: [
       "성과급 지급률",
       "대기업 성과급",
