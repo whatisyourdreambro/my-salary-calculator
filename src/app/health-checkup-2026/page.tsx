@@ -254,7 +254,7 @@ export default function HealthCheckup2026Page() {
  >
  <Calendar className="w-8 h-8 opacity-70 mb-3" />
  <h3 className="text-lg font-black mb-2">건강보험 정산 2026</h3>
- <p className="text-sm opacity-90">7월 추가 부과 대응</p>
+ <p className="text-sm opacity-90">4월 추가 부과 대응</p>
  </Link>
  <Link
  href="/social-insurance-rates-2026"

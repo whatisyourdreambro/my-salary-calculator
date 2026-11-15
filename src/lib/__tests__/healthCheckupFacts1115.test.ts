@@ -8,6 +8,16 @@ import { describe, expect, it } from "vitest";
 
 const src = readFileSync(resolve(process.cwd(), "src/app/health-checkup-2026/page.tsx"), "utf8").replace(/\s+/g, " ");
 
+// 광고 위(CalcResultAd 와 GuideMidAd 사이) 링크 카드 — 직장가입자 건강보험료 정산은 4월분 보험료에 반영된다
+// (연결 페이지 /health-insurance-2026 도 4월). '7월 건보 정산'은 운영자 상시 금지 문구(d4eda1cfa 가 메뉴의 같은 문구만 고쳤다).
+// 숫자 한 글자 교체: 14px 사이트 글꼴 102.96px -> 103.97px(+1.01px), 카드 글 칸은 최소 약 180px 라 줄바꿈 없음.
+describe("/health-checkup-2026 건강보험 정산 링크 카드", () => {
+  it("정산 추가 부과 달은 4월이고 7월 문구가 없다", () => {
+    expect(src).toContain('<p className="text-sm opacity-90">4월 추가 부과 대응</p>');
+    expect(src).not.toContain("7월 추가 부과");
+  });
+});
+
 // 접힌 FAQ(GuideMidAd 아래 닫힌 details) — '多'(U+591A)는 사이트 서브셋 글꼴에 없는 글자라 열면 시스템 글꼴로 그려졌다.
 // 1895f456e(2026-09-28)가 같은 쪽의 다른 '多'만 '많음'으로 바꿨다.
 describe("/health-checkup-2026 접힌 FAQ 글꼴", () => {
