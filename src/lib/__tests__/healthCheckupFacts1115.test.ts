@@ -16,3 +16,12 @@ describe("/health-checkup-2026 접힌 FAQ 글꼴", () => {
     expect(src).not.toContain("多");
   });
 });
+
+// 광고 위(CalcResultAd 와 GuideMidAd 사이) 비용 표 — 폐암 행이 설명·5대 암 행·FAQ(암검진 실시기준 제10·11조)와 달리
+// 보험료 하위 50%·의료급여 0원을 빠뜨렸다. 새 칸은 더 짧다(12px 사이트 글꼴 156.23px -> 123.63px, 모든 글자 서브셋 안).
+describe("/health-checkup-2026 폐암 검진 비용 칸", () => {
+  it("본인 10%와 하위 50% 0원을 함께 적고 옛 칸 문구가 없다", () => {
+    expect(src).toContain('{ item: "폐암 검진", cost: "본인 10%(하위 50% 0원)" }');
+    expect(src).not.toContain("공단 90% + 본인 10% (1만원대)");
+  });
+});
