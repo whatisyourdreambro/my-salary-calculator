@@ -196,9 +196,10 @@ export function destTemplate(href: string): DestTemplate {
 
 /**
  * 가이드/시즌 페이지 CTA 카드 클릭.
- * position 값: related-calc · next-action · related-guide (onClick 직접 호출)
+ * position 값: next-action · related-guide (onClick 직접 호출)
  *   + InternalLinkTracker 가 보내는 data-msy-module id (industry-rank 등, ≤40종 — internalLinkModules.test).
- * destTpl: 목적지 템플릿(destTemplate). 직접 호출부 3종도 같은 고정값을 전달한다.
+ *   related-calc 은 2026-11-15(N2-perf-02)부터 RelatedCalculators 의 모듈 속성으로 위임 계측된다(같은 값).
+ * destTpl: 목적지 템플릿(destTemplate). 직접 호출부 2종(NextActions·RelatedGuides)도 같은 고정값을 전달한다.
  */
 export function trackGuideCTAClick(
   slug: string,
