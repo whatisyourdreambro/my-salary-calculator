@@ -23,6 +23,19 @@ const destinations: Record<string, Omit<TopicLink, 'href'>> = {
   '/tools/life': { title: '생활비 계산 도구 모음', description: '구독료·유류비·공동 지출을 각각 계산해 생활 예산에 반영하세요.' },
   '/tools/math': { title: '비율·숫자 도구 모음', description: '금액의 비율을 직접 검산하거나 조건에 맞는 숫자를 생성할 수 있습니다.' },
   '/tools/real-estate': { title: '주택·대출 도구 모음', description: 'LTV·DSR·취득세를 함께 계산해 주택 구입 자금의 여러 조건을 확인하세요.' },
+  // 2026-11-15 SEASONA(감사 calc ideas[6]) — 시즌·퇴직 계산기 6곳의 다음 할 일. 제목·설명은 각 목적지 페이지의 메타 설명 범위 안에서만 쓴다.
+  '/calc/january-bonus': { title: '13월의 월급 시뮬레이터', description: '신용카드·IRP·의료비 공제를 넣어 연말정산 환급·추가 납부 예상액을 확인하세요.' },
+  '/year-end-tax-2027': { title: '연말정산 2027 총정리', description: '2026년 귀속 연말정산 일정과 계산기·체크리스트를 단계별 순서로 확인하세요.' },
+  '/calc/bonus-calculators': { title: '회사별 성과급 계산기 모음', description: '삼성전자·SK하이닉스·현대차 등 회사별 지급 방식에 맞춘 성과급 계산기를 고르세요.' },
+  '/unemployment-benefit': { title: '실업급여 계산기', description: '퇴사 뒤 받을 구직급여의 예상 금액과 지급 일수, 신청 조건을 확인하세요.' },
+  '/tools/finance/irp': { title: 'IRP·연금저축 세액공제 계산기', description: '연금계좌 납입액에 따른 세액공제 예상액을 연 900만원 한도 기준으로 계산하세요.' },
+  '/tools/finance/severance': { title: '퇴직금 세금 계산기', description: '근속연수공제와 환산급여공제를 반영해 퇴직소득세를 계산하고 IRP 이연 효과도 확인하세요.' },
+  '/calc/annual-leave-days': { title: '연차 개수 계산기', description: '입사일 기준으로 연도별로 생기는 연차 일수와 회계연도 방식의 차이를 확인하세요.' },
+  '/calc/ordinary-wage': { title: '통상임금 계산기', description: '기본급·고정수당·정기상여로 시간급 통상임금과 연차수당 등 파급액을 계산하세요.' },
+  '/calc/severance-vs-pension': { title: '퇴직금 vs 퇴직연금 비교', description: 'DB형·DC형과 IRP 일시·연금 수령의 세금과 실수령액을 같은 조건으로 비교하세요.' },
+  '/calc/voluntary-retirement': { title: '희망퇴직 위로금 실수령 계산기', description: '위로금과 법정퇴직금을 합산한 퇴직소득세와 세후 실수령액을 계산하세요.' },
+  '/year-end-tax': { title: '연말정산 환급금 계산기', description: '총급여와 카드·연금계좌·기부금을 넣어 예상 환급액이나 추가 납부액을 계산하세요.' },
+  '/calc/dependent-check': { title: '부양가족 인적공제 판정기', description: '부모님·형제자매가 기본공제 150만원 대상인지 나이·소득·동거 기준으로 확인하세요.' },
 };
 
 export const TOPIC_NEXT_STEPS: Record<string, readonly string[]> = {
@@ -41,6 +54,14 @@ export const TOPIC_NEXT_STEPS: Record<string, readonly string[]> = {
   '/year-end-tax-settlement-2026': ['/chuseok-bonus-2026', '/money-check', '/tips'],
   '/chuseok-bonus-2026': ['/calc/bonus-home-plan', '/year-end-tax-settlement-2026', '/tips'],
   '/calc/samsung-bonus': ['/calc/bonus-home-plan', '/year-end-tax-settlement-2026'],
+  // 2026-11-15 SEASONA(감사 calc ideas[6]): calc/layout 이 모든 광고(InArticleAd·쿠팡·HomeTopAd) 뒤에 그리는 상자 — 광고 위 변화 없음.
+  // 키를 더하면 PAGE_LINK_REVIEW_PATHS 에도 들어가 사이트맵 날짜 하한이 2026-10-19 가 된다 — 통합 원장 단계가 실제 수정일(2026-11-15)로 올린다.
+  '/calc/year-end-bonus-tax': ['/calc/january-bonus', '/year-end-tax-2027', '/calc/bonus-calculators'],
+  '/calc/year-end-bonus': ['/calc/january-bonus', '/year-end-tax-2027', '/calc/bonus-calculators'],
+  '/calc/voluntary-retirement': ['/unemployment-benefit', '/tools/finance/irp', '/calc/severance-vs-pension'],
+  '/calc/vacation-pay': ['/calc/annual-leave-days', '/calc/ordinary-wage', '/tools/finance/severance'],
+  '/calc/severance-vs-pension': ['/tools/finance/severance', '/tools/finance/irp', '/calc/voluntary-retirement'],
+  '/calc/smb-income-tax-break': ['/year-end-tax-2027', '/year-end-tax', '/calc/dependent-check'],
   '/civil-servant-pay-2027': ['/public-institutions', '/hub/career'],
   '/public-institutions': ['/civil-servant-pay-2027', '/insights', '/hub/career'],
   '/tools/finance/compound': ['/tools/finance', '/tools/math', '/hub/fire'],
