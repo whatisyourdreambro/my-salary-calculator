@@ -257,7 +257,7 @@ export default function VoluntaryRetirementClient() {
             <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.65)" }}>
               퇴직금 + 위로금 세후 실수령액
             </p>
-            <div className="text-5xl sm:text-6xl font-black tracking-tight text-white" style={{ letterSpacing: "-0.04em" }}>
+            <div className="text-[length:clamp(1.75rem,9.5vw,3rem)] leading-none sm:text-6xl font-black tracking-tight text-white" style={{ letterSpacing: "-0.04em" }}>
               {fmt(r.net)}원
             </div>
             <p className="text-sm font-bold mt-1" style={{ color: "rgba(255,255,255,0.7)" }}>
