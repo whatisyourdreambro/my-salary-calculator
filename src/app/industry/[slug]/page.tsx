@@ -13,6 +13,7 @@ import JsonLd from "@/components/JsonLd";
 import { CalcResultAd, InArticleAd, HomeTopAd, GuideMidAd, MultiplexAd } from "@/components/AdPlacement";
 import CoupangBanner from "@/components/CoupangBanner";
 import ShareSection from "@/components/ShareSection";
+import { listedRankingLinksForIndustry } from "@/lib/industryCrossLinks";
 
 export const dynamic = "force-static";
 
@@ -100,6 +101,8 @@ export default async function IndustryPage({ params: pendingParams }: Props) {
     .map((x) => x.industry);
 
   const trendStyle = TREND_INFO[industry.trend];
+  // 같은 업종 상장사 공시 연봉 순위 링크 — 마지막 광고(MultiplexAd) 아래에만 (2026-11-15 SEASONC, app-data-pages ideas[3])
+  const listedRankingLinks = listedRankingLinksForIndustry(industry.id);
 
   return (
     <>
@@ -328,6 +331,28 @@ export default async function IndustryPage({ params: pendingParams }: Props) {
           <div className="mt-8">
             <MultiplexAd />
           </div>
+
+          {/* 상장사 공시 연봉 순위 교차 링크 — 이 쪽 마지막 광고(MultiplexAd) 아래, 뒤에 광고 없음(광고 위 UI 금지).
+              모듈 id 는 이 파일의 다른 업계 목록과 같은 industry-list(목적지 구분은 dest_tpl). 2026-11-15 SEASONC */}
+          {listedRankingLinks.length > 0 && (
+            <section data-msy-module="industry-list" className="mt-8 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">상장사 공시 연봉 순위로 보기</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-3 leading-relaxed">
+                이 페이지의 업계 연봉은 추정치입니다. 같은 업종 상장사가 DART 사업보고서에 공시한 평균연봉(전 직급 평균) 순위는 아래에서 볼 수 있습니다.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {listedRankingLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="inline-flex min-h-11 items-center rounded-full border border-gray-200 dark:border-gray-600 px-4 text-sm font-medium text-blue-600 dark:text-blue-400 hover:border-blue-500"
+                  >
+                    {link.name} 공시기업 연봉 순위 →
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
       </div>
     </>
