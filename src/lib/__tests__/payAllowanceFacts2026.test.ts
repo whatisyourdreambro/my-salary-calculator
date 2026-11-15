@@ -25,6 +25,12 @@ describe("경찰 직급보조비 적용 계급 (PT-01)", () => {
     expect(CIVIL_POSITION_ALLOWANCE_2026.policeFire[0]).toBe(175_000);
     expect(read("src/app/police-pay-2026/page.tsx")).toContain("직급보조비(월 17.5만원)");
   });
+
+  it("경찰 봉급표 광고 위 수당 목록은 순경~경장급 17.5만원 (한 글자 같은 폭 교체)", () => {
+    const src = read("src/app/police-pay-2026/page.tsx");
+    expect(src).toContain("<strong>직급보조비</strong> 월 17.5만원(순경~경장급)");
+    expect(src).not.toContain("순경~경사급");
+  });
 });
 
 describe("정근수당 지급률 (PT-02)", () => {

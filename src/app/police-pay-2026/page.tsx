@@ -167,7 +167,7 @@ export default function PolicePay2026Page() {
                   <strong>112 출동수당·출동 가산금</strong> — 일 상한 4만원 (2026년 3만→4만원 인상)
                 </li>
                 <li>
-                  <strong>정액급식비</strong> 월 16만원 · <strong>직급보조비</strong> 월 17.5만원(순경~경사급) ·{" "}
+                  <strong>정액급식비</strong> 월 16만원 · <strong>직급보조비</strong> 월 17.5만원(순경~경장급) ·{" "}
                   <strong>명절휴가비</strong> 설·추석 각 월봉급의 60%
                 </li>
                 <li>
