@@ -10,6 +10,7 @@ import { describe, expect, it } from "vitest";
 import { koGuides } from "@/lib/guidesContent";
 import { guideSupplements } from "@/lib/guides/supplements";
 import { guideSupplementsSamsungDs202610 } from "@/lib/guides/supplements-samsung-ds-2026-10";
+import { GUIDE_SITEMAP_ONLY_REVISED } from "@/lib/guideSitemapDates";
 import { SAMSUNG_DS_NEWS_SLUG, semiconductorBonusNews202610Guides } from "@/lib/guides/semiconductor-bonus-news-2026-10";
 import { isReleaseHeldBack } from "@/lib/guideReleaseHoldback";
 import { getGuideRelatedCalcs } from "@/lib/crossLink";
@@ -85,6 +86,20 @@ describe("② 가이드 5편 광고 아래 보강(4편 + 삼성·SK 주식 성�
       expect(guideSupplements[s], s).toContain(`/guides/${SAMSUNG_DS_NEWS_SLUG}`);
       expect(guideSupplements[s], s).not.toMatch(INTERNAL);
       expect(guideSupplements[s], s).not.toMatch(/자주 묻는 질문/);
+    }
+  });
+
+  // 2026-11-15 (facts-01): 10월 29일 실적 발표는 지난 일 — 미래형 문장을 발표 결과(영업이익 107조 4,405억원, 삼성전자 실적 발표)로.
+  // 사이트맵 날짜는 고친 날(guideSitemapDates.ts 행). 출처: 비즈워치 2026-10-29, 삼성전자 뉴스룸 2026-10-29.
+  it("OPI 전망 글 보강은 10월 29일 실적 발표를 지난 일로 적고, 사이트맵 행은 고친 날이다 (facts-01)", () => {
+    const opi = guideSupplementsSamsungDs202610["samsung-opi-forecast-2027"];
+    expect(opi).not.toContain("발표됩니다");
+    expect(opi).toContain("10월 8일 잠정치 107조 4,000억원");
+    expect(opi).toContain("10월 29일 삼성전자 실적 발표에서 107조 4,405억원으로 공시됐습니다");
+    expect(GUIDE_SITEMAP_ONLY_REVISED["samsung-opi-forecast-2027"]).toBe("2026-11-15");
+    // 같은 맵의 다른 4편에는 10월 29일 이후를 미래형으로 적은 문장이 없다
+    for (const [slug, html] of Object.entries(guideSupplementsSamsungDs202610)) {
+      expect(html, slug).not.toMatch(/10월 29일[^.<]*발표됩니다/);
     }
   });
 });

@@ -53,7 +53,9 @@ export const GUIDE_SITEMAP_ONLY_REVISED: Readonly<Record<string, string>> = {
   "hl-mando-salary-2026": RELAND_R1_PUSH,
   "sk-hynix-ps-cash-vs-stock-scenarios-2026": RELAND_R1_PUSH,
   // ── R1 재착지에서 기존 보강 문장을 바꾼 3편(supplements-2026-10.ts, 원장일 RELAND_R1_PUSH) ──
-  "samsung-opi-forecast-2027": RELAND_R1_PUSH,
+  // samsung-opi-forecast-2027 은 그 뒤 2026-11-15(facts-01)에 광고 아래 10/9 보강의 '확정 실적은 10월 29일 발표됩니다'(지난 일)를
+  // 10월 29일 실적 발표 영업이익 107조 4,405억원으로 고쳐 행 값이 그날이다(RELAND_R1_PUSH 를 쓰지 않는다).
+  "samsung-opi-forecast-2027": "2026-11-15",
   "samsung-bonus-treasury-stock-15-trillion-2026": RELAND_R1_PUSH,
   "samsung-vs-sk-hynix-stock-bonus-2026": RELAND_R1_PUSH,
   // ── R1 재착지에서 내용이 바뀐 '수정 칩 있는' 가이드 10편(원장일 RELAND_R1_PUSH) — 화면 날짜는 2026.10.03 그대로 (2026-11-15, ads-01) ──
