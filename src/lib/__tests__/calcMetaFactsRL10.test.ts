@@ -1,0 +1,27 @@
+// RL-10 (2026-11-15 재착지) — 10월에 운영자가 승인한 간이 계산기 사실 정정(등록면허세·직원 인건비·재산세 납기·209시간)을 고정한다.
+// 10월 원본 테스트(calcFactFixes20260929·metaFactFixes20261102)는 지금 기준 트리에 없어, 이 묶음의 단언만 이 파일로 다시 옮겼다.
+// 광고 위 문구는 같은 폭이나 더 짧게 쓰는 것이 원칙이라, 바뀐 문구는 글자 종류(한글·숫자·공백·그 밖)별로 종전과 견준다.
+import { describe, expect, it } from "vitest";
+import { allCalculators } from "@/lib/simpleCalculators";
+
+const calc = (slug: string) => {
+  const c = allCalculators.find((x) => x.slug === slug);
+  if (!c) throw new Error(`missing calculator ${slug}`);
+  return c;
+};
+
+describe("CS-04 등록면허세 힌트·공식 (지방세법 제28조 제1항 제1호: 보존·상속 1천분의 8, 무상 15, 저당권 2)", () => {
+  it("'주택 매매 0.8%' 오기가 없고 보존·상속·저당 세율을 쓴다", () => {
+    const c = calc("registration-tax-quick");
+    const hint = c.fields.find((f) => f.name === "rate")?.hint ?? "";
+    expect(hint).toBe("보존·상속 0.8%, 저당 0.2%"); // 공식 1행 표기(저당 0.2%)와 같게 — 종전 힌트와 한글 6자 동일
+    expect(c.formula).toContain("(보존·상속 0.8% · 무상 1.5% · 저당 0.2%)");
+    expect(`${hint} ${c.formula}`).not.toContain("주택 매매 0.8%");
+    expect(c.formula).not.toContain("증여 1.5%");
+  });
+  it("공식 1행은 종전과 글자 수가 같다 (고정폭 공식 블록, 광고 위)", () => {
+    const line = (c: string) => c.split("\n")[0];
+    const before = "등록면허세 = 취득가액 × 등록세율 (주택 매매 0.8% · 증여 1.5% · 상속 0.8%)";
+    expect([...line(calc("registration-tax-quick").formula ?? "")].length).toBe([...before].length);
+  });
+});

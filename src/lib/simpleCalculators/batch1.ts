@@ -164,7 +164,7 @@ const TAX: CalculatorDef[] = [
  keywords: ["등록면허세", "등록세"],
  fields: [
  { name: "price", label: "취득가액", defaultValue: 500000000, suffix: "원" },
- { name: "rate", label: "등록세율", defaultValue: 0.8, suffix: "%", hint: "주택 매매 0.8%, 증여 1.5%" },
+ { name: "rate", label: "등록세율", defaultValue: 0.8, suffix: "%", hint: "보존·상속 0.8%, 저당 0.2%" },
  ],
  compute: ({ price, rate }) => {
  const tax = price * (rate / 100);
