@@ -38,6 +38,7 @@ vi.mock("@/components/ShareButtons", () => ({ default: stub }));
 vi.mock("@/components/FavoritesButton", () => ({ default: stub }));
 vi.mock("@/components/SalaryLookupTracker", () => ({ default: stub }));
 vi.mock("@/components/PrivateFeedback", () => ({ default: stub }));
+vi.mock("@/components/PrivateFeedbackLazy", () => ({ default: stub })); // 2026-11-15 N2-perf-04 회사 페이지의 지연 래퍼
 vi.mock("@/components/RelatedCalculators", () => ({ default: stub }));
 
 import CompanyDetailPage from "@/app/salary-db/[id]/page";

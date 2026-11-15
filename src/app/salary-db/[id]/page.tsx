@@ -21,7 +21,9 @@ import { industryRankingByCompanyId } from "@/lib/salary-data/dartRanking";
 import CompanyCareerLevels from "@/components/CompanyCareerLevels";
 import CompanyBonusCalculatorLink from "@/components/CompanyBonusCalculatorLink";
 import CompanyNarrative from "@/components/CompanyNarrative";
-import PrivateFeedback from "@/components/PrivateFeedback";
+// 삼성전자 전용 폼 — 나머지 회사 페이지 첫 로드에서 폼 청크를 빼려고 지연 래퍼를 같은 이름으로 가져온다
+// (2026-11-15 N2-perf-04, 아래 JSX 한 줄은 그대로 — PrivateFeedbackLazy 주석 참조)
+import PrivateFeedback from "@/components/PrivateFeedbackLazy";
 import CompanyFaq from "@/components/CompanyFaq";
 import CompanyIndustryRank from "@/components/CompanyIndustryRank";
 import RelatedCompanies from "@/components/RelatedCompanies";
