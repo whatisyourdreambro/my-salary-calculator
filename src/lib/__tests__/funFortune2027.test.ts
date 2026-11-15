@@ -50,3 +50,11 @@ describe("/fun/fortune 2027 정미년", () => {
     expect(stripComments(page)).not.toMatch(/[丁未]/);
   });
 });
+
+describe("/fortune-2026 → /fun/fortune 교차 링크 문구도 2027 (같은 폭 이하)", () => {
+  it("링크 문구가 대상 쪽 연도와 같다", () => {
+    const src = readFileSync("src/app/fortune-2026/page.tsx", "utf8");
+    expect(src).toContain("생년월일시로 보는 2027 신년운세 전체보기");
+    expect(src).not.toContain("2026 신년운세");
+  });
+});
