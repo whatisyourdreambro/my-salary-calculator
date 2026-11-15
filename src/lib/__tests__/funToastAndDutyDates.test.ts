@@ -20,3 +20,15 @@ describe("motion 토스트는 framer 가 가로 -50% 를 갖는다 (components-b
     expect(toast![1]).not.toContain("-translate-x-1/2");
   });
 });
+
+describe("당직 추첨기 날짜 중복 제거 (components-b06-F04)", () => {
+  it("parseDates 는 Set 으로 중복 날짜를 한 번만 남기고, 이름 파서는 그대로", () => {
+    const src = readSrc("src/components/WeekendDutyGame.tsx");
+    const line = "const parseDates  = (s: string) => [...new Set(s.split(/[\\n,]/).map(d => d.trim()).filter(Boolean))];";
+    expect(src).toContain(line);
+    expect(src).toContain("const parsePeople = (s: string) => s.split(/[\\n,]/).map(p => p.trim()).filter(Boolean);");
+    // 같은 식을 그대로 돌려 본다: '11/23, 11/30\n11/23' -> ['11/23', '11/30']
+    const parseDates = (s: string) => [...new Set(s.split(/[\n,]/).map(d => d.trim()).filter(Boolean))];
+    expect(parseDates("11/23, 11/30\n11/23")).toEqual(["11/23", "11/30"]);
+  });
+});

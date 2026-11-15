@@ -61,7 +61,8 @@ export default function WeekendDutyGame() {
     setTimeout(() => setToast(null), 2800);
   };
 
-  const parseDates  = (s: string) => s.split(/[\n,]/).map(d => d.trim()).filter(Boolean);
+  // 같은 날짜를 두 번 넣으면 한 칸·한 key 를 나눠 같은 사람이 그날 두 번 뽑혔다 — 날짜만 중복 제거(동명이인은 id 가 달라 그대로)
+  const parseDates  = (s: string) => [...new Set(s.split(/[\n,]/).map(d => d.trim()).filter(Boolean))];
   const parsePeople = (s: string) => s.split(/[\n,]/).map(p => p.trim()).filter(Boolean);
 
   const initializeMatrix = () => {
