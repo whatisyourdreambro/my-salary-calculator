@@ -53,6 +53,23 @@ export const INSURANCE_RATES_2026 = {
 } as const;
 
 /**
+ * 사업주만 내는 4대보험 요율 (2026년) — 직원 인건비(회사 부담) 계산기(/calc/employee-cost-quick)가 쓴다.
+ * - 고용보험 고용안정·직능개발사업: 150인 미만 기업 0.25% (150인 이상 우선지원대상 0.45%, 150~1,000인 0.65%, 1,000인 이상 0.85%)
+ *   — 고용보험 및 산업재해보상보험의 보험료징수 등에 관한 법률 시행령 제12조.
+ * - 산재보험: 2026년 평균 산재보험료율 1.47%(출퇴근재해 포함, 업종별 상이) — 고용노동부 2025-12-31 보도
+ *   https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=18810
+ * 실업급여 보험료(회사 0.9%)는 근로자분과 같아 INSURANCE_RATES_2026.EMPLOYMENT_INSURANCE 를 그대로 쓴다.
+ * 2026-11-15 RL-10 재착지 때 근로복지공단 고용보험료율표(2022-07-01 이후 고용안정 2.5/4.5/6.5/8.5 천분율)와
+ * 위 고용노동부 보도(2026년 평균 1.47% 유지)로 다시 확인했다. 2027 값은 이 블록이 아니라 1/1 전환 묶음(RL-44)이 정한다.
+ */
+export const EMPLOYER_ONLY_RATES_2026 = {
+  /** 고용안정·직능개발사업 — 150인 미만 기업 */
+  EMPLOYMENT_STABILITY_UNDER_150: 0.0025,
+  /** 산재보험 평균 요율 (2026) */
+  INDUSTRIAL_ACCIDENT_AVG: 0.0147,
+} as const;
+
+/**
  * 4대보험·지방세 요율 묶음의 형태 — INSURANCE_RATES_2026 과 같은 키, 값은 number.
  * (`typeof INSURANCE_RATES_2026` 은 as const 리터럴 타입이라 다른 연도 값을 받을 수 없다.)
  * TaxLogic.calculateSalary2026·bonusTaxCalc.calcBonusNet 의 선택 인자 rates 타입.

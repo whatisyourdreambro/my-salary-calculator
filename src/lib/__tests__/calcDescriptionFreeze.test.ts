@@ -23,7 +23,7 @@ const correctiveSlugs = [
   "currency-converter", "unit-converter-length", "education-cost-cumulative", "alimony-quick",
 ];
 // RL-10 (2026-11-15) — 각 슬러그는 description 1필드만 바꾼다.
-const rl10CorrectiveSlugs = ["registration-tax-quick"];
+const rl10CorrectiveSlugs = ["registration-tax-quick", "employee-cost-quick"];
 
 describe("/calc 메타 동결 — 01ce9fe 스냅샷과 일치 (~2026-10-09)", () => {
   it("스냅샷과 레지스트리가 같은 202개 슬러그", () => {
