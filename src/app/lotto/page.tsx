@@ -239,8 +239,9 @@ export default function LottoPage() {
  {showAdvanced && (
  <div className="space-y-4 p-4 bg-secondary/30 rounded-xl animate-in slide-in-from-top-2">
  <div>
- <label className="block text-xs font-bold mb-1 text-muted-foreground">포함할 숫자 (최대 5개)</label>
+ <label htmlFor="lotto-include" className="block text-xs font-bold mb-1 text-muted-foreground">포함할 숫자 (최대 5개)</label>
  <input
+ id="lotto-include"
  type="text"
  value={includeInput}
  onChange={(e) => setIncludeInput(e.target.value)}
@@ -249,8 +250,9 @@ export default function LottoPage() {
  />
  </div>
  <div>
- <label className="block text-xs font-bold mb-1 text-muted-foreground">제외할 숫자</label>
+ <label htmlFor="lotto-exclude" className="block text-xs font-bold mb-1 text-muted-foreground">제외할 숫자</label>
  <input
+ id="lotto-exclude"
  type="text"
  value={excludeInput}
  onChange={(e) => setExcludeInput(e.target.value)}

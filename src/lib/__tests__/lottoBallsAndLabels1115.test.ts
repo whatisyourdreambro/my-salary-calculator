@@ -27,3 +27,13 @@ describe("/lotto number ball colours", () => {
     expect(helper).not.toContain("bg-primary/50 text-white");
   });
 });
+
+describe("/lotto include/exclude fields have names", () => {
+  it.each(["lotto-include", "lotto-exclude"])("label htmlFor %s matches an input id", (id) => {
+    expect(src).toContain(`<label htmlFor="${id}"`);
+    expect(src.match(new RegExp(`\\bid="${id}"`, "g"))).toHaveLength(1);
+    const input = src.slice(src.indexOf(`id="${id}"`) - 40, src.indexOf(`id="${id}"`) + 60);
+    expect(input).toContain("<input");
+    expect(input).toContain('type="text"');
+  });
+});
