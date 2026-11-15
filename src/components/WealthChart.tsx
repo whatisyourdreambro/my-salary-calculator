@@ -233,11 +233,12 @@ export default function WealthChart({ monthlyNetSalary }: WealthChartProps) {
  <div className="text-2xl">💡</div>
  <div>
  <h4 className="font-bold text-primary text-sm">Mung&apos;s Wealth Tip</h4>
- {/* 나이는 묻지 않으므로(계산은 30세 출발 가정) '{n}세에' 대신 차트 기준선과 같은 '{n}년 뒤' — 종전 폭 이하
- ('세에'→'년 뒤' 공백 1, '거대해집니다'→'커집니다' 한글 2자 감소; 2026-11-15 N2-components-03, components-b05-M01) */}
+ {/* 나이는 묻지 않으므로(계산은 30세 출발 가정) '{n}세에' 대신 차트 기준선과 같은 '{n}년 뒤' — 낱말마다 종전 이하
+ ('{나이}세에'→'{n}년', '목표액'→'뒤', '거대해집니다!'→'커집니다!'; 낱말 수가 같아 keep-all 줄바꿈에서도 줄이 늘 수 없다.
+ 목표액은 위 '목표: …원' 배지가 말한다; 2026-11-15 N2-components-03, components-b05-M01) */}
  <p className="text-primary text-xs mt-1 leading-relaxed">
  {fireYear
- ? `현재 저축과 수익률을 유지하면 ${fireYear.year}년 뒤 목표액 ${formatKRW(fireGoal)}원을 달성합니다. 복리의 힘은 시간이 지날수록 커집니다!`
+ ? `현재 저축과 수익률을 유지하면 ${fireYear.year}년 뒤 ${formatKRW(fireGoal)}원을 달성합니다. 복리의 힘은 시간이 지날수록 커집니다!`
  : `목표액에 도달하기 위해 저축률을 높이거나 투자 수익률을 개선해보세요. 일찍 시작할수록 유리합니다.`}
  </p>
  </div>

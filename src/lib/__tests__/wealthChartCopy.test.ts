@@ -41,7 +41,7 @@ describe("WealthChart 팁·툴팁 — 숨은 나이 가정 없음", () => {
   const TIP_BEFORE =
     "현재 저축과 수익률을 유지하면 ${fireYear.age}세에 목표액 ${formatKRW(fireGoal)}원을 달성합니다. 복리의 힘은 시간이 지날수록 거대해집니다!";
   const TIP_AFTER =
-    "현재 저축과 수익률을 유지하면 ${fireYear.year}년 뒤 목표액 ${formatKRW(fireGoal)}원을 달성합니다. 복리의 힘은 시간이 지날수록 커집니다!";
+    "현재 저축과 수익률을 유지하면 ${fireYear.year}년 뒤 ${formatKRW(fireGoal)}원을 달성합니다. 복리의 힘은 시간이 지날수록 커집니다!";
 
   it("팁은 '{n}년 뒤', 툴팁 머리는 '{n}년 후' 만 쓰고 나이를 말하지 않는다", () => {
     expect(src).toContain(TIP_AFTER);
@@ -52,13 +52,23 @@ describe("WealthChart 팁·툴팁 — 숨은 나이 가정 없음", () => {
     expect(src).toContain("calculateWealthProjection(monthlySavings, annualReturn / 100, 30, 30)");
   });
 
-  it("새 팁은 종전보다 좁다 — 한글 2자 감소, 공백 1개 증가, 숫자 자리 같거나 적음", () => {
+  // 팁 <p> 는 globals.css 의 word-break: keep-all 이라 띄어쓰기에서만 줄이 바뀐다. 전체 폭이 줄어도 낱말 하나를
+  // 둘로 나누면(공백 추가) 앞줄 끝 낱말이 밀려 특정 폭에서 한 줄이 늘 수 있다 — 그래서 낱말 수를 같게 두고
+  // 낱말마다 한글·숫자·기타 글자 수가 종전 이하인지 본다 (그러면 어느 폭에서도 줄 수가 늘지 않는다).
+  it("새 팁은 낱말 수가 같고 낱말마다 종전 이하다 — keep-all 줄바꿈에서도 줄이 늘지 않는다", () => {
     const count = (s: string, re: RegExp) => [...s].filter((ch) => re.test(ch)).length;
-    // 나이는 31~60세(2자리), 경과 연수는 1~30년(1~2자리)
-    const before = TIP_BEFORE.replace("${fireYear.age}", "60").replace("${formatKRW(fireGoal)}", "10.0억");
-    const after = TIP_AFTER.replace("${fireYear.year}", "30").replace("${formatKRW(fireGoal)}", "10.0억");
-    expect(count(before, /[가-힣]/) - count(after, /[가-힣]/)).toBe(2);
-    expect(count(after, / /) - count(before, / /)).toBe(1);
-    expect(count(after, /[0-9]/)).toBe(count(before, /[0-9]/));
+    // 나이는 31~60세(2자리) = 30 + 경과 연수 1~30년(1~2자리)
+    for (const goal of ["5.0억", "10.0억", "100.0억"]) {
+      for (let year = 1; year <= 30; year++) {
+        const before = TIP_BEFORE.replace("${fireYear.age}", String(year + 30)).replace("${formatKRW(fireGoal)}", goal).split(" ");
+        const after = TIP_AFTER.replace("${fireYear.year}", String(year)).replace("${formatKRW(fireGoal)}", goal).split(" ");
+        expect(after.length).toBe(before.length);
+        after.forEach((word, i) => {
+          expect(count(word, /[가-힣]/), word).toBeLessThanOrEqual(count(before[i], /[가-힣]/));
+          expect(count(word, /[0-9]/), word).toBeLessThanOrEqual(count(before[i], /[0-9]/));
+          expect(count(word, /[^가-힣0-9]/), word).toBeLessThanOrEqual(count(before[i], /[^가-힣0-9]/));
+        });
+      }
+    }
   });
 });
