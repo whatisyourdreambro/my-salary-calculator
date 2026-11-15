@@ -252,7 +252,7 @@ CI 대기 시간 연장(게시 작업이 CI 끝까지 기다리게 하는 코드
 8. 공무원 2027 확정 봉급표 공표 당일(12월 말~1월 초): `docs/pay-2027-dday-runbook.md`.
 9. 1/1(금·공휴일) 0시 이후 main 합침, 권장 1/1 오전 버튼: 4대보험 요율 2027 전환(`CURRENT_RATES_YEAR` — `docs/next-upgrade-plan-2026-09-11.md` §5-1, 선행 P-1~P-4 와 운영자 '고시 확인 시 예' 승인 전제). 0시 전에 합치면 verify:tax 가 CI 실패.
 10. 1/2(토) 이후, 확인 2건(공무원 확정표·간소화 개통일)이 끝난 날(보통 1월 첫 주): JAN 수동 전환(`seasonKey.ts` `SEASON_KEY_OVERRIDE`). 미리 끝나면 9번과 합친다.
-11. 삼성 4분기 잠정실적(보통 1/8 전후): `annualOp.ts`(7번과 같은 원장 갱신).
+11. 삼성 4분기 잠정실적(보통 1/8 전후): `annualOp.ts` 4필드(전사 잠정치 — 히어로 문장만 바뀌고 계산기 'DS부문 영업이익' 기본값은 그대로, 7번과 같은 원장 갱신). 1월 말 확정실적 날 DS부문 연간 영업이익을 `dsProfitTrillion` 에 넣어 계산기 기본값을 바꾼다(같은 원장 갱신, `docs/growth-playbook-2026.md` §3).
 12. SK하이닉스 PI 하반기·삼성 OPI(보통 1월 하순)·SK 4분기 실적: `opiData.ts`·`psData.ts` 등(원장 항목 `/calc/samsung-bonus`·`/calc/sk-hynix-bonus` 갱신). 최대 수익일이라 오전에 게시해 재시도 여유를 둔다.
 13. 2월 SK하이닉스 PS 확정: `psData.ts`(원장 `/calc/sk-hynix-bonus` 갱신).
 14. 3/11(목) 0시 이후: 연말정산 귀속연도 2027(`src/lib/yearEndSeason.ts`) + JAN 세트 만료(`seasonKey.ts` `SEASON_EXPIRES_KST`) → 다음 세트.

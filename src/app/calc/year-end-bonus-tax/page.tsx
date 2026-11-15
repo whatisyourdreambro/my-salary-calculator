@@ -13,19 +13,29 @@ import {
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
 import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
+import { CURRENT_RATES_YEAR, INSURANCE_RATES_BY_YEAR, rateLabels } from "@/config/currentRates";
 import { Info, Calendar } from "lucide-react";
 import YearEndBonusTaxClient from "./Client";
 
+// 2027 요율 문구는 연도 정본(taxConstants2027.ts)에서 파생 — 요율 리터럴을 두지 않는다(verify:tax).
+// 계산기 두 카드는 현행 포인터(2026) 요율로 계산하므로, 포인터가 2026 인 동안만 접힌 FAQ 에 그 차이를 밝힌다.
+const R27 = rateLabels(INSURANCE_RATES_BY_YEAR[2027]);
+
+// 귀속연도 기준(2026-11-15 N2-calc-01): 급여는 근로제공일이 속한 해, 성과급은 보통 개인별 지급액이 확정된 해의 소득이다
+// (국세청 근로소득 수입시기 안내 · 사전-2025-법규소득-1070, 2026-03-11 답변). 입금일만 1월로 미뤄도 소득 연도는 그대로다.
 const FAQ_ITEMS = [
   {
     question: "연말 보너스를 12월에 받는 게 좋을까, 1월에 받는 게 좋을까?",
     answer:
-      "연봉이 매년 비슷하다면 차이가 거의 없습니다. 두 경우 모두 결국 누진세율로 합산 과세되기 때문입니다. 하지만 (1) 다음해 퇴사 예정이거나 (2) 다음해 소득이 크게 줄어드는 경우(육아휴직 등) 1월 수령이 유리할 수 있습니다. 반대로 다음해 소득이 크게 늘어날 예정이라면 12월 수령이 유리합니다.",
+      "보너스가 어느 해 소득인지(귀속연도)가 먼저입니다. 급여는 근로를 제공한 날이 속한 해의 소득이고, 성과급은 보통 개인별 지급액이 확정된 해의 소득이라, 올해 금액이 정해진 보너스는 1월에 입금돼도 올해 연봉에 합산됩니다. 위 계산기의 '1월 지급'은 금액 확정까지 다음해로 넘어가 다음해 소득이 되는 경우입니다. 그 경우 연봉이 매년 비슷하다면 차이가 거의 없고, 다음해 소득이 크게 줄면(퇴사·육아휴직 등) 1월 쪽이, 크게 늘면 12월 쪽이 유리할 수 있습니다." +
+      (CURRENT_RATES_YEAR === 2026
+        ? ` 두 경우 모두 2026년 4대보험 요율로 계산했으며, 2027년 국민연금 ${R27.pension}·장기요양 ${R27.ltcRatio}(건강보험료 대비)를 반영하면 1월 쪽 4대보험이 보너스의 최대 약 0.3% 늘어납니다.`
+        : ""),
   },
   {
     question: "보너스를 분할 지급하면 세금이 줄어드나요?",
     answer:
-      "원천징수 시점의 일시적 부담은 줄어들 수 있지만, 연말정산에서 합산 과세되기 때문에 최종 세금은 동일합니다. 단, 회사가 일부를 다음해로 이연 지급하면 다음해 소득에 합산되어 누진세율 구간이 달라질 수 있습니다. 이 경우 절세 효과는 개인의 다음해 예상 소득에 따라 결정됩니다.",
+      "같은 해 소득이라면 나눠 받아도 연말정산에서 합산되므로 최종 세금은 같고, 원천징수 시점의 부담만 달라질 수 있습니다. 입금일만 다음해로 미룬다고 소득 연도가 바뀌지는 않습니다(국세청은 개인별 지급액이 확정된 뒤 일부를 다음해 이후에 나눠 지급한 사안에서 확정된 연도를 귀속연도로 봄, 사전-2025-법규소득-1070). 금액 확정까지 다음해로 넘어가 다음해 소득이 되는 경우에만 다음해 소득에 합산되어 누진세율 구간이 달라질 수 있습니다. 귀속연도는 회사 급여 담당자에게 확인하세요.",
   },
   {
     question: "보너스에 4대보험이 부과되는 게 맞나요?",
@@ -48,7 +58,7 @@ export const metadata: Metadata = buildToolMetadata({
   name: "연말 보너스 세금 계산기",
   tagline: "12월 vs 1월 보너스 — 수령 시점별 세금 비교",
   description:
-    "연말 보너스를 12월에 받을지 1월에 받을지, 일시 지급과 분할 지급 중 어느 쪽이 절세에 유리한지 비교합니다. 2026년 누진세율 기준 합산 과세 시뮬레이션.",
+    "연말 보너스가 올해 소득일 때와 다음해 소득일 때의 세금·4대보험·실수령액을 비교합니다. 지급일이 아니라 귀속연도가 기준입니다. 2026년 누진세율 기준.",
   path: "/calc/year-end-bonus-tax",
   keywords: [
     "연말 보너스 세금",
@@ -67,7 +77,7 @@ export default function YearEndBonusTaxPage() {
         data={[
           softwareApplicationLd({
             name: "연말 보너스 세금 계산기",
-            description: "수령 시점·분할 지급에 따른 보너스 세금 차이를 비교 계산합니다.",
+            description: "귀속연도(올해·다음해)에 따른 보너스 세금·실수령액 차이를 비교 계산합니다.",
             url: "/calc/year-end-bonus-tax",
           }),
           autoBreadcrumbLd("/calc/year-end-bonus-tax", {

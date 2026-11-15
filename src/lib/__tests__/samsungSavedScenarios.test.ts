@@ -1,4 +1,7 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import { calcSamsungBonusNet, computeDivisionPool, DIVISIONS } from "@/app/calc/samsung-bonus/model";
 import { computePersonalBonus } from "@/app/calc/samsung-bonus/personalBonus";
 import {
@@ -58,5 +61,17 @@ describe("Samsung explicit local comparisons", () => {
       expect(result.netWon).toBeCloseTo(calcSamsungBonusNet(scenario.s, gross, scenario.ac, scenario.ins).net, 5);
       expect(result.totalGrossWon).toBeGreaterThanOrEqual(result.netWon);
     }
+  });
+});
+
+// 2026-11-15 N2-calc-02 (calc-04-F23): '내 조건 저장·비교' 안내의 요율 연도는 현행 포인터에서 파생한다 —
+// 1/1 포인터 전환(RL-44) 뒤 엔진(model.ts 기본 요율 CURRENT_INSURANCE_RATES)과 안내 문구가 어긋나지 않게.
+describe("저장 시나리오 안내 문구 — 요율 연도 파생", () => {
+  const src = readFileSync(resolve(process.cwd(), "src/app/calc/samsung-bonus/SavedScenarios.tsx"), "utf8");
+  it("CURRENT_RATES_YEAR 를 한 문자열 안에서 쓰고 2026 리터럴은 없다", () => {
+    expect(src).toContain('import { CURRENT_RATES_YEAR } from "@/config/currentRates";');
+    expect(src).toContain("현재 계산기의 ${CURRENT_RATES_YEAR}년 기준을 사용합니다.");
+    expect(src).not.toContain("현재 계산기의 2026년 기준");
+    expect(CURRENT_RATES_YEAR).toBeGreaterThanOrEqual(2026);
   });
 });

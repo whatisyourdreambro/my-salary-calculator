@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { CalcResultAd } from "@/components/AdPlacement";
 import NumberInput from "@/components/NumberInput";
 import { estimateJanuaryBonus2026 } from "@/lib/januaryBonus2026";
+import { YEAR_END_SEASON } from "@/lib/yearEndSeason";
 
 function fmt(n: number) {
   return Math.round(n).toLocaleString("ko-KR");
@@ -24,7 +25,7 @@ export default function JanuaryBonusClient() {
   const [irpFmt, setIrpFmt] = useState("3,000,000");
   const [medicalFmt, setMedicalFmt] = useState("500,000");
   const [donationFmt, setDonationFmt] = useState("100,000");
-  const [withheldFmt, setWithheldFmt] = useState(""); // 작년 원천징수세액 (미입력 시 추정치 사용)
+  const [withheldFmt, setWithheldFmt] = useState(""); // 귀속연도(YEAR_END_SEASON.attributionYear) 원천징수세액 (미입력 시 추정치 사용)
   const [hasSpouse, setHasSpouse] = useState(false);
   const [dependents, setDependents] = useState(0);
 
@@ -95,7 +96,7 @@ export default function JanuaryBonusClient() {
           />
           <Field
             id="withheld"
-            label="작년 원천징수세액 (작년 한 해 미리 낸 세금)"
+            label={`${YEAR_END_SEASON.attributionYear}년 원천징수세액 (그해 미리 낸 세금)`}
             value={withheldFmt}
             onChange={(v) => setWithheldFmt(v)}
             placeholder="미입력 시 추정치 사용"
@@ -134,7 +135,7 @@ export default function JanuaryBonusClient() {
           </div>
         </div>
         <p className="text-xs text-faint-blue">
-          💡 원천징수세액은 작년 한 해 급여에서 미리 떼인 소득세+지방소득세 합계입니다(원천징수영수증
+          💡 원천징수세액은 {YEAR_END_SEASON.attributionYear}년 급여에서 미리 떼인 소득세+지방소득세 합계입니다(원천징수영수증
           또는 급여명세서에서 확인). 모르면 비워두세요 — 연봉 기반 간이세액 추정치로 계산됩니다.
         </p>
       </div>
@@ -168,7 +169,7 @@ export default function JanuaryBonusClient() {
             {fmt(Math.abs(result.refund))}원
           </div>
           <p className="text-sm font-bold mt-2 mb-1" style={{ color: "rgba(255,255,255,0.85)" }}>
-            {isRefund ? "1~2월 월급에 환급금 합산 예상" : "1~2월 월급에서 추가 차감 예상"}
+            {isRefund ? "2~3월 월급에 환급금 합산 예상" : "2~3월 월급에서 추가 차감 예상"}
           </p>
           {result.isWithheldEstimated && (
             <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.7)" }}>

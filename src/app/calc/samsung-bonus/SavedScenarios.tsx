@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 import {
   calculateScenario, MAX_SAVED_SCENARIOS, readSavedScenarios, sameScenario,
   SCENARIO_STORAGE_KEY, serializeScenarios, validateScenarioInputs,
@@ -71,7 +72,7 @@ export default function SavedScenarios({ inputs, valid, onRestore }: {
         <p className="text-xs leading-relaxed text-muted-blue dark:text-canvas-300">
           영업이익·연봉·사업부·세금 가정을 최대 3개 저장해 비교하세요. 저장 버튼을 눌러야 이 브라우저에 보관되며, 다른 기기로 동기화되지 않습니다. 공용 기기에서는 사용 후 삭제해 주세요.
         </p>
-        <p className="text-xs leading-relaxed text-muted-blue dark:text-canvas-300">모든 금액은 OPI1+OPI2 합산 추정입니다. 적용 연도를 바꿔도 세금·보험료는 현재 계산기의 2026년 기준을 사용합니다. TAI·RSU는 비교에 포함하지 않습니다.</p>
+        <p className="text-xs leading-relaxed text-muted-blue dark:text-canvas-300">{`모든 금액은 OPI1+OPI2 합산 추정입니다. 적용 연도를 바꿔도 세금·보험료는 현재 계산기의 ${CURRENT_RATES_YEAR}년 기준을 사용합니다. TAI·RSU는 비교에 포함하지 않습니다.`}</p>
         <div className="flex flex-wrap gap-2">
           <button type="button" className={button} disabled={!ready || !current} onClick={save}>현재 조건 저장</button>
           <button type="button" className={button} disabled={!ready} onClick={() => remove()}>저장 조건 전체 삭제</button>

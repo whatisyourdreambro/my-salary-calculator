@@ -141,15 +141,16 @@ describe("SK하이닉스 PS·PI", () => {
     expect(skPs(196.4, 100_000_000) / 1e8).toBeCloseTo(5.68, 2);
   });
 
-  it("지급 시점 50/30/10/10 + 2025년분 구 체계 이연 현금 10%p × 2", () => {
+  // 2026-11-15 N2-calc-14 (calc-01-F01): 2025년분 PS 이연 20%는 9/16 가결안으로 2026년에 조기 지급(보도) —
+  // 종전 기대값(2027 현금 = ps26×50% + ps25×10%, 2028 현금 = ps25×10%)은 옛 이연 현금을 두 번 더한 값이라 바꿨다.
+  it("지급 시점 50/30/10/10 — 2025년분 이연 현금은 2027·2028년에 더하지 않는다(2026년 조기 지급)", () => {
     const ops = [200, 0, 0, 0, 0];
     const r = computeComp(skBase({ ops, wageGrowthPct: 0, piPct: 0 }));
     const ps26 = skPs(200, 100_000_000);
-    const ps25 = (2964 / 100) * (100_000_000 / 20);
     const [y27, y28, y29, y30, y31] = r.years;
-    expect(y27.components[0].gross).toBeCloseTo(ps26 * 0.5 + ps25 * 0.1, 3);
+    expect(y27.components[0].gross).toBeCloseTo(ps26 * 0.5, 3);
     expect(y27.components[1].gross).toBeCloseTo(ps26 * 0.3, 3);
-    expect(y28.components[0].gross).toBeCloseTo(ps25 * 0.1, 3);
+    expect(y28.components[0].gross).toBe(0);
     expect(y28.components[1].gross).toBeCloseTo(ps26 * 0.1, 3);
     expect(y29.components[0].gross).toBe(0);
     expect(y29.components[1].gross).toBeCloseTo(ps26 * 0.1, 3);
@@ -174,10 +175,25 @@ describe("SK하이닉스 PS·PI", () => {
     }
   });
 
-  it("2026년 받은 성과급 = 2025년분 PS 80% + 2025 하반기 PI 150% + 2026 상반기 PI 150%", () => {
+  // 2026-11-15 N2-calc-14: 종전 기대값 29.64 × 기본급 × 0.8 은 이연 20% 조기 지급(9/16 가결안)을 빠뜨린 값이라 1.0 으로 바꿨다.
+  it("2026년 받은 성과급 = 2025년분 PS 100%(2월 80% + 이연 20% 조기 지급) + 2025 하반기 PI 150% + 2026 상반기 PI 150%", () => {
     const r = computeComp(skBase({ wageGrowthPct: 0 }));
     const basic = 100_000_000 / 20;
-    expect(r.gross2026.bonus).toBeCloseTo(29.64 * basic * 0.8 + basic * 1.5 + basic * 1.5, 3);
+    expect(r.gross2026.bonus).toBeCloseTo(29.64 * basic * 1.0 + basic * 1.5 + basic * 1.5, 3);
+  });
+
+  it("SK 연봉 1억 기본 시나리오: 2027 PS 현금 = 2026년분 PS × 50% 뿐, 2028 PS 현금 = 2027년분 PS × 50% 뿐", () => {
+    const base = skBase();
+    const r = computeComp(base);
+    const [y27, y28] = r.years;
+    const ps26 = skPs(base.ops[0], 100_000_000); // 2026 연봉 = salary0 (기준 연도)
+    const ps27 = skPs(base.ops[1], 100_000_000 * 1.063); // 2027 연봉 = 1억 × (1 + 6.3%)
+    expect(y27.components[0].gross).toBeCloseTo(ps26 * 0.5, 3);
+    expect(y28.components[0].gross).toBeCloseTo(ps27 * 0.5, 3);
+    // 옛 이연 현금(2025년분 PS × 10% ≈ 1,394만원)이 끼어 있지 않다
+    const oldDeferred = (SK_PS_2025_PCT / 100) * (100_000_000 / 1.063 / 20) * 0.1;
+    expect(oldDeferred).toBeGreaterThan(13_000_000);
+    expect(Math.abs(y27.components[0].gross - ps26 * 0.5)).toBeLessThan(1);
   });
 });
 

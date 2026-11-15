@@ -119,6 +119,8 @@ export default function KiaBonusClient() {
           <div className="mt-3 space-y-3 p-4 rounded-xl bg-canvas/30">
             <Row label="성과금 % (월 기본급 대비)">
               <NumberInput
+                allowNegative={false}
+                aria-label="성과금 % (월 기본급 대비)"
                 type="number"
                 value={bonusPctOverride}
                 onChange={(e) => setBonusPctOverride(Number(e.target.value) || 0)}
@@ -129,6 +131,8 @@ export default function KiaBonusClient() {
             </Row>
             <Row label="정액 (원)">
               <NumberInput
+                allowNegative={false}
+                aria-label="정액 (원)"
                 type="number"
                 value={fixedOverride}
                 onChange={(e) => setFixedOverride(Number(e.target.value) || 0)}
@@ -138,6 +142,8 @@ export default function KiaBonusClient() {
             </Row>
             <Row label="무상주 (주)">
               <NumberInput
+                allowNegative={false}
+                aria-label="무상주 (주)"
                 type="number"
                 value={sharesOverride}
                 onChange={(e) => setSharesOverride(Number(e.target.value) || 0)}
@@ -155,6 +161,7 @@ export default function KiaBonusClient() {
         <label className="block">
           <span className="text-sm font-bold">월 기본급(통상임금) (만원)</span>
           <NumberInput
+            allowNegative={false}
             type="number"
             value={monthlyBasicManwon}
             onChange={(e) => setMonthlyBasicManwon(Number(e.target.value) || 0)}
@@ -185,6 +192,7 @@ export default function KiaBonusClient() {
         <label className="block">
           <span className="text-sm font-bold">기아 보통주 1주 가격 (원)</span>
           <NumberInput
+            allowNegative={false}
             type="number"
             value={stockPrice}
             onChange={(e) => setStockPrice(Number(e.target.value) || 0)}
@@ -220,10 +228,10 @@ export default function KiaBonusClient() {
         {showAdvanced && (
           <div className="mt-4 space-y-4">
             <div>
-              <label className="block text-sm font-bold mb-2">
+              <label htmlFor="ms-kia-bonus-credit" className="block text-sm font-bold mb-2">
                 추가 세액공제: <span className="text-primary">{creditRate}%</span>
               </label>
-              <input
+              <input id="ms-kia-bonus-credit"
                 type="range"
                 min={0}
                 max={50}
@@ -255,7 +263,7 @@ export default function KiaBonusClient() {
         <div className="grid sm:grid-cols-2 gap-3 mb-5">
           <ResultCard label="정률 성과금" value={fmtManwon(calc.percentBonusWon)} sub={`= 월 기본급 ${monthlyBasicManwon}만 × ${customMode ? bonusPctOverride : scenario.bonusPercent}%`} />
           <ResultCard label="정액 격려금" value={fmtManwon(calc.fixedBonusWon)} sub="합의안 명시 정액 (기념 격려금 포함)" />
-          <ResultCard label="자사주 가치" value={fmtManwon(calc.freeShareValueWon)} sub={`${customMode ? sharesOverride : scenario.freeShares}주 × ${(stockPrice / 10000).toFixed(0)}만원`} />
+          <ResultCard label="자사주 가치" value={fmtManwon(calc.freeShareValueWon)} sub={`${customMode ? sharesOverride : scenario.freeShares}주 × ${(stockPrice / 10000).toFixed(1).replace(/\.0$/, "")}만원`} />
           <ResultCard label="포인트·상품권" value={fmtManwon(calc.voucherWon)} sub={customMode ? "직접 입력 모드 — 시나리오 포인트 미포함" : scenario.voucherLabel} />
         </div>
 

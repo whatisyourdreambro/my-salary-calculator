@@ -123,7 +123,8 @@ describe("SSR 기본값과 결과 문구", () => {
     expect(html).toContain('<option value="memory" selected="">메모리</option>');
     expect(html).toContain('<option value="hwaseong-dongtan" selected="">화성시 동탄구</option>');
     expect(html).toContain('value="80,000,000"');
-    expect(html).toContain("화성시 동탄구 아파트 중위가격 8.53억 (2026년 8월, 한국부동산원)");
+    // 2026-11-15 N2-calc-14: 시세 스냅숏 R-ONE 2026년 9월 동탄구 중위 8억 7,000만원(2026-11-15 조회) — 종전 8.53억(8월)
+    expect(html).toContain("화성시 동탄구 아파트 중위가격 8.70억 (2026년 9월, 한국부동산원)");
     expect(html).toContain("기본 시나리오(가정) 기준 구매 가능 시점");
     expect(html).toContain("2029년 말");
     expect(html).toContain('aria-pressed="true"');

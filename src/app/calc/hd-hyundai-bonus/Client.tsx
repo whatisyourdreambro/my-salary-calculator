@@ -77,6 +77,8 @@ export default function HdHyundaiBonusClient() {
           <div className="mt-3 p-4 rounded-xl bg-canvas/30 flex items-center gap-2">
             <span className="text-sm font-bold w-32">성과급 (월 기본급 대비)</span>
             <NumberInput
+              allowNegative={false}
+              aria-label="성과급 (월 기본급 대비)"
               type="number"
               value={customPercent}
               onChange={(e) => setCustomPercent(Number(e.target.value) || 0)}
@@ -95,6 +97,7 @@ export default function HdHyundaiBonusClient() {
         <label className="block">
           <span className="text-sm font-bold">월 기본급(통상임금) (만원)</span>
           <NumberInput
+            allowNegative={false}
             type="number"
             value={monthlyBasicManwon}
             onChange={(e) => setMonthlyBasicManwon(Number(e.target.value) || 0)}
@@ -132,10 +135,10 @@ export default function HdHyundaiBonusClient() {
         {showAdvanced && (
           <div className="mt-4 space-y-4">
             <div>
-              <label className="block text-sm font-bold mb-2">
+              <label htmlFor="ms-hd-hyundai-bonus-credit" className="block text-sm font-bold mb-2">
                 추가 세액공제: <span className="text-primary">{creditRate}%</span>
               </label>
-              <input
+              <input id="ms-hd-hyundai-bonus-credit"
                 type="range"
                 min={0}
                 max={50}

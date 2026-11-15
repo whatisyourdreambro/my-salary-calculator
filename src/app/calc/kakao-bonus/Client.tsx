@@ -44,6 +44,7 @@ export default function KakaoBonusClient() {
         <label className="block">
           <span className="text-sm font-bold">연 기본 연봉 (만원)</span>
           <NumberInput
+            allowNegative={false}
             type="number"
             value={salaryManwon}
             onChange={(e) => setSalaryManwon(Number(e.target.value) || 0)}
@@ -106,6 +107,7 @@ export default function KakaoBonusClient() {
           <label className="block">
             <span className="text-sm font-bold">RSU 부여 주식 수 (주)</span>
             <NumberInput
+              allowNegative={false}
               type="number"
               value={rsuShares}
               onChange={(e) => setRsuShares(Number(e.target.value) || 0)}
@@ -129,6 +131,7 @@ export default function KakaoBonusClient() {
           <label className="block">
             <span className="text-sm font-bold">카카오 주가 (원)</span>
             <NumberInput
+              allowNegative={false}
               type="number"
               value={stockPrice}
               onChange={(e) => setStockPrice(Number(e.target.value) || 0)}
@@ -151,7 +154,7 @@ export default function KakaoBonusClient() {
           </label>
         </div>
         <p className="mt-3 text-xs text-faint">
-          RSU 가치 = {rsuShares}주 × {(stockPrice / 10000).toFixed(0)}만원 ={" "}
+          RSU 가치 = {rsuShares}주 × {(stockPrice / 10000).toFixed(1).replace(/\.0$/, "")}만원 ={" "}
           <strong className="text-primary">{fmtManwon(calc.rsuValueWon)}</strong>
           {" "}(2026 평균 1인당 약 670만원, 직급·평가에 따라 편차)
         </p>
@@ -187,10 +190,10 @@ export default function KakaoBonusClient() {
         {showAdvanced && (
           <div className="mt-4 space-y-4">
             <div>
-              <label className="block text-sm font-bold mb-2">
+              <label htmlFor="ms-kakao-bonus-credit" className="block text-sm font-bold mb-2">
                 추가 세액공제: <span className="text-primary">{creditRate}%</span>
               </label>
-              <input
+              <input id="ms-kakao-bonus-credit"
                 type="range"
                 min={0}
                 max={50}
@@ -221,7 +224,7 @@ export default function KakaoBonusClient() {
 
         <div className="grid sm:grid-cols-3 gap-3 mb-5">
           <ResultCard label="정기 PI" value={fmtManwon(calc.piWon)} sub={`= 연봉 × ${piPercent}%`} />
-          <ResultCard label="RSU 가치" value={fmtManwon(calc.rsuValueWon)} sub={`${rsuShares}주 × ${(stockPrice / 10000).toFixed(0)}만`} />
+          <ResultCard label="RSU 가치" value={fmtManwon(calc.rsuValueWon)} sub={`${rsuShares}주 × ${(stockPrice / 10000).toFixed(1).replace(/\.0$/, "")}만`} />
           <ResultCard label="격려금" value={fmtManwon(calc.encouragementWon)} sub={includeEncouragement ? "2026 노사합의" : "포함 안 함"} />
         </div>
 

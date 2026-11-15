@@ -11,7 +11,7 @@ import NumberInput from "@/components/NumberInput";
 //   (디지털타임스 단독·EBN, 2025-02-06 / SBS Biz)
 // 동시점 계열사 차등: SK엔무브 800% / SK어스온 400% / SK온 0% (EBN 2025-02-06)
 // FY2023 실적분(2024년 지급): 계열사별 0~800%, 울산CLX PS 612% (뉴스핌 2024-02-16·이데일리 단독)
-// FY2025 실적분(2026년)은 보도 미확보 — 미확정이므로 시나리오에 넣지 않는다.
+// FY2025 실적분은 2026년 초 지급(SBS Biz 2026-02-22: 전년보다 적게, SK온 미지급)됐지만 지급률이 보도되지 않아 시나리오에 넣지 않는다.
 // ────────────────────────────────────────────────────────────
 
 type Breakdown = { name: string; pct: number };
@@ -157,7 +157,7 @@ export default function SkInnovationBonusClient() {
             <div className="text-[10px] font-bold text-faint">직접 입력</div>
             <div className="font-bold text-sm mt-0.5">🎛️ 커스텀 지급률 (0~800%)</div>
             <div className="text-xs text-faint mt-1 leading-relaxed">
-              FY2025 실적분(2026년) 미확정 — 예상치를 직접 넣어 시뮬레이션
+              FY2025 실적분(2026년) 미공개 — 예상치를 직접 넣어 시뮬레이션
             </div>
           </button>
         </div>
@@ -168,6 +168,7 @@ export default function SkInnovationBonusClient() {
             </label>
             <input
               type="range"
+              aria-label="지급률 (월 기본급 대비 %)"
               min={0}
               max={800}
               step={10}
@@ -177,6 +178,7 @@ export default function SkInnovationBonusClient() {
             />
             <div className="mt-2 flex items-center gap-2">
               <NumberInput
+                aria-label="지급률 직접 입력 (%)"
                 type="number"
                 value={customPct}
                 onChange={(e) => setCustomPct(Number(e.target.value) || 0)}
@@ -282,6 +284,7 @@ export default function SkInnovationBonusClient() {
               </label>
               <input
                 type="range"
+                aria-label="추가 세액공제 가정 (%)"
                 min={0}
                 max={50}
                 step={5}
