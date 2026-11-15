@@ -78,7 +78,8 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/bonus-calculators': { lastModified: new Date('2026-11-01T00:00:00+09:00'), priority: 0.9 }, // 최근 소식 10/28 SK하이닉스 3분기 실적 (B27)
  // 2026-09-27 신설 — 시세 스냅숏이 매월(16일 이후) 갱신되므로 monthly. lastModified 는 스냅숏을 바꾼 배포에만 올린다.
  // 2026-11-01: 스냅숏과 별개로 본문 사실 정정 — 특별경영성과급 재원 DS 영업이익 10.5%(B28 STR-04-B).
- '/calc/bonus-home-plan': { lastModified: new Date('2026-11-01T00:00:00+09:00'), changeFrequency: 'monthly' },
+ // 2026-11-15: SK하이닉스 2025년분 PS 이연 20% 이중 합산 정정(9/16 가결)·접힌 FAQ, 시세 스냅숏 R-ONE·ECOS 2026년 9월 갱신(N2-calc-14)
+ '/calc/bonus-home-plan': { lastModified: new Date('2026-11-15T00:00:00+09:00'), changeFrequency: 'monthly' },
  // priority 0.85 는 sitemap() 내 성과급 클러스터 루프와 같은 값 — override 가 있으면
  // 루프가 건너뛰므로 명시 (누락 시 기본 0.8 로 강등됨).
  '/calc/hyundai-bonus': { lastModified: new Date('2026-09-25'), priority: 0.85 },
@@ -91,7 +92,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/minimum-wage-2026': { lastModified: new Date('2026-09-12') },
  // 2026-11-13: 마지막 광고 아래 한도표 국민성장펀드 행·접힌 FAQ 월세 100㎡·성장펀드 문장(n1 SEASON lens-season-F08·F09) — 신뢰 노트 확인일도 같은 날
  '/year-end-tax': { lastModified: new Date('2026-11-13T00:00:00+09:00') }, // 표준세액공제 13만원 비교 엔진(PKG-10)·2027 연말정산 제목과 접힌 FAQ 사실 정정(PKG-20)·접힌 아코디언 추가 입력과 엔진 한도(B24)·마지막 광고 아래 한도표 계산기 링크와 혼인 FAQ(B30)·출산지원금 비과세·중소기업 감면 행(B43)
- '/calc/january-bonus': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 13월의 월급 계산기를 연말정산 정본 엔진으로 (B23 CALC-01)
+ '/calc/january-bonus': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 2026-11-15 결과 카드 환급 시기 2~3월·접힌 FAQ·원천징수 입력칸 귀속연도 표기(N2-calc-06). 11/1 연말정산 정본 엔진 (B23 CALC-01)
  '/retirement-pension-2026': { lastModified: new Date('2026-10-26T00:00:00+09:00') }, // 일반 위험자산 한도·적격 TDF 예외·공제와 환급 구분 정정
  // 2026-08-23 시즌 패키지 (연말정산 허브·미리보기·시즌 사이드바)
  // 2026-11-13: 미리보기 단계 카드·시즌 캘린더 첫 행을 국세청 운영 기간 10/28~12/18 로(n1 SEASON lens-season-F03)
@@ -110,11 +111,11 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/smb-income-tax-break': { lastModified: new Date('2026-11-02T00:00:00+09:00') }, // 경력단절여성 → 경력단절자(2025-03-14 조특법 개정, OF1 T3) — 11/1 4대보험료 소득공제·환산 나이 판정 반영(PKG-14)
  '/calc/offer-compare': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 자녀 공제 나이 FAQ 정정(PKG-21) — 본문 '(설명 수정 2026-11-01)'와 일치
  '/calc/child-deduction': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 결과 광고 위 입력 안내를 짧은 요약으로 (B09 P4-05)
- '/calc/jeonse-loan': { lastModified: new Date('2026-11-02T00:00:00+09:00') }, // 결과 카드 배지 최저 비용 → 최저 금리, 금리 순 판정(OF3 C3, 첫 원장 항목)
+ '/calc/jeonse-loan': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 2026-11-15 접힌 FAQ 전세보증보험 보증료 HUG 연 0.097~0.211%(N2-calc-03). 11/2 결과 카드 배지 최저 금리(OF3 C3, 첫 원장 항목)
  '/tax-changes-2026': { lastModified: new Date('2026-11-13T00:00:00+09:00') }, // 접힌 FAQ 2026 귀속 변경 4가지(n1 SEASON lens-season-F10) — 페이지 수정일 2곳도 같은 날. 11/1 자녀세액공제 나이 정정(PKG-21)
  '/year-end-tax-checklist': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 2027 연말정산 제목·자녀세액공제 나이 정정(PKG-20)
  '/weekly-holiday-allowance-2026': { lastModified: new Date('2026-09-12') },
- '/civil-servant-pay-2026': { lastModified: new Date('2026-10-04') },
+ '/civil-servant-pay-2026': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 2026-11-15 정근수당 10~50%·접힌 FAQ·9급~1급 전 호봉 전체표(RL-09·RL-12)
  // 공무원 월급 실수령액 계산기 (2026-09-27 신설 — 운영자 승인 동결 예외)
  '/calc/civil-servant-net-pay': { lastModified: new Date('2026-10-23T00:00:00+09:00'), priority: 0.8, changeFrequency: 'monthly' },
  '/tools/finance/compound': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
@@ -122,7 +123,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/donation-tax-credit-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 산출세액 한도 미반영 정정·한도 초과 미공제분 줄 (B26 STR-02-o)·페이지 끝 날짜 FAQ (B30)
  // 2026-11-01: 연말정산 계산기 3종 — 마지막 광고(MultiplexAd) 아래 페이지 끝 날짜 FAQ 2문항 (B30 SEO-07-b, 첫 원장 항목)
  '/credit-card-deduction-2026': { lastModified: new Date('2026-11-13T00:00:00+09:00') }, // 2026-11-13 접힌 FAQ 한도 자녀 요건(n1 SEASON)
- '/medical-tax-credit-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 출처 조문 제59조의4 제2항 정정도 같은 날
+ '/medical-tax-credit-2026': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 2026-11-15 FAQ 근거 조문 제2항 정정(N2-app-pages-02). 11/1 출처 조문 제59조의4 제2항 정정
  '/rent-tax-credit-2026': { lastModified: new Date('2026-11-13T00:00:00+09:00') }, // 2026-11-13 접힌 FAQ·HowTo 3자녀 100㎡·주말부부 요건(n1 SEASON lens-season-F09)
  '/property-holding-tax-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 종부세 농어촌특별세·1세대 1주택 세액공제·12월 상세 (R2-HOLD)
  '/health-insurance-dependent': { lastModified: new Date('2026-10-17') },
@@ -132,12 +133,14 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  // 2026-11-02: 고용보험 회사 부담 1.15~1.75%·총 2.1~2.7%, 산재 평균 1.5% 정정(OF1 T1·C5, 첫 원장 항목) — 페이지 수정일 2곳도 같은 날
  '/social-insurance-rates-2026': { lastModified: new Date('2026-11-02T00:00:00+09:00') },
  // 2026-11-02: 중소기업 취업자 감면 기간 정정(청년 5년 90%, 60세 이상·장애인·경력단절자 3년 70% — FF-2, 첫 원장 항목). 화면·OG·JSON-LD 날짜 필드 없음
- '/income-tax-2026': { lastModified: new Date('2026-11-02T00:00:00+09:00') },
+ // 2026-11-15: 기타소득 소득금액 300만원·장기보유특별공제 요건 정정(N2-app-pages-12). 화면·OG·JSON-LD 날짜 필드 없음
+ '/income-tax-2026': { lastModified: new Date('2026-11-15T00:00:00+09:00') },
  // 봉급표 버티컬 4종 (2026-08-30)
- '/military-pay-2026': { lastModified: new Date('2026-09-27') },
- '/teacher-pay-2026': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 1~40호봉 전체 표(접힌 상자, 마지막 본문 광고 아래 — B35)
- '/police-pay-2026': { lastModified: new Date('2026-10-04') },
- '/firefighter-pay-2026': { lastModified: new Date('2026-10-04') }, // B20 리드·메타 정렬(네이버 저CTR)
+ // 2026-11-15: 봉급표 5쪽 수당 사실 정정·마지막 광고 아래 전 호봉 전체표·수당 표·2027 군 초급간부 예산안 섹션(RL-09·RL-12·RL-13) — 페이지 수정일 3곳도 같은 날
+ '/military-pay-2026': { lastModified: new Date('2026-11-15T00:00:00+09:00') },
+ '/teacher-pay-2026': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 2026-11-15 교직수당 목록·접힌 FAQ·수당 표(RL-09·RL-12). 11/1 1~40호봉 전체 표(접힌 상자, 마지막 본문 광고 아래 — B35)
+ '/police-pay-2026': { lastModified: new Date('2026-11-15T00:00:00+09:00') },
+ '/firefighter-pay-2026': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // B20 리드·메타 정렬(네이버 저CTR)
  // 2026-08-25 P2 백로그 (임베드 위젯 5종 확장·구조화데이터 보강·영문 메뉴)
  '/embed': { lastModified: new Date('2026-11-02T00:00:00+09:00') }, // 연말정산 위젯 안내 ·4대보험만 삭제(OF3 C4)
  '/en': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
@@ -148,7 +151,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  // 페이지가 이미 밝힌 수정일로 사이트맵 정렬(n1 CRAWL lens-crawl-F05·lens-meta-F03) — 7/16 기본값이 페이지 날짜보다 이르던 4곳.
  // 날짜는 각 페이지 OG modifiedTime·Article·PublishedMeta 와 같다(통합일·게시일 아님).
  '/samsung-negotiation-2026': { lastModified: new Date('2026-09-27T00:00:00+09:00') },
- '/savings-interest-2026': { lastModified: new Date('2026-09-27T00:00:00+09:00') },
+ '/savings-interest-2026': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 2026-11-15 광고 위 비과세 상품 목록 정정(N2-app-pages-13) — OG modifiedTime 도 같은 날
  '/tax-rates-2026': { lastModified: new Date('2026-09-26T00:00:00+09:00') },
  '/year-end-tax-mid-resign': { lastModified: new Date('2026-08-15T00:00:00+09:00') }, // 발행일
  // 2026-11-13: 근로장려금 기한 후 신청 6월 2일 ~ 12월 1일·FAQ 마감 정정(n1 SEASON lens-season-F07, 첫 원장 항목). 화면 날짜 필드 없음
@@ -160,6 +163,19 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/fortune-2026': { lastModified: new Date('2026-11-13T00:00:00+09:00') },
  '/tools/math': { lastModified: new Date('2026-11-13T00:00:00+09:00') }, // tools/layout.tsx 의 마지막 광고 아래
  '/company/simulator': { lastModified: new Date('2026-11-13T00:00:00+09:00') }, // company/layout.tsx 의 마지막 광고 아래
+ // 2026-11-15 통합(claude/next-1120) 첫 원장 항목 — 날짜는 각 묶음 커밋의 실제 수정일(KST), 통합일·게시일 아님. 아래 페이지는 화면·OG·Article 날짜 필드 없음.
+ // 성과급 루프 0.85 대상(-bonus)은 행이 생기면 루프가 건너뛰므로 priority 를 그대로 적는다(위 82~83줄 주석). 연말 성과급 세금은 0.8 그대로.
+ '/calc/year-end-bonus-tax': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 접힌 FAQ·메타·JSON-LD 귀속연도 기준(N2-calc-01) — 10/4 352451886 문구 정정 이후 첫 행(N2-calc-05)
+ '/calc/hd-hyundai-bonus': { lastModified: new Date('2026-11-15T00:00:00+09:00'), priority: 0.85 }, // 접힌 FAQ 10/27 임단협 가결·면책 안내 2026년분 지급률 미확정(N2-calc-09)
+ '/calc/sk-innovation-bonus': { lastModified: new Date('2026-11-15T00:00:00+09:00'), priority: 0.85 }, // FY2025 실적분 2026년 초 지급 반영 본문·FAQ·메타·칩(N2-calc-09)
+ '/calc/severance-vs-pension': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 퇴직소득세 실효세율 표·문단 정정과 DC 연말 납입 계산 정정(N2-calc-08·N2-lib-09)
+ '/tools/finance/severance': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 법정 퇴직금 정본 엔진·입퇴사일·상여금·연차수당 입력(RL-11 재착지, 운영자 결정 10)
+ '/tips': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 신생아 특례대출 카드 조건 정정(N2-app-pages-10) — OG modifiedTime 도 같은 날
+ '/terms': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 제7조 제휴망 이름 정정(N2-app-pages-05) — 화면 최종 업데이트 2026년 11월 15일과 같은 날
+ '/parental-leave': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 육아휴직 급여 신청 기간 정정(N2-app-pages-08, 고용보험법 제70조)
+ '/unemployment-benefit': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 대기기간·실업인정 횟수·고용24 정정(N2-app-pages-08)
+ '/tools/real-estate/ltv': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 규제지역 LTV 40%·10·15 대책 접힌 FAQ(RL-08 재착지) — N2-app-tools-fun-01 이 더 늦게 고치면 그 날로
+ '/tools/real-estate/gift-tax': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 마지막 광고 아래 계산 방식 설명 글·세대생략 할증 제57조(N2-app-tools-fun-06)
 };
 
 // 2026-09-10: 연봉 상세의 계산 방법과 회사 상세 FAQ를 실질적으로 수정한 날.
