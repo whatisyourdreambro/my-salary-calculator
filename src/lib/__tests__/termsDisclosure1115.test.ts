@@ -23,10 +23,10 @@ describe("/terms 제7조 제휴 고지", () => {
     expect(src).toContain("제휴 네트워크(링크프라이스)의 제휴 링크");
   });
 
-  it("제휴 코드(offers.json 의 ilikeclick 항목)는 이 수정에서 바뀌지 않았다 — 비활성 그대로", () => {
+  it("고지에서 뺀 제휴망(ilikeclick)의 오퍼는 활성 상태가 하나도 없다", () => {
+    // 비활성 자리표시 항목이 남아 있든 운영자가 지우든(결정 묶음 A) 통과해야 한다 — 존재 개수는 고정하지 않는다.
     const offers = JSON.parse(readSrc("src/data/offers.json")) as Array<{ network: string; active: boolean }>;
     const ilike = offers.filter((o) => o.network === "ilikeclick");
-    expect(ilike.length).toBeGreaterThan(0);
     expect(ilike.every((o) => o.active === false)).toBe(true);
   });
 });
