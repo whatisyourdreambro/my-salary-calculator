@@ -5,7 +5,6 @@
 import React from "react";
 import Link from "@/components/AppLink";
 import { ChevronRight, ReceiptText } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { InArticleAd } from "./AdPlacement";
 interface DeductionItemProps {
  label: string;
@@ -17,7 +16,7 @@ interface DeductionItemProps {
 const DeductionItem = ({ label, value, iconBg, iconColor }: DeductionItemProps) => (
  <div className="flex flex-wrap items-center justify-between gap-3 py-4">
  <dt className="flex items-center gap-3">
- <div className={cn("w-10 h-10 rounded-[14px] flex items-center justify-center transition-colors", iconBg)}>
+ <div className={`w-10 h-10 rounded-[14px] flex items-center justify-center transition-colors ${iconBg}`}>
  <ReceiptText size={20} className={iconColor} aria-hidden="true" />
  </div>
  <span className="font-medium text-muted-foreground text-[15px]">{label}</span>
@@ -62,7 +61,7 @@ export default function SalaryResultCard({
  {/* 이전 결과 문구는 320px 폭에서도 한 줄(14px 굵게 약 166px)이라 광고 위 줄 수가 그대로다. 두 줄이 되는 문구로 바꾸지 말 것. */}
  <span
  role={stale === undefined ? undefined : "status"}
- className={cn("text-sm font-semibold", stale ? "text-amber-700 dark:text-amber-400" : "text-muted-foreground")}
+ className={`text-sm font-semibold ${stale ? "text-amber-700 dark:text-amber-400" : "text-muted-foreground"}`}
  >
  {stale ? "이전 결과 · 다시 계산해 주세요" : "예상 월 실수령액"}
  </span>
