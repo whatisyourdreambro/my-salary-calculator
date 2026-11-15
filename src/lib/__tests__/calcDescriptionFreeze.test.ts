@@ -8,6 +8,8 @@
 // 스냅샷을 재생성해 함께 커밋한다(그 커밋 메시지에 바뀐 슬러그를 적을 것).
 // 2026-10-03 승인된 사실·기능 정정 8개 슬러그/9개 필드만 별도 corrective fixture로 덮어쓴다.
 // 원래 202개 baseline은 유지하고 나머지 메타 동결은 그대로 검사한다.
+// 2026-11-15 RL-10: 10월에 운영자가 승인한 계산기 사실 정정(등록면허세·직원 인건비·재산세 납기·209시간)의 메타를 같은 fixture 에 더했다.
+// 슬러그마다 reason 에 근거를 적고, 아래 목록·필드 수를 함께 올린다(동결 게이트는 그대로 — 목록 밖 슬러그가 바뀌면 실패).
 import { describe, expect, it } from "vitest";
 import { allCalculators } from "@/lib/simpleCalculators";
 import { calculatorSeoDescription, calculatorSeoTitle, SEO_DESCRIPTION_MIN } from "@/lib/simpleCalculators/seoText";
@@ -20,6 +22,8 @@ const correctiveSlugs = [
   "real-estate-flip-cost", "freelancer-yearly-quick", "corporate-tax-quick", "side-business-net",
   "currency-converter", "unit-converter-length", "education-cost-cumulative", "alimony-quick",
 ];
+// RL-10 (2026-11-15) — 각 슬러그는 description 1필드만 바꾼다.
+const rl10CorrectiveSlugs = ["registration-tax-quick", "employee-cost-quick", "property-tax-quick", "yearly-to-hourly", "weekly-pay"];
 
 describe("/calc 메타 동결 — 01ce9fe 스냅샷과 일치 (~2026-10-09)", () => {
   it("스냅샷과 레지스트리가 같은 202개 슬러그", () => {
@@ -27,8 +31,8 @@ describe("/calc 메타 동결 — 01ce9fe 스냅샷과 일치 (~2026-10-09)", ()
     expect(Object.keys(snapshot).sort()).toEqual(allCalculators.map((c) => c.slug).sort());
   });
 
-  it("승인된 corrective fixture는 정확히 8개 슬러그·9개 필드만 바꾼다", () => {
-    expect(Object.keys(corrective).sort()).toEqual([...correctiveSlugs].sort());
+  it("승인된 corrective fixture는 정확히 8개 슬러그·9개 필드 + RL-10 슬러그당 description 1필드만 바꾼다", () => {
+    expect(Object.keys(corrective).sort()).toEqual([...correctiveSlugs, ...rl10CorrectiveSlugs].sort());
     let changedFields = 0;
     for (const [slug, correction] of Object.entries(corrective)) {
       expect(correction.reason.trim().length, slug).toBeGreaterThan(0);
@@ -41,10 +45,10 @@ describe("/calc 메타 동결 — 01ce9fe 스냅샷과 일치 (~2026-10-09)", ()
         changedFields += 1;
       }
     }
-    expect(changedFields).toBe(9);
+    expect(changedFields).toBe(9 + rl10CorrectiveSlugs.length);
   });
 
-  it("202쪽 전부 원래 baseline + 승인된 8개 정정 메타와 byte 단위로 같다", () => {
+  it("202쪽 전부 원래 baseline + 승인된 정정 메타(10/3 8개 + RL-10)와 byte 단위로 같다", () => {
     const diffs: string[] = [];
     for (const calc of allCalculators) {
       const s = { ...snapshot[calc.slug], ...corrective[calc.slug] };
@@ -60,7 +64,11 @@ describe("/calc 메타 동결 — 01ce9fe 스냅샷과 일치 (~2026-10-09)", ()
     for (const slug of ["yearly-to-hourly", "weekly-pay"]) {
       const calc = allCalculators.find((c) => c.slug === slug)!;
       expect(calc.description.length, slug).toBeLessThan(SEO_DESCRIPTION_MIN);
+      // 01ce9fe baseline 은 옛 4.345주 문구 그대로 두고, RL-10(CS-23, 2026-11-15)이 corrective fixture 로 209 기준 메타를 덮어쓴다.
       expect(snapshot[slug].description, slug).toContain("4.345주(연 52주 ÷ 12개월)");
+      expect(corrective[slug]?.description, slug).toContain("월 209시간");
+      expect(corrective[slug]?.description, slug).not.toContain("4.345주(연 52주 ÷ 12개월)");
+      expect(calculatorSeoDescription(calc), slug).not.toContain("4.345주(연 52주 ÷ 12개월)");
       // 잘려 들어가는 앞부분 — 여기를 고치면 메타가 바뀐다
       expect(calculatorSeoDescription(calc), slug).toContain((calc.explanation ?? "").slice(0, 40));
     }

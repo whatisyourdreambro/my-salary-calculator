@@ -2,7 +2,7 @@
 // 부동산 10 + 보험 8 + 사업자 8 + 일상 14 + 건강 5 + 결혼육아 5 = 50개
 
 import type { CalculatorDef } from "./types";
-import { RENT_CREDIT_2026, calcIncomeTax2026 } from "@/lib/taxConstants2026";
+import { EMPLOYER_ONLY_RATES_2026, INSURANCE_RATES_2026, RENT_CREDIT_2026, calcIncomeTax2026 } from "@/lib/taxConstants2026";
 import { UNEMPLOYMENT_BENEFIT_2026, unemploymentDailyLowerBound } from "@/config/unemploymentBenefit";
 // 이자율 0% 극한 처리 정본 (batch1 과 동일 사유 — i=0 에서 NaN 방지)
 import { annuityPayment, annuityPrincipal, monthlyRate } from "./finance";
@@ -449,9 +449,17 @@ const BUSINESS: CalculatorDef[] = [
  category: "business",
  categoryLabel: "사업자",
  keywords: ["인건비", "직원 비용"],
+ // 사이트맵 lastmod(간이 계산기 유일한 날짜) — RL-10 사실 정정을 실제로 고친 날(KST). 화면에는 날짜가 없다.
+ publishedAt: "2026-11-15",
  fields: [{ name: "monthly", label: "월 급여", defaultValue: 3000000, suffix: "원" }],
  compute: ({ monthly }) => {
- const insurance = monthly * 0.105;
+ // 회사 부담 = 국민연금 + 건강보험(장기요양 포함) + 고용보험(실업급여 + 150인 미만 고용안정·직능개발) + 산재 평균 — 2026년 약 11.44%
+ // 2026 요율 고정 — 설명·공식·FAQ·유의사항이 2026 값(약 11.4%·× 11.44%·국민연금 4.75%·건강 3.595%)을 적으므로 1/1 포인터(CURRENT_RATES_YEAR)를
+ // 따르지 않는다. 2027 요율 확정 시 compute 와 문구를 한 번에 바꾼다(docs/next-upgrade-plan-2026-09-11.md §5, RL-44).
+ const R = INSURANCE_RATES_2026;
+ const employerRate = R.NATIONAL_PENSION + R.HEALTH_INSURANCE * (1 + R.LONG_TERM_CARE_RATIO) + R.EMPLOYMENT_INSURANCE
+ + EMPLOYER_ONLY_RATES_2026.EMPLOYMENT_STABILITY_UNDER_150 + EMPLOYER_ONLY_RATES_2026.INDUSTRIAL_ACCIDENT_AVG;
+ const insurance = monthly * employerRate;
  const severance = monthly / 12;
  const total = monthly + insurance + severance;
  return {

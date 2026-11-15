@@ -251,7 +251,8 @@ export const hubs: Hub[] = [
         heading: "증여·재산 세금",
         links: [
           { label: "증여세 간편 계산", href: "/calc/gift-tax-quick", desc: "관계별 공제한도 반영 증여세" },
-          { label: "등록면허세 계산", href: "/calc/registration-tax-quick", desc: "매매·증여 시 추가 세금" },
+          // F7·code55-01(10월 승인, 2026-11-15 RL-10 재착지): 매매·증여 등기는 취득세에 통합(지방세법 제23조 1호) — '추가 세금' 오기 정정, 한글 9·공백 3→2·가운뎃점 1
+          { label: "등록면허세 계산", href: "/calc/registration-tax-quick", desc: "저당·전세권 등기 세금" },
           { label: "증여세 계산기", href: "/tools/real-estate/gift-tax", desc: "가족 간 증여 상세 계산" },
         ],
       },
