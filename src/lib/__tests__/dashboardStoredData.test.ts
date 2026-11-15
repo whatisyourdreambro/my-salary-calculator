@@ -23,7 +23,7 @@ vi.mock("@/components/DashboardFavoritesSection", () => ({ default: () => null }
 vi.mock("@/components/AppLink", () => ({ default: (props: { href: string; children: unknown }) => createElement("a", { href: props.href }, props.children as string) }));
 vi.mock("react-countup", () => ({ default: (props: { end: number }) => createElement("span", null, String(props.end)) }));
 vi.mock("lucide-react", () => ({ Calculator: () => null, PiggyBank: () => null, TrendingUp: () => null, Building2: () => null, ArrowRight: () => null, Sparkles: () => null, RefreshCw: () => null }));
-vi.mock("recharts", () => Object.fromEntries(["RadialBarChart", "RadialBar", "ResponsiveContainer", "PieChart", "Pie", "Cell", "Tooltip", "Legend"].map(name => [name, () => null])));
+vi.mock("recharts", () => Object.fromEntries(["RadialBarChart", "RadialBar", "PolarAngleAxis", "ResponsiveContainer", "PieChart", "Pie", "Cell", "Tooltip", "Legend"].map(name => [name, () => null])));
 
 import DashboardPage from "@/app/dashboard/page";
 
@@ -75,5 +75,10 @@ describe("대시보드 즐겨찾기·점수 게이지 (2026-11-15 감사 compone
     expect(src).toContain("if (saveFavorites([])) setFavorites([]);");
     expect(src).toContain("if (saveFavorites(next)) setFavorites(next);");
     expect(src).not.toContain("localStorage.removeItem");
+  });
+  it("점수 게이지는 0~100 각도 축을 써서 점수만큼만 고리를 채운다", () => {
+    const src = readSrc("src/components/MyDashboard.tsx");
+    expect(src).toContain('<PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} tickLine={false} axisLine={false} />');
+    expect(src).toContain('<div className="relative h-48 w-48 mx-auto">');
   });
 });
