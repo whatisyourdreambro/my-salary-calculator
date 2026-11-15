@@ -173,3 +173,27 @@ describe("화면 문구 — 3.3~5.5% 연금소득세 오기 제거, 광고 위 �
     notWider("퇴직소득세 6~28%", "실효세율 0~10%대");
   });
 });
+
+// 2026-11-15 감사 calc-04-F05 (문단): '일반적으로 6~28%의 분리과세율' -> '실효세율은 대개 0~10%대'.
+// 퇴직소득세는 환산과세표준에 기본세율 6~45%(소득세법 제55조)를 매기지만 근속연수공제·환산급여공제 뒤 실제 부담은 훨씬 낮다
+// (국세청 퇴직소득 안내 예시: 퇴직급여 1억·근속 20년 산출세액 112만원).
+describe("퇴직소득세 실효세율 문단 (calc-04-F05)", () => {
+  const page = readSrc("src/app/calc/severance-vs-pension/page.tsx");
+  it("문단은 '실효세율은 대개 0~10%대입니다.' 이고 6~28%의 분리과세율 문장은 없다 (표 칸은 앞 커밋 테스트가 따로 본다)", () => {
+    expect(page).toContain("단계별로 적용되어 실효세율은 대개 0~10%대입니다.");
+    expect(page).not.toContain("6~28%의 분리과세율");
+  });
+  it("연봉 3천만~2억 · 근속 1~30년 (월급 × 근속) 실효세율은 모두 0% 이상 10% 미만", () => {
+    for (const annual of [30_000_000, 45_000_000, 60_000_000, 80_000_000, 100_000_000, 150_000_000, 200_000_000]) {
+      for (const years of [1, 3, 5, 10, 20, 30]) {
+        const amount = (annual / 12) * years;
+        const rate = retirementIncomeTaxWithLocal(amount, years) / amount;
+        expect(rate).toBeGreaterThanOrEqual(0);
+        expect(rate).toBeLessThan(0.1);
+      }
+    }
+    // 이 페이지 기본값(DB 일시 수령) 2.6%
+    const r = compareSeveranceVsPension(DEFAULT);
+    expect((r.dbTax / r.dbAmount) * 100).toBeCloseTo(2.64, 2);
+  });
+});

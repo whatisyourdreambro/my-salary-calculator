@@ -154,7 +154,7 @@ export default function SeveranceVsPensionPage() {
             </h2>
             <p className="text-muted-blue dark:text-canvas-300 leading-relaxed">
               퇴직소득세는 <strong>환산급여 방식</strong>으로 계산됩니다. 일반 근로소득세와 달리 근속연수
-              공제, 환산급여 공제 등이 단계별로 적용되어 일반적으로 6~28%의 분리과세율이 적용됩니다.
+              공제, 환산급여 공제 등이 단계별로 적용되어 실효세율은 대개 0~10%대입니다.
             </p>
             <ol className="space-y-2 text-muted-blue dark:text-canvas-300">
               <li>
