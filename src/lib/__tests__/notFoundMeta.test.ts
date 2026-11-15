@@ -28,4 +28,12 @@ describe("not-found metadata", () => {
     expect(SRC).toMatch(/^import type \{ Metadata \} from "next";/m);
     expect(SRC).not.toMatch(/^["']use client["']/m);
   });
+
+  // infra-b02-F01 (2026-11-15): 404 추천 카드는 연도를 쓰지 않는다 — currentRates 를 import 할 수 없어(위 import 가드)
+  // 1/1 요율 전환 때 '2026' 이 남는다. 홈 카드 설명은 연도 중립 문구.
+  it("추천 카드 설명에 연도 숫자가 없다 (홈 카드 = 세후 실수령액 즉시 계산)", () => {
+    expect(SRC).toContain('{ href: "/", label: "연봉 계산기", icon: Home, description: "세후 실수령액 즉시 계산" }');
+    const block = SRC.slice(SRC.indexOf("const SUGGESTED_LINKS"), SRC.indexOf("export default function NotFound"));
+    expect(block).not.toMatch(/description: "[^"]*20\d\d/);
+  });
 });

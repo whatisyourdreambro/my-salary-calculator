@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 const SUGGESTED_LINKS = [
-  { href: "/", label: "연봉 계산기", icon: Home, description: "2026 실수령액 즉시 계산" },
+  { href: "/", label: "연봉 계산기", icon: Home, description: "세후 실수령액 즉시 계산" },
   { href: "/calc", label: "계산기 모음", icon: Calculator, description: "세금·대출·투자·부동산" },
   { href: "/guides", label: "금융 가이드", icon: BookOpen, description: "직장인 절세·재테크" },
   { href: "/salary-db", label: "회사별 연봉", icon: Building2, description: "기업 평균 연봉 비교" },
