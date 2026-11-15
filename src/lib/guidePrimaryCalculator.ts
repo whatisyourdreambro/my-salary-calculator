@@ -71,9 +71,12 @@ const DIRECT_GUIDE_LINKS: Readonly<Record<string, GuideCalculatorLink>> = {
   // 삼성전자 성과급 계산기로. ★이 카드는 광고 위다(데스크톱 SidebarAd, 모바일 page.tsx 의 CalcResultAd 위) — 이름은 바꾸기 전 이름과
   // 폭이 같거나 좁은 '삼성 성과급 계산기'(굵게 7.376em = '주식 수익률 계산기' 7.376em, '연봉 실수령액 계산기' 8.240em 보다 0.864em 좁음,
   // 사이트 서브셋 글꼴 advance 폭). STATIC_CALC_CARDS 제목 '삼성전자 성과급 계산기'(9.105em)는 넓어서 쓰지 않는다.
-  // SK하이닉스 글 2편은 같은 폭 안에 정확한 이름이 들어가지 않아(최소 'SK하이닉스 PS 계산기' 9.057em) 이번에는 바꾸지 않았다.
   "samsung-wage-negotiation-2026": { name: "삼성 성과급 계산기", href: "/calc/samsung-bonus" },
   "samsung-opi-tai-complete-2026": { name: "삼성 성과급 계산기", href: "/calc/samsung-bonus" },
+  // 같은 날 SK하이닉스 PS 이력 글 — 종전 '연봉 실수령액 계산기'(굵게 8.240em)보다 좁은 '하이닉스 PS 계산기'(7.765em, wght 400~700 모두
+  // 0.48~0.52em 좁음). SK하이닉스 임금협상 글(sk-hynix-wage-2026, 종전 '주식 수익률 계산기' 7.376em)은 같은 폭 안에 정확한 이름이
+  // 들어가지 않아 그대로 둔다('하이닉스 PS 계산기' +0.389em, 'SK 성과급 계산기'는 SK이노베이션 계산기와 헷갈림).
+  "sk-hynix-ps-history-2026-prospect": { name: "하이닉스 PS 계산기", href: "/calc/sk-hynix-bonus" },
 };
 
 const CATEGORY_LINKS: Readonly<Record<string, GuideCalculatorLink>> = {

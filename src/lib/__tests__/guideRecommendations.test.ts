@@ -38,6 +38,7 @@ describe("가이드 대표 계산기의 편집 의도", () => {
     // 2026-11-15 SEASONA(lib ideas[0]) — 광고 위 카드라 이름 폭은 아래 '광고 위 카드 이름' 검사가 따로 고정
     ["samsung-wage-negotiation-2026", "/calc/samsung-bonus"],
     ["samsung-opi-tai-complete-2026", "/calc/samsung-bonus"],
+    ["sk-hynix-ps-history-2026-prospect", "/calc/sk-hynix-bonus"],
     ["year-end-tax-2026", "/year-end-tax"],
     ["severance-pay-guide", "/tools/finance/severance"],
     ["isa-vs-pension-savings", "/tools/finance/compound"],

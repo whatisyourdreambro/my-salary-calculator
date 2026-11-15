@@ -40,3 +40,24 @@ describe("삼성 성과급 글 2편의 대표 계산기 카드 (SEASONA lib idea
     expect(getGuidePrimaryCalculator({ slug: "unmapped", category: "연봉" }).name).toBe(BEFORE["samsung-opi-tai-complete-2026"]);
   });
 });
+
+// 라틴 글자가 섞인 이름은 실측값으로만 — fontTools 로 잰 서브셋 글꼴 advance 폭(2026-11-15, wght 700 / 400):
+//   '연봉 실수령액 계산기' 8.2402em / 8.2803em  →  '하이닉스 PS 계산기' 7.7646em / 7.7637em ('PS' 1.2529em < 한글 2음절 1.7285em)
+describe("SK하이닉스 PS 이력 글의 대표 계산기 카드 (SEASONA lib ideas[0])", () => {
+  it("하이닉스 PS 계산기로 가고, 바꾸기 전 이름보다 한글 2음절이 줄고 라틴 대문자 2자(PS)만 더해진다", () => {
+    const guide = koGuides.find((g) => g.slug === "sk-hynix-ps-history-2026-prospect")!;
+    expect(guide.category).toBe("연봉");
+    const link = getGuidePrimaryCalculator(guide);
+    expect(link).toEqual({ name: "하이닉스 PS 계산기", href: "/calc/sk-hynix-bonus" });
+    const now = shape(link.name);
+    const old = shape("연봉 실수령액 계산기");
+    expect(now.spaces).toBe(old.spaces);
+    expect(old.hangul - now.hangul).toBe(2);
+    expect(link.name.replace(/[\uAC00-\uD7A3 ]/g, "")).toBe("PS");
+  });
+
+  it("SK하이닉스 임금협상 글은 같은 폭 안에 정확한 이름이 없어 카테고리 기본 카드 그대로", () => {
+    const guide = koGuides.find((g) => g.slug === "sk-hynix-wage-2026")!;
+    expect(getGuidePrimaryCalculator(guide)).toEqual({ name: "주식 수익률 계산기", href: "/calc/stock-pl-quick" });
+  });
+});
