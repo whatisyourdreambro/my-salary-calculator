@@ -4675,7 +4675,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "samsung-opi-tai-complete-2026",
   "title": "삼성전자 OPI·TAI 2026 — 사업부별 지급률·세후",
-  "description": "OPI는 연봉의 최대 50%, TAI는 월 기본급 대비 반기 지급. 2025년 실적분 OPI·2026년 상반기 TAI 사업부별 지급률과 연봉별 세후.",
+  "description": "OPI는 연봉의 최대 50%, TAI는 월 기본급 대비 반기 지급. 2025년 실적분 OPI·2026년 상반기 TAI 지급률과 세후.",
   "category": "연봉",
   "tags": [
    "삼성전자",
@@ -4695,7 +4695,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "sk-hynix-ps-history-2026-prospect",
   "title": "SK하이닉스 PS 연도별 지급률과 2026 지급 방식",
-  "description": "PS 2021년 1,000% → 2023년 0% → 2025년 2,964%(2026년 지급). 2026년 실적분부터 현금 50%·자사주 30%·이연 20%, 연봉별 세후.",
+  "description": "PS 2023년 0% → 2025년 2,964%. 2026년 실적분부터 현금 50%·자사주 30%·이연 20%.",
   "category": "연봉",
   "tags": [
    "SK하이닉스",
