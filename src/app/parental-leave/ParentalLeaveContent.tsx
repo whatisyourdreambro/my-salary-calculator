@@ -305,7 +305,7 @@ export default function ParentalLeaveContent() {
     <div className="space-y-3">
      {[
       { step: "30일 전", title: "회사에 서면 신청", desc: "육아휴직 시작 30일 전까지 사용 기간, 자녀 정보를 포함하여 서면으로 신청." },
-      { step: "시작 후", title: "고용24 급여 신청", desc: "육아휴직 시작 후 1개월 이내 고용24(work24.go.kr)에서 육아휴직 급여 신청." },
+      { step: "시작 후", title: "고용24 급여 신청", desc: "시작 1개월 뒤부터 고용24(work24.go.kr)에서 신청. 종료 후 12개월 이내." },
       { step: "매월", title: "급여 지급", desc: "매월 고용보험에서 급여 전액 지급 (2025년 개편으로 사후지급금 폐지)." },
      ].map((item, i) => (
       <div key={i} className="flex gap-4 items-start">

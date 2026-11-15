@@ -37,6 +37,13 @@ describe("/parental-leave 6+6 토글 접근성", () => {
 });
 
 // [표지 08b] /parental-leave 육아휴직 급여 신청 기간
+// 광고 위(CalcResultAd 아래, CoupangBanner·GuideMidAd 위) 단계 설명 — 12px 사이트 글꼴 364.96px -> 349.20px(-15.76px).
+describe("/parental-leave 육아휴직 급여 신청 기간(고용보험법 제70조 제2항)", () => {
+  it("시작 1개월 뒤부터·종료 후 12개월 이내로 적고 옛 '1개월 이내'가 없다", () => {
+    expect(parental).toContain('desc: "시작 1개월 뒤부터 고용24(work24.go.kr)에서 신청. 종료 후 12개월 이내."');
+    expect(parental).not.toContain("시작 후 1개월 이내");
+  });
+});
 
 // [표지 08c] /unemployment-benefit STEP 3 대기기간 기산일
 
