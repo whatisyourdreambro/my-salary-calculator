@@ -14,6 +14,7 @@
 // 데이터 수정)이라, status 에 기대는 단언은 모두 합성 등록부(synthetic·clone 뒤 수정)에서 한다 — 발표일 Day-0 에
 // status 를 고쳐도 npm test 가 깨지지 않게.
 
+import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -41,6 +42,7 @@ import {
   toEventId,
   toPath,
   validateRegistry,
+  type LastmodHandle,
   type SeasonRegistry,
   type SeasonRow,
 } from "@/lib/seasonAnnounce";
@@ -473,6 +475,46 @@ describe("announceList", () => {
     const a = announceList(REG, "E10");
     expect(a.lastmodTodo.find((t) => t.url === "/calc/samsung-bonus")?.kind).toBe("bonus-engine");
   });
+
+  // 2026-11-15 (tooling-01): 손잡이에 넣을 날짜는 내용을 실제로 고친 날(KST) — '반영 배포일'(게시일)이 아니다.
+  it("lastmod 할 일 문구 — 날짜는 실제 수정일(KST), 게시일·배포일 아님 (tooling-01)", () => {
+    const dated: LastmodHandle[] = [
+      { kind: "route-override", ref: "/home-loan" },
+      { kind: "add-on-event", ref: "/auto-tax-2026" },
+      { kind: "guide-modified", ref: "lotto-prize-tax" },
+      { kind: "calc-publishedAt", ref: "salary-quick" },
+      { kind: "company-lastUpdated", ref: "companyPageModified" },
+    ];
+    for (const handle of dated) {
+      const text = lastmodAction(handle);
+      expect(text, handle.kind).toContain("실제 수정일(KST)");
+      expect(text, handle.kind).toContain("게시일·미래 날짜 금지");
+      expect(text, handle.kind).not.toContain("배포일");
+    }
+    // 가이드는 화면 칩 숫자를 바꾸지 않는 사이트맵 전용 행이 기본이다(guideSitemapDates.ts 머리 주석)
+    expect(lastmodAction({ kind: "guide-modified", ref: "lotto-prize-tax" })).toContain("src/lib/guideSitemapDates.ts");
+  });
+
+  it("CLI 는 지금 날짜를 KST 달력일로 찍는다 — +09:00 자정 ROUTE_OVERRIDES 가 하루 앞당겨 보이지 않게 (tooling-01)", async () => {
+    const cli = read("scripts/season-announce.ts");
+    expect(cli).not.toContain("반영 배포일");
+    expect(cli).not.toMatch(/lastModified\.toISOString\(\)\.slice\(0, 10\)/);
+    const { ROUTE_OVERRIDES } = await import("@/app/sitemap");
+    const kst = (d: Date) => new Date(d.getTime() + 9 * 3_600_000).toISOString().slice(0, 10);
+    const out = execFileSync(process.execPath, ["--import", "tsx", "scripts/season-announce.ts", "event", "E0"], {
+      cwd: process.cwd(), encoding: "utf8", timeout: 60_000, maxBuffer: 4 * 1024 * 1024,
+    });
+    const shown = new Map([...out.matchAll(/^ {2}- (\/\S*) \[지금 (\d{4}-\d{2}-\d{2})\]$/gm)].map((m) => [m[1], m[2]]));
+    let checked = 0;
+    for (const [route, day] of shown) {
+      const lm = ROUTE_OVERRIDES[route]?.lastModified;
+      if (!lm) continue;
+      expect(day, route).toBe(kst(lm));
+      checked += 1;
+    }
+    expect(checked).toBeGreaterThan(0);
+    expect(out).not.toContain("반영 배포일");
+  }, 65_000);
 });
 
 // ── (5) diffSitemaps ─────────────────────────────────────────────────────────────
