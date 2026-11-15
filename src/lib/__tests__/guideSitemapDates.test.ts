@@ -1,4 +1,4 @@
-// 광고 아래 보강의 사이트맵 전용 날짜 (lens-meta-F01, 운영자 승인 2026-11-13)
+// 사이트맵 전용 가이드 날짜 — 광고 아래 보강(lens-meta-F01, 운영자 승인 2026-11-13), 또는 화면 날짜를 올리지 못한 광고 위 같은 폭 정정(ads-01)
 //
 // 화면·OG·Article 날짜(getGuideContentDate)는 그대로 두고 사이트맵 lastmod 만 보강을 고친 날로 올린다.
 // 그래야 게시 8단계 IndexNow(사이트맵 (loc, lastmod) 차이)가 보강한 글을 네이버·빙에 알린다.
@@ -26,7 +26,7 @@ const NO_SUPPLEMENT_ROWS: Readonly<Record<string, string>> = {
     "R1 RL-02 광고 위 같은 폭 정정만 받았다. 칩을 2026.11.03 으로 바꾸면 화면 폭 440~441px 에서 제목 아래 광고가 24px 내려가 화면 날짜는 2026.10.03 그대로 둔다",
 };
 
-describe("guideSitemapDates — 광고 아래 보강의 사이트맵 전용 날짜", () => {
+describe("guideSitemapDates — 사이트맵 전용 날짜(광고 아래 보강, 또는 화면 날짜를 올리지 못한 광고 위 정정)", () => {
   it("모든 행은 실제 가이드 슬러그·광고 아래 보강이 있는 글(이름 붙인 예외 제외)·YYYY-MM-DD·오늘(KST) 이전", () => {
     for (const [slug, day] of Object.entries(GUIDE_SITEMAP_ONLY_REVISED)) {
       expect(bySlug.has(slug), slug).toBe(true);
