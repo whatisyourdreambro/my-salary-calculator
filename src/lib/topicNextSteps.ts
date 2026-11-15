@@ -54,6 +54,8 @@ export const TOPIC_NEXT_STEPS: Record<string, readonly string[]> = {
   '/year-end-tax-settlement-2026': ['/chuseok-bonus-2026', '/money-check', '/tips'],
   '/chuseok-bonus-2026': ['/calc/bonus-home-plan', '/year-end-tax-settlement-2026', '/tips'],
   '/calc/samsung-bonus': ['/calc/bonus-home-plan', '/year-end-tax-settlement-2026'],
+  // 2026-11-15 SEASONA(감사 components ideas[6]): SK하이닉스 성과급 계산기 — calc/layout 의 모든 광고 뒤. 목적지 제목·설명은 위 SEASONA 묶음 것을 쓴다.
+  '/calc/sk-hynix-bonus': ['/calc/bonus-home-plan', '/calc/bonus-calculators', '/year-end-tax-2027'],
   // 2026-11-15 SEASONA(감사 calc ideas[6]): calc/layout 이 모든 광고(InArticleAd·쿠팡·HomeTopAd) 뒤에 그리는 상자 — 광고 위 변화 없음.
   // 키를 더하면 PAGE_LINK_REVIEW_PATHS 에도 들어가 사이트맵 날짜 하한이 2026-10-19 가 된다 — 통합 원장 단계가 실제 수정일(2026-11-15)로 올린다.
   '/calc/year-end-bonus-tax': ['/calc/january-bonus', '/year-end-tax-2027', '/calc/bonus-calculators'],

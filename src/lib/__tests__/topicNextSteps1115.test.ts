@@ -64,3 +64,12 @@ describe("시즌·퇴직 계산기 6곳 (SEASONA calc ideas[6])", () => {
     expect(renderToStaticMarkup(createElement(TopicNextSteps, { path: "/calc/kia-bonus" }))).toBe("");
   });
 });
+
+describe("SK하이닉스 성과급 계산기 (SEASONA components ideas[6])", () => {
+  it("calc/layout 상자 — 내 집 마련·회사별 성과급 모음·연말정산 2027", () => {
+    const targets = ["/calc/bonus-home-plan", "/calc/bonus-calculators", "/year-end-tax-2027"];
+    expect(TOPIC_NEXT_STEPS["/calc/sk-hynix-bonus"]).toEqual(targets);
+    for (const href of targets) expect(pageExists(href), href).toBe(true);
+    expect(getTopicNextSteps("/calc/sk-hynix-bonus").every((c) => c.title && c.description.length > 20)).toBe(true);
+  });
+});
