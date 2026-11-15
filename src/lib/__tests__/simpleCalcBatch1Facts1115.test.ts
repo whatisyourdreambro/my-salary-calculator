@@ -182,3 +182,15 @@ describe("simple-calc-b04-F08 (2)(3) 내 연봉 가능 대출액 유의사항·�
     expect(kinds(c.caveats?.[0] ?? "").hangul).toBeLessThan(64);
   });
 });
+
+describe("simple-calc-b04-F09 (2) 주택담보대출 월 상환액 유의사항·본문·출처 — 보금자리론 2026-11-09 공시 (광고 위, 더 좁게)", () => {
+  it("유의사항 3·본문 3단락·출처 제목", () => {
+    const c = calc("mortgage-monthly-quick");
+    expect(c.caveats?.[2]).toBe("기본값 금리 4%는 예시이며, 2026년 11월 9일 공시 기준 보금자리론 30년 만기 금리는 u-보금자리론 연 5.30%, 아낌e-보금자리론 연 5.20%입니다.");
+    expect(c.details).toContain("2026년 11월 9일 공시 기준 u-보금자리론이 만기 10년 연 5.10%부터 50년 연 5.40%, 아낌e-보금자리론이 10년 연 5.00%부터 50년 연 5.30%이며");
+    expect(c.details).not.toContain("2026년 9월 1일 공시");
+    expect(c.sources?.[0]).toEqual({ title: "한국주택금융공사 — 보금자리론 금리안내(2026년 11월 공시)", url: "https://www.hf.go.kr/ko/sub01/sub01_01_04.do" });
+    expect(c.sources).toHaveLength(2);
+    notWider(c.sources?.[0]?.title ?? "", "한국주택금융공사 — 보금자리론 금리안내(2026년 9월 1일 공시)", "source title");
+  });
+});
