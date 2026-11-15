@@ -37,7 +37,7 @@ const FAQS = [
   },
   {
     q: "자동차세 연납 할인은 얼마나 되나요?",
-    a: "2026년 기준 1월 16~31일에 연납을 신청하면 2~12월분 세액의 5%(연세액 대비 실질 약 4.6%)를 공제받습니다. 예: 2,000cc 차량 연 자동차세가 약 52만원이면 연납 시 약 49만 6천원으로 약 2만 4천원 절약됩니다. 3월(16~31일)·6월(16~30일)·9월(16~30일)에도 연납 신청이 가능하지만 남은 기간분만 공제되어 공제액이 줄어듭니다.",
+    a: "2026년 기준 1월 16~31일에 연납을 신청하면 2~12월분 세액의 5%(연세액 대비 실질 약 4.6%)를 공제받습니다. 예: 2,000cc 차량 연 자동차세가 약 52만원이면 연납 시 약 49만 6천원으로 약 2만 4천원 절약됩니다. 3월(16~31일)·6월(16~30일)·9월(16~30일)에도 연납 신청이 가능하지만 남은 기간분만 공제되어 공제액이 줄어듭니다. 2027년 1월 연납도 같은 방식입니다. 2026년 11월 15일 현재 지방세법 시행령 제125조 제6항은 공제 이자율을 연도 제한 없이 5%로 정하고 있어, 2027년 1월 16~31일(31일이 일요일이라 2월 1일까지, 지방세기본법 제24조)에 연납하면 납부기한 다음 날부터 12월 31일까지 기간분 세액의 5%가 공제됩니다(지방세법 제128조 제3항).",
   },
   {
     q: "자동차세는 어떻게 계산되나요?",
@@ -273,6 +273,19 @@ export default function AutoTax2026Page() {
               </p>
               <p className="text-xs text-muted-blue dark:text-canvas-300">
                 4대보험·소득세 자동 공제
+              </p>
+            </Link>
+            {/* 1월 연납 가이드 카드 — 마지막 광고(CoupangBanner) 아래 맨 끝 그리드(운영자 결정 2번, 2026-11-15 SEASONB).
+                다섯째 카드라 두 칸을 차지해 2열 그리드 끝이 비지 않게 한다. */}
+            <Link
+              href="/guides/car-tax-annual-payment"
+              className="col-span-2 block p-4 rounded-2xl bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-700 hover:border-electric transition-colors"
+            >
+              <p className="text-sm font-bold text-navy dark:text-canvas-50 mb-1">
+                자동차세 연납 신청 가이드
+              </p>
+              <p className="text-xs text-muted-blue dark:text-canvas-300">
+                1월 연납 공제 계산·위택스 신청 방법
               </p>
             </Link>
           </div>
