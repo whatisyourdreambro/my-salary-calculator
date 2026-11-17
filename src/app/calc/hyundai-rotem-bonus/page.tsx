@@ -18,7 +18,6 @@ import {
   softwareApplicationLd,
   autoBreadcrumbLd,
   faqLd,
-  howToLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -88,14 +87,6 @@ const FAQ_ITEMS = [
   },
 ];
 
-const HOW_TO_STEPS = [
-  { name: "시나리오 선택", text: "2025년 타결안(450% + 1,620만) / 2024년(500% + 1,800만) / 직접 입력 중 선택." },
-  { name: "본인 월 기본급 입력", text: "월 기본급을 만원 단위로 입력. 보도 평균 3,380만원 역산 시 월 기본급 약 390만원 수준." },
-  { name: "연봉 추정 확인", text: "세율 추정용 연봉은 기본급 × 18로 자동 산출되며, 세금 가정에서 직접 입력으로 바꿀 수 있습니다." },
-  { name: "결과 확인", text: "% × 기본급 + 정액 + 상품권 합산이 즉시 표시." },
-  { name: "세후 실수령 확인", text: "누진세율 + 4대보험 추가 부과로 세후 실수령액 자동 계산." },
-];
-
 export const metadata: Metadata = {
   // canonical/OG/twitter/robots/hreflang은 buildPageMetadata(src/lib/seo.ts) 정본으로 생성 —
   // 수기 canonical 드리프트 방지. 기존 출력값은 유지되고 헬퍼 자동 필드만 추가된다.
@@ -133,11 +124,6 @@ export default function HyundaiRotemBonusPage() {
             dateModified: staticRouteLastModified(PAGE_PATH),
           }),
           faqLd(FAQ_ITEMS),
-          howToLd({
-            name: "현대로템 성과급 계산하는 방법",
-            description: "임단협 시나리오·본인 월 기본급으로 정률+정액 성과금 합산 + 세후 실수령액을 산출하는 5단계 가이드",
-            steps: HOW_TO_STEPS,
-          }),
         ]}
       />
 

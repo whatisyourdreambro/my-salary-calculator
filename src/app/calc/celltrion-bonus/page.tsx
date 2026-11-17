@@ -14,7 +14,6 @@ import {
   softwareApplicationLd,
   autoBreadcrumbLd,
   faqLd,
-  howToLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -79,14 +78,6 @@ const FAQ_ITEMS = [
   },
 ];
 
-const HOW_TO_STEPS = [
-  { name: "시나리오 선택", text: "2025년 실적분(최대 50%) / 2024년 실적분(최대 53%) / 2023년 실적분(42%) / 직접 입력 중 선택." },
-  { name: "본인 기본급 연봉 입력", text: "성과급·수당을 제외한 기본급 연봉을 만원 단위로 입력. 셀트리온 성과급은 기본급 연봉 대비 %로 책정됩니다." },
-  { name: "지급률 조정 (선택)", text: "직접 입력 모드에서 본인 평가 등급에 맞는 지급률(%)로 조정 가능. 보도 수치는 최고 등급 상한." },
-  { name: "결과 확인", text: "기본급 연봉 × 지급률 산정액이 즉시 표시. 2025년 실적분은 1월 선지급(약 43%)과 잔여분을 구분해 표시." },
-  { name: "세후 실수령 확인", text: "누진세율 + 4대보험 추가 부과로 세후 실수령액 자동 계산." },
-];
-
 export const metadata: Metadata = {
   // canonical/OG/twitter/robots/hreflang은 buildPageMetadata(src/lib/seo.ts) 정본으로 생성 —
   // 수기 canonical 드리프트 방지. 기존 출력값은 유지되고 헬퍼 자동 필드만 추가된다.
@@ -124,11 +115,6 @@ export default function CelltrionBonusPage() {
             dateModified: staticRouteLastModified(PAGE_PATH),
           }),
           faqLd(FAQ_ITEMS),
-          howToLd({
-            name: "셀트리온 성과급 계산하는 방법",
-            description: "실적연도 시나리오·본인 기본급 연봉으로 경영성과급 + 세후 실수령액을 산출하는 5단계 가이드",
-            steps: HOW_TO_STEPS,
-          }),
         ]}
       />
 

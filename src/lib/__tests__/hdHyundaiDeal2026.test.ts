@@ -10,7 +10,7 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const page = readFileSync(resolve(process.cwd(), "src/app/calc/hd-hyundai-bonus/page.tsx"), "utf8");
-const faqBlock = page.slice(page.indexOf("const FAQ_ITEMS"), page.indexOf("const HOW_TO_STEPS"));
+const faqBlock = page.slice(page.indexOf("const FAQ_ITEMS"), page.indexOf("export const metadata")); // 2026-11-18 R4 RL-17: HOW_TO_STEPS 제거로 끝 앵커만 바꿈
 
 describe("HD현대중공업 2026 임단협 가결 — 접힌 FAQ (calc-02-F01)", () => {
   it("가결일·찬성률·타결 내용과 보도 출처, 성과급률 미발표", () => {

@@ -12,7 +12,6 @@ import {
   softwareApplicationLd,
   autoBreadcrumbLd,
   faqLd,
-  howToLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -77,14 +76,6 @@ const FAQ_ITEMS = [
   },
 ];
 
-const HOW_TO_STEPS = [
-  { name: "사업부 시나리오 선택", text: "석유화학 호황 850% / 첨단소재 600% / 평년 400% / 적자 100% / 0%." },
-  { name: "본인 월 기본급 입력", text: "월 통상임금 입력 (보통 400~600만원)." },
-  { name: "PI 포함 여부", text: "PI(연간 고정 200%) 포함 체크. 기본 포함." },
-  { name: "결과 확인", text: "PS + PI 합산 세전 즉시 표시." },
-  { name: "세후 실수령 확인", text: "누진세율 + 4대보험 marginal 자동 계산." },
-];
-
 export const metadata: Metadata = {
   // canonical/OG/twitter/robots/hreflang은 buildPageMetadata(src/lib/seo.ts) 정본으로 생성 —
   // 수기 canonical 드리프트 방지. 기존 출력값은 유지되고 헬퍼 자동 필드만 추가된다.
@@ -117,11 +108,6 @@ export default function LgChemBonusPage() {
           autoBreadcrumbLd(PAGE_PATH, { leafName: "LG화학 성과급" }),
           softwareApplicationLd({ name: PAGE_TITLE, description: PAGE_DESC, url: `${SITE_URL}${PAGE_PATH}`, dateModified: staticRouteLastModified(PAGE_PATH) }),
           faqLd(FAQ_ITEMS),
-          howToLd({
-            name: "LG화학 성과급 계산하는 방법",
-            description: "사업부 시나리오·본인 기본급으로 PS+PI 세전·세후 실수령액을 산출하는 5단계 가이드",
-            steps: HOW_TO_STEPS,
-          }),
         ]}
       />
 

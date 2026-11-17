@@ -17,7 +17,6 @@ import {
   softwareApplicationLd,
   autoBreadcrumbLd,
   faqLd,
-  howToLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -92,25 +91,6 @@ const FAQ_ITEMS = [
   },
 ];
 
-const HOW_TO_STEPS = [
-  {
-    name: "시나리오 선택",
-    text: "최근 지급 실적(2024 실적분 250% / 2023 실적분 800% / 2022 실적분 1,500%) 중 선택. 직접 입력도 가능.",
-  },
-  {
-    name: "본인 월 기본급 입력",
-    text: "월 기본급을 만원 단위로 입력. 추정 연봉(기본급 × 20 = 12개월 + 상여 800%)이 자동 계산됩니다.",
-  },
-  {
-    name: "결과 확인",
-    text: "월 기본급 × 지급률(%)로 세전 경영성과급이 즉시 표시됩니다.",
-  },
-  {
-    name: "세후 실수령 확인",
-    text: "누진세율 + 지방세 + 4대보험 추가 부과를 반영한 세후 실수령액이 자동 계산됩니다.",
-  },
-];
-
 export const metadata: Metadata = {
   // canonical/OG/twitter/robots/hreflang은 buildPageMetadata(src/lib/seo.ts) 정본으로 생성 —
   // 수기 canonical 드리프트 방지. 기존 출력값은 유지되고 헬퍼 자동 필드만 추가된다.
@@ -148,12 +128,6 @@ export default function SOilBonusPage() {
             dateModified: staticRouteLastModified(PAGE_PATH),
           }),
           faqLd(FAQ_ITEMS),
-          howToLd({
-            name: "S-OIL 경영성과급 계산하는 방법",
-            description:
-              "최근 지급 실적 시나리오·본인 월 기본급으로 세전 성과급 + 세후 실수령액을 산출하는 4단계 가이드",
-            steps: HOW_TO_STEPS,
-          }),
         ]}
       />
 

@@ -14,7 +14,6 @@ import {
   softwareApplicationLd,
   autoBreadcrumbLd,
   faqLd,
-  howToLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -84,29 +83,6 @@ const FAQ_ITEMS = [
   },
 ];
 
-const HOW_TO_STEPS = [
-  {
-    name: "지급률 시나리오 선택",
-    text: "FY2025 실적분 150%(2026-02 실제 지급) / 적자 0% / 과거 호황 300%(2015-01 참고) 중 선택. 직접 입력도 가능.",
-  },
-  {
-    name: "본인 월 기본급 입력",
-    text: "급여명세서의 월 기본급을 만원 단위로 입력. 경영성과급은 기본급의 %로 지급됩니다.",
-  },
-  {
-    name: "본인 연봉 입력",
-    text: "세금 계산용 연 기본 연봉 입력. FY2023 공시 평균연봉은 8,000만원.",
-  },
-  {
-    name: "결과 확인",
-    text: "월 기본급 × 지급률 = 세전 경영성과급이 즉시 표시됩니다.",
-  },
-  {
-    name: "세후 실수령 확인",
-    text: "누진세율 + 4대보험 추가 부과를 반영한 세후 실수령액이 자동 계산됩니다.",
-  },
-];
-
 export const metadata: Metadata = {
   // canonical/OG/twitter/robots/hreflang은 buildPageMetadata(src/lib/seo.ts) 정본으로 생성 —
   // 수기 canonical 드리프트 방지. 기존 출력값은 유지되고 헬퍼 자동 필드만 추가된다.
@@ -144,12 +120,6 @@ export default function LgDisplayBonusPage() {
             dateModified: staticRouteLastModified(PAGE_PATH),
           }),
           faqLd(FAQ_ITEMS),
-          howToLd({
-            name: "LG디스플레이 경영성과급 계산하는 방법",
-            description:
-              "지급률 시나리오·본인 월 기본급·연봉으로 경영성과급 세전·세후 실수령액을 산출하는 5단계 가이드",
-            steps: HOW_TO_STEPS,
-          }),
         ]}
       />
 

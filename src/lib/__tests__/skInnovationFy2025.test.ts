@@ -9,7 +9,7 @@ import { describe, expect, it } from "vitest";
 
 const page = readFileSync(resolve(process.cwd(), "src/app/calc/sk-innovation-bonus/page.tsx"), "utf8");
 const client = readFileSync(resolve(process.cwd(), "src/app/calc/sk-innovation-bonus/Client.tsx"), "utf8");
-const faqBlock = page.slice(page.indexOf("const FAQ_ITEMS"), page.indexOf("const HOW_TO_STEPS"));
+const faqBlock = page.slice(page.indexOf("const FAQ_ITEMS"), page.indexOf("export const metadata")); // 2026-11-18 R4 RL-17: HOW_TO_STEPS 제거로 끝 앵커만 바꿈
 
 describe("SK이노베이션 FY2025 실적분 — 메타·접힌 FAQ (calc-04-F04)", () => {
   it("메타 설명은 2026년 초 지급·지급률 미공개", () => {

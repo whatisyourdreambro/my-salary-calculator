@@ -19,7 +19,6 @@ import {
   softwareApplicationLd,
   autoBreadcrumbLd,
   faqLd,
-  howToLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -170,29 +169,6 @@ const FAQ_ITEMS = [
   },
 ];
 
-const HOW_TO_STEPS = [
-  {
-    name: "영업이익 시나리오 선택",
-    text: `${PROFIT_SCENARIOS.map((s) => `${s.label}(${s.trillion}조)`).join(" / ")} 중 선택하거나 직접 입력합니다. 2026년 1~3분기 누적 영업이익은 ${Q1_Q3_2026_PROFIT_TRIL}조원(10/28 회사 발표)입니다.`,
-  },
-  {
-    name: "본인 연봉 입력",
-    text: "연 기본 연봉을 만원 단위로 입력하면 기본급(연봉÷20)이 자동 계산됩니다.",
-  },
-  {
-    name: "PI 확인·선택",
-    text: "2026 상반기 PI는 150% 확정(7/28 지급)이 기본 적용되고, 하반기는 시나리오를 선택합니다.",
-  },
-  {
-    name: "PS 지급 방식 선택",
-    text: "신 체계(현금 50%+자사주 50%, 2026-09-16 가결) / 구 체계(현금 80%+이연 20%) / 주식 100% 선택권을 토글해 비교합니다.",
-  },
-  {
-    name: "결과·세후 확인",
-    text: "PS+PI 산정 총액, 연도별 지급 타임라인(현금·주식 구성), 당해 수령분 세후 실수령액을 확인합니다.",
-  },
-];
-
 export const metadata: Metadata = {
   // canonical/OG/twitter/robots/hreflang은 buildPageMetadata(src/lib/seo.ts) 정본으로 생성 —
   // 수기 canonical 드리프트 방지. 기존 출력값은 유지되고 헬퍼 자동 필드만 추가된다.
@@ -262,12 +238,6 @@ export default function SkHynixBonusPage() {
             dateModified: LAST_UPDATED,
           },
           faqLd(FAQ_ITEMS),
-          howToLd({
-            name: "SK하이닉스 PS·PI 성과급 계산하는 방법",
-            description:
-              "영업이익·연봉·PI에 2026 임단협 타결 지급 방식(현금 50%+자사주 50%)까지 반영해 세후 실수령액을 산출하는 5단계 가이드",
-            steps: HOW_TO_STEPS,
-          }),
         ]}
       />
 

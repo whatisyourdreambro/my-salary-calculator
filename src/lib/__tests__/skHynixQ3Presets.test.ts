@@ -90,21 +90,16 @@ describe("② /calc/sk-hynix-bonus 화면", () => {
     expect(page).toContain("상반기 영업이익 98.2조원");
   });
 
-  it("FAQ(접힌 details)·HowTo(JSON-LD)는 1~3분기 누적·두 시나리오의 뜻·10/28 뉴스룸 출처를 적는다", async () => {
+  it("FAQ(접힌 details)는 1~3분기 누적·두 시나리오의 뜻·10/28 뉴스룸 출처를 적는다", async () => {
     const page = await html(() => import("@/app/calc/sk-hynix-bonus/page"));
     const items = ldItems(page);
     const faq = items.find((i) => i["@type"] === "FAQPage");
-    const howTo = items.find((i) => i["@type"] === "HowTo");
     const ps = faq.mainEntity.find((q: { name: string }) => q.name === "2026년 SK하이닉스 PS는 1인당 얼마나 될까요?");
     const answer: string = ps.acceptedAnswer.text;
     expect(answer).toContain("회사가 2026년 10월 28일 발표한 1~3분기 누적 영업이익은 181.5조원(3분기 83조 3,338억원, SK하이닉스 뉴스룸)입니다.");
     expect(answer).toContain("계산기의 '보수' 시나리오(181.5조원)는 4분기 영업이익을 0으로 둔 값이고, '누적 연환산'(242조원)은 1~3분기 흐름이 4분기에도 이어진다고 가정한 값입니다.");
     expect(answer).toContain("자사주 20조원 매입을 결의했고, 그중 약 10조원은 임직원 보상용이라고 밝혔습니다.");
     expect(answer).toContain("컨센서스 250조원");
-    const step = howTo.step.find((s: { name: string }) => s.name === "영업이익 시나리오 선택");
-    expect(step.text).toBe(
-      "2025 실적(47.2조) / 보수(181.5조) / 누적 연환산(242조) / 컨센서스(250조) 중 선택하거나 직접 입력합니다. 2026년 1~3분기 누적 영업이익은 181.5조원(10/28 회사 발표)입니다."
-    );
     // 화면의 FAQ 답은 <details> 안(기본 닫힘)에만 있다.
     const details = [...page.matchAll(/<details(?![^>]*\sopen="")[^>]*>([\s\S]*?)<\/details>/g)].map((m) => m[1]);
     expect(details.some((d) => d.includes("임직원 보상용이라고 밝혔습니다."))).toBe(true);

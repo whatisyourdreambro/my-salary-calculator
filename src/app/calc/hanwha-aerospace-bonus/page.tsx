@@ -18,7 +18,6 @@ import {
   softwareApplicationLd,
   autoBreadcrumbLd,
   faqLd,
-  howToLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -83,29 +82,6 @@ const FAQ_ITEMS = [
   },
 ];
 
-const HOW_TO_STEPS = [
-  {
-    name: "지급 연도 선택",
-    text: "FY2025 실적분(2026년 2월 지급) / FY2024 실적분(2025년 2월 지급) / 직접 입력 중 선택.",
-  },
-  {
-    name: "소속 사업부 선택",
-    text: "지상방산(LS) 725% / 유도무기(PGM) 702.8% / MRO 510.6% / 항공 494.8% / 그 외 사업부 중 본인 소속 선택.",
-  },
-  {
-    name: "본인 월 기본급 입력",
-    text: "급여명세서의 월 기본급을 만원 단위로 입력. BPI·VEI는 월 기본급 대비 %로 지급됩니다.",
-  },
-  {
-    name: "연봉 입력",
-    text: "누진세율 계산용 본인 연봉 입력. 디폴트는 FY2025 공시 평균 1억 2,400만원.",
-  },
-  {
-    name: "결과 확인",
-    text: "기본급 × 지급률 + 정액 인센티브 합산 세전 총액과 누진세율·4대보험 반영 세후 실수령액이 즉시 표시.",
-  },
-];
-
 export const metadata: Metadata = {
   // canonical/OG/twitter/robots/hreflang은 buildPageMetadata(src/lib/seo.ts) 정본으로 생성 —
   // 수기 canonical 드리프트 방지. 기존 출력값은 유지되고 헬퍼 자동 필드만 추가된다.
@@ -143,12 +119,6 @@ export default function HanwhaAerospaceBonusPage() {
             dateModified: staticRouteLastModified(PAGE_PATH),
           }),
           faqLd(FAQ_ITEMS),
-          howToLd({
-            name: "한화에어로스페이스 성과급 계산하는 방법",
-            description:
-              "지급 연도·소속 사업부·본인 월 기본급으로 BPI+VEI 성과급 세전 총액과 세후 실수령액을 산출하는 5단계 가이드",
-            steps: HOW_TO_STEPS,
-          }),
         ]}
       />
 

@@ -13,7 +13,6 @@ import {
   softwareApplicationLd,
   autoBreadcrumbLd,
   faqLd,
-  howToLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -73,14 +72,6 @@ const FAQ_ITEMS = [
   },
 ];
 
-const HOW_TO_STEPS = [
-  { name: "본인 연봉 입력", text: "연 기본 연봉을 만원 단위로 입력. 네이버 평균 연봉 약 1.2억." },
-  { name: "PI(정기 인센티브) % 선택", text: "10/20/30/40% 중 본인 평가 시나리오 선택." },
-  { name: "RSU 부여 주식 수 입력", text: "본인 RSU 부여 받을 주식 수 입력. 일반 직원 수~수십 주." },
-  { name: "네이버 주가 입력", text: "현재 네이버 주가 (디폴트 23만원). 가득 시점 주가로 시나리오." },
-  { name: "결과 확인", text: "PI + RSU 합산 세전·세후 실수령액 자동 계산." },
-];
-
 export const metadata: Metadata = {
   // canonical/OG/twitter/robots/hreflang은 buildPageMetadata(src/lib/seo.ts) 정본으로 생성 —
   // 수기 canonical 드리프트 방지. 기존 출력값은 유지되고 헬퍼 자동 필드만 추가된다.
@@ -118,11 +109,6 @@ export default function NaverBonusPage() {
             dateModified: staticRouteLastModified(PAGE_PATH),
           }),
           faqLd(FAQ_ITEMS),
-          howToLd({
-            name: "네이버 성과급·RSU 계산하는 방법",
-            description: "PI + RSU 합산 + 가득 시점 주가 기반 세전·세후 실수령액을 산출하는 5단계 가이드",
-            steps: HOW_TO_STEPS,
-          }),
         ]}
       />
 
