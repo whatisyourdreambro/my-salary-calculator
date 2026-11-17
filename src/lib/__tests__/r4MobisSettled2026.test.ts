@@ -80,10 +80,16 @@ describe("페이지 문구 — 협상 중·미확정 표현 제거, 출처는 �
   const page = norm(read(PAGE));
 
   it("옛 상태 문구가 남아 있지 않다", () => {
-    // (숨긴 HowTo JSON-LD 의 '직접 입력(2026 타결 시)'은 BONUS1 이 블록째 지우므로 이 묶음에서 건드리지 않는다)
     for (const s of ["협상 진행 중", "잠정안(미확정)", "<strong>미확정</strong>", "2026-09-26 기준", "아직 반영하지 않았습니다", "반영 전입니다", "타결 시 본 계산기"]) {
       expect(page.includes(s), s).toBe(false);
     }
+  });
+
+  it("숨긴 HowTo JSON-LD 의 시나리오 단계는 지금 칩(2026 타결·2025 타결·직접 입력)과 같다", () => {
+    // 화면에 나오지 않는 JSON-LD 문자열만(광고 위치와 무관). 블록 자체는 BONUS1 이 지운다(2026-11-18 통합에서 칩에 맞춤).
+    expect(page).toContain(`{ name: "시나리오 선택", text: "2026 타결 / 2025 타결 / 직접 입력 중 선택." }`);
+    expect(page).not.toContain("2024 합의 /");
+    expect(page).not.toContain("직접 입력(2026 타결 시)");
   });
 
   it("메타 설명과 '신뢰' FAQ 답은 계산기 기준(2026 타결 보도·DART 공시 + 2025 타결 보도)을 적는다", () => {
