@@ -1311,8 +1311,8 @@
     },
     "/calc/s-oil-bonus": {
       "contentDate": "2026-11-15",
-      "reviewedAtCommit": "e9d4065f9cf99e947aaa11640c602b4147582db7",
-      "reason": "First ledger entry 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[4] (d7eefa10c, review fix c39ba57c2): a dated press note below the last calc-layout ad gives the 2026 Q3 preliminary results (SBS Biz 2026-11-02) and names the 2024·2023·2022 payout rates as reported values. Priority 0.85 kept explicitly because the bonus-cluster loop skips routes with a row. The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day; the page has no visible, OG or Article revision date field.) Rehashed 2026-11-17 for the n2 repair (commit e9d4065f9): only the 삼성바이오로직스 entry of the shared dependency src/components/CalcNewsNote.tsx changed; the S-OIL note text is unchanged (press of the last seven days re-read on 2026-11-17, nothing new), so the 2026-11-15 date is retained.",
+      "reviewedAtCommit": "0513c7ab3bd7910e473abc15f15dd2c1ef458f66",
+      "reason": "First ledger entry 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[4] (d7eefa10c, review fix c39ba57c2): a dated press note below the last calc-layout ad gives the 2026 Q3 preliminary results (SBS Biz 2026-11-02) and names the 2024·2023·2022 payout rates as reported values. Priority 0.85 kept explicitly because the bonus-cluster loop skips routes with a row. The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day; the page has no visible, OG or Article revision date field.) Rehashed 2026-11-17 for the n2 repair (commit e9d4065f9): only the 삼성바이오로직스 entry of the shared dependency src/components/CalcNewsNote.tsx changed; the S-OIL note text is unchanged (press of the last seven days re-read on 2026-11-17, nothing new), so the 2026-11-15 date is retained. Rehashed 2026-11-18 for the n2 final fix (commit 1e59a7499): only the 삼성바이오로직스 entry of the shared dependency src/components/CalcNewsNote.tsx changed; the S-OIL note text is unchanged, so the 2026-11-15 date is retained.",
       "dependencies": [
         "src/components/CalcNewsNote.tsx"
       ],
@@ -1321,12 +1321,12 @@
         "src/app/calc/s-oil-bonus/page.tsx",
         "src/components/CalcNewsNote.tsx"
       ],
-      "sha256": "15dcebe3a572d570aeba6a4ef410d0cfa9d84a69326854e1d2b28d89ffb5b512"
+      "sha256": "c4d76a09717a94532e075a897f0ba8192ebeeec29a9b9ce741cb50a2d8c4a7b2"
     },
     "/calc/samsung-biologics-bonus": {
-      "contentDate": "2026-11-17",
-      "reviewedAtCommit": "e9d4065f9cf99e947aaa11640c602b4147582db7",
-      "reason": "First ledger entry 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[4] (d7eefa10c): a dated press note below the last calc-layout ad reports the 11/17 resumption of talks and the partial strike to 11/27 (서울경제TV and 아시아경제 2026-11-13); re-check before the publish. Priority 0.85 kept explicitly. The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day; the page has no visible, OG or Article revision date field.) Rehashed 2026-11-17 for the n2 repair (commit e9d4065f9): the dated news note below the last ad (src/components/CalcNewsNote.tsx) now follows the 2026-11-17 press of 아시아경제 and 재경일보 (talks resumed 11/17 without agreement, the company proposed applying 6.2% before the wage agreement, the union refused; strike until 11/27 and 12/4). Visible text changed on 2026-11-17, so the content date moves to 2026-11-17 with the sitemap row.",
+      "contentDate": "2026-11-18",
+      "reviewedAtCommit": "0513c7ab3bd7910e473abc15f15dd2c1ef458f66",
+      "reason": "First ledger entry 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[4] (d7eefa10c): a dated press note below the last calc-layout ad reports the 11/17 resumption of talks and the partial strike to 11/27 (서울경제TV and 아시아경제 2026-11-13); re-check before the publish. Priority 0.85 kept explicitly. The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day; the page has no visible, OG or Article revision date field.) Rehashed 2026-11-17 for the n2 repair (commit e9d4065f9): the dated news note below the last ad (src/components/CalcNewsNote.tsx) now follows the 2026-11-17 press of 아시아경제 and 재경일보 (talks resumed 11/17 without agreement, the company proposed applying 6.2% before the wage agreement, the union refused; strike until 11/27 and 12/4). Visible text changed on 2026-11-17, so the content date moves to 2026-11-17 with the sitemap row. Rehashed 2026-11-18 for the n2 final fix (commit 1e59a7499, finding facts2-01): the dated news note below the last ad (src/components/CalcNewsNote.tsx) now says 일부 부서는 12월 4일까지 예정 instead of 일부 지원 부서 (재경일보 2026-11-17 writes 일부 부서; 서울경제TV 2026-11-13 puts the support departments in the first group that ends on 11/27), and attributes the union's refusal and the 15% demand to 재경일보, the only cited outlet that reports them. The press of 2026-11-17 and 2026-11-18 was searched again on 2026-11-18 with no newer confirmed development. Visible text changed on 2026-11-18, so the content date moves to 2026-11-18 with the sitemap row.",
       "dependencies": [
         "src/components/CalcNewsNote.tsx"
       ],
@@ -1335,7 +1335,7 @@
         "src/app/calc/samsung-biologics-bonus/page.tsx",
         "src/components/CalcNewsNote.tsx"
       ],
-      "sha256": "7774ede9300a2292edf18d4ad60b161dbb78a940e3b10a66169bb6a539040f9e"
+      "sha256": "79c8fa0464682fe8b417118bbdb725963c9169445a17e7a27596d39b7a45073f"
     },
     "/calc/vacation-pay": {
       "contentDate": "2026-11-15",

@@ -184,7 +184,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  // 성과급 루프 0.85 대상(-bonus)은 행이 생기면 루프가 건너뛰므로 priority 0.85 를 그대로 적는다(위 83~84줄 주석).
  '/calc/pension-hike-2027': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 접힌 FAQ 첫 두 답에 2026~2033 연도별 요율·월 보험료 예시(SEASONA calc ideas[1]) — 10/23 정확도 검토일보다 늦다
  '/calc/s-oil-bonus': { lastModified: new Date('2026-11-15T00:00:00+09:00'), priority: 0.85 }, // 마지막 광고 아래 날짜 박힌 3분기 실적 보도 요약(SEASONA calc ideas[4])
- '/calc/samsung-biologics-bonus': { lastModified: new Date('2026-11-17T00:00:00+09:00'), priority: 0.85 }, // 마지막 광고 아래 날짜 박힌 교섭·부분파업 보도 요약(SEASONA calc ideas[4]), 11-17 n2 수리로 11/17 교섭 재개 보도 기준
+ '/calc/samsung-biologics-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.85 }, // 마지막 광고 아래 날짜 박힌 교섭·부분파업 보도 요약(SEASONA calc ideas[4]), 11-17 n2 수리로 11/17 교섭 재개 보도 기준, 11-18 facts2-01 일부 부서·매체 표시 정정
  '/calc/vacation-pay': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 마지막 광고 아래 '이어서 확인할 내용' 상자·검색 설명 예시 금액(SEASONA calc ideas[6]·[5])
  '/hub/tax-saving': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 마지막 광고 아래 '이어서 확인할 내용' 상자(SEASONA lib ideas[3])·등록면허세 카드 설명(CALCMETA RL-10)
  '/fun/fortune': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 신년운세를 2027 정미년으로 — 제목·H1·결과 문구(SEASONC app-tools-fun ideas[0])
