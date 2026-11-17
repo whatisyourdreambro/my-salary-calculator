@@ -139,3 +139,12 @@ describe("calc-01-F10 연차 개수 계산기 — 발생일 내림차순", () =>
     expect(fiscal.indexOf("2024-02-02")).toBeLessThan(fiscal.indexOf("2024-01-01"));
   });
 });
+
+describe("calc-03-F14 /calc 오퍼 비교 카드", () => {
+  it("BEST 대비가 아니라 첫 오퍼와 차액(도구는 첫 번째 입력 오퍼 기준)", () => {
+    const src = read("src/app/calc/page.tsx");
+    expect(src).not.toContain("BEST 대비");
+    expect(src).toContain("오퍼 최대 10개 총보상을 동일 조건 세후 환산 — 월 실수령 순위·첫 오퍼와 차액");
+    expect(read("src/components/SalaryComparator.tsx")).toContain("첫 번째로 입력한");
+  });
+});

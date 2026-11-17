@@ -129,7 +129,8 @@ const FEATURED_CALCS: Array<{ href: string; title: string; description: string; 
  {
    href: "/calc/offer-compare",
    title: "이직 오퍼 실수령 비교",
-   description: "오퍼 최대 10개 총보상을 동일 조건 세후 환산 — 월 실수령 순위·BEST 대비 차액",
+   // 2026-11-18 N2-calc-17 calc-03-F14: 비교 기준은 BEST 가 아니라 첫 번째로 입력한 오퍼(SalaryComparator) — 더 좁은 문구
+   description: "오퍼 최대 10개 총보상을 동일 조건 세후 환산 — 월 실수령 순위·첫 오퍼와 차액",
    season: "1~3월 이직 피크",
  },
  {
