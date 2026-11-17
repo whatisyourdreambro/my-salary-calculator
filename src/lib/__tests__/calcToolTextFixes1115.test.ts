@@ -122,3 +122,20 @@ describe("calc-01-F12 맞벌이 몰아주기 — 출처 문장 링크 앞 띄어
     expect(visible).not.toContain("와소득세법");
   });
 });
+
+describe("calc-01-F10 연차 개수 계산기 — 발생일 내림차순", () => {
+  it("기본(입사 2023-03-02) 두 표 모두 발생일 내림차순, 행 수는 min(14, 전체) 그대로", async () => {
+    const { default: Client } = await import("@/app/calc/annual-leave-days/Client");
+    const { entryBasedSchedule, fiscalYearSchedule } = await import("@/lib/annualLeave");
+    const until = "2026-11-18";
+    const out = renderToStaticMarkup(createElement(Client, { initialUntil: until })).replaceAll("<!-- -->", "");
+    const tables = [...out.matchAll(/<tbody>([\s\S]*?)<\/tbody>/g)].map((m) => [...m[1].matchAll(/<td[^>]*>(\d{4}-\d{2}-\d{2})<\/td>/g)].map((d) => d[1]));
+    expect(tables.length).toBeGreaterThanOrEqual(2);
+    const expectedLengths = [entryBasedSchedule("2023-03-02", until), fiscalYearSchedule("2023-03-02", until)].map((g) => Math.min(14, g.length));
+    expect(tables.map((t) => t.length).sort()).toEqual([...expectedLengths].sort());
+    for (const dates of tables) expect(dates).toEqual([...dates].sort().reverse());
+    // 회계연도 표: 2024-01-01 비례연차가 2024-02-02·2024-01-02 아래로 내려간다
+    const fiscal = tables.find((t) => t.includes("2024-02-02") && t.includes("2024-01-01"))!;
+    expect(fiscal.indexOf("2024-02-02")).toBeLessThan(fiscal.indexOf("2024-01-01"));
+  });
+});
