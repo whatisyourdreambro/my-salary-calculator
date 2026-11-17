@@ -67,6 +67,8 @@ import TaiCalculator from "./TaiCalculator";
 import { TAI_LATEST, TAI_LATEST_TOP, taiRateSummary } from "./taiData";
 import { OPI1_MAX_RATE, OPI_LATEST, OPI_LATEST_BOTTOM, opiRateSummary } from "./opiData";
 import { ANNUAL_OP_2026_PRELIM } from "./annualOp";
+// 서버 컴포넌트 전용 import — DART 확정 실적(백만원, 접힌 FAQ 참고 문장). 클라이언트 번들에는 실리지 않는다.
+import { SAMSUNG_OP, toTril1 } from "@/lib/bonusHome/opActuals";
 import ShareButtons from "@/components/ShareButtons";
 import FavoritesButton from "@/components/FavoritesButton";
 import { withBonusAnnouncement } from "@/data/bonusAnnouncements";
@@ -172,9 +174,15 @@ const FAQ_ITEMS = [
       "성과급 자체의 세율은 낮출 수 없지만 환급액을 키우는 방법은 있습니다. (1) IRP·연금저축 추가 납입 (연 900만원 한도, 연봉 5,500만 이하 16.5% / 초과 13.2% 세액공제), (2) 우리사주조합 출연 (연 400만원 한도 소득공제), (3) 의료비·교육비·기부금 세액공제 극대화, (4) 고향사랑기부 (10만원까지 100% 세액공제). 성과급 입금 직후 IRP 한도를 채우는 게 가장 효과 큽니다.",
   },
   {
-    question: "삼성전자 성과급은 언제, 몇 번 지급되나요?",
+    // RL-18 (2026-11-18, 10월 895334845·8ac89336a 재이식): 종전 '언제, 몇 번 지급되나요?'는 '지급일' FAQ 와 같은 답이라
+    // 특별경영성과급 조건 질문으로 바꿨다(닫힌 FAQ). 조건·재원 단위는 DS부문 연간 영업이익(파이낸셜뉴스 2026-09-27
+    // https://www.fnnews.com/news/202609270938413557 · 뉴시스 2026-05-21 https://www.newsis.com/view/NISX20260521_0003638619),
+    // 세후 전액 자사주·3분의 1 즉시·1년·2년 매각 제한·지급 2027년 3월 말~4월 초(정기 주총 뒤): 2026-10-07 보도
+    // (MTN https://news.mtn.co.kr/news-detail/2026100715413498845 · SBS Biz https://biz.sbs.co.kr/amp/article/20000338792).
+    // DART 반기보고서(rcpNo 20260814003699)의 전사 연결 영업이익은 참고값일 뿐 조건 판정 단위가 아니다 — 문장에 그렇게 밝힌다.
+    question: "특별경영성과급 지급 조건은 무엇인가요?",
     answer:
-      "공개 보도 기준 삼성전자는 통상 (1) 연초(1월 전후)에 전년도 실적에 따른 OPI(초과이익성과급, 옛 PS)를 한 번에 지급하고, (2) 상·하반기에 목표달성장려금(TAI, 옛 PI)을 기본급의 일정 비율로 나눠 지급하는 구조로 알려져 있습니다. 본 계산기는 연 단위 OPI 재원 분배를 중심으로 추정하므로, 반기 TAI까지 합산하려면 그만큼 더해 보세요. 정확한 지급 시기·횟수는 매년 노사 협의와 회사 공지에 따라 달라집니다.",
+      `보도된 지급 조건은 DS부문 연간 영업이익 기준 2026~2028년 200조원 이상(2029~2035년은 100조원 이상)이며, 최종 지급 여부는 회사 공지를 따릅니다. 참고로 DART 반기보고서(${SAMSUNG_OP.h1_2026.source.filedAt} 접수) 기준 ${SAMSUNG_OP.h1_2026.label} 삼성전자 전사 연결 영업이익은 약 ${toTril1(SAMSUNG_OP.h1_2026.millionWon)}조원입니다(조건 판정은 DS부문 영업이익). DS부문 특별경영성과급은 세후 전액을 자사주로 받고, 그중 3분의 1은 즉시 팔 수 있으며 나머지는 3분의 1씩 1년·2년 매각이 제한됩니다(보도 기준). 2026년 실적분이 첫 적용 대상이며, 2026년 10월 7일 언론 보도에 따르면 3월 정기 주총에서 지급 안건이 승인되면 2027년 3월 말~4월 초 지급됩니다.`,
   },
   {
     question: "삼성전자 평균 성과급은 얼마인가요?",
