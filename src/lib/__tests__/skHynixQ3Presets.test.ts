@@ -74,7 +74,7 @@ describe("① psData 3분기 실적 시나리오", () => {
     expect(runrate.trillion).toBe(242);
     expect(consensus).toEqual({ id: "consensus", label: "컨센서스", trillion: 250, hint: "증권가 2026 전망" });
     expect(DEFAULT_PROFIT_TRILLION).toBe(250);
-    expect(LAST_UPDATED).toBe("2026-11-01");
+    expect(LAST_UPDATED).toBe("2026-11-18"); // 11/1 3분기 실적 반영 뒤 R4 BONUS1 N2-calc-10(상반기 PI 지급일 7/30) 실제 수정일
   });
 });
 
@@ -109,7 +109,7 @@ describe("② /calc/sk-hynix-bonus 화면", () => {
     const sourceDates: string[] = SOURCES.map((s) => s.date);
     expect(sourceDates).not.toContain("2026-10-28");
     const page = await html(() => import("@/app/calc/sk-hynix-bonus/page"));
-    expect(page).toContain("마지막 갱신 2026-11-01.");
+    expect(page).toContain("마지막 갱신 2026-11-18.");
   });
 });
 

@@ -177,4 +177,5 @@ export const SOURCES = [
   },
 ] as const;
 
-export const LAST_UPDATED = "2026-11-01";
+// 2026-11-18: 상반기 PI 지급일 7/30·접힌 FAQ(R4 BONUS1 N2-calc-10)의 실제 수정일 — 화면 마지막 갱신·JSON-LD·article 수정일·사이트맵이 같은 날.
+export const LAST_UPDATED = "2026-11-18";

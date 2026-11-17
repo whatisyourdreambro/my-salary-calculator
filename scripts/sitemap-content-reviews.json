@@ -259,8 +259,8 @@
     },
     "/calc/sk-hynix-bonus": {
       "contentDate": "2026-11-18",
-      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
-      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B27 DATA-03): the operating-profit scenario chips use the Q3 results (보수 181.5조 with the fourth quarter at 0, 누적 연환산 242조 = 181.5조×4/3), the step-1 paragraph says 1~3분기, the footer 마지막 갱신 shows psData LAST_UPDATED 2026-11-01, and the collapsed PS FAQ answer (also in FAQPage JSON-LD) and the HowTo cite the 10/28 SK hynix newsroom cumulative operating profit. Visible content change: content date advanced from 2026-10-04 to 2026-11-01. Stage-1 sweep repair (2026-11-01): the two result-card formula lines drop the leading = and the 당해 수령분 세전 line uses a hyphen-minus, so the 보수 chip state keeps the base line count above CalcResultAd (wording otherwise unchanged); date kept. R4 integration ledger step 2026-11-18 for the 11/27 publish branch claude/next-1127: BONUS1 N2-calc-10: 2026 상반기 PI pay day 7/28 -> 7/30 on screen (96bc6391f, question-1 candidate) and in data/FAQ (bcd5b116f), stock simulator presets on phones (14c292d81); RL-17 HowTo JSON-LD removed (8017090d1). The package's N2-calc-05 ledger step is this rehash with the real edit day. ROUTE_OVERRIDES row 2026-11-01 -> 2026-11-18.",
+      "reviewedAtCommit": "a596d505775a6573f6b1755c3f99c8d5f3eee486",
+      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B27 DATA-03): the operating-profit scenario chips use the Q3 results (보수 181.5조 with the fourth quarter at 0, 누적 연환산 242조 = 181.5조×4/3), the step-1 paragraph says 1~3분기, the footer 마지막 갱신 shows psData LAST_UPDATED 2026-11-01, and the collapsed PS FAQ answer (also in FAQPage JSON-LD) and the HowTo cite the 10/28 SK hynix newsroom cumulative operating profit. Visible content change: content date advanced from 2026-10-04 to 2026-11-01. Stage-1 sweep repair (2026-11-01): the two result-card formula lines drop the leading = and the 당해 수령분 세전 line uses a hyphen-minus, so the 보수 chip state keeps the base line count above CalcResultAd (wording otherwise unchanged); date kept. R4 integration ledger step 2026-11-18 for the 11/27 publish branch claude/next-1127: BONUS1 N2-calc-10: 2026 상반기 PI pay day 7/28 -> 7/30 on screen (96bc6391f, question-1 candidate) and in data/FAQ (bcd5b116f), stock simulator presets on phones (14c292d81); RL-17 HowTo JSON-LD removed (8017090d1). The package's N2-calc-05 ledger step is this rehash with the real edit day. ROUTE_OVERRIDES row 2026-11-01 -> 2026-11-18. Rehashed again 2026-11-18 in the same R4 integration: psData.LAST_UPDATED moves 2026-11-01 -> 2026-11-18 (the on-screen 마지막 갱신 in the footer above the calc layout ads, JSON-LD dateModified and article:modified_time read the same constant, and structuredDataTrust ties it to the sitemap day). Content date 2026-11-18 unchanged. If the sweep reverts this date commit, the row goes back to 2026-11-01 together with its ROUTE_OVERRIDES line.",
       "dependencies": [],
       "files": [
         "src/app/calc/sk-hynix-bonus/Client.tsx",
@@ -269,7 +269,7 @@
         "src/app/calc/sk-hynix-bonus/page.tsx",
         "src/app/calc/sk-hynix-bonus/psData.ts"
       ],
-      "sha256": "d01fce83b34d180be091dbfe3d2e74d1cf88c7d383b3b97a64df962398bde484"
+      "sha256": "78e2bb14a96166aab66be41ed1ec47629950b5364202fbf6f4f3c7d6afdb3adb"
     },
     "/calc/bonus-calculators": {
       "contentDate": "2026-11-18",
