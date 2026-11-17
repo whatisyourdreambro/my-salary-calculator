@@ -60,6 +60,18 @@ describe("CB-04 삼성디스플레이 — TAI FAQ(접힌 details)에 2026 상반
   });
 });
 
+describe("CB-05 LG에너지솔루션 — 75%는 2026-02-06 이미 지급, '1분기 결산 후 결정' 삭제 (접힌 FAQ)", () => {
+  const faq = faqBlock("src/app/calc/lg-energy-bonus/page.tsx");
+  it("2025년 실적분 최대 75% 2026-02-06 지급(전년 50%), 2026년 실적분은 2027년 초 결정", () => {
+    expect(faq).toContain("2026년 2월 6일에는 2025년 실적분으로 기본급의 최대 75%가 지급됐습니다(뉴스웨이 2026-02-04 보도, 전년 50%).");
+    expect(faq).toContain("2026년 실적분은 2027년 초 결정되며");
+    expect(faq).not.toContain("정확한 결정은 1분기 결산 후");
+    expect(faq).not.toContain("2025년(75%)보다 더 낮거나 비슷할 가능성");
+    // 정률 단정 금지(10월 605fdc4ae 리뷰): '기본급의 75%' 단정 대신 '최대 75%'
+    expect(faq).not.toMatch(/기본급의 75%/);
+  });
+});
+
 describe("CB-03 리포트 행(bonusData) — 삼성SDI 전자재료 5%는 2025년 지급(2024년 실적분)", () => {
   it("year 는 지급 연도: 전자재료 5% 행은 2025, 2026년 행에는 전자재료 지급이 없다", async () => {
     const { BONUS_PROFILES } = await import("@/data/bonusData");
