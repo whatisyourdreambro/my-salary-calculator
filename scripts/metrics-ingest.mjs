@@ -12,8 +12,9 @@
 //   node scripts/metrics-ingest.mjs log --date YYYY-MM-DD [--window "9/13 기준 28일"] [--ga4 <결과.json|텍스트>]
 //                                   [--gsc <결과.json|텍스트>] [--adsense "<방향만 — 애드센스 수치 금지(약관 비밀유지)>"] [--note "..."] [--file <로그.md>]
 //                                   [--gsc-block "<텍스트>" | --gsc-block-clicks <n> --gsc-block-impr <n> [--gsc-block-ctr <%>]
-//                                    [--gsc-block-pos <노출가중순위>] [--gsc-block-window "8/07~9/03"] [--gsc-block-prev "147,190,237"]]
-//                                   [--coverage-exmux <%>] [--coverage-total <%>] (저장소 기록 금지 — 운영자 로컬 로그 전용)
+//                                    [--gsc-block-pos <노출가중순위>] [--gsc-block-window "8/07~9/03"] [--gsc-block-prev "147→190→237"]]
+//                                    (--gsc-block-prev: 오래된 블록부터 · → 또는 공백 구분, 천 단위 쉼표 허용 · 쉼표만 쓰는 옛 형식은 1,000 미만 값에만)
+//                                   [--coverage-exmux <%>] [--coverage-total <%>] (저장소 기록 금지 — 운영자 로컬 로그 전용, 저장소 안 --file 이면 거부)
 //   node scripts/metrics-ingest.mjs --selftest
 //
 // 입력(UTF-8, BOM 허용, 영문/한글 UI 모두):
@@ -96,8 +97,9 @@ function usage() {
       '  node scripts/metrics-ingest.mjs log --date YYYY-MM-DD [--window "..."] [--ga4 <결과.json|텍스트>] [--gsc <결과.json|텍스트>]',
       '                                  [--adsense "<방향만 — 애드센스 수치 금지(약관 비밀유지)>"] [--note "..."] [--file <로그.md>]',
       '                                  [--gsc-block "<텍스트>" | --gsc-block-clicks <n> --gsc-block-impr <n> [--gsc-block-ctr <%>]',
-      '                                   [--gsc-block-pos <노출가중순위>] [--gsc-block-window "8/07~9/03"] [--gsc-block-prev "147,190,237"]]',
-      "                                  [--coverage-exmux <%>] [--coverage-total <%>] (저장소 기록 금지 — 운영자 로컬 로그 전용)",
+      '                                   [--gsc-block-pos <노출가중순위>] [--gsc-block-window "8/07~9/03"] [--gsc-block-prev "147→190→237"]]',
+      "                                   (--gsc-block-prev: 오래된 블록부터 · → 또는 공백 구분, 천 단위 쉼표 허용 · 쉼표만 쓰는 옛 형식은 1,000 미만 값에만)",
+      "                                  [--coverage-exmux <%>] [--coverage-total <%>] (저장소 기록 금지 — 운영자 로컬 로그 전용, 저장소 안 --file 이면 거부)",
       "  node scripts/metrics-ingest.mjs --selftest",
       "  CSV 원본은 리포 밖 폴더(C:\\Users\\ruby1\\.moneysalary-secrets\\)에 두고 절대 경로로 넘긴다. 로그에는 집계만 남는다.",
     ].join("\n")
@@ -533,11 +535,13 @@ function buildGscBlock(o) {
   let out = (o.gscBlockWindow ? `${o.gscBlockWindow} ` : "") + parts.join(" · ");
 
   if (o.gscBlockPrev != null) {
-    const prev = String(o.gscBlockPrev)
-      .split(/[,\s→>]+/)
-      .map((s) => s.trim())
-      .filter(Boolean)
-      .map((s, i) => countArg(s, `--gsc-block-prev[${i}]`));
+    // → · > · ; · 공백이 있으면 그것으로 나누고(천 단위 쉼표 허용), 쉼표만 쓴 옛 형식은 1,000 미만 값에만 쓴다.
+    // '535,768,1,050' 처럼 쉼표 구분에 천 단위 쉼표가 섞이면 [535,768,1,50] 으로 조용히 깨지므로 거부한다.
+    const raw = String(o.gscBlockPrev).trim();
+    const multi = /[→>;\s]/.test(raw);
+    const tokens = (multi ? raw.split(/[→>;\s]+/) : raw.split(",")).map((s) => s.trim().replace(/,$/, "")).filter(Boolean);
+    if (!multi && tokens.some((t, i) => i > 0 && /^0\d/.test(t))) bad('--gsc-block-prev 에 천 단위 쉼표가 섞인 것 같습니다 — 1,000 이상이 있으면 "535→768→1,050" 처럼 → 나 공백으로 구분하세요');
+    const prev = tokens.map((s, i) => countArg(s, `--gsc-block-prev[${i}]`));
     if (!prev.length) bad('--gsc-block-prev 를 해석할 수 없습니다 — 예: "147,190,237"(오래된 블록부터)');
     out += ` · 블록추이 ${[...prev, clicks].map((n) => fmtInt(n)).join("→")}`;
   }
@@ -554,6 +558,17 @@ function buildCoverage(o) {
     console.log(`[log] 경고: ex-mux(${fmtPct2(exmux)})가 총(${fmtPct2(total)})보다 낮습니다 — 멀티플렉스를 빼면 보통 올라갑니다. 값이 뒤바뀌지 않았는지 확인하세요`);
   }
   return total == null ? `ex-mux ${fmtPct2(exmux)}` : `총 ${fmtPct2(total)} · ex-mux ${fmtPct2(exmux)}`;
+}
+
+// 저장소 안 로그(기본 docs/metrics-log.md 포함)에는 애드센스 실적 수치를 쓰지 않는다(약관 비밀유지 · 공개 저장소).
+// verify-no-adsense-figures 는 데이터 행의 ex-mux 칸·--adsense 칸 숫자를 잡지 못하므로 쓰기 전에 여기서 거부한다.
+function repoLogViolation(file, { coverage, adsense }) {
+  const rel = path.relative(REPO_ROOT, path.resolve(file));
+  const insideRepo = rel === "" || (!rel.startsWith("..") && !path.isAbsolute(rel));
+  if (!insideRepo) return null;
+  if (coverage != null) return "--coverage-exmux/--coverage-total 은 애드센스 실적 수치라 저장소 안 로그에 쓸 수 없습니다 — --file 로 저장소 밖 운영자 로그(예: C:\\Users\\ruby1\\.moneysalary-secrets\\metrics-log.md)를 지정하세요";
+  if (adsense != null && /\d/.test(String(adsense))) return "--adsense 에는 방향어(상승·하락·변화 없음·비공개)만 씁니다 — 숫자가 든 값은 저장소 안 로그에 쓸 수 없습니다";
+  return null;
 }
 
 function cmdLog(pos, opts) {
@@ -578,6 +593,8 @@ function cmdLog(pos, opts) {
     if (e instanceof BadInput) fail(e.message);
     throw e;
   }
+  const violation = repoLogViolation(file, { coverage, adsense: opts.adsense });
+  if (violation) fail(violation);
   if ([ga4, gsc, gscBlock, coverage, opts.adsense, opts.note].every((v) => v == null || v === "—"))
     fail("기록할 내용이 없습니다: --ga4 / --gsc / --gsc-block* / --coverage-exmux / --adsense / --note 중 하나 이상");
   const row = `| ${date} | ${cell(opts.window)} | ${cell(ga4)} | ${cell(gsc)} | ${cell(gscBlock)} | ${cell(opts.adsense)} | ${cell(coverage)} | ${cell(opts.note)} |`;
@@ -714,6 +731,20 @@ function selftest() {
   check("검증: 커버리지 0~100 범위 밖 거부", throws(() => buildCoverage({ coverageExmux: "9000" })));
   check("검증: --coverage-total 단독 거부", throws(() => buildCoverage({ coverageTotal: "80.00" })));
   check("검증: 빈 입력이면 두 열 모두 null", buildGscBlock({}) === null && buildCoverage({}) === null);
+  check(
+    "블록추이 → 구분·천 단위 쉼표",
+    buildGscBlock({ gscBlockClicks: "1100", gscBlockImpr: "9000", gscBlockPos: "7", gscBlockPrev: "535→768→1,050" }).endsWith("블록추이 535→768→1,050→1,100")
+  );
+  check(
+    "검증: 쉼표 구분에 천 단위 쉼표 혼입 거부",
+    throws(() => buildGscBlock({ gscBlockClicks: "1100", gscBlockImpr: "9000", gscBlockPos: "7", gscBlockPrev: "535,768,1,050" }))
+  );
+
+  // 3e) 저장소 안 로그에는 애드센스 실적 수치 금지 — 숫자 든 표본은 런타임에 만들어 가드가 리터럴 수치를 보지 않게 한다
+  check("저장소 안 로그: 커버리지 거부", repoLogViolation(DEFAULT_LOG, { coverage: "ex-mux x" }) !== null);
+  check("저장소 밖 로그: 커버리지 허용", repoLogViolation(logFile, { coverage: "ex-mux x" }) === null);
+  check("저장소 안 로그: 방향어 허용", repoLogViolation(DEFAULT_LOG, { adsense: "하락(비공개)" }) === null);
+  check("저장소 안 로그: 숫자 든 --adsense 거부", repoLogViolation(DEFAULT_LOG, { adsense: "RPM " + String(3) }) !== null);
 
   const ok = checks.every(Boolean);
   console.log(`\n[selftest] ${checks.filter(Boolean).length}/${checks.length} → ${ok ? "PASS" : "FAIL"}`);
