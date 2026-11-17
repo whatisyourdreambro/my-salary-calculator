@@ -10,7 +10,7 @@
 /** 회사 id → 검색 별칭 목록 */
 export const companyAliases: Record<string, string[]> = {
   // ── 사명 변경: 옛 이름으로도 많이 검색됨 ──
-  "sk-cc": ["SK C&C", "SK씨앤씨", "에스케이씨앤씨", "SK AX 연봉계약직"],
+  "sk-cc": ["SK C&C", "SK씨앤씨", "에스케이씨앤씨"],
   "ls-electric": ["LS일렉트릭", "엘에스일렉트릭", "LS산전"],
   hmm: ["에이치엠엠", "현대상선"],
   "hanwha-ocean": ["대우조선해양", "대우조선"],
@@ -63,14 +63,16 @@ export const companyAliases: Record<string, string[]> = {
   ohou: ["오늘의 집", "버킷플레이스", "Ohou", "Ohouse", "Bucketplace"],
 
   // ── GSC CTR 0% 회사 별칭 추가 (7차 점검, 노출은 받는데 클릭 0인 회사들) ──
-  skc: ["에스케이씨", "SKC 동박", "SKC 솔믹스", "SKC 화학", "SKC 코오롱"],
+  // CM-18 (2026-09-30): 별칭은 본문 '모두 같은 회사' 문장·meta keywords·JSON-LD alternateName 에 그대로 나간다 —
+  // 다른 법인(SKC 솔믹스 = 현 SK엔펄스, SKC 코오롱 = 현 PI첨단소재)·직무명·검색어(…신입, …연봉계약직, 테슬라 어드바이저)는 뺀다.
+  // SKC 동박(동박 사업은 별도 법인 SK넥실리스)·SKC 화학(공식명·통칭 아님)도 뺀다 — 검색 전용 목록 규칙(공식명·통칭만)도
+  // 통과하지 못해 어디에도 두지 않는다 (CM-18 승인서 원문: 타 법인명은 어디에도 두지 않는다).
+  skc: ["에스케이씨"],
   "sk-innovation": [
     "에스케이이노베이션",
     "SK Innovation",
     "SK이노",
     "SKI",
-    "SK이노베이션 정유",
-    "SK이노베이션 신입",
   ],
   "naver-cloud": [
     "네이버 클라우드",
@@ -79,7 +81,6 @@ export const companyAliases: Record<string, string[]> = {
     "NCP",
     "Naver Cloud Platform",
     "네이버클라우드플랫폼",
-    "네이버 클라우드 신입",
   ],
   // ── 글로벌 회사 한국어 표기 ──
   // (구 tesla_kr 키의 직무명 별칭 3종은 2026-08-30 tesla 로 병합 — tesla_kr id 는
@@ -88,15 +89,14 @@ export const companyAliases: Record<string, string[]> = {
     "Tesla",
     "테슬라코리아",
     "Tesla Korea",
-    "테슬라 어드바이저",
     "테슬라 한국지사",
-    "Tesla Advisor Korea",
   ],
   amazon: ["Amazon", "아마존코리아", "아마존웹서비스", "Amazon Korea"],
 
   // ── 한국 IT 대표 회사 영문 표기 ──
-  toss: ["Toss", "토스", "비바리퍼블리카", "토스뱅크", "토스증권"],
-  coupang: ["Coupang", "쿠팡 풀필먼트", "쿠팡로지스틱스"],
+  // 토스뱅크·토스증권(별도 회사 페이지 toss-bank·toss-securities), 쿠팡풀필먼트서비스·쿠팡로지스틱스서비스는 별도 법인 (CM-18)
+  toss: ["Toss", "토스", "비바리퍼블리카"],
+  coupang: ["Coupang"],
 
   // ── 사명 변경 (기존 등록 회사 — 새 사명으로도 검색됨) ──
   "lotte-data-comm": ["롯데이노베이트", "롯데정통"],

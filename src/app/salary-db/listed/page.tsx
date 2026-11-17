@@ -71,7 +71,7 @@ export default function ListedIndexPage() {
             공시기업 공시 평균연봉 <span className="text-primary">{listedCohort.length}곳</span>
           </h1>
           <p className="text-sm sm:text-[15px] leading-7 text-muted-blue max-w-3xl">
-            금융감독원 전자공시(DART) 사업보고서의 「직원 등의 현황」에서 집계한 공식
+            금융감독원 전자공시(DART) 사업보고서의 「직원 등의 현황」에서 산정한
             평균연봉입니다(급여총액 ÷ 직원 수, 등기임원 제외 — 신입 초봉 아님). 직원 500명
             이상 주요 공시기업을 업종별로 정리했으며, 각 페이지에서 월 실수령 환산과 업종 내
             순위를 확인할 수 있습니다. 상세 직급별 연봉 프로필은{" "}

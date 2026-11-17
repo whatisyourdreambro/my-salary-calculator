@@ -11,7 +11,7 @@ export const krCompanies_Batch3: CompanyProfile[] = [
  source:
  "DART SK이노베이션 사업보고서(2025.12) 직원 등 현황, 2026-03-16 제출",
  sourceUrl: "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260316000827",
- note: "직원 2,064명(SK E&S CIC 포함, 2024-11 합병 반영). 2024년(1억6,800만원) 대비 하락 — 합병에 따른 인적 구성 변화 영향. 지주부문 소수 정예 구조라 평균이 높은 편.",
+ note: "직원 2,064명(SK E&S CIC 포함, 2024-11 합병 반영). 지주부문 소수 정예 구조라 평균이 높은 편.",
  },
  name: { ko: "SK이노베이션", en: "SK Innovation" },
  industry: "Energy / Chemical",

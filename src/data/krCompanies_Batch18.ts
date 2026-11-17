@@ -46,7 +46,7 @@ export const krCompanies_Batch18: CompanyProfile[] = [
     industry: "Medical Device / Dental",
     tier: "startup",
     logo: "🦷",
-    description: "치과 임플란트 세계 2위. 2022년 회계 횡령 사건 후 재상장, 중국·미국 등 글로벌 시장 1위권 유지.",
+    description: "치과 임플란트 세계 2위. 2022년 회계 횡령 사건 후 인수돼, 중국·미국 등 글로벌 시장 1위권 유지.",
     salary: {
       entry: { base: 50000000, incentive: { target: 15, max: 30, avgAmount: 9500000 } },
       junior: { base: 61000000, incentive: { target: 15, max: 30, avgAmount: 12000000 } },
@@ -70,7 +70,7 @@ export const krCompanies_Batch18: CompanyProfile[] = [
       pros: [
         "치과 임플란트 세계 2위의 글로벌 브랜드 파워",
         "중국·동남아 고성장 시장에서의 영업 기회",
-        "재상장 후 거버넌스 개선 노력",
+        "상폐된 후 거버넌스 개선 노력",
       ],
       cons: [
         "횡령 사건 후 내부 통제 강화로 행정 부담 증가",
@@ -388,7 +388,7 @@ export const krCompanies_Batch18: CompanyProfile[] = [
       score: 7.5,
       keywords: ["신약전환", "OTC", "R&D", "바이오투자"],
       pros: [
-        "70년 역사의 안정적인 브랜드와 매출 기반",
+        "80년 역사의 안정된 브랜드와 매출 기반",
         "신약 R&D 전환으로 성장 모멘텀 기대",
         "중견 제약사 중 안정적인 근무 환경",
       ],
@@ -429,7 +429,7 @@ export const krCompanies_Batch18: CompanyProfile[] = [
       keywords: ["신약", "글로벌임상", "R&D", "당뇨"],
       pros: [
         "글로벌 임상 경험 축적(미국·유럽 진행 중)",
-        "박카스 브랜드 기반의 강력한 의약품 영업력",
+        "전문의약품 중심의 탄탄한 병의원 영업력",
         "동아쏘시오그룹 계열의 안정적 재무 지원",
       ],
       cons: [

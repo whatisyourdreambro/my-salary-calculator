@@ -7,7 +7,7 @@ export const krCompanies_Batch19: CompanyProfile[] = [
     industry: "Gaming",
     tier: "unicorn",
     logo: "🎮",
-    description: "마블 퓨처파이트·일곱개의 대죄 등 글로벌 히트작 보유 대형 게임사. 방시혁(하이브) 최대주주, 글로벌 M&A 공격적 추진.",
+    description: "마블 퓨처파이트·일곱개의 대죄 등 글로벌 히트작 보유 대형 게임사. 방준혁(창업자) 최대주주, 글로벌 M&A 공격적 추진.",
     salary: {
       entry: { base: 55000000, incentive: { target: 15, max: 30, avgAmount: 10000000 } },
       junior: { base: 67000000, incentive: { target: 15, max: 30, avgAmount: 13000000 } },
@@ -182,7 +182,7 @@ export const krCompanies_Batch19: CompanyProfile[] = [
       remoteWork: { policy: "hybrid", daysPerWeek: 2, description: "개발·기획 주 2일 재택, 영업 오피스 중심" },
     },
     benefits: [
-      { category: "lifestyle", title: "한컴오피스 라이선스 지원", description: "임직원 한컴오피스 全제품 무상 제공", value: 300000 },
+      { category: "lifestyle", title: "한컴오피스 라이선스 지원", description: "임직원 한컴오피스 전제품 무상 제공", value: 300000 },
       { category: "growth", title: "교육비 지원", description: "SW 개발·AI 교육비 및 자격증 지원", value: 1500000 },
       { category: "financial", title: "복지포인트", description: "연 120만원 복지카드 지급", value: 1200000 },
     ],

@@ -78,8 +78,10 @@ const pre = preGateSnapshot as {
   salaryFaqSha256: Record<string, string>;
 };
 /** 고정본 뒤 공시 카드 note 를 고친 회사(같은 폭 숫자 교체) — 적용 전 카드 바이트 대조에서만 뺀다.
- *  korea-investment: '증권업 평균연봉 전체 1위 수준' -> '4위 수준'(DART 2025 증권업 24곳 중 4위, 2026-10). */
-const CARD_NOTE_CHANGED_AFTER_FIXTURE: readonly string[] = ["korea-investment"];
+ *  korea-investment: '증권업 평균연봉 전체 1위 수준' -> '4위 수준'(DART 2025 증권업 24곳 중 4위, 2026-10).
+ *  sk-innovation: 바로 아래 DART 배지(+20.3%)와 반대로 읽히던 근거 없는 '2024년(1억6,800만원) 대비 하락' 문장 삭제
+ *  (더 짧은 note, N2-data-03 data-b04-M01, 2026-11-18 — companyFactFixesN2a.test.ts 가 새 note 를 고정). */
+const CARD_NOTE_CHANGED_AFTER_FIXTURE: readonly string[] = ["korea-investment", "sk-innovation"];
 /** 고정본 뒤 수기 공시 카드의 헤드라인·출처·note 를 원문 값으로 바로잡은 회사 — 적용 전 카드 바이트 대조에서만 뺀다
  *  (적용 후 '출처 줄 글자 수 ≤ 종전' 검사는 그대로 받는다). 고친 값은 companyFixes1030.test.ts(db-insurance)·
  *  companyFixes1102.test.ts(meritz-fire)가 고정한다. 고정본 bd68d860 은 재생성하지 않는다.
@@ -118,6 +120,25 @@ const escapeHtml = (text: string) =>
 
 const renderCard = (c: CompanyProfile) =>
   renderToStaticMarkup(createElement(CompanyDisclosedSalary, { company: c }));
+
+/** CM-04(2026-09-29) 의도된 공시 카드 변경 — 지주회사 본사 공시의 note 문구(같은 폭 교체)만.
+ *  2026-10-30 A8: HD한국조선해양(중간지주 본사 1,543명) 추가. */
+const CM04_HOLDING_NOTE_CHANGE: Record<string, { before: string; now: string }> = Object.fromEntries(
+  (
+    [
+      ["posco", "524"],
+      ["ecopro", "185"],
+      ["cuckoo", "82"],
+      ["hd-ksoe", "1,543"],
+    ] as const
+  ).map(([id, n]) => [
+    id,
+    {
+      before: `직원 ${n}명 기준. 사업부문·성별로 공시된 1인평균급여액을 인원 가중 평균한 값(등기임원 제외).`,
+      now: `본사 ${n}명 기준. 계열사·자회사를 제외한 1인평균급여액을 인원 가중 평균한 값(등기임원 제외).`,
+    },
+  ])
+);
 
 function metaOf(company: CompanyProfile) {
   const metadata = buildCompanyMetadata(companyMetadataInput(company));
@@ -412,7 +433,12 @@ describe("적용 전 빌드 — bd68d860(병합 전 main) 출력과 바이트 �
       // 데이터 출처 문구 자체가 병합 전과 같다 — 꼬리는 표시 단계(게이트 뒤)에서만 뺀다
       expect(d.source, c.id).toBe(pre.disclosedSources[c.id]);
       const html = renderCard(c);
-      expect(sha256(html), c.id).toBe(pre.cardSha256[c.id]);
+      // CM-04(2026-09-29)·A8(hd-ksoe): 지주회사 본사 공시 4곳은 note 한 줄만 같은 폭 지주회사 문구로 바뀌었다 — 종전 note 로
+      // 되돌린 HTML 이 고정본과 같아야 한다(카드의 나머지는 바이트 동일). 고정본은 재생성하지 않는다.
+      const holdingNote = CM04_HOLDING_NOTE_CHANGE[c.id];
+      const comparable = holdingNote ? html.replace(holdingNote.now, holdingNote.before) : html;
+      if (holdingNote) expect(html, c.id).toContain(holdingNote.now);
+      expect(sha256(comparable), c.id).toBe(pre.cardSha256[c.id]);
       const oldSource = escapeHtml(pre.disclosedSources[c.id]);
       if (d.sourceUrl) {
         expect(html, c.id).toContain("출처: <a href=");
