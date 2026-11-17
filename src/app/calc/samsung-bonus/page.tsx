@@ -973,7 +973,7 @@ export default function SamsungBonusCalculatorPage() {
               </li>
             </ul>
             <p className="text-muted-blue dark:text-canvas-300 leading-relaxed">
-              가정에 따라 실효세율 20~40% 범위로 달라지므로, 본 계산기의 가정
+              가정에 따라 실효세율 20~50% 범위로 달라지므로, 본 계산기의 가정
               조정 패널로 본인 상황에 맞게 시뮬레이션하세요. 세액공제 여력을
               늘리는 대표 수단은 IRP·연금저축(합산 연 900만원 한도 세액공제)
               입니다 —{" "}
