@@ -878,22 +878,22 @@ ${INSURANCE_BY_SALARY.map((x) => `<tr><td>${manwon(x.salary)}</td><td>${won(x.pe
 `;
 
 const dependentBeforeBonus = `
-<p class="lead">성과급 받기 전 가족 피부양자 자격 점검 필수. 2022년 11월 피부양자 요건 강화 — 연소득 2,000만원 + 재산세 과세표준 5.4억 이하. 가족 본인의 소득·재산 조건을 확인해야 합니다.</p>
+<p class="lead">성과급 받기 전 가족 피부양자 자격 점검 필수. 2022년 9월 피부양자 요건 강화 — 연소득 2,000만원 + 재산세 과세표준 5.4억 이하. 가족 본인의 소득·재산 조건을 확인해야 합니다.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 피부양자 자격 점검</h2>
 <ul class="space-y-2 mt-4">
 <li>· <strong>연소득 2,000만 이하</strong>: 사업소득은 사실상 0, 근로·연금소득 합산</li>
-<li>· <strong>재산세 과세표준 5.4억 이하</strong>: 소득 있으면 더 엄격</li>
+<li>· <strong>재산세 과세표준 9억 이하</strong>: 5.4억 초과는 조건부</li>
 <li>· <strong>사업소득자</strong>: 연 500만 초과 시 피부양자 박탈</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 성과급 큰 직원의 함정</h2>
-<p>본인이 성과급 받아도 피부양자 자격에 직접 영향 없음. 단 가족(부모·배우자)이 임대소득·연금소득·이자소득 등으로 2,000만 넘으면 그들이 피부양자에서 박탈 → 지역가입자 전환 → 월 50~150만원 보험료 부과.</p>
+<p>본인이 성과급 받아도 피부양자 자격에 직접 영향 없음. 단 가족(부모·배우자)이 연금·이자소득 등으로 2,000만 넘거나 임대소득이 있으면 피부양자에서 박탈 → 지역가입자 전환 → 소득·재산별 보험료 부과.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 사전 점검</h2>
 <ul class="space-y-2 mt-4">
 <li>· 부모·배우자 연소득 합산 점검 (1~2월)</li>
-<li>· 임대소득 2,000만 초과 시 가족 부담</li>
+<li>· 임대소득 있으면 피부양자 탈락</li>
 <li>· 임의계속가입 신청 가능성 확인</li>
 </ul>
 
@@ -1322,7 +1322,7 @@ export const hotBonusTaxComplete: Guide[] = [
     content: bonusInsuranceCeiling,
     lang: "ko",
   },
-  { slug: "dependent-check-before-bonus-2026", title: "성과급 받기 전 가족 피부양자 점검 — 임대 2,000만 + 박탈", description: "본인 성과급으로 피부양자 자격 직접 영향 없음. 단 가족 임대·연금·이자 합산 2,000만+ 시 박탈 → 지역가입자 월 50~150만 부담.", category: "기초", tags: ["피부양자", "건강보험", "성과급", "지역가입자", "2026"], level: "고급", modifiedDate: "2026-10-03", publishedDate: "2026-05-23", views: 0, content: dependentBeforeBonus, lang: "ko" },
+  { slug: "dependent-check-before-bonus-2026", title: "성과급 받기 전 가족 피부양자 점검 — 소득 2,000만 + 박탈", description: "본인 성과급으로 피부양자 자격 직접 영향 없음. 단 가족 소득 합산 2,000만+ 또는 임대소득 시 박탈 → 지역보험료 부담.", category: "기초", tags: ["피부양자", "건강보험", "성과급", "지역가입자", "2026"], level: "고급", modifiedDate: "2026-10-03", publishedDate: "2026-05-23", views: 0, content: dependentBeforeBonus, lang: "ko" },
   { slug: "total-income-adjustment-bonus-2026", title: "성과급 + 임대 + 금융 + 사업 종합 정산 — 영끌 2억 시 추가 5,750만", description: "성과급 5,000만 + 임대 3,000만 + 배당 2,000만 + 사업 3,000만 = 영끌 2억. 종소세 4,500만 + 지방세 + 정산 800만 = 약 5,750만 추가.", category: "기초", tags: ["종합과세", "성과급", "임대소득", "정산", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: incomeAdjustmentTotal, lang: "ko" },
   { slug: "optional-continue-after-bonus-2026", title: "성과급 큰 임원 퇴직 후 임의계속가입 — 신청 기한·36개월", description: "성과급 큰 임원이 퇴직하면 지역보험료가 커질 수 있다. 임의계속가입은 퇴직 전 12개월 평균 보수월액 기준으로 최대 36개월.", category: "기초", tags: ["임의계속가입", "퇴직", "건강보험", "임원", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: optionalContinueAfterBonus, lang: "ko" },
   // 영역 D — 성과급 절세 심화 10편
