@@ -489,7 +489,9 @@ test('the Worker bundle check refuses the build-time OG renderer, its data, Next
   assert.doesNotThrow(() => assertPagesWorkerBundle(clean));
   for (const [input, message] of [['cloudflare/pages-og-render.ts', /build-time OG renderer/], ['cloudflare/pages-og-strips.ts', /build-time OG renderer/],
     ['vendor/og-strips/config.json', /build-time OG renderer/], ['node_modules/next/dist/server/web/spec-extension/image-response.js', /Next\/OpenNext\/React/],
-    ['node_modules/react/index.js', /Next\/OpenNext\/React/]])
+    ['node_modules/react/index.js', /Next\/OpenNext\/React/], ['node_modules/next/dist/compiled/picomatch/index.js', /Next\/OpenNext\/React/],
+    ['node_modules/picomatch/lib/parse.js', /glob matcher/], ['node_modules/vite/node_modules/picomatch/index.js', /glob matcher/],
+    ['node_modules/micromatch/index.js', /glob matcher/], ['../node_modules/braces/index.js', /glob matcher/]])
     assert.throws(() => assertPagesWorkerBundle({ ...clean, inputs: { ...clean.inputs, [input]: {} } }), message, input);
   assert.throws(() => assertPagesWorkerBundle({ ...clean, outputs: { 'dist/_worker.js/index.js': { imports: [{ path: './og/index.mjs', kind: 'import-statement', external: true }] } } }),
     /one self-contained module: \.\/og\/index\.mjs/);
