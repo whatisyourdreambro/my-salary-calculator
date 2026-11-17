@@ -119,6 +119,25 @@ const escapeHtml = (text: string) =>
 const renderCard = (c: CompanyProfile) =>
   renderToStaticMarkup(createElement(CompanyDisclosedSalary, { company: c }));
 
+/** CM-04(2026-09-29) 의도된 공시 카드 변경 — 지주회사 본사 공시의 note 문구(같은 폭 교체)만.
+ *  2026-10-30 A8: HD한국조선해양(중간지주 본사 1,543명) 추가. */
+const CM04_HOLDING_NOTE_CHANGE: Record<string, { before: string; now: string }> = Object.fromEntries(
+  (
+    [
+      ["posco", "524"],
+      ["ecopro", "185"],
+      ["cuckoo", "82"],
+      ["hd-ksoe", "1,543"],
+    ] as const
+  ).map(([id, n]) => [
+    id,
+    {
+      before: `직원 ${n}명 기준. 사업부문·성별로 공시된 1인평균급여액을 인원 가중 평균한 값(등기임원 제외).`,
+      now: `본사 ${n}명 기준. 계열사·자회사를 제외한 1인평균급여액을 인원 가중 평균한 값(등기임원 제외).`,
+    },
+  ])
+);
+
 function metaOf(company: CompanyProfile) {
   const metadata = buildCompanyMetadata(companyMetadataInput(company));
   return {
@@ -412,7 +431,12 @@ describe("적용 전 빌드 — bd68d860(병합 전 main) 출력과 바이트 �
       // 데이터 출처 문구 자체가 병합 전과 같다 — 꼬리는 표시 단계(게이트 뒤)에서만 뺀다
       expect(d.source, c.id).toBe(pre.disclosedSources[c.id]);
       const html = renderCard(c);
-      expect(sha256(html), c.id).toBe(pre.cardSha256[c.id]);
+      // CM-04(2026-09-29)·A8(hd-ksoe): 지주회사 본사 공시 4곳은 note 한 줄만 같은 폭 지주회사 문구로 바뀌었다 — 종전 note 로
+      // 되돌린 HTML 이 고정본과 같아야 한다(카드의 나머지는 바이트 동일). 고정본은 재생성하지 않는다.
+      const holdingNote = CM04_HOLDING_NOTE_CHANGE[c.id];
+      const comparable = holdingNote ? html.replace(holdingNote.now, holdingNote.before) : html;
+      if (holdingNote) expect(html, c.id).toContain(holdingNote.now);
+      expect(sha256(comparable), c.id).toBe(pre.cardSha256[c.id]);
       const oldSource = escapeHtml(pre.disclosedSources[c.id]);
       if (d.sourceUrl) {
         expect(html, c.id).toContain("출처: <a href=");

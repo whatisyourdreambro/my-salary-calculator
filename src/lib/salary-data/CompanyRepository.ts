@@ -45,11 +45,23 @@ function buildDartDisclosed(id: string): CompanyProfile["disclosed"] | undefined
  ? `지주회사 본사 직원 ${employees}명 기준(계열사 미포함). 1인평균급여액을 인원 가중 평균(등기임원 제외).`
  : `지주회사 본사 직원 ${employees}명 기준(계열사 직원 평균 아님). 연간급여총액÷인원 가중(등기임원 제외).`
  : reported
- ? `${staff} 사업부문·성별로 공시된 1인평균급여액을 인원 가중 평균한 값(등기임원 제외).`
+ ? HOLDING_SAME_WIDTH_NOTE_IDS.has(id)
+ ? `본사 ${employees}명 기준. 계열사·자회사를 제외한 1인평균급여액을 인원 가중 평균한 값(등기임원 제외).`
+ : `${staff} 사업부문·성별로 공시된 1인평균급여액을 인원 가중 평균한 값(등기임원 제외).`
  : `${staff} 사업부문·성별 구분 공시를 연간급여총액÷인원으로 가중 평균한 값(등기임원 제외).`,
  basis: reported ? "reported" : "computed",
  };
 }
+
+/** 지주회사 본사 공시인데 HOLDING_COMPANY_DART_IDS 에 없는 곳 (2026-09-29 CM-04) — 포스코홀딩스(POSCO홀딩스
+ *  본사 524명)·에코프로(지주 185명)·쿠쿠홀딩스(82명). 페이지 이름·별칭(포스코·POSCO·밥솥 1위)이 사업회사처럼
+ *  읽혀 계열사 직원 평균으로 오인될 수 있다. 위 지주회사 문구는 일반 문구와 폭이 달라 공시 카드(GuideMidAd 위)
+ *  줄바꿈이 바뀌므로, 일반 문구와 단어마다 같은 폭인 문구로 바꾼다(직원→본사, 사업부문·성별로→계열사·자회사를,
+ *  공시된→제외한 — 한글 음절끼리). HOLDING_COMPANY_DART_IDS 에 넣지 않는 이유: 그 목록은 문구 폭이 다르고
+ *  meta 2차 판정 제외에도 쓰일 예정이라(회사 meta 불변 원칙) 이 목록의 출력은 note 문구만 바뀌어야 한다.
+ *  2026-10-30 A8: HD한국조선해양(조선 중간지주, 본사 1,543명 — DART 2025 사업보고서 rcpNo 20260320001032, 공시
+ *  1인평균 기준)을 추가 — 같은 폭 문구 '본사 1,543명 기준. 계열사·자회사를 제외한 …'. */
+const HOLDING_SAME_WIDTH_NOTE_IDS: ReadonlySet<string> = new Set(["posco", "ecopro", "cuckoo", "hd-ksoe"]);
 
 /** "YYYY-MM-DD" 문자열들 중 가장 늦은 날짜 — 날짜로 파싱해 비교(문자열 비교 금지),
  *  파싱 불가·빈 값은 무시. 후보가 전부 무효면 undefined. 반환값은 원본 문자열 그대로. */

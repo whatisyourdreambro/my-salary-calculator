@@ -111,6 +111,28 @@ describe("CM-21 서브셋 밖 한자 글리프 교체 (全·比 → 전·비)", 
   });
 });
 
+describe("CM-04 지주회사 본사 공시 4곳 — 공시 카드 note 를 같은 폭 지주회사 문구로", () => {
+  it("포스코홀딩스·에코프로·쿠쿠홀딩스·HD한국조선해양(A8)은 본사 N명·계열사·자회사 제외를 밝힌다", () => {
+    for (const [id, n] of [["posco", "524"], ["ecopro", "185"], ["cuckoo", "82"], ["hd-ksoe", "1,543"]] as const) {
+      const note = company(id).disclosed?.note ?? "";
+      expect(note, id).toBe(
+        `본사 ${n}명 기준. 계열사·자회사를 제외한 1인평균급여액을 인원 가중 평균한 값(등기임원 제외).`
+      );
+      expect(widthSignature(note)).toBe(
+        widthSignature(`직원 ${n}명 기준. 사업부문·성별로 공시된 1인평균급여액을 인원 가중 평균한 값(등기임원 제외).`)
+      );
+      expect(outsideFont(note)).toEqual([]);
+    }
+  });
+
+  it("다른 DART 주입 회사·기존 지주회사 목록 문구는 그대로", () => {
+    expect(company("hmm").disclosed?.note).toBe(
+      "직원 1,933명 기준. 사업부문·성별로 공시된 1인평균급여액을 인원 가중 평균한 값(등기임원 제외)."
+    );
+    expect(company("kb-financial").disclosed?.note?.startsWith("지주회사 본사 직원 144명 기준(계열사 미포함).")).toBe(true);
+  });
+});
+
 describe("정정 문구는 사이트 글꼴 서브셋 안의 글자만 쓴다", () => {
   it("CM-03", () => {
     expect(outsideFont(careerStep("kakao", "크루 (전사 평균)").description)).toEqual([]);
