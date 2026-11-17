@@ -5012,7 +5012,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 870
+  "contentChars": 865
  },
  {
   "slug": "couple-split-bonus-year-2026",

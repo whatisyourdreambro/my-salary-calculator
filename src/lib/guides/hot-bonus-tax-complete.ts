@@ -958,7 +958,7 @@ const giftWithBonus = `
 <li>· 미성년 자녀: 10년 2,000만원</li>
 <li>· 성인 자녀: 10년 5,000만원</li>
 <li>· 배우자: 10년 6억원</li>
-<li>· 손자녀: 10년 5,000만원</li>
+<li>· 손자녀: 부모와 합산</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 성과급 5,000만 → 자녀 증여</h2>
