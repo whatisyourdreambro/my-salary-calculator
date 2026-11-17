@@ -689,7 +689,7 @@ export default function SamsungBonusClient() {
                 ≈ 약 1억 4,820만원
               </strong>
               <span className="text-xs text-faint-blue ml-2">
-                (80% 즉시 · 20% 2년 이연)
+                (80% 즉시·20% 조기지급)
               </span>
             </p>
             <p className="mt-1 text-xs">
