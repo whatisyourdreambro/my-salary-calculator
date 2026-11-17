@@ -6,8 +6,24 @@ import { calcBonusNet, DEFAULT_BONUS_CREDIT_RATE, fmtEok, fmtManwon } from "@/li
 import NumberInput from "@/components/NumberInput";
 
 // 현대모비스 임단협 시나리오 (현대차그룹 연동형 — 정률 + 정액 + 주식 패키지)
-// 출처: 전자신문·서울경제·아주경제 2025-10-17 (2025 타결), 머니S 단독 2024-07-09 (2024 합의)
+// 출처: 2026 타결 — 더팩트 2026-08-26 (잠정합의안: 기본급 10만원 인상·성과급 400%+1,320만원·주식 8주·복지포인트 50만원)·
+//   더팩트 2026-09-04 (올해 임단협 마무리), DART 2026-10-30 주요사항보고서(자기주식처분결정, rcpNo 20261030000571:
+//   2026년 단체교섭에 따른 회사주식 지급 96,136주, 처분 예정일 2026-11-30, 처분 상대방 회사 직원).
+//   2025 타결 — 전자신문·서울경제·아주경제 2025-10-17.
+// 2026-11-17 운영자 승인(N2-calc-19): 2026 타결을 기본값으로, 버튼 수는 그대로 — 두 번째 칩이던 2024 임협 합의
+//   (머니S 단독 2024-07-09: 성과금·격려금 총 500% + 1,520만 + 주식 36주)는 2026 타결 칩으로 바꿨다.
+//   2024 수치는 page.tsx 의 '최근 지급 연혁' 표와 FAQ 에 그대로 남는다.
 const SCENARIOS = [
+  {
+    id: "2026-settled",
+    label: "2026 임단협 타결 (최신)",
+    bonusPercent: 400,
+    fixedAmount: 13_200_000, // 1,320만원
+    freeShares: 8, // 주식 8주 (DART 공시 기준 2026-11-30 지급)
+    voucher: 500_000, // 복지포인트 50만 (원 환산)
+    voucherLabel: "복지포인트",
+    desc: "성과금 400% + 격려금 1,320만 + 주식 8주 + 복지포인트 50만 (주식 11/30 지급, 기본급 월 +10만 별도)",
+  },
   {
     id: "2025-settled",
     label: "2025 임단협 타결 (실제 지급)",
@@ -15,16 +31,8 @@ const SCENARIOS = [
     fixedAmount: 14_200_000, // 1,420만원
     freeShares: 17, // 우리사주 17주
     voucher: 200_000, // 재래시장상품권 20만원
+    voucherLabel: "재래시장상품권",
     desc: "성과금 450% + 격려금 1,420만 + 우리사주 17주 + 재래시장상품권 20만 (2025-10-17 타결, 기본급 10만원 인상 별도)",
-  },
-  {
-    id: "2024-settled",
-    label: "2024 임협 합의 (실제 지급)",
-    bonusPercent: 500,
-    fixedAmount: 15_200_000, // 1,520만원
-    freeShares: 36, // 주식 총 36주 (11주+20주+5주)
-    voucher: 0,
-    desc: "성과금·격려금 총 500% + 1,520만 + 주식 36주. 우리사주출연 리워드 100~150만원은 출연 조건부라 합산 제외.",
   },
 ] as const;
 
@@ -32,14 +40,14 @@ const DEFAULT_SALARY_MANWON = 500;
 const DEFAULT_MOBIS_STOCK = 280_000; // 현대모비스 보통주 — 지급 시점 주가로 직접 수정 권장
 
 export default function HyundaiMobisBonusClient() {
-  const [scenarioId, setScenarioId] = useState<(typeof SCENARIOS)[number]["id"]>("2025-settled");
+  const [scenarioId, setScenarioId] = useState<(typeof SCENARIOS)[number]["id"]>("2026-settled");
   const [monthlyBasicManwon, setMonthlyBasicManwon] = useState(DEFAULT_SALARY_MANWON);
   const [stockPrice, setStockPrice] = useState(DEFAULT_MOBIS_STOCK);
 
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [bonusPctOverride, setBonusPctOverride] = useState(450);
-  const [fixedOverride, setFixedOverride] = useState(14_200_000);
-  const [sharesOverride, setSharesOverride] = useState(17);
+  const [bonusPctOverride, setBonusPctOverride] = useState(400);
+  const [fixedOverride, setFixedOverride] = useState(13_200_000);
+  const [sharesOverride, setSharesOverride] = useState(8);
   const [customMode, setCustomMode] = useState(false);
   const [creditRate, setCreditRate] = useState(DEFAULT_BONUS_CREDIT_RATE);
   const [applyInsurance, setApplyInsurance] = useState(true);
@@ -105,7 +113,7 @@ export default function HyundaiMobisBonusClient() {
             customMode ? "border-primary bg-primary/10" : "border-canvas-deep hover:border-primary/40"
           }`}
         >
-          🎛️ 직접 입력 (2026 타결안 나오면 여기에)
+          🎛️ 직접 입력 (커스텀 시나리오)
         </button>
         {customMode && (
           <div className="mt-3 space-y-3 p-4 rounded-xl bg-canvas/30">
@@ -258,7 +266,7 @@ export default function HyundaiMobisBonusClient() {
           <ResultCard label="정률 성과금" value={fmtManwon(calc.percentBonusWon)} sub={`= 월 기본급 ${monthlyBasicManwon}만 × ${customMode ? bonusPctOverride : scenario.bonusPercent}%`} />
           <ResultCard label="정액 격려금" value={fmtManwon(calc.fixedBonusWon)} sub="임단협 합의 명시 정액" />
           <ResultCard label="주식(우리사주) 가치" value={fmtManwon(calc.shareValueWon)} sub={`${customMode ? sharesOverride : scenario.freeShares}주 × ${(stockPrice / 10000).toFixed(1).replace(/\.0$/, "")}만원`} />
-          <ResultCard label="상품권" value={fmtManwon(calc.voucherWon)} sub={calc.voucherWon > 0 ? "재래시장상품권" : "해당 시나리오 상품권 없음"} />
+          <ResultCard label="포인트·상품권" value={fmtManwon(calc.voucherWon)} sub={calc.voucherWon > 0 ? scenario.voucherLabel : "해당 시나리오 상품권 없음"} />
         </div>
 
         <div className="rounded-xl bg-white border border-primary/30 p-5">
