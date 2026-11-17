@@ -44,7 +44,6 @@ import {
   softwareApplicationLd,
   autoBreadcrumbLd,
   faqLd,
-  howToLd,
   speakableLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
@@ -180,39 +179,6 @@ const FAQ_ITEMS = [
     question: "삼성전자 평균 성과급은 얼마인가요?",
     answer:
       "사업부·연도별 영업이익에 따라 편차가 매우 큽니다. 본 계산기 디폴트(영업이익 350조 가정, 평균 연봉 8,000만원)에서는 메모리 사업부가 연봉의 수백 % 수준으로 가장 높고, 적자 사업부는 부문 균등분만 받아 크게 낮아지는 식으로 추정됩니다. '평균'이라는 단일 숫자보다, 위 계산기에 본인 사업부·연봉·그 해 영업이익을 넣어 본인 케이스를 직접 확인하는 것이 정확합니다. 본 결과는 공개 보도 기반 추정치입니다.",
-  },
-];
-
-const HOW_TO_STEPS = [
-  {
-    name: "영업이익 입력",
-    text:
-      "DS부문 연간 영업이익(조원)을 입력합니다. 분기 영업이익이면 4배 환산. 30·100·350·1000조 등 다양한 시나리오를 빠른선택 칩으로 비교 가능합니다.",
-  },
-  {
-    name: "사업부 인원·가중치 확인",
-    text:
-      "메모리·공통·파운드리·시스템LSI의 인원과 사업부 가중치를 확인. 회사 정책에 따라 조정 가능. 적자 사업부는 가중치 0으로 두면 사업부 분배에서 제외.",
-  },
-  {
-    name: "사업부별 1인당 평균 확인",
-    text:
-      "부문(40%) + 사업부(60%) 분배 결과로 사업부별 1인당 평균이 자동 산출됩니다.",
-  },
-  {
-    name: "내 연봉으로 본인 케이스 계산",
-    text:
-      "본인 연봉과 소속 사업부를 선택하면 본인 케이스의 세전·세후 성과급이 산출됩니다. 추가 세액공제·4대보험 부과 적용도 직접 조정 가능.",
-  },
-  {
-    name: "다년도 RSU 매도 시뮬",
-    text:
-      "연도별 1인당 성과급·RSU 비중·풀린 비율·주가를 입력. 누적 매도 가능 주식이 합산되고, 기준 매도가 입력 시 통합 매도 시 가치와 누적 그래프가 산출됩니다.",
-  },
-  {
-    name: "TAI 미니 계산기",
-    text:
-      `월 기본급을 입력하고 사업부를 선택하면 ${TAI_LATEST.periodLabel} 실제 발표 지급률(${TAI_LATEST_TOP.division} ${TAI_LATEST_TOP.rate}% 등)로 이번 TAI가 즉시 계산됩니다.`,
   },
 ];
 
@@ -363,13 +329,6 @@ export default function SamsungBonusCalculatorPage() {
             leafName: "삼성전자 성과급 계산기",
           }),
           faqLd(FAQ_ITEMS),
-          howToLd({
-            name: "삼성전자 성과급 계산하는 방법",
-            description:
-              "영업이익 입력부터 본인 연봉별 세후 실수령, 다년도 RSU 매도 시뮬, TAI 계산까지 6단계.",
-            steps: HOW_TO_STEPS,
-            totalTime: "PT3M",
-          }),
         ]}
       />
 

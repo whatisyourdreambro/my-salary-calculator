@@ -12,7 +12,6 @@ import {
   softwareApplicationLd,
   autoBreadcrumbLd,
   faqLd,
-  howToLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -82,14 +81,6 @@ const FAQ_ITEMS = [
   },
 ];
 
-const HOW_TO_STEPS = [
-  { name: "OPI 시나리오 선택", text: "2025 실적분 50% / 2024 실적분 50% / 직접 입력 중 선택." },
-  { name: "본인 연봉 입력", text: "연 기본 연봉 입력. 기본급(연봉/20) 자동 산출. 평균 1억 1,400만원." },
-  { name: "TAI 설정", text: "상반기 100% 확정 반영, 하반기(미확정)는 직접 조정." },
-  { name: "결과 확인", text: "OPI + TAI 합산 세전 즉시 표시." },
-  { name: "세후 실수령 확인", text: "누진세 + 4대보험 marginal 자동 계산." },
-];
-
 export const metadata: Metadata = {
   // canonical/OG/twitter/robots/hreflang은 buildPageMetadata(src/lib/seo.ts) 정본으로 생성 —
   // 수기 canonical 드리프트 방지. 기존 출력값은 유지되고 헬퍼 자동 필드만 추가된다.
@@ -122,11 +113,6 @@ export default function SamsungBiologicsBonusPage() {
           autoBreadcrumbLd(PAGE_PATH, { leafName: "삼성바이오로직스 성과급" }),
           softwareApplicationLd({ name: PAGE_TITLE, description: PAGE_DESC, url: `${SITE_URL}${PAGE_PATH}`, dateModified: staticRouteLastModified(PAGE_PATH) }),
           faqLd(FAQ_ITEMS),
-          howToLd({
-            name: "삼성바이오로직스 성과급 계산하는 방법",
-            description: "OPI 시나리오·본인 연봉으로 OPI+TAI 세전·세후 실수령액을 산출하는 5단계 가이드",
-            steps: HOW_TO_STEPS,
-          }),
         ]}
       />
 
