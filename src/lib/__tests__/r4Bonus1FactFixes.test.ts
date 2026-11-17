@@ -204,3 +204,13 @@ describe("N2-calc-11 LG엔솔 지급 이력 표 2026 행 (광고 위, 더 짧은
     expect(page).not.toContain("1Q 적자 -2,078억, ESS 회복 신호");
   });
 });
+
+describe("N2-calc-11 LG화학 사업부별 PS 표 (광고 위, 행 삭제)", () => {
+  it("출처 없는 '2022 호황 | 배터리 (분사 전) | 450%' 행이 없다 — 분사는 2020-12-01", () => {
+    const page = read("src/app/calc/lg-chem-bonus/page.tsx");
+    expect(page).not.toContain("배터리 (분사 전)");
+    expect(page).not.toContain(">450%<");
+    expect(page).toContain(">석유화학본부<");
+    expect(page).toContain(">첨단소재 · 생명과학<");
+  });
+});
