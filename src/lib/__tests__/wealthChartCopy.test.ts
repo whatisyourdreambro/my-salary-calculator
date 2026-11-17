@@ -72,3 +72,17 @@ describe("WealthChart 팁·툴팁 — 숨은 나이 가정 없음", () => {
     }
   });
 });
+
+// n2 수리: 부제가 짧아진 뒤 md 이상 가로 머리줄에서 제목 '자산 성장 시뮬레이션'이 두 줄로 접혀(홈 1010~1033px·/calc/2026-year
+// 1013px 이상 결과 화면, 아래 광고 +32px, n2 스윕 B) 제목만 md 이상에서 한 줄로 고정한다. md 미만(세로 쌓기)은 그대로.
+describe("WealthChart 머리줄 제목 — md 이상 한 줄", () => {
+  const src = readFileSync("src/components/WealthChart.tsx", "utf8");
+  it("제목 h2 에 md:whitespace-nowrap 만 더하고 md 미만 줄바꿈은 그대로", () => {
+    const h2 = /<h2 className="([^"]+)">\s*<TrendingUp \/> 자산 성장 시뮬레이션/.exec(src);
+    expect(h2).not.toBeNull();
+    const classes = h2![1].split(/\s+/);
+    expect(classes).toContain("md:whitespace-nowrap");
+    expect(classes).not.toContain("whitespace-nowrap");
+    expect(classes.filter((c) => c !== "md:whitespace-nowrap").join(" ")).toBe("text-2xl font-bold text-foreground flex items-center gap-2");
+  });
+});

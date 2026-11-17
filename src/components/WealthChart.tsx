@@ -70,7 +70,10 @@ export default function WealthChart({ monthlyNetSalary }: WealthChartProps) {
  <div className="bg-white p-6 rounded-2xl border border-canvas shadow-xl space-y-8">
  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
  <div>
- <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+ {/* md:whitespace-nowrap (n2 수리) — 부제가 만원 정수로 짧아지자 md 이상 가로 줄에서 왼쪽 묶음이 덜 넓어져 제목이 두 줄로 접혔다
+     (홈 1010~1033px·/calc/2026-year 1013px 이상 결과 화면, 아래 광고 +32px, n2 스윕 B). 제목을 한 줄로 두면 왼쪽 묶음의 최소 폭이
+     제목 폭이 되어 줄어든 몫은 목표 배지가 맡는다. md 미만(세로 쌓기)은 그대로 */}
+ <h2 className="text-2xl font-bold text-foreground flex items-center gap-2 md:whitespace-nowrap">
  <TrendingUp /> 자산 성장 시뮬레이션
  </h2>
  <p className="text-faint-blue text-sm">월 {formatKRW(monthlySavings)}원씩 투자하면 미래의 내 자산은?</p>
