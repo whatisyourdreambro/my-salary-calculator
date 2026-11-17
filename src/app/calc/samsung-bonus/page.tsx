@@ -1042,17 +1042,17 @@ export default function SamsungBonusCalculatorPage() {
               </span>
             </Link>
             <Link
-              href="/samsung-negotiation-2026"
+              href="/guides/samsung-opi-tai-complete-2026"
               className="block p-5 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 rounded-2xl hover:border-electric transition-colors group"
             >
               <p className="text-xs font-black uppercase tracking-widest text-electric mb-2">
                 시즌 가이드
               </p>
               <p className="font-bold text-navy dark:text-canvas-50 text-sm mb-1">
-                삼성전자 2026 임금협상 분석
+                삼성전자 OPI·TAI 2026
               </p>
               <p className="text-xs text-muted-blue mb-3">
-                5가지 핵심 쟁점, 직급별 예상 인상폭, SK하이닉스 비교
+                사업부별 지급률·지급 시기·세후 금액
               </p>
               <span className="text-xs font-bold text-electric inline-flex items-center gap-1">
                 자세히 보기{" "}
