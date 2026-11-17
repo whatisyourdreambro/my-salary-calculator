@@ -289,7 +289,7 @@ export const metadata: Metadata = {
     "삼성 임금협상 2026",
   ].join(", "),
   other: {
-    "article:modified_time": "2026-11-01",
+    "article:modified_time": "2026-11-18",
   },
 };
 
@@ -1234,7 +1234,7 @@ export default function SamsungBonusCalculatorPage() {
               본 계산기는 공개된 노사 합의 보도와 분배 모델 추정치이며
               참고용입니다. DS부문 영업이익 10.5% 재원·부문 사업부 4:6 비율은 보도 기반
               고정값, 사업부 인원·가중치·세금 가정은 사용자 조정 가능. 정확한
-              본인 케이스는 회사 명세서 확인. 페이지 수정일: <time dateTime="2026-11-01">2026-11-01</time>.
+              본인 케이스는 회사 명세서 확인. 페이지 수정일: <time dateTime="2026-11-18">2026-11-18</time>.
             </p>
           </div>
 

@@ -39,10 +39,12 @@ export const EDITORIAL_TRUST_PAGES: Readonly<Record<string, EditorialTrustNoteCo
     checkedOn: TAX_TABLE_EFFECTIVE_DATE,
   },
   // 화면 '페이지 수정일'(page.tsx) — 2026-11-01 B28 이식 때 2026-10-07 보도 원문을 다시 확인(page.tsx 머리 주석).
+  // 2026-11-18 R4 SAMSUNG: 우리사주 소득공제(조특법 제88조의4)·특별경영성과급 조건·SK 9/16 가결안·2025년 사업보고서 평균 연봉을
+  // 원문으로 다시 대조하고 화면을 정정한 날 = 화면 '페이지 수정일'.
   "/calc/samsung-bonus": {
     sources: "언론 보도 원문, 사업보고서",
     official: false,
-    checkedOn: "2026-11-01",
+    checkedOn: "2026-11-18",
   },
   // psData LAST_UPDATED(화면 '마지막 갱신') — 2026-11-01 B27, 10/28 회사 발표 3분기 실적 반영.
   "/calc/sk-hynix-bonus": {
