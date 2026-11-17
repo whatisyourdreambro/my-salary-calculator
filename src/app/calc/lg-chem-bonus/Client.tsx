@@ -75,6 +75,8 @@ export default function LgChemBonusClient() {
           <div className="mt-3 p-4 rounded-xl bg-canvas/30 flex items-center gap-2">
             <span className="text-sm font-bold w-32">PS (월 기본급 대비)</span>
             <NumberInput
+              allowNegative={false}
+              aria-label="PS (월 기본급 대비)"
               type="number"
               value={customPsPercent}
               onChange={(e) => setCustomPsPercent(Number(e.target.value) || 0)}
@@ -91,6 +93,7 @@ export default function LgChemBonusClient() {
         <label className="block">
           <span className="text-sm font-bold">월 기본급(통상임금) (만원)</span>
           <NumberInput
+            allowNegative={false}
             type="number"
             value={monthlyBasicManwon}
             onChange={(e) => setMonthlyBasicManwon(Number(e.target.value) || 0)}
@@ -147,10 +150,10 @@ export default function LgChemBonusClient() {
         {showAdvanced && (
           <div className="mt-4 space-y-4">
             <div>
-              <label className="block text-sm font-bold mb-2">
+              <label htmlFor="ms-lg-chem-bonus-credit" className="block text-sm font-bold mb-2">
                 추가 세액공제: <span className="text-primary">{creditRate}%</span>
               </label>
-              <input type="range" min={0} max={50} step={5} value={creditRate}
+              <input id="ms-lg-chem-bonus-credit" type="range" min={0} max={50} step={5} value={creditRate}
                 onChange={(e) => setCreditRate(Number(e.target.value))}
                 className="w-full accent-primary" />
             </div>

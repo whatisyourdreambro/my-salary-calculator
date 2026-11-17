@@ -154,3 +154,43 @@ describe("CB-07 허브 2026 시즌 캘린더 12월 (광고 위, 더 짧은 글)"
     expect(dec.events).toHaveLength(2);
   });
 });
+
+describe("N2-calc-11 LG에너지솔루션·LG화학·카카오 접힌 FAQ (calc-02-F06~F10)", () => {
+  it("LG엔솔 FAQ: 1~3분기 누적 6,615억원 흑자(3분기 7,560억원, 세액공제 4,169억원 포함)", () => {
+    const faq = faqBlock("src/app/calc/lg-energy-bonus/page.tsx");
+    expect(faq).toContain("2분기 1,133억원, 3분기 7,560억원(북미 생산 세액공제 4,169억원 포함, 11월 3일 실적 발표)의 영업이익으로 1~3분기 누적 6,615억원 흑자입니다.");
+    expect(faq).toContain("1~3분기 누적 영업이익은 6,615억원(1분기 -2,078억·2분기 1,133억·3분기 7,560억, 세액공제 포함)입니다.");
+    expect(faq).toContain("본 계산기의 최근(75%)·회복기(200%) 시나리오로 범위를 비교해 보세요.");
+    expect(faq).not.toContain("상반기 누적은 945억원 손실");
+    expect(faq).not.toContain("연봉을 입력하면 자동 환산");
+    expect(faq).toContain("세율 추정용 연봉은 월 기본급 × 13으로 잡습니다(450만원이면 5,850만원)");
+    expect(faq).toContain("LG화학(모회사)은 2025년 실적분 전사 성과급을 지급하지 않았습니다(디지털타임스 2026-02-02 보도).");
+    expect(faq).not.toContain("분사 후에도 안정적");
+  });
+  it("LG화학 FAQ: 분사는 2020년 12월 1일(2022년 1월 상장), '분사 전 450%' 없음, PI 는 가정값", () => {
+    const faq = faqBlock("src/app/calc/lg-chem-bonus/page.tsx");
+    expect(faq).toContain("LG에너지솔루션은 2020년 12월 1일 LG화학에서 분사해 출범한 자회사(2022년 1월 상장)입니다.");
+    expect(faq).not.toContain("2022년 LG화학에서 분사");
+    expect(faq).not.toContain("분사 전");
+    expect(faq).toContain("PI는 본 계산기에서 기본급의 200%로 가정(적자 연도 지급은 보장되지 않음)");
+    expect(faq).not.toContain("PI는 안정적으로");
+    expect(faq).toContain("공개 보도(서울경제·핀포인트뉴스)와 사업보고서 기반 추정이며, PI 200%는 계산기 가정값입니다.");
+  });
+  it("카카오 FAQ: 출처에 '연봉체계 자료' 없음, PI 10~40% 는 계산기 가정값", () => {
+    const faq = faqBlock("src/app/calc/kakao-bonus/page.tsx");
+    expect(faq).toContain("2026-05 임금협상 보도(뉴스웨이) 기반 추정이며, 정기 PI 10~40%는 계산기 가정값입니다.");
+    expect(faq).not.toContain("연봉체계 자료");
+  });
+});
+
+describe("N2-calc-11 LG화학 계산기 입력 위생 (calc-02-F19)", () => {
+  const src = read("src/app/calc/lg-chem-bonus/Client.tsx");
+  it("NumberInput 은 모두 allowNegative={false}, 직접 입력 칸은 aria-label, 세액공제 슬라이더는 id+htmlFor", () => {
+    const inputs = [...src.matchAll(/<NumberInput\b[\s\S]*?\/>/g)].map((m) => m[0]);
+    expect(inputs).toHaveLength(2);
+    for (const body of inputs) expect(body, body).toContain("allowNegative={false}");
+    expect(src).toContain('aria-label="PS (월 기본급 대비)"');
+    expect(src).toContain('htmlFor="ms-lg-chem-bonus-credit"');
+    expect(src).toContain('id="ms-lg-chem-bonus-credit" type="range"');
+  });
+});
