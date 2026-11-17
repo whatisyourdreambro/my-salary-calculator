@@ -49,9 +49,9 @@
       "sha256": "3d38ad439768f5c9c484b00b86993060691030d36bbbe857caa1fc6159157d32"
     },
     "/calc": {
-      "contentDate": "2026-10-05",
-      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
-      "reason": "475512fe4 (October 5) corrected featured calculator descriptions. 126f5d3fd changes only the ReactElement type. Child calculator and news routes are not this index. Recommendation destination selection in the shared registry does not revise the index article. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B12 P2UX-01): calc/layout.tsx renders TopicNextSteps after CalcNewsNote at the end of every calculator layout, below the calc ad block; TopicNextSteps returns null on /calc (no map key), so the hub visible content is unchanged and the 2026-10-05 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G4 appends EditorialTrustNoteFromPath at the end of calc/layout.tsx, after the calc ad block, share fallback and next-step boxes; it renders nothing on /calc itself (only on the Samsung and SK hynix bonus calculators). No visible hub change, so the 2026-10-05 date is retained.",
+      "contentDate": "2026-11-18",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "475512fe4 (October 5) corrected featured calculator descriptions. 126f5d3fd changes only the ReactElement type. Child calculator and news routes are not this index. Recommendation destination selection in the shared registry does not revise the index article. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B12 P2UX-01): calc/layout.tsx renders TopicNextSteps after CalcNewsNote at the end of every calculator layout, below the calc ad block; TopicNextSteps returns null on /calc (no map key), so the hub visible content is unchanged and the 2026-10-05 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G4 appends EditorialTrustNoteFromPath at the end of calc/layout.tsx, after the calc ad block, share fallback and next-step boxes; it renders nothing on /calc itself (only on the Samsung and SK hynix bonus calculators). No visible hub change, so the 2026-10-05 date is retained. R4 integration ledger step 2026-11-18 for the 11/27 publish branch claude/next-1127: the featured 현대로템 card season label 12월 임단협 시즌 -> 하반기 임단협 시즌 (BONUS1 897b7c015, CB-07, question-1 candidate) and the offer-compare card description BEST 대비 차액 -> 첫 오퍼와 차액 (CALCMISC 69a105971, N2-calc-17 calc-03-F14) are visible fact corrections; the filtered-state grid spacing 2d4e55705 is layout only. Content date 2026-11-18 = KST day of those unit commits.",
       "dependencies": [
         "src/lib/calculatorJourneys.ts",
         "src/lib/simpleCalculators/index.ts"
@@ -63,7 +63,7 @@
         "src/lib/calculatorJourneys.ts",
         "src/lib/simpleCalculators/index.ts"
       ],
-      "sha256": "d962803b4983ca0d29c13f5fb01014d236487709f97873d9d183eaf713f169a9"
+      "sha256": "8eddce98857b854bc9278d9ffa2df946d7fb853f2cca5164757cb4dbeb303715"
     },
     "/money-check": {
       "contentDate": "2026-10-19",
@@ -83,8 +83,8 @@
     },
     "/": {
       "contentDate": "2026-10-19",
-      "reviewedAtCommit": "c612bfed828c3102b8f1f377e89d73b53bd5d930",
-      "reason": "Reviewed October 23 against deployed commit 3f100889. Added explicit saved-condition reuse and storage metadata, with no salary rate, tax calculation or home article correction. Retain the October 19 editorial date; this review covers the changed NextActions measurement and SalaryCalculator dependencies. Reviewed October 23 at e2961ffb: the SalaryCalculator diff removes newly generated private result tokens and remote amount-image URLs, and explains explicit result-text approval. It does not change salary rates, calculations or the home financial article. Retain the October 19 editorial content date for this sharing/privacy workflow change; old result readers remain supported. Reviewed October 25 against e424ac77 plus this candidate: insurance NextActions now opens the existing fee calculator and names the FIRE destination accurately. This is a navigation correction; retain the home article date. Rehashed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-22 P4-07): the home freelancer next-step card in NextActions now links to /health-insurance-fee-2026 instead of /health-insurance-2026. Link target only, no salary, tax or home article change, so the 2026-10-19 date is retained. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B05, B07). B05 STR-05 (10/5 approval #6, re-approved 2026-11-01) moves the work-clock section from between the hero and HomeTopAd to directly below that ad, drops the third hero jump button (실시간 월급 시계; the header menu item stays) and moves the salary result offer-comparison handoff block below ResultAd; B07 IVT-03 moves the stale-result notice from a box above the result card into the card title (edit-after-calculation state only; the SSR HTML is unchanged). Layout and state copy only, no salary, tax or home article change, so the 2026-10-19 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 takes the home WebApplication JSON-LD dateModified from staticRouteLastModified('/'), the same 2026-10-19 sitemap date (it was 2026-07-16), and G4 appends the who-made-this trust note (official-source check date 2026-09-25 = TAX_TABLE_EFFECTIVE_DATE) as the last sibling after the last ad, HomeSeoSection and share. JSON-LD and a note below every ad only, no salary, tax or home article change, so the 2026-10-19 date is retained. Rehashed 2026-11-14 for the n1 publish branch claude/next-1117 (package ADS, owner approval 2026-11-13): lens-ads-F11 removes the unused Google Ads conversion event and its trackEvent import from SalaryCalculator.tsx; nothing visible, no salary, tax or home article change, so the 2026-10-19 date is retained. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (COMPB N2-components-06: SalaryCalculator.tsx gains attributes only (type=button, aria-pressed, aria-label, role=group with aria-labelledby, label ids, aria-live counts); no text, class, element or spacing changes. The home FeaturedGuides card swap of SEASONC and the DEC/JAN season chips of SEASONA are in files this entry does not hash and change no fact on the page.) The 2026-10-19 date is retained.",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "Reviewed October 23 against deployed commit 3f100889. Added explicit saved-condition reuse and storage metadata, with no salary rate, tax calculation or home article correction. Retain the October 19 editorial date; this review covers the changed NextActions measurement and SalaryCalculator dependencies. Reviewed October 23 at e2961ffb: the SalaryCalculator diff removes newly generated private result tokens and remote amount-image URLs, and explains explicit result-text approval. It does not change salary rates, calculations or the home financial article. Retain the October 19 editorial content date for this sharing/privacy workflow change; old result readers remain supported. Reviewed October 25 against e424ac77 plus this candidate: insurance NextActions now opens the existing fee calculator and names the FIRE destination accurately. This is a navigation correction; retain the home article date. Rehashed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-22 P4-07): the home freelancer next-step card in NextActions now links to /health-insurance-fee-2026 instead of /health-insurance-2026. Link target only, no salary, tax or home article change, so the 2026-10-19 date is retained. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B05, B07). B05 STR-05 (10/5 approval #6, re-approved 2026-11-01) moves the work-clock section from between the hero and HomeTopAd to directly below that ad, drops the third hero jump button (실시간 월급 시계; the header menu item stays) and moves the salary result offer-comparison handoff block below ResultAd; B07 IVT-03 moves the stale-result notice from a box above the result card into the card title (edit-after-calculation state only; the SSR HTML is unchanged). Layout and state copy only, no salary, tax or home article change, so the 2026-10-19 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 takes the home WebApplication JSON-LD dateModified from staticRouteLastModified('/'), the same 2026-10-19 sitemap date (it was 2026-07-16), and G4 appends the who-made-this trust note (official-source check date 2026-09-25 = TAX_TABLE_EFFECTIVE_DATE) as the last sibling after the last ad, HomeSeoSection and share. JSON-LD and a note below every ad only, no salary, tax or home article change, so the 2026-10-19 date is retained. Rehashed 2026-11-14 for the n1 publish branch claude/next-1117 (package ADS, owner approval 2026-11-13): lens-ads-F11 removes the unused Google Ads conversion event and its trackEvent import from SalaryCalculator.tsx; nothing visible, no salary, tax or home article change, so the 2026-10-19 date is retained. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (COMPB N2-components-06: SalaryCalculator.tsx gains attributes only (type=button, aria-pressed, aria-label, role=group with aria-labelledby, label ids, aria-live counts); no text, class, element or spacing changes. The home FeaturedGuides card swap of SEASONC and the DEC/JAN season chips of SEASONA are in files this entry does not hash and change no fact on the page.) The 2026-10-19 date is retained. Rehashed 2026-11-18 in the R4 integration of claude/next-1127: HOME RL-20 (0613b6189, owner approval 2026-11-18 question 12, condition: measured final hydrated ad positions unchanged) reserves the seasonal banner space in the server HTML (seed prop, static import and one JSX line in src/app/page.tsx and src/app/HomeClient.tsx); the final DOM after mount is byte-identical, with no article, rate or calculation change, so the 2026-10-19 date is retained. The N2-lib-10 D-day fix (e9d522cfa) is in src/lib/seasonalCalendar.ts, not a hashed file. If 0613b6189 is reverted after the sweep, this hash returns to its earlier value.",
       "dependencies": [
         "src/components/NextActions.tsx",
         "src/components/SalaryCalculator.tsx"
@@ -95,7 +95,7 @@
         "src/components/NextActions.tsx",
         "src/components/SalaryCalculator.tsx"
       ],
-      "sha256": "0f49f46c0fff82070660f0b992d497c3bcb4f70497102b2a1e79889a17dee57c"
+      "sha256": "0e43fd4cd439d600568b00b2ba00f490a72b20eff84549899ed5d5c3286dc905"
     },
     "/home-loan": {
       "contentDate": "2026-09-19",
@@ -229,9 +229,9 @@
       "sha256": "7a24858903ede868673ef440510921a0423b54fa0ac155362b888ac82d82c74e"
     },
     "/calc/samsung-bonus": {
-      "contentDate": "2026-11-01",
-      "reviewedAtCommit": "c612bfed828c3102b8f1f377e89d73b53bd5d930",
-      "reason": "Reviewed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B05, B06, B12, B28, B37). B28 STR-04-B (owner approval 2026-11-01 item 5) ports the held 10/9 public-press wording above the ads: the division scenario intro (기존 OPI 포함 세전; 370조원 is a company-wide or DS부문 forecast depending on the outlet), the distribution-model step 1 title OPI2 재원 = DS 영업이익 × 10.5%, the CL paragraph with the lower 0.9·0.8배 grades (10/7 reports) and the note that the multi-year simulator models only 가·나·일반, the 재원 heading and paragraph, the bottom info box, the simulator note and the OPI source label 복수 언론 보도 등. B37 P2UX-04 b returns the hero subtitle (2026 OPI·TAI 예상 금액) and the first summary sentence to the pre-10/19 line count; P2UX-04 a restores the OPI·TAI calculator head of the search description (head only). B05 STR-05 moves the hero jump links below the first ad and drops the redundant 내 연봉으로 바로 계산 link, B06 adds pt-2 under the personal-result CalcResultAd and B12 P2UX-01 moves the TopicNextSteps box from the page main to the end of calc/layout; those three are layout only. Visible text change: content date advanced from 2026-10-19 to 2026-11-01, matching article:modified_time, the JSON-LD dateModified and the visible 페이지 수정일 that B28 set. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 replaces the SoftwareApplication JSON-LD dateModified string with staticRouteLastModified(PAGE_PATH), still 2026-11-01 and equal to the visible page revision date; the G4 trust note (공개 자료 label, check date 2026-11-01) arrives through calc/layout.tsx, which this entry does not hash. JSON-LD source only, so the 2026-11-01 date is retained. Rehashed 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF2 S1 spells OPI and OPI2 as the press does (초과이익성과금 to 초과이익성과급, 특별경영성과금 to 특별경영성과급; spelling only, identical glyph advance, no layout change, also in the meta description); OF2 S2 removes the two 2025 OPI rows not found in press (한국총괄·SR·CDO 37%, EHS 34%), sets sourceNote to 복수 언론 보도 and cites press URLs only in the opiData.ts comments, so ads only move up. The skeptic keeps contentDate 2026-11-01 because the visible 페이지 수정일 above the calc/layout ads uses proportional digits (publicSourceWording.test.ts ties it to the sitemap date), so the 2026-11-01 date is retained. Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (CALCA N2-calc-02: annualOp.ts separates the DS division operating-profit default (dsProfitTrillion) from the company-wide preliminary figure and SavedScenarios.tsx reads the current rate-pointer year; nothing rendered changes today (announced=false, identical text).) The 2026-11-01 date is retained. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[6], components ideas[6], lib ideas[3] and app-tools-fun ideas[3]: the dependency src/lib/topicNextSteps.ts gained rows and destination entries for other routes only; the box on this page renders the same cards.) The 2026-11-01 date is retained.",
+      "contentDate": "2026-11-18",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "Reviewed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B05, B06, B12, B28, B37). B28 STR-04-B (owner approval 2026-11-01 item 5) ports the held 10/9 public-press wording above the ads: the division scenario intro (기존 OPI 포함 세전; 370조원 is a company-wide or DS부문 forecast depending on the outlet), the distribution-model step 1 title OPI2 재원 = DS 영업이익 × 10.5%, the CL paragraph with the lower 0.9·0.8배 grades (10/7 reports) and the note that the multi-year simulator models only 가·나·일반, the 재원 heading and paragraph, the bottom info box, the simulator note and the OPI source label 복수 언론 보도 등. B37 P2UX-04 b returns the hero subtitle (2026 OPI·TAI 예상 금액) and the first summary sentence to the pre-10/19 line count; P2UX-04 a restores the OPI·TAI calculator head of the search description (head only). B05 STR-05 moves the hero jump links below the first ad and drops the redundant 내 연봉으로 바로 계산 link, B06 adds pt-2 under the personal-result CalcResultAd and B12 P2UX-01 moves the TopicNextSteps box from the page main to the end of calc/layout; those three are layout only. Visible text change: content date advanced from 2026-10-19 to 2026-11-01, matching article:modified_time, the JSON-LD dateModified and the visible 페이지 수정일 that B28 set. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 replaces the SoftwareApplication JSON-LD dateModified string with staticRouteLastModified(PAGE_PATH), still 2026-11-01 and equal to the visible page revision date; the G4 trust note (공개 자료 label, check date 2026-11-01) arrives through calc/layout.tsx, which this entry does not hash. JSON-LD source only, so the 2026-11-01 date is retained. Rehashed 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF2 S1 spells OPI and OPI2 as the press does (초과이익성과금 to 초과이익성과급, 특별경영성과금 to 특별경영성과급; spelling only, identical glyph advance, no layout change, also in the meta description); OF2 S2 removes the two 2025 OPI rows not found in press (한국총괄·SR·CDO 37%, EHS 34%), sets sourceNote to 복수 언론 보도 and cites press URLs only in the opiData.ts comments, so ads only move up. The skeptic keeps contentDate 2026-11-01 because the visible 페이지 수정일 above the calc/layout ads uses proportional digits (publicSourceWording.test.ts ties it to the sitemap date), so the 2026-11-01 date is retained. Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (CALCA N2-calc-02: annualOp.ts separates the DS division operating-profit default (dsProfitTrillion) from the company-wide preliminary figure and SavedScenarios.tsx reads the current rate-pointer year; nothing rendered changes today (announced=false, identical text).) The 2026-11-01 date is retained. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[6], components ideas[6], lib ideas[3] and app-tools-fun ideas[3]: the dependency src/lib/topicNextSteps.ts gained rows and destination entries for other routes only; the box on this page renders the same cards.) The 2026-11-01 date is retained. R4 integration ledger step 2026-11-18 for the 11/27 publish branch claude/next-1127: SAMSUNG unit visible fact corrections (우리사주 출연 소득공제 FAQ 1e4947e5e, DS부문 condition FAQ c04d645e7, OPI/TAI guide card 3b14b6b08, 평균 연봉 1.58억 8f09dcbce, SK 20% 조기지급 62e40e41c, 실효세율 20~50% 5bd008d87, spacing 2a0d49699, result-card nowrap 331622fef, chart 44197b9c3, manual-mode grid ceed38b89 owner-approved N2-calc-24) and the page revision date/checkedOn 2026-11-18 (298a4d492); BONUS1 276c6db0a removed the hidden HowTo JSON-LD. ROUTE_OVERRIDES row 2026-11-01 -> 2026-11-18.",
       "dependencies": [
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
@@ -255,12 +255,12 @@
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
       ],
-      "sha256": "2c38c90efb72fcf5982b8308f9fd48fb102dc92ce1ac96950ad089b955a31b89"
+      "sha256": "76b6766a711df2c7b158bf60a3e100679aabac5f41052a85b328af4357f90ee4"
     },
     "/calc/sk-hynix-bonus": {
-      "contentDate": "2026-11-01",
-      "reviewedAtCommit": "9c82ac0172852becde36ba13d83e1a072fa992ea",
-      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B27 DATA-03): the operating-profit scenario chips use the Q3 results (보수 181.5조 with the fourth quarter at 0, 누적 연환산 242조 = 181.5조×4/3), the step-1 paragraph says 1~3분기, the footer 마지막 갱신 shows psData LAST_UPDATED 2026-11-01, and the collapsed PS FAQ answer (also in FAQPage JSON-LD) and the HowTo cite the 10/28 SK hynix newsroom cumulative operating profit. Visible content change: content date advanced from 2026-10-04 to 2026-11-01. Stage-1 sweep repair (2026-11-01): the two result-card formula lines drop the leading = and the 당해 수령분 세전 line uses a hyphen-minus, so the 보수 chip state keeps the base line count above CalcResultAd (wording otherwise unchanged); date kept.",
+      "contentDate": "2026-11-18",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B27 DATA-03): the operating-profit scenario chips use the Q3 results (보수 181.5조 with the fourth quarter at 0, 누적 연환산 242조 = 181.5조×4/3), the step-1 paragraph says 1~3분기, the footer 마지막 갱신 shows psData LAST_UPDATED 2026-11-01, and the collapsed PS FAQ answer (also in FAQPage JSON-LD) and the HowTo cite the 10/28 SK hynix newsroom cumulative operating profit. Visible content change: content date advanced from 2026-10-04 to 2026-11-01. Stage-1 sweep repair (2026-11-01): the two result-card formula lines drop the leading = and the 당해 수령분 세전 line uses a hyphen-minus, so the 보수 chip state keeps the base line count above CalcResultAd (wording otherwise unchanged); date kept. R4 integration ledger step 2026-11-18 for the 11/27 publish branch claude/next-1127: BONUS1 N2-calc-10: 2026 상반기 PI pay day 7/28 -> 7/30 on screen (96bc6391f, question-1 candidate) and in data/FAQ (bcd5b116f), stock simulator presets on phones (14c292d81); RL-17 HowTo JSON-LD removed (8017090d1). The package's N2-calc-05 ledger step is this rehash with the real edit day. ROUTE_OVERRIDES row 2026-11-01 -> 2026-11-18.",
       "dependencies": [],
       "files": [
         "src/app/calc/sk-hynix-bonus/Client.tsx",
@@ -269,22 +269,22 @@
         "src/app/calc/sk-hynix-bonus/page.tsx",
         "src/app/calc/sk-hynix-bonus/psData.ts"
       ],
-      "sha256": "baf091e2f876fb5ded88f07402b176b1d7ec9fc49a52076b403ec46fae7cc0c5"
+      "sha256": "d01fce83b34d180be091dbfe3d2e74d1cf88c7d383b3b97a64df962398bde484"
     },
     "/calc/bonus-calculators": {
-      "contentDate": "2026-11-01",
-      "reviewedAtCommit": "918026445ffd1a42aa27d8debd63035f4bb8c100",
-      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B27 DATA-03): the visible 최근 소식 list (src/data/bonusCalcHub.ts) gains the 10/28 SK hynix Q3 results item at the top and drops the oldest 2026-05-27 item. That data file is not hashed for this route, so the source hash is unchanged; as with the 2026-10-09 news update, the content date is advanced from 2026-10-09 to 2026-11-01. Rehashed 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF2 S1 changes the hub paragraph above HomeTopAd and the collapsed FAQ answer from OPI(삼성 초과이익성과금) to OPI(삼성 초과이익성과급) (press wording, spelling only, identical glyph advance, no layout change), so the 2026-11-01 date is retained.",
+      "contentDate": "2026-11-18",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "Reviewed 2026-11-01 for the stage-1 release (origin/main 9c82ac01 plus B27 DATA-03): the visible 최근 소식 list (src/data/bonusCalcHub.ts) gains the 10/28 SK hynix Q3 results item at the top and drops the oldest 2026-05-27 item. That data file is not hashed for this route, so the source hash is unchanged; as with the 2026-10-09 news update, the content date is advanced from 2026-10-09 to 2026-11-01. Rehashed 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF2 S1 changes the hub paragraph above HomeTopAd and the collapsed FAQ answer from OPI(삼성 초과이익성과금) to OPI(삼성 초과이익성과급) (press wording, spelling only, identical glyph advance, no layout change), so the 2026-11-01 date is retained. R4 integration ledger step 2026-11-18 for the 11/27 publish branch claude/next-1127: BONUS1: hub FAQ on 현대차·기아 deal timing (8eaf269ba), four season labels 하반기 임단협 시즌 (59d23cdfd, question-1 candidate), December calendar entry 삼성디스플레이 하반기 TAI (96a7b4b36), news date 2026-07-30 (6c4b8e36b). ROUTE_OVERRIDES row 2026-11-01 -> 2026-11-18.",
       "dependencies": [],
       "files": [
         "src/app/calc/bonus-calculators/page.tsx"
       ],
-      "sha256": "435134eb3d6f21c02d22daaa83cd5bc1d574f6f7e71efa841c5b7f45edcc78f8"
+      "sha256": "a785525aa4d059e41011df52365f7c81ee325c69cdbc734a5118901429500a75"
     },
     "/calc/bonus-home-plan": {
-      "contentDate": "2026-11-15",
-      "reviewedAtCommit": "c612bfed828c3102b8f1f377e89d73b53bd5d930",
-      "reason": "Reviewed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B12, B28). B28 STR-04-B (owner approval 2026-11-01 item 5) corrects the visible method paragraph: the Samsung special bonus pool is now DS 영업이익 10.5% (10/7 press reports) instead of a company-wide 영업이익 10.5% 재원, with the 2026~28년 200조 and 29년부터 100조 thresholds unchanged. B12 P2UX-01 moves the TopicNextSteps box (same three cards) from the page main to the end of calc/layout, below the calc ad block (layout only). Fact correction outside the market snapshot: content date advanced from 2026-10-19 to 2026-11-01 (the page has no visible revision date; its Dataset dateModified follows the market snapshot). Fact update 2026-11-15 for the 11/20 publish branch claude/next-1120 (CALCA N2-calc-14: the SK하이닉스 2025 PS deferral of 20% is no longer added again to 2027 and 2028 cash after the 9/16 agreement and the collapsed FAQ says so; market snapshot refresh to R-ONE 2026-09 apartment prices and ECOS 2026-09 mortgage rate 4.88% (Dataset dateModified from fetchedAt 2026-11-15)) Content date advanced from 2026-11-01 to 2026-11-15, the real KST edit day of the unit commits. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[0] (a7eaf21eb) adds the SoftwareApplication JSON-LD dateModified from staticRouteLastModified (head only), and the dependency src/lib/topicNextSteps.ts gained other routes rows only; the visible page is unchanged since the CALCA review.) The 2026-11-15 date is retained.",
+      "contentDate": "2026-11-18",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "Reviewed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B12, B28). B28 STR-04-B (owner approval 2026-11-01 item 5) corrects the visible method paragraph: the Samsung special bonus pool is now DS 영업이익 10.5% (10/7 press reports) instead of a company-wide 영업이익 10.5% 재원, with the 2026~28년 200조 and 29년부터 100조 thresholds unchanged. B12 P2UX-01 moves the TopicNextSteps box (same three cards) from the page main to the end of calc/layout, below the calc ad block (layout only). Fact correction outside the market snapshot: content date advanced from 2026-10-19 to 2026-11-01 (the page has no visible revision date; its Dataset dateModified follows the market snapshot). Fact update 2026-11-15 for the 11/20 publish branch claude/next-1120 (CALCA N2-calc-14: the SK하이닉스 2025 PS deferral of 20% is no longer added again to 2027 and 2028 cash after the 9/16 agreement and the collapsed FAQ says so; market snapshot refresh to R-ONE 2026-09 apartment prices and ECOS 2026-09 mortgage rate 4.88% (Dataset dateModified from fetchedAt 2026-11-15)) Content date advanced from 2026-11-01 to 2026-11-15, the real KST edit day of the unit commits. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[0] (a7eaf21eb) adds the SoftwareApplication JSON-LD dateModified from staticRouteLastModified (head only), and the dependency src/lib/topicNextSteps.ts gained other routes rows only; the visible page is unchanged since the CALCA review.) The 2026-11-15 date is retained. R4 integration ledger step 2026-11-18 for the 11/27 publish branch claude/next-1127: CALCMISC owner-approved N2-calc-21: scenario basis 2026 상반기 -> 1~3분기 누적 (DART 3분기보고서 2026-11-16; Samsung on the DS부문 basis), visible table, texts and default numbers (9cf0059de data, 75e6fdcbf, review 4a7a96af4 shorter FAQ 5). Default 2027 example 6.99억. Package step 5: contentDate = edit day. ROUTE_OVERRIDES row 2026-11-15 -> 2026-11-18.",
       "dependencies": [
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
@@ -295,18 +295,18 @@
         "src/components/TopicNextSteps.tsx",
         "src/lib/topicNextSteps.ts"
       ],
-      "sha256": "6f91939b0457677346dde69b860e4673e9633fdece3049bd488a7898e25b7261"
+      "sha256": "6fdfa3ef27b87fd9b83f4fa16f8fc26448de95a6e61b24f15b4aba3e572f43e6"
     },
     "/calc/hyundai-bonus": {
       "contentDate": "2026-09-25",
-      "reviewedAtCommit": "edb7587ec078f40f53106505ee440ad4535335f0",
-      "reason": "78f10ee20 (September 25) changes the bonus-tax engine. Later dormant announcement configuration leaves current text unchanged; 4c83c9b88 only removes a redundant memo dependency. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B05 STR-05, 10/5 approval #6 re-approved 2026-11-01): the hero jump links moved below CalcResultAd and BonusNextLinks, and the redundant agreement-comparison button was dropped because that section follows directly. Layout only, no calculation or article change, so the 2026-09-25 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 changes the SoftwareApplication JSON-LD dateModified from 2026-09-19 to staticRouteLastModified(PAGE_PATH) = 2026-09-25, the sitemap and A18 engine date. The visible check-date text is unchanged; JSON-LD only, so the 2026-09-25 date is retained. Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (CALCA N2-calc-04: input attributes only (allowNegative, aria-label, htmlFor and id); no visible change.) The 2026-09-25 date is retained.",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "78f10ee20 (September 25) changes the bonus-tax engine. Later dormant announcement configuration leaves current text unchanged; 4c83c9b88 only removes a redundant memo dependency. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B05 STR-05, 10/5 approval #6 re-approved 2026-11-01): the hero jump links moved below CalcResultAd and BonusNextLinks, and the redundant agreement-comparison button was dropped because that section follows directly. Layout only, no calculation or article change, so the 2026-09-25 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 changes the SoftwareApplication JSON-LD dateModified from 2026-09-19 to staticRouteLastModified(PAGE_PATH) = 2026-09-25, the sitemap and A18 engine date. The visible check-date text is unchanged; JSON-LD only, so the 2026-09-25 date is retained. Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (CALCA N2-calc-04: input attributes only (allowNegative, aria-label, htmlFor and id); no visible change.) The 2026-09-25 date is retained. Rehashed 2026-11-18 in the R4 integration of claude/next-1127: BONUS1 (RL-17 CB-17, 8017090d1/276c6db0a) removed only the hidden HowTo JSON-LD block (HOW_TO_STEPS and the howToLd import) from page.tsx; nothing on screen changed, so the content date is retained.",
       "dependencies": [],
       "files": [
         "src/app/calc/hyundai-bonus/Client.tsx",
         "src/app/calc/hyundai-bonus/page.tsx"
       ],
-      "sha256": "93d4ebf967faab6a47140f440a3cc66009ccf2ca7121b4bd8b5bef5cb7044383"
+      "sha256": "e49d4f20731871890efb404172c88a30cfb89a9c851d6529725282b1020e56e8"
     },
     "/calc/year-end-bonus": {
       "contentDate": "2026-11-15",
@@ -324,14 +324,14 @@
     },
     "/calc/kia-bonus": {
       "contentDate": "2026-09-25",
-      "reviewedAtCommit": "c612bfed828c3102b8f1f377e89d73b53bd5d930",
-      "reason": "September 25 bonus-tax engine and rate-label revision. 4c83c9b88 only removes a redundant memo dependency; no later substantive page revision. Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (CALCA N2-calc-04 and calc-02-F17: input attributes, and the share-value card shows a typed non-round share price to one decimal of 만원; the default price renders the same.) The 2026-09-25 date is retained. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[0] (a7eaf21eb): the SoftwareApplication JSON-LD gains dateModified = staticRouteLastModified of this route, which equals the sitemap date; head only, nothing visible changes.) The 2026-09-25 date is retained.",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "September 25 bonus-tax engine and rate-label revision. 4c83c9b88 only removes a redundant memo dependency; no later substantive page revision. Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (CALCA N2-calc-04 and calc-02-F17: input attributes, and the share-value card shows a typed non-round share price to one decimal of 만원; the default price renders the same.) The 2026-09-25 date is retained. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[0] (a7eaf21eb): the SoftwareApplication JSON-LD gains dateModified = staticRouteLastModified of this route, which equals the sitemap date; head only, nothing visible changes.) The 2026-09-25 date is retained. Rehashed 2026-11-18 in the R4 integration of claude/next-1127: BONUS1 (RL-17 CB-17, 8017090d1/276c6db0a) removed only the hidden HowTo JSON-LD block (HOW_TO_STEPS and the howToLd import) from page.tsx; nothing on screen changed, so the content date is retained.",
       "dependencies": [],
       "files": [
         "src/app/calc/kia-bonus/Client.tsx",
         "src/app/calc/kia-bonus/page.tsx"
       ],
-      "sha256": "fd9369c65fbe7d2208df402b613c632b1aa28b63744ead3dba08a3f7b865a74c"
+      "sha256": "a806f25bb748c2e395fe187ff68cdc42c47b669b346a4e7b861cefb2ea59da0d"
     },
     "/minimum-wage-2027": {
       "contentDate": "2026-11-01",
@@ -443,8 +443,8 @@
     },
     "/calc/dual-income-year-end": {
       "contentDate": "2026-11-01",
-      "reviewedAtCommit": "c612bfed828c3102b8f1f377e89d73b53bd5d930",
-      "reason": "Reviewed 2026-11-01 for the stage-1 and stage-2 releases (origin/main 9c82ac01 plus B23, B24, B25, B26 with the stage-1 sweep repair, and B08, B09). Stage 1: B24 YE-03 treats couple medical (서로를 위한 의료비) as other-dependent medical capped at 700만원 after the 3% threshold (소득세법 제59조의4②) and shortens the disclosure above the result ad; B25 P4-06 rewords the allocation line prefix to 부부 상호 and shows 어느 쪽이든 같음 when the couple-medical side does not change the total, which is the default view (the sweep repair kept the 100만원 default example and removed the B26 split-children note again; the disclosure covers the per-child limitation); B23 only adds the engine breakdown field. Stage 2: B09 P4-05 puts the two input help paragraphs above CalcResultAd (annual child credit and, with children, child donations) inside closed details 입력 기준 보기 with unchanged wording, ids and aria-describedby, and B08 IVT-05 pads the allocation list to 4 rows with an invisible aria-hidden row while the medical field is empty (no visible text). Result and visible changes: the content date stays at the release date 2026-11-01 (the page has no revision date field). Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (CALCMETA RL-10 CS-21: src/lib/taxConstants2026.ts gains the EMPLOYER_ONLY_RATES_2026 export used only by /calc/employee-cost-quick; hashing that file at its base version reproduces the recorded sha256, and this page renders nothing new.) The 2026-11-01 date is retained. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[0] (a7eaf21eb): the SoftwareApplication JSON-LD gains dateModified = staticRouteLastModified of this route, which equals the sitemap date; head only, nothing visible changes.) The 2026-11-01 date is retained.",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "Reviewed 2026-11-01 for the stage-1 and stage-2 releases (origin/main 9c82ac01 plus B23, B24, B25, B26 with the stage-1 sweep repair, and B08, B09). Stage 1: B24 YE-03 treats couple medical (서로를 위한 의료비) as other-dependent medical capped at 700만원 after the 3% threshold (소득세법 제59조의4②) and shortens the disclosure above the result ad; B25 P4-06 rewords the allocation line prefix to 부부 상호 and shows 어느 쪽이든 같음 when the couple-medical side does not change the total, which is the default view (the sweep repair kept the 100만원 default example and removed the B26 split-children note again; the disclosure covers the per-child limitation); B23 only adds the engine breakdown field. Stage 2: B09 P4-05 puts the two input help paragraphs above CalcResultAd (annual child credit and, with children, child donations) inside closed details 입력 기준 보기 with unchanged wording, ids and aria-describedby, and B08 IVT-05 pads the allocation list to 4 rows with an invisible aria-hidden row while the medical field is empty (no visible text). Result and visible changes: the content date stays at the release date 2026-11-01 (the page has no revision date field). Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (CALCMETA RL-10 CS-21: src/lib/taxConstants2026.ts gains the EMPLOYER_ONLY_RATES_2026 export used only by /calc/employee-cost-quick; hashing that file at its base version reproduces the recorded sha256, and this page renders nothing new.) The 2026-11-01 date is retained. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[0] (a7eaf21eb): the SoftwareApplication JSON-LD gains dateModified = staticRouteLastModified of this route, which equals the sitemap date; head only, nothing visible changes.) The 2026-11-01 date is retained. Rehashed 2026-11-18 in the R4 integration of claude/next-1127: CALCMISC 6a5ebdfd0 (N2-calc-17 calc-01-F12) adds two spaces before the links of the source sentence and writes 2026-10-26에 as 10월 26일에 (same year); spacing and date format only, so the 2026-11-01 date is retained.",
       "dependencies": [
         "src/lib/dualIncomeYearEnd2026.ts",
         "src/lib/yearEndTaxCalculator.ts",
@@ -457,7 +457,7 @@
         "src/lib/taxConstants2026.ts",
         "src/lib/yearEndTaxCalculator.ts"
       ],
-      "sha256": "d6a64982d68494ccbedf181bc2a051b0978b0ddc3da1d39b2eff93e4d8ccbd19"
+      "sha256": "d18b8c00a77e7978fb849ab34a9486868e6d881f3d90d223a5cc1d3d8e277a7f"
     },
     "/calc/voluntary-retirement": {
       "contentDate": "2026-11-15",
@@ -475,19 +475,19 @@
     },
     "/calc/dependent-check": {
       "contentDate": "2026-09-05",
-      "reviewedAtCommit": "c612bfed828c3102b8f1f377e89d73b53bd5d930",
-      "reason": "0b1a29ac8 (September 5) adds the year-end-tax explanatory cluster. 075f9bed9 only replaces the numeric input component. Rehashed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-20): SEO-07-a 2027 연말정산 (2026년 귀속) title and code39-02 statute citation fix in the FAQ (separately living lineal ascendants: Income Tax Act article 53(3)). Title and citation only, so the 2026-09-05 date is retained. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[0] (a7eaf21eb): the SoftwareApplication JSON-LD gains dateModified = staticRouteLastModified of this route, which equals the sitemap date; head only, nothing visible changes.) The 2026-09-05 date is retained.",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "0b1a29ac8 (September 5) adds the year-end-tax explanatory cluster. 075f9bed9 only replaces the numeric input component. Rehashed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-20): SEO-07-a 2027 연말정산 (2026년 귀속) title and code39-02 statute citation fix in the FAQ (separately living lineal ascendants: Income Tax Act article 53(3)). Title and citation only, so the 2026-09-05 date is retained. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[0] (a7eaf21eb): the SoftwareApplication JSON-LD gains dateModified = staticRouteLastModified of this route, which equals the sitemap date; head only, nothing visible changes.) The 2026-09-05 date is retained. Rehashed 2026-11-18 in the R4 integration of claude/next-1127: CALCMISC f511261f8 (owner-approved N2-calc-20) keeps the last valid verdict card in place while the birth year is being edited; editing-state layout only, default render byte-identical, so the 2026-09-05 date is retained.",
       "dependencies": [],
       "files": [
         "src/app/calc/dependent-check/Client.tsx",
         "src/app/calc/dependent-check/page.tsx"
       ],
-      "sha256": "1fd4cbcf5d65236883c88266e64d0b69ebeb8220cc8755be7f8114d8cc485ceb"
+      "sha256": "b61a1051a3d2a39cfcd9b88539759d6af6b26094e6ce41c8374fbb3a75a08213"
     },
     "/calc/smb-income-tax-break": {
-      "contentDate": "2026-11-15",
-      "reviewedAtCommit": "c612bfed828c3102b8f1f377e89d73b53bd5d930",
-      "reason": "Reviewed 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF1 T3 renames the 70%·3-year group from 경력단절여성 to 경력단절자 after the 2025-03-14 amendment of the Restriction of Special Taxation Act (career-break workers of any gender, article 29-8(2); Enforcement Decree article 27(1)4): the select option and the conditional youth-ineligible verdict above CalcResultAd, the 감면율 list item above InArticleAd, the meta description, and FAQ 1 (collapsed details and FAQPage JSON-LD), which adds that hires before 2025-03-14 keep the former career-break-women rule; the src/lib/smbTaxBreak.ts labels follow (not hashed for this route). The PKG-14 calculation is unchanged. Fact correction: content date advanced from 2026-11-01 to 2026-11-02 (the page has no revision date field). Content update 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[6] and [0]: a new 이어서 확인할 내용 box (연말정산 2027, 연말정산 환급금 계산기, 부양가족 판정기) below the last calc-layout ad and JSON-LD dateModified from the sitemap; src/lib/topicNextSteps.ts is added as a dependency) Content date advanced from 2026-11-02 to 2026-11-15, the real KST edit day of the unit commits.",
+      "contentDate": "2026-11-18",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "Reviewed 2026-11-02 for the owner-fix integration release (origin/main 91802644 plus stage 2 + Google 2cab06bc and the owner-approved OF1-OF4 round): OF1 T3 renames the 70%·3-year group from 경력단절여성 to 경력단절자 after the 2025-03-14 amendment of the Restriction of Special Taxation Act (career-break workers of any gender, article 29-8(2); Enforcement Decree article 27(1)4): the select option and the conditional youth-ineligible verdict above CalcResultAd, the 감면율 list item above InArticleAd, the meta description, and FAQ 1 (collapsed details and FAQPage JSON-LD), which adds that hires before 2025-03-14 keep the former career-break-women rule; the src/lib/smbTaxBreak.ts labels follow (not hashed for this route). The PKG-14 calculation is unchanged. Fact correction: content date advanced from 2026-11-01 to 2026-11-02 (the page has no revision date field). Content update 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[6] and [0]: a new 이어서 확인할 내용 box (연말정산 2027, 연말정산 환급금 계산기, 부양가족 판정기) below the last calc-layout ad and JSON-LD dateModified from the sitemap; src/lib/topicNextSteps.ts is added as a dependency) Content date advanced from 2026-11-02 to 2026-11-15, the real KST edit day of the unit commits. R4 integration ledger step 2026-11-18 for the 11/27 publish branch claude/next-1127: CALCMISC N2-calc-17 calc-04-F16: body 세 차례 연장 -> 수차례 연장 (c77315bc1) and the age < 15 verdict line (83acaeae2). ROUTE_OVERRIDES row 2026-11-15 -> 2026-11-18.",
       "dependencies": [
         "src/lib/topicNextSteps.ts"
       ],
@@ -496,7 +496,7 @@
         "src/app/calc/smb-income-tax-break/page.tsx",
         "src/lib/topicNextSteps.ts"
       ],
-      "sha256": "3c0a90990e6cbaa02851b76e7bb2015540322a0b79370ba7260c5e8d31e240cc"
+      "sha256": "f124ada022b91321d82e1a70d597020d09d142a4f74126149affb7537e1ca67a"
     },
     "/calc/offer-compare": {
       "contentDate": "2026-11-01",
@@ -575,8 +575,8 @@
     },
     "/calc/civil-servant-net-pay": {
       "contentDate": "2026-10-23",
-      "reviewedAtCommit": "c612bfed828c3102b8f1f377e89d73b53bd5d930",
-      "reason": "Reviewed October 23 against commit 813aa1ec. Official allowance regulation Article 10 and GEPS contribution guidance support two substantive corrections: children do not consume the four-person nonchild family-allowance cap, and pension contribution completion requires explicit confirmation instead of a years-of-service inference. Related controls, explanation and FAQ were corrected. This is the content correction date, not a deployment date; salary tables and insurance-rate values were not changed. Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (PAY RL-09 and RL-12: src/lib/civilServantAllowances2026.ts gains pay-page constants (PAY_PAGE_ALLOWANCE_SOURCE_2026 and allowance rows) and comments; CIVIL_ALLOWANCE_SOURCE_2026 and every value this calculator renders are unchanged.) The 2026-10-23 date is retained. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[0] (a7eaf21eb): the SoftwareApplication JSON-LD gains dateModified = staticRouteLastModified of this route, which equals the sitemap date; head only, nothing visible changes.) The 2026-10-23 date is retained.",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "Reviewed October 23 against commit 813aa1ec. Official allowance regulation Article 10 and GEPS contribution guidance support two substantive corrections: children do not consume the four-person nonchild family-allowance cap, and pension contribution completion requires explicit confirmation instead of a years-of-service inference. Related controls, explanation and FAQ were corrected. This is the content correction date, not a deployment date; salary tables and insurance-rate values were not changed. Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (PAY RL-09 and RL-12: src/lib/civilServantAllowances2026.ts gains pay-page constants (PAY_PAGE_ALLOWANCE_SOURCE_2026 and allowance rows) and comments; CIVIL_ALLOWANCE_SOURCE_2026 and every value this calculator renders are unchanged.) The 2026-10-23 date is retained. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[0] (a7eaf21eb): the SoftwareApplication JSON-LD gains dateModified = staticRouteLastModified of this route, which equals the sitemap date; head only, nothing visible changes.) The 2026-10-23 date is retained. Rehashed 2026-11-18 in the R4 integration of claude/next-1127: CALCMISC 2ee30d7a1 updates only the decree number of the 공무원수당 등에 관한 규정 citation (대통령령 제36728호); amounts and text are unchanged, so the 2026-10-23 date is retained.",
       "dependencies": [
         "src/lib/civilServantAllowances2026.ts",
         "src/lib/civilServantNetPay.ts"
@@ -587,7 +587,7 @@
         "src/lib/civilServantAllowances2026.ts",
         "src/lib/civilServantNetPay.ts"
       ],
-      "sha256": "df91780b1d340f1d2f44a8c5f8c6949c00d6797322065d5239ab93aae64744ae"
+      "sha256": "12781426e438a13a16de5d5237b6d18ab48f2fd0af1172540b735d4093ff2b5e"
     },
     "/tools/finance/compound": {
       "contentDate": "2026-10-19",
@@ -986,9 +986,9 @@
       "sha256": "3f0ddf46ed58214a7ae5f81ac074e2c270ba57063b3c935157de19f313ea3aa9"
     },
     "/calc/holiday-bonus": {
-      "contentDate": "2026-11-03",
-      "reviewedAtCommit": "c612bfed828c3102b8f1f377e89d73b53bd5d930",
-      "reason": "New explicit review 2026-11-03 for the R1 re-land integration (claude/reland-r1-1102 from origin/main d2fcc872 plus P3 RL-05, owner approval 7 of 2026-11-01): two collapsed FAQ answers, which are also the FAQPage JSON-LD text, correct the tax facts, re-landing October e1d8535c and the 11/2 precision follow-up 58bf35c0. Daily workers deduct 150,000 won a day (Income Tax Act article 47(2)), 6% less the 55% credit leaves 2.7% plus 0.27% local tax, withholding under 1,000 won is not collected (about 187,000 won a day, judged per payment) and separate taxation ends it; non-taxable earned income is only what the law enumerates (article 12 and others) and a holiday bonus is not on that list. Fact correction: the sitemap date moves from the shared BONUS_ENGINE_REVIEW_DATE 2026-09-25 to 2026-11-03 through a new ROUTE_OVERRIDES key. The page has no visible, OG or Article revision date and its SoftwareApplication JSON-LD has no dateModified, so no text above an ad changes; priority stays 0.8 (the route is excluded from the 0.85 bonus loop). The calculator renders the shared calcBonusNet engine, listed as a dependency. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[0] (a7eaf21eb): the SoftwareApplication JSON-LD gains dateModified = staticRouteLastModified of this route, which equals the sitemap date; head only, nothing visible changes.) The 2026-11-03 date is retained.",
+      "contentDate": "2026-11-18",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "New explicit review 2026-11-03 for the R1 re-land integration (claude/reland-r1-1102 from origin/main d2fcc872 plus P3 RL-05, owner approval 7 of 2026-11-01): two collapsed FAQ answers, which are also the FAQPage JSON-LD text, correct the tax facts, re-landing October e1d8535c and the 11/2 precision follow-up 58bf35c0. Daily workers deduct 150,000 won a day (Income Tax Act article 47(2)), 6% less the 55% credit leaves 2.7% plus 0.27% local tax, withholding under 1,000 won is not collected (about 187,000 won a day, judged per payment) and separate taxation ends it; non-taxable earned income is only what the law enumerates (article 12 and others) and a holiday bonus is not on that list. Fact correction: the sitemap date moves from the shared BONUS_ENGINE_REVIEW_DATE 2026-09-25 to 2026-11-03 through a new ROUTE_OVERRIDES key. The page has no visible, OG or Article revision date and its SoftwareApplication JSON-LD has no dateModified, so no text above an ad changes; priority stays 0.8 (the route is excluded from the 0.85 bonus loop). The calculator renders the shared calcBonusNet engine, listed as a dependency. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[0] (a7eaf21eb): the SoftwareApplication JSON-LD gains dateModified = staticRouteLastModified of this route, which equals the sitemap date; head only, nothing visible changes.) The 2026-11-03 date is retained. R4 integration ledger step 2026-11-18 for the 11/27 publish branch claude/next-1127: CALCMISC N2-calc-17 calc-02-F13: body paragraph and FAQ 1 say irregular bonuses are also 4대보험 보수 (16d94f70a, 52ee0a5a4, review 3b26ff4b1 shorter FAQ 1); the pointer swaps of 7746884a5 render identically today. ROUTE_OVERRIDES row 2026-11-03 -> 2026-11-18.",
       "dependencies": [
         "src/lib/bonusTaxCalc.ts"
       ],
@@ -997,7 +997,7 @@
         "src/app/calc/holiday-bonus/page.tsx",
         "src/lib/bonusTaxCalc.ts"
       ],
-      "sha256": "6387a6e22605a061cb92926b9b3e179598b7a7afcc3ca199377ff53c59428b4e"
+      "sha256": "06d97632c36ebd9e9190c77d214b87a23eb8a5393d4ff1b4498db404fd652a72"
     },
     "/samsung-negotiation-2026": {
       "contentDate": "2026-09-27",
@@ -1054,8 +1054,8 @@
     },
     "/global": {
       "contentDate": "2026-11-13",
-      "reviewedAtCommit": "edb7587ec078f40f53106505ee440ad4535335f0",
-      "reason": "First ledger entry 2026-11-14 for the n1 publish branch claude/next-1117 (package META, lens-meta-F10): a new explainer section (what the page calculates and on which basis) is rendered by page.tsx, below the last ad slot; nothing above an ad changes and the page has no revision date field, so the sitemap day is the edit day 2026-11-13. The explainer text module and section component are dependencies. Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (TOOLSA N2-app-tools-fun-06: the dependency src/lib/toolExplainers.ts gains the /tools/real-estate/gift-tax entry only; this page text is unchanged.) The 2026-11-13 date is retained.",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-14 for the n1 publish branch claude/next-1117 (package META, lens-meta-F10): a new explainer section (what the page calculates and on which basis) is rendered by page.tsx, below the last ad slot; nothing above an ad changes and the page has no revision date field, so the sitemap day is the edit day 2026-11-13. The explainer text module and section component are dependencies. Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (TOOLSA N2-app-tools-fun-06: the dependency src/lib/toolExplainers.ts gains the /tools/real-estate/gift-tax entry only; this page text is unchanged.) The 2026-11-13 date is retained. Rehashed 2026-11-18 in the R4 integration of claude/next-1127: the shared src/lib/toolExplainers.ts gained the /tools/finance/severance entry (CALCMISC 01a65d606); this page's explainer text is unchanged, so the content date is retained.",
       "dependencies": [
         "src/components/ToolExplainerSection.tsx",
         "src/lib/toolExplainers.ts"
@@ -1066,12 +1066,12 @@
         "src/components/ToolExplainerSection.tsx",
         "src/lib/toolExplainers.ts"
       ],
-      "sha256": "15cec8a62ac3cacc6982d4a6155e78887c56b5668996bceff88b7b0f25110958"
+      "sha256": "56d26d0182663eac03b0c5b1746f126cd97459a8acd213b2a4358ecc75c7c86f"
     },
     "/mbti-salary": {
       "contentDate": "2026-11-13",
-      "reviewedAtCommit": "edb7587ec078f40f53106505ee440ad4535335f0",
-      "reason": "First ledger entry 2026-11-14 for the n1 publish branch claude/next-1117 (package META, lens-meta-F10): a new explainer section (what the page calculates and on which basis) is rendered by page.tsx, below the last ad slot; nothing above an ad changes and the page has no revision date field, so the sitemap day is the edit day 2026-11-13. The explainer text module and section component are dependencies. Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (TOOLSA N2-app-tools-fun-06: the dependency src/lib/toolExplainers.ts gains the /tools/real-estate/gift-tax entry only; this page text is unchanged.) The 2026-11-13 date is retained.",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-14 for the n1 publish branch claude/next-1117 (package META, lens-meta-F10): a new explainer section (what the page calculates and on which basis) is rendered by page.tsx, below the last ad slot; nothing above an ad changes and the page has no revision date field, so the sitemap day is the edit day 2026-11-13. The explainer text module and section component are dependencies. Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (TOOLSA N2-app-tools-fun-06: the dependency src/lib/toolExplainers.ts gains the /tools/real-estate/gift-tax entry only; this page text is unchanged.) The 2026-11-13 date is retained. Rehashed 2026-11-18 in the R4 integration of claude/next-1127: the shared src/lib/toolExplainers.ts gained the /tools/finance/severance entry (CALCMISC 01a65d606); this page's explainer text is unchanged, so the content date is retained.",
       "dependencies": [
         "src/components/ToolExplainerSection.tsx",
         "src/lib/toolExplainers.ts"
@@ -1082,12 +1082,12 @@
         "src/components/ToolExplainerSection.tsx",
         "src/lib/toolExplainers.ts"
       ],
-      "sha256": "2a2191bd5e387d116fc133cf6be9ec1a10a2fa084186d978b6697f910e49ed86"
+      "sha256": "e375ef2c208f3fe242af60bcb8bd95442eaf5ccc98ac7195b18d4600db3f7282"
     },
     "/lotto": {
       "contentDate": "2026-11-13",
-      "reviewedAtCommit": "edb7587ec078f40f53106505ee440ad4535335f0",
-      "reason": "First ledger entry 2026-11-14 for the n1 publish branch claude/next-1117 (package META, lens-meta-F10): a new explainer section (what the page calculates and on which basis) is rendered by page.tsx, below the last ad slot; nothing above an ad changes and the page has no revision date field, so the sitemap day is the edit day 2026-11-13. The explainer text module and section component are dependencies. Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (TOOLSA N2-app-tools-fun-04 and -07: ball colours and label ids in lotto/page.tsx, search description wording in lotto/layout.tsx (precedent /chuseok-bonus-2026, N2-app-pages-19), and the gift-tax entry in src/lib/toolExplainers.ts; no content change.) The 2026-11-13 date is retained.",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-14 for the n1 publish branch claude/next-1117 (package META, lens-meta-F10): a new explainer section (what the page calculates and on which basis) is rendered by page.tsx, below the last ad slot; nothing above an ad changes and the page has no revision date field, so the sitemap day is the edit day 2026-11-13. The explainer text module and section component are dependencies. Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (TOOLSA N2-app-tools-fun-04 and -07: ball colours and label ids in lotto/page.tsx, search description wording in lotto/layout.tsx (precedent /chuseok-bonus-2026, N2-app-pages-19), and the gift-tax entry in src/lib/toolExplainers.ts; no content change.) The 2026-11-13 date is retained. Rehashed 2026-11-18 in the R4 integration of claude/next-1127: the shared src/lib/toolExplainers.ts gained the /tools/finance/severance entry (CALCMISC 01a65d606); this page's explainer text is unchanged, so the content date is retained.",
       "dependencies": [
         "src/components/ToolExplainerSection.tsx",
         "src/lib/toolExplainers.ts"
@@ -1098,12 +1098,12 @@
         "src/components/ToolExplainerSection.tsx",
         "src/lib/toolExplainers.ts"
       ],
-      "sha256": "b377b3d5cc56754519f12f7c4ae46f93f6c50e1ce0ddc70e271bb6a0a3ef736a"
+      "sha256": "235e0696108a7ed9c8296c3f57a1f02bb82614781bcbeb85933ffe1bbb95185a"
     },
     "/fortune-2026": {
       "contentDate": "2026-11-13",
-      "reviewedAtCommit": "c612bfed828c3102b8f1f377e89d73b53bd5d930",
-      "reason": "First ledger entry 2026-11-14 for the n1 publish branch claude/next-1117 (package META, lens-meta-F10): a new explainer section (what the page calculates and on which basis) is rendered by page.tsx, below the last ad slot; nothing above an ad changes and the page has no revision date field, so the sitemap day is the edit day 2026-11-13. The explainer text module and section component are dependencies. Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (TOOLSA N2-app-tools-fun-06: the dependency src/lib/toolExplainers.ts gains the /tools/real-estate/gift-tax entry only; this page text is unchanged.) The 2026-11-13 date is retained. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONC 7101d97f8: the sister-link label to /fun/fortune reads 2027 신년운세 (one digit, narrower) because that page moved to 2027; the 2026 article itself is unchanged.) The 2026-11-13 date is retained.",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-14 for the n1 publish branch claude/next-1117 (package META, lens-meta-F10): a new explainer section (what the page calculates and on which basis) is rendered by page.tsx, below the last ad slot; nothing above an ad changes and the page has no revision date field, so the sitemap day is the edit day 2026-11-13. The explainer text module and section component are dependencies. Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (TOOLSA N2-app-tools-fun-06: the dependency src/lib/toolExplainers.ts gains the /tools/real-estate/gift-tax entry only; this page text is unchanged.) The 2026-11-13 date is retained. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONC 7101d97f8: the sister-link label to /fun/fortune reads 2027 신년운세 (one digit, narrower) because that page moved to 2027; the 2026 article itself is unchanged.) The 2026-11-13 date is retained. Rehashed 2026-11-18 in the R4 integration of claude/next-1127: the shared src/lib/toolExplainers.ts gained the /tools/finance/severance entry (CALCMISC 01a65d606); this page's explainer text is unchanged, so the content date is retained.",
       "dependencies": [
         "src/components/ToolExplainerSection.tsx",
         "src/lib/toolExplainers.ts"
@@ -1114,12 +1114,12 @@
         "src/components/ToolExplainerSection.tsx",
         "src/lib/toolExplainers.ts"
       ],
-      "sha256": "4458225b3de7fd566bde20652e9fccbe07815d268a50a610a13401d4a32e6f80"
+      "sha256": "9dbc58357db58033ad895bfaa9c53ef8ea7950a89946ce9abe0b6313013db9f8"
     },
     "/tools/math": {
       "contentDate": "2026-11-13",
-      "reviewedAtCommit": "edb7587ec078f40f53106505ee440ad4535335f0",
-      "reason": "First ledger entry 2026-11-14 for the n1 publish branch claude/next-1117 (package META, lens-meta-F10): a new explainer section (what the page calculates and on which basis) is rendered by src/app/tools/layout.tsx, below the last ad slot; nothing above an ad changes and the page has no revision date field, so the sitemap day is the edit day 2026-11-13. The explainer text module and section component are dependencies. Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (TOOLSA N2-app-tools-fun-06 adds only the gift-tax entry to src/lib/toolExplainers.ts and PERFA N2-perf-02 changes only the import line of src/app/tools/layout.tsx; LIBA N2-lib-04 (typed 증감율 state, percentCalculator.ts) and COMPA N2-components-05 (result colour) are not in the hash and change no prerendered text.) The 2026-11-13 date is retained.",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-14 for the n1 publish branch claude/next-1117 (package META, lens-meta-F10): a new explainer section (what the page calculates and on which basis) is rendered by src/app/tools/layout.tsx, below the last ad slot; nothing above an ad changes and the page has no revision date field, so the sitemap day is the edit day 2026-11-13. The explainer text module and section component are dependencies. Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (TOOLSA N2-app-tools-fun-06 adds only the gift-tax entry to src/lib/toolExplainers.ts and PERFA N2-perf-02 changes only the import line of src/app/tools/layout.tsx; LIBA N2-lib-04 (typed 증감율 state, percentCalculator.ts) and COMPA N2-components-05 (result colour) are not in the hash and change no prerendered text.) The 2026-11-13 date is retained. Rehashed 2026-11-18 in the R4 integration of claude/next-1127: the shared src/lib/toolExplainers.ts gained the /tools/finance/severance entry (CALCMISC 01a65d606); this page's explainer text is unchanged, so the content date is retained.",
       "dependencies": [
         "src/app/tools/layout.tsx",
         "src/components/ToolExplainerSection.tsx",
@@ -1131,12 +1131,12 @@
         "src/components/ToolExplainerSection.tsx",
         "src/lib/toolExplainers.ts"
       ],
-      "sha256": "27b82f1aeddc27630949b145e472f9894fa67267bc466236258fc06b4b56dd57"
+      "sha256": "2796368d16b3e92f94e19ce93d9e80d6ed200573846a98aa6b062d96fbab3c0a"
     },
     "/company/simulator": {
       "contentDate": "2026-11-13",
-      "reviewedAtCommit": "edb7587ec078f40f53106505ee440ad4535335f0",
-      "reason": "First ledger entry 2026-11-14 for the n1 publish branch claude/next-1117 (package META, lens-meta-F10): a new explainer section (what the page calculates and on which basis) is rendered by src/app/company/layout.tsx, below the last ad slot; nothing above an ad changes and the page has no revision date field, so the sitemap day is the edit day 2026-11-13. The explainer text module and section component are dependencies. Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (TOOLSA N2-app-tools-fun-06: src/lib/toolExplainers.ts gains the gift-tax entry only (COMPA N2-components-05 chart tooltip colours are colour only); this page text is unchanged.) The 2026-11-13 date is retained.",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-14 for the n1 publish branch claude/next-1117 (package META, lens-meta-F10): a new explainer section (what the page calculates and on which basis) is rendered by src/app/company/layout.tsx, below the last ad slot; nothing above an ad changes and the page has no revision date field, so the sitemap day is the edit day 2026-11-13. The explainer text module and section component are dependencies. Rehashed 2026-11-15 for the 11/20 publish branch claude/next-1120 (TOOLSA N2-app-tools-fun-06: src/lib/toolExplainers.ts gains the gift-tax entry only (COMPA N2-components-05 chart tooltip colours are colour only); this page text is unchanged.) The 2026-11-13 date is retained. Rehashed 2026-11-18 in the R4 integration of claude/next-1127: the shared src/lib/toolExplainers.ts gained the /tools/finance/severance entry (CALCMISC 01a65d606); this page's explainer text is unchanged, so the content date is retained.",
       "dependencies": [
         "src/app/company/layout.tsx",
         "src/components/ToolExplainerSection.tsx",
@@ -1149,12 +1149,12 @@
         "src/components/ToolExplainerSection.tsx",
         "src/lib/toolExplainers.ts"
       ],
-      "sha256": "0ad413c255c6bcba3defdd452e330c3ff13962cff57485697f388f108fe19023"
+      "sha256": "1f44c00f844c3ba6906f4691f941fb662da4adcf3734402844db8795e99d77d5"
     },
     "/calc/year-end-bonus-tax": {
-      "contentDate": "2026-11-15",
-      "reviewedAtCommit": "c612bfed828c3102b8f1f377e89d73b53bd5d930",
-      "reason": "First ledger entry 2026-11-15 for the 11/20 publish branch claude/next-1120 (CALCA N2-calc-01 and N2-calc-05 step 1: the collapsed FAQ, meta description and FAQ JSON-LD now tie the tax year to the 귀속연도 (사전-2025-법규소득-1070) and say the January card uses 2026 rates; the visible text was first corrected on 2026-10-04 in 352451886 while the sitemap kept BONUS_ENGINE_REVIEW_DATE 2026-09-25. Priority 0.8 unchanged; the page has no revision date field) The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day. Reviewed again 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[6] and [0]: a new 이어서 확인할 내용 box below the last calc-layout ad and JSON-LD dateModified from the sitemap; the box reads src/lib/topicNextSteps.ts, added as a dependency) The real KST edit day of these commits is 2026-11-15, the date the entry already carries.",
+      "contentDate": "2026-11-18",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-15 for the 11/20 publish branch claude/next-1120 (CALCA N2-calc-01 and N2-calc-05 step 1: the collapsed FAQ, meta description and FAQ JSON-LD now tie the tax year to the 귀속연도 (사전-2025-법규소득-1070) and say the January card uses 2026 rates; the visible text was first corrected on 2026-10-04 in 352451886 while the sitemap kept BONUS_ENGINE_REVIEW_DATE 2026-09-25. Priority 0.8 unchanged; the page has no revision date field) The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day. Reviewed again 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[6] and [0]: a new 이어서 확인할 내용 box below the last calc-layout ad and JSON-LD dateModified from the sitemap; the box reads src/lib/topicNextSteps.ts, added as a dependency) The real KST edit day of these commits is 2026-11-15, the date the entry already carries. R4 integration ledger step 2026-11-18 for the 11/27 publish branch claude/next-1127: SAMSUNG: visible 절세 list line 우리사주 조합 출연 연 400만원 공제 한도액 (9321930e3, RL-18, same width) and the two list lines on 귀속연도 timing (343c62bbe, N2-calc-01 step 5, shorter). If both are reverted after the sweep, the 2026-11-15 date returns. ROUTE_OVERRIDES row 2026-11-15 -> 2026-11-18.",
       "dependencies": [
         "src/lib/topicNextSteps.ts"
       ],
@@ -1163,30 +1163,30 @@
         "src/app/calc/year-end-bonus-tax/page.tsx",
         "src/lib/topicNextSteps.ts"
       ],
-      "sha256": "ec6fffc685b853252435f5a3fa1401b0478abf74ae4f32074eacb2fa6534657d"
+      "sha256": "ec84b176b00e89ff0ab83dc8d7903ce7f525c48d17f7c30c2435cb3d11665159"
     },
     "/calc/hd-hyundai-bonus": {
       "contentDate": "2026-11-15",
-      "reviewedAtCommit": "c612bfed828c3102b8f1f377e89d73b53bd5d930",
-      "reason": "First ledger entry 2026-11-15 for the 11/20 publish branch claude/next-1120 (CALCA N2-calc-09 and N2-calc-05 step 2: four collapsed FAQ answers and the FAQ JSON-LD report the 10/27 임단협 ratification (press), and the disclaimer line reads 2026년분 지급률 미확정 in narrower text; priority 0.85 kept explicitly because the bonus-cluster loop skips routes with a row) The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[0] (a7eaf21eb): the SoftwareApplication JSON-LD gains dateModified = staticRouteLastModified of this route, which equals the sitemap date; head only, nothing visible changes.) The 2026-11-15 date is retained.",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-15 for the 11/20 publish branch claude/next-1120 (CALCA N2-calc-09 and N2-calc-05 step 2: four collapsed FAQ answers and the FAQ JSON-LD report the 10/27 임단협 ratification (press), and the disclaimer line reads 2026년분 지급률 미확정 in narrower text; priority 0.85 kept explicitly because the bonus-cluster loop skips routes with a row) The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[0] (a7eaf21eb): the SoftwareApplication JSON-LD gains dateModified = staticRouteLastModified of this route, which equals the sitemap date; head only, nothing visible changes.) The 2026-11-15 date is retained. Rehashed 2026-11-18 in the R4 integration of claude/next-1127: BONUS1 (RL-17 CB-17, 8017090d1/276c6db0a) removed only the hidden HowTo JSON-LD block (HOW_TO_STEPS and the howToLd import) from page.tsx; nothing on screen changed, so the content date is retained.",
       "dependencies": [],
       "files": [
         "src/app/calc/hd-hyundai-bonus/Client.tsx",
         "src/app/calc/hd-hyundai-bonus/data.ts",
         "src/app/calc/hd-hyundai-bonus/page.tsx"
       ],
-      "sha256": "5f2255f31144fbf7636e59bedd03e5d93b18b3faed6188de8c628fef073ab3a0"
+      "sha256": "1e78e2d09d0990d635b935047f39fca6d52261b947d0201680daac252d2fb480"
     },
     "/calc/sk-innovation-bonus": {
       "contentDate": "2026-11-15",
-      "reviewedAtCommit": "c612bfed828c3102b8f1f377e89d73b53bd5d930",
-      "reason": "First ledger entry 2026-11-15 for the 11/20 publish branch claude/next-1120 (CALCA N2-calc-09 and N2-calc-05 step 4: the body H2 and first paragraph, collapsed FAQ, meta and custom chip say the FY2025 performance pay is paid in early 2026 and its rate is 미공개, and the pension FAQ names 기준소득월액 상한; priority 0.85 kept explicitly) The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[0] (a7eaf21eb): the SoftwareApplication JSON-LD gains dateModified = staticRouteLastModified of this route, which equals the sitemap date; head only, nothing visible changes.) The 2026-11-15 date is retained.",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-15 for the 11/20 publish branch claude/next-1120 (CALCA N2-calc-09 and N2-calc-05 step 4: the body H2 and first paragraph, collapsed FAQ, meta and custom chip say the FY2025 performance pay is paid in early 2026 and its rate is 미공개, and the pension FAQ names 기준소득월액 상한; priority 0.85 kept explicitly) The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[0] (a7eaf21eb): the SoftwareApplication JSON-LD gains dateModified = staticRouteLastModified of this route, which equals the sitemap date; head only, nothing visible changes.) The 2026-11-15 date is retained. Rehashed 2026-11-18 in the R4 integration of claude/next-1127: BONUS1 (RL-17 CB-17, 8017090d1/276c6db0a) removed only the hidden HowTo JSON-LD block (HOW_TO_STEPS and the howToLd import) from page.tsx; nothing on screen changed, so the content date is retained.",
       "dependencies": [],
       "files": [
         "src/app/calc/sk-innovation-bonus/Client.tsx",
         "src/app/calc/sk-innovation-bonus/page.tsx"
       ],
-      "sha256": "0cd93f74aa81488e40333405af2d08c8e593a2823ec4113718c49ba9abdc1ce7"
+      "sha256": "e16555af4de2596d6e60fd41e010be83749e4b30f95c9061d5db058fdb642dbd"
     },
     "/calc/severance-vs-pension": {
       "contentDate": "2026-11-17",
@@ -1205,21 +1205,25 @@
       "sha256": "9cd31d064b53376fc58c0da5ebfd0db79f8dc36fa5e9047aa5db003f4e509238"
     },
     "/tools/finance/severance": {
-      "contentDate": "2026-11-15",
-      "reviewedAtCommit": "c612bfed828c3102b8f1f377e89d73b53bd5d930",
-      "reason": "First ledger entry 2026-11-15 for the 11/20 publish branch claude/next-1120 (SEV RL-11 re-land (owner decision 10 of 2026-11-13): the legal severance result uses the canonical engine with start and end dates, annual bonus and annual-leave pay inputs; default result 19,279,133원. The October 2026-10-15 override row was not re-landed. The tools layout and the canonical engine are dependencies) The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (STACK N2-app-tools-fun-05 F01 and F04: allowNegative={false} on the five amount inputs of the RL-11 form and aria-pressed, type=button and role=group on the toggles (attributes only).) The 2026-11-15 date is retained.",
+      "contentDate": "2026-11-18",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-15 for the 11/20 publish branch claude/next-1120 (SEV RL-11 re-land (owner decision 10 of 2026-11-13): the legal severance result uses the canonical engine with start and end dates, annual bonus and annual-leave pay inputs; default result 19,279,133원. The October 2026-10-15 override row was not re-landed. The tools layout and the canonical engine are dependencies) The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day. Rehashed 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (STACK N2-app-tools-fun-05 F01 and F04: allowNegative={false} on the five amount inputs of the RL-11 form and aria-pressed, type=button and role=group on the toggles (attributes only).) The 2026-11-15 date is retained. R4 integration ledger step 2026-11-18 for the 11/27 publish branch claude/next-1127: CALCMISC 01a65d606 (leftovers SEV): new explanatory text below the last ad from the shared src/lib/toolExplainers.ts (퇴사일은 마지막 근무일, 평균임금 산식); that file and src/components/ToolExplainerSection.tsx are now hashed dependencies like the other explainer routes. ROUTE_OVERRIDES row 2026-11-15 -> 2026-11-18.",
       "dependencies": [
         "src/app/tools/layout.tsx",
-        "src/lib/severanceCalculator.ts"
+        "src/lib/severanceCalculator.ts",
+        "src/components/ToolExplainerSection.tsx",
+        "src/lib/toolExplainers.ts"
       ],
       "files": [
         "src/app/tools/finance/severance/layout.tsx",
         "src/app/tools/finance/severance/legalSeverance.ts",
         "src/app/tools/finance/severance/page.tsx",
         "src/app/tools/layout.tsx",
-        "src/lib/severanceCalculator.ts"
+        "src/components/ToolExplainerSection.tsx",
+        "src/lib/severanceCalculator.ts",
+        "src/lib/toolExplainers.ts"
       ],
-      "sha256": "14a11d98732714377b6660ba7b95eb474ca4c58e5be2f00b483c9d7c1ce2a660"
+      "sha256": "5414d5f5856a8ab2c34bd5adedcc269a60e9f95e314a5f8c5b217c546628531b"
     },
     "/tips": {
       "contentDate": "2026-11-15",
@@ -1282,8 +1286,8 @@
     },
     "/tools/real-estate/gift-tax": {
       "contentDate": "2026-11-15",
-      "reviewedAtCommit": "edb7587ec078f40f53106505ee440ad4535335f0",
-      "reason": "First ledger entry 2026-11-15 for the 11/20 publish branch claude/next-1120 (TOOLSA N2-app-tools-fun-06 (commit afcd29971): a new explainer below the last ad describes how the calculator works and the 세대생략 할증 it does not compute (상증법 제57조); nothing above an ad changes and the page has no revision date field. Dependencies as the /tools/math entry) The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day.",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-15 for the 11/20 publish branch claude/next-1120 (TOOLSA N2-app-tools-fun-06 (commit afcd29971): a new explainer below the last ad describes how the calculator works and the 세대생략 할증 it does not compute (상증법 제57조); nothing above an ad changes and the page has no revision date field. Dependencies as the /tools/math entry) The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day. Rehashed 2026-11-18 in the R4 integration of claude/next-1127: the shared src/lib/toolExplainers.ts gained the /tools/finance/severance entry (CALCMISC 01a65d606); this page's explainer text is unchanged, so the content date is retained.",
       "dependencies": [
         "src/app/tools/layout.tsx",
         "src/components/ToolExplainerSection.tsx",
@@ -1296,7 +1300,7 @@
         "src/components/ToolExplainerSection.tsx",
         "src/lib/toolExplainers.ts"
       ],
-      "sha256": "a981e7c867e460861253ac3d2adbc36133e211356efc305e0e33571328a4b874"
+      "sha256": "cb81287f7668fc4361f4153736935e70a28c770b6de28d1c4de85920443e06e4"
     },
     "/calc/pension-hike-2027": {
       "contentDate": "2026-11-15",
@@ -1311,8 +1315,8 @@
     },
     "/calc/s-oil-bonus": {
       "contentDate": "2026-11-15",
-      "reviewedAtCommit": "703b796498e1f553d72c49035651f6c63804b0fc",
-      "reason": "First ledger entry 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[4] (d7eefa10c, review fix c39ba57c2): a dated press note below the last calc-layout ad gives the 2026 Q3 preliminary results (SBS Biz 2026-11-02) and names the 2024·2023·2022 payout rates as reported values. Priority 0.85 kept explicitly because the bonus-cluster loop skips routes with a row. The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day; the page has no visible, OG or Article revision date field.) Rehashed 2026-11-17 for the n2 repair (commit e9d4065f9): only the 삼성바이오로직스 entry of the shared dependency src/components/CalcNewsNote.tsx changed; the S-OIL note text is unchanged (press of the last seven days re-read on 2026-11-17, nothing new), so the 2026-11-15 date is retained. Rehashed 2026-11-18 for the n2 final fix (commit 1e59a7499): only the 삼성바이오로직스 entry of the shared dependency src/components/CalcNewsNote.tsx changed; the S-OIL note text is unchanged, so the 2026-11-15 date is retained. Rehashed 2026-11-18 for the MOBIS integration (commit 327c2f47a): the shared dependency src/components/CalcNewsNote.tsx gained a separate 현대모비스 block; the S-OIL note text is unchanged, so the 2026-11-15 date is retained.",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[4] (d7eefa10c, review fix c39ba57c2): a dated press note below the last calc-layout ad gives the 2026 Q3 preliminary results (SBS Biz 2026-11-02) and names the 2024·2023·2022 payout rates as reported values. Priority 0.85 kept explicitly because the bonus-cluster loop skips routes with a row. The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day; the page has no visible, OG or Article revision date field.) Rehashed 2026-11-17 for the n2 repair (commit e9d4065f9): only the 삼성바이오로직스 entry of the shared dependency src/components/CalcNewsNote.tsx changed; the S-OIL note text is unchanged (press of the last seven days re-read on 2026-11-17, nothing new), so the 2026-11-15 date is retained. Rehashed 2026-11-18 for the n2 final fix (commit 1e59a7499): only the 삼성바이오로직스 entry of the shared dependency src/components/CalcNewsNote.tsx changed; the S-OIL note text is unchanged, so the 2026-11-15 date is retained. Rehashed 2026-11-18 for the MOBIS integration (commit 327c2f47a): the shared dependency src/components/CalcNewsNote.tsx gained a separate 현대모비스 block; the S-OIL note text is unchanged, so the 2026-11-15 date is retained. Rehashed 2026-11-18 in the R4 integration of claude/next-1127: BONUS1 (RL-17 CB-17, 8017090d1/276c6db0a) removed only the hidden HowTo JSON-LD block (HOW_TO_STEPS and the howToLd import) from page.tsx; nothing on screen changed, so the content date is retained.",
       "dependencies": [
         "src/components/CalcNewsNote.tsx"
       ],
@@ -1321,12 +1325,12 @@
         "src/app/calc/s-oil-bonus/page.tsx",
         "src/components/CalcNewsNote.tsx"
       ],
-      "sha256": "a0caceb2a633f7c69aeac079e5a5d19ff06ffdc2f8932de40355e49bcf2e86ca"
+      "sha256": "4a3f7b220acfbbb9f47cbf6c876ac6833767864c0da695d0d3686458aac6e1cc"
     },
     "/calc/samsung-biologics-bonus": {
       "contentDate": "2026-11-18",
-      "reviewedAtCommit": "703b796498e1f553d72c49035651f6c63804b0fc",
-      "reason": "First ledger entry 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[4] (d7eefa10c): a dated press note below the last calc-layout ad reports the 11/17 resumption of talks and the partial strike to 11/27 (서울경제TV and 아시아경제 2026-11-13); re-check before the publish. Priority 0.85 kept explicitly. The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day; the page has no visible, OG or Article revision date field.) Rehashed 2026-11-17 for the n2 repair (commit e9d4065f9): the dated news note below the last ad (src/components/CalcNewsNote.tsx) now follows the 2026-11-17 press of 아시아경제 and 재경일보 (talks resumed 11/17 without agreement, the company proposed applying 6.2% before the wage agreement, the union refused; strike until 11/27 and 12/4). Visible text changed on 2026-11-17, so the content date moves to 2026-11-17 with the sitemap row. Rehashed 2026-11-18 for the n2 final fix (commit 1e59a7499, finding facts2-01): the dated news note below the last ad (src/components/CalcNewsNote.tsx) now says 일부 부서는 12월 4일까지 예정 instead of 일부 지원 부서 (재경일보 2026-11-17 writes 일부 부서; 서울경제TV 2026-11-13 puts the support departments in the first group that ends on 11/27), and attributes the union's refusal and the 15% demand to 재경일보, the only cited outlet that reports them. The press of 2026-11-17 and 2026-11-18 was searched again on 2026-11-18 with no newer confirmed development. Visible text changed on 2026-11-18, so the content date moves to 2026-11-18 with the sitemap row. Rehashed 2026-11-18 for the MOBIS integration (commit 327c2f47a): the shared dependency src/components/CalcNewsNote.tsx gained a separate 현대모비스 block; the 삼성바이오로직스 note is unchanged since 1e59a7499, so the 2026-11-18 date is retained.",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[4] (d7eefa10c): a dated press note below the last calc-layout ad reports the 11/17 resumption of talks and the partial strike to 11/27 (서울경제TV and 아시아경제 2026-11-13); re-check before the publish. Priority 0.85 kept explicitly. The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day; the page has no visible, OG or Article revision date field.) Rehashed 2026-11-17 for the n2 repair (commit e9d4065f9): the dated news note below the last ad (src/components/CalcNewsNote.tsx) now follows the 2026-11-17 press of 아시아경제 and 재경일보 (talks resumed 11/17 without agreement, the company proposed applying 6.2% before the wage agreement, the union refused; strike until 11/27 and 12/4). Visible text changed on 2026-11-17, so the content date moves to 2026-11-17 with the sitemap row. Rehashed 2026-11-18 for the n2 final fix (commit 1e59a7499, finding facts2-01): the dated news note below the last ad (src/components/CalcNewsNote.tsx) now says 일부 부서는 12월 4일까지 예정 instead of 일부 지원 부서 (재경일보 2026-11-17 writes 일부 부서; 서울경제TV 2026-11-13 puts the support departments in the first group that ends on 11/27), and attributes the union's refusal and the 15% demand to 재경일보, the only cited outlet that reports them. The press of 2026-11-17 and 2026-11-18 was searched again on 2026-11-18 with no newer confirmed development. Visible text changed on 2026-11-18, so the content date moves to 2026-11-18 with the sitemap row. Rehashed 2026-11-18 for the MOBIS integration (commit 327c2f47a): the shared dependency src/components/CalcNewsNote.tsx gained a separate 현대모비스 block; the 삼성바이오로직스 note is unchanged since 1e59a7499, so the 2026-11-18 date is retained. R4 integration ledger step 2026-11-18 for the 11/27 publish branch claude/next-1127: SAMSUNG N2-calc-13 calc-03-F04: 2026년 1월 OPI 지급, TAI H2 default 50% (bcc3c85e4, default result 4,600만 / 세후 3,089만), table cells (11eb9b1ac, c7088b8e9, afe8bf630 question-1 candidate), disclaimer (8ed5e8bd6), closed FAQ (467a351d1), input attributes (49aec8d50); BONUS1 276c6db0a removed the hidden HowTo JSON-LD. The content date stays 2026-11-18 (the same KST day as the n2 note fix).",
       "dependencies": [
         "src/components/CalcNewsNote.tsx"
       ],
@@ -1335,7 +1339,7 @@
         "src/app/calc/samsung-biologics-bonus/page.tsx",
         "src/components/CalcNewsNote.tsx"
       ],
-      "sha256": "fa1efdc1216ebcb9867b27fb9a0380eac4f1b9ced039754c7eb5c81679ad373a"
+      "sha256": "ec2c1304c3c67cda429a909d28b87e34b70ae6cbcd41d7eb7fb59f0e3e7dbd86"
     },
     "/calc/vacation-pay": {
       "contentDate": "2026-11-15",
@@ -1393,8 +1397,8 @@
     },
     "/calc/hyundai-mobis-bonus": {
       "contentDate": "2026-11-18",
-      "reviewedAtCommit": "703b796498e1f553d72c49035651f6c63804b0fc",
-      "reason": "First ledger entry 2026-11-18 in the MOBIS integration step of the 11/20 publish branch claude/next-1120 (owner-approved package N2-calc-19, 2026-11-17; unit claude/r4-mobis-1118 327c2f47a, review verdict approve): the default scenario is the 2026 임단협 settlement (성과금 400% + 격려금 1,320만 + 주식 8주 + 복지포인트 50만; 더팩트 2026-08-26 and 2026-09-04, DART 2026-10-30 자기주식 처분 결정), the 2024 chip is replaced by the 2026 chip (two chips kept), the badge, hero, 2026 card, notice, footer and one FAQ question are replaced at the same width or shorter (44e341dbf), three collapsed FAQ answers report the settlement (9bb0551a5) and a dated press and DART summary sits below every ad in the shared src/components/CalcNewsNote.tsx (327c2f47a); the hidden HowTo JSON-LD scenario step now names the current chips (703b79649). Visible text changed on 2026-11-18 (KST day of all four unit commits), so the content date is 2026-11-18, not the integration or publish day. Before this row the sitemap day came from the BONUS_ENGINE_ROUTES group (2026-09-25); priority 0.85 is kept explicitly because the bonus-cluster loop skips routes with a row. The page has no visible, OG or Article revision date field; its SoftwareApplication dateModified follows staticRouteLastModified.",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-18 in the MOBIS integration step of the 11/20 publish branch claude/next-1120 (owner-approved package N2-calc-19, 2026-11-17; unit claude/r4-mobis-1118 327c2f47a, review verdict approve): the default scenario is the 2026 임단협 settlement (성과금 400% + 격려금 1,320만 + 주식 8주 + 복지포인트 50만; 더팩트 2026-08-26 and 2026-09-04, DART 2026-10-30 자기주식 처분 결정), the 2024 chip is replaced by the 2026 chip (two chips kept), the badge, hero, 2026 card, notice, footer and one FAQ question are replaced at the same width or shorter (44e341dbf), three collapsed FAQ answers report the settlement (9bb0551a5) and a dated press and DART summary sits below every ad in the shared src/components/CalcNewsNote.tsx (327c2f47a); the hidden HowTo JSON-LD scenario step now names the current chips (703b79649). Visible text changed on 2026-11-18 (KST day of all four unit commits), so the content date is 2026-11-18, not the integration or publish day. Before this row the sitemap day came from the BONUS_ENGINE_ROUTES group (2026-09-25); priority 0.85 is kept explicitly because the bonus-cluster loop skips routes with a row. The page has no visible, OG or Article revision date field; its SoftwareApplication dateModified follows staticRouteLastModified. Rehashed 2026-11-18 in the R4 integration of claude/next-1127: BONUS1 (RL-17 CB-17, 8017090d1/276c6db0a) removed only the hidden HowTo JSON-LD block (HOW_TO_STEPS and the howToLd import) from page.tsx; nothing on screen changed, so the MOBIS content date 2026-11-18 is retained.",
       "dependencies": [
         "src/components/CalcNewsNote.tsx"
       ],
@@ -1403,7 +1407,7 @@
         "src/app/calc/hyundai-mobis-bonus/page.tsx",
         "src/components/CalcNewsNote.tsx"
       ],
-      "sha256": "c6168b345b87adea58f356d3035c349c1c25f1e3d27148651bba1c441f056466"
+      "sha256": "153179897155f3cde539f66207e1576399788596300edc335a992750b4f9fd22"
     },
     "/salary-db": {
       "contentDate": "2026-10-17",
@@ -1428,15 +1432,15 @@
       "sha256": "6980d90a01736a86f3f5941de2a32675bb55af640e711bf293aaa656c4e5a526"
     },
     "/salary-db/listed": {
-      "contentDate": "2026-10-17",
-      "reviewedAtCommit": "c612bfed828c3102b8f1f377e89d73b53bd5d930",
-      "reason": "First ledger entry 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (N2-infra-02 infra-b03-F01: H1, breadcrumb and body read 공시기업 since 2026-10-17 2e0a99484, and 2026-10-06 83b4634e5 restored the 상장 여부 sentence; 2026-11-01 fd6521d12 changed head meta only and does not count. MetricRankingView.tsx is hashed by the directory rule but rendered only by the top-* pages. The sitemap row takes the later of DART_LITE_DATE and this day, so a later DART refresh still wins and re-opens this review. Later movers: N2-perf-06 (R7 12/08) edits SalaryDbClient.tsx and re-hashes /salary-db keeping 2026-10-17 (performance only); RL-35 (R10 12/18) moves /salary-db, RL-46 (R14 1/8) moves /job, RL-56 (R16 1/15) moves /salary-db and /salary-db/ranking to their own edit days.)",
+      "contentDate": "2026-11-18",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (N2-infra-02 infra-b03-F01: H1, breadcrumb and body read 공시기업 since 2026-10-17 2e0a99484, and 2026-10-06 83b4634e5 restored the 상장 여부 sentence; 2026-11-01 fd6521d12 changed head meta only and does not count. MetricRankingView.tsx is hashed by the directory rule but rendered only by the top-* pages. The sitemap row takes the later of DART_LITE_DATE and this day, so a later DART refresh still wins and re-opens this review. Later movers: N2-perf-06 (R7 12/08) edits SalaryDbClient.tsx and re-hashes /salary-db keeping 2026-10-17 (performance only); RL-35 (R10 12/18) moves /salary-db, RL-46 (R14 1/8) moves /job, RL-56 (R16 1/15) moves /salary-db and /salary-db/ranking to their own edit days.) R4 integration ledger step 2026-11-18 for the 11/27 publish branch claude/next-1127: COMPANY CL-04 (b45dffdf8, RL-19 re-land): the intro paragraph above GuideMidAd now reads 에서 산정한 평균연봉입니다 instead of 집계한 공식 평균연봉입니다, a visible factual label correction (shorter). The hub ROUTE_OVERRIDES row moves 2026-10-17 -> 2026-11-18; the page has no on-screen date.",
       "dependencies": [],
       "files": [
         "src/app/salary-db/listed/MetricRankingView.tsx",
         "src/app/salary-db/listed/page.tsx"
       ],
-      "sha256": "8a687377e68a11c3a160b870749368b3116155358100055de371227eab5b50d7"
+      "sha256": "9e98881b0a04ca11698c98ec8023fec07e6d655e7e369a7859482de9de99e15e"
     },
     "/job": {
       "contentDate": "2026-10-05",
@@ -1467,6 +1471,111 @@
         "src/app/region/page.tsx"
       ],
       "sha256": "bf48f275e9e7606338fd3a5c92932e1f44333d4d7e26fb6d7322a1044882a4f0"
+    },
+    "/calc/incentive-tax": {
+      "contentDate": "2026-11-18",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-18 in the R4 integration of the 11/27 publish branch claude/next-1127: SAMSUNG RL-18 corrects the closed FAQ and FAQPage JSON-LD (우리사주조합 출연금 400만원 is 소득공제, not 비과세; 1e4947e5e) and the visible 절세 list line at the same width (9321930e3); CALCMISC N2-calc-17 corrects closed FAQ 2 (irregular bonuses are also 4대보험 보수; 52ee0a5a4) and moves the year labels to the current-rates pointer with identical output today (7746884a5). Before this row the sitemap day came from the BONUS_ENGINE_ROUTES group (2026-09-25). No visible, OG or Article revision date field; the SoftwareApplication dateModified follows staticRouteLastModified. The date stays even if 9321930e3 is reverted, because the closed FAQ correction has no ad risk.",
+      "dependencies": [],
+      "files": [
+        "src/app/calc/incentive-tax/Client.tsx",
+        "src/app/calc/incentive-tax/page.tsx"
+      ],
+      "sha256": "eaaca055b840f24ead999b18cfce3d6c707e0f6d3614d75fa8cc297f550f2afe"
+    },
+    "/calc/samsung-sdi-bonus": {
+      "contentDate": "2026-11-18",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-18 in the R4 integration of the 11/27 publish branch claude/next-1127: BONUS1 RL-16 CB-03 and N2-calc-12: badge 전자재료 포함 0%, history row 2025년 (2024 실적 · 캐즘), chip hints, closed FAQs, 0.55억 button, min-w-0 inputs, and the owner-approved N2-calc-23 TAI model (상반기 75% reported + 하반기 100% assumed; default TAI 800만 -> 700만원); RL-17 HowTo JSON-LD removed. Before this row the sitemap day came from the BONUS_ENGINE_ROUTES group (2026-09-25); priority 0.85 is written explicitly because the bonus-cluster loop skips routes with a row.",
+      "dependencies": [],
+      "files": [
+        "src/app/calc/samsung-sdi-bonus/Client.tsx",
+        "src/app/calc/samsung-sdi-bonus/data.ts",
+        "src/app/calc/samsung-sdi-bonus/page.tsx"
+      ],
+      "sha256": "3664c34541a1da2010b4d3887193dea2733a550fb2d6ad6250bf2a0e58333425"
+    },
+    "/calc/samsung-display-bonus": {
+      "contentDate": "2026-11-18",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-18 in the R4 integration of the 11/27 publish branch claude/next-1127: BONUS1 RL-16 CB-04 and N2-calc-12: closed TAI FAQ with the 2026 상반기 대형 75%·중소형 100% result, the H1 TAI input note (70f8e22be, shorter), min-w-0 inputs (885204da9) and closed-FAQ pension wording; RL-17 HowTo JSON-LD removed. Before this row the sitemap day came from the BONUS_ENGINE_ROUTES group (2026-09-25); priority 0.85 is written explicitly because the bonus-cluster loop skips routes with a row.",
+      "dependencies": [],
+      "files": [
+        "src/app/calc/samsung-display-bonus/Client.tsx",
+        "src/app/calc/samsung-display-bonus/page.tsx"
+      ],
+      "sha256": "83ecae1659905a9873f9b73f2dbdf94e450340ecb8704123d0c20d9388cc648a"
+    },
+    "/calc/lg-energy-bonus": {
+      "contentDate": "2026-11-18",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-18 in the R4 integration of the 11/27 publish branch claude/next-1127: BONUS1 RL-16 CB-05 and N2-calc-11: closed FAQs (75% paid 2026-02-06, 1~3분기 누적 흑자 6,616억), chip hints 2024년·2025년 실적분 (eb79e05be), history row 2026 미정 / 1~3Q 누적 흑자 6,616억 (5f5d6fb7a, 250c502d6); RL-17 HowTo JSON-LD removed. Before this row the sitemap day came from the BONUS_ENGINE_ROUTES group (2026-09-25); priority 0.85 is written explicitly because the bonus-cluster loop skips routes with a row.",
+      "dependencies": [],
+      "files": [
+        "src/app/calc/lg-energy-bonus/Client.tsx",
+        "src/app/calc/lg-energy-bonus/data.ts",
+        "src/app/calc/lg-energy-bonus/page.tsx"
+      ],
+      "sha256": "127ac39bf51efec15b52716d20bb466a18e2aaec069b210b3055ccb8c6a3b6f7"
+    },
+    "/calc/lg-chem-bonus": {
+      "contentDate": "2026-11-18",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-18 in the R4 integration of the 11/27 publish branch claude/next-1127: BONUS1 RL-16 CB-06 and N2-calc-11: closed FAQs (2025년 실적분 전사 성과급 0원), PI card and caption without the 적자여도 보장 claim (84fbfda44, ec4b75750), the unsourced 2022 배터리 450% PS row deleted (265a5d4fd), notice and footer without 노조 자료·사람인 (82895ce9c); RL-17 HowTo JSON-LD removed. Before this row the sitemap day came from the BONUS_ENGINE_ROUTES group (2026-09-25); priority 0.85 is written explicitly because the bonus-cluster loop skips routes with a row.",
+      "dependencies": [],
+      "files": [
+        "src/app/calc/lg-chem-bonus/Client.tsx",
+        "src/app/calc/lg-chem-bonus/data.ts",
+        "src/app/calc/lg-chem-bonus/page.tsx"
+      ],
+      "sha256": "6371e1550012de4b69603a25a2a41eb90f055efc3e985cbdc67e9e641f667da2"
+    },
+    "/calc/kakao-bonus": {
+      "contentDate": "2026-11-18",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-18 in the R4 integration of the 11/27 publish branch claude/next-1127: BONUS1 N2-calc-11: closed FAQ source sentence and the data-source footer without the non-public 카카오 연봉체계 자료 (8798b6e51, be078f311); RL-17 HowTo JSON-LD removed. Before this row the sitemap day came from the BONUS_ENGINE_ROUTES group (2026-09-25); priority 0.85 is written explicitly because the bonus-cluster loop skips routes with a row.",
+      "dependencies": [],
+      "files": [
+        "src/app/calc/kakao-bonus/Client.tsx",
+        "src/app/calc/kakao-bonus/data.ts",
+        "src/app/calc/kakao-bonus/page.tsx"
+      ],
+      "sha256": "b853874c26c15786b2eb99c53149c47bf2d0d5f9a71a5c2e0db33d2ea717162d"
+    },
+    "/privacy": {
+      "contentDate": "2026-11-18",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-18 in the R4 integration of the 11/27 publish branch claude/next-1127: CONTENT2 owner-approved N2-app-pages-20 (8dcd74419): LinkPrice is named in the cookie, affiliate-tracking and third-party sections, and the page shows 최종 업데이트 2026년 11월 18일. The sitemap previously carried STATIC_LAST_MODIFIED 2026-07-16, as /terms did before its 2026-11-15 row. The page has no ad.",
+      "dependencies": [],
+      "files": [
+        "src/app/privacy/page.tsx"
+      ],
+      "sha256": "6fe1a5a93bd742ee9066549364b850a73cf3d7686820759884e7d5bd77769624"
+    },
+    "/en/privacy": {
+      "contentDate": "2026-11-18",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-18 in the R4 integration of the 11/27 publish branch claude/next-1127: CONTENT2 owner-approved N2-app-pages-20 step 5 (106ac57c9): the English mirror names LinkPrice in the cookies, purposes and providers paragraphs (each narrower) and its time element reads 2026-11-18. The owner condition keeps 106ac57c9 only if the sweep shows PageFooterAds unchanged; if it is reverted, remove this row and its ROUTE_OVERRIDES line so the page returns to the /en floor date 2026-09-09.",
+      "dependencies": [],
+      "files": [
+        "src/app/en/privacy/page.tsx"
+      ],
+      "sha256": "78b5c4aebc2386ba88315d8e215bde7c560b73ca150212176cbebd0874964186"
+    },
+    "/tools/deposit": {
+      "contentDate": "2026-11-18",
+      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
+      "reason": "First ledger entry 2026-11-18 in the R4 integration of the 11/27 publish branch claude/next-1127: CONTENT2 owner-approved N2-lib-13: the closed FAQ answer 이자소득세는 언제 떼나요? and its FAQPage JSON-LD gain the 2026 조합예탁금 rule (5%·9% 분리과세 and who keeps the exemption; 03295b5a9, ships regardless), plus the conditional shorter list line (e22102b5e) and disclaimer (ac56d6e3e) that stay only if the sweep shows no ad moving down. The page content lives in src/lib/toolContent.ts, hashed as a dependency together with src/app/tools/layout.tsx. The sitemap previously carried STATIC_LAST_MODIFIED 2026-07-16.",
+      "dependencies": [
+        "src/app/tools/layout.tsx",
+        "src/lib/toolContent.ts"
+      ],
+      "files": [
+        "src/app/tools/deposit/page.tsx",
+        "src/app/tools/layout.tsx",
+        "src/lib/toolContent.ts"
+      ],
+      "sha256": "94d86bd45bd4175e9acad32adb34e79a1054c716ca3cac756863cc1b9733e3ba"
     }
   }
 }

@@ -51,7 +51,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  // 2026-09-25 A17: 기관별 세후 월급이 간이세액표 엔진으로 바뀜
  '/public-institutions': { lastModified: new Date('2026-10-19T00:00:00+09:00'), priority: 0.8, changeFrequency: 'monthly' },
  '/work-clock': { lastModified: new Date('2026-09-19'), priority: 0.8, changeFrequency: 'monthly' },
- '/calc': { lastModified: new Date('2026-10-05'), changeFrequency: 'monthly' },
+ '/calc': { lastModified: new Date('2026-11-18T00:00:00+09:00'), changeFrequency: 'monthly' }, // 2026-11-18 R4: 현대로템 카드 시즌 '하반기 임단협 시즌'(BONUS1 CB-07)·이직 오퍼 카드 '첫 오퍼와 차액'(CALCMISC calc-03-F14)
  '/money-check': { lastModified: new Date('2026-10-19T00:00:00+09:00'), changeFrequency: 'monthly' },
  '/': { lastModified: new Date('2026-10-19T00:00:00+09:00') },
  '/home-loan': { lastModified: new Date('2026-09-19') },
@@ -73,13 +73,15 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  // 차이·세액공제 30% 기본 가정 제거). 나머지 A18 계산기는 sitemap() 의 BONUS_ENGINE_ROUTES 루프.
  // 2026-10-09: 삼성 DS 특별성과급 세부안(10/7 보도) — 지급 시기·재원(DS부문)·원천징수 문구, 공개 출처 표현 정리.
  // 2026-11-01: 광고 위 공개 보도 표현·재원 DS 영업이익 10.5%·CL4 하위 0.9·0.8배(B28 STR-04-B), 히어로 부제·요약 10/19 이전 줄 수(B37 P2UX-04).
- '/calc/samsung-bonus': { lastModified: new Date('2026-11-01T00:00:00+09:00'), priority: 0.95 },
- '/calc/sk-hynix-bonus': { lastModified: new Date('2026-11-01T00:00:00+09:00'), priority: 0.9 }, // 3분기 실적(10/28) 시나리오·PS FAQ (B27 DATA-03)
- '/calc/bonus-calculators': { lastModified: new Date('2026-11-01T00:00:00+09:00'), priority: 0.9 }, // 최근 소식 10/28 SK하이닉스 3분기 실적 (B27)
+ // 2026-11-18 R4 SAMSUNG: 우리사주 출연 소득공제·DS부문 조건 FAQ·평균 연봉 1.58억·SK 20% 조기지급·실효세율 20~50% 등 사실 정정(RL-18·CB-11·N2-calc-07), 화면 수정일 같은 날.
+ '/calc/samsung-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.95 },
+ '/calc/sk-hynix-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.9 }, // 3분기 실적(10/28) 시나리오·PS FAQ (B27 DATA-03), 11/18 상반기 PI 지급일 7/30·주가 시뮬레이터(BONUS1 N2-calc-10)
+ '/calc/bonus-calculators': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.9 }, // 최근 소식 10/28 SK하이닉스 3분기 실적 (B27), 11/18 시즌 라벨·12월 달력·FAQ·소식 날짜(BONUS1 CB-07·N2-calc-10)
  // 2026-09-27 신설 — 시세 스냅숏이 매월(16일 이후) 갱신되므로 monthly. lastModified 는 스냅숏을 바꾼 배포에만 올린다.
  // 2026-11-01: 스냅숏과 별개로 본문 사실 정정 — 특별경영성과급 재원 DS 영업이익 10.5%(B28 STR-04-B).
  // 2026-11-15: SK하이닉스 2025년분 PS 이연 20% 이중 합산 정정(9/16 가결)·접힌 FAQ, 시세 스냅숏 R-ONE·ECOS 2026년 9월 갱신(N2-calc-14)
- '/calc/bonus-home-plan': { lastModified: new Date('2026-11-15T00:00:00+09:00'), changeFrequency: 'monthly' },
+ // 2026-11-18: 시나리오 기준을 2026년 1~3분기 누적으로(DART 3분기보고서 11/16, 삼성 DS부문 기준) — 운영자 승인 N2-calc-21(CALCMISC)
+ '/calc/bonus-home-plan': { lastModified: new Date('2026-11-18T00:00:00+09:00'), changeFrequency: 'monthly' },
  // priority 0.85 는 sitemap() 내 성과급 클러스터 루프와 같은 값 — override 가 있으면
  // 루프가 건너뛰므로 명시 (누락 시 기본 0.8 로 강등됨).
  '/calc/hyundai-bonus': { lastModified: new Date('2026-09-25'), priority: 0.85 },
@@ -87,7 +89,8 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/kia-bonus': { lastModified: new Date('2026-09-25'), priority: 0.85 },
  // 2026-11-03: 접힌 FAQ 일용직 세금(1일 15만원 공제·2.7%·소액부징수)·비과세 근거 정정(R1 재착지 RL-05, 첫 원장 항목).
  // 화면·OG·Article 날짜 필드 없음. priority 는 기본 0.8 그대로(0.85 성과급 루프 제외 대상).
- '/calc/holiday-bonus': { lastModified: new Date('2026-11-03T00:00:00+09:00') },
+ // 2026-11-18: 본문·FAQ 1 비정기 상여도 과세 근로소득이면 4대보험 보수(CALCMISC N2-calc-17 calc-02-F13).
+ '/calc/holiday-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00') },
  '/minimum-wage-2027': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 2027 장기요양 13.90% 확정 반영 실수령 참고치·FAQ (PKG-10)
  '/minimum-wage-2026': { lastModified: new Date('2026-09-12') },
  // 2026-11-13: 마지막 광고 아래 한도표 국민성장펀드 행·접힌 FAQ 월세 100㎡·성장펀드 문장(n1 SEASON lens-season-F08·F09) — 신뢰 노트 확인일도 같은 날
@@ -109,7 +112,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/voluntary-retirement': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 2026-11-15 마지막 광고 아래 '이어서 확인할 내용' 상자·JSON-LD dateModified(SEASONA calc ideas[6]·[0])
  '/calc/dependent-check': { lastModified: new Date('2026-09-05') },
  // 2026-11-15: 마지막 광고 아래 '이어서 확인할 내용' 상자·JSON-LD dateModified(SEASONA calc ideas[6]·[0])
- '/calc/smb-income-tax-break': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 11/2 경력단절여성 → 경력단절자(2025-03-14 조특법 개정, OF1 T3) — 11/1 4대보험료 소득공제·환산 나이 판정 반영(PKG-14)
+ '/calc/smb-income-tax-break': { lastModified: new Date('2026-11-18T00:00:00+09:00') }, // 11/18 적용기한 '수차례 연장'·만 15세 미만 문구(CALCMISC calc-04-F16) — 11/2 경력단절여성 → 경력단절자(2025-03-14 조특법 개정, OF1 T3) — 11/1 4대보험료 소득공제·환산 나이 판정 반영(PKG-14)
  '/calc/offer-compare': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 자녀 공제 나이 FAQ 정정(PKG-21) — 본문 '(설명 수정 2026-11-01)'와 일치
  '/calc/child-deduction': { lastModified: new Date('2026-11-01T00:00:00+09:00') }, // 결과 광고 위 입력 안내를 짧은 요약으로 (B09 P4-05)
  '/calc/jeonse-loan': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 2026-11-15 접힌 FAQ 전세보증보험 보증료 HUG 연 0.097~0.211%(N2-calc-03). 11/2 결과 카드 배지 최저 금리(OF3 C3, 첫 원장 항목)
@@ -168,11 +171,11 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/company/simulator': { lastModified: new Date('2026-11-13T00:00:00+09:00') }, // company/layout.tsx 의 마지막 광고 아래
  // 2026-11-15 통합(claude/next-1120) 첫 원장 항목 — 날짜는 각 묶음 커밋의 실제 수정일(KST), 통합일·게시일 아님. 아래 페이지는 화면·OG·Article 날짜 필드 없음.
  // 성과급 루프 0.85 대상(-bonus)은 행이 생기면 루프가 건너뛰므로 priority 를 그대로 적는다(위 82~83줄 주석). 연말 성과급 세금은 0.8 그대로.
- '/calc/year-end-bonus-tax': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 접힌 FAQ·메타·JSON-LD 귀속연도 기준(N2-calc-01) — 10/4 352451886 문구 정정 이후 첫 행(N2-calc-05)
+ '/calc/year-end-bonus-tax': { lastModified: new Date('2026-11-18T00:00:00+09:00') }, // 11/18 광고 위 목록 우리사주 공제 한도액·귀속연도 두 줄(SAMSUNG RL-18·N2-calc-01 5단계) — 접힌 FAQ·메타·JSON-LD 귀속연도 기준(N2-calc-01) — 10/4 352451886 문구 정정 이후 첫 행(N2-calc-05)
  '/calc/hd-hyundai-bonus': { lastModified: new Date('2026-11-15T00:00:00+09:00'), priority: 0.85 }, // 접힌 FAQ 10/27 임단협 가결·면책 안내 2026년분 지급률 미확정(N2-calc-09)
  '/calc/sk-innovation-bonus': { lastModified: new Date('2026-11-15T00:00:00+09:00'), priority: 0.85 }, // FY2025 실적분 2026년 초 지급 반영 본문·FAQ·메타·칩(N2-calc-09)
  '/calc/severance-vs-pension': { lastModified: new Date('2026-11-17T00:00:00+09:00') }, // 퇴직소득세 실효세율 표·문단 정정과 DC 연말 납입 계산 정정(N2-calc-08·N2-lib-09), 11-17 n2 수리로 표 세금 칸 글자 순서(0~10%대 실효세율)
- '/tools/finance/severance': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 법정 퇴직금 정본 엔진·입퇴사일·상여금·연차수당 입력(RL-11 재착지, 운영자 결정 10)
+ '/tools/finance/severance': { lastModified: new Date('2026-11-18T00:00:00+09:00') }, // 11/18 마지막 광고 아래 설명 글(CALCMISC 01a65d606) — 법정 퇴직금 정본 엔진·입퇴사일·상여금·연차수당 입력(RL-11 재착지, 운영자 결정 10)
  '/tips': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 신생아 특례대출 카드 조건 정정(N2-app-pages-10) — OG modifiedTime 도 같은 날
  '/terms': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 제7조 제휴망 이름 정정(N2-app-pages-05) — 화면 최종 업데이트 2026년 11월 15일과 같은 날
  '/parental-leave': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 육아휴직 급여 신청 기간 정정(N2-app-pages-08, 고용보험법 제70조)
@@ -192,10 +195,21 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  // 2026-11-18 통합(claude/next-1120, MOBIS) 첫 원장 항목 — 날짜는 묶음 커밋의 실제 수정일(KST), 통합일·게시일 아님. 화면·OG·Article 날짜 필드 없음.
  // 성과급 루프 0.85 대상이라 행이 생기면 루프가 건너뛰므로 priority 0.85 를 그대로 적는다(위 83~84줄 주석).
  '/calc/hyundai-mobis-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.85 }, // 기본값 2026 임단협 타결(400%+1,320만+주식 8주+복지포인트 50만)·칩·접힌 FAQ·마지막 광고 아래 보도·DART 요약(N2-calc-19). 9/25 A18 엔진
+ // 2026-11-18 R4 통합(claude/next-1127) 첫 원장 항목 — 날짜는 묶음 커밋의 실제 수정일(KST), 통합일·게시일 아님. 화면·OG·Article 날짜 필드 없음(개인정보 처리방침 둘은 화면 최종 업데이트와 같은 날).
+ // 성과급 루프 0.85 대상(-bonus)은 행이 생기면 루프가 건너뛰므로 priority 0.85 를 그대로 적는다(위 83~84줄 주석). 인센티브 세금·예금·처리방침은 기본 0.8 그대로.
+ '/calc/incentive-tax': { lastModified: new Date('2026-11-18T00:00:00+09:00') }, // 접힌 FAQ 우리사주 출연 소득공제(SAMSUNG RL-18)·비정기 상여 4대보험(CALCMISC calc-02-F13), 광고 위 목록 같은 폭. 9/25 A18 엔진
+ '/calc/samsung-sdi-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.85 }, // 배지·이력 표·칩·접힌 FAQ·TAI 상반기 75% 반영(BONUS1 RL-16 CB-03·N2-calc-12·N2-calc-23). 9/25 A18 엔진
+ '/calc/samsung-display-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.85 }, // 2026 상반기 TAI 대형 75%·중소형 100% 안내·접힌 FAQ(BONUS1 RL-16 CB-04·N2-calc-12). 9/25 A18 엔진
+ '/calc/lg-energy-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.85 }, // 칩 실적분·이력 표 2026 행·접힌 FAQ(BONUS1 RL-16 CB-05·N2-calc-11). 9/25 A18 엔진
+ '/calc/lg-chem-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.85 }, // PI 보장 단정 삭제·출처 없는 표 행 삭제·출처 정리(BONUS1 RL-16 CB-06·N2-calc-11). 9/25 A18 엔진
+ '/calc/kakao-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.85 }, // 공개 출처 아닌 연봉체계 자료 삭제(BONUS1 N2-calc-11). 9/25 A18 엔진
+ '/privacy': { lastModified: new Date('2026-11-18T00:00:00+09:00') }, // 링크프라이스 쿠키·제휴 추적·제3자 목록(CONTENT2 N2-app-pages-20) — 화면 최종 업데이트 2026년 11월 18일과 같은 날
+ '/en/privacy': { lastModified: new Date('2026-11-18T00:00:00+09:00') }, // 영문 거울 LinkPrice(CONTENT2 106ac57c9) — 스윕에서 되돌리면 이 행도 지운다(/en 하한 9/9 로)
+ '/tools/deposit': { lastModified: new Date('2026-11-18T00:00:00+09:00') }, // 접힌 FAQ 조합예탁금 2026 과세 규칙(CONTENT2 N2-lib-13 03295b5a9)
  // 허브 6곳(N2-infra-02, infra-b03-F01) — 화면 문구를 마지막으로 바꾼 운영 커밋의 날. sitemap() 의 허브 행이 이 키를 읽는다(자식 행은 그대로).
  '/salary-db': { lastModified: new Date('2026-10-17T00:00:00+09:00') }, // 10/17 2e0a99484(126f5d3fd) 형제 허브 카드 '공시기업 공시 연봉', 10/04 352451886 회사 카드 '인센티브 목표'
  '/salary-db/ranking': { lastModified: new Date('2026-10-17T00:00:00+09:00') }, // '공시기업 업종 28종'(10/17), 9/25 659e1b438 '급여총액÷인원 산정' — 11/15 DATAB 는 검색 설명만
- '/salary-db/listed': { lastModified: new Date('2026-10-17T00:00:00+09:00') }, // H1·빵부스러기·본문 '공시기업'(2e0a99484), 10/06 83b4634e5 상장 여부 문장, 11/01 fd6521d12 head 메타만이라 날짜 미반영
+ '/salary-db/listed': { lastModified: new Date('2026-11-18T00:00:00+09:00') }, // 11/18 소개 문단 '산정한 평균연봉'(COMPANY CL-04, b45dffdf8) — H1·빵부스러기·본문 '공시기업'(2e0a99484), 10/06 83b4634e5 상장 여부 문장, 11/01 fd6521d12 head 메타만이라 날짜 미반영
  '/job': { lastModified: new Date('2026-10-05T00:00:00+09:00') }, // 475512fe4 히어로 리드·메타
  '/industry': { lastModified: new Date('2026-10-05T00:00:00+09:00') }, // 475512fe4 히어로 리드·메타
  '/region': { lastModified: new Date('2026-10-17T00:00:00+09:00') }, // 2e0a99484 히어로 리드, 10/04 352451886 '비교 기준 가정' 통계 라벨·분석 문단
