@@ -11,7 +11,8 @@ import { describe, expect, it } from "vitest";
 
 const SLUGS = [
   "celltrion-bonus", "hd-hyundai-bonus", "hyundai-bonus", "hyundai-mobis-bonus", "hyundai-rotem-bonus",
-  "kakao-bonus", "kepco-bonus", "kia-bonus", "lg-display-bonus", "lg-energy-bonus", "posco-bonus",
+  "kakao-bonus", "kepco-bonus", "kia-bonus", "lg-chem-bonus", "lg-display-bonus", "lg-energy-bonus", "posco-bonus",
+  "samsung-biologics-bonus",
 ] as const;
 
 const read = (slug: string) => readFileSync(resolve(process.cwd(), `src/app/calc/${slug}/Client.tsx`), "utf8");
