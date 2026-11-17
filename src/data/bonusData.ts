@@ -330,17 +330,17 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
     sourceFile: "src/app/calc/lg-energy-bonus/Client.tsx",
     payouts: [
       {
-        year: 2024,
+        year: 2025,
         scheme: "성과급",
         percentOfBase: 50,
-        note: "2024년 실지급 — 적자기",
+        note: "2024년 실적분 — 적자기",
         source: "LG에너지솔루션 분기 실적발표·뉴스웨이 2026-02 보도 (page.tsx 출처)",
       },
       {
-        year: 2025,
+        year: 2026,
         scheme: "성과급",
         percentOfBase: 75,
-        note: "2025년 실지급",
+        note: "2025년 실적분",
         source: "LG에너지솔루션 분기 실적발표·뉴스웨이 2026-02 보도 (page.tsx 출처)",
       },
     ],

@@ -72,6 +72,17 @@ describe("CB-05 LG에너지솔루션 — 75%는 2026-02-06 이미 지급, '1분�
   });
 });
 
+describe("CB-05 리포트 행(bonusData) — LG에너지솔루션 50%·75%는 지급 연도 2025·2026", () => {
+  it("2024년 실적분 50%는 2025년 행, 2025년 실적분 75%는 2026년 행(note 는 실적분)", async () => {
+    const { BONUS_PROFILES } = await import("@/data/bonusData");
+    const lges = BONUS_PROFILES.find((p) => p.calcSlug === "lg-energy-bonus")!;
+    expect(lges.payouts.map((p) => [p.year, p.percentOfBase, p.note])).toEqual([
+      [2025, 50, "2024년 실적분 — 적자기"],
+      [2026, 75, "2025년 실적분"],
+    ]);
+  });
+});
+
 describe("CB-03 리포트 행(bonusData) — 삼성SDI 전자재료 5%는 2025년 지급(2024년 실적분)", () => {
   it("year 는 지급 연도: 전자재료 5% 행은 2025, 2026년 행에는 전자재료 지급이 없다", async () => {
     const { BONUS_PROFILES } = await import("@/data/bonusData");
