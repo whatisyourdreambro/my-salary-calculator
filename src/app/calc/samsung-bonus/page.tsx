@@ -411,14 +411,16 @@ export default function SamsungBonusCalculatorPage() {
               <strong className="text-electric">사업부별 1인당</strong>
             </p>
             <p className="text-sm text-faint-blue mt-3 max-w-md mx-auto leading-relaxed">
-              {/* 잠정실적(1/8) 발표 후 같은 문장을 치환 — 요소 추가 없음(광고 위 높이 불변, annualOp.ts) */}
+              {/* 잠정실적(1/8) 발표 후 같은 문장을 치환 — 요소 추가 없음(광고 위 높이 불변, annualOp.ts).
+                  잠정실적은 전사 연결 합계라 '전사'로 밝히고 재원은 DS부문 영업이익 기준임을 그대로 둔다(N2-calc-02·07, calc-03-F07).
+                  발표 당일 이 가지가 처음 그려지므로 런북대로 그날 스윕한다. */}
               {ANNUAL_OP_2026_PRELIM.announced && ANNUAL_OP_2026_PRELIM.profitTrillion != null ? (
                 <>
-                  2026년 연간 영업이익 잠정{" "}
+                  2026년 전사 영업이익 잠정{" "}
                   <strong className="text-navy dark:text-canvas-50">
                     {ANNUAL_OP_2026_PRELIM.profitTrillion}조
                   </strong>
-                  ({ANNUAL_OP_2026_PRELIM.date} 잠정실적 발표) 기준 ·{" "}
+                  ({ANNUAL_OP_2026_PRELIM.date} 발표) · DS부문 영업이익{" "}
                   <strong className="text-navy dark:text-canvas-50">10.5%</strong>{" "}
                   재원·<strong className="text-navy dark:text-canvas-50">4:6</strong>{" "}
                   분배.
