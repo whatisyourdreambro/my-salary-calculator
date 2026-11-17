@@ -348,7 +348,7 @@ export const krCompanies_Batch17: CompanyProfile[] = [
     industry: "Defense / Auto",
     tier: "conglomerate",
     logo: "🪖",
-    description: "K2전차 변속기·방산 부품 및 자동차 모터를 생산하는 방산·자동차 복합 부품사. SNT그룹 핵심 계열사.",
+    description: "K2소총·방산 부품 및 자동차 모터를 생산하는 방산·자동차 복합 부품사. SNT그룹 핵심 계열사.",
     salary: {
       entry: { base: 52000000, incentive: { target: 15, max: 30, avgAmount: 10000000 } },
       junior: { base: 63000000, incentive: { target: 15, max: 30, avgAmount: 13000000 } },
@@ -367,8 +367,8 @@ export const krCompanies_Batch17: CompanyProfile[] = [
     ],
     culture: {
       score: 7.7,
-      keywords: ["방산", "K2전차", "자동차모터"],
-      pros: ["K2전차 핵심 부품으로 방산 수요 안정적", "전동화 모터 사업으로 미래차 시장 진입", "방산·자동차 이중 포트폴리오로 리스크 분산"],
+      keywords: ["방산", "K2소총", "자동차모터"],
+      pros: ["K2소총 등 총기류로 방산 수요 안정적", "전동화 모터 사업으로 미래차 시장 진입", "방산·자동차 이중 포트폴리오로 리스크 분산"],
       cons: ["방산 보안 규정으로 업무 제약 존재", "중소·중견 규모로 대기업 대비 복지 소폭 열세", "방산 수주 사이클에 따른 실적 변동"],
     },
     lastUpdated: "2026-05-15",
