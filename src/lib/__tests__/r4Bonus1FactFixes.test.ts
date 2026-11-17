@@ -50,3 +50,14 @@ describe("CB-03 삼성SDI — 광고 위 같은 폭 교체 (배지)", () => {
     expect(page).not.toContain("2026년 (2025 실적 · 캐즘)");
   });
 });
+
+describe("CB-03 리포트 행(bonusData) — 삼성SDI 전자재료 5%는 2025년 지급(2024년 실적분)", () => {
+  it("year 는 지급 연도: 전자재료 5% 행은 2025, 2026년 행에는 전자재료 지급이 없다", async () => {
+    const { BONUS_PROFILES } = await import("@/data/bonusData");
+    const sdi = BONUS_PROFILES.find((p) => p.calcSlug === "samsung-sdi-bonus")!;
+    const em5 = sdi.payouts.find((p) => p.division === "전자재료" && p.percentOfSalary === 5)!;
+    expect(em5.year).toBe(2025);
+    expect(em5.note).toBe("2024년 실적분 — 폴더블 OLED 수혜 사업부 (보도상 3~5% 중 상단값)");
+    expect(sdi.payouts.filter((p) => p.year === 2026 && p.division === "전자재료")).toEqual([]);
+  });
+});

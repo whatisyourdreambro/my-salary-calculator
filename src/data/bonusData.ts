@@ -361,11 +361,11 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         source: "CEOSCOREDAILY·파이낸셜포스트·전자신문 보도 (page.tsx 출처)",
       },
       {
-        year: 2026,
+        year: 2025,
         scheme: "OPI",
         division: "전자재료",
         percentOfSalary: 5,
-        note: "2025년 실적분 — 폴더블 OLED 수혜 사업부 (보도상 3~5% 중 상단값)",
+        note: "2024년 실적분 — 폴더블 OLED 수혜 사업부 (보도상 3~5% 중 상단값)",
         source: "CEOSCOREDAILY·파이낸셜포스트·전자신문 보도 (page.tsx 출처)",
       },
       {
