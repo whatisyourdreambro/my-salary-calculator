@@ -497,7 +497,7 @@ const foreignBonus = `
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 외국 법인 직접 지급 시 신고 의무</h2>
-<p>외국 모회사가 한국 직원에게 직접 RSU·옵션 지급 시 한국 세무서에 본인이 직접 신고해야 함. 미신고 시 가산세 + 외국 자산 미신고 죄. 매년 5월 종소세 신고와 함께 처리.</p>
+<p>외국 모회사가 준 RSU·옵션 이익은 국내 회사가 원천징수하지 않았으면 본인이 5월 종소세로 신고. 미신고 시 가산세. 해외계좌 잔액 5억 초과면 6월 별도 신고.</p>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/income-tax-2026" class="text-primary underline">종합소득세 계산기</a></li></ul></div>
 `;
