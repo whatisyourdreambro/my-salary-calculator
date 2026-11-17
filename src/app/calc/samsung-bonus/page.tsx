@@ -550,8 +550,8 @@ export default function SamsungBonusCalculatorPage() {
             </h2>
             <p className="text-sm text-muted-blue dark:text-canvas-300 mb-5 leading-relaxed">
               OPI는 <strong>연봉 대비 %</strong>(상한 {OPI1_MAX_RATE}%)로 연 1회, 통상 1월
-              말~2월 초에 지급됩니다. {OPI_LATEST.fiscalYear}년 실적분은 {OPI_LATEST.payDateLabel}
-              지급됐으며, {OPI_LATEST.sourceNote}에 따른 실제 지급률은 다음과
+              말~2월 초에 지급됩니다. {OPI_LATEST.fiscalYear}년 실적분은 {OPI_LATEST.payDateLabel}{" "}
+              지급됐고, {OPI_LATEST.sourceNote}에 따른 실제 지급률은 다음과
               같습니다.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">

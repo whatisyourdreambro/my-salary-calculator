@@ -41,8 +41,8 @@ export default function TaiCalculator() {
         계산기 — 이번 지급분
       </h3>
       <p className="text-[11px] text-faint-blue mb-5 leading-relaxed">
-        TAI는 <strong>월 기본급 대비 %</strong>로 지급됩니다. 사업부를 누르면
-        {TAI_LATEST.periodLabel} 실제 발표 지급률이 적용됩니다.
+        TAI는 <strong>월 기본급 대비 %</strong>로 지급됩니다. 사업부를 누르면{" "}
+        {TAI_LATEST.periodLabel} 발표 지급률이 적용됩니다.
       </p>
 
       <div className="space-y-4">
