@@ -6,14 +6,14 @@ import { calcBonusNet, DEFAULT_BONUS_CREDIT_RATE, fmtEok, fmtManwon } from "@/li
 import NumberInput from "@/components/NumberInput";
 
 // 삼성바이오로직스 OPI 지급 이력 (보도 기준)
-// - 2025 실적분: 연봉의 50% 상한 (아시아경제 2025-12-27, 산경투데이·컨슈머타임스 2025-12-26)
+// - 2025 실적분: 연봉의 50% 상한 (아시아경제 2025-12-27, 산경투데이·컨슈머타임스 2025-12-26) — 2026년 1월 지급분
 // - 2024 실적분: 연봉의 50% 상한 (한국경제 2025-07-08)
 const SCENARIOS = [
   {
     id: "2025-cap",
     label: "2025 실적분 · 50% (상한)",
     percent: 50,
-    hint: "2026-01 지급 예상 · 아시아경제",
+    hint: "2026-01 지급 · 아시아경제",
   },
   {
     id: "2024-cap",
@@ -26,7 +26,7 @@ const SCENARIOS = [
 const DEFAULT_SALARY_MANWON = 8000;
 const BASIC_RATIO = 20; // 삼성 표준 — TAI 기준 월 기본급 = 연봉 / 20
 const TAI_H1_CONFIRMED = 100; // 2025 상반기 TAI 100% 확정 (한국경제 등 2025-07-08)
-const TAI_H2_DEFAULT = 100; // 하반기 확정치 보도 미확보 — 기본값 100% 가정 (조정 가능)
+const TAI_H2_DEFAULT = 50; // 2025 하반기 50% 수준 보도(쿠키뉴스 2026-06-11, 2026-11-18 재확인) — 조정 가능
 
 export default function SamsungBiologicsBonusClient() {
   const [scenarioId, setScenarioId] = useState<(typeof SCENARIOS)[number]["id"]>("2025-cap");
@@ -162,8 +162,8 @@ export default function SamsungBiologicsBonusClient() {
           <div>
             <p className="font-bold">TAI 포함 (월 기본급 × 상·하반기 각 최대 100%)</p>
             <p className="text-xs text-faint mt-0.5">
-              2025 상반기 100% 확정 (한국경제 등 2025-07-08). 하반기 확정치는
-              보도 미확보 — 아래에서 직접 조정.
+              2025 상반기 100% 확정 (한국경제 등 2025-07-08). 하반기 50% 수준
+              보도 (쿠키뉴스 2026-06-11).
             </p>
           </div>
         </label>
@@ -184,7 +184,7 @@ export default function SamsungBiologicsBonusClient() {
             <div>
               <label htmlFor="ms-samsung-biologics-bonus-field-1" className="block text-sm font-bold mb-2">
                 하반기 TAI: <span className="text-primary">{taiH2Percent}%</span>
-                <span className="ml-2 text-[10px] font-normal text-faint">2025년 확정치 미확정 — 가정값</span>
+                <span className="ml-2 text-[10px] font-normal text-faint">2025년 50% 수준 보도</span>
               </label>
               <input id="ms-samsung-biologics-bonus-field-1"
                 type="range" min={0} max={100} step={25}
