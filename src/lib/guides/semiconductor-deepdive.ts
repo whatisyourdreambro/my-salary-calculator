@@ -923,8 +923,8 @@ const chipRsuStockTax2026 = `
    </tr>
    <tr class="border-t border-border bg-primary/5">
     <td class="p-3 font-bold">ISA 내 매수</td>
-    <td class="p-3 font-bold text-primary">200만원까지 비과세, 초과분 9.9% 분리과세</td>
-    <td class="p-3 font-bold">6,822만원 ~ 7,000만원</td>
+    <td class="p-3 font-bold text-primary">국내주식 차익은 원래 비과세</td>
+    <td class="p-3 font-bold">7,000만원</td>
    </tr>
    <tr class="border-t border-border">
     <td class="p-3">일반 증권계좌 (소액주주)</td>

@@ -2120,7 +2120,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-13",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5922
+  "contentChars": 5901
  },
  {
   "slug": "year-end-tax-refund-secrets-2026",
