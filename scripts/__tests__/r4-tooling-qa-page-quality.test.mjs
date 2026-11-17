@@ -61,6 +61,40 @@ test("a percent-encoded Korean redirect source matches a raw Korean href", t => 
   assert.equal(qualityFailed(ledger), true);
 });
 
+// scripts-b07-F02: in a static export every slug without exported HTML is a 404, so a dynamic-pattern match is unresolved.
+const dynamicContext = {
+  origin, htmlPaths: new Set(["/guides"]), sitemapPaths: new Set(["/qna/known"]),
+  handlers: new Set(), publicFiles: new Set(), redirects: [{ test: /^\/old$/, destination: "/guides" }], dynamic: [{ test: /^\/qna\/[^/]+$/ }],
+};
+
+test("staticExport:true makes an unexported dynamic slug unresolved; other builds keep the unchecked label", () => {
+  assert.equal(classifyLink("/qna/unknown", "/", dynamicContext).kind, "dynamic-pattern-unchecked");
+  assert.equal(classifyLink("/qna/unknown", "/", { ...dynamicContext, staticExport: true }).kind, "unresolved-page");
+  // Order is unchanged: generated HTML, redirects and sitemap entries are classified before the dynamic rule.
+  assert.equal(classifyLink("/old", "/", { ...dynamicContext, staticExport: true }).kind, "configured-redirect");
+  assert.equal(classifyLink("/qna/known", "/", { ...dynamicContext, staticExport: true }).kind, "sitemap-runtime-unchecked");
+  assert.equal(classifyLink("/guides", "/", { ...dynamicContext, staticExport: true }).kind, "generated-html");
+});
+
+test("a fallback:false dynamic rule makes an unknown slug unresolved even without a static export", () => {
+  const context = { ...dynamicContext, dynamic: [{ test: /^\/qna\/[^/]+$/, fallback: false }] };
+  assert.equal(classifyLink("/qna/unknown", "/", context).kind, "unresolved-page");
+  assert.equal(classifyLink("/qna/unknown", "/", { ...dynamicContext, dynamic: [{ test: /^\/qna\/[^/]+$/, fallback: null }] }).kind, "dynamic-pattern-unchecked");
+});
+
+test("buildLedger reads export-detail.json and the prerender fallback; a legacy redirect source stays configured-redirect", t => {
+  const { root, buildDir } = pagesStage(t, { pagesRedirects: [OLD_RULE], routesRedirects: TRAILING_SLASH_ONLY, indexLinks: '<a href="/old">legacy</a><a href="/missing-slug">missing</a>' });
+  let ledger = buildLedger({ root, buildDir });
+  assert.deepEqual(ledger.unresolvedLinks, [], "without export-detail.json the dynamic match stays unchecked");
+  assert.equal(ledger.linkKinds["dynamic-pattern-unchecked"], 1);
+  fs.writeFileSync(path.join(buildDir, "export-detail.json"), JSON.stringify({ version: 1, outDirectory: "out", success: true }));
+  ledger = buildLedger({ root, buildDir });
+  assert.deepEqual(ledger.unresolvedLinks.map(link => [link.target, link.kind]), [["/missing-slug", "unresolved-page"]]);
+  assert.deepEqual(ledger.linkGate.redirectLinks.map(link => [link.target, link.kind]), [["/old", "configured-redirect"]]);
+  assert.equal(qualityFailed(ledger), true);
+  assert.ok(ledger.scope.limitations.some(line => line.startsWith("Dynamic pattern matches are unchecked only in non-export builds")));
+});
+
 test("percent-encoded sources from routes-manifest.json (non-Pages builds) also match decoded targets", () => {
   const rules = redirectRulesFor(path.join(os.tmpdir(), "no-such-build-dir", ".next"), { redirects: [{ source: KOREAN_RULE.source, destination: "/guides/x", statusCode: 308, regex: "^/guides/one-home-prop-tax-12%EC%96%B5-2026(?:/)?$" }] });
   const context = { origin, htmlPaths: new Set(), sitemapPaths: new Set(), handlers: new Set(), publicFiles: new Set(), dynamic: [], redirects: rules };
