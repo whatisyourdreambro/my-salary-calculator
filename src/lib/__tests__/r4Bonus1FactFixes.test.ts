@@ -143,3 +143,14 @@ describe("CB-07 /calc 인덱스 현대로템 카드 시즌 (광고 위 한 줄 �
     expect(page).not.toContain("12월 임단협 시즌");
   });
 });
+
+describe("CB-07 허브 2026 시즌 캘린더 12월 (광고 위, 더 짧은 글)", () => {
+  it("12월에 현대차·기아 임단협 타결 성과급이 없고, 하반기 TAI 발표사(삼성디스플레이)로 바뀐다", async () => {
+    const { BONUS_CALENDAR_2026 } = await import("@/data/bonusCalcHub");
+    const dec = BONUS_CALENDAR_2026.find((r) => r.month === "12월")!;
+    expect(dec.events.some((e) => e.label.includes("현대차·기아"))).toBe(false);
+    expect(dec.events.some((e) => e.label.includes("HD현대중공업"))).toBe(false);
+    expect(dec.events).toContainEqual({ label: "삼성디스플레이 하반기 TAI", href: "/calc/samsung-display-bonus" });
+    expect(dec.events).toHaveLength(2);
+  });
+});
