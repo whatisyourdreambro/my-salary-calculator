@@ -163,7 +163,8 @@ const TAX: CalculatorDef[] = [
  categoryLabel: "세금",
  keywords: ["등록면허세", "등록세"],
  // 사이트맵 lastmod(간이 계산기 유일한 날짜) — RL-10 사실 정정을 실제로 고친 날(KST). 화면에는 날짜가 없다.
- publishedAt: "2026-11-15",
+ // 2026-11-18: n2 최종 수리로 설명문(enrichments.ts)을 운영 문구보다 짧게 다시 고친 날(504·505·583px 줄 수 복구).
+ publishedAt: "2026-11-18",
  fields: [
  { name: "price", label: "취득가액", defaultValue: 500000000, suffix: "원" },
  { name: "rate", label: "등록세율", defaultValue: 0.8, suffix: "%", hint: "보존·상속 0.8%, 저당 0.2%" },

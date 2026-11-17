@@ -31,10 +31,11 @@ const notWider = (now: string, was: string) => {
 // lens-meta-M01: 간이 계산기는 화면에 날짜가 없고 사이트맵 lastmod 는 CalculatorDef.publishedAt 하나만 읽는다(sitemap.ts).
 // RL-10 이 사실을 고친 다섯 계산기는 실제로 고친 날(2026-11-15 KST)을 단다 — /calc 의 신규(2026-09-10) 필터에는 들지 않는다.
 describe("RL-10 날짜 손잡이 — 고친 다섯 계산기의 publishedAt", () => {
-  it("실제 수정일 2026-11-15(직원 인건비는 n2 수리로 유의사항을 다시 고친 2026-11-17), 미래 날짜 아님", () => {
+  it("실제 수정일 2026-11-15(직원 인건비는 n2 수리로 유의사항을 다시 고친 2026-11-17, 등록면허세는 설명문을 다시 줄인 2026-11-18), 미래 날짜 아님", () => {
+    const redated: Record<string, string> = { "employee-cost-quick": "2026-11-17", "registration-tax-quick": "2026-11-18" };
     for (const slug of ["registration-tax-quick", "employee-cost-quick", "property-tax-quick", "yearly-to-hourly", "weekly-pay"]) {
       const c = calc(slug);
-      expect(c.publishedAt, slug).toBe(slug === "employee-cost-quick" ? "2026-11-17" : "2026-11-15");
+      expect(c.publishedAt, slug).toBe(redated[slug] ?? "2026-11-15");
       expect(new Date(`${c.publishedAt}T00:00:00+09:00`).getTime(), slug).toBeLessThanOrEqual(Date.now());
     }
   });
@@ -197,13 +198,20 @@ describe("CS-05 등록면허세 설명문(meta 스니펫) — 등기 원인별 �
     expect(meta).not.toContain("유상 이전 2%");
     expect(meta).not.toContain("주택 유상 매매");
   });
-  it("설명문 전체 글자 폭 추정은 종전보다 좁다(한글 157->150) — 그래도 줄바꿈 위치가 달라 몇 폭에서 한 줄 늘 수 있어 질문 1 로 실측한다", () => {
+  // 2026-11-18 n2 최종 수리(skads-02): 11-15 문구(236자, 한글 150)는 운영 문구(234자)보다 2자 길어 504·505·583px 에서 한 줄 늘었다.
+  // 끝 문장 '이 계산기는 그런 등기의 세액을 검산할 때 씁니다.'(아래 details 와 같은 쓰임 안내)를 빼 207자 — 세율 사실은 그대로.
+  it("설명문은 운영 문구보다 짧다(234 -> 207자, 한글 157 -> 130) — 줄 수는 1px 단위 실측 스윕이 확인한다", () => {
     const was = "등록면허세는 부동산 등기·등록을 할 때 내는 지방세로, 소유권 이전의 원인에 따라 세율이 다릅니다. 주택 유상 매매는 취득가액의 0.8%, 증여(무상 취득)는 1.5%, 상속은 0.8%가 기본이며 등록면허세액의 20%가 지방교육세로 함께 붙습니다. 유상 매매로 주택을 취득할 때는 취득세에 등록분이 통합돼 부과되므로, 이 계산기는 등기 원인별 등록분을 따로 확인하거나 취득세 통합 고지 내역을 검산할 때 쓰는 값입니다.";
-    const a = kinds(calc("registration-tax-quick").explanation ?? "");
+    const prev1115 = "등록면허세는 부동산 등기·등록을 할 때 내는 지방세입니다. 매매·증여·상속처럼 취득을 원인으로 한 등기는 취득세에 통합되어 따로 내지 않고, 저당권·전세권 설정 등 남는 등기에만 붙습니다. 세율은 소유권 보존·상속 0.8%, 증여 등 무상 이전 1.5%, 유상 이전 2%(주택은 취득세율의 50%), 저당권 설정 0.2%이며 등록면허세액의 20%가 지방교육세로 붙습니다. 이 계산기는 그런 등기의 세액을 검산할 때 씁니다.";
+    const now = calc("registration-tax-quick").explanation ?? "";
+    expect([...now].length).toBe([...was].length - 27);
+    expect([...now].length).toBeLessThan([...prev1115].length);
+    expect(now).not.toContain("이 계산기는 그런 등기의 세액을 검산할 때 씁니다");
+    const a = kinds(now);
     const b = kinds(was);
-    expect(a.hangul).toBe(b.hangul - 7);
+    expect(a.hangul).toBe(b.hangul - 27);
     expect(a.digit).toBe(b.digit + 3);
-    // 좁은 글자(공백·가운뎃점·%·마침표 등)는 6개 늘었다 — 한글 7자(약 6.6em)가 빠진 것보다 작다(약 +1.6em, 숫자 +3 은 약 +1.7em)
-    expect(a.space + a.other).toBe(b.space + b.other + 6);
+    // 좁은 글자(공백·가운뎃점·%·마침표 등)는 3개 줄었다 — 숫자 +3(약 +1.7em)보다 한글 27자(약 25em)가 훨씬 많이 빠졌다
+    expect(a.space + a.other).toBe(b.space + b.other - 3);
   });
 });
