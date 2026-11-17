@@ -3,6 +3,10 @@
 // 삼성디스플레이 성과급 계산기 — 삼성 계열 공통 OPI + TAI 이원 구조.
 // OPI: 2025년 실적분 연봉의 36% (전 사업부 공통, 2026-01-30 지급) / 2024년 실적분 40%
 // TAI: 2025년 하반기 대형·중소형 모두 월 기본급의 50% (2025-12-24 지급)
+// TAI: 2026년 상반기 대형 75%·중소형 100% (뉴스핌·헤럴드경제 2026-07-06 — 2026-11-18 R4 RL-16 CB-04, 접힌 FAQ 만;
+//   두 기사의 '8일 지급'은 삼성전자 문단이라 삼성디스플레이 지급일로 쓰지 않음)
+// 참고(2026-11-18 확인, 광고 위라 아직 고치지 않음): 2025년 상반기 TAI 는 중소형·본사 100%·대형 75% 로 보도됐다(뉴시스 2025-07-04).
+//   표 마지막 행·표 각주·출처 줄의 '2025 상반기 확정치 보도 미확보·SBS Biz 전망' 문구는 다음 측정 슬롯에서 정정 후보.
 // 출처: 연합뉴스·디지털타임스 2026-01-28, 뉴시스 2025-12-22, SBS Biz 2025-07-01
 
 import type { Metadata } from "next";
@@ -13,7 +17,6 @@ import {
   softwareApplicationLd,
   autoBreadcrumbLd,
   faqLd,
-  howToLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -49,7 +52,7 @@ const FAQ_ITEMS = [
   {
     question: "TAI는 최근 얼마나 나왔나요?",
     answer:
-      "2025년 하반기 TAI는 대형·중소형 사업부 모두 월 기본급의 50%로, 2025년 12월 24일 지급됐습니다 (뉴시스 2025-12-22 보도). 2025년 상반기 확정치는 보도로 확인되지 않았으며, 이청 대표 발언 기준 '중소형 75% 이상·대형 50% 이상' 전망이 보도된 바 있습니다 (SBS Biz 2025-07-01). 본 계산기는 상·하반기 %를 각각 조정할 수 있습니다.",
+      "2026년 상반기 TAI는 대형사업부 월 기본급의 75%, 중·소형사업부 100%로 책정됐다고 보도됐습니다(뉴스핌·헤럴드경제 2026-07-06). 직전 2025년 하반기 TAI는 대형·중소형 모두 50%였습니다(더팩트 2025-12-22). 본 계산기는 상·하반기 %를 각각 조정할 수 있습니다.",
   },
   {
     question: "삼성전자 성과급과 무엇이 다른가요?",
@@ -69,21 +72,13 @@ const FAQ_ITEMS = [
   {
     question: "성과급 세금은 어떻게 계산되나요?",
     answer:
-      `OPI·TAI 모두 근로소득에 합산되어 누진세율(6~45%) + 지방소득세(소득세의 10%) + 4대보험(국민연금 ${CURRENT_RATE_LABELS.pension}, 건강보험 ${CURRENT_RATE_LABELS.health} 등)이 부과됩니다. 국민연금은 보수월액 상한(2026.7~2027.6 연 7,908만원) 적용. 본 계산기는 연봉 기준 세금과 연봉+성과급 합산 세금의 차이를 성과급에 귀속시키는 marginal 방식으로 정확하게 산출합니다.`,
+      `OPI·TAI 모두 근로소득에 합산되어 누진세율(6~45%) + 지방소득세(소득세의 10%) + 4대보험(국민연금 ${CURRENT_RATE_LABELS.pension}, 건강보험 ${CURRENT_RATE_LABELS.health} 등)이 부과됩니다. 국민연금은 기준소득월액 상한(2026.7~2027.6 연 7,908만원) 적용. 본 계산기는 연봉 기준 세금과 연봉+성과급 합산 세금의 차이를 성과급에 귀속시키는 marginal 방식으로 정확하게 산출합니다.`,
   },
   {
     question: "이 계산기 결과를 어디까지 신뢰할 수 있나요?",
     answer:
       "연합뉴스·디지털타임스(2026-01-28)·뉴시스(2025-12-22)·SBS Biz(2025-07-01) 공개 보도 기반 추정 모델입니다. 실제 지급은 본인 사업부·평가·근속·기본급 산정 방식에 따라 차이가 날 수 있으며, 2026년 실적분(2027년 1월 지급 예정) OPI는 미확정입니다. 정확한 본인 케이스는 사내 시스템에서 확인하세요.",
   },
-];
-
-const HOW_TO_STEPS = [
-  { name: "OPI 시나리오 선택", text: "2025 실적분 36%(확정) / 2024 실적분 40% / 상한 50% / 직접 입력 중 선택." },
-  { name: "본인 연봉 입력", text: "연 기본 연봉 입력. 기본급(연봉 ÷ 20) 자동 산출." },
-  { name: "TAI 반기별 % 설정", text: "상반기·하반기 TAI %를 각각 설정. 2025 하반기 확정치 50% 프리셋 제공." },
-  { name: "결과 확인", text: "OPI + TAI 합산 세전 성과급 즉시 표시." },
-  { name: "세후 실수령 확인", text: "누진세율 + 4대보험 marginal 방식 자동 계산." },
 ];
 
 export const metadata: Metadata = {
@@ -118,11 +113,6 @@ export default function SamsungDisplayBonusPage() {
           autoBreadcrumbLd(PAGE_PATH, { leafName: "삼성디스플레이 성과급" }),
           softwareApplicationLd({ name: PAGE_TITLE, description: PAGE_DESC, url: `${SITE_URL}${PAGE_PATH}`, dateModified: staticRouteLastModified(PAGE_PATH) }),
           faqLd(FAQ_ITEMS),
-          howToLd({
-            name: "삼성디스플레이 성과급 계산하는 방법",
-            description: "OPI 시나리오·본인 연봉·반기별 TAI로 세전·세후 실수령액을 산출하는 5단계 가이드",
-            steps: HOW_TO_STEPS,
-          }),
         ]}
       />
 

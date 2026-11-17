@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Settings, Lock, Coins } from "lucide-react";
 import { calcBonusNet, DEFAULT_BONUS_CREDIT_RATE, fmtEok, fmtManwon } from "@/lib/bonusTaxCalc";
 
-import { SCENARIOS, DEFAULT_SALARY_MANWON, BASIC_RATIO, TAI_HALF, TAI_PER_YEAR } from "./data";
+import { SCENARIOS, DEFAULT_SALARY_MANWON, BASIC_RATIO, TAI_H1, TAI_H2 } from "./data";
 import NumberInput from "@/components/NumberInput";
 
 export default function SamsungSdiBonusClient() {
@@ -27,8 +27,8 @@ export default function SamsungSdiBonusClient() {
 
     // OPI: 연봉 × 사업부 %
     const opiWon = salaryWon * (opiPct / 100);
-    // TAI: 월 기본급 × 100% × 2회 (사업부 영향 받지 않는 안정 항목)
-    const taiWon = includeTai ? monthlyBasicWon * TAI_HALF * TAI_PER_YEAR : 0;
+    // TAI: 월 기본급 × (상반기 75% 보도값 + 하반기 100% 가정) — 2026 상반기는 전 사업부 공통 75%
+    const taiWon = includeTai ? monthlyBasicWon * (TAI_H1 + TAI_H2) : 0;
     const totalGross = opiWon + taiWon;
 
     const tax = calcBonusNet(salaryWon, totalGross, creditRate, applyInsurance);
@@ -77,11 +77,12 @@ export default function SamsungSdiBonusClient() {
           <div className="mt-3 p-4 rounded-xl bg-canvas/30 flex items-center gap-2">
             <span className="text-sm font-bold w-32">OPI (연봉 대비)</span>
             <NumberInput
+              aria-label="OPI 직접 입력 (연봉 대비 %)"
               type="number"
               value={customOpiPercent}
               onChange={(e) => setCustomOpiPercent(Number(e.target.value) || 0)}
               step="1" min="0" max="50"
-              className="flex-1 p-2 rounded border border-canvas-deep tabular-nums text-lg font-bold"
+              className="min-w-0 flex-1 p-2 rounded border border-canvas-deep tabular-nums text-lg font-bold"
             />
             <span className="text-sm font-bold">%</span>
           </div>
@@ -108,7 +109,7 @@ export default function SamsungSdiBonusClient() {
               onClick={() => setSalaryManwon(m)}
               className="py-1.5 rounded-md border border-canvas-deep text-xs font-bold hover:border-primary/40 transition"
             >
-              {(m / 10000).toFixed(1).replace(/\.0$/, "")}억
+              {(m / 10000).toFixed(2).replace(/\.?0+$/, "")}억
             </button>
           ))}
         </div>
@@ -128,9 +129,9 @@ export default function SamsungSdiBonusClient() {
             className="w-5 h-5 accent-primary"
           />
           <div>
-            <p className="font-bold">TAI 포함 (월 기본급 100% × 연 2회)</p>
+            <p className="font-bold">TAI 포함 (월 기본급 75%+100%)</p>
             <p className="text-xs text-faint mt-0.5">
-              회사 적자 시 TAI도 감소 가능. 포함 시 {fmtManwon(calc.monthlyBasicWon * 2)} 추가.
+              회사 적자 시 TAI도 감소 가능. 포함 시 {fmtManwon(calc.monthlyBasicWon * (TAI_H1 + TAI_H2))} 추가.
             </p>
           </div>
         </label>
@@ -151,7 +152,7 @@ export default function SamsungSdiBonusClient() {
               <label className="block text-sm font-bold mb-2">
                 추가 세액공제: <span className="text-primary">{creditRate}%</span>
               </label>
-              <input type="range" min={0} max={50} step={5} value={creditRate}
+              <input aria-label="추가 세액공제 가정 (%)" type="range" min={0} max={50} step={5} value={creditRate}
                 onChange={(e) => setCreditRate(Number(e.target.value))}
                 className="w-full accent-primary" />
             </div>
@@ -172,7 +173,7 @@ export default function SamsungSdiBonusClient() {
         </h2>
         <div className="grid sm:grid-cols-2 gap-3 mb-5">
           <ResultCard label="OPI" value={fmtManwon(calc.opiWon)} sub={`연봉 × ${customMode ? customOpiPercent : scenario.percent}%`} />
-          <ResultCard label="TAI" value={fmtManwon(calc.taiWon)} sub={includeTai ? "월 기본 × 100% × 2회" : "포함 안 함"} />
+          <ResultCard label="TAI" value={fmtManwon(calc.taiWon)} sub={includeTai ? "월 기본 × (75+100)%" : "포함 안 함"} />
         </div>
         <div className="rounded-xl bg-white border border-primary/30 p-5">
           <p className="text-xs font-bold text-faint mb-1">📊 OPI + TAI (세전)</p>

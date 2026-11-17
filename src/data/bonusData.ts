@@ -11,7 +11,7 @@
 //    아닌 것)은 제외. 실지급·타결·공기관 평가 확정치만 담는다.
 //    제외 예: 현대차·기아 2026 노조 요구안 800%(협상 중), HD현대 노조 요구 1,400%,
 //    포스코 평년 400%/슈퍼사이클 1,000%(사이클 가정), LG엔솔 200~900% 가정 구간,
-//    LG화학 100%/400% 가정, 삼성SDI 48%(가정)·TAI 100%(모델 가정),
+//    LG화학 100%/400% 가정, 삼성SDI 48%(가정)·TAI 하반기 100%(모델 가정 — 상반기 75%는 2026-07 보도값, 2026-11-18 N2-calc-23),
 //    삼성디스플레이 상한 50%·TAI 상반기 전망(50/75%), 삼성바이오 TAI 하반기 가정,
 //    두산 상한 530%/하한 100%(제도 상·하한), 한전 등급표 S250/C100(제도 표),
 //    네이버·카카오 PI 10~40%(평가등급 구조), 삼성 DIVISIONS 가중치(시뮬 파라미터).
@@ -19,6 +19,8 @@
 //    (SK하이닉스 PS 는 통상 실적 이듬해 2월 지급 — psData.ts 캘린더 기준)
 // 5. 삼성전자는 제도가 둘(TAI·OPI)이고 원본 파일이 달라 프로필 2개로 분리했다
 //    (같은 calcSlug "samsung-bonus"). 회사 수 집계는 calcSlug 기준 unique 로.
+// 6. 지급 기록(payouts)을 바꾸면 /insights/bonus-payout-history-2026 표가 바뀐다 — src/data/reportsRegistry.ts 의 리포트 날짜도
+//    함께 올린다(측정 게시면 updatedDate 를 실제 수정일로, 아니면 sitemapDate 만). 2026-11-18 R4 N2-calc-10(STACK 이관 한 줄).
 //
 // ── 검증 ────────────────────────────────────────────────────
 // node scripts/verify-bonus-data.mjs 가 각 payout 숫자값이 sourceFile 텍스트에
@@ -256,7 +258,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         year: 2026,
         scheme: "PI",
         percentOfBase: 150,
-        note: "2026년 상반기 PI 최대치 확정 — 2026-07-28 지급",
+        note: "2026년 상반기 PI 최대치 확정 — 2026-07-30 지급",
         source: "복수 언론 2026-07 (psData.ts PI_2026·SOURCES)",
       },
     ],
@@ -330,17 +332,17 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
     sourceFile: "src/app/calc/lg-energy-bonus/Client.tsx",
     payouts: [
       {
-        year: 2024,
+        year: 2025,
         scheme: "성과급",
         percentOfBase: 50,
-        note: "2024년 실지급 — 적자기",
+        note: "2024년 실적분 — 적자기",
         source: "LG에너지솔루션 분기 실적발표·뉴스웨이 2026-02 보도 (page.tsx 출처)",
       },
       {
-        year: 2025,
+        year: 2026,
         scheme: "성과급",
         percentOfBase: 75,
-        note: "2025년 실지급",
+        note: "2025년 실적분",
         source: "LG에너지솔루션 분기 실적발표·뉴스웨이 2026-02 보도 (page.tsx 출처)",
       },
     ],
@@ -361,11 +363,11 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         source: "CEOSCOREDAILY·파이낸셜포스트·전자신문 보도 (page.tsx 출처)",
       },
       {
-        year: 2026,
+        year: 2025,
         scheme: "OPI",
         division: "전자재료",
         percentOfSalary: 5,
-        note: "2025년 실적분 — 폴더블 OLED 수혜 사업부 (보도상 3~5% 중 상단값)",
+        note: "2024년 실적분 — 폴더블 OLED 수혜 사업부 (보도상 3~5% 중 상단값)",
         source: "CEOSCOREDAILY·파이낸셜포스트·전자신문 보도 (page.tsx 출처)",
       },
       {
@@ -398,7 +400,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         scheme: "PS",
         percentOfBase: 0,
         note: "다운사이클 2024 — PS 미지급. PI(월 기본급 200% 연간 고정)는 별도",
-        source: "LG화학 노조 자료·공개 보도 (page.tsx 출처)",
+        source: "공개 보도 (page.tsx 출처)",
       },
       {
         year: 2022,

@@ -1,0 +1,231 @@
+// R4 BONUS1 (2026-11-18) — 성과급 사실 정정 1부 고정 테스트.
+// 10월 재착지 묶음 RL-16(CB-03~CB-07)과 감사 묶음 N2-calc-10·11·12·23 의 사실 문구를 고정한다.
+// 10월 원본 테스트(bonusFactFixes20260929)는 저장소에 없어서 이 단위 전용 파일로 새로 만들었다(공유 테스트 파일 무접촉).
+// 모든 숫자·날짜는 2026-11-18 보도 원문으로 다시 확인했다(커밋 본문에 출처).
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { describe, expect, it } from "vitest";
+
+const read = (p: string) => readFileSync(resolve(process.cwd(), p), "utf8");
+/** page.tsx 의 FAQ_ITEMS 블록(접힌 details·FAQPage JSON-LD 로만 나가는 글) */
+const faqBlock = (p: string) => {
+  const src = read(p);
+  const start = src.indexOf("const FAQ_ITEMS");
+  const end = src.indexOf("export const metadata");
+  expect(start, p).toBeGreaterThanOrEqual(0);
+  expect(end, p).toBeGreaterThan(start);
+  return src.slice(start, end);
+};
+
+describe("CB-03 삼성SDI — 2026년 1월 OPI 전 사업부 0%, 상반기 TAI 75%, OPI 재원 변경 (접힌 FAQ)", () => {
+  const faq = faqBlock("src/app/calc/samsung-sdi-bonus/page.tsx");
+
+  it("2026년 1월(2025년 실적분)은 전 사업부 0%, 전자재료 한 자릿수는 2025년 초(2024년 실적분)", () => {
+    expect(faq).toContain("2026년 1월(2025년 실적분)에는 전기차 캐즘에 따른 영업손실로 전 사업부 0%였습니다(뉴스핌·CEO스코어데일리 2026-01-28 보도)");
+    expect(faq).toContain("2025년 초(2024년 실적분)에는 전자재료만 한 자릿수(보도상 3~5%)였고");
+    expect(faq).not.toContain("배터리·본사 OPI 0%, 전자재료만 3~5%");
+    expect(faq).not.toContain("복구 전망");
+    expect(faq).not.toContain("다만 SDI는 전자재료 사업부가 일부 OPI 받음");
+  });
+
+  // 2026-11-18 리뷰 정정: 뉴스핌·헤럴드경제·아시아경제·세계일보 2026-07-06 의 '8일 지급'은 삼성전자 문단에만 있다 — SDI·디스플레이 지급일로 쓰지 않는다.
+  it("2026년 상반기 TAI 전 사업부 75%(지급일 없이), OPI 재원 EVA 20% → 영업이익 10%", () => {
+    expect(faq).toContain("2026년 상반기 TAI는 전 사업부 공통 월 기본급의 75%로 확정됐다고 보도됐습니다(뉴스핌·헤럴드경제 2026-07-06).");
+    expect(faq).not.toContain("7월 8일");
+    expect(faq).toContain("OPI 재원은 2027년 초 지급분부터 EVA의 20%에서 영업이익의 10%로 바뀝니다(이투데이 2026-09-10 보도, 참여 직원의 93.4%가 선택)");
+    expect(faq).not.toContain("TAI는 6·12월에 연 2회 지급됩니다");
+  });
+
+  it("LG엔솔 비교 FAQ 는 실적 연도를 밝힌다", () => {
+    expect(faq).toContain("캐즘기 LG엔솔은 2024년 실적분 50%·2025년 실적분 75%였고, 삼성SDI는 2025년 실적분 OPI가 전 사업부 0%였습니다.");
+  });
+});
+
+describe("CB-03 삼성SDI — 광고 위 같은 폭 교체 (배지)", () => {
+  const page = read("src/app/calc/samsung-sdi-bonus/page.tsx");
+  it("배지: 2026 캐즘 0%(전자재료 포함 0%) — 10월 1,123폭 스윕 통과 문구", () => {
+    expect(page).toContain("2024 배터리 32% / 2026 캐즘 0% (전자재료 포함 0%)");
+    expect(page).not.toContain("(전자재료만 3-5%)");
+  });
+  it("지급 이력 표: 배터리 0%·전자재료 3~5%·본사 0% 행은 2025년 초(2024 실적분) 지급분", () => {
+    expect(page).toContain("2025년 (2024 실적 · 캐즘)");
+    expect(page).not.toContain("2026년 (2025 실적 · 캐즘)");
+  });
+});
+
+describe("CB-04 삼성디스플레이 — TAI FAQ(접힌 details)에 2026 상반기 확정치", () => {
+  const faq = faqBlock("src/app/calc/samsung-display-bonus/page.tsx");
+  it("2026 상반기 대형 75%·중소형 100%, 직전 2025 하반기 50%", () => {
+    expect(faq).toContain("2026년 상반기 TAI는 대형사업부 월 기본급의 75%, 중·소형사업부 100%로 책정됐다고 보도됐습니다(뉴스핌·헤럴드경제 2026-07-06).");
+    expect(faq).not.toContain("7월 8일");
+    expect(faq).toContain("직전 2025년 하반기 TAI는 대형·중소형 모두 50%였습니다(더팩트 2025-12-22).");
+    expect(faq).not.toContain("2025년 상반기 확정치는 보도로 확인되지 않았으며");
+  });
+});
+
+describe("CB-05 LG에너지솔루션 — 75%는 2026-02-06 이미 지급, '1분기 결산 후 결정' 삭제 (접힌 FAQ)", () => {
+  const faq = faqBlock("src/app/calc/lg-energy-bonus/page.tsx");
+  it("2025년 실적분 최대 75% 2026-02-06 지급(전년 50%), 2026년 실적분은 2027년 초 결정", () => {
+    expect(faq).toContain("2026년 2월 6일에는 2025년 실적분으로 기본급의 최대 75%가 지급됐습니다(뉴스웨이 2026-02-04 보도, 전년 50%).");
+    expect(faq).toContain("2026년 실적분은 2027년 초 결정되며");
+    expect(faq).not.toContain("정확한 결정은 1분기 결산 후");
+    expect(faq).not.toContain("2025년(75%)보다 더 낮거나 비슷할 가능성");
+    // 정률 단정 금지(10월 605fdc4ae 리뷰): '기본급의 75%' 단정 대신 '최대 75%'
+    expect(faq).not.toMatch(/기본급의 75%/);
+  });
+});
+
+describe("CB-05 리포트 행(bonusData) — LG에너지솔루션 50%·75%는 지급 연도 2025·2026", () => {
+  it("2024년 실적분 50%는 2025년 행, 2025년 실적분 75%는 2026년 행(note 는 실적분)", async () => {
+    const { BONUS_PROFILES } = await import("@/data/bonusData");
+    const lges = BONUS_PROFILES.find((p) => p.calcSlug === "lg-energy-bonus")!;
+    expect(lges.payouts.map((p) => [p.year, p.percentOfBase, p.note])).toEqual([
+      [2025, 50, "2024년 실적분 — 적자기"],
+      [2026, 75, "2025년 실적분"],
+    ]);
+  });
+});
+
+describe("CB-06 LG화학 — 2025년 실적분 전사 성과급 0원·위로금 미지급, PI 적자 보장 단정 삭제 (접힌 FAQ)", () => {
+  const faq = faqBlock("src/app/calc/lg-chem-bonus/page.tsx");
+  it("1/30 통합노사협의회·석유화학 영업손실 3,564억원·디지털타임스 보도", () => {
+    expect(faq).toContain("석유화학 연간 영업손실(3,564억원) 등으로 흑자를 낸 첨단소재·생명과학까지 포함해 전사 성과급 0원, 위로금도 미지급으로 1월 30일 통합노사협의회에서 결정됐습니다(디지털타임스 2026-02-02 보도)");
+    expect(faq).not.toContain("2024~2025년 석유화학 다운사이클로 0%대까지 떨어진 사업부도 있음");
+  });
+  it("PI 는 계산기 가정이며 적자 연도 보장 단정 없음", () => {
+    expect(faq).toContain("적자 연도에도 보장된다고 단정할 수 없습니다");
+    expect(faq).not.toContain("적자여도 PI는 보장");
+  });
+});
+
+describe("CB-06 LG화학 — PI 카드(광고 위 같은 폭)", () => {
+  it("적자 연도 보장 단정 대신 같은 폭 문구(한글 16자·공백 5개)", () => {
+    const page = read("src/app/calc/lg-chem-bonus/page.tsx");
+    expect(page).toContain("<li>• 적자 연도에도 지급된다는 보장은 없음</li>");
+    expect(page).not.toContain("영업이익 적자여도 보장되는 안정 항목");
+  });
+});
+
+describe("CB-03 리포트 행(bonusData) — 삼성SDI 전자재료 5%는 2025년 지급(2024년 실적분)", () => {
+  it("year 는 지급 연도: 전자재료 5% 행은 2025, 2026년 행에는 전자재료 지급이 없다", async () => {
+    const { BONUS_PROFILES } = await import("@/data/bonusData");
+    const sdi = BONUS_PROFILES.find((p) => p.calcSlug === "samsung-sdi-bonus")!;
+    const em5 = sdi.payouts.find((p) => p.division === "전자재료" && p.percentOfSalary === 5)!;
+    expect(em5.year).toBe(2025);
+    expect(em5.note).toBe("2024년 실적분 — 폴더블 OLED 수혜 사업부 (보도상 3~5% 중 상단값)");
+    expect(sdi.payouts.filter((p) => p.year === 2026 && p.division === "전자재료")).toEqual([]);
+  });
+});
+
+describe("CB-07 성과급 허브 — 현대차·기아는 2026년 8월 말 타결 (접힌 FAQ)", () => {
+  it("허브 FAQ 에 '주로 연말' 이 없고 8/28·8/31 가결을 적는다", () => {
+    const faq = faqBlock("src/app/calc/bonus-calculators/page.tsx");
+    expect(faq).toContain("2026년에는 기아(8월 28일)·현대차(8월 31일)가 8월 말 찬반투표로 타결했습니다.");
+    expect(faq).not.toContain("(주로 연말)");
+  });
+});
+
+describe("CB-07 성과급 허브 카드 시즌 라벨 (광고 위 한 줄 안)", () => {
+  it("현대차·기아·현대모비스·현대로템 '12월 임단협 시즌' -> '하반기 임단협 시즌'", async () => {
+    const { BONUS_CALCS } = await import("@/data/bonusCalcHub");
+    expect(BONUS_CALCS.filter((c) => c.seasonLabel === "12월 임단협 시즌")).toEqual([]);
+    for (const slug of ["hyundai-bonus", "kia-bonus", "hyundai-mobis-bonus", "hyundai-rotem-bonus"]) {
+      expect(BONUS_CALCS.find((c) => c.slug === slug)?.seasonLabel, slug).toBe("하반기 임단협 시즌");
+    }
+  });
+  it("HD현대중공업은 '연초 지급' 유지 — 2025년분은 2026년 2월로 미뤄 지급(아시아경제 2026-01-23, 헤럴드경제 2026-01-10)", async () => {
+    const { BONUS_CALCS } = await import("@/data/bonusCalcHub");
+    expect(BONUS_CALCS.find((c) => c.slug === "hd-hyundai-bonus")?.seasonLabel).toBe("연초 지급");
+  });
+});
+
+describe("CB-07 /calc 인덱스 현대로템 카드 시즌 (광고 위 한 줄 안)", () => {
+  it("'12월 임단협 시즌' 이 남지 않는다", () => {
+    const page = read("src/app/calc/page.tsx");
+    expect(page).toContain('season: "하반기 임단협 시즌"');
+    expect(page).not.toContain("12월 임단협 시즌");
+  });
+});
+
+describe("CB-07 허브 2026 시즌 캘린더 12월 (광고 위, 더 짧은 글)", () => {
+  it("12월에 현대차·기아 임단협 타결 성과급이 없고, 하반기 TAI 발표사(삼성디스플레이)로 바뀐다", async () => {
+    const { BONUS_CALENDAR_2026 } = await import("@/data/bonusCalcHub");
+    const dec = BONUS_CALENDAR_2026.find((r) => r.month === "12월")!;
+    expect(dec.events.some((e) => e.label.includes("현대차·기아"))).toBe(false);
+    expect(dec.events.some((e) => e.label.includes("HD현대중공업"))).toBe(false);
+    expect(dec.events).toContainEqual({ label: "삼성디스플레이 하반기 TAI", href: "/calc/samsung-display-bonus" });
+    expect(dec.events).toHaveLength(2);
+  });
+});
+
+describe("N2-calc-11 LG에너지솔루션·LG화학·카카오 접힌 FAQ (calc-02-F06~F10)", () => {
+  // 2026-11-18 리뷰 정정: 누적은 회사 발표·보도값 6,616억원(비즈니스워치 2026-11-03 '1~3분기 누적 … 영업이익은 6616억원').
+  // 반올림된 분기 값의 합(-2,078 + 1,133 + 7,560 = 6,615)으로 쓰지 않는다.
+  it("LG엔솔 FAQ: 1~3분기 누적 6,616억원 흑자(3분기 7,560억원, 세액공제 4,169억원 포함)", () => {
+    const faq = faqBlock("src/app/calc/lg-energy-bonus/page.tsx");
+    expect(faq).toContain("2분기 1,133억원, 3분기 7,560억원(북미 생산 세액공제 4,169억원 포함, 11월 3일 실적 발표)의 영업이익으로 1~3분기 누적 6,616억원 흑자입니다(비즈니스워치 2026-11-03 보도).");
+    expect(faq).toContain("1~3분기 누적 영업이익은 6,616억원(1분기 -2,078억·2분기 1,133억·3분기 7,560억, 세액공제 포함, 비즈니스워치 2026-11-03 보도)입니다.");
+    expect(faq).not.toContain("6,615억");
+    expect(faq).toContain("본 계산기의 최근(75%)·회복기(200%) 시나리오로 범위를 비교해 보세요.");
+    expect(faq).not.toContain("상반기 누적은 945억원 손실");
+    expect(faq).not.toContain("연봉을 입력하면 자동 환산");
+    expect(faq).toContain("세율 추정용 연봉은 월 기본급 × 13으로 잡습니다(450만원이면 5,850만원)");
+    expect(faq).toContain("LG화학(모회사)은 2025년 실적분 전사 성과급을 지급하지 않았습니다(디지털타임스 2026-02-02 보도).");
+    expect(faq).not.toContain("분사 후에도 안정적");
+  });
+  it("LG화학 FAQ: 분사는 2020년 12월 1일(2022년 1월 상장), '분사 전 450%' 없음, PI 는 가정값", () => {
+    const faq = faqBlock("src/app/calc/lg-chem-bonus/page.tsx");
+    expect(faq).toContain("LG에너지솔루션은 2020년 12월 1일 LG화학에서 분사해 출범한 자회사(2022년 1월 상장)입니다.");
+    expect(faq).not.toContain("2022년 LG화학에서 분사");
+    expect(faq).not.toContain("분사 전");
+    expect(faq).toContain("PI는 본 계산기에서 기본급의 200%로 가정(적자 연도 지급은 보장되지 않음)");
+    expect(faq).not.toContain("PI는 안정적으로");
+    expect(faq).toContain("공개 보도(서울경제·핀포인트뉴스)와 사업보고서 기반 추정이며, PI 200%는 계산기 가정값입니다.");
+  });
+  it("카카오 FAQ: 출처에 '연봉체계 자료' 없음, PI 10~40% 는 계산기 가정값", () => {
+    const faq = faqBlock("src/app/calc/kakao-bonus/page.tsx");
+    expect(faq).toContain("2026-05 임금협상 보도(뉴스웨이) 기반 추정이며, 정기 PI 10~40%는 계산기 가정값입니다.");
+    expect(faq).not.toContain("연봉체계 자료");
+  });
+});
+
+describe("N2-calc-11 LG화학 계산기 입력 위생 (calc-02-F19)", () => {
+  const src = read("src/app/calc/lg-chem-bonus/Client.tsx");
+  it("NumberInput 은 모두 allowNegative={false}, 직접 입력 칸은 aria-label, 세액공제 슬라이더는 id+htmlFor", () => {
+    const inputs = [...src.matchAll(/<NumberInput\b[\s\S]*?\/>/g)].map((m) => m[0]);
+    expect(inputs).toHaveLength(2);
+    for (const body of inputs) expect(body, body).toContain("allowNegative={false}");
+    expect(src).toContain('aria-label="PS (월 기본급 대비)"');
+    expect(src).toContain('htmlFor="ms-lg-chem-bonus-credit"');
+    expect(src).toContain('id="ms-lg-chem-bonus-credit" type="range"');
+  });
+});
+
+describe("N2-calc-11 LG엔솔 지급 이력 표 2026 행 (광고 위, 더 짧은 글)", () => {
+  it("2026 (예상) 행: 미정 / 1~3Q 누적 흑자 6,616억(보도값)", () => {
+    const page = read("src/app/calc/lg-energy-bonus/page.tsx");
+    expect(page).toContain('<td className="py-2 px-3 text-right tabular-nums text-faint">미정</td>');
+    expect(page).toContain('<td className="py-2 px-3 text-faint">1~3Q 누적 흑자 6,616억</td>');
+    expect(page).not.toContain("6,615억");
+    expect(page).not.toContain("50~100%?");
+    expect(page).not.toContain("1Q 적자 -2,078억, ESS 회복 신호");
+  });
+});
+
+describe("N2-calc-11 LG화학 사업부별 PS 표 (광고 위, 행 삭제)", () => {
+  it("출처 없는 '2022 호황 | 배터리 (분사 전) | 450%' 행이 없다 — 분사는 2020-12-01", () => {
+    const page = read("src/app/calc/lg-chem-bonus/page.tsx");
+    expect(page).not.toContain("배터리 (분사 전)");
+    expect(page).not.toContain(">450%<");
+    expect(page).toContain(">석유화학본부<");
+    expect(page).toContain(">첨단소재 · 생명과학<");
+  });
+});
+
+describe("N2-calc-11 LG화학 계산기 PI 체크 설명 (광고 위, 더 짧은 글)", () => {
+  it("'회사 적자여도 안정 지급' 단정이 없다", () => {
+    const src = read("src/app/calc/lg-chem-bonus/Client.tsx");
+    expect(src).toContain("적자 연도엔 지급 보장 없음 (노사 합의로 결정).");
+    expect(src).not.toContain("회사 적자여도 안정 지급");
+  });
+});

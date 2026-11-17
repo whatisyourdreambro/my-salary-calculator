@@ -11,8 +11,8 @@
 
 // LG에너지솔루션 성과급 시나리오 (배터리 사이클 기반)
 export const SCENARIOS = [
-  { id: "deficit", label: "적자기 (50%)", percent: 50, hint: "2024년 실 지급" },
-  { id: "current", label: "최근 (75%)", percent: 75, hint: "2025년 실 지급" },
+  { id: "deficit", label: "적자기 (50%)", percent: 50, hint: "2024년 실적분" },
+  { id: "current", label: "최근 (75%)", percent: 75, hint: "2025년 실적분" },
   { id: "recovery", label: "회복기 (200%)", percent: 200, hint: "ESS 전환 가정" },
   { id: "normal", label: "평년 (400%)", percent: 400, hint: "안정 흑자" },
   { id: "boom", label: "호황 (900%)", percent: 900, hint: "2022년 폭증기" },

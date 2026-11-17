@@ -104,10 +104,11 @@ describe("rss.xml — /insights 리포트 합류", () => {
 
   // 2026-11-15 app-data-pages-b02-F01: 성과급 리포트 표는 9/20·9/26·9/27(SK하이닉스 행)·10/4(본문)·10/8(출처 13칸)에 바뀌었다.
   // 화면 '최종 갱신' 칩·Article/Dataset 날짜는 광고 위라 측정 게시 때까지 updatedDate(9/3) 그대로, 사이트맵·RSS 만 실제 수정일.
-  it("성과급 리포트: 사이트맵 lastmod·RSS = 2026-10-08, 화면·JSON-LD 날짜는 updatedDate 2026-09-03 그대로", () => {
+  // 2026-11-18 R4 BONUS1(RL-16 핸드오프): 측정 게시(R4)에서 화면 칩·JSON-LD 날짜를 실제 수정일로 올리고 sitemapDate 를 지웠다.
+  it("성과급 리포트: 화면·JSON-LD·사이트맵 lastmod·RSS 모두 updatedDate 2026-11-18 (sitemapDate 없음)", () => {
     const report = reportsRegistry.find((r) => r.slug === "bonus-payout-history-2026")!;
-    expect(report.updatedDate).toBe("2026-09-03");
-    expect(report.sitemapDate).toBe("2026-10-08");
+    expect(report.updatedDate).toBe("2026-11-18");
+    expect(report.sitemapDate).toBeUndefined();
     // sitemap() 은 지연 require(@/...)를 써서 앱과 같은 tsx 경로 해석으로 실행한다(structuredDataTrust.test.ts 와 같은 방식, 네트워크 금지)
     const fixture = `globalThis.fetch=()=>{throw new Error('Network forbidden')};
       const {default:sitemap}=require('./src/app/sitemap.ts');
@@ -122,7 +123,7 @@ describe("rss.xml — /insights 리포트 합류", () => {
       expect(hit, slug).toHaveLength(1);
       return kstDay(hit[0].lastModified);
     };
-    expect(lastmod("bonus-payout-history-2026")).toBe("2026-10-08");
+    expect(lastmod("bonus-payout-history-2026")).toBe("2026-11-18");
     // 나머지 리포트는 sitemapDate 가 없고 사이트맵 날짜 = updatedDate
     for (const r of reportsRegistry.filter((x) => !x.sitemapDate)) expect(lastmod(r.slug), r.slug).toBe(r.updatedDate);
   }, 90_000);

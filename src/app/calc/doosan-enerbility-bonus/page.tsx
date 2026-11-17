@@ -19,7 +19,6 @@ import {
   softwareApplicationLd,
   autoBreadcrumbLd,
   faqLd,
-  howToLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -84,26 +83,6 @@ const FAQ_ITEMS = [
   },
 ];
 
-const HOW_TO_STEPS = [
-  {
-    name: "시나리오 선택",
-    text: "2025 지급 실적(연봉의 약 27%) / 상한 530% / 하한 100% / 직접 입력 중 선택.",
-  },
-  {
-    name: "본인 연봉·월 기본급 입력",
-    text: "연 기본 연봉(만원)과 월 기본급(만원)을 입력. FY2025 평균 연봉은 1억원.",
-  },
-  {
-    name: "평가 차등 조정",
-    text: "개인·조직 평가 차등 배율을 70~130% 범위에서 조정.",
-  },
-  { name: "결과 확인", text: "시나리오별 세전 성과급과 기본급 환산율(100~530% 범위)이 즉시 표시." },
-  {
-    name: "세후 실수령 확인",
-    text: "누진세율 + 4대보험 추가 부과로 세후 실수령액 자동 계산.",
-  },
-];
-
 export const metadata: Metadata = {
   // canonical/OG/twitter/robots/hreflang은 buildPageMetadata(src/lib/seo.ts) 정본으로 생성 —
   // 수기 canonical 드리프트 방지. 기존 출력값은 유지되고 헬퍼 자동 필드만 추가된다.
@@ -141,12 +120,6 @@ export default function DoosanEnerbilityBonusPage() {
             dateModified: staticRouteLastModified(PAGE_PATH),
           }),
           faqLd(FAQ_ITEMS),
-          howToLd({
-            name: "두산에너빌리티 성과급 계산하는 방법",
-            description:
-              "지급 시나리오·본인 연봉·평가 차등으로 경영성과급 세전·세후 실수령액을 산출하는 5단계 가이드",
-            steps: HOW_TO_STEPS,
-          }),
         ]}
       />
 

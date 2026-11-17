@@ -23,7 +23,6 @@ import {
   softwareApplicationLd,
   autoBreadcrumbLd,
   faqLd,
-  howToLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -93,14 +92,6 @@ const FAQ_ITEMS = [
   },
 ];
 
-const HOW_TO_STEPS = [
-  { name: "시나리오 선택", text: "2026 타결 / 2025 타결 / 직접 입력 중 선택." },
-  { name: "본인 월 기본급 입력", text: "월 통상임금 입력. 보통 300~700만원 범위." },
-  { name: "현대모비스 주가 입력", text: "우리사주 평가용 현재 주가 입력. 지급 시점 시가로 수정 가능." },
-  { name: "결과 확인", text: "% × 기본급 + 정액 격려금 + 주식 가치 + 상품권 합산 즉시 표시." },
-  { name: "세후 실수령 확인", text: "누진세율 + 4대보험 추가 부과로 세후 실수령액 자동 계산." },
-];
-
 export const metadata: Metadata = {
   // canonical/OG/twitter/robots/hreflang은 buildPageMetadata(src/lib/seo.ts) 정본으로 생성 —
   // 수기 canonical 드리프트 방지. 기존 출력값은 유지되고 헬퍼 자동 필드만 추가된다.
@@ -138,11 +129,6 @@ export default function HyundaiMobisBonusPage() {
             dateModified: staticRouteLastModified(PAGE_PATH),
           }),
           faqLd(FAQ_ITEMS),
-          howToLd({
-            name: "현대모비스 성과급 계산하는 방법",
-            description: "임단협 시나리오·본인 기본급으로 성과금+격려금+우리사주 합산 + 세후 실수령을 산출하는 5단계 가이드",
-            steps: HOW_TO_STEPS,
-          }),
         ]}
       />
 

@@ -122,7 +122,7 @@ export const BONUS_CALCS: BonusCalcEntry[] = [
     companyId: "hyundai",
     sector: "자동차·중공업·철강",
     hook: "2026 임협 타결 400% + 1,270만 + 주식 15주 (8/31 가결)",
-    seasonLabel: "12월 임단협 시즌",
+    seasonLabel: "하반기 임단협 시즌",
   },
   {
     slug: "kia-bonus",
@@ -130,7 +130,7 @@ export const BONUS_CALCS: BonusCalcEntry[] = [
     companyId: "kia",
     sector: "자동차·중공업·철강",
     hook: "2026 임단협 타결 400% + 1,270만 + 자사주 47주 (6년 연속 무분규)",
-    seasonLabel: "12월 임단협 시즌",
+    seasonLabel: "하반기 임단협 시즌",
   },
   {
     slug: "hyundai-mobis-bonus",
@@ -138,7 +138,7 @@ export const BONUS_CALCS: BonusCalcEntry[] = [
     companyId: "hyundai-mobis",
     sector: "자동차·중공업·철강",
     hook: "임단협 450% + 1,420만 + 우리사주 17주 (2025 타결)",
-    seasonLabel: "12월 임단협 시즌",
+    seasonLabel: "하반기 임단협 시즌",
   },
   {
     slug: "hyundai-rotem-bonus",
@@ -146,7 +146,7 @@ export const BONUS_CALCS: BonusCalcEntry[] = [
     companyId: "hyundai-rotem",
     sector: "자동차·중공업·철강",
     hook: "임단협 타결안 기본급 450% + 1,620만원",
-    seasonLabel: "12월 임단협 시즌",
+    seasonLabel: "하반기 임단협 시즌",
   },
   {
     slug: "hd-hyundai-bonus",
@@ -266,7 +266,9 @@ export const BONUS_CALENDAR_2026: Array<{
     month: "12월",
     events: [
       { label: "삼성전자 하반기 TAI", href: "/calc/samsung-bonus" },
-      { label: "현대차·기아 등 임단협 타결 성과급", href: "/calc/hyundai-bonus" },
+      // 2026-11-18 R4(CB-07): 현대차·기아는 2026년 8월 말 타결(12월 아님). 10월 안의 'HD현대중공업 연말 성과급'은 2025년분이
+      // 2026년 2월로 미뤄 지급돼(아시아경제 2026-01-23) 쓰지 않고, 12월 22일 하반기 TAI 를 발표한 삼성디스플레이로 바꿨다(더팩트 2025-12-22).
+      { label: "삼성디스플레이 하반기 TAI", href: "/calc/samsung-display-bonus" },
     ],
   },
 ];
@@ -318,7 +320,7 @@ export const BONUS_NEWS_2026: Array<{
     href: "/calc/sk-hynix-bonus",
   },
   {
-    date: "2026-07-28",
+    date: "2026-07-30", // 2026-11-18 N2-calc-10: 07-28 은 2025년 상반기 날짜 — 2026년은 7월 30일(파이낸셜뉴스 2026-07-26). 순서 그대로
     text: "SK하이닉스 2026 상반기 PI 최대치 150% 확정 지급",
     href: "/calc/sk-hynix-bonus",
   },

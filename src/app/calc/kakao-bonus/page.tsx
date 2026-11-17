@@ -12,7 +12,6 @@ import {
   softwareApplicationLd,
   autoBreadcrumbLd,
   faqLd,
-  howToLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -73,16 +72,8 @@ const FAQ_ITEMS = [
   {
     question: "이 계산기 결과를 어디까지 신뢰할 수 있나요?",
     answer:
-      "2026 카카오 자사주 처분 공시(데이터투자·DealSite경제TV·인베스팅닷컴), 2026-05 임금협상 보도(뉴스웨이), 카카오 연봉체계 자료 기반 추정. 실제 RSU·PI는 본인 직급·평가에 따라 편차 큼. 정확한 본인 케이스는 사내 시스템 확인.",
+      "2026 카카오 자사주 처분 공시(데이터투자·DealSite경제TV·인베스팅닷컴)와 2026-05 임금협상 보도(뉴스웨이) 기반 추정이며, 정기 PI 10~40%는 계산기 가정값입니다. 실제 RSU·PI는 본인 직급·평가에 따라 편차 큼. 정확한 본인 케이스는 사내 시스템 확인.",
   },
-];
-
-const HOW_TO_STEPS = [
-  { name: "본인 연봉 입력", text: "연 기본 연봉을 만원 단위로 입력. 카카오 평균 약 8,500~9,500만원." },
-  { name: "PI % 선택", text: "10/20/30/40% 중 본인 평가 시나리오 선택." },
-  { name: "RSU 부여 주식 수 입력", text: "본인 RSU 부여 받을 주식 수 입력. 일반 직원 약 135주 (1인당 670만원 기준)." },
-  { name: "카카오 주가 입력", text: "현재 카카오 주가 (디폴트 5만원). 가득 시점 주가 시나리오." },
-  { name: "결과 확인", text: "PI + RSU + 격려금 합산 세전·세후 실수령액 자동 계산." },
 ];
 
 export const metadata: Metadata = {
@@ -122,11 +113,6 @@ export default function KakaoBonusPage() {
             dateModified: staticRouteLastModified(PAGE_PATH),
           }),
           faqLd(FAQ_ITEMS),
-          howToLd({
-            name: "카카오 성과급·RSU 계산하는 방법",
-            description: "PI + RSU + 격려금 합산 + 가득 시점 주가 기반 세전·세후 실수령액을 산출하는 5단계 가이드",
-            steps: HOW_TO_STEPS,
-          }),
         ]}
       />
 
@@ -255,7 +241,7 @@ export default function KakaoBonusPage() {
               <Info className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
               <span>
                 <strong>데이터 출처</strong>: 2026 카카오 자사주 처분 공시 (데이터투자·DealSite경제TV·인베스팅닷컴),
-                2026-05 임협 보도(뉴스웨이), 카카오 연봉체계 자료. {CURRENT_RATES_YEAR} 세법 반영.
+                2026-05 임협 보도(뉴스웨이). {CURRENT_RATES_YEAR} 세법 반영.
               </span>
             </p>
           </footer>

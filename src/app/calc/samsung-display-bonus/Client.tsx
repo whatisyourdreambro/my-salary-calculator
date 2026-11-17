@@ -19,8 +19,9 @@ const DEFAULT_SALARY_MANWON = 8000;
 const BASIC_RATIO = 20; // 기본급 = 연봉 / 20 (삼성 표준)
 
 // TAI 프리셋 근거:
-// 하반기 50% — 2025년 하반기 대형·중소형 모두 월 기본급의 50%, 2025-12-24 지급 (뉴시스 2025-12-22)
-// 상반기 50/75% — 확정치 보도 미확보. 이청 대표 발언 기준 '중소형 75%·대형 50% 이상' 전망 (SBS Biz 2025-07-01)
+// 하반기 50% — 2025년 하반기 대형·중소형 모두 월 기본급의 50% (더팩트 2025-12-22)
+// 상반기 기본값 50% 는 그대로(바꾸면 광고 위 기본 결과가 바뀌어 별도 결정). 상반기 입력 칸 안내는 2026 상반기 확정치 —
+// 대형 75%·중소형 100% (뉴스핌·헤럴드경제 2026-07-06; 2026-11-18 N2-calc-12 calc-04-F08 — 기사의 '8일 지급'은 삼성전자 문단)
 const TAI_PRESETS = [0, 25, 50, 75, 100];
 
 export default function SamsungDisplayBonusClient() {
@@ -96,11 +97,12 @@ export default function SamsungDisplayBonusClient() {
           <div className="mt-3 p-4 rounded-xl bg-canvas/30 flex items-center gap-2">
             <span className="text-sm font-bold w-32">OPI (연봉 대비)</span>
             <NumberInput
+              aria-label="OPI 직접 입력 (연봉 대비 %)"
               type="number"
               value={customOpiPercent}
               onChange={(e) => setCustomOpiPercent(Number(e.target.value) || 0)}
               step="1" min="0" max="50"
-              className="flex-1 p-2 rounded border border-canvas-deep tabular-nums text-lg font-bold"
+              className="min-w-0 flex-1 p-2 rounded border border-canvas-deep tabular-nums text-lg font-bold"
             />
             <span className="text-sm font-bold">%</span>
           </div>
@@ -150,7 +152,7 @@ export default function SamsungDisplayBonusClient() {
             label="상반기 TAI (7월 지급)"
             value={taiH1Percent}
             onChange={setTaiH1Percent}
-            note="2025 상반기 확정치 보도 미확보 — 중소형 75%·대형 50% 이상 전망 (SBS Biz 2025-07-01)"
+            note="2026 상반기: 대형 75%·중소형 100% 확정 (뉴스핌·헤럴드경제 2026-07-06)"
           />
           <TaiInput
             label="하반기 TAI (12월 지급)"
@@ -179,7 +181,7 @@ export default function SamsungDisplayBonusClient() {
               <label className="block text-sm font-bold mb-2">
                 추가 세액공제: <span className="text-primary">{creditRate}%</span>
               </label>
-              <input type="range" min={0} max={50} step={5} value={creditRate}
+              <input aria-label="추가 세액공제 가정 (%)" type="range" min={0} max={50} step={5} value={creditRate}
                 onChange={(e) => setCreditRate(Number(e.target.value))}
                 className="w-full accent-primary" />
             </div>
@@ -254,7 +256,7 @@ function TaiInput({
             value={value}
             onChange={(e) => onChange(Number(e.target.value) || 0)}
             step="5" min="0" max="100"
-            className="flex-1 p-2 rounded border border-canvas-deep tabular-nums text-lg font-bold focus:outline-none focus:border-primary"
+            className="min-w-0 flex-1 p-2 rounded border border-canvas-deep tabular-nums text-lg font-bold focus:outline-none focus:border-primary"
           />
           <span className="text-sm font-bold">%</span>
         </div>

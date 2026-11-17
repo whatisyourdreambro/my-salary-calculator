@@ -11,6 +11,9 @@ import { AGREEMENT_2026 } from "./psData";
 import NumberInput from "@/components/NumberInput";
 
 const CHANGE_PRESETS = [-50, -30, -10, 0, 20, 50, 100];
+// 휴대폰(sm 미만)에서는 7개 버튼(약 242px)이 슬라이더 최소 폭과 함께 카드 밖으로 넘쳐 +50·+100 이 잘렸다 — 셋은 sm 이상에서만
+// 보인다(2026-11-18 N2-calc-10 calc-04-F02). 1년 후 기본값 +20 과 0·-50·+50 은 휴대폰에서도 보인다. 줄 수·높이 그대로.
+const PHONE_HIDDEN_PRESETS: ReadonlySet<number> = new Set([-30, -10, 100]);
 
 type Tranche = {
   label: string;
@@ -117,10 +120,10 @@ export default function StockScenarioSimulator() {
                 onChange={(e) =>
                   setChg((prev) => ({ ...prev, [t.key]: Number(e.target.value) }))
                 }
-                className="flex-1 accent-primary"
+                className="min-w-0 flex-1 accent-primary"
                 aria-label={`${t.label} 주가 변동률`}
               />
-              <div className="flex gap-1">
+              <div className="flex shrink-0 gap-1">
                 {CHANGE_PRESETS.map((p) => (
                   <button
                     key={p}
@@ -130,7 +133,7 @@ export default function StockScenarioSimulator() {
                       chg[t.key] === p
                         ? "border-primary bg-primary/10 text-primary"
                         : "border-canvas-deep hover:border-primary/40"
-                    }`}
+                    }${PHONE_HIDDEN_PRESETS.has(p) ? " hidden sm:inline-block" : ""}`}
                   >
                     {p > 0 ? `+${p}` : p}
                   </button>

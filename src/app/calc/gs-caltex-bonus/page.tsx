@@ -16,7 +16,6 @@ import {
   softwareApplicationLd,
   autoBreadcrumbLd,
   faqLd,
-  howToLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -81,14 +80,6 @@ const FAQ_ITEMS = [
   },
 ];
 
-const HOW_TO_STEPS = [
-  { name: "지급 연도 시나리오 선택", text: "최근 4개년 지급 실적(연봉의 25%/12.5%/40%/50%) 중 선택. 직접 입력도 가능." },
-  { name: "본인 기본연봉 입력", text: "연 기본연봉을 만원 단위로 입력. 평균 공시 연봉은 1억 6,575만원(2023 사업보고서)." },
-  { name: "환산 확인", text: "월 기본급 = 연봉 ÷ 20 자동 환산. 기본급 % = 연봉 % × 20 관계도 함께 표시." },
-  { name: "결과 확인", text: "기본연봉 × 지급률 + 상품권(해당 연도) 합산 세전 성과급이 즉시 표시." },
-  { name: "세후 실수령 확인", text: "누진세율 + 4대보험 추가 부과로 세후 실수령액 자동 계산." },
-];
-
 export const metadata: Metadata = {
   // canonical/OG/twitter/robots/hreflang은 buildPageMetadata(src/lib/seo.ts) 정본으로 생성 —
   // 수기 canonical 드리프트 방지. 기존 출력값은 유지되고 헬퍼 자동 필드만 추가된다.
@@ -126,11 +117,6 @@ export default function GsCaltexBonusPage() {
             dateModified: staticRouteLastModified(PAGE_PATH),
           }),
           faqLd(FAQ_ITEMS),
-          howToLd({
-            name: "GS칼텍스 성과급 계산하는 방법",
-            description: "최근 4개년 지급 실적 시나리오·본인 기본연봉으로 경영성과급 세전·세후 실수령액을 산출하는 5단계 가이드",
-            steps: HOW_TO_STEPS,
-          }),
         ]}
       />
 

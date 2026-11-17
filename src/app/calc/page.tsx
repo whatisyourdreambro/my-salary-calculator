@@ -68,7 +68,7 @@ const FEATURED_CALCS: Array<{ href: string; title: string; description: string; 
    href: "/calc/hyundai-rotem-bonus",
    title: "현대로템 성과급 계산기",
    description: "2025 임단협 타결안 기본급 450% + 1,620만원 — 세전·세후 실수령 즉시 계산",
-   season: "12월 임단협 시즌",
+   season: "하반기 임단협 시즌",
  },
  // 2026-08-31 — 8/30 성장 배포 신설 3종 인덱스 등재 (배포 점검 후속: 미등재로 인덱스·검색 발견 불가하던 결함 수리)
  {

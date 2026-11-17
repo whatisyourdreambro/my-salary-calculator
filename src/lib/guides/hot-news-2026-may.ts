@@ -20,8 +20,9 @@ import { basePct, bonusNet2026, manKo } from "@/lib/guides/bonusKeeperFigures";
 // 2차 키퍼(2026-09-26 G2B) — 엔티티 형식(GUIDES-10). 첫 표의 평균 급여는 DART 사업보고서 급여총액÷인원
 // (src/data/dart/dartDisclosed.ts, /salary-db/lgensol 연도별 표와 같은 기준), 성과급은 계산기와 같은 bonusData.
 // 2025·2026년 임금 인상률은 공식 발표·복수 보도로 확인되지 않아 숫자를 싣지 않는다(추정 금지).
-const LGES_Y25 = basePct("lgensol", 2025); // 2025년 실적분 — 2026-02-06 지급 (뉴스웨이 2026-02-04)
-const LGES_Y24 = basePct("lgensol", 2024);
+// bonusData year 는 지급 연도(2026-11-18 R4 RL-16 CB-05 정정) — 2025년 실적분은 2026년 행, 2024년 실적분은 2025년 행. 본문 숫자 불변.
+const LGES_Y25 = basePct("lgensol", 2026); // 2025년 실적분 — 2026-02-06 지급 (뉴스웨이 2026-02-04)
+const LGES_Y24 = basePct("lgensol", 2025); // 2024년 실적분 — 2025-01 지급
 const LGES_SALARY_X = 13; // lg-energy-bonus 계산기의 연봉 가정(월 기본급 × 13)
 const lgesRows = [3_000_000, 4_000_000, 5_000_000].map((monthly) => {
   const bonus = (monthly * LGES_Y25) / 100;

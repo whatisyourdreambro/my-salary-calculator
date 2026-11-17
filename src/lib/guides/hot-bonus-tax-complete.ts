@@ -315,7 +315,7 @@ const HY26_PCT = basePct("hyundai", 2026);
 const HY26_FIX = fixedManwon("hyundai", 2026);
 const KIA26_PCT = basePct("kia", 2026);
 const KIA26_FIX = fixedManwon("kia", 2026);
-const LGES_25 = basePct("lgensol", 2025);
+const LGES_25 = basePct("lgensol", 2026); // 2025년 실적분(2026-02 지급) — bonusData year 는 지급 연도(2026-11-18 R4 RL-16 CB-05)
 const LGD_25 = basePct("lg-display", 2026); // bonusData 는 지급 연도(2026) — 2025년 실적분
 const POSCO_S_MIN = basePct("posco", 2025); // 직고용(S직군) 흑자 시 최소 경영성과급 — 2026-04 보도
 const HY_CASH = 5_000_000 * (HY26_PCT / 100) + HY26_FIX * 10_000;
@@ -361,7 +361,7 @@ const lgPoscoBonus = `
 <h2>LG 계열은 회사마다 따로 정합니다</h2>
 <p>LG 계열사는 회사별 실적에 따라 성과급을 따로 정합니다. 2026년 초에 지급된 2025년 실적분을 보면 차이가 큽니다.</p>
 <ul>
-<li><strong>LG에너지솔루션</strong> — 기본급의 최대 ${LGES_25}%를 2026년 2월 6일 지급했습니다. 2024년 실적분 ${basePct("lgensol", 2024)}%보다는 늘었지만, 2022년 실적분 870~900%, 2023년 실적분 340~380%(보도)와 비교하면 크게 줄었습니다. 연도별 추이는 <a href="/guides/lgensol-wage-negotiation-2026">LG에너지솔루션 임금협상·성과급 정리</a>에 있습니다.</li>
+<li><strong>LG에너지솔루션</strong> — 기본급의 최대 ${LGES_25}%를 2026년 2월 6일 지급했습니다. 2024년 실적분 ${basePct("lgensol", 2025)}%보다는 늘었지만, 2022년 실적분 870~900%, 2023년 실적분 340~380%(보도)와 비교하면 크게 줄었습니다. 연도별 추이는 <a href="/guides/lgensol-wage-negotiation-2026">LG에너지솔루션 임금협상·성과급 정리</a>에 있습니다.</li>
 <li><strong>LG디스플레이</strong> — 4년 만에 흑자로 돌아서면서 전 사업부에 기본급의 ${LGD_25}%를 지급했습니다(2026년 2월).</li>
 <li><strong>LG전자</strong> — 성과급이 사업본부와 개인 고과에 따라 달라, 전사 공통 지급률로 보도된 값이 없습니다. 평균 급여(2025년 1억 1,700만원)와 직급별 초임은 <a href="/salary-db/lgelectronics">LG전자 연봉 정보</a>에서 볼 수 있습니다.</li>
 </ul>

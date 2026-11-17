@@ -18,7 +18,8 @@ import { PI_TIERS, PS_HISTORY, type PsHistoryRow } from "@/app/calc/sk-hynix-bon
 
 export { OPI1_MAX_RATE, OPI_ACTUAL_2025 } from "@/app/calc/samsung-bonus/opiData";
 export { TAI_ANNOUNCED_DATE, TAI_PAY_DATE, TAI_RATES_2026_H1 } from "@/app/calc/samsung-bonus/taiData";
-// PI_2026 은 다시 내보내지 않는다 — h1.paidDate(2026-07-28)는 2025년 상반기 보도 날짜로 보여 2026년 근거가 없다(원장 X-06).
+// PI_2026 은 다시 내보내지 않는다 — 가이드 본문은 2026 상반기 PI 를 '7월 30일 지급 예정 보도'로만 쓴다(원장 H-04). h1.paidDate 는
+// 2026-11-18 R4 N2-calc-10 에서 2026-07-30 으로 고쳤다(원장 X-06 해결 — 옛 07-28 은 2025년 상반기 날짜).
 export { AGREEMENT_2026, BASIC_RATIO, PI_TIERS, PS_HISTORY } from "@/app/calc/sk-hynix-bonus/psData";
 
 const must = <T>(value: T | undefined, what: string): T => {

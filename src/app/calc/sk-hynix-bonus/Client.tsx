@@ -46,7 +46,7 @@ export default function SkHynixBonusClient() {
     const opiWon = opiTrillion * 1_000_000_000_000; // 조 → 원
 
     // PS: 영업이익 × 10% ÷ 직원수 × (본인연봉/평균) — 연봉 비례 보정 모델
-    const psPoolWon = opiWon * AGREEMENT_2026.poolRate;
+    const psPoolWon = Math.max(0, opiWon) * AGREEMENT_2026.poolRate; // 영업손실이면 PS 재원 0 (음수 PS 방지, N2-calc-10 calc-04-F12)
     const psAvgWon = psPoolWon / EMPLOYEES;
     const psPersonalWon = psAvgWon * (salaryWon / REFERENCE_SALARY);
 
@@ -171,6 +171,7 @@ export default function SkHynixBonusClient() {
         <label className="block">
           <span className="text-xs font-bold text-faint">또는 직접 입력 (조원)</span>
           <NumberInput
+            allowNegative={false}
             type="number"
             value={opiTrillion}
             onChange={(e) => setOpiTrillion(Number(e.target.value) || 0)}
@@ -237,7 +238,7 @@ export default function SkHynixBonusClient() {
         <p className="text-sm text-faint mb-4">
           반기별 영업이익률 연동, 기본급의 0~150% × 2회.{" "}
           <strong className="text-primary">
-            2026 상반기는 150% 확정(7/28 지급)
+            2026 상반기는 150% 확정(7/30 지급)
           </strong>
           되었습니다. 하반기는 시나리오를 선택하세요.
         </p>
@@ -361,6 +362,7 @@ export default function SkHynixBonusClient() {
                 </span>
               </label>
               <input
+                aria-label="추가 세액공제 가정 (%)"
                 type="range"
                 min={0}
                 max={50}

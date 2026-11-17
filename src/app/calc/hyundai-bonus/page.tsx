@@ -14,7 +14,6 @@ import {
   softwareApplicationLd,
   autoBreadcrumbLd,
   faqLd,
-  howToLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 // SoftwareApplication dateModified = 사이트맵 lastmod (같은 함수, G3 2026-11-01) — 서버 컴포넌트 전용 import
@@ -84,14 +83,6 @@ const FAQ_ITEMS = [
   },
 ];
 
-const HOW_TO_STEPS = [
-  { name: "시나리오 선택", text: "2026 임협 타결안 / 2025 합의 / 직접 입력 중 선택합니다." },
-  { name: "본인 기준금액(월) 입력", text: "회사 지급 안내에서 정률 성과금 산정에 사용하는 월 기준금액을 확인해 입력합니다." },
-  { name: "무상주 주가 가정 입력", text: "비교에 사용할 주가를 입력합니다. 기본값 23만원은 예시이며 실시간 시세가 아닙니다." },
-  { name: "현금·비현금 항목 확인", text: "월 기준금액 × 지급률 + 정액으로 계산한 현금 항목과, 주식·포인트 평가액을 나누어 확인합니다." },
-  { name: "예상 공제액 확인", text: "연봉·세액공제·보험료 가정을 확인하고, 현금과 비현금 항목을 합한 비교용 결과로 이용합니다." },
-];
-
 export const metadata: Metadata = {
   // canonical/OG/twitter/robots/hreflang은 buildPageMetadata(src/lib/seo.ts) 정본으로 생성 —
   // 수기 canonical 드리프트 방지. 기존 출력값은 유지되고 헬퍼 자동 필드만 추가된다.
@@ -129,11 +120,6 @@ export default function HyundaiBonusPage() {
             dateModified: staticRouteLastModified(PAGE_PATH),
           }),
           faqLd(FAQ_ITEMS),
-          howToLd({
-            name: "현대차 성과급 계산하는 방법",
-            description: "임단협 보도 시나리오·월 기준금액·주가 가정으로 성과금과 비현금 항목의 합산 가치 및 예상 공제액을 비교하는 5단계 가이드",
-            steps: HOW_TO_STEPS,
-          }),
         ]}
       />
 

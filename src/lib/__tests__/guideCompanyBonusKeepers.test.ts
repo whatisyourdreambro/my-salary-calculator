@@ -156,6 +156,7 @@ describe("SK하이닉스 PS 키퍼", () => {
 
 describe("LG에너지솔루션 키퍼 (엔티티 형식)", () => {
   const slug = "lgensol-wage-negotiation-2026";
+  // bonusData year 는 지급 연도(2026-11-18 R4 RL-16 CB-05) — 2025년 실적분 75%는 2026년 행, 2024년 실적분 50%는 2025년 행
 
   it("첫 표는 DART 급여총액÷인원 이력과 같다", () => {
     const c = content(slug);
@@ -176,9 +177,9 @@ describe("LG에너지솔루션 키퍼 (엔티티 형식)", () => {
   it("성과급·평균 급여는 계산기 데이터·회사 페이지 헤드라인과 같다", () => {
     const t = text(slug);
     // 뉴스웨이 2026-02-04 "최대 75%" — 정률로 단정하지 않는다
-    expect(t).toContain(`기본급의 최대 ${basePct("lgensol", 2025)}%`);
-    expect(t).not.toMatch(new RegExp(`기본급(의)? ${basePct("lgensol", 2025)}%`));
-    expect(t).toContain(`${basePct("lgensol", 2024)}%`);
+    expect(t).toContain(`기본급의 최대 ${basePct("lgensol", 2026)}%`);
+    expect(t).not.toMatch(new RegExp(`기본급(의)? ${basePct("lgensol", 2026)}%`));
+    expect(t).toContain(`${basePct("lgensol", 2025)}%`);
     const h = headline("lgensol");
     expect(h.fiscalYear).toBe("2025");
     expect(t).toContain(`약 ${h.text}`);
@@ -204,8 +205,8 @@ describe("LG·현대차·기아·포스코 키퍼", () => {
     expect(c).toContain(`${basePct("hyundai", 2025)}% + ${pct(fixedManwon("hyundai", 2025))}만원 + 30주`);
     expect(c).toContain(`${basePct("kia", 2025)}% + ${pct(fixedManwon("kia", 2025))}만원 + 53주`);
     expect(c).toContain(`2025년 실적분 ${basePct("lg-display", 2026)}%`);
-    expect(c).toContain(`2025년 실적분 최대 ${basePct("lgensol", 2025)}%`);
-    expect(text(slug)).not.toMatch(new RegExp(`(LG엔솔|LG에너지솔루션|기본급의) ${basePct("lgensol", 2025)}%`));
+    expect(c).toContain(`2025년 실적분 최대 ${basePct("lgensol", 2026)}%`);
+    expect(text(slug)).not.toMatch(new RegExp(`(LG엔솔|LG에너지솔루션|기본급의) ${basePct("lgensol", 2026)}%`));
     for (const id of ["hyundai", "kia", "lgensol", "lg-display", "lgelectronics", "posco"]) {
       const h = headline(id);
       expect(h.fiscalYear, id).toBe("2025");

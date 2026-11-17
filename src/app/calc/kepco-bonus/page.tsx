@@ -15,7 +15,6 @@ import {
   softwareApplicationLd,
   autoBreadcrumbLd,
   faqLd,
-  howToLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -90,29 +89,6 @@ const FAQ_ITEMS = [
   },
 ];
 
-const HOW_TO_STEPS = [
-  {
-    name: "평가연도(시나리오) 선택",
-    text: "2025년도 A등급(2026년 지급) / 2024년도 A / 2023년도 B / 2022년도 D 중 선택. 등급 직접 선택(커스텀)도 가능.",
-  },
-  {
-    name: "본인 월 기본급 입력",
-    text: "급여명세서의 월 기본급을 만원 단위로 입력. 경평 성과급 = 월 기본급 × 등급 지급률.",
-  },
-  {
-    name: "연 총보수 입력",
-    text: "세금 계산용. 기본값은 알리오 2025년 정규직 평균보수 9,638만원.",
-  },
-  {
-    name: "결과 확인",
-    text: "월 기본급 × 등급 지급률(A등급 200%)의 세전 성과급이 즉시 표시.",
-  },
-  {
-    name: "세후 실수령 확인",
-    text: "누진세율 + 4대보험 추가 부과 반영한 세후 실수령액 자동 계산.",
-  },
-];
-
 export const metadata: Metadata = {
   // canonical/OG/twitter/robots/hreflang은 buildPageMetadata(src/lib/seo.ts) 정본으로 생성 —
   // 수기 canonical 드리프트 방지. 기존 출력값은 유지되고 헬퍼 자동 필드만 추가된다.
@@ -150,12 +126,6 @@ export default function KepcoBonusPage() {
             dateModified: staticRouteLastModified(PAGE_PATH),
           }),
           faqLd(FAQ_ITEMS),
-          howToLd({
-            name: "한국전력 경영평가 성과급 계산하는 방법",
-            description:
-              "경영평가 등급 시나리오·본인 월 기본급으로 경평 성과급 세전·세후 실수령을 산출하는 5단계 가이드",
-            steps: HOW_TO_STEPS,
-          }),
         ]}
       />
 

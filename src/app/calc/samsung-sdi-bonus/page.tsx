@@ -2,7 +2,12 @@
 //
 // 삼성SDI 성과급 계산기 — 삼성 OPI + TAI 구조, 배터리 사이클 영향.
 // 2024: 배터리 32% / 전자재료 18% / 본사 28%
-// 2025-26: 전기차 캐즘 → 배터리 OPI 0%, 전자재료 3~5%
+// 2025년 초(2024 실적분): 배터리·본사 0%, 전자재료만 한 자릿수(보도상 3~5%, SBS Biz 2025-01 예측 지급률 보도)
+// 2026년 1월(2025 실적분): 전 사업부 0% (뉴스핌·CEO스코어데일리 2026-01-28 보도)
+// 2026 상반기 TAI: 전 사업부 공통 75% (뉴스핌·헤럴드경제 2026-07-06 보도 — 두 기사의 '8일 지급'은 삼성전자 문단이라 SDI 지급일로 쓰지 않음)
+// OPI 재원: 2027년 초 지급분부터 EVA 20% → 영업이익 10% (이투데이 2026-09-10 보도, 참여 직원 93.4% 선택)
+// 2026-11-18 R4 재착지(RL-16, 10월 a61342085·119902bed): 위 사실을 2026-11-18 보도 원문으로 다시 확인.
+// 계산기 TAI = 월 기본급 × (상반기 75% 보도값 + 하반기 100% 가정) — 2026-11-18 N2-calc-23(운영자 승인 2026-11-17), data.ts TAI_H1·TAI_H2.
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
@@ -12,7 +17,6 @@ import {
   softwareApplicationLd,
   autoBreadcrumbLd,
   faqLd,
-  howToLd,
 } from "@/lib/structuredData";
 import JsonLd from "@/components/JsonLd";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -32,23 +36,23 @@ const PAGE_PATH = "/calc/samsung-sdi-bonus";
 const PAGE_TITLE = "삼성SDI 성과급 계산기 2026";
 const PAGE_TITLE_FULL = `${PAGE_TITLE} | ${SITE_NAME}`;
 const PAGE_DESC =
-  "삼성SDI 성과급 계산기. OPI(연봉의 0~48%) + TAI(월 기본급 100% × 2회) 합산. 배터리·전자재료·본사 사업부별 시나리오와 본인 연봉만 입력하면 세전·세후 실수령액이 즉시.";
+  "삼성SDI 성과급 계산기. OPI(연봉의 0~48%) + TAI(월 기본급 상반기 75% + 하반기 100% 가정) 합산. 배터리·전자재료·본사 사업부별 시나리오와 본인 연봉만 입력하면 세전·세후 실수령액이 즉시.";
 
 const FAQ_ITEMS = [
   {
     question: "삼성SDI 성과급은 어떻게 구성되나요?",
     answer:
-      "삼성SDI는 삼성 그룹 표준 보상체계 — OPI(연봉의 0~50%, 사업부별 영업이익 연동) + TAI(월 기본급 최대 100% × 연 2회) 구조입니다. OPI는 1월에 연 1회, TAI는 6·12월에 연 2회 지급됩니다. 사업부별로 차등 지급되며 본 계산기는 사업부 시나리오 + 본인 연봉으로 정확하게 산출합니다.",
+      "삼성SDI는 삼성 그룹 표준 보상체계 — OPI(연봉의 0~50%, 사업부별 영업이익 연동) + TAI(월 기본급 최대 100% × 연 2회) 구조입니다. OPI는 1월에 연 1회, TAI는 7·12월 전후 연 2회 지급되며, 2026년 상반기 TAI는 전 사업부 공통 월 기본급의 75%로 확정됐다고 보도됐습니다(뉴스핌·헤럴드경제 2026-07-06). 사업부별로 차등 지급되며 본 계산기는 사업부 시나리오 + 본인 연봉으로 정확하게 산출합니다.",
   },
   {
     question: "2024년 vs 2026년 삼성SDI OPI 차이는?",
     answer:
-      "2024년 초 지급 OPI: 배터리 32% / 전자재료 18% / 본사 28% — 전기차 호황 마지막 시기. 2026년(2025년 실적 기준): 전기차 캐즘으로 영업적자 전환, 배터리·본사 OPI 0%, 전자재료만 3~5%. 본 계산기 '캐즘' 시나리오가 2026년 현실. 회복기(연봉의 18%)·평년(28%)·호황기(48%) 등 시나리오 비교 가능.",
+      "2024년 초 지급 OPI: 배터리 32% / 전자재료 18% / 본사 28% — 전기차 호황 마지막 시기. 2025년 초(2024년 실적분)에는 전자재료만 한 자릿수(보도상 3~5%)였고, 2026년 1월(2025년 실적분)에는 전기차 캐즘에 따른 영업손실로 전 사업부 0%였습니다(뉴스핌·CEO스코어데일리 2026-01-28 보도). 본 계산기 캐즘(0%) 시나리오가 2026년 1월 지급 기준입니다. OPI 재원은 2027년 초 지급분부터 EVA의 20%에서 영업이익의 10%로 바뀝니다(이투데이 2026-09-10 보도, 참여 직원의 93.4%가 선택).",
   },
   {
     question: "전기차 캐즘이 왜 성과급에 큰 영향?",
     answer:
-      "삼성SDI 매출의 70% 이상이 배터리(중대형 + 소형). 전기차 캐즘(수요 둔화) 시 (1) 매출 감소, (2) ESS 전환 비용, (3) 미국 IRA 정책 불확실성으로 영업이익 급감 → OPI 풀이 사라짐. 다만 전자재료(폴더블·OLED 소재)는 안정적이라 OPI 일부 지급. 2027년 ESS·LFP 시장 회복 시 연봉의 18~28% 수준(회복기~평년 시나리오)으로 복구 전망.",
+      "삼성SDI 매출의 70% 이상이 배터리(중대형 + 소형). 전기차 캐즘(수요 둔화) 시 (1) 매출 감소, (2) ESS 전환 비용, (3) 미국 IRA 정책 불확실성으로 영업이익 급감 → OPI 풀이 사라짐. 2025년 1월에는 전자재료 사업부만 OPI 일부를 받았지만 2026년 1월에는 전 사업부가 0%였습니다. 회복 시 수준은 본 계산기의 회복기(18%)·평년(28%) 시나리오로 가늠해 볼 수 있습니다(전망치 아님).",
   },
   {
     question: "삼성전자 성과급과 비교하면?",
@@ -58,31 +62,23 @@ const FAQ_ITEMS = [
   {
     question: "기본급은 어떻게 정의되나요?",
     answer:
-      "삼성SDI는 삼성 표준 — TAI 기준 기본급은 통상 연봉의 1/20입니다. 예: 연봉 1억이면 기본급 500만/월, TAI 100% × 2회 = 1,000만원 추가. 본 계산기에서는 본인이 연봉을 입력하면 기본급·TAI 자동 산출됩니다.",
+      "삼성SDI는 삼성 표준 — TAI 기준 기본급은 통상 연봉의 1/20입니다. 예: 연봉 1억이면 기본급 500만/월, TAI는 2026년 상반기 보도값 75%와 하반기 가정 100%를 더해 875만원입니다(하반기 지급률은 12월 발표 뒤 반영). 본 계산기에서는 본인이 연봉을 입력하면 기본급·TAI 자동 산출됩니다.",
   },
   {
     question: "세금은 어떻게 떼나요?",
     answer:
-      `성과급은 근로소득 합산 누진세율(6~45%) + 지방세 + 4대보험(국민연금 ${CURRENT_RATE_LABELS.pension}, 건강 ${CURRENT_RATE_LABELS.health}, 장기요양 등). 국민연금은 보수월액 상한(2026.7~2027.6 연 7,908만원) 적용. 본 계산기는 marginal 방식으로 정확하게 산출합니다.`,
+      `성과급은 근로소득 합산 누진세율(6~45%) + 지방세 + 4대보험(국민연금 ${CURRENT_RATE_LABELS.pension}, 건강 ${CURRENT_RATE_LABELS.health}, 장기요양 등). 국민연금은 기준소득월액 상한(2026.7~2027.6 연 7,908만원) 적용. 본 계산기는 marginal 방식으로 정확하게 산출합니다.`,
   },
   {
     question: "LG에너지솔루션과 어떻게 다른가요?",
     answer:
-      "두 회사 모두 배터리 사이클에 민감하지만 (1) LG엔솔은 단순 %(50~900%) 단일 풀, (2) 삼성SDI는 OPI + TAI 분리 구조. 캐즘 시 LG엔솔도 75%로 떨어졌고 삼성SDI는 배터리 0%. 다만 SDI는 전자재료 사업부가 일부 OPI 받음. '/calc/lg-energy-bonus' 비교 가능.",
+      "두 회사 모두 배터리 사이클에 민감하지만 (1) LG엔솔은 단순 %(50~900%) 단일 풀, (2) 삼성SDI는 OPI + TAI 분리 구조. 캐즘기 LG엔솔은 2024년 실적분 50%·2025년 실적분 75%였고, 삼성SDI는 2025년 실적분 OPI가 전 사업부 0%였습니다. '/calc/lg-energy-bonus' 비교 가능.",
   },
   {
     question: "이 계산기 결과를 어디까지 신뢰할 수 있나요?",
     answer:
       "공개 보도(CEOSCOREDAILY·파이낸셜포스트·전자신문) + 삼성SDI 분기 실적 기반 추정 모델. 실제 지급은 본인 사업부·평가·근속에 따라 ±20% 차이 가능. 정확한 본인 케이스는 사내 시스템 확인.",
   },
-];
-
-const HOW_TO_STEPS = [
-  { name: "사업부 시나리오 선택", text: "캐즘 0% / 전자재료 3-5% / 회복 18% / 평년 28% / 호황 48%." },
-  { name: "본인 연봉 입력", text: "연 기본 연봉 입력. 기본급(연봉/20)·TAI 자동 산출." },
-  { name: "TAI 포함 여부", text: "TAI(월 기본급 100% × 2회) 자동 합산. 회사 적자 시 TAI도 감소." },
-  { name: "결과 확인", text: "OPI + TAI 합산 세전 즉시 표시." },
-  { name: "세후 실수령 확인", text: "누진세 + 4대보험 marginal 자동 계산." },
 ];
 
 export const metadata: Metadata = {
@@ -117,11 +113,6 @@ export default function SamsungSdiBonusPage() {
           autoBreadcrumbLd(PAGE_PATH, { leafName: "삼성SDI 성과급" }),
           softwareApplicationLd({ name: PAGE_TITLE, description: PAGE_DESC, url: `${SITE_URL}${PAGE_PATH}`, dateModified: staticRouteLastModified(PAGE_PATH) }),
           faqLd(FAQ_ITEMS),
-          howToLd({
-            name: "삼성SDI 성과급 계산하는 방법",
-            description: "사업부 시나리오·본인 연봉으로 OPI+TAI 세전·세후 실수령액을 산출하는 5단계 가이드",
-            steps: HOW_TO_STEPS,
-          }),
         ]}
       />
 
@@ -130,7 +121,7 @@ export default function SamsungSdiBonusPage() {
           <header className="mb-8">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold mb-3">
               <Battery className="w-3.5 h-3.5" />
-              2024 배터리 32% / 2026 캐즘 0% (전자재료만 3-5%)
+              2024 배터리 32% / 2026 캐즘 0% (전자재료 포함 0%)
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-3">
               삼성SDI 성과급 계산기 <span className="text-primary">2026</span>
@@ -197,7 +188,7 @@ export default function SamsungSdiBonusPage() {
                     <td className="py-2">연봉의 28%</td>
                   </tr>
                   <tr>
-                    <td className="py-2 pr-4">2026년 (2025 실적 · 캐즘)</td>
+                    <td className="py-2 pr-4">2025년 (2024 실적 · 캐즘)</td>
                     <td className="py-2 pr-4">0%</td>
                     <td className="py-2 pr-4">3~5%</td>
                     <td className="py-2">0%</td>

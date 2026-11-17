@@ -68,8 +68,9 @@ export const reportsRegistry: ReportMeta[] = [
     seoTitle: `2026 대기업 성과급 지급률 총정리 — ${bonusCompanyCount}개사 ${bonusPayoutCount}건 전수`,
     description: `삼성전자 TAI·OPI, SK하이닉스 PS, 현대차 임단협 성과급 등 국내 대기업 ${bonusCompanyCount}개사의 성과급 지급률 기록 ${bonusPayoutCount}건을 기존 보도·공시 출처에서 집계. 지급 상태는 원문 note 기준 분류이며 실제 지급을 재검증한 값이 아닙니다. 월 기본급 대비·연봉 대비·정액 세 기준을 분리해 왜곡 없이 비교. 출처 표기 시 자유 인용.`,
     publishedDate: "2026-08-23",
-    updatedDate: "2026-09-03",
-    sitemapDate: "2026-10-08", // SK hynix rows 9/20, 9/26 and 9/27, body 10/4, 13 source cells 10/8. The on-screen date sits above an ad, so it changes at a measured publish.
+    // 2026-11-18 R4 BONUS1(RL-16 핸드오프, N2-app-data-pages-01 6단계): 이 리포트 표의 행이 바뀐 실제 수정일(KST)로 올리고 sitemapDate 는 지웠다 —
+    // 삼성SDI 전자재료 행 연도, LG엔솔 두 행 연도·note, SK하이닉스 PI note 지급일, LG화학 행 출처. 화면 '최종 갱신' 칩은 광고 위라 R4 측정 게시에서 실측.
+    updatedDate: "2026-11-18",
     keywords: [
       "성과급 지급률",
       "대기업 성과급",
