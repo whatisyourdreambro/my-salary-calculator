@@ -200,7 +200,7 @@ export default function SamsungBiologicsBonusPage() {
                   <tr className="border-b border-canvas-deep">
                     <td className="py-2 pr-4">OPI 2025년 실적분</td>
                     <td className="py-2 pr-4">연봉의 50% (상한)</td>
-                    <td className="py-2 pr-4">2026년 1월 (예상)</td>
+                    <td className="py-2 pr-4">2026년 1월</td>
                     <td className="py-2">아시아경제 2025-12-27, 산경투데이·컨슈머타임스 2025-12-26</td>
                   </tr>
                   <tr className="border-b border-canvas-deep">
