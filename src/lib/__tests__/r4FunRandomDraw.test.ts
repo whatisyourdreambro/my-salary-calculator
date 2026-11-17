@@ -39,6 +39,17 @@ describe("레이스 판은 열 폭에 맞춰 줄어든다 (components-b04-F02 1�
     expect(box![2].split(/\s+/)).toEqual(expect.arrayContaining(["text-sm", "sm:text-lg", "mb-2", "sm:mb-4"]));
   });
 
+  it("순위 상자는 판 높이 안에서 잘린다 — 낮아진 판 아래 광고 위로 넘치지 않게 (R4 FUN 검토)", () => {
+    // 판이 열 폭에 맞춰 낮아지면(320px 약 576, 600~767px 약 501~642) 당첨자 7명 이상에서 상자 아래 끝(top-24 + 머리 + 목록 최대 500)이
+    // 판 밖으로 나가 종료 화면 InArticleAd(판 아래 약 48px)·레이스 중 CalcResultAd 를 덮었다. 상자는 판 아래 끝 1rem 위까지.
+    const box = /<div className="(absolute top-24 [^"]+)">\s*<h3/.exec(src);
+    expect(box).not.toBeNull();
+    const cls = box![1].split(/\s+/);
+    expect(cls).toEqual(expect.arrayContaining(["max-h-[calc(100%_-_7rem)]", "overflow-hidden"]));
+    // 상자를 감싼 게임 화면은 relative 이고 판(canvas) 말고 흐름 안 자식이 없어 100% = 판 높이
+    expect(src).toContain('<div className={`relative ${gameState === "setup" ? "hidden" : "block"}`}>');
+  });
+
   it("당첨자 수 칸을 비우거나(0) 소수·음수면 특별상 없이는 레이스를 시작하지 않는다", () => {
     expect(src).toContain('if (!Number.isInteger(winnerCount) || winnerCount < 0 || (winnerCount === 0 && specialPrizes.length === 0)) return alert("당첨자 수를 1명 이상 입력해주세요!");');
     const guard = src.indexOf("Number.isInteger(winnerCount)");

@@ -591,8 +591,8 @@ export default function RandomDrawGame() {
  className="w-full h-[600px] md:h-[800px] bg-[#0a0a0a] rounded-3xl border-4 border-canvas shadow-2xl cursor-crosshair"
  />
 
- {/* Live Leaderboard */}
- <div className="absolute top-24 right-2 sm:right-6 w-40 sm:w-80 bg-electric/80 backdrop-blur-xl border border-white/10 rounded-2xl p-3 sm:p-6 pointer-events-none shadow-2xl">
+ {/* Live Leaderboard — 판 높이 안에서만(max-h). 판이 휴대폰·태블릿 폭에서 낮아져 당첨자가 많으면 상자가 판 아래 광고 위로 넘쳤다(pointer-events-none 이라 탭이 광고로 감) */}
+ <div className="absolute top-24 right-2 sm:right-6 w-40 sm:w-80 max-h-[calc(100%_-_7rem)] overflow-hidden bg-electric/80 backdrop-blur-xl border border-white/10 rounded-2xl p-3 sm:p-6 pointer-events-none shadow-2xl">
  <h3 className="text-navy font-black mb-2 sm:mb-4 flex items-center gap-2 text-sm sm:text-lg">
  <Trophy className="w-5 h-5 text-primary" /> LIVE RANKING
  </h3>
