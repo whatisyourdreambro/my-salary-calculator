@@ -3,7 +3,7 @@
 // 아파트 중위가격과 DSR·LTV·주담대 한도로 몇 년 뒤 살 수 있는지 계산한다. 정적(○) 라우트 — 본문 숫자는 빌드 때
 // 스냅숏(src/data/marketSnapshot.json)·엔진(src/lib/bonusHome/*)에서 만든다. 런타임 외부 요청 없음.
 // 광고 순서는 /calc/pension-hike-2027 과 같다: Client(입력 → 결과 → CalcResultAd → 상세) → 본문 → InArticleAd → FAQ → GuideMidAd → 안내 → 관련 계산기.
-// ★ 갱신 체크포인트: 매월 16일 이후 시세 스냅숏(npx tsx scripts/fetch-market-snapshot.ts) · 10월 말 3분기 실적(기본 규칙 재검토) ·
+// ★ 갱신 체크포인트: 매월 16일 이후 시세 스냅숏(npx tsx scripts/fetch-market-snapshot.ts) · 2027년 1~3월 연간 실적(시나리오 기준 재검토) ·
 //   1~2월 삼성 OPI·SK PS 발표 · 2026-12-31 지방 스트레스 금리 유예 종료 · 규제지역 변경 · 4월 사업보고서.
 
 import type { Metadata } from "next";
@@ -16,8 +16,8 @@ import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Home, Info } from "lucide-react";
 import { HOME_REGIONS } from "@/data/homePriceRegions";
 import { buildPlan, DEFAULT_PLAN_STATE, fmtEokShort, fmtManwon, fmtTril, MARKET_SNAPSHOT } from "@/lib/bonusHome/plan";
-import { companyScenarioOps, h1Tril, RULE_SCENARIO_IDS, SCENARIO_RULES } from "@/lib/bonusHome/scenarios";
-import { SAMSUNG_OP_HISTORY, SK_OP_HISTORY } from "@/lib/bonusHome/opActuals";
+import { companyScenarioOps, q1q3Tril, RULE_SCENARIO_IDS, SCENARIO_RULES } from "@/lib/bonusHome/scenarios";
+import { SAMSUNG_OP, SK_OP_HISTORY, toTril1 } from "@/lib/bonusHome/opActuals";
 import { LOAN_RULE_SOURCES, LOAN_RULES_AS_OF } from "@/lib/bonusHome/loanRules";
 import { SAMSUNG_WAGE_2026, skPs } from "@/lib/bonusHome/compEngines";
 import BonusHomePlanClient from "./Client";
@@ -57,7 +57,7 @@ const FAQ_ITEMS = [
   {
     question: "증권사 전망을 쓰지 않는 이유는?",
     answer:
-      "증권사 실적 예상은 유료로 제공되는 데이터이고, 예측을 계산기 숫자처럼 보여 주면 확정된 것처럼 오해하기 쉽습니다. 이 계산기는 DART에 공시된 상반기 확정 영업이익에 누구나 확인할 수 있는 규칙(×1.5·×2·매년 ×0.7·×1.1)을 곱한 시나리오(가정)만 씁니다. 연도별 값은 '직접' 시나리오에서 원하는 숫자로 바꿀 수 있습니다.",
+      "증권사 실적 예상은 유료로 제공되는 데이터이고, 예측을 계산기 숫자처럼 보여 주면 확정된 것처럼 오해하기 쉽습니다. 이 계산기는 DART에 공시된 2026년 1~3분기 영업이익(삼성전자는 특별경영성과급 기준인 DS부문)에 누구나 확인할 수 있는 규칙(×1·×4/3·매년 ×0.7·×1.1, ×1은 4분기 0 가정)을 곱한 시나리오(가정)만 씁니다. 연도별 값은 '직접' 시나리오에서 원하는 숫자로 바꿀 수 있습니다.",
   },
 ];
 
@@ -132,8 +132,8 @@ export default function BonusHomePlanPage() {
 
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-8 mb-4">영업이익 시나리오는 전망이 아닙니다</h2>
             <p className="text-muted-blue dark:text-canvas-300 leading-relaxed">
-              영업이익은 DART에 공시된 2026년 상반기 확정 실적(삼성전자 {fmtTril(h1Tril("samsung"))}, SK하이닉스 {fmtTril(h1Tril("sk"))})에
-              정해진 규칙을 곱한 시나리오(가정)입니다. 증권사 컨센서스·전망이 아닙니다. 계산기의 &lsquo;직접&rsquo; 시나리오에서 해마다 바꿀 수 있습니다.
+              영업이익은 DART에 공시된 2026년 1~3분기 실적(삼성전자 DS부문 {fmtTril(q1q3Tril("samsung"))}, SK하이닉스 {fmtTril(q1q3Tril("sk"))})에
+              정해진 규칙을 곱한 시나리오(가정)입니다. 증권사 컨센서스·전망이 아닙니다. &lsquo;직접&rsquo; 시나리오에서 바꿀 수 있습니다.
             </p>
             <div className="not-prose overflow-x-auto mb-4">
               <table className="w-full min-w-[560px] rounded-xl bg-white dark:bg-canvas-900">
@@ -159,7 +159,7 @@ export default function BonusHomePlanPage() {
             </div>
             <p className="text-muted-blue dark:text-canvas-300 leading-relaxed">
               과거 실적(참고, DART 연결 영업이익) — SK하이닉스 {SK_OP_HISTORY.filter((h) => h.label.endsWith("연간")).map((h) => `${h.label.slice(0, 4)}년 ${fmtTril(h.tril)}`).join(", ")},
-              2026년 상반기 {fmtTril(h1Tril("sk"))}. 삼성전자 {SAMSUNG_OP_HISTORY.map((h) => `${h.label} ${fmtTril(h.tril)}`).join(", ")}.
+              2026년 1~3분기 {fmtTril(q1q3Tril("sk"))}. 삼성전자 {SAMSUNG_OP.fy2025.label} {fmtTril(toTril1(SAMSUNG_OP.fy2025.millionWon))}, {SAMSUNG_OP.q1q3_2026.label} {fmtTril(toTril1(SAMSUNG_OP.q1q3_2026.millionWon))}(DS부문 {fmtTril(q1q3Tril("samsung"))}).
               삼성은 보수 시나리오(가정)에서 2027년 실적부터 특별경영성과급 조건(200조) 아래로 내려가 그 뒤 지급분이 0이 됩니다.
             </p>
 

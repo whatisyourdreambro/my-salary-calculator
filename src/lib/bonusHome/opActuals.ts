@@ -1,7 +1,7 @@
 // src/lib/bonusHome/opActuals.ts
 //
 // /calc/bonus-home-plan(성과급 내 집 마련 계산기)의 영업이익 '확정 실적' — 실적만 둔다(전망·컨센서스 없음).
-// 시나리오(scenarios.ts)는 여기 상반기 실적에 결정적 규칙을 곱한 가정일 뿐이다.
+// 시나리오(scenarios.ts)는 여기 2026년 1~3분기 실적(삼성전자는 DS부문)에 결정적 규칙을 곱한 가정일 뿐이다(2026-11-18 전에는 상반기 기준).
 //
 // 값은 전부 DART 정기보고서의 요약연결재무정보 '영업이익'(연결, 백만원)이다 — 2026-09-27 dart.fss.or.kr 공시뷰어에서 직접 대조:
 //   삼성전자(고유번호 00126380)
@@ -90,27 +90,29 @@ export const toTril1 = (millionWon: number): number => toTenthsTril(millionWon) 
 
 export type OpHistoryRow = { label: string; tril: number; note?: string; sourceUrl?: string };
 
-/** '과거 실적(참고)' — 삼성전자는 2025 연간과 2026 상반기(분기 포함)만 */
+/** '과거 실적(참고, 연결)' — 삼성전자 2025 연간 + 2026 상반기·3분기·1~3분기. 행 수는 2026-11-18 전(연간·1분기·2분기·상반기 4행)과 같다 —
+ *  계산기의 접힌 표(CalcResultAd 아래·InArticleAd 위)를 펼쳤을 때도 높이가 늘지 않게 1·2분기 행 대신 3분기·누적 행을 둔다. */
 export const SAMSUNG_OP_HISTORY: OpHistoryRow[] = [
   { label: SAMSUNG_OP.fy2025.label, tril: toTril1(SAMSUNG_OP.fy2025.millionWon), sourceUrl: dartViewerUrl(SAMSUNG_OP.fy2025.source.rcpNo) },
-  { label: SAMSUNG_OP.q1_2026.label, tril: toTril1(SAMSUNG_OP.q1_2026.millionWon), sourceUrl: dartViewerUrl(SAMSUNG_OP.q1_2026.source.rcpNo) },
-  { label: "2026년 2분기", tril: toTril1(SAMSUNG_Q2_2026_MILLION), note: "반기 − 1분기", sourceUrl: dartViewerUrl(SAMSUNG_OP.h1_2026.source.rcpNo) },
   { label: SAMSUNG_OP.h1_2026.label, tril: toTril1(SAMSUNG_OP.h1_2026.millionWon), sourceUrl: dartViewerUrl(SAMSUNG_OP.h1_2026.source.rcpNo) },
+  { label: "2026년 3분기", tril: toTril1(SAMSUNG_Q3_2026_MILLION), note: "누적 − 반기", sourceUrl: dartViewerUrl(SAMSUNG_OP.q1q3_2026.source.rcpNo) },
+  { label: SAMSUNG_OP.q1q3_2026.label, tril: toTril1(SAMSUNG_OP.q1q3_2026.millionWon), sourceUrl: dartViewerUrl(SAMSUNG_OP.q1q3_2026.source.rcpNo) },
 ];
 
-/** '과거 실적(참고)' — SK하이닉스 2021~2025 연간(psData, DART 사업보고서) + 2026 상반기(분기 포함) */
+/** '과거 실적(참고, 연결)' — SK하이닉스 2021~2025 연간(psData, DART 사업보고서) + 2026 상반기·3분기·1~3분기 (행 수 종전과 같음) */
 export const SK_OP_HISTORY: OpHistoryRow[] = [
   ...PS_HISTORY.map((r) => ({ label: `${r.year}년 연간`, tril: r.opTril, note: r.opTril < 0 ? "영업손실" : undefined })),
-  { label: SK_OP_2026.q1.label, tril: toTril1(SK_OP_2026.q1.millionWon), sourceUrl: dartViewerUrl(SK_OP_2026.q1.source.rcpNo) },
-  { label: "2026년 2분기", tril: toTril1(SK_Q2_2026_MILLION), note: "반기 − 1분기", sourceUrl: dartViewerUrl(SK_OP_2026.h1.source.rcpNo) },
   { label: SK_OP_2026.h1.label, tril: toTril1(SK_OP_2026.h1.millionWon), sourceUrl: dartViewerUrl(SK_OP_2026.h1.source.rcpNo) },
+  { label: "2026년 3분기", tril: toTril1(SK_Q3_2026_MILLION), note: "누적 − 반기", sourceUrl: dartViewerUrl(SK_OP_2026.q1q3.source.rcpNo) },
+  { label: SK_OP_2026.q1q3.label, tril: toTril1(SK_OP_2026.q1q3.millionWon), sourceUrl: dartViewerUrl(SK_OP_2026.q1q3.source.rcpNo) },
 ];
 
-/** 시나리오 규칙의 기준 — 2026년 상반기 확정 영업이익(0.1조 정수) */
-export const H1_2026_TENTHS = {
-  samsung: toTenthsTril(SAMSUNG_OP.h1_2026.millionWon),
-  sk: toTenthsTril(SK_OP_2026.h1.millionWon),
+/** 시나리오 규칙의 기준 — 2026년 1~3분기 누적 영업이익(0.1조 정수). 삼성전자는 DS부문(특별경영성과급 재원·200조 조건의 기준),
+ *  SK하이닉스는 연결. 2026-11-18 N2-calc-21 전에는 상반기(삼성 연결 146.7조·SK 98.2조)였다. */
+export const Q1_Q3_2026_TENTHS = {
+  samsung: toTenthsTril(SAMSUNG_DS_OP_2026.q1q3.millionWon),
+  sk: toTenthsTril(SK_OP_2026.q1q3.millionWon),
 } as const;
 
-/** 실적 기준일 표기 — 둘 다 2026-08-14 반기보고서 */
-export const OP_ACTUALS_AS_OF = "2026년 상반기(DART 반기보고서 2026-08-14)";
+/** 실적 기준일 표기 — 둘 다 2026-11-16 분기보고서 */
+export const OP_ACTUALS_AS_OF = "2026년 1~3분기(DART 분기보고서 2026-11-16)";
