@@ -498,10 +498,10 @@ export default function MemeCoinPage() {
       <AnimatePresence>
         {toast && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#161B22] border border-[#30363D] text-white px-6 py-3 rounded-full text-sm font-bold shadow-2xl flex items-center gap-2 z-50 whitespace-nowrap"
+            initial={{ opacity: 0, y: 20, x: "-50%" }}
+            animate={{ opacity: 1, y: 0, x: "-50%" }}
+            exit={{ opacity: 0, y: 20, x: "-50%" }}
+            className="fixed bottom-8 left-1/2 bg-[#161B22] border border-[#30363D] text-white px-6 py-3 rounded-full text-sm font-bold shadow-2xl flex items-center gap-2 z-50 whitespace-nowrap"
           >
             <CheckCheck className="w-4 h-4 text-green-400" />
             {toast}
