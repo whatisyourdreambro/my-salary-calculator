@@ -14,16 +14,22 @@
 //   ② 화면 날짜를 올리려면(guideContentRevisions.*.ts 표) 게시 전에 화면 폭 320~460px 를 1px 단위로, 수화 후와 첫 화면(수화 전)
 //     둘 다 가드 스윕으로 재서 광고 아래 이동이 0 이어야 한다. 한 곳이라도 내려가면 그 글도 이 표가 기본이다.
 //     글꼴 폭 계산('같은 글자 수에 더 좁은 숫자')은 실측을 대신하지 못한다.
+// ★ 칩 없는 글의 본문 정정(운영자 결정 2026-11-17 10번, DEFER 질문 '화면은 그대로 두고 검색엔진용 날짜만 고친 날로'):
+//   ③ 화면에 '수정' 칩이 없는 글(modifiedDate 없음·정정일 표에 없음)의 본문(광고 위 같은 폭 이하 정정)을 고치면, 칩을 새로 만들지
+//     않고(GuideMidAd 위 새 UI 금지) 이 표에 그 본문을 실제로 고친 날(KST, git 기록의 커밋일)로 행을 더한다 — 보강이 없어도 된다.
+//     칩이 없으니 화면·OG·Article 날짜는 발행일 그대로이고 사이트맵 lastmod·rss.xml pubDate 만 바뀌어 IndexNow 가 알린다.
+//     보강 없는 행은 테스트의 이름 붙인 목록(CHIPLESS_BODY_ROWS, 이유 20자 이상)에 있어야 하고, 아직 알리지 않은 정정에만 쓴다
+//     (오늘 날짜로 옛 정정을 덮거나 게시일·미래 날짜를 쓰지 않는다). 칩이 있는 글은 ① 그대로(NO_SUPPLEMENT_ROWS).
 // 왜: IndexNow(게시 8단계 cloudIndexNowPlan)는 사이트맵 (loc, lastmod) 차이만 알린다. 날짜가 그대로면 보강한 글이
 //   네이버·빙에 알려지지 않는다(lens-crawl-F01 의 같은 틈). rss.xml 도 이 날짜를 쓴다(피드 전문 = 본문 + 보강).
-// 행 규칙: 값은 그 보강(또는 화면 날짜를 올리지 못한 광고 위 같은 폭 정정)을 실제로 고친 날(KST, YYYY-MM-DD). 미래 날짜·게시일
+// 행 규칙: 값은 그 보강(또는 화면 날짜를 올리지 못한 광고 위 같은 폭 정정, 또는 ③ 칩 없는 글의 본문 정정)을 실제로 고친 날(KST, YYYY-MM-DD). 미래 날짜·게시일
 //   선반영 금지. 링크 한 줄만 바뀐 보강은 넣지 않는다
 //   (etf-beginner·basic-pension-65-2026·health-insurance-2026-guide·retirement-planning·public-company-salary-ranking-2026).
 //   getGuideContentDate 보다 이르거나 같으면 효과가 없다(max). 뒤 묶음(RL-08·RL-15·RL-21·RL-23 등)이 가이드의 보강을 바꾸면
 //   칩이 없는 글이든 있는 글이든 그 묶음의 원장일로 행을 더한다(위 ★ ①). 광고 아래 보강이 없는 행은 테스트의 이름 붙인 예외
-//   목록(NO_SUPPLEMENT_ROWS)에 이유와 함께 있어야 한다. 서버 전용(클라이언트 번들에 싣지 않는다).
+//   목록(칩 있는 글 NO_SUPPLEMENT_ROWS · 칩 없는 글 본문 정정 CHIPLESS_BODY_ROWS)에 이유와 함께 있어야 한다. 서버 전용(클라이언트 번들에 싣지 않는다).
 // 테스트: src/lib/__tests__/guideSitemapDates.test.ts · relandR1Ledger.test.ts(R1 10편의 두 날짜) ·
-//   guideRevisionDates.test.ts(R1 10편의 실제 화면·OG·Article 출력)
+//   guideRevisionDates.test.ts(R1 10편의 실제 화면·OG·Article 출력) · rl08GuideFacts.test.ts(RL-08 칩 없는 5편의 ③ 행)
 import { RELAND_R1_PUSH } from "@/config/relandR1Push";
 import { getGuideContentDate } from "./guideContentRevisions";
 
@@ -96,9 +102,17 @@ export const GUIDE_SITEMAP_ONLY_REVISED: Readonly<Record<string, string>> = {
   "child-support-100-2026": RL08_EDIT_DAY,
   // 에너지바우처: 칩(2026.10.03) 있는 글 — 금액·기간·대상·신청 기간 정정, 공식 원 단위 보강. 칩 숫자는 바꾸지 않는다(머리 주석 ★).
   "energy-voucher-2026": RL08_EDIT_DAY,
-  // 같은 묶음에서 광고 위 문장만 고친 칩 없는·보강 없는 5편(commercial-office-capital-gains-2026·lease-right-transfer-tax-2026·
-  // child-gift-10year-rule-2026·rental-business-prop-tax-exclusion-2026·minimum-wage-2026)은 행을 두지 않는다 — 테스트의
-  // NO_SUPPLEMENT_ROWS 규칙(칩 없는 글에 보강도 없이 사이트맵 날짜만 올리는 행 금지). 날짜를 올릴지는 통합 단계의 결정이다.
+  // ── ③ 칩 없는 글의 본문 정정(운영자 결정 2026-11-17 10번) — 보강 없이 사이트맵 날짜만 본문을 고친 날로. 화면은 그대로(칩 없음) ──
+  // 같은 묶음(RL-08, GUIDES8 2026-11-15 12:51~12:56 커밋)에서 광고 위 문장만 같은 폭 이하로 고친 칩 없는·보강 없는 5편. 11/15 에는
+  // 보강 없는 칩 없는 글의 행이 금지라 날짜를 두지 못했다(DEFER 질문). 값은 그 본문을 실제로 고친 날 RL08_EDIT_DAY.
+  "commercial-office-capital-gains-2026": RL08_EDIT_DAY, // 1c90ba05a 장기보유공제 20%·약 1.46억
+  "lease-right-transfer-tax-2026": RL08_EDIT_DAY, // 266f6e806 2년 미만만 단기 40~50%, 3년 보유는 기본세율
+  "child-gift-10year-rule-2026": RL08_EDIT_DAY, // c11f56d41 신고기한 증여월 말일부터 3개월
+  "rental-business-prop-tax-exclusion-2026": RL08_EDIT_DAY, // ffcfbd57b 10년 장기·6년 단기, 종부세 산출 318만원
+  "minimum-wage-2026": RL08_EDIT_DAY, // 3406a00b1 월급제 유급 시간 연 2,508시간(주휴 포함)
+  // 홈택스 연말정산 미리보기 활용법: 46d56278d(2026-11-13 08:10 KST) 개통 미정 문장 → 국세청 운영 기간 10월 28일~12월 18일(같은 길이 이하).
+  // 칩 없는 글이라 그날 정정이 검색엔진에 알려지지 않았다(n1 게시 뒤 네이버 수동 요청 목록에만 있었다).
+  "hometax-year-end-preview-2026": "2026-11-13",
 };
 
 /** 사이트맵 lastmod·rss.xml pubDate 용 가이드 날짜 = max(getGuideContentDate, 사이트맵 전용 행). 화면·OG·Article 에는 쓰지 않는다. */

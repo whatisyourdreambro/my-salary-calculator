@@ -174,7 +174,9 @@ describe("최저임금·부업 가이드 문장 (8b46a5e36·cf268e726)", () => {
 });
 
 describe("RL-08 날짜 — 화면 칩은 새로 생기거나 바뀌지 않고, 사이트맵 전용 행만 실제 수정일", () => {
-  it("행이 있는 4편은 RL08_EDIT_DAY, 행 없는 5편은 화면·사이트맵 모두 종전 값(칩 없음)", () => {
+  // 2026-11-18: 칩 없는·보강 없는 5편은 11/15 에 행을 둘 수 없었다(보강 없는 칩 없는 글의 행 금지). 운영자 결정 2026-11-17 10번으로
+  // 칩 없는 글의 본문 정정도 사이트맵 전용 행을 받는다(guideSitemapDates.ts 머리 주석 ③) — 화면 날짜는 그대로 발행일, 칩 없음.
+  it("9편 모두 행이 RL08_EDIT_DAY — 칩 없는 5편은 화면 날짜가 발행일 그대로(칩 없음)이고 사이트맵 날짜만 본문을 고친 날", () => {
     expect(RL08_EDIT_DAY).toBe("2026-11-15");
     for (const slug of ["child-support-100-2026", "energy-voucher-2026", "first-home-2026-strategy", "side-hustle-tax-2026"]) {
       expect(GUIDE_SITEMAP_ONLY_REVISED[slug], slug).toBe(RL08_EDIT_DAY);
@@ -184,7 +186,8 @@ describe("RL-08 날짜 — 화면 칩은 새로 생기거나 바뀌지 않고, �
       "rental-business-prop-tax-exclusion-2026", "minimum-wage-2026",
     ]) {
       const g = guide(slug);
-      expect(slug in GUIDE_SITEMAP_ONLY_REVISED, slug).toBe(false);
+      expect(GUIDE_SITEMAP_ONLY_REVISED[slug], slug).toBe(RL08_EDIT_DAY);
+      expect(getGuideSitemapDate(g), slug).toBe(RL08_EDIT_DAY);
       expect(g.modifiedDate, slug).toBeUndefined();
       expect(getGuideContentDate(g), slug).toBe(g.publishedDate);
     }
