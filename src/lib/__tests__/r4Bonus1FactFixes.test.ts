@@ -113,3 +113,11 @@ describe("CB-03 리포트 행(bonusData) — 삼성SDI 전자재료 5%는 2025�
     expect(sdi.payouts.filter((p) => p.year === 2026 && p.division === "전자재료")).toEqual([]);
   });
 });
+
+describe("CB-07 성과급 허브 — 현대차·기아는 2026년 8월 말 타결 (접힌 FAQ)", () => {
+  it("허브 FAQ 에 '주로 연말' 이 없고 8/28·8/31 가결을 적는다", () => {
+    const faq = faqBlock("src/app/calc/bonus-calculators/page.tsx");
+    expect(faq).toContain("2026년에는 기아(8월 28일)·현대차(8월 31일)가 8월 말 찬반투표로 타결했습니다.");
+    expect(faq).not.toContain("(주로 연말)");
+  });
+});
