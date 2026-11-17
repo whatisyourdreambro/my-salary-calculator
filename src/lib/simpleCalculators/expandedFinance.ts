@@ -13,6 +13,10 @@ const R = (label: string, value: number, suffix = "원") => {
 };
 const result = (label: string, value: number, secondary: NonNullable<CalculatorResult["secondary"]> = [], note?: string, suffix = "원"): CalculatorResult => ({ primary: R(label, value, suffix), secondary, note });
 const invalid = (note: string): CalculatorResult => ({ ...result("입력 조건 확인", 0, [], note), status: "invalid" });
+// 2026-11-18 N2-simple-calc-05 simple-calc-b05a-F01: 입력 범위 안내의 조사와 상한 표기 — 라벨 끝 음절에 받침이 없으면 '는'(종전 늘 '은':
+// '무급 처리 일수은'), 1조 이상 조 단위 상한은 '1조'(종전 '1000000000000'). 숫자 칸 안내는 같은 길이, 원 칸 안내는 11자 짧아진다.
+const topic = (word: string) => { const c = word.charCodeAt(word.length - 1); return `${word}${c >= 0xac00 && c <= 0xd7a3 && (c - 0xac00) % 28 === 0 ? "는" : "은"}`; };
+const bound = (n: number) => (n >= 1e12 && n % 1e12 === 0 ? `${n / 1e12}조` : String(n));
 const monthly = (annual: number) => annual / 1200;
 const payment = (p: number, r: number, n: number) => r === 0 ? p / n : p * r / -Math.expm1(-n * Math.log1p(r));
 const growth = (r: number, n: number) => Math.exp(n * Math.log1p(r));
@@ -61,8 +65,8 @@ function define(spec: Spec): CalculatorDef {
     compute: (inputs) => {
       for (const field of spec.fields) {
         const value = inputs[field.name];
-        if (!Number.isFinite(value) || value < (field.min ?? 0) || value > (field.max ?? 1e12)) return invalid(`${field.label}은 ${field.min ?? 0}~${field.max ?? 1e12}${field.suffix ?? ""} 범위로 입력하세요.`);
-        if (field.step === 1 && field.suffix !== "원" && !Number.isInteger(value)) return invalid(`${field.label}은 정수로 입력하세요.`);
+        if (!Number.isFinite(value) || value < (field.min ?? 0) || value > (field.max ?? 1e12)) return invalid(`${topic(field.label)} ${bound(field.min ?? 0)}~${bound(field.max ?? 1e12)}${field.suffix ?? ""} 범위로 입력하세요.`);
+        if (field.step === 1 && field.suffix !== "원" && !Number.isInteger(value)) return invalid(`${topic(field.label)} 정수로 입력하세요.`);
       }
       const computed = compute(inputs);
       if ([computed.primary, ...(computed.secondary ?? [])].some((value) => !Number.isFinite(value.value) || Math.abs(value.value) > 1e18)) return invalid("계산 결과가 표시 범위를 넘었어요. 금액·이율·기간을 줄여 다시 비교하세요.");
