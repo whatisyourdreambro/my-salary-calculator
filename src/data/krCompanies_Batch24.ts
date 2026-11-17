@@ -41,7 +41,7 @@ export const krCompanies_Batch24: CompanyProfile[] = [
     industry: "Healthcare / General Hospital",
     tier: "conglomerate",
     logo: "🏥",
-    description: "현대아산재단 운영, 국내 최대 규모·최다 진료 사립병원. 암·심장·장기이식 분야 세계적 수준.",
+    description: "아산재단 운영, 국내 최대 규모·최다 진료 사립병원. 암·심장·장기이식 분야 세계적 수준.",
     salary: {
       entry: { base: 44000000, incentive: { target: 12, max: 22, avgAmount: 6000000 } },
       junior: { base: 55000000, incentive: { target: 12, max: 22, avgAmount: 8000000 } },
@@ -104,7 +104,7 @@ export const krCompanies_Batch24: CompanyProfile[] = [
     industry: "Healthcare / University Hospital",
     tier: "startup",
     logo: "🏥",
-    description: "연세대학교 의과대학 부속병원. 국내 최초 현대식 병원으로 130년 역사. 신촌·강남·용인세브란스 운영.",
+    description: "연세대학교 의과대학 부속병원. 국내 최초 현대식 병원, 140년 역사. 신촌·강남·용인세브란스 운영.",
     salary: {
       entry: { base: 43000000, incentive: { target: 10, max: 20, avgAmount: 5500000 } },
       junior: { base: 54000000, incentive: { target: 10, max: 20, avgAmount: 7500000 } },
@@ -135,7 +135,7 @@ export const krCompanies_Batch24: CompanyProfile[] = [
     industry: "Healthcare / University Hospital",
     tier: "startup",
     logo: "⛪",
-    description: "가톨릭대학교 운영 7개 부속병원 네트워크(서울성모병원·여의도성모병원 등). 수도권 최대 의료법인.",
+    description: "가톨릭대학교 운영 8개 병원 네트워크(서울성모병원·여의도성모병원 등). 수도권 최대 의료법인.",
     salary: {
       entry: { base: 41000000, incentive: { target: 10, max: 18, avgAmount: 4500000 } },
       junior: { base: 51000000, incentive: { target: 10, max: 18, avgAmount: 6500000 } },
@@ -153,8 +153,8 @@ export const krCompanies_Batch24: CompanyProfile[] = [
     ],
     culture: {
       score: 7.6,
-      keywords: ["가톨릭병원", "서울성모병원", "7개병원네트워크"],
-      pros: ["전국 7개 병원 네트워크 근무 유연성", "안정적 고용", "의료비 지원"],
+      keywords: ["가톨릭병원", "서울성모병원", "8개병원"],
+      pros: ["8개 병원 네트워크 근무 유연성", "안정적 고용", "의료비 지원"],
       cons: ["가톨릭 재단 특성상 보수적 문화", "일부 병원 노후 시설"],
     },
     lastUpdated: "2026-05-15",

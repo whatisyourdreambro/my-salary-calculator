@@ -133,3 +133,40 @@ describe("data-b03-F02 보령제약(중복 기록) — 삼진제약 계열 아�
     expect(rawRecord("boryung-pharmaceutical").lastUpdated).toBe("2026-05-15");
   });
 });
+
+describe("data-b03-F05 병원 3곳 — 운영 재단·역사·부속병원 수", () => {
+  it("서울아산병원은 아산사회복지재단(약칭 아산재단) 운영 — 현대아산재단 아님", () => {
+    const c = company("asan-medical-center");
+    expect(c.description.startsWith("아산재단 운영, 국내 최대 규모·최다 진료 사립병원.")).toBe(true);
+    expect(JSON.stringify(c)).not.toContain("현대아산재단");
+    expect(notWider(c.description, c.description.replace("아산재단 운영,", "현대아산재단 운영,"))).toBe(true);
+    expect(rawRecord("asan-medical-center").lastUpdated).toBe("2026-05-15");
+  });
+
+  it("세브란스는 1885년 광혜원부터 — 140년 역사, 병원으로 -> 병원, 으로 숫자 폭 증가를 상쇄", () => {
+    const c = company("severance-hospital");
+    expect(c.description).toContain("국내 최초 현대식 병원, 140년 역사.");
+    expect(c.description).not.toContain("130년 역사");
+    expect(notWider(c.description, c.description.replace("병원, 140년 역사.", "병원으로 130년 역사."))).toBe(true);
+    expect(rawRecord("severance-hospital").lastUpdated).toBe("2026-05-15");
+  });
+
+  it("가톨릭중앙의료원 부속병원은 8곳 — 7개 아님, 숫자 폭 증가는 낱말을 덜어 상쇄", () => {
+    const c = company("catholic-medical-center");
+    expect(c.description.startsWith("가톨릭대학교 운영 8개 병원 네트워크(서울성모병원·여의도성모병원 등).")).toBe(true);
+    expect(c.culture.keywords).toEqual(["가톨릭병원", "서울성모병원", "8개병원"]);
+    expect(c.culture.pros[0]).toBe("8개 병원 네트워크 근무 유연성");
+    expect(JSON.stringify(c)).not.toMatch(/7개 ?(부속)?병원/);
+    expect(notWider(c.description, c.description.replace("운영 8개 병원 네트워크", "운영 7개 부속병원 네트워크"))).toBe(true);
+    expect(notWider("8개병원", "7개병원네트워크")).toBe(true);
+    expect(notWider(c.culture.pros[0], "전국 7개 병원 네트워크 근무 유연성")).toBe(true);
+    expect(rawRecord("catholic-medical-center").lastUpdated).toBe("2026-05-15");
+  });
+
+  it("서브셋 밖 글자 0", () => {
+    for (const id of ["asan-medical-center", "severance-hospital", "catholic-medical-center"]) {
+      const c = company(id);
+      expect(outsideFont(c.description + c.culture.keywords.join("") + c.culture.pros.join(""))).toEqual([]);
+    }
+  });
+});
