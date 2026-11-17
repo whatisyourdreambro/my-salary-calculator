@@ -78,8 +78,10 @@ const pre = preGateSnapshot as {
   salaryFaqSha256: Record<string, string>;
 };
 /** 고정본 뒤 공시 카드 note 를 고친 회사(같은 폭 숫자 교체) — 적용 전 카드 바이트 대조에서만 뺀다.
- *  korea-investment: '증권업 평균연봉 전체 1위 수준' -> '4위 수준'(DART 2025 증권업 24곳 중 4위, 2026-10). */
-const CARD_NOTE_CHANGED_AFTER_FIXTURE: readonly string[] = ["korea-investment"];
+ *  korea-investment: '증권업 평균연봉 전체 1위 수준' -> '4위 수준'(DART 2025 증권업 24곳 중 4위, 2026-10).
+ *  sk-innovation: 바로 아래 DART 배지(+20.3%)와 반대로 읽히던 근거 없는 '2024년(1억6,800만원) 대비 하락' 문장 삭제
+ *  (더 짧은 note, N2-data-03 data-b04-M01, 2026-11-18 — companyFactFixesN2a.test.ts 가 새 note 를 고정). */
+const CARD_NOTE_CHANGED_AFTER_FIXTURE: readonly string[] = ["korea-investment", "sk-innovation"];
 /** 고정본 뒤 수기 공시 카드의 헤드라인·출처·note 를 원문 값으로 바로잡은 회사 — 적용 전 카드 바이트 대조에서만 뺀다
  *  (적용 후 '출처 줄 글자 수 ≤ 종전' 검사는 그대로 받는다). 고친 값은 companyFixes1030.test.ts(db-insurance)·
  *  companyFixes1102.test.ts(meritz-fire)가 고정한다. 고정본 bd68d860 은 재생성하지 않는다.

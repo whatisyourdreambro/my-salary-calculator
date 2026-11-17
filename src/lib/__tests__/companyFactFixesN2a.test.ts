@@ -170,3 +170,20 @@ describe("data-b03-F05 병원 3곳 — 운영 재단·역사·부속병원 수",
     }
   });
 });
+
+describe("data-b04-M01 SK이노베이션 공시 카드 note — 바로 아래 DART 배지(+20.3%)와 반대로 읽히던 근거 없는 2024년 문장 삭제", () => {
+  it("note 에서 2024년(1억6,800만원) 대비 하락 문장만 빠지고 나머지·헤드라인·출처는 그대로", () => {
+    const d = company("sk-innovation").disclosed!;
+    expect(d.note).toBe("직원 2,064명(SK E&S CIC 포함, 2024-11 합병 반영). 지주부문 소수 정예 구조라 평균이 높은 편.");
+    expect(d.note).not.toContain("1억6,800");
+    expect(d.note).not.toContain("대비 하락");
+    expect(d.avgSalaryManwon).toBe(14600);
+    expect(d.sourceUrl).toBe("https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260316000827");
+    expect(rawRecord("sk-innovation").lastUpdated).toBe("2025-11-23");
+  });
+
+  it("companyMetaDescription A4' 고정본 대조에서 이 카드만 빠진다(고정본 재생성 없음)", () => {
+    const src = readFileSync("src/lib/__tests__/companyMetaDescription.test.ts", "utf8");
+    expect(src).toMatch(/CARD_NOTE_CHANGED_AFTER_FIXTURE: readonly string\[\] = \["korea-investment", "sk-innovation"\]/);
+  });
+});
