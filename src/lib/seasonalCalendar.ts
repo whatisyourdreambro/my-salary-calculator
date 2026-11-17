@@ -186,11 +186,14 @@ export const SEASONAL_CALENDAR: SeasonalContent[] = [
 ];
 
 /**
- * deadline 까지 남은 일수 (당일 23:59:59 기준). 지난 마감이면 null — 배지를 그리지 않는다.
+ * deadline 까지 남은 일수 (달력 날짜 차이 — 마감 당일 0 = D-0, 한국 D-day 관례). 지난 마감이면 null — 배지를 그리지 않는다.
  * 캘린더의 모든 deadline 은 그 항목의 노출 창(최대 3개월) 끝 달에 있으므로, 마감 달이 현재 달보다
  * 6개월 이상 뒤면 "해를 넘긴 창의 작년 마감"(예: 1월 초에 보는 12/31)으로 본다.
  * 이전 구현은 이 경우 다음 해 마감으로 계산해 1/1~1/14 에 D-365, 마감 다음날(9/26)에 D-0 긴급 배지가
  * 찍혔다(2026-09-05 리뷰 발견). now 주입은 테스트용.
+ * 2026-11-18 N2-lib-10(lib-b08-F03): 종전 '당일 23:59:59 까지 올림'은 배지가 늘 하루 많았다
+ * (11/15 에 12/31 마감을 D-47, 마감 당일에 D-1). 표준국어대사전 '디데이' = 예정한 그날 → 당일 D-0, 전날 D-1.
+ * 시각과 무관하게 같은 날이면 같은 값(자정·정오·23시 모두), 로컬 달력 날짜 기준.
  */
 export function getDaysLeft(
   deadline: { month: number; day: number },
@@ -199,10 +202,32 @@ export function getDaysLeft(
   const nowMonth = now.getMonth() + 1;
   const year =
     deadline.month - nowMonth >= 6 ? now.getFullYear() - 1 : now.getFullYear();
-  const target = new Date(year, deadline.month - 1, deadline.day, 23, 59, 59);
-  const diff = target.getTime() - now.getTime();
-  if (diff < 0) return null;
-  return Math.ceil(diff / (1000 * 60 * 60 * 24));
+  const target = new Date(year, deadline.month - 1, deadline.day);
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const days = Math.round((target.getTime() - today.getTime()) / 86_400_000);
+  return days < 0 ? null : days;
+}
+
+/**
+ * 홈 시즌 배너 자리 예약(RL-20 = 10월 D4-③ 63d0be8a 재착륙, 2026-11-18)용 '서버가 본 오늘' — KST 달력 날짜 숫자 3개.
+ * 홈은 정적 프리렌더라 이 값은 빌드 날짜다. 서버(빌드 시 UTC 일 수 있음)와 하이드레이션 첫 렌더가 같은 값을 쓰도록
+ * Date 가 아니라 숫자로 넘기고, 양쪽 모두 seasonalSeedDate()(로컬 정오)로 되돌려 같은 항목·같은 D-day 를 고른다
+ * (하이드레이션 불일치 0). 마운트 뒤에는 방문자의 지금 시각으로 실제 배너를 그린다(SeasonalBanner.tsx).
+ */
+export interface SeasonalSeed {
+  y: number;
+  m: number;
+  d: number;
+}
+
+export function seasonalSeedKst(nowMs: number = Date.now()): SeasonalSeed {
+  const kst = new Date(nowMs + 9 * 60 * 60 * 1000);
+  return { y: kst.getUTCFullYear(), m: kst.getUTCMonth() + 1, d: kst.getUTCDate() };
+}
+
+/** 로컬 정오 — 어느 타임존에서 읽어도 같은 달·일 (테스트의 at() 과 같은 방식) */
+export function seasonalSeedDate(seed: SeasonalSeed): Date {
+  return new Date(seed.y, seed.m - 1, seed.d, 12, 0, 0);
 }
 
 /**

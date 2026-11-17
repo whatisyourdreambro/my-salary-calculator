@@ -10,6 +10,8 @@ import HomeWorkClockSection from "@/components/home/HomeWorkClockSection";
 import IslandBoundary, { IslandFallback } from "@/components/IslandBoundary";
 import { HomeTopAd, GuideMidAd, Display2Ad, MultiplexAd } from "@/components/AdPlacement";
 import { retryChunkImport } from "@/lib/chunkReload";
+import SeasonalBanner from "@/components/SeasonalBanner";
+import type { SeasonalSeed } from "@/lib/seasonalCalendar";
 
 // Primary inputs load immediately; only the two lower calculators use DeferredSection.
 // 청크 로드 실패는 1초 뒤 1회 재시도(A14) — 그래도 실패하면 아래 CalculatorTabs 경계가 이 자리에서만 대체.
@@ -38,10 +40,13 @@ function CalculatorTabs() {
   );
 }
 const CoupangBanner = dynamic(() => import("@/components/CoupangBanner"), { ssr: false });
-const SeasonalBanner = dynamic(() => import("@/components/SeasonalBanner"), { ssr: false });
+// RL-20(10월 D4-③ 재착륙): 시즌 배너는 정적 import — 서버 HTML 에 서버 날짜(seasonalSeed)로 같은 크기의 보이지 않는 자리를 두고,
+// 마운트 뒤 지금 시각으로 종전과 같은 배너를 그린다(src/components/SeasonalBanner.tsx). 종전 dynamic(ssr:false)은
+// 하이드레이션·청크 로드 뒤 0 -> 배너 높이로 튀어나와 아래 계산기·Display2Ad 를 밀었다. 감싸는 div·위치는 그대로.
 
-export default function HomeClient({ featuredGuides, socialProof, guideCategories, toolsSection, trafficEngines }: {
+export default function HomeClient({ featuredGuides, socialProof, guideCategories, toolsSection, trafficEngines, seasonalSeed = null }: {
   featuredGuides: ReactNode; socialProof: ReactNode; guideCategories: ReactNode; toolsSection: ReactNode; trafficEngines: ReactNode;
+  seasonalSeed?: SeasonalSeed | null;
 }) {
   return <div className="w-full bg-background text-foreground">
     {/* Title, explanation and anchor are present before client hydration. */}
@@ -75,7 +80,7 @@ export default function HomeClient({ featuredGuides, socialProof, guideCategorie
     <div className="page-width"><HomeTopAd /></div>
     <HomeWorkClockSection />
     {socialProof}
-    <div className="bg-background py-8"><SeasonalBanner /></div>
+    <div className="bg-background py-8"><SeasonalBanner seed={seasonalSeed} /></div>
 
     <section id="calculator-section" className="page-width ms-section scroll-mt-24">
       <noscript><p className="ms-panel mb-6">계산기를 사용하려면 자바스크립트를 켜 주세요. <a href="/table/2026/annual" className="font-semibold text-link underline">2026 연봉별 실수령액 표</a>는 바로 읽을 수 있습니다.</p></noscript>
