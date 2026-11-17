@@ -171,8 +171,8 @@ export default function LgEnergyBonusPage() {
                   </tr>
                   <tr>
                     <td className="py-2 px-3 font-bold">2026 (예상)</td>
-                    <td className="py-2 px-3 text-right tabular-nums text-faint">50~100%?</td>
-                    <td className="py-2 px-3 text-faint">1Q 적자 -2,078억, ESS 회복 신호</td>
+                    <td className="py-2 px-3 text-right tabular-nums text-faint">미정</td>
+                    <td className="py-2 px-3 text-faint">1~3Q 누적 흑자 6,615억</td>
                   </tr>
                 </tbody>
               </table>
