@@ -182,8 +182,8 @@ export default function DualIncomeYearEndPage() {
             <p className="text-muted-blue dark:text-canvas-300 leading-relaxed">
               <strong>출처·기준일</strong>: 소득세법 제50조·제59조의2·제59조의4, 조세특례제한법
               제126조의2, 국세청 편리한 연말정산 서비스 안내 — 2026년 귀속(2027년 1~2월 정산)
-              기준, 2026-08-31 작성. 일반 자녀세액공제의 2026년 적용 연령·배분 입력은 2026-10-26에
-              <a href="https://law.go.kr/LSW/lsRvsDocListP.do?chrClsCd=010102&lsId=001565" target="_blank" rel="noopener noreferrer" className="underline">법률 제21548호 부칙 제2조</a>와
+              기준, 2026-08-31 작성. 일반 자녀세액공제의 2026년 적용 연령·배분 입력은 10월 26일에{" "}
+              <a href="https://law.go.kr/LSW/lsRvsDocListP.do?chrClsCd=010102&lsId=001565" target="_blank" rel="noopener noreferrer" className="underline">법률 제21548호 부칙 제2조</a>와{" "}
               <a href="https://law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1033235071" target="_blank" rel="noopener noreferrer" className="underline">소득세법 제53조</a>를 대조해 수정했습니다.
             </p>
           </article>

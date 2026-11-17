@@ -112,3 +112,13 @@ describe("calc-04-F16 중소기업 감면 — 연장 횟수", () => {
     expect(read("src/lib/smbTaxBreak.ts")).not.toContain("3회 연장");
   });
 });
+
+describe("calc-01-F12 맞벌이 몰아주기 — 출처 문장 링크 앞 띄어쓰기", () => {
+  it("두 링크 앞에 공백이 있고, 날짜는 같은 해의 '10월 26일'로 짧게(InArticleAd 위 줄 수 불변)", async () => {
+    const out = await html(() => import("@/app/calc/dual-income-year-end/page"));
+    const visible = out.replace(/<[^>]+>/g, "");
+    expect(visible).toContain("2026-08-31 작성. 일반 자녀세액공제의 2026년 적용 연령·배분 입력은 10월 26일에 법률 제21548호 부칙 제2조와 소득세법 제53조를 대조해 수정했습니다.");
+    expect(visible).not.toContain("에법률");
+    expect(visible).not.toContain("와소득세법");
+  });
+});
