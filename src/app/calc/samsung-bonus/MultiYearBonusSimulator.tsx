@@ -1176,10 +1176,13 @@ function YearProfitRowCard({
         borderColor: blocked ? "#EF444455" : row.triggered && row.profit > 0 ? "#10B98155" : "#7A9AB544",
       }}
     >
-      {/* 상단 — 연도 + 영업이익 + 연봉 + 삭제 */}
+      {/* 상단 — 연도 + 영업이익 + 연봉 + 삭제
+          '연도별 직접 입력'(manual) 모드만: 640px 미만에서는 연봉 칸을 아랫줄 전체 폭으로 내린다(N2-calc-24 calc-03-F08,
+          운영자 승인 2026-11-17 6번 — 기본(고정)·자동 인상 모드와 첫 화면은 그대로). 종전 두 칸이 360px 에서 약 104px 를 나눠
+          '8,400' 같은 입력값이 잘려 보였다. 글씨를 줄이면 iOS 가 16px 미만 입력칸에서 화면을 확대해 쓰지 않는다. */}
       <div className={`grid gap-3 items-end ${
         salaryMode === "manual"
-          ? "grid-cols-[70px_1fr_1fr_auto] sm:grid-cols-[85px_1fr_1fr_auto]"
+          ? "grid-cols-[70px_1fr_auto] sm:grid-cols-[85px_1fr_1fr_auto]"
           : "grid-cols-[80px_1fr_auto] sm:grid-cols-[100px_1fr_auto]"
       }`}>
         {/* 연도 */}
@@ -1241,7 +1244,7 @@ function YearProfitRowCard({
 
         {/* manual 모드 — 연봉 입력 필드 (만원) */}
         {salaryMode === "manual" && (
-          <div>
+          <div className="col-span-3 sm:col-span-1 order-last sm:order-none">
             <label className="text-[9px] font-bold uppercase tracking-widest block mb-1 text-faint-blue inline-flex items-center gap-1">
               <Pencil size={9} aria-hidden /> 연봉 <span className="opacity-70 font-medium">(만원)</span>
             </label>
