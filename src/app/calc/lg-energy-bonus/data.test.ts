@@ -7,10 +7,12 @@ import { describe, expect, it } from "vitest";
 import { DEFAULT_BASIC_MANWON, SCENARIOS } from "./data";
 
 describe("lg-energy-bonus/data 동결값", () => {
-  it("SCENARIOS — 2026-09-05 Client.tsx 인라인 리터럴과 동일", () => {
+  // 2026-11-18 R4(RL-16 CB-05, 10월 605fdc4ae): 50%·75% 칩 힌트를 실적연도 표기로 정정 — 50%는 2025-01, 75%는 2026-02-06
+  // 지급분이라 '실 지급' 연도가 1년씩 틀렸다(bonusData note '2024년 실적분'·'2025년 실적분'과 같게). 공백 1개만 줄어 칩 줄 수 불변.
+  it("SCENARIOS — 2026-09-05 Client.tsx 인라인 리터럴과 동일(힌트 2개만 2026-11-18 정정)", () => {
     expect(SCENARIOS).toEqual([
-      { id: "deficit", label: "적자기 (50%)", percent: 50, hint: "2024년 실 지급" },
-      { id: "current", label: "최근 (75%)", percent: 75, hint: "2025년 실 지급" },
+      { id: "deficit", label: "적자기 (50%)", percent: 50, hint: "2024년 실적분" },
+      { id: "current", label: "최근 (75%)", percent: 75, hint: "2025년 실적분" },
       { id: "recovery", label: "회복기 (200%)", percent: 200, hint: "ESS 전환 가정" },
       { id: "normal", label: "평년 (400%)", percent: 400, hint: "안정 흑자" },
       { id: "boom", label: "호황 (900%)", percent: 900, hint: "2022년 폭증기" },
