@@ -26,7 +26,7 @@ import {
   POSITION_ALLOWANCE_2026,
   TEACHER_PAY_ROWS_2026,
 } from "@/lib/civilServantPay";
-import { AGREEMENT_2026, H1_2026_PROFIT_TRIL, PS_HISTORY } from "@/app/calc/sk-hynix-bonus/psData";
+import { AGREEMENT_2026, H1_2026_PROFIT_TRIL, PS_HISTORY, Q1_Q3_2026_PROFIT_TRIL } from "@/app/calc/sk-hynix-bonus/psData";
 import { FIXED_BU_RATIO, FIXED_RERATE, FIXED_SA_RATIO, getThreshold } from "@/app/calc/samsung-bonus/model";
 import { SAMSUNG_OPI2_TRANCHES, SAMSUNG_WAGE_2026 } from "@/lib/bonusHome/compEngines";
 import { UNEMPLOYMENT_BENEFIT_2026, unemploymentDailyLowerBound } from "@/config/unemploymentBenefit";
@@ -369,6 +369,16 @@ const specialBonusPoolSupplement = `
 <p>2026년 5월 삼성전자 임금협약 보도(지디넷·아시아경제·연합인포맥스)와 10월 7일 세부안 보도(한국경제·이투데이)는 DS부문 특별경영성과급 재원을 위 본문의 '영업이익의 12% 수준'이 아니라 DS부문 영업이익의 10.5%로, 지급 조건을 2026~2028년 매년 DS 영업이익 200조원 이상으로 전합니다(보도 기준).</p>
 `;
 
+/** SK하이닉스 PS 2027 전망 글 — 위 재원 기준 보강 + 3분기 실적(2026-11-18, N2-guides-content-02 b01-F03). 본문은 상반기 98.2조원까지라
+ *  쌍둥이 글(samsung-opi-forecast-2027)이 10/29 실적을 받은 것처럼 10/28 발표를 광고 아래에만 더한다. 누적 영업이익은 psData 정본 상수
+ *  (Q1 37조6,103억 + Q2 60조5,426억 + Q3 83조3,338억 = 181조4,867억 → 181.5). 재원 약 18.1조원 = 181조4,867억 × 10% = 18조1,487억(반올림).
+ *  출처: SK하이닉스 뉴스룸 2026-10-28 https://news.skhynix.co.kr/q3-2026-business-results/ (2026-11-18 재확인). */
+const skHynixPsForecastSupplement = specialBonusPoolSupplement + `
+<h2>2026년 3분기 실적 반영</h2>
+<p>SK하이닉스는 2026년 10월 28일 3분기 매출 104조 6,155억원, 영업이익 83조 3,338억원을 발표했습니다. 1~3분기 누적 영업이익은 ${Q1_Q3_2026_PROFIT_TRIL}조원이라, 위 본문의 '영업이익 10%' 공식을 적용한 재원은 약 18.1조원입니다(4분기 실적 제외). 연간 실적과 지급률은 2027년 1~2월 회사 발표로 확정됩니다.</p>
+<p><em>출처: SK하이닉스 뉴스룸 2026년 3분기 경영실적(2026-10-28)</em></p>
+`;
+
 const sideHustleSupplement = `
 <h2>신고 예시 다시 계산</h2>
 <p>연봉 5,000만원(본인 1인)의 과세표준은 근로소득공제·인적공제·4대보험 공제 뒤 약 3,100만원대라, 부업 순이익 700만원을 더해도 과세표준 5,000만원 이하인 15% 구간에 머뭅니다. 추가 세금은 700만원 × 15% = 약 105만원에 지방소득세 10.5만원 정도로, 위 예시의 24%·168만원보다 적습니다. 내 조건은 <a href="/income-tax-2026">종합소득세 계산기</a>로 확인하세요.</p>
@@ -416,7 +426,7 @@ export const guideSupplements: Record<string, string> = {
   "samsung-medison-salary-2026": samsungMedisonSupplement,
   "samsung-opi-forecast-2027": specialBonusPoolSupplement,
   "side-hustle-tax-2026": sideHustleSupplement,
-  "sk-hynix-ps-forecast-2027": specialBonusPoolSupplement,
+  "sk-hynix-ps-forecast-2027": skHynixPsForecastSupplement,
   "sk-hynix-wage-2026": skHynixWage2026Supplement,
   "unemployment-benefits-complete": unemploymentBenefitsSupplement,
   "vat-filing-2026": vatFilingSupplement,
