@@ -201,7 +201,7 @@ export default function SamsungSdiBonusPage() {
                     <td className="py-2">연봉의 28%</td>
                   </tr>
                   <tr>
-                    <td className="py-2 pr-4">2026년 (2025 실적 · 캐즘)</td>
+                    <td className="py-2 pr-4">2025년 (2024 실적 · 캐즘)</td>
                     <td className="py-2 pr-4">0%</td>
                     <td className="py-2 pr-4">3~5%</td>
                     <td className="py-2">0%</td>

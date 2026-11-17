@@ -45,4 +45,8 @@ describe("CB-03 삼성SDI — 광고 위 같은 폭 교체 (배지)", () => {
     expect(page).toContain("2024 배터리 32% / 2026 캐즘 0% (전자재료 포함 0%)");
     expect(page).not.toContain("(전자재료만 3-5%)");
   });
+  it("지급 이력 표: 배터리 0%·전자재료 3~5%·본사 0% 행은 2025년 초(2024 실적분) 지급분", () => {
+    expect(page).toContain("2025년 (2024 실적 · 캐즘)");
+    expect(page).not.toContain("2026년 (2025 실적 · 캐즘)");
+  });
 });
