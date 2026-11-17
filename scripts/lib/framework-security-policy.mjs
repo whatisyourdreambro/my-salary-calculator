@@ -31,10 +31,22 @@ export const REVIEWED_DEV_ADVISORIES = Object.freeze([
 //   - when `ownerDecision` is the date (YYYY-MM-DD, KST) of the owner's yes, not earlier
 //     than `reviewed` and not later than `expires`; any other value (PENDING) is refused,
 //   - until `expires` (UTC, inclusive), which is at most OWNER_EXCEPTION_MAX_DAYS after
-//     `reviewed`. Renewing needs a new review and a new owner decision.
+//     `reviewed`. Renewing needs a new review and a new owner decision,
+//   - when none of its dates runs ahead of the clock: `reviewed` and `ownerDecision` may
+//     not be later than the gate date plus one day (the gate date is UTC and the KST date
+//     is at most one day ahead of it), and `expires` may not be more than
+//     OWNER_EXCEPTION_MAX_DAYS after the gate date. So an entry is never in force for more
+//     than OWNER_EXCEPTION_MAX_DAYS days counted from any gate run, and never before the
+//     day of the decision it records. (A full 31-day entry is therefore refused until
+//     09:00 KST of its review day; it fails closed and clears by itself.)
 // A package record that also carries any other advisory still needs that advisory to
 // pass the dev-only rules above; unknown ids still block. Remove the entry as soon as a
 // patched release is adopted or the advisory is withdrawn (the gate prints it as unused).
+// Unlike the dev-only list, an owner entry also covers copies that package-lock.json does
+// not mark dev-only: the owner decides that on the evidence stated in `reason`. For the
+// picomatch entry these are the eight records under tailwindcss-animate (a dependency
+// that only tailwind.config.ts imports); the Worker bundle check in
+// scripts/lib/pages-export.mjs refuses the build if such a copy ever reaches the Worker.
 export const OWNER_EXCEPTION_MAX_DAYS = 31;
 export const OWNER_APPROVED_ADVISORIES = Object.freeze([
   Object.freeze({ id: 'GHSA-fc5q-39xc-vjpf', package: 'picomatch', reviewed: '2026-11-18', expires: '2026-12-18', ownerDecision: 'PENDING',
@@ -44,15 +56,21 @@ const TOLERABLE = new Set(['info', 'low', 'moderate']);
 const OWNER_TOLERABLE = new Set([...TOLERABLE, 'high']);
 const isDate = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)
   && !Number.isNaN(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value;
+const addDays = (date, days) => new Date(Date.parse(date) + days * 86_400_000).toISOString().slice(0, 10);
 
-// Why an owner entry is not in force on `today`; null when it is.
+// Why an owner entry is not in force on `today` (the UTC date of the gate run); null when it is.
 export function ownerExceptionRefusal(entry, today) {
+  if (!isDate(today)) return 'the gate date is not a date';
   if (!isDate(entry?.reviewed) || !isDate(entry?.expires)) return 'reviewed and expires must be dates';
   const days = (Date.parse(entry.expires) - Date.parse(entry.reviewed)) / 86_400_000;
   if (!(days > 0 && days <= OWNER_EXCEPTION_MAX_DAYS)) return `expires must be 1-${OWNER_EXCEPTION_MAX_DAYS} days after reviewed`;
   if (!isDate(entry.ownerDecision)) return 'ownerDecision is not a date: the owner has not approved this entry';
   if (entry.ownerDecision < entry.reviewed || entry.ownerDecision > entry.expires) return 'ownerDecision must lie between reviewed and expires';
   if (today > entry.expires) return 'expired';
+  const latestKstDate = addDays(today, 1);
+  if (entry.reviewed > latestKstDate) return 'reviewed is a future date';
+  if (entry.ownerDecision > latestKstDate) return 'ownerDecision is a future date: no approval can exist yet';
+  if (entry.expires > addDays(today, OWNER_EXCEPTION_MAX_DAYS)) return `expires is more than ${OWNER_EXCEPTION_MAX_DAYS} days after the gate date`;
   return null;
 }
 

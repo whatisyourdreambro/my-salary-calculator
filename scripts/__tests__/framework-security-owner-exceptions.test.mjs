@@ -1,5 +1,6 @@
 // Offline: an owner-approved exception covers exactly one advisory of one package, for at
-// most 31 days, never a critical one, and never before the owner's decision is recorded.
+// most 31 days counted from the review and from any gate run, never a critical one, and
+// never before the day of the owner's decision that it records.
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
@@ -67,7 +68,7 @@ test('critical always blocks, whatever the owner list says', () => {
   assert.deepEqual(names(run(mixed, [approved]).blocked), ['micromatch']);
 });
 
-test('the exception ends on its expiry date and can never span more than 31 days', () => {
+test('the exception ends on its expiry date and its window can never be longer than 31 days', () => {
   assert.deepEqual(run(audit(), [approved], '2026-12-18').blocked, []);
   const late = run(audit(), [approved], '2026-12-19');
   assert.deepEqual(names(late.blocked), ALL);
@@ -80,6 +81,46 @@ test('the exception ends on its expiry date and can never span more than 31 days
     assert.match(result.ownerRefused[0].refusal, /expires must be 1-31 days after reviewed|must be dates/, String(expires));
   }
   assert.match(ownerExceptionRefusal({ ...approved, reviewed: 'today' }, '2026-11-19'), /must be dates/);
+});
+
+test('no date of an entry may run ahead of the gate clock', () => {
+  const refused = (entry, today, reason) => {
+    const result = run(audit(), [entry], today);
+    assert.deepEqual(names(result.blocked), ALL, `${JSON.stringify(entry)} on ${today}`);
+    assert.deepEqual(result.ownerAccepted, []);
+    assert.match(result.ownerRefused[0].refusal, reason, `${JSON.stringify(entry)} on ${today}`);
+  };
+  // A review dated in the future would keep the entry in force for more than 31 days from today.
+  const future = { ...pending, reviewed: '2027-01-01', expires: '2027-01-31', ownerDecision: '2027-01-01' };
+  refused(future, '2026-11-18', /reviewed is a future date/);
+  refused(future, '2026-12-30', /reviewed is a future date/);
+  assert.deepEqual(run(audit(), [future], '2026-12-31').blocked, [], 'KST 2027-01-01 begins at 15:00 UTC on 2026-12-31');
+  // A decision dated in the future is not an approval yet.
+  refused({ ...pending, ownerDecision: '2026-12-10' }, '2026-11-18', /ownerDecision is a future date/);
+  refused({ ...pending, ownerDecision: '2026-11-20' }, '2026-11-18', /ownerDecision is a future date/);
+  // The gate date is UTC: during the KST morning the KST date is one day ahead and must pass.
+  assert.deepEqual(run(audit(), [{ ...pending, ownerDecision: '2026-11-19' }], '2026-11-18').blocked, []);
+  assert.deepEqual(run(audit(), [{ ...pending, ownerDecision: '2026-11-18' }], '2026-11-17').blocked, []);
+  refused({ ...pending, ownerDecision: '2026-11-18' }, '2026-11-16', /reviewed is a future date/);
+  // A full 31-day entry is refused until its expiry is at most 31 days after the gate date.
+  const full = { ...pending, expires: '2026-12-19', ownerDecision: '2026-11-18' };
+  refused(full, '2026-11-17', /more than 31 days after the gate date/);
+  assert.deepEqual(run(audit(), [full], '2026-11-18').blocked, []);
+  assert.match(ownerExceptionRefusal(approved, 'today'), /gate date is not a date/);
+  assert.match(ownerExceptionRefusal(approved, undefined), /gate date is not a date/);
+  // Whatever the dates, an entry in force never reaches further than 31 days past the gate date
+  // and none of its dates lies more than one day (the UTC to KST gap) after it.
+  const day = n => new Date(Date.UTC(2026, 10, 18) + n * 86_400_000).toISOString().slice(0, 10);
+  let inForce = 0;
+  for (let reviewed = -40; reviewed <= 40; reviewed += 1) for (let length = 0; length <= 33; length += 1)
+    for (const decision of [reviewed - 1, reviewed, reviewed + 1, reviewed + length, reviewed + length + 1, 0, 1, 2]) {
+      const entry = { ...pending, reviewed: day(reviewed), expires: day(reviewed + length), ownerDecision: day(decision) };
+      if (ownerExceptionRefusal(entry, day(0)) !== null) continue;
+      inForce += 1;
+      assert.ok(reviewed <= 1 && decision <= 1 && reviewed + length >= 0 && reviewed + length <= 31 && length >= 1 && length <= 31
+        && decision >= reviewed && decision <= reviewed + length, JSON.stringify(entry));
+    }
+  assert.ok(inForce > 100, 'the sweep must exercise entries that are in force');
 });
 
 test('a record with any other unreviewed advisory still blocks; the dev-only rules are unchanged', () => {
@@ -129,6 +170,7 @@ test('real audit of 2026-11-18: blocked while PENDING, clear only with a dated d
 
 test('the committed owner list is frozen, specific, justified and short-lived', () => {
   assert.ok(Object.isFrozen(OWNER_APPROVED_ADVISORIES) && OWNER_APPROVED_ADVISORIES.length <= 3);
+  const kstToday = new Date(Date.now() + 9 * 3_600_000).toISOString().slice(0, 10);
   const keys = OWNER_APPROVED_ADVISORIES.map(e => `${e.id} ${e.package}`);
   assert.equal(new Set(keys).size, keys.length, 'one entry per advisory and package');
   for (const entry of OWNER_APPROVED_ADVISORIES) {
@@ -139,11 +181,13 @@ test('the committed owner list is frozen, specific, justified and short-lived', 
     for (const field of ['reviewed', 'expires']) assert.match(entry[field], /^\d{4}-\d{2}-\d{2}$/);
     const days = (Date.parse(entry.expires) - Date.parse(entry.reviewed)) / 86_400_000;
     assert.ok(days > 0 && days <= 31, `${entry.id} expiry must be 1-31 days after review`);
+    assert.ok(entry.reviewed <= kstToday, `${entry.id} review date ${entry.reviewed} is after today (KST ${kstToday})`);
     assert.ok(entry.reason.length >= 40);
     assert.ok(!REVIEWED_DEV_ADVISORIES.some(e => e.id === entry.id && e.package === entry.package), 'an advisory lives in one list only');
     if (entry.ownerDecision !== 'PENDING') {
       assert.match(entry.ownerDecision, /^\d{4}-\d{2}-\d{2}$/, 'ownerDecision is PENDING or the date of the owner decision');
       assert.ok(entry.ownerDecision >= entry.reviewed && entry.ownerDecision <= entry.expires);
+      assert.ok(entry.ownerDecision <= kstToday, `${entry.id} owner decision ${entry.ownerDecision} is after today (KST ${kstToday})`);
     }
   }
 });
