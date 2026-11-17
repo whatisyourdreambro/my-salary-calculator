@@ -906,7 +906,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         year: 2026,
         scheme: "OPI",
         percentOfSalary: 50,
-        note: "2025년 실적분 — 연봉의 50% 상한, 2026-01 지급 예상 보도",
+        note: "2025년 실적분 — 연봉의 50% 상한, 2026-01 지급",
         source: "아시아경제 2025-12-27 · 산경투데이·컨슈머타임스 2025-12-26",
       },
       {
@@ -920,7 +920,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         year: 2025,
         scheme: "TAI",
         percentOfBase: 100,
-        note: "2025년 상반기 TAI 100% 확정 (하반기 확정치는 보도 미확보)",
+        note: "2025년 상반기 TAI 100% 확정",
         source: "한국경제 등 2025-07-08",
       },
     ],
