@@ -112,7 +112,9 @@ describe("R1 원장 기준일 리터럴 동기화 — 설 상여 계산기·추�
 
   it("sitemap.ts ROUTE_OVERRIDES 두 줄이 기준일이다", () => {
     const sitemap = readSrc("src/app/sitemap.ts");
-    expect(sitemap).toContain(`'/calc/holiday-bonus': { lastModified: ${midnight} }`);
+    // 2026-11-18 R4 CALCMISC(N2-calc-17 calc-02-F13)가 설 상여 계산기 본문·FAQ 1 을 다시 고쳐 그 행만 그날로 늦췄다(머리 주석 규칙).
+    expect(sitemap).toContain(`'/calc/holiday-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00') }`);
+    expect(sitemap).not.toContain(`'/calc/holiday-bonus': { lastModified: ${midnight} }`);
     expect(sitemap).toContain(`'/chuseok-bonus-2026': { lastModified: ${midnight} }`);
   });
 
@@ -120,7 +122,7 @@ describe("R1 원장 기준일 리터럴 동기화 — 설 상여 계산기·추�
     const ledger = JSON.parse(readSrc("scripts/sitemap-content-reviews.json")) as {
       routes: Record<string, { contentDate: string }>;
     };
-    expect(ledger.routes["/calc/holiday-bonus"]?.contentDate).toBe(RELAND_R1_PUSH);
+    expect(ledger.routes["/calc/holiday-bonus"]?.contentDate).toBe("2026-11-18"); // R4 CALCMISC 본문·FAQ 1 정정일
     expect(ledger.routes["/chuseok-bonus-2026"]?.contentDate).toBe(RELAND_R1_PUSH);
   });
 

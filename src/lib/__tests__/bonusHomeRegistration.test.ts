@@ -69,8 +69,9 @@ describe("사이트맵·URL 원장", () => {
     // October 19 adds explanatory next steps; November 1 corrects the special-bonus pool sentence
     // (DS 영업이익 10.5%, B28 STR-04-B, stage-2 ledger advance); November 15 corrects the SK하이닉스 2025 PS
     // deferral and refreshes the market snapshot (N2-calc-14, integration ledger for claude/next-1120);
-    // monthly snapshot cadence remains.
-    expect(src).toMatch(/'\/calc\/bonus-home-plan': \{ lastModified: new Date\('2026-11-15T00:00:00\+09:00'\), changeFrequency: 'monthly' \}/);
+    // November 18 moves the scenario basis to the 2026 Q1-Q3 operating profit (owner-approved N2-calc-21, unit CALCMISC,
+    // R4 integration ledger for claude/next-1127); monthly snapshot cadence remains.
+    expect(src).toMatch(/'\/calc\/bonus-home-plan': \{ lastModified: new Date\('2026-11-18T00:00:00\+09:00'\), changeFrequency: 'monthly' \}/);
     const ledger = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "scripts/url-ledger.snapshot.json"), "utf8"));
     expect(ledger.sitemap).toContain(HREF);
   });
