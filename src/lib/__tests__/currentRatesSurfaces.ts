@@ -30,7 +30,7 @@ const BONUS_FOOTERS: Array<[string, () => Promise<{ default: unknown }>, (y: num
   ["hd-hyundai", () => import("@/app/calc/hd-hyundai-bonus/page"), (y) => `머니데이). ${y} 세법 반영.`],
   ["hyundai-mobis", () => import("@/app/calc/hyundai-mobis-bonus/page"), (y) => `2026-03-09). ${y} 세법 반영.`],
   ["hyundai-rotem", () => import("@/app/calc/hyundai-rotem-bonus/page"), (y) => `갈등 보도). ${y} 세법 반영.`],
-  ["kakao", () => import("@/app/calc/kakao-bonus/page"), (y) => `연봉체계 자료. ${y} 세법 반영.`],
+  ["kakao", () => import("@/app/calc/kakao-bonus/page"), (y) => `보도(뉴스웨이). ${y} 세법 반영.`],
   ["kepco", () => import("@/app/calc/kepco-bonus/page"), (y) => `2026-05-06 인용). ${y} 세법 반영.`],
   ["kia", () => import("@/app/calc/kia-bonus/page"), (y) => `삼프로TV). ${y} 세법 반영.`],
   ["lg-chem", () => import("@/app/calc/lg-chem-bonus/page"), (y) => `730% 사례. ${y} 세법 반영.`],
