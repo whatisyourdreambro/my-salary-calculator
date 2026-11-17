@@ -62,7 +62,8 @@ const stripComments = (html: string) => html.replaceAll("<!-- -->", "");
 
 describe("(a) 공시 업종 순위 FAQ — 1위 회사 조사 '으로/로'", () => {
   // 받침 있는 1위 회사(으로) — 검증자 재현 8곳: 부국증권·SK텔레콤·한국씨티은행·SK이노베이션·현대로템·HMM·롯데정밀화학·브이엠
-  const CONSONANT_FINAL = ["securities", "telecom", "bank", "energy", "heavy-industry", "logistics", "chemical", "manufacturing"];
+  // retail-commerce: 1위 E1 은 이원으로 읽어 E1으로 (2026-11-18 R4 COMPANY — josa.ts WHOLE_WORD_FINAL, 종전 기대값 E1로 는 틀린 값)
+  const CONSONANT_FINAL = ["securities", "telecom", "bank", "energy", "heavy-industry", "logistics", "chemical", "manufacturing", "retail-commerce"];
 
   it.each(industryRankings.map((r) => [r.industryId, r.topRows[0].nameKo] as const))(
     "%s: %s 뒤 조사가 받침에 맞다",

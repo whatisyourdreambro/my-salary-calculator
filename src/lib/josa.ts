@@ -11,6 +11,7 @@
 //  3) 영문: 알려진 단어(ELECTRIC·Lab 등)는 단어 발음표, 대문자로 끝나면 알파벳 이름 발음
 //     (L·R=ㄹ받침, M·N=받침, 나머지 모음 끝), 소문자로 끝나는 미등록 단어는 판정 불가.
 //  4) 숫자: 0(영)·3(삼)·6(육)=받침, 1(일)·7(칠)·8(팔)=ㄹ받침, 2·4·5·9=모음 끝. %(퍼센트)=모음 끝.
+//     단, 말 전체를 통째로 읽는 이름(WHOLE_WORD_FINAL — E1 이원)은 그 발음이 먼저다.
 //  5) 판정할 수 없으면 기존 병기 형식('은(는)'·'(으)로')을 그대로 쓴다 — 틀린 조사보다 병기가 낫다.
 
 export type JosaPair = "은/는" | "이/가" | "과/와" | "을/를" | "이란/란" | "으로/로";
@@ -50,6 +51,12 @@ const LATIN_WORD_FINAL: Record<string, Exclude<FinalSound, null>> = {
   POP: "consonant", // 문화 키워드 'K-pop' — 케이팝
 };
 
+/** 말 전체를 통째로 읽는 이름(대문자 정규화) — 끝 글자 규칙으로는 틀리는 것만 등재.
+ *  E1(이원): 숫자 1 을 일(ㄹ받침)로 읽으면 'E1로' 가 되지만 회사명은 이원이라 'E1으로' (2026-11-18, n2 leftovers DATAB). */
+const WHOLE_WORD_FINAL: Record<string, Exclude<FinalSound, null>> = {
+  E1: "consonant",
+};
+
 /** 끝의 괄호 병기와 닫는 따옴표·괄호·문장부호를 떼어 조사가 붙을 실제 말만 남긴다. */
 function stripTrailing(word: string): string {
   let w = word.trim();
@@ -65,6 +72,8 @@ function stripTrailing(word: string): string {
 function finalSound(word: string): FinalSound {
   const w = stripTrailing(word);
   if (!w) return null;
+  const whole = WHOLE_WORD_FINAL[w.toUpperCase()];
+  if (whole) return whole;
   const last = w[w.length - 1];
   const code = last.charCodeAt(0);
 
