@@ -17,10 +17,12 @@ import { describe, expect, it } from "vitest";
 
 import { guideSupplements } from "@/lib/guides/supplements";
 
-/** 원시 JSON 바이트 상한 (예정 합계 58,363B + 약 10%) */
-const RAW_LIMIT = 64_200;
-/** brotli(품질 11) 상한 (예정 합계 16,632B + 약 10%) */
-const BR_LIMIT = 18_300;
+/** 원시 JSON 바이트 상한 (예정 합계 58,363B + 약 10%) — 2026-11-18 N2-guides-content-02 가 +2,000B: 이 묶음의 광고 아래 보강 4건
+*  (삼성 3편 10월 29일 기준·SK하이닉스 3분기·SK 2025 임금·실업급여 180일)이 맵을 62,246B -> 64,218B(+1,972B)로 늘려, 패키지 0단계 규칙대로
+*  측정 증가분을 500B 단위로 올림해 한 번만 올린다. 이 여유로 다른 보강을 더하지 않는다(나머지 보강은 2월 N2-guides-content-10 과 T25a 뒤). */
+const RAW_LIMIT = 66_200;
+/** brotli(품질 11) 상한 (예정 합계 16,632B + 약 10%) — 2026-11-18 같은 묶음 +500B(17,135B -> 17,495B, +360B 를 500B 단위 올림) */
+const BR_LIMIT = 18_800;
 
 describe("guides layout guideSupplements 맵 크기 게이트", () => {
   it("guides/layout.tsx 는 맵 전체를 GuideSupplement 에 넘긴다 (쪽별로 쪼개면 이 게이트를 항목당 상한으로 바꿀 것)", () => {

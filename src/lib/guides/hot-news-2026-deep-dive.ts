@@ -173,11 +173,12 @@ const taxAmnestyReform = `
 <p class="lead">누락·과소신고를 발견했다면 수정신고인지 기한후신고인지 먼저 구분하세요. 감면율은 신고 시기와 가산세 종류에 따라 달라지며, 자진 신고만으로 세무조사나 모든 가산세가 면제되는 것은 아닙니다. 아래 기간별 수정신고 감면과 납부지연가산세를 별도로 확인하세요.</p>
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 자진 신고·수정 신고 우대</h2>
 <ul class="space-y-2 mt-4">
-<li>· <strong>1개월 이내 수정</strong>: 가산세 90% 감면</li>
+<li>· <strong>1개월 이내</strong>: 90% 감면</li>
 <li>· <strong>3개월 이내</strong>: 75% 감면</li>
 <li>· <strong>6개월 이내</strong>: 50% 감면</li>
 <li>· <strong>1년 이내</strong>: 30% 감면</li>
-<li>· <strong>2년 이내</strong>: 20% 감면</li>
+<li>· <strong>1년 6개월 이내</strong>: 20% 감면</li>
+<li>· <strong>2년 이내</strong>: 10% 감면</li>
 </ul>
 <h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 무신고 가산세</h2>
 <ul class="space-y-2 mt-4">
@@ -776,7 +777,7 @@ export const hotNewsDeepDive: Guide[] = [
   { slug: "consumption-tax-simple-vs-general-2026", title: "간이과세자 vs 일반과세자 — 매출 1.04억 분기점 100만원 절세", description: "간이 부가세 1.5~4% vs 일반 10%. 매출 8천 음식점 시 간이가 약 100만원 유리. 단 매입세액 공제 제한.", category: "세금", tags: ["간이과세", "일반과세", "부가세", "자영업", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: consumptionTaxReturn, lang: "ko" },
   { slug: "carryover-loss-15year-2026", title: "이월결손금 15년 — 손실난 해 신고로 미래 3,000만원 절세", description: "사업 손실 15년 이월(양도차손·가상자산 제외). 2025년 손실 1억 → 2026 이익 1.5억 시 절세 약 3,000만원.", category: "세금", tags: ["이월결손금", "사업손실", "양도손실", "절세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: carryoverLoss, lang: "ko" },
   { slug: "tax-reduction-disabled-2026", title: "장애인 인적공제 200만원 + 의료비 무한도 — 매년 100~300만원 환급", description: "본인·부양가족 장애 등록 시 인적공제 200 + 의료비 한도 없음 + 보험료 100 + 교육비 무한도. 매년 100~300만원 추가 환급.", category: "세금", tags: ["장애인", "인적공제", "의료비", "보험료", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: taxReductionDisabled, lang: "ko" },
-  { slug: "tax-amnesty-self-report-2026", title: "자진 수정신고 — 1개월 이내 가산세 90% 감면", description: "1개월 90% / 3개월 75% / 6개월 50% / 1년 30% / 2년 20% 감면. 무신고 시 20%, 부정 40%, 역외 60% 가산세.", category: "세금", tags: ["수정신고", "가산세", "감면", "세무조사", "2026"], level: "중급", publishedDate: "2026-05-23",
+  { slug: "tax-amnesty-self-report-2026", title: "자진 수정신고 — 1개월 이내 가산세 90% 감면", description: "1개월 90%·3개월 75%·6개월 50%·1년 30%·1.5년 20%·2년 10% 감면. 무신고·부정·역외 20·40·60% 가산세.", category: "세금", tags: ["수정신고", "가산세", "감면", "세무조사", "2026"], level: "중급", publishedDate: "2026-05-23",
     modifiedDate: "2026-10-03", views: 0, content: taxAmnestyReform, lang: "ko" },
   // 건강·의료 10편
   { slug: "out-of-pocket-limit-2026", title: "본인부담상한제 — 5분위 시 327만원 환급", description: "1년 의료비 90~843만원 초과분은 다음해 8월 말 안내 후 신청 시 환급. 5분위 직장인 500만원 부담 시 327만원 환급.", category: "기초", tags: ["본인부담상한제", "의료비", "환급", "건강보험", "2026"], level: "초급", publishedDate: "2026-05-23", views: 0, content: outOfPocketLimit, lang: "ko" },

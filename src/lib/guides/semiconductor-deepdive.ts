@@ -555,7 +555,7 @@ const semiconductorPerformanceBonusTax = `
 
 <h3 class="text-xl font-bold mt-8 mb-3">전략 2. ISA(개인종합자산관리계좌)로 매매차익 비과세</h3>
 <p>
- PS 받은 자금으로 ISA 한도(연 2,000만원, 누적 1억) 내에서 ETF·국내주식 매매하면 매매차익 200만원까지 비과세, 초과분은 9.9% 분리과세.
+ PS 받은 자금으로 ISA 한도(연 2,000만원, 누적 1억) 내에서 해외지수 ETF 매매차익·배당 200만원까지 비과세, 초과분은 9.9% 분리과세.
  일반 계좌(15.4%) 대비 절세 효과 큽니다.
 </p>
 
@@ -923,8 +923,8 @@ const chipRsuStockTax2026 = `
    </tr>
    <tr class="border-t border-border bg-primary/5">
     <td class="p-3 font-bold">ISA 내 매수</td>
-    <td class="p-3 font-bold text-primary">200만원까지 비과세, 초과분 9.9% 분리과세</td>
-    <td class="p-3 font-bold">6,822만원 ~ 7,000만원</td>
+    <td class="p-3 font-bold text-primary">국내주식 차익은 원래 비과세</td>
+    <td class="p-3 font-bold">7,000만원</td>
    </tr>
    <tr class="border-t border-border">
     <td class="p-3">일반 증권계좌 (소액주주)</td>
@@ -959,7 +959,7 @@ const chipRsuStockTax2026 = `
 
 <h3 class="text-xl font-bold mt-8 mb-3">원칙 2. ISA 한도 우선, 그다음 일반 계좌</h3>
 <p>
- 매년 ISA 한도(2,000만원) 만큼은 ISA 계좌로 매수해 매매차익을 비과세로 가져갑니다.
+ 매년 ISA 한도(2,000만원) 만큼은 ISA 계좌로 매수해 배당을 비과세로 받습니다.
  한도 초과분만 일반 계좌로.
 </p>
 

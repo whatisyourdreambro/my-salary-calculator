@@ -828,11 +828,13 @@ describe.skipIf(REGEN.size > 0)("(6) metaDescription 은 META-07 맵(54편)·검
     // + 2026-11-15 N2-lib-01: 화면 정정이 광고 위라 미뤄진 3편 = 19편 — tax-amnesty-self-report-2026(국세기본법 제48조②1
     //   1년 6개월 20%·2년 10%, 화면 표는 한 줄이 늘어 운영자 질문 1 뒤), wage-delayed-claim-2026(추석 한시 지원 기한이 지나
     //   상시 절차부터), low-income-support-4benefits-2026(2026 4인 생계급여 2,078,316원, 화면 195만원은 N2-lib-06 스윕 뒤).
+    // + 2026-11-18 N2-guides-content-02(b04-M03): comprehensive-financial-income-2000-2026 — 화면 TL;DR 의 '한계세율 35%+ 점프'(10/4 본문에서
+    //   지운 주장) 대신 검색 설명만 소득세법 제14조·제62조 문구 = 20편. 화면 TL;DR 은 R7 N2-guides-content-04.
     const kwStart = src.indexOf("const guideKeywordMetaDescriptions");
     expect(kwStart, "guidesContent.ts 의 검색어 복원 맵을 찾지 못함").toBeGreaterThan(-1);
     const kwBlock = src.slice(kwStart, src.indexOf("\n};", kwStart));
     const keywordMeta = new Set([...kwBlock.matchAll(/^\s*"([a-z0-9-]+)"\s*:/gm)].map((m) => m[1]));
-    expect(keywordMeta.size).toBe(19);
+    expect(keywordMeta.size).toBe(20);
     expect([...keywordMeta].filter((s) => meta07.has(s) || keeperSet.has(s)), "META-07·키퍼와 겹치지 않는다").toEqual([]);
     expect([...keywordMeta].filter((s) => !bySlug.get(s)?.metaDescription)).toEqual([]);
     expect(

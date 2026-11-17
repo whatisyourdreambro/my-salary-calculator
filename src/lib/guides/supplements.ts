@@ -26,7 +26,7 @@ import {
   POSITION_ALLOWANCE_2026,
   TEACHER_PAY_ROWS_2026,
 } from "@/lib/civilServantPay";
-import { AGREEMENT_2026, H1_2026_PROFIT_TRIL, PS_HISTORY } from "@/app/calc/sk-hynix-bonus/psData";
+import { AGREEMENT_2026, H1_2026_PROFIT_TRIL, PS_HISTORY, Q1_Q3_2026_PROFIT_TRIL } from "@/app/calc/sk-hynix-bonus/psData";
 import { FIXED_BU_RATIO, FIXED_RERATE, FIXED_SA_RATIO, getThreshold } from "@/app/calc/samsung-bonus/model";
 import { SAMSUNG_OPI2_TRANCHES, SAMSUNG_WAGE_2026 } from "@/lib/bonusHome/compEngines";
 import { UNEMPLOYMENT_BENEFIT_2026, unemploymentDailyLowerBound } from "@/config/unemploymentBenefit";
@@ -211,6 +211,7 @@ const skHynixWage2026Supplement = `
 <p>이 글은 2026년 5월 임금협상 초기에 쓴 분석입니다. 그 뒤 확정된 내용을 날짜와 출처를 붙여 정리합니다. 본문 PS 추이 표의 2026년 행은 작성 당시의 전망으로, 상반기 실적과 맞지 않아 취소선으로 철회했습니다.</p>
 <ul>
 <li><strong>2026 임금협상 타결</strong> — 2026년 9월 16일 조합원 총투표에서 수정 잠정합의안이 가결됐습니다(헤럴드경제·파이낸셜뉴스 2026-09-16 보도 기준). 기본급 인상률은 ${AGREEMENT_2026.wageIncreasePct}%로, 본문의 당시 추정(5.5~7.0%) 범위 안입니다.</li>
+<li><strong>2025년 임금교섭</strong> — 2025년 9월 임금 6.0% 인상으로 타결됐습니다(파이낸셜뉴스 2025-09-01 보도 기준). 본문 변수 1의 '약 5.5%'는 6.0%가 맞습니다.</li>
 <li><strong>성과급(PS) 지급 방식</strong> — 재원은 영업이익의 ${SKH_POOL_PCT}%(상한 없음)입니다. ${AGREEMENT_2026.appliesFrom} 당해 ${SKH_SPLIT.cashNowPct + SKH_SPLIT.stockNowPct}%(현금 ${SKH_SPLIT.cashNowPct}% + 자사주 ${SKH_SPLIT.stockNowPct}%)를 지급하고, 나머지 ${SKH_SPLIT.stockYear1Pct + SKH_SPLIT.stockYear2Pct}%는 1년 뒤·2년 뒤 주식으로 ${SKH_SPLIT.stockYear1Pct}%씩 나눠 지급합니다(보도 기준).</li>
 <li><strong>2025년 실적분 PS</strong> — 기본급 대비 ${SKH_PS_2025_RATE}%(2026년 2월 5일 지급, 보도 기준). 같은 해 연결 영업이익은 ${SKH_PS_2025.opTril}조원(DART 사업보고서)입니다.</li>
 <li><strong>2026년 실적</strong> — 상반기 영업이익 약 ${H1_2026_PROFIT_TRIL}조원(회사 실적 발표). 2026년분 PS 지급률은 2027년 초 연간 실적 발표 뒤 확정됩니다.</li>
@@ -369,6 +370,16 @@ const specialBonusPoolSupplement = `
 <p>2026년 5월 삼성전자 임금협약 보도(지디넷·아시아경제·연합인포맥스)와 10월 7일 세부안 보도(한국경제·이투데이)는 DS부문 특별경영성과급 재원을 위 본문의 '영업이익의 12% 수준'이 아니라 DS부문 영업이익의 10.5%로, 지급 조건을 2026~2028년 매년 DS 영업이익 200조원 이상으로 전합니다(보도 기준).</p>
 `;
 
+/** SK하이닉스 PS 2027 전망 글 — 위 재원 기준 보강 + 3분기 실적(2026-11-18, N2-guides-content-02 b01-F03). 본문은 상반기 98.2조원까지라
+ *  쌍둥이 글(samsung-opi-forecast-2027)이 10/29 실적을 받은 것처럼 10/28 발표를 광고 아래에만 더한다. 누적 영업이익은 psData 정본 상수
+ *  (Q1 37조6,103억 + Q2 60조5,426억 + Q3 83조3,338억 = 181조4,867억 → 181.5). 재원 약 18.1조원 = 181조4,867억 × 10% = 18조1,487억(반올림).
+ *  출처: SK하이닉스 뉴스룸 2026-10-28 https://news.skhynix.co.kr/q3-2026-business-results/ (2026-11-18 재확인). */
+const skHynixPsForecastSupplement = specialBonusPoolSupplement + `
+<h2>2026년 3분기 실적 반영</h2>
+<p>SK하이닉스는 2026년 10월 28일 3분기 매출 104조 6,155억원, 영업이익 83조 3,338억원을 발표했습니다. 1~3분기 누적 영업이익은 ${Q1_Q3_2026_PROFIT_TRIL}조원이라, 위 본문의 '영업이익 10%' 공식을 적용한 재원은 약 18.1조원입니다(4분기 실적 제외). 연간 실적과 지급률은 2027년 1~2월 회사 발표로 확정됩니다.</p>
+<p><em>출처: SK하이닉스 뉴스룸 2026년 3분기 경영실적(2026-10-28)</em></p>
+`;
+
 const sideHustleSupplement = `
 <h2>신고 예시 다시 계산</h2>
 <p>연봉 5,000만원(본인 1인)의 과세표준은 근로소득공제·인적공제·4대보험 공제 뒤 약 3,100만원대라, 부업 순이익 700만원을 더해도 과세표준 5,000만원 이하인 15% 구간에 머뭅니다. 추가 세금은 700만원 × 15% = 약 105만원에 지방소득세 10.5만원 정도로, 위 예시의 24%·168만원보다 적습니다. 내 조건은 <a href="/income-tax-2026">종합소득세 계산기</a>로 확인하세요.</p>
@@ -382,6 +393,7 @@ const unemploymentBenefitsSupplement = `
 <li><strong>Q. 50세 이상이면 며칠 받나요?</strong> — 50세 이상·장애인은 가입기간 1년 미만 120일, 1~3년 180일, 3~5년 210일, 5~10년 240일, 10년 이상 270일입니다(고용보험법 별표 1). 1년 이상 구간마다 50세 미만보다 30일 깁니다.</li>
 </ul>
 <p>조기재취업수당은 소정급여일수를 절반 이상 남기고 재취업해 12개월 이상 계속 고용(65세 이상은 6개월)돼야 받을 수 있고, 워크넷은 고용24로 통합됐습니다. 내 평균임금·나이·가입기간으로 계산하려면 <a href="/unemployment-benefit">실업급여 계산기</a>, 권고사직과 자진퇴사 비교는 <a href="/guides/voluntary-vs-recommended-resignation-2026">권고사직 vs 자진퇴사</a>를 이용하세요.</p>
+<p>수급 요건의 180일은 가입 일수가 아니라 보수 지급의 기초가 된 날(유급휴일 포함)이라 주 5일 근무자는 약 7개월 이상 일해야 채워집니다(고용보험법 제40조·제41조).</p>
 <p><em>출처: 고용보험법 제45·46·50조 별표 1, 고용노동부 구직급여 상한액 고시, 생활법령 조기재취업수당</em></p>
 `;
 
@@ -416,7 +428,7 @@ export const guideSupplements: Record<string, string> = {
   "samsung-medison-salary-2026": samsungMedisonSupplement,
   "samsung-opi-forecast-2027": specialBonusPoolSupplement,
   "side-hustle-tax-2026": sideHustleSupplement,
-  "sk-hynix-ps-forecast-2027": specialBonusPoolSupplement,
+  "sk-hynix-ps-forecast-2027": skHynixPsForecastSupplement,
   "sk-hynix-wage-2026": skHynixWage2026Supplement,
   "unemployment-benefits-complete": unemploymentBenefitsSupplement,
   "vat-filing-2026": vatFilingSupplement,

@@ -1709,7 +1709,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-06",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3408
+  "contentChars": 3395
  },
  {
   "slug": "samsung-employee-rsu-stock",
@@ -1817,7 +1817,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-06",
   "views": 0,
   "lang": "ko",
-  "contentChars": 2911
+  "contentChars": 2903
  },
  {
   "slug": "kospi-leader-stock-strategy",
@@ -2061,7 +2061,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 6036
+  "contentChars": 6034
  },
  {
   "slug": "hbm-supercycle-worker-2026",
@@ -2120,7 +2120,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-13",
   "views": 0,
   "lang": "ko",
-  "contentChars": 5925
+  "contentChars": 5901
  },
  {
   "slug": "year-end-tax-refund-secrets-2026",
@@ -4036,7 +4036,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "tax-amnesty-self-report-2026",
   "title": "자진 수정신고 — 1개월 이내 가산세 90% 감면",
-  "description": "1개월 90% / 3개월 75% / 6개월 50% / 1년 30% / 2년 20% 감면. 무신고 시 20%, 부정 40%, 역외 60% 가산세.",
+  "description": "1개월 90%·3개월 75%·6개월 50%·1년 30%·1.5년 20%·2년 10% 감면. 무신고·부정·역외 20·40·60% 가산세.",
   "category": "세금",
   "tags": [
    "수정신고",
@@ -4050,7 +4050,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 959
+  "contentChars": 998
  },
  {
   "slug": "out-of-pocket-limit-2026",
@@ -4769,7 +4769,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 937
+  "contentChars": 929
  },
  {
   "slug": "sign-on-bonus-tax-2026",
@@ -4812,7 +4812,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "executive-bonus-corporate-limit-2026",
   "title": "비상장 임원 성과급 한도 — 초과 시 회사·임원 모두 손해",
-  "description": "정관·주총 한도 명시. 한도 5억 + 실 지급 8억 시 초과 3억 법인세 7,200만 추가 + 임원 근로소득세 그대로. 한도 내 운용 필수.",
+  "description": "정관·주총 한도 명시. 한도 5억 + 실지급 8억 시 초과 3억 법인세 6,000만 추가 + 임원 근로소득세 그대로. 한도 내 운용 필수.",
   "category": "연봉",
   "tags": [
    "임원",
@@ -4825,7 +4825,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 900
+  "contentChars": 893
  },
  {
   "slug": "bonus-1eok-net-payment-2026",
@@ -4943,8 +4943,8 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "dependent-check-before-bonus-2026",
-  "title": "성과급 받기 전 가족 피부양자 점검 — 임대 2,000만 + 박탈",
-  "description": "본인 성과급으로 피부양자 자격 직접 영향 없음. 단 가족 임대·연금·이자 합산 2,000만+ 시 박탈 → 지역가입자 월 50~150만 부담.",
+  "title": "성과급 받기 전 가족 피부양자 점검 — 소득 2,000만 + 박탈",
+  "description": "본인 성과급으로 피부양자 자격 직접 영향 없음. 단 가족 소득 합산 2,000만+ 또는 임대소득 시 박탈 → 지역보험료 부담.",
   "category": "기초",
   "tags": [
    "피부양자",
@@ -4958,12 +4958,12 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1064
+  "contentChars": 1051
  },
  {
   "slug": "total-income-adjustment-bonus-2026",
-  "title": "성과급 + 임대 + 금융 + 사업 종합 정산 — 영끌 2억 시 추가 5,750만",
-  "description": "성과급 5,000만 + 임대 3,000만 + 배당 2,000만 + 사업 3,000만 = 영끌 2억. 종소세 4,500만 + 지방세 + 정산 800만 = 약 5,750만 추가.",
+  "title": "성과급 + 임대 + 금융 + 사업 종합정산 — 영끌 2억 시 부담 5,300만",
+  "description": "성과급 5,000만 + 임대 3,000만 + 배당 2,000만 + 사업 3,000만 = 영끌 2억. 소득세 4,100만 + 지방세 + 정산 800만 = 약 5,300만 부담.",
   "category": "기초",
   "tags": [
    "종합과세",
@@ -4976,7 +4976,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 917
+  "contentChars": 912
  },
  {
   "slug": "optional-continue-after-bonus-2026",
@@ -5012,7 +5012,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 870
+  "contentChars": 865
  },
  {
   "slug": "couple-split-bonus-year-2026",
@@ -5054,7 +5054,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "moving-company-bonus-2026",
   "title": "이직 중 성과급 — 전·신 회사 합산 1,000만+ 추가 세금",
-  "description": "전 회사 + 신 회사 성과급 모두 근로소득 합산. 5월 종소세 신고 시 합산 신고 의무. 한계세율 점프 시 추가 1,000만+ 세금.",
+  "description": "전 회사 + 신 회사 성과급 모두 근로소득 합산. 새 회사 연말정산에서 합산. 한계세율 점프 시 추가 1,000만+ 세금.",
   "category": "커리어",
   "tags": [
    "이직",
@@ -5067,7 +5067,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 983
+  "contentChars": 975
  },
  {
   "slug": "bonus-retire-impact-severance-2026",
@@ -5202,7 +5202,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-08-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 6542
+  "contentChars": 6543
  },
  {
   "slug": "sk-hynix-ps-forecast-2027",

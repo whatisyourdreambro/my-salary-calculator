@@ -497,7 +497,7 @@ const foreignBonus = `
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 외국 법인 직접 지급 시 신고 의무</h2>
-<p>외국 모회사가 한국 직원에게 직접 RSU·옵션 지급 시 한국 세무서에 본인이 직접 신고해야 함. 미신고 시 가산세 + 외국 자산 미신고 죄. 매년 5월 종소세 신고와 함께 처리.</p>
+<p>외국 모회사가 준 RSU·옵션 이익은 국내 회사가 원천징수하지 않았으면 본인이 5월 종소세로 신고. 미신고 시 가산세. 해외계좌 잔액 5억 초과면 6월 별도 신고.</p>
 
 <div class="mt-8 p-6 bg-primary/5 rounded-2xl border border-primary/20"><p class="font-bold text-primary mb-2">📌 관련</p><ul class="space-y-1 text-sm"><li>· <a href="/income-tax-2026" class="text-primary underline">종합소득세 계산기</a></li></ul></div>
 `;
@@ -550,14 +550,14 @@ const executiveBonusLimit = `
 <ul class="space-y-2 mt-4">
 <li>· 정관 또는 주주총회 결의로 한도 설정</li>
 <li>· 일반적으로 기본급의 100~300%</li>
-<li>· 한도 초과분: 손금 불산입 → 법인세 24% 추가</li>
+<li>· 한도 초과분: 손금 불산입 → 법인세 추가</li>
 <li>· 임원 본인은 근로소득세 정상 부과</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 한도 5억 / 실 지급 8억</h2>
 <ul class="space-y-2 mt-4">
 <li>· 한도 내 5억: 법인 손금 인정, 임원 근로소득</li>
-<li>· 한도 초과 3억: 법인 손금 불산입 → 법인세 7,200만 추가</li>
+<li>· 한도 초과 3억: 손금 불산입 → 법인세 6,000만 추가</li>
 <li>· 임원: 8억 전체에 근로소득세 + 4대보험</li>
 <li>· <strong>회사·임원 모두 손해 → 한도 내 운용 필수</strong></li>
 </ul>
@@ -878,22 +878,22 @@ ${INSURANCE_BY_SALARY.map((x) => `<tr><td>${manwon(x.salary)}</td><td>${won(x.pe
 `;
 
 const dependentBeforeBonus = `
-<p class="lead">성과급 받기 전 가족 피부양자 자격 점검 필수. 2022년 11월 피부양자 요건 강화 — 연소득 2,000만원 + 재산세 과세표준 5.4억 이하. 가족 본인의 소득·재산 조건을 확인해야 합니다.</p>
+<p class="lead">성과급 받기 전 가족 피부양자 자격 점검 필수. 2022년 9월 피부양자 요건 강화 — 연소득 2,000만원 + 재산세 과세표준 5.4억 이하. 가족 본인의 소득·재산 조건을 확인해야 합니다.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 피부양자 자격 점검</h2>
 <ul class="space-y-2 mt-4">
 <li>· <strong>연소득 2,000만 이하</strong>: 사업소득은 사실상 0, 근로·연금소득 합산</li>
-<li>· <strong>재산세 과세표준 5.4억 이하</strong>: 소득 있으면 더 엄격</li>
+<li>· <strong>재산세 과세표준 9억 이하</strong>: 5.4억 초과는 조건부</li>
 <li>· <strong>사업소득자</strong>: 연 500만 초과 시 피부양자 박탈</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 성과급 큰 직원의 함정</h2>
-<p>본인이 성과급 받아도 피부양자 자격에 직접 영향 없음. 단 가족(부모·배우자)이 임대소득·연금소득·이자소득 등으로 2,000만 넘으면 그들이 피부양자에서 박탈 → 지역가입자 전환 → 월 50~150만원 보험료 부과.</p>
+<p>본인이 성과급 받아도 피부양자 자격에 직접 영향 없음. 단 가족(부모·배우자)이 연금·이자소득 등으로 2,000만 넘거나 임대소득이 있으면 피부양자에서 박탈 → 지역가입자 전환 → 소득·재산별 보험료 부과.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 사전 점검</h2>
 <ul class="space-y-2 mt-4">
 <li>· 부모·배우자 연소득 합산 점검 (1~2월)</li>
-<li>· 임대소득 2,000만 초과 시 가족 부담</li>
+<li>· 임대소득 있으면 피부양자 탈락</li>
 <li>· 임의계속가입 신청 가능성 확인</li>
 </ul>
 
@@ -906,11 +906,11 @@ const incomeAdjustmentTotal = `
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 종합 정산 시뮬 (영끌 2억)</h2>
 <p>연봉 7,000만 + 성과급 5,000만 + 임대소득 3,000만 + 배당 2,000만 + 사업소득 3,000만:</p>
 <ul class="space-y-2 mt-4">
-<li>· 종합소득 총: 2억</li>
-<li>· 종합소득세: 약 4,500만</li>
-<li>· 지방세: 450만</li>
+<li>· 종합과세: 1.8억</li>
+<li>· 소득세: 약 4,100만</li>
+<li>· 지방세: 410만</li>
 <li>· 4대보험 정산 추가: 약 800만</li>
-<li>· <strong>총 추가 부담: 약 5,750만</strong></li>
+<li>· <strong>총 부담: 약 5,300만</strong></li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 분산 절세</h2>
@@ -958,7 +958,7 @@ const giftWithBonus = `
 <li>· 미성년 자녀: 10년 2,000만원</li>
 <li>· 성인 자녀: 10년 5,000만원</li>
 <li>· 배우자: 10년 6억원</li>
-<li>· 손자녀: 10년 5,000만원</li>
+<li>· 손자녀: 부모와 합산</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 성과급 5,000만 → 자녀 증여</h2>
@@ -1059,13 +1059,13 @@ const december1January = `
 `;
 
 const moveCompanyBonus = `
-<p class="lead">이직 중 성과급 받는 경우 — 전 회사 기여분(전 회사 지급) + 신 회사 기여분(신 회사 지급) 모두 근로소득. 종합소득세 신고 시 둘 다 합산. 4월 건보료 정산도 양쪽 통합.</p>
+<p class="lead">이직 중 성과급 받는 경우 — 전 회사 기여분(전 회사 지급) + 신 회사 기여분(신 회사 지급) 모두 근로소득. 새 회사 연말정산에 합산(빠지면 5월 신고). 건보는 회사별.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 이직 중 성과급 처리</h2>
 <ul class="space-y-2 mt-4">
 <li>· <strong>전 회사 성과급</strong>: 퇴직 후 지급되어도 원천징수 + 근로소득</li>
 <li>· <strong>신 회사 성과급</strong>: 정상 처리</li>
-<li>· <strong>합산</strong>: 5월 종소세 신고 시 합산. 한계세율 점프 가능</li>
+<li>· <strong>합산</strong>: 새 회사 정산에 합산. 한계세율 점프 가능</li>
 <li>· <strong>이중 공제</strong>: 인적공제·기본공제 중복 안 됨</li>
 </ul>
 
@@ -1073,7 +1073,7 @@ const moveCompanyBonus = `
 <p>전 회사 4개월 근무 후 신 회사 8개월. 7월 전 회사 성과급 3,000만 + 12월 신 회사 성과급 2,000만:</p>
 <ul class="space-y-2 mt-4">
 <li>· 종합 성과급 5,000만 + 양 회사 연봉 합산</li>
-<li>· 5월 종소세 신고 시 양쪽 모두 합산</li>
+<li>· 빠지면 5월 종소세 신고로 합산</li>
 <li>· 한계세율 점프 시 추가 1,000만+ 세금</li>
 </ul>
 
@@ -1214,7 +1214,7 @@ const bonusPropertySell = `
 <ul class="space-y-3 mt-4">
 <li><strong>① 근로소득 + 성과급</strong>: 종합과세 누진세율</li>
 <li><strong>② 부동산 양도</strong>: 분류과세 (종합과세와 별도)</li>
-<li><strong>③ 양도세 신고</strong>: 양도일 다음달 말일까지 예정신고 → 확정신고는 다음해 5월</li>
+<li><strong>③ 양도세 신고</strong>: 양도월 말일부터 2개월 예정신고 → 확정신고는 다음해 5월</li>
 <li><strong>④ 건보료 부과</strong>: 보수 외 소득(임대·금융 등) 2천만원 초과 시 소득월액보험료 추가 반영</li>
 </ul>
 
@@ -1248,7 +1248,7 @@ export const hotBonusTaxComplete: Guide[] = [
     modifiedDate: "2026-10-03", views: 0, content: signOnBonus, lang: "ko" },
   { slug: "retention-bonus-3year-split-2026", title: "리텐션 보너스 1억 — 3년 분할 vs 일시 총세금", description: "M&A·구조조정 후 잔존 보너스. 1억 일시 vs 3년 분할 세금은 귀속연도별 상이. 분할 지급 협상 시 조건 확인.", category: "연봉", tags: ["리텐션", "잔존보너스", "M&A", "구조조정", "2026"], level: "고급", publishedDate: "2026-05-23",
     modifiedDate: "2026-10-03", views: 0, content: retentionBonus, lang: "ko" },
-  { slug: "executive-bonus-corporate-limit-2026", title: "비상장 임원 성과급 한도 — 초과 시 회사·임원 모두 손해", description: "정관·주총 한도 명시. 한도 5억 + 실 지급 8억 시 초과 3억 법인세 7,200만 추가 + 임원 근로소득세 그대로. 한도 내 운용 필수.", category: "연봉", tags: ["임원", "비상장", "성과급한도", "법인세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: executiveBonusLimit, lang: "ko" },
+  { slug: "executive-bonus-corporate-limit-2026", title: "비상장 임원 성과급 한도 — 초과 시 회사·임원 모두 손해", description: "정관·주총 한도 명시. 한도 5억 + 실지급 8억 시 초과 3억 법인세 6,000만 추가 + 임원 근로소득세 그대로. 한도 내 운용 필수.", category: "연봉", tags: ["임원", "비상장", "성과급한도", "법인세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: executiveBonusLimit, lang: "ko" },
   // 영역 B — 성과급 소득세 10편
   {
     slug: "bonus-1eok-net-payment-2026",
@@ -1322,15 +1322,15 @@ export const hotBonusTaxComplete: Guide[] = [
     content: bonusInsuranceCeiling,
     lang: "ko",
   },
-  { slug: "dependent-check-before-bonus-2026", title: "성과급 받기 전 가족 피부양자 점검 — 임대 2,000만 + 박탈", description: "본인 성과급으로 피부양자 자격 직접 영향 없음. 단 가족 임대·연금·이자 합산 2,000만+ 시 박탈 → 지역가입자 월 50~150만 부담.", category: "기초", tags: ["피부양자", "건강보험", "성과급", "지역가입자", "2026"], level: "고급", modifiedDate: "2026-10-03", publishedDate: "2026-05-23", views: 0, content: dependentBeforeBonus, lang: "ko" },
-  { slug: "total-income-adjustment-bonus-2026", title: "성과급 + 임대 + 금융 + 사업 종합 정산 — 영끌 2억 시 추가 5,750만", description: "성과급 5,000만 + 임대 3,000만 + 배당 2,000만 + 사업 3,000만 = 영끌 2억. 종소세 4,500만 + 지방세 + 정산 800만 = 약 5,750만 추가.", category: "기초", tags: ["종합과세", "성과급", "임대소득", "정산", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: incomeAdjustmentTotal, lang: "ko" },
+  { slug: "dependent-check-before-bonus-2026", title: "성과급 받기 전 가족 피부양자 점검 — 소득 2,000만 + 박탈", description: "본인 성과급으로 피부양자 자격 직접 영향 없음. 단 가족 소득 합산 2,000만+ 또는 임대소득 시 박탈 → 지역보험료 부담.", category: "기초", tags: ["피부양자", "건강보험", "성과급", "지역가입자", "2026"], level: "고급", modifiedDate: "2026-10-03", publishedDate: "2026-05-23", views: 0, content: dependentBeforeBonus, lang: "ko" },
+  { slug: "total-income-adjustment-bonus-2026", title: "성과급 + 임대 + 금융 + 사업 종합정산 — 영끌 2억 시 부담 5,300만", description: "성과급 5,000만 + 임대 3,000만 + 배당 2,000만 + 사업 3,000만 = 영끌 2억. 소득세 4,100만 + 지방세 + 정산 800만 = 약 5,300만 부담.", category: "기초", tags: ["종합과세", "성과급", "임대소득", "정산", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: incomeAdjustmentTotal, lang: "ko" },
   { slug: "optional-continue-after-bonus-2026", title: "성과급 큰 임원 퇴직 후 임의계속가입 — 신청 기한·36개월", description: "성과급 큰 임원이 퇴직하면 지역보험료가 커질 수 있다. 임의계속가입은 퇴직 전 12개월 평균 보수월액 기준으로 최대 36개월.", category: "기초", tags: ["임의계속가입", "퇴직", "건강보험", "임원", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: optionalContinueAfterBonus, lang: "ko" },
   // 영역 D — 성과급 절세 심화 10편
   { slug: "gift-children-with-bonus-2026", title: "성과급 받는 해 자녀 5,000만 증여 — 평생 1.4억+ 비과세", description: "성인 자녀 10년 5,000만 비과세. 본인 성과급 절세 + 자녀 자산 형성 + 세대 간 이전 효과. 10년 반복 시 평생 1.4억+ 비과세.", category: "세금", tags: ["증여", "자녀", "비과세", "5000만", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: giftWithBonus, lang: "ko" },
   { slug: "couple-split-bonus-year-2026", title: "맞벌이 연말정산 몰아주기 — 성과급 받은 해 기준", description: "인적공제는 세율 높은 쪽, 의료비는 3% 문턱 낮은 쪽, 카드는 25% 문턱을 넘는 쪽. 세액공제는 세율과 무관합니다.", metaDescription: "맞벌이 연말정산 몰아주기는 인적공제는 세율이 높은 쪽, 의료비는 총급여 3% 문턱이 낮은 쪽, 카드는 25% 문턱을 넘는 쪽이 기본입니다. 성과급 받은 해 계산 예시와 불가 항목을 정리했습니다.", category: "세금", tags: ["부부분산", "의료비", "한계세율", "연말정산", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-26", views: 0, content: coupleSplitBonus, lang: "ko" },
   // 영역 E — 성과급 시점·실전 10편
   { slug: "december-vs-january-bonus-2026", title: "12월 인센티브 vs 1월 인센티브 — 정산 시점·IRP 한도", description: "같은 금액 세금 차이 거의 없음. 단 12월 지급은 당해 정산, IRP 한도 즉시 도달. 1월 지급은 다음해 정산. 정산·납입 일정 차이.", category: "세금", tags: ["12월", "1월", "인센티브", "정산", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: december1January, lang: "ko" },
-  { slug: "moving-company-bonus-2026", title: "이직 중 성과급 — 전·신 회사 합산 1,000만+ 추가 세금", description: "전 회사 + 신 회사 성과급 모두 근로소득 합산. 5월 종소세 신고 시 합산 신고 의무. 한계세율 점프 시 추가 1,000만+ 세금.", category: "커리어", tags: ["이직", "성과급", "전회사", "종합소득세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: moveCompanyBonus, lang: "ko" },
+  { slug: "moving-company-bonus-2026", title: "이직 중 성과급 — 전·신 회사 합산 1,000만+ 추가 세금", description: "전 회사 + 신 회사 성과급 모두 근로소득 합산. 새 회사 연말정산에서 합산. 한계세율 점프 시 추가 1,000만+ 세금.", category: "커리어", tags: ["이직", "성과급", "전회사", "종합소득세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: moveCompanyBonus, lang: "ko" },
   { slug: "bonus-retire-impact-severance-2026", title: "성과급 퇴직금 포함 기준 2026 — 평균임금·대법원 판례", description: "퇴직금은 평균임금으로 계산합니다. 정기상여·목표 인센티브는 들어가고, 해마다 노사합의로 정한 경영성과급은 빠질 수 있습니다.", metaDescription: "성과급이 퇴직금에 들어가는지는 평균임금 포함 여부로 갈립니다. 2026년 대법원 판결(삼성전자 목표 인센티브 포함·경영성과급 제외)과 월 500만원·10년 근속 예시로 퇴직금 차이와 퇴직소득세를 계산했습니다.", category: "커리어", tags: ["퇴직금", "평균임금", "성과급", "퇴직소득세", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-26", views: 0, content: bonusRetireImpact, lang: "ko" },
   { slug: "stock-option-with-bonus-2026", title: "성과급 + 스톡옵션 일반 vs 적격 — 과세 시점·세금 차이", description: "일반: 행사이익은 근로소득으로 성과급과 합산 과세. 적격(벤처)은 요건 충족 시 행사 때 과세를 미루고 매도 때 양도세.", category: "주식", tags: ["스톡옵션", "적격", "벤처", "양도세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: stockOptionTimingBonus, lang: "ko" },
   { slug: "bonus-property-sell-same-year-2026", title: "성과급 + 부동산 양도 동시 — 종합 세금 점검 필수", description: "근로소득(성과급) 종합과세 + 부동산 분류과세 별도. 건보료 정산에도 반영. 1주택 비과세 + 80% 공제 시 5억 양도차익 약 200만, 성과급 5,000만 + 합산 약 2,700만.", category: "부동산", tags: ["성과급", "부동산양도", "종합세금", "정산", "2026"], level: "고급", modifiedDate: "2026-10-03", publishedDate: "2026-05-23", views: 0, content: bonusPropertySell, lang: "ko" },

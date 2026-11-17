@@ -4,6 +4,8 @@
 // 그래야 게시 8단계 IndexNow(사이트맵 (loc, lastmod) 차이)가 보강한 글을 네이버·빙에 알린다.
 // 2026-11-15 (ads-01): 이미 '수정' 칩이 있는 R1 10편도 이 표에 있다 — 칩 숫자를 바꾸면 화면 폭 440~445px 에서 광고가 24px 내려가
 // (가드 스윕 실측) 화면 날짜는 운영 값 그대로 둔다. 그 10편의 두 날짜 고정은 relandR1Ledger.test.ts.
+// 2026-11-18 (운영자 결정 2026-11-17 10번): 칩 없는 글의 본문 정정도 보강 없이 행을 둘 수 있다 — 화면은 그대로(칩을 만들지 않음),
+// 사이트맵 날짜만 본문을 고친 날. 이름과 이유를 적은 CHIPLESS_BODY_ROWS 에 있어야 한다(아래 두 번째 검사, rl08GuideFacts.test.ts 도 같은 규칙).
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
@@ -26,12 +28,23 @@ const NO_SUPPLEMENT_ROWS: Readonly<Record<string, string>> = {
   "us-treasury-bond":
     "R1 RL-02 광고 위 같은 폭 정정만 받았다. 칩을 2026.11.03 으로 바꾸면 화면 폭 440~441px 에서 제목 아래 광고가 24px 내려가 화면 날짜는 2026.10.03 그대로 둔다",
 };
+// 칩 없는 글의 본문(광고 위) 정정 — 운영자 결정 2026-11-17 10번(DEFER 질문: 화면은 그대로 두고 검색엔진용 날짜만 고친 날로).
+// 칩 없는 글은 본문을 고쳐도 화면 날짜가 발행일이라 IndexNow 가 알리지 않는다. 칩을 새로 만들면 GuideMidAd 위 UI 가 늘어나므로(금지)
+// 칩 없이 사이트맵 전용 행만 둔다. 값은 그 본문을 실제로 고친 날(KST, git 기록) — 아직 알리지 않은 정정에만, 오늘·게시일·미래 날짜 금지.
+const CHIPLESS_BODY_ROWS: Readonly<Record<string, string>> = {
+  "commercial-office-capital-gains-2026": "RL-08 재착지 1c90ba05a(2026-11-15) 광고 위 양도세 예시 정정 — 칩 없는 글, 보강 없음",
+  "lease-right-transfer-tax-2026": "RL-08 재착지 266f6e806(2026-11-15) 광고 위 보유기간별 세율 정정 — 칩 없는 글, 보강 없음",
+  "child-gift-10year-rule-2026": "RL-08 재착지 c11f56d41(2026-11-15) 광고 위 증여세 신고기한 정정 — 칩 없는 글, 보강 없음",
+  "rental-business-prop-tax-exclusion-2026": "RL-08 재착지 ffcfbd57b(2026-11-15) 광고 위 종부세 합산배제 예시 정정 — 칩 없는 글, 보강 없음",
+  "minimum-wage-2026": "RL-08 재착지 3406a00b1(2026-11-15) 광고 위 월급제 유급 시간 정정 — 칩 없는 글, 보강 없음",
+  "hometax-year-end-preview-2026": "lens-season-F05 46d56278d(2026-11-13) 운영 기간 10월 28일~12월 18일 같은 길이 정정 — 칩 없는 글, 보강 없음",
+};
 
 describe("guideSitemapDates — 사이트맵 전용 날짜(광고 아래 보강, 또는 화면 날짜를 올리지 못한 광고 위 정정)", () => {
   it("모든 행은 실제 가이드 슬러그·광고 아래 보강이 있는 글(이름 붙인 예외 제외)·YYYY-MM-DD·오늘(KST) 이전", () => {
     for (const [slug, day] of Object.entries(GUIDE_SITEMAP_ONLY_REVISED)) {
       expect(bySlug.has(slug), slug).toBe(true);
-      if (slug in NO_SUPPLEMENT_ROWS) {
+      if (slug in NO_SUPPLEMENT_ROWS || slug in CHIPLESS_BODY_ROWS) {
         expect(guideSupplements[slug], `${slug}: 보강이 생겼으면 예외 목록에서 뺀다`).toBeFalsy();
       } else {
         expect(guideSupplements[slug], slug).toBeTruthy();
@@ -43,15 +56,30 @@ describe("guideSitemapDates — 사이트맵 전용 날짜(광고 아래 보강,
     }
   });
 
-  it("보강 없는 행의 예외는 1편뿐이고, 이유가 있으며, 표에 실제로 있는 '수정 칩 있는' 글이다", () => {
+  it("보강 없는 행의 예외: 칩 있는 글(①)은 1편, 칩 없는 글의 본문 정정(③, 운영자 결정 2026-11-17)은 6편 — 모두 이유가 있고 표에 실제로 있다", () => {
     expect(Object.keys(NO_SUPPLEMENT_ROWS)).toEqual(["us-treasury-bond"]);
     for (const [slug, reason] of Object.entries(NO_SUPPLEMENT_ROWS)) {
       expect(slug in GUIDE_SITEMAP_ONLY_REVISED, `${slug}: 표에 없는 예외`).toBe(true);
       expect(reason.length, slug).toBeGreaterThanOrEqual(20);
-      // 칩 없는 글에 보강도 없이 사이트맵 날짜만 올리는 행은 허용하지 않는다
+      // ① 은 칩 있는 글만 — 칩 없는 글은 아래 ③ 목록에 따로 이유를 적는다
       const guide = bySlug.get(slug)!;
       expect(guide.modifiedDate, slug).toBeDefined();
       expect(getGuideContentDate(guide), slug).not.toBe(guide.publishedDate);
+    }
+    // ③ 칩 없는 글의 본문 정정 — 목록을 고정한다(새 행은 이유와 함께 여기에 더한다)
+    expect(Object.keys(CHIPLESS_BODY_ROWS).sort()).toEqual([
+      "child-gift-10year-rule-2026", "commercial-office-capital-gains-2026", "hometax-year-end-preview-2026",
+      "lease-right-transfer-tax-2026", "minimum-wage-2026", "rental-business-prop-tax-exclusion-2026",
+    ]);
+    for (const [slug, reason] of Object.entries(CHIPLESS_BODY_ROWS)) {
+      expect(slug in GUIDE_SITEMAP_ONLY_REVISED, `${slug}: 표에 없는 예외`).toBe(true);
+      expect(slug in NO_SUPPLEMENT_ROWS, `${slug}: 두 목록에 함께 있으면 안 된다`).toBe(false);
+      expect(reason.length, slug).toBeGreaterThanOrEqual(20);
+      const guide = bySlug.get(slug)!;
+      // 칩이 없는 글이고(화면 날짜 = 발행일), 행은 그 화면을 바꾸지 않는다 — 사이트맵 날짜만 발행일보다 늦다
+      expect(guide.modifiedDate, slug).toBeUndefined();
+      expect(getGuideContentDate(guide), slug).toBe(guide.publishedDate);
+      expect(GUIDE_SITEMAP_ONLY_REVISED[slug] > guide.publishedDate, slug).toBe(true);
     }
   });
 
