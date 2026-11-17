@@ -50,3 +50,28 @@ describe("삼성SDI 빠른 연봉 버튼 표기 (calc-04-F19, naverBonusLabels �
     expect(sdi.client).toContain("{[5500, 7000, 9000, 12000, 15000].map((m) => (");
   });
 });
+
+describe("삼성SDI TAI = 상반기 75%(보도) + 하반기 100%(가정) (N2-calc-23, 운영자 승인 2026-11-17)", () => {
+  it("기본 결과(캐즘 0%·연봉 8,000만원): OPI 0 + TAI 700만원(종전 800만원)", async () => {
+    const { DEFAULT_SALARY_MANWON, BASIC_RATIO, TAI_H1, TAI_H2, SCENARIOS } = await import("@/app/calc/samsung-sdi-bonus/data");
+    const salaryWon = DEFAULT_SALARY_MANWON * 10_000;
+    const opi = salaryWon * (SCENARIOS[0].percent / 100);
+    const tai = (salaryWon / BASIC_RATIO) * (TAI_H1 + TAI_H2);
+    expect(SCENARIOS[0].id).toBe("chasm");
+    expect(opi + tai).toBe(7_000_000);
+  });
+  it("체크 상자·결과 카드·안내 금액은 같은 상수를 쓴다", () => {
+    const src = sdi.client;
+    expect(src).toContain("const taiWon = includeTai ? monthlyBasicWon * (TAI_H1 + TAI_H2) : 0;");
+    expect(src).toContain('<p className="font-bold">TAI 포함 (월 기본급 75%+100%)</p>');
+    expect(src).toContain("포함 시 {fmtManwon(calc.monthlyBasicWon * (TAI_H1 + TAI_H2))} 추가.");
+    expect(src).toContain('sub={includeTai ? "월 기본 × (75+100)%" : "포함 안 함"}');
+    expect(src).not.toContain("100% × 연 2회");
+    expect(src).not.toContain("monthlyBasicWon * 2)");
+  });
+  it("메타 설명·접힌 FAQ 예시도 75% + 100% 가정", () => {
+    expect(sdi.page).toContain("TAI(월 기본급 상반기 75% + 하반기 100% 가정) 합산.");
+    expect(sdi.page).toContain("TAI는 2026년 상반기 보도값 75%와 하반기 가정 100%를 더해 875만원입니다");
+    expect(sdi.page).not.toContain("TAI 100% × 2회 = 1,000만원");
+  });
+});

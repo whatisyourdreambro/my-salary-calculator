@@ -8,8 +8,8 @@ import {
   BASIC_RATIO,
   DEFAULT_SALARY_MANWON,
   SCENARIOS,
-  TAI_HALF,
-  TAI_PER_YEAR,
+  TAI_H1,
+  TAI_H2,
 } from "./data";
 
 describe("samsung-sdi-bonus/data 동결값", () => {
@@ -27,7 +27,8 @@ describe("samsung-sdi-bonus/data 동결값", () => {
   it("기본값·TAI 상수", () => {
     expect(DEFAULT_SALARY_MANWON).toBe(8000);
     expect(BASIC_RATIO).toBe(20);
-    expect(TAI_HALF).toBe(1.0);
-    expect(TAI_PER_YEAR).toBe(2);
+    // 2026-11-18 N2-calc-23(운영자 승인 2026-11-17): 상반기 75%(보도) + 하반기 100%(12월 발표 전 가정)
+    expect(TAI_H1).toBe(0.75);
+    expect(TAI_H2).toBe(1.0);
   });
 });

@@ -19,5 +19,7 @@ export const SCENARIOS = [
 
 export const DEFAULT_SALARY_MANWON = 8000;
 export const BASIC_RATIO = 20; // 기본급 = 연봉 / 20
-export const TAI_HALF = 1.0; // 반기당 월 기본급 100%
-export const TAI_PER_YEAR = 2; // 연 2회
+// TAI(목표달성장려금) — 2026-11-18 N2-calc-23(운영자 승인 2026-11-17): 종전 '100% × 연 2회' 최대치 고정 대신
+// 상반기는 보도된 실제값, 하반기는 12월 발표 전 가정값. 12월 하반기 지급률이 보도되면 TAI_H2 만 고친다.
+export const TAI_H1 = 0.75; // 2026 상반기 전 사업부 공통 월 기본급의 75% (뉴스핌·헤럴드경제 2026-07-06 보도)
+export const TAI_H2 = 1.0; // 2026 하반기 — 12월 발표 전 가정(최대치 100%)
