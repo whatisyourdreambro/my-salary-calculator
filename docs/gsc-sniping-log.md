@@ -534,3 +534,20 @@ T0 = 운영자가 이 묶음이 든 게시를 마친 시각(게시 뒤 기입: `
 
 - 검색 설명이 바뀌지 않은 화면 변경(기록만): /guides/samsung-opi-tai-complete-2026·/guides/sk-hynix-ps-history-2026-prospect 의 화면 설명(TL;DR·카드)을 홈 시즌 카드 높이 보호로 줄였다. 두 글은 키퍼라 검색 설명은 인라인 metaDescription 그대로다(Article JSON-LD 설명만 짧아짐).
 - 사이트맵: 검색 설명만 바뀐 글·도구는 날짜를 올리지 않는다(11/13 lens-meta-F02 선례). /fun/fortune 은 화면 문구가 2027 로 바뀌어 원장 단계에서 날짜 판단(보고서 ledger_routes).
+
+## 2026-11-18 R4 GUIDES 단위 검색 제목·설명·사이트맵 날짜 기록 (claude/r4-guides-1118, 11/27 게시 예정 묶음, append-only)
+
+검색 제목이 바뀌는 글 2편(같은 폭 이하 사실 정정, 화면 H1·카드도 같이 바뀜):
+
+| 날짜 | URL | 옛 제목 → 새 제목 | 이유 |
+|---|---|---|---|
+| 2026-11-18 | /guides/dependent-check-before-bonus-2026 | 성과급 받기 전 가족 피부양자 점검 — 임대 2,000만 + 박탈 → 성과급 받기 전 가족 피부양자 점검 — 소득 2,000만 + 박탈 | 주택임대소득은 금액과 관계없이 있으면 피부양자 탈락(시행규칙 별표 1의2), 2,000만은 소득 합계 기준 (N2-guides-content-03 b03-F03) |
+| 2026-11-18 | /guides/total-income-adjustment-bonus-2026 | 성과급 + 임대 + 금융 + 사업 종합 정산 — 영끌 2억 시 추가 5,750만 → 성과급 + 임대 + 금융 + 사업 종합정산 — 영끌 2억 시 부담 5,300만 | 배당 2,000만원 분리과세, 사이트 세금 엔진 재계산 (b03-F04) |
+
+검색 설명만 바뀐 글 1편(화면 TL;DR 은 그대로, R7 N2-guides-content-04): /guides/comprehensive-financial-income-2000-2026 — 옛 검색 설명은 화면 설명과 같은 '이자·배당 연 2천 초과 시 종합과세 전환. 직장인 한계세율 35%+ 점프. …', 새 검색 설명 '이자·배당 금융소득이 연 2,000만원을 넘으면 초과분만 근로소득 등과 합산해 6~45% 누진세율로 과세합니다(소득세법 제14조·제62조). 부부 분산, ISA, 연금계좌로 줄이는 방법을 정리했습니다.' (b04-M03). 사이트맵 날짜는 올리지 않는다(검색 설명만).
+
+화면 설명(TL;DR·카드, 검색 설명이 따로 없는 글은 검색 설명도)이 바뀐 글: executive-bonus-corporate-limit-2026(법인세 7,200만 → 6,000만), dependent-check-before-bonus-2026, total-income-adjustment-bonus-2026, moving-company-bonus-2026(5월 합산 신고 의무 → 새 회사 연말정산에서 합산), tax-amnesty-self-report-2026(화면 설명 2년 20% → 1.5년 20%·2년 10%; 검색 설명은 11/15 N2-lib-01 이 이미 고침).
+
+사이트맵 전용 날짜 규칙 ③(운영자 결정 2026-11-17 10번): 수정 칩 없는 글의 본문 정정도 화면은 그대로 두고 사이트맵 lastmod 만 본문을 고친 날로. 이 단위가 넣은 행 6개 — /guides/hometax-year-end-preview-2026 2026-11-13(11/15 DEFER 절의 n1 게시 뒤 네이버 수동 요청 목록에 있던 글: 이 묶음이 게시되면 IndexNow 가 자동으로 알린다), /guides/commercial-office-capital-gains-2026·/guides/lease-right-transfer-tax-2026·/guides/child-gift-10year-rule-2026·/guides/rental-business-prop-tax-exclusion-2026·/guides/minimum-wage-2026 2026-11-15(RL-08 본문 정정일).
+
+이 단위가 오늘(2026-11-18) 고친 가이드 23편의 사이트맵 전용 행(값 2026-11-18)과 보강 핀은 통합 단계 원장 몫이다(보고서 ledger_routes). 행이 들어가면 게시 8단계 IndexNow 가 알리고, 게시 뒤 네이버 수동 수집 요청 목록(N2-guides-content-02 7단계)에도 같은 23편을 올린다(보고서 ledger_routes 의 advance 행). 게시 후 T0: 위 두 제목의 검색 결과 제목 반영 여부를 28일 창에서 본다.
