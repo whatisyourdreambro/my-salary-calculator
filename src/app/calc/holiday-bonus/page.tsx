@@ -134,10 +134,12 @@ export default function HolidayBonusPage() {
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-8 mb-4">
               명절 상여금 vs 정기 보너스
             </h2>
+            {/* 2026-11-18 N2-calc-17 calc-02-F13: 정기·비정기 구분 없이 과세 근로소득이면 4대보험 보수에 들어간다
+                (국민연금법 시행령 제3조 — 소득세법 제20조 근로소득 − 비과세, 국민건강보험법 제70조·시행령 제33조 — 보수에 상여 포함).
+                비정기 격려금이면 연금이 빠질 수 있다던 종전 문장은 틀렸다. InArticleAd 위 — 종전 문단보다 모든 폭에서 줄 수가 같거나 적다. */}
             <p className="text-muted-blue dark:text-canvas-300 leading-relaxed">
-              회사가 명절 상여를 <strong>정기 상여금</strong>으로 분류하면 4대보험 부과 대상이 됩니다. 반면
-              <strong> 비정기 격려금</strong>으로 분류하면 4대보험은 일부만(국민연금 제외) 부과될 수 있습니다.
-              취업규칙에 명시된 정기 지급이라면 정기 상여로 봅니다.
+              명절 상여는 <strong>정기 상여금</strong>이든 <strong>비정기 격려금</strong>이든 과세 근로소득이면 4대보험
+              보수에 포함됩니다. 건강·고용보험은 다음 해 보수총액 정산 때, 국민연금은 이후 기준소득월액 결정 때 반영됩니다.
             </p>
           </article>
 
