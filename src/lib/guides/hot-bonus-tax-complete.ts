@@ -1214,7 +1214,7 @@ const bonusPropertySell = `
 <ul class="space-y-3 mt-4">
 <li><strong>① 근로소득 + 성과급</strong>: 종합과세 누진세율</li>
 <li><strong>② 부동산 양도</strong>: 분류과세 (종합과세와 별도)</li>
-<li><strong>③ 양도세 신고</strong>: 양도일 다음달 말일까지 예정신고 → 확정신고는 다음해 5월</li>
+<li><strong>③ 양도세 신고</strong>: 양도월 말일부터 2개월 예정신고 → 확정신고는 다음해 5월</li>
 <li><strong>④ 건보료 부과</strong>: 보수 외 소득(임대·금융 등) 2천만원 초과 시 소득월액보험료 추가 반영</li>
 </ul>
 
