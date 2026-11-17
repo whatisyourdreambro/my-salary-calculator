@@ -964,8 +964,9 @@ export default function MultiYearBonusSimulator({
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-faint-blue mb-1.5">
               누적 세전 (합산)
             </p>
+            {/* 숫자 줄바꿈 금지·'만원' 앞에서만 줄바꿈(N2-calc-07 calc-03-F06) — 줄 수 종전 이하 */}
             <p className="text-2xl sm:text-3xl font-black tabular-nums text-navy dark:text-canvas-50">
-              {fmtManwon(animCumGross)}
+              <span className="whitespace-nowrap">{fmtManwonInt(animCumGross)}</span><wbr />만원
             </p>
             <p className="text-[11px] text-faint-blue mt-1 tabular-nums">
               {fmtEok(computed.cumGross)}
@@ -981,11 +982,12 @@ export default function MultiYearBonusSimulator({
             >
               누적 세후
             </p>
+            {/* 카드 오른쪽 끝(overflow-hidden) 칸 — 360px 미만·10억 이상은 작은 글씨로 잘림 방지(N2-calc-07, Client.tsx 와 같은 규칙) */}
             <p
-              className="text-3xl sm:text-4xl font-black tabular-nums"
+              className={`${computed.cumNet >= 100000 ? "text-xl min-[360px]:text-2xl" : "text-2xl min-[360px]:text-3xl"} sm:text-4xl font-black tabular-nums`}
               style={{ color: "hsl(var(--link))" }}
             >
-              {fmtManwon(animCumNet)}
+              <span className="whitespace-nowrap">{fmtManwonInt(animCumNet)}</span><wbr />만원
             </p>
             <p className="text-[11px] text-faint-blue mt-1 tabular-nums">
               {[
