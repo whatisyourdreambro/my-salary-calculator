@@ -199,10 +199,11 @@ describe("N2-calc-11 LG화학 계산기 입력 위생 (calc-02-F19)", () => {
 });
 
 describe("N2-calc-11 LG엔솔 지급 이력 표 2026 행 (광고 위, 더 짧은 글)", () => {
-  it("2026 (예상) 행: 미정 / 1~3Q 누적 흑자 6,615억", () => {
+  it("2026 (예상) 행: 미정 / 1~3Q 누적 흑자 6,616억(보도값)", () => {
     const page = read("src/app/calc/lg-energy-bonus/page.tsx");
     expect(page).toContain('<td className="py-2 px-3 text-right tabular-nums text-faint">미정</td>');
-    expect(page).toContain('<td className="py-2 px-3 text-faint">1~3Q 누적 흑자 6,615억</td>');
+    expect(page).toContain('<td className="py-2 px-3 text-faint">1~3Q 누적 흑자 6,616억</td>');
+    expect(page).not.toContain("6,615억");
     expect(page).not.toContain("50~100%?");
     expect(page).not.toContain("1Q 적자 -2,078억, ESS 회복 신호");
   });
