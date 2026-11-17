@@ -44,3 +44,45 @@ describe("SK하이닉스 접힌 FAQ·입력 위생 (calc-04-F11·F12·F21·F22)"
     expect(page).toContain('aria-label={STATUS === "ratified" ? "2026 임단협 타결 안내" : "2026 임단협 잠정합의 안내"}');
   });
 });
+
+describe("SK하이닉스 주가 시뮬레이터 버튼 줄 (calc-04-F02)", () => {
+  const sim = read("src/app/calc/sk-hynix-bonus/StockScenarioSimulator.tsx");
+  it("슬라이더는 줄어들 수 있고(min-w-0), 버튼 묶음은 줄지 않는다(shrink-0)", () => {
+    expect(sim).toContain('className="min-w-0 flex-1 accent-primary"');
+    expect(sim).toContain('<div className="flex shrink-0 gap-1">');
+  });
+  it("휴대폰에서는 -30·-10·+100 만 숨긴다(기본값 +20 과 0·-50·+50 은 보임)", () => {
+    expect(sim).toContain("const PHONE_HIDDEN_PRESETS: ReadonlySet<number> = new Set([-30, -10, 100]);");
+    expect(sim).toContain('${PHONE_HIDDEN_PRESETS.has(p) ? " hidden sm:inline-block" : ""}');
+    expect(sim).toContain("const CHANGE_PRESETS = [-50, -30, -10, 0, 20, 50, 100];");
+  });
+});
+
+describe("2026 상반기 PI 옛 날짜(7/28)가 코드·데이터에 남지 않는다 (calc-04-F01)", () => {
+  /** // 주석은 빼고 본다(옛 날짜를 설명하는 주석은 허용) */
+  const code = (p: string) => read(p).replace(/\/\/[^\n]*/g, "");
+  for (const p of [
+    "src/app/calc/sk-hynix-bonus/page.tsx",
+    "src/app/calc/sk-hynix-bonus/Client.tsx",
+    "src/app/calc/sk-hynix-bonus/psData.ts",
+    "src/app/calc/sk-hynix-bonus/StockScenarioSimulator.tsx",
+    "src/app/calc/sk-hynix-bonus/StockScenarioSection.tsx",
+    "src/data/bonusData.ts",
+    "src/data/bonusCalcHub.ts",
+  ]) {
+    it(p, () => {
+      const src = code(p);
+      expect(src).not.toContain("7/28");
+      expect(src).not.toContain("2026-07-28");
+      expect(src).not.toContain("7월 28일");
+    });
+  }
+  it("화면·리포트·허브 소식은 7/30", () => {
+    expect(read("src/app/calc/sk-hynix-bonus/Client.tsx")).toContain("2026 상반기는 150% 확정(7/30 지급)");
+    expect(page).toContain("30일 지급됐습니다(상반기 영업이익 98.2조원)");
+    expect(page).toContain("(7/30 지급)");
+    expect(read("src/app/calc/sk-hynix-bonus/psData.ts")).toContain('fact: "2026 상반기 PI 150% 확정(7/30 지급)"');
+    expect(read("src/data/bonusData.ts")).toContain('note: "2026년 상반기 PI 최대치 확정 — 2026-07-30 지급"');
+    expect(read("src/data/bonusCalcHub.ts")).toContain('date: "2026-07-30"');
+  });
+});
