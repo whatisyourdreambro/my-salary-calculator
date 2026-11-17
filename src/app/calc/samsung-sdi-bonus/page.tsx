@@ -134,7 +134,7 @@ export default function SamsungSdiBonusPage() {
           <header className="mb-8">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold mb-3">
               <Battery className="w-3.5 h-3.5" />
-              2024 배터리 32% / 2026 캐즘 0% (전자재료만 3-5%)
+              2024 배터리 32% / 2026 캐즘 0% (전자재료 포함 0%)
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-3">
               삼성SDI 성과급 계산기 <span className="text-primary">2026</span>

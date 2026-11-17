@@ -38,3 +38,11 @@ describe("CB-03 삼성SDI — 2026년 1월 OPI 전 사업부 0%, 상반기 TAI 7
     expect(faq).toContain("캐즘기 LG엔솔은 2024년 실적분 50%·2025년 실적분 75%였고, 삼성SDI는 2025년 실적분 OPI가 전 사업부 0%였습니다.");
   });
 });
+
+describe("CB-03 삼성SDI — 광고 위 같은 폭 교체 (배지)", () => {
+  const page = read("src/app/calc/samsung-sdi-bonus/page.tsx");
+  it("배지: 2026 캐즘 0%(전자재료 포함 0%) — 10월 1,123폭 스윕 통과 문구", () => {
+    expect(page).toContain("2024 배터리 32% / 2026 캐즘 0% (전자재료 포함 0%)");
+    expect(page).not.toContain("(전자재료만 3-5%)");
+  });
+});
