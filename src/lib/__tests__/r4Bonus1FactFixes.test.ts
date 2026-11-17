@@ -95,6 +95,14 @@ describe("CB-06 LG화학 — 2025년 실적분 전사 성과급 0원·위로금 
   });
 });
 
+describe("CB-06 LG화학 — PI 카드(광고 위 같은 폭)", () => {
+  it("적자 연도 보장 단정 대신 같은 폭 문구(한글 16자·공백 5개)", () => {
+    const page = read("src/app/calc/lg-chem-bonus/page.tsx");
+    expect(page).toContain("<li>• 적자 연도에도 지급된다는 보장은 없음</li>");
+    expect(page).not.toContain("영업이익 적자여도 보장되는 안정 항목");
+  });
+});
+
 describe("CB-03 리포트 행(bonusData) — 삼성SDI 전자재료 5%는 2025년 지급(2024년 실적분)", () => {
   it("year 는 지급 연도: 전자재료 5% 행은 2025, 2026년 행에는 전자재료 지급이 없다", async () => {
     const { BONUS_PROFILES } = await import("@/data/bonusData");

@@ -173,7 +173,7 @@ export default function LgChemBonusPage() {
                 <h3 className="font-bold mb-2 text-lg">PI (생산성격려금)</h3>
                 <ul className="space-y-1 text-sm leading-relaxed">
                   <li>• 연간 고정 <strong>기본급의 200%</strong></li>
-                  <li>• 영업이익 적자여도 보장되는 안정 항목</li>
+                  <li>• 적자 연도에도 지급된다는 보장은 없음</li>
                   <li>• 노사 합의로 변경 가능성은 있음</li>
                 </ul>
               </article>
