@@ -36,7 +36,7 @@ const FAQ_ITEMS = [
   {
     question: "인센티브 세금을 줄이는 합법적 방법은?",
     answer:
-      "(1) IRP·연금저축 추가 납입(연 900만원 한도, 13.2~16.5% 세액공제), (2) 인센티브 수령 연도에 의료비·교육비·기부금 공제 최대화, (3) 우리사주조합 출연금 한도 활용(연 400만원 한도 비과세), (4) 주택청약 납입 등이 있습니다. 인센티브 자체의 세율을 낮출 수는 없지만 다른 공제로 환급액을 키울 수 있습니다.",
+      "(1) IRP·연금저축 추가 납입(연 900만원 한도, 13.2~16.5% 세액공제), (2) 인센티브 수령 연도에 의료비·교육비·기부금 공제 최대화, (3) 우리사주조합 출연금 한도 활용(연 400만원 한도 소득공제), (4) 주택청약 납입 등이 있습니다. 인센티브 자체의 세율을 낮출 수는 없지만 다른 공제로 환급액을 키울 수 있습니다.",
   },
   {
     question: "외국계 기업 인센티브는 다르게 과세되나요?",
@@ -140,7 +140,7 @@ export default function IncentiveTaxPage() {
                 <strong className="text-navy dark:text-canvas-50">IRP/연금저축 활용</strong> — 연 900만원, 최대 148.5만원 환급
               </li>
               <li>
-                <strong className="text-navy dark:text-canvas-50">우리사주 조합 출연</strong> — 연 400만원 한도 비과세
+                <strong className="text-navy dark:text-canvas-50">우리사주 조합 출연</strong> — 연 400만원 공제 한도액
               </li>
               <li>
                 <strong className="text-navy dark:text-canvas-50">중소기업 취업 청년 감면</strong> — 일정 요건 시 90% 감면 (연 200만원 한도)

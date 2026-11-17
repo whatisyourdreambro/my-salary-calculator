@@ -66,6 +66,8 @@ import TaiCalculator from "./TaiCalculator";
 import { TAI_LATEST, TAI_LATEST_TOP, taiRateSummary } from "./taiData";
 import { OPI1_MAX_RATE, OPI_LATEST, OPI_LATEST_BOTTOM, opiRateSummary } from "./opiData";
 import { ANNUAL_OP_2026_PRELIM } from "./annualOp";
+// 서버 컴포넌트 전용 import — DART 확정 실적(백만원, 접힌 FAQ 참고 문장). 클라이언트 번들에는 실리지 않는다.
+import { SAMSUNG_OP, toTril1 } from "@/lib/bonusHome/opActuals";
 import ShareButtons from "@/components/ShareButtons";
 import FavoritesButton from "@/components/FavoritesButton";
 import { withBonusAnnouncement } from "@/data/bonusAnnouncements";
@@ -153,7 +155,7 @@ const FAQ_ITEMS = [
   {
     question: "SK하이닉스 성과급과 어떻게 다른가요?",
     answer:
-      "SK하이닉스는 PS(Profit Sharing)를 기준급(연봉의 20분의 1) 대비 %로 지급하고, 삼성전자는 영업이익 풀을 부문·사업부로 분배하는 방식입니다. 2025년 실적 기준 SK하이닉스 PS는 2964%(2026년 2월 5일 지급, 상한 1000% 폐지 후 첫 적용)로, 연간 PI 300%(반기 150%×2회)까지 합치면 총 3264% — 연봉 1억 기준 PS만 세전 약 1억 4,820만원입니다. 80%는 즉시, 20%는 2년에 걸쳐 이연 지급됩니다. 정밀 계산은 SK하이닉스 성과급 계산기(/calc/sk-hynix-bonus)를 이용하세요.",
+      "SK하이닉스는 PS(Profit Sharing)를 기준급(연봉의 20분의 1) 대비 %로 지급하고, 삼성전자는 영업이익 풀을 부문·사업부로 분배하는 방식입니다. 2025년 실적 기준 SK하이닉스 PS는 2964%(2026년 2월 5일 지급, 상한 1000% 폐지 후 첫 적용)로, 연간 PI 300%(반기 150%×2회)까지 합치면 총 3264% — 연봉 1억 기준 PS만 세전 약 1억 4,820만원입니다. 2025년분은 80%를 즉시, 20%를 2년에 걸쳐 나눠 줄 예정이었으나 9월 16일 가결된 임단협에 따라 이연분 20%도 2026년 안에 앞당겨 지급하기로 했고, 2026년분(2027년 초 지급)부터는 당해 현금 50%+자사주 30%, 1·2년 후 자사주 10%씩으로 바뀝니다(보도 기준). 정밀 계산은 SK하이닉스 성과급 계산기(/calc/sk-hynix-bonus)를 이용하세요.",
   },
   {
     question: "가고과·나고과를 받으면 성과급이 얼마나 달라지나요?",
@@ -168,12 +170,18 @@ const FAQ_ITEMS = [
   {
     question: "성과급 받으면 어떻게 절세할 수 있나요?",
     answer:
-      "성과급 자체의 세율은 낮출 수 없지만 환급액을 키우는 방법은 있습니다. (1) IRP·연금저축 추가 납입 (연 900만원 한도, 연봉 5,500만 이하 16.5% / 초과 13.2% 세액공제), (2) 우리사주조합 출연 (연 400만원 한도 비과세), (3) 의료비·교육비·기부금 세액공제 극대화, (4) 고향사랑기부 (10만원까지 100% 세액공제). 성과급 입금 직후 IRP 한도를 채우는 게 가장 효과 큽니다.",
+      "성과급 자체의 세율은 낮출 수 없지만 환급액을 키우는 방법은 있습니다. (1) IRP·연금저축 추가 납입 (연 900만원 한도, 연봉 5,500만 이하 16.5% / 초과 13.2% 세액공제), (2) 우리사주조합 출연 (연 400만원 한도 소득공제), (3) 의료비·교육비·기부금 세액공제 극대화, (4) 고향사랑기부 (10만원까지 100% 세액공제). 성과급 입금 직후 IRP 한도를 채우는 게 가장 효과 큽니다.",
   },
   {
-    question: "삼성전자 성과급은 언제, 몇 번 지급되나요?",
+    // RL-18 (2026-11-18, 10월 895334845·8ac89336a 재이식): 종전 '언제, 몇 번 지급되나요?'는 '지급일' FAQ 와 같은 답이라
+    // 특별경영성과급 조건 질문으로 바꿨다(닫힌 FAQ). 조건·재원 단위는 DS부문 연간 영업이익(파이낸셜뉴스 2026-09-27
+    // https://www.fnnews.com/news/202609270938413557 · 뉴시스 2026-05-21 https://www.newsis.com/view/NISX20260521_0003638619),
+    // 세후 전액 자사주·3분의 1 즉시·1년·2년 매각 제한·지급 2027년 3월 말~4월 초(정기 주총 뒤): 2026-10-07 보도
+    // (MTN https://news.mtn.co.kr/news-detail/2026100715413498845 · SBS Biz https://biz.sbs.co.kr/amp/article/20000338792).
+    // DART 반기보고서(rcpNo 20260814003699)의 전사 연결 영업이익은 참고값일 뿐 조건 판정 단위가 아니다 — 문장에 그렇게 밝힌다.
+    question: "특별경영성과급 지급 조건은 무엇인가요?",
     answer:
-      "공개 보도 기준 삼성전자는 통상 (1) 연초(1월 전후)에 전년도 실적에 따른 OPI(초과이익성과급, 옛 PS)를 한 번에 지급하고, (2) 상·하반기에 목표달성장려금(TAI, 옛 PI)을 기본급의 일정 비율로 나눠 지급하는 구조로 알려져 있습니다. 본 계산기는 연 단위 OPI 재원 분배를 중심으로 추정하므로, 반기 TAI까지 합산하려면 그만큼 더해 보세요. 정확한 지급 시기·횟수는 매년 노사 협의와 회사 공지에 따라 달라집니다.",
+      `보도된 지급 조건은 DS부문 연간 영업이익 기준 2026~2028년 200조원 이상(2029~2035년은 100조원 이상)이며, 최종 지급 여부는 회사 공지를 따릅니다. 참고로 DART 반기보고서(${SAMSUNG_OP.h1_2026.source.filedAt} 접수) 기준 ${SAMSUNG_OP.h1_2026.label} 삼성전자 전사 연결 영업이익은 약 ${toTril1(SAMSUNG_OP.h1_2026.millionWon)}조원입니다(조건 판정은 DS부문 영업이익). DS부문 특별경영성과급은 세후 전액을 자사주로 받고, 그중 3분의 1은 즉시 팔 수 있으며 나머지는 3분의 1씩 1년·2년 매각이 제한됩니다(보도 기준). 2026년 실적분이 첫 적용 대상이며, 2026년 10월 7일 언론 보도에 따르면 3월 정기 주총에서 지급 안건이 승인되면 2027년 3월 말~4월 초 지급됩니다.`,
   },
   {
     question: "삼성전자 평균 성과급은 얼마인가요?",
@@ -247,7 +255,7 @@ export const metadata: Metadata = {
     "삼성 임금협상 2026",
   ].join(", "),
   other: {
-    "article:modified_time": "2026-11-01",
+    "article:modified_time": "2026-11-18",
   },
 };
 
@@ -362,14 +370,16 @@ export default function SamsungBonusCalculatorPage() {
               <strong className="text-electric">사업부별 1인당</strong>
             </p>
             <p className="text-sm text-faint-blue mt-3 max-w-md mx-auto leading-relaxed">
-              {/* 잠정실적(1/8) 발표 후 같은 문장을 치환 — 요소 추가 없음(광고 위 높이 불변, annualOp.ts) */}
+              {/* 잠정실적(1/8) 발표 후 같은 문장을 치환 — 요소 추가 없음(광고 위 높이 불변, annualOp.ts).
+                  잠정실적은 전사 연결 합계라 '전사'로 밝히고 재원은 DS부문 영업이익 기준임을 그대로 둔다(N2-calc-02·07, calc-03-F07).
+                  발표 당일 이 가지가 처음 그려지므로 런북대로 그날 스윕한다. */}
               {ANNUAL_OP_2026_PRELIM.announced && ANNUAL_OP_2026_PRELIM.profitTrillion != null ? (
                 <>
-                  2026년 연간 영업이익 잠정{" "}
+                  2026년 전사 영업이익 잠정{" "}
                   <strong className="text-navy dark:text-canvas-50">
                     {ANNUAL_OP_2026_PRELIM.profitTrillion}조
                   </strong>
-                  ({ANNUAL_OP_2026_PRELIM.date} 잠정실적 발표) 기준 ·{" "}
+                  ({ANNUAL_OP_2026_PRELIM.date} 발표) · DS부문 영업이익{" "}
                   <strong className="text-navy dark:text-canvas-50">10.5%</strong>{" "}
                   재원·<strong className="text-navy dark:text-canvas-50">4:6</strong>{" "}
                   분배.
@@ -501,8 +511,8 @@ export default function SamsungBonusCalculatorPage() {
             </h2>
             <p className="text-sm text-muted-blue dark:text-canvas-300 mb-5 leading-relaxed">
               OPI는 <strong>연봉 대비 %</strong>(상한 {OPI1_MAX_RATE}%)로 연 1회, 통상 1월
-              말~2월 초에 지급됩니다. {OPI_LATEST.fiscalYear}년 실적분은 {OPI_LATEST.payDateLabel}
-              지급됐으며, {OPI_LATEST.sourceNote}에 따른 실제 지급률은 다음과
+              말~2월 초에 지급됩니다. {OPI_LATEST.fiscalYear}년 실적분은 {OPI_LATEST.payDateLabel}{" "}
+              지급됐고, {OPI_LATEST.sourceNote}에 따른 실제 지급률은 다음과
               같습니다.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
@@ -924,7 +934,7 @@ export default function SamsungBonusCalculatorPage() {
               </li>
             </ul>
             <p className="text-muted-blue dark:text-canvas-300 leading-relaxed">
-              가정에 따라 실효세율 20~40% 범위로 달라지므로, 본 계산기의 가정
+              가정에 따라 실효세율 20~50% 범위로 달라지므로, 본 계산기의 가정
               조정 패널로 본인 상황에 맞게 시뮬레이션하세요. 세액공제 여력을
               늘리는 대표 수단은 IRP·연금저축(합산 연 900만원 한도 세액공제)
               입니다 —{" "}
@@ -993,17 +1003,17 @@ export default function SamsungBonusCalculatorPage() {
               </span>
             </Link>
             <Link
-              href="/samsung-negotiation-2026"
+              href="/guides/samsung-opi-tai-complete-2026"
               className="block p-5 bg-white dark:bg-canvas-900 border border-canvas-200 dark:border-canvas-800 rounded-2xl hover:border-electric transition-colors group"
             >
               <p className="text-xs font-black uppercase tracking-widest text-electric mb-2">
                 시즌 가이드
               </p>
               <p className="font-bold text-navy dark:text-canvas-50 text-sm mb-1">
-                삼성전자 2026 임금협상 분석
+                삼성전자 OPI·TAI 2026
               </p>
               <p className="text-xs text-muted-blue mb-3">
-                5가지 핵심 쟁점, 직급별 예상 인상폭, SK하이닉스 비교
+                사업부별 지급률·지급 시기·세후 금액
               </p>
               <span className="text-xs font-bold text-electric inline-flex items-center gap-1">
                 자세히 보기{" "}
@@ -1087,7 +1097,7 @@ export default function SamsungBonusCalculatorPage() {
                 삼성전자 평균 연봉·복지
               </p>
               <p className="text-xs text-muted-blue mb-3">
-                직급별 성장표, 1.35억 평균 연봉, 복지 비교
+                직급별 성장표, 1.58억 평균 연봉, 복지 비교
               </p>
               <span className="text-xs font-bold text-electric inline-flex items-center gap-1">
                 회사 보기{" "}
@@ -1183,7 +1193,7 @@ export default function SamsungBonusCalculatorPage() {
               본 계산기는 공개된 노사 합의 보도와 분배 모델 추정치이며
               참고용입니다. DS부문 영업이익 10.5% 재원·부문 사업부 4:6 비율은 보도 기반
               고정값, 사업부 인원·가중치·세금 가정은 사용자 조정 가능. 정확한
-              본인 케이스는 회사 명세서 확인. 페이지 수정일: <time dateTime="2026-11-01">2026-11-01</time>.
+              본인 케이스는 회사 명세서 확인. 페이지 수정일: <time dateTime="2026-11-18">2026-11-18</time>.
             </p>
           </div>
 

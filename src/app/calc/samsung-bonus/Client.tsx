@@ -689,7 +689,7 @@ export default function SamsungBonusClient() {
                 ≈ 약 1억 4,820만원
               </strong>
               <span className="text-xs text-faint-blue ml-2">
-                (80% 즉시 · 20% 2년 이연)
+                (80% 즉시·20% 조기지급)
               </span>
             </p>
             <p className="mt-1 text-xs">
@@ -1137,8 +1137,8 @@ function MySalaryCalculator({
                   성과급은 보수에 합산되어 4대보험 정산 시 추가 부과됩니다.
                   단 국민연금은 기준소득월액 상한(2026년 7월부터 월 659만원,
                   연 환산 7,908만원)이 있어 고소득자는 추가 부과액이 적습니다.
-                  실제 반영은 이듬해 7월 보수월액 재산정으로 이뤄지는 점도
-                  참고하세요. 체크하지 않으면 4대보험은 포함하지 않고
+                  실제 반영은 국민연금은 이듬해 7월 기준소득월액 재산정, 건강보험은
+                  이듬해 4월 정산으로 이뤄지는 점도 참고하세요. 체크하지 않으면 4대보험은 포함하지 않고
                   소득세·지방세만 공제합니다.
                 </span>
               </span>
@@ -1183,8 +1183,10 @@ function MySalaryCalculator({
               <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-faint-blue mb-1.5">
                 세전 합계
               </p>
+              {/* 숫자는 줄바꿈 금지·'만원' 앞에서만 줄바꿈(N2-calc-07 calc-03-F06 — 360~375px 에서 '39,60/8만원'처럼 숫자 중간이 끊기던 것).
+                  줄 수는 종전 이하라 결과 직하 광고는 그대로이거나 위로만 간다. */}
               <p className="text-2xl sm:text-3xl font-black tabular-nums text-navy dark:text-canvas-50">
-                {fmtManwon(animGross)}
+                <span className="whitespace-nowrap">{fmtManwonInt(animGross)}</span><wbr />만원
               </p>
               <p className="text-[11px] text-faint-blue mt-1 tabular-nums">
                 {[
@@ -1205,11 +1207,13 @@ function MySalaryCalculator({
               >
                 세후 실수령
               </p>
+              {/* 세후 칸은 카드 오른쪽 끝(overflow-hidden)이라 줄바꿈 금지 숫자가 안쪽 여백(20px)을 넘으면 잘린다 —
+                  360px 미만은 한 단계 작은 글씨, 10억(100,000만원) 이상은 한 단계 더 작게(N2-calc-07, 2026-11-18 글꼴 폭 실측). */}
               <p
-                className="text-3xl sm:text-4xl font-black tabular-nums"
+                className={`${personal.netManwon >= 100000 ? "text-xl min-[360px]:text-2xl" : "text-2xl min-[360px]:text-3xl"} sm:text-4xl font-black tabular-nums`}
                 style={{ color: "hsl(var(--link))" }}
               >
-                {fmtManwon(animNet)}
+                <span className="whitespace-nowrap">{fmtManwonInt(animNet)}</span><wbr />만원
               </p>
               <p className="text-[11px] text-faint-blue mt-1 tabular-nums">
                 {[fmtEok(personal.netManwon), `공제 ${personal.effRate.toFixed(1)}%`]

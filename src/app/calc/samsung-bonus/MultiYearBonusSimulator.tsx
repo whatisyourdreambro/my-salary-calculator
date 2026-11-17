@@ -964,8 +964,9 @@ export default function MultiYearBonusSimulator({
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-faint-blue mb-1.5">
               누적 세전 (합산)
             </p>
+            {/* 숫자 줄바꿈 금지·'만원' 앞에서만 줄바꿈(N2-calc-07 calc-03-F06) — 줄 수 종전 이하 */}
             <p className="text-2xl sm:text-3xl font-black tabular-nums text-navy dark:text-canvas-50">
-              {fmtManwon(animCumGross)}
+              <span className="whitespace-nowrap">{fmtManwonInt(animCumGross)}</span><wbr />만원
             </p>
             <p className="text-[11px] text-faint-blue mt-1 tabular-nums">
               {fmtEok(computed.cumGross)}
@@ -981,11 +982,12 @@ export default function MultiYearBonusSimulator({
             >
               누적 세후
             </p>
+            {/* 카드 오른쪽 끝(overflow-hidden) 칸 — 360px 미만·10억 이상은 작은 글씨로 잘림 방지(N2-calc-07, Client.tsx 와 같은 규칙) */}
             <p
-              className="text-3xl sm:text-4xl font-black tabular-nums"
+              className={`${computed.cumNet >= 100000 ? "text-xl min-[360px]:text-2xl" : "text-2xl min-[360px]:text-3xl"} sm:text-4xl font-black tabular-nums`}
               style={{ color: "hsl(var(--link))" }}
             >
-              {fmtManwon(animCumNet)}
+              <span className="whitespace-nowrap">{fmtManwonInt(animCumNet)}</span><wbr />만원
             </p>
             <p className="text-[11px] text-faint-blue mt-1 tabular-nums">
               {[
@@ -1174,10 +1176,13 @@ function YearProfitRowCard({
         borderColor: blocked ? "#EF444455" : row.triggered && row.profit > 0 ? "#10B98155" : "#7A9AB544",
       }}
     >
-      {/* 상단 — 연도 + 영업이익 + 연봉 + 삭제 */}
+      {/* 상단 — 연도 + 영업이익 + 연봉 + 삭제
+          '연도별 직접 입력'(manual) 모드만: 640px 미만에서는 연봉 칸을 아랫줄 전체 폭으로 내린다(N2-calc-24 calc-03-F08,
+          운영자 승인 2026-11-17 6번 — 기본(고정)·자동 인상 모드와 첫 화면은 그대로). 종전 두 칸이 360px 에서 약 104px 를 나눠
+          '8,400' 같은 입력값이 잘려 보였다. 글씨를 줄이면 iOS 가 16px 미만 입력칸에서 화면을 확대해 쓰지 않는다. */}
       <div className={`grid gap-3 items-end ${
         salaryMode === "manual"
-          ? "grid-cols-[70px_1fr_1fr_auto] sm:grid-cols-[85px_1fr_1fr_auto]"
+          ? "grid-cols-[70px_1fr_auto] sm:grid-cols-[85px_1fr_1fr_auto]"
           : "grid-cols-[80px_1fr_auto] sm:grid-cols-[100px_1fr_auto]"
       }`}>
         {/* 연도 */}
@@ -1239,7 +1244,7 @@ function YearProfitRowCard({
 
         {/* manual 모드 — 연봉 입력 필드 (만원) */}
         {salaryMode === "manual" && (
-          <div>
+          <div className="col-span-3 sm:col-span-1 order-last sm:order-none">
             <label className="text-[9px] font-bold uppercase tracking-widest block mb-1 text-faint-blue inline-flex items-center gap-1">
               <Pencil size={9} aria-hidden /> 연봉 <span className="opacity-70 font-medium">(만원)</span>
             </label>
@@ -1592,27 +1597,26 @@ function BonusBarChart({
                 opacity={blocked ? 0.18 : 0.32}
                 rx="3"
               />
-              {/* 세후 막대 (전경, 진한) */}
-              {!blocked && (
-                <rect
-                  x={center - barWidth / 2}
-                  y={netY}
-                  width={barWidth}
-                  height={netH}
-                  fill={color}
-                  rx="3"
-                  style={{
-                    filter: isHover
-                      ? `drop-shadow(0 2px 6px ${color}55)`
-                      : "none",
-                  }}
-                />
-              )}
-              {/* 미달 마크 */}
+              {/* 세후 막대 (전경, 진한) — 임계값 미달 연도도 OPI1 은 지급되므로 세후 막대를 그린다(빨강).
+                  N2-calc-07 calc-03-F10: 종전에는 미달 연도의 세후 막대를 숨기고 툴팁에 '0원'이라 해 위 '세후' 줄과 어긋났다. */}
+              <rect
+                x={center - barWidth / 2}
+                y={netY}
+                width={barWidth}
+                height={netH}
+                fill={blocked ? "#EF4444" : color}
+                rx="3"
+                style={{
+                  filter: isHover
+                    ? `drop-shadow(0 2px 6px ${color}55)`
+                    : "none",
+                }}
+              />
+              {/* 미달 마크 — 빨간 세후 막대에 묻히지 않게 막대 바로 위에 둔다(막대가 없으면 종전 자리) */}
               {blocked && (
                 <text
                   x={center}
-                  y={padT + innerH - 6}
+                  y={Math.min(padT + innerH - 6, netY - 4)}
                   textAnchor="middle"
                   fontSize="11"
                   fontWeight="900"
@@ -1710,7 +1714,7 @@ function BonusBarChart({
                 fontSize="9"
                 fill="#FCA5A5"
               >
-                ⚠ 임계값 미달 — 0원
+                ⚠ 임계값 미달 — OPI2 0원
               </text>
             )}
           </g>
@@ -1736,7 +1740,7 @@ function BonusBarChart({
         </span>
         <span className="inline-flex items-center gap-1.5 text-muted-blue">
           <span className="text-destructive font-black">✕</span>
-          임계값 미달 (0원)
+          OPI2 미달 (0원)
         </span>
       </div>
       </div>
