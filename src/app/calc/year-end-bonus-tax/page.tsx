@@ -117,11 +117,11 @@ export default function YearEndBonusTaxPage() {
             <ul className="space-y-2 text-muted-blue dark:text-canvas-300">
               <li>
                 <strong>다음해 소득 감소 예상</strong> — 육아휴직, 이직, 퇴사 등으로 다음해 연봉이
-                대폭 줄어들 때 일부를 다음해로 이연하면 낮은 세율 구간 적용 가능
+                대폭 줄어들 때 다음해 귀속 소득이면 낮은 세율 구간 적용 가능
               </li>
               <li>
                 <strong>한계세율 구간 진입 회피</strong> — 보너스로 인해 35% 구간(8,800만원 초과)에
-                진입할 때, 일부를 다음해로 분산하면 24% 구간 유지 가능
+                진입할 때, 일부가 다음해 귀속이면 24% 구간 유지 가능
               </li>
               <li>
                 <strong>현금 흐름 관리</strong> — 일시 지급 시 원천징수가 크게 떼이고 환급은 다음해
