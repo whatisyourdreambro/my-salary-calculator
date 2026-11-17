@@ -47,10 +47,11 @@ export const EDITORIAL_TRUST_PAGES: Readonly<Record<string, EditorialTrustNoteCo
     checkedOn: "2026-11-18",
   },
   // psData LAST_UPDATED(화면 '마지막 갱신') — 2026-11-01 B27, 10/28 회사 발표 3분기 실적 반영.
+  // 2026-11-18 R4 BONUS1 N2-calc-10: 상반기 PI 지급일(7/30)·접힌 FAQ 를 보도 원문으로 다시 대조하고 고친 날 = LAST_UPDATED.
   "/calc/sk-hynix-bonus": {
     sources: "언론 보도, 사업보고서·실적 공시",
     official: false,
-    checkedOn: "2026-11-01",
+    checkedOn: "2026-11-18",
   },
   // 공제 한도표 근거 문단의 최신 기준일(YEAR_END_LIMITS_SOURCE_NOTE)·내용 검토 원장 contentDate — B24·B43 법령 대조.
   "/year-end-tax": {
