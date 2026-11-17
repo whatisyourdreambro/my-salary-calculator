@@ -558,8 +558,8 @@
     },
     "/civil-servant-pay-2026": {
       "contentDate": "2026-11-15",
-      "reviewedAtCommit": "edb7587ec078f40f53106505ee440ad4535335f0",
-      "reason": "352451886 (October 4) replaces an inappropriate private-employee reference with the civil-pension-specific calculator and explanation. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 adds license: CITATION_POLICY_URL (/insights#citation-policy, the existing citation policy) to this pay-scale Dataset JSON-LD. JSON-LD only, no visible change, so the 2026-10-04 date is retained. Fact update 2026-11-15 for the 11/20 publish branch claude/next-1120 (PAY RL-09 PT-02 and RL-12 T13b: 정근수당 10~50% above the ads, the collapsed FAQ allowance facts, the collapsed 9급~1급 full-table box after MultiplexAd, widened Dataset; page dates are 2026-11-15) Content date advanced from 2026-10-04 to 2026-11-15, the real KST edit day of the unit commits.",
+      "reviewedAtCommit": "e9d4065f9cf99e947aaa11640c602b4147582db7",
+      "reason": "352451886 (October 4) replaces an inappropriate private-employee reference with the civil-pension-specific calculator and explanation. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 adds license: CITATION_POLICY_URL (/insights#citation-policy, the existing citation policy) to this pay-scale Dataset JSON-LD. JSON-LD only, no visible change, so the 2026-10-04 date is retained. Fact update 2026-11-15 for the 11/20 publish branch claude/next-1120 (PAY RL-09 PT-02 and RL-12 T13b: 정근수당 10~50% above the ads, the collapsed FAQ allowance facts, the collapsed 9급~1급 full-table box after MultiplexAd, widened Dataset; page dates are 2026-11-15) Content date advanced from 2026-10-04 to 2026-11-15, the real KST edit day of the unit commits. Rehashed 2026-11-17 for the n2 repair (commit d5a39171b): src/components/PayStepTable.tsx gives its scroll region position relative so the absolutely positioned screen-reader text of empty cells stays inside the scroll area (the opened full-table box no longer widens the document to 549px at 320-544px). Class only, no visible text change; the default render is identical (box closed), so the 2026-11-15 date is retained.",
       "dependencies": [
         "src/lib/payTablesFull2026.ts",
         "src/components/PayStepTable.tsx",
@@ -571,7 +571,7 @@
         "src/lib/civilServantAllowances2026.ts",
         "src/lib/payTablesFull2026.ts"
       ],
-      "sha256": "c497d9cbcd94d20a200ff3fcc7b6f5404c41190c5c255977121bcb93ea949d70"
+      "sha256": "f8ea4687165881771e4d52ef8413ed40187e9403bcb27e580ae326ea758375fa"
     },
     "/calc/civil-servant-net-pay": {
       "contentDate": "2026-10-23",
@@ -711,8 +711,8 @@
     },
     "/police-pay-2026": {
       "contentDate": "2026-11-15",
-      "reviewedAtCommit": "edb7587ec078f40f53106505ee440ad4535335f0",
-      "reason": "352451886 (October 4) corrects the destination and label to the police-specific civil-net-pay model. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B06 STR-05, 10/5 approval #5 re-approved 2026-11-01): mt-8 on the CTA cards under InArticleAd so the first tap target sits 32px below the ad. B11 P3G-04 restores the PoliceFireRankTable row height in a shared component that this entry does not hash. Spacing only, so the 2026-10-04 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 adds license: CITATION_POLICY_URL (/insights#citation-policy, the existing citation policy) to this pay-scale Dataset JSON-LD. JSON-LD only, no visible change, so the 2026-10-04 date is retained. Fact update 2026-11-15 for the 11/20 publish branch claude/next-1120 (PAY RL-09 PT-01, RL-12 T13b and T14b: 직급보조비 17.5만원 range 순경~경장급 above the ads, the collapsed 순경~치안정감 full-table box, the #police-allowances table and publicPay related cards below the last in-column ad, widened Dataset; page modifiedTime, Article and PublishedMeta are 2026-11-15. Dependencies added for the full table, its component, the allowance constants and the related cards) Content date advanced from 2026-10-04 to 2026-11-15, the real KST edit day of the unit commits.",
+      "reviewedAtCommit": "e9d4065f9cf99e947aaa11640c602b4147582db7",
+      "reason": "352451886 (October 4) corrects the destination and label to the police-specific civil-net-pay model. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B06 STR-05, 10/5 approval #5 re-approved 2026-11-01): mt-8 on the CTA cards under InArticleAd so the first tap target sits 32px below the ad. B11 P3G-04 restores the PoliceFireRankTable row height in a shared component that this entry does not hash. Spacing only, so the 2026-10-04 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 adds license: CITATION_POLICY_URL (/insights#citation-policy, the existing citation policy) to this pay-scale Dataset JSON-LD. JSON-LD only, no visible change, so the 2026-10-04 date is retained. Fact update 2026-11-15 for the 11/20 publish branch claude/next-1120 (PAY RL-09 PT-01, RL-12 T13b and T14b: 직급보조비 17.5만원 range 순경~경장급 above the ads, the collapsed 순경~치안정감 full-table box, the #police-allowances table and publicPay related cards below the last in-column ad, widened Dataset; page modifiedTime, Article and PublishedMeta are 2026-11-15. Dependencies added for the full table, its component, the allowance constants and the related cards) Content date advanced from 2026-10-04 to 2026-11-15, the real KST edit day of the unit commits. Rehashed 2026-11-17 for the n2 repair (commit d5a39171b): PayStepTable scroll region position relative (opened full-table box no longer widens the document at 320-544px). Class only, no visible text change, default render identical; the 2026-11-15 date is retained.",
       "dependencies": [
         "src/lib/payTablesFull2026.ts",
         "src/components/PayStepTable.tsx",
@@ -726,12 +726,12 @@
         "src/lib/payTablesFull2026.ts",
         "src/lib/relatedCalculators.ts"
       ],
-      "sha256": "e32fe99326a88f1c5ceb038c94f520a2f73e6a20e679f32d89e8020aa635724b"
+      "sha256": "414b1dfad09c1b9074e0c902269bde96fa30d0117fb1e4b1649120571010427f"
     },
     "/firefighter-pay-2026": {
       "contentDate": "2026-11-15",
-      "reviewedAtCommit": "edb7587ec078f40f53106505ee440ad4535335f0",
-      "reason": "352451886 (October 4) corrects the destination and label to the firefighter-specific civil-net-pay model. Rehashed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-22 CTR-4): the head title and description include the query 소방관 월급; prefix, H1, lead and pay figures are unchanged. Head metadata only, so the 2026-10-04 date is retained. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B06 STR-05, 10/5 approval #5 re-approved 2026-11-01): mt-8 on the CTA cards under InArticleAd so the first tap target sits 32px below the ad. B11 P3G-04 restores the PoliceFireRankTable row height in a shared component that this entry does not hash. Spacing only, so the 2026-10-04 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 adds license: CITATION_POLICY_URL (/insights#citation-policy, the existing citation policy) to this pay-scale Dataset JSON-LD. JSON-LD only, no visible change, so the 2026-10-04 date is retained. Fact update 2026-11-15 for the 11/20 publish branch claude/next-1120 (PAY RL-12 T13b and T14b: the collapsed 소방사~소방정감 full-table box, the #fire-allowances table (출동가산금 note per 별표 11) and publicPay related cards below the last in-column ad, widened Dataset; page dates are 2026-11-15) Content date advanced from 2026-10-04 to 2026-11-15, the real KST edit day of the unit commits.",
+      "reviewedAtCommit": "e9d4065f9cf99e947aaa11640c602b4147582db7",
+      "reason": "352451886 (October 4) corrects the destination and label to the firefighter-specific civil-net-pay model. Rehashed 2026-11-01 for the integration release (origin/main 5ccd079e plus PKG-22 CTR-4): the head title and description include the query 소방관 월급; prefix, H1, lead and pay figures are unchanged. Head metadata only, so the 2026-10-04 date is retained. Rehashed 2026-11-01 for the stage-2 release (origin/main 9c82ac01 plus B06 STR-05, 10/5 approval #5 re-approved 2026-11-01): mt-8 on the CTA cards under InArticleAd so the first tap target sits 32px below the ad. B11 P3G-04 restores the PoliceFireRankTable row height in a shared component that this entry does not hash. Spacing only, so the 2026-10-04 date is retained. Rehashed 2026-11-02 for the stage 2 + Google integration release (origin/main 91802644 plus stage 2 e9ccc801 and the owner-approved G1-G5 round): G3 adds license: CITATION_POLICY_URL (/insights#citation-policy, the existing citation policy) to this pay-scale Dataset JSON-LD. JSON-LD only, no visible change, so the 2026-10-04 date is retained. Fact update 2026-11-15 for the 11/20 publish branch claude/next-1120 (PAY RL-12 T13b and T14b: the collapsed 소방사~소방정감 full-table box, the #fire-allowances table (출동가산금 note per 별표 11) and publicPay related cards below the last in-column ad, widened Dataset; page dates are 2026-11-15) Content date advanced from 2026-10-04 to 2026-11-15, the real KST edit day of the unit commits. Rehashed 2026-11-17 for the n2 repair (commit d5a39171b): PayStepTable scroll region position relative (opened full-table box no longer widens the document at 320-544px). Class only, no visible text change, default render identical; the 2026-11-15 date is retained.",
       "dependencies": [
         "src/lib/payTablesFull2026.ts",
         "src/components/PayStepTable.tsx",
@@ -745,7 +745,7 @@
         "src/lib/payTablesFull2026.ts",
         "src/lib/relatedCalculators.ts"
       ],
-      "sha256": "23c6a34c0caa6de53efd73c082c658fed6e1f8609eae187fa090807aef5e057b"
+      "sha256": "5e93660a02923eeff17d5899766a21100f449d719e2f121190908e1f2f1ab4ef"
     },
     "/embed": {
       "contentDate": "2026-11-02",
@@ -1189,9 +1189,9 @@
       "sha256": "0cd93f74aa81488e40333405af2d08c8e593a2823ec4113718c49ba9abdc1ce7"
     },
     "/calc/severance-vs-pension": {
-      "contentDate": "2026-11-15",
-      "reviewedAtCommit": "c612bfed828c3102b8f1f377e89d73b53bd5d930",
-      "reason": "First ledger entry 2026-11-15 for the 11/20 publish branch claude/next-1120 (SEV N2-calc-08 and N2-lib-09: the comparison table and formula paragraph give the effective retirement income tax rate 0~10%대 instead of 6~28%, the DC calculation earns no return in the year of a year-end contribution with fractional service prorated (results 66,250,132원 and others), and result-card contrast is at least 4.5:1. The engine src/lib/severanceVsPension.ts is a dependency) The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day. Reviewed again 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[5] and [6]: the search description carries the engine example (DB 약 6,524만원, DC 약 6,816만원) and a new 이어서 확인할 내용 box sits below the last calc-layout ad; JSON-LD dateModified follows the sitemap. The box reads src/lib/topicNextSteps.ts, added as a dependency) The real KST edit day of these commits is 2026-11-15, the date the entry already carries.",
+      "contentDate": "2026-11-17",
+      "reviewedAtCommit": "e9d4065f9cf99e947aaa11640c602b4147582db7",
+      "reason": "First ledger entry 2026-11-15 for the 11/20 publish branch claude/next-1120 (SEV N2-calc-08 and N2-lib-09: the comparison table and formula paragraph give the effective retirement income tax rate 0~10%대 instead of 6~28%, the DC calculation earns no return in the year of a year-end contribution with fractional service prorated (results 66,250,132원 and others), and result-card contrast is at least 4.5:1. The engine src/lib/severanceVsPension.ts is a dependency) The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day. Reviewed again 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[5] and [6]: the search description carries the engine example (DB 약 6,524만원, DC 약 6,816만원) and a new 이어서 확인할 내용 box sits below the last calc-layout ad; JSON-LD dateModified follows the sitemap. The box reads src/lib/topicNextSteps.ts, added as a dependency) The real KST edit day of these commits is 2026-11-15, the date the entry already carries. Rehashed 2026-11-17 for the n2 repair (claude/next-1120, commit fd484e6ff): the three tax cells of the comparison table above GuideMidAd now read 0~10%대 실효세율 instead of 실효세율 0~10%대 (same characters, reordered, because the 11-15 order wrapped to four lines in the narrowest column and moved GuideMidAd, InArticleAd and HomeTopAd down 20px at 370-427px). Visible text changed on 2026-11-17, so the content date moves to 2026-11-17 with the sitemap row.",
       "dependencies": [
         "src/lib/severanceVsPension.ts",
         "src/lib/topicNextSteps.ts"
@@ -1202,7 +1202,7 @@
         "src/lib/severanceVsPension.ts",
         "src/lib/topicNextSteps.ts"
       ],
-      "sha256": "3ab43ef2cbdd8b8e26232bf26c9c1839a39c544f84f1382e2417e9cfe84bd37a"
+      "sha256": "9cd31d064b53376fc58c0da5ebfd0db79f8dc36fa5e9047aa5db003f4e509238"
     },
     "/tools/finance/severance": {
       "contentDate": "2026-11-15",
@@ -1311,8 +1311,8 @@
     },
     "/calc/s-oil-bonus": {
       "contentDate": "2026-11-15",
-      "reviewedAtCommit": "c612bfed828c3102b8f1f377e89d73b53bd5d930",
-      "reason": "First ledger entry 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[4] (d7eefa10c, review fix c39ba57c2): a dated press note below the last calc-layout ad gives the 2026 Q3 preliminary results (SBS Biz 2026-11-02) and names the 2024·2023·2022 payout rates as reported values. Priority 0.85 kept explicitly because the bonus-cluster loop skips routes with a row. The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day; the page has no visible, OG or Article revision date field.)",
+      "reviewedAtCommit": "e9d4065f9cf99e947aaa11640c602b4147582db7",
+      "reason": "First ledger entry 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[4] (d7eefa10c, review fix c39ba57c2): a dated press note below the last calc-layout ad gives the 2026 Q3 preliminary results (SBS Biz 2026-11-02) and names the 2024·2023·2022 payout rates as reported values. Priority 0.85 kept explicitly because the bonus-cluster loop skips routes with a row. The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day; the page has no visible, OG or Article revision date field.) Rehashed 2026-11-17 for the n2 repair (commit e9d4065f9): only the 삼성바이오로직스 entry of the shared dependency src/components/CalcNewsNote.tsx changed; the S-OIL note text is unchanged (press of the last seven days re-read on 2026-11-17, nothing new), so the 2026-11-15 date is retained.",
       "dependencies": [
         "src/components/CalcNewsNote.tsx"
       ],
@@ -1321,12 +1321,12 @@
         "src/app/calc/s-oil-bonus/page.tsx",
         "src/components/CalcNewsNote.tsx"
       ],
-      "sha256": "46527c3e2b5f3e16d70d5557c38b198a755421fd27a6653102b4b04513552082"
+      "sha256": "15dcebe3a572d570aeba6a4ef410d0cfa9d84a69326854e1d2b28d89ffb5b512"
     },
     "/calc/samsung-biologics-bonus": {
-      "contentDate": "2026-11-15",
-      "reviewedAtCommit": "c612bfed828c3102b8f1f377e89d73b53bd5d930",
-      "reason": "First ledger entry 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[4] (d7eefa10c): a dated press note below the last calc-layout ad reports the 11/17 resumption of talks and the partial strike to 11/27 (서울경제TV and 아시아경제 2026-11-13); re-check before the publish. Priority 0.85 kept explicitly. The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day; the page has no visible, OG or Article revision date field.)",
+      "contentDate": "2026-11-17",
+      "reviewedAtCommit": "e9d4065f9cf99e947aaa11640c602b4147582db7",
+      "reason": "First ledger entry 2026-11-15 in the second integration step of the 11/20 publish branch claude/next-1120 (SEASONA calc ideas[4] (d7eefa10c): a dated press note below the last calc-layout ad reports the 11/17 resumption of talks and the partial strike to 11/27 (서울경제TV and 아시아경제 2026-11-13); re-check before the publish. Priority 0.85 kept explicitly. The sitemap day is the real KST edit day 2026-11-15 of the unit commits, not the integration or publish day; the page has no visible, OG or Article revision date field.) Rehashed 2026-11-17 for the n2 repair (commit e9d4065f9): the dated news note below the last ad (src/components/CalcNewsNote.tsx) now follows the 2026-11-17 press of 아시아경제 and 재경일보 (talks resumed 11/17 without agreement, the company proposed applying 6.2% before the wage agreement, the union refused; strike until 11/27 and 12/4). Visible text changed on 2026-11-17, so the content date moves to 2026-11-17 with the sitemap row.",
       "dependencies": [
         "src/components/CalcNewsNote.tsx"
       ],
@@ -1335,7 +1335,7 @@
         "src/app/calc/samsung-biologics-bonus/page.tsx",
         "src/components/CalcNewsNote.tsx"
       ],
-      "sha256": "436a8045b9084f87edcc7a662dd7b879d3e69033013cf7604db50e6288781026"
+      "sha256": "7774ede9300a2292edf18d4ad60b161dbb78a940e3b10a66169bb6a539040f9e"
     },
     "/calc/vacation-pay": {
       "contentDate": "2026-11-15",
