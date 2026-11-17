@@ -48,7 +48,6 @@
       "src/app/calc/year-end-bonus-tax/page.tsx": "닫힌 FAQ 1 의 '두 경우 모두 2026년 4대보험 요율로 계산했으며' 문장 — CURRENT_RATES_YEAR === 2026 일 때만 붙어(N2-calc-01) 1/1 전환하면 문장째 빠진다. 조건 없이 붙게 바뀌면 manual 로 옮길 것"
     },
     "manual": {
-      "src/app/calc/holiday-bonus/page.tsx": "메타 설명 '2026년 세법 기준' — /calc 제목·설명 동결(10/10) 뒤 CURRENT_RATES_YEAR 로 파생하거나 전환 당일 교체(본문은 파생 완료)",
       "src/app/embed/page.tsx": "FAQ '공통적으로 2026년 세법 기준' — 연말정산 위젯은 2026 귀속 고정이라 파생 불가, 전환 당일 문장 교체",
       "src/app/qna/layout.tsx": "메타 설명 '2026년 세법 기준' — qnaData 의 요율·금액(P-4)과 함께 교체",
       "src/app/tools/finance/page.tsx": "금융 계산기 허브 설명·배지·seoHeading '2026년 세법' — 13종 중 성과급만 포인터, 연도 롤오버 때 함께",
