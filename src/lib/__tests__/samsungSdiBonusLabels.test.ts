@@ -24,3 +24,12 @@ describe("입력 이름 (calc-04-F22, 속성만)", () => {
     });
   }
 });
+
+describe("입력 칸이 카드 밖으로 넘치지 않는다 — min-w-0 (calc-04-F03, 높이 불변)", () => {
+  it("삼성디스플레이 TAI 입력 2칸(기본 화면)·OPI 직접 입력, 삼성SDI OPI 직접 입력", () => {
+    expect(display.client).toContain('className="min-w-0 flex-1 p-2 rounded border border-canvas-deep tabular-nums text-lg font-bold focus:outline-none focus:border-primary"');
+    expect(display.client).toContain('className="min-w-0 flex-1 p-2 rounded border border-canvas-deep tabular-nums text-lg font-bold"');
+    expect(sdi.client).toContain('className="min-w-0 flex-1 p-2 rounded border border-canvas-deep tabular-nums text-lg font-bold"');
+    for (const src of [display.client, sdi.client]) expect(src).not.toMatch(/className="flex-1 p-2 rounded/);
+  });
+});

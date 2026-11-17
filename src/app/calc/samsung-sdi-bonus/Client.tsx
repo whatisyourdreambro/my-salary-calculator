@@ -82,7 +82,7 @@ export default function SamsungSdiBonusClient() {
               value={customOpiPercent}
               onChange={(e) => setCustomOpiPercent(Number(e.target.value) || 0)}
               step="1" min="0" max="50"
-              className="flex-1 p-2 rounded border border-canvas-deep tabular-nums text-lg font-bold"
+              className="min-w-0 flex-1 p-2 rounded border border-canvas-deep tabular-nums text-lg font-bold"
             />
             <span className="text-sm font-bold">%</span>
           </div>

@@ -101,7 +101,7 @@ export default function SamsungDisplayBonusClient() {
               value={customOpiPercent}
               onChange={(e) => setCustomOpiPercent(Number(e.target.value) || 0)}
               step="1" min="0" max="50"
-              className="flex-1 p-2 rounded border border-canvas-deep tabular-nums text-lg font-bold"
+              className="min-w-0 flex-1 p-2 rounded border border-canvas-deep tabular-nums text-lg font-bold"
             />
             <span className="text-sm font-bold">%</span>
           </div>
@@ -255,7 +255,7 @@ function TaiInput({
             value={value}
             onChange={(e) => onChange(Number(e.target.value) || 0)}
             step="5" min="0" max="100"
-            className="flex-1 p-2 rounded border border-canvas-deep tabular-nums text-lg font-bold focus:outline-none focus:border-primary"
+            className="min-w-0 flex-1 p-2 rounded border border-canvas-deep tabular-nums text-lg font-bold focus:outline-none focus:border-primary"
           />
           <span className="text-sm font-bold">%</span>
         </div>
