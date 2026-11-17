@@ -15,6 +15,12 @@ import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Sparkles, Info } from "lucide-react";
 import HolidayBonusClient from "./Client";
 import { staticRouteLastModified } from "@/app/sitemap";
+import { calcBonusNet } from "@/lib/bonusTaxCalc";
+
+// 2026-11-18 N2-calc-17 calc-02-F16: FAQ 3 예시의 4대보험 금액은 계산기와 같은 엔진·현행 요율 포인터에서 만든다
+// (오늘 97,174원 -> 약 9.7만원, 2027 요율로 바뀌면 약 10.0만원). 소득세·실수령 예시는 2027 요율에서도 같은 반올림값이다.
+const FAQ_EXAMPLE = calcBonusNet(24_000_000, 1_000_000);
+const HOLIDAY_FAQ_INSURANCE_MAN = ((FAQ_EXAMPLE.pensionDelta + FAQ_EXAMPLE.healthDelta + FAQ_EXAMPLE.empInsDelta) / 10_000).toFixed(1);
 
 const FAQ_ITEMS = [
   {
@@ -35,7 +41,7 @@ const FAQ_ITEMS = [
   {
     question: "100만원 미만이면 세금이 거의 안 붙는다고 들었는데요?",
     answer:
-      "과세표준이 6% 구간인 저소득층은 근로소득세액공제(산출세액의 55%)까지 반영돼 소득세 부담이 작습니다. 예를 들어 연봉 2,400만원에 명절 상여금 100만원이면 소득세 약 2만원 + 지방세 약 2천원 + 4대보험 약 9.7만원으로 실수령 약 88만원, 연봉 9,000만원이면 실수령 약 71만원입니다. 본 계산기로 정확히 확인 가능합니다.",
+      `과세표준이 6% 구간인 저소득층은 근로소득세액공제(산출세액의 55%)까지 반영돼 소득세 부담이 작습니다. 예를 들어 연봉 2,400만원에 명절 상여금 100만원이면 소득세 약 2만원 + 지방세 약 2천원 + 4대보험 약 ${HOLIDAY_FAQ_INSURANCE_MAN}만원으로 실수령 약 88만원, 연봉 9,000만원이면 실수령 약 71만원입니다. 본 계산기로 정확히 확인 가능합니다.`,
   },
   {
     question: "명절 상여금 절세 방법은?",
@@ -68,7 +74,7 @@ export const metadata: Metadata = buildToolMetadata({
   name: "명절·휴가비 상여금 세금 계산기",
   tagline: "설·추석 보너스와 여름휴가비 실수령액",
   description:
-    "설·추석 명절 상여금과 여름휴가비의 세금·4대보험을 2026년 세법 기준으로 계산합니다. 한계세율별 실수령액 비교, 비과세 항목 안내, 지급 의무 여부까지.",
+    `설·추석 명절 상여금과 여름휴가비의 세금·4대보험을 ${CURRENT_RATES_YEAR}년 세법 기준으로 계산합니다. 한계세율별 실수령액 비교, 비과세 항목 안내, 지급 의무 여부까지.`,
   path: "/calc/holiday-bonus",
   keywords: [
     "명절 상여금",
