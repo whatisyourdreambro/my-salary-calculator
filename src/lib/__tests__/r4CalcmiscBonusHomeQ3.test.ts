@@ -120,6 +120,17 @@ describe("화면 문구 — 상반기 기준 문장이 남지 않는다", () => 
     expect(visible).not.toMatch(/상반기 확정|반기보고서 2026-08-14 등|2026년 = 상반기/);
   });
 
+  // 검토(2026-11-18): 접힌 FAQ 5 는 펼치면 GuideMidAd 위 — 새 규칙 문구로 바꾸되 종전 답보다 넓지 않게(줄 모형 0폭).
+  it("FAQ 5(증권사 전망): 1~3분기 영업이익 × 새 규칙, 종전 답보다 길지 않다", () => {
+    const OLD = "증권사 실적 예상은 유료로 제공되는 데이터이고, 예측을 계산기 숫자처럼 보여 주면 확정된 것처럼 오해하기 쉽습니다. 이 계산기는 DART에 공시된 상반기 확정 영업이익에 누구나 확인할 수 있는 규칙(×1.5·×2·매년 ×0.7·×1.1)을 곱한 시나리오(가정)만 씁니다. 연도별 값은 '직접' 시나리오에서 원하는 숫자로 바꿀 수 있습니다.";
+    const NOW = "증권사 실적 예상은 유료로 제공되는 데이터이고, 예측을 계산기 숫자처럼 보여 주면 확정된 것처럼 오해하기 쉽습니다. 이 계산기는 DART에 공시된 1~3분기 영업이익에 누구나 확인할 수 있는 규칙(×1·×4/3·매년 ×0.7·×1.1)을 곱한 시나리오(가정)만 씁니다. 연도별 값은 '직접' 시나리오에서 원하는 숫자로 바꿀 수 있습니다.";
+    expect(page.replaceAll("&#x27;", "'")).toContain(NOW);
+    expect(page).not.toContain("상반기 확정 영업이익에");
+    const hangul = (t: string) => [...t].filter((ch) => ch >= "가" && ch <= "힣").length;
+    expect(NOW.length).toBeLessThan(OLD.length);
+    expect(hangul(NOW)).toBeLessThan(hangul(OLD));
+  });
+
   it("계산기 시나리오 문장: 삼성 'DS부문', SK 연결 — 기준은 1~3분기(DART 분기보고서)", () => {
     const client = (initial: Record<string, unknown>) => strip(renderToStaticMarkup(createElement(BonusHomePlanClient as never, { initial } as never))).replace(/<[^>]+>/g, "");
     expect(client({})).toContain("기본 시나리오(가정): 2026년 = 1~3분기 × 4/3, 이후 같은 값. 기준은 1~3분기 DS부문 영업이익 249.4조(DART 분기보고서)입니다.");
