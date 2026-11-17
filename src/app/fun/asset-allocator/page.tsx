@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Trophy, Play, RotateCcw, Monitor, Smartphone } from "lucide-react";
 import ResultSharePanel from "@/components/ResultSharePanel";
-import { InArticleAd } from "@/components/AdPlacement";
 
 // --- Game Constants & Types ---
 const BASKET_WIDTH = 100;
@@ -255,7 +254,9 @@ export default function AssetAllocatorGame() {
  }, []);
 
  return (
- <main className="min-h-screen bg-[#1c1917] flex flex-col items-center justify-center p-4 pb-16 relative overflow-hidden pt-28">
+ // 게임 영역(캔버스 판) 아래 끝에서 fun/layout 공통 광고 라벨까지 152px 이상 — Google 권장 150px(N2-app-tools-fun-11, 2026-11-17 운영자 승인).
+ // 시작·게임오버: pb-32(128px)+광고 여백 24px. 플레이 중은 조작 안내 줄(gap 24+16px)만큼 더 멀다. 줄이지 말 것.
+ <main className="min-h-screen bg-[#1c1917] flex flex-col items-center justify-center p-4 pb-32 relative overflow-hidden pt-28">
  {/* Background Gradient (외부 텍스처 제거 — CSS 그라데이션 대체) */}
  <div className="absolute inset-0 opacity-40 pointer-events-none"
  style={{ backgroundImage: `radial-gradient(circle at 50% 0%, rgba(203,165,119,0.12) 0%, transparent 55%), linear-gradient(180deg, #292524 0%, #1c1917 100%)` }} />
@@ -386,13 +387,7 @@ export default function AssetAllocatorGame() {
  </div>
  )}
 
- {/* 게임오버 시에만 게임 영역 아래 광고 — 오버레이 내부는 오클릭 정책 리스크라
- 금지, 본문 흐름에만 둔다. fun/layout 슬롯과 무충돌 (운영자 일괄 승인 2026-08-23) */}
- {gameState === "gameover" && (
- <div className="w-full max-w-2xl mx-auto mt-6">
- <InArticleAd />
- </div>
- )}
+ {/* 게임 영역(드래그) 바로 아래에는 광고를 두지 않는다 — 드래그 중 오클릭 방지(2026-11-17 운영자 승인). 광고는 fun/layout 공통 슬롯만 */}
  </div>
  </main>
  );

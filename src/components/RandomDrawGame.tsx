@@ -93,6 +93,8 @@ export default function RandomDrawGame() {
  const startGame = () => {
  const names = candidatesText.split("\n").filter(n => n.trim() !== "");
  if (names.length === 0) return alert("참가자를 입력해주세요!");
+ // 칸을 비우면 Number('') = 0 — 특별상도 없으면 당첨자 없는 레이스가 돌았다(N2-components-11)
+ if (!Number.isInteger(winnerCount) || winnerCount < 0 || (winnerCount === 0 && specialPrizes.length === 0)) return alert("당첨자 수를 1명 이상 입력해주세요!");
  if (winnerCount > names.length) return alert("당첨자 수가 참가자 수보다 많습니다!");
 
  // Create Balls with Avatars
@@ -180,8 +182,12 @@ export default function RandomDrawGame() {
  if (canvas.width !== width * dpr) {
  canvas.width = width * dpr;
  canvas.height = height * dpr;
- canvas.style.width = `${width}px`;
- canvas.style.height = `${height}px`;
+ // 판(비트맵)은 논리 400x800·900x800 그대로 두고 화면 폭에 맞춰 줄인다 — 고정 px 폭이면 휴대폰에서 오른쪽 벽이 잘렸다.
+ // 비율은 테두리 포함 상자 기준이라 넓은 화면에서는 종전 900x800·400x800 과 같고, 좁은 화면에서만 낮아진다(N2-components-11).
+ canvas.style.width = "100%";
+ canvas.style.maxWidth = `${width}px`;
+ canvas.style.height = "auto";
+ canvas.style.aspectRatio = `${width} / ${height}`;
  ctx.scale(dpr, dpr);
  }
 
@@ -490,6 +496,7 @@ export default function RandomDrawGame() {
  type="number"
  min="1"
  max={candidatesText.split("\n").filter(n => n.trim()).length || 1}
+ allowNegative={false}
  value={winnerCount}
  onChange={(e) => setWinnerCount(Number(e.target.value))}
  className="bg-transparent text-foreground text-2xl font-bold outline-none w-full"
@@ -584,9 +591,9 @@ export default function RandomDrawGame() {
  className="w-full h-[600px] md:h-[800px] bg-[#0a0a0a] rounded-3xl border-4 border-canvas shadow-2xl cursor-crosshair"
  />
 
- {/* Live Leaderboard */}
- <div className="absolute top-24 right-6 w-80 bg-electric/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 pointer-events-none shadow-2xl">
- <h3 className="text-navy font-black mb-4 flex items-center gap-2 text-lg">
+ {/* Live Leaderboard — 판 높이 안에서만(max-h). 판이 휴대폰·태블릿 폭에서 낮아져 당첨자가 많으면 상자가 판 아래 광고 위로 넘쳤다(pointer-events-none 이라 탭이 광고로 감) */}
+ <div className="absolute top-24 right-2 sm:right-6 w-40 sm:w-80 max-h-[calc(100%_-_7rem)] overflow-hidden bg-electric/80 backdrop-blur-xl border border-white/10 rounded-2xl p-3 sm:p-6 pointer-events-none shadow-2xl">
+ <h3 className="text-navy font-black mb-2 sm:mb-4 flex items-center gap-2 text-sm sm:text-lg">
  <Trophy className="w-5 h-5 text-primary" /> LIVE RANKING
  </h3>
  <div className="space-y-2 max-h-[500px] overflow-hidden">
@@ -627,7 +634,7 @@ export default function RandomDrawGame() {
  </AnimatePresence>
  {winners.length === 0 && (
  <div className="text-faint-blue text-sm text-center py-8 italic">
- Racing in progress...
+ {gameState === "finished" ? "당첨자가 없습니다" : "Racing in progress..."}
  </div>
  )}
  </div>

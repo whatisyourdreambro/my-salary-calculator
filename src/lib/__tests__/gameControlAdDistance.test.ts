@@ -5,6 +5,7 @@
 // 테트리스(방향 버튼·lg 보드)·기업 이상형 월드컵(카드 판)·플래피(캔버스)는 136px·136px·약 88~134px 였다.
 // 소스의 Tailwind 간격 클래스(1단위 4px)로 최소 거리를 계산한다 — 렌더·광고 요청 없음, 실측은 가드 스윕 몫.
 // 세 페이지 모두 min-h-screen 이라 남는 화면 높이는 거리를 늘리기만 한다(플래피는 세로 가운데 정렬).
+// 2026-11-17 운영자 승인(N2-app-tools-fun-11): 자산 배분 게임(드래그, 세로 가운데 정렬)도 같은 기준 — 88px·128px 였다.
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
@@ -57,5 +58,21 @@ describe("게임 끝에서 공통 광고 라벨까지 150px 이상", () => {
     const main = classesOf(src, /<main className="([^"]+)"/);
     expect(main).toEqual(expect.arrayContaining(["min-h-screen", "justify-center"]));
     expect(spacing(main, /^pb-\d+$/) + AD_GAP).toBeGreaterThanOrEqual(MIN);
+  });
+
+  // N2-app-tools-fun-11 (운영자 승인 2026-11-17): 손가락 드래그 게임. 종전 main pb-16 이라 시작·게임오버 88px, 플레이 중 128px 였다.
+  it("자산 배분 게임: 캔버스 판(시작·게임오버 때 마지막 블록)에서 최소 152px, 플레이 중 192px", () => {
+    const src = read("src/app/fun/asset-allocator/page.tsx");
+    const main = classesOf(src, /<main className="([^"]+)"/);
+    expect(main).toEqual(expect.arrayContaining(["min-h-screen", "justify-center"]));
+    // 판 아래 형제는 플레이 중 조작 안내 줄(16px 높이, 세로 gap-6)뿐이고 게임 아래 페이지 광고는 없다
+    const column = classesOf(src, /<div className="(relative z-10 w-full max-w-2xl flex flex-col items-center gap-\d+)">/);
+    expect(src).toContain('<div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-[#292524] bg-[#0c0a09]">');
+    expect(src).toMatch(/\{gameState === "playing" && \(\s*<div className="flex items-center gap-6 text-faint-blue text-xs/);
+    expect(src).not.toMatch(/<InArticleAd\b/);
+    const lastBlock = spacing(main, /^pb-\d+$/) + AD_GAP;
+    const playing = spacing(column, /^gap-\d+$/) + 16 + lastBlock;
+    expect(lastBlock).toBeGreaterThanOrEqual(MIN);
+    expect(playing).toBeGreaterThanOrEqual(MIN);
   });
 });
