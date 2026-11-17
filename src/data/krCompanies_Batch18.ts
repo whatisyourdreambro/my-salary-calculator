@@ -388,7 +388,7 @@ export const krCompanies_Batch18: CompanyProfile[] = [
       score: 7.5,
       keywords: ["신약전환", "OTC", "R&D", "바이오투자"],
       pros: [
-        "70년 역사의 안정적인 브랜드와 매출 기반",
+        "80년 역사의 안정된 브랜드와 매출 기반",
         "신약 R&D 전환으로 성장 모멘텀 기대",
         "중견 제약사 중 안정적인 근무 환경",
       ],

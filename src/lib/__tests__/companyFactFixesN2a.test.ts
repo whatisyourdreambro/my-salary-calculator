@@ -110,3 +110,14 @@ describe("data-b03-F07 동아에스티 — 박카스는 동아제약 브랜드, 
     expect(rawRecord("dong-a-st").lastUpdated).toBe("2026-05-15");
   });
 });
+
+describe("data-b03-M04 일동제약 — 1941년 창립(2026년 85년째), 70년 역사 아님", () => {
+  it("장점 첫 줄 80년 역사, 안정적인 -> 안정된 으로 숫자 폭 증가를 상쇄해 종전보다 좁다", () => {
+    const c = company("il-dong-pharma");
+    expect(c.culture.pros[0]).toBe("80년 역사의 안정된 브랜드와 매출 기반");
+    expect(JSON.stringify(c.culture)).not.toContain("70년 역사");
+    expect(notWider(c.culture.pros[0], "70년 역사의 안정적인 브랜드와 매출 기반")).toBe(true);
+    expect(outsideFont(c.culture.pros[0])).toEqual([]);
+    expect(rawRecord("il-dong-pharma").lastUpdated).toBe("2026-05-15");
+  });
+});
