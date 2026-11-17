@@ -19,6 +19,8 @@
 //    (SK하이닉스 PS 는 통상 실적 이듬해 2월 지급 — psData.ts 캘린더 기준)
 // 5. 삼성전자는 제도가 둘(TAI·OPI)이고 원본 파일이 달라 프로필 2개로 분리했다
 //    (같은 calcSlug "samsung-bonus"). 회사 수 집계는 calcSlug 기준 unique 로.
+// 6. 지급 기록(payouts)을 바꾸면 /insights/bonus-payout-history-2026 표가 바뀐다 — src/data/reportsRegistry.ts 의 리포트 날짜도
+//    함께 올린다(측정 게시면 updatedDate 를 실제 수정일로, 아니면 sitemapDate 만). 2026-11-18 R4 N2-calc-10(STACK 이관 한 줄).
 //
 // ── 검증 ────────────────────────────────────────────────────
 // node scripts/verify-bonus-data.mjs 가 각 payout 숫자값이 sourceFile 텍스트에
