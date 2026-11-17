@@ -83,6 +83,18 @@ describe("CB-05 리포트 행(bonusData) — LG에너지솔루션 50%·75%는 �
   });
 });
 
+describe("CB-06 LG화학 — 2025년 실적분 전사 성과급 0원·위로금 미지급, PI 적자 보장 단정 삭제 (접힌 FAQ)", () => {
+  const faq = faqBlock("src/app/calc/lg-chem-bonus/page.tsx");
+  it("1/30 통합노사협의회·석유화학 영업손실 3,564억원·디지털타임스 보도", () => {
+    expect(faq).toContain("석유화학 연간 영업손실(3,564억원) 등으로 흑자를 낸 첨단소재·생명과학까지 포함해 전사 성과급 0원, 위로금도 미지급으로 1월 30일 통합노사협의회에서 결정됐습니다(디지털타임스 2026-02-02 보도)");
+    expect(faq).not.toContain("2024~2025년 석유화학 다운사이클로 0%대까지 떨어진 사업부도 있음");
+  });
+  it("PI 는 계산기 가정이며 적자 연도 보장 단정 없음", () => {
+    expect(faq).toContain("적자 연도에도 보장된다고 단정할 수 없습니다");
+    expect(faq).not.toContain("적자여도 PI는 보장");
+  });
+});
+
 describe("CB-03 리포트 행(bonusData) — 삼성SDI 전자재료 5%는 2025년 지급(2024년 실적분)", () => {
   it("year 는 지급 연도: 전자재료 5% 행은 2025, 2026년 행에는 전자재료 지급이 없다", async () => {
     const { BONUS_PROFILES } = await import("@/data/bonusData");
