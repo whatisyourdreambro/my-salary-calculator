@@ -102,3 +102,13 @@ describe("calc-02-F16 1/1 전환 리허설 — 포인터 2027 모킹", () => {
     vi.resetModules();
   });
 });
+
+describe("calc-04-F16 중소기업 감면 — 연장 횟수", () => {
+  it("본문은 '세 차례'가 아니라 '수차례'(적용기한이 네 번 이상 늦춰짐)", async () => {
+    const out = await html(() => import("@/app/calc/smb-income-tax-break/page"));
+    expect(out).not.toContain("세 차례");
+    expect(out).toContain("이 제도는 지금까지 수차례 연장되어 왔지만");
+    expect(read("src/app/calc/smb-income-tax-break/page.tsx")).not.toContain("3회 연장");
+    expect(read("src/lib/smbTaxBreak.ts")).not.toContain("3회 연장");
+  });
+});
