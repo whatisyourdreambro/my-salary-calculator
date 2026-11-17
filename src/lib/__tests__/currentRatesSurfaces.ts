@@ -33,7 +33,7 @@ const BONUS_FOOTERS: Array<[string, () => Promise<{ default: unknown }>, (y: num
   ["kakao", () => import("@/app/calc/kakao-bonus/page"), (y) => `연봉체계 자료. ${y} 세법 반영.`],
   ["kepco", () => import("@/app/calc/kepco-bonus/page"), (y) => `2026-05-06 인용). ${y} 세법 반영.`],
   ["kia", () => import("@/app/calc/kia-bonus/page"), (y) => `삼프로TV). ${y} 세법 반영.`],
-  ["lg-chem", () => import("@/app/calc/lg-chem-bonus/page"), (y) => `연봉 데이터. ${y} 세법 반영.`],
+  ["lg-chem", () => import("@/app/calc/lg-chem-bonus/page"), (y) => `730% 사례. ${y} 세법 반영.`],
   ["lg-display", () => import("@/app/calc/lg-display-bonus/page"), (y) => `2024-03-14 보도. ${y}년 세법(소득세율·4대보험 요율) 반영.`],
   ["lg-energy", () => import("@/app/calc/lg-energy-bonus/page"), (y) => `리포트 2026-05. ${y} 세법 반영.`],
   ["naver", () => import("@/app/calc/naver-bonus/page"), (y) => `RSU 분석. ${y} 세법 반영.`],

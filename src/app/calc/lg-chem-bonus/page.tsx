@@ -227,7 +227,7 @@ export default function LgChemBonusPage() {
               <span>
                 <strong className="block mb-1 text-amber-900">⚠️ 추정 시뮬레이터입니다</strong>
                 <span className="text-amber-800">
-                  서울경제·핀포인트뉴스·사람인 + LG화학 노조 자료 기반 추정. 실제
+                  서울경제·핀포인트뉴스 보도 기반 추정(PI는 가정값). 실제
                   지급은 사업부·평가·근속에 따라 ±15% 차이 가능.
                 </span>
               </span>
@@ -266,7 +266,7 @@ export default function LgChemBonusPage() {
               <Info className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
               <span>
                 <strong>데이터 출처</strong>: 서울경제 2022 LG화학 850% 보도,
-                핀포인트뉴스 2022 720~730% 사례, LG화학 노조 자료, 사람인 연봉 데이터.{" "}
+                핀포인트뉴스 2022 720~730% 사례.{" "}
                 {CURRENT_RATES_YEAR} 세법 반영.
               </span>
             </p>
