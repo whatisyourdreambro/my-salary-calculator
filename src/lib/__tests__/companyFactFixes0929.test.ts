@@ -73,9 +73,40 @@ describe("CM-03 직급별 연봉표 평균 근속 — 2025 사업보고서 값",
   });
 });
 
+describe("히어로 소개문 사실 정정 — 한글 음절끼리 제자리 교체 (광고 위 폭 불변)", () => {
+  it("CM-06 넷마블 최대주주는 방준혁(DART 2025 사업보고서, 24.12%) — 방시혁(하이브) 아님", () => {
+    const d = company("netmarble").description;
+    expect(d).toContain("방준혁(창업자) 최대주주, 글로벌 M&A 공격적 추진.");
+    expect(d).not.toContain("방시혁");
+    expect(widthSignature("방준혁(창업자) 최대주주,")).toBe(widthSignature("방시혁(하이브) 최대주주,"));
+  });
+
+  it("CM-08 오스템임플란트는 재상장이 아니라 2023년 공개매수 인수 후 상장폐지", () => {
+    const c = company("osstem-implant");
+    expect(c.description).toContain("2022년 회계 횡령 사건 후 인수돼, 중국·미국 등");
+    expect(c.culture.pros).toContain("상폐된 후 거버넌스 개선 노력");
+    expect(JSON.stringify(c)).not.toContain("재상장");
+    expect(widthSignature("사건 후 인수돼,")).toBe(widthSignature("사건 후 재상장,"));
+    expect(widthSignature("상폐된 후 거버넌스 개선 노력")).toBe(widthSignature("재상장 후 거버넌스 개선 노력"));
+  });
+
+  it("CM-14 카카오브레인 LLM·칼로 사업은 2024-06 카카오로 영업양수 — '선도' 현재형 제거", () => {
+    const d = company("kakao-brain").description;
+    expect(d).toContain("KoGPT·Karlo 개발사, 본사로 LLM·생성 AI 이관.");
+    expect(d).not.toContain("일체");
+    expect(widthSignature("본사로 LLM·생성 AI 이관.")).toBe(widthSignature("한국어 LLM·생성 AI 선도."));
+  });
+});
+
 describe("정정 문구는 사이트 글꼴 서브셋 안의 글자만 쓴다", () => {
   it("CM-03", () => {
     expect(outsideFont(careerStep("kakao", "크루 (전사 평균)").description)).toEqual([]);
     expect(outsideFont(careerStep("naver", "팀원 (전사 평균)").description)).toEqual([]);
+  });
+  it("CM-06·08·14", () => {
+    for (const id of ["netmarble", "osstem-implant", "kakao-brain"]) {
+      const c = company(id);
+      expect(outsideFont(c.description + c.culture.pros.join("") + c.culture.cons.join(""))).toEqual([]);
+    }
   });
 });

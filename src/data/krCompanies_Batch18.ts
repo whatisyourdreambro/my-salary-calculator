@@ -46,7 +46,7 @@ export const krCompanies_Batch18: CompanyProfile[] = [
     industry: "Medical Device / Dental",
     tier: "startup",
     logo: "🦷",
-    description: "치과 임플란트 세계 2위. 2022년 회계 횡령 사건 후 재상장, 중국·미국 등 글로벌 시장 1위권 유지.",
+    description: "치과 임플란트 세계 2위. 2022년 회계 횡령 사건 후 인수돼, 중국·미국 등 글로벌 시장 1위권 유지.",
     salary: {
       entry: { base: 50000000, incentive: { target: 15, max: 30, avgAmount: 9500000 } },
       junior: { base: 61000000, incentive: { target: 15, max: 30, avgAmount: 12000000 } },
@@ -70,7 +70,7 @@ export const krCompanies_Batch18: CompanyProfile[] = [
       pros: [
         "치과 임플란트 세계 2위의 글로벌 브랜드 파워",
         "중국·동남아 고성장 시장에서의 영업 기회",
-        "재상장 후 거버넌스 개선 노력",
+        "상폐된 후 거버넌스 개선 노력",
       ],
       cons: [
         "횡령 사건 후 내부 통제 강화로 행정 부담 증가",

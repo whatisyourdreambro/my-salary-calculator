@@ -7,7 +7,7 @@ export const krCompanies_Batch19: CompanyProfile[] = [
     industry: "Gaming",
     tier: "unicorn",
     logo: "🎮",
-    description: "마블 퓨처파이트·일곱개의 대죄 등 글로벌 히트작 보유 대형 게임사. 방시혁(하이브) 최대주주, 글로벌 M&A 공격적 추진.",
+    description: "마블 퓨처파이트·일곱개의 대죄 등 글로벌 히트작 보유 대형 게임사. 방준혁(창업자) 최대주주, 글로벌 M&A 공격적 추진.",
     salary: {
       entry: { base: 55000000, incentive: { target: 15, max: 30, avgAmount: 10000000 } },
       junior: { base: 67000000, incentive: { target: 15, max: 30, avgAmount: 13000000 } },
