@@ -112,10 +112,9 @@ describe("2026 임단협 상태 문구 (R4 bonus-deal-status)", () => {
   });
 
   it("잠정합의·사측 제시안 수치(승인 전)는 본문에 없다", () => {
-    const mobis = norm(read(PAGES.mobis));
+    // 모비스 2026 타결 수치(1,320만·주식 8주)는 운영자 승인(2026-11-17, N2-calc-19)으로 반영했다 — 금지 목록에서 뺐다.
     const rotem = norm(read(PAGES.rotem));
     const hanwha = norm(read(PAGES.hanwha));
-    for (const s of ["1,320만", "1320만", "주식 8주", "자사주 8주"]) expect(mobis.includes(s), `mobis '${s}'`).toBe(false);
     for (const s of ["1,550만", "1550만", "850만", "주식 30주"]) expect(rotem.includes(s), `rotem '${s}'`).toBe(false);
     // 사측 제시안(뉴스1 2026-09-11): 기본급 월 12만2,000원↑·인센 최대 500만·생산목표달성격려금 최대 300만.
     // ('800만원'은 기존 평균연봉 '1억 1,800만원'과 겹쳐 쓰지 않는다)
