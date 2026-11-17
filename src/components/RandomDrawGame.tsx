@@ -180,8 +180,12 @@ export default function RandomDrawGame() {
  if (canvas.width !== width * dpr) {
  canvas.width = width * dpr;
  canvas.height = height * dpr;
- canvas.style.width = `${width}px`;
- canvas.style.height = `${height}px`;
+ // 판(비트맵)은 논리 400x800·900x800 그대로 두고 화면 폭에 맞춰 줄인다 — 고정 px 폭이면 휴대폰에서 오른쪽 벽이 잘렸다.
+ // 비율은 테두리 포함 상자 기준이라 넓은 화면에서는 종전 900x800·400x800 과 같고, 좁은 화면에서만 낮아진다(N2-components-11).
+ canvas.style.width = "100%";
+ canvas.style.maxWidth = `${width}px`;
+ canvas.style.height = "auto";
+ canvas.style.aspectRatio = `${width} / ${height}`;
  ctx.scale(dpr, dpr);
  }
 
