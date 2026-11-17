@@ -211,6 +211,7 @@ const skHynixWage2026Supplement = `
 <p>이 글은 2026년 5월 임금협상 초기에 쓴 분석입니다. 그 뒤 확정된 내용을 날짜와 출처를 붙여 정리합니다. 본문 PS 추이 표의 2026년 행은 작성 당시의 전망으로, 상반기 실적과 맞지 않아 취소선으로 철회했습니다.</p>
 <ul>
 <li><strong>2026 임금협상 타결</strong> — 2026년 9월 16일 조합원 총투표에서 수정 잠정합의안이 가결됐습니다(헤럴드경제·파이낸셜뉴스 2026-09-16 보도 기준). 기본급 인상률은 ${AGREEMENT_2026.wageIncreasePct}%로, 본문의 당시 추정(5.5~7.0%) 범위 안입니다.</li>
+<li><strong>2025년 임금교섭</strong> — 2025년 9월 임금 6.0% 인상으로 타결됐습니다(파이낸셜뉴스 2025-09-01 보도 기준). 본문 변수 1의 '약 5.5%'는 6.0%가 맞습니다.</li>
 <li><strong>성과급(PS) 지급 방식</strong> — 재원은 영업이익의 ${SKH_POOL_PCT}%(상한 없음)입니다. ${AGREEMENT_2026.appliesFrom} 당해 ${SKH_SPLIT.cashNowPct + SKH_SPLIT.stockNowPct}%(현금 ${SKH_SPLIT.cashNowPct}% + 자사주 ${SKH_SPLIT.stockNowPct}%)를 지급하고, 나머지 ${SKH_SPLIT.stockYear1Pct + SKH_SPLIT.stockYear2Pct}%는 1년 뒤·2년 뒤 주식으로 ${SKH_SPLIT.stockYear1Pct}%씩 나눠 지급합니다(보도 기준).</li>
 <li><strong>2025년 실적분 PS</strong> — 기본급 대비 ${SKH_PS_2025_RATE}%(2026년 2월 5일 지급, 보도 기준). 같은 해 연결 영업이익은 ${SKH_PS_2025.opTril}조원(DART 사업보고서)입니다.</li>
 <li><strong>2026년 실적</strong> — 상반기 영업이익 약 ${H1_2026_PROFIT_TRIL}조원(회사 실적 발표). 2026년분 PS 지급률은 2027년 초 연간 실적 발표 뒤 확정됩니다.</li>
