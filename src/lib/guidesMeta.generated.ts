@@ -1709,7 +1709,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-06",
   "views": 0,
   "lang": "ko",
-  "contentChars": 3408
+  "contentChars": 3395
  },
  {
   "slug": "samsung-employee-rsu-stock",
