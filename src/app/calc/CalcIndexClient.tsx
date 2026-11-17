@@ -83,13 +83,18 @@ export default function CalcIndexClient({ grouped, featured }: { grouped: Groupe
           <p className="mt-3 text-base text-muted-foreground">검색어를 짧게 바꾸거나 분야 선택을 해제해 보세요.</p>
           <button type="button" onClick={reset} className="ms-button ms-button-primary mt-5">모든 계산기 보기</button>
         </div>}
-        {visible.map((group, index) => <Fragment key={group.id}>
-          <section id={`cat-${group.id}`} aria-labelledby={`heading-${group.id}`} className="mb-12 scroll-mt-64">
+        {visible.map((group, index) => {
+          // 2026-11-18 N2-calc-17 calc-01-F11: 첫 묶음을 6장 뒤에서 두 격자로 나누는 것은 그 사이에 광고를 넣을 때(기본 목록)만이다.
+          // 검색·분야 선택 상태에서도 나누면 6번째와 7번째 카드 줄이 간격 없이 붙었다 — 그때는 한 격자로 두어 줄 간격(gap-4, 16px)을
+          // 되살리고, 같은 16px 를 묶음 아래 여백에서 뺀다(mb-12 -> mb-8). 목록 전체 높이·아래 광고 위치는 그대로, 기본 목록 마크업은 바이트 동일.
+          const splitFirst = index === 0 && group.items.length > FIRST_GROUP_AD_AFTER;
+          return <Fragment key={group.id}>
+          <section id={`cat-${group.id}`} aria-labelledby={`heading-${group.id}`} className={splitFirst && !showGroupAds ? "mb-8 scroll-mt-64" : "mb-12 scroll-mt-64"}>
             <div className="mb-5 flex items-center gap-3">
               <h2 id={`heading-${group.id}`} className="text-2xl font-bold tracking-tight text-foreground">{group.label}</h2>
               <span className="rounded-lg bg-secondary px-2.5 py-1 text-sm font-semibold text-muted-foreground tabular-nums">{group.items.length}</span>
             </div>
-            {(index === 0 && group.items.length > FIRST_GROUP_AD_AFTER
+            {(showGroupAds && splitFirst
               ? [group.items.slice(0, FIRST_GROUP_AD_AFTER), group.items.slice(FIRST_GROUP_AD_AFTER)]
               : [group.items]
             ).map((chunk, chunkIndex) => <Fragment key={chunkIndex}>
@@ -105,7 +110,8 @@ export default function CalcIndexClient({ grouped, featured }: { grouped: Groupe
             </Fragment>)}
           </section>
           {showGroupAds && GROUP_ADS[index] && <div className="my-12 border-y border-border py-8">{GROUP_ADS[index]}</div>}
-        </Fragment>)}
+        </Fragment>;
+        })}
       </div>
     </div>
   );
