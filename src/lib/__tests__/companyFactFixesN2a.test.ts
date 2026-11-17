@@ -121,3 +121,15 @@ describe("data-b03-M04 일동제약 — 1941년 창립(2026년 85년째), 70년 
     expect(rawRecord("il-dong-pharma").lastUpdated).toBe("2026-05-15");
   });
 });
+
+describe("data-b03-F02 보령제약(중복 기록) — 삼진제약 계열 아님, 현재 사명은 보령", () => {
+  it("히어로 꼬리를 현재 사명 안내로 — 종전보다 좁다, canonical·별칭·redirect 는 그대로(2월 308 병합 몫)", () => {
+    const c = company("boryung-pharmaceutical");
+    expect(c.description).toBe("카나브(고혈압치료제) 글로벌 기술수출 성공 제약사. 현재 사명은 보령.");
+    expect(JSON.stringify(c)).not.toContain("삼진제약");
+    expect(notWider(c.description, "카나브(고혈압치료제) 글로벌 기술수출 성공 제약사. 삼진제약·보령바이오파마 계열.")).toBe(true);
+    expect(c.name.ko).toBe("보령제약");
+    expect(outsideFont(c.description)).toEqual([]);
+    expect(rawRecord("boryung-pharmaceutical").lastUpdated).toBe("2026-05-15");
+  });
+});

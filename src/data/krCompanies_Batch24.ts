@@ -472,7 +472,7 @@ export const krCompanies_Batch24: CompanyProfile[] = [
     industry: "Pharmaceutical",
     tier: "startup",
     logo: "💊",
-    description: "카나브(고혈압치료제) 글로벌 기술수출 성공 제약사. 삼진제약·보령바이오파마 계열.",
+    description: "카나브(고혈압치료제) 글로벌 기술수출 성공 제약사. 현재 사명은 보령.",
     salary: {
       entry: { base: 44000000, incentive: { target: 13, max: 23, avgAmount: 6500000 } },
       junior: { base: 55000000, incentive: { target: 13, max: 23, avgAmount: 9000000 } },
