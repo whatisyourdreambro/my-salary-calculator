@@ -209,6 +209,28 @@ export function getDaysLeft(
 }
 
 /**
+ * 홈 시즌 배너 자리 예약(RL-20 = 10월 D4-③ 63d0be8a 재착륙, 2026-11-18)용 '서버가 본 오늘' — KST 달력 날짜 숫자 3개.
+ * 홈은 정적 프리렌더라 이 값은 빌드 날짜다. 서버(빌드 시 UTC 일 수 있음)와 하이드레이션 첫 렌더가 같은 값을 쓰도록
+ * Date 가 아니라 숫자로 넘기고, 양쪽 모두 seasonalSeedDate()(로컬 정오)로 되돌려 같은 항목·같은 D-day 를 고른다
+ * (하이드레이션 불일치 0). 마운트 뒤에는 방문자의 지금 시각으로 실제 배너를 그린다(SeasonalBanner.tsx).
+ */
+export interface SeasonalSeed {
+  y: number;
+  m: number;
+  d: number;
+}
+
+export function seasonalSeedKst(nowMs: number = Date.now()): SeasonalSeed {
+  const kst = new Date(nowMs + 9 * 60 * 60 * 1000);
+  return { y: kst.getUTCFullYear(), m: kst.getUTCMonth() + 1, d: kst.getUTCDate() };
+}
+
+/** 로컬 정오 — 어느 타임존에서 읽어도 같은 달·일 (테스트의 at() 과 같은 방식) */
+export function seasonalSeedDate(seed: SeasonalSeed): Date {
+  return new Date(seed.y, seed.m - 1, seed.d, 12, 0, 0);
+}
+
+/**
  * now 기준 첫 매치 항목 (없으면 null). now 주입은 테스트용 — 기본값은 현재 시각.
  * gates: 발표 게이트 주입(선택). requires 가 있는 항목은 해당 게이트가 true 일 때만 매치되고,
  * 기본(미주입·false)이면 건너뛰어 다음 항목으로 폴스루한다 — 순수 함수 유지(호출부가 값을 넘김).

@@ -19,6 +19,9 @@ import FloatingShareBar from "@/components/FloatingShareBar";
 import AutoShareSection from "@/components/AutoShareSection";
 import EditorialTrustNote from "@/components/EditorialTrustNote";
 import { RSS_FEED_ALTERNATES } from "@/lib/seo";
+// 홈 시즌 배너 자리 예약(RL-20 = 10월 D4-③) — 서버가 본 오늘(KST, 정적 프리렌더라 빌드 날짜).
+// 하이드레이션 첫 렌더도 같은 값을 받아 같은 보이지 않는 상자를 그리고, 마운트 뒤 방문 날짜의 실제 배너로 바뀐다.
+import { seasonalSeedKst } from "@/lib/seasonalCalendar";
 
 // canonical/hreflang은 홈 전용 값 — 루트 layout에 두면 alternates를 자체 정의하지
 // 않는 모든 페이지에 "canonical: 홈"이 상속되는 사고 위험이 있어 여기로 이동(2026-07-06).
@@ -46,6 +49,7 @@ export default function HomePage() {
         guideCategories={<GuideCategories />}
         toolsSection={<HomeToolsSection />}
         trafficEngines={<TrafficEnginesNav />}
+        seasonalSeed={seasonalSeedKst()}
       />
       <HomeSeoSection />
       <AutoShareSection contentType="page" maxWidth="7xl" className="pb-12" />
