@@ -550,14 +550,14 @@ const executiveBonusLimit = `
 <ul class="space-y-2 mt-4">
 <li>· 정관 또는 주주총회 결의로 한도 설정</li>
 <li>· 일반적으로 기본급의 100~300%</li>
-<li>· 한도 초과분: 손금 불산입 → 법인세 24% 추가</li>
+<li>· 한도 초과분: 손금 불산입 → 법인세 추가</li>
 <li>· 임원 본인은 근로소득세 정상 부과</li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">💰 시뮬 — 한도 5억 / 실 지급 8억</h2>
 <ul class="space-y-2 mt-4">
 <li>· 한도 내 5억: 법인 손금 인정, 임원 근로소득</li>
-<li>· 한도 초과 3억: 법인 손금 불산입 → 법인세 7,200만 추가</li>
+<li>· 한도 초과 3억: 손금 불산입 → 법인세 6,000만 추가</li>
 <li>· 임원: 8억 전체에 근로소득세 + 4대보험</li>
 <li>· <strong>회사·임원 모두 손해 → 한도 내 운용 필수</strong></li>
 </ul>
@@ -1248,7 +1248,7 @@ export const hotBonusTaxComplete: Guide[] = [
     modifiedDate: "2026-10-03", views: 0, content: signOnBonus, lang: "ko" },
   { slug: "retention-bonus-3year-split-2026", title: "리텐션 보너스 1억 — 3년 분할 vs 일시 총세금", description: "M&A·구조조정 후 잔존 보너스. 1억 일시 vs 3년 분할 세금은 귀속연도별 상이. 분할 지급 협상 시 조건 확인.", category: "연봉", tags: ["리텐션", "잔존보너스", "M&A", "구조조정", "2026"], level: "고급", publishedDate: "2026-05-23",
     modifiedDate: "2026-10-03", views: 0, content: retentionBonus, lang: "ko" },
-  { slug: "executive-bonus-corporate-limit-2026", title: "비상장 임원 성과급 한도 — 초과 시 회사·임원 모두 손해", description: "정관·주총 한도 명시. 한도 5억 + 실 지급 8억 시 초과 3억 법인세 7,200만 추가 + 임원 근로소득세 그대로. 한도 내 운용 필수.", category: "연봉", tags: ["임원", "비상장", "성과급한도", "법인세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: executiveBonusLimit, lang: "ko" },
+  { slug: "executive-bonus-corporate-limit-2026", title: "비상장 임원 성과급 한도 — 초과 시 회사·임원 모두 손해", description: "정관·주총 한도 명시. 한도 5억 + 실지급 8억 시 초과 3억 법인세 6,000만 추가 + 임원 근로소득세 그대로. 한도 내 운용 필수.", category: "연봉", tags: ["임원", "비상장", "성과급한도", "법인세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: executiveBonusLimit, lang: "ko" },
   // 영역 B — 성과급 소득세 10편
   {
     slug: "bonus-1eok-net-payment-2026",

@@ -4812,7 +4812,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "executive-bonus-corporate-limit-2026",
   "title": "비상장 임원 성과급 한도 — 초과 시 회사·임원 모두 손해",
-  "description": "정관·주총 한도 명시. 한도 5억 + 실 지급 8억 시 초과 3억 법인세 7,200만 추가 + 임원 근로소득세 그대로. 한도 내 운용 필수.",
+  "description": "정관·주총 한도 명시. 한도 5억 + 실지급 8억 시 초과 3억 법인세 6,000만 추가 + 임원 근로소득세 그대로. 한도 내 운용 필수.",
   "category": "연봉",
   "tags": [
    "임원",
@@ -4825,7 +4825,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 900
+  "contentChars": 893
  },
  {
   "slug": "bonus-1eok-net-payment-2026",
