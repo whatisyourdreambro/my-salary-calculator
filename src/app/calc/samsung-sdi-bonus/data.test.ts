@@ -15,8 +15,10 @@ import {
 describe("samsung-sdi-bonus/data 동결값", () => {
   it("SCENARIOS — 2026-09-05 Client.tsx 인라인 리터럴과 동일", () => {
     expect(SCENARIOS).toEqual([
-      { id: "chasm", label: "캐즘 (0%)", percent: 0, hint: "2026 배터리·본사" },
-      { id: "electromat", label: "전자재료 (5%)", percent: 5, hint: "2026 폴더블 OLED" },
+      // 2026-11-18 R4(RL-16 CB-03, 10월 a61342085·119902bed): 2026년 1월 OPI 는 전 사업부 0%, 전자재료 한 자릿수는 2025년 초(2024 실적분) 지급분.
+      // 전자재료 힌트는 10월 스윕에서 광고 이동이 없던 같은 폭 문구(2025 폴더블 OLED 는 675px 에서 칩 줄 수를 바꿨다).
+      { id: "chasm", label: "캐즘 (0%)", percent: 0, hint: "2026 전 사업부" },
+      { id: "electromat", label: "전자재료 (5%)", percent: 5, hint: "2025 OLED/IT소재" },
       { id: "recovery", label: "회복기 (18%)", percent: 18, hint: "2024 전자재료" },
       { id: "normal", label: "평년 (28%)", percent: 28, hint: "2024 본사" },
       { id: "boom", label: "호황 (48%)", percent: 48, hint: "전기차 슈퍼사이클" },
