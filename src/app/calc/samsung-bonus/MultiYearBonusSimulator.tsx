@@ -1594,27 +1594,26 @@ function BonusBarChart({
                 opacity={blocked ? 0.18 : 0.32}
                 rx="3"
               />
-              {/* 세후 막대 (전경, 진한) */}
-              {!blocked && (
-                <rect
-                  x={center - barWidth / 2}
-                  y={netY}
-                  width={barWidth}
-                  height={netH}
-                  fill={color}
-                  rx="3"
-                  style={{
-                    filter: isHover
-                      ? `drop-shadow(0 2px 6px ${color}55)`
-                      : "none",
-                  }}
-                />
-              )}
-              {/* 미달 마크 */}
+              {/* 세후 막대 (전경, 진한) — 임계값 미달 연도도 OPI1 은 지급되므로 세후 막대를 그린다(빨강).
+                  N2-calc-07 calc-03-F10: 종전에는 미달 연도의 세후 막대를 숨기고 툴팁에 '0원'이라 해 위 '세후' 줄과 어긋났다. */}
+              <rect
+                x={center - barWidth / 2}
+                y={netY}
+                width={barWidth}
+                height={netH}
+                fill={blocked ? "#EF4444" : color}
+                rx="3"
+                style={{
+                  filter: isHover
+                    ? `drop-shadow(0 2px 6px ${color}55)`
+                    : "none",
+                }}
+              />
+              {/* 미달 마크 — 빨간 세후 막대에 묻히지 않게 막대 바로 위에 둔다(막대가 없으면 종전 자리) */}
               {blocked && (
                 <text
                   x={center}
-                  y={padT + innerH - 6}
+                  y={Math.min(padT + innerH - 6, netY - 4)}
                   textAnchor="middle"
                   fontSize="11"
                   fontWeight="900"
@@ -1712,7 +1711,7 @@ function BonusBarChart({
                 fontSize="9"
                 fill="#FCA5A5"
               >
-                ⚠ 임계값 미달 — 0원
+                ⚠ 임계값 미달 — OPI2 0원
               </text>
             )}
           </g>
@@ -1738,7 +1737,7 @@ function BonusBarChart({
         </span>
         <span className="inline-flex items-center gap-1.5 text-muted-blue">
           <span className="text-destructive font-black">✕</span>
-          임계값 미달 (0원)
+          OPI2 미달 (0원)
         </span>
       </div>
       </div>
