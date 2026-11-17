@@ -149,7 +149,7 @@ export default function YearEndBonusTaxPage() {
                 <strong className="text-navy dark:text-canvas-50">의료비·신용카드 사용</strong> — 보너스 받은 12월에 큰 지출 몰아서 공제 한도 채우기
               </li>
               <li>
-                <strong className="text-navy dark:text-canvas-50">우리사주 조합 출연</strong> — 연 400만원 한도 비과세, 보너스 일부를 자사주로 적립
+                <strong className="text-navy dark:text-canvas-50">우리사주 조합 출연</strong> — 연 400만원 공제 한도액, 보너스 일부를 자사주로 적립
               </li>
             </ol>
           </article>

@@ -140,7 +140,7 @@ export default function IncentiveTaxPage() {
                 <strong className="text-navy dark:text-canvas-50">IRP/연금저축 활용</strong> — 연 900만원, 최대 148.5만원 환급
               </li>
               <li>
-                <strong className="text-navy dark:text-canvas-50">우리사주 조합 출연</strong> — 연 400만원 한도 비과세
+                <strong className="text-navy dark:text-canvas-50">우리사주 조합 출연</strong> — 연 400만원 공제 한도액
               </li>
               <li>
                 <strong className="text-navy dark:text-canvas-50">중소기업 취업 청년 감면</strong> — 일정 요건 시 90% 감면 (연 200만원 한도)
