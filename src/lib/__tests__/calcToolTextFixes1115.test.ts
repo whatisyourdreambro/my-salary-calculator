@@ -40,7 +40,10 @@ describe("calc-02-F13 명절 상여·인센티브 — 4대보험 정기·비정�
     expect(out).not.toContain("정기 상여금으로 분류되면");
     expect(out).toContain("명절 상여는 <strong>정기 상여금</strong>이든 <strong>비정기 격려금</strong>이든 과세 근로소득이면 4대보험 보수에 포함됩니다.");
     expect(out).toContain("건강·고용보험은 다음 해 보수총액 정산 때, 국민연금은 이후 기준소득월액 결정 때 반영됩니다.");
-    expect(out).toContain("정기 상여든 비정기 격려금이든 과세되는 근로소득이면 소득세와 4대보험 보수에 모두 포함됩니다(국민연금법 시행령 제3조, 국민건강보험법 제70조).");
+    // 검토(2026-11-18): 펼친 FAQ 는 calc/layout 광고 위 — 종전 둘째 문장보다 길지 않게
+    const faq1 = "정기 상여든 비정기 격려금이든 과세 근로소득이면 소득세와 4대보험 보수에 포함됩니다(국민연금법 시행령 제3조, 국민건강보험법 제70조).";
+    expect(out).toContain(faq1);
+    expect(faq1.length).toBeLessThan("회사가 명절에 일시 지급하더라도 정기 상여금으로 분류되면 4대보험 부과 대상이 되며, 비정기 일회성 격려금이라도 소득세는 동일하게 부과됩니다.".length);
     // 계산기 자체도 상여에 연금을 매긴다 — 본문과 엔진이 같은 말을 한다
     expect(calcBonusNet(24_000_000, 1_000_000).pensionDelta).toBeGreaterThan(0);
   });
