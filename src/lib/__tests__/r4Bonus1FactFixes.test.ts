@@ -135,3 +135,11 @@ describe("CB-07 성과급 허브 카드 시즌 라벨 (광고 위 한 줄 안)",
     expect(BONUS_CALCS.find((c) => c.slug === "hd-hyundai-bonus")?.seasonLabel).toBe("연초 지급");
   });
 });
+
+describe("CB-07 /calc 인덱스 현대로템 카드 시즌 (광고 위 한 줄 안)", () => {
+  it("'12월 임단협 시즌' 이 남지 않는다", () => {
+    const page = read("src/app/calc/page.tsx");
+    expect(page).toContain('season: "하반기 임단협 시즌"');
+    expect(page).not.toContain("12월 임단협 시즌");
+  });
+});
