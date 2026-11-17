@@ -121,3 +121,17 @@ describe("CB-07 성과급 허브 — 현대차·기아는 2026년 8월 말 타�
     expect(faq).not.toContain("(주로 연말)");
   });
 });
+
+describe("CB-07 성과급 허브 카드 시즌 라벨 (광고 위 한 줄 안)", () => {
+  it("현대차·기아·현대모비스·현대로템 '12월 임단협 시즌' -> '하반기 임단협 시즌'", async () => {
+    const { BONUS_CALCS } = await import("@/data/bonusCalcHub");
+    expect(BONUS_CALCS.filter((c) => c.seasonLabel === "12월 임단협 시즌")).toEqual([]);
+    for (const slug of ["hyundai-bonus", "kia-bonus", "hyundai-mobis-bonus", "hyundai-rotem-bonus"]) {
+      expect(BONUS_CALCS.find((c) => c.slug === slug)?.seasonLabel, slug).toBe("하반기 임단협 시즌");
+    }
+  });
+  it("HD현대중공업은 '연초 지급' 유지 — 2025년분은 2026년 2월로 미뤄 지급(아시아경제 2026-01-23, 헤럴드경제 2026-01-10)", async () => {
+    const { BONUS_CALCS } = await import("@/data/bonusCalcHub");
+    expect(BONUS_CALCS.find((c) => c.slug === "hd-hyundai-bonus")?.seasonLabel).toBe("연초 지급");
+  });
+});

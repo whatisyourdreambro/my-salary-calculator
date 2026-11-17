@@ -122,7 +122,7 @@ export const BONUS_CALCS: BonusCalcEntry[] = [
     companyId: "hyundai",
     sector: "자동차·중공업·철강",
     hook: "2026 임협 타결 400% + 1,270만 + 주식 15주 (8/31 가결)",
-    seasonLabel: "12월 임단협 시즌",
+    seasonLabel: "하반기 임단협 시즌",
   },
   {
     slug: "kia-bonus",
@@ -130,7 +130,7 @@ export const BONUS_CALCS: BonusCalcEntry[] = [
     companyId: "kia",
     sector: "자동차·중공업·철강",
     hook: "2026 임단협 타결 400% + 1,270만 + 자사주 47주 (6년 연속 무분규)",
-    seasonLabel: "12월 임단협 시즌",
+    seasonLabel: "하반기 임단협 시즌",
   },
   {
     slug: "hyundai-mobis-bonus",
@@ -138,7 +138,7 @@ export const BONUS_CALCS: BonusCalcEntry[] = [
     companyId: "hyundai-mobis",
     sector: "자동차·중공업·철강",
     hook: "임단협 450% + 1,420만 + 우리사주 17주 (2025 타결)",
-    seasonLabel: "12월 임단협 시즌",
+    seasonLabel: "하반기 임단협 시즌",
   },
   {
     slug: "hyundai-rotem-bonus",
@@ -146,7 +146,7 @@ export const BONUS_CALCS: BonusCalcEntry[] = [
     companyId: "hyundai-rotem",
     sector: "자동차·중공업·철강",
     hook: "임단협 타결안 기본급 450% + 1,620만원",
-    seasonLabel: "12월 임단협 시즌",
+    seasonLabel: "하반기 임단협 시즌",
   },
   {
     slug: "hd-hyundai-bonus",
