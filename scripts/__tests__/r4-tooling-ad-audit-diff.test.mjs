@@ -102,3 +102,11 @@ test('(h) an owner-approved allowlist entry exempts a multi-line block (any JSX 
   assert.equal(status, 0, out);
   assert.match(out, /승인 면제\] src\/app\/x\/page\.tsx:\d+ <CalcResultAd> 직상단 — approvalId TEST 2026-11-18/);
 });
+
+test('(i) an approved line higher up in the same added block does not exempt an unapproved line directly above the ad', t => {
+  // The per-line rule (b) runs over every line first, so the block rule never hides one of its ERRORs (R4 TOOLING review).
+  const allow = [{ file: 'src/app/x/page.tsx', pattern: '^<aside className="approved">$', reason: 'test', approvalId: 'TEST 2026-11-18' }];
+  const { status, out } = runCase(t, page([...keep, '      <aside className="approved">', '        <p>approved block</p>', '      </aside>', '      <Unapproved />']), { allow });
+  assert.equal(status, 1, out);
+  assert.match(out, /ERROR {2}src\/app\/x\/page\.tsx:\d+ 광고 <CalcResultAd>\(:\d+\) 직상단에 새 UI 삽입 \(<Unapproved \/>/);
+});

@@ -573,43 +573,6 @@ if (DIFF_MODE) {
         break;
       }
     }
-    // (b2) 추가 블록 단위(2026-11-18 R4 TOOLING, 감사 힌트 scripts-b01-M01 재현 확인): 같은 헌크의 연속된 추가 줄 묶음에
-    //     JSX 여는 줄이 하나라도 있고, 묶음 마지막 줄 바로 아래 2줄 안에 기존(컨텍스트) 광고 줄이 있으면 (b)와 같은 ERROR.
-    //     (b)는 줄마다 2줄 창을 보므로 3줄 이상인 새 문단·여러 줄 컴포넌트는 자기 줄로 창을 다 써서 광고에 닿지 못했다.
-    //     JSX 여는 줄이 없는 묶음(문구·속성만 수정)은 지금처럼 범위 밖. (b)가 이미 보고한 광고는 건너뛴다.
-    if (ln.startsWith("+") && !(meta[i - 1] && meta[i - 1].hunk === m.hunk && lines[i - 1].startsWith("+"))) {
-      let end = i;
-      while (end + 1 < lines.length && meta[end + 1] && meta[end + 1].hunk === m.hunk && lines[end + 1].startsWith("+")) end++;
-      const jsx = [];
-      for (let k = i; k <= end; k++) {
-        const b = lines[k].slice(1);
-        if (isJsxLine(b) && !isCommentLine(b) && !adLineRe.test(b)) jsx.push({ k, text: b.trim() });
-      }
-      if (jsx.length) {
-        for (let j = end + 1; j <= end + 2 && j < lines.length; j++) {
-          const n = meta[j];
-          if (!n || n.hunk !== m.hunk) break;
-          const next = lines[j];
-          if (!next.startsWith(" ") || isCommentLine(next.slice(1))) continue;
-          const ad = next.match(adLineRe);
-          if (!ad) continue;
-          const key = `${m.file}:${n.newNo}`;
-          if (narrowHitKeys.has(key)) break;
-          narrowHitKeys.add(key);
-          const first = jsx[0];
-          const ok = uiAllow.find((a) => a.file === m.file && jsx.some((x) => a.re.test(x.text)));
-          if (ok) {
-            uiAllowUsed.add(ok);
-            uiAllowHits.push({ file: m.file, line: meta[first.k].newNo, text: first.text, adComp: ad[1], approvalId: ok.approvalId });
-          } else {
-            errors.push(
-              `${m.file}:${meta[first.k].newNo} 광고 <${ad[1]}>(:${n.newNo}) 직상단에 새 UI 삽입 (${first.text.slice(0, 60)}…, 추가 블록 ${end - i + 1}줄) — 2026-08-16 규칙: 새 UI 는 광고 아래에. 운영자 승인 건만 ad-audit-allow.json {file, pattern, reason, approvalId} 등재`
-            );
-          }
-          break;
-        }
-      }
-    }
     // (d) 광고 줄 삭제만 있고 인접한 추가가 없으면 유닛 소실 의심 — WARN 유지(재배열 오탐 이력)
     if (ln.startsWith("-") && adLineRe.test(ln)) {
       const window = lines.slice(Math.max(0, i - 4), i + 5);
@@ -618,6 +581,48 @@ if (DIFF_MODE) {
       if (m.deleted && retiredFiles.has(m.file)) {
         retiredHits.push(`${m.file} (${body.trim().slice(0, 50)})`);
       } else warns.push(`${m.file}: 광고 유닛 삭제 감지, 대체 추가 없음 — 의도 확인 필요`);
+    }
+  }
+  // (b2) 추가 블록 단위(2026-11-18 R4 TOOLING, 감사 힌트 scripts-b01-M01 재현 확인): 같은 헌크의 연속된 추가 줄 묶음에
+  //     JSX 여는 줄이 하나라도 있고, 묶음 마지막 줄 바로 아래 2줄 안에 기존(컨텍스트) 광고 줄이 있으면 (b)와 같은 ERROR.
+  //     (b)는 줄마다 2줄 창을 보므로 3줄 이상인 새 문단·여러 줄 컴포넌트는 자기 줄로 창을 다 써서 광고에 닿지 못했다.
+  //     JSX 여는 줄이 없는 묶음(문구·속성만 수정)은 지금처럼 범위 밖. (b) 줄 단위 검사가 모든 줄을 다 본 뒤에 도는
+  //     별도 패스라, (b)가 이미 보고·면제한 광고는 건너뛰고 (b)의 ERROR 는 그대로 남는다(묶음 단위 면제가 (b) ERROR 를
+  //     가리지 않게 — R4 TOOLING 리뷰: 같은 묶음 위쪽의 승인 줄 하나가 광고 바로 위 미승인 줄까지 면제하던 경우).
+  for (let i = 0; i < lines.length; i++) {
+    const m = meta[i];
+    if (!m) continue;
+    const ln = lines[i];
+    if (!ln.startsWith("+") || (meta[i - 1] && meta[i - 1].hunk === m.hunk && lines[i - 1].startsWith("+"))) continue;
+    let end = i;
+    while (end + 1 < lines.length && meta[end + 1] && meta[end + 1].hunk === m.hunk && lines[end + 1].startsWith("+")) end++;
+    const jsx = [];
+    for (let k = i; k <= end; k++) {
+      const b = lines[k].slice(1);
+      if (isJsxLine(b) && !isCommentLine(b) && !adLineRe.test(b)) jsx.push({ k, text: b.trim() });
+    }
+    if (!jsx.length) continue;
+    for (let j = end + 1; j <= end + 2 && j < lines.length; j++) {
+      const n = meta[j];
+      if (!n || n.hunk !== m.hunk) break;
+      const next = lines[j];
+      if (!next.startsWith(" ") || isCommentLine(next.slice(1))) continue;
+      const ad = next.match(adLineRe);
+      if (!ad) continue;
+      const key = `${m.file}:${n.newNo}`;
+      if (narrowHitKeys.has(key)) break;
+      narrowHitKeys.add(key);
+      const first = jsx[0];
+      const ok = uiAllow.find((a) => a.file === m.file && jsx.some((x) => a.re.test(x.text)));
+      if (ok) {
+        uiAllowUsed.add(ok);
+        uiAllowHits.push({ file: m.file, line: meta[first.k].newNo, text: first.text, adComp: ad[1], approvalId: ok.approvalId });
+      } else {
+        errors.push(
+          `${m.file}:${meta[first.k].newNo} 광고 <${ad[1]}>(:${n.newNo}) 직상단에 새 UI 삽입 (${first.text.slice(0, 60)}…, 추가 블록 ${end - i + 1}줄) — 2026-08-16 규칙: 새 UI 는 광고 아래에. 운영자 승인 건만 ad-audit-allow.json {file, pattern, reason, approvalId} 등재`
+        );
+      }
+      break;
     }
   }
 
