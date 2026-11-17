@@ -341,7 +341,7 @@ export const semiconductorBonusNews202609Guides = [
 
 <h2>🧮 내 연봉으로 시나리오 계산해 보기</h2>
 <ul>
-<li><strong>세전 산정액 잡기</strong>: <a href="/calc/sk-hynix-bonus">SK하이닉스 성과급 계산기</a>에 본인 연봉과 영업이익 시나리오(150조·196.4조·250조)를 넣으면 개인 기준 세전 PS 예상액이 나옵니다. 평균 7억원은 개인 지급액이 아니므로, 본인 연봉을 넣어 확인하는 편이 정확합니다</li>
+<li><strong>세전 산정액 잡기</strong>: <a href="/calc/sk-hynix-bonus">SK하이닉스 성과급 계산기</a>에 본인 연봉과 영업이익 시나리오(181.5조·242조·250조)를 넣으면 개인 기준 세전 PS 예상액이 나옵니다. 평균 7억원은 개인 지급액이 아니므로, 본인 연봉을 넣어 확인하는 편이 정확합니다</li>
 <li><strong>세후 금액 감각</strong>: 원천징수 규모는 <a href="/calc/incentive-tax">성과급 세금 계산기</a>로, 주식 매도 시 거래세·양도세 원칙은 <a href="/tools/finance/stock-tax">주식 세금 계산기</a>로 확인하세요</li>
 <li><strong>다른 회사와 함께 보기</strong>: 삼성·SK 등 성과급 계산기를 한곳에 모은 <a href="/calc/bonus-calculators">성과급 계산기 허브</a>, 공시 기반 연봉 데이터는 <a href="/salary-db/sk-hynix">SK하이닉스 연봉 정보</a></li>
 </ul>
