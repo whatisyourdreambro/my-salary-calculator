@@ -468,7 +468,7 @@ L9(samsung-bonus 첫 광고 깊이 상향)는 그 병합이 선행돼야 효과�
 
 운영자 결정 2026-11-17(질문 목록 2번 `N2-app-tools-fun-11`, '권장대로'): 이 한 페이지에서만 광고 코드를 바꾼다. 2026-11-01(IVT-01 Part B, `4140d1bce`)·2026-11-02(OF4 A2, `7a1f3c198`)에 테트리스·플래피·기업 이상형 월드컵에 적용한 것과 같은 방식이다. 수익·애드센스 수치는 적지 않는다.
 
-- **이유**: 자산 배분 게임은 손가락으로 끌어(window touchmove) 판 아래쪽 바구니를 움직이는 게임이다. Google AdSense 광고 게재위치 정책은 광고와 게임 가장자리 사이를 최소 150px 띄우거나 게임 플레이 페이지에서 광고를 빼라고 권한다(https://support.google.com/adsense/answer/1346295 , 2026-11-18 재확인).
+- **이유**: 자산 배분 게임은 손가락으로 끌어(window touchmove) 판 아래쪽 바구니를 움직이는 게임이다. Google AdSense 광고 게재위치 정책은 광고와 게임 가장자리 사이를 최소 150px 띄우거나 게임 플레이 페이지에서 광고를 빼라고 권한다(150px 은 광고 게재위치 정책 https://support.google.com/adsense/answer/1346295 , 빼기는 게임 플레이 페이지 안내 https://support.google.com/adsense/answer/2768340 , 둘 다 2026-11-18 재확인).
 - **뺀 것**: 게임오버 때 게임 판(캔버스 상자) 바로 아래 본문 흐름에 새로 뜨던 `InArticleAd` 1개와 그 import(`src/app/fun/asset-allocator/page.tsx`). 판 아래 끝에서 그 광고 라벨까지 약 72px 였다(gap-6 24 + 래퍼 mt-6 24 + AdSlot 여백 24). 게임 상태 조건부 클라이언트 렌더라 서버 HTML 은 그대로다.
 - **여백**: 같은 파일 `main` 하단 여백 `pb-16` → `pb-32`. 판 아래 끝 → fun/layout 첫 공통 광고(`CalcResultAd`) 라벨 거리(Tailwind 클래스 기준 정적 계산):
 
