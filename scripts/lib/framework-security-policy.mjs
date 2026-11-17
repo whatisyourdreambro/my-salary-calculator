@@ -47,7 +47,13 @@ export const REVIEWED_DEV_ADVISORIES = Object.freeze([
 // picomatch entry these are the eight records under tailwindcss-animate (a dependency
 // that only tailwind.config.ts imports); the Worker bundle check in
 // scripts/lib/pages-export.mjs refuses the build if such a copy ever reaches the Worker.
+// The gate itself (not only the test on the committed list) also refuses: every entry when
+// the list has more than OWNER_EXCEPTION_MAX_ENTRIES entries, every entry for an id and
+// package that appear more than once, an entry whose id is also in the dev-only list (an
+// advisory lives in one list only), and the owner path for a package record without
+// lockfile nodes (the dev-only rule blocks such a record too).
 export const OWNER_EXCEPTION_MAX_DAYS = 31;
+export const OWNER_EXCEPTION_MAX_ENTRIES = 3;
 export const OWNER_APPROVED_ADVISORIES = Object.freeze([
   Object.freeze({ id: 'GHSA-fc5q-39xc-vjpf', package: 'picomatch', reviewed: '2026-11-18', expires: '2026-12-18', ownerDecision: 'PENDING',
     reason: 'No patched picomatch release exists on any line (range <=4.0.7, no first patched version; the maintainer declined the report on 2026-10-21). The flaw needs an attacker-chosen glob pattern; here every pattern comes from repository config (Tailwind content globs, ESLint, Vitest, TypeScript tooling) and the deployed Pages Worker bundles no npm package at all. Remove when a patched release is adopted or the advisory is withdrawn.' }),
@@ -74,6 +80,16 @@ export function ownerExceptionRefusal(entry, today) {
   return null;
 }
 
+// Why the owner list as a whole, or this entry's place in it, keeps the entry out of force.
+function ownerListRefusal(entry, ownerList, allowlist) {
+  if (ownerList.length > OWNER_EXCEPTION_MAX_ENTRIES)
+    return `the owner list has more than ${OWNER_EXCEPTION_MAX_ENTRIES} entries: none is honoured`;
+  if (ownerList.filter(e => e?.id === entry?.id && e?.package === entry?.package).length > 1)
+    return 'more than one owner entry for this advisory and package: none is honoured';
+  if (allowlist.some(e => e.id === entry?.id)) return 'this advisory is also in the reviewed dev-only list: an advisory lives in one list only';
+  return null;
+}
+
 export function classifyAdvisories(audit, lock, today = new Date().toISOString().slice(0, 10), allowlist = REVIEWED_DEV_ADVISORIES, ownerList = OWNER_APPROVED_ADVISORIES) {
   const vulnerabilities = audit.vulnerabilities;
   const roots = (name, seen = new Set()) => {
@@ -82,7 +98,8 @@ export function classifyAdvisories(audit, lock, today = new Date().toISOString()
     return (vulnerabilities[name]?.via ?? []).flatMap(via => typeof via === 'string' ? roots(via, seen)
       : [{ package: via.name, id: String(via.url ?? '').split('/').pop(), severity: via.severity }]);
   };
-  const owner = ownerList.map(entry => ({ entry, refusal: ownerExceptionRefusal(entry, today), covers: [] }));
+  const owner = ownerList.map(entry => ({ entry,
+    refusal: ownerListRefusal(entry, ownerList, allowlist) ?? ownerExceptionRefusal(entry, today), covers: [] }));
   const blocked = [], accepted = [], ownerAccepted = [];
   for (const [name, entry] of Object.entries(vulnerabilities)) {
     const advisories = roots(name);
@@ -96,9 +113,14 @@ export function classifyAdvisories(audit, lock, today = new Date().toISOString()
     // remaining advisory passes the unchanged dev-only rule on its own.
     const owned = advisories.map(a => OWNER_TOLERABLE.has(a.severity)
       ? owner.find(o => !o.refusal && o.entry.id === a.id && o.entry.package === a.package) : undefined);
-    const ownerOk = advisories.length > 0 && owned.some(Boolean) && OWNER_TOLERABLE.has(entry.severity)
+    const ownerOk = entry.nodes.length > 0 && advisories.length > 0 && owned.some(Boolean) && OWNER_TOLERABLE.has(entry.severity)
       && advisories.every((a, i) => owned[i] || (devOnly && TOLERABLE.has(a.severity) && reviews[i]));
-    if (!ownerOk) { blocked.push(record); continue; }
+    if (!ownerOk) {
+      // Only when an owner entry in force would have covered it, so the base output is unchanged.
+      const noNodes = owned.some(Boolean) && entry.nodes.length === 0;
+      blocked.push(noNodes ? { ...record, ownerRefusal: 'no lockfile nodes: the record cannot be checked against package-lock.json' } : record);
+      continue;
+    }
     const used = [...new Set(owned.filter(Boolean))];
     for (const o of used) o.covers.push(name);
     ownerAccepted.push({ ...record, ownerApproved: used.map(o => o.entry.id),

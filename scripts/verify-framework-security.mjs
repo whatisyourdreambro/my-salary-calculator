@@ -28,5 +28,6 @@ console.log(JSON.stringify({ dependencyAdvisories: blocked, reviewedDevAdvisorie
   unusedOwnerExceptions: ownerUnused, localBackportsVerified: true }, null, 2));
 for (const e of ownerApproved) console.log(`OWNER-APPROVED EXCEPTION IN FORCE: ${e.id} (${e.package}), owner decision ${e.ownerDecision}, accepted until ${e.expires} UTC for ${e.covers.length} package records.`);
 for (const e of ownerRefused) console.log(`Owner exception NOT in force: ${e.id} (${e.package}): ${e.refusal}.`);
+for (const r of blocked.filter(r => r.ownerRefusal)) console.log(`Owner exception not applied to ${r.name}: ${r.ownerRefusal}.`);
 for (const e of ownerUnused) console.log(`Owner exception no longer needed, remove it: ${e.id} (${e.package}).`);
 if (blocked.length) process.exitCode = 1;

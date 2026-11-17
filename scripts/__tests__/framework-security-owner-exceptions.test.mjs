@@ -4,7 +4,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
-import { classifyAdvisories, OWNER_APPROVED_ADVISORIES, OWNER_EXCEPTION_MAX_DAYS, ownerExceptionRefusal, REVIEWED_DEV_ADVISORIES }
+import { classifyAdvisories, OWNER_APPROVED_ADVISORIES, OWNER_EXCEPTION_MAX_DAYS, OWNER_EXCEPTION_MAX_ENTRIES, ownerExceptionRefusal, REVIEWED_DEV_ADVISORIES }
   from '../lib/framework-security-policy.mjs';
 
 const PICO = 'GHSA-fc5q-39xc-vjpf', MINI = 'GHSA-g3hv-75wg-m249';
@@ -147,6 +147,56 @@ test('a record with any other unreviewed advisory still blocks; the dev-only rul
   // The owner list does not widen the dev-only list: a high dev-only advisory stays blocked.
   const devHigh = { vulnerabilities: { minimatch: { name: 'minimatch', severity: 'high', via: [via('minimatch', MINI, 'high')], nodes: ['node_modules/minimatch'] } } };
   assert.deepEqual(names(run(devHigh, [approved]).blocked), ['minimatch']);
+});
+
+test('the gate itself refuses duplicate entries, an over-long list and an id from the dev-only list', () => {
+  const refusedAll = (owner, reason, label) => {
+    const result = run(audit(), owner);
+    assert.deepEqual(names(result.blocked), ALL, label);
+    assert.deepEqual(result.ownerAccepted, [], label);
+    assert.deepEqual(result.ownerApproved, [], label);
+    assert.equal(result.ownerRefused.length, owner.length, label);
+    for (const r of result.ownerRefused) assert.match(r.refusal, reason, label);
+  };
+  // (a) Two entries for the same id and package: neither is honoured, whatever the other says.
+  refusedAll([approved, approved], /more than one owner entry for this advisory and package/, 'two dated');
+  refusedAll([pending, approved], /more than one owner entry for this advisory and package/, 'PENDING and dated');
+  // The same id for another package is a different entry: the picomatch entry stays in force.
+  const otherPackage = run(audit(), [approved, { ...approved, package: 'micromatch' }]);
+  assert.deepEqual(otherPackage.blocked, []);
+  assert.deepEqual(otherPackage.ownerRefused, []);
+  assert.deepEqual(otherPackage.ownerUnused.map(e => e.package), ['micromatch']);
+  // (b) More than three entries: none is honoured. Exactly three is allowed.
+  const extra = n => ({ ...approved, id: `GHSA-aaaa-bbbb-ccc${n}`, package: `pkg${n}` });
+  assert.equal(OWNER_EXCEPTION_MAX_ENTRIES, 3);
+  refusedAll([approved, extra(1), extra(2), extra(3)], /owner list has more than 3 entries/, 'four entries');
+  const three = run(audit(), [approved, extra(1), extra(2)]);
+  assert.deepEqual(three.blocked, []);
+  assert.deepEqual(three.ownerApproved.map(e => e.id), [PICO]);
+  // (c) An owner entry for an advisory that the dev-only list already reviews is refused,
+  // so a dev-only advisory that turns high cannot be passed through the owner list.
+  const devHigh = { vulnerabilities: { minimatch: { name: 'minimatch', severity: 'high', via: [via('minimatch', MINI, 'high')], nodes: ['node_modules/minimatch'] } } };
+  for (const pkg of ['minimatch', 'brace-expansion']) {
+    const result = run(devHigh, [{ ...approved, id: MINI, package: pkg }]);
+    assert.deepEqual(names(result.blocked), ['minimatch'], pkg);
+    assert.deepEqual(result.ownerAccepted, [], pkg);
+    assert.match(result.ownerRefused[0].refusal, /also in the reviewed dev-only list/, pkg);
+  }
+});
+
+test('a package record without lockfile nodes is blocked on the owner path too, with a reason', () => {
+  const a = audit();
+  a.vulnerabilities.micromatch.nodes = [];
+  const result = run(a, [approved]);
+  assert.deepEqual(names(result.blocked), ['micromatch']);
+  assert.match(result.blocked[0].ownerRefusal, /no lockfile nodes/);
+  assert.deepEqual(names(result.ownerAccepted), ['picomatch', 'tinyglobby']);
+  // Without an owner entry in force the blocked record looks exactly as in the base policy.
+  const before = run(a, [pending]);
+  assert.deepEqual(names(before.blocked), ALL);
+  assert.ok(before.blocked.every(r => !('ownerRefusal' in r)));
+  const source = readFileSync(new URL('../verify-framework-security.mjs', import.meta.url), 'utf8');
+  assert.match(source, /Owner exception not applied to \$\{r\.name\}: \$\{r\.ownerRefusal\}/);
 });
 
 test('real audit of 2026-11-18: blocked while PENDING, clear only with a dated decision', () => {
