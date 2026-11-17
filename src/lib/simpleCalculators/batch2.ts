@@ -452,7 +452,8 @@ const BUSINESS: CalculatorDef[] = [
  categoryLabel: "사업자",
  keywords: ["인건비", "직원 비용"],
  // 사이트맵 lastmod(간이 계산기 유일한 날짜) — RL-10 사실 정정을 실제로 고친 날(KST). 화면에는 날짜가 없다.
- publishedAt: "2026-11-15",
+ // 2026-11-17: n2 수리로 유의사항 문구를 다시 고친 날(enrichments-ext-b.ts, 320~325px 줄 수 복구).
+ publishedAt: "2026-11-17",
  fields: [{ name: "monthly", label: "월 급여", defaultValue: 3000000, suffix: "원" }],
  compute: ({ monthly }) => {
  // 회사 부담 = 국민연금 + 건강보험(장기요양 포함) + 고용보험(실업급여 + 150인 미만 고용안정·직능개발) + 산재 평균 — 2026년 약 11.44%

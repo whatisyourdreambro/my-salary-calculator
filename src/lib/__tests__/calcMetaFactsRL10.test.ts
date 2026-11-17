@@ -31,10 +31,10 @@ const notWider = (now: string, was: string) => {
 // lens-meta-M01: 간이 계산기는 화면에 날짜가 없고 사이트맵 lastmod 는 CalculatorDef.publishedAt 하나만 읽는다(sitemap.ts).
 // RL-10 이 사실을 고친 다섯 계산기는 실제로 고친 날(2026-11-15 KST)을 단다 — /calc 의 신규(2026-09-10) 필터에는 들지 않는다.
 describe("RL-10 날짜 손잡이 — 고친 다섯 계산기의 publishedAt", () => {
-  it("실제 수정일 2026-11-15, 미래 날짜 아님", () => {
+  it("실제 수정일 2026-11-15(직원 인건비는 n2 수리로 유의사항을 다시 고친 2026-11-17), 미래 날짜 아님", () => {
     for (const slug of ["registration-tax-quick", "employee-cost-quick", "property-tax-quick", "yearly-to-hourly", "weekly-pay"]) {
       const c = calc(slug);
-      expect(c.publishedAt, slug).toBe("2026-11-15");
+      expect(c.publishedAt, slug).toBe(slug === "employee-cost-quick" ? "2026-11-17" : "2026-11-15");
       expect(new Date(`${c.publishedAt}T00:00:00+09:00`).getTime(), slug).toBeLessThanOrEqual(Date.now());
     }
   });
@@ -105,7 +105,7 @@ describe("CS-21 직원 인건비 — 2026년 회사부담 약 11.44% (국민연�
     expect(c.explanation).toContain("약 20% 더 드는 셈");
     expect(c.formula).toContain("×11.44%");
     expect(c.faqs?.[0].q).toBe("4대보험 회사 부담분 11.4%는 어떻게 구성되나요?");
-    expect(c.caveats?.[0]).toBe("4대보험 회사부담 11.4%는 산재보험을 평균 요율로 잡은 어림값입니다.");
+    expect(c.caveats?.[0]).toBe("4대보험 회사부담 11.4%는 산재 평균 요율로 잡은 어림값입니다.");
     const all = [c.explanation, c.formula, ...(c.faqs ?? []).flatMap((f) => [f.q, f.a]), ...(c.caveats ?? [])].join("\n");
     expect(all).not.toContain("10.5%");
     expect(all).not.toContain("약 18%");
@@ -114,7 +114,8 @@ describe("CS-21 직원 인건비 — 2026년 회사부담 약 11.44% (국민연�
     const line1 = (c.formula ?? "").split("\n")[0];
     expect(line1).toBe("4대보험 회사부담 = 월 급여 ×11.44%");
     expect([...line1].length).toBe([..."4대보험 회사부담 = 월 급여 × 10.5%"].length);
-    // 유의사항: 한글 26 그대로, 괄호 2개가 빠지고 공백 1개가 늘어 좁은 글자 합계가 15 -> 14 (employeeCostDisclosure.test.ts 와 같은 기준)
+    // 유의사항: 한글 26 -> 23, 괄호 2개가 빠지고 공백 1개가 늘어 좁은 글자 합계가 15 -> 14 (employeeCostDisclosure.test.ts 와 같은 기준).
+    // n2 수리: 앞 문구 '산재보험을 평균 요율로'는 글자는 좁아도 320~325px 에서 한 줄 늘어(스윕 A) '산재 평균 요율로'로 줄였다.
     const was = kinds("4대보험 회사부담 10.5%는 산재보험(업종별)을 낮게 잡은 어림값입니다.");
     const now = kinds(c.caveats?.[0] ?? "");
     expect(now.hangul).toBeLessThanOrEqual(was.hangul);

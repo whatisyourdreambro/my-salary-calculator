@@ -17,7 +17,7 @@ describe("employee-cost-quick 안내", () => {
   it("유의사항 문구는 바로 앞 운영 문구보다 글자가 늘지 않는다 (광고 위)", () => {
     // before = 2026-10-05 code56-04 이후 운영 문구(bda78b0da), after = RL-10 정정 문구
     const before = "4대보험 회사부담 10.5%는 산재보험(업종별)을 낮게 잡은 어림값입니다.";
-    const after = "4대보험 회사부담 11.4%는 산재보험을 평균 요율로 잡은 어림값입니다.";
+    const after = "4대보험 회사부담 11.4%는 산재 평균 요율로 잡은 어림값입니다.";
     expect(calc.caveats).toContain(after);
     const count = (s: string) => [[...s].filter((c) => /[가-힣]/.test(c)).length, [...s].filter((c) => !/[가-힣]/.test(c)).length];
     expect(count(after)[0]).toBeLessThanOrEqual(count(before)[0]);
