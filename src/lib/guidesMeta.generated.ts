@@ -4050,7 +4050,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 959
+  "contentChars": 998
  },
  {
   "slug": "out-of-pocket-limit-2026",

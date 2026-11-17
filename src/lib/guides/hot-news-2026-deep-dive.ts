@@ -173,11 +173,12 @@ const taxAmnestyReform = `
 <p class="lead">누락·과소신고를 발견했다면 수정신고인지 기한후신고인지 먼저 구분하세요. 감면율은 신고 시기와 가산세 종류에 따라 달라지며, 자진 신고만으로 세무조사나 모든 가산세가 면제되는 것은 아닙니다. 아래 기간별 수정신고 감면과 납부지연가산세를 별도로 확인하세요.</p>
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 자진 신고·수정 신고 우대</h2>
 <ul class="space-y-2 mt-4">
-<li>· <strong>1개월 이내 수정</strong>: 가산세 90% 감면</li>
+<li>· <strong>1개월 이내</strong>: 90% 감면</li>
 <li>· <strong>3개월 이내</strong>: 75% 감면</li>
 <li>· <strong>6개월 이내</strong>: 50% 감면</li>
 <li>· <strong>1년 이내</strong>: 30% 감면</li>
-<li>· <strong>2년 이내</strong>: 20% 감면</li>
+<li>· <strong>1년 6개월 이내</strong>: 20% 감면</li>
+<li>· <strong>2년 이내</strong>: 10% 감면</li>
 </ul>
 <h2 class="mt-12 text-2xl font-bold text-primary">⚠️ 무신고 가산세</h2>
 <ul class="space-y-2 mt-4">
