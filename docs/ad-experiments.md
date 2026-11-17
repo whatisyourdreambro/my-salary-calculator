@@ -463,3 +463,10 @@ L9(samsung-bonus 첫 광고 깊이 상향)는 그 병합이 선행돼야 효과�
 - 같은 수리에서 받아들이지 않고 고친 것(재측정에서 아래 이동 0): /calc/employee-cost-quick 유의사항 줄바꿈(+28, `739fe80cd` → `22ec44348`), /calc/severance-vs-pension 비교표 세금 칸(+20, `b0aef6028` → `fd484e6ff`), 홈·/calc/2026-year 결과 화면의 자산 성장 차트 제목 줄바꿈(+32, `fa12a65a6` → `a4d6e190f`), /calc/kakao-bonus 주가 121,900원 입력 상태(+16, `fbb33830c` → `bf8a97918`). 재측정 결과는 n2 수리 보고(sweep-repair)에 있다.
 - 기본 접힘 FAQ 답을 연 상태에서만 생기는 이동(이번 게시가 늘리거나 고친 답)과 /civil-servant-pay-2026 의 새 전 호봉 상자를 연 상태의 SidebarAd 이동은 질문 1 이 아니라 운영 세션 결정(열린 상태 한정, 기본 화면 같음)으로 받아들였다. 목록은 n2 스윕 A·B 보고(opened-FAQ 상태)에 있고 여기 반복하지 않는다.
 - 한계: 실제 휴대폰에서는 줄바꿈 경계가 1~2px 다를 수 있다. 460px 위는 상태마다 8px 또는 16px 간격으로 쟀다(등록면허세만 1px 단위).
+
+## 2026-11-18 R4 TOOLING — ad-audit --diff 광고 직상단 게이트를 추가 블록 단위로 (append-only)
+
+- 무엇: `scripts/ad-audit.mjs --diff` 의 광고 직상단 ERROR(2026-09-25 강화, 위 2026-09-25 절)는 추가된 JSX 줄마다 바로 아래 2줄만 봐서, 광고 바로 위에 넣은 3줄 이상 새 문단(`<p>`·문구·`</p>`)이나 여러 줄로 쓴 컴포넌트(`<ShareNote` · `title="x"` · `/>`)는 자기 줄로 창을 다 써 15줄 창 INFO 만 남기고 CI 를 통과했다(감사 힌트 scripts-b01-M01, 이번에 재현). 이제 같은 헌크의 연속 추가 줄 묶음에 JSX 여는 줄이 있고 묶음 마지막 줄 바로 아래 2줄 안에 기존 광고 줄이 있으면 같은 ERROR 다. 면제는 그대로 `ad-audit-allow.json` 의 {file, pattern, reason, approvalId}(pattern 은 묶음의 JSX 줄 중 하나와 맞으면 됨). 문구·속성만 바꾼 묶음(JSX 여는 줄 없음)은 종전처럼 범위 밖이다. 광고·쿠팡·링크프라이스 코드, 슬롯, 배치는 바뀌지 않는다.
+- 재현·테스트: `scripts/__tests__/r4-tooling-ad-audit-diff.test.mjs`(임시 git 저장소 8건). 옛 스크립트에서는 3줄 문단, 여러 줄 컴포넌트, 블록과 광고 사이에 JSX 주석이 낀 경우가 통과했고(재현), 새 스크립트에서는 모두 exit 1 이다. 기존 문단 안 문구만 고친 경우와 광고보다 세 줄 넘게 위에서 끝나는 묶음은 exit 0 이다.
+- 이력 재생: `--diff --base b757c57a`(9/8 이후) ERROR 1건 → 2건. 늘어난 1건은 `src/app/guides/[slug]/GuidePageClient.tsx` 의 모바일 목차 `<details>`(`4eda6889e`, 2026-09-10, 운영 중)로, 본문이 나뉘지 않는 짧은 가이드에서 GuideMidAd 바로 위에 있다. 이미 게시된 이력이라 이 기록에서는 고치지 않는다. `--diff --base bda78b0da`(다음 게시 가지 전체)와 `--diff --base ce2463cda` 는 옛·새 규칙 모두 ERROR 0, 같은 날 R4 다른 단위 가지 9개의 그 시점 머리도 옛·새 모두 ERROR 0 이었다.
+- 영향: 앞으로 광고 바로 위에 여러 줄 JSX 블록을 넣는 푸시는 승인 ID 가 든 allowlist 항목 없이는 CI 가 빨갛다(2026-08-16 규칙과 같은 뜻). 이 게이트 강화 커밋만 따로 되돌릴 수 있다.
