@@ -320,7 +320,7 @@ export const BONUS_NEWS_2026: Array<{
     href: "/calc/sk-hynix-bonus",
   },
   {
-    date: "2026-07-28",
+    date: "2026-07-30", // 2026-11-18 N2-calc-10: 07-28 은 2025년 상반기 날짜 — 2026년은 7월 30일(파이낸셜뉴스 2026-07-26). 순서 그대로
     text: "SK하이닉스 2026 상반기 PI 최대치 150% 확정 지급",
     href: "/calc/sk-hynix-bonus",
   },
