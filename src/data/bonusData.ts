@@ -258,7 +258,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         year: 2026,
         scheme: "PI",
         percentOfBase: 150,
-        note: "2026년 상반기 PI 최대치 확정 — 2026-07-28 지급",
+        note: "2026년 상반기 PI 최대치 확정 — 2026-07-30 지급",
         source: "복수 언론 2026-07 (psData.ts PI_2026·SOURCES)",
       },
     ],
