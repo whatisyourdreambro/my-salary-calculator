@@ -200,7 +200,7 @@ export const semiconductorBonusNews202609Guides = [
 
 <h2>🧮 시나리오별 내 수령액, 지금 계산해 보기</h2>
 <ul>
-<li><strong>PS 시뮬레이션</strong>: <a href="/calc/sk-hynix-bonus">SK하이닉스 성과급 계산기</a>에 본인 연봉을 넣고 영업이익 시나리오(보수 150조·연환산 196.4조·컨센서스 250조)를 바꿔 가며 세전 산정액을 확인하세요</li>
+<li><strong>PS 시뮬레이션</strong>: <a href="/calc/sk-hynix-bonus">SK하이닉스 성과급 계산기</a>에 본인 연봉을 넣고 영업이익 시나리오(보수 181.5조·연환산 242조·컨센서스 250조)를 바꿔 가며 세전 산정액을 확인하세요</li>
 <li><strong>세후 금액</strong>: 억 단위 성과급은 원천징수도 큽니다. <a href="/calc/incentive-tax">성과급 세금 계산기</a>로 현금 부분의 세후 금액을 먼저 보세요</li>
 <li><strong>주식으로 받은 뒤</strong>: 매도 시 증권거래세와 배당소득세 감각은 <a href="/tools/finance/stock-tax">주식 세금 계산기</a>에서</li>
 <li><strong>다른 회사 성과급</strong>: 삼성전자 등 주요 기업 성과급 계산기는 <a href="/calc/bonus-calculators">성과급 계산기 모음</a>에 있습니다</li>
