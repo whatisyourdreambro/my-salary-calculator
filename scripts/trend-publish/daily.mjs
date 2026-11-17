@@ -57,7 +57,7 @@ export function isoWeekKey(d) {
   const dow = (date.getUTCDay() + 6) % 7;
   date.setUTCDate(date.getUTCDate() - dow + 3);
   const firstThursday = new Date(Date.UTC(date.getUTCFullYear(), 0, 4));
-  const week = 1 + Math.round((date.getTime() - firstThursday.getTime()) / DAY / 7 - (((firstThursday.getUTCDay() + 6) % 7) - 3) / 7);
+  const week = 1 + Math.round(((date.getTime() - firstThursday.getTime()) / DAY - 3 + ((firstThursday.getUTCDay() + 6) % 7)) / 7);
   return `${date.getUTCFullYear()}-W${String(week).padStart(2, "0")}`;
 }
 

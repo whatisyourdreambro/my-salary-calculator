@@ -46,6 +46,13 @@ for (const relative of ['scripts/qa-crawl.ts', 'scripts/qa-english.ts', 'scripts
     violations.push(`${relative}: HTTP QA must use the guarded document fetcher`);
   }
 }
+// Every top-level QA script, not only the five named above: a copied or new scripts/qa-* file with a raw fetch
+// (no loopback assertion, no QA User-Agent, redirects followed) fails CI (2026-11-18 N2-scripts-03).
+for (const name of fs.readdirSync(path.join(root, 'scripts'))) {
+  if (!/^qa-.*\.(?:[cm]?js|[cm]?ts)$/.test(name)) continue;
+  const code = fs.readFileSync(path.join(root, 'scripts', name), 'utf8');
+  if (/\bfetch\s*\(/.test(code)) violations.push(`scripts/${name}: QA HTTP must use fetchQaDocument from scripts/lib/qa-safety.cjs, not raw fetch`);
+}
 // These are non-rendering production checks, not public-data API importers.
 // Keep this list explicit so a raw fetch/redirect-follow regression fails CI.
 for (const relative of ['scripts/trend-publish/verify-prod.mjs', 'scripts/naver-template-panel.ts',

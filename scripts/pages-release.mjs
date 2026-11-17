@@ -303,6 +303,18 @@ export async function runPagesRelease(env = process.env) {
   }
 }
 
+/**
+ * CI gate of the approved local recovery release: reads the LOCAL publish switch (PAGES_LOCAL_PUBLISH_ENABLED), never the
+ * cloud one, then requires the exact commit's verify job (2026-11-18 N2-scripts-06; 80bc88f3f defaulted the readiness
+ * check to cloud mode and updated pages-release-local.mjs only).
+ */
+export async function approvedLocalCiCheck(get, commit) {
+  const { pagesPublicationReadiness, waitForPagesVerification } = await import('./trend-publish/publish-approved.mjs');
+  const readiness = await pagesPublicationReadiness(get, { mode: 'local' });
+  assert.equal(readiness.mainSha, commit, 'Main changed; do not publish this local package');
+  return waitForPagesVerification(get, { sha: commit, workflowId: readiness.workflowId, attempts: 1 });
+}
+
 export async function runApprovedLocalPagesRelease(commit, env = process.env) {
   const git = args => execFileSync('git', args, { cwd: root, encoding: 'utf8', windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
   const local = () => ({ commit, head: git(['rev-parse', 'HEAD']).trim(),
@@ -310,12 +322,7 @@ export async function runApprovedLocalPagesRelease(commit, env = process.env) {
   assertLocalReleaseContext(env, local());
   assert.equal(git(['ls-files', '--error-unmatch', '.env.production']).trim(), '.env.production');
   const github = createGithubReleaseClient(env);
-  const { pagesPublicationReadiness, waitForPagesVerification } = await import('./trend-publish/publish-approved.mjs');
-  const checkCi = async () => {
-    const readiness = await pagesPublicationReadiness(github.get);
-    assert.equal(readiness.mainSha, commit, 'Main changed; do not publish this local package');
-    return waitForPagesVerification(github.get, { sha: commit, workflowId: readiness.workflowId, attempts: 1 });
-  };
+  const checkCi = () => approvedLocalCiCheck(github.get, commit);
   const ci = await checkCi();
   const verified = verifyArtifact(root, 'production', env), { stage, marker } = verified;
   verifyPagesAdvertising(stage); assertProductionDirectory(stage);

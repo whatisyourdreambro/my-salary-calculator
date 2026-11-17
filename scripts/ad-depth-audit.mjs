@@ -48,7 +48,7 @@ const DEFAULT_ROUTES = [
   "/guides/salary-guide-2026",
   "/salary-db",
   "/salary-db/samsung-electronics",
-  "/company",
+  "/calc/sk-hynix-bonus",
   "/tools",
   "/tools/finance/severance",
   "/year-end-tax",

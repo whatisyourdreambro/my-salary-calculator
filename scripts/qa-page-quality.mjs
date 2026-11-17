@@ -154,6 +154,21 @@ function compiledRules(rules) {
   return rules.filter(rule => rule.regex && !rule.has?.length && !rule.missing?.length).map(rule => ({ ...rule, test: new RegExp(rule.regex) }));
 }
 const matching = (rules, pathname) => rules.find(rule => rule.test.test(pathname));
+// Redirect sources may be written percent-encoded (Korean slugs) while link targets are decoded by normalizePath, and the
+// Pages worker matches the encoded path: try both spellings (2026-11-18 N2-scripts-05, scripts-b07-M01).
+const encodedForm = (pathname) => { try { return encodeURI(pathname); } catch { return pathname; } };
+const matchingRedirect = (rules, pathname) => rules.find(rule => rule.test.test(pathname) || rule.test.test(encodedForm(pathname)));
+/**
+ * Redirect rules the build actually serves. A Pages stage (<stage>/.next next to <stage>/generated/pages-manifest.json)
+ * serves the worker manifest's redirects; its routes-manifest.json keeps only Next's internal trailing-slash rule.
+ * Other build dirs (.next, .next-qa) have no such file and keep reading routes-manifest.json.
+ */
+export function redirectRulesFor(buildDir, routes) {
+  const pagesManifest = readJson(path.join(buildDir, "..", "generated", "pages-manifest.json"), null);
+  return pagesManifest?.redirects?.length
+    ? pagesManifest.redirects.map(rule => ({ ...rule, test: new RegExp(rule.regex, rule.flags || "i") }))
+    : compiledRules(routes.redirects ?? []);
+}
 
 // ── Link gate (2026-09-30 WP-01 LT-07) ────────────────────────────────────────────────────────────
 // Mirrors src/lib/salaryRedirect.ts (SALARY_PATH + parseSalaryPathAmount; the node test guards drift): the middleware
@@ -219,10 +234,13 @@ export function classifyLink(href, sourcePath, context) {
   // Known files resolve; an arbitrary nonexistent CSV must remain unresolved.
   if (context.publicFiles.has(target)) return { ...base, kind: "public-asset" };
   if (context.htmlPaths.has(target)) return { ...base, kind: "generated-html" };
-  if (matching(context.redirects, target)) return { ...base, kind: "configured-redirect" };
+  if (matchingRedirect(context.redirects, target)) return { ...base, kind: "configured-redirect" };
   if (isMiddlewareSalaryRedirect(target, context.htmlPaths)) return { ...base, kind: "middleware-salary-redirect" };
   if (context.sitemapPaths.has(target)) return { ...base, kind: "sitemap-runtime-unchecked" };
-  if (matching(context.dynamic, target)) return { ...base, kind: "dynamic-pattern-unchecked" };
+  // A static export (Pages) renders nothing at runtime, so a dynamic slug without exported HTML is a 404; so is any slug of a
+  // fallback:false route (2026-11-18 N2-scripts-05, scripts-b07-F02). Only other builds keep the unchecked label.
+  const dyn = matching(context.dynamic, target);
+  if (dyn) return { ...base, kind: context.staticExport || dyn.fallback === false ? "unresolved-page" : "dynamic-pattern-unchecked" };
   return { ...base, kind: ASSET.test(target) ? "unresolved-asset" : "unresolved-page" };
 }
 
@@ -238,8 +256,9 @@ export function buildLedger({ root, buildDir = path.join(root, ".next") }) {
   const origin = new URL(sitemap[0].url).origin;
   if (sitemap.some(item => new URL(item.url).origin !== origin)) throw new Error("Sitemap contains multiple origins.");
   const sitemapPaths = new Set(sitemap.map(item => item.path));
-  const redirects = compiledRules(routes.redirects ?? []);
-  const dynamic = compiledRules(routes.dynamicRoutes ?? []);
+  const redirects = redirectRulesFor(buildDir, routes);
+  const dynamic = compiledRules(routes.dynamicRoutes ?? []).map(rule => ({ ...rule, fallback: prerender.dynamicRoutes?.[rule.page]?.fallback }));
+  const staticExport = readJson(path.join(buildDir, "export-detail.json"), null)?.success === true;
   const handlers = new Set(Object.keys(appPaths).filter(key => key.endsWith("/route")).map(key => normalizePath(key.slice(0, -6))));
   const edgePatterns = Object.values(edge.functions ?? {}).flatMap(item => (item.matchers ?? []).map(matcher => ({ page: item.page, test: new RegExp(matcher.regexp) })));
   const publicFiles = new Set(walk(path.join(root, "public"), "").map(file => normalizePath("/" + path.relative(path.join(root, "public"), file).split(path.sep).join("/"))));
@@ -253,7 +272,7 @@ export function buildLedger({ root, buildDir = path.join(root, ".next") }) {
     const raw = fs.readFileSync(file, "utf8");
     const html = analyzeHtml(raw);
     const meta = readJson(file.slice(0, -5) + ".meta", {});
-    const redirect = matching(redirects, pathname);
+    const redirect = matchingRedirect(redirects, pathname);
     const xRobots = Object.entries(meta.headers ?? {}).filter(([key]) => key.toLowerCase() === "x-robots-tag").flatMap(([, value]) => [value].flat());
     const noindex = [...html.robots, ...xRobots].some(value => /\bnoindex\b/i.test(value));
     let selfCanonical = false;
@@ -281,12 +300,12 @@ export function buildLedger({ root, buildDir = path.join(root, ".next") }) {
     records.push({ path: pathname, artifact: relative, bytes: Buffer.byteLength(raw), inSitemap: sitemapPaths.has(pathname), classification, machineStatus: checks.length ? "checked-issues" : "checked", contentReview: "not-reviewed", ...fields, canonicalSelf: selfCanonical, response: { artifactStatus: explicitStatus, configuredRedirectStatus: redirect?.statusCode ?? null, productionHttpStatus: null, runtimeVerified: false }, robotsHeaderFromArtifact: xRobots, redirect: redirect ? { source: redirect.source, destination: redirect.destination } : null, issues: checks, links: [] });
   }
   const htmlPaths = new Set(records.map(record => record.path));
-  const context = { origin, htmlPaths, sitemapPaths, handlers, publicFiles, dynamic, redirects };
+  const context = { origin, htmlPaths, sitemapPaths, handlers, publicFiles, dynamic, redirects, staticExport };
   for (const pathname of sitemapPaths) {
     if (htmlPaths.has(pathname)) continue;
     const edgeMatch = edgePatterns.find(item => item.test.test(pathname));
     const dynamicMatch = matching(dynamic, pathname);
-    const redirect = matching(redirects, pathname);
+    const redirect = matchingRedirect(redirects, pathname);
     const handler = handlers.has(pathname);
     records.push({ path: pathname, inSitemap: true, artifact: null, classification: handler ? "sitemap-non-page-handler" : redirect ? "sitemap-redirect-unchecked" : "declared-runtime-unchecked", runtime: edgeMatch ? "edge" : dynamicMatch ? "dynamic" : "unknown", routePattern: edgeMatch?.page ?? dynamicMatch?.page ?? null, machineStatus: "inventory-only", contentReview: "not-reviewed", titles: null, descriptions: null, h1: null, canonical: null, canonicalSelf: null, robots: null, robotsHeaderFromArtifact: null, jsonLd: null, content: null, response: { artifactStatus: null, productionHttpStatus: null, runtimeVerified: false }, issues: handler ? ["sitemap-non-page-handler"] : redirect ? ["sitemap-redirect"] : !edgeMatch && !dynamicMatch ? ["sitemap-route-unresolved"] : [], links: [] });
   }
@@ -357,7 +376,7 @@ export function buildLedger({ root, buildDir = path.join(root, ".next") }) {
   const issueRecords = records.filter(record => record.issues.length);
   const unresolvedLinks = records.flatMap(record => record.links.filter(link => ["invalid-url", "unresolved-page", "unresolved-asset"].includes(link.kind)).map(link => ({ source: record.path, ...link })));
   const shortContentReview = records.filter(record => record.classification === "indexable-candidate" && record.content.characters < 500).map(record => ({ path: record.path, ...record.content, status: "review-only-not-a-quality-or-noindex-verdict" }));
-  return { schemaVersion: 1, generatedAt: new Date().toISOString(), origin, build: { id: fs.readFileSync(path.join(buildDir, "BUILD_ID"), "utf8").trim(), prerenderManifestMtime: fs.statSync(path.join(buildDir, "prerender-manifest.json")).mtime.toISOString(), manifestHash: hash(fs.readFileSync(path.join(buildDir, "prerender-manifest.json"))), sourceCommitVerified: false }, scope: { networkRequests: 0, contentReviewed: 0, generatedHtmlMachineChecked: true, runtimeResponsesChecked: false, limitations: ["Sitemap runtime entries are inventoried, not response-checked.", "HTML metadata and link checks do not prove Google indexing or factual accuracy.", "Dynamic pattern matches do not prove every data slug exists.", "Content length and duplicate headings are review flags, never automatic noindex recommendations.", "CSS visibility, hydration, CDN headers and input interactions are not reproduced.", "The ledger covers the build artifacts; current source may have changed since that build."] }, counts: { generatedHtml: files.length, uniquePagePaths: records.length, sitemapEntries: sitemap.length, sitemapUniquePaths: sitemapPaths.size, sitemapDuplicatePaths: sitemap.length - sitemapPaths.size, sitemapQueryEntries: sitemap.filter(item => item.hasQuery).length, prerenderManifestRoutes: Object.keys(prerender.routes ?? {}).length, declaredRuntimeEntries: records.filter(record => record.classification === "declared-runtime-unchecked").length, classification: tally("classification"), machineStatus: tally("machineStatus"), issuePages: issueRecords.length, unresolvedLinkOccurrences: unresolvedLinks.reduce((sum, link) => sum + link.occurrences, 0), redirectLinkOccurrences: linkGate.redirectLinks.reduce((sum, link) => sum + link.occurrences, 0), noindexLinkOccurrences: linkGate.noindexLinks.reduce((sum, link) => sum + link.occurrences, 0), weakPages: weak.total }, linkKinds, duplicates, shortContentReview, unresolvedLinks, linkGate, weak, records: records.sort((a, b) => a.path.localeCompare(b.path)) };
+  return { schemaVersion: 1, generatedAt: new Date().toISOString(), origin, build: { id: fs.readFileSync(path.join(buildDir, "BUILD_ID"), "utf8").trim(), prerenderManifestMtime: fs.statSync(path.join(buildDir, "prerender-manifest.json")).mtime.toISOString(), manifestHash: hash(fs.readFileSync(path.join(buildDir, "prerender-manifest.json"))), sourceCommitVerified: false }, scope: { networkRequests: 0, contentReviewed: 0, generatedHtmlMachineChecked: true, runtimeResponsesChecked: false, limitations: ["Sitemap runtime entries are inventoried, not response-checked.", "HTML metadata and link checks do not prove Google indexing or factual accuracy.", "Dynamic pattern matches are unchecked only in non-export builds; in a static export a slug without exported HTML is unresolved.", "Content length and duplicate headings are review flags, never automatic noindex recommendations.", "CSS visibility, hydration, CDN headers and input interactions are not reproduced.", "The ledger covers the build artifacts; current source may have changed since that build."] }, counts: { generatedHtml: files.length, uniquePagePaths: records.length, sitemapEntries: sitemap.length, sitemapUniquePaths: sitemapPaths.size, sitemapDuplicatePaths: sitemap.length - sitemapPaths.size, sitemapQueryEntries: sitemap.filter(item => item.hasQuery).length, prerenderManifestRoutes: Object.keys(prerender.routes ?? {}).length, declaredRuntimeEntries: records.filter(record => record.classification === "declared-runtime-unchecked").length, classification: tally("classification"), machineStatus: tally("machineStatus"), issuePages: issueRecords.length, unresolvedLinkOccurrences: unresolvedLinks.reduce((sum, link) => sum + link.occurrences, 0), redirectLinkOccurrences: linkGate.redirectLinks.reduce((sum, link) => sum + link.occurrences, 0), noindexLinkOccurrences: linkGate.noindexLinks.reduce((sum, link) => sum + link.occurrences, 0), weakPages: weak.total }, linkKinds, duplicates, shortContentReview, unresolvedLinks, linkGate, weak, records: records.sort((a, b) => a.path.localeCompare(b.path)) };
 }
 
 // ── Weak-page baseline (report only) ──────────────────────────────────────────────────────────────
