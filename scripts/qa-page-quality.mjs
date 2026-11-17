@@ -154,6 +154,21 @@ function compiledRules(rules) {
   return rules.filter(rule => rule.regex && !rule.has?.length && !rule.missing?.length).map(rule => ({ ...rule, test: new RegExp(rule.regex) }));
 }
 const matching = (rules, pathname) => rules.find(rule => rule.test.test(pathname));
+// Redirect sources may be written percent-encoded (Korean slugs) while link targets are decoded by normalizePath, and the
+// Pages worker matches the encoded path: try both spellings (2026-11-18 N2-scripts-05, scripts-b07-M01).
+const encodedForm = (pathname) => { try { return encodeURI(pathname); } catch { return pathname; } };
+const matchingRedirect = (rules, pathname) => rules.find(rule => rule.test.test(pathname) || rule.test.test(encodedForm(pathname)));
+/**
+ * Redirect rules the build actually serves. A Pages stage (<stage>/.next next to <stage>/generated/pages-manifest.json)
+ * serves the worker manifest's redirects; its routes-manifest.json keeps only Next's internal trailing-slash rule.
+ * Other build dirs (.next, .next-qa) have no such file and keep reading routes-manifest.json.
+ */
+export function redirectRulesFor(buildDir, routes) {
+  const pagesManifest = readJson(path.join(buildDir, "..", "generated", "pages-manifest.json"), null);
+  return pagesManifest?.redirects?.length
+    ? pagesManifest.redirects.map(rule => ({ ...rule, test: new RegExp(rule.regex, rule.flags || "i") }))
+    : compiledRules(routes.redirects ?? []);
+}
 
 // ── Link gate (2026-09-30 WP-01 LT-07) ────────────────────────────────────────────────────────────
 // Mirrors src/lib/salaryRedirect.ts (SALARY_PATH + parseSalaryPathAmount; the node test guards drift): the middleware
@@ -219,7 +234,7 @@ export function classifyLink(href, sourcePath, context) {
   // Known files resolve; an arbitrary nonexistent CSV must remain unresolved.
   if (context.publicFiles.has(target)) return { ...base, kind: "public-asset" };
   if (context.htmlPaths.has(target)) return { ...base, kind: "generated-html" };
-  if (matching(context.redirects, target)) return { ...base, kind: "configured-redirect" };
+  if (matchingRedirect(context.redirects, target)) return { ...base, kind: "configured-redirect" };
   if (isMiddlewareSalaryRedirect(target, context.htmlPaths)) return { ...base, kind: "middleware-salary-redirect" };
   if (context.sitemapPaths.has(target)) return { ...base, kind: "sitemap-runtime-unchecked" };
   if (matching(context.dynamic, target)) return { ...base, kind: "dynamic-pattern-unchecked" };
@@ -238,7 +253,7 @@ export function buildLedger({ root, buildDir = path.join(root, ".next") }) {
   const origin = new URL(sitemap[0].url).origin;
   if (sitemap.some(item => new URL(item.url).origin !== origin)) throw new Error("Sitemap contains multiple origins.");
   const sitemapPaths = new Set(sitemap.map(item => item.path));
-  const redirects = compiledRules(routes.redirects ?? []);
+  const redirects = redirectRulesFor(buildDir, routes);
   const dynamic = compiledRules(routes.dynamicRoutes ?? []);
   const handlers = new Set(Object.keys(appPaths).filter(key => key.endsWith("/route")).map(key => normalizePath(key.slice(0, -6))));
   const edgePatterns = Object.values(edge.functions ?? {}).flatMap(item => (item.matchers ?? []).map(matcher => ({ page: item.page, test: new RegExp(matcher.regexp) })));
@@ -253,7 +268,7 @@ export function buildLedger({ root, buildDir = path.join(root, ".next") }) {
     const raw = fs.readFileSync(file, "utf8");
     const html = analyzeHtml(raw);
     const meta = readJson(file.slice(0, -5) + ".meta", {});
-    const redirect = matching(redirects, pathname);
+    const redirect = matchingRedirect(redirects, pathname);
     const xRobots = Object.entries(meta.headers ?? {}).filter(([key]) => key.toLowerCase() === "x-robots-tag").flatMap(([, value]) => [value].flat());
     const noindex = [...html.robots, ...xRobots].some(value => /\bnoindex\b/i.test(value));
     let selfCanonical = false;
@@ -286,7 +301,7 @@ export function buildLedger({ root, buildDir = path.join(root, ".next") }) {
     if (htmlPaths.has(pathname)) continue;
     const edgeMatch = edgePatterns.find(item => item.test.test(pathname));
     const dynamicMatch = matching(dynamic, pathname);
-    const redirect = matching(redirects, pathname);
+    const redirect = matchingRedirect(redirects, pathname);
     const handler = handlers.has(pathname);
     records.push({ path: pathname, inSitemap: true, artifact: null, classification: handler ? "sitemap-non-page-handler" : redirect ? "sitemap-redirect-unchecked" : "declared-runtime-unchecked", runtime: edgeMatch ? "edge" : dynamicMatch ? "dynamic" : "unknown", routePattern: edgeMatch?.page ?? dynamicMatch?.page ?? null, machineStatus: "inventory-only", contentReview: "not-reviewed", titles: null, descriptions: null, h1: null, canonical: null, canonicalSelf: null, robots: null, robotsHeaderFromArtifact: null, jsonLd: null, content: null, response: { artifactStatus: null, productionHttpStatus: null, runtimeVerified: false }, issues: handler ? ["sitemap-non-page-handler"] : redirect ? ["sitemap-redirect"] : !edgeMatch && !dynamicMatch ? ["sitemap-route-unresolved"] : [], links: [] });
   }
