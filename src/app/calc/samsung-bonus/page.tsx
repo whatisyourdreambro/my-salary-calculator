@@ -1136,7 +1136,7 @@ export default function SamsungBonusCalculatorPage() {
                 삼성전자 평균 연봉·복지
               </p>
               <p className="text-xs text-muted-blue mb-3">
-                직급별 성장표, 1.35억 평균 연봉, 복지 비교
+                직급별 성장표, 1.58억 평균 연봉, 복지 비교
               </p>
               <span className="text-xs font-bold text-electric inline-flex items-center gap-1">
                 회사 보기{" "}
