@@ -49,7 +49,7 @@ const R1_PRODUCTION_SCREEN_DATE = "2026-10-03";
 const R1_LEDGER_DAY = "2026-11-03";
 // R1 뒤 묶음이 다시 고쳐 사이트맵·RSS 날짜만 그 묶음의 실제 수정일로 늦춘 글(화면 날짜는 위 운영 값 그대로) — relandR1Ledger.test.ts 와 같은 표.
 // RL-08(2026-11-15): first-home-2026-strategy 광고 위 매수 가능액 공식 두 줄 같은 폭 이하 정정.
-const R1_LATER_SITEMAP_DAY: Readonly<Record<string, string>> = { "first-home-2026-strategy": "2026-11-15" };
+const R1_LATER_SITEMAP_DAY: Readonly<Record<string, string>> = { "first-home-2026-strategy": "2026-11-15", "performance-pay-complete-2026": "2026-11-18" };
 
 describe("검증된 가이드 보강일의 상세 화면·검색 메타 정합성", () => {
   it("실제 sitemap 함수도 정정일 표의 글마다 같은 내용 수정일을 출력한다", () => {

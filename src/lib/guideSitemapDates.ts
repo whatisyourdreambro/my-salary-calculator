@@ -36,6 +36,9 @@ import { getGuideContentDate } from "./guideContentRevisions";
 /** RL-08 재착지(부동산 세금·복지 가이드 사실 정정) 가이드 문장·보강을 실제로 고친 날(KST) — 게시일이 아니다. */
 export const RL08_EDIT_DAY = "2026-11-15";
 
+/** R4 GUIDES 단위(claude/r4-guides-1118) 가 가이드 본문·보강을 실제로 고친 날(KST) — 게시일(11/27)이 아니다. */
+export const R4_GUIDES_EDIT_DAY = "2026-11-18";
+
 export const GUIDE_SITEMAP_ONLY_REVISED: Readonly<Record<string, string>> = {
   // ── R1 재착지(RL-01·RL-02 광고 아래 보강 추가 23편, 원장일 RELAND_R1_PUSH) ──
   "financial-income-tax": RELAND_R1_PUSH,
@@ -52,22 +55,22 @@ export const GUIDE_SITEMAP_ONLY_REVISED: Readonly<Record<string, string>> = {
   "newlywed-tax-benefits-2026": RELAND_R1_PUSH,
   // RL-08 재착지(2026-11-15): 광고 위 IRP 문장 같은 폭 이하 정정(과세표준 → 세액공제). 칩 없는 글이라 화면 날짜는 그대로, 사이트맵만 그날로.
   "side-hustle-tax-2026": RL08_EDIT_DAY,
-  "unemployment-benefits-complete": RELAND_R1_PUSH,
+  "unemployment-benefits-complete": R4_GUIDES_EDIT_DAY, // R4 GUIDES 2026-11-18 (이전 RELAND_R1_PUSH)
   "parental-leave-complete-guide": RELAND_R1_PUSH,
   "earned-income-credit-2026": RELAND_R1_PUSH,
   "national-pension-strategy-2026": RELAND_R1_PUSH,
   "four-major-insurance-complete": RELAND_R1_PUSH,
   "parental-leave-6plus6-2026": RELAND_R1_PUSH,
-  "sk-hynix-ps-forecast-2027": RELAND_R1_PUSH,
+  "sk-hynix-ps-forecast-2027": R4_GUIDES_EDIT_DAY, // R4 GUIDES 2026-11-18 (이전 RELAND_R1_PUSH)
   "samsung-medison-salary-2026": RELAND_R1_PUSH,
   "hl-mando-salary-2026": RELAND_R1_PUSH,
-  "sk-hynix-ps-cash-vs-stock-scenarios-2026": RELAND_R1_PUSH,
+  "sk-hynix-ps-cash-vs-stock-scenarios-2026": R4_GUIDES_EDIT_DAY, // R4 GUIDES 2026-11-18 (이전 RELAND_R1_PUSH)
   // ── R1 재착지에서 기존 보강 문장을 바꾼 3편(supplements-2026-10.ts, 원장일 RELAND_R1_PUSH) ──
   // samsung-opi-forecast-2027 은 그 뒤 2026-11-15(facts-01)에 광고 아래 10/9 보강의 '확정 실적은 10월 29일 발표됩니다'(지난 일)를
   // 10월 29일 실적 발표 영업이익 107조 4,405억원으로 고쳐 행 값이 그날이다(RELAND_R1_PUSH 를 쓰지 않는다).
-  "samsung-opi-forecast-2027": "2026-11-15",
-  "samsung-bonus-treasury-stock-15-trillion-2026": RELAND_R1_PUSH,
-  "samsung-vs-sk-hynix-stock-bonus-2026": RELAND_R1_PUSH,
+  "samsung-opi-forecast-2027": R4_GUIDES_EDIT_DAY, // 11/15 facts-01 뒤 R4 b01-M01 본문 DS 24.9조 정정
+  "samsung-bonus-treasury-stock-15-trillion-2026": R4_GUIDES_EDIT_DAY, // R4 GUIDES 2026-11-18 (이전 RELAND_R1_PUSH)
+  "samsung-vs-sk-hynix-stock-bonus-2026": R4_GUIDES_EDIT_DAY, // R4 GUIDES 2026-11-18 (이전 RELAND_R1_PUSH)
   // ── R1 재착지에서 내용이 바뀐 '수정 칩 있는' 가이드 10편(원장일 RELAND_R1_PUSH) — 화면 날짜는 2026.10.03 그대로 (2026-11-15, ads-01) ──
   // R1 원장(d48f17877)은 이 10편을 본문 정정일 표(guideContentRevisions.relandR1.ts)에 넣어 칩을 2026.11.03 으로 바꿨고, 그 숫자
   // 변화가 화면 폭 440~445px 에서 제목 아래 광고를 24px 내렸다(머리 주석 ★). 운영자 상시 규칙(광고를 내리지 않는다)에 따라
@@ -80,7 +83,7 @@ export const GUIDE_SITEMAP_ONLY_REVISED: Readonly<Record<string, string>> = {
   "first-home-2026-strategy": RL08_EDIT_DAY,
   "isa-account-guide": RELAND_R1_PUSH, // 2026 세제개편안 ISA 내용 정정(생산적금융 ISA)
   "minimum-wage-impact-2026": RELAND_R1_PUSH, // 2027 최저임금 10,700원 확정 표
-  "performance-pay-complete-2026": RELAND_R1_PUSH, // SK하이닉스 PS 지급 방식·삼성 인상률·DS 특별경영성과급(보도 기준)
+  "performance-pay-complete-2026": R4_GUIDES_EDIT_DAY, // R1 보강(SK하이닉스 PS 지급 방식 등) 뒤 R4 RL-18 광고 위 우리사주 공제 정정(같은 폭)
   "retirement-planning-30s": RELAND_R1_PUSH, // 10억 목표 월 적립액 재계산
   "year-end-tax-2026": RELAND_R1_PUSH, // 2026년 귀속 연말정산 FAQ 4문항
   // 2편: 광고 위 같은 폭 사실 정정(R1 RL-02)도 받았다. 이 2편도 화면 날짜는 2026.10.03 그대로다 — 광고를 내린 것은 정정 문장이
@@ -90,13 +93,13 @@ export const GUIDE_SITEMAP_ONLY_REVISED: Readonly<Record<string, string>> = {
   "us-treasury-bond": RELAND_R1_PUSH, // TL;DR·카드·Article 설명 '금리 인하 시기' → '금리 변동 시기'(같은 폭) — 광고 아래 보강은 없다
   // ── 이미 운영 중인 보강의 마지막 실질 수정일(git 기록으로 확인) ──
   // 9/27 db933b147: SK하이닉스 9/16 가결 결과 보강(H2 '2026년 9월 27일 기준'). 그 뒤 끼워 넣는 psData 값 변화 없음.
-  "sk-hynix-wage-2026": "2026-09-27",
+  "sk-hynix-wage-2026": R4_GUIDES_EDIT_DAY, // 9/27 보강 뒤 R4 b13-F02 2025년 6.0% 항목
   // 11/1 80dcc3138: 재원 표현을 'DS부문 영업이익의 10.5%'로 정정(공개 보도 기준). 11/2 05845980d 는 '성과금→성과급' 한 글자 표기라 날짜에 넣지 않는다.
   "samsung-wage-negotiation-2026": "2026-11-01",
   // 10/8 0d2242990·3980bb5b8: DS 특별성과급 세부안(10/7 보도) 보강과 같은 날 정정. 칩 날짜(9/26)는 그대로.
   "samsung-opi-tai-complete-2026": "2026-10-08",
   // 11/1 80dcc3138: '재원 기준' 줄 추가(DS부문 영업이익의 10.5%). 칩 날짜(10/3)는 그대로.
-  "samsung-special-bonus-q3-preview-2027": "2026-11-01",
+  "samsung-special-bonus-q3-preview-2027": R4_GUIDES_EDIT_DAY, // 11/1 재원 기준 뒤 R4 b12-F02 10월 29일 기준
   // ── RL-08 재착지(10월 8b46a5e36·25bc65494 등, 2026-11-15): 광고 위 같은 폭 이하 사실 정정 + 마지막 광고 아래 새 보강(supplements-2026-11.ts) ──
   // 아동수당: 칩 없는 글 — 금액 줄 월 10만~12만원·부모급여 조건 정정, 지역별 금액 보강. 칩을 새로 만들지 않는다(GuideMidAd 위 UI).
   "child-support-100-2026": RL08_EDIT_DAY,
@@ -113,6 +116,21 @@ export const GUIDE_SITEMAP_ONLY_REVISED: Readonly<Record<string, string>> = {
   // 홈택스 연말정산 미리보기 활용법: 46d56278d(2026-11-13 08:10 KST) 개통 미정 문장 → 국세청 운영 기간 10월 28일~12월 18일(같은 길이 이하).
   // 칩 없는 글이라 그날 정정이 검색엔진에 알려지지 않았다(n1 게시 뒤 네이버 수동 요청 목록에만 있었다).
   "hometax-year-end-preview-2026": "2026-11-13",
+  // ── R4 GUIDES(2026-11-18): 보강 없는 글의 광고 위 같은 폭 이하 정정 — 칩 있는 글은 ①(NO_SUPPLEMENT_ROWS), 칩 없는 글은 ③(CHIPLESS_BODY_ROWS) ──
+  "samsung-ds-special-bonus-details-oct-2026": R4_GUIDES_EDIT_DAY, // ③ b12-F01 10/29 발표 결과
+  "sk-hynix-bonus-renegotiation-sept-2026": R4_GUIDES_EDIT_DAY, // ③ b12-F03 계산기 버튼 값
+  "samsung-electronics-stock-2026": R4_GUIDES_EDIT_DAY, // ③ b13-F04 (a) ISA
+  "chip-stock-tax-guide": R4_GUIDES_EDIT_DAY, // ③ b13-M01 연금계좌 해외지수 ETF
+  "executive-bonus-corporate-limit-2026": R4_GUIDES_EDIT_DAY, // ③ b03-F01 법인세 6,000만
+  "total-income-adjustment-bonus-2026": R4_GUIDES_EDIT_DAY, // ③ b03-F04 배당 분리과세
+  "moving-company-bonus-2026": R4_GUIDES_EDIT_DAY, // ③ b03-F05 새 회사 연말정산 합산
+  "gift-children-with-bonus-2026": R4_GUIDES_EDIT_DAY, // ③ b03-F06 손자녀 합산
+  "foreign-bonus-structure-2026": R4_GUIDES_EDIT_DAY, // ③ b03-M01 해외계좌 6월
+  "semiconductor-performance-bonus-tax": R4_GUIDES_EDIT_DAY, // ① b13-F04 (b), 칩 2026.10.03 그대로
+  "chip-rsu-stock-tax-2026": R4_GUIDES_EDIT_DAY, // ① b13-F04 (c)(d), 칩 2026.10.03 그대로
+  "bonus-property-sell-same-year-2026": R4_GUIDES_EDIT_DAY, // ① b03-F02, 칩 2026.10.03 그대로
+  "dependent-check-before-bonus-2026": R4_GUIDES_EDIT_DAY, // ① b03-F03, 칩 2026.10.03 그대로
+  "tax-amnesty-self-report-2026": R4_GUIDES_EDIT_DAY, // ① N2-lib-12 표·설명, 칩 2026.10.03 그대로
 };
 
 /** 사이트맵 lastmod·rss.xml pubDate 용 가이드 날짜 = max(getGuideContentDate, 사이트맵 전용 행). 화면·OG·Article 에는 쓰지 않는다. */

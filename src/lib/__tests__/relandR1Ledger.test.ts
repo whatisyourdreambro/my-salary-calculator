@@ -49,6 +49,8 @@ const R1_LEDGER_DAY = "2026-11-03";
 // RL-08(2026-11-15): first-home-2026-strategy 광고 위 매수 가능액 공식 두 줄 같은 폭 이하 정정(guideSitemapDates.ts RL08_EDIT_DAY).
 const LATER_BATCH_SITEMAP_DAY: Readonly<Record<string, string>> = {
   "first-home-2026-strategy": "2026-11-15",
+  // R4 GUIDES(2026-11-18): performance-pay-complete-2026 광고 위 우리사주 공제 정정(RL-18 가이드 몫, 같은 폭) — 칩은 2026.10.03 그대로
+  "performance-pay-complete-2026": "2026-11-18",
 };
 
 describe("R1 재착지 가이드 정정일 — 화면 날짜까지 올리는 글은 쿠팡 야간 가이드 1편", () => {

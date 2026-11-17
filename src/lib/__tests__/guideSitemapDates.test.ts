@@ -27,6 +27,11 @@ const NO_SUPPLEMENT_ROWS: Readonly<Record<string, string>> = {
   // R1 RL-02: TL;DR·카드·Article 설명 '금리 인하 시기' → '금리 변동 시기'(같은 폭). 광고 아래 보강은 받지 않았다.
   "us-treasury-bond":
     "R1 RL-02 광고 위 같은 폭 정정만 받았다. 칩을 2026.11.03 으로 바꾸면 화면 폭 440~441px 에서 제목 아래 광고가 24px 내려가 화면 날짜는 2026.10.03 그대로 둔다",
+  "bonus-property-sell-same-year-2026": "광고 위 같은 폭 이하 정정만 받았다(b03-F02 양도세 예정신고 기한, 보강 없음). 칩 2026.10.03 숫자는 바꾸지 않는다(R4 GUIDES 2026-11-18)",
+  "chip-rsu-stock-tax-2026": "광고 위 같은 폭 이하 정정만 받았다(b13-F04 (c)(d) ISA 문장·표 칸, 보강 없음). 칩 2026.10.03 숫자는 바꾸지 않는다(R4 GUIDES 2026-11-18)",
+  "dependent-check-before-bonus-2026": "광고 위 같은 폭 이하 정정만 받았고 광고 아래 보강은 2월(N2-guides-content-10). 칩 2026.10.03 숫자는 바꾸지 않는다(R4 GUIDES 2026-11-18)",
+  "semiconductor-performance-bonus-tax": "광고 위 같은 폭 이하 정정만 받았다(b13-F04 (b) ISA 문장, 보강 없음). 칩 2026.10.03 숫자는 바꾸지 않는다(R4 GUIDES 2026-11-18)",
+  "tax-amnesty-self-report-2026": "광고 위 감면 표 한 줄 추가(N2-lib-12, 운영자 승인 2026-11-17 질문 1 방식)와 더 좁은 설명만 받았다(보강 없음). 칩 2026.10.03 숫자는 바꾸지 않는다(R4 GUIDES 2026-11-18)",
 };
 // 칩 없는 글의 본문(광고 위) 정정 — 운영자 결정 2026-11-17 10번(DEFER 질문: 화면은 그대로 두고 검색엔진용 날짜만 고친 날로).
 // 칩 없는 글은 본문을 고쳐도 화면 날짜가 발행일이라 IndexNow 가 알리지 않는다. 칩을 새로 만들면 GuideMidAd 위 UI 가 늘어나므로(금지)
@@ -38,6 +43,15 @@ const CHIPLESS_BODY_ROWS: Readonly<Record<string, string>> = {
   "rental-business-prop-tax-exclusion-2026": "RL-08 재착지 ffcfbd57b(2026-11-15) 광고 위 종부세 합산배제 예시 정정 — 칩 없는 글, 보강 없음",
   "minimum-wage-2026": "RL-08 재착지 3406a00b1(2026-11-15) 광고 위 월급제 유급 시간 정정 — 칩 없는 글, 보강 없음",
   "hometax-year-end-preview-2026": "lens-season-F05 46d56278d(2026-11-13) 운영 기간 10월 28일~12월 18일 같은 길이 정정 — 칩 없는 글, 보강 없음",
+  "samsung-ds-special-bonus-details-oct-2026": "R4 GUIDES b12-F01(2026-11-18) 광고 위 3분기 문단 같은 글자 수 정정 — 칩 없는 글, 보강 없음",
+  "sk-hynix-bonus-renegotiation-sept-2026": "R4 GUIDES b12-F03(2026-11-18) 광고 위 계산기 시나리오 값 같은 글자 수 정정 — 칩 없는 글, 보강 없음",
+  "samsung-electronics-stock-2026": "R4 GUIDES b13-F04 (a)(2026-11-18) 광고 위 ISA 문장 더 좁게 정정 — 칩 없는 글, 보강 없음",
+  "chip-stock-tax-guide": "R4 GUIDES b13-M01(2026-11-18) 광고 위 연금계좌 ETF 문장 더 좁게 정정 — 칩 없는 글, 보강 없음",
+  "executive-bonus-corporate-limit-2026": "R4 GUIDES b03-F01(2026-11-18) 광고 위 법인세 문장 더 좁게 정정 — 칩 없는 글, 보강 없음",
+  "total-income-adjustment-bonus-2026": "R4 GUIDES b03-F04(2026-11-18) 광고 위 시뮬·제목 더 좁게 정정 — 칩 없는 글, 보강 없음",
+  "moving-company-bonus-2026": "R4 GUIDES b03-F05(2026-11-18) 광고 위 합산·건보 문장 더 좁게 정정 — 칩 없는 글, 보강 없음",
+  "gift-children-with-bonus-2026": "R4 GUIDES b03-F06(2026-11-18) 광고 위 손자녀 줄 더 좁게 정정 — 칩 없는 글, 보강 없음",
+  "foreign-bonus-structure-2026": "R4 GUIDES b03-M01(2026-11-18) 광고 위 RSU·해외계좌 문단 더 좁게 정정 — 칩 없는 글, 보강 없음",
 };
 
 describe("guideSitemapDates — 사이트맵 전용 날짜(광고 아래 보강, 또는 화면 날짜를 올리지 못한 광고 위 정정)", () => {
@@ -56,8 +70,8 @@ describe("guideSitemapDates — 사이트맵 전용 날짜(광고 아래 보강,
     }
   });
 
-  it("보강 없는 행의 예외: 칩 있는 글(①)은 1편, 칩 없는 글의 본문 정정(③, 운영자 결정 2026-11-17)은 6편 — 모두 이유가 있고 표에 실제로 있다", () => {
-    expect(Object.keys(NO_SUPPLEMENT_ROWS)).toEqual(["us-treasury-bond"]);
+  it("보강 없는 행의 예외: 칩 있는 글(①)은 6편, 칩 없는 글의 본문 정정(③, 운영자 결정 2026-11-17)은 15편 — 모두 이유가 있고 표에 실제로 있다", () => {
+    expect(Object.keys(NO_SUPPLEMENT_ROWS)).toEqual(["us-treasury-bond", "bonus-property-sell-same-year-2026", "chip-rsu-stock-tax-2026", "dependent-check-before-bonus-2026", "semiconductor-performance-bonus-tax", "tax-amnesty-self-report-2026"]);
     for (const [slug, reason] of Object.entries(NO_SUPPLEMENT_ROWS)) {
       expect(slug in GUIDE_SITEMAP_ONLY_REVISED, `${slug}: 표에 없는 예외`).toBe(true);
       expect(reason.length, slug).toBeGreaterThanOrEqual(20);
@@ -68,8 +82,11 @@ describe("guideSitemapDates — 사이트맵 전용 날짜(광고 아래 보강,
     }
     // ③ 칩 없는 글의 본문 정정 — 목록을 고정한다(새 행은 이유와 함께 여기에 더한다)
     expect(Object.keys(CHIPLESS_BODY_ROWS).sort()).toEqual([
-      "child-gift-10year-rule-2026", "commercial-office-capital-gains-2026", "hometax-year-end-preview-2026",
-      "lease-right-transfer-tax-2026", "minimum-wage-2026", "rental-business-prop-tax-exclusion-2026",
+      "child-gift-10year-rule-2026", "chip-stock-tax-guide", "commercial-office-capital-gains-2026",
+      "executive-bonus-corporate-limit-2026", "foreign-bonus-structure-2026", "gift-children-with-bonus-2026",
+      "hometax-year-end-preview-2026", "lease-right-transfer-tax-2026", "minimum-wage-2026",
+      "moving-company-bonus-2026", "rental-business-prop-tax-exclusion-2026", "samsung-ds-special-bonus-details-oct-2026",
+      "samsung-electronics-stock-2026", "sk-hynix-bonus-renegotiation-sept-2026", "total-income-adjustment-bonus-2026",
     ]);
     for (const [slug, reason] of Object.entries(CHIPLESS_BODY_ROWS)) {
       expect(slug in GUIDE_SITEMAP_ONLY_REVISED, `${slug}: 표에 없는 예외`).toBe(true);
@@ -168,22 +185,22 @@ const SUPPLEMENT_PINS: Readonly<Record<string, readonly [hash: string, day: stri
   "rent-deposit-protection": ["1d74d14153527769", "2026-11-03"],
   "retirement-planning": ["191dc78d852ef6fb", "2026-10-03"],
   "retirement-planning-30s": ["c8f0117f1e097b74", "2026-11-03"],
-  "samsung-bonus-treasury-stock-15-trillion-2026": ["c6aa5025c4aa4220", "2026-11-03"],
+  "samsung-bonus-treasury-stock-15-trillion-2026": ["1c8ba81030cec110", "2026-11-18"],
   "samsung-medison-salary-2026": ["ecd2a15f74d1abae", "2026-11-03"],
   "samsung-opi-forecast-2027": ["5128bbd4399d5582", "2026-11-15"],
   "samsung-opi-tai-complete-2026": ["995857fcfc051ca8", "2026-10-08"],
-  "samsung-special-bonus-q3-preview-2027": ["e5079e168aa2522c", "2026-11-01"],
-  "samsung-vs-sk-hynix-stock-bonus-2026": ["d11f97fa9b843691", "2026-11-03"],
+  "samsung-special-bonus-q3-preview-2027": ["cdc9804bdde45747", "2026-11-18"],
+  "samsung-vs-sk-hynix-stock-bonus-2026": ["4410ab351e93a405", "2026-11-18"],
   "samsung-wage-negotiation-2026": ["99837c3b3d2c45b5", "2026-11-01"],
   "side-hustle-tax-2026": ["1ef59ab5d22ff447", "2026-11-03"],
   "sk-hynix-ps-cash-vs-stock-scenarios-2026": ["63648f3ce0316dd0", "2026-11-03"],
-  "sk-hynix-ps-forecast-2027": ["bbaf7f6667195e6a", "2026-11-03"],
+  "sk-hynix-ps-forecast-2027": ["ddfc1050118f2634", "2026-11-18"],
   "sk-hynix-stock-2026": ["7d3a7bfc3e0269da", "2026-11-03"],
-  "sk-hynix-wage-2026": ["0cbeb1721aa34716", "2026-09-27"],
+  "sk-hynix-wage-2026": ["a286d5922ca6a845", "2026-11-18"],
   "social-insurance-reduction": ["f664265068b59501", "2026-11-03"],
   "tax-refund-mistakes-2026": ["47a9348456de53bb", "2026-11-03"],
   "temp-two-home-3year-rule-2026": ["a9bf9822802e740a", "2026-11-01"],
-  "unemployment-benefits-complete": ["4261aa010a69408e", "2026-11-03"],
+  "unemployment-benefits-complete": ["da0c60ab5e528caa", "2026-11-18"],
   "unemployment-insurance-2026": ["9b26b239aa9b7b5d", "2026-11-03"],
   "vat-filing-2026": ["b88455d06fb69eff", "2026-11-03"],
   "year-end-tax-2026": ["03cfb416099d1ce7", "2026-11-03"],

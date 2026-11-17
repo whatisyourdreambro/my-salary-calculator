@@ -99,7 +99,8 @@ describe("② 가이드 5편 광고 아래 보강(4편 + 삼성·SK 주식 성�
     // 10월 29일 발표를 적은 절의 제목도 10월 29일 기준이다(10월 8일 기준이라고 말하지 않는다)
     expect(opi).toContain("<h2>2026년 10월 29일 기준 확인 사항</h2>");
     expect(opi).not.toContain("10월 8일 기준");
-    expect(GUIDE_SITEMAP_ONLY_REVISED["samsung-opi-forecast-2027"]).toBe("2026-11-15");
+    // 2026-11-18 R4 GUIDES b01-M01 이 같은 글 본문(DS 24.9조)을 다시 고쳐 행이 그날로 늦춰졌다(하한 2026-11-15)
+    expect(GUIDE_SITEMAP_ONLY_REVISED["samsung-opi-forecast-2027"]).toBe("2026-11-18");
     // 같은 맵의 다른 4편에는 10월 29일 이후를 미래형으로 적은 문장이 없다
     for (const [slug, html] of Object.entries(guideSupplementsSamsungDs202610)) {
       expect(html, slug).not.toMatch(/10월 29일[^.<]*발표됩니다/);
