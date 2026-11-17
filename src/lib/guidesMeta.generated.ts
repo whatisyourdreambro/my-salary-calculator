@@ -2061,7 +2061,7 @@ export const guideCards: GuideCardMeta[] = [
   "modifiedDate": "2026-10-03",
   "views": 0,
   "lang": "ko",
-  "contentChars": 6036
+  "contentChars": 6034
  },
  {
   "slug": "hbm-supercycle-worker-2026",
