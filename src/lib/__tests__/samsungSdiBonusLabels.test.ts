@@ -41,3 +41,12 @@ describe("삼성디스플레이 상반기 TAI 입력 칸 안내 — 2026 상반�
     expect(display.client).toContain("const [taiH1Percent, setTaiH1Percent] = useState(50);");
   });
 });
+
+describe("삼성SDI 빠른 연봉 버튼 표기 (calc-04-F19, naverBonusLabels 와 같은 방식)", () => {
+  const label = (m: number) => `${(m / 10000).toFixed(2).replace(/\.?0+$/, "")}억`;
+  it("5,500만원 버튼은 0.55억(종전 toFixed(1) 로 '0.6억')", () => {
+    expect([5500, 7000, 9000, 12000, 15000].map(label)).toEqual(["0.55억", "0.7억", "0.9억", "1.2억", "1.5억"]);
+    expect(sdi.client).toContain('{(m / 10000).toFixed(2).replace(/\\.?0+$/, "")}억');
+    expect(sdi.client).toContain("{[5500, 7000, 9000, 12000, 15000].map((m) => (");
+  });
+});

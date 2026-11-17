@@ -109,7 +109,7 @@ export default function SamsungSdiBonusClient() {
               onClick={() => setSalaryManwon(m)}
               className="py-1.5 rounded-md border border-canvas-deep text-xs font-bold hover:border-primary/40 transition"
             >
-              {(m / 10000).toFixed(1).replace(/\.0$/, "")}억
+              {(m / 10000).toFixed(2).replace(/\.?0+$/, "")}억
             </button>
           ))}
         </div>
