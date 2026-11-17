@@ -254,7 +254,9 @@ export default function AssetAllocatorGame() {
  }, []);
 
  return (
- <main className="min-h-screen bg-[#1c1917] flex flex-col items-center justify-center p-4 pb-16 relative overflow-hidden pt-28">
+ // 게임 영역(캔버스 판) 아래 끝에서 fun/layout 공통 광고 라벨까지 152px 이상 — Google 권장 150px(N2-app-tools-fun-11, 2026-11-17 운영자 승인).
+ // 시작·게임오버: pb-32(128px)+광고 여백 24px. 플레이 중은 조작 안내 줄(gap 24+16px)만큼 더 멀다. 줄이지 말 것.
+ <main className="min-h-screen bg-[#1c1917] flex flex-col items-center justify-center p-4 pb-32 relative overflow-hidden pt-28">
  {/* Background Gradient (외부 텍스처 제거 — CSS 그라데이션 대체) */}
  <div className="absolute inset-0 opacity-40 pointer-events-none"
  style={{ backgroundImage: `radial-gradient(circle at 50% 0%, rgba(203,165,119,0.12) 0%, transparent 55%), linear-gradient(180deg, #292524 0%, #1c1917 100%)` }} />
