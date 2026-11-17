@@ -131,7 +131,7 @@ export default function LgChemBonusClient() {
           <div>
             <p className="font-bold">PI 포함 (연간 고정 200%)</p>
             <p className="text-xs text-faint mt-0.5">
-              회사 적자여도 안정 지급 (노사 합의로 변경 가능성 있음).
+              적자 연도엔 지급 보장 없음 (노사 합의로 결정).
               포함 시 {fmtManwon(monthlyBasicManwon * 10000 * 2)} 추가.
             </p>
           </div>

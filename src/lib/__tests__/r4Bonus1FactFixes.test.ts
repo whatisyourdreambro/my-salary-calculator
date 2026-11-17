@@ -214,3 +214,11 @@ describe("N2-calc-11 LG화학 사업부별 PS 표 (광고 위, 행 삭제)", () 
     expect(page).toContain(">첨단소재 · 생명과학<");
   });
 });
+
+describe("N2-calc-11 LG화학 계산기 PI 체크 설명 (광고 위, 더 짧은 글)", () => {
+  it("'회사 적자여도 안정 지급' 단정이 없다", () => {
+    const src = read("src/app/calc/lg-chem-bonus/Client.tsx");
+    expect(src).toContain("적자 연도엔 지급 보장 없음 (노사 합의로 결정).");
+    expect(src).not.toContain("회사 적자여도 안정 지급");
+  });
+});
