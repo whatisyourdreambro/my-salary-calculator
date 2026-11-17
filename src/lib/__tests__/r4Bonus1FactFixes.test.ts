@@ -51,6 +51,15 @@ describe("CB-03 삼성SDI — 광고 위 같은 폭 교체 (배지)", () => {
   });
 });
 
+describe("CB-04 삼성디스플레이 — TAI FAQ(접힌 details)에 2026 상반기 확정치", () => {
+  const faq = faqBlock("src/app/calc/samsung-display-bonus/page.tsx");
+  it("2026 상반기 대형 75%·중소형 100%, 직전 2025 하반기 50%", () => {
+    expect(faq).toContain("2026년 상반기 TAI는 대형사업부 월 기본급의 75%, 중·소형사업부 100%로 확정돼 7월 8일 지급 예정으로 보도됐습니다(뉴스핌·헤럴드경제 2026-07-06).");
+    expect(faq).toContain("직전 2025년 하반기 TAI는 대형·중소형 모두 50%였습니다(더팩트 2025-12-22).");
+    expect(faq).not.toContain("2025년 상반기 확정치는 보도로 확인되지 않았으며");
+  });
+});
+
 describe("CB-03 리포트 행(bonusData) — 삼성SDI 전자재료 5%는 2025년 지급(2024년 실적분)", () => {
   it("year 는 지급 연도: 전자재료 5% 행은 2025, 2026년 행에는 전자재료 지급이 없다", async () => {
     const { BONUS_PROFILES } = await import("@/data/bonusData");
