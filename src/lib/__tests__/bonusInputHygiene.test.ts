@@ -85,7 +85,16 @@ describe("주식 가치 카드의 주가 표시 (calc-02-F17)", () => {
       expect(src, slug).toContain(String.raw`(stockPrice / 10000).toFixed(1).replace(/\.0$/, "")`);
       expect(src, slug).toContain("{(p / 10000).toFixed(0)}만");
     }
-    expect(read("kakao-bonus").match(/\(stockPrice \/ 10000\)\.toFixed\(1\)/g)?.length).toBe(2);
+    // RSU 문장·카드 두 곳 + n2 수리의 단위 고르기 한 곳(소수 주가는 '만원' 대신 '만')
+    expect(read("kakao-bonus").match(/\(stockPrice \/ 10000\)\.toFixed\(1\)/g)?.length).toBe(3);
+  });
+  it("카카오 RSU 문장: 소수 주가는 '12.2만', 만원 정수 주가는 종전처럼 '5만원' (n2 수리, 320~324px 한 줄 늘던 것)", () => {
+    const src = read("kakao-bonus");
+    expect(src).toContain(String.raw`{(stockPrice / 10000).toFixed(1).replace(/\.0$/, "")}{(stockPrice / 10000).toFixed(1).endsWith(".0") ? "만원" : "만"} =`);
+    const unit = (stockPrice: number) => ((stockPrice / 10000).toFixed(1).endsWith(".0") ? "만원" : "만");
+    expect(`${fmt(50_000)}${unit(50_000)}`).toBe("5만원");
+    expect(`${fmt(121_900)}${unit(121_900)}`).toBe("12.2만");
+    expect(`${fmt(99_999)}${unit(99_999)}`).toBe("10만원");
   });
   it("기본 주가는 같은 글자, 반올림이 곱셈을 틀리게 하던 값은 소수로", () => {
     expect([fmt(120_000), fmt(280_000), fmt(50_000)]).toEqual(["12", "28", "5"]);

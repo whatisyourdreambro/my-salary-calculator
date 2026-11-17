@@ -154,7 +154,10 @@ export default function KakaoBonusClient() {
           </label>
         </div>
         <p className="mt-3 text-xs text-faint">
-          RSU 가치 = {rsuShares}주 × {(stockPrice / 10000).toFixed(1).replace(/\.0$/, "")}만원 ={" "}
+          {/* n2 수리: 소수 주가(12.2 등)는 '만원' 대신 '만' — 소수 두 글자가 붙어 320~324px 에서 이 줄이 한 줄 늘었다(카카오 주가
+              121,900원 입력, CalcResultAd 위 +16px, n2 스윕 A). '12.2만' 은 종전 '12만원' 과 거의 같은 폭이다(서브셋 글꼴 12px: 소수 자리
+              0·1·2·5·7·8 은 좁고 3·4·6·9 는 0.2px 안쪽으로 넓다). 만원 정수 주가(기본 5만원)는 글자 그대로 */}
+          RSU 가치 = {rsuShares}주 × {(stockPrice / 10000).toFixed(1).replace(/\.0$/, "")}{(stockPrice / 10000).toFixed(1).endsWith(".0") ? "만원" : "만"} ={" "}
           <strong className="text-primary">{fmtManwon(calc.rsuValueWon)}</strong>
           {" "}(2026 평균 1인당 약 670만원, 직급·평가에 따라 편차)
         </p>
