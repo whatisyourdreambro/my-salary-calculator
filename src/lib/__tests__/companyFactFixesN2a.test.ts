@@ -97,3 +97,16 @@ describe("data-b03-M01 SNT모티브 — 방산 부문은 K2 소총 등 소화기
     expect(rawRecord("snt-motiv").lastUpdated).toBe("2026-05-15");
   });
 });
+
+describe("data-b03-F07 동아에스티 — 박카스는 동아제약 브랜드, 동아에스티는 전문의약품 회사", () => {
+  it("장점의 박카스 브랜드 영업력을 전문의약품·병의원 영업력으로 — 종전보다 좁다", () => {
+    const c = company("dong-a-st");
+    expect(c.culture.pros[1]).toBe("전문의약품 중심의 탄탄한 병의원 영업력");
+    expect(JSON.stringify(c.culture)).not.toContain("박카스 브랜드 기반");
+    expect(notWider(c.culture.pros[1], "박카스 브랜드 기반의 강력한 의약품 영업력")).toBe(true);
+    // 히어로의 박카스 형제사(동아제약 분리) 설명은 사실이라 그대로
+    expect(c.description).toContain("박카스");
+    expect(outsideFont(c.culture.pros[1])).toEqual([]);
+    expect(rawRecord("dong-a-st").lastUpdated).toBe("2026-05-15");
+  });
+});
