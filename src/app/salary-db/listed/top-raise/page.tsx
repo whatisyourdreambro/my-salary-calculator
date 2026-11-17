@@ -58,7 +58,7 @@ function OutlierList() {
           <thead>
             <tr className="border-b border-canvas-200 text-left text-faint-blue">
               <th className="py-1.5 pr-3 font-bold">회사</th>
-              <th className="py-1.5 pr-3 font-bold">인상률(전년比)</th>
+              <th className="py-1.5 pr-3 font-bold">인상률(전년비)</th>
               <th className="py-1.5 pr-3 font-bold">직원 수</th>
               <th className="py-1.5 font-bold">제외 사유</th>
             </tr>
@@ -103,7 +103,7 @@ export default function TopRaisePage() {
             직원 수 급변·최저임금 미달 등 왜곡 가능성이 큰 회사는 순위에서 뺐습니다.
           </>
         ),
-        valueHeader: "인상률(전년比)",
+        valueHeader: "인상률(전년비)",
         renderValue: (row) => (
           <>
             {pct(row.raisePct)}%

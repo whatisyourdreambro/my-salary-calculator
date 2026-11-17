@@ -98,6 +98,19 @@ describe("히어로 소개문 사실 정정 — 한글 음절끼리 제자리 �
   });
 });
 
+describe("CM-21 서브셋 밖 한자 글리프 교체 (全·比 → 전·비)", () => {
+  it("한컴 복지 설명·상장사 인상률 표 머리글·사이트 검색 설명", () => {
+    const hancom = company("hancom");
+    expect(hancom.benefits.map((b) => b.description)).toContain("임직원 한컴오피스 전제품 무상 제공");
+    expect(outsideFont(hancom.benefits.map((b) => b.description).join(""))).toEqual([]);
+    const topRaise = readFileSync("src/app/salary-db/listed/top-raise/page.tsx", "utf8");
+    expect(topRaise).not.toContain("比");
+    expect(topRaise.split("인상률(전년비)").length - 1).toBe(2);
+    const search = readFileSync("src/lib/searchIndex.ts", "utf8");
+    expect(search).toContain("공시 기준 전년비 인상률 순위");
+  });
+});
+
 describe("정정 문구는 사이트 글꼴 서브셋 안의 글자만 쓴다", () => {
   it("CM-03", () => {
     expect(outsideFont(careerStep("kakao", "크루 (전사 평균)").description)).toEqual([]);

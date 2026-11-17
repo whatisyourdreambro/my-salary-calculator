@@ -182,7 +182,7 @@ export const krCompanies_Batch19: CompanyProfile[] = [
       remoteWork: { policy: "hybrid", daysPerWeek: 2, description: "개발·기획 주 2일 재택, 영업 오피스 중심" },
     },
     benefits: [
-      { category: "lifestyle", title: "한컴오피스 라이선스 지원", description: "임직원 한컴오피스 全제품 무상 제공", value: 300000 },
+      { category: "lifestyle", title: "한컴오피스 라이선스 지원", description: "임직원 한컴오피스 전제품 무상 제공", value: 300000 },
       { category: "growth", title: "교육비 지원", description: "SW 개발·AI 교육비 및 자격증 지원", value: 1500000 },
       { category: "financial", title: "복지포인트", description: "연 120만원 복지카드 지급", value: 1200000 },
     ],
