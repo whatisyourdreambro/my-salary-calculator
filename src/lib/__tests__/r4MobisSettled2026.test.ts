@@ -85,9 +85,11 @@ describe("페이지 문구 — 협상 중·미확정 표현 제거, 출처는 �
     }
   });
 
-  it("숨긴 HowTo JSON-LD 의 시나리오 단계는 지금 칩(2026 타결·2025 타결·직접 입력)과 같다", () => {
-    // 화면에 나오지 않는 JSON-LD 문자열만(광고 위치와 무관). 블록 자체는 BONUS1 이 지운다(2026-11-18 통합에서 칩에 맞춤).
-    expect(page).toContain(`{ name: "시나리오 선택", text: "2026 타결 / 2025 타결 / 직접 입력 중 선택." }`);
+  it("숨긴 HowTo JSON-LD 는 없고(R4 BONUS1 276c6db0a 제거), 옛 2024 시나리오 단계 문구도 남지 않는다", () => {
+    // 화면에 나오지 않는 JSON-LD 문자열만(광고 위치와 무관). 11/20 판에서 칩에 맞춘 단계(703b79649)는 11/27 통합에서
+    // BONUS1 의 RL-17 HowTo 제거로 블록째 빠졌다. 제거 가드는 bonusNoHowTo.test.ts, 여기서는 옛 문구가 돌아오지 않는지만.
+    expect(page).not.toContain("HOW_TO_STEPS");
+    expect(page).not.toContain("howToLd");
     expect(page).not.toContain("2024 합의 /");
     expect(page).not.toContain("직접 입력(2026 타결 시)");
   });
