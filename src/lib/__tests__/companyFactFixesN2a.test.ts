@@ -1,4 +1,4 @@
-// 회사 쪽 사실 정정 고정 — N2-data-03 (R4, 2026-11-18)
+// 회사 쪽 사실 정정 고정 — N2-data-03 · N2-data-08 1단계 (R4, 2026-11-18)
 //
 // 사업·주주·소속·역사가 틀렸거나 자기 공시 카드와 어긋나던 회사 기록을 제자리에서 고쳤다.
 // 모든 정정은 광고(CalcResultAd·CompanyTopAd·GuideMidAd·InArticleAd) 위 글자라 종전보다 넓어지면 안 된다.
@@ -196,5 +196,48 @@ describe("data-b02-F08 SKC 히어로 — 지금은 없는 사명 SKC솔믹스 �
     );
     expect(c.description).not.toContain("SKC솔믹스");
     expect(rawRecord("skc").lastUpdated).toBe("2026-05-15");
+  });
+});
+
+describe("data-b03-F01 LS아이앤디 — LS ELECTRIC 사업(산업자동화·PLC)이 적혀 있던 쪽을 슈페리어에식스 투자사로 (N2-data-08 1단계)", () => {
+  const OLD = {
+    description: "LS그룹 계열 산업자동화·에너지 솔루션 기업. 전력기기·자동화 시스템·스마트팩토리 통합 공급.",
+    benefit: "산업자동화·PLC 전문 교육 지원",
+    keywords: ["자동화", "에너지", "산업"],
+    pros: ["스마트팩토리 성장 수혜", "LS그룹 안정성", "전력·자동화 기술 전문성"],
+    cons: ["제조업 보수적 문화", "현장 설치·유지보수 출장 多", "LS그룹 내 계열사 간 경쟁"],
+  };
+
+  it("소개문·복지·키워드·장단점이 LS아이앤디 사업(슈페리어에식스 투자)과 맞고 자동화·PLC·多 가 없다", () => {
+    const c = company("ls-i-s");
+    expect(c.description).toBe("LS그룹 계열 해외투자사. 미국 전선기업 슈페리어에식스 보유.");
+    expect(c.benefits.find((b) => b.title === "교육 지원")?.description).toBe("전선·소재 직무 교육 지원");
+    expect(c.culture.keywords).toEqual(["전선", "투자사", "북미"]);
+    expect(c.culture.pros).toEqual(["북미 전력망 투자 수혜", "LS그룹 안정성", "전선·케이블 기술 전문성"]);
+    expect(c.culture.cons).toEqual(["제조업 보수적 문화", "해외 법인 관리 업무 많음", "LS그룹 내 계열사 간 경쟁"]);
+    const all = JSON.stringify({ d: c.description, b: c.benefits, k: c.culture });
+    for (const gone of ["자동화", "PLC", "多", "스마트팩토리"]) expect(all, gone).not.toContain(gone);
+  });
+
+  it("광고 위 글자는 모두 종전 폭 이하 — 키워드 칩은 칩마다 음절 수 이하(flex-wrap 항목)", () => {
+    const c = company("ls-i-s");
+    expect(notWider(c.description, OLD.description)).toBe(true);
+    expect(notWider(c.benefits.find((b) => b.title === "교육 지원")!.description!, OLD.benefit)).toBe(true);
+    c.culture.keywords.forEach((k, i) => expect(notWider(k, OLD.keywords[i]), k).toBe(true));
+    c.culture.pros.forEach((p, i) => expect(notWider(p, OLD.pros[i]), p).toBe(true));
+    // 多 는 서브셋 밖(대체 글꼴) 글자 — 폭을 0 으로 쳐도 새 단점 줄이 좁다
+    c.culture.cons.forEach((p, i) => expect(notWider(p, OLD.cons[i]), p).toBe(true));
+  });
+
+  it("id·이름·업종·tier·연봉·lastUpdated 불변, 서브셋 밖 글자 0", () => {
+    const c = company("ls-i-s");
+    expect(c.name).toEqual({ ko: "LS아이앤디", en: "LS I&D" });
+    expect(c.industry).toBe("Industrial Systems");
+    expect(c.tier).toBe("conglomerate");
+    expect(c.salary.entry.base).toBe(50000000);
+    expect(rawRecord("ls-i-s").lastUpdated).toBe("2026-05-15");
+    expect(
+      outsideFont(c.description + c.benefits.map((b) => b.description ?? "").join("") + c.culture.keywords.join("") + c.culture.pros.join("") + c.culture.cons.join(""))
+    ).toEqual([]);
   });
 });
