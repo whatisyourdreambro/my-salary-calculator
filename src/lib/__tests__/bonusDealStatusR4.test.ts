@@ -43,14 +43,16 @@ const MD_RE = /(?<![\d/.-])(9|1[0-2])\/([1-9]|[12]\d|3[01])(?![\d/])/;
 
 // 5) 광고 위 폭 고정 문구 — 정규화한 소스에 그대로 있어야 한다.
 const WIDTH_PINNED: Record<keyof typeof PAGES, string[]> = {
+  // 2026-11-18 N2-calc-19(운영자 승인 2026-11-17): 모비스 2026 타결 문구로 교체. 같은 폭 이하는 사이트 글꼴 폭 모델의
+  // 줄 수 비교로 골랐고 게시 전 통합 스윕에서 실측한다 — 근거와 전체 목록은 r4MobisSettled2026.test.ts.
   mobis: [
-    `<h3 className="font-bold mb-2 text-lg">📢 2026 임단협 (잠정합의)</h3>`,
+    `<h3 className="font-bold mb-2 text-lg">📢 2026 임단협 (타결)</h3>`,
     `<li>• 현대차 8/31 <strong>가결</strong>(성과금 400%·1,270만, 주식 15주)</li>`,
-    `<li>• 모비스 <strong>8/25 잠정합의</strong> 보도</li>`,
-    `<li>• 타결 시 본 계산기 &lsquo;직접 입력&rsquo;으로 즉시 계산 가능</li>`,
-    `2026년분 지급률은 <strong>미확정</strong>. 확정 보도가 나오면 본 페이지를 갱신합니다.`,
-    `차이 가능하며, 2026년분은 현대차 가결 이후에도 잠정안(미확정) 상태입니다.`,
-    `{CURRENT_RATES_YEAR} 세법 반영. 2026년분 임단협은 잠정안(2026-08 보도).`,
+    `<li>• 기본급 월 <strong>10만원</strong> 인상</li>`,
+    `<li>• 주식 <strong>8주</strong>(11/30 지급)·복지포인트 50만원</li>`,
+    `더팩트 2026-08-26·09-04 보도, 주식 지급은 DART 10/30 공시.`,
+    `차이 가능하며, 주식 평가액은 지급 시점 주가에 따라 달라집니다.`,
+    `{CURRENT_RATES_YEAR} 세법 반영. 2026년분 임단협은 타결(2026-09 보도).`,
   ],
   doosan: [
     `<h3 className="font-bold mb-2 text-lg">📢 2026 임단협, 9/26 교섭 중</h3>`,
@@ -112,10 +114,9 @@ describe("2026 임단협 상태 문구 (R4 bonus-deal-status)", () => {
   });
 
   it("잠정합의·사측 제시안 수치(승인 전)는 본문에 없다", () => {
-    const mobis = norm(read(PAGES.mobis));
+    // 모비스 2026 타결 수치(1,320만·주식 8주)는 운영자 승인(2026-11-17, N2-calc-19)으로 반영했다 — 금지 목록에서 뺐다.
     const rotem = norm(read(PAGES.rotem));
     const hanwha = norm(read(PAGES.hanwha));
-    for (const s of ["1,320만", "1320만", "주식 8주", "자사주 8주"]) expect(mobis.includes(s), `mobis '${s}'`).toBe(false);
     for (const s of ["1,550만", "1550만", "850만", "주식 30주"]) expect(rotem.includes(s), `rotem '${s}'`).toBe(false);
     // 사측 제시안(뉴스1 2026-09-11): 기본급 월 12만2,000원↑·인센 최대 500만·생산목표달성격려금 최대 300만.
     // ('800만원'은 기존 평균연봉 '1억 1,800만원'과 겹쳐 쓰지 않는다)

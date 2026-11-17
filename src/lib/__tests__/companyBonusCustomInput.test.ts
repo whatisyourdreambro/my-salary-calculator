@@ -26,7 +26,8 @@ vi.mock("@/lib/bonusTaxCalc", async () => {
 import MobisClient from "@/app/calc/hyundai-mobis-bonus/Client";
 import RotemClient from "@/app/calc/hyundai-rotem-bonus/Client";
 
-function renderMobis(year: 2024 | 2025, custom: boolean) {
+// 모비스 시나리오 칩은 2026-11-18 N2-calc-19 로 2026 타결·2025 타결 두 개다(2024 합의 칩 → 2026 타결 칩).
+function renderMobis(year: 2025 | 2026, custom: boolean) {
   observed.index = 0;
   observed.states = [`${year}-settled`, 500, 280_000, false, 450, 14_200_000, 17, custom, 0, true];
   return renderToStaticMarkup(createElement(MobisClient));
@@ -41,7 +42,7 @@ describe("회사 성과급 직접 입력의 시나리오 독립성", () => {
   beforeEach(() => { observed.gross = []; });
 
   it("모비스의 같은 직접 입력값은 이전에 선택한 연도와 무관하게 같은 세전액을 계산한다", () => {
-    renderMobis(2024, true);
+    renderMobis(2026, true);
     renderMobis(2025, true);
     expect(observed.gross).toEqual([41_460_000, 41_460_000]);
   });
@@ -55,10 +56,11 @@ describe("회사 성과급 직접 입력의 시나리오 독립성", () => {
     expect(newYear).not.toContain("2025 타결안 포함분");
   });
 
-  it("모비스의 기존 시나리오 계산은 2025년 상품권과 2024년 패키지를 그대로 반영한다", () => {
+  it("모비스의 기존 시나리오 계산은 2025년 상품권과 2026년 패키지(복지포인트 포함)를 그대로 반영한다", () => {
     renderMobis(2025, false);
-    renderMobis(2024, false);
-    expect(observed.gross).toEqual([41_660_000, 50_280_000]);
+    renderMobis(2026, false);
+    // 2026: 500만 × 400% + 1,320만 + 8주 × 28만 + 복지포인트 50만 = 3,594만
+    expect(observed.gross).toEqual([41_660_000, 35_940_000]);
   });
 
   it("로템의 기존 시나리오 계산은 2025년 상품권과 2024년 패키지를 그대로 반영한다", () => {
