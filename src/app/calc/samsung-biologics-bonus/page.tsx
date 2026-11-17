@@ -259,7 +259,7 @@ export default function SamsungBiologicsBonusPage() {
                 <strong className="block mb-1 text-amber-900">⚠️ 추정 시뮬레이터입니다</strong>
                 <span className="text-amber-800">
                   아시아경제·산경투데이·컨슈머타임스·한국경제·데일리안·뉴데일리경제
-                  공개 보도 기반 추정. 2025년 하반기 TAI·향후 연도 지급률은
+                  공개 보도 기반 추정. 향후 연도 지급률은
                   미확정이며, 실제 지급은 사업부문·평가·근속에 따라 차이 날 수
                   있습니다.
                 </span>
