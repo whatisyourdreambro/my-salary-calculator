@@ -27,7 +27,7 @@ const SECTIONS = [
  "• 계산 입력값 (연봉, 부양가족 수 등) — 계산과 저장은 기본적으로 사용자 브라우저에서 처리합니다. 직접 구현한 계산 분석 이벤트에는 정확한 금액·금액 구간·부양가족 수를 포함하지 않고 계산기 종류와 이용 단계만 전송합니다.",
  "• 결과 공유 — 새 공유 링크는 개인 입력 없이 공용 페이지와 고정 채널 정보만 전달하며, 링크 미리보기 이미지 URL에도 개인 입력을 넣지 않습니다. 결과 문구나 이 기기에서 만든 이미지는 내용을 확인하고 승인한 경우에만 공유하며, 상대와 선택한 외부 서비스가 그 내용을 볼 수 있습니다. 과거에 생성한 입력값 포함 결과 링크는 계속 읽을 수 있고, 해당 링크 방문 요청은 호스팅 서버에 전달될 수 있습니다.",
  "• 분석 URL — 직접 구현한 분석 이벤트에서는 공유 토큰과 계산 입력 쿼리를 제거하고 캠페인 유입 정보만 남깁니다. Google Analytics의 자동 페이지·링크 측정은 별도로 동작하므로 서비스 설정에 따라 방문 URL과 링크 정보가 수집될 수 있습니다.",
- "• 광고/분석 쿠키 — Google AdSense, Google Analytics 4, 쿠팡 파트너스가 제공하는 쿠키",
+ "• 광고/분석/제휴 쿠키 — Google AdSense, Google Analytics 4, 쿠팡 파트너스, 링크프라이스(금융 제휴 링크를 누른 경우)가 제공하는 쿠키",
  ],
  },
  {
@@ -40,7 +40,7 @@ const SECTIONS = [
  "• 공개 집계: 해당 기능을 제공하는 경우, 최근 28일의 공개 집계에 동의한 응답이 10건 이상일 때 전체·도움 됨·헷갈림 건수만 표시합니다. 사유별 소수 집계나 개별 응답은 공개하지 않습니다. 응답 건수는 고유 참여자 수·전체 이용자 만족도를 의미하지 않습니다.",
  "• 사이트 트래픽 분석 (Google Analytics 4)",
  "• 맞춤형 광고 게재 (Google AdSense)",
- "• 제휴 마케팅 추적 (쿠팡 파트너스 — 링크 경유 구매 발생 시 일정액의 수수료를 제공받으며, 구매 가격에는 영향이 없습니다)",
+ "• 제휴 마케팅 추적 (쿠팡 파트너스·링크프라이스 — 제휴 링크를 거쳐 구매·조회·가입이 발생하면 일정액의 수수료를 받으며, 이용 가격에는 영향이 없습니다)",
  ],
  },
  {
@@ -59,6 +59,7 @@ const SECTIONS = [
  "본 사이트는 다음 제3자 서비스를 사용합니다. 각 제공자의 개인정보 정책을 별도로 확인하시기 바랍니다:",
  "• Google AdSense / Google Analytics — Google LLC (https://policies.google.com/privacy)",
  "• 쿠팡 파트너스 — 쿠팡(주) (https://partners.coupang.com)",
+ "• 링크프라이스 — (주)링크프라이스 (https://www.linkprice.com). 금융 제휴 링크를 누른 경우에만 클릭과 성과 확인에 쓰입니다.",
  "• Cloudflare (호스팅·비공개 문의 및 페이지 개선 의견 저장) — Cloudflare, Inc. (https://www.cloudflare.com/privacypolicy). 운영자는 인증된 관리 화면에서 접수를 확인하며, 외부 방문자가 접수 목록을 조회하는 기능은 제공하지 않습니다.",
  ],
  },
@@ -103,7 +104,7 @@ export default function PrivacyPage() {
 
  <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
  <div className="mb-12">
- <p className="text-sm text-faint-blue mb-2">최종 업데이트: 2026년 11월 1일</p>
+ <p className="text-sm text-faint-blue mb-2">최종 업데이트: 2026년 11월 18일</p>
  <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-navy mb-4">
  개인정보 처리방침
  </h1>
