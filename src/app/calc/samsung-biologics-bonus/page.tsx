@@ -217,7 +217,7 @@ export default function SamsungBiologicsBonusPage() {
                   </tr>
                   <tr>
                     <td className="py-2 pr-4">TAI 2025년 하반기</td>
-                    <td className="py-2 pr-4">미확정 (확정치 보도 미확보)</td>
+                    <td className="py-2 pr-4">50% 수준 (보도)</td>
                     <td className="py-2 pr-4">2025년 12월 지급분</td>
                     <td className="py-2">쿠키뉴스 2026-06-11</td>
                   </tr>
