@@ -29,6 +29,36 @@ describe("레이스 판은 열 폭에 맞춰 줄어든다 (components-b04-F02 1�
     expect(src).toContain("const height = 800;");
   });
 
+  it("실시간 순위 상자는 휴대폰에서 w-40·p-3 (sm 이상은 종전 w-80·p-6), 판 위에 떠 있는 absolute 그대로", () => {
+    const box = /<div className="(absolute top-24 [^"]+)">\s*<h3 className="([^"]+)">\s*<Trophy/.exec(src);
+    expect(box).not.toBeNull();
+    const cls = box![1].split(/\s+/);
+    expect(cls).toEqual(expect.arrayContaining(["absolute", "top-24", "right-2", "sm:right-6", "w-40", "sm:w-80", "p-3", "sm:p-6", "pointer-events-none"]));
+    expect(cls).not.toContain("w-80");
+    expect(cls).not.toContain("p-6");
+    expect(box![2].split(/\s+/)).toEqual(expect.arrayContaining(["text-sm", "sm:text-lg", "mb-2", "sm:mb-4"]));
+  });
+
+  it("당첨자 수 칸을 비우거나(0) 소수·음수면 특별상 없이는 레이스를 시작하지 않는다", () => {
+    expect(src).toContain('if (!Number.isInteger(winnerCount) || winnerCount < 0 || (winnerCount === 0 && specialPrizes.length === 0)) return alert("당첨자 수를 1명 이상 입력해주세요!");');
+    const guard = src.indexOf("Number.isInteger(winnerCount)");
+    expect(guard).toBeGreaterThan(src.indexOf('return alert("참가자를 입력해주세요!")'));
+    expect(guard).toBeLessThan(src.indexOf("ballsRef.current = names.map("));
+    expect(src).toMatch(/id="random-draw-winners"[\s\S]{0,200}allowNegative=\{false\}/);
+    // 같은 조건식을 그대로 돌려 본다
+    const blocked = (winnerCount: number, prizes: number) =>
+      !Number.isInteger(winnerCount) || winnerCount < 0 || (winnerCount === 0 && prizes === 0);
+    expect(blocked(Number(""), 0)).toBe(true);
+    expect(blocked(1.5, 0)).toBe(true);
+    expect(blocked(-1, 2)).toBe(true);
+    expect(blocked(0, 1)).toBe(false);
+    expect(blocked(1, 0)).toBe(false);
+  });
+
+  it("종료됐는데 당첨자가 없으면 'Racing in progress...' 대신 '당첨자가 없습니다'", () => {
+    expect(src).toContain('{gameState === "finished" ? "당첨자가 없습니다" : "Racing in progress..."}');
+  });
+
   it("종료 상태 광고 자리는 그대로 캔버스 아래 본문 흐름 (광고 코드 변경 없음)", () => {
     expect(src).toMatch(/\{gameState === "finished" && \(\s*<div className="w-full max-w-2xl mx-auto mt-6">\s*<InArticleAd \/>\s*<\/div>\s*\)\}/);
     expect(src.match(/<InArticleAd\b/g)).toHaveLength(1);

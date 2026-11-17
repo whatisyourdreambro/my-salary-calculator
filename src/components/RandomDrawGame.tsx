@@ -93,6 +93,8 @@ export default function RandomDrawGame() {
  const startGame = () => {
  const names = candidatesText.split("\n").filter(n => n.trim() !== "");
  if (names.length === 0) return alert("참가자를 입력해주세요!");
+ // 칸을 비우면 Number('') = 0 — 특별상도 없으면 당첨자 없는 레이스가 돌았다(N2-components-11)
+ if (!Number.isInteger(winnerCount) || winnerCount < 0 || (winnerCount === 0 && specialPrizes.length === 0)) return alert("당첨자 수를 1명 이상 입력해주세요!");
  if (winnerCount > names.length) return alert("당첨자 수가 참가자 수보다 많습니다!");
 
  // Create Balls with Avatars
@@ -494,6 +496,7 @@ export default function RandomDrawGame() {
  type="number"
  min="1"
  max={candidatesText.split("\n").filter(n => n.trim()).length || 1}
+ allowNegative={false}
  value={winnerCount}
  onChange={(e) => setWinnerCount(Number(e.target.value))}
  className="bg-transparent text-foreground text-2xl font-bold outline-none w-full"
@@ -589,8 +592,8 @@ export default function RandomDrawGame() {
  />
 
  {/* Live Leaderboard */}
- <div className="absolute top-24 right-6 w-80 bg-electric/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 pointer-events-none shadow-2xl">
- <h3 className="text-navy font-black mb-4 flex items-center gap-2 text-lg">
+ <div className="absolute top-24 right-2 sm:right-6 w-40 sm:w-80 bg-electric/80 backdrop-blur-xl border border-white/10 rounded-2xl p-3 sm:p-6 pointer-events-none shadow-2xl">
+ <h3 className="text-navy font-black mb-2 sm:mb-4 flex items-center gap-2 text-sm sm:text-lg">
  <Trophy className="w-5 h-5 text-primary" /> LIVE RANKING
  </h3>
  <div className="space-y-2 max-h-[500px] overflow-hidden">
@@ -631,7 +634,7 @@ export default function RandomDrawGame() {
  </AnimatePresence>
  {winners.length === 0 && (
  <div className="text-faint-blue text-sm text-center py-8 italic">
- Racing in progress...
+ {gameState === "finished" ? "당첨자가 없습니다" : "Racing in progress..."}
  </div>
  )}
  </div>
