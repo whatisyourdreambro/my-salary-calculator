@@ -400,7 +400,7 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         scheme: "PS",
         percentOfBase: 0,
         note: "다운사이클 2024 — PS 미지급. PI(월 기본급 200% 연간 고정)는 별도",
-        source: "LG화학 노조 자료·공개 보도 (page.tsx 출처)",
+        source: "공개 보도 (page.tsx 출처)",
       },
       {
         year: 2022,
