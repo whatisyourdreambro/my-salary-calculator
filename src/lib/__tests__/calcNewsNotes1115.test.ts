@@ -35,21 +35,27 @@ describe("S-OIL 보도 요약 (SBS Biz 2026-11-02)", () => {
   });
 });
 
-describe("삼성바이오로직스 보도 요약 (서울경제TV·아시아경제 2026-11-13)", () => {
+// n2 수리: 11/17 교섭 재개 보도(아시아경제·재경일보 2026-11-17)로 고쳤다 — 11-15 판은 11/13 보도 기준 '17일 교섭을 다시 열기로'였다.
+describe("삼성바이오로직스 보도 요약 (아시아경제·재경일보 2026-11-17)", () => {
   const route = "/calc/samsung-biologics-bonus";
-  it("교섭·부분파업 일정과 쟁점은 매체·날짜를 붙인 보도 문장", () => {
+  it("교섭 재개 결과·회사 제안·쟁점·부분파업 일정은 매체·날짜를 붙인 보도 문장", () => {
     const item = calcNewsNoteFor(route)!;
-    expect(item.points[0]).toMatch(/^서울경제TV·아시아경제 2026년 11월 13일 보도에 따르면/);
-    expect(item.points[0]).toContain("11월 6일부터 부분파업");
-    expect(item.points[0]).toContain("11월 17일 교섭을 다시 열기로");
+    expect(item.title).toBe("임금·성과급 교섭과 부분파업 — 2026년 11월 17일 언론 보도 기준");
+    expect(item.points[0]).toMatch(/^아시아경제·재경일보 2026년 11월 17일 보도에 따르면/);
+    for (const s of ["11월 17일 교섭을 다시 열었지만 합의하지 못했습니다", "평균 6.2% 인상을 임금협약 체결 전에 먼저 적용", "12월 급여부터", "받아들이지 않겠다는 입장"]) {
+      expect(item.points[0]).toContain(s);
+    }
     expect(item.points[1]).toMatch(/^같은 보도 기준 쟁점:/);
-    for (const s of ["기본급 9.5% 인상", "연간 세전 영업이익의 15%", "평균 6.2% 인상", "1인당 격려금 600만원"]) {
+    for (const s of ["기본급 9.5% 인상", "정액 300만원", "연간 세전 영업이익의 15%", "11월 6일부터 부분파업", "11월 27일까지", "12월 4일까지"]) {
       expect(item.points[1]).toContain(s);
     }
+    // 11/13 보도의 '다시 열기로'·'1인당 격려금 600만원'(11/17 보도에 없는 제안)은 남기지 않는다
+    expect(text(route)).not.toContain("다시 열기로");
+    expect(text(route)).not.toContain("격려금 600만원");
   });
 
-  it("교섭 결과는 날짜를 박아 '보도 없음'으로만 쓰고 예측하지 않는다", () => {
-    expect(text(route)).toContain("2026년 11월 15일 기준 교섭 결과는 보도되지 않았습니다");
+  it("협약 체결 여부는 날짜를 박아 쓰고 예측하지 않는다", () => {
+    expect(text(route)).toContain("2026년 11월 17일 보도 기준 임금협약은 체결되지 않았습니다");
     expect(text(route)).not.toMatch(PROMISE);
   });
 });
