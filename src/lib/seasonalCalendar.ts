@@ -186,11 +186,14 @@ export const SEASONAL_CALENDAR: SeasonalContent[] = [
 ];
 
 /**
- * deadline 까지 남은 일수 (당일 23:59:59 기준). 지난 마감이면 null — 배지를 그리지 않는다.
+ * deadline 까지 남은 일수 (달력 날짜 차이 — 마감 당일 0 = D-0, 한국 D-day 관례). 지난 마감이면 null — 배지를 그리지 않는다.
  * 캘린더의 모든 deadline 은 그 항목의 노출 창(최대 3개월) 끝 달에 있으므로, 마감 달이 현재 달보다
  * 6개월 이상 뒤면 "해를 넘긴 창의 작년 마감"(예: 1월 초에 보는 12/31)으로 본다.
  * 이전 구현은 이 경우 다음 해 마감으로 계산해 1/1~1/14 에 D-365, 마감 다음날(9/26)에 D-0 긴급 배지가
  * 찍혔다(2026-09-05 리뷰 발견). now 주입은 테스트용.
+ * 2026-11-18 N2-lib-10(lib-b08-F03): 종전 '당일 23:59:59 까지 올림'은 배지가 늘 하루 많았다
+ * (11/15 에 12/31 마감을 D-47, 마감 당일에 D-1). 표준국어대사전 '디데이' = 예정한 그날 → 당일 D-0, 전날 D-1.
+ * 시각과 무관하게 같은 날이면 같은 값(자정·정오·23시 모두), 로컬 달력 날짜 기준.
  */
 export function getDaysLeft(
   deadline: { month: number; day: number },
@@ -199,10 +202,10 @@ export function getDaysLeft(
   const nowMonth = now.getMonth() + 1;
   const year =
     deadline.month - nowMonth >= 6 ? now.getFullYear() - 1 : now.getFullYear();
-  const target = new Date(year, deadline.month - 1, deadline.day, 23, 59, 59);
-  const diff = target.getTime() - now.getTime();
-  if (diff < 0) return null;
-  return Math.ceil(diff / (1000 * 60 * 60 * 24));
+  const target = new Date(year, deadline.month - 1, deadline.day);
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const days = Math.round((target.getTime() - today.getTime()) / 86_400_000);
+  return days < 0 ? null : days;
 }
 
 /**

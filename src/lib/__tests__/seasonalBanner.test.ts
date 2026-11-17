@@ -179,8 +179,8 @@ describe("1월 OPI 게이트 — getCurrentSeasonal(now, { opiAnnounced })", () 
 });
 
 describe("getDaysLeft — now 주입", () => {
-  it("12/15 정오 기준 12/31 마감은 D-17 (당일 23:59:59 까지 올림)", () => {
-    expect(getDaysLeft({ month: 12, day: 31 }, at(2026, 12, 15))).toBe(17);
+  it("12/15 기준 12/31 마감은 D-16 (달력 날짜 차이)", () => {
+    expect(getDaysLeft({ month: 12, day: 31 }, at(2026, 12, 15))).toBe(16);
   });
 
   it("지난 마감은 null — 배지를 그리지 않는다 (9/26 D-0, 1월 초 D-365 재발 방지)", () => {
@@ -193,9 +193,9 @@ describe("getDaysLeft — now 주입", () => {
   });
 
   it("마감 당일과 창 안의 날짜는 정상 계산된다", () => {
-    expect(getDaysLeft({ month: 12, day: 31 }, at(2026, 12, 31))).toBe(1);
-    expect(getDaysLeft({ month: 12, day: 31 }, at(2026, 11, 1))).toBe(61);
-    expect(getDaysLeft({ month: 9, day: 30 }, at(2026, 8, 20))).toBe(42);
+    expect(getDaysLeft({ month: 12, day: 31 }, at(2026, 12, 31))).toBe(0);
+    expect(getDaysLeft({ month: 12, day: 31 }, at(2026, 11, 1))).toBe(60);
+    expect(getDaysLeft({ month: 9, day: 30 }, at(2026, 8, 20))).toBe(41);
   });
 
   it("deadline 은 노출 창의 각 달에서 6개월 미만 앞에 있다 (6개월 규칙의 전제)", () => {
