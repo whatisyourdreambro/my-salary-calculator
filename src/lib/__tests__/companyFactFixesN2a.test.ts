@@ -187,3 +187,14 @@ describe("data-b04-M01 SK이노베이션 공시 카드 note — 바로 아래 DA
     expect(src).toMatch(/CARD_NOTE_CHANGED_AFTER_FIXTURE: readonly string\[\] = \["korea-investment", "sk-innovation"\]/);
   });
 });
+
+describe("data-b02-F08 SKC 히어로 — 지금은 없는 사명 SKC솔믹스 괄호 삭제", () => {
+  it("반도체 소재(SKC솔믹스) -> 반도체 소재, 나머지 문장(신입 영끌 약 6,600만원 포함)은 그대로", () => {
+    const c = company("skc");
+    expect(c.description).toBe(
+      "SK그룹 소재 사업의 핵심 축. 2차전지 동박(SK넥실리스), 반도체 소재, 친환경 화학 사업까지 운영하는 글로벌 첨단소재 기업. 신입 영끌 약 6,600만원 수준."
+    );
+    expect(c.description).not.toContain("SKC솔믹스");
+    expect(rawRecord("skc").lastUpdated).toBe("2026-05-15");
+  });
+});
