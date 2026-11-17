@@ -238,7 +238,7 @@ export default function SkHynixBonusClient() {
         <p className="text-sm text-faint mb-4">
           반기별 영업이익률 연동, 기본급의 0~150% × 2회.{" "}
           <strong className="text-primary">
-            2026 상반기는 150% 확정(7/28 지급)
+            2026 상반기는 150% 확정(7/30 지급)
           </strong>
           되었습니다. 하반기는 시나리오를 선택하세요.
         </p>

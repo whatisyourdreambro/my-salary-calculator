@@ -291,7 +291,7 @@ export default function SkHynixBonusPage() {
             </p>
             <p className="text-xs text-faint mt-2 leading-relaxed">
               한편 <strong>2026 상반기 PI는 최대치 150%로 확정</strong>되어 7월
-              28일 지급됐습니다(상반기 영업이익 98.2조원). 아래 계산기는 두
+              30일 지급됐습니다(상반기 영업이익 98.2조원). 아래 계산기는 두
               내용을 모두 반영했으며,{" "}
               {STATUS === "rejected"
                 ? "재협상 결과가 나오면 즉시 갱신합니다."
@@ -341,7 +341,7 @@ export default function SkHynixBonusPage() {
                   <li>• 기본급의 <strong>최대 150%</strong> × 연 2회 (7월·1월)</li>
                   <li>
                     • <strong className="text-primary">2026 상반기 150% 확정</strong>{" "}
-                    (7/28 지급)
+                    (7/30 지급)
                   </li>
                   <li>• 기본급 = 통상 연봉의 1/20</li>
                   <li>• 이번 주식 지급 개편의 대상 아님 (현금 유지 가정)</li>
