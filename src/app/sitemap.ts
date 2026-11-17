@@ -189,6 +189,9 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/hub/tax-saving': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 마지막 광고 아래 '이어서 확인할 내용' 상자(SEASONA lib ideas[3])·등록면허세 카드 설명(CALCMETA RL-10)
  '/fun/fortune': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 신년운세를 2027 정미년으로 — 제목·H1·결과 문구(SEASONC app-tools-fun ideas[0])
  '/auto-tax-2026': { lastModified: new Date('2026-11-15T00:00:00+09:00') }, // 접힌 연납 FAQ 답에 2027년 1월 연납(개정이 없으면)·마지막 광고 아래 연납 가이드 카드(SEASONB ideas[1])
+ // 2026-11-18 통합(claude/next-1120, MOBIS) 첫 원장 항목 — 날짜는 묶음 커밋의 실제 수정일(KST), 통합일·게시일 아님. 화면·OG·Article 날짜 필드 없음.
+ // 성과급 루프 0.85 대상이라 행이 생기면 루프가 건너뛰므로 priority 0.85 를 그대로 적는다(위 83~84줄 주석).
+ '/calc/hyundai-mobis-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.85 }, // 기본값 2026 임단협 타결(400%+1,320만+주식 8주+복지포인트 50만)·칩·접힌 FAQ·마지막 광고 아래 보도·DART 요약(N2-calc-19). 9/25 A18 엔진
  // 허브 6곳(N2-infra-02, infra-b03-F01) — 화면 문구를 마지막으로 바꾼 운영 커밋의 날. sitemap() 의 허브 행이 이 키를 읽는다(자식 행은 그대로).
  '/salary-db': { lastModified: new Date('2026-10-17T00:00:00+09:00') }, // 10/17 2e0a99484(126f5d3fd) 형제 허브 카드 '공시기업 공시 연봉', 10/04 352451886 회사 카드 '인센티브 목표'
  '/salary-db/ranking': { lastModified: new Date('2026-10-17T00:00:00+09:00') }, // '공시기업 업종 28종'(10/17), 9/25 659e1b438 '급여총액÷인원 산정' — 11/15 DATAB 는 검색 설명만
