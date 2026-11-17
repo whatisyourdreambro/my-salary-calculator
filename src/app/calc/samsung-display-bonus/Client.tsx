@@ -19,8 +19,9 @@ const DEFAULT_SALARY_MANWON = 8000;
 const BASIC_RATIO = 20; // 기본급 = 연봉 / 20 (삼성 표준)
 
 // TAI 프리셋 근거:
-// 하반기 50% — 2025년 하반기 대형·중소형 모두 월 기본급의 50%, 2025-12-24 지급 (뉴시스 2025-12-22)
-// 상반기 50/75% — 확정치 보도 미확보. 이청 대표 발언 기준 '중소형 75%·대형 50% 이상' 전망 (SBS Biz 2025-07-01)
+// 하반기 50% — 2025년 하반기 대형·중소형 모두 월 기본급의 50% (더팩트 2025-12-22)
+// 상반기 기본값 50% 는 그대로(바꾸면 광고 위 기본 결과가 바뀌어 별도 결정). 상반기 입력 칸 안내는 2026 상반기 확정치 —
+// 대형 75%·중소형 100%, 7월 8일 지급 예정 (뉴스핌·헤럴드경제 2026-07-06; 2026-11-18 N2-calc-12 calc-04-F08)
 const TAI_PRESETS = [0, 25, 50, 75, 100];
 
 export default function SamsungDisplayBonusClient() {
@@ -151,7 +152,7 @@ export default function SamsungDisplayBonusClient() {
             label="상반기 TAI (7월 지급)"
             value={taiH1Percent}
             onChange={setTaiH1Percent}
-            note="2025 상반기 확정치 보도 미확보 — 중소형 75%·대형 50% 이상 전망 (SBS Biz 2025-07-01)"
+            note="2026 상반기: 대형 75%·중소형 100% 확정 (뉴스핌·헤럴드경제 2026-07-06)"
           />
           <TaiInput
             label="하반기 TAI (12월 지급)"

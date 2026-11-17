@@ -33,3 +33,11 @@ describe("입력 칸이 카드 밖으로 넘치지 않는다 — min-w-0 (calc-0
     for (const src of [display.client, sdi.client]) expect(src).not.toMatch(/className="flex-1 p-2 rounded/);
   });
 });
+
+describe("삼성디스플레이 상반기 TAI 입력 칸 안내 — 2026 상반기 확정치 (calc-04-F08, 더 짧은 글)", () => {
+  it("2025 전망 대신 2026 상반기 대형 75%·중소형 100%, 기본값 50% 는 그대로", () => {
+    expect(display.client).toContain('note="2026 상반기: 대형 75%·중소형 100% 확정 (뉴스핌·헤럴드경제 2026-07-06)"');
+    expect(display.client).not.toContain("2025 상반기 확정치 보도 미확보");
+    expect(display.client).toContain("const [taiH1Percent, setTaiH1Percent] = useState(50);");
+  });
+});
