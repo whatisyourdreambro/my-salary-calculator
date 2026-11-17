@@ -78,6 +78,7 @@ export default function SamsungBiologicsBonusClient() {
               key={s.id}
               type="button"
               onClick={() => { setScenarioId(s.id); setCustomMode(false); }}
+              aria-pressed={scenarioId === s.id && !customMode}
               className={`p-4 rounded-xl border-2 text-left transition ${
                 scenarioId === s.id && !customMode
                   ? "border-primary bg-primary/10"
@@ -92,6 +93,7 @@ export default function SamsungBiologicsBonusClient() {
         <button
           type="button"
           onClick={() => setCustomMode(!customMode)}
+          aria-pressed={customMode}
           className={`mt-3 w-full p-3 rounded-xl border-2 text-sm font-bold transition ${
             customMode ? "border-primary bg-primary/10" : "border-canvas-deep hover:border-primary/40"
           }`}
@@ -103,8 +105,10 @@ export default function SamsungBiologicsBonusClient() {
             <span className="text-sm font-bold w-32">OPI (연봉 대비)</span>
             <NumberInput
               type="number"
+              aria-label="OPI 지급률 (연봉 대비 %)"
+              allowNegative={false}
               value={customOpiPercent}
-              onChange={(e) => setCustomOpiPercent(Number(e.target.value) || 0)}
+              onChange={(e) => setCustomOpiPercent(Math.min(50, Number(e.target.value) || 0))}
               step="1" min="0" max="50"
               className="flex-1 p-2 rounded border border-canvas-deep tabular-nums text-lg font-bold"
             />
@@ -123,6 +127,7 @@ export default function SamsungBiologicsBonusClient() {
           <span className="text-sm font-bold">연 기본 연봉 (만원)</span>
           <NumberInput
             type="number"
+            allowNegative={false}
             value={salaryManwon}
             onChange={(e) => setSalaryManwon(Number(e.target.value) || 0)}
             step="100" min="0"
@@ -201,6 +206,7 @@ export default function SamsungBiologicsBonusClient() {
         <button
           type="button"
           onClick={() => setShowAdvanced(!showAdvanced)}
+          aria-expanded={showAdvanced}
           className="flex items-center gap-2 font-bold text-base"
         >
           <Settings className="w-4 h-4" />
