@@ -314,7 +314,9 @@ describe("전체표 상자 배치 — 본문 칼럼 마지막 광고 아래, 기
     expect(tds.filter((t) => /^\d{1,3}(,\d{3})+$/.test(t)).length).toBe(cells);
     const ths = [...b.src.matchAll(/<th scope="col"[^>]*>([^<]*)<\/th>/g)].map((m) => m[1]).filter((t) => t !== "호봉");
     expect(ths).toEqual([...headers]);
-    expect(b.src).toContain('class="overflow-x-auto"');
+    // relative: sr-only('해당 없음') 절대 위치 글자가 스크롤 영역 안에 갇힌다 — 없으면 상자를 연 320~544px 에서 문서 폭 549px (n2 수리)
+    expect(b.src).toContain('class="relative overflow-x-auto"');
+    expect(b.src).not.toContain('class="overflow-x-auto"');
     expect(b.src).toContain('role="region"');
     expect(b.src).toMatch(/<th scope="row"[^>]*>1<!-- -->호봉<\/th>|<th scope="row"[^>]*>1호봉<\/th>/);
   });

@@ -29,8 +29,11 @@ export default function PayStepTable({
   regionLabel,
   minWidthClass = "min-w-[280px]",
 }: PayStepTableProps) {
+  // relative (n2 수리): '해당 없음' sr-only(position:absolute) 글자의 기준 상자를 이 스크롤 영역으로 둔다. 없으면 기준이 영역 밖
+  // 조상이라 표 오른쪽 끝(약 549px)에 놓인 1px 글자가 스크롤 영역에 갇히지 않고 문서 폭을 549px 로 늘렸다(상자 연 상태, 320~544px,
+  // n2 스윕 B overflow). 접힌 기본 화면에는 영향 없음.
   return (
-    <div className="overflow-x-auto" tabIndex={0} role="region" aria-label={regionLabel}>
+    <div className="relative overflow-x-auto" tabIndex={0} role="region" aria-label={regionLabel}>
       <table className={`w-full text-sm tabular-nums ${minWidthClass}`}>
         <caption className="mb-3 text-left text-xs font-bold text-muted-blue">{caption}</caption>
         <thead>
