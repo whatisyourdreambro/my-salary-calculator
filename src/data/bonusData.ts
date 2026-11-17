@@ -621,7 +621,24 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
     nameKo: "현대모비스",
     scheme: "임단협 성과금·격려금",
     sourceFile: "src/app/calc/hyundai-mobis-bonus/Client.tsx",
+    // 2026-11-18 N2-calc-19(운영자 승인 2026-11-17): 계산기 칩이 2026 타결·2025 타결 두 개가 되어 2024 임협 합의 행 2개를
+    // 2026 타결 행 2개로 바꿨다(행 수 그대로 — 리포트 표가 광고 위라 행이 늘면 광고가 내려간다). 비고·출처 칸 글은 바뀐
+    // 2024 행보다 짧게 맞췄다(r4MobisReportRows.test.ts). 2024 수치는 계산기 page.tsx 연혁 표·Client.tsx 머리 주석에 남는다.
     payouts: [
+      {
+        year: 2026,
+        scheme: "임단협 성과금(정률)",
+        percentOfBase: 400,
+        note: "2026 임단협 타결 — 기본급 월 +10만 별도",
+        source: "더팩트 2026-09-04",
+      },
+      {
+        year: 2026,
+        scheme: "임단협 격려금(정액)",
+        fixedAmountManwon: 1320,
+        note: "2026 임단협 타결 — 별도 주식 8주(11/30 지급, DART 2026-10-30 공시)·복지포인트 50만",
+        source: "더팩트 2026-08-26·09-04",
+      },
       {
         year: 2025,
         scheme: "임단협 성과금(정률)",
@@ -635,22 +652,6 @@ export const BONUS_PROFILES: CompanyBonusProfile[] = [
         fixedAmountManwon: 1420,
         note: "2025 임단협 타결 — 별도 우리사주 17주·재래시장상품권 20만원",
         source: "전자신문·서울경제·아주경제 2025-10-17",
-      },
-      {
-        year: 2024,
-        scheme: "임단협 성과금(정률)",
-        percentOfBase: 500,
-        note: "2024 임협 합의 — 성과금·격려금 총 500%",
-        source: "머니S 단독 2024-07-09",
-      },
-      {
-        year: 2024,
-        scheme: "임단협 격려금(정액)",
-        fixedAmountManwon: 1520,
-        note:
-          "2024 임협 합의 — 별도 주식 총 36주(11+20+5). " +
-          "우리사주출연 리워드 100~150만원은 출연 조건부라 합산 제외",
-        source: "머니S 단독 2024-07-09",
       },
     ],
   },
