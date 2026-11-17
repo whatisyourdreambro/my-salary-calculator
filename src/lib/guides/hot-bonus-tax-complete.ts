@@ -1059,13 +1059,13 @@ const december1January = `
 `;
 
 const moveCompanyBonus = `
-<p class="lead">이직 중 성과급 받는 경우 — 전 회사 기여분(전 회사 지급) + 신 회사 기여분(신 회사 지급) 모두 근로소득. 종합소득세 신고 시 둘 다 합산. 4월 건보료 정산도 양쪽 통합.</p>
+<p class="lead">이직 중 성과급 받는 경우 — 전 회사 기여분(전 회사 지급) + 신 회사 기여분(신 회사 지급) 모두 근로소득. 새 회사 연말정산에 합산(빠지면 5월 신고). 건보는 회사별.</p>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">📋 이직 중 성과급 처리</h2>
 <ul class="space-y-2 mt-4">
 <li>· <strong>전 회사 성과급</strong>: 퇴직 후 지급되어도 원천징수 + 근로소득</li>
 <li>· <strong>신 회사 성과급</strong>: 정상 처리</li>
-<li>· <strong>합산</strong>: 5월 종소세 신고 시 합산. 한계세율 점프 가능</li>
+<li>· <strong>합산</strong>: 새 회사 정산에 합산. 한계세율 점프 가능</li>
 <li>· <strong>이중 공제</strong>: 인적공제·기본공제 중복 안 됨</li>
 </ul>
 
@@ -1073,7 +1073,7 @@ const moveCompanyBonus = `
 <p>전 회사 4개월 근무 후 신 회사 8개월. 7월 전 회사 성과급 3,000만 + 12월 신 회사 성과급 2,000만:</p>
 <ul class="space-y-2 mt-4">
 <li>· 종합 성과급 5,000만 + 양 회사 연봉 합산</li>
-<li>· 5월 종소세 신고 시 양쪽 모두 합산</li>
+<li>· 빠지면 5월 종소세 신고로 합산</li>
 <li>· 한계세율 점프 시 추가 1,000만+ 세금</li>
 </ul>
 
@@ -1330,7 +1330,7 @@ export const hotBonusTaxComplete: Guide[] = [
   { slug: "couple-split-bonus-year-2026", title: "맞벌이 연말정산 몰아주기 — 성과급 받은 해 기준", description: "인적공제는 세율 높은 쪽, 의료비는 3% 문턱 낮은 쪽, 카드는 25% 문턱을 넘는 쪽. 세액공제는 세율과 무관합니다.", metaDescription: "맞벌이 연말정산 몰아주기는 인적공제는 세율이 높은 쪽, 의료비는 총급여 3% 문턱이 낮은 쪽, 카드는 25% 문턱을 넘는 쪽이 기본입니다. 성과급 받은 해 계산 예시와 불가 항목을 정리했습니다.", category: "세금", tags: ["부부분산", "의료비", "한계세율", "연말정산", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-26", views: 0, content: coupleSplitBonus, lang: "ko" },
   // 영역 E — 성과급 시점·실전 10편
   { slug: "december-vs-january-bonus-2026", title: "12월 인센티브 vs 1월 인센티브 — 정산 시점·IRP 한도", description: "같은 금액 세금 차이 거의 없음. 단 12월 지급은 당해 정산, IRP 한도 즉시 도달. 1월 지급은 다음해 정산. 정산·납입 일정 차이.", category: "세금", tags: ["12월", "1월", "인센티브", "정산", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: december1January, lang: "ko" },
-  { slug: "moving-company-bonus-2026", title: "이직 중 성과급 — 전·신 회사 합산 1,000만+ 추가 세금", description: "전 회사 + 신 회사 성과급 모두 근로소득 합산. 5월 종소세 신고 시 합산 신고 의무. 한계세율 점프 시 추가 1,000만+ 세금.", category: "커리어", tags: ["이직", "성과급", "전회사", "종합소득세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: moveCompanyBonus, lang: "ko" },
+  { slug: "moving-company-bonus-2026", title: "이직 중 성과급 — 전·신 회사 합산 1,000만+ 추가 세금", description: "전 회사 + 신 회사 성과급 모두 근로소득 합산. 새 회사 연말정산에서 합산. 한계세율 점프 시 추가 1,000만+ 세금.", category: "커리어", tags: ["이직", "성과급", "전회사", "종합소득세", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: moveCompanyBonus, lang: "ko" },
   { slug: "bonus-retire-impact-severance-2026", title: "성과급 퇴직금 포함 기준 2026 — 평균임금·대법원 판례", description: "퇴직금은 평균임금으로 계산합니다. 정기상여·목표 인센티브는 들어가고, 해마다 노사합의로 정한 경영성과급은 빠질 수 있습니다.", metaDescription: "성과급이 퇴직금에 들어가는지는 평균임금 포함 여부로 갈립니다. 2026년 대법원 판결(삼성전자 목표 인센티브 포함·경영성과급 제외)과 월 500만원·10년 근속 예시로 퇴직금 차이와 퇴직소득세를 계산했습니다.", category: "커리어", tags: ["퇴직금", "평균임금", "성과급", "퇴직소득세", "2026"], level: "중급", publishedDate: "2026-05-23", modifiedDate: "2026-09-26", views: 0, content: bonusRetireImpact, lang: "ko" },
   { slug: "stock-option-with-bonus-2026", title: "성과급 + 스톡옵션 일반 vs 적격 — 과세 시점·세금 차이", description: "일반: 행사이익은 근로소득으로 성과급과 합산 과세. 적격(벤처)은 요건 충족 시 행사 때 과세를 미루고 매도 때 양도세.", category: "주식", tags: ["스톡옵션", "적격", "벤처", "양도세", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: stockOptionTimingBonus, lang: "ko" },
   { slug: "bonus-property-sell-same-year-2026", title: "성과급 + 부동산 양도 동시 — 종합 세금 점검 필수", description: "근로소득(성과급) 종합과세 + 부동산 분류과세 별도. 건보료 정산에도 반영. 1주택 비과세 + 80% 공제 시 5억 양도차익 약 200만, 성과급 5,000만 + 합산 약 2,700만.", category: "부동산", tags: ["성과급", "부동산양도", "종합세금", "정산", "2026"], level: "고급", modifiedDate: "2026-10-03", publishedDate: "2026-05-23", views: 0, content: bonusPropertySell, lang: "ko" },
