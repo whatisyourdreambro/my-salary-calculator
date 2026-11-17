@@ -24,12 +24,14 @@ const PAGES: Record<string, { file: string; adTags: string[] }> = {
   "/company/simulator": { file: "src/app/company/layout.tsx", adTags: ["<PageFooterAds"] },
   // 2026-11-15 app-tools-fun-b04-F05: 계산기에 없는 세대생략 할증(상증법 제57조)을 마지막 광고 아래에서 알린다.
   "/tools/real-estate/gift-tax": { file: "src/app/tools/layout.tsx", adTags: ["<HomeTopAd", "<InArticleAd", "<CoupangBanner"] },
+  // 2026-11-18 R4 CALCMISC: 입력칸 '퇴사일'이 마지막 근무일이라는 것(고용노동부 계산기의 퇴직일자는 그다음 날)을 마지막 광고 아래에서 알린다.
+  "/tools/finance/severance": { file: "src/app/tools/layout.tsx", adTags: ["<HomeTopAd", "<InArticleAd", "<CoupangBanner"] },
 };
 
 const visibleText = (html: string) => html.replace(/<[^>]+>/g, "").replace(/&#x27;/g, "'").replace(/&amp;/g, "&");
 
 describe("lens-meta-F10 도구 설명 글", () => {
-  it("대상은 7곳뿐이다(11/13 6곳 + 11/15 증여세 계산기)", () => {
+  it("대상은 8곳뿐이다(11/13 6곳 + 11/15 증여세 계산기 + 11/18 퇴직금 세금 계산기)", () => {
     expect(Object.keys(TOOL_EXPLAINERS).sort()).toEqual(Object.keys(PAGES).sort());
   });
 

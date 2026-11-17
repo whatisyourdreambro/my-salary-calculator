@@ -191,14 +191,16 @@ describe("시나리오 절벽 — 삼성 보수(2027년 실적부터 임계값 �
       stressAddPct: 3,
       ...over,
     });
-  it("동탄 중위가·저축 30%: 기본은 2029년 말, 보수는 2028년부터 성과급이 급감(2030년엔 OPI·TAI 만)해 2031년까지 불가", () => {
+  // 2026-11-18 N2-calc-21: 보수 2026 = 1~3분기 DS부문 249.4조(종전 상반기 × 1.5 = 220.1조). 2027년 실적부터 200조 미만이라 절벽은 같고,
+  // 2026년 실적분이 커져 이 고정 입력(8.525억·4.48%)에서는 2031년 말에 구매 가능해졌다 — 종전 기대값(불가·부족액 > 0)을 바꿨다.
+  it("동탄 중위가·저축 30%: 기본은 2029년 말, 보수는 2028년부터 성과급이 급감(2030년엔 OPI·TAI 만)해 2031년 말에야 가능", () => {
     const cons = run("conservative");
     const base = run("base");
     expect(cons.years[1].bonusSaved).toBeLessThan(base.years[1].bonusSaved / 2);
     expect(cons.years[1].bonusSaved).toBeGreaterThan(0);
     expect(cons.years[3].bonusSaved).toBeLessThan(cons.years[2].bonusSaved / 3);
-    expect(cons.buyYear).toBeNull();
-    expect(cons.shortfall).toBeGreaterThan(0);
+    expect(cons.buyYear).toBe(2031);
+    expect(cons.buyYear!).toBeGreaterThan(base.buyYear!);
     expect(base.buyYear).toBe(2029);
   });
   it("잠금 주식 포함 토글은 판정 자산만 늘린다", () => {

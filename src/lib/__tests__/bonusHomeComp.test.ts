@@ -93,14 +93,17 @@ describe("삼성 특별경영성과급(OPI2) — model.computeDivisionPool 과 �
 describe("설계 대조값 — 삼성 메모리·연봉 8천만·인상 6.2%·기본 시나리오", () => {
   const r = computeComp(samsungBase());
   const y27 = r.years[0];
-  it("2026년 실적분 특별경영성과급 약 5.76억", () => {
-    expect(y27.components[1].gross / 1e8).toBeCloseTo(5.76, 2);
+  // 2026-11-18 N2-calc-21: 기본 시나리오 2026 영업이익이 상반기 × 2(293.4조)에서 DS부문 1~3분기 × 4/3(332.5조)로 바뀌어
+  // 종전 기대값(특별 5.76억·세전 6.22억·세후 3.41억)을 새 규칙의 값으로 바꿨다 — 운영자 질문의 '6.22억 -> 약 7.11억'은 전사 기준 계산,
+  // 운영자가 함께 고른 DS부문 기준으로는 6.99억.
+  it("2026년 실적분 특별경영성과급 약 6.53억", () => {
+    expect(y27.components[1].gross / 1e8).toBeCloseTo(6.525, 3);
   });
-  it("2027년 성과급 세전 약 6.22억(OPI 3,760만 + 특별 5.76억 + TAI 849.6만), 세후 약 3.41억(공제율 약 45%)", () => {
+  it("2027년 성과급 세전 약 6.99억(OPI 3,760만 + 특별 6.53억 + TAI 849.6만), 세후 약 3.81억(공제율 약 46%)", () => {
     expect(y27.components[0].gross).toBeCloseTo(37_600_000, 0);
     expect(y27.components[2].gross).toBeCloseTo(8_496_000, 0);
-    expect(y27.gross / 1e8).toBeCloseTo(6.22, 2);
-    expect(y27.net / 1e8).toBeCloseTo(3.41, 2);
+    expect(y27.gross / 1e8).toBeCloseTo(6.986, 3);
+    expect(y27.net / 1e8).toBeCloseTo(3.806, 3);
     expect(y27.effRate).toBeGreaterThan(44);
     expect(y27.effRate).toBeLessThan(46);
   });

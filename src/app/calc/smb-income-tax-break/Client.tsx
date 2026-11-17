@@ -7,6 +7,7 @@ import {
   youthAdjustedAge,
   youthAgeVerdict,
   YOUTH_MAX_AGE,
+  YOUTH_MIN_AGE,
   type SmbBreakType,
 } from "@/lib/smbTaxBreak";
 import NumberInput from "@/components/NumberInput";
@@ -178,7 +179,11 @@ export default function SmbTaxBreakClient() {
               </div>
             </div>
             <p className={`mt-3 text-sm font-bold ${youthOk ? "text-electric" : youthVerdict === "birthday" ? "text-amber-600 dark:text-amber-400" : "text-red-500"}`}>
-              {parseInput(age) > 0
+              {/* 2026-11-18 N2-calc-17 calc-04-F16: 입력 만 나이 1~14세(예: 35 를 고쳐 쓰는 중 3)는 종전에 '만 34세 초과' 문구가 떴다 —
+                  하한은 실제 만 나이로 판정해 짧은 '만 15세 미만' 문구를 쓴다(조특법 시행령 제27조, 근로계약일 현재 만 15~34세). */}
+              {parseInput(age) > 0 && parseInput(age) < YOUTH_MIN_AGE
+                ? `만 ${YOUTH_MIN_AGE}세 미만 — 청년 요건(만 ${YOUTH_MIN_AGE}~${YOUTH_MAX_AGE}세) 미충족`
+                : parseInput(age) > 0
                 ? youthOk
                   ? `병역 차감 후 환산 ${adjAge % 1 === 0 ? adjAge : adjAge.toFixed(1)}세 — 청년 연령 요건 충족`
                   : youthVerdict === "birthday"

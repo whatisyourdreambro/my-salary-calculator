@@ -16,6 +16,8 @@ import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Sparkles, Info, AlertTriangle } from "lucide-react";
 import IncentiveClient from "./Client";
 import { staticRouteLastModified } from "@/app/sitemap";
+// 2026-11-18 N2-calc-17 calc-02-F16: 메타 설명·하단 안내의 연도는 계산 엔진과 같은 현행 요율 포인터를 따른다(오늘 출력 동일).
+import { CURRENT_RATES_YEAR } from "@/config/currentRates";
 
 const FAQ_ITEMS = [
   {
@@ -26,7 +28,7 @@ const FAQ_ITEMS = [
   {
     question: "성과급과 인센티브의 세금 차이가 있나요?",
     answer:
-      "법적으로 성과급(상여금)과 인센티브는 모두 근로소득으로 동일하게 처리됩니다. 회사가 어떤 명칭으로 부르든 정기·비정기 여부에 따라 4대보험 부과 방식이 약간 다를 수 있지만, 세금 계산 방식 자체는 동일합니다. '인센티브'라는 이름이 붙어 있다고 해서 분리과세가 자동 적용되지 않습니다.",
+      "법적으로 성과급(상여금)과 인센티브는 모두 근로소득으로 동일하게 처리됩니다. 회사가 어떤 명칭으로 부르든, 정기·비정기 여부와 관계없이 소득세와 4대보험 모두 같은 근로소득으로 처리됩니다. '인센티브'라는 이름이 붙어 있다고 해서 분리과세가 자동 적용되지 않습니다.",
   },
   {
     question: "주식매수선택권(스톡옵션) 행사이익은 어떻게 과세되나요?",
@@ -49,7 +51,7 @@ export const metadata: Metadata = buildToolMetadata({
   name: "인센티브 분리과세 계산기",
   tagline: "인센티브·스톡옵션 세금 — 합산과세 vs 분리과세 비교",
   description:
-    "인센티브와 성과급의 세금 차이, 스톡옵션 분리과세 한도, 절세 전략까지. 한국 소득세법 2026 기준으로 합산과세와 분리과세를 비교해 실수령액을 계산합니다.",
+    `인센티브와 성과급의 세금 차이, 스톡옵션 분리과세 한도, 절세 전략까지. 한국 소득세법 ${CURRENT_RATES_YEAR} 기준으로 합산과세와 분리과세를 비교해 실수령액을 계산합니다.`,
   path: "/calc/incentive-tax",
   keywords: [
     "인센티브 세금",
@@ -190,7 +192,7 @@ export default function IncentiveTaxPage() {
           <div className="rounded-2xl p-5 mb-8 flex gap-3 bg-electric-5 border border-electric-20">
             <Info size={18} className="text-electric flex-shrink-0 mt-1" />
             <p className="text-xs text-muted-blue dark:text-canvas-300 leading-relaxed">
-              본 계산은 2026년 소득세법·조세특례제한법 기준이며 참고용입니다. 실제 분리과세
+              본 계산은 {CURRENT_RATES_YEAR}년 소득세법·조세특례제한법 기준이며 참고용입니다. 실제 분리과세
               적용 여부는 세무사 또는 국세청 상담을 통해 확인하시기 바랍니다.
             </p>
           </div>

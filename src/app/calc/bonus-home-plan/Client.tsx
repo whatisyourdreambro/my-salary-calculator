@@ -31,7 +31,7 @@ import {
   type PlanModel,
   type PlanState,
 } from "@/lib/bonusHome/plan";
-import { FISCAL_YEARS, h1Tril, SCENARIO_LABELS, SCENARIO_RULES, type ScenarioId } from "@/lib/bonusHome/scenarios";
+import { FISCAL_YEARS, q1q3Tril, SCENARIO_LABELS, SCENARIO_RULES, type ScenarioId } from "@/lib/bonusHome/scenarios";
 import { SAMSUNG_OPI1_MAX_PCT, SAMSUNG_WAGE_2026, TAI_BASE_SHARE_OF_SALARY, type CompanyId, type DivisionId } from "@/lib/bonusHome/compEngines";
 
 const COMPANY_OPTIONS: { id: CompanyId; label: string }[] = [
@@ -316,7 +316,8 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
             <p className="mt-2 text-sm leading-relaxed text-muted-blue dark:text-canvas-300">
               {raw.scenario === "custom"
                 ? "직접 입력 시나리오(가정)입니다. 연도별 영업이익을 바꾸면 성과급이 다시 계산됩니다."
-                : `${SCENARIO_LABELS[raw.scenario]} 시나리오(가정): ${SCENARIO_RULES[raw.scenario as Exclude<ScenarioId, "custom">].ruleText}. 기준은 2026년 상반기 확정 영업이익 ${fmtTril(h1Tril(raw.company === "samsung" ? "samsung" : "sk"))}(DART 반기보고서)입니다.`}
+                : // 2026-11-18 N2-calc-21: 기준 = 1~3분기 누적(삼성 DS부문). 연도는 앞 규칙 문구(2026년 = …)에 있어 문장을 종전보다 짧게 둔다(CalcResultAd 아래·InArticleAd 위).
+                  `${SCENARIO_LABELS[raw.scenario]} 시나리오(가정): ${SCENARIO_RULES[raw.scenario as Exclude<ScenarioId, "custom">].ruleText}. 기준은 1~3분기 ${raw.company === "samsung" ? "DS부문 " : ""}영업이익 ${fmtTril(q1q3Tril(raw.company === "samsung" ? "samsung" : "sk"))}(DART 분기보고서)입니다.`}
             </p>
             <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-5">
               {FISCAL_YEARS.map((fy, i) => (
@@ -359,9 +360,9 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
               </table>
               <p className="mt-2 text-xs text-faint-blue">
                 {raw.company === "samsung" ? (
-                  <>출처: DART 삼성전자 <a className="underline" href={dartViewerUrl(SAMSUNG_OP.h1_2026.source.rcpNo)} target="_blank" rel="noopener noreferrer">반기보고서(2026-08-14)</a>·<a className="underline" href={dartViewerUrl(SAMSUNG_OP.q1_2026.source.rcpNo)} target="_blank" rel="noopener noreferrer">1분기보고서(2026-05-15)</a> 요약연결재무정보.</>
+                  <>출처: DART 삼성전자 <a className="underline" href={dartViewerUrl(SAMSUNG_OP.q1q3_2026.source.rcpNo)} target="_blank" rel="noopener noreferrer">분기보고서(2026-11-16)</a>·<a className="underline" href={dartViewerUrl(SAMSUNG_OP.h1_2026.source.rcpNo)} target="_blank" rel="noopener noreferrer">반기보고서(2026-08-14)</a> 요약연결재무정보.</>
                 ) : (
-                  <>출처: DART SK하이닉스 사업보고서(2021~2025)·<a className="underline" href={dartViewerUrl(SK_OP_2026.h1.source.rcpNo)} target="_blank" rel="noopener noreferrer">반기보고서(2026-08-14)</a>·<a className="underline" href={dartViewerUrl(SK_OP_2026.q1.source.rcpNo)} target="_blank" rel="noopener noreferrer">1분기보고서(2026-05-15)</a> 요약연결재무정보.</>
+                  <>출처: DART SK하이닉스 사업보고서(2021~2025)·<a className="underline" href={dartViewerUrl(SK_OP_2026.q1q3.source.rcpNo)} target="_blank" rel="noopener noreferrer">분기보고서(2026-11-16)</a>·<a className="underline" href={dartViewerUrl(SK_OP_2026.h1.source.rcpNo)} target="_blank" rel="noopener noreferrer">반기보고서(2026-08-14)</a> 요약연결재무정보.</>
                 )}
               </p>
             </details>
@@ -420,7 +421,7 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
           <li>대출 한도는 직전 연도 총급여({raw.dsrIncludeBonus ? "연봉 + 그해 받은 성과급" : "연봉만"})로 DSR 을 계산합니다. 은행은 통상 전년도 원천징수영수증 총급여 기준 — 은행별 상이.</li>
           <li>세후는 연봉에 성과급을 더한 연간 결정세액 차이와 4대보험(2026년 요율·세율 기준)입니다. 2027년 이후 세법·요율 변화는 반영하지 않습니다.</li>
           {comp.afterHorizon.length > 0 && (
-            <li>이후 수령분: {comp.afterHorizon.map((a) => `${a.year}년 ${a.label} ${fmtEokShort(a.value)}`).join(" · ")} — 2031년 판정에는 넣지 않았습니다.</li>
+            <li>이후 수령분: {comp.afterHorizon.map((a) => `${a.year}년 ${a.label} ${fmtEokShort(a.value)}`).join(" · ")} — 2031년 판정에서 뺐습니다.</li>
           )}
         </ul>
       </section>
@@ -544,7 +545,7 @@ export default function BonusHomePlanClient({ initial }: { initial?: Partial<Raw
         <ul className="mt-3 list-disc space-y-1 pl-5 text-xs leading-relaxed text-muted-blue dark:text-canvas-300">
           <li>출처: 한국부동산원 전국주택가격동향조사, {MARKET_SNAPSHOT.rone.monthLabel} — (월) 중위매매가격_아파트, 시·군·구 (<a className="underline" href={MARKET_SNAPSHOT.rone.sourceUrl} target="_blank" rel="noopener noreferrer">R-ONE</a>, {MARKET_SNAPSHOT.fetchedAt} 수집)</li>
           <li>출처: 한국은행 경제통계시스템(ECOS) — 예금은행 주택담보대출 금리(신규취급액), {MARKET_SNAPSHOT.ecos.monthLabel}</li>
-          <li>영업이익: DART 삼성전자·SK하이닉스 정기보고서 요약연결재무정보(2026 반기보고서 2026-08-14 등)</li>
+          <li>영업이익: DART 삼성전자·SK하이닉스 분기보고서 연결·부문 영업이익(2026-11-16 등)</li>
           <li>성과급 제도: 삼성전자 2026 임금협약(2026-05-27 가결)·2025년분 OPI·2026 상반기 TAI, SK하이닉스 2026 임단협(2026-09-16 가결) — 모두 보도 기준</li>
           {LOAN_RULE_SOURCES.map((src) => (
             <li key={src.url}>

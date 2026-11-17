@@ -18,8 +18,10 @@ function GrantTable({ grants, empty }: { grants: LeaveGrant[]; empty: string }) 
   if (grants.length === 0) {
     return <p className="text-sm text-muted-blue px-1 py-3">{empty}</p>;
   }
-  // 최근 발생분이 위로
-  const rows = [...grants].reverse().slice(0, 14);
+  // 최근 발생분이 위로 — 발생일 내림차순. fiscalYearSchedule 은 월 단위 발생분을 먼저, 1/1 발생분을 나중에 넣어서
+  // 단순 reverse 는 입사일이 2/1 뒤면 1/1 비례연차 행이 더 늦은 날짜 행 위에 왔다(2026-11-18 N2-calc-17 calc-01-F10).
+  // 같은 날짜는 종전처럼 나중에 넣은 행이 위(reverse 뒤 안정 정렬). 행 수·생략 수는 종전과 같다(언제나 min(14, 전체)).
+  const rows = [...grants].reverse().sort((a, b) => (a.grantDate < b.grantDate ? 1 : a.grantDate > b.grantDate ? -1 : 0)).slice(0, 14);
   const hidden = grants.length - rows.length;
   return (
     <div className="overflow-x-auto">

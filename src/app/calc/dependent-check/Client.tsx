@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Link from "@/components/AppLink";
 import { CalcResultAd } from "@/components/AdPlacement";
 import { CheckCircle2, XCircle, ArrowRight } from "lucide-react";
@@ -84,6 +84,84 @@ function OptionButton({
   );
 }
 
+type Verdict = NonNullable<ReturnType<typeof judgeDependent>>;
+
+// 판정 카드 — 정상 판정이면 그대로, 입력 중(hidden)이면 마지막 정상 판정을 보이지 않게 같은 격자 칸에 그려 자리만 차지한다.
+// hidden 이 false 일 때의 마크업은 2026-11-18 이전 인라인 카드와 바이트 단위로 같다(className·style, aria-hidden 없음).
+function renderVerdictCard(
+  verdict: Verdict,
+  relation: DependentRelation,
+  extras: { label: string; amount: number }[],
+  hidden = false,
+) {
+  return (
+        <div
+          className={hidden ? "invisible col-start-1 row-start-1 rounded-2xl overflow-hidden" : "rounded-2xl overflow-hidden"}
+          aria-hidden={hidden ? "true" : undefined}
+          style={{ boxShadow: verdict.eligible ? "0 8px 40px #0145F225" : "0 8px 40px #0F172A20" }}
+        >
+          <div
+            className="px-8 py-8 text-center"
+            style={{
+              background: verdict.eligible
+                ? "linear-gradient(135deg, #0145F2 0%, #0D5BFF 100%)"
+                : "linear-gradient(135deg, #334155 0%, #475569 100%)",
+            }}
+          >
+            <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.65)" }}>
+              {RELATION_LABEL[relation]} — 2026년 귀속 판정
+            </p>
+            <div className="text-4xl sm:text-5xl font-black tracking-tight text-white" style={{ letterSpacing: "-0.04em" }}>
+              {verdict.eligible ? `기본공제 ${fmtMan(verdict.basicDeduction)} 가능` : "기본공제 불가"}
+            </div>
+            <p className="text-sm font-bold mt-2" style={{ color: "rgba(255,255,255,0.7)" }}>
+              {verdict.eligible
+                ? `추가공제 포함 소득공제 합계 ${fmtMan(verdict.totalDeduction)} — 과세표준에서 차감`
+                : "아래 미충족 요건을 확인하세요. 요건이 하나라도 어긋나면 공제 대상이 아닙니다."}
+            </p>
+          </div>
+
+          <div className="bg-white dark:bg-canvas-900 px-6 py-5 space-y-3">
+            {verdict.checks.map((c) => (
+              <div key={c.key} className="flex items-start gap-3 border-b border-canvas-100 dark:border-canvas-800 pb-3">
+                {c.ok ? (
+                  <CheckCircle2 size={18} className="text-electric flex-shrink-0 mt-0.5" />
+                ) : (
+                  <XCircle size={18} className="text-red-500 flex-shrink-0 mt-0.5" />
+                )}
+                <div>
+                  <div className={`text-sm font-black ${c.ok ? "text-navy dark:text-canvas-50" : "text-red-500"}`}>
+                    {c.title} {c.ok ? "충족" : "미충족"}
+                  </div>
+                  <div className="text-xs text-muted-blue dark:text-canvas-300 leading-relaxed mt-0.5">{c.detail}</div>
+                </div>
+              </div>
+            ))}
+
+            {verdict.eligible && extras.length > 0 && (
+              <div className="pt-1">
+                <p className="text-xs font-black uppercase tracking-widest text-faint-blue mb-2">추가공제</p>
+                {extras.map((ex) => (
+                  <div key={ex.label} className="flex items-baseline justify-between gap-3 text-sm py-1">
+                    <span className="font-bold text-navy dark:text-canvas-50">{ex.label}</span>
+                    <span className="font-black tabular-nums text-electric shrink-0">+{fmtMan(ex.amount)}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* ★소득요건 기준연도 안내 — 2026 귀속(이번 정산)은 100만원이 정답 */}
+            <div className="rounded-xl px-4 py-3 bg-canvas-50 dark:bg-canvas-800 text-[11px] text-muted-blue dark:text-canvas-300 leading-relaxed">
+              이 판정은 <strong className="text-navy dark:text-canvas-50">2026년 귀속분(2027년 1~2월 정산)</strong> 기준으로,
+              소득요건은 연간 소득금액 <strong className="text-navy dark:text-canvas-50">100만원 이하</strong>(근로소득만 있으면 총급여
+              500만원 이하)입니다. 2026년 8월 3일 발표된 세제개편안의 <strong className="text-navy dark:text-canvas-50">300만원 완화</strong>는
+              국회를 통과해야 하며, 통과 시에도 <strong className="text-navy dark:text-canvas-50">2027년 귀속분(2028년 초 정산)부터</strong> 적용됩니다.
+            </div>
+          </div>
+        </div>
+  );
+}
+
 export default function DependentCheckClient() {
   const [relation, setRelation] = useState<DependentRelation>("ascendant");
   const [birthYearStr, setBirthYearStr] = useState("1958");
@@ -119,6 +197,15 @@ export default function DependentCheckClient() {
           : []),
       ]
     : [];
+
+  // 입력 중 결과 자리 유지 (2026-11-18 N2-calc-20, 운영자 승인 2026-11-17 — 2026-11-01 자녀공제 B08 과 같은 방식).
+  // 출생연도를 고쳐 쓰는 동안(예: 1958 을 지우고 1962 를 입력하는 중 '195') verdict 가 null 이 되면 종전에는 판정 카드 전체가
+  // 한 줄 안내로 줄어 바로 아래 CalcResultAd 가 입력칸 밑까지 올라왔다가 넷째 자리에서 다시 내려갔다. 마지막 정상 판정을 보관해 두고,
+  // 그 카드를 보이지 않게(invisible·aria-hidden) 같은 격자 칸에 남긴 채 안내 문장을 겹쳐 높이를 유지한다. 첫 렌더는 언제나 정상(1958)이라
+  // 서버 HTML·첫 화면 광고 위치는 바이트 단위로 그대로다.
+  const lastValid = useRef<{ verdict: NonNullable<typeof verdict>; relation: DependentRelation; extras: typeof extras; age: number } | null>(null);
+  if (verdict) lastValid.current = { verdict, relation, extras, age: ageInTaxYear(birthYear) };
+  const held = verdict ? null : lastValid.current;
 
   return (
     <div className="space-y-5 mb-10">
@@ -157,11 +244,16 @@ export default function DependentCheckClient() {
               className="w-full rounded-xl px-4 py-4 text-lg font-black bg-canvas-50 dark:bg-canvas-800 border border-canvas-200 dark:border-canvas-700 text-navy dark:text-canvas-50 focus:outline-none focus:ring-2 focus:ring-electric/50"
               aria-label="출생연도"
             />
-            {birthYearValid && (
+            {birthYearValid ? (
               <p className="text-[11px] text-faint-blue mt-1.5">
                 2026년 귀속 기준 만 {ageInTaxYear(birthYear)}세로 판정합니다.
               </p>
-            )}
+            ) : held ? (
+              // 입력 중에도 이 줄 자리를 남긴다(휴대폰 한 칸 배치에서 광고가 한 번 더 오르내리던 것) — 마지막 정상 나이로, 보이지 않게
+              <p aria-hidden="true" className="invisible text-[11px] text-faint-blue mt-1.5">
+                2026년 귀속 기준 만 {held.age}세로 판정합니다.
+              </p>
+            ) : null}
           </div>
           <div>
             <p className="text-xs font-bold tracking-tight mb-2 text-faint-blue">
@@ -238,71 +330,19 @@ export default function DependentCheckClient() {
       </div>
 
       {/* 판정 결과 */}
-      {!verdict ? (
+      {verdict ? (
+        renderVerdictCard(verdict, relation, extras)
+      ) : held ? (
+        <div className="grid">
+          {renderVerdictCard(held.verdict, held.relation, held.extras, true)}
+          <p className="col-start-1 row-start-1 self-center text-sm font-bold text-muted-blue text-center py-4">
+            출생연도 4자리를 입력하면 즉시 판정됩니다.
+          </p>
+        </div>
+      ) : (
         <p className="text-sm font-bold text-muted-blue text-center py-4">
           출생연도 4자리를 입력하면 즉시 판정됩니다.
         </p>
-      ) : (
-        <div className="rounded-2xl overflow-hidden" style={{ boxShadow: verdict.eligible ? "0 8px 40px #0145F225" : "0 8px 40px #0F172A20" }}>
-          <div
-            className="px-8 py-8 text-center"
-            style={{
-              background: verdict.eligible
-                ? "linear-gradient(135deg, #0145F2 0%, #0D5BFF 100%)"
-                : "linear-gradient(135deg, #334155 0%, #475569 100%)",
-            }}
-          >
-            <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.65)" }}>
-              {RELATION_LABEL[relation]} — 2026년 귀속 판정
-            </p>
-            <div className="text-4xl sm:text-5xl font-black tracking-tight text-white" style={{ letterSpacing: "-0.04em" }}>
-              {verdict.eligible ? `기본공제 ${fmtMan(verdict.basicDeduction)} 가능` : "기본공제 불가"}
-            </div>
-            <p className="text-sm font-bold mt-2" style={{ color: "rgba(255,255,255,0.7)" }}>
-              {verdict.eligible
-                ? `추가공제 포함 소득공제 합계 ${fmtMan(verdict.totalDeduction)} — 과세표준에서 차감`
-                : "아래 미충족 요건을 확인하세요. 요건이 하나라도 어긋나면 공제 대상이 아닙니다."}
-            </p>
-          </div>
-
-          <div className="bg-white dark:bg-canvas-900 px-6 py-5 space-y-3">
-            {verdict.checks.map((c) => (
-              <div key={c.key} className="flex items-start gap-3 border-b border-canvas-100 dark:border-canvas-800 pb-3">
-                {c.ok ? (
-                  <CheckCircle2 size={18} className="text-electric flex-shrink-0 mt-0.5" />
-                ) : (
-                  <XCircle size={18} className="text-red-500 flex-shrink-0 mt-0.5" />
-                )}
-                <div>
-                  <div className={`text-sm font-black ${c.ok ? "text-navy dark:text-canvas-50" : "text-red-500"}`}>
-                    {c.title} {c.ok ? "충족" : "미충족"}
-                  </div>
-                  <div className="text-xs text-muted-blue dark:text-canvas-300 leading-relaxed mt-0.5">{c.detail}</div>
-                </div>
-              </div>
-            ))}
-
-            {verdict.eligible && extras.length > 0 && (
-              <div className="pt-1">
-                <p className="text-xs font-black uppercase tracking-widest text-faint-blue mb-2">추가공제</p>
-                {extras.map((ex) => (
-                  <div key={ex.label} className="flex items-baseline justify-between gap-3 text-sm py-1">
-                    <span className="font-bold text-navy dark:text-canvas-50">{ex.label}</span>
-                    <span className="font-black tabular-nums text-electric shrink-0">+{fmtMan(ex.amount)}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* ★소득요건 기준연도 안내 — 2026 귀속(이번 정산)은 100만원이 정답 */}
-            <div className="rounded-xl px-4 py-3 bg-canvas-50 dark:bg-canvas-800 text-[11px] text-muted-blue dark:text-canvas-300 leading-relaxed">
-              이 판정은 <strong className="text-navy dark:text-canvas-50">2026년 귀속분(2027년 1~2월 정산)</strong> 기준으로,
-              소득요건은 연간 소득금액 <strong className="text-navy dark:text-canvas-50">100만원 이하</strong>(근로소득만 있으면 총급여
-              500만원 이하)입니다. 2026년 8월 3일 발표된 세제개편안의 <strong className="text-navy dark:text-canvas-50">300만원 완화</strong>는
-              국회를 통과해야 하며, 통과 시에도 <strong className="text-navy dark:text-canvas-50">2027년 귀속분(2028년 초 정산)부터</strong> 적용됩니다.
-            </div>
-          </div>
-        </div>
       )}
 
       {/* 결과 직하 광고 */}

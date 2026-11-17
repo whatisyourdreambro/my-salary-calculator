@@ -15,12 +15,20 @@ import { GuideMidAd, InArticleAd } from "@/components/AdPlacement";
 import { Sparkles, Info } from "lucide-react";
 import HolidayBonusClient from "./Client";
 import { staticRouteLastModified } from "@/app/sitemap";
+import { calcBonusNet } from "@/lib/bonusTaxCalc";
+
+// 2026-11-18 N2-calc-17 calc-02-F16: FAQ 3 예시의 4대보험 금액은 계산기와 같은 엔진·현행 요율 포인터에서 만든다
+// (오늘 97,174원 -> 약 9.7만원, 2027 요율로 바뀌면 약 10.0만원). 소득세·실수령 예시는 2027 요율에서도 같은 반올림값이다.
+const FAQ_EXAMPLE = calcBonusNet(24_000_000, 1_000_000);
+const HOLIDAY_FAQ_INSURANCE_MAN = ((FAQ_EXAMPLE.pensionDelta + FAQ_EXAMPLE.healthDelta + FAQ_EXAMPLE.empInsDelta) / 10_000).toFixed(1);
 
 const FAQ_ITEMS = [
   {
     question: "명절 상여금에도 세금이 붙나요?",
     answer:
-      "네, 명절 상여금(설·추석 보너스)도 근로소득에 포함되어 소득세와 4대보험이 부과됩니다. 회사가 명절에 일시 지급하더라도 정기 상여금으로 분류되면 4대보험 부과 대상이 되며, 비정기 일회성 격려금이라도 소득세는 동일하게 부과됩니다.",
+      // 2026-11-18 N2-calc-17 calc-02-F13: 정기·비정기 구분은 4대보험 부과와 무관 — 닫힌 FAQ(JSON-LD 같은 문장).
+      // 펼치면 calc/layout 광고 위라 종전 답보다 넓지 않게('과세되는'·'모두' 생략, 줄 모형 0폭).
+      "네, 명절 상여금(설·추석 보너스)도 근로소득에 포함되어 소득세와 4대보험이 부과됩니다. 정기 상여든 비정기 격려금이든 과세 근로소득이면 소득세와 4대보험 보수에 포함됩니다(국민연금법 시행령 제3조, 국민건강보험법 제70조).",
   },
   {
     question: "명절 상여금이 비과세 처리되는 경우가 있나요?",
@@ -34,7 +42,7 @@ const FAQ_ITEMS = [
   {
     question: "100만원 미만이면 세금이 거의 안 붙는다고 들었는데요?",
     answer:
-      "과세표준이 6% 구간인 저소득층은 근로소득세액공제(산출세액의 55%)까지 반영돼 소득세 부담이 작습니다. 예를 들어 연봉 2,400만원에 명절 상여금 100만원이면 소득세 약 2만원 + 지방세 약 2천원 + 4대보험 약 9.7만원으로 실수령 약 88만원, 연봉 9,000만원이면 실수령 약 71만원입니다. 본 계산기로 정확히 확인 가능합니다.",
+      `과세표준이 6% 구간인 저소득층은 근로소득세액공제(산출세액의 55%)까지 반영돼 소득세 부담이 작습니다. 예를 들어 연봉 2,400만원에 명절 상여금 100만원이면 소득세 약 2만원 + 지방세 약 2천원 + 4대보험 약 ${HOLIDAY_FAQ_INSURANCE_MAN}만원으로 실수령 약 88만원, 연봉 9,000만원이면 실수령 약 71만원입니다. 본 계산기로 정확히 확인 가능합니다.`,
   },
   {
     question: "명절 상여금 절세 방법은?",
@@ -67,7 +75,7 @@ export const metadata: Metadata = buildToolMetadata({
   name: "명절·휴가비 상여금 세금 계산기",
   tagline: "설·추석 보너스와 여름휴가비 실수령액",
   description:
-    "설·추석 명절 상여금과 여름휴가비의 세금·4대보험을 2026년 세법 기준으로 계산합니다. 한계세율별 실수령액 비교, 비과세 항목 안내, 지급 의무 여부까지.",
+    `설·추석 명절 상여금과 여름휴가비의 세금·4대보험을 ${CURRENT_RATES_YEAR}년 세법 기준으로 계산합니다. 한계세율별 실수령액 비교, 비과세 항목 안내, 지급 의무 여부까지.`,
   path: "/calc/holiday-bonus",
   keywords: [
     "명절 상여금",
@@ -134,10 +142,12 @@ export default function HolidayBonusPage() {
             <h2 className="text-2xl font-black text-navy dark:text-canvas-50 mt-8 mb-4">
               명절 상여금 vs 정기 보너스
             </h2>
+            {/* 2026-11-18 N2-calc-17 calc-02-F13: 정기·비정기 구분 없이 과세 근로소득이면 4대보험 보수에 들어간다
+                (국민연금법 시행령 제3조 — 소득세법 제20조 근로소득 − 비과세, 국민건강보험법 제70조·시행령 제33조 — 보수에 상여 포함).
+                비정기 격려금이면 연금이 빠질 수 있다던 종전 문장은 틀렸다. InArticleAd 위 — 종전 문단보다 모든 폭에서 줄 수가 같거나 적다. */}
             <p className="text-muted-blue dark:text-canvas-300 leading-relaxed">
-              회사가 명절 상여를 <strong>정기 상여금</strong>으로 분류하면 4대보험 부과 대상이 됩니다. 반면
-              <strong> 비정기 격려금</strong>으로 분류하면 4대보험은 일부만(국민연금 제외) 부과될 수 있습니다.
-              취업규칙에 명시된 정기 지급이라면 정기 상여로 봅니다.
+              명절 상여는 <strong>정기 상여금</strong>이든 <strong>비정기 격려금</strong>이든 과세 근로소득이면 4대보험
+              보수에 포함됩니다. 건강·고용보험은 다음 해 보수총액 정산 때, 국민연금은 이후 기준소득월액 결정 때 반영됩니다.
             </p>
           </article>
 
