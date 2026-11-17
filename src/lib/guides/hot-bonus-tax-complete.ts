@@ -906,11 +906,11 @@ const incomeAdjustmentTotal = `
 <h2 class="mt-12 text-2xl font-bold text-primary">📊 종합 정산 시뮬 (영끌 2억)</h2>
 <p>연봉 7,000만 + 성과급 5,000만 + 임대소득 3,000만 + 배당 2,000만 + 사업소득 3,000만:</p>
 <ul class="space-y-2 mt-4">
-<li>· 종합소득 총: 2억</li>
-<li>· 종합소득세: 약 4,500만</li>
-<li>· 지방세: 450만</li>
+<li>· 종합과세: 1.8억</li>
+<li>· 소득세: 약 4,100만</li>
+<li>· 지방세: 410만</li>
 <li>· 4대보험 정산 추가: 약 800만</li>
-<li>· <strong>총 추가 부담: 약 5,750만</strong></li>
+<li>· <strong>총 부담: 약 5,300만</strong></li>
 </ul>
 
 <h2 class="mt-12 text-2xl font-bold text-primary">🎯 분산 절세</h2>
@@ -1323,7 +1323,7 @@ export const hotBonusTaxComplete: Guide[] = [
     lang: "ko",
   },
   { slug: "dependent-check-before-bonus-2026", title: "성과급 받기 전 가족 피부양자 점검 — 소득 2,000만 + 박탈", description: "본인 성과급으로 피부양자 자격 직접 영향 없음. 단 가족 소득 합산 2,000만+ 또는 임대소득 시 박탈 → 지역보험료 부담.", category: "기초", tags: ["피부양자", "건강보험", "성과급", "지역가입자", "2026"], level: "고급", modifiedDate: "2026-10-03", publishedDate: "2026-05-23", views: 0, content: dependentBeforeBonus, lang: "ko" },
-  { slug: "total-income-adjustment-bonus-2026", title: "성과급 + 임대 + 금융 + 사업 종합 정산 — 영끌 2억 시 추가 5,750만", description: "성과급 5,000만 + 임대 3,000만 + 배당 2,000만 + 사업 3,000만 = 영끌 2억. 종소세 4,500만 + 지방세 + 정산 800만 = 약 5,750만 추가.", category: "기초", tags: ["종합과세", "성과급", "임대소득", "정산", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: incomeAdjustmentTotal, lang: "ko" },
+  { slug: "total-income-adjustment-bonus-2026", title: "성과급 + 임대 + 금융 + 사업 종합정산 — 영끌 2억 시 부담 5,300만", description: "성과급 5,000만 + 임대 3,000만 + 배당 2,000만 + 사업 3,000만 = 영끌 2억. 소득세 4,100만 + 지방세 + 정산 800만 = 약 5,300만 부담.", category: "기초", tags: ["종합과세", "성과급", "임대소득", "정산", "2026"], level: "고급", publishedDate: "2026-05-23", views: 0, content: incomeAdjustmentTotal, lang: "ko" },
   { slug: "optional-continue-after-bonus-2026", title: "성과급 큰 임원 퇴직 후 임의계속가입 — 신청 기한·36개월", description: "성과급 큰 임원이 퇴직하면 지역보험료가 커질 수 있다. 임의계속가입은 퇴직 전 12개월 평균 보수월액 기준으로 최대 36개월.", category: "기초", tags: ["임의계속가입", "퇴직", "건강보험", "임원", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: optionalContinueAfterBonus, lang: "ko" },
   // 영역 D — 성과급 절세 심화 10편
   { slug: "gift-children-with-bonus-2026", title: "성과급 받는 해 자녀 5,000만 증여 — 평생 1.4억+ 비과세", description: "성인 자녀 10년 5,000만 비과세. 본인 성과급 절세 + 자녀 자산 형성 + 세대 간 이전 효과. 10년 반복 시 평생 1.4억+ 비과세.", category: "세금", tags: ["증여", "자녀", "비과세", "5000만", "2026"], level: "중급", publishedDate: "2026-05-23", views: 0, content: giftWithBonus, lang: "ko" },
