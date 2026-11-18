@@ -72,6 +72,9 @@ describe("R4 PRIVKO /privacy — 카카오톡 공유 고지와 개인정보의 �
     expect(s8).toContain("이전을 거부하는 방법·절차와 효과:"); // 5.
     expect(s8).toContain("해당 기능을 이용할 수 없습니다");
     expect(s8).toContain("호스팅 제공자의 접속 로그 처리");
+    // 검토 수정: 시험용 끄기(src/lib/liveAds.ts hasLiveServicesOptOut)가 코드에 있으므로 '끌 수 없다'가 아니라 '방문자용 설정이 없다'로 적는다.
+    expect(s8).toContain("끄는 설정은 사이트에서 제공하지 않습니다");
+    expect(s8).not.toContain("사이트에서 끌 수 없습니다");
   });
 
   it("section 8 names Cloudflare, Inc. and Google LLC with their verified contacts, and no Korean company", () => {
