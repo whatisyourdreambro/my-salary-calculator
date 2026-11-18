@@ -207,9 +207,14 @@ test('real audit of 2026-11-18: blocked while PENDING, clear only with a dated d
   assert.deepEqual(names(before.accepted), ['minimatch']);
   assert.deepEqual(before.ownerAccepted, []);
   assert.equal(before.ownerRefused.length, 1);
-  // The committed list itself: while its picomatch entry is PENDING the real audit stays blocked.
+  // The committed list itself: while its picomatch entry is PENDING the real audit stays blocked;
+  // once the owner's decision date is committed it is clear inside the window and blocked after it.
   if (OWNER_APPROVED_ADVISORIES.some(e => e.id === PICO && e.ownerDecision === 'PENDING'))
     assert.equal(classifyAdvisories(data.audit, data.lock, '2026-11-18').blocked.length, 21, 'a PENDING entry must not open the gate');
+  else if (OWNER_APPROVED_ADVISORIES.some(e => e.id === PICO)) {
+    assert.deepEqual(classifyAdvisories(data.audit, data.lock, '2026-11-18').blocked, [], 'the dated committed entry opens the gate inside its window');
+    assert.equal(classifyAdvisories(data.audit, data.lock, '2026-12-19').blocked.length, 21, 'the committed entry ends after its expiry (UTC)');
+  }
   const after = classifyAdvisories(data.audit, data.lock, '2026-11-19', REVIEWED_DEV_ADVISORIES, [approved]);
   assert.deepEqual(after.blocked, []);
   assert.deepEqual(names(after.accepted), ['minimatch']);

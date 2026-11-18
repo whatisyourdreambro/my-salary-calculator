@@ -8,11 +8,12 @@
 // exceptions. An unreviewed advisory is never auto-accepted or reduced to a
 // warning, whatever its severity; changing that needs a new owner decision.
 //
-// PROPOSAL 2026-11-18 (pending, not in force): OWNER_APPROVED_ADVISORIES below is a
-// second, separate list for an advisory the dev-only list can never cover (high, or
-// not dev-only in the lockfile) and for which no patched release exists. It changes
-// nothing until the owner answers: an entry whose `ownerDecision` is not a date is
-// refused, so the gate keeps failing exactly as before.
+// Owner decision 2026-11-18 (KST): OWNER_APPROVED_ADVISORIES below is a second,
+// separate list for an advisory the dev-only list can never cover (high, or not
+// dev-only in the lockfile) and for which no patched release exists. The owner approved
+// its single entry exactly as proposed; it is in force until 2026-12-18 UTC (blocks
+// again from 2026-12-19 09:00 KST); look at the advisory again around 2026-12-15. An
+// entry whose `ownerDecision` is not a date (PENDING) is still refused.
 
 // Add an entry only after review, at most 183 days ahead (tests enforce this).
 // When it expires the advisory blocks again and must be re-reviewed.
@@ -55,7 +56,7 @@ export const REVIEWED_DEV_ADVISORIES = Object.freeze([
 export const OWNER_EXCEPTION_MAX_DAYS = 31;
 export const OWNER_EXCEPTION_MAX_ENTRIES = 3;
 export const OWNER_APPROVED_ADVISORIES = Object.freeze([
-  Object.freeze({ id: 'GHSA-fc5q-39xc-vjpf', package: 'picomatch', reviewed: '2026-11-18', expires: '2026-12-18', ownerDecision: 'PENDING',
+  Object.freeze({ id: 'GHSA-fc5q-39xc-vjpf', package: 'picomatch', reviewed: '2026-11-18', expires: '2026-12-18', ownerDecision: '2026-11-18',
     reason: 'No patched picomatch release exists on any line (range <=4.0.7, no first patched version; the maintainer declined the report on 2026-10-21). The flaw needs an attacker-chosen glob pattern; here every pattern comes from repository config (Tailwind content globs, ESLint, Vitest, TypeScript tooling) and the deployed Pages Worker bundles no npm package at all. Remove when a patched release is adopted or the advisory is withdrawn.' }),
 ]);
 const TOLERABLE = new Set(['info', 'low', 'moderate']);
