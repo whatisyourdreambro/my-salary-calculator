@@ -13,10 +13,13 @@
 //   찬반투표 찬성률 보도는 찾지 못해 쓰지 않는다. 현대차 2026: 8/31 가결·9/1 보도(400%+1,270만·주식 15주).
 //   운영자 승인 2026-11-17(N2-calc-19): Client.tsx 기본 시나리오를 2026 타결로(버튼 수 유지), 광고 위 배지·소개·
 //   합의 구조 상자·안내 상자·출처 문구는 같은 폭 이하로 교체(src/lib/__tests__/r4MobisSettled2026.test.ts).
-//   성과급 허브 카드·회사 페이지 계산기 안내(N2-data-09)는 승인 전이라 '2025 타결' 그대로 둔다.
+//   성과급 허브 카드·회사 페이지 계산기 안내(N2-data-09)는 2026-11-18 운영자 승인으로 같은 날 '2026 임단협 타결 400% +
+//   1,320만 + 주식 8주'로 바뀌었다(src/data/bonusCalcHub.ts·src/components/CompanyBonusCalculatorLink.tsx, R4 DATA2 90824b324,
+//   src/lib/__tests__/r4bData2MobisHook.test.ts 가 이 계산기의 2026 타결 값과 같음을 고정).
 //   운영자 승인 2026-11-18(질문 C-11, 광고가 내려가지 않을 때만): Client.tsx 주가 기본값 28만 → DART 공시 처분가
-//   353,000원(10/29 종가), 빠른 값 버튼 27·32·37·42만, 세후 줄의 '세전 ' 앞말 삭제(줄이 넓어지지 않게), '주식 8주' FAQ 답은
-//   같은 폭 이하로 기본값·8주 평가액(282만 4,000원)을 적는다(src/lib/__tests__/r4bMisc2MobisPrice.test.ts).
+//   353,000원(10/29 종가), 빠른 값 버튼 27·32·37·42만, '주식 8주' FAQ 답은 같은 폭 이하로 기본값·8주 평가액(282만 4,000원)을
+//   적는다(src/lib/__tests__/r4bMisc2MobisPrice.test.ts). 세후 줄 문구는 게시 가지 next-1120 의 통합 검토 RV-01(8893a94b8)
+//   'X − 공제 Y (실효 Z%)' 다(MISC2 는 같은 줄에서 '세전 ' 만 뺐고, R4 통합이 더 짧은 게시 가지 문구를 남겼다).
 
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
