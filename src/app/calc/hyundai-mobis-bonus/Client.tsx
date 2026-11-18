@@ -37,7 +37,12 @@ const SCENARIOS = [
 ] as const;
 
 const DEFAULT_SALARY_MANWON = 500;
-const DEFAULT_MOBIS_STOCK = 280_000; // 현대모비스 보통주 — 지급 시점 주가로 직접 수정 권장
+// 주가 기본값 = DART 2026-10-30 주요사항보고서(자기주식처분결정, rcpNo 20261030000571)의 처분 대상 주식가격(보통주)
+//   353,000원 — 이사회 결의 전일(2026-10-29) 종가이고, 공시는 '향후 주가 변동에 따라 변동될 수 있음'이라고 적는다.
+//   지급일(11/30) 주가 예측이 아니라 날짜가 박힌 공시 기준가다. 2026-11-18 다시 읽어 확인.
+// 2026-11-18 운영자 승인(질문 C-11, 광고가 내려가지 않을 때만): 28만 → 35.3만, 빠른 값 버튼 24·28·32·36만 → 27·32·37·42만
+//   (버튼 수 그대로, 라벨 폭은 자리마다 종전 이하). 폭 확인은 src/lib/__tests__/r4bMisc2MobisPrice.test.ts.
+const DEFAULT_MOBIS_STOCK = 353_000;
 
 export default function HyundaiMobisBonusClient() {
   const [scenarioId, setScenarioId] = useState<(typeof SCENARIOS)[number]["id"]>("2026-settled");
@@ -202,7 +207,7 @@ export default function HyundaiMobisBonusClient() {
           />
         </label>
         <div className="mt-3 grid grid-cols-4 gap-2">
-          {[240_000, 280_000, 320_000, 360_000].map((p) => (
+          {[270_000, 320_000, 370_000, 420_000].map((p) => (
             <button
               key={p}
               type="button"
@@ -214,7 +219,7 @@ export default function HyundaiMobisBonusClient() {
           ))}
         </div>
         <p className="mt-2 text-xs text-faint">
-          우리사주 평가액은 지급 시점 주가에 따라 달라집니다. 현재가를 확인해 직접 입력하세요.
+          기본값은 DART 10/30 공시 처분가(10/29 종가). 지급일 주가로 고쳐 입력하세요.
         </p>
       </section>
 
@@ -284,8 +289,10 @@ export default function HyundaiMobisBonusClient() {
           <p className="text-2xl sm:text-3xl font-black tabular-nums">
             {fmtEok(calc.tax.net)}
           </p>
+          {/* '세전 ' 앞말은 뺐다(C-11, 2026-11-18) — 바로 위 '총 성과급 (세전)' 상자와 같은 값이고, 기본 주가 35.3만에서
+              이 줄이 종전(28만, '세전 3,594만원 − 공제 1,221만원 (실효세율 34%)')보다 넓어져 결과 광고 위 상자가 한 줄 늘지 않게 */}
           <p className="text-xs text-faint mt-1">
-            세전 {fmtEok(calc.totalGross)} − 공제 {fmtEok(calc.tax.totalDeductions)}{" "}
+            {fmtEok(calc.totalGross)} − 공제 {fmtEok(calc.tax.totalDeductions)}{" "}
             (실효세율 <strong>{calc.tax.effectiveRate}%</strong>)
           </p>
         </div>

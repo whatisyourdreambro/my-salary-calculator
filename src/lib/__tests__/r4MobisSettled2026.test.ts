@@ -42,15 +42,16 @@ const text = (html: string) => norm(html.replace(/<[^>]+>/g, " ").replace(/&amp;
 describe("계산기 기본값 = 2026 임단협 타결 (버튼 수 그대로)", () => {
   beforeEach(() => { observed.gross = []; });
 
-  it("첫 화면: 2026 타결 칩이 기본 선택이고 세전 합계는 3,594만원(기본급 500만·주가 28만)", () => {
+  it("첫 화면: 2026 타결 칩이 기본 선택이고 세전 합계는 3,652만원(기본급 500만·주가 35.3만 = DART 공시 처분가, C-11)", () => {
     const html = renderToStaticMarkup(createElement(MobisClient));
-    // 500만 × 400% + 1,320만 + 8주 × 28만 + 복지포인트 50만
-    expect(observed.gross).toEqual([20_000_000 + 13_200_000 + 8 * 280_000 + 500_000]);
-    expect(observed.gross[0]).toBe(35_940_000);
+    // 500만 × 400% + 1,320만 + 8주 × 35.3만 + 복지포인트 50만 — 주가 기본값은 2026-11-18 C-11 로 28만 → 35.3만
+    // (r4bMisc2MobisPrice.test.ts 가 기본값·버튼·폭을 고정한다)
+    expect(observed.gross).toEqual([20_000_000 + 13_200_000 + 8 * 353_000 + 500_000]);
+    expect(observed.gross[0]).toBe(36_524_000);
     const t = text(html);
-    expect(t).toContain("3,594만원");
+    expect(t).toContain("3,652만원");
     expect(t).toContain("= 월 기본급 500만 × 400%");
-    expect(t).toContain("8주 × 28만원");
+    expect(t).toContain("8주 × 35.3만원");
     expect(t).toContain("포인트·상품권");
     expect(t).toContain("포인트·상품권 50만원 복지포인트");
     // 시나리오 칩 2개(2026 → 2025) + 직접 입력 버튼 1개 — 칩이 늘면 광고 위 높이가 늘어난다
