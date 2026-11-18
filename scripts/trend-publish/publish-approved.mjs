@@ -15,7 +15,8 @@
 //   (--retire 는 되돌리기라 HALT·달력·한도·결정 대기·REVIEWED_UNTIL·PUBLISH_ENABLED 를 보지 않는다 — DEPLOY_HOLD·2시간·Purge 확인만.
 //    --update 는 새 URL 이 아니라 한도·결정 대기·동결·첫 발행일을 보지 않는다 — 판정일·배포 배치·로컬 차단은 본다)
 // 흐름: 워크트리를 origin/main 으로 → render(오늘 날짜·operator-approved) → 생성 파일 재생성 → 게이트 전부 →
-//   커밋 → push main → 승인된 SHA의 GitHub 게시 작업 접수 → 클라우드 CI·Pages·운영 확인·IndexNow.
+//   커밋 → push main → 여기서 멈춤. 운영 게시는 운영자가 앱에서 'Pages · 승인 후 게시'로 알림에 찍힌 전체 40자 SHA 를
+//   실행한다(운영자 결정 2026-11-18 질문 C-10 A안, N2-scripts-09 — 이 도구는 pages-cloud-dispatch.mjs 를 부르지 않는다).
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -405,18 +406,22 @@ export async function main(argv = process.argv, deps = defaultDeps()) {
   }
   const pushed = (await git(["rev-parse", "HEAD"])).stdout.trim();
 
-  // 6) 승인된 정확한 SHA만 클라우드에 인계. 접수 이후 이 컴퓨터가 꺼져도 계속된다.
-  const handoff = await run(process.execPath, [join(wt, "scripts/pages-cloud-dispatch.mjs"), "--approved-commit", pushed,
-    "--article-slug", slug, ...(kind === "retire" ? ["--retirement-to", arg(argv, "--to") ?? ""] : ["--article-marker", title])]);
-  if (handoff.code !== 0) {
-    say(`[publish] 소스 ${pushed.slice(0, 8)} 반영됨; 클라우드 접수 미확인. dispatch 영수증과 GitHub Actions를 확인하고 자동 재시도하지 말 것.`);
+  // 6) 여기서 멈춘다 — 운영 게시는 운영자가 앱에서 한다(운영자 결정 2026-11-18 질문 C-10 A안, N2-scripts-09 scripts-b09-F02).
+  //    'Pages · 승인 후 게시'(pages-publish.yml)는 그 커밋까지의 main 전체를 운영에 올린다. 이 도구가 스스로 접수하면 운영자가
+  //    아직 게시하지 않은 다른 main 커밋까지 함께 나가므로(11/13 '게시 버튼은 운영자가 앱에서 직접'과 충돌) 알림만 남긴다.
+  //    pages-cloud-dispatch.mjs 와 게시 워크플로는 그대로다. 글 확인 입력(article_slug·article_marker·retirement_to)은 알림에 적는다.
+  if (!SHA.test(pushed)) {
+    say("[publish] main 에 반영했지만 반영한 커밋의 전체 SHA 를 읽지 못했다 — git -C <워크트리> rev-parse HEAD 로 40자 SHA 를 확인해 운영자에게 알릴 것. 게시는 운영자가 앱에서.");
     return 3;
   }
+  const articleInputs = kind === "retire"
+    ? [`article_slug=${slug}`, `retirement_to=${arg(argv, "--to") ?? ""}`]
+    : [`article_slug=${slug}`, `article_marker=${title}`];
   say(
     [
-      `[publish] ${kind === "retire" ? "철회" : kind === "update" ? "수정 발행" : "발행"} 클라우드 접수 — ${slug} (${pushed.slice(0, 8)}), 아직 발행 완료는 아님`,
-      handoff.stdout.trim(),
-      "이 컴퓨터를 꺼도 GitHub 검사 → 무료 Pages 배포 → 광고 없는 HTTP 검사 → IndexNow가 이어진다. Actions 작업 성공이 완료 기준이다.",
+      `[publish] main 반영 ${pushed} — 게시는 운영자가 앱에서 Pages · 승인 후 게시로 이 커밋을 실행`,
+      `[publish] ${kind === "retire" ? "철회" : kind === "update" ? "수정 발행" : "발행"} 소스만 반영 — ${slug}, 운영에는 아직 게시되지 않았다(이 도구는 게시를 접수하지 않는다).`,
+      `게시 때 글 확인 입력(선택): ${articleInputs.join(" · ")}`,
       "다른 세션·워크트리: main 이 바뀌었다 — git fetch origin 후 rebase(또는 main 새로 받기) 하고 작업할 것.",
       kind === "publish" ? `다음 할 일: D+28(${addDays(today, 28)}) 판정 — decide.mjs --slug ${slug} --at d28 …` : "",
     ]

@@ -340,51 +340,81 @@ test("publisher rejects unsafe or looping retirement targets before Git, API, bu
   }
 });
 
-test("publisher preserves an approved local retirement target through Pages deployment and verification", async () => {
+// 운영자 결정 2026-11-18 질문 C-10 A안(N2-scripts-09 scripts-b09-F02): 발행기는 main 반영 뒤 멈추고 운영 게시(pages-cloud-dispatch.mjs →
+// pages-publish.yml)를 스스로 접수하지 않는다 — 게시는 운영자가 앱에서 알림에 찍힌 전체 40자 SHA 로 'Pages · 승인 후 게시'를 실행한다.
+// 아래 세 경우는 종전 '푸시 뒤 클라우드 접수'를 고정하던 것을 이 결정에 맞게 고쳤다(접수 호출 0, 알림에 전체 SHA·글 확인 입력).
+const OWNER_NOTICE = sha => `[publish] main 반영 ${sha} — 게시는 운영자가 앱에서 Pages · 승인 후 게시로 이 커밋을 실행`;
+const dispatchInvoked = f => f.invocations.some(item => [item.cmd, ...item.args].some(value => /pages-cloud-dispatch|pages-publish\.yml/.test(String(value))));
+
+test("publisher retirement keeps the approved local target in render and in the owner notice; it never dispatches the production publish", async () => {
   const f = publisherFixture();
   try {
     assert.equal(await publishMain([...f.args, "--retire", "--to", "/guides"], f.deps), 0, f.messages.join("\n"));
     const rendered = f.calls.find(call => call.includes("render.ts"));
-    const dispatched = f.calls.find(call => call.includes("pages-cloud-dispatch.mjs"));
     assert.ok(rendered.includes("--to /guides --write"));
-    assert.ok(dispatched.endsWith("--retirement-to /guides"));
-    assert.ok(dispatched.includes(`--approved-commit ${PUB_NEXT}`));
+    assert.ok(f.calls.some(call => call.endsWith("push origin HEAD:main")));
+    assert.equal(dispatchInvoked(f), false, f.calls.join("\n"));
+    const notice = f.messages.join("\n");
+    assert.ok(notice.includes(OWNER_NOTICE(PUB_NEXT)), notice);
+    assert.ok(notice.includes(`article_slug=${f.args[f.args.indexOf("--slug") + 1]} · retirement_to=/guides`), notice);
     assert.ok(!f.calls.some(call => call.includes("verify-prod.mjs")));
   } finally { cleanup(f.home, f.wt); }
 });
 
-test("publisher preserves the approved quoted title as a single cloud verification argument", async () => {
+test("publisher notice keeps the approved quoted title exactly as the optional article_marker input; nothing is dispatched", async () => {
   const title = '고용보험 "확정" 안내 & 조건';
   const f = publisherFixture({ title });
   try {
     assert.equal(await publishMain(f.args, f.deps), 0, f.messages.join("\n"));
-    const handoff = f.invocations.find(item => item.args.some(value => String(value).endsWith("pages-cloud-dispatch.mjs")));
-    assert.ok(handoff);
-    assert.equal(handoff.args[handoff.args.indexOf("--article-marker") + 1], title);
+    assert.equal(dispatchInvoked(f), false);
+    assert.ok(f.messages.join("\n").includes(`article_marker=${title}`));
   } finally { cleanup(f.home, f.wt); }
 });
 
-test("publisher hands approved commit to cloud after push; both queued and failed dispatch never report publication completed", async () => {
-  for (const jobConclusion of ["success", "skipped"]) {
-    const f = publisherFixture({ jobConclusion });
+test("publisher stops after the push: no production publish is dispatched, the notice carries the full 40-character pushed SHA and never claims publication", async () => {
+  for (const mode of [[], ["--retire", "--to", "/guides"]]) {
+    const f = publisherFixture();
     try {
-      assert.equal(await publishMain(f.args, f.deps), jobConclusion === "success" ? 0 : 3, f.messages.join("\n"));
-      assert.ok(f.calls.some(call => call.endsWith("push origin HEAD:main")));
-      const localIndex = f.calls.findIndex(call => call.includes("pages-cloud-dispatch.mjs"));
-      assert.ok(localIndex > f.calls.findIndex(call => call.endsWith("push origin HEAD:main")));
-      assert.ok(f.calls[localIndex].includes(`--approved-commit ${PUB_NEXT} --article-slug `));
+      assert.equal(await publishMain([...f.args, ...mode], f.deps), 0, f.messages.join("\n"));
+      const pushIndex = f.calls.findIndex(call => call.endsWith("push origin HEAD:main"));
+      assert.ok(pushIndex > -1, f.calls.join("\n"));
+      // 푸시 뒤에는 반영한 SHA 읽기 하나뿐 — 접수·배포·운영 확인 명령이 없다
+      assert.deepEqual(f.calls.slice(pushIndex + 1).map(call => call.replace(/^git -C \S+ /, "")), ["rev-parse HEAD"]);
+      assert.equal(dispatchInvoked(f), false);
       assert.equal(f.calls.some(call => call.includes("verify-prod.mjs")), false);
-      assert.equal(f.messages.some(line => /발행 완료 —/.test(line)), false);
-      assert.equal(f.messages.some(line => /아직 발행 완료는 아님/.test(line)), jobConclusion === "success");
-      assert.ok(f.calls.some(call => call.includes("qa:pages:build") && call.includes("qa:pages:verify")));
-      const builds = f.invocations.filter(item => item.args.some(value => String(value).includes("qa:pages:build")));
-      assert.ok(builds.length >= 1);
-      for (const build of builds) {
-        assert.equal(build.options.env.NEXT_PUBLIC_ADS_DISABLED, "1");
-        assert.equal(build.options.env.GITHUB_TOKEN, undefined); assert.equal(build.options.env.CLOUDFLARE_API_TOKEN, undefined);
+      const notice = f.messages.join("\n");
+      assert.ok(notice.includes(OWNER_NOTICE(PUB_NEXT)), notice);
+      assert.equal(PUB_NEXT.length, 40);
+      assert.deepEqual(notice.match(/\b[a-f0-9]{40}\b/g), [PUB_NEXT]);
+      assert.equal(f.messages.some(line => /발행 완료|클라우드 접수|게시 완료/.test(line)), false);
+      assert.ok(notice.includes("운영에는 아직 게시되지 않았다"));
+      if (mode.length === 0) {
+        assert.ok(f.calls.some(call => call.includes("qa:pages:build") && call.includes("qa:pages:verify")));
+        const builds = f.invocations.filter(item => item.args.some(value => String(value).includes("qa:pages:build")));
+        assert.ok(builds.length >= 1);
+        for (const build of builds) {
+          assert.equal(build.options.env.NEXT_PUBLIC_ADS_DISABLED, "1");
+          assert.equal(build.options.env.GITHUB_TOKEN, undefined); assert.equal(build.options.env.CLOUDFLARE_API_TOKEN, undefined);
+        }
       }
     } finally { cleanup(f.home, f.wt); }
   }
+  // 반영한 커밋을 전체 40자 SHA 로 읽지 못하면 짧은 SHA 알림을 내지 않고 3(사람 확인) — 이때도 게시 접수는 없다
+  const g = publisherFixture();
+  try {
+    const run = g.deps.run;
+    let pushedOnce = false;
+    g.deps.run = async (cmd, args, options) => {
+      const result = await run(cmd, args, options);
+      if (cmd === "git" && args.includes("push")) pushedOnce = true;
+      else if (pushedOnce && cmd === "git" && args.includes("rev-parse")) return { ...result, stdout: PUB_NEXT.slice(0, 8) };
+      return result;
+    };
+    assert.equal(await publishMain(g.args, g.deps), 3, g.messages.join("\n"));
+    assert.equal(dispatchInvoked(g), false);
+    assert.equal(g.messages.some(line => line.includes("[publish] main 반영 ")), false);
+    assert.ok(g.messages.join("\n").includes("40자 SHA"));
+  } finally { cleanup(g.home, g.wt); }
 });
 
 test("retirement verification: one HEAD, exact same-origin 308 destination, no follow or body execution", async () => {

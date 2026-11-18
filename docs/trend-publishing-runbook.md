@@ -2,16 +2,18 @@
 
 > **무료 Pages·클라우드 승인 발행(2026-10-18):** 글별 승인 후 `pages-publish.yml`을 정확한 main SHA로 한 번 접수한다. CI 성공 → `codex/pages-production` 승격 → Cloudflare Git 빌드 → 비렌더링 HTTP·글 확인 → IndexNow까지 서버에서 실행한다. GitHub에 Cloudflare 토큰을 저장하거나 전달하지 않는다. 접수 이후 컴퓨터를 꺼도 계속되며, Actions의 `publish` job 성공과 최종 검증·IndexNow 완료 영수증이 완료 기준이며, skipped job은 완료가 아니다. [현재 README 절차](../README.md)가 이전 로컬 Pages/Workers 설명보다 우선한다.
 
+> **운영자 결정 2026-11-18 (질문 C-10 A안, N2-scripts-09):** `publish-approved`는 main 반영(push)까지만 하고 게시를 스스로 접수하지 않는다. `pages-publish.yml`은 그 커밋까지의 main 전체를 운영에 올리므로, 운영자가 아직 게시하지 않은 다른 main 커밋이 함께 나가지 않게 게시 버튼은 운영자가 앱에서 누른다(11/13 결정). 발행기는 `[publish] main 반영 <전체 40자 SHA> — 게시는 운영자가 앱에서 Pages · 승인 후 게시로 이 커밋을 실행` 알림과 글 확인 입력(`article_slug`·`article_marker` 또는 `retirement_to`)만 남긴다. 아래 '접수' 설명은 운영자가 그 SHA로 게시 워크플로를 실행한 뒤의 절차다.
+
 **첫 native 시도 기록(2026-10-18):** native 빌드 `3b70f1ba…`는 Cloudflare의 인증 정보가 포함된 clone URL을 checkout-origin 검사가 거부해 bootstrap 단계에서 실패했고, Actions 실행 `39044448829`는 취소됐다. 해당 URL 검증 문제는 수정했다. 이 실패 이력이나 과거 배포 성공을 후속 릴리스의 성공으로 대신하지 않는다. 현재 완료 상태는 최신 완료된 `publish` job과 그 실행에 일치하는 검증·IndexNow artifact로 확인한다.
 
 2026-09-26 R5 publisher 신설. 코드: `scripts/trend-publish/*` · `src/lib/trendBriefs/*` · 등록 `src/lib/guides/trend-briefs.ts`.
-**글별 운영자 승인과 기존 발행 한도는 유지한다.** `daily`는 로컬 PROPOSE까지만 만들며, `publish-approved`가 승인 초안·해시·준비 상태와 QA를 확인한 뒤 main에 반영하고 클라우드 승인 워크플로에 인계한다. QA는 `qa:pages:build`/`qa:pages:verify`와 `.pages-qa/.next`를 사용한다. 로컬 초안 준비·검사·푸시·접수까지는 컴퓨터가 켜져 있어야 한다. 접수가 확인된 이후 운영용 빌드·배포·HTTP 확인·IndexNow는 서버에서 진행한다. 이번 변경으로 정기 게시 작업을 새로 등록하지 않는다. 예약 작업의 실제 등록·활성 상태를 이 런북이나 예약 폴더의 예시만으로 추정하지 않는다. 등록되지 않은 예약을 임의로 만들거나 과거 네이버 예약 글을 중복 등록하지 않는다.
+**글별 운영자 승인과 기존 발행 한도는 유지한다.** `daily`는 로컬 PROPOSE까지만 만들며, `publish-approved`가 승인 초안·해시·준비 상태와 QA를 확인한 뒤 main에 반영하고 멈춘다(게시 접수는 운영자가 앱에서 — 2026-11-18 결정). QA는 `qa:pages:build`/`qa:pages:verify`와 `.pages-qa/.next`를 사용한다. 로컬 초안 준비·검사·푸시까지는 컴퓨터가 켜져 있어야 한다. 운영자의 게시 접수가 확인된 이후 운영용 빌드·배포·HTTP 확인·IndexNow는 서버에서 진행한다. 이번 변경으로 정기 게시 작업을 새로 등록하지 않는다. 예약 작업의 실제 등록·활성 상태를 이 런북이나 예약 폴더의 예시만으로 추정하지 않는다. 등록되지 않은 예약을 임의로 만들거나 과거 네이버 예약 글을 중복 등록하지 않는다.
 
 ## 0. 운영자 결정 (2026-09-27) — 글 승인·달력·한도에 적용, 배포 방식은 §7
 
 | 항목 | 결정 | 코드·설정 |
 |---|---|---|
-| 발행 승인 | 브리프마다 운영자가 채팅에서 `발행 <slug>` 라고 승인한 뒤에만 게시. 무승인 자동 발행 없음 | daily는 PROPOSE까지, 승인 CLI의 main push 후 정확한 SHA를 클라우드에 접수. 완료 여부는 Actions 최종 결과로 구분 |
+| 발행 승인 | 브리프마다 운영자가 채팅에서 `발행 <slug>` 라고 승인한 뒤에만 게시. 무승인 자동 발행 없음 | daily는 PROPOSE까지, 승인 CLI는 main push 후 정확한 SHA를 알리고 멈춤 — 게시 접수는 운영자가 앱에서(2026-11-18 결정). 완료 여부는 Actions 최종 결과로 구분 |
 | 파일럿 | **2026-10-13 ~ 10-31**. 10/12 까지는 dry-run 만 | `calendar.json` `pilot`·`firstPublishNotBefore` = 10-13, `types.ts` `FIRST_PUBLISH_NOT_BEFORE` = 2026-10-13 |
 | 발행 한도 | **하루 1편 이하 · ISO 주 5편 이하**(월 16편·첫 90일 게시 30편 하드 상한도 그대로) | `config.json` `caps` perKstDay 1 · perIsoWeek 5 |
 | 동결 | **11/1 ~ 1/31 발행 없음**(보고만, FREEZE). 연말정산 시즌 예외 없음 | `calendar.json` `freezes` |
@@ -90,15 +92,15 @@ daily.mjs 는 운영자 플래그와 저장소의 운영자 파일(docs/drafts·
 
 | 문구 | 세션이 하는 일 |
 |---|---|
-| `발행 <slug>` | `publish-approved`가 카드의 초안 해시·승인·기존 게이트를 확인하여 비강제 push한 뒤, 정확한 SHA로 클라우드 승인 발행 절차(§7)에 한 번 접수한다. 접수와 게시 완료는 구분한다. |
-| `철회 <slug>` | 승인된 항목의 철회·허브 308·원장 변경안을 `--retire`로 반영하고, 같은 클라우드 승인 발행 절차에서 정확한 릴리스와 승인된 308 목적지를 확인한다. |
+| `발행 <slug>` | `publish-approved`가 카드의 초안 해시·승인·기존 게이트를 확인하여 비강제 push하고 멈춘다. 알림의 전체 40자 SHA로 운영자가 앱에서 클라우드 승인 발행 절차(§7)를 실행한다(2026-11-18 결정). 접수와 게시 완료는 구분한다. |
+| `철회 <slug>` | 승인된 항목의 철회·허브 308·원장 변경안을 `--retire`로 반영하고 멈춘다. 운영자가 알림의 SHA와 `retirement_to`로 같은 클라우드 승인 발행 절차를 실행하면 정확한 릴리스와 승인된 308 목적지를 확인한다. |
 | `점검 완료` | 운영자가 확인한 네 항목으로 `review-ack.mjs --days 7 --gsc-manual-actions none --adsense-policy none --naver-notice none --clicks ok` |
 | `트렌드 중지` | `review-ack.mjs --halt "<사유>"` → HALT. 재개는 운영자가 HALT 파일을 지운다 |
 | `결정 <slug> 유지·수정·철회 …` | `decide.mjs --slug <slug> --decision keep|update|retire --at d28 --gsc-impr N --naver-clicks N` (§6) |
 
 승인은 **'발행을 허락한다'** 는 뜻이지 내용 검수가 아니다. 본문 작성 방식 상자에는 `운영자가 발행을 승인했습니다(내용 검수 아님)` 로 적히고, 승인 없이는 `사람 검토 없이 자동 검사만 거쳤습니다` 이다('검수 완료' 표기는 게이트가 막는다). 승인은 초안 해시(날짜·fetchedAt·humanReview 제외)에 묶이고, 카드는 **1차 출처 게시일+7일과 카드 날짜+2일 중 이른 날**에 만료된다.
 
-**현재 publish-approved 사전 조건:** HALT 없음 · PUBLISH_ENABLED · REVIEWED_UNTIL 유효 · 달력 · 한도 · 결정 대기 없음 · DEPLOY_HOLD 없음 · origin/main 최신 커밋 2시간 경과 · 카드 미만료 · 해시 일치 · 보관본에 레이더 후보 기록. 원격 `PAGES_CLOUD_PUBLISH_ENABLED=true`와 검증·게시 워크플로 준비 상태도 통과해야 한다. 현재 클라우드 모드에서는 `CF_PURGE_OK`나 `--manual-purge-ack`를 요구하지 않는다. 날짜는 실제 KST 오늘(`--today`는 `--check-only` 전용)이다. 통과하면 origin/main 위에서 오늘 날짜·승인 표기로 다시 렌더 → QA 게이트 전부 → 커밋 → 비강제 main push → 정확한 SHA의 클라우드 접수(§7)까지 수행하고 `queued`, 아직 게시 완료 아님을 보고한다. 이후 CI·배포·16개 HTTP 계약·해당 글 확인·IndexNow 결과는 Actions에서 확인한다. **다른 세션은 바뀐 main을 fetch/rebase할 것.**
+**현재 publish-approved 사전 조건:** HALT 없음 · PUBLISH_ENABLED · REVIEWED_UNTIL 유효 · 달력 · 한도 · 결정 대기 없음 · DEPLOY_HOLD 없음 · origin/main 최신 커밋 2시간 경과 · 카드 미만료 · 해시 일치 · 보관본에 레이더 후보 기록. 원격 `PAGES_CLOUD_PUBLISH_ENABLED=true`와 검증·게시 워크플로 준비 상태도 통과해야 한다. 현재 클라우드 모드에서는 `CF_PURGE_OK`나 `--manual-purge-ack`를 요구하지 않는다. 날짜는 실제 KST 오늘(`--today`는 `--check-only` 전용)이다. 통과하면 origin/main 위에서 오늘 날짜·승인 표기로 다시 렌더 → QA 게이트 전부 → 커밋 → 비강제 main push까지 수행하고 멈춘다. 반영한 전체 40자 SHA와 글 확인 입력을 알리고, 아직 게시되지 않았음을 보고한다(2026-11-18 결정 — 게시 접수는 운영자가 앱에서). 운영자가 게시를 실행한 뒤의 CI·배포·16개 HTTP 계약·해당 글 확인·IndexNow 결과는 Actions에서 확인한다. **다른 세션은 바뀐 main을 fetch/rebase할 것.**
 
 ## 5. 주간 점검 (REVIEWED_UNTIL — 최대 14일)
 
@@ -122,7 +124,7 @@ daily.mjs 는 운영자 플래그와 저장소의 운영자 파일(docs/drafts·
 
 ## 7. 클라우드 승인 발행·운영 확인
 
-운영자의 글별 승인과 기존 초안 해시·달력·한도·HALT 검사를 통과한 발행기는 main에 소스를 반영하고 `pages-cloud-dispatch.mjs`로 승인된 전체 SHA를 한 번 접수한다. 이미 GitHub에 준비된 글은 저장소 소유자가 [Pages · 승인 후 게시](https://github.com/whatisyourdreambro/my-salary-calculator/actions/workflows/pages-publish.yml)의 **Run workflow**에서 `main`과 승인할 전체 `approved_commit`을 지정한다. 휴대폰에서도 가능하다. 이 작업 자체가 해당 커밋 전체의 명시적 게시 승인이다. UI 직접 승인 경로는 로컬 트렌드 카드·해시·한도를 대신 검사하지 않으므로, 트렌드 글은 그 검사를 먼저 통과한 내용을 승인한다.
+운영자의 글별 승인과 기존 초안 해시·달력·한도·HALT 검사를 통과한 발행기는 main에 소스를 반영하고 멈춘다(2026-11-18 결정 — 예전처럼 `pages-cloud-dispatch.mjs`로 스스로 접수하지 않는다). 발행기가 알린 전체 SHA와 이미 GitHub에 준비된 글은 저장소 소유자가 [Pages · 승인 후 게시](https://github.com/whatisyourdreambro/my-salary-calculator/actions/workflows/pages-publish.yml)의 **Run workflow**에서 `main`과 승인할 전체 `approved_commit`을 지정한다. 휴대폰에서도 가능하다. 이 작업 자체가 해당 커밋 전체의 명시적 게시 승인이다. UI 직접 승인 경로는 로컬 트렌드 카드·해시·한도를 대신 검사하지 않으므로, 트렌드 글은 그 검사를 먼저 통과한 내용을 승인한다.
 
 1. `PAGES_CLOUD_PUBLISH_ENABLED=true` 및 활성 게시 워크플로를 확인하고 기존 사이트맵을 보관한다. 기존 로컬 발행 스위치는 false로 둔다.
 2. GitHub 실행기가 최신 main과 승인 SHA, 실행한 소유자, 정확한 push/main CI verify 성공을 대조한다. 실패·건너뜀·변경된 main은 배포하지 않는다.
