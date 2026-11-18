@@ -137,7 +137,7 @@ export const BONUS_CALCS: BonusCalcEntry[] = [
     company: "현대모비스",
     companyId: "hyundai-mobis",
     sector: "자동차·중공업·철강",
-    hook: "임단협 450% + 1,420만 + 우리사주 17주 (2025 타결)",
+    hook: "2026 임단협 타결 400% + 1,320만 + 주식 8주",
     seasonLabel: "하반기 임단협 시즌",
   },
   {
