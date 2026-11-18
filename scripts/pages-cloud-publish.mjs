@@ -110,7 +110,14 @@ export function createCloudGithubClient(token, fetchFn = globalThis.fetch) {
     },
     compare: (previous, commit) => {
       assert.match(previous, SHA); assert.match(commit, SHA);
-      return request(`${API}/compare/${previous}...${commit}`);
+      // Approval run #29 (44337287611, 2026-11-19) stopped here: without paging parameters GitHub answers with up to
+      // 250 commits and up to 300 changed files with patches, 2,563,739 bytes for 402 commits and 480 files, which is
+      // over the 2,000,000-byte cap above. GitHub's 'Compare two commits' documentation: with per_page or page the
+      // changed files are listed on the first page only; per_page is at most 100. Page 2 of one commit per page
+      // therefore never carries files and at most one commit, so its size does not grow with the publication. Measured
+      // 2026-11-19: status, ahead_by, behind_by, base_commit and merge_base_commit are those of the whole comparison on
+      // that page too, for ahead, behind, diverged and identical pairs and for a one-commit comparison (empty page).
+      return request(`${API}/compare/${previous}...${commit}?per_page=1&page=2`);
     },
     promote: async commit => {
       assert.match(commit, SHA);
