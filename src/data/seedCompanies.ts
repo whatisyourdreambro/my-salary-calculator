@@ -258,21 +258,26 @@ export const seedCompanies: CompanyProfile[] = [
  logo: "💾",
  description: "글로벌 메모리 반도체 2위, AI 반도체(HBM) 선두주자.",
  salary: {
+ // incentive.max(연봉 대비 %) — 종전 50 은 PS 옛 상한(월 기본급 1,000% = 연봉의 최대 50% 가량, 이투데이 2023-02-01
+ // https://www.etoday.co.kr/news/view/2217429)이었다. 노사가 2025년 하반기 이 상한을 폐지했고 2025년분 PS 는
+ // 2,964%로 책정돼 연봉 1억원 직원이 1억4,820만원(연봉의 약 148%)을 받았다(뉴시스 2026-02-04
+ // https://www.newsis.com/view/NISX20260204_0003502924). 그래서 신입~리드 max 150 (N2-data-07 1번, 운영자 승인 2026-11-18).
+ // 임원 행은 검증자 안대로 그대로 둔다.
  entry: {
  base: 53000000,
- incentive: { target: 50, max: 50, avgAmount: 28000000 }, // Recent boom
+ incentive: { target: 50, max: 150, avgAmount: 28000000 }, // Recent boom
  },
  junior: {
  base: 72000000,
- incentive: { target: 50, max: 50, avgAmount: 38000000 },
+ incentive: { target: 50, max: 150, avgAmount: 38000000 },
  },
  senior: {
  base: 98000000,
- incentive: { target: 50, max: 50, avgAmount: 50000000 },
+ incentive: { target: 50, max: 150, avgAmount: 50000000 },
  },
  lead: {
  base: 135000000,
- incentive: { target: 50, max: 50, avgAmount: 70000000 },
+ incentive: { target: 50, max: 150, avgAmount: 70000000 },
  },
  executive: {
  base: 260000000,
