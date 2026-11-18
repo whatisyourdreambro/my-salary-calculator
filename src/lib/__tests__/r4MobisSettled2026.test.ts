@@ -58,6 +58,12 @@ describe("계산기 기본값 = 2026 임단협 타결 (버튼 수 그대로)", (
     expect(chips).toEqual(["2026 임단협 타결 (최신)", "2025 임단협 타결 (실제 지급)"]);
     expect(t).toContain("🎛️ 직접 입력 (커스텀 시나리오)");
     expect(t).not.toContain("2026 타결안 나오면");
+    // 세후 아래 줄 — 같은 세 숫자, '세전 '·'세율' 없이 (2026-11-18 통합 검토 RV-01: 직접 입력한 기본급에서 이 줄이 한 줄 더
+    // 접혀 CalcResultAd 가 내려가던 폭을 없앰. 세전 합계는 바로 위 '총 성과급 (세전)' 상자)
+    const tight = norm(html.replace(/<[^>]+>/g, ""));
+    expect(tight).toContain("2,373만원3,594만원 − 공제 1,221만원 (실효 34%)");
+    expect(tight).not.toContain("세전 3,594만원 − 공제");
+    expect(tight).not.toContain("실효세율");
   });
 
   it("2026 칩 설명·직접 입력 초기값은 보도·공시 값(400% · 1,320만 · 8주 · 복지포인트 50만)", () => {
@@ -128,6 +134,9 @@ const ABOVE_AD_CLIENT = [
   `<ResultCard label="포인트·상품권" value={fmtManwon(calc.voucherWon)} sub={calc.voucherWon > 0 ? scenario.voucherLabel : "해당 시나리오 상품권 없음"} />`,
   `voucherLabel: "복지포인트",`,
   `voucherLabel: "재래시장상품권",`,
+  // 결과 카드 세후 아래 줄(CalcResultAd 바로 위): 2025 기본값의 옛 줄 '세전 … − 공제 … (실효세율 …%)'보다 어떤 입력에서도
+  // 16px 이상 짧다(사이트 글꼴 폭, 기본급 0~3,000만·주가 0~100만·세액공제·4대보험·직접 입력). 통합 검토 RV-01(2026-11-18).
+  `{fmtEok(calc.totalGross)} − 공제 {fmtEok(calc.tax.totalDeductions)}{" "} (실효 <strong>{calc.tax.effectiveRate}%</strong>)`,
 ];
 
 describe("광고 위 문구는 폭을 맞춘 값 그대로다", () => {
