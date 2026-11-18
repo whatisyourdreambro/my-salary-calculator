@@ -295,7 +295,9 @@ export const krCompanies_Batch21: CompanyProfile[] = [
   },
   {
     id: "hanwha-qcells",
-    name: { ko: "한화큐셀스", en: "Hanwha Qcells" },
+    // 회사명 정정 (N2-data-08 2단계, 운영자 승인 2026-11-18): 한화큐셀스 -> 한화큐셀. 회사 국문 사이트(qcells.com/kr) 표기 한화큐셀,
+    // 법인은 2020년 한화솔루션에 합병(DART 자동완성 옛 법인명 한화큐셀앤드첨단소재·한화큐셀코리아) — 한화큐셀스 표기는 어디에도 없다.
+    name: { ko: "한화큐셀", en: "Hanwha Qcells" },
     industry: "Solar Energy",
     tier: "conglomerate",
     logo: "☀️",
