@@ -12,6 +12,10 @@
 //  - 세후 줄 '세전 X − 공제 Y (실효세율 Z%)' 는 기본값 35.3만에서 '세전 3,652만원 − 공제 1,245만원 (실효세율 34.1%)' 가
 //    되어 종전(28만) 줄보다 10.9px 넓어지고, 결과 상자 글 폭 244.5~255.25px(화면 약 370~381px)에서 한 줄 늘어 결과 광고가
 //    내려갈 자리였다. 그래서 바로 위 '총 성과급 (세전)' 상자와 같은 값인 '세전 ' 앞말을 뺐다(모든 상태에서 줄이 좁아진다).
+//  - R4 통합(2026-11-18): 같은 줄을 게시 가지 next-1120 의 RV-01(8893a94b8)이 'X − 공제 Y (실효 Z%)' 로 더 줄였고, 통합은
+//    그 문구를 쓴다. 아래 '종전 대비' 단언은 MISC2 의 바탕(c8e9ae9b0, main bda78b0da 와 같은 '세전 … (실효세율 …%)' 줄, 28만)
+//    대비 그대로 성립한다. 다만 N(next-1120 71471b5a5 = RV-01 문구·28만) 대비로는 기본 상태 줄이 10.9px 넓어 결과 상자 글 폭
+//    약 201~212px 에서 한 줄 는다 — 맨 아래 'N 대비' 블록이 그 폭을 그대로 적어 두며, 실측이 판정한다(내려가면 efe317f1a 되돌림).
 //  - 3단계 안내 문장·'주식 8주' FAQ 답은 같은 폭 이하이고, keep-all 줄 수가 어느 폭에서도 늘지 않는다.
 // 글꼴 단위는 사이트 글꼴 MoneySalaryText 를 fontTools 로 wght 400·700 인스턴스해 잰 advance(unitsPerEm 2048)다 —
 // 한글 음절은 모두 1770, 숫자는 비례. 표에 없는 새 글자는 테스트가 실패한다(먼저 재고 표에 넣을 것).
@@ -140,61 +144,103 @@ describe("첫 화면(서버 렌더 = 수화 뒤 기본 상태) 결과 — 기본
     expect(8 * 353_000).toBe(2_824_000);
   });
 
-  it("세전 3,652만원(추정 연봉 대비 41%), 세후 2,407만원, 세후 줄은 '세전 ' 앞말 없이", () => {
+  it("세전 3,652만원(추정 연봉 대비 41%), 세후 2,407만원, 세후 줄은 게시 가지 RV-01 문구('세전 '·'세율' 없이)", () => {
     const tax = calcBonusNet(500 * 10_000 * 18, 36_524_000, DEFAULT_BONUS_CREDIT_RATE, true);
     expect([fmtEok(tax.net), fmtEok(tax.totalDeductions), tax.effectiveRate]).toEqual(["2,407만원", "1,245만원", 34.1]);
     expect(plain).toContain("3,652만원");
     expect(plain).toContain("추정 연봉 대비 41%");
     expect(plain).toContain("2,407만원");
-    expect(plain).toContain("3,652만원 − 공제 1,245만원 (실효세율 34.1%)");
+    expect(plain).toContain("3,652만원 − 공제 1,245만원 (실효 34.1%)");
     expect(plain).not.toContain("세전 3,652만원 − 공제");
-    expect(CLIENT).toContain(`{fmtEok(calc.totalGross)} − 공제 {fmtEok(calc.tax.totalDeductions)}{" "} (실효세율 <strong>{calc.tax.effectiveRate}%</strong>)`);
+    expect(plain).not.toContain("실효세율");
+    expect(CLIENT).toContain(`{fmtEok(calc.totalGross)} − 공제 {fmtEok(calc.tax.totalDeductions)}{" "} (실효 <strong>{calc.tax.effectiveRate}%</strong>)`);
   });
 });
 
-// 세후 줄: 종전(next-1120 = 28만, '세전 ' 앞말 있음) 대 지금. 결과 상자 글 폭은 화면 320px 에서 약 194px, 가장 넓을 때 866px.
+// 세후 줄: 종전(MISC2 바탕 c8e9ae9b0 = 28만, '세전 … (실효세율 …%)') 대 지금(35.3만, RV-01 문구 '… (실효 …%)').
+// 결과 상자 글 폭은 화면 320px 에서 약 194px, 가장 넓을 때 866px.
 type Sc = { bp: number; fx: number; sh: number; v: number };
 const S2026: Sc = { bp: 400, fx: 13_200_000, sh: 8, v: 500_000 };
 const S2025: Sc = { bp: 450, fx: 14_200_000, sh: 17, v: 200_000 };
 const SCUSTOM: Sc = { bp: 400, fx: 13_200_000, sh: 8, v: 0 };
-function netLine(sc: Sc, salaryManwon: number, price: number, withPrefix: boolean): Run[] {
+/** form "old" = '세전 X − 공제 Y (실효세율 Z%)'(c8e9ae9b0·main), "rv01" = 'X − 공제 Y (실효 Z%)'(next-1120 RV-01, 지금 문구) */
+function netLine(sc: Sc, salaryManwon: number, price: number, form: "old" | "rv01"): Run[] {
   const monthly = salaryManwon * 10_000;
   const gross = monthly * (sc.bp / 100) + sc.fx + sc.sh * price + sc.v;
   const tax = calcBonusNet(monthly * 18, gross, DEFAULT_BONUS_CREDIT_RATE, true);
+  const head =
+    form === "old"
+      ? `세전 ${fmtEok(gross)} − 공제 ${fmtEok(tax.totalDeductions)} (실효세율 `
+      : `${fmtEok(gross)} − 공제 ${fmtEok(tax.totalDeductions)} (실효 `;
   return [
-    [`${withPrefix ? "세전 " : ""}${fmtEok(gross)} − 공제 ${fmtEok(tax.totalDeductions)} (실효세율 `, 400],
+    [head, 400],
     [`${tax.effectiveRate}%`, 700],
     [")", 400],
   ];
 }
 
-describe("세후 줄은 측정 상태마다 종전보다 좁고 줄 수가 늘지 않는다(결과 광고 바로 위)", () => {
-  const cases: [string, Sc, number, number, number][] = [
-    ["기본(2026)", S2026, 500, 280_000, 353_000],
-    ["2025 칩", S2025, 500, 280_000, 353_000],
-    ["직접 입력", SCUSTOM, 500, 280_000, 353_000],
-  ];
+const NET_CASES: [string, Sc, number, number, number][] = [
+  ["기본(2026)", S2026, 500, 280_000, 353_000],
+  ["2025 칩", S2025, 500, 280_000, 353_000],
+  ["직접 입력", SCUSTOM, 500, 280_000, 353_000],
+];
+{
   const OLD_BTN = [240_000, 280_000, 320_000, 360_000];
   const NEW_BTN = [270_000, 320_000, 370_000, 420_000];
   OLD_BTN.forEach((p, i) => {
-    cases.push([`버튼 ${i + 1} (2026)`, S2026, 500, p, NEW_BTN[i]]);
-    cases.push([`버튼 ${i + 1} (2025)`, S2025, 500, p, NEW_BTN[i]]);
-    cases.push([`버튼 ${i + 1} (직접 입력)`, SCUSTOM, 500, p, NEW_BTN[i]]);
+    NET_CASES.push([`버튼 ${i + 1} (2026)`, S2026, 500, p, NEW_BTN[i]]);
+    NET_CASES.push([`버튼 ${i + 1} (2025)`, S2025, 500, p, NEW_BTN[i]]);
+    NET_CASES.push([`버튼 ${i + 1} (직접 입력)`, SCUSTOM, 500, p, NEW_BTN[i]]);
   });
-  for (const m of [300, 400, 600, 700]) cases.push([`기본급 ${m}만 (2026)`, S2026, m, 280_000, 353_000]);
+  for (const m of [300, 400, 600, 700]) NET_CASES.push([`기본급 ${m}만 (2026)`, S2026, m, 280_000, 353_000]);
+}
 
-  it.each(cases)("%s", (_name, sc, salary, oldPrice, newPrice) => {
-    const before = netLine(sc, salary, oldPrice, true);
-    const after = netLine(sc, salary, newPrice, false);
+describe("세후 줄은 측정 상태마다 종전(c8e9ae9b0·main 의 '세전 … (실효세율 …%)', 28만)보다 좁고 줄 수가 늘지 않는다(결과 광고 바로 위)", () => {
+  it.each(NET_CASES)("%s", (_name, sc, salary, oldPrice, newPrice) => {
+    const before = netLine(sc, salary, oldPrice, "old");
+    const after = netLine(sc, salary, newPrice, "rv01");
     expect(widthOf(after, 12)).toBeLessThan(widthOf(before, 12));
     expect(widthsWithMoreLines(before, after, 12, 190, 870)).toEqual([]);
   });
 
   it("앞말을 그대로 두면 기본 상태에서 줄이 넓어져 한 줄 느는 폭이 생긴다(이 수정의 이유)", () => {
-    const before = netLine(S2026, 500, 280_000, true);
-    const kept = netLine(S2026, 500, 353_000, true);
+    const before = netLine(S2026, 500, 280_000, "old");
+    const kept = netLine(S2026, 500, 353_000, "old");
     expect(widthOf(kept, 12) - widthOf(before, 12)).toBeGreaterThan(10);
     expect(widthsWithMoreLines(before, kept, 12, 190, 870).length).toBeGreaterThan(0);
+  });
+});
+
+// R4 통합 2026-11-18: R4 의 바탕 N(next-1120 71471b5a5)은 이미 RV-01 문구에 28만이다. 그 줄 대비 지금(35.3만)은 문구가
+// 같아 숫자만 다르고, 기본 상태에서 10.9px 넓어 결과 상자 글 폭 201.25~211.75px(화면 약 327~338px)에서 한 줄 는다.
+// 이 블록은 그 예측을 그대로 적어 둔다 — 운영자 조건(광고가 하나도 내려가지 않을 때만, 2026-11-18 C-11)은 실측이 판정하고,
+// 결과 광고가 내려가면 efe317f1a 를 되돌린다(이 파일도 함께 빠진다).
+describe("N(next-1120 71471b5a5, RV-01 문구·28만) 대비 세후 줄 — 줄이 느는 폭(실측 판정용 예측)", () => {
+  const moreVsN = (sc: Sc, salary: number, oldPrice: number, newPrice: number) =>
+    widthsWithMoreLines(netLine(sc, salary, oldPrice, "rv01"), netLine(sc, salary, newPrice, "rv01"), 12, 190, 870);
+
+  it("기본 상태: 10.9px 넓고 글 폭 201.25~211.75px 에서 한 줄 는다", () => {
+    const n = netLine(S2026, 500, 280_000, "rv01");
+    const head = netLine(S2026, 500, 353_000, "rv01");
+    expect(widthOf(head, 12) - widthOf(n, 12)).toBeCloseTo(10.9, 1);
+    const worse = moreVsN(S2026, 500, 280_000, 353_000);
+    expect([worse[0], worse[worse.length - 1], worse.length]).toEqual([201.25, 211.75, 43]);
+  });
+
+  it("줄이 느는 상태 목록(버튼은 자리끼리 짝): 기본·버튼 1(직접 입력)·버튼 2·3·4(2026)·버튼 3·4(2025)·버튼 4(직접 입력)·기본급 300·400만", () => {
+    const names = NET_CASES.filter(([, sc, salary, o, nw]) => moreVsN(sc, salary, o, nw).length > 0).map(([name]) => name);
+    expect(names).toEqual([
+      "기본(2026)",
+      "버튼 1 (직접 입력)",
+      "버튼 2 (2026)",
+      "버튼 3 (2026)",
+      "버튼 3 (2025)",
+      "버튼 4 (2026)",
+      "버튼 4 (2025)",
+      "버튼 4 (직접 입력)",
+      "기본급 300만 (2026)",
+      "기본급 400만 (2026)",
+    ]);
   });
 });
 

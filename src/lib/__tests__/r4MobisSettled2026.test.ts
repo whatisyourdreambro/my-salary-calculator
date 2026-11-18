@@ -61,9 +61,11 @@ describe("계산기 기본값 = 2026 임단협 타결 (버튼 수 그대로)", (
     expect(t).not.toContain("2026 타결안 나오면");
     // 세후 아래 줄 — 같은 세 숫자, '세전 '·'세율' 없이 (2026-11-18 통합 검토 RV-01: 직접 입력한 기본급에서 이 줄이 한 줄 더
     // 접혀 CalcResultAd 가 내려가던 폭을 없앰. 세전 합계는 바로 위 '총 성과급 (세전)' 상자)
+    // 숫자는 R4 통합(2026-11-18)에서 C-11 주가 기본값 35.3만(efe317f1a)의 첫 화면 값으로 — 문구는 RV-01 그대로.
+    // efe317f1a 를 되돌리면 28만 값('2,373만원3,594만원 − 공제 1,221만원 (실효 34%)')으로 돌아간다.
     const tight = norm(html.replace(/<[^>]+>/g, ""));
-    expect(tight).toContain("2,373만원3,594만원 − 공제 1,221만원 (실효 34%)");
-    expect(tight).not.toContain("세전 3,594만원 − 공제");
+    expect(tight).toContain("2,407만원3,652만원 − 공제 1,245만원 (실효 34.1%)");
+    expect(tight).not.toContain("세전 3,652만원 − 공제");
     expect(tight).not.toContain("실효세율");
   });
 
