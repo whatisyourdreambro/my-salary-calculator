@@ -206,6 +206,61 @@ export async function promoteApprovedCloudRelease(commit, { env, event, api, sav
   return receipt;
 }
 
+// Approval run #29 (44337287611, 2026-11-19) stopped in this step while the job log and the receipt named only the
+// phase, so the cause needed outside probing. A failure now records and prints a reason, but only one of this file's
+// own constant messages (the first line: Node 22 appends actual and expected values below a given message) or the
+// HTTP status number of a failed GitHub request. Anything else becomes a generic kind. Never a token, a header, a
+// response body, an address or an assertion's values. scripts/__tests__/pages-cloud-publish-failure-reason.test.mjs
+// keeps this list equal to the messages used in this file.
+const PUBLIC_FAILURE_REASONS = new Set(['Use --promote --commit <full SHA>', 'A full approved commit is required',
+  'Invalid approved commit', 'GitHub Actions is required', 'Cloud publication is disabled',
+  'Only explicit release approval is accepted', 'Wrong repository', 'Wrong repository owner',
+  'Select main when approving the release', 'The approved commit must be the workflow commit',
+  'Only the owner may approve a release', 'Only the owner may start a release', 'Reruns cannot repeat a release',
+  'Invalid workflow run ID', 'Wrong event repository', 'Wrong event owner', 'Wrong event sender', 'Wrong dispatch ref',
+  'Approval input differs from the commit', 'A QA process cannot promote production',
+  'Cloudflare credentials and deploy hooks are forbidden', 'Unsafe receipt directory',
+  'Receipt directory escapes the workspace', 'Generated GitHub authentication is required', 'Unexpected GitHub endpoint',
+  'GitHub transport failed', 'GitHub response body is missing', 'GitHub response exceeds the size limit',
+  'GitHub returned invalid JSON', 'Unexpected Git reference', 'Reference does not point to a commit',
+  'Invalid reference SHA', 'Invalid CI wait budget', 'Invalid CI wait interval', 'CI is not active',
+  'Unexpected CI workflow', 'Invalid CI workflow ID', 'Main changed after approval', 'Invalid CI run listing',
+  'CI history exceeds the lookup limit', 'Invalid CI run ID', 'Invalid CI job listing', 'Ambiguous CI verification job',
+  'CI job belongs to another run', 'CI job belongs to another commit', 'CI verify did not succeed', 'Invalid CI job ID',
+  'CI workflow did not succeed', 'Main changed after CI verification', 'CI completed without a successful verify job',
+  'The approved commit did not pass CI within the wait budget', 'Invalid readback budget', 'Invalid readback interval',
+  'This commit is already on the deployment branch', 'Promotion must be a fast-forward', 'Unexpected comparison base',
+  'Deployment branch diverged', 'Main changed before promotion', 'Deployment branch changed before promotion',
+  'GitHub did not confirm the approved commit', 'Deployment branch readback differs', 'Main changed during promotion',
+  'Missing GitHub dispatch event', 'Dispatch event is too large', 'Checkout differs from approval']);
+const PUBLIC_PHASES = new Set(['claimed', 'checking-ci', 'promotion-requested', 'promoted-awaiting-native-deployment']);
+const publishFailures = new WeakMap();
+
+export function cloudPublishFailureReason(error) {
+  let first = '', code, name;
+  try { first = String(error?.message ?? '').split('\n', 1)[0]; code = error?.code; name = error?.name; } catch { /* generic */ }
+  if (PUBLIC_FAILURE_REASONS.has(first)) return first;
+  const status = /^GitHub request failed \(HTTP ([1-5][0-9]{2})\)$/.exec(first)?.[1];
+  if (status) return `GitHub request failed (HTTP ${status})`;
+  return code === 'ERR_ASSERTION' ? 'contract-assertion'
+    : ['TimeoutError', 'AbortError', 'TypeError', 'SyntaxError'].includes(name) ? name : 'gate-error';
+}
+
+// The receipt written after a failure and the error the command line reports for it.
+export function cloudPublishFailure(commit, phase, error) {
+  const reason = cloudPublishFailureReason(error);
+  const failure = new Error(`Cloud publication stopped at ${phase}; inspect the pinned workflow and deployment branch before any new approval`);
+  publishFailures.set(failure, { phase: PUBLIC_PHASES.has(phase) ? phase : 'unclassified', reason });
+  return { failure, record: { schemaVersion: 1, commit, phase, failed: true, reason,
+    promotionOutcomeMayBeUnknown: phase === 'promotion-requested' } };
+}
+
+// One JSON line for the job log: the phase and the reason, or 'preflight' for a failure before the gate began
+// (or while writing the failure receipt itself).
+export function cloudPublishFailureDiagnostic(error) {
+  return { failed: true, ...(publishFailures.get(error) ?? { phase: 'preflight', reason: cloudPublishFailureReason(error) }) };
+}
+
 export async function runCloudPublish(args = process.argv.slice(2), env = process.env) {
   const commit = parseCloudPublishArgs(args);
   assert(env.GITHUB_EVENT_PATH && lstatSync(env.GITHUB_EVENT_PATH).isFile() && !lstatSync(env.GITHUB_EVENT_PATH).isSymbolicLink(), 'Missing GitHub dispatch event');
@@ -223,16 +278,17 @@ export async function runCloudPublish(args = process.argv.slice(2), env = proces
       saveState: value => { phase = value.phase; writeFileSync(state, JSON.stringify(value, null, 2)); },
       savePromotion: value => writeFileSync(path.join(directory, 'promotion.json'), JSON.stringify(value, null, 2), { flag: 'wx', mode: 0o600 }),
     });
-  } catch {
-    writeFileSync(state, JSON.stringify({ schemaVersion: 1, commit, phase, failed: true,
-      promotionOutcomeMayBeUnknown: phase === 'promotion-requested' }, null, 2));
-    throw new Error(`Cloud publication stopped at ${phase}; inspect the pinned workflow and deployment branch before any new approval`);
+  } catch (error) {
+    const { failure, record } = cloudPublishFailure(commit, phase, error);
+    writeFileSync(state, JSON.stringify(record, null, 2));
+    throw failure;
   }
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
-  runCloudPublish().then(() => console.log('Approved commit promoted; native deployment verification must still complete.')).catch(() => {
+  runCloudPublish().then(() => console.log('Approved commit promoted; native deployment verification must still complete.')).catch(error => {
     console.error('Cloud release promotion failed. No retry was performed; see the sanitized release receipt.');
+    console.error(JSON.stringify(cloudPublishFailureDiagnostic(error)));
     process.exitCode = 1;
   });
 }
