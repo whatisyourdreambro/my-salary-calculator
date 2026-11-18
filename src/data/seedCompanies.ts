@@ -20,25 +20,25 @@ export const seedCompanies: CompanyProfile[] = [
  "대한민국 시가총액 1위, 글로벌 반도체·모바일·가전 리더. DS(반도체) / DX(가전·모바일) / 하만 3대 사업부 운영, 임직원 약 12만명. 2026년 임금협약 타결(2026-05-27 조합원 투표 가결, 찬성 73.7% — Base-up 4.1% + 성과인상률 평균 2.1%)로 셀러리캡 전면 상향 — CL2 0.76→0.80억, CL3 1.03→1.10억, CL4 (개발 1.22억/비개발 1.20억) → 개발·비개발 통합 1.30억. 전 직급 가중 평균 영끌 연봉 약 8,000만원(반도체 사이클 평탄화 기준).",
  salary: {
  // CL1 (신입~사원): base 4,800만 + OPI/TAI 평균 800만 = 영끌 5,600만원.
- // 셀러리캡(CL1 상한) 약 5,500만원 base. 평균 OPI 회사 인상률에 OPI 변동 ±30% 반영.
+ // 평균 OPI 회사 인상률에 OPI 변동 ±30% 반영.
  entry: {
  base: 48000000,
  incentive: { target: 25, max: 50, avgAmount: 8000000 },
  },
  // CL2 (대리, 3~7년차): base 6,000만 + 평균 OPI 1,200만 = 영끌 7,200만원.
- // 셀러리캡 약 7,200만원 base. 동기 진급 격차 첫 발생 구간.
+ // 동기 진급 격차 첫 발생 구간. (셀러리캡 수치는 아래 careerLevels — 아주경제 2026-05-21 보도값만)
  junior: {
  base: 60000000,
  incentive: { target: 30, max: 50, avgAmount: 12000000 },
  },
  // CL3 (과장, 7~12년차): base 7,500만 + 평균 OPI 1,700만 = 영끌 9,200만원.
- // 셀러리캡 약 8,800만원 base. 진급 누락 시 cap에 가까워져 인상폭 정체.
+ // 진급 누락 시 cap에 가까워져 인상폭 정체.
  senior: {
  base: 75000000,
  incentive: { target: 35, max: 50, avgAmount: 17000000 },
  },
  // CL4 (차장/부장, 12~18년차): base 9,000만 + 평균 OPI 2,200만 = 영끌 1억 1,200만원.
- // 셀러리캡 약 1억 500만원 base. 임원 진급 전 마지막 cap, 정체 시 가장 강함.
+ // 임원 진급 전 마지막 cap, 정체 시 가장 강함.
  lead: {
  base: 90000000,
  incentive: { target: 40, max: 60, avgAmount: 22000000 },
@@ -67,7 +67,6 @@ export const seedCompanies: CompanyProfile[] = [
  {
  group: "CL1 (고졸·전문대졸 입사)",
  promotionNote: "고졸·전문대졸 신입은 CL1 시작. 평균 4~6년 이상 근무 + 점수 충족 시 CL2 진급 가능",
- salaryCapManwon: 5000,
  steps: [
  {
  label: "CL1-1 (1~2년차)",
@@ -80,7 +79,6 @@ export const seedCompanies: CompanyProfile[] = [
  description: "CL1-1 이후 호봉 상승, CL2 진급 직전 구간",
  baseManwon: 4200,
  totalManwon: 5400,
- isCapReached: true,
  },
  ],
  },
@@ -293,7 +291,6 @@ export const seedCompanies: CompanyProfile[] = [
  {
  group: "CL2 (사원·신입)",
  promotionNote: "대졸 기술사무직 신입 시작점(호칭 TL 통일). 평균 5~6년차 CL3 진급. PS·성과급에 따라 영끌 변동 큼.",
- salaryCapManwon: 8000,
  steps: [
  {
  label: "CL2 (1~2년차)",
@@ -312,21 +309,18 @@ export const seedCompanies: CompanyProfile[] = [
  {
  group: "CL3 (대리)",
  promotionNote: "보도 대리급 연봉 약 8,500만원(영끌). HBM 호황기 PS로 영끌 상향.",
- salaryCapManwon: 9000,
  steps: [
  {
  label: "CL3 (대리)",
  description: "대리 진급. 보도 영끌 약 8,500만원",
  baseManwon: 6500,
  totalManwon: 8500,
- isCapReached: true,
  },
  ],
  },
  {
  group: "CL4 (과장·차장)",
  promotionNote: "보도 과장·차장급 연봉 약 1억원(영끌). 핵심 실무·리더 구간.",
- salaryCapManwon: 11000,
  steps: [
  {
  label: "CL4 (과장)",
@@ -339,21 +333,18 @@ export const seedCompanies: CompanyProfile[] = [
  description: "차장. 사업부 핵심 인력",
  baseManwon: 8800,
  totalManwon: 11500,
- isCapReached: true,
  },
  ],
  },
  {
  group: "CL5 (부장·수석)",
  promotionNote: "보도 부장급 연봉 약 1억 3,000만원(영끌). 임원 진급 대기 구간.",
- salaryCapManwon: 14000,
  steps: [
  {
  label: "CL5 (부장)",
  description: "부장 진급. 보도 영끌 약 1억 3,000만원",
  baseManwon: 9800,
  totalManwon: 13000,
- isCapReached: true,
  },
  ],
  },
