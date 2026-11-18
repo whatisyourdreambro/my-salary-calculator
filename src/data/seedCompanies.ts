@@ -450,7 +450,12 @@ export const seedCompanies: CompanyProfile[] = [
  },
  benefits: [
  { category: "growth", title: "업무 기기 지원", description: "최고사양 맥북/노트북 및 장비 지원", value: 3000000 },
- { category: "financial", title: "스톡그랜트", description: "매년 1천만원 상당 자사주 지급", value: 10000000 },
+ // 스톡그랜트(전 직원 연 1천만원 상당 자사주, 2021-04 도입)는 2023-05 임협에서 2026년까지 2년 연장됐다가(아이뉴스24 2023-05-18
+ // https://www.inews24.com/view/1595647, 2024-07 지급 전자신문 https://www.etnews.com/20240701000387) 2025년 임단협
+ // 잠정합의에서 종료됐다(EBN 2025-04-01 https://www.ebn.co.kr/news/articleView.html?idxno=1657605, 디지털데일리 같은 날).
+ // 지금 받는 복지가 아니므로 value 0(연 가치 줄 숨김) — N2-data-07 3번, 운영자 승인 2026-11-18. 패키지 문구 2021~23년은
+ // 2024년 지급 보도와 어긋나 쓰지 않고, 종전보다 좁은 문구로 바꿨다.
+ { category: "financial", title: "스톡그랜트", description: "자사주 지급, 2025년 종료", value: 0 },
  { category: "lifestyle", title: "커넥티드 워크", description: "원격 근무 지원금 (월 15만원)", value: 1800000 },
  ],
  lastUpdated: "2026-08-15",
