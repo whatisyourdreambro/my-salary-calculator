@@ -13,6 +13,11 @@ import NumberInput from "@/components/NumberInput";
 // 2026-11-17 운영자 승인(N2-calc-19): 2026 타결을 기본값으로, 버튼 수는 그대로 — 두 번째 칩이던 2024 임협 합의
 //   (머니S 단독 2024-07-09: 성과금·격려금 총 500% + 1,520만 + 주식 36주)는 2026 타결 칩으로 바꿨다.
 //   2024 수치는 page.tsx 의 '최근 지급 연혁' 표와 FAQ 에 그대로 남는다.
+// 2026-11-18 통합 검토 RV-01: 월 기본급을 직접 넣으면 세후 아래 한 줄(세전 … − 공제 … (실효세율 …%))이 2026 숫자로
+//   바뀌어 일부 값(260만·310만·730만·910만 등)에서 359~365px 폰 화면에 한 줄 더 접혀 CalcResultAd 가 16px 내려갔다.
+//   같은 세 숫자(세전 합계·공제·실효율)를 그대로 두고 '세전 '과 '세율' 네 글자만 줄였다
+//   (세전 합계는 바로 위 '총 성과급 (세전)' 상자에 있다). 사이트 글꼴 폭으로 어떤 입력에서도 2025 기본값의 옛 줄보다
+//   16px 이상 짧다(기본급 0~3,000만·주가 0~100만·세액공제·4대보험 전부, 직접 입력 포함). 되돌리면 광고가 다시 내려간다.
 const SCENARIOS = [
   {
     id: "2026-settled",
@@ -285,8 +290,8 @@ export default function HyundaiMobisBonusClient() {
             {fmtEok(calc.tax.net)}
           </p>
           <p className="text-xs text-faint mt-1">
-            세전 {fmtEok(calc.totalGross)} − 공제 {fmtEok(calc.tax.totalDeductions)}{" "}
-            (실효세율 <strong>{calc.tax.effectiveRate}%</strong>)
+            {fmtEok(calc.totalGross)} − 공제 {fmtEok(calc.tax.totalDeductions)}{" "}
+            (실효 <strong>{calc.tax.effectiveRate}%</strong>)
           </p>
         </div>
 
