@@ -98,9 +98,10 @@ describe("회사 데이터 사실 정정 — 광고 위 같은 폭 이하 (R09 c
       expect(ratio, id).toBeGreaterThan(s.entry.incentive.target);
       expect(ratio, id).toBeLessThan(s.entry.incentive.max);
     }
-    // 전 회사 incentive 는 연 기본급 대비 % — 100 을 넘는 것은 메리츠화재(최대 300%)뿐(별건)
+    // 전 회사 incentive 는 연 기본급 대비 % — 100 을 넘는 것은 SK하이닉스(최대 150%, PS 상한 폐지 후 2025년분 연봉의 약 148% —
+    // N2-data-07 1번, r4bData2SkHynixIncentive.test.ts)와 메리츠화재(최대 300%)뿐(별건)
     const over = companies.filter((c) => c.salary.entry.incentive.max > 100).map((c) => c.id);
-    expect(over).toEqual(["meritz-fire"]);
+    expect(over).toEqual(["sk-hynix", "meritz-fire"]);
   });
 });
 

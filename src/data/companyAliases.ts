@@ -176,4 +176,8 @@ export const companySearchAliases: Record<string, string[]> = {
   "keti": ["KETI"],
   // 롯데칠성음료 — 통칭(줄임 이름)
   "lotte-chilsung": ["롯데칠성"],
+
+  // ── N2-data-08 2단계 (2026-11-18 준비, 운영자 승인 C-3): 회사명 정정 묶음의 검색 전용 통칭 ──
+  // 롯데글로벌로지스의 택배 서비스 브랜드(바이라인네트워크 2024-12-09 '롯데택배 약속배송' 등 보도). 회사명은 정정 커밋이 따로 바꾼다.
+  "lotte-global-logistics": ["롯데택배"],
 };

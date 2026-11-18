@@ -20,25 +20,25 @@ export const seedCompanies: CompanyProfile[] = [
  "대한민국 시가총액 1위, 글로벌 반도체·모바일·가전 리더. DS(반도체) / DX(가전·모바일) / 하만 3대 사업부 운영, 임직원 약 12만명. 2026년 임금협약 타결(2026-05-27 조합원 투표 가결, 찬성 73.7% — Base-up 4.1% + 성과인상률 평균 2.1%)로 셀러리캡 전면 상향 — CL2 0.76→0.80억, CL3 1.03→1.10억, CL4 (개발 1.22억/비개발 1.20억) → 개발·비개발 통합 1.30억. 전 직급 가중 평균 영끌 연봉 약 8,000만원(반도체 사이클 평탄화 기준).",
  salary: {
  // CL1 (신입~사원): base 4,800만 + OPI/TAI 평균 800만 = 영끌 5,600만원.
- // 셀러리캡(CL1 상한) 약 5,500만원 base. 평균 OPI 회사 인상률에 OPI 변동 ±30% 반영.
+ // 평균 OPI 회사 인상률에 OPI 변동 ±30% 반영.
  entry: {
  base: 48000000,
  incentive: { target: 25, max: 50, avgAmount: 8000000 },
  },
  // CL2 (대리, 3~7년차): base 6,000만 + 평균 OPI 1,200만 = 영끌 7,200만원.
- // 셀러리캡 약 7,200만원 base. 동기 진급 격차 첫 발생 구간.
+ // 동기 진급 격차 첫 발생 구간. (셀러리캡 수치는 아래 careerLevels — 아주경제 2026-05-21 보도값만)
  junior: {
  base: 60000000,
  incentive: { target: 30, max: 50, avgAmount: 12000000 },
  },
  // CL3 (과장, 7~12년차): base 7,500만 + 평균 OPI 1,700만 = 영끌 9,200만원.
- // 셀러리캡 약 8,800만원 base. 진급 누락 시 cap에 가까워져 인상폭 정체.
+ // 진급 누락 시 cap에 가까워져 인상폭 정체.
  senior: {
  base: 75000000,
  incentive: { target: 35, max: 50, avgAmount: 17000000 },
  },
  // CL4 (차장/부장, 12~18년차): base 9,000만 + 평균 OPI 2,200만 = 영끌 1억 1,200만원.
- // 셀러리캡 약 1억 500만원 base. 임원 진급 전 마지막 cap, 정체 시 가장 강함.
+ // 임원 진급 전 마지막 cap, 정체 시 가장 강함.
  lead: {
  base: 90000000,
  incentive: { target: 40, max: 60, avgAmount: 22000000 },
@@ -67,7 +67,6 @@ export const seedCompanies: CompanyProfile[] = [
  {
  group: "CL1 (고졸·전문대졸 입사)",
  promotionNote: "고졸·전문대졸 신입은 CL1 시작. 평균 4~6년 이상 근무 + 점수 충족 시 CL2 진급 가능",
- salaryCapManwon: 5000,
  steps: [
  {
  label: "CL1-1 (1~2년차)",
@@ -80,7 +79,6 @@ export const seedCompanies: CompanyProfile[] = [
  description: "CL1-1 이후 호봉 상승, CL2 진급 직전 구간",
  baseManwon: 4200,
  totalManwon: 5400,
- isCapReached: true,
  },
  ],
  },
@@ -258,21 +256,26 @@ export const seedCompanies: CompanyProfile[] = [
  logo: "💾",
  description: "글로벌 메모리 반도체 2위, AI 반도체(HBM) 선두주자.",
  salary: {
+ // incentive.max(연봉 대비 %) — 종전 50 은 PS 옛 상한(월 기본급 1,000% = 연봉의 최대 50% 가량, 이투데이 2023-02-01
+ // https://www.etoday.co.kr/news/view/2217429)이었다. 노사가 2025년 하반기 이 상한을 폐지했고 2025년분 PS 는
+ // 2,964%로 책정돼 연봉 1억원 직원이 1억4,820만원(연봉의 약 148%)을 받았다(뉴시스 2026-02-04
+ // https://www.newsis.com/view/NISX20260204_0003502924). 그래서 신입~리드 max 150 (N2-data-07 1번, 운영자 승인 2026-11-18).
+ // 임원 행은 검증자 안대로 그대로 둔다.
  entry: {
  base: 53000000,
- incentive: { target: 50, max: 50, avgAmount: 28000000 }, // Recent boom
+ incentive: { target: 50, max: 150, avgAmount: 28000000 }, // Recent boom
  },
  junior: {
  base: 72000000,
- incentive: { target: 50, max: 50, avgAmount: 38000000 },
+ incentive: { target: 50, max: 150, avgAmount: 38000000 },
  },
  senior: {
  base: 98000000,
- incentive: { target: 50, max: 50, avgAmount: 50000000 },
+ incentive: { target: 50, max: 150, avgAmount: 50000000 },
  },
  lead: {
  base: 135000000,
- incentive: { target: 50, max: 50, avgAmount: 70000000 },
+ incentive: { target: 50, max: 150, avgAmount: 70000000 },
  },
  executive: {
  base: 260000000,
@@ -288,7 +291,6 @@ export const seedCompanies: CompanyProfile[] = [
  {
  group: "CL2 (사원·신입)",
  promotionNote: "대졸 기술사무직 신입 시작점(호칭 TL 통일). 평균 5~6년차 CL3 진급. PS·성과급에 따라 영끌 변동 큼.",
- salaryCapManwon: 8000,
  steps: [
  {
  label: "CL2 (1~2년차)",
@@ -307,21 +309,18 @@ export const seedCompanies: CompanyProfile[] = [
  {
  group: "CL3 (대리)",
  promotionNote: "보도 대리급 연봉 약 8,500만원(영끌). HBM 호황기 PS로 영끌 상향.",
- salaryCapManwon: 9000,
  steps: [
  {
  label: "CL3 (대리)",
  description: "대리 진급. 보도 영끌 약 8,500만원",
  baseManwon: 6500,
  totalManwon: 8500,
- isCapReached: true,
  },
  ],
  },
  {
  group: "CL4 (과장·차장)",
  promotionNote: "보도 과장·차장급 연봉 약 1억원(영끌). 핵심 실무·리더 구간.",
- salaryCapManwon: 11000,
  steps: [
  {
  label: "CL4 (과장)",
@@ -334,21 +333,18 @@ export const seedCompanies: CompanyProfile[] = [
  description: "차장. 사업부 핵심 인력",
  baseManwon: 8800,
  totalManwon: 11500,
- isCapReached: true,
  },
  ],
  },
  {
  group: "CL5 (부장·수석)",
  promotionNote: "보도 부장급 연봉 약 1억 3,000만원(영끌). 임원 진급 대기 구간.",
- salaryCapManwon: 14000,
  steps: [
  {
  label: "CL5 (부장)",
  description: "부장 진급. 보도 영끌 약 1억 3,000만원",
  baseManwon: 9800,
  totalManwon: 13000,
- isCapReached: true,
  },
  ],
  },
@@ -454,7 +450,12 @@ export const seedCompanies: CompanyProfile[] = [
  },
  benefits: [
  { category: "growth", title: "업무 기기 지원", description: "최고사양 맥북/노트북 및 장비 지원", value: 3000000 },
- { category: "financial", title: "스톡그랜트", description: "매년 1천만원 상당 자사주 지급", value: 10000000 },
+ // 스톡그랜트(전 직원 연 1천만원 상당 자사주, 2021-04 도입)는 2023-05 임협에서 2026년까지 2년 연장됐다가(아이뉴스24 2023-05-18
+ // https://www.inews24.com/view/1595647, 2024-07 지급 전자신문 https://www.etnews.com/20240701000387) 2025년 임단협
+ // 잠정합의에서 종료됐다(EBN 2025-04-01 https://www.ebn.co.kr/news/articleView.html?idxno=1657605, 디지털데일리 같은 날).
+ // 지금 받는 복지가 아니므로 value 0(연 가치 줄 숨김) — N2-data-07 3번, 운영자 승인 2026-11-18. 패키지 문구 2021~23년은
+ // 2024년 지급 보도와 어긋나 쓰지 않고, 종전보다 좁은 문구로 바꿨다.
+ { category: "financial", title: "스톡그랜트", description: "자사주 지급, 2025년 종료", value: 0 },
  { category: "lifestyle", title: "커넥티드 워크", description: "원격 근무 지원금 (월 15만원)", value: 1800000 },
  ],
  lastUpdated: "2026-08-15",

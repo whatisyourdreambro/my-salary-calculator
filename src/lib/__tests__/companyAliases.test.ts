@@ -154,7 +154,11 @@ const B3_VARIANTS: Record<string, string[]> = {
   keti: ["KETI"],
   "lotte-chilsung": ["롯데칠성"],
 };
-const RELANDED: Record<string, string[]> = { ...W3F, ...R609_RENAMED, ...B3_VARIANTS };
+/** N2-data-08 2단계(2026-11-18, 운영자 승인 C-3) — 회사명 정정 묶음의 택배 브랜드 통칭 하나 (r4bData2LotteAlias.test.ts) */
+const N2_DATA_08: Record<string, string[]> = {
+  "lotte-global-logistics": ["롯데택배"],
+};
+const RELANDED: Record<string, string[]> = { ...W3F, ...R609_RENAMED, ...B3_VARIANTS, ...N2_DATA_08 };
 /** 사이트 회사명(name.ko = H1) — 새 사명은 검색 쪽에만 싣고 회사명은 바꾸지 않는다 */
 const NAME_KO: Record<string, string> = {
   kotra: "KOTRA",
@@ -168,13 +172,15 @@ const NAME_KO: Record<string, string> = {
   "hd-hyundai-oilbank": "HD현대오일뱅크",
   keti: "한국전자기술연구원",
   "lotte-chilsung": "롯데칠성음료",
+  // N2-data-08: 검색 쪽 통칭(롯데택배)과 별개로 회사명 자체를 실제 사명으로 고치는 것은 회사명 정정 커밋 몫
+  "lotte-global-logistics": "롯데글로벌로지스",
 };
 const narrativeOf = (c: CompanyProfile) => renderToStaticMarkup(createElement(CompanyNarrative, { company: c }));
 
 describe("RL-03 재착지 목록 — W3-F 2곳 + R6-09 사명 변경 5곳 + B3 4곳 (화면 비노출)", () => {
-  it("목록이 정확히 이 11곳·이 값이다 (별칭 공변량 id 집합 — docs/analytics-measurement.md L10' 절 ②)", () => {
+  it("목록이 정확히 이 12곳(RL-03 11곳 + N2-data-08 1곳)·이 값이다 (별칭 공변량 id 집합 — docs/analytics-measurement.md L10' 절 ②)", () => {
     expect(companySearchAliases).toEqual(RELANDED);
-    expect(Object.keys(companySearchAliases)).toHaveLength(11);
+    expect(Object.keys(companySearchAliases)).toHaveLength(12);
   });
 
   it("회사명(name.ko·H1)은 그대로다", () => {

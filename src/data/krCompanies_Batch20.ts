@@ -259,7 +259,9 @@ export const krCompanies_Batch20: CompanyProfile[] = [
   },
   {
     id: "lotte-global-logistics",
-    name: { ko: "롯데글로벌로지스틱스", en: "Lotte Global Logistics" },
+    // 회사명 정정 (N2-data-08 2단계, 운영자 승인 2026-11-18): 롯데글로벌로지스틱스 -> 롯데글로벌로지스. DART 회사명 롯데글로벌로지스,
+    // 회사 사이트(lotteglogis.com) 표기 롯데글로벌로지스 / LOTTE GLOBAL LOGISTICS CO,.LTD — 2026-11-18 확인.
+    name: { ko: "롯데글로벌로지스", en: "Lotte Global Logistics" },
     industry: "Logistics",
     tier: "conglomerate",
     logo: "📦",
