@@ -31,6 +31,7 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   SEASONAL_LINKS_DEC,
+  SEASONAL_LINKS_JAN,
   SEASONAL_LINKS_OCT,
   type SeasonalLinkSet,
 } from "@/app/table/2026/SeasonalLinks";
@@ -225,7 +226,7 @@ describe("폭 모델의 전제", () => {
     expect(sha).toBe(FONT_SHA256);
   });
   it("검사하는 문구의 글자와 한글 밖 인접 쌍은 모두 표에서 잰 것이다", () => {
-    for (const s of [...setTexts(SEASONAL_LINKS_OCT), ...setTexts(SEASONAL_LINKS_DEC)]) {
+    for (const s of [...setTexts(SEASONAL_LINKS_OCT), ...setTexts(SEASONAL_LINKS_DEC), ...setTexts(SEASONAL_LINKS_JAN)]) {
       const cs = [...s];
       cs.forEach((c, i) => {
         expect(isHangul(c) || CHARS.includes(c), `${s}: ${c}`).toBe(true);
@@ -271,5 +272,36 @@ describe("12월 세트(DEC) — 12/1 자동 전환 때 지금 세트(OCT)보다 
     expect(SEASONAL_LINKS_DEC.heading).toBe("연말정산 마감 전 — 12월 시즌 체크리스트");
     expect(SEASONAL_LINKS_DEC.links[0].description).toBe("단계별 로드맵 — 12/31 전 점검");
     expect(SEASONAL_LINKS_DEC.links[2].description).toBe(SEASONAL_LINKS_OCT.links[2].description);
+  });
+});
+
+// 1월 세트는 1/2 무렵 SEASON_KEY_OVERRIDE = "JAN" 으로 수동 전환(1/1 묶음). 같은 규칙을 줄인 12월 세트에 대어 본다.
+describe("1월 세트(JAN) — 수동 전환 때 줄인 12월 세트(DEC)보다 상자가 높아지지 않는다", () => {
+  it("링크 6개·순서·주소는 그대로", () => {
+    expect(SEASONAL_LINKS_JAN.links.map((l) => l.href)).toEqual([
+      "/year-end-tax-2027",
+      "/calc/samsung-bonus",
+      "/year-end-tax",
+      "/credit-card-deduction-2026",
+      "/table/2027/annual",
+      "/medical-tax-credit-2026",
+    ]);
+  });
+  it("제목·카드·상자 높이 모두 12월 세트 이하 (짝: 환급금 계산기 ← IRP 계산기)", () => {
+    expectNoTallerThan(SEASONAL_LINKS_DEC, SEASONAL_LINKS_JAN, { "/year-end-tax": "/tools/finance/irp" });
+  });
+  it("줄인 문구는 고치기 전보다 좁고, 날짜는 넣지 않았다(간소화 개통일 미발표)", () => {
+    const changed: [Kind, string, string][] = [
+      ["heading", "연말정산 간소화 오픈 — 1월 시즌 체크리스트", SEASONAL_LINKS_JAN.heading],
+      ["title", "연말정산 간소화 서비스 이용 순서 — 2027 허브", SEASONAL_LINKS_JAN.links[0].title],
+      ["desc", "간소화 자료 조회부터 회사 제출까지 단계별 로드맵", SEASONAL_LINKS_JAN.links[0].description],
+      ["desc", "발표된 사업부별 지급률 입력 → 세후 실수령액 바로 확인", SEASONAL_LINKS_JAN.links[1].description],
+      ["desc", "간소화 자료 기준 예상 환급·추가납부액 즉시 계산", SEASONAL_LINKS_JAN.links[2].description],
+    ];
+    for (const [kind, before, after] of changed) expect(total(after, kind)).toBeLessThan(total(before, kind));
+    for (const s of setTexts(SEASONAL_LINKS_JAN)) {
+      expect(s).not.toMatch(/\d+\/\d+/);
+      expect(s).not.toMatch(/\d+일/);
+    }
   });
 });

@@ -160,23 +160,24 @@ export const SEASONAL_LINKS_DEC: SeasonalLinkSet = {
 // 1월 연말정산 간소화·OPI 세트 — 1/2 교체용 사전 제작 (2026-09-05, L18' 시점 앞당김).
 // 라우트 6종 전부 src/app 에 실존 확인. ★OPI 는 발표 전 → 라벨만, 지급률 수치 금지.
 // ★간소화 오픈일은 국세청 공지 전 미확인 → 날짜 카피 금지.
+// 2026-11-18 (R4 SEASONDEC): 1/2 수동 전환 때 줄인 12월 상자보다 줄이 늘지 않게 제목·허브 제목·설명 3개를 줄임(사실은 그대로).
 export const SEASONAL_LINKS_JAN: SeasonalLinkSet = {
-  heading: "연말정산 간소화 오픈 — 1월 시즌 체크리스트",
+  heading: "연말정산 간소화 — 1월 시즌 체크리스트",
   links: [
     {
       href: "/year-end-tax-2027",
-      title: "연말정산 간소화 서비스 이용 순서 — 2027 허브",
-      description: "간소화 자료 조회부터 회사 제출까지 단계별 로드맵",
+      title: "연말정산 간소화 이용 순서 — 2027 허브",
+      description: "간소화 자료 조회부터 회사 제출까지",
     },
     {
       href: "/calc/samsung-bonus",
       title: "삼성전자 OPI 세후 계산기",
-      description: "발표된 사업부별 지급률 입력 → 세후 실수령액 바로 확인",
+      description: "사업부별 지급률 입력 → 세후 실수령액 바로 확인",
     },
     {
       href: "/year-end-tax",
       title: "연말정산 환급금 계산기",
-      description: "간소화 자료 기준 예상 환급·추가납부액 즉시 계산",
+      description: "간소화 자료 기준 예상 환급·추가납부액 계산",
     },
     {
       href: "/credit-card-deduction-2026",
