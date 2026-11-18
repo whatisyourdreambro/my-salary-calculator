@@ -173,7 +173,7 @@ const NAME_KO: Record<string, string> = {
   keti: "한국전자기술연구원",
   "lotte-chilsung": "롯데칠성음료",
   // N2-data-08: 검색 쪽 통칭(롯데택배)과 별개로 회사명 자체를 실제 사명으로 고치는 것은 회사명 정정 커밋 몫
-  "lotte-global-logistics": "롯데글로벌로지스틱스",
+  "lotte-global-logistics": "롯데글로벌로지스",
 };
 const narrativeOf = (c: CompanyProfile) => renderToStaticMarkup(createElement(CompanyNarrative, { company: c }));
 
