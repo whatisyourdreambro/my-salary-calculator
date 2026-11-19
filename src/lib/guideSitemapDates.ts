@@ -69,7 +69,7 @@ export const GUIDE_SITEMAP_ONLY_REVISED: Readonly<Record<string, string>> = {
   // samsung-opi-forecast-2027 은 그 뒤 2026-11-15(facts-01)에 광고 아래 10/9 보강의 '확정 실적은 10월 29일 발표됩니다'(지난 일)를
   // 10월 29일 실적 발표 영업이익 107조 4,405억원으로 고쳐 행 값이 그날이다(RELAND_R1_PUSH 를 쓰지 않는다).
   "samsung-opi-forecast-2027": R4_GUIDES_EDIT_DAY, // 11/15 facts-01 뒤 R4 b01-M01 본문 DS 24.9조 정정
-  "samsung-bonus-treasury-stock-15-trillion-2026": R4_GUIDES_EDIT_DAY, // R4 GUIDES 2026-11-18 (이전 RELAND_R1_PUSH)
+  "samsung-bonus-treasury-stock-15-trillion-2026": "2026-11-20", // R4 GUIDES 2026-11-18 (이전 RELAND_R1_PUSH), R4 수리 2026-11-20 보강 자사주 매입 결과(F6)
   "samsung-vs-sk-hynix-stock-bonus-2026": R4_GUIDES_EDIT_DAY, // R4 GUIDES 2026-11-18 (이전 RELAND_R1_PUSH)
   // ── R1 재착지에서 내용이 바뀐 '수정 칩 있는' 가이드 10편(원장일 RELAND_R1_PUSH) — 화면 날짜는 2026.10.03 그대로 (2026-11-15, ads-01) ──
   // R1 원장(d48f17877)은 이 10편을 본문 정정일 표(guideContentRevisions.relandR1.ts)에 넣어 칩을 2026.11.03 으로 바꿨고, 그 숫자
@@ -99,7 +99,7 @@ export const GUIDE_SITEMAP_ONLY_REVISED: Readonly<Record<string, string>> = {
   // 10/8 0d2242990·3980bb5b8: DS 특별성과급 세부안(10/7 보도) 보강과 같은 날 정정. 칩 날짜(9/26)는 그대로.
   "samsung-opi-tai-complete-2026": "2026-10-08",
   // 11/1 80dcc3138: '재원 기준' 줄 추가(DS부문 영업이익의 10.5%). 칩 날짜(10/3)는 그대로.
-  "samsung-special-bonus-q3-preview-2027": R4_GUIDES_EDIT_DAY, // 11/1 재원 기준 뒤 R4 b12-F02 10월 29일 기준
+  "samsung-special-bonus-q3-preview-2027": "2026-11-20", // 11/1 재원 기준 뒤 R4 b12-F02 10월 29일 기준, R4 수리 2026-11-20 보강 자사주 매입 결과(F6)
   // ── RL-08 재착지(10월 8b46a5e36·25bc65494 등, 2026-11-15): 광고 위 같은 폭 이하 사실 정정 + 마지막 광고 아래 새 보강(supplements-2026-11.ts) ──
   // 아동수당: 칩 없는 글 — 금액 줄 월 10만~12만원·부모급여 조건 정정, 지역별 금액 보강. 칩을 새로 만들지 않는다(GuideMidAd 위 UI).
   "child-support-100-2026": RL08_EDIT_DAY,

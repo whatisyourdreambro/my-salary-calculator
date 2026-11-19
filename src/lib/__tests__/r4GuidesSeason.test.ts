@@ -118,3 +118,15 @@ describe("b04-M03 (0b6804d8e) 금융소득 종합과세 가이드 — 검색 설
     expect(meta.length).toBeLessThanOrEqual(120);
   });
 });
+
+describe("R4 수리 F6 (2026-11-20, 사실 확인 bonus-gaps-1) 삼성 가이드 2편 보강 — 자사주 매입 결과(10월 12일 공시)", () => {
+  it("10월 2일 진행 보도 대신 8월 24일~10월 6일 약 5,686만 주·약 15조원 취득 결과(딜사이트 2026-10-12)", () => {
+    const a = guideSupplementsSamsungDs202610["samsung-special-bonus-q3-preview-2027"];
+    const b = guideSupplementsSamsungDs202610["samsung-bonus-treasury-stock-15-trillion-2026"];
+    expect(a).toContain("자사주 매입은 10월 6일 약 15조원으로 끝났고(10월 12일 공시),");
+    expect(a).not.toContain("14.2조원");
+    expect(b).toContain("<li><strong>매입 결과</strong> — 10월 12일 취득 결과 공시 보도(딜사이트)에 따르면 8월 24일~10월 6일 약 5,686만 주, 약 15조원어치를 사들여 공시 물량(약 5,329만 주)을 넘겼습니다.</li>");
+    expect(b).not.toContain("매입 진행");
+    expect(b).not.toContain("이어갈 가능성");
+  });
+});
