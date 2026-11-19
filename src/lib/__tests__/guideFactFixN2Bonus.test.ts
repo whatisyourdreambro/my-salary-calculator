@@ -83,7 +83,18 @@ describe("b03-F03 (69b3489b1) 가족 피부양자 점검 — 2022년 9월 개편
     const g = guide("dependent-check-before-bonus-2026");
     expect(g.content).toContain("2022년 9월 피부양자 요건 강화");
     expect(g.content).toContain("<strong>재산세 과세표준 9억 이하</strong>: 5.4억 초과는 조건부");
-    expect(g.content).toContain("연금·이자소득 등으로 2,000만 넘거나 임대소득이 있으면 피부양자에서 박탈");
+    expect(g.content).toContain("연금·이자소득 등으로 2,000만 넘거나 임대소득이 있으면 박탈 → 지역보험료 부과.");
+    // R4 수리(2026-11-20): 함정 문단이 374~382px 에서 한 줄 늘어(+32, 핵심 요약 -26 과 합쳐 +6) GuideMidAd 가 내려갔다 —
+    // N 문장의 낱말을 지우거나 더 좁은 낱말로만 바꾼 꼴로 다시 썼다(줄 수가 N 이하).
+    // F5(law-4): 2022년 9월 개편은 소득 기준(3,400만 -> 2,000만)이고 재산 기준은 그대로였다.
+    expect(g.content).toContain("2022년 9월 피부양자 요건 강화 — 연소득 2,000만원 이하, 재산 기준 유지.");
+    expect(g.content).not.toContain("연소득 2,000만원 + 재산세 과세표준 5.4억 이하");
+    // F4(law-gaps-4): 시행규칙 별표 1의2 제1호 나목 — 사업자등록이 있으면 사업소득이 있으면 탈락, 없으면 연 500만원 이하만 인정
+    expect(g.content).toContain("<li>· <strong>사업소득</strong>: 등록자 0원, 미등록 500만 이하</li>");
+    expect(g.content).not.toContain("연 500만 초과 시 피부양자 박탈");
+    // F3(law-gaps-1): 소득 요건은 가족 한 사람 한 사람의 소득으로 본다(합산이 아니다)
+    expect(g.description).toContain("가족 각자 소득 2,000만+ 또는 임대소득 시 박탈");
+    expect(g.description).not.toContain("합산");
     expect(g.content).toContain("<li>· 임대소득 있으면 피부양자 탈락</li>");
     expect(g.title).toBe("성과급 받기 전 가족 피부양자 점검 — 소득 2,000만 + 박탈");
     expect(all(g.slug)).not.toContain("2022년 11월");

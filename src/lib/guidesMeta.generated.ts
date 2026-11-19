@@ -4944,7 +4944,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "dependent-check-before-bonus-2026",
   "title": "성과급 받기 전 가족 피부양자 점검 — 소득 2,000만 + 박탈",
-  "description": "본인 성과급으로 피부양자 자격 직접 영향 없음. 단 가족 소득 합산 2,000만+ 또는 임대소득 시 박탈 → 지역보험료 부담.",
+  "description": "본인 성과급으로 피부양자 자격 직접 영향 없음. 단 가족 각자 소득 2,000만+ 또는 임대소득 시 박탈 → 지역보험료 부담.",
   "category": "기초",
   "tags": [
    "피부양자",
@@ -4958,7 +4958,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-05-23",
   "views": 0,
   "lang": "ko",
-  "contentChars": 1051
+  "contentChars": 1021
  },
  {
   "slug": "total-income-adjustment-bonus-2026",
