@@ -95,6 +95,11 @@ describe("히어로 소개문 사실 정정 — 한글 음절끼리 제자리 �
     expect(d).toContain("KoGPT·Karlo 개발사, 본사로 LLM·생성 AI 이관.");
     expect(d).not.toContain("일체");
     expect(widthSignature("본사로 LLM·생성 AI 이관.")).toBe(widthSignature("한국어 LLM·생성 AI 선도."));
+    // R4 수리(2026-11-20, 사실 확인 bonus-1): 남은 법인은 2024-10-01 디케이테크인에 흡수합병돼 소멸(뉴시스 2024-08-25) —
+    // 첫 마디의 현재형 '핵심 연구 조직' 도 같은 꼴(두 음절 한글 낱말 세 개)로 바꿨다.
+    expect(d).toContain("카카오그룹 AI 연구 법인 소멸.");
+    expect(d).not.toContain("핵심 연구 조직");
+    expect(widthSignature("카카오그룹 AI 연구 법인 소멸.")).toBe(widthSignature("카카오그룹 AI 핵심 연구 조직."));
   });
 });
 

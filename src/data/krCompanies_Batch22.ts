@@ -262,7 +262,7 @@ export const krCompanies_Batch22: CompanyProfile[] = [
     industry: "AI Research / LLM",
     tier: "unicorn",
     logo: "🧠",
-    description: "카카오그룹 AI 핵심 연구 조직. KoGPT·Karlo 개발사, 본사로 LLM·생성 AI 이관.",
+    description: "카카오그룹 AI 연구 법인 소멸. KoGPT·Karlo 개발사, 본사로 LLM·생성 AI 이관.",
     salary: {
       entry: { base: 70000000, incentive: { target: 20, max: 40, avgAmount: 18000000 }, stock: { type: "RSU", amount: 15000000, vesting: "4 years" } },
       junior: { base: 88000000, incentive: { target: 20, max: 40, avgAmount: 22000000 }, stock: { type: "RSU", amount: 20000000, vesting: "4 years" } },
