@@ -1543,14 +1543,14 @@
       "sha256": "b853874c26c15786b2eb99c53149c47bf2d0d5f9a71a5c2e0db33d2ea717162d"
     },
     "/privacy": {
-      "contentDate": "2026-11-18",
-      "reviewedAtCommit": "f3ea9cf3ed05296ea506767ac5537d7c2a852b71",
-      "reason": "First ledger entry 2026-11-18 in the R4 integration of the 11/27 publish branch claude/next-1127: CONTENT2 owner-approved N2-app-pages-20 (8dcd74419): LinkPrice is named in the cookie, affiliate-tracking and third-party sections, and the page shows 최종 업데이트 2026년 11월 18일. The sitemap previously carried STATIC_LAST_MODIFIED 2026-07-16, as /terms did before its 2026-11-15 row. The page has no ad. R4 Repair PRIVKO merge (f3ea9cf3e of claude/r4-privko-1118 fd57d33de, all written on 2026-11-18 KST): the Korean page gains the Kakao share tool line in section 4, section 8 on the transfer abroad (Cloudflare, Google) and the review fix of its refusal sentence; rehash only, content date 2026-11-18 kept.",
+      "contentDate": "2026-11-20",
+      "reviewedAtCommit": "d991c1c83d60055a2d5d15fa4f2ea82c81a996a1",
+      "reason": "First ledger entry 2026-11-18 in the R4 integration of the 11/27 publish branch claude/next-1127: CONTENT2 owner-approved N2-app-pages-20 (8dcd74419): LinkPrice is named in the cookie, affiliate-tracking and third-party sections, and the page shows 최종 업데이트 2026년 11월 18일. The sitemap previously carried STATIC_LAST_MODIFIED 2026-07-16, as /terms did before its 2026-11-15 row. The page has no ad. R4 Repair PRIVKO merge (f3ea9cf3e of claude/r4-privko-1118 fd57d33de, all written on 2026-11-18 KST): the Korean page gains the Kakao share tool line in section 4, section 8 on the transfer abroad (Cloudflare, Google) and the review fix of its refusal sentence; rehash only, content date 2026-11-18 kept. Repair of R4 on 2026-11-20: section 8 gains the ground of the transfer for Cloudflare (개인정보 보호법 제28조의8 제1항 제3호 가목), the statement that Google collects its cookies and identifiers itself with a pointer to Google's additional information for residents of Korea, and the requested page address among the access-log items of sections 1 and 8 (owner answer of 2026-11-19 to question P1 of that day); the storage region of the D1 database is not stated because the owner has not looked it up (question P2).",
       "dependencies": [],
       "files": [
         "src/app/privacy/page.tsx"
       ],
-      "sha256": "95a4f17359e62607bccf69f8d17a8532e4276c77e357793ab2bf0daedeeb3e57"
+      "sha256": "398e23c1783ceb131bf73553ecc0ea844169cb3001fd37f8cfbeb5d8cc346a9c"
     },
     "/en/privacy": {
       "contentDate": "2026-11-18",

@@ -6,6 +6,9 @@
 //   dpo@cloudflare.com — https://www.cloudflare.com/privacypolicy/ 19. CONTACT INFORMATION (Cloudflare, Inc.)
 //   googlekrsupport@google.com — https://policies.google.com/privacy?hl=ko 의 문의 주소이자
 //     https://policies.google.com/privacy/additional?hl=ko 국외 이전 문단의 문의 주소
+// R4 수리(2026-11-20): 운영자 2026-11-19 답 '권장대로 넣기'(owner-questions-2026-11-19.md P1) — 8번에 이전 근거(Cloudflare 만),
+// Google 이 쿠키·식별자를 직접 수집한다는 문장, 접속 로그 항목(요청한 페이지 주소). P2(저장 지역)는 답이 없어 적지 않는다.
+// https://policies.google.com/privacy/additional?hl=ko 는 2026-11-19·11-20 에 열어 본 제목이 '한국 거주자를 위한 개인정보 관련 추가 정보'.
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { createElement } from "react";
@@ -83,6 +86,34 @@ describe("R4 PRIVKO /privacy — 카카오톡 공유 고지와 개인정보의 �
     expect(s8).toContain("Google LLC (googlekrsupport@google.com, https://policies.google.com/privacy)");
     expect(s8).not.toMatch(/카카오|쿠팡|링크프라이스/);
     expect(s8).not.toContain("동의를 받");
+  });
+
+  it("section 8 states the ground of the transfer for Cloudflare only, and what Google collects itself", () => {
+    const s8 = bySection.get("8. 개인정보의 국외 이전") ?? "";
+    const s1 = bySection.get("1. 수집하는 개인정보 항목") ?? "";
+    expect(s8).toContain("이전 근거:");
+    expect(s8).toContain("개인정보 보호법 제28조의8 제1항 제3호 가목");
+    expect(s8).toContain("Google 서비스의 쿠키와 식별자는 Google이 직접 수집합니다.");
+    expect(s8).toContain("https://policies.google.com/privacy/additional?hl=ko");
+    expect(s8).toContain("한국 거주자를 위한 개인정보 관련 추가 정보");
+    const country = s8.indexOf("이전되는 국가:");
+    const ground = s8.indexOf("이전 근거:");
+    const timing = s8.indexOf("이전 시기와 방법:");
+    expect(country).toBeGreaterThanOrEqual(0);
+    expect(ground).toBeGreaterThan(country);
+    expect(timing).toBeGreaterThan(ground);
+    const groundText = s8.slice(ground, timing);
+    const cut = groundText.indexOf("가목)") + "가목)".length;
+    expect(cut).toBeGreaterThan("가목)".length);
+    const cloudflarePart = groundText.slice(0, cut);
+    const googlePart = groundText.slice(cut);
+    expect(cloudflarePart).not.toContain("Google");
+    expect(googlePart).not.toMatch(/제\s*\d+\s*조/);
+    expect(googlePart).not.toMatch(/동의|계약|정당한 이익/);
+    expect(s8).toContain("접속 로그(IP 주소, 접속 시간, 브라우저 종류, 요청한 페이지 주소)");
+    expect(s1).toContain("접속 로그 (IP 주소, 접속 시간, 브라우저 종류, 요청한 페이지 주소)");
+    expect(SRC.split("제28조의8").length - 1).toBe(1);
+    expect(SRC).not.toContain("브라우저 종류)");
   });
 
   it("every e-mail address in the page source is one verified on 2026-11-18", () => {

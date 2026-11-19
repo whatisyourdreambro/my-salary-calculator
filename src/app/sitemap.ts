@@ -203,7 +203,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/lg-energy-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.85 }, // 칩 실적분·이력 표 2026 행·접힌 FAQ(BONUS1 RL-16 CB-05·N2-calc-11). 9/25 A18 엔진
  '/calc/lg-chem-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.85 }, // PI 보장 단정 삭제·출처 없는 표 행 삭제·출처 정리(BONUS1 RL-16 CB-06·N2-calc-11). 9/25 A18 엔진
  '/calc/kakao-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.85 }, // 공개 출처 아닌 연봉체계 자료 삭제(BONUS1 N2-calc-11). 9/25 A18 엔진
- '/privacy': { lastModified: new Date('2026-11-18T00:00:00+09:00') }, // 링크프라이스 쿠키·제휴 추적·제3자 목록(CONTENT2 N2-app-pages-20) — 화면 최종 업데이트 2026년 11월 18일과 같은 날
+ '/privacy': { lastModified: new Date('2026-11-20T00:00:00+09:00') }, // 링크프라이스(CONTENT2 N2-app-pages-20, 11/18)·카카오 공유·8번 국외 이전(PRIVKO, 11/18) 뒤 8번 이전 근거·Google 직접 수집·접속 로그 항목 보완(운영자 2026-11-19, R4 수리 11/20) — 화면 최종 업데이트 2026년 11월 20일과 같은 날
  '/en/privacy': { lastModified: new Date('2026-11-18T00:00:00+09:00') }, // 영문 거울 LinkPrice(CONTENT2 106ac57c9) — 스윕에서 되돌리면 이 행도 지운다(/en 하한 9/9 로)
  '/tools/deposit': { lastModified: new Date('2026-11-18T00:00:00+09:00') }, // 접힌 FAQ 조합예탁금 2026 과세 규칙(CONTENT2 N2-lib-13 03295b5a9)
  // 허브 6곳(N2-infra-02, infra-b03-F01) — 화면 문구를 마지막으로 바꾼 운영 커밋의 날. sitemap() 의 허브 행이 이 키를 읽는다(자식 행은 그대로).
