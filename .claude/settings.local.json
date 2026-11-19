@@ -49,6 +49,10 @@
       "Bash(curl *)",
       "Bash(echo \"lint_exit=$?\")",
       "Bash(grep -B2 \"error\" /tmp/lint_out.txt | grep -v warning | head -60)"
+    ],
+    "deny": [
+      "WebFetch(domain:moneysalary.com)",
+      "WebFetch(domain:www.moneysalary.com)"
     ]
   }
 }
