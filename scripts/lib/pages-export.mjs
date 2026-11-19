@@ -415,6 +415,11 @@ export function workerModuleInventory(dist) {
 const FORBIDDEN_WORKER_INPUTS = Object.freeze([
   [/(?:^|\/)node_modules\/(?:next|@opennextjs|react|react-dom)(?:\/|$)/, 'Next/OpenNext/React runtime'],
   [/(?:^|\/)cloudflare\/pages-og-(?:render|strips)\.ts$|(?:^|\/)vendor\/og-/, 'the build-time OG renderer or its data'],
+  // Build tooling only (2026-11-18, GHSA-fc5q-39xc-vjpf review): a glob matcher must never run on visitor input.
+  // It sees node_modules paths only: a matcher copied into our own source, or Next's compiled copy
+  // outside node_modules/next, would need a separate check.
+  [/(?:^|\/)node_modules\/(?:picomatch|micromatch|nanomatch|anymatch|minimatch|braces|brace-expansion|fast-glob|tinyglobby|globby|glob|glob-parent|is-glob|fdir|readdirp|chokidar)(?:\/|$)/,
+    'a glob matcher (build tooling)'],
 ]);
 
 /** Fail-closed check of the esbuild metafile: one self-contained module without forbidden inputs. */
