@@ -551,3 +551,17 @@ T0 = 운영자가 이 묶음이 든 게시를 마친 시각(게시 뒤 기입: `
 사이트맵 전용 날짜 규칙 ③(운영자 결정 2026-11-17 10번): 수정 칩 없는 글의 본문 정정도 화면은 그대로 두고 사이트맵 lastmod 만 본문을 고친 날로. 이 단위가 넣은 행 6개 — /guides/hometax-year-end-preview-2026 2026-11-13(11/15 DEFER 절의 n1 게시 뒤 네이버 수동 요청 목록에 있던 글: 이 묶음이 게시되면 IndexNow 가 자동으로 알린다), /guides/commercial-office-capital-gains-2026·/guides/lease-right-transfer-tax-2026·/guides/child-gift-10year-rule-2026·/guides/rental-business-prop-tax-exclusion-2026·/guides/minimum-wage-2026 2026-11-15(RL-08 본문 정정일).
 
 이 단위가 오늘(2026-11-18) 고친 가이드 23편의 사이트맵 전용 행(값 2026-11-18)과 보강 핀은 통합 단계 원장 몫이다(보고서 ledger_routes). 행이 들어가면 게시 8단계 IndexNow 가 알리고, 게시 뒤 네이버 수동 수집 요청 목록(N2-guides-content-02 7단계)에도 같은 23편을 올린다(보고서 ledger_routes 의 advance 행). 게시 후 T0: 위 두 제목의 검색 결과 제목 반영 여부를 28일 창에서 본다.
+
+## 2026-11-20 R4 수리(claude/next-1127) 검색 제목·설명·사이트맵 날짜 기록 (append-only)
+
+R4 전체 측정 뒤 수리 단계가 2026-11-20 에 다시 쓴 글(광고 위 줄 수를 N 이하로). 화면 칩 숫자는 바꾸지 않았다.
+
+| 날짜 | URL | 바뀐 것 | 이유 |
+|---|---|---|---|
+| 2026-11-20 | /guides/total-income-adjustment-bonus-2026 | 제목(검색 제목·H1·카드): 성과급 + 임대 + 금융 + 사업 종합정산 — 영끌 2억 시 부담 5,300만 → 성과급 + 임대 + 금융 + 사업 종합 정산 — 영끌 2억 시 총 5,300만 | 붙여 쓴 '종합정산' 이 426~464px 에서 H1 을 한 줄 늘려 광고가 38px 내려감. 2026-11-18 절의 새 제목은 게시되지 않는다 |
+| 2026-11-20 | /guides/tax-amnesty-self-report-2026 | 화면 설명(핵심 요약·카드·RSS): 1개월 90% / 3개월 75% / 6개월 50% / 1년 30% / 1.5년 20% / 2년 10% 감면. 무신고 20~60% 가산세. | 가운뎃점으로 붙인 11/18 설명이 359~364·475~481px 에서 한 줄 늘어남 |
+| 2026-11-20 | /guides/dependent-check-before-bonus-2026 | 화면 설명: 가족 소득 합산 2,000만+ → 가족 각자 소득 2,000만+ | 소득 요건은 한 사람씩 본다(사실 확인 law-gaps-1) |
+
+사이트맵 전용 행을 2026-11-20 으로 올린 글(IndexNow 가 게시 때 알린다): 위 세 편과 /guides/samsung-ds-special-bonus-details-oct-2026(3분기 두 문단 축약), /guides/samsung-special-bonus-q3-preview-2027·/guides/samsung-bonus-treasury-stock-15-trillion-2026(광고 아래 보강의 자사주 매입 결과, 딜사이트 2026-10-12). 계산기 쪽 2026-11-20: /calc/samsung-bonus(접힌 조건 FAQ 참고값·페이지 수정일), /calc/lg-chem-bonus·/calc/lg-energy-bonus(이력 표), /privacy(8번 국외 이전 보완).
+
+- /calc/samsung-biologics-bonus: 운영 사이트맵이 이미 2026-11-18(n2 1e59a7499)이라 R4 게시의 IndexNow 차집합에 들지 않는다. 화면 글(2026년 1월 OPI 지급, 2025 하반기 TAI 기본값 50%와 기본 결과, 지급 이력 표, 주의 상자, 접힌 FAQ)이 바뀌므로 게시 뒤 네이버 웹 페이지 수집 요청에 넣는다(lens-crawl-F01 상시 규칙, 사실 확인 dates-02).
