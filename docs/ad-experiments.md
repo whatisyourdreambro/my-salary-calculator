@@ -489,3 +489,49 @@ L9(samsung-bonus 첫 광고 깊이 상향)는 그 병합이 선행돼야 효과�
 - 이력 재생: `--diff --base b757c57a`(9/8 이후) ERROR 1건 → 2건. 늘어난 1건은 `src/app/guides/[slug]/GuidePageClient.tsx` 의 모바일 목차 `<details>`(`4eda6889e`, 2026-09-10, 운영 중)로, 본문이 나뉘지 않는 짧은 가이드에서 GuideMidAd 바로 위에 있다. 이미 게시된 이력이라 이 기록에서는 고치지 않는다. `--diff --base bda78b0da`(다음 게시 가지 전체)와 `--diff --base ce2463cda` 는 옛·새 규칙 모두 ERROR 0, 같은 날 R4 다른 단위 가지 9개의 그 시점 머리도 옛·새 모두 ERROR 0 이었다.
 - 영향: 앞으로 광고 바로 위에 여러 줄 JSX 블록을 넣는 푸시는 승인 ID 가 든 allowlist 항목 없이는 CI 가 빨갛다(2026-08-16 규칙과 같은 뜻). 이 게이트 강화 커밋만 따로 되돌릴 수 있다.
 - 같은 날 리뷰 수정: 묶음 규칙이 줄 단위 규칙 (b) 와 같은 루프에서 먼저 돌아, 같은 추가 묶음 위쪽의 승인(allowlist) 줄 하나가 광고 바로 위 미승인 줄의 (b) ERROR 까지 면제할 수 있었다(옛 스크립트는 ERROR). 묶음 규칙을 (b) 가 모든 줄을 본 뒤의 별도 패스로 옮겨 (b) 의 결과는 옛 스크립트와 같고 묶음 규칙은 ERROR 를 더하기만 한다. 테스트 (i) 추가, 위 이력 재생·단위 가지 9개 결과는 같다.
+
+## 2026-11-20 R4 게시 가지(claude/next-1127) 수리 — 받아들인 광고 이동 기록: 운영자 승인 항목·질문 1 한 줄·펼친 FAQ (append-only)
+
+- **측정**: 광고 없는 로컬 QA 빌드(qa:start, 127.0.0.1)와 가드 러너(qa:run, qa-safety 가드 그대로)로 R4 머리 `ccb5f8e67` 과 N `71471b5a5`(n2 게시 가지, 운영 main 과 src·public 같음)를 2026-11-18~20 에 비교했다(156,135쌍 + 쿠팡 경로 보충 492쌍). 수화 후 320~460px 1px, 461~1440px 은 해당 쪽만 1px 나머지 16px 격자, 첫 화면(수화 전)은 4px 격자와 768·1024·1440. 슬롯 이름은 컴포넌트 이름(GuideMidAd, InArticleAd, CalcResultAd, MultiplexAd, HomeTopAd, Display2Ad, 레이아웃 광고 ad-slot-result·ad-slot-home-top). 수익·AdSense 수치는 적지 않는다.
+- **이 절의 범위**: 운영자 결정과 2026-11-13 질문 1(사실 정정, 같은 폭으로 못 쓰는 한 줄, 약 32px 이내)·2026-11-17 펼친 FAQ 공지가 허용한 이동만 적는다. 같은 측정에서 허용 밖으로 나온 이동(가이드 4편·LG화학·LG에너지솔루션 표·비교 2쪽·삼성 첫 화면 날짜 줄)은 2026-11-20 수리 커밋으로 고쳤거나 되돌렸고, 수리 뒤 값은 끝의 빠른 점검 줄과 다음 전체 재측정 기록에 남는다.
+
+### 운영자 승인 항목
+
+- **N2-lib-12** `/guides/tax-amnesty-self-report-2026` (`4b4c729fd`, 자진 수정신고 감면 표 '1년 6개월 이내 20%' 한 줄; 운영자 2026-11-17 '권장대로', 질문 1 방식 한 줄 약 40px): GuideMidAd 와 그 아래 모든 슬롯(사이드바 0). 수화 후 +8px(320~354px, N 의 첫 줄이 두 줄이던 폭), +40px(355~358·365~474·482~847·866~1215·1234~1440px), +14px(848~865·1216~1233px). 첫 화면 +8px(320~352px 격자), +40px(356·368~460px 격자, 768·1024·1440). 359~364·475~481px 의 +66px 은 표가 아니라 같은 날 화면 설명(`f234b8e2a`)이 한 줄 더 감긴 것이어서 2026-11-20 `89fe4cf3c` 로 설명을 N 처럼 띄워 고쳤다(수리 뒤 빠른 점검: 수화 후 320~460px 1px·464~1440px 4px, 첫 화면 격자 — 최대 +40px, +66px 없음).
+- **N2-calc-20** `/calc/dependent-check` (`f511261f8`, 출생 연도를 다시 치거나 지우는 동안 판정 카드를 유지; 운영자 2026-11-17): 머리의 광고는 입력 중에도 자기 기본 상태 자리 그대로다(dcRetype·dcClear 0px, 203폭). N 은 그 순간 카드가 접혀 모든 슬롯이 435~636px 올라가므로 N 대비로는 CalcResultAd·InArticleAd·GuideMidAd·HomeTopAd 가 +435~+636px(320~324px +636, 360~406px +584, 422~496px +486, 768~1440px +436), 형제자매 선택 뒤 19 입력(dcSib19) +435~+639px. 다 친 상태(dcSettled, 1962)와 기본 상태는 320~1440px 에서 0.
+- **N2-calc-24** `/calc/samsung-bonus` 다년도 시뮬레이터 '연도별 직접 입력' 모드에서만 (`ceed38b89`, 640px 미만 연도 카드마다 연봉 칸을 아랫줄로; 운영자 승인 2026-11-17, 최대 215px 를 알린 뒤 2026-11-19 약 21:13 KST '그대로 두기'): InArticleAd(Display2Ad·GuideMidAd 는 1px 안에서 같음) +6px(320·327~328px), 0 또는 위로(321~326·329~340px), +35~36px(341~347), +71~72px(348~349), +116~117px(350~359), +132~133px(360~390), +176~177px(391~450), +144~145px(451~460·464·480·496), +161~179px(512), +191~192px(528), +214~215px(544~624), 640~1440px 0. CalcResultAd 는 어느 폭에서도 내려가지 않음(-44~0), HomeTopAd#1 0. 기본 모드와 첫 화면은 0.
+- **RL-20** `/` (`0613b6189`, 시즌 배너 자리를 서버 HTML 에서 미리 잡음; 운영자 2026-11-18, 조건 '수화 뒤 최종 광고 위치 불변' 충족): 수화 후 모든 슬롯 0(320~1440px, 방문 시각 상태 7개 포함). 첫 화면에서만 아래 세 슬롯(Display2Ad·GuideMidAd·MultiplexAd)이 N 의 첫 화면보다 배너 자리만큼 낮다: +120px(대부분의 폭), +104px(559~639px), +140px(640~688px). HomeTopAd 0.
+- **N2-app-tools-fun-11** `/fun/asset-allocator` (`429cc6e0b`·`26f29553c`, 게임 끝 화면 바로 아래 페이지 광고 제거와 게임 영역~다음 광고 150px 이상; 운영자 2026-11-17): 기본·플레이 중 상태에서 레이아웃 광고 ad-slot-result·ad-slot-home-top +64px(320~1440px, 360x740·390x844·1280x800), 플레이 중 게임 영역~다음 광고 192px(N 128px). 게임 끝(60초 뒤): 게임 아래 InArticleAd 가 모든 뷰포트에서 없어졌고(측정 전체에서 유일한 슬롯 구성 변화), 두 레이아웃 광고는 -252px(위로), 게임 영역~다음 광고(ad-slot-result) 152px(모든 뷰포트, N 은 없어진 광고까지 72px).
+
+### 질문 1 한 줄 이동(사실 정정, 더 짧게 쓸 수 없음)
+
+- `/calc/sk-hynix-bonus` (`96bc6391f`, 2026 상반기 PI 지급일 7/28 -> 7/30, 파이낸셜뉴스 2026-07-26): 3단계 PI 안내 줄이 한 줄(20px) 더 감김 — CalcResultAd 와 그 아래 모든 슬롯(InArticleAd·GuideMidAd·HomeTopAd) +20px, 기본 상태 330·458px(1px 측정)·856px(461~1440px 1px 측정), 주가 시뮬레이터 스크롤 상태(skScroll) 330·458px, 펼친 상태도 같은 폭에서 같은 +20px. 질문 1 (2026-11-13).
+- `/calc/samsung-bonus` 펼친 상태만 (`9e8ead397`, 접힌 도움말 '계산 가정 조정' 의 국민연금 이듬해 7월·건강보험 이듬해 4월 정산 구분): 펼치면 CalcResultAd 와 그 아래 슬롯이 +11~12px(341~359px), +19~20px(360~442·460·464·480·496·512·560·576·592·656~1440px, 464px 부터 16px 격자), 0(528·544·608·624·640px), 320~340px 은 위로. FAQ 답 보강은 0. 질문 1 (사실 정정, 펼친 상태).
+- `/calc/bonus-home-plan` 펼친 상태만 (`75e6fdcbf`, CalcResultAd 와 InArticleAd 사이 접힌 근거 표를 3분기보고서 값으로, 운영자 승인 N2-calc-21 2026-11-17): InArticleAd·GuideMidAd·HomeTopAd +20px(364~387px), CalcResultAd 0.
+
+### 펼친 FAQ (운영자 공지 2026-11-17 '접힌 FAQ 답변 보강: 펼쳤을 때만 광고가 더 내려가는 것 허용', 2026-11-19 같은 기준 확인)
+
+기본 상태(접힌 FAQ)에서는 아래 쪽 모두 이 항목으로 광고가 내려가지 않는다. 펼친 상태(모든 닫힌 details 를 연 상태, 464px 부터 16px 격자):
+- `/calc/bonus-calculators` (`8eaf269ba`): MultiplexAd·InArticleAd +3~46px(320~460px, 464~656·736~832·1024~1440px 격자).
+- `/calc/bonus-home-plan` (`4a7a96af4`): GuideMidAd·HomeTopAd +3px(512px). (근거 표는 위 질문 1 줄)
+- `/calc/kakao-bonus` (`8798b6e51`): InArticleAd·HomeTopAd +6~23px(320~322·332~335·362~397·430~460·464·544·560·768·784·800px).
+- `/calc/lg-chem-bonus` (`2ea46a510`·`8798b6e51`): InArticleAd·HomeTopAd +6~207px(320~460px 와 격자 대부분; 기본 상태 몫을 뺀 FAQ 몫 최대 +205px, 325~326px).
+- `/calc/lg-energy-bonus` (`9f042598e`·`8798b6e51`): InArticleAd·HomeTopAd +5~139px(측정한 203폭 모두; FAQ 몫 최대 +182px, 322~325px).
+- `/calc/samsung-biologics-bonus` (`467a351d1`): InArticleAd·HomeTopAd +3~46px(102폭: 322~460px 의 여러 구간과 496~928px 격자 일부).
+- `/calc/samsung-display-bonus` (`5e9a46198`·`47b68fa04`): HomeTopAd +23px(576·752px).
+- `/calc/samsung-sdi-bonus` (`1581cefd7`·`47b68fa04`·`cb861b002`): InArticleAd·HomeTopAd +46~296px(320~460px +159~296, 464~1440px +46~137).
+- `/calc/sk-hynix-bonus` (`bcd5b116f`·`47b68fa04`): HomeTopAd +20~46px(FAQ 몫 +22~46px; 330·333~335·353~359·413~424·458~460·464·544·560·720·1024~1440px 격자).
+- `/region/ulsan` (`d6f64f9d8`): InArticleAd·MultiplexAd +28px(333~340·389~405·528·544·592·608px).
+- `/salary-db/listed/industry/retail-commerce` (`34b4c20aa`): HomeTopAd·InArticleAd +28px(415~426px).
+- `/tools/deposit` (`03295b5a9`, N2-lib-13): InArticleAd·HomeTopAd +60~284px(측정한 203폭 모두, 320~460px +144~284). GuideMidAd·CalcResultAd 는 내려가지 않고, 기본 상태는 320~1440px 에서 0(N2-lib-13 조건 충족).
+- LG화학·LG에너지솔루션 두 줄은 수리 전 머리 값이다. 2026-11-20 수리(`667b35b95` 표 칸, `9c7fa4090` 2026 행 삭제)가 기본 상태 표 높이를 바꾸므로 펼친 상태는 다음 전체 재측정(RC 블록)이 다시 잰다.
+
+### 2026-11-20 수리 뒤 빠른 점검 (같은 러너, 수리 머리 `3771c329c` 빌드 `6ZY7_7km79yau1fPV-Xnh` vs N)
+
+2026-11-20 08:00~08:33 KST, 4,090쌍, 실패·오류 0, 포트 정리 확인. 수화 후 320~460px 은 1px, 464~1440px 은 4px(아래 '격자' 표시는 더 성김), 첫 화면은 표시한 폭.
+- `/guides/tax-amnesty-self-report-2026`: 내려간 것은 승인된 표 한 줄뿐 — 수화 후 +8px(320~339), +14px(355~358·449~472·816~864·1184~1232, 설명 줄이 N 보다 적은 폭), +40px(그 밖), 첫 화면도 +8~40px. +66px 없음.
+- `/guides/samsung-ds-special-bonus-details-oct-2026`, `/guides/total-income-adjustment-bonus-2026`, `/guides/dependent-check-before-bonus-2026`, `/calc/lg-chem-bonus`, `/calc/lg-energy-bonus`: 수화 후 386폭(320~460px 1px + 464~1440px 4px)과 첫 화면(4px 격자와 고장 폭 앞뒤 3px, 768·1024·1440)에서 내려간 광고 0.
+- `/calc/samsung-bonus`: 첫 화면 386폭(320~460px 1px + 4px 격자)·수화 후 98폭에서 0(420px 의 첫 화면 +19px 사라짐).
+- `/salary-db/compare/sk-hynix-vs-semes`·`/salary-db/compare/nvidia-vs-sk-hynix`(되돌림 `1ff990684` 뒤, 444~450·599~610·628~655px 1px): 0.
+- `/salary-db/kakao-brain`(F1, 수화 후 320~520px 1px + 8px 격자, 첫 화면 4px 격자): 0. 설명 카드 호스트 `/guides/category/basics`·`/guides/category/tax`·`/guides/split-accounts`·`/guides/carryover-loss-15year-2026`(4px·16px 격자): 0. 광고 아래 보강 2편(360·768·1440): 0.
+- 전체 재측정(1px, 두 층, 상태 포함)은 수리 가지 마지막 머리에서 다음 단계가 돌린다(계획 sweep-plan-repair.json).
