@@ -1544,13 +1544,13 @@
     },
     "/privacy": {
       "contentDate": "2026-11-18",
-      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
-      "reason": "First ledger entry 2026-11-18 in the R4 integration of the 11/27 publish branch claude/next-1127: CONTENT2 owner-approved N2-app-pages-20 (8dcd74419): LinkPrice is named in the cookie, affiliate-tracking and third-party sections, and the page shows 최종 업데이트 2026년 11월 18일. The sitemap previously carried STATIC_LAST_MODIFIED 2026-07-16, as /terms did before its 2026-11-15 row. The page has no ad.",
+      "reviewedAtCommit": "f3ea9cf3ed05296ea506767ac5537d7c2a852b71",
+      "reason": "First ledger entry 2026-11-18 in the R4 integration of the 11/27 publish branch claude/next-1127: CONTENT2 owner-approved N2-app-pages-20 (8dcd74419): LinkPrice is named in the cookie, affiliate-tracking and third-party sections, and the page shows 최종 업데이트 2026년 11월 18일. The sitemap previously carried STATIC_LAST_MODIFIED 2026-07-16, as /terms did before its 2026-11-15 row. The page has no ad. R4 Repair PRIVKO merge (f3ea9cf3e of claude/r4-privko-1118 fd57d33de, all written on 2026-11-18 KST): the Korean page gains the Kakao share tool line in section 4, section 8 on the transfer abroad (Cloudflare, Google) and the review fix of its refusal sentence; rehash only, content date 2026-11-18 kept.",
       "dependencies": [],
       "files": [
         "src/app/privacy/page.tsx"
       ],
-      "sha256": "6fe1a5a93bd742ee9066549364b850a73cf3d7686820759884e7d5bd77769624"
+      "sha256": "95a4f17359e62607bccf69f8d17a8532e4276c77e357793ab2bf0daedeeb3e57"
     },
     "/en/privacy": {
       "contentDate": "2026-11-18",
