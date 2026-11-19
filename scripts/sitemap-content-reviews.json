@@ -1519,16 +1519,16 @@
       "sha256": "127ac39bf51efec15b52716d20bb466a18e2aaec069b210b3055ccb8c6a3b6f7"
     },
     "/calc/lg-chem-bonus": {
-      "contentDate": "2026-11-18",
-      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
-      "reason": "First ledger entry 2026-11-18 in the R4 integration of the 11/27 publish branch claude/next-1127: BONUS1 RL-16 CB-06 and N2-calc-11: closed FAQs (2025년 실적분 전사 성과급 0원), PI card and caption without the 적자여도 보장 claim (84fbfda44, ec4b75750), the unsourced 2022 배터리 450% PS row deleted (265a5d4fd), notice and footer without 노조 자료·사람인 (82895ce9c); RL-17 HowTo JSON-LD removed. Before this row the sitemap day came from the BONUS_ENGINE_ROUTES group (2026-09-25); priority 0.85 is written explicitly because the bonus-cluster loop skips routes with a row.",
+      "contentDate": "2026-11-20",
+      "reviewedAtCommit": "1d6cb76f1769aebaa1cfc3787dc7f76205e375fa",
+      "reason": "First ledger entry 2026-11-18 in the R4 integration of the 11/27 publish branch claude/next-1127: BONUS1 RL-16 CB-06 and N2-calc-11: closed FAQs (2025년 실적분 전사 성과급 0원), PI card and caption without the 적자여도 보장 claim (84fbfda44, ec4b75750), the unsourced 2022 배터리 450% PS row deleted (265a5d4fd), notice and footer without 노조 자료·사람인 (82895ce9c); RL-17 HowTo JSON-LD removed. Before this row the sitemap day came from the BONUS_ENGINE_ROUTES group (2026-09-25); priority 0.85 is written explicitly because the bonus-cluster loop skips routes with a row. R4 Repair on 2026-11-20: the PS history table cell 석유화학 일부 becomes 석유화학 (일부) (same meaning) so that the business-unit column keeps the minimum width that the deleted unsourced row 2022 호황 | 배터리 (분사 전) | 450% gave it (a parenthesis plus one syllable); without it the table switched to its narrow layout at 342 px instead of 336 px and GuideMidAd moved 63 px down at 336-341 px in the R4 measurement. Sitemap override moved to 2026-11-20 with it.",
       "dependencies": [],
       "files": [
         "src/app/calc/lg-chem-bonus/Client.tsx",
         "src/app/calc/lg-chem-bonus/data.ts",
         "src/app/calc/lg-chem-bonus/page.tsx"
       ],
-      "sha256": "6371e1550012de4b69603a25a2a41eb90f055efc3e985cbdc67e9e641f667da2"
+      "sha256": "1691fa81d020885abbe4ba8646b57f0041fe43a4c641caa27cba9c1ea513b06a"
     },
     "/calc/kakao-bonus": {
       "contentDate": "2026-11-18",

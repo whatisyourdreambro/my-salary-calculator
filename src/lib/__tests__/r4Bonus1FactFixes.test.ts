@@ -220,6 +220,13 @@ describe("N2-calc-11 LG화학 사업부별 PS 표 (광고 위, 행 삭제)", () 
     expect(page).toContain(">석유화학본부<");
     expect(page).toContain(">첨단소재 · 생명과학<");
   });
+  // R4 수리(2026-11-20): 행을 지우자 사업부 칸의 가장 긴 끊김 없는 덩어리('(분'·'전)', 괄호+한 글자)가 사라져 표가 336px 이 아니라
+  // 342px 부터 좁은 배치로 바뀌었다(GuideMidAd +63px, 336~341px). 같은 폭의 덩어리를 참인 글로 남긴다: '석유화학 (일부)'.
+  it("사업부 칸의 최소 폭 덩어리 — 석유화학 (일부)", () => {
+    const page = read("src/app/calc/lg-chem-bonus/page.tsx");
+    expect(page).toContain('<td className="py-2 pr-4">석유화학 (일부)</td>');
+    expect(page).not.toContain(">석유화학 일부<");
+  });
 });
 
 describe("N2-calc-11 LG화학 계산기 PI 체크 설명 (광고 위, 더 짧은 글)", () => {

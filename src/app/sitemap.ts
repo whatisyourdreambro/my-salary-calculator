@@ -201,7 +201,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/samsung-sdi-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.85 }, // 배지·이력 표·칩·접힌 FAQ·TAI 상반기 75% 반영(BONUS1 RL-16 CB-03·N2-calc-12·N2-calc-23). 9/25 A18 엔진
  '/calc/samsung-display-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.85 }, // 2026 상반기 TAI 대형 75%·중소형 100% 안내·접힌 FAQ(BONUS1 RL-16 CB-04·N2-calc-12). 9/25 A18 엔진
  '/calc/lg-energy-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.85 }, // 칩 실적분·이력 표 2026 행·접힌 FAQ(BONUS1 RL-16 CB-05·N2-calc-11). 9/25 A18 엔진
- '/calc/lg-chem-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.85 }, // PI 보장 단정 삭제·출처 없는 표 행 삭제·출처 정리(BONUS1 RL-16 CB-06·N2-calc-11). 9/25 A18 엔진
+ '/calc/lg-chem-bonus': { lastModified: new Date('2026-11-20T00:00:00+09:00'), priority: 0.85 }, // PI 보장 단정 삭제·출처 없는 표 행 삭제·출처 정리(BONUS1 RL-16 CB-06·N2-calc-11, 11/18), R4 수리 11/20 표 칸 '석유화학 (일부)'(삭제 행이 넓히던 칸 최소 폭 유지). 9/25 A18 엔진
  '/calc/kakao-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.85 }, // 공개 출처 아닌 연봉체계 자료 삭제(BONUS1 N2-calc-11). 9/25 A18 엔진
  '/privacy': { lastModified: new Date('2026-11-20T00:00:00+09:00') }, // 링크프라이스(CONTENT2 N2-app-pages-20, 11/18)·카카오 공유·8번 국외 이전(PRIVKO, 11/18) 뒤 8번 이전 근거·Google 직접 수집·접속 로그 항목 보완(운영자 2026-11-19, R4 수리 11/20) — 화면 최종 업데이트 2026년 11월 20일과 같은 날
  '/en/privacy': { lastModified: new Date('2026-11-18T00:00:00+09:00') }, // 영문 거울 LinkPrice(CONTENT2 106ac57c9) — 스윕에서 되돌리면 이 행도 지운다(/en 하한 9/9 로)

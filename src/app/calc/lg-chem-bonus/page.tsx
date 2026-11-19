@@ -187,7 +187,7 @@ export default function LgChemBonusPage() {
                   </tr>
                   <tr>
                     <td className="py-2 pr-4">2024~2025 다운사이클</td>
-                    <td className="py-2 pr-4">석유화학 일부</td>
+                    <td className="py-2 pr-4">석유화학 (일부)</td>
                     <td className="py-2">0%대</td>
                   </tr>
                 </tbody>
