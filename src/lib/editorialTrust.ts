@@ -41,10 +41,11 @@ export const EDITORIAL_TRUST_PAGES: Readonly<Record<string, EditorialTrustNoteCo
   // 화면 '페이지 수정일'(page.tsx) — 2026-11-01 B28 이식 때 2026-10-07 보도 원문을 다시 확인(page.tsx 머리 주석).
   // 2026-11-18 R4 SAMSUNG: 우리사주 소득공제(조특법 제88조의4)·특별경영성과급 조건·SK 9/16 가결안·2025년 사업보고서 평균 연봉을
   // 원문으로 다시 대조하고 화면을 정정한 날 = 화면 '페이지 수정일'.
+  // 2026-11-20 R4 수리: 접힌 조건 FAQ 의 참고 문장을 DART 3분기보고서(2026-11-16 접수) DS부문 1~3분기 값으로 바꾼 날.
   "/calc/samsung-bonus": {
     sources: "언론 보도 원문, 사업보고서",
     official: false,
-    checkedOn: "2026-11-18",
+    checkedOn: "2026-11-20",
   },
   // psData LAST_UPDATED(화면 '마지막 갱신') — 2026-11-01 B27, 10/28 회사 발표 3분기 실적 반영.
   // 2026-11-18 R4 BONUS1 N2-calc-10: 상반기 PI 지급일(7/30)·접힌 FAQ 를 보도 원문으로 다시 대조하고 고친 날 = LAST_UPDATED.

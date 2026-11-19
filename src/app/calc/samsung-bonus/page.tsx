@@ -67,7 +67,7 @@ import { TAI_LATEST, TAI_LATEST_TOP, taiRateSummary } from "./taiData";
 import { OPI1_MAX_RATE, OPI_LATEST, OPI_LATEST_BOTTOM, opiRateSummary } from "./opiData";
 import { ANNUAL_OP_2026_PRELIM } from "./annualOp";
 // 서버 컴포넌트 전용 import — DART 확정 실적(백만원, 접힌 FAQ 참고 문장). 클라이언트 번들에는 실리지 않는다.
-import { SAMSUNG_OP, toTril1 } from "@/lib/bonusHome/opActuals";
+import { SAMSUNG_OP, SAMSUNG_DS_OP_2026, toTril1 } from "@/lib/bonusHome/opActuals";
 import ShareButtons from "@/components/ShareButtons";
 import FavoritesButton from "@/components/FavoritesButton";
 import { withBonusAnnouncement } from "@/data/bonusAnnouncements";
@@ -179,9 +179,11 @@ const FAQ_ITEMS = [
     // 세후 전액 자사주·3분의 1 즉시·1년·2년 매각 제한·지급 2027년 3월 말~4월 초(정기 주총 뒤): 2026-10-07 보도
     // (MTN https://news.mtn.co.kr/news-detail/2026100715413498845 · SBS Biz https://biz.sbs.co.kr/amp/article/20000338792).
     // DART 반기보고서(rcpNo 20260814003699)의 전사 연결 영업이익은 참고값일 뿐 조건 판정 단위가 아니다 — 문장에 그렇게 밝힌다.
+    // R4 수리(2026-11-20, 사실 확인 bonus-2): 게시일엔 3분기보고서가 이미 공시돼 있어 참고 문장을 DART 분기보고서
+    // (rcpNo 20261116001482, 2026-11-16 접수, 주석 27 부문별 보고)의 2026년 1~3분기 DS부문 영업이익(조건 판정 단위)과 전사 연결 값으로.
     question: "특별경영성과급 지급 조건은 무엇인가요?",
     answer:
-      `보도된 지급 조건은 DS부문 연간 영업이익 기준 2026~2028년 200조원 이상(2029~2035년은 100조원 이상)이며, 최종 지급 여부는 회사 공지를 따릅니다. 참고로 DART 반기보고서(${SAMSUNG_OP.h1_2026.source.filedAt} 접수) 기준 ${SAMSUNG_OP.h1_2026.label} 삼성전자 전사 연결 영업이익은 약 ${toTril1(SAMSUNG_OP.h1_2026.millionWon)}조원입니다(조건 판정은 DS부문 영업이익). DS부문 특별경영성과급은 세후 전액을 자사주로 받고, 그중 3분의 1은 즉시 팔 수 있으며 나머지는 3분의 1씩 1년·2년 매각이 제한됩니다(보도 기준). 2026년 실적분이 첫 적용 대상이며, 2026년 10월 7일 언론 보도에 따르면 3월 정기 주총에서 지급 안건이 승인되면 2027년 3월 말~4월 초 지급됩니다.`,
+      `보도된 지급 조건은 DS부문 연간 영업이익 기준 2026~2028년 200조원 이상(2029~2035년은 100조원 이상)이며, 최종 지급 여부는 회사 공지를 따릅니다. 참고로 DART 분기보고서(${SAMSUNG_OP.q1q3_2026.source.filedAt} 접수) 기준 ${SAMSUNG_OP.q1q3_2026.label} 삼성전자 DS부문 영업이익은 약 ${toTril1(SAMSUNG_DS_OP_2026.q1q3.millionWon)}조원입니다(전사 연결 약 ${toTril1(SAMSUNG_OP.q1q3_2026.millionWon)}조원). DS부문 특별경영성과급은 세후 전액을 자사주로 받고, 그중 3분의 1은 즉시 팔 수 있으며 나머지는 3분의 1씩 1년·2년 매각이 제한됩니다(보도 기준). 2026년 실적분이 첫 적용 대상이며, 2026년 10월 7일 언론 보도에 따르면 3월 정기 주총에서 지급 안건이 승인되면 2027년 3월 말~4월 초 지급됩니다.`,
   },
   {
     question: "삼성전자 평균 성과급은 얼마인가요?",
@@ -255,7 +257,7 @@ export const metadata: Metadata = {
     "삼성 임금협상 2026",
   ].join(", "),
   other: {
-    "article:modified_time": "2026-11-18",
+    "article:modified_time": "2026-11-20",
   },
 };
 
@@ -1192,8 +1194,8 @@ export default function SamsungBonusCalculatorPage() {
             <p className="text-xs text-muted-blue dark:text-canvas-300 leading-relaxed">
               본 계산기는 공개된 노사 합의 보도와 분배 모델 추정치이며
               참고용입니다. DS부문 영업이익 10.5% 재원·부문 사업부 4:6 비율은 보도 기반
-              고정값, 사업부 인원·가중치·세금 가정은 사용자 조정 가능. 정확한
-              본인 케이스는 회사 명세서 확인. 페이지 수정일: <time dateTime="2026-11-18">2026-11-18</time>.
+              고정값, 사업부 인원·가중치·세금 가정은 사용자 조정 가능.
+              본인 금액은 회사 명세서 확인. 페이지 수정일: <time dateTime="2026-11-20">2026-11-20</time>.
             </p>
           </div>
 

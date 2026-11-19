@@ -74,7 +74,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  // 2026-10-09: 삼성 DS 특별성과급 세부안(10/7 보도) — 지급 시기·재원(DS부문)·원천징수 문구, 공개 출처 표현 정리.
  // 2026-11-01: 광고 위 공개 보도 표현·재원 DS 영업이익 10.5%·CL4 하위 0.9·0.8배(B28 STR-04-B), 히어로 부제·요약 10/19 이전 줄 수(B37 P2UX-04).
  // 2026-11-18 R4 SAMSUNG: 우리사주 출연 소득공제·DS부문 조건 FAQ·평균 연봉 1.58억·SK 20% 조기지급·실효세율 20~50% 등 사실 정정(RL-18·CB-11·N2-calc-07), 화면 수정일 같은 날.
- '/calc/samsung-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.95 },
+ '/calc/samsung-bonus': { lastModified: new Date('2026-11-20T00:00:00+09:00'), priority: 0.95 }, // R4 수리 11/20 접힌 조건 FAQ 참고 문장 DART 3분기보고서 DS부문 값(사실 확인 bonus-2)·주의 상자 문구, 화면 페이지 수정일과 같은 날
  '/calc/sk-hynix-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.9 }, // 3분기 실적(10/28) 시나리오·PS FAQ (B27 DATA-03), 11/18 상반기 PI 지급일 7/30·주가 시뮬레이터(BONUS1 N2-calc-10)
  '/calc/bonus-calculators': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.9 }, // 최근 소식 10/28 SK하이닉스 3분기 실적 (B27), 11/18 시즌 라벨·12월 달력·FAQ·소식 날짜(BONUS1 CB-07·N2-calc-10)
  // 2026-09-27 신설 — 시세 스냅숏이 매월(16일 이후) 갱신되므로 monthly. lastModified 는 스냅숏을 바꾼 배포에만 올린다.
