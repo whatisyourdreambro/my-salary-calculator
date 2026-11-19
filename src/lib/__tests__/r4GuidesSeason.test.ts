@@ -36,12 +36,19 @@ describe("N2-lib-12 (4b4c729fd) 자진 수정신고 감면 표 — 국세기본�
   });
 });
 
-describe("N2-lib-12 (f234b8e2a) 자진 수정신고 화면 설명 — 1.5년 20%·2년 10%", () => {
+describe("N2-lib-12 (f234b8e2a, R4 수리 2026-11-20) 자진 수정신고 화면 설명 — 1.5년 20%·2년 10%", () => {
   it("설명이 표와 같은 단계를 말한다", () => {
     const d = guide("tax-amnesty-self-report-2026").description;
-    expect(d).toContain("1년 30%·1.5년 20%·2년 10% 감면");
+    expect(d).toContain("1년 30% / 1.5년 20% / 2년 10% 감면");
     expect(d).not.toContain("2년 20%");
     expect(d.length).toBeLessThanOrEqual(80);
+  });
+  // R4 측정(ccb5f8e67 vs N): '·' 로 붙인 설명은 줄바꿈 자리가 줄어 359~364px·475~481px 에서 핵심 요약이 한 줄 늘었다(+26px).
+  // N 처럼 ' / ' 로 띄우고 둘째 문장을 줄여, 어느 폭에서도 N 의 설명보다 줄이 늘지 않게 한다.
+  it("N 처럼 띄어 쓴 구분자 — 가운뎃점으로 붙인 긴 덩어리가 없다", () => {
+    const d = guide("tax-amnesty-self-report-2026").description;
+    expect(d).not.toMatch(/%·\d/);
+    expect(d).toContain("무신고 20~60% 가산세.");
   });
 });
 

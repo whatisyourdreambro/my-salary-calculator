@@ -130,7 +130,7 @@ export const GUIDE_SITEMAP_ONLY_REVISED: Readonly<Record<string, string>> = {
   "chip-rsu-stock-tax-2026": R4_GUIDES_EDIT_DAY, // ① b13-F04 (c)(d), 칩 2026.10.03 그대로
   "bonus-property-sell-same-year-2026": R4_GUIDES_EDIT_DAY, // ① b03-F02, 칩 2026.10.03 그대로
   "dependent-check-before-bonus-2026": R4_GUIDES_EDIT_DAY, // ① b03-F03, 칩 2026.10.03 그대로
-  "tax-amnesty-self-report-2026": R4_GUIDES_EDIT_DAY, // ① N2-lib-12 표·설명, 칩 2026.10.03 그대로
+  "tax-amnesty-self-report-2026": "2026-11-20", // ① N2-lib-12 표(11/18)·설명, R4 수리 2026-11-20 설명을 N 처럼 ' / ' 로 다시 씀, 칩 2026.10.03 그대로
 };
 
 /** 사이트맵 lastmod·rss.xml pubDate 용 가이드 날짜 = max(getGuideContentDate, 사이트맵 전용 행). 화면·OG·Article 에는 쓰지 않는다. */

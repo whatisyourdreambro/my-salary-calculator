@@ -4036,7 +4036,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "tax-amnesty-self-report-2026",
   "title": "자진 수정신고 — 1개월 이내 가산세 90% 감면",
-  "description": "1개월 90%·3개월 75%·6개월 50%·1년 30%·1.5년 20%·2년 10% 감면. 무신고·부정·역외 20·40·60% 가산세.",
+  "description": "1개월 90% / 3개월 75% / 6개월 50% / 1년 30% / 1.5년 20% / 2년 10% 감면. 무신고 20~60% 가산세.",
   "category": "세금",
   "tags": [
    "수정신고",
