@@ -200,7 +200,7 @@ export const ROUTE_OVERRIDES: Record<string, RouteOverride> = {
  '/calc/incentive-tax': { lastModified: new Date('2026-11-18T00:00:00+09:00') }, // 접힌 FAQ 우리사주 출연 소득공제(SAMSUNG RL-18)·비정기 상여 4대보험(CALCMISC calc-02-F13), 광고 위 목록 같은 폭. 9/25 A18 엔진
  '/calc/samsung-sdi-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.85 }, // 배지·이력 표·칩·접힌 FAQ·TAI 상반기 75% 반영(BONUS1 RL-16 CB-03·N2-calc-12·N2-calc-23). 9/25 A18 엔진
  '/calc/samsung-display-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.85 }, // 2026 상반기 TAI 대형 75%·중소형 100% 안내·접힌 FAQ(BONUS1 RL-16 CB-04·N2-calc-12). 9/25 A18 엔진
- '/calc/lg-energy-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.85 }, // 칩 실적분·이력 표 2026 행·접힌 FAQ(BONUS1 RL-16 CB-05·N2-calc-11). 9/25 A18 엔진
+ '/calc/lg-energy-bonus': { lastModified: new Date('2026-11-20T00:00:00+09:00'), priority: 0.85 }, // 칩 실적분·이력 표 2026 행·접힌 FAQ(BONUS1 RL-16 CB-05·N2-calc-11, 11/18), R4 수리 11/20 이력 표의 2026 (예상) 행 삭제(2026 수치는 접힌 FAQ). 9/25 A18 엔진
  '/calc/lg-chem-bonus': { lastModified: new Date('2026-11-20T00:00:00+09:00'), priority: 0.85 }, // PI 보장 단정 삭제·출처 없는 표 행 삭제·출처 정리(BONUS1 RL-16 CB-06·N2-calc-11, 11/18), R4 수리 11/20 표 칸 '석유화학 (일부)'(삭제 행이 넓히던 칸 최소 폭 유지). 9/25 A18 엔진
  '/calc/kakao-bonus': { lastModified: new Date('2026-11-18T00:00:00+09:00'), priority: 0.85 }, // 공개 출처 아닌 연봉체계 자료 삭제(BONUS1 N2-calc-11). 9/25 A18 엔진
  '/privacy': { lastModified: new Date('2026-11-20T00:00:00+09:00') }, // 링크프라이스(CONTENT2 N2-app-pages-20, 11/18)·카카오 공유·8번 국외 이전(PRIVKO, 11/18) 뒤 8번 이전 근거·Google 직접 수집·접속 로그 항목 보완(운영자 2026-11-19, R4 수리 11/20) — 화면 최종 업데이트 2026년 11월 20일과 같은 날

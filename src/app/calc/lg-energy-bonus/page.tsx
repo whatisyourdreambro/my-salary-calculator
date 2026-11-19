@@ -164,15 +164,10 @@ export default function LgEnergyBonusPage() {
                     <td className="py-2 px-3 text-right tabular-nums font-bold text-amber-600">50%</td>
                     <td className="py-2 px-3 text-faint">전기차 캐즘·중국 경쟁 심화</td>
                   </tr>
-                  <tr className="border-b border-canvas-deep">
+                  <tr>
                     <td className="py-2 px-3 font-bold">2025</td>
                     <td className="py-2 px-3 text-right tabular-nums font-bold">75%</td>
                     <td className="py-2 px-3 text-faint">전년比 소폭 확대</td>
-                  </tr>
-                  <tr>
-                    <td className="py-2 px-3 font-bold">2026 (예상)</td>
-                    <td className="py-2 px-3 text-right tabular-nums text-faint">미정</td>
-                    <td className="py-2 px-3 text-faint">1~3Q 누적 흑자 6,616억</td>
                   </tr>
                 </tbody>
               </table>

@@ -201,14 +201,18 @@ describe("N2-calc-11 LG화학 계산기 입력 위생 (calc-02-F19)", () => {
   });
 });
 
-describe("N2-calc-11 LG엔솔 지급 이력 표 2026 행 (광고 위, 더 짧은 글)", () => {
-  it("2026 (예상) 행: 미정 / 1~3Q 누적 흑자 6,616억(보도값)", () => {
+describe("N2-calc-11 LG엔솔 지급 이력 표 2026 행 (광고 위, R4 수리 2026-11-20 행 삭제)", () => {
+  // 5f5d6fb7a·250c502d6 의 '미정 / 1~3Q 누적 흑자 6,616억' 은 칸이 짧아져 자동 표 배치의 폭 배분이 바뀌었고(지급률 칸 최소 폭·
+  // 시장 상황 칸 최대 폭 감소), 410~429·450~496px 에서 다른 행이 한 줄 더 감겨 GuideMidAd 가 20px 내려갔다. 표는 지급 '이력'이고
+  // 2026년 실적분은 2027년 초 결정이라, 출처 없던 예상 행을 지우고 2026년 수치(1~3분기 6,616억원)는 접힌 FAQ 가 말한다.
+  it("2026 (예상) 행이 없고 옛 추정·1분기 문구도 없다 — 2026 수치는 FAQ 에", () => {
     const page = read("src/app/calc/lg-energy-bonus/page.tsx");
-    expect(page).toContain('<td className="py-2 px-3 text-right tabular-nums text-faint">미정</td>');
-    expect(page).toContain('<td className="py-2 px-3 text-faint">1~3Q 누적 흑자 6,616억</td>');
-    expect(page).not.toContain("6,615억");
+    expect(page).not.toContain("2026 (예상)");
+    expect(page).not.toContain(">미정<");
     expect(page).not.toContain("50~100%?");
     expect(page).not.toContain("1Q 적자 -2,078억, ESS 회복 신호");
+    expect(page).not.toContain("6,615억");
+    expect(page).toContain("2026년 실적분은 2027년 초 결정되며, 1~3분기 누적 영업이익은 6,616억원");
   });
 });
 

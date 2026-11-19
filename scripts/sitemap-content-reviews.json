@@ -1507,16 +1507,16 @@
       "sha256": "83ecae1659905a9873f9b73f2dbdf94e450340ecb8704123d0c20d9388cc648a"
     },
     "/calc/lg-energy-bonus": {
-      "contentDate": "2026-11-18",
-      "reviewedAtCommit": "28cb8b6c54a8c9fc3cd0c6dd23a5447f2f3e698c",
-      "reason": "First ledger entry 2026-11-18 in the R4 integration of the 11/27 publish branch claude/next-1127: BONUS1 RL-16 CB-05 and N2-calc-11: closed FAQs (75% paid 2026-02-06, 1~3분기 누적 흑자 6,616억), chip hints 2024년·2025년 실적분 (eb79e05be), history row 2026 미정 / 1~3Q 누적 흑자 6,616억 (5f5d6fb7a, 250c502d6); RL-17 HowTo JSON-LD removed. Before this row the sitemap day came from the BONUS_ENGINE_ROUTES group (2026-09-25); priority 0.85 is written explicitly because the bonus-cluster loop skips routes with a row.",
+      "contentDate": "2026-11-20",
+      "reviewedAtCommit": "667b35b95df8d8b14df02635a214b52479c08ebb",
+      "reason": "First ledger entry 2026-11-18 in the R4 integration of the 11/27 publish branch claude/next-1127: BONUS1 RL-16 CB-05 and N2-calc-11: closed FAQs (75% paid 2026-02-06, 1~3분기 누적 흑자 6,616억), chip hints 2024년·2025년 실적분 (eb79e05be), history row 2026 미정 / 1~3Q 누적 흑자 6,616억 (5f5d6fb7a, 250c502d6); RL-17 HowTo JSON-LD removed. Before this row the sitemap day came from the BONUS_ENGINE_ROUTES group (2026-09-25); priority 0.85 is written explicitly because the bonus-cluster loop skips routes with a row. R4 Repair on 2026-11-20: the row 2026 (예상) of the payment-history table is deleted (it held the BONUS1 cells 미정 and 1~3Q 누적 흑자 6,616억 that replaced the unsourced 50~100%? and the outdated 1Q note); the shorter cells changed the automatic column widths so another row wrapped one more line and GuideMidAd moved 20 px down at 410-429 and 450-496 px in the R4 measurement. The 2026 figures stay in the closed FAQ (2026년 실적분은 2027년 초 결정, 1~3분기 누적 6,616억원, 비즈니스워치 2026-11-03). Sitemap override moved to 2026-11-20 with it.",
       "dependencies": [],
       "files": [
         "src/app/calc/lg-energy-bonus/Client.tsx",
         "src/app/calc/lg-energy-bonus/data.ts",
         "src/app/calc/lg-energy-bonus/page.tsx"
       ],
-      "sha256": "127ac39bf51efec15b52716d20bb466a18e2aaec069b210b3055ccb8c6a3b6f7"
+      "sha256": "55aa1bf0f3c5c09dd5b1417fb966b599e364b7b6ff08a3ac3796500022339b2c"
     },
     "/calc/lg-chem-bonus": {
       "contentDate": "2026-11-20",
