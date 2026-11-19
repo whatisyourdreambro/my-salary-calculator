@@ -58,16 +58,18 @@ describe("N2-guides-content-01 — 광고 분할·읽기 시간 불변", () => {
   }
 });
 
-describe("b12-F01 (628da0d00) 삼성 DS 특별성과급 세부안 — 10/29 발표는 지난 일", () => {
+describe("b12-F01 (628da0d00, R4 수리 2026-11-20) 삼성 DS 특별성과급 세부안 — 10/29 발표는 지난 일", () => {
   const c = guide("samsung-ds-special-bonus-details-oct-2026").content;
   it("발표 결과를 적고, 발표 대기 문장은 없다", () => {
-    expect(c).toContain("254조 1,300억원이며(EBN), 확정 실적은 10월 29일 컨퍼런스콜로 발표됐습니다.");
+    expect(c).toContain("1~3분기 누적 영업이익은 254조 1,300억원입니다(EBN).</p>");
     expect(c).toContain("10월 29일 발표된 3분기 DS부문 영업이익은 106조 5,000억원입니다(한국경제).");
+    expect(c).toContain("앞서 메리츠증권은 약 110조원으로 추정했습니다(파이낸셜뉴스 10월 8일, 증권가 추정).");
     expect(c).not.toContain("컨퍼런스콜에서 발표됩니다");
     expect(c).not.toContain("10월 29일 확정 발표를 봐야");
   });
-  it("같은 글자 수 교체 — 본문 길이 7,804자 그대로", () => {
-    expect(c.length).toBe(7804);
+  // 같은 글자 수 교체(7,804자)는 실측에서 두 문단이 한 줄씩 더 감겼다(InArticleAd +32~64px). 수리본은 두 문단 모두 N 보다 짧다.
+  it("N(7,804자)보다 짧은 본문 7,703자 — 읽기 시간 8분과 광고 분할 H2(3·8번째)는 위 핀이 지킨다", () => {
+    expect(c.length).toBe(7703);
   });
 });
 

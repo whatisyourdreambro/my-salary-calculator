@@ -117,7 +117,7 @@ export const GUIDE_SITEMAP_ONLY_REVISED: Readonly<Record<string, string>> = {
   // 칩 없는 글이라 그날 정정이 검색엔진에 알려지지 않았다(n1 게시 뒤 네이버 수동 요청 목록에만 있었다).
   "hometax-year-end-preview-2026": "2026-11-13",
   // ── R4 GUIDES(2026-11-18): 보강 없는 글의 광고 위 같은 폭 이하 정정 — 칩 있는 글은 ①(NO_SUPPLEMENT_ROWS), 칩 없는 글은 ③(CHIPLESS_BODY_ROWS) ──
-  "samsung-ds-special-bonus-details-oct-2026": R4_GUIDES_EDIT_DAY, // ③ b12-F01 10/29 발표 결과
+  "samsung-ds-special-bonus-details-oct-2026": "2026-11-20", // ③ b12-F01 10/29 발표 결과(11/18), R4 수리 2026-11-20 두 문단을 N 보다 짧게 다시 씀
   "sk-hynix-bonus-renegotiation-sept-2026": R4_GUIDES_EDIT_DAY, // ③ b12-F03 계산기 버튼 값
   "samsung-electronics-stock-2026": R4_GUIDES_EDIT_DAY, // ③ b13-F04 (a) ISA
   "chip-stock-tax-guide": R4_GUIDES_EDIT_DAY, // ③ b13-M01 연금계좌 해외지수 ETF
