@@ -4962,7 +4962,7 @@ export const guideCards: GuideCardMeta[] = [
  },
  {
   "slug": "total-income-adjustment-bonus-2026",
-  "title": "성과급 + 임대 + 금융 + 사업 종합정산 — 영끌 2억 시 부담 5,300만",
+  "title": "성과급 + 임대 + 금융 + 사업 종합 정산 — 영끌 2억 시 총 5,300만",
   "description": "성과급 5,000만 + 임대 3,000만 + 배당 2,000만 + 사업 3,000만 = 영끌 2억. 소득세 4,100만 + 지방세 + 정산 800만 = 약 5,300만 부담.",
   "category": "기초",
   "tags": [

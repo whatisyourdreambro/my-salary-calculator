@@ -98,7 +98,10 @@ describe("b03-F04 (f19859c27) 종합 정산 시뮬 — 배당 2,000만원 분리
     for (const s of ["<li>· 종합과세: 1.8억</li>", "<li>· 소득세: 약 4,100만</li>", "<li>· 지방세: 410만</li>", "<strong>총 부담: 약 5,300만</strong>"]) {
       expect(g.content).toContain(s);
     }
-    expect(g.title).toContain("영끌 2억 시 부담 5,300만");
+    // R4 수리(2026-11-20): '종합정산'(붙여 쓴 한 낱말)이 426~464px 에서 H1 을 한 줄 늘려 광고가 38px 내려갔다 — N 의 띄어 쓴
+    // '종합 정산'으로 되돌리고, 끝말은 N 의 '추가'보다 좁은 '총'(5,300만 은 5,750만 보다 0.06em 넓다)으로 줄 수가 N 이하.
+    expect(g.title).toBe("성과급 + 임대 + 금융 + 사업 종합 정산 — 영끌 2억 시 총 5,300만");
+    expect(g.title).not.toContain("종합정산");
     expect(g.description).toContain("소득세 4,100만 + 지방세 + 정산 800만 = 약 5,300만 부담.");
     expect(all(g.slug)).not.toContain("5,750만");
     expect(all(g.slug)).not.toContain("종합소득 총: 2억");
