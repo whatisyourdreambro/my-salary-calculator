@@ -150,10 +150,13 @@ describe("b03-F05 (31327daa8) 이직 중 성과급 — 새 회사 연말정산 �
     expect(g.content).toContain("새 회사 연말정산에 합산(빠지면 5월 신고). 건보는 회사별.");
     expect(g.content).toContain("<strong>합산</strong>: 새 회사 정산에 합산.");
     expect(g.content).toContain("<li>· 빠지면 5월 종소세 신고로 합산</li>");
-    expect(g.description).toContain("새 회사 연말정산에서 합산.");
+    // R4 수리 2회차(2026-11-20): 설명은 N 의 '5월 종소세 신고 시 …' 꼴로 되돌려 /guides 태그 목록(?q=종소세·5월 종소세·종소세 신고·
+    // 연말정산·정산)이 N 과 같은 카드를 보인다. 뜻은 본문과 같다 — 새 회사 정산에 합산, 빠진 것은 5월 종소세 신고로 합산.
+    // 누구나 5월에 신고해야 한다는 '합산 신고 의무' 꼴은 없다.
+    expect(g.description).toBe("전 회사 + 신 회사 성과급 모두 근로소득 합산. 5월 종소세 신고 시 누락 합산. 한계세율 점프 시 추가 1,000만+ 세금.");
+    expect(g.description).not.toContain("연말정산");
     expect(all(g.slug)).not.toContain("양쪽 통합");
     expect(all(g.slug)).not.toContain("합산 신고 의무");
-    expect(all(g.slug)).not.toContain("5월 종소세 신고 시");
   });
 });
 

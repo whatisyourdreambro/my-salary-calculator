@@ -5054,7 +5054,7 @@ export const guideCards: GuideCardMeta[] = [
  {
   "slug": "moving-company-bonus-2026",
   "title": "이직 중 성과급 — 전·신 회사 합산 1,000만+ 추가 세금",
-  "description": "전 회사 + 신 회사 성과급 모두 근로소득 합산. 새 회사 연말정산에서 합산. 한계세율 점프 시 추가 1,000만+ 세금.",
+  "description": "전 회사 + 신 회사 성과급 모두 근로소득 합산. 5월 종소세 신고 시 누락 합산. 한계세율 점프 시 추가 1,000만+ 세금.",
   "category": "커리어",
   "tags": [
    "이직",
