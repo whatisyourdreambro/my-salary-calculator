@@ -5492,7 +5492,7 @@ export const guideCards: GuideCardMeta[] = [
   "publishedDate": "2026-10-09",
   "views": 0,
   "lang": "ko",
-  "contentChars": 7703
+  "contentChars": 7694
  },
  {
   "slug": "sk-hynix-bonus-renegotiation-sept-2026",

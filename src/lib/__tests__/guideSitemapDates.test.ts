@@ -43,7 +43,7 @@ const CHIPLESS_BODY_ROWS: Readonly<Record<string, string>> = {
   "rental-business-prop-tax-exclusion-2026": "RL-08 재착지 ffcfbd57b(2026-11-15) 광고 위 종부세 합산배제 예시 정정 — 칩 없는 글, 보강 없음",
   "minimum-wage-2026": "RL-08 재착지 3406a00b1(2026-11-15) 광고 위 월급제 유급 시간 정정 — 칩 없는 글, 보강 없음",
   "hometax-year-end-preview-2026": "lens-season-F05 46d56278d(2026-11-13) 운영 기간 10월 28일~12월 18일 같은 길이 정정 — 칩 없는 글, 보강 없음",
-  "samsung-ds-special-bonus-details-oct-2026": "R4 GUIDES b12-F01(2026-11-18) 광고 위 3분기 문단 같은 글자 수 정정 — 칩 없는 글, 보강 없음",
+  "samsung-ds-special-bonus-details-oct-2026": "R4 GUIDES b12-F01(2026-11-18) 광고 위 3분기 문단 같은 글자 수 정정 — 칩 없는 글, 보강 없음, R4 수리 2026-11-20 두 문단을 N 보다 짧게, 같은 날 2회차 출처 표시 '1~3분기 누적 실적'(순수 삭제)",
   "sk-hynix-bonus-renegotiation-sept-2026": "R4 GUIDES b12-F03(2026-11-18) 광고 위 계산기 시나리오 값 같은 글자 수 정정 — 칩 없는 글, 보강 없음",
   "samsung-electronics-stock-2026": "R4 GUIDES b13-F04 (a)(2026-11-18) 광고 위 ISA 문장 더 좁게 정정 — 칩 없는 글, 보강 없음",
   "chip-stock-tax-guide": "R4 GUIDES b13-M01(2026-11-18) 광고 위 연금계좌 ETF 문장 더 좁게 정정 — 칩 없는 글, 보강 없음",

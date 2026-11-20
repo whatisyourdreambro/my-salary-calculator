@@ -21,6 +21,8 @@
 //   - 삼성전자 뉴스룸 2026-10-08 3분기 잠정실적 https://news.samsung.com/kr/삼성전자-2026년-3분기-잠정실적-발표
 //     매출 195조원·영업이익 107.4조원, 영업이익 전분기 대비 20.01%·전년 동기 대비 782.50% 증가
 //   - EBN 2026-10-08 https://www.ebn.co.kr/news/articleView.html?idxno=1727128 (1~3분기 누적 영업이익 254조 1,300억원, 10월 29일 실적 컨퍼런스콜)
+//     (2026-11-20 R4 수리 2회차: 아래 수리로 본문이 컨퍼런스콜 일정을 더는 말하지 않아, 출처 목록의 링크 글도 '1~3분기 누적 실적·실적 발표 일정'
+//      -> '1~3분기 누적 실적'(순수 삭제). 이 기사는 누적 영업이익의 출처로만 쓴다)
 //   - 한국경제 2026-10-29 https://www.hankyung.com/article/202610292686g (3분기 확정: 전사 영업이익 107조 4,405억원, DS부문 매출 147조 1,000억원·영업이익 106조 5,000억원)
 //   - 삼성전자 뉴스룸 2026-10-29 '삼성전자, 2026년 3분기 실적 발표' https://news.samsung.com/kr/삼성전자-2026년-3분기-실적-발표
 //     (2026-11-18 N2-guides-content-01 b12-F01: 본문 3분기 문단의 '10월 29일 발표됩니다'·'확정 발표를 봐야'를 발표 결과로 — 같은 글자 수(본문 길이·분할 불변), 글꼴 폭은 같거나 좁음)
@@ -119,7 +121,7 @@ export const semiconductorBonusNews202610Guides = [
 <li>파이낸셜뉴스 2026-10-07 <a href="https://www.fnnews.com/news/202610071816171716" rel="noopener noreferrer" target="_blank">DS 특별경영성과급 세부사항 보도</a></li>
 <li>뉴데일리 2026-10-07 <a href="https://biz.newdaily.co.kr/site/data/html/2026/10/07/2026100700308.html" rel="noopener noreferrer" target="_blank">기부 비율 선택 방식 보도</a></li>
 <li>삼성전자 뉴스룸 2026-10-08 <a href="https://news.samsung.com/kr/%EC%82%BC%EC%84%B1%EC%A0%84%EC%9E%90-2026%EB%85%84-3%EB%B6%84%EA%B8%B0-%EC%9E%A0%EC%A0%95%EC%8B%A4%EC%A0%81-%EB%B0%9C%ED%91%9C" rel="noopener noreferrer" target="_blank">삼성전자 2026년 3분기 잠정실적 발표</a></li>
-<li>EBN 2026-10-08 <a href="https://www.ebn.co.kr/news/articleView.html?idxno=1727128" rel="noopener noreferrer" target="_blank">1~3분기 누적 실적·실적 발표 일정</a></li>
+<li>EBN 2026-10-08 <a href="https://www.ebn.co.kr/news/articleView.html?idxno=1727128" rel="noopener noreferrer" target="_blank">1~3분기 누적 실적</a></li>
 <li>파이낸셜뉴스 2026-10-08 <a href="https://www.fnnews.com/news/202610081059582374" rel="noopener noreferrer" target="_blank">메리츠증권 부문별 실적 추정 보도</a></li>
 <li>파이낸셜뉴스 2026-10-02 <a href="https://www.fnnews.com/news/202610021118186081" rel="noopener noreferrer" target="_blank">임직원 보상용 자사주 매입 진행 보도</a></li>
 <li>한국경제 2026-08-21 <a href="https://www.hankyung.com/article/2026082156601" rel="noopener noreferrer" target="_blank">성과급용 자사주 15조원 매입 의결 보도</a></li>
