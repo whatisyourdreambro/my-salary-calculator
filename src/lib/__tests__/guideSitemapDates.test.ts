@@ -29,7 +29,7 @@ const NO_SUPPLEMENT_ROWS: Readonly<Record<string, string>> = {
     "R1 RL-02 광고 위 같은 폭 정정만 받았다. 칩을 2026.11.03 으로 바꾸면 화면 폭 440~441px 에서 제목 아래 광고가 24px 내려가 화면 날짜는 2026.10.03 그대로 둔다",
   "bonus-property-sell-same-year-2026": "광고 위 같은 폭 이하 정정만 받았다(b03-F02 양도세 예정신고 기한, 보강 없음). 칩 2026.10.03 숫자는 바꾸지 않는다(R4 GUIDES 2026-11-18)",
   "chip-rsu-stock-tax-2026": "광고 위 같은 폭 이하 정정만 받았다(b13-F04 (c)(d) ISA 문장·표 칸, 보강 없음). 칩 2026.10.03 숫자는 바꾸지 않는다(R4 GUIDES 2026-11-18)",
-  "dependent-check-before-bonus-2026": "광고 위 같은 폭 이하 정정만 받았고 광고 아래 보강은 2월(N2-guides-content-10). 칩 2026.10.03 숫자는 바꾸지 않는다(R4 GUIDES 2026-11-18)",
+  "dependent-check-before-bonus-2026": "광고 위 같은 폭 이하 정정만 받았고 광고 아래 보강은 2월(N2-guides-content-10). 칩 2026.10.03 숫자는 바꾸지 않는다(R4 GUIDES 2026-11-18), R4 수리 2026-11-20 리드·사업소득 줄·함정 문단·설명(F3~F5), 같은 날 2회차 설명 '가족 1인 연금·이자 합산'(/guides 태그 목록 N 과 같게)",
   "semiconductor-performance-bonus-tax": "광고 위 같은 폭 이하 정정만 받았다(b13-F04 (b) ISA 문장, 보강 없음). 칩 2026.10.03 숫자는 바꾸지 않는다(R4 GUIDES 2026-11-18)",
   "tax-amnesty-self-report-2026": "광고 위 감면 표 한 줄 추가(N2-lib-12, 운영자 승인 2026-11-17 질문 1 방식)와 더 좁은 설명만 받았다(보강 없음). 칩 2026.10.03 숫자는 바꾸지 않는다(R4 GUIDES 2026-11-18)",
 };
