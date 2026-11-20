@@ -122,7 +122,7 @@ export const GUIDE_SITEMAP_ONLY_REVISED: Readonly<Record<string, string>> = {
   "samsung-electronics-stock-2026": R4_GUIDES_EDIT_DAY, // ③ b13-F04 (a) ISA
   "chip-stock-tax-guide": R4_GUIDES_EDIT_DAY, // ③ b13-M01 연금계좌 해외지수 ETF
   "executive-bonus-corporate-limit-2026": R4_GUIDES_EDIT_DAY, // ③ b03-F01 법인세 6,000만
-  "total-income-adjustment-bonus-2026": "2026-11-20", // ③ b03-F04 배당 분리과세(11/18), R4 수리 2026-11-20 제목 '종합 정산 … 총 5,300만'
+  "total-income-adjustment-bonus-2026": "2026-11-20", // ③ b03-F04 배당 분리과세(11/18), R4 수리 2026-11-20 제목 '종합 정산 … 총 5,300만'·설명 '급여 1.2억 … 종소세 4,100만'(덧셈 정정, /guides 태그 목록 N 과 같게)
   "moving-company-bonus-2026": R4_GUIDES_EDIT_DAY, // ③ b03-F05 새 회사 연말정산 합산
   "gift-children-with-bonus-2026": R4_GUIDES_EDIT_DAY, // ③ b03-F06 손자녀 합산
   "foreign-bonus-structure-2026": R4_GUIDES_EDIT_DAY, // ③ b03-M01 해외계좌 6월

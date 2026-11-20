@@ -48,7 +48,7 @@ const CHIPLESS_BODY_ROWS: Readonly<Record<string, string>> = {
   "samsung-electronics-stock-2026": "R4 GUIDES b13-F04 (a)(2026-11-18) 광고 위 ISA 문장 더 좁게 정정 — 칩 없는 글, 보강 없음",
   "chip-stock-tax-guide": "R4 GUIDES b13-M01(2026-11-18) 광고 위 연금계좌 ETF 문장 더 좁게 정정 — 칩 없는 글, 보강 없음",
   "executive-bonus-corporate-limit-2026": "R4 GUIDES b03-F01(2026-11-18) 광고 위 법인세 문장 더 좁게 정정 — 칩 없는 글, 보강 없음",
-  "total-income-adjustment-bonus-2026": "R4 GUIDES b03-F04(2026-11-18) 광고 위 시뮬·제목 더 좁게 정정 — 칩 없는 글, 보강 없음",
+  "total-income-adjustment-bonus-2026": "R4 GUIDES b03-F04(2026-11-18) 광고 위 시뮬·제목 더 좁게 정정 — 칩 없는 글, 보강 없음, R4 수리 2026-11-20 제목 '종합 정산 — 영끌 2억 시 총 5,300만', 같은 날 2회차 설명 '급여 1.2억 … 종소세 4,100만'(덧셈 정정, /guides 태그 목록 N 과 같게)",
   "moving-company-bonus-2026": "R4 GUIDES b03-F05(2026-11-18) 광고 위 합산·건보 문장 더 좁게 정정 — 칩 없는 글, 보강 없음",
   "gift-children-with-bonus-2026": "R4 GUIDES b03-F06(2026-11-18) 광고 위 손자녀 줄 더 좁게 정정 — 칩 없는 글, 보강 없음",
   "foreign-bonus-structure-2026": "R4 GUIDES b03-M01(2026-11-18) 광고 위 RSU·해외계좌 문단 더 좁게 정정 — 칩 없는 글, 보강 없음",
